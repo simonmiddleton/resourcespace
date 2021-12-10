@@ -6,6 +6,7 @@ $parent = (int) getval("parent", $featured_collections_root_collection, true);
 if($k == "" || !check_access_key_collection($parent, $k))
     {
     include "../include/authenticate.php";
+    $parent = (int) getval("parent", $featured_collections_root_collection, true);
     }
 
 if(!$enable_themes)

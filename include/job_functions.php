@@ -72,7 +72,7 @@ function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="", $pr
     if($newstatus!="")
         {
         $update_sql[] = "status = ?";
-        $parameters = array_merge($parameters,array("s",$newstatus));
+        $parameters = array_merge($parameters,array("i",$newstatus));
         }
     if(is_int_loose($priority))
         {
@@ -157,7 +157,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
             {
             // Only show own jobs
             $condition[] = " user = ?";
-            $parameters = array_merge($parameters,array("i",(int)$user));
+            $parameters = array_merge($parameters,array("i",(int)$userref));
             }
         else
             {
@@ -174,7 +174,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
                 {
                 // Only show own jobs
                 $condition[] = " user = ?";
-                $parameters = array_merge($parameters,array("i",(int)$user));
+                $parameters = array_merge($parameters,array("i",(int)$userref));
                 }
             else
                 {
@@ -326,7 +326,7 @@ function job_queue_run_job($job, $clear_process_lock)
         $offline_plugins = $plugins;
 
         // Include plugins for this job user's group
-        $group_plugins = ps_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 AND disable_group_select = 0 AND find_in_set(?,enabled_groups) ORDER BY priority","plugins", array("i",$jobuserdata["usergroup"]));
+        $group_plugins = ps_query("SELECT name, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 AND disable_group_select = 0 AND find_in_set(?,enabled_groups) ORDER BY priority", array("i",$jobuserdata["usergroup"]), "plugins");
         foreach($group_plugins as $group_plugin)
             {
             include_plugin_config($group_plugin['name'],$group_plugin['config'],$group_plugin['config_json']);

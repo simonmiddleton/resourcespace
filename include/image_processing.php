@@ -133,6 +133,11 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
+                if(base64_encode(base64_decode($filename)) == $filename)
+                   {
+                   // Should have been encoded by Uppy
+                   $filename = base64_decode($filename);
+                   }
                 }
             else
                 {
@@ -1858,7 +1863,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : "");
+                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
                             {
@@ -3637,7 +3642,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         {
         $keep_transparency=true;
         $cmd_args['%sourcepath'] = $sourcepath;
-        $command .= ' -background transparent %sourcepath';
+        $command .= ' -background transparent %sourcepath[0]';
         }
     else
         {

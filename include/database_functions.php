@@ -7,6 +7,37 @@
 
 
 /**
+ * Simple class to use when required to obtain/build SQL (sub) statements from various functions.
+ * 
+ * @internal
+ */
+final class PreparedStatementQuery {
+    /**
+     * @var string $sql SQL prepared (sub) statement with placeholders in place
+     */
+    public $sql;
+
+    /**
+     * @var array $parameters Bind parameters
+     */
+    public $parameters;
+
+    /**
+     * Create a new PreparedStatementQuery
+     * 
+     * @param string $sql        SQL prepared (sub) statement with placeholders in place
+     * @param array  $parameters Bind parameters
+     */
+    public function __construct(string $sql = '', array $parameters = [])
+        {
+        $this->sql = $sql;
+        $this->parameters = $parameters;
+        }
+}
+
+
+
+/**
  * Centralised error handler. Display friendly error messages.
  *
  * @param  integer $errno

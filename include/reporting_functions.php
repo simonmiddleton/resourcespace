@@ -26,6 +26,7 @@ function get_reports()
         if (!hook('ignorereport', '', array($r[$n])))
             {
             $r[$n]["name"] = get_report_name($r[$n]);
+            $r[$n]["contains_date"] = report_has_date($r[$n]["query"]);
             $return[] = $r[$n]; # Adds to return array.
             }
         }
@@ -63,12 +64,20 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     $ref_escaped = escape_check($ref);
 
     $report = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = '{$ref_escaped}'");
+    $has_date_range = report_has_date($report[0]["query"]);
     $report=$report[0];
     $report['name'] = get_report_name($report);
 
     if($download || $foremail)
         {
-        $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+        if ($has_date_range)
+            {
+            $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+            }
+        else
+            {
+            $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . ".csv";
+            }
         }
 
     if($results = hook("customreport", "", array($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download,$add_border, $report)))
@@ -581,4 +590,43 @@ function get_translated_activity_type($activity_type)
         {
         return $lang[$key];
         }
+    }
+
+/**
+ * Checks for the presence of date placeholders in a report's SQL query.  
+ *
+ * @param  string   $query   The report's SQL query.
+ * 
+ * @return boolean  Returns true if a date placeholder was found else false.
+ */
+function report_has_date($query)
+    {
+    $date_placeholders = array('[from-y]','[from-m]','[from-d]','[to-y]','[to-m]','[to-d]');
+    $date_present = false;
+
+    foreach ($date_placeholders as $placeholder)
+        {
+        $position = strpos($query,$placeholder);
+        if ($position !== false)
+            {
+            $date_present = true;
+            break;
+            }
+        }
+
+    return $date_present;
+    }
+
+/**
+ * Checks for the presence of date placeholders in a report's sql query using the report's id.
+ *
+ * @param  string   $report   Report id of the report to retrieve the query data from the report table.
+ * 
+ * @return boolean  Returns true if a date placeholder was found else false.
+ */
+function report_has_date_by_id($report)
+    {
+    $query = sql_value("SELECT `query` as value FROM report WHERE ref = '" . escape_check($report) . "'",0);
+    $result = report_has_date($query);
+    return $result;
     }

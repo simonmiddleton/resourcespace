@@ -1369,7 +1369,7 @@ if($import && isset($folder_path))
         if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
             {
             sql_query(sprintf(
-                "UPDATE resource SET access = '%s' WHERE ref = '%s'",
+                "UPDATE resource SET access = '%u' WHERE ref = '%s'",
                 escape_check($src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access']),
                 escape_check($new_resource_ref)
             ));
@@ -1471,6 +1471,8 @@ if($import && isset($folder_path))
             continue;
             }
 
+        logScript("Processing SRC resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
+
         if(!array_key_exists($src_rn["resource"], $resources_mapping))
             {
             logScript("WARNING: Unable to find a resource mapping. Skipping");
@@ -1478,8 +1480,6 @@ if($import && isset($folder_path))
             fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
             continue;
             }
-
-        logScript("Processing SRC resource #{$src_rn["resource"]} and node #{$src_rn["node"]}");
 
         // If specification defined a mapping for a SRC node, apply it
         if(isset($nodes_spec[$src_rn['node']]))
@@ -1645,7 +1645,7 @@ if($import && isset($folder_path))
             continue;
             }
 
-        sql_query("INSERT INTO resource_related (resource, related) VALUES ('{$src_rr["resource"]}', '{$src_rr["related"]}')");
+        sql_query("INSERT INTO resource_related (resource, related) VALUES ('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')");
 
         $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
         fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);

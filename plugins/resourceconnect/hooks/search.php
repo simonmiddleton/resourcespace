@@ -115,7 +115,7 @@ function HookResourceConnectSearchReplacesearchresults()
 function HookResourceConnectSearchThumblistextras()
     {
         
-    global $baseurl_short, $baseurl, $result, $n, $lang, $url;
+    global $baseurl_short, $baseurl, $result, $n, $lang, $url, $usercollection;
 
     $resource = $result[$n]; // record for resource
 
@@ -125,6 +125,7 @@ function HookResourceConnectSearchThumblistextras()
         } // only display icons for resourceconnect resources identified by ref = -87412
 
     $ref = $resource["ref_tab"]; // resource id in resourceconnect_collection_resources table
+    $source_ref = $resource['source_ref'];
     $pre_url = $resource["pre_url"]; // preview image url - stored locally
     $title = $resource["field8"]; // image title
     ?>
@@ -139,7 +140,24 @@ function HookResourceConnectSearchThumblistextras()
                         ></a>
     
     <!-- Remove from collection -->
-    <a class="removeFromCollection fa fa-minus-circle" href="<?php echo "$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=" . time() ?>" onClick="return CollectionDivLoad(this,false);"> </a>
+    <a class="removeFromCollection fa fa-minus-circle" href="<?php echo generateURL("$baseurl/pages/collections.php", ['resourceconnect_remove_ref' => $ref, 'resourceconnect_remove' => $source_ref, 'resourceconnect_remove_col' => $usercollection, 'nc' => time()]); ?>" onClick="return CollectionDivLoad(this,false);"> </a>
+    <?php
+    parse_str($url, $parts);
+    $url = $parts['url'];
+
+    $add_url= generateURL($baseurl . "/plugins/resourceconnect/pages/add_collection.php",
+        [
+            "nc"          => time(),
+            "title"       => $title,
+            "url"         => str_replace("&search","&source_search",$url),
+            "thumb"       => $resource['col_url'],
+            "large_thumb" => $resource['thm_url'],
+            "xl_thumb"    => $resource['pre_url'],
+            "back"        => $baseurl . "/pages/view.php?" . $_SERVER["QUERY_STRING"]
+        ]
+    );
+    ?>
+    <a class="addToCollection fa fa-plus-circle DisplayNone" href="<?php echo $add_url; ?>" onClick="return CollectionDivLoad(this,false);"> </a>
     <?php
     } 
 
@@ -166,6 +184,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
             (
             "ref"=>-87412,
             "ref_tab"=>$resource["ref"],
+            "source_ref"=>$resource["source_ref"],
             "access"=>0,
             "archive"=>0,
             "resource_type"=>0,

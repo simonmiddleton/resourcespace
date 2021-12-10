@@ -73,6 +73,19 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
         }
         
     $response = $server->serve();
+    // Extra check added to ensure URL uses $baseurl. Required due to reported issues with some reverse proxy configurations
+    $tuslocation = $response->headers->get('location');
+    if (!empty($tuslocation) && (strpos($tuslocation, $baseurl) === false))
+        {
+        $suffix = strpos($tuslocation,"/pages/upload_batch.php");
+        if($suffix !== false)
+            {
+            $tusbase = substr($tuslocation,0,$suffix);
+            $rslocation = str_replace($tusbase,$baseurl,$tuslocation);
+            debug("upload_batch. Correcting invalid upload URL from '" . $tuslocation . "' to '" . $rslocation . "'");
+            $response->headers->set('location', $rslocation);
+            }
+        }
     $response->send();
     exit(0); // As this is the end of the TUS upload handler no further processing to be performed.
     }
@@ -108,11 +121,6 @@ $upload_here                            = (getval('upload_here', '') != '' ? tru
 
 // Set to process upload once file upload complete
 $processupload                          = getval("processupload","") != "";
-
-// $chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
-// $chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
-// $upfilename  = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-// $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']) : 0;
 
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
@@ -410,9 +418,10 @@ if ($processupload)
     $extension=explode(".",$upfilename);
     $extension=trim(strtolower($extension[count($extension)-1]));
 
-	// Clean the filename
-	$origuploadedfilename=escape_check($upfilename);
-	$upfilepath = $targetDir . DIRECTORY_SEPARATOR . $upfilename;
+    // Clean the filename
+    $origuploadedfilename=escape_check($upfilename);
+    $encodedname = base64_encode($upfilename);
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
 
     # Banned extension?
     global $banned_extensions;
@@ -960,6 +969,17 @@ jQuery(document).ready(function () {
                         });
                     }
                 }
+             // Encode the file names
+            const updatedFiles = {}
+            Object.keys(files).forEach(fileid => {
+            console.log(files[fileid]);
+                updatedFiles[fileid] = {
+                    ...files[fileid],
+                  }
+                updatedFiles[fileid].meta.name = base64encode(`${files[fileid].name}`);
+                console.debug('file obj')
+                console.debug(files[fileid].id)
+                });    
                 
             // Now upload the files
             count = Object.keys(files).length;
@@ -1175,7 +1195,7 @@ function processFile(file, forcepost)
                 }
             else
                 {
-                // Check if we have recorded a resource ID for a fiel with the same name minus the alternative suffix
+                // Check if we have recorded a resource ID for a file with the same name minus the alternative suffix
                 original_filename = filename.substr(0, filename.lastIndexOf(alternative_suffix));
                 resource_id       = resource_ids_for_alternatives.indexOf(original_filename);
                 if(resource_id != -1)
@@ -1257,7 +1277,7 @@ function processFile(file, forcepost)
             if (uploadresponse.status != true)
                 {
                 error = uploadresponse.error;
-
+                upRedirBlock = true;
                 if(uploadresponse.error==108)
                     {
                     message = '<?php echo $lang['error-duplicatesfound']?>';
@@ -1366,6 +1386,13 @@ jQuery('#CentralSpace').on("ProcessedMain",function(){
             }
         });
     });
+
+function base64encode(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+      function toSolidBytes(match, p1) {
+          return String.fromCharCode('0x' + p1);
+  }));
+}
 
 function postUploadActions()
     {

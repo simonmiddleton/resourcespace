@@ -58,8 +58,6 @@ $basket_stores_size=true;
 // Default browse bar width;
 $browse_default_width = 295;
 
-$camera_autorotation_checked = true;
-
 # Option to force single branch selection in category tree selection 
 $cat_tree_singlebranch=false;
 
@@ -510,9 +508,6 @@ $show_edit_all_link = true;
 
 // Show required field legend on upload
 $show_required_field_label = true;
-
-# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
-$show_upload_log=true;
 
 # Show the link to 'user contributed assets' on the My Contributions page
 # Allows non-admin users to see the assets they have contributed

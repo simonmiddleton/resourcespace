@@ -812,7 +812,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                         // If this is a 'joined' field it still needs to add it to the resource column
                         $joins = get_resource_table_joins();
-                        if(in_array($fieldid, $joins))
+                        if(in_array($fieldid, $joins) && is_int_loose($fieldid))
                             {
                                 $resnodes = get_resource_nodes($resource_id, $fieldid, true);
                                 $resvals = array_column($resnodes,"name");

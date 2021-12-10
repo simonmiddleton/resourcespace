@@ -97,12 +97,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		$owner=$userref;
 		}
 
-	if (is_null($owner))
-		{
-		$owner = 'NULL';
-		}
-
-	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("s",$owner,"i",$ttl_seconds,"s",$text,"s",$url,"i",$related_activity,"i",$related_ref,"i",$notification_type));
+	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
 	$message_ref = sql_insert_id();
 
 	foreach($users as $user)
@@ -450,9 +445,10 @@ function message_send_unread_emails()
 		get_config_option($digestuser,'user_pref_daily_digest_mark_read', $mark_read);
 		if($mark_read && count($messagerefs) > 0)
 			{
-            $parameters = ps_param_fill($messagerefs,"i");
+            $parameters = array("i",MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL);
+            $parameters = array_merge($parameters,ps_param_fill($messagerefs,"i"));
             $parameters = array_merge($parameters, array("i",$digestuser));
-            ps_query("UPDATE user_message SET seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' WHERE message IN ('" . ps_param_insert(count($messagerefs)) . "') and user = ?");
+            ps_query("UPDATE user_message SET seen = ? WHERE message IN (" . ps_param_insert(count($messagerefs)) . ") and user = ?", $parameters);
 			}
 		}
 

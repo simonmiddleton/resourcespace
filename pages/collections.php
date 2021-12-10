@@ -748,7 +748,9 @@ if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3) && $
 		}
 	}
 ?><div>
-
+<script>
+    var collection_resources = <?php echo json_encode(array_column($result,'ref'));?>; 
+</script>
 <div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
 
 hook('before_collectionmenu');
@@ -894,11 +896,11 @@ else if ($basket)
         include "search_views/resource_tools.php";  
             
 		} # End of remove link condition 
-		?>
+        ?>
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook
@@ -1263,7 +1265,7 @@ else
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook

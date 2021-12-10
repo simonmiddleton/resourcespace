@@ -24,16 +24,16 @@ function send_research_request(array $rr_cfields)
 	$rr_description=getval("description","");
 	$parameters=array("i",$as_user, "s",$rr_name, "s",$rr_description);
 
-	$rr_deadline = ( (getval("deadline","")=="") ? "NULL" : "'".getval("deadline","")."'");
+	$rr_deadline = getval("deadline","00-00-00")." 00:00:00";
 	$rr_contact = getval("contact","");
 	$rr_email = getval("email","");
 	$rr_finaluse = getval("finaluse","");
 	$parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
 
 	# $rt
-	$rr_noresources = ( (getval("noresources","")=="") ? "NULL" : "'".getval("noresources","")."'");
+	$rr_noresources = ( (getval("noresources","")=="") ? "0" : "'".getval("noresources","")."'");
 	$rr_shape = getval("shape","");
-	$parameters=array_merge($parameters,array("s",$rt, "s",$rr_noresources, "s",$rr_shape));
+	$parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
 
     /**
     * @var string JSON representation of custom research request fields after removing the generated HTML properties we 
@@ -45,7 +45,7 @@ function send_research_request(array $rr_cfields)
         {
         trigger_error(json_last_error_msg());
         }
-    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "NULL" : "'".$rr_cfields_json."'");
+    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : "'".$rr_cfields_json."'");
 	$parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
 
 	ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
@@ -104,8 +104,8 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 	$use_sort = "";
 	$parameters=array();
 	if ($find!="") {
-		$searchsql="where name like concat('%', ?, '%') or description like concat('%', ?, '%') or contact like concat('%', ?, '%') or ref=?"; 
-		$parameters=array("s",$find, "s",$find, "s",$find, "s",$find);
+		$searchsql="WHERE name like ? or description like ? or contact like ? or ref=?"; 
+		$parameters=array("s","%{$find}%", "s","%{$find}%", "s","%{$find}%", "i",(int)$find);
 	}
 	if (in_array($order_by, array("ref","name","created","status","assigned_to","collection")))
 		{
@@ -123,9 +123,13 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 
 function get_research_request($ref)
 	{
-	$parameters=array("i",$ref);
-	$return=ps_query("select *,email,(select username from user u where u.ref=r.user) username, 
-		(select username from user u where u.ref=r.assigned_to) assigned_username from research_request r where ref=?", $parameters);
+	$rr_sql="SELECT rr.ref,rr.name,rr.description,rr.deadline,rr.email,rr.contact,rr.finaluse,rr.resource_types,rr.noresources,rr.shape,
+					rr.created,rr.user,rr.assigned_to,rr.status,rr.collection,rr.custom_fields_json,
+					(select u.username from user u where u.ref=rr.user) username, 
+					(select u.username from user u where u.ref=rr.assigned_to) assigned_username from research_request rr where rr.ref=?";
+	$rr_parameters=array("i",$ref);
+
+	$return=ps_query($rr_sql, $rr_parameters);
 	if (count($return) == 0)
 	    {
 	    return false;

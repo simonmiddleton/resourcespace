@@ -1781,12 +1781,12 @@ function save_resource_data_multi($collection,$editsearch = array())
         $related = explode(',', getvalescaped('related', ''));
 
         // Make sure all submitted values are numeric
-        $ok = array();
+        $resources_to_relate = array();
         for($n = 0; $n < count($related); $n++)
             {
             if(is_numeric(trim($related[$n])))
                 {
-                $ok[] = trim($related[$n]);
+                $resources_to_relate[] = trim($related[$n]);
                 }
             }
 
@@ -1801,10 +1801,24 @@ function save_resource_data_multi($collection,$editsearch = array())
         for($m = 0; $m < count($list); $m++)
             {
             $ref = $list[$m];
+            // Only add new relationships
+            $existing_relations = ps_array("SELECT related value FROM resource_related WHERE resource = ?", array("i", $ref));
 
-            if(0 < count($ok))
+            // Don't relate a resource to itself
+            $for_relate_sql = array();
+            $for_relate_parameters = array();
+            foreach ($resources_to_relate as $resource_to_relate)
                 {
-                sql_query("INSERT INTO resource_related(resource, related) VALUES ($ref, " . join("),(" . $ref . ",",$ok) . ")");
+                if ($ref != $resource_to_relate && !in_array($resource_to_relate, $existing_relations))
+                    {
+                    $for_relate_sql = array_merge($for_relate_sql, array('(?, ?)'));
+                    $for_relate_parameters = array_merge($for_relate_parameters, array("i", $ref, "i", $resource_to_relate));
+                    }
+                }
+
+            if(0 < count($for_relate_sql))
+                {
+                ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",", $for_relate_sql), $for_relate_parameters);
                 $successfully_edited_resources[] = $ref;
                 }
             }
@@ -2371,7 +2385,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
     else
         {
-        if (trim($value) == trim($existing))
+        if (trim($value) === trim($existing))
             {
             // Nothing to do
             return true;
@@ -3244,10 +3258,26 @@ function get_resource_types($types = "", $translate = true)
                 $parameters[]="i";$parameters[]=$type;
                 }
             }
-        $sql=" where ref in ($cleantypes) ";
+        $sql=" WHERE ref IN ($cleantypes) ";
         }
     
-    $r=ps_query("select *, colour, icon from resource_type $sql order by order_by,ref",$parameters,"schema");
+    $r=ps_query("SELECT ref,
+                        name,
+                        allowed_extensions,
+                        order_by,
+                        config_options,
+                        tab_name,
+                        push_metadata,
+                        inherit_global_fields,
+                        colour,
+                        icon
+                   FROM resource_type
+                        $sql
+               ORDER BY order_by,
+                        ref",
+                        $parameters,
+                        "schema");
+
     $return=array();
     # Translate names (if $translate==true) and check permissions
     for ($n=0;$n<count($r);$n++)
@@ -4079,7 +4109,7 @@ function write_metadata($path, $ref, $uniqid="")
                 $group_tag = strtolower($group_tag); # E.g. IPTC:Keywords -> iptc:keywords
                 if (strpos($group_tag,":")===false) {$tag = $group_tag;} # E.g. subject -> subject
                 else {$tag = substr($group_tag, strpos($group_tag,":")+1);} # E.g. iptc:keywords -> keywords
-                if(strpos($group_tag,"-") !== false)
+                if(strpos($group_tag,"-") !== false && stripos($group_tag,"xmp") !== false)
                     {
                     // Remove the XMP namespace for XMP data if included
                     $group_tag = substr($group_tag,0,(strpos($group_tag,"-")));
@@ -4366,17 +4396,40 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
 	{
 	# Returns a list of alternative files for the given resource
-	if ($order_by!="" && $sort!=""){
+	if ($order_by!="" && $sort!="" 
+        && in_array(strtoupper($order_by),array("ALT_TYPE")) 
+        && in_array(strtoupper($sort),array("ASC","DESC")) )
+        {
 		$ordersort=$order_by." ".$sort.",";
-	} else {
+	    } 
+    else 
+        {
 		$ordersort="";
-	}
+	    }
+
+    # The following hook now returns a query object
     $extrasql=hook("get_alternative_files_extra_sql","",array($resource));
     
-    # Filter by type, if provided.
-    if ($type!="") {$extrasql.= " and alt_type='" . escape_check($type) . "'";}
+    if (!$extrasql)
+        {
+        # Hook inactive, ensure we have an empty query object
+        $extrasql = new PreparedStatementQuery();
+        }
 
-	return sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='".escape_check($resource)."' $extrasql order by ".escape_check($ordersort)." name asc, file_size desc");
+    # Filter by type, if provided.
+    if ($type!="") 
+        {
+        $extrasql->sql.=" AND alt_type=?";
+        $extrasql->parameters=array_merge($extrasql->parameters,array("s",$type));
+        }
+
+    $alt_files_sql="SELECT ref,name,description,file_name,file_extension,file_size,creation_date,alt_type 
+                    FROM resource_alt_files where resource=? ". $extrasql->sql . 
+                   " order by ".$ordersort." name asc, file_size desc";
+
+    $alt_files_parameters=array_merge($extrasql->parameters,array("i",$resource));
+
+	return ps_query($alt_files_sql,$alt_files_parameters);
 	}
 
 /**
@@ -5905,7 +5958,14 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
     $file=$path;
     
     // check for valid image
-    $mime_content_type = mime_content_type($file);
+    if (function_exists('mime_content_type'))
+        {
+        $mime_content_type = mime_content_type($file);
+        }
+    else
+        {
+        $mime_content_type = get_mime_type($file);
+        }
     $is_image = strpos($mime_content_type, "image/");
     if ($is_image === false)
         {

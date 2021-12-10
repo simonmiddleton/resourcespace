@@ -284,13 +284,13 @@ if(!hook("replace_create_user"))
     {
     ?>
     <div class="BasicsBox">
-        <form method="post" action="<?php echo $baseurl_short?>pages/team/team_user.php">
+        <form id="new_user_form" method="post" action="<?php echo $baseurl_short?>pages/team/team_user.php">
             <?php generateFormToken("create_new_user"); ?>
     		<div class="Question">
     			<label for="newuser"><?php echo $lang["createuserwithusername"]?></label>
     			<div class="tickset">
     			 <div class="Inline"><input type=text name="newuser" id="newuser" maxlength="50" class="shrtwidth" /></div>
-    			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
+    			 <div class="Inline"><input name="Submit" id="create_user_button" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
     			</div>
     			<div class="clearerleft"> </div>
     		</div>

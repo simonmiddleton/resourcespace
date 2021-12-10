@@ -774,12 +774,6 @@ $list_display_array=array(15,30,60);
 # How many results per page? (default)
 $default_perpage_list=15;
 
-
-# Group based upload folders? (separate local upload folders for each group)
-$groupuploadfolders=false;
-# Username based upload folders? (separate local upload folders for each user based on username)
-$useruploadfolders=false;
-
 # Enable order by rating? (require rating field updating to rating column)
 $orderbyrating=false;
 
@@ -2374,6 +2368,9 @@ $collection_purge=false;
 $camera_autorotation = false;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
+
+// Default for upload rotation. Will be overridden by user preference.
+$camera_autorotation_checked = true;
 
 # if gnash_dump (gnash w/o gui) is compiled, previews are possible:
 # Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt

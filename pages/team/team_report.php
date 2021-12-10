@@ -12,6 +12,11 @@ include "../../include/reporting_functions.php";
 
 set_time_limit(0);
 $report=getvalescaped("report","");
+$show_date_field = true;
+if ($report != "")
+    {
+    $show_date_field = report_has_date_by_id($report);
+    }
 $period=getvalescaped("period",$reporting_periods_default[0]);
 $period_init=$period;
 $backurl = getval('backurl', '');
@@ -228,15 +233,32 @@ else
     <?php generateFormToken("team_report"); ?>
     <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
 <div class="Question">
+    <script>
+    function show_hide_date()
+        {
+        reports = document.getElementById('report');
+        selected_report = reports.options[reports.selectedIndex];
+        show_date = selected_report.dataset.contains_date;
+        if (show_date == 0)
+            {
+            document.getElementById('date_period').style.display='none';
+            }
+        else
+            {
+            document.getElementById('date_period').style.display='block';
+            }
+        }
+    </script>
 <label for="report"><?php echo $lang["viewreport"]?></label>
-<select id="report" name="report" class="stdwidth">
+<select id="report" name="report" class="stdwidth" onchange="show_hide_date();">
     <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
 <?php
 foreach($report_options as $report_opt)
     {
     echo sprintf(
-        '<option value="%s"%s>%s</option>',
+        '<option value="%s" data-contains_date=%d %s>%s</option>',
         $report_opt['ref'],
+        ($report_opt['contains_date'] == true ? 1 : 0),
         ($report_opt['ref'] == $report ? ' selected' : ''),
         htmlspecialchars($report_opt['name']));
     }
@@ -247,6 +269,14 @@ foreach($report_options as $report_opt)
 
 <?php include "../../include/date_range_selector.php" ?>
 
+<?php if (!$show_date_field)
+    {
+    ?>
+    <script>
+        document.getElementById('date_period').style.display='none';
+    </script>
+    <?php
+    } ?>
 
 <!-- E-mail Me function -->
 <div id="EmailMe" <?php if ($period_init==-1) { ?>style="display:none;"<?php } ?>>

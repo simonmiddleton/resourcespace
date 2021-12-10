@@ -18,7 +18,7 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 	# Check if a user with that username already exists
 	if ($user_preferences_change_username && $username != $newUsername)
 		{
-		$existing = ps_query('SELECT ref FROM user WHERE username = ?'. ['s', $newUsername]);
+		$existing = ps_query('SELECT ref FROM user WHERE username = ?', ['s', $newUsername]);
 		if (!empty($existing))
 			{
 			$GLOBALS['errorUsername'] = $lang['useralreadyexists'];

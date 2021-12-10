@@ -115,7 +115,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			{
 			global $resource_types;
 			?>
-            <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+            <select id="field_edit_<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
             <option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
 
             <?php
@@ -137,7 +137,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			//natsort($field_types);
 			?>
-                <select id="<?php echo $propertyname ?>"
+                <select id="field_edit_<?php echo $propertyname ?>"
                         name="<?php echo $propertyname ?>"
                         class="stdwidth"
                         onchange="
@@ -166,7 +166,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                                         {
                                             this.form.submit(); 
                                         } else {
-                                            jQuery('#type').val(current_type);
+                                            jQuery('#field_edit_type').val(current_type);
                                         }
                                 }
 								else
@@ -233,7 +233,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				// The linked_data_field column is is only used for date range fields at present			
 				// Used to store the raw EDTF string submitted
 				?>
-				<input name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+				<input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
 				<?php
 				}
 			}
@@ -244,7 +244,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			
 			?>
-			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+			  <select id="field_edit_<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
 				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
 				<?php
 				foreach($allfields as $field)
@@ -263,24 +263,24 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			{
 			if ($propertyname=="advanced_search" && $system_date_field)
                 {
-                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                ?><input id="field_edit_<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
                 $helptext=$lang["property-system_date_help_text"];
                 }
             else
                 {
-                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                ?><input id="field_edit_<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
                 }
 			}
 		elseif($type==2)
 			{
 			?>
-			<textarea class="stdwidth" rows="5" id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
+			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo $propertyname ?>" name="<?php echo $propertyname ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
 			<?php
 			}
 		else
 			{
 			?>
-			<input name="<?php echo $propertyname ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+			<input id="field_edit_<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
 			<?php
 			}
 
@@ -664,8 +664,8 @@ else
     <?php
     }?>
 
-<input type="hidden" name="save" id="save" value="yes"/>
-<input type="hidden" name="delete" id="delete" value=""/>
+<input type="hidden" name="save" id="field_edit_save" value="yes"/>
+<input type="hidden" name="delete" id="field_edit_delete" value=""/>
 </form>
 
 

@@ -40,7 +40,7 @@ if($camera_autorotation)
 
     if($autorotate == "")
         {
-        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : $camera_autorotation_checked);
         }
     else
         {
@@ -2025,18 +2025,22 @@ else
            </label><?php
 
         # Autosave display
-          if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
+        if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
 
-          <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
-          if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
-          
-          $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
-          $related = get_related_resources($relatedref);
+        <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
+        if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
+        
+        if (!$editsearch)
+            {
+            $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+            $related = get_related_resources($relatedref);
 
-          echo ((getval("resetform","")!="")?"":join(", ", $related))?></textarea>
+            echo ((getval("resetform","")!="")?"":join(", ", $related));
+            }
+        ?></textarea>
 
-          <div class="clearerleft"> </div>
-          </div><?php
+        <div class="clearerleft"> </div>
+        </div><?php
        } 
     }
     

@@ -18,14 +18,23 @@ if(temp_local_download_remote_file($src_url) !== false)
     return false;
     }
 
-if(temp_local_download_remote_file($src_fpath) === false)
+$localcopy = temp_local_download_remote_file($src_fpath);    
+if($localcopy === false)
     {
     echo 'Downloading (ie. copy) a file under temp/remote_files/ - ';
     return false;
     }
 
+// Ensure copy does not fail if called twice
+$repeatcopy = temp_local_download_remote_file($localcopy);
+if($repeatcopy != $localcopy)
+    {
+    echo 'Repeat call to temp_local_download_remote_file() failed - ';
+    return false;
+    }
 
 // Teardown
+unlink($localcopy);
 unlink($src_fpath);
 unset($src_filename, $src_fpath, $src_url);
 
