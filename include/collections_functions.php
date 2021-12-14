@@ -4973,7 +4973,8 @@ function get_featured_collections(int $parent, array $ctx)
             LEFT JOIN collection AS cc ON c.ref = cc.parent
                 WHERE c.`type` = %s
                   AND c.parent %s
-             GROUP BY c.ref",
+             GROUP BY c.ref
+             ORDER BY c.order_by",
             COLLECTION_TYPE_FEATURED,
             sql_is_null_or_eq_val((string) $parent, $parent == 0)
             )
