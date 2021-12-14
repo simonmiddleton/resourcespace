@@ -232,7 +232,7 @@ $lang["gotoadvancedsearch"]="zur erweiterten Suche";
 $lang["viewnewmaterial"]="neue Einträge anzeigen";
 $lang["researchrequestservice"]="Suchanfrage";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Ressourcen";
 $lang["overquota"]="Speicherplatz erschöpft; es können keine weiteren Ressourcen hinzugefügt werden";
 $lang["managearchiveresources"]="Archivierte Ressourcen verwalten";
@@ -266,7 +266,7 @@ $lang["pluginmanager"]="Plugin Manager";
 $lang["users"]="Benutzer";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="E-Mail Empfänger";
 $lang["emailsubject"]="E-Mail Betreff";
 $lang["emailtext"]="E-Mail Text";
@@ -276,10 +276,10 @@ $lang["emailsent"]="E-Mail wurde gesendet.";
 $lang["mustspecifyoneuser"]="Sie müssen mindestens einen Benutzer auswählen";
 $lang["couldnotmatchusers"]="Keine passende Benutzer gefunden (oder Benutzer mehrfach angegeben)";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Kommentare";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Durch Benutzer zur Freischaltung eingereichte Ressourcen anzeigen";
 $lang["userpending"]="Durch Benutzer zur Freischaltung eingereichte Ressourcen";
 $lang["viewuserpendingsubmission"]="Durch Benutzer hochgeladene Ressourcen anzeigen";

@@ -41,7 +41,7 @@ $lang["gotoadvancedsearch"]="Ir para a Busca Avançada";
 $lang["viewnewmaterial"]="Ver Novo Conteúdo";
 $lang["researchrequestservice"]="Serviço de Requisição de Pesquisa";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Gerenciar Conteúdo";
 $lang["overquota"]="Sem espaço em disco. Não é possível adicionar conteúdo.";
 $lang["managearchiveresources"]="Gerenciar Conteúdo em Arquivo";
@@ -73,7 +73,7 @@ $lang["resourceidnotfound"]="A ID do conteúdo não foi encontrada";
 $lang["inclusive"]="(inclusive)";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Destinatários do Email";
 $lang["emailsubject"]="Assunto";
 $lang["emailtext"]="Mensagem";
@@ -82,10 +82,10 @@ $lang["emailsent"]="O email foi enviado.";
 $lang["mustspecifyoneuser"]="Ao menos um usuário deve ser especificado.";
 $lang["couldnotmatchusers"]="Não foi possível encontrar todos os usuários, ou os nomes estão duplicados";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Comentários";
 
-# Team Centre - Content management
+# Admin - Content management
 $lang["viewuserpending"]="Ver Contribuições com Revisão Pendentes";
 $lang["searcharchivedresources"]="Procurar Conteúdo Arquivado";
 $lang["viewresourcespendingarchive"]="Ver Conteúdo com Arquivamento Pendente";

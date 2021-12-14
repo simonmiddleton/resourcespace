@@ -218,7 +218,7 @@ else
     {
     // Filter out reports not valid for the context you're in:
     // - if running report on search results, then drop the ones that don't have support for non-correlated SQL
-    // - if viewing reports normally (from team centre), then remove the ones that support search results
+    // - if viewing reports normally (from Admin), then remove the ones that support search results
     if($run_report_on_search_results != $report_opt['support_non_correlated_sql'])
         {
         continue;

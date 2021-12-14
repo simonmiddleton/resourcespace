@@ -42,7 +42,7 @@ $lang["gotoadvancedsearch"]="Zaawansowane szukanie";
 $lang["viewnewmaterial"]="Zobacz najnowsze";
 $lang["researchrequestservice"]="Usługa żądań wyszukiwania";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Zarządzaj zasobami";
 $lang["overquota"]="Za duży rozmiar; nie mogę dodać.";
 $lang["managearchiveresources"]="Zasoby archiwalne";
@@ -75,7 +75,7 @@ $lang["pluginssetup"]="Zarządzaj dodatkami";
 $lang["pluginmanager"]="Menadżer dodatków";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Odbiorca(y)";
 $lang["emailsubject"]="Tytuł";
 $lang["emailtext"]="Tekst";
@@ -84,10 +84,10 @@ $lang["emailsent"]="E-mail został wysłany.";
 $lang["mustspecifyoneuser"]="Musisz wpisać chociaż jednego odbiorcę";
 $lang["couldnotmatchusers"]="Nie można znaleźć niektórych odbiorców, albo wpisałeś kogoś podwójnie";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Komentarze";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Zobacz udostępione zasoby użytkownika oczekujące na sprawdzenie";
 $lang["viewuserpendingsubmission"]="Zobacz udostępione zasoby użytkownika w trakcie wysyłania";
 $lang["searcharchivedresources"]="Przeszukaj archiwum";
@@ -360,7 +360,7 @@ $lang["add"]="Dodaj";
 $lang["create"]="Utwórz";
 $lang["group"]="Grupa";
 $lang["confirmaddgroup"]="Czy na pewno chcesz dodać wszystkich użytkowników w tej grupie?";
-$lang["backtoteamhome"]="back to team centre home";
+$lang["backtoteamhome"]="back to Admin home";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="ID Zasobu";
 $lang["id"]="ID";
 $lang["date"]="Data";

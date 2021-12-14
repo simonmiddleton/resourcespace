@@ -527,8 +527,8 @@ $store_uploadedrefs=false;
 # Suppress SQL information in the debug log?
 $suppress_sql_log = false;
 
-# display an alert icon next to the team centre link 
-# and the relevant team centre item when there are requests that need managing
+# display an alert icon next to the Admin link 
+# and the relevant Admin item when there are requests that need managing
 # only affects users with permissions to do this.
 $team_centre_alert_icon = true;
 

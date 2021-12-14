@@ -574,7 +574,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                         ?>
                     </li><?php
                     } ?>
-                <!-- End of team centre link -->
+                <!-- End of Admin link -->
                 
                 <?php hook("addtoplinks"); ?>
                 

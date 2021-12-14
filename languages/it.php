@@ -40,7 +40,7 @@ $lang["gotoadvancedsearch"]="Ricerca avanzata";
 $lang["viewnewmaterial"]="Vedi il nuovo materiale";
 $lang["researchrequestservice"]="Richiedi una ricerca";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Gestisci le risorse";
 $lang["overquota"]="Spazio su disco insuffieciente; impossibile aggiungere risorse";
 $lang["managearchiveresources"]="Gestisci risorse d'archivio";
@@ -69,7 +69,7 @@ $lang["resourceidnotfound"]="La risorsa ID non e' stata trovata";
 $lang["inclusive"]="(incluso)";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Destinatari E-mail";
 $lang["emailsubject"]="Titolo E-mail";
 $lang["emailtext"]="Testo E-mail";
@@ -78,10 +78,10 @@ $lang["emailsent"]="L'email e' stata inviata.";
 $lang["mustspecifyoneuser"]="Devi specificare almeno un utente";
 $lang["couldnotmatchusers"]="Non trovo tutti i nomi utente, o i nomi utente sono doppi";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Commenti";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Vedi le risorse uploadate che aspettano una revisione";
 $lang["searcharchivedresources"]="Cerca risorse archiviate";
 $lang["viewresourcespendingarchive"]="Vedi le risorse che aspettano per l'archivio";
@@ -337,7 +337,7 @@ $lang["add"]="Aggiungi";
 $lang["create"]="Crea nuovo";
 $lang["group"]="Gruppo";
 $lang["confirmaddgroup"]="Sei sicuro di voler aggiungere tutti i membri a questo gruppo?";
-$lang["backtoteamhome"]="torna al Team Centre";
+$lang["backtoteamhome"]="torna al Admin";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="ID della risorsa";
 $lang["id"]="ID";
 $lang["date"]="Data";

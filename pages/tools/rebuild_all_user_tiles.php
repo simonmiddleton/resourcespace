@@ -1,7 +1,7 @@
 <?php
 /*
  * Rebuild All User Dashes from existing all user tiles.
- * Before running this tool, use the "manage all user tiles" tool in Team Centre to get the order as you wish it to be.
+ * Before running this tool, use the "manage all user tiles" tool in Admin to get the order as you wish it to be.
  * This WILL NOT delete existing user only tiles
  */
 

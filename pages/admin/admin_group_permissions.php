@@ -289,7 +289,7 @@ DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 DrawOption("t", $lang["can_access_team_centre"], false, true);
 if (in_array("t",$permissions))
 	{
-	# Team Centre options	
+	# Admin options	
 	DrawOption("r", $lang["can_manage_research_requests"]);
 	DrawOption("R", $lang["can_manage_resource_requests"], false, true);
 	if (in_array("R",$permissions))	

@@ -309,7 +309,7 @@ $tile_styles['conf']  = array('blank', 'analytics');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
-# Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
+# Only those with admin privileges can modify the dash and this must be done from the Admin > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;
 
 # Options to show/hide the tiles on the home page

@@ -198,7 +198,7 @@ $lang["gotoadvancedsearch"]="Mene kehittyneempään hakuun";
 $lang["viewnewmaterial"]="Katso uutta materiaalia";
 $lang["researchrequestservice"]="Tutkimuspyyntöhaku";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Hallitse resursseja";
 $lang["overquota"]="Levytila täynnä; ei voi lisätä resursseja";
 $lang["managearchiveresources"]="Hallitse arkistoresursseja";
@@ -231,7 +231,7 @@ $lang["pluginssetup"]="Hallitse lisäosia";
 $lang["pluginmanager"]="Lisäosien hallinta";
 $lang["users"]="käyttäjiä";
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Sähköpostin vastaanottajat";
 $lang["emailsubject"]="Sähköpostin aihe";
 $lang["emailtext"]="Sähköpostin teksti";
@@ -241,10 +241,10 @@ $lang["emailsent"]="Sähköposti on lähetetty.";
 $lang["mustspecifyoneuser"]="Sinun täytyy lisätä ainakin yksi käyttäjä";
 $lang["couldnotmatchusers"]="Kaikkia käyttäjänimiä ei löydy, tai käyttäjänimiä on kahteen kertaan";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Kommentit";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Näytä arviointia odottavat käyttäjien tuottamat resurssit";
 $lang["userpending"]="Arviointia odottavat käyttäjien tuottamat resurssit";
 $lang["viewuserpendingsubmission"]="Näytä käyttäjien tuottamat lähetystä odottavat resurssit";
