@@ -203,7 +203,8 @@ if($external_upload)
         "{$baseurl}/pages/edit.php",
         array('upload_review_mode' => true,
               'collection' => $usercollection,
-              'k' => $k)
+              'k' => $k,
+              'resetform' => true)
         );     
     }
 elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
@@ -237,7 +238,8 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
             "{$baseurl}/pages/edit.php",
             array(
                 'upload_review_mode' => true,
-                'collection_add' => $collection_add
+                'collection_add' => $collection_add,
+                'resetform' => true
             ));	
         }
 
@@ -871,7 +873,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
-    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true"));
+    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true", 'resetform' => true));
     redirect($redirecturl);
     exit();
 	}
