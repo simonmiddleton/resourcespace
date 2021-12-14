@@ -1368,11 +1368,7 @@ if($import && isset($folder_path))
         // Move across the resource access. Custom access gets remapped.
         if(in_array($src_resource['access'], RESOURCE_ACCESS_TYPES))
             {
-            sql_query(sprintf(
-                "UPDATE resource SET access = '%u' WHERE ref = '%s'",
-                escape_check($src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access']),
-                escape_check($new_resource_ref)
-            ));
+            $new_resource_acccess = $src_resource['access'] == RESOURCE_ACCESS_CUSTOM_GROUP ? $custom_access_new_value_spec : $src_resource['access'];
             }
         else
             {
@@ -1380,6 +1376,22 @@ if($import && isset($folder_path))
             exit(1);
             }
 
+        $new_resource_data = [
+            'creation_date' => $src_resource['creation_date'] ?: null,
+            'rating' => $src_resource['rating'] !== '' ? (int) $src_resource['rating'] : null,
+            'user_rating' => $src_resource['user_rating'] !== '' ? (int) $src_resource['user_rating'] : null,
+            'access' => (int) $new_resource_acccess,
+            'mapzoom' => $src_resource['mapzoom'] !== '' ? (int) $src_resource['mapzoom'] : null,
+            'modified' => $src_resource['modified'] ?: null,
+            'geo_lat' => $src_resource['geo_lat'] !== '' ? (int) $src_resource['geo_lat'] : null,
+            'geo_long' => $src_resource['geo_long'] !== '' ? (int) $src_resource['geo_long'] : null,
+        ];
+        $new_resource_data = array_diff($new_resource_data, array_filter($new_resource_data, 'is_null'));
+        if(!empty($new_resource_data) && !put_resource_data($new_resource_ref, $new_resource_data))
+            {
+            logScript("ERROR: unable to update the new resource properties!");
+            exit(1);
+            }
 
         // we don't want to extract, revert or autorotate. This is a basic file pull into the DEST system from a remote SRC
         $job_data = array(
