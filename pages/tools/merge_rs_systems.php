@@ -1383,8 +1383,8 @@ if($import && isset($folder_path))
             'access' => (int) $new_resource_acccess,
             'mapzoom' => $src_resource['mapzoom'] !== '' ? (int) $src_resource['mapzoom'] : null,
             'modified' => $src_resource['modified'] ?: null,
-            'geo_lat' => $src_resource['geo_lat'] !== '' ? (int) $src_resource['geo_lat'] : null,
-            'geo_long' => $src_resource['geo_long'] !== '' ? (int) $src_resource['geo_long'] : null,
+            'geo_lat' => $src_resource['geo_lat'] !== '' ? $src_resource['geo_lat'] : null,
+            'geo_long' => $src_resource['geo_long'] !== '' ? $src_resource['geo_long'] : null,
         ];
         $new_resource_data = array_diff($new_resource_data, array_filter($new_resource_data, 'is_null'));
         if(!empty($new_resource_data) && !put_resource_data($new_resource_ref, $new_resource_data))
