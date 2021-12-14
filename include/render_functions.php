@@ -5517,7 +5517,7 @@ function render_message($message="")
             {
             $msgdata[] = "<img title='" . htmlspecialchars($sendername) . "' alt='" . htmlspecialchars($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";  // %%PROFILEIMAGE%%
             }  
-        $msgdata[] = $message["message"];  // %%MESSAGE%%     
+        $msgdata[] = htmlspecialchars($message["message"]);  // %%MESSAGE%%     
         }
 
     $messagehtml = "<div class='%%CLASSES%%' %%EXTRA%%>
