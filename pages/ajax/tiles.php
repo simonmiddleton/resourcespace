@@ -48,7 +48,7 @@ while((     !is_file($file)
             ||
             (filemtime($file)<time()-$geo_tile_cache_lifetime)
             ||
-            !in_array(mime_content_type($file),array("image/png","image/jpeg"))
+            !in_array(get_mime_type($file),array("image/png","image/jpeg"))
             )
         && 
             $gettile
@@ -181,7 +181,7 @@ while((     !is_file($file)
         }
     }
 
-if(!is_file($file) || !in_array(mime_content_type($file),array("image/png","image/jpeg")))
+if(!is_file($file) || !in_array(get_mime_type($file),array("image/png","image/jpeg")))
     {
     // No tiles available at requested resolution
     http_response_code(404);
