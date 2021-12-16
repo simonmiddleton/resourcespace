@@ -80,21 +80,20 @@ if (getval("save",'') != '' && enforcePostRequest(false))
 
 include "../include/header.php";
 
-
 if(isset($download_usage_prevent_options))
     { ?>
     <script>
         function checkvalidusage() {
             validoptions = new Array(<?php echo "'" . implode("','",$download_usage_prevent_options) . "'" ?>);
-            if(jQuery.inArray( jQuery('#usage').val(), validoptions )!=-1) {
-                jQuery('input[type="submit"]').attr('disabled','disabled')
+            if (jQuery.inArray(jQuery('#usage').find(":selected").text(), validoptions ) !=- 1) {
+                jQuery('#submit').prop('disabled', true).css("filter", "opacity(0.25)");
                 alert("<?php echo $lang["download_usage_option_blocked"] ?>");
             }
             else {
-                jQuery('input[type="submit"]').removeAttr('disabled');
+                jQuery('#submit').prop('disabled', false).css("filter", "opacity(1)");
             }
         }
-    </script>
+    </script>   
     <?php
     } ?>
 
