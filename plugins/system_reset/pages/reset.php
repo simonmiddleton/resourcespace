@@ -57,7 +57,7 @@ if (getval("submitted","")!="")
         $table=(array_values($table)[0]); # Get table name
         if ($table!="user")
             {
-            ps_query("drop table " . $table,false,-1,false);
+            ps_query("drop table " . $table,array(),false,-1,false);
             }
         }
     
