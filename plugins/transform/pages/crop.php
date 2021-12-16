@@ -891,14 +891,12 @@ renderBreadcrumbs($links_trail);
             jQuery(document).ready(function ()
                 {
                 jQuery('input[type=radio][name=saveaction]').change(function()
-                    {                
+                    {        
                     jQuery('.imagetools_save_action').hide();
                     if(this.value=='alternative')
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_alternative_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -906,8 +904,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_download_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -917,6 +913,7 @@ renderBreadcrumbs($links_trail);
                         jQuery('#imagetools_slideshow_actions').show();
                         jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
                         jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
+                        jQuery('#size_preset_select').val('');
                         if(typeof jcrop_active == 'undefined' || !jcrop_active)
                             {
                             CropManager.attachCropper();
@@ -928,8 +925,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_original_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -937,8 +932,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_preview_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
