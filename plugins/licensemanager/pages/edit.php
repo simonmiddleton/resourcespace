@@ -161,24 +161,26 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["indicateusagemedium"]?></label>
+<table>
 <?php
 $s=trim_array(explode(",",$license["license_usage"]));
 $allchecked=true;
 foreach ($license_usage_mediums as $medium)
     {
     ?>
+    <tr><td>
     <input type="checkbox" class="license_usage" name="license_usage[]" value="<?php echo $medium ?>" <?php if (in_array($medium, $s)) { ?>checked<?php } else {$allchecked=false;} ?>>&nbsp;<?php echo lang_or_i18n_get_translated($medium, "license_usage-") ?>
-    &nbsp;
-    &nbsp;
-    &nbsp;
+    </td></tr>
     <?php
     }
 ?>
 
     <!-- Option to tick all mediums -->
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox"
-onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>
-    /><?php echo $lang["selectall"] ?>
+    <tr><td>
+        <input type="checkbox" onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>/><?php echo $lang["selectall"] ?>
+    </td></tr>
+
+</table>
 
 <div class="clearerleft"> </div></div>
 

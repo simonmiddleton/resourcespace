@@ -177,24 +177,26 @@ include "../../../include/header.php";
 
 
 <div class="Question"><label><?php echo $lang["indicateusagemedium"]?></label>
+<table>
 <?php
 $s=trim_array(explode(",",$consent["consent_usage"]));
 $allchecked=true;
 foreach ($consent_usage_mediums as $medium)
     {
     ?>
+    <tr><td>
     <input type="checkbox" class="consent_usage" name="consent_usage[]" value="<?php echo $medium ?>" <?php if (in_array($medium, $s)) { ?>checked<?php } else {$allchecked=false;} ?>>&nbsp;<?php echo lang_or_i18n_get_translated($medium, "consent_usage-") ?>
-    &nbsp;
-    &nbsp;
-    &nbsp;
+    </td></tr>
     <?php
     }
 ?>
-
+    <tr><td>
     <!-- Option to tick all mediums -->
-    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox"
+    <input type="checkbox"
 onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>
     /><?php echo $lang["selectall"] ?>
+    </td></tr>
+</table>
 
 <div class="clearerleft"> </div></div>
 

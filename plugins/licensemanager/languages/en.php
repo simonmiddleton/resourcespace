@@ -28,3 +28,5 @@ $lang["linkedresources"]="Linked resources";
 $lang["linklicense"]="Link license";
 $lang["unlinklicense"]="Unlink license";
 $lang["selectlicence"]="Please select a License ID";
+
+$lang['license_manager_mediums']='License usage mediums';
