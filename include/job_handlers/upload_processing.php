@@ -1,7 +1,8 @@
 <?php
 include_once __DIR__ . '/../image_processing.php';
 # $job_data["resource"]
-# $job_data["extract"]
+# $job_data["extract"] -> Should the embedded metadata be extracted during this process? Please note that this is used 
+#                         for the no_exif param where false means to extract metadata!
 # $job_data["revert"]
 # $job_data["autorotate"]
 # $job_data["archive"] -> optional based on $upload_then_process_holding_state
@@ -34,14 +35,14 @@ if($resource!==false && is_null($alternative))
         {
         $status = upload_file_by_url(
             $job_data["resource"],
-            $job_data["extract"],
+            !$job_data["extract"],
             $job_data["revert"],
             $job_data["autorotate"],
             $job_data["upload_file_by_url"]);
         }
     else
         {
-        $status=upload_file($job_data["resource"], $job_data["extract"], $job_data["revert"], $job_data["autorotate"] ,"", true);
+        $status=upload_file($job_data["resource"], !$job_data["extract"], $job_data["revert"], $job_data["autorotate"] ,"", true);
         }
 	
 	# update the archive status
