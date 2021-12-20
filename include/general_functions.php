@@ -4821,7 +4821,8 @@ function get_system_status()
     // Return active user count (last 7 days)
     $return['results']['recent_user_count'] = [
         'status' => 'OK',
-        'info' => get_recent_users(7)
+        'info' => get_recent_users(7),
+        'within_year' => get_recent_users(365)
     ];
 
     // Check if plugins have any warnings
