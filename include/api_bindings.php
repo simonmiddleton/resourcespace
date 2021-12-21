@@ -627,6 +627,15 @@ function api_get_field_options($ref, $nodeinfo = false)
         
     return get_field_options($ref, $nodeinfo);
     }
+
+function api_get_nodes($ref, $parent=null, $recursive=false, $offset=null, $rows=null, $name="", $use_count=false, $order_by_translated_name=false)
+    {
+    // Check access to field.   
+    if(!metadata_field_view_access($ref))
+        {return false;}
+        
+    return get_nodes($ref, $parent, $recursive, $offset, $rows, $name, $use_count, $order_by_translated_name);
+    }
     
 function api_get_user_collections()
 	{
