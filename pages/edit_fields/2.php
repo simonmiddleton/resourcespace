@@ -166,4 +166,40 @@ if(!hook('customchkboxes', '', array($field)))
 		</fieldset>
         <?php
         }
+
+        if($field['field_constraint'])
+            {
+        ?>
+        <script>
+            if(pagename!='search_advanced')
+                {
+                jQuery(document).ready(function(){
+                    let fieldset = jQuery('fieldset[name="<?php echo htmlentities($field['title'])?>"]');
+                    let checked = fieldset.find('input:checked');
+                    if(checked.length > 0)
+                        {
+                        fieldset.find('input:not(:checked)').prop('disabled', true);
+                        }
+
+                    fieldset.find('input').on('click', function()
+                        {
+                        let parenttable = jQuery(this).parents('tbody');
+                        if(parenttable.find('input:checked').length > 0)
+                            {
+                            parenttable.find('input:not(:checked)').each(function()
+                                {
+                                jQuery(this).prop('disabled', true);    
+                                })
+                            }
+                        else
+                            {
+                            fieldset.find('input').prop('disabled',false);
+                            }
+                        }
+                    )
+                })
+                }
+        </script>        
+        <?php
+            }
     }
