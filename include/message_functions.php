@@ -290,16 +290,21 @@ function message_send_unread_emails()
                 }
             }
         }
-        
+
 	# Get all unread notifications created since last run, or all mesages sent to inactive users. 
     # Build array of sql query parameters
-    $parameters = ps_param_fill($digestusers,"i");
+    $parameters = array();
+    if (count($digestusers) > 0)
+        {
+        $parameters = array_merge($parameters, ps_param_fill($digestusers,"i"));
+        }
     $parameters = array_merge($parameters, array("s",$lastrun));
     if (count($sendall) > 0)
         {
         $parameters = array_merge($parameters, ps_param_fill($sendall,"i"));
         }
-    $unreadmessages=ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0 AND u.ref IN (" . ps_param_insert(count($digestusers)) . ") AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
+    $unreadmessages = ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0"
+      . (count($digestusers) > 0 ? " AND u.ref IN (" . ps_param_insert(count($digestusers)) . ")" : "") . " AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
 
     $inactive_message_auto_digest_period_saved = $inactive_message_auto_digest_period;
 	foreach($digestusers as $digestuser)
