@@ -62,8 +62,13 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     global $lang, $baseurl, $report_rows_attachment_limit;
 
     $ref_escaped = escape_check($ref);
-
     $report = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = '{$ref_escaped}'");
+
+    if (count($report) < 1)
+        {
+        return $lang['error_generic'];
+        }
+
     $has_date_range = report_has_date($report[0]["query"]);
     $report=$report[0];
     $report['name'] = get_report_name($report);
@@ -604,7 +609,7 @@ function get_translated_activity_type($activity_type)
  * 
  * @return boolean  Returns true if a date placeholder was found else false.
  */
-function report_has_date($query)
+function report_has_date(string $query)
     {
     $date_placeholders = array('[from-y]','[from-m]','[from-d]','[to-y]','[to-m]','[to-d]');
     $date_present = false;
@@ -625,11 +630,11 @@ function report_has_date($query)
 /**
  * Checks for the presence of date placeholders in a report's sql query using the report's id.
  *
- * @param  string   $report   Report id of the report to retrieve the query data from the report table.
+ * @param  int   $report   Report id of the report to retrieve the query data from the report table.
  * 
  * @return boolean  Returns true if a date placeholder was found else false.
  */
-function report_has_date_by_id($report)
+function report_has_date_by_id(int $report)
     {
     $query = sql_value("SELECT `query` as value FROM report WHERE ref = '" . escape_check($report) . "'",0);
     $result = report_has_date($query);
