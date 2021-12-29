@@ -119,6 +119,11 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 false, # editable_only
                 true # returnsql
             );
+            if(!is_string($search_sql))
+                {
+                debug("Invalid SQL returned by do_search(). Report cannot be generated");
+                return false;
+                }
             $ncsql = sprintf('(SELECT ncsql.ref FROM (%s) AS ncsql)', $search_sql);
 
             $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $ncsql, $sql);
