@@ -79,7 +79,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
 
         // When changing parent we need to make sure order by is changed as well
         // to reflect the fact that the node has just been added (ie. at the end of the list)
-        if($parent !== $current_node['parent'])
+        if($parent != $current_node['parent'])
             {
             $order_by = get_node_order_by($resource_type_field, true, $parent);
             }
@@ -115,10 +115,15 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
 
     if($returnexisting)
         {
-        // Check for an existing match
-        $existingnode=ps_value("SELECT ref value FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name),0);
-        if($existingnode > 0)
-            {return (int)$existingnode;}
+        // Check for an existing match. MySQL checks case insensitive so case is checked on this side.
+        $existingnode=ps_query("SELECT ref,name FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name),0);
+        if(count($existingnode) > 0)
+            {
+            foreach ($existingnode as $node)
+                {
+                if($node["name"]== $name){return (int)$existingnode;}
+                }
+            }
         }
 
     ps_query($query,$parameters);
