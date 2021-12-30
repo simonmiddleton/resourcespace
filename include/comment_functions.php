@@ -15,13 +15,13 @@ function comments_submit()
 
     if (($comment_to_hide != 0) && (checkPerm("o"))) {
         // Does this comment have any child comments?
-        if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = '?'",array("i",$comment_to_hide),'') != '')
+        if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = ?",array("i",$comment_to_hide),'') != '')
             {
-            ps_query("UPDATE comment SET hide = 1 WHERE ref = '?'",array("i",$comment_to_hide));
+            ps_query("UPDATE comment SET hide = 1 WHERE ref = ?",array("i",$comment_to_hide));
             }
         else
             {
-            ps_query("DELETE FROM comment WHERE ref = '?'",array("i",$comment_to_hide));
+            ps_query("DELETE FROM comment WHERE ref = ?",array("i",$comment_to_hide));
             }
 
         return;
@@ -43,7 +43,7 @@ function comments_submit()
 
         $comment_flag_url .= "#comment${comment_flag_ref}";		// add comment anchor to end of URL
 
-        $comment_body = ps_query("select body from comment where ref='?'",array("i",$comment_flag_ref));
+        $comment_body = ps_query("select body from comment where ref=?",array("i",$comment_flag_ref));
         $comment_body = (!empty($comment_body[0]['body'])) ? $comment_body[0]['body'] : "";
 
         if ($comment_body == "") return;
@@ -102,9 +102,9 @@ function comments_submit()
     $resource_ref =  getvalescaped("resource_ref", 0,true);
 
     $sql_values_prepend = array(
-        "i", ($parent_ref == 0 ? "NULL" : "'$parent_ref'"),
-        "i", ($collection_ref == 0 ? "NULL" : "'$collection_ref'"),
-        "i", ($resource_ref == 0 ? "NULL" : "'$resource_ref'")
+        "i", ($parent_ref == 0 ? NULL : "'$parent_ref'"),
+        "i", ($collection_ref == 0 ? NULL : "'$collection_ref'"),
+        "i", ($resource_ref == 0 ? NULL : "'$resource_ref'")
     );
 
     $sql_values = array_merge($sql_values_prepend,$sql_values,array("s",$body));
