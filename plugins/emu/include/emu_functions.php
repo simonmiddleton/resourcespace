@@ -53,7 +53,7 @@ function get_emu_resources()
         ps_param_fill($emu_resource_types,"i"),
         ["i",$emu_irn_field]
     );
-    $emu_resources = sql_query($sql,$sql_params);
+    $emu_resources = ps_query($sql,$sql_params);
 
     return $emu_resources;
     }
