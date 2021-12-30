@@ -116,12 +116,12 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     if($returnexisting)
         {
         // Check for an existing match. MySQL checks case insensitive so case is checked on this side.
-        $existingnode=ps_query("SELECT ref,name FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name),0);
+        $existingnode=ps_query("SELECT ref,name FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name));
         if(count($existingnode) > 0)
             {
             foreach ($existingnode as $node)
                 {
-                if($node["name"]== $name){return (int)$existingnode;}
+                if($node["name"]== $name){return (int)$node["ref"];}
                 }
             }
         }
