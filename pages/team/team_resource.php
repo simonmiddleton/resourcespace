@@ -74,7 +74,7 @@ include "../../include/header.php";
 
 		<li><i aria-hidden="true" class="fa fa-fw fa-filter"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!unused")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewuncollectedresources"]?></a></li>
 		
-		<li><i aria-hidden="true" class="fas fa-exclamation-triangle"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/search.php?search=!integrityfail&archive=-2,-1,0,1,2,3" onClick="return CentralSpaceLoad(this,true);" title="<?php echo $lang["team_resource_integrity_fail_info"]?>"><?php echo $lang["team_resource_integrity_fail"]?></a></li>
+		<li><i aria-hidden="true" class="fas fa-exclamation-triangle"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/search.php?search=!integrityfail" onClick="return CentralSpaceLoad(this,true);" title="<?php echo $lang["team_resource_integrity_fail_info"]?>"><?php echo $lang["team_resource_integrity_fail"]?></a></li>
 		
         <?php if (checkperm("i")) { ?><li><i aria-hidden="true" class="fa fa-fw fa-archive"></i>&nbsp;<a href="<?php echo $baseurl?>/pages/team/team_archive.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["managearchiveresources"]?></a></li><?php } ?>
 			

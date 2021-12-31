@@ -872,7 +872,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 $sql_filter.= (($sql_filter!="")?" AND ":"") . "archive<>2";
                 }
             }
-        elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata")
+        elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata" || strpos($search,"integrityfail") !== false)
             {hook("search_all_workflow_states_filter");}   
         elseif (count($archive) == 0 || $archive_standard && !$smartsearch)
             {

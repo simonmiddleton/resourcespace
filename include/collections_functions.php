@@ -353,19 +353,19 @@ function add_resource_to_collection(
         || $smartadd
     );
 
-	if ($addpermitted && !$smartadd && (count($collection_block_restypes)>0)) // Can't always block adding resource types since this may be a single resource managed request
-		{
-		if($addtype=="")
-			{
-			$addtype=ps_value("SELECT resource_type value FROM resource WHERE ref = ?",["i",$resource],0);
-			}
-		if(in_array($addtype,$collection_block_restypes))
-			{
-			$addpermitted=false;
-			}
-		}
+    if ($addpermitted && !$smartadd && (count($collection_block_restypes)>0)) // Can't always block adding resource types since this may be a single resource managed request
+        {
+        if($addtype=="")
+            {
+            $addtype=ps_value("SELECT resource_type value FROM resource WHERE ref = ?",["i",$resource],0);
+            }
+        if(in_array($addtype,$collection_block_restypes))
+            {
+            $addpermitted=false;
+            }
+        }
 
-    if ($addpermitted)	
+    if ($addpermitted)
         {
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
@@ -377,7 +377,7 @@ function add_resource_to_collection(
 
             // Check if user can share externally and has open access. We shouldn't add this if they can't share externally, have restricted access or only been granted access
             if (!can_share_resource($resource)){return false;}
-			
+
             # Set the flag so a warning appears.
             global $collection_share_warning;
             # Check to see if all shares have expired
@@ -388,11 +388,11 @@ function add_resource_to_collection(
                 {
                 if($date!="" && $date<$datetime){$collection_share_warning=false;}
                 }
-			
-			for ($n=0;$n<count($keys);$n++)
-				{
-				# Insert a new access key entry for this resource/collection.
-				global $userref;
+
+            for ($n=0;$n<count($keys);$n++)
+                {
+                # Insert a new access key entry for this resource/collection.
+                global $userref;
                 ps_query(
                     'INSERT INTO external_access_keys(resource, access_key, user, collection, `date`, expires, access, usergroup, password_hash) VALUES (?, ?, ?, ?, now(), ?, ?, ?, ?)',
                     [
@@ -405,37 +405,36 @@ function add_resource_to_collection(
                         'i', $keys[$n]['usergroup'] ?: null,
                         's', $keys[$n]['password_hash'] ?: null,
                     ]
-                );				
-				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
-				}
-			
-			}
+                );
+                collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
+                }            
+            }
 
-		hook("Addtocollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		
-		if(!hook("addtocollectionsql", "", array( $resource,$collection, $size)))
-			{
+        hook("Addtocollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
+
+        if(!hook("addtocollectionsql", "", array( $resource,$collection, $size)))
+            {
             ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
             ps_query(
                 'INSERT INTO collection_resource(collection, resource, purchase_size) VALUES (?, ?, ?)',
                 ['i', $collection, 'i', $resource, 's', $size ?: null]
             );
-			}
-		
-		collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
+            }
+        
+        collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
 
-		// Clear theme image cache
-		clear_query_cache("themeimage");
+        // Clear theme image cache
+        clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
 
-		return true;
-		}
-	else
-		{
-		hook("Addtocollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return $lang["cantmodifycollection"];
-		}
-	}
+        return true;
+        }
+    else
+        {
+        hook("Addtocollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
+        return $lang["cantmodifycollection"];
+        }
+    }
 
 /**
  * Remove resource $resource from collection $collection
@@ -456,31 +455,31 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
         }
 
     if (collection_writeable($collection)||$smartadd)
-		{	
-		hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		
-		if(!hook("removefromcollectionsql", "", array( $resource,$collection, $size)))
-			{
+        {	
+        hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
+        
+        if(!hook("removefromcollectionsql", "", array( $resource,$collection, $size)))
+            {
             $delparams = ["i",$resource,"i",$collection];
-			ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
-			ps_query("DELETE FROM external_access_keys WHERE resource = ? AND collection = ?",$delparams);
-			}
-		
-		// log this
-		collection_log($collection,LOG_CODE_COLLECTION_REMOVED_RESOURCE,$resource);
+            ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
+            ps_query("DELETE FROM external_access_keys WHERE resource = ? AND collection = ?",$delparams);
+            }
+        
+        // log this
+        collection_log($collection,LOG_CODE_COLLECTION_REMOVED_RESOURCE,$resource);
 
-		// Clear theme image cache
-		clear_query_cache("themeimage");
+        // Clear theme image cache
+        clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
 
-		return true;
-		}
-	else
-		{
-		hook("Removefromcollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
-		return $lang["cantmodifycollection"];
-		}
-	}
+        return true;
+        }
+    else
+        {
+        hook("Removefromcollectionfail", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
+        return $lang["cantmodifycollection"];
+        }
+    }
     
 /**
  * Add resource(s) $resources to collection $collection

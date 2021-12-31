@@ -120,10 +120,10 @@ if(count($checkfailed) > 0)
         $message = $lang['file_integrity_summary_failed'];
         $notification_message = $message; 
 
-        $message   .= "\r\n" . $baseurl . "pages/search.php?search=!integrityfail&archive=-2,-1,0,1,2,3";; 
-        $url        = $baseurl_short . "pages/search.php?search=!integrityfail&archive=-2,-1,0,1,2,3";;
+        $message   .= "\r\n" . $baseurl . "pages/search.php?search=!integrityfail"; 
+        $url        = $baseurl_short . "pages/search.php?search=!integrityfail";
         $templatevars['message']    = $message;
-        $templatevars['url']        = $baseurl . "/pages/search.php?search=!integrityfail&archive=-2,-1,0,1,2,3";
+        $templatevars['url']        = $baseurl . "/pages/search.php?search=!integrityfail";
         $admin_notify_emails        = array();
         $admin_notify_users         = array();
         $notify_users               = get_notification_users("SYSTEM_ADMIN");
