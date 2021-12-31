@@ -1569,7 +1569,7 @@ function do_search(
     if(checkperm("J") && $search != $upload_collection)
         {
         $collection_join = " JOIN collection_resource AS jcr ON jcr.resource = r.ref JOIN collection AS jc ON jcr.collection = jc.ref";
-        $collection_join .= featured_collections_permissions_filter_sql("AND", "jc.ref");
+        $collection_join .= featured_collections_permissions_filter_sql("AND", "jc.ref",true);
 
         $sql_join = $collection_join . $sql_join;
         }

@@ -3845,7 +3845,7 @@ function get_themes_by_resource($ref)
                   %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
         escape_check($ref),
         COLLECTION_TYPE_FEATURED . ", " . COLLECTION_TYPE_PUBLIC,
-        trim(featured_collections_permissions_filter_sql("WHERE", "c.ref"))
+        trim(featured_collections_permissions_filter_sql("WHERE", "c.ref",true))
     );
 
     $results = sql_query($sql);

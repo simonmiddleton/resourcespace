@@ -60,8 +60,9 @@ update_field($resource_b, 'title', 'test_002501_B');
 // --- End of setup
 
 
-
 // Search - excluding FCs and include public collections
+// Cache should be reset before testing
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('level', $order_by, $sort, true);
 $found_col_refs = array_column($spc_result, 'ref');
 if(!in_array($public_col, $found_col_refs))
@@ -73,6 +74,8 @@ if(!in_array($public_col, $found_col_refs))
 
 // Search - including FCs and excluding public ones
 add_resource_to_collection($resource_a, $fc_a);
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
+
 $spc_result = search_public_collections('level', $order_by, $sort, false);
 $found_col_refs = array_column($spc_result, 'ref');
 if(!in_array($fc_a, $found_col_refs))
@@ -81,8 +84,8 @@ if(!in_array($fc_a, $found_col_refs))
     return false;
     }
 
-
 // Search in both featured and public collections
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('level', $order_by, $sort, false);
 $found_col_refs = array_column($spc_result, 'ref');
 if([$fc_a, $public_col] != $found_col_refs)
@@ -94,6 +97,7 @@ if([$fc_a, $public_col] != $found_col_refs)
 
 // Search excluding featured collections => this is essentially a search public collections (ie function 
 // was called incorrectly - both featured and public collections are "public".)
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('level', $order_by, $sort, true);
 $found_col_refs = array_column($spc_result, 'ref');
 if(!in_array($public_col, $found_col_refs))
@@ -106,6 +110,7 @@ if(!in_array($public_col, $found_col_refs))
 // Search showing resource count
 add_resource_to_collection($resource_a, $public_col);
 add_resource_to_collection($resource_b, $public_col);
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('level', $order_by, $sort, false, true);
 $found_col_refs = array_column($spc_result, 'count', 'ref');
 if(!($found_col_refs[$fc_a] == 1 && $found_col_refs[$public_col] == 2))
@@ -117,6 +122,7 @@ if(!($found_col_refs[$fc_a] == 1 && $found_col_refs[$public_col] == 2))
 
 // Search for collections confined to the user group (parent, child, sibling)
 $public_collections_confine_group = true;
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('', $order_by, $sort, false);
 $found_col_refs = array_flip(array_column($spc_result, 'ref'));
 if(
@@ -135,9 +141,11 @@ if(
 
 // Override group confinment
 $public_collections_confine_group = false;
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result_no_confinment = search_public_collections('', $order_by, $sort, false);
 $found_col_refs_no_confinment = array_column($spc_result_no_confinment, 'ref');
 $public_collections_confine_group = true;
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result_override_group_restrict = search_public_collections('', $order_by, $sort, false, $include_resources, true);
 $found_col_refs_override_group_restrict = array_column($spc_result_override_group_restrict, 'ref');
 if($found_col_refs_no_confinment != $found_col_refs_override_group_restrict)
@@ -150,6 +158,7 @@ unset($spc_result_no_confinment, $found_col_refs_no_confinment, $spc_result_over
 
 
 // Search for public collections or collections belonging to the user
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('', $order_by, $sort, true, $include_resources, false);
 foreach($spc_result as $spc)
     {
@@ -169,5 +178,6 @@ unset($fc_cat_lvl_a, $fc_cat_lvl_a1, $fc_cat_lvl_b, $fc_cat_lvl_b1, $public_col,
 unset($resource_a, $resource_b);
 unset($spc_result, $found_col_refs);
 unset($original_public_collections_confine_group);
+unset($CACHE_FC_ACCESS_CONTROL);unset($CACHE_FC_PERMS_FILTER_SQL);
 
 return true;

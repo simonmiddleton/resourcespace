@@ -36,7 +36,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         {
         # A-Z search
         $condsql=" WHERE c.name LIKE ?";
-        $condparams = array("s",$find);
+        $condparams = array("s",$find . "%");
         }
     elseif (strlen($find)>1 || is_numeric($find))
         {  
@@ -902,106 +902,154 @@ refresh_collection_frame($collection="")
 
 function search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $include_resources=false, $override_group_restrict=false, $fetchrows=-1)
     {
-    global $userref;
+    global $userref,$public_collections_confine_group,$userref,$usergroup;
 
     $keysql = "";
     $sql = "";
-
+    $sqlparams = []; 
+    $select_extra = "";
     // Validate sort & order_by
     $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
     $order_by = (in_array($order_by, $valid_order_bys) ? $order_by : "name");
 
-	# Keywords searching?
-	$keywords=split_keywords($search);  
-	if (strlen($search)==1 && !is_numeric($search)) 
-		{
-		# A-Z search
-		$sql="and c.name like '" . escape_check($search) . "%'";
-		}
-	elseif (substr($search,0,16)=="collectiontitle:")
-	    {
-	    # A-Z specific title search
-	    
-	    $newsearch="";
-	    for ($n=0;$n<count($keywords);$n++)
-	    	{
-	    	   if (substr($keywords[$n],0,16)=="collectiontitle:") $newsearch.=" ".substr($keywords[$n],16);    // wildcard * - %
-	    	}
+    # Keywords searching?
+    $keywords=split_keywords($search);
+    if (strlen($search)==1 && !is_numeric($search)) 
+        {
+        # A-Z search
+        $sql = "AND c.name LIKE ?";
+        $sqlparams[] = ["s"];$sqlparams[] = $search . "%";
+        }
+    elseif (substr($search,0,16)=="collectiontitle:")
+        {
+        # A-Z specific title search
+        $newsearch="";
+        for ($n=0;$n<count($keywords);$n++)
+            {
+            if (substr($keywords[$n],0,16)=="collectiontitle:")
+                {
+                $newsearch.=" ".substr($keywords[$n],16);    // wildcard * - %
+                }
+            }
 
         $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
-        $sql="and c.name like '$newsearch'";
-	    	
-	    }
-	if (strlen($search)>1 || is_numeric($search))
-		{  
-		
-		$keyrefs=array();
-		for ($n=0;$n<count($keywords);$n++)
-			{
-			if (substr($keywords[$n],0,16)!="collectiontitle:")
-    		    {
-    		    if (substr($keywords[$n],0,16)=="collectionowner:") 
-    		        {
-    			    $keywords[$n]=substr($keywords[$n],16);
-	    		    $keyref=$keywords[$n];
-                       $sql.=" and (u.username rlike '$keyref' or u.fullname rlike '$keyref')";	
+        $sql = "AND c.name LIKE ?";
+        $sqlparams[] = ["s"];$sqlparams[] = $newsearch;
+        }
+    if (strlen($search)>1 || is_numeric($search))
+        {
+        $keyrefs=array();
+        $keyunions = array();
+        $unionselect = "SELECT kunion.collection";
+        for ($n=0;$n<count($keywords);$n++)
+            {
+            if (substr($keywords[$n],0,16)!="collectiontitle:")
+                {
+                if (substr($keywords[$n],0,16)=="collectionowner:")
+                    {
+                    $keywords[$n]=substr($keywords[$n],16);
+                    $keyref=$keywords[$n];
+                    $sql.=" AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
+                    $sqlparams[] = ["i"];$sqlparams[] = $keyref;
+                    $sqlparams[] = ["i"];$sqlparams[] = $keyref;
                     }
-                elseif (substr($keywords[$n],0,19)=="collectionownerref:") 
+                elseif (substr($keywords[$n],0,19)=="collectionownerref:")
                     {
                     $keywords[$n]=substr($keywords[$n],19);
                     $keyref=$keywords[$n];
-                       $sql.=" and (c.user='$keyref')";
-                    } 
+                    $sql.=" AND (c.user=?)";
+                    $sqlparams[] = ["i"];$sqlparams[] = $keyref;
+                    }
                 else
                     {
                     if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
-		    # Support field specific matching - discard the field identifier as not appropriate for collection searches.
-		    if (strpos($keywords[$n],":")!==false) {$keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);}
+                    # Support field specific matching - discard the field identifier as not appropriate for collection searches.
+                    if (strpos($keywords[$n],":")!==false)
+                        {
+                        $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
+                        }
                     $keyref=resolve_keyword($keywords[$n],false);
-                    if ($keyref!==false) {$keyrefs[]=$keyref;}
-                    $keysql .= " JOIN collection_keyword AS k" . $n . " ON k" . $n . ".collection = c.ref AND (k" . $n . ".keyword = '$keyref')";
+                    if ($keyref!==false)
+                        {
+                        $keyrefs[]=$keyref;
+                        }
                     }
-			    }
-			}
+                }
+            }
+        for($n=0;$n<count($keyrefs);$n++)
+            {
+            $select_extra .= ", k.key" . $keyrefs[$n];
+            $unionselect .= ", BIT_OR(key" . $keyrefs[$n] . "_found) AS key" . $keyrefs[$n];
+            $unionsql = "SELECT collection ";
+            for($l=0;$l<count($keyrefs);$l++)
+                {
+                $unionsql .= $keyrefs[$l] == $keyrefs[$n] ? ",TRUE" : ",FALSE";
+                $unionsql .= " AS key" . $keyrefs[$l] . "_found";
+                }
+            $unionsql .= " FROM collection_keyword WHERE keyword=" . $keyrefs[$n];
+            $keyunions[] = $unionsql;
+            $sql .= " AND key" .  $keyrefs[$n];
+            }
+        if(count($keyunions)> 0)
+            {
+            $keysql .= " LEFT OUTER JOIN (" . $unionselect . " FROM (" . implode(" UNION ", $keyunions) . ") kunion GROUP BY collection) AS k ON c.ref = k.collection";
+            }
         }
-	
-	# Restrict to parent, child and sibling groups?
-	global $public_collections_confine_group,$userref,$usergroup;
-	if ($public_collections_confine_group && !$override_group_restrict)
-		{
-		# Form a list of all applicable groups
-		$groups=array($usergroup); # Start with user's own group
-		$groups=array_merge($groups,sql_array("select ref value from usergroup where parent='" . escape_check($usergroup) . "'")); # Children
-		$groups=array_merge($groups,sql_array("select parent value from usergroup where ref='" . escape_check($usergroup) . "'")); # Parent
-		$groups=array_merge($groups,sql_array("select ref value from usergroup where parent<>0 and parent=(select parent from usergroup where ref='" . escape_check($usergroup) . "')")); # Siblings (same parent)
-		
-		$sql.=" and u.usergroup in ('" . join ("','",$groups) . "')";
-		}
+
+    # Restrict to parent, child and sibling groups?
+    if ($public_collections_confine_group && !$override_group_restrict)
+        {
+        # Form a list of all applicable groups
+        $groups=array($usergroup); # Start with user's own group
+        $usergroupparams = ["i",$usergroup];
+        $groups=array_merge($groups,ps_array("SELECT ref value FROM usergroup WHERE parent=?",$usergroupparams)); # Children
+        $groups=array_merge($groups,ps_array("SELECT parent value FROM usergroup WHERE ref=?",$usergroupparams)); # Parent
+        $groups=array_merge($groups,ps_array("SELECT ref value FROM usergroup WHERE parent<>0 AND parent=(SELECT parent FROM usergroup WHERE ref=?)",$usergroupparams)); # Siblings (same parent)
+
+        $sql.=" AND u.usergroup IN (" . ps_param_insert(count($groups)) . ")";
+        $sqlparams = array_merge($sqlparams, ps_param_fill($groups,"i"));
+        }
 
     // Add extra elements to the SELECT statement if needed
-    $select_extra = "";
     if($include_resources)
         {
-        $select_extra .= ", count(DISTINCT cr.resource) AS count";
+        $select_extra .= ", COUNT(DISTINCT cr.resource) AS count";
         }
 
     // Filter by type (public/featured collections)
-    $public_type_filter_sql = "c.`type` = " . COLLECTION_TYPE_PUBLIC;
-    $featured_type_filter_sql = sprintf(
-        "(c.`type` = %s %s)",
-        COLLECTION_TYPE_FEATURED,
-        trim(featured_collections_permissions_filter_sql("AND", "c.ref"))
-    );
+    $public_type_filter_sql = "c.`type` = ?";
+    $public_type_filter_sql_params = ["i",COLLECTION_TYPE_PUBLIC];
+
+
     if($exclude_themes)
         {
         $featured_type_filter_sql = "";
+        $featured_type_filter_sql_params =[];
         }
-    $type_filter_sql = sprintf(
-        ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? "(%s%s)" : "%s%s"),
-        $public_type_filter_sql,
-        ($public_type_filter_sql != "" && $featured_type_filter_sql != "" ? " OR {$featured_type_filter_sql}" : $featured_type_filter_sql)
-    );
+    else
+        {
+        $featured_type_filter_sql = "(c.`type` = ?)";
+        $featured_type_filter_sql_params = ["i",COLLECTION_TYPE_FEATURED];
+        $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
+        if(is_array($fcf_sql))
+            {
+            // Update with the extra condition
+            $featured_type_filter_sql = "(c.`type` = ? " . $fcf_sql[0] . ")";
+            $featured_type_filter_sql_params = array_merge(["i",COLLECTION_TYPE_FEATURED],$fcf_sql[1]);
+            }
+        }
+
+    if($public_type_filter_sql != "" && $featured_type_filter_sql != "")
+        {
+        $type_filter_sql = "(" . $public_type_filter_sql . " OR " . $featured_type_filter_sql . ")";
+        $type_filter_sql_params = array_merge($public_type_filter_sql_params,$featured_type_filter_sql_params);
+        }
+    else
+        {
+        $type_filter_sql = $public_type_filter_sql . $featured_type_filter_sql;
+        $type_filter_sql_params = array_merge($public_type_filter_sql_params,$featured_type_filter_sql_params);
+        }
 
     $where_clause_osql = 'col.`type` = ' . COLLECTION_TYPE_PUBLIC;
     if($featured_type_filter_sql !== '')
@@ -1015,13 +1063,12 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                          SELECT DISTINCT c.*,
                                 u.username,
                                 u.fullname,
-                                if(c.`type` = %s AND COUNT(DISTINCT cc.ref)>0, true, false) AS is_featured_collection_category
+                                IF(c.`type` = %s AND COUNT(DISTINCT cc.ref)>0, true, false) AS is_featured_collection_category
                                 %s
                            FROM collection AS c
                 LEFT OUTER JOIN collection AS cc ON c.ref = cc.parent
                 LEFT OUTER JOIN collection_resource AS cr ON c.ref = cr.collection
                 LEFT OUTER JOIN user AS u ON c.user = u.ref
-                LEFT OUTER JOIN collection_keyword AS k ON c.ref = k.collection
                           %s # keysql
                           WHERE %s # type_filter_sql
                             %s
@@ -1038,10 +1085,8 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $where_clause_osql
     );
 
-    return sql_query($main_sql, '', $fetchrows);
+    return ps_query($main_sql, array_merge($type_filter_sql_params,$sqlparams),'', $fetchrows);
     }
-
-
 
 /**
  * Search within available collections
@@ -1056,8 +1101,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
  */
 function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="DESC", $fetchrows = -1)
     {
-    global $search_includes_themes, $userref, $default_collection_sort;
-    
+    global $search_includes_themes, $default_collection_sort;
     if($order_by=='')
         {
         $order_by=$default_collection_sort;
@@ -1070,25 +1114,23 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
         {
         $quoted_string=true;
         $search=substr($search,1,-1);
-        } 
+        }
+
     $search_includes_themes_now=$search_includes_themes;
     if ($restypes!="") 
         {
         $restypes_x=explode(",",$restypes);
-        $search_includes_themes_now=in_array("themes",$restypes_x);
+        $search_includes_themes_now=in_array("featured",$restypes_x);
         } 
 
     if ($search_includes_themes_now)
         {
         # Same search as when searching within public collections.
-        $collections=search_public_collections($search,"theme","ASC",!$search_includes_themes_now,true,false,$fetchrows);
+        $collections=search_public_collections($search,"name","ASC",!$search_includes_themes_now,true,false,$fetchrows);
         
         $condensedcollectionsresults=array();
         $result=$collections;
         }
-       
-    
-    
     return $result;
     }
 
@@ -2247,79 +2289,78 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         }
 
 	for ($r=0;$r<$searchcount;$r++)
-		{
-		$resource=$results[$r]["ref"];
-		$archivestatus=$results[$r]["archive"];
-		
-		if(in_array($results[$r]["resource_type"],$collection_block_restypes))
-			{
-			$blockedtypes[] = $results[$r]["resource_type"];
-			continue;
-			}
+        {
+        $resource=$results[$r]["ref"];
+        $archivestatus=$results[$r]["archive"];
+        
+        if(in_array($results[$r]["resource_type"],$collection_block_restypes))
+            {
+            $blockedtypes[] = $results[$r]["resource_type"];
+            continue;
+            }
 
-		if (count($keys)>0)
-			{			
-			if ($archivestatus<0 && !$collection_allow_not_approved_share)
-				{
-				$resourcesnotadded[$resource] = $results[$r];
-				continue;
-				}
-			for ($n=0;$n<count($keys);$n++)
-				{
-				# Insert a new access key entry for this resource/collection.
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
+        if (count($keys)>0)
+            {			
+            if ($archivestatus<0 && !$collection_allow_not_approved_share)
+                {
+                $resourcesnotadded[$resource] = $results[$r];
+                continue;
+                }
+            for ($n=0;$n<count($keys);$n++)
+                {
+                # Insert a new access key entry for this resource/collection.
+                sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
                 #log this
-				collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);	
-				
-				# Set the flag so a warning appears.
-				$collection_share_warning=true;	
-				}
-			}
-		}	
-		
-		
-	if (is_array($results))
-		{		
-		$modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results, $resourcesnotadded));
-		if (is_array($modifyNotAdded))
-			$resourcesnotadded = $modifyNotAdded;
+                collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
+                
+                # Set the flag so a warning appears.
+                $collection_share_warning=true;
+                }
+            }
+        }
 
-		for ($n=0;$n<$searchcount;$n++)
-			{
-			$resource=$results[$n]["ref"];
-			if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
-				{
-				sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
-				sql_query("insert into collection_resource(resource,collection,sortorder) values ('$resource','$collection','$n')");
-				
-				#log this
-				collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
-				}
-			}
+    if (is_array($results))
+        {		
+        $modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results, $resourcesnotadded));
+        if (is_array($modifyNotAdded))
+            $resourcesnotadded = $modifyNotAdded;
+
+        for ($n=0;$n<$searchcount;$n++)
+            {
+            $resource=$results[$n]["ref"];
+            if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
+                {
+                sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
+                sql_query("insert into collection_resource(resource,collection,sortorder) values ('$resource','$collection','$n')");
+                
+                #log this
+                collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
+                }
+            }
 		}
 
-	if (!empty($resourcesnotadded) || count($blockedtypes)>0)
-		{
-		# Translate to titles only for displaying them to the user
-		global $view_title_field;
-		$titles = array();
-		foreach ($resourcesnotadded as $resource)
-			{
-			$titles[] = i18n_get_translated($resource['field' . $view_title_field]);
-			}
-		if(count($blockedtypes)>0)
-			{
-			$blocked_restypes=array_unique($blockedtypes);
-			// Return a list of blocked resouce types
-			$titles["blockedtypes"]=$blocked_restypes;
-			}
-		return $titles;
-		}
-	if(count($blockedtypes)>0)
-		{
-		}
-	return array();
-	}
+    if (!empty($resourcesnotadded) || count($blockedtypes)>0)
+        {
+        # Translate to titles only for displaying them to the user
+        global $view_title_field;
+        $titles = array();
+        foreach ($resourcesnotadded as $resource)
+            {
+            $titles[] = i18n_get_translated($resource['field' . $view_title_field]);
+            }
+        if(count($blockedtypes)>0)
+            {
+            $blocked_restypes=array_unique($blockedtypes);
+            // Return a list of blocked resouce types
+            $titles["blockedtypes"]=$blocked_restypes;
+            }
+        return $titles;
+        }
+    if(count($blockedtypes)>0)
+        {
+        }
+    return array();
+    }
 
 /**
  * Returns true or false, can all resources in this collection be edited by the user?
@@ -2330,31 +2371,31 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
  * @return boolean
  */
 function allow_multi_edit($collection,$collectionid = 0)
-	{
-	global $resource;
+    {
+    global $resource;
 
-	if (is_array($collection) && $collectionid == 0)
-		{
-		// Do this the hard way by checking every resource for edit access
-		for ($n=0;$n<count($collection);$n++)
-			{
-			$resource = $collection[$n];
-			if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n]))
-				{
-				return false;
-				}
-			}	
-		}
+    if (is_array($collection) && $collectionid == 0)
+        {
+        // Do this the hard way by checking every resource for edit access
+        for ($n=0;$n<count($collection);$n++)
+            {
+            $resource = $collection[$n];
+            if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n]))
+                {
+                return false;
+                }
+            }	
+        }
 	else
-		{            
-		// Instead of checking each resource we can do a comparison between a search for all resources in collection and a search for editable resources
+        {
+        // Instead of checking each resource we can do a comparison between a search for all resources in collection and a search for editable resources
         $resultcount = 0;
-		if(!is_array($collection))
-			{
-			// Need the collection resources so need to run the search
-			$collectionid = $collection;
-			$collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,false);
-			}
+        if(!is_array($collection))
+            {
+            // Need the collection resources so need to run the search
+            $collectionid = $collection;
+            $collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,false);
+            }
         if(is_array($collection))
             {
             $resultcount = count($collection);
@@ -2365,14 +2406,14 @@ function allow_multi_edit($collection,$collectionid = 0)
             {
             $editcount = count($editresults);
             }
-		if($resultcount != $editcount){return false;}
-		}
-	
-			
-	if(hook('denyaftermultiedit', '', array($collection))) { return false; }
+        if($resultcount != $editcount){return false;}
+        }
 
-	return true;
-	}
+            
+    if(hook('denyaftermultiedit', '', array($collection))) { return false; }
+
+    return true;
+    }
 
 
 /**
@@ -2388,12 +2429,14 @@ function allow_multi_edit($collection,$collectionid = 0)
 */
 function get_featured_collection_resources(array $c, array $ctx)
     {
+    global $usergroup, $userref, $CACHE_FC_RESOURCES, $themes_simple_images;
+    global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
+
     if(!isset($c["ref"]) || !is_int((int) $c["ref"]))
         {
         return array();
         }
 
-    global $CACHE_FC_RESOURCES, $themes_simple_images;
     $CACHE_FC_RESOURCES = (!is_null($CACHE_FC_RESOURCES) && is_array($CACHE_FC_RESOURCES) ? $CACHE_FC_RESOURCES : array());
     // create a unique ID for this result set as the context for the same FC may differ
     $cache_id = $c["ref"] . md5(json_encode($ctx));
@@ -2417,40 +2460,45 @@ function get_featured_collection_resources(array $c, array $ctx)
             }
 
         $node_search = NODE_TOKEN_PREFIX . $c['ref'];
-
         $limit = (!is_null($limit) ? $limit : 1);
 
-        // Access control is still in place (ie permissions are honoured)
+        // Access control is still in place (i.e. permissions are honoured)
         $smart_fc_resources = do_search($node_search, '', 'hit_count', 0, $limit, 'desc', false, 0, false, false, '', true, false, true);
         $smart_fc_resources = (is_array($smart_fc_resources) ? array_column($smart_fc_resources, "ref") : array());
 
         $CACHE_FC_RESOURCES[$cache_id] = $smart_fc_resources;
-
         return $smart_fc_resources;
         }
 
     // Access control
-    $rca_joins = array();
     $rca_where = '';
-    $fc_permissions_where = '';
+    $rca_joins = array();$rca_join_params = array();
+    $fc_permissions_where = '';$fc_permissions_where_params = [];
+    $union="";$unionparams=[];
     if(!checkperm("v"))
         {
-        global $usergroup, $userref;
-        $rca_joins = array(
-            sprintf('LEFT JOIN resource_custom_access AS rca_u ON r.ref = rca_u.resource AND rca_u.user = \'%s\' AND (rca_u.user_expires IS NULL OR rca_u.user_expires > now())', escape_check($userref)),
-            sprintf('LEFT JOIN resource_custom_access AS rca_ug ON r.ref = rca_ug.resource AND rca_ug.usergroup = \'%s\'', escape_check($usergroup)),
-        );
+        // Add joins for user and group custom access
+        $rca_joins[] = 'LEFT JOIN resource_custom_access AS rca_u ON r.ref = rca_u.resource AND rca_u.user = ? AND (rca_u.user_expires IS NULL OR rca_u.user_expires > now())';
+        $rca_join_params [] = "i"; $rca_join_params [] = $userref;
+
+        $rca_joins[] = 'LEFT JOIN resource_custom_access AS rca_ug ON r.ref = rca_ug.resource AND rca_ug.usergroup = ?';
+        $rca_join_params [] = "i"; $rca_join_params [] = $usergroup;
+
         $rca_where = sprintf(
             'AND (r.access < %1$s OR (r.access IN (%1$s, %2$s) AND ((rca_ug.access IS NOT NULL AND rca_ug.access < %1$s) OR (rca_u.access IS NOT NULL AND rca_u.access < %1$s))))',
             RESOURCE_ACCESS_CONFIDENTIAL,
             RESOURCE_ACCESS_CUSTOM_GROUP);
-        $fc_permissions_where = featured_collections_permissions_filter_sql("AND", "c.ref");
+
+        $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
+        if(is_array($fcf_sql))
+            {
+            $fc_permissions_where = "(c.`type` = ? " . $fcf_sql[0] . ")";
+            $fc_permissions_where_params = array_merge(["i",COLLECTION_TYPE_FEATURED],$fcf_sql[1]);
+            }
         }
 
     if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]) && isset($c["bg_img_resource_ref"]))
         {
-        global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
-
         if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"])
             {
             return array();
@@ -2459,10 +2507,11 @@ function get_featured_collection_resources(array $c, array $ctx)
             {
             $limit = 1;
             $union = sprintf("
-                UNION SELECT ref, 1 AS use_as_theme_thumbnail, r.hit_count FROM resource AS r %s WHERE r.ref = '%s' %s",
+                UNION SELECT ref, 1 AS use_as_theme_thumbnail, r.hit_count FROM resource AS r %s WHERE r.ref = ? %s",
                 implode(" ", $rca_joins),
-                escape_check($c["bg_img_resource_ref"]),
                 $rca_where);
+
+            $unionparams = array_merge($rca_join_params,["i",$c["bg_img_resource_ref"]]);
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
         else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($limit))
@@ -2488,6 +2537,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         ),
         "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.`type` = " . COLLECTION_TYPE_FEATURED,
     );
+    $subquery_params = $rca_join_params;
 
     if(is_featured_collection_category($c))
         {
@@ -2511,13 +2561,13 @@ function get_featured_collection_resources(array $c, array $ctx)
             $checkfc = $colstack->pop();
             if(!in_array($checkfc,$all_fcs_rp))
                 {
-                $subfcimages = get_collection_resources($checkfc);        
+                $subfcimages = get_collection_resources($checkfc);
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
-                    $fcresources = array_merge($fcresources,$subfcimages);                
+                    $fcresources = array_merge($fcresources,$subfcimages);
                     }
                 continue;
-                }       
+                }
      
             // Either a parent FC or no results, add sub fcs to stack
             $children = array_keys($all_fcs_rp,$checkfc);
@@ -2526,22 +2576,26 @@ function get_featured_collection_resources(array $c, array $ctx)
                 $colstack->push($child_fc);
                 }
             }
-        $subquery["where"] = "WHERE r.ref IN ('" . implode("','",$fcresources) . "')";
+        $fcrescount = count($fcresources);
+        if($fcrescount > 0)
+            {
+            $subquery["where"] = "WHERE r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
+            $subquery_params = array_merge($subquery_params,ps_param_fill($fcresources,"i"));
+            }
         }
 
     $subquery["join"] = implode(" ", $subquery["join"]);
     $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
+    $subquery_params = array_merge($subquery_params,$fc_permissions_where_params);
 
     $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
-        (isset($union) ? $union : ''),
+        $union,
         sql_limit(null, $limit)
     );
 
-    $fc_resources = sql_array($sql, "themeimage");
-
+    $fc_resources = ps_array($sql,array_merge($unionparams,$subquery_params),"themeimage");
     $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
-
     return $fc_resources;
     }
 
@@ -5004,15 +5058,21 @@ function get_featured_collections(int $parent, array $ctx)
 * @param string $prefix SQL WHERE clause element. Mostly should be either WHERE, AND -or- OR depending on the SQL statement 
 *                       this is part of.
 * @param string $column SQL column on which to apply the filter for
+
+* @param bool $returnstring (temporary) Will return the legacy string version until do_search() and others are migrated to use prepared statements. This can be removed once all functions use prepared statements
 * 
-* @return string Returns "" if user should see all featured collections or a SQL filter (e.g AND ref IN("32", "34") )
+* @return array|string Returns "" if user should see all featured collections or a SQL filter (e.g AND ref IN("32", "34") ) with the placholders as the first element and the collection IDs as params for the second - for use in e.g. ps_query(), ps_value()
 */
-function featured_collections_permissions_filter_sql(string $prefix, string $column)
+function featured_collections_permissions_filter_sql(string $prefix, string $column, bool $returnstring =false)
     {
     global $CACHE_FC_PERMS_FILTER_SQL;
     $CACHE_FC_PERMS_FILTER_SQL = (!is_null($CACHE_FC_PERMS_FILTER_SQL) && is_array($CACHE_FC_PERMS_FILTER_SQL) ? $CACHE_FC_PERMS_FILTER_SQL : array());
     $cache_id = md5("{$prefix}-{$column}");
-    if(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
+    if(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && $returnstring)
+        {
+        return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
+        }
+    elseif(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_array($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
         {
         return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
         }
@@ -5023,19 +5083,34 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     $column = trim($column);
 
     $computed_fcs = compute_featured_collections_access_control();
+
     if($computed_fcs === true)
         {
         $return = ""; # No access control needed! User should see all featured collections
         }
     else if(is_array($computed_fcs))
         {
-        $fcs_list = "'" . join("', '", array_map('escape_check', $computed_fcs)) . "'";
-        $return = "{$prefix} {$column} IN ({$fcs_list})";
+        if($returnstring)
+            {
+            $fcs_list = "'" . join("', '", array_map('escape_check', $computed_fcs)) . "'";
+            $return = "{$prefix} {$column} IN ({$fcs_list})";
+            }
+        else
+            {
+            $return = array("{$prefix} {$column} IN (" . ps_param_insert(count($computed_fcs)) . ")",ps_param_fill($computed_fcs,"i"));
+            }
         }
     else
         {
-        // User is not allowed to see any of the available FCs
-        $return = "{$prefix} 1 = 0";
+        // User is not allowed to see any of the available FCs if($returnstring)
+        if($returnstring)
+            {
+            $return = "{$prefix} 1 = 0";
+            }
+        else
+            {
+            $return = [$prefix . " 1 = 0",[]];
+            }
         }
 
     $CACHE_FC_PERMS_FILTER_SQL[$cache_id] = $return;
@@ -5553,7 +5628,17 @@ function get_featured_collections_by_resources(array $r_refs)
         {
         return array();
         }
+    
+    $featured_type_filter_sql = "";
+    $featured_type_filter_sql_params =[];
+    $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
+    if(is_array($fcf_sql))
+        {
+        $featured_type_filter_sql = "(c.`type` = ? " . $fcf_sql[0] . ")";
+        $featured_type_filter_sql_params = array_merge(["i",COLLECTION_TYPE_FEATURED],$fcf_sql[1]);
+        }
 
+        
     $sql = sprintf(
         "SELECT c.ref, c.`name`, c.`parent`
            FROM collection_resource AS cr
@@ -5561,11 +5646,12 @@ function get_featured_collections_by_resources(array $r_refs)
           WHERE cr.resource IN (%s)
             %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
         COLLECTION_TYPE_FEATURED,
-        "'" . join("', '", $resources) . "'",
-        trim(featured_collections_permissions_filter_sql("AND", "c.ref"))
-    );
-    $fcs = sql_query($sql);
+        ps_param_insert(count($resources)),
+        $featured_type_filter_sql
+        );
 
+    $fcs = ps_query($sql,array_merge(ps_param_fill($resources, 'i')),$featured_type_filter_sql_params);
+    
     $results = array();
     foreach($fcs as $fc)
         {
