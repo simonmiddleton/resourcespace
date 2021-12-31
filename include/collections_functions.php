@@ -461,8 +461,9 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 		
 		if(!hook("removefromcollectionsql", "", array( $resource,$collection, $size)))
 			{
-			sql_query("delete from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
-			sql_query("delete from external_access_keys where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
+            $delparams = ["i",$resource,"i",$collection];
+			ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
+			ps_query("DELETE FROM external_access_keys WHERE resource = ? AND collection = ?",$delparams);
 			}
 		
 		// log this
@@ -598,8 +599,8 @@ function collection_writeable($collection)
         }
 
     # Load a list of attached users
-    $attached=sql_array("select user value from user_collection where collection='" . escape_check($collection) . "'");
-    $attached_groups=sql_array("select usergroup value from usergroup_collection where collection='" . escape_check($collection) . "'");
+    $attached = ps_array("SELECT user value FROM user_collection WHERE collection = ?",["i",$collection]);
+    $attached_groups = ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection = ?",["i",$collection]);
 
     // Can edit if 
     // - The user owns the collection (if we are anonymous user and are using session collections then this must also have the same session id )
@@ -669,8 +670,8 @@ function collection_readable($collection)
         }
 
 	# Load a list of attached users
-	$attached=sql_array("select user value from user_collection where collection='$collection'");
-	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
+	$attached = ps_array("SELECT user value FROM user_collection WHERE collection = ?",["i",$collection]);
+	$attached_groups = ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection = ?",["i",$collection]);
 
 	# Access if collection_commenting is enabled and request feedback checked
 	# Access if it's a public collection (or featured collection to which user has access to)
@@ -726,7 +727,7 @@ function set_user_collection($user,$collection)
 	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection;
 	if(!(isset($anonymous_login) && $username==$anonymous_login) || !$anonymous_user_session_collection)
 		{		
-		sql_query("UPDATE user SET current_collection='" . escape_check($collection) . "' WHERE ref='" . escape_check($user) . "'");
+		ps_query("UPDATE user SET current_collection = ? WHERE ref = ?",["i",$collection,"i",$user]);
 		}
 	$usercollection=$collection;
 	}
