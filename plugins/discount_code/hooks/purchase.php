@@ -30,7 +30,7 @@ function HookDiscount_codePurchaseAdjust_item_price ($origprice,$resource,$size)
 	if ($discount_code=="") {return $origprice;} # No code specified
 	
 	# Check that the discount code exists.
-	$discount_info = ps_query("SELECT * FROM discount_code WHERE upper(code) = ?", array("s", $discount_code));
+	$discount_info = ps_query("SELECT code, percent, expires FROM discount_code WHERE upper(code) = ?", array("s", $discount_code));
 	if (count($discount_info)==0)
 		{
 		$discount_error=$lang["error-invalid-discount-code"];
