@@ -705,6 +705,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
     $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
     $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang;
 	
+    debug("SQL: " . $sql);
     // Check cache for this query
     $cache_write=false;
     if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
