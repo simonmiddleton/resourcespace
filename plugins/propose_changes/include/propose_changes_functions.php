@@ -184,10 +184,11 @@ function save_proposed_changes($ref)
 				# Check for regular expression match
 				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 					{
-					if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
+                    global $regexp_slash_replace;
+					if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
 						{
 						global $lang;
-						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
+						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
 						if (getval("autosave","")!="")
 							{
 							exit();
@@ -216,10 +217,11 @@ function save_proposed_changes($ref)
 				# Check for regular expression match
 				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 						{
-						if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
+                        global $regexp_slash_replace;
+						if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
 								{
 								global $lang;
-								debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
+								debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
 								if (getval("autosave","")!="")
 										{
 										exit();

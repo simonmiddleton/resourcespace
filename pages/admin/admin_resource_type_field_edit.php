@@ -5,6 +5,9 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
+
+use function Symfony\Component\VarDumper\Dumper\esc;
+
 include "../../include/db.php";
 include "../../include/authenticate.php"; 
 if (!checkperm("a"))
@@ -98,6 +101,12 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			return;
 			}
 		}
+
+    if($propertyname == 'regexp_filter')
+        {
+        global $regexp_slash_replace; 
+        $currentvalue = str_replace($regexp_slash_replace, '\\', $currentvalue);
+        }
 		
 	$alt_helptext=hook('rtfieldedithelptext', 'admin_resource_type_field_edit', array($propertyname));
 	if($alt_helptext!==false){
@@ -414,6 +423,7 @@ $type_change = false;
 
 if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false))
 	{
+    global $regexp_slash_replace;
 	# Save field config
 	$sync_field = getvalescaped("sync_field",0);
 	$existingfield = get_resource_type_field($ref);
@@ -426,7 +436,12 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			}		
 		else
 			{
-			$val=escape_check(trim(getval($column,"")));			
+			$val=trim(getval($column,""));
+            if($column == 'regexp_filter')
+                {
+                $val = str_replace('\\', $regexp_slash_replace, $val);   
+                }
+            $val = escape_check($val);
 			
 			if($column == "type" && $val != $existingfield["type"] && getval("migrate_data","") != "")
 				{
@@ -439,7 +454,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
                 {
                 $val="field" . $ref;
                 }
-			}
+            }
 		if (isset($sql))
 			{
 			$sql.=",";
