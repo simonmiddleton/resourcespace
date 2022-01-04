@@ -217,16 +217,13 @@ function HookAction_datesCronCron()
     $subject_state="";
     $subject_restrict="";
     $subject_combined="";
-    if ($action_dates_email_for_state == "1")
-        {
-        $subject_state = $lang['action_dates_email_subject_state'];
-        $message_state=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_state']) . "\r\n";
-        }
-    if ($action_dates_email_for_restrict == "1")
-        {
-        $subject_restrict = $lang['action_dates_email_subject_restrict'];
-        $message_restrict=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_restrict']) . "\r\n";
-        }
+
+    $subject_state = $lang['action_dates_email_subject_state'];
+    $message_state=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_state']) . "\r\n";
+
+    $subject_restrict = $lang['action_dates_email_subject_restrict'];
+    $message_restrict=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_restrict']) . "\r\n";
+    
 
     # Determine how and to whom notifications are to be sent
     $admin_notify_emails = array();
