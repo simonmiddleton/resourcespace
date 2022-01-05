@@ -906,7 +906,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
     $keysql = "";
     $sql = "";
-    $sqlparams = []; 
+    $sql_params = []; 
     $select_extra = "";
     // Validate sort & order_by
     $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
@@ -919,7 +919,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         {
         # A-Z search
         $sql = "AND c.name LIKE ?";
-        $sqlparams[] = ["s"];$sqlparams[] = $search . "%";
+        $sql_params[] = "s";$sql_params[] = $search . "%";
         }
     elseif (substr($search,0,16)=="collectiontitle:")
         {
@@ -935,7 +935,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
         $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
         $sql = "AND c.name LIKE ?";
-        $sqlparams[] = ["s"];$sqlparams[] = $newsearch;
+        $sql_params[] = "s";$sql_params[] = $newsearch;
         }
     if (strlen($search)>1 || is_numeric($search))
         {
@@ -951,15 +951,15 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     $keywords[$n]=substr($keywords[$n],16);
                     $keyref=$keywords[$n];
                     $sql.=" AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
-                    $sqlparams[] = ["i"];$sqlparams[] = $keyref;
-                    $sqlparams[] = ["i"];$sqlparams[] = $keyref;
+                    $sql_params[] = "i";$sql_params[] = $keyref;
+                    $sql_params[] = "i";$sql_params[] = $keyref;
                     }
                 elseif (substr($keywords[$n],0,19)=="collectionownerref:")
                     {
                     $keywords[$n]=substr($keywords[$n],19);
                     $keyref=$keywords[$n];
                     $sql.=" AND (c.user=?)";
-                    $sqlparams[] = ["i"];$sqlparams[] = $keyref;
+                    $sql_params[] = "i";$sql_params[] = $keyref;
                     }
                 else
                     {
@@ -1008,7 +1008,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $groups=array_merge($groups,ps_array("SELECT ref value FROM usergroup WHERE parent<>0 AND parent=(SELECT parent FROM usergroup WHERE ref=?)",$usergroupparams)); # Siblings (same parent)
 
         $sql.=" AND u.usergroup IN (" . ps_param_insert(count($groups)) . ")";
-        $sqlparams = array_merge($sqlparams, ps_param_fill($groups,"i"));
+        $sql_params = array_merge($sql_params, ps_param_fill($groups,"i"));
         }
 
     // Add extra elements to the SELECT statement if needed
@@ -1085,7 +1085,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $where_clause_osql
     );
 
-    return ps_query($main_sql, array_merge($type_filter_sql_params,$sqlparams),'', $fetchrows);
+    return ps_query($main_sql, array_merge($type_filter_sql_params,$sql_params),'', $fetchrows);
     }
 
 /**
