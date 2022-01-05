@@ -104,6 +104,11 @@ if ($collection!="" && $collection!="undefined")
 // Load collection info. 
 // get_user_collections moved before output as function may set cookies
 $cinfo=get_collection($usercollection);
+if(!is_array($cinfo))
+    {
+    // If $usercollection doesn't exist default to the users default collection
+    $cinfo=get_collection(sql_value('SELECT ref AS `value` FROM collection WHERE user = "'. $userref .'" AND name = "Default Collection" ORDER BY ref LIMIT 1', 0));
+    }
 if('' == $k || $internal_share_access)
     {
     $list = get_user_collections($userref);
