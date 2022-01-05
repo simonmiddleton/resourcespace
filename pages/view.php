@@ -1735,6 +1735,11 @@ hook ("resourceactions") ?>
                 {
                 echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</div>";
                 }
+            else if ($delete_requires_password)
+                {
+                $delete_url = generateURL($baseurl . "/pages/delete.php", $urlparams);
+                echo "<a id='delete_link_" . $ref . "' href='" . $delete_url . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</a>";
+                }
             else
                 {
                 $urlparams['text']='deleted';

@@ -3314,3 +3314,6 @@ $preview_keep_alpha_extensions = array("gif","png","tif","svg");
 
 // Array of sizes that will always be permitted through download.php and won't require terms/usage to be entered - needed when hide_real_filepath=true;
 $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
+
+// String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
+$regexp_slash_replace = 'SLASH';

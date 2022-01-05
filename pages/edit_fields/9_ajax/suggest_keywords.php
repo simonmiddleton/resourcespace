@@ -68,7 +68,8 @@ if(!$exactmatch && !$readonly)
     # Ensure regexp filter is honoured if one is present
     if (trim(strlen($fielddata["regexp_filter"]))>=1)
         {
-        if(preg_match("#^" . $fielddata["regexp_filter"] . "$#",$keyword,$matches) <= 0)
+        global $regexp_slash_replace;
+        if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fielddata["regexp_filter"]) . "$#",$keyword,$matches) <= 0)
             {
             $fielderror = true;
             }
