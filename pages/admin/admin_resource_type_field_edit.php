@@ -6,8 +6,6 @@
  * @subpackage Pages_Team
  */
 
-use function Symfony\Component\VarDumper\Dumper\esc;
-
 include "../../include/db.php";
 include "../../include/authenticate.php"; 
 if (!checkperm("a"))
