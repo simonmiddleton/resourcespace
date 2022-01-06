@@ -1933,7 +1933,7 @@ function RenderPushedMetadata($resource)
     global $k,$view_title_field,$lang, $internal_share_access, $fields_all,$ref;
     $reset_ref    = $ref;
 	$ref          = $resource["ref"];
-    $resource     = array_unique(array_merge($resource, get_resource_data($resource['ref'])));
+    $resource     = array_merge($resource, get_resource_data($resource['ref']));
 	$fields       = get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
     $access       = get_resource_access($ref);
     
