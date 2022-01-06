@@ -486,11 +486,18 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
             if($prepared_statement_cache[$sql]===false)
                 {
-                $error="Bad prepared SQL statement: " . $sql;
-                if (!$dbstruct) // if the second pass, this still didn't work after checking dbstruct, throw a proper error.
+                if ($dbstruct)
                     {
-                    errorhandler("N/A", $error, "(database)", "N/A");
+                    // Clear out the cache for this query before running check_db_structs()
+                    unset($prepared_statement_cache[$sql]); 
+                    db_clear_connection_mode();
+                    check_db_structs();
+                    db_set_connection_mode($db_connection_mode);
+                    # Try again (no dbstruct this time to prevent an endless loop)
+                    return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect,$fetch_specific_columns);
                     }
+                $error="Bad prepared SQL statement: " . $sql;
+                errorhandler("N/A", $error, "(database)", "N/A");
                 }
             }
         $params_array = array();
@@ -581,39 +588,39 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
 		$querytime += $time_total;
 	}
 	
-	$return_rows=array();
+    $return_rows=array();
     if ($error!="")
         {
         if ($error=="Server shutdown in progress")
-        	{
-			echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
-        	}
+            {
+            echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
+            }
         elseif (substr($error,0,15)=="Too many tables")
-        	{
-			echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
-        	}
+            {
+            echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
+            }
         elseif (strpos($error,"has gone away")!==false && $reconnect)
-			{
-			# SQL server connection has timed out or been killed. Try to reconnect and run query again.
-			sql_connect();
+            {
+            # SQL server connection has timed out or been killed. Try to reconnect and run query again.
+            sql_connect();
             db_set_connection_mode($db_connection_mode);
-			return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false);
-			}
+            return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false);
+            }
         else
-        	{
-        	# Check that all database tables and columns exist using the files in the 'dbstruct' folder.
-        	if ($dbstruct) # should we do this?
-        		{
+            {
+            # Check that all database tables and columns exist using the files in the 'dbstruct' folder.
+            if ($dbstruct) # should we do this?
+                {
                 db_clear_connection_mode();
-				check_db_structs();
+                check_db_structs();
                 db_set_connection_mode($db_connection_mode);
 
-        		# Try again (no dbstruct this time to prevent an endless loop)
-        		return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect);
-        		}
+                # Try again (no dbstruct this time to prevent an endless loop)
+                return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect,$fetch_specific_columns);
+                }
 
-	        errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
-	        }
+            errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
+            }
 
         exit();
         }
