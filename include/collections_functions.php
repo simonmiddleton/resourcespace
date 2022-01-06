@@ -5162,7 +5162,10 @@ function featured_collection_check_access_control(int $c_ref)
                        level
                   FROM cte
               ORDER BY level DESC;",
-            "featured_collections");
+            "featured_collections",
+            -1,
+            true,
+            0);
             }
         else
             {
@@ -5177,7 +5180,10 @@ function featured_collection_check_access_control(int $c_ref)
                     JOIN  collection C2
                         ON  C1.p_ref = C2.ref
                 ORDER BY  C1.lvl DESC", 
-                    "featured_collections");
+                    "featured_collections",
+                    -1,
+                    true,
+                    0);
             }
 
           foreach($allparents as $parent)
