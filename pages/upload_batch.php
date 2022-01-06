@@ -199,12 +199,13 @@ if($external_upload)
         $usercollection = $ci[0];
         }
     $upload_review_col = $usercollection;
+    rs_setcookie('lockedfields', '', 1);
     $redirecturl = generateURL(
         "{$baseurl}/pages/edit.php",
         array('upload_review_mode' => true,
               'collection' => $usercollection,
-              'k' => $k,
-              'resetform' => true)
+              'k' => $k
+              )
         );     
     }
 elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
@@ -234,12 +235,12 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         }
     else
         {
+        rs_setcookie('lockedfields', '', 1);
         $redirecturl = generateURL(
             "{$baseurl}/pages/edit.php",
             array(
                 'upload_review_mode' => true,
-                'collection_add' => $collection_add,
-                'resetform' => true
+                'collection_add' => $collection_add
             ));	
         }
 
@@ -873,7 +874,8 @@ elseif ($upload_no_file && getval("createblank","")!="")
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
-    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true", 'resetform' => true));
+    rs_setcookie('lockedfields', '', 1);
+    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true"));
     redirect($redirecturl);
     exit();
 	}
