@@ -273,7 +273,8 @@ function setup_user($userdata)
 /**
  * Returns a user list. Group or search term is optional. The standard user group names are translated using $lang. Custom user group names are i18n translated.
  *
- * @param  integer $group   If set, a user group to limit the results
+ * @param  integer $group            Can be a single group, or a comma separated list of groups used to limit the results
+ *                                   If blank, zero or NULL then all users will be returned irrespective of their group
  * @param  string $find Search string to filter returned results
  * @param  string $order_by
  * @param  boolean $usepermissions
@@ -290,7 +291,13 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
     $sql = "";
     $find=escape_check(strtolower($find));
-    if ($group != 0 && (string)(int)$group == (string)$group) {$sql = "where usergroup IN ($group)";}
+    # Sanitise the incoming group(s), stripping out any which are non-numeric 
+    $grouparray=array_filter(explode(",",$group), 'ctype_digit');
+    # Reconstruct the sanitised list of group(s)
+    $grouplist=implode(",",$grouparray);
+
+    if ($group != 0 && count($grouparray)>0) {$sql = "where usergroup IN ($grouplist)";}
+
     if ($exact_username_match)
         {
         # $find is an exact username
