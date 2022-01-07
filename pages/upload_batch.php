@@ -423,7 +423,7 @@ if ($processupload)
 
     // Clean the filename
     $origuploadedfilename=escape_check($upfilename);
-    $encodedname = base64_encode($upfilename);
+    $encodedname = str_replace("/","RS_FORWARD_SLASH",base64_encode($upfilename));
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
 
     # Banned extension?
@@ -980,7 +980,8 @@ jQuery(document).ready(function () {
                 updatedFiles[fileid] = {
                     ...files[fileid],
                   }
-                updatedFiles[fileid].meta.name = base64encode(`${files[fileid].name}`);
+                safefilename = base64encode(`${files[fileid].name}`);
+                updatedFiles[fileid].meta.name = safefilename.replace(/\//g,'RS_FORWARD_SLASH'); // To fix issue with forward slashes in base64 string
                 console.debug('file obj')
                 console.debug(files[fileid].id)
                 });    
