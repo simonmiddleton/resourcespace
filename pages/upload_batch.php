@@ -1445,7 +1445,7 @@ function postUploadActions()
     console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
     <?php
-    if($send_collection_to_admin && $setarchivestate == -1) 
+    if($send_collection_to_admin && $setarchivestate == -1 && !$external_upload) 
         {
         ?>
         api('send_collection_to_admin',{'collection': newcol}, function(response)
