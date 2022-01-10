@@ -2395,7 +2395,7 @@ if($annotate_enabled)
     ?>
     <!-- Annotorious -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.js"></script>
+    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
 
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
