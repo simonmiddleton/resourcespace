@@ -2,6 +2,11 @@
 include "../../include/db.php";
 include "../../include/authenticate.php";
 
+if (isset($anonymous_login) && $anonymous_login == $username)
+    {
+    die($lang["error-permissions-login"]);
+    }
+
 $msgto  = getval("msgto",0,true);
 $msglimit   = getval("showcount",3,true);
 $text       = getval("messagetext","");
