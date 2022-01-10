@@ -99,10 +99,10 @@ if ($on_upload || (isset($ref) && $ref<0))
         }
 
 	if (getval("single","")=="" || $on_upload)
-        { 
+        {
         $non_col_options=0;
         # Add Resource Batch: specify default content - also ask which collection to add the resource to.
-        if ($enable_add_collection_on_upload)
+        if ($enable_add_collection_on_upload && !(isset($external_upload) && $external_upload))
             {
             $collection_add=getvalescaped("collection_add","");
 
@@ -312,24 +312,24 @@ if ($on_upload || (isset($ref) && $ref<0))
                 </div> <!-- end collectioninfo -->
                 </div> <!-- end question_collectionadd -->
                 <?php
+                }            
+            ?>
+            <script>
+            jQuery(document).ready(function() {
+            jQuery('#collection_add').change(function (){
+                if(jQuery('#collection_add').val()=='new'){
+                jQuery('#collectioninfo').fadeIn();
+                } 
+                else {
+                jQuery('#collectioninfo').fadeOut();
                 }
+            });
+            jQuery('#collection_add').change();
+            });
+            </script>
+            <?php
             } // end enable_add_collection_on_upload
 		}
-    ?>
-    <script>
-    jQuery(document).ready(function() {
-       jQuery('#collection_add').change(function (){
-         if(jQuery('#collection_add').val()=='new'){
-           jQuery('#collectioninfo').fadeIn();
-        } 
-        else {
-           jQuery('#collectioninfo').fadeOut();
-        }
-     });
-       jQuery('#collection_add').change();
-    });
-    </script>
-    <?php
 	hook("extrauploadoptions");
 	}
   
