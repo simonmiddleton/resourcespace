@@ -180,7 +180,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Question" ><label><?php echo $lang["username"]?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password", "", array($user))) { ?>
-<div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo $lang["hidden"]; ?>">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo $lang["hidden"]; ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
 <?php } else { ?>
 <div><input name="password" id="password" type="hidden" value="<?php echo $lang["hidden"];?>" /></div>
 <?php } ?>
