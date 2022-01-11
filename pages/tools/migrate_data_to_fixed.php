@@ -99,6 +99,7 @@ if(getval("submit","") != "")
             // No need to process any further if no data is found set for this resource
             if(trim($resdata_row['value']) == '' || ($maxrows != 0 && $migrated >= $maxrows))
                 {
+                $migrated++;
                 continue;
                 }
 
