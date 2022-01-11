@@ -565,8 +565,8 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                 $return_row_count++;
                 $result[]=$result_row;
                 }
+            mysqli_free_result($result_set);
             }
-        mysqli_free_result($result_set);
         }
 
     if ($config_show_performance_footer){
