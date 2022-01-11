@@ -90,7 +90,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
         $accepted = sql_value("SELECT accepted_terms value FROM user WHERE ref = '{$result['ref']}'", 0);
         if(0 == $accepted && $terms_login && !checkperm('p'))
             {
-            $redirect_url='pages/terms.php?noredir=true';
+            $redirect_url='pages/terms.php?url=' . urlencode($url);
             }
         else{
             $redirect_url=$url;
