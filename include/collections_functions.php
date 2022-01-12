@@ -510,7 +510,9 @@ function collection_add_resources($collection,$resources='',$search='',$selected
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
     else if($resources ==''){$resources=do_search($search);}
 
-    if ($resources =='' || count($resources) == 0){return $lang["noresourcesfound"];}
+    if(!is_array($resources)){$resources = explode(",",$resources);}
+
+    if (count($resources) == 0){return $lang["noresourcesfound"];}
     $collection_resources       = get_collection_resources($collection);
     $refs_to_add = array_diff($resources, $collection_resources);
 
@@ -561,6 +563,8 @@ function collection_remove_resources($collection,$resources='',$removeall=false,
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
 
     $collection_resources       = get_collection_resources($collection);
+    
+    if(!is_array($resources)){$resources = explode(",",$resources);}
     $refs_to_remove = array_intersect($collection_resources, $resources);
     
     $errors=0;
