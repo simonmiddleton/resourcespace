@@ -133,6 +133,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
+                $filename = str_replace("RS_FORWARD_SLASH","/",$filename);
                 if(base64_encode(base64_decode($filename)) == $filename)
                    {
                    // Should have been encoded by Uppy
