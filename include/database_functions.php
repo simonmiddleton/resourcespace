@@ -467,10 +467,6 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         {
         $db_connection_mode = 'read_only';
         $db_connection = $db['read_only'];
-
-        // In case it needs to retry and developer has forced a read-only
-        $logthis = 2;
-
         db_clear_connection_mode();
         }
 
@@ -494,7 +490,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                     check_db_structs();
                     db_set_connection_mode($db_connection_mode);
                     # Try again (no dbstruct this time to prevent an endless loop)
-                    return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect,$fetch_specific_columns);
+                    return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
                 $error="Bad prepared SQL statement: " . $sql;
                 errorhandler("N/A", $error, "(database)", "N/A");
@@ -604,7 +600,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             # SQL server connection has timed out or been killed. Try to reconnect and run query again.
             sql_connect();
             db_set_connection_mode($db_connection_mode);
-            return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false);
+            return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
             }
         else
             {
@@ -616,7 +612,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                 db_set_connection_mode($db_connection_mode);
 
                 # Try again (no dbstruct this time to prevent an endless loop)
-                return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect,$fetch_specific_columns);
+                return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                 }
 
             errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
