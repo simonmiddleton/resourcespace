@@ -645,3 +645,55 @@ function send_user_message($users,$text)
     message_add($users,$text,"",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE + MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,30*24*60*60);
     return true;
     }
+
+
+function send_user_notification($users=[],string $type,array $eventdata=[],string $body,string $url="",string $template="",array $templatevars=[])
+    {
+    global $applicationname, $lang, $userref;
+    $notifytypes = [
+            "resource_request"  => "user_pref_resource_access_notifications",
+            "account_request"   => "user_pref_user_management_notifications",
+            "resource_change"   => "user_pref_resource_notifications",
+            "research_request"  => "user_pref_resource_access_notifications",
+        ];
+ 
+    $message_users = []; // Users that will be sent a message
+    $emails = []; // User emails that will be sent an email
+    foreach($users as $notify_user)
+        {
+        if(!isset($notify_user["ref"]))
+            {
+            $notify_user = get_user((int)$notify_user);
+            if($notify_user == false)
+                {
+                continue;
+                }
+            }        
+        
+        get_config_option($notify_user['ref'],$notifytypes[$type], $send_message);		  
+        if($send_message==false)
+            {
+            continue;
+            }
+        get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+        if($send_email && $notify_user["email"]!="")
+            {
+            $emails = $notify_user["email"];
+            }        
+        else
+            {
+            $message_users[]=$notify_user["ref"];
+            }
+        }
+
+    $message = "";
+    
+    if (count($message_users)>0)
+        {
+        message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS);
+        }
+    if(count($emails) > 0)
+        {        
+        send_mail($emails,$applicationname . ": " . $lang["status-1"],$message,"","",$template,$templatevars);            
+        }
+    }
