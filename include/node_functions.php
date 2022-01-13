@@ -230,7 +230,7 @@ function get_node($ref, array &$returned_node)
 
 /**
 * Get all nodes from database for a specific metadata field or parent.
-* Use $parent = NULL and recursive = TRUE to get all nodes for a field
+* Use $parent = NULL and recursive = TRUE to get all nodes for a category tree field
 * 
 * Use $offset and $rows only when returning a subset.
 * 
@@ -2238,4 +2238,82 @@ function process_node_search_syntax_to_names(array $R, string $column)
         }
 
     return $R;
+    }
+
+
+/**
+ * 
+ * 
+ */
+function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
+    {
+
+
+    $value = trim($value);
+    $existing_resource_nodes = get_resource_nodes($resource, $resource_type_field, true);
+    $similar_field_nodes = get_nodes($resource_type_field, null, false, null, null, $value, true);
+    $found_match = get_node_by_name($similar_field_nodes, $value, false);
+
+    $nodes_to_add = [];
+    $nodes_to_remove = [];
+
+
+    // Remove existing data (when given an empty value)
+    if($value === '')
+        {
+        // remove data
+        // - check the current node associated is linked with any other resources. If not, remove it.
+        // - remove original node association
+        $existing_resource_nodes = get_resource_nodes($resource, $resource_type_field);
+        $nodes_to_remove = $existing_resource_nodes;
+        }
+
+    // Create a new node if we couldn't find an identical match already set for this field
+    else if(empty($found_match))
+        {
+        $new_node = set_node(null, $resource_type_field, $value, null, get_node_order_by($resource_type_field, false, null));
+        $nodes_to_add = [$new_node];
+        }
+
+
+    
+    // Update resource_node table
+    db_begin_transaction("update_resource_node");
+    if(count($nodes_to_remove) > 0)
+        {
+        delete_resource_nodes($resource, $nodes_to_remove, false);
+        // For the delete part, get all nodes for fields that are non fixed list AND have zero resource_node entries and delete them.
+        delete_unsused_non_fixed_list_nodes($resource_type_field);
+        }
+
+    if(count($nodes_to_add) > 0)
+        {
+        add_resource_nodes($resource, $nodes_to_add, false, false);
+        }
+    
+    log_node_changes($resource, $nodes_to_add, $nodes_to_remove);
+    db_end_transaction("update_resource_node");
+    
+
+print_r([
+    'similar_field_nodes' => $similar_field_nodes,
+    'found_match' => $found_match,
+    'existing_resource_nodes' => $existing_resource_nodes,
+]);
+
+    return;
+    }
+
+
+function delete_unsused_non_fixed_list_nodes(int $resource_type_field)
+    {
+    // 
+
+    DELETE n
+    FROM node AS n
+    INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+    LEFT JOIN resource_node AS rn ON rn.node = n.ref
+    WHERE n.resource_type_field = 10
+    AND rtf.`type`IN (0, 1, 4, 5, 6, 8, 10, 13)
+    AND rn.node IS NULL;
     }

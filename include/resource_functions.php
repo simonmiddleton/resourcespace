@@ -856,7 +856,14 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					
 					$new_checksums[$fields[$n]['ref']] = md5($val);
                     }
-				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
+				elseif (
+                    $multilingual_text_fields
+                    && (
+                        $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+                        || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_MULTI_LINE
+                        || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE
+                   )
+                )
 					{
 					# Construct a multilingual string from the submitted translations
 					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
@@ -896,7 +903,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						continue;
 						};
 					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
-					} 
+					}
+
 				# Check for regular expression match
 				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 					{
@@ -922,7 +930,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $errors[$fields[$n]["ref"]]=$error;
                     continue;
                     }
-				} // End of if not a fixed list (node) field
+				} // End of if not a fixed list field
 
             if(
                 $fields[$n]['required'] == 1
@@ -1015,8 +1023,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 {
                 eval($fields[$n]["onchange_macro"]);
                 }
-			}
-		}
+			} # End of if "allowed to edit field conditions"
+		} # End of for $fields
 
     // When editing a resource, prevent applying the change to the resource if there are any errors
     if(count($errors) > 0 && $ref > 0)
