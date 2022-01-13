@@ -4021,7 +4021,7 @@ function rcRmdir ($path)
                 }				
             else
                 {
-                $success = @unlink($path . DIRECTORY_SEPARATOR . $objectname);
+                $success = try_unlink($path . DIRECTORY_SEPARATOR . $objectname);
                 }
 
             if(!$success)
@@ -4353,19 +4353,10 @@ function permission_negative_j(int $ref)
 function cleanup_files($files)
     {
     // Clean up any temporary files
-    $GLOBALS["use_error_exception"] = true;
     foreach($files as $deletefile)
         {
-        try
-            {
-            unlink($deletefile);
-            }
-        catch(Exception $e)
-            {
-            debug("Unable to delete - file not found: " . $deletefile);
-            }
+        try_unlink($deletefile);
         }
-    unset($GLOBALS["use_error_exception"]);
     }
 
 /**
@@ -4848,4 +4839,28 @@ function get_system_status()
         }
 
     return $return;
+    }
+
+
+/**
+ * Try and delete a file without triggering a fatal error
+ *
+ * @param  string $deletefile   Full path to file
+ * @return bool|string          Returns TRUE on success or a string containing error
+ */
+function try_unlink($deletefile)
+    {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        $deleted = unlink($deletefile);
+        }
+    catch (Throwable $t)
+        {
+        $message = "Unable to delete : " . $deletefile . ". Reason" . $t->getMessage();
+        debug($message);
+        return $message;
+        }        
+    unset($GLOBALS["use_error_exception"]);
+    return $deleted;
     }
