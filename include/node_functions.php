@@ -2248,7 +2248,6 @@ function process_node_search_syntax_to_names(array $R, string $column)
 function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
     {
 
-
     $value = trim($value);
     $existing_resource_nodes = get_resource_nodes($resource, $resource_type_field, true);
     $similar_field_nodes = get_nodes($resource_type_field, null, false, null, null, $value, true);
@@ -2256,16 +2255,26 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
 
     $nodes_to_add = [];
     $nodes_to_remove = [];
-
+    $delete_unsused_nodes = false;
 
     // Remove existing data (when given an empty value)
     if($value === '')
         {
-        // remove data
-        // - check the current node associated is linked with any other resources. If not, remove it.
-        // - remove original node association
-        $existing_resource_nodes = get_resource_nodes($resource, $resource_type_field);
-        $nodes_to_remove = $existing_resource_nodes;
+        $nodes_to_remove = get_resource_nodes($resource, $resource_type_field);
+
+        // Determine list of nodes to remove and their current use count
+        $node_use_count_dict = array_intersect_key(array_column($similar_field_nodes, 'use_count', 'ref'), array_flip($nodes_to_remove));
+
+        // If nodes will no longer be associated with any other resources, trigger a removal of "ghost" nodes. Note the 
+        // clean-up must happen after we actually delete nodes, not before.
+        foreach($node_use_count_dict as $n_ref => $n_use_count)
+            {
+            if(--$n_use_count === 0)
+                {
+                $delete_unsused_nodes = true;
+                break;
+                }
+            }
         }
 
     // Create a new node if we couldn't find an identical match already set for this field
@@ -2278,12 +2287,15 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
 
     
     // Update resource_node table
-    db_begin_transaction("update_resource_node");
+    db_begin_transaction('save_non_fixed_list_field_update_resource_node');
     if(count($nodes_to_remove) > 0)
         {
         delete_resource_nodes($resource, $nodes_to_remove, false);
-        // For the delete part, get all nodes for fields that are non fixed list AND have zero resource_node entries and delete them.
-        delete_unsused_non_fixed_list_nodes($resource_type_field);
+
+        if($delete_unsused_nodes)
+            {
+            delete_unsused_non_fixed_list_nodes($resource_type_field);
+            }
         }
 
     if(count($nodes_to_add) > 0)
@@ -2292,28 +2304,55 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
         }
     
     log_node_changes($resource, $nodes_to_add, $nodes_to_remove);
-    db_end_transaction("update_resource_node");
+    db_end_transaction('save_non_fixed_list_field_update_resource_node');
     
 
 print_r([
     'similar_field_nodes' => $similar_field_nodes,
     'found_match' => $found_match,
     'existing_resource_nodes' => $existing_resource_nodes,
+    'nodes_to_add' => $nodes_to_add,
+    'nodes_to_remove' => $nodes_to_remove,
 ]);
 
     return;
     }
 
 
+/**
+ * Delete unused non-fixed list field nodes with a 1:1 resource association
+ * 
+ * @param integer $resource_type_field Resource type field (metadata field) ID
+ */
 function delete_unsused_non_fixed_list_nodes(int $resource_type_field)
     {
-    // 
+    if($resource_type_field <= 0)
+        {
+        return;
+        }
 
-    DELETE n
-    FROM node AS n
-    INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
-    LEFT JOIN resource_node AS rn ON rn.node = n.ref
-    WHERE n.resource_type_field = 10
-    AND rtf.`type`IN (0, 1, 4, 5, 6, 8, 10, 13)
-    AND rn.node IS NULL;
+    // Delete nodes that no longer have a resource association
+    ps_query(
+           'DELETE n
+              FROM node AS n
+        INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+         LEFT JOIN resource_node AS rn ON rn.node = n.ref
+             WHERE n.resource_type_field = ?
+               AND rtf.`type`IN (' . ps_param_insert(count(NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES)) . ')
+               AND rn.node IS NULL',
+        array_merge(['i', $resource_type_field], ps_param_fill(NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES, 'i'))
+    );
+    remove_invalid_node_keyword_mappings();
+    clear_query_cache('schema');
+    }
+
+
+/**
+ * Delete invalid node_keyword associations. Note, by invalid, it's meant where the node is missing.
+ */
+function remove_invalid_node_keyword_mappings()
+    {
+    $vals = ps_query('SELECT * FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
+    ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
+    clear_query_cache('schema');
     }

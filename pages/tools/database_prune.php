@@ -80,6 +80,7 @@ for ($n=0;$n<count($r);$n++)
         }
     }
 
-hook("dbprune");
+remove_invalid_node_keyword_mappings();
+echo number_format(sql_affected_rows()) . " orphaned node-keyword relationships deleted." . $newline;
 
-?>
+hook("dbprune");
