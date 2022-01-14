@@ -551,11 +551,12 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
     else    
         {
         // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
-        $result_set=mysqli_query($db_connection,$sql);
-        $return_row_count=0;$result=array();
+        $result = $result_set = mysqli_query($db_connection, $sql);
+        $return_row_count = 0;
         $error=mysqli_error($db_connection);
-        if ($error=="")
+        if ($error=="" && $result_set instanceof mysqli_result)
             {
+            $result = [];
             while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result_set))
                 {
                 $return_row_count++;
@@ -620,7 +621,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
 
         exit();
         }
-    elseif ($result===false)
+    elseif ($result === true)
         {
 		return array();		// no result set, (query was insert, update etc.) - simply return empty array.
         }
