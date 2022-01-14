@@ -2272,13 +2272,6 @@ if (!$external_upload && !$edit_upload_options_at_top)
     {
     ?></div><?php
     }
-
-if(!hook('replacesubmitbuttons'))
-    {
-    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
-    }
-
-hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBoxLeft -->
 <?php
@@ -2362,7 +2355,17 @@ if ($ref>0 && !$multiple)
     <?php }
     ?>
 </div><!-- end of BasicsBoxRight-->
-<?php } ?>
+<?php } 
+
+if(!hook('replacesubmitbuttons'))
+    {
+    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
+    }
+
+hook('aftereditcollapsiblesection');
+
+?>
+
 </div><!-- end of BasicsBox -->
 </form>
 
