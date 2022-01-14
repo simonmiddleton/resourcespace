@@ -80,12 +80,17 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         $error = odbc_errormsg();
         return $error;
         }
-
+    $resource_data = get_resource_data($resource);
     $modules_mappings = tms_link_get_modules_mappings();
     $convertedtmsdata = array();
 
     foreach($modules_mappings as $module)
         {
+        if(!in_array($resource_data["resource_type"],$module["applicable_resource_types"])) 
+            {
+            // Not valid module for this resource
+            continue;
+            }
         // Get TMS UID value we have for this resource
         if($tms_object_id == "")
             {
