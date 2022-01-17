@@ -110,7 +110,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 			get_config_option($user,'email_and_user_notifications', $notifications_always_email);
 			if($notifications_always_email)
 				{
-				$email_to=ps_value("select email value from user where ref = ?", array("i",$user), "");
+				$email_to=ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
 				if($email_to!=='')
 					{
                     if(substr($url,0,1) == "/")
@@ -647,9 +647,25 @@ function send_user_message($users,$text)
     }
 
 
-function send_user_notification($users=[],string $type,array $eventdata=[],string $body,string $url="",string $template="",array $templatevars=[])
+/**
+ * Send system notifications to specified users, checking the relevant user preference
+ *
+ * @param  array $users         Array of user IDs
+ * @param  string $type         Type of notification e.g. resource request, user account request
+ * @param  array $eventdata     Information about the related event to store against the system message
+ *                              'type'  - Related activity type
+ *                              'ref'   - Related activity reference
+ * @param  string $message      Message text
+ * @param  string $url          URL 
+ * @param  string $template     Email template to use
+ * @param  array $templatevars  Email template variables
+ * 
+ * @return void
+ */
+function send_user_notification($users=[],string $type,array $eventdata=[],string $message,string $url="",string $template="",array $templatevars=[])
     {
     global $applicationname, $lang, $userref;
+    debug("BANG starting send_user_notification()");
     $notifytypes = [
             "resource_request"  => "user_pref_resource_access_notifications",
             "account_request"   => "user_pref_user_management_notifications",
@@ -657,40 +673,51 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
             "research_request"  => "user_pref_resource_access_notifications",
         ];
  
+    debug("BANG users" . print_r($users,true));
     $message_users = []; // Users that will be sent a message
     $emails = []; // User emails that will be sent an email
+    debug("BANG type" . gettype($users));
     foreach($users as $notify_user)
         {
-        if(!isset($notify_user["ref"]))
+        $userdetails = $notify_user;
+        if(!isset($userdetails["ref"]))
             {
-            $notify_user = get_user((int)$notify_user);
-            if($notify_user == false)
+            $userdetails = get_user((int)$notify_user);
+            if($userdetails == false)
                 {
+                debug("BANG user not found "  . (int)$notify_user);
                 continue;
                 }
             }        
         
-        get_config_option($notify_user['ref'],$notifytypes[$type], $send_message);		  
+        debug("BANG Check user preference for user " . $userdetails["ref"]);
+        get_config_option($userdetails['ref'],$notifytypes[$type], $send_message);		  
         if($send_message==false)
             {
+            debug("BANG user " . (int)$notify_user) . " doesn't want to get messages";
             continue;
             }
-        get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-        if($send_email && $notify_user["email"]!="")
+        get_config_option($userdetails['ref'],'email_user_notifications', $send_email);    
+        if($send_email && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL))
             {
-            $emails = $notify_user["email"];
+            debug("BANG send email to user #" . $userdetails["ref"]);
+            $emails = $userdetails["email"];
             }        
         else
             {
-            $message_users[]=$notify_user["ref"];
+            debug("BANG send message to user #" . $userdetails["ref"]);
+            $message_users[]=$userdetails["ref"];
             }
         }
-
-    $message = "";
     
     if (count($message_users)>0)
         {
-        message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS);
+        $activitytype = $eventdata["type"] ?? NULL;
+        if(!is_null($activitytype))
+            {
+            $relatedactivity = $eventdata["ref"] ?? NULL;
+            }
+        message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
         }
     if(count($emails) > 0)
         {        

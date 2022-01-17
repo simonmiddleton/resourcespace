@@ -2100,7 +2100,7 @@ function resolve_user_emails($user_list)
             continue;
             }
 
-        // Skip internal, not approved accounts
+        // Skip internal, not approved/disabled accounts
         if($email_details[0]['approved'] != 1)
             {
             debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');

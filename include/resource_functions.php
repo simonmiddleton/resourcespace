@@ -2457,42 +2457,44 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
 	{
-	# Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
-	
-	if ($useremail==""){$useremail=$email_from;}
-	if ($group=="") {$group=$usergroup;}
+    // TODO - migrate to use send_user_notification()
+    # Attempt to resolve all users in the string $userlist to user references.
+
+    global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+
+    if ($useremail==""){$useremail=$email_from;}
+    if ($group=="") {$group=$usergroup;}
         
-	# remove any line breaks that may have been entered
-	$userlist=str_replace("\\r\\n",",",$userlist);
+    # remove any line breaks that may have been entered
+    $userlist=str_replace("\\r\\n",",",$userlist);
 
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
-	$userlist=resolve_userlist_groups($userlist);
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
-		{
-		$userlist_with_groups=$userlist;
-		$groups_users=resolve_userlist_groups_smart($userlist,true);
-		if($groups_users!='')
-			{
-			if($userlist!="")
-				{
-				$userlist=remove_groups_smart_from_userlist($userlist);
-				if($userlist!="")
-					{
-					$userlist.=",";
-					}
-				}
-			$userlist.=$groups_users;
-			}
-		}
-	
-	$ulist=trim_array(explode(",",$userlist));
-	$ulist=array_filter($ulist);
-	$ulist=array_values($ulist);
+    if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+    $userlist=resolve_userlist_groups($userlist);
+    if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+        {
+        $userlist_with_groups=$userlist;
+        $groups_users=resolve_userlist_groups_smart($userlist,true);
+        if($groups_users!='')
+            {
+            if($userlist!="")
+                {
+                $userlist=remove_groups_smart_from_userlist($userlist);
+                if($userlist!="")
+                    {
+                    $userlist.=",";
+                    }
+                }
+            $userlist.=$groups_users;
+            }
+        }
 
-	$emails=array();
-	$key_required=array();
+    $ulist=trim_array(explode(",",$userlist));
+    $ulist=array_filter($ulist);
+    $ulist=array_values($ulist);
+
+    $emails=array();
+    $key_required=array();
 
     $emails_keys = resolve_user_emails($ulist);
 
@@ -2505,87 +2507,92 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
     $emails       = $emails_keys['emails'];
     $key_required = $emails_keys['key_required'];
 
-	# Send an e-mail to each resolved user / e-mail address
-	$subject="$applicationname: $resourcename";
-	if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
-	if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
-	
-	$message=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);
+    # Send an e-mail to each resolved user / e-mail address
+    $subject="$applicationname: $resourcename";
+    if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
+    if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
 
-#	Commented 'no message' line out as formatted oddly, and unnecessary.
-#	if ($message==""){$message=$lang['nomessage'];}
-	$resolve_open_access=false;
-	
-	for ($n=0;$n<count($emails);$n++)
-		{
-		$key="";
-		# Do we need to add an external access key for this user (e-mail specified rather than username)?
-		if ($key_required[$n])
-			{
-			$k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
-			$key="&k=". $k;
-			}
-                elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)
-                    {debug("smart_groups: going to resolve open access");
-					# get this all done at once
-					resolve_open_access((isset($userlist_with_groups)?$userlist_with_groups:$userlist),$resource,$expires);
-					$resolve_open_access=true;
+    $message=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);
+
+    $resolve_open_access=false;
+
+    for ($n=0;$n<count($emails);$n++)
+        {
+        $key="";
+        # Do we need to add an external access key for this user (e-mail specified rather than username)?
+        if ($key_required[$n])
+            {
+            $k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
+            $key="&k=". $k;
+            }
+        elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)
+            {debug("smart_groups: going to resolve open access");
+            # get this all done at once
+            resolve_open_access((isset($userlist_with_groups)?$userlist_with_groups:$userlist),$resource,$expires);
+            $resolve_open_access=true;
+            }
+
+        # make vars available to template
+        global $watermark;       
+        $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
+        if (!file_exists($templatevars['thumbnail'])){
+            $resourcedata=get_resource_data($resource);
+            $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+        }
+        $templatevars['url']=$baseurl . "/?r=" . $resource . $key;
+        $templatevars['fromusername']=$fromusername;
+        $templatevars['message']=$message;
+        $templatevars['resourcename']=$resourcename;
+        $templatevars['from_name']=$from_name;
+        if(isset($k))
+            {
+            if($expires=="")
+                {
+                $templatevars['expires_date']=$lang["email_link_expires_never"];
+                $templatevars['expires_days']=$lang["email_link_expires_never"];
+                }
+            else
+                {
+                $day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
+                $templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
+                $templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
+                if($day_count>1)
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_days'].".";
                     }
-		
-		# make vars available to template
-		global $watermark;       
-		$templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
-		if (!file_exists($templatevars['thumbnail'])){
-			$resourcedata=get_resource_data($resource);
-			$templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
-		}
-		$templatevars['url']=$baseurl . "/?r=" . $resource . $key;
-		$templatevars['fromusername']=$fromusername;
-		$templatevars['message']=$message;
-		$templatevars['resourcename']=$resourcename;
-		$templatevars['from_name']=$from_name;
-		if(isset($k)){
-			if($expires==""){
-				$templatevars['expires_date']=$lang["email_link_expires_never"];
-				$templatevars['expires_days']=$lang["email_link_expires_never"];
-			}
-			else{
-				$day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
-				$templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
-				$templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
-				if($day_count>1){
-					$templatevars['expires_days'].=" ".$lang['expire_days'].".";
-				}
-				else{
-					$templatevars['expires_days'].=" ".$lang['expire_day'].".";
-				}
-			}
-		}
-		else{
-			# Set empty expiration tempaltevars
-			$templatevars['expires_date']='';
-			$templatevars['expires_days']='';
-		}
-		
-		# Build message and send.
-		if (count($emails) > 1 && $list_recipients===true) {
-			$body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-			$templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-		}
-		else {
-			$body = "";
-		}
-		$body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
-		send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
-		
-		# log this
-		resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
-		
-		}
-	hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
-	# Return an empty string (all OK).
-	return "";
-	}
+                else
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_day'].".";
+                    }
+                }
+            }
+        else
+            {
+            # Set empty expiration templatevars
+            $templatevars['expires_date']='';
+            $templatevars['expires_days']='';
+            }
+        
+        # Build message and send.
+        if (count($emails) > 1 && $list_recipients===true)
+            {
+            $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+            $templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+            }
+        else
+            {
+            $body = "";
+            }
+        $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
+        send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        
+        # log this
+        resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);        
+        }
+    hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
+    # Return an empty string (all OK).
+    return "";
+    }
 
 function delete_resource($ref)
 	{
