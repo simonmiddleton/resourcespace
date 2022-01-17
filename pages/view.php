@@ -2354,7 +2354,7 @@ function <?php echo $context ?>UpdateFSResultCount()
 <?php
 generateFormToken("{$context}findsimilar");
 
-$keywords=get_resource_top_keywords($ref,50);
+$keywords=array_values(array_unique(get_resource_top_keywords($ref,50)));
 if (count($keywords)!=0)
 	{
 		for ($n=0;$n<count($keywords);$n++)
