@@ -2355,7 +2355,11 @@ if ($ref>0 && !$multiple)
     <?php }
     ?>
 </div><!-- end of BasicsBoxRight-->
-<?php } 
+<?php }
+else
+    {
+    ?><div class="BasicsBoxRight"></div><?php
+    }
 
 if(!hook('replacesubmitbuttons'))
     {
