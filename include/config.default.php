@@ -1477,6 +1477,17 @@ $global_permissions="";
 # Suggested setting for a 'read only' mode: $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q";
 $global_permissions_mask="";
 
+# Define user groups who can manage users and requests in other user groups only. An alternative to setting a parent with U permission. 
+# Useful if parent user group is set for permissions inheritance but requests / users are to be managed by a different user group.
+# Config. consists of array in which the key is the user group to manage users and user requests (equivalent of U permission) and 
+# the value is an array of subordinate groups to be managed. Approvers (array key in config) must be unique but its possible to have
+# the same user group managed by multiple user groups.
+/*
+$usergroup_approval_mappings = array(
+    18 => array(19,20)
+    );
+*/
+
 # User account application - auto creation
 # By default this is switched off and applications for new user accounts will be sent as e-mails
 # Enabling this option means user accounts will be created but will need to be approved by an administrator

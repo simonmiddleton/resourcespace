@@ -317,11 +317,23 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
             $sql .= "LOWER(username) like '$find%'";
             }
         }
-    if ($usepermissions && (checkperm('E') || (checkperm('U') && !$U_perm_strict)))
+    
+    $approver_groups = get_approver_usergroups($usergroup);
+
+    if ($usepermissions && (checkperm('E') || ((checkperm('U') || count($approver_groups) > 0) && $U_perm_strict)))
         {
         # Only return users in children groups to the user's group
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        $sql.= "find_in_set('" . $usergroup . "',g.parent) ";
+
+        if (count($approver_groups) > 0)
+            {
+            $sql.= "(find_in_set('" . $usergroup . "',g.parent) or g.ref in (" . implode(",", $approver_groups) . "))";
+            }
+        else
+            {
+            $sql.= "find_in_set('" . $usergroup . "',g.parent) ";
+            }
+
         $sql.= hook("getuseradditionalsql");
         }
 
@@ -332,14 +344,17 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         }
 
     // Return users in both user's user group and children groups
-    if ($usepermissions && checkperm('U') && !$U_perm_strict) {
-        $sql .= sprintf('
-                %1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))
-            ',
-            ($sql == '') ? 'WHERE' : ' AND',
-            $usergroup
-        );
-    }
+    if ($usepermissions && (checkperm('U') || count($approver_groups) > 0) && !$U_perm_strict)
+        {
+        if (count($approver_groups) > 0)
+            {
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', $usergroup, implode(",", $approver_groups));
+            }
+        else
+            {
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))',($sql == '') ? 'WHERE' : ' AND', $usergroup);
+            }
+        }
     $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
     $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
     # Executes query.
@@ -432,20 +447,37 @@ function get_user_by_username($username)
 function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array = false)
     {
     # Creates a query, taking (if required) the permissions  into account.
+    global $usergroup;
+    $approver_groups = get_approver_usergroups($usergroup);
     $sql = "";
-    if ($usepermissions && checkperm("U")) {
+    if ($usepermissions && (checkperm("U") || count($approver_groups) > 0))
+        {
         # Only return users in children groups to the user's group
-        global $usergroup,$U_perm_strict;
+        global $U_perm_strict;
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        if ($U_perm_strict) {
-            //$sql.= "(parent='$usergroup')";
-            $sql.= "find_in_set('" . $usergroup . "',parent)";
+        if ($U_perm_strict)
+            {
+            if (count($approver_groups) > 0)
+                {
+                $sql.= "(find_in_set('" . $usergroup . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
+                }
+            else
+                {
+                $sql.= "find_in_set('" . $usergroup . "',parent)";
+                }
+            }
+        else
+            {
+            if (count($approver_groups) > 0)
+                {
+                $sql.= "(ref='$usergroup' or find_in_set('" . $usergroup . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
+                }
+            else
+                {
+                $sql.= "(ref='$usergroup' or find_in_set('" . $usergroup . "',parent))";
+                }
+            }
         }
-        else {
-            //$sql.= "(ref='$usergroup' or parent='$usergroup')";
-            $sql.= "(ref='$usergroup' or find_in_set('" . $usergroup . "',parent))";
-        }
-    }
 
     # Executes query.
     global $default_group;
@@ -1134,16 +1166,31 @@ function new_user($newuser, $usergroup = 0)
 function get_active_users()
     {
     global $usergroup, $U_perm_strict;
+    $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in=1 and unix_timestamp(now())-unix_timestamp(last_active)<(3600*2)";
-    if (checkperm("U") && $U_perm_strict)
+    if ((checkperm("U") || count($approver_groups) > 0) && $U_perm_strict)
         {
-        $sql.= " and find_in_set('" . $usergroup . "',g.parent) ";
+        if (count($approver_groups) > 0)
+            {
+            $sql.= "and (find_in_set('" . $usergroup . "',g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
+            }
+        else
+            {
+            $sql.= " and find_in_set('" . $usergroup . "',g.parent) ";
+            }
         }
 
     // Return users in both user's user group and children groups
-    elseif (checkperm('U') && !$U_perm_strict)
+    elseif ((checkperm("U") || count($approver_groups) > 0)&& !$U_perm_strict)
         {
-        $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent))";
+        if (count($approver_groups) > 0)
+            {
+            $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
+            }
+        else
+            {
+            $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent))";
+            }
         }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
@@ -2243,8 +2290,21 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
         switch($userpermission)
             {
             case "USER_ADMIN";
+            $sql_approver_groups = '';
+            global $usergroup_approval_mappings;
+            if (is_numeric($usergroup) && isset($usergroup_approval_mappings))
+                {
+                // Determine which user groups should be excluded from notifications. If mapping exists it must be valid to send notification.
+                $approver_groups = array_keys($usergroup_approval_mappings);
+                $defined_approvers_for_group = get_usergroup_approvers($usergroup);
+                $affective_approver_groups = array_diff($approver_groups, $defined_approvers_for_group);
+                if (count($affective_approver_groups) > 0)
+                    {
+                    $sql_approver_groups = 'and ug.ref not in (' . implode(",", $affective_approver_groups) . ')';
+                    }
+                }
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . ")) " . $sql_approver_groups . "":""));    
             return $notification_users_cache[$userpermissionindex];
             break;
             
@@ -2524,15 +2584,30 @@ function checkperm_user_edit($user)
 		$user=get_user($user);
 		}
 	$editusergroup=$user['usergroup'];
-	if (!checkperm('U') || $editusergroup == '')    // no user editing restriction, or is not defined so return true
+    global $U_perm_strict, $usergroup;
+    $approver_groups = get_approver_usergroups($usergroup);
+
+	if ((!checkperm('U') && count($approver_groups) == 0) || $editusergroup == '')    // no user editing restriction, or is not defined so return true
 		{
 		return true;
 		}
-	global $U_perm_strict, $usergroup;
+
 	// Get all the groups that the logged in user can manage 
-	$validgroups = sql_array("SELECT `ref` AS  'value' FROM `usergroup` WHERE " .
-		($U_perm_strict ? "FIND_IN_SET('{$usergroup}',parent)" : "(`ref`='{$usergroup}' OR FIND_IN_SET('{$usergroup}',parent))")
-	);
+    $sql = "SELECT `ref` AS  'value' FROM `usergroup` WHERE ";
+    if (count($approver_groups) > 0)
+        {
+        $sql .= "ref in (" . implode(",", $approver_groups) . ") or ";
+        }
+    if ($U_perm_strict)
+        {
+        $sql .= "FIND_IN_SET('{$usergroup}',parent)";
+        }
+    else
+        {
+        $sql .= "`ref`='{$usergroup}' OR FIND_IN_SET('{$usergroup}',parent)";
+        }
+
+	$validgroups = sql_array($sql);
 	
 	// Return true if the target user we are checking is in one of the valid groups
 	return (in_array($editusergroup, $validgroups));
@@ -2985,3 +3060,65 @@ function is_ecommerce_user()
     return ($userrequestmode == 2 || $userrequestmode == 3) ? true : false; 
     }
 
+
+/**
+ * Returns an array of the user groups the supplied user group acts as an approver for.
+ * Uses config $usergroup_approval_mappings.
+ *
+ * @param  int  $usergroup   Approving user group 
+ * 
+ * @return  array   Array of subordinate user group ids.
+ */
+function get_approver_usergroups($usergroup = "")
+    {
+    if ($usergroup == "" || !is_numeric($usergroup))
+        {
+        return array();
+        }
+
+    global $usergroup_approval_mappings;
+
+    $approval_groups = array();
+    if (isset($usergroup_approval_mappings))
+        {
+        if (array_key_exists((int)$usergroup, $usergroup_approval_mappings))
+           {
+           $approval_groups = $usergroup_approval_mappings[(int)$usergroup];
+           }
+        }
+
+    return $approval_groups;
+    }
+
+
+/**
+ * Returns an array of user groups who act as user request approvers to the user group supplied.
+ * Uses config $usergroup_approval_mappings.
+ *
+ * @param  int  $usergroup   Subordinate user group who's approval user group we need to find.
+ * 
+ * @return  array   Approval user group ids for supplied user group. Likely one value but its possible to have multiple approving groups.
+ */
+function get_usergroup_approvers($usergroup = "")
+    {
+    if ($usergroup == "" || !is_numeric($usergroup))
+        {
+        return array();
+        }
+
+    global $usergroup_approval_mappings;
+
+    $approver_groups = array();
+    if (isset($usergroup_approval_mappings))
+        {
+        foreach ($usergroup_approval_mappings as $approver => $groups)
+            {
+            if (in_array($usergroup, $groups))
+                {
+                $approver_groups[] = $approver;
+                }
+            }
+        }
+
+    return $approver_groups;
+    }
