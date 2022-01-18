@@ -4425,7 +4425,7 @@ function get_alternative_files($resource,$order_by="",$sort="",$type="")
                     FROM resource_alt_files where resource=? ". $extrasql->sql . 
                    " order by ".$ordersort." name asc, file_size desc";
 
-    $alt_files_parameters=array_merge($extrasql->parameters,array("i",$resource));
+    $alt_files_parameters=array_merge(array("i",$resource), $extrasql->parameters);
 
 	return ps_query($alt_files_sql,$alt_files_parameters);
 	}

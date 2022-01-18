@@ -29,12 +29,21 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         {
         $search_all_workflow_states = false;
         $default_display	= $list_display_fields;
-        
+
+        if(ctype_digit($view_title_field)) 
+            {
+            $generated_title_field = "field".$view_title_field;
+            }
+        else
+            {
+            $generated_title_field = "''";    
+            }
+
         # Function get_editable_resource_sql() now returns a query object
         $editable_resource_query=get_editable_resource_sql($countonly);
 
-        $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, 
-           field" . $view_title_field . " as description,'resourcereview' as type FROM (" . $editable_resource_query->sql . ") resources" ;
+        $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, " 
+           .$generated_title_field." as description, 'resourcereview' as type FROM (" . $editable_resource_query->sql . ") resources" ;
         $actionsql->parameters=array_merge($actionsql->parameters, $editable_resource_query->parameters);
         }
     if(checkperm("R") && $actions_resource_requests && (!$filtered || 'resourcerequest'==$type))
