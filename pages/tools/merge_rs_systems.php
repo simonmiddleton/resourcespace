@@ -1637,30 +1637,47 @@ if($import && isset($folder_path))
     logScript("Importing resource related...");
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_related = (isset($processed_resource_related) ? $processed_resource_related : array());
+    $processed_resource_related = array_flip($processed_resource_related);
     $src_resource_related = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_related_export.json", "r+b"));
-    foreach($src_resource_related as $src_rr)
+
+    logScript("Starting import...");
+    $src_resource_related_chunks = array_chunk($src_resource_related,2000);
+
+    foreach($src_resource_related_chunks as $src_resource_related_chunk)
         {
-        if(in_array("{$src_rr["resource"]}_{$src_rr["related"]}", $processed_resource_related))
+        $insertvals = [];
+        $temp_processed_related = [];
+        $temp_processed_related_log  = "";
+        foreach($src_resource_related_chunk as $src_rr)
             {
-            continue;
+            if(isset($processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"]))
+                {
+                continue;
+                }
+
+            logScript("Processing resource related - resource: #{$src_rr["resource"]} | related: #{$src_rr["related"]}");
+
+            if(
+                !array_key_exists($src_rr["resource"], $resources_mapping)
+                || !array_key_exists($src_rr["related"], $resources_mapping))
+                {
+                logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
+                $processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
+                fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
+                continue;
+                }
+
+            $insertvals[] = "('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')";
+
+            $temp_processed_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
+            $temp_processed_related_log .= "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL;
             }
-
-        logScript("Processing resource related - resource: #{$src_rr["resource"]} | related: #{$src_rr["related"]}");
-
-        if(
-            !array_key_exists($src_rr["resource"], $resources_mapping)
-            || !array_key_exists($src_rr["related"], $resources_mapping))
+        if(count($insertvals) > 0)
             {
-            logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
-            $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
-            fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
-            continue;
+            sql_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals));
+            $processed_resource_related = array_merge($processed_resource_related,$temp_processed_related);
+            fwrite($progress_fh, $temp_processed_related_log);
             }
-
-        sql_query("INSERT INTO resource_related (resource, related) VALUES ('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')");
-
-        $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
-        fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
         }
     unset($src_resource_related);
 
