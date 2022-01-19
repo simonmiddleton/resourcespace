@@ -510,6 +510,7 @@ function collection_add_resources($collection,$resources='',$search='',$selected
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
     else if($resources ==''){$resources=do_search($search);}
 
+    if($resources === false){return $lang["noresourcesfound"];}
     if(!is_array($resources)){$resources = explode(",",$resources);}
 
     if (count($resources) == 0){return $lang["noresourcesfound"];}
