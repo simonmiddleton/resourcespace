@@ -1639,8 +1639,6 @@ if($import && isset($folder_path))
     $processed_resource_related = (isset($processed_resource_related) ? $processed_resource_related : array());
     $processed_resource_related = array_flip($processed_resource_related);
     $src_resource_related = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_related_export.json", "r+b"));
-
-    logScript("Starting import...");
     $src_resource_related_chunks = array_chunk($src_resource_related,2000);
 
     foreach($src_resource_related_chunks as $src_resource_related_chunk)
