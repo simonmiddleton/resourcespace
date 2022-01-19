@@ -810,7 +810,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                             {
                             # Make sure drop down has only one value. Any existing values e.g. Resource Default should be removed if the CSV specifies a value.
                             $dropdown_nodes = array_column(get_nodes($fieldid), 'ref');
-                            delete_resource_nodes($resource_id, $dropdown_nodes);
+                            delete_resource_nodes($resource_id, $dropdown_nodes, false);
                             }
 
                         if(count($nodes_to_add))
