@@ -584,45 +584,51 @@ if($export && isset($folder_path))
         $additional_process = isset($table["additional_process"]) && is_callable($table["additional_process"]) ? $table["additional_process"] : null;
 
         // @todo: consider limiting the results and keep paging until all data is retrieved to avoid running out of memory
-        $records = sql_query("SELECT {$select} FROM {$from} {$where}");
-
-        if(empty($records))
+        $records_count= sql_value("SELECT COUNT(*) value FROM {$from} {$where}",0);
+        $counter = 0;
+        while($counter<=$records_count)
             {
-            logScript("WARNING: no data found!");
-            }
+            $records = sql_query("SELECT {$select} FROM {$from} {$where} LIMIT {$counter},5000");
 
-        foreach($records as $record)
-            {
-            // Sometimes you want to provide feedback to the user to let him/ her know a particular record is being processed
-            if(isset($table["record_feedback"]) && !empty($table["record_feedback"]))
+            if(empty($records))
                 {
-                $log_msg = $table["record_feedback"]["text"];
-                foreach($table["record_feedback"]["placeholders"] as $placeholder)
-                    {
-                    $log_msg = str_replace("%{$placeholder}", $record["{$placeholder}"], $log_msg);
-                    }
-                logScript($log_msg);
+                if($records_count=0){logScript("WARNING: no data found!");}
+                exit();
                 }
 
-            if(!is_null($additional_process))
+            foreach($records as $record)
                 {
-                $record = $additional_process($record);
+                // Sometimes you want to provide feedback to the user to let him/ her know a particular record is being processed
+                if(isset($table["record_feedback"]) && !empty($table["record_feedback"]))
+                    {
+                    $log_msg = $table["record_feedback"]["text"];
+                    foreach($table["record_feedback"]["placeholders"] as $placeholder)
+                        {
+                        $log_msg = str_replace("%{$placeholder}", $record["{$placeholder}"], $log_msg);
+                        }
+                    logScript($log_msg);
+                    }
 
-                // additional processing might determine we don't want to process this record at all
-                if($record === false)
+                if(!is_null($additional_process))
+                    {
+                    $record = $additional_process($record);
+
+                    // additional processing might determine we don't want to process this record at all
+                    if($record === false)
+                        {
+                        continue;
+                        }
+                    }
+
+                if($dry_run)
                     {
                     continue;
                     }
-                }
 
-            if($dry_run)
-                {
-                continue;
+                fwrite($export_fh, json_encode($record, JSON_NUMERIC_CHECK) . PHP_EOL);
                 }
-
-            fwrite($export_fh, json_encode($record, JSON_NUMERIC_CHECK) . PHP_EOL);
+            $counter += 5000;
             }
-
         fclose($export_fh);
         }
 
@@ -1637,45 +1643,30 @@ if($import && isset($folder_path))
     logScript("Importing resource related...");
     fwrite($progress_fh, PHP_EOL . PHP_EOL);
     $processed_resource_related = (isset($processed_resource_related) ? $processed_resource_related : array());
-    $processed_resource_related = array_flip($processed_resource_related);
     $src_resource_related = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "resource_related_export.json", "r+b"));
-    $src_resource_related_chunks = array_chunk($src_resource_related,2000);
-
-    foreach($src_resource_related_chunks as $src_resource_related_chunk)
+    foreach($src_resource_related as $src_rr)
         {
-        $insertvals = [];
-        $temp_processed_related = [];
-        $temp_processed_related_log  = "";
-        foreach($src_resource_related_chunk as $src_rr)
+        if(in_array("{$src_rr["resource"]}_{$src_rr["related"]}", $processed_resource_related))
             {
-            if(isset($processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"]))
-                {
-                continue;
-                }
-
-            logScript("Processing resource related - resource: #{$src_rr["resource"]} | related: #{$src_rr["related"]}");
-
-            if(
-                !array_key_exists($src_rr["resource"], $resources_mapping)
-                || !array_key_exists($src_rr["related"], $resources_mapping))
-                {
-                logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
-                $processed_resource_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
-                fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
-                continue;
-                }
-
-            $insertvals[] = "('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')";
-
-            $temp_processed_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
-            $temp_processed_related_log .= "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL;
+            continue;
             }
-        if(count($insertvals) > 0)
+
+        logScript("Processing resource related - resource: #{$src_rr["resource"]} | related: #{$src_rr["related"]}");
+
+        if(
+            !array_key_exists($src_rr["resource"], $resources_mapping)
+            || !array_key_exists($src_rr["related"], $resources_mapping))
             {
-            sql_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals));
-            $processed_resource_related = array_merge($processed_resource_related,$temp_processed_related);
-            fwrite($progress_fh, $temp_processed_related_log);
+            logScript("WARNING: Unable to find a resource mapping for either resource or related. Skipping");
+            $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
+            fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
+            continue;
             }
+
+        sql_query("INSERT INTO resource_related (resource, related) VALUES ('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')");
+
+        $processed_resource_related[] = "{$src_rr["resource"]}_{$src_rr["related"]}";
+        fwrite($progress_fh, "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL);
         }
     unset($src_resource_related);
 
