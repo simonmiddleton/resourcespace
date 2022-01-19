@@ -675,7 +675,7 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
  
     debug("BANG users" . print_r($users,true));
     $message_users = []; // Users that will be sent a message
-    $emails = []; // User emails that will be sent an email
+    $emails = ""; // User emails that will be sent an email
     debug("BANG type" . gettype($users));
     foreach($users as $notify_user)
         {
@@ -690,18 +690,21 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
                 }
             }        
         
-        debug("BANG Check user preference for user " . $userdetails["ref"]);
-        get_config_option($userdetails['ref'],$notifytypes[$type], $send_message);		  
-        if($send_message==false)
+        if(isset($notifytypes[$type]))
             {
-            debug("BANG user " . (int)$notify_user) . " doesn't want to get messages";
-            continue;
+            debug("BANG Checking user preference for user " . $userdetails["ref"]);
+            get_config_option($userdetails['ref'],$notifytypes[$type], $send_message);		  
+            if($send_message==false)
+                {
+                debug("BANG user " . (int)$notify_user . " doesn't want to get messages");
+                continue;
+                }
             }
         get_config_option($userdetails['ref'],'email_user_notifications', $send_email);    
         if($send_email && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL))
             {
             debug("BANG send email to user #" . $userdetails["ref"]);
-            $emails = $userdetails["email"];
+            $emails .= "," . $userdetails["email"];
             }        
         else
             {
@@ -719,8 +722,9 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
             }
         message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
         }
-    if(count($emails) > 0)
+    if(trim($emails) != "")
         {        
+        debug("BANG send mail using template: " . $template);
         send_mail($emails,$applicationname . ": " . $lang["status-1"],$message,"","",$template,$templatevars);            
         }
     }

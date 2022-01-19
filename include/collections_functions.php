@@ -596,6 +596,10 @@ function collection_writeable($collection)
             return false; // so "you cannot modify this collection"
             }
         }
+    if($collectiondata['type']==COLLECTION_TYPE_REQUEST && !checkperm('R'))
+        {
+        return false;
+        }
 
     # Load a list of attached users
     $attached = ps_array("SELECT user value FROM user_collection WHERE collection = ?",["i",$collection]);
@@ -3478,7 +3482,7 @@ function get_session_collections($rs_session,$userref="",$create=false)
         {
         $userref='NULL';
         }
-	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_SHARE_UPLOAD . "') " . $extrasql,"");
+	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_TYPE_SHARE_UPLOAD . "') " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
         if(upload_share_active())
@@ -3783,7 +3787,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Edit Collection
-    if((($userref == $collection_data['user']) || (checkperm('h')))  && ($k == '' || $internal_share_access) && !$system_read_only) 
+    if((($userref == $collection_data['user'] && !in_array($collection_data['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION])) || (checkperm('h')))  && ($k == '' || $internal_share_access) && !$system_read_only) 
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_edit.php",$urlparams);
         $options[$o]['value']='edit_collection';
@@ -3867,7 +3871,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     // Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
-    if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate() && !$system_read_only)
+    if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate() && !$system_read_only && !in_array($collection_data['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION]))
         {
         $is_smart_featured_collection = (isset($collection_data["smart"]) ? (bool) $collection_data["smart"] : false);
         $is_featured_collection_category = (is_featured_collection_category($collection_data) || is_featured_collection_category_by_children($collection_data["ref"]));
@@ -3905,7 +3909,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Add option to publish as featured collection
-    if($enable_themes && ($k == '' || $internal_share_access) && checkperm("h"))
+    if($enable_themes && ($k == '' || $internal_share_access) && checkperm("h") && !in_array($collection_data['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION]))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_set_category.php", $urlparams);
         $options[$o]['value'] = 'collection_set_category';
@@ -5521,6 +5525,7 @@ function allow_collection_share(array $c)
             || checkperm ("g") 
             || collection_min_access($c["ref"]) <= RESOURCE_ACCESS_RESTRICTED
             || $restricted_share)
+        && !in_array($c['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION])
     )
         {
         return true;
@@ -5728,9 +5733,10 @@ function allow_upload_to_collection(array $c)
         }
 
     if(
-        $c["type"] == COLLECTION_TYPE_SELECTION
+        in_array($c["type"],[COLLECTION_TYPE_SELECTION,COLLECTION_TYPE_REQUEST])
         // Featured Collection Categories can't contain resources, only other featured collections (categories or normal)
         || ($c["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category_by_children($c["ref"]))
+
     )
         {
         return false;
