@@ -562,7 +562,8 @@ function collection_remove_resources($collection,$resources='',$removeall=false,
         }
 
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
-
+    if($resources===false){return $lang["noresourcesfound"];}
+    
     $collection_resources       = get_collection_resources($collection);
     
     if(!is_array($resources)){$resources = explode(",",$resources);}
