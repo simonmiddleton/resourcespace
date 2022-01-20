@@ -100,7 +100,7 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 		$tms_object_id = intval($tms_form_post_id);
         
         global $tmsdata;
-		$tmsdata = tms_link_get_tms_data('', $tms_object_id);
+		$tmsdata = tms_link_get_tms_data('', $tms_object_id, '', $module['module_name']);
 
 		// Make sure we actually do save this data, even if we return an error
         $result_update_field = update_field($ref, $module['rs_uid_field'], $tms_object_id);
@@ -145,7 +145,7 @@ function HookTms_linkEditSaveextraresourcedata($list)
             }
 
         global $tmsdata;
-        $tmsdata = tms_link_get_tms_data('', $tms_object_id);
+        $tmsdata = tms_link_get_tms_data('', $tms_object_id, '', $module['module_name']);
         
         if(!is_array($tmsdata))
             {

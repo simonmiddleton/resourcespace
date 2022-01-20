@@ -1414,6 +1414,7 @@ $mime_type_by_extension = array(
     'avi'  => 'video/msvideo',
     'mp3'  => 'audio/mpeg',
     'wav'  => 'audio/x-wav',
+    'weba' => 'audio/webm',    
     'jpg'  => 'image/jpeg',
     'jpeg' => 'image/jpeg',
     'gif'  => 'image/gif',
@@ -1683,7 +1684,8 @@ $ffmpeg_audio_extensions = array(
     'aac',
     'ra',
     'rm',
-    'gsm'
+    'gsm',
+    'weba',
     );
 	
 # The audio settings for mp3 previews
@@ -2945,8 +2947,8 @@ $daterange_edtf_support=false;
 $resource_type_extension_mapping_default = 1;
 $resource_type_extension_mapping         = array(
     2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl', 'ott' , 'rtf' , 'txt' , 'xml'),
-    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv'),
-    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
+    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv', 'webm'),
+    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg', 'weba'),
 );
 
 // Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
