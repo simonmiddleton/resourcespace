@@ -327,11 +327,11 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
         if (count($approver_groups) > 0)
             {
-            $sql.= "(find_in_set('" . $usergroup . "',g.parent) or g.ref in (" . implode(",", $approver_groups) . "))";
+            $sql.= "(find_in_set('" . escape_check($usergroup) . "',g.parent) or g.ref in (" . implode(",", $approver_groups) . "))";
             }
         else
             {
-            $sql.= "find_in_set('" . $usergroup . "',g.parent) ";
+            $sql.= "find_in_set('" . escape_check($usergroup) . "',g.parent) ";
             }
 
         $sql.= hook("getuseradditionalsql");
@@ -348,11 +348,11 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         {
         if (count($approver_groups) > 0)
             {
-            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', $usergroup, implode(",", $approver_groups));
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup), implode(",", $approver_groups));
             }
         else
             {
-            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))',($sql == '') ? 'WHERE' : ' AND', $usergroup);
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup));
             }
         }
     $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
@@ -459,22 +459,22 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
             {
             if (count($approver_groups) > 0)
                 {
-                $sql.= "(find_in_set('" . $usergroup . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
+                $sql.= "(find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
                 }
             else
                 {
-                $sql.= "find_in_set('" . $usergroup . "',parent)";
+                $sql.= "find_in_set('" . escape_check($usergroup) . "',parent)";
                 }
             }
         else
             {
             if (count($approver_groups) > 0)
                 {
-                $sql.= "(ref='$usergroup' or find_in_set('" . $usergroup . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
+                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
                 }
             else
                 {
-                $sql.= "(ref='$usergroup' or find_in_set('" . $usergroup . "',parent))";
+                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent))";
                 }
             }
         }
@@ -1172,11 +1172,11 @@ function get_active_users()
         {
         if (count($approver_groups) > 0)
             {
-            $sql.= "and (find_in_set('" . $usergroup . "',g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
+            $sql.= "and (find_in_set('" . escape_check($usergroup) . "',g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
             }
         else
             {
-            $sql.= " and find_in_set('" . $usergroup . "',g.parent) ";
+            $sql.= " and find_in_set('" . escape_check($usergroup) . "',g.parent) ";
             }
         }
 
@@ -1185,11 +1185,11 @@ function get_active_users()
         {
         if (count($approver_groups) > 0)
             {
-            $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
+            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
             }
         else
             {
-            $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent))";
+            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent))";
             }
         }
     
@@ -2304,7 +2304,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
                     }
                 }
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . ")) " . $sql_approver_groups . "":""));    
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . escape_check($usergroup) . ")) " . $sql_approver_groups . "":""));    
             return $notification_users_cache[$userpermissionindex];
             break;
             
@@ -2600,11 +2600,11 @@ function checkperm_user_edit($user)
         }
     if ($U_perm_strict)
         {
-        $sql .= "FIND_IN_SET('{$usergroup}',parent)";
+        $sql .= "FIND_IN_SET('{" . escape_check($usergroup) . "}',parent)";
         }
     else
         {
-        $sql .= "`ref`='{$usergroup}' OR FIND_IN_SET('{$usergroup}',parent)";
+        $sql .= "`ref`='{" . escape_check($usergroup) . "}' OR FIND_IN_SET('{" . escape_check($usergroup) . "}',parent)";
         }
 
 	$validgroups = sql_array($sql);
