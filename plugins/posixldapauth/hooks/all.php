@@ -6,12 +6,12 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 	*/
 	$ldap_debug = true;
 	
-	include_once "plugins/posixldapauth/config/config.default.php";
-	if (file_exists("plugins/posixldapauth/config/config.php"))
+	include_once dirname(__FILE__) . "/../config/config.default.php";
+	if (file_exists(dirname(__FILE__) . "/../config/config.php"))
 	{
-        	include_once("plugins/posixldapauth/config/config.php");
+        	include_once(dirname(__FILE__) . "/../config/config.php");
 	}
-	include_once "plugins/posixldapauth/hooks/ldap_class.php";
+	include_once dirname(__FILE__) . "/ldap_class.php";
 	global $username;
 	global $password;
 	global $password_hash,$use_plugins_manager,$ldapauth;
