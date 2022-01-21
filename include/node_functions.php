@@ -2243,7 +2243,7 @@ function process_node_search_syntax_to_names(array $R, string $column)
 
 /**
  * 
- * 
+ * TODO: consider making this function deal with a list of changes (instead of one resource, rtf and value at a time)
  */
 function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
     {
@@ -2265,17 +2265,28 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
     - remove original node association
     */
     $value = trim($value);
-    $existing_resource_nodes = get_resource_nodes($resource, $resource_type_field, true);
+
+    // Non-fixed list fields should only have one resource-node relationship! If you have two nodes associated with a 
+    // resource for a non-fixed list field (e.g text) then something went wrong somewhere.
+    $existing_resource_node = get_resource_nodes($resource, $resource_type_field, true)[0] ?? [];
+    $existing_rn_w_use_count = get_nodes_use_count([$existing_resource_node['ref'] ?? 0]);
+
     $similar_field_nodes = get_nodes($resource_type_field, null, false, null, null, $value, true);
     $found_match = get_node_by_name($similar_field_nodes, $value, false);
 
-    $nodes_to_add = [];
-    $nodes_to_remove = [];
+
+    // TODO: nodes_to_add & remove should be empty if found_match=existing_resource_node
+    $nodes_to_add = array_column([$found_match], 'ref');
+    $nodes_to_remove = empty($nodes_to_add)
+                        ? []
+                        : (empty($existing_resource_node) ? [] : [$existing_resource_node['ref']]);
+
     $delete_unsused_nodes = false;
 
     // Remove existing data (when given an empty value)
     if($value === '')
         {
+        $nodes_to_add = [];
         $nodes_to_remove = get_resource_nodes($resource, $resource_type_field);
 
         // Determine list of nodes to remove and their current use count
@@ -2293,8 +2304,30 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
             }
         }
 
-    // Create a new node if we couldn't find an identical match already set for this field
-    else if(empty($found_match))
+    // EDIT mode
+    else if(empty($found_match) && !empty($existing_resource_node))
+        {
+        // Current node is only used on this resource
+        if(
+            $existing_rn_w_use_count[$existing_resource_node['ref']] <= 1
+            && set_node($existing_resource_node['ref'], $resource_type_field, $value, null, $existing_resource_node['order_by']) !== false
+        )
+            {
+            echo "EDITED exiting node - {$existing_resource_node['ref']}".PHP_EOL;
+            }
+
+        // Current node has more resources associated with it => new node created
+        if($existing_rn_w_use_count[$existing_resource_node['ref']] > 1)
+            {
+            // - create a new node for the new value (ie. the updated value input by user)
+            // - link new node ID with the resource
+            // - remove original node association
+            echo "TODO---EDITED: create, link and remove".PHP_EOL;
+            }
+        }
+
+    // Create a new node if unable to find a match for the new value or an existing node for the resource
+    else if(empty($found_match) && empty($existing_resource_node))
         {
         $new_node = set_node(null, $resource_type_field, $value, null, get_node_order_by($resource_type_field, false, null));
         $nodes_to_add = [$new_node];
@@ -2326,7 +2359,7 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
 print_r([
     'similar_field_nodes' => $similar_field_nodes,
     'found_match' => $found_match,
-    'existing_resource_nodes' => $existing_resource_nodes,
+    'existing_resource_node' => $existing_resource_node,
     'nodes_to_add' => $nodes_to_add,
     'nodes_to_remove' => $nodes_to_remove,
 ]);
@@ -2368,7 +2401,24 @@ function delete_unsused_non_fixed_list_nodes(int $resource_type_field)
  */
 function remove_invalid_node_keyword_mappings()
     {
-    $vals = ps_query('SELECT * FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
     ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
     clear_query_cache('schema');
     }
+
+
+function get_nodes_use_count(array $nodes)
+    {
+    $nodes = array_filter($nodes, 'is_int_loose');
+    if(empty($nodes))
+        {
+        return [];
+        }
+
+    $nodes_use_count = ps_query(
+        'SELECT node, COUNT(node) AS `use_count` FROM resource_node WHERE node IN (' . ps_param_insert(count($nodes)) . ') GROUP BY node',
+        ps_param_fill($nodes, 'i')
+    );
+
+    return array_column($nodes_use_count, 'use_count', 'node');
+    }
+
