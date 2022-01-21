@@ -418,7 +418,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
         }
         
     $resource = get_resource_data($ref);
-    if(!is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
+    if(!is_numeric($ref) || $resource === false || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
         {
         return false;
         }

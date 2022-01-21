@@ -56,6 +56,7 @@ $simplesaml_config_defaults["admin.protectmetadata"] = false;
 $simplesaml_config_defaults["enable.saml20-idp"] = true;
 $simplesaml_config_defaults["datadir"] = $storagedir . "/simplesamldata";
 $simplesaml_config_defaults["timezone"] = null;
+$simplesaml_config_defaults["session.cookie.secure"] = true;
 
 
 

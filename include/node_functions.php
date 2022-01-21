@@ -2247,7 +2247,23 @@ function process_node_search_syntax_to_names(array $R, string $column)
  */
 function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
     {
+    /*
+    # SAVING - DONE
+    The saving functionality will ensure that upon saving a text field, the system will look for a node with a matching 
+    identical name. ResourceSpace will create a new node if one cannot be retrieved.
 
+    # EDITING
+    When editing a text field, the system will update the node name only if a node is not being used by more than one resource.
+
+    When more than a resource is used, the process will be as follows:
+    - create a new node for the new value (ie. the updated value input by user)
+    - link new node ID with the resource
+    - remove original node association
+
+    DONE - If the new value is an empty string, then the process is slightly different:
+    - check the current node associated is linked with any other resources. If not, remove it.
+    - remove original node association
+    */
     $value = trim($value);
     $existing_resource_nodes = get_resource_nodes($resource, $resource_type_field, true);
     $similar_field_nodes = get_nodes($resource_type_field, null, false, null, null, $value, true);

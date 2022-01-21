@@ -82,7 +82,7 @@ foreach($foldercontents as $objectindex => $object)
                     notify_resource_change($valid_resource);
                     }
                 $replaced[] = $valid_resource;
-                unlink($full_path);
+                try_unlink($full_path);
                 }
             else
                 {
@@ -124,7 +124,8 @@ foreach($foldercontents as $objectindex => $object)
                         continue;
                         }
                     }
-                unlink($full_path);
+                // Attempt to delete
+                try_unlink($full_path);
                 }
             else
                 {
