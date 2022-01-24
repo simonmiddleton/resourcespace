@@ -63,41 +63,30 @@ function HookTms_linkAllInitialise()
 
 function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
     {
-    global $tms_link_object_id_field,$tms_link_resource_types,$lang,$tms_link_field_mappings_saved;
-
-    $resdata = get_resource_data($resource);
     $validfield = false;
+    if($resource < 0 || !tms_link_is_rs_uid_field($field))
+        {
+        return false;
+        }
+    $resdata = get_resource_data($resource);
     foreach(tms_link_get_modules_mappings() as $module_uid => $module)
         {
-        if(in_array($resdata['resource_type'], $module['applicable_resource_types']))
+        if(!in_array($resdata['resource_type'], $module['applicable_resource_types']))
             {
-            $validfield = true;
+            continue;
             }
-        }
-    if($validfield !== true)
-        {
-        return false;
-        }
-	
-	if($resource < 0 || !tms_link_is_rs_uid_field($field))
-        {
-        return false;
-        }
 
-    $tms_object_id = intval($value);
-    $tmsdata = tms_link_get_tms_data($resource, $tms_object_id);
+        $tms_object_id = intval($value);
+        debug("tms_link: updating resource id #" . $resource);
 
-    // if call to tms_link_get_tms_data() does not return an array, error has occurred
-    if (!is_array($tmsdata))
-        {
-        return $tmsdata;  // return error message
-        }
-
-    debug("tms_link: updating resource id #" . $resource);
-
-    foreach(tms_link_get_modules_mappings() as $module)
-        {
         $module_name = $module['module_name'];
+        $tmsdata = tms_link_get_tms_data($resource, $tms_object_id,'', $module_name);
+
+        // if call to tms_link_get_tms_data() does not return an array, error has occurred
+        if (!is_array($tmsdata))
+            {
+            return $tmsdata;  // return error message
+            }
 
         if(!array_key_exists($module_name, $tmsdata))
             {

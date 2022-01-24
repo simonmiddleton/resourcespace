@@ -68,7 +68,7 @@ function tms_convert_value($value, $key, array $module)
     }
 
 
-function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "")
+function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "", $onlymodule="")
   {
   global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password;
   
@@ -94,6 +94,10 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
 
     foreach($modules_mappings as $module)
         {
+        if(trim($onlymodule) != "" && $onlymodule != $module['module_name'])
+            {
+            continue;
+            }
         if(isset($resource_data) && !in_array($resource_data["resource_type"],$module["applicable_resource_types"])) 
             {
             // Not valid module for this resource
