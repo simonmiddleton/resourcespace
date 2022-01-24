@@ -3586,9 +3586,10 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $cmd_args = [];
-    $imversion = get_imagemagick_version();
+    $imversion = get_imagemagick_version(false); # Return version in string format
+
     // Set correct syntax for commands to remove alpha channel
-    if($imversion[0] >= 7)
+    if(version_compare($imversion,"7",">="))
         {
         $alphaoff = " -alpha off";
         }
@@ -3678,7 +3679,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     $colorspace2 = "";
     if(isset($actions["srgb"]))
         {
-        if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
+        if (version_compare($imversion,"6.7.5-5",">="))
             {
             $colorspace1 = " -colorspace sRGB ";
             $colorspace2 =  " -colorspace RGB ";
