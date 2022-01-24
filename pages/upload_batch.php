@@ -418,12 +418,14 @@ if ($processupload)
     debug("upload_batch - received file from user '" . $username . "',  filename: '" . $upfilename . "'");
         
     # Work out the extension
-    $extension=explode(".",$upfilename);
-    $extension=trim(strtolower($extension[count($extension)-1]));
+    $parts=explode(".",$upfilename);
+    $extension=trim(strtolower($parts[count($parts)-1]));
+    if(count($parts) > 1){array_pop($parts);}
+    $filenameonly = implode('.', $parts);
 
      // Clean the filename
     $origuploadedfilename= escape_check($upfilename);
-    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode(pathinfo($upfilename, PATHINFO_FILENAME)));
+    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($extension)) ? ".{$extension}" : '');
 
     # Banned extension?
