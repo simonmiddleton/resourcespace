@@ -3332,7 +3332,7 @@ function get_resource_top_keywords($resource,$count)
         if(isset($r) && trim($r) != '')
             {  
             if (substr($r,0,1)==","){$r=substr($r,1);}
-            $s=split_keywords($r);
+            $s=split_keywords(i18n_get_translated($r));
             # Splitting keywords can result in break words being included in these results
             # These should be removed here otherwise they will show as keywords themselves which is incorrect
             global $noadd; 
