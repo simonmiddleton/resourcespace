@@ -806,7 +806,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         $new_nodes_val = "";
                         delete_resource_nodes($resource_id, $nodes_to_remove);
 
-                        if (count($nodes_to_add) > 0 && $field_type == FIELD_TYPE_DROP_DOWN_LIST)
+                        if (count($nodes_to_add) > 0 && $field_type == FIELD_TYPE_DROP_DOWN_LIST || $field_type == FIELD_TYPE_RADIO_BUTTONS)
                             {
                             # Make sure drop down has only one value. Any existing values e.g. Resource Default should be removed if the CSV specifies a value.
                             $dropdown_nodes = array_column(get_nodes($fieldid), 'ref');
