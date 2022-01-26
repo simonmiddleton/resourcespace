@@ -345,11 +345,12 @@ if(isset($user))
         exit(1);
         }
 
-    // Reset any "maintenance mode" config options the system might be configured with
-    $global_permissions_mask = "";
-
     setup_user($user_data[0]);
     logScript("Running script as user '{$username}' (ID #{$userref})");
+
+    // Reset any "maintenance mode" config options the system might be configured with
+    $global_permissions_mask = "";
+    $system_read_only = false;
     }
 logScript("Running script with language set to '{$language}'");
 
@@ -1462,9 +1463,17 @@ if($import && isset($folder_path))
     // If specification is configured to add certain nodes to all imported resources, do it now
     if(!empty($nodes_applied_to_all_merged_resources))
         {
-        if(add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false))
+        if(
+            !isset($processed_nodes_applied_to_all_merged_resources)
+            && add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false)
+        )
             {
             logScript('Updated all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
+            fwrite($progress_fh, '$processed_nodes_applied_to_all_merged_resources = true;' . PHP_EOL);
+            }
+        else if(isset($processed_nodes_applied_to_all_merged_resources))
+            {
+            logScript('Nodes that should be applied to all merged resources have already been added. Skipping');
             }
         else
             {
