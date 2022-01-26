@@ -40,7 +40,7 @@ if (!$save_as)
 	{
 	?>
 	<script type="text/javascript">
-	window.setTimeout("document.location='<?php echo $url?>'",1000);
+	window.setTimeout("document.location='<?php echo htmlspecialchars($url)?>'",1000);
 	</script>
 	<?php
 	}
