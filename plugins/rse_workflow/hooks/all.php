@@ -4,13 +4,12 @@ function HookRse_workflowAllInitialise()
 	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
 	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
-     global $pagename, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
+     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
     
     # Update $archive_states and associated $lang variables with entries from database
     $searchstates = array();
     $wfstates=rse_workflow_get_archive_states();
     
-	global $lang;
 	foreach($wfstates as $wfstateref=>$wfstate)
 		{
 		if (!$wfstate['fixed'])
@@ -50,8 +49,8 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     
     if(getval('more_workflow_action_' . $workflowaction,'') != '')
         {
-            $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
-            $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
+        $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
+        $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
         }
         
     if(count($resource) > 200)
@@ -66,42 +65,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     
     $maillinkurl = (($use_phpmailer) ? "<a href=\"$linkurl\">$linkurl</a>" : $linkurl); // Convert to anchor link if using html mails
       
-    /***** NOTIFY GROUP SUPPORT *****/
-    if(isset($wfstates[$archive]['notify_group']) && $wfstates[$archive]['notify_group'] != '')
-        {   
-        $archive_notify = sql_query("
-            SELECT ref, email
-              FROM user
-             WHERE approved = 1
-               AND usergroup = '" . escape_check($wfstates[$archive]['notify_group']) . "'
-        ");
-
-        // Send notifications to members of usergroup
-        foreach($archive_notify as $archive_notify_user)
-            {
-            debug("processing notification for notify user " . $archive_notify_user['ref']);
-            get_config_option($archive_notify_user['ref'],'user_pref_resource_notifications', $send_message);          
-            if($send_message==false)
-                {
-                continue;
-                }
-                
-            // Does this user want an email or notification?
-            get_config_option($archive_notify_user['ref'],'email_user_notifications', $send_email); 
-            if($send_email && filter_var($archive_notify_user["email"], FILTER_VALIDATE_EMAIL))
-                {
-                debug("sending email notification to user " . $archive_notify_user['ref']);
-                send_mail($archive_notify_user["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl);
-                }
-            else
-                {
-                global $userref;
-                debug("sending system notification to user " . $archive_notify_user['ref']);
-                message_add($archive_notify_user['ref'],$message,$linkurl);
-                }
-            }
-        }
-    /***** END OF NOTIFY GROUP SUPPORT *****/
+    /***** NOTIFY GROUP SUPPORT IS NOW HANDLED BY ACTIONS *****/    
 
     /*****NOTIFY CONTRIBUTOR*****/
     if(isset($wfstates[$archive]['notify_user_flag']) && $wfstates[$archive]['notify_user_flag'] == 1)
@@ -235,4 +199,32 @@ function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_
         break;
     <?php
     return;
+    }
+
+
+function HookRse_workflowAllAfter_setup_user()
+    {
+    // Replaces notify group messaging - now replaced by actions
+    global $userref, $usergroup;
+    
+    get_config_option($userref,'user_pref_resource_notifications', $addwfactions);		  
+    if($addwfactions==false)
+        {
+        // No notifications were sent so actions shouldn't appear either
+        return false;
+        }
+
+    $extra_notify_states = [];
+    $wfstates=rse_workflow_get_archive_states();
+    foreach($wfstates as $wfstateref=>$wfstate)
+        {
+        if(isset($wfstate['notify_group']) &&  (int)$wfstate['notify_group'] == $usergroup && !checkperm("z" . $wfstateref))
+            {
+            $extra_notify_states[] = $wfstateref;
+            }
+        }
+    if(count($extra_notify_states) > 0)
+        {
+        $GLOBALS['actions_notify_states'] .= "," . implode(",",$extra_notify_states);
+        }
     }

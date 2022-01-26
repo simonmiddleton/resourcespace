@@ -1350,11 +1350,6 @@ $registration_group_select=false;
 #   3: Drop down box (set options using $custom_request_options["Field Name"]=array("Option 1","Option 2","Option 3");
 #   4: HTML block, e.g. help text paragraph (set HTML usign $custom_request_html="<b>Some HTML</b>";
 
-
-# Send an e-mail to the address set at $email_notify above when user contributed
-# resources are submitted (status changes from "User Contributed - Pending Submission" to "User Contributed - Pending Review").
-$notify_user_contributed_submitted=true;
-
 # When requesting feedback, allow the user to select resources (e.g. pick preferred photos from a photo shoot).
 $feedback_resource_select=false;
 # When requesting feedback, display the contents of the specified field (if available) instead of the resource ID. 
@@ -2570,9 +2565,6 @@ $no_metadata_read_default=false; // If set to true and $metadata_read is false t
 $removenever=false; # Remove 'never' option for resource request access expiration and sets default expiry date to 7 days
 $hide_resource_share_link=false; // Configurable option to hide the "Share" link on the resource view page.
 
-# Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
-$user_resources_approved_email=false; 
-
 # Option to have default date left blank, instead of current date.
 $blank_date_upload_template=false;
 
@@ -2925,13 +2917,17 @@ $fstemplate_alt_scramblekey="";
 $responsive_ui = true;
 
 # Default action settings
-$actions_enable=false;
+$actions_enable = true;
 # If $actions_enable is false, option to enable actions only for users with certain permissions, To enable actions based on users having more than one permission, separate with a comma.
 $actions_permissions=array("a","t","R","u","e0");
 $actions_resource_requests=true;
 $actions_account_requests=true;
-$actions_resource_review=true;
-$actions_notify_states="-1";
+
+// $actions_notify_states . If unset then default values are set based on permissions
+// - Standard users with permission 'e-2' and 'd' will include -2 so they see their 'Pending submission' resources as actions
+// - Users with the e-1 permission will include -1 so they see 'Pending review' resources as actions
+$actions_notify_states="";
+
 $actions_resource_types_hide="";  // Resource types to exclude from notifications
 $actions_approve_hide_groups=""; // Groups to exclude from notifications
 
