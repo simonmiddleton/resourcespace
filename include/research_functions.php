@@ -24,14 +24,22 @@ function send_research_request(array $rr_cfields)
 	$rr_description=getval("description","");
 	$parameters=array("i",$as_user, "s",$rr_name, "s",$rr_description);
 
-	$rr_deadline = getval("deadline","00-00-00")." 00:00:00";
+	$rr_deadline = getval("deadline","");
+	if($rr_deadline=="")
+		{
+	 	$rr_deadline=NULL;
+		}
 	$rr_contact = getval("contact","");
 	$rr_email = getval("email","");
 	$rr_finaluse = getval("finaluse","");
 	$parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
 
 	# $rt
-	$rr_noresources = ( (getval("noresources","")=="") ? "0" : "'".getval("noresources","")."'");
+	$rr_noresources = getval("noresources","");
+	if($rr_noresources=="")
+		{
+		$rr_noresources=NULL;
+		}
 	$rr_shape = getval("shape","");
 	$parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
 
