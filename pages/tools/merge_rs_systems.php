@@ -593,8 +593,7 @@ if($export && isset($folder_path))
 
             if(empty($records))
                 {
-                if($records_count=0){logScript("WARNING: no data found!");}
-                exit();
+                if($records_count==0){logScript("WARNING: no data found!");}
                 }
 
             foreach($records as $record)
