@@ -35,7 +35,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         $search_all_workflow_states = false;
         $default_display	= $list_display_fields;
 
-        if(ctype_digit($view_title_field)) 
+        if(is_int_loose($view_title_field)) 
             {
             $generated_title_field = "field".$view_title_field;
             }
