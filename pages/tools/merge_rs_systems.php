@@ -1464,7 +1464,7 @@ if($import && isset($folder_path))
         {
         if(
             !isset($processed_nodes_applied_to_all_merged_resources)
-            && add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false)
+            && add_resource_nodes_multi(array_values($resources_mapping), $nodes_applied_to_all_merged_resources, false, true)
         )
             {
             logScript('Updated all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
