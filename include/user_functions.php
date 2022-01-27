@@ -345,7 +345,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
         if (count($approver_groups) > 0)
             {
-            $sql.= "(find_in_set('" . escape_check($usergroup) . "',g.parent) or g.ref in (" . implode(",", $approver_groups) . "))";
+            $sql.= "(find_in_set('" . escape_check($usergroup) . "',g.parent) or g.ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
             }
         else
             {
@@ -366,7 +366,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         {
         if (count($approver_groups) > 0)
             {
-            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup), implode(",", $approver_groups));
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup), implode(",", escape_check_array_values($approver_groups)));
             }
         else
             {
@@ -477,7 +477,7 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
             {
             if (count($approver_groups) > 0)
                 {
-                $sql.= "(find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
+                $sql.= "(find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
                 }
             else
                 {
@@ -488,7 +488,7 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
             {
             if (count($approver_groups) > 0)
                 {
-                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", $approver_groups) . "))";
+                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
                 }
             else
                 {
@@ -1190,7 +1190,7 @@ function get_active_users()
         {
         if (count($approver_groups) > 0)
             {
-            $sql.= "and (find_in_set('" . escape_check($usergroup) . "',g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
+            $sql.= "and (find_in_set('" . escape_check($usergroup) . "',g.parent) or usergroup in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
             }
         else
             {
@@ -1203,7 +1203,7 @@ function get_active_users()
         {
         if (count($approver_groups) > 0)
             {
-            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent) or usergroup in (" . implode(",", $approver_groups) . "))";
+            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent) or usergroup in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
             }
         else
             {
@@ -2318,7 +2318,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
                 $affective_approver_groups = array_diff($approver_groups, $defined_approvers_for_group);
                 if (count($affective_approver_groups) > 0)
                     {
-                    $sql_approver_groups = 'and ug.ref not in (' . implode(",", $affective_approver_groups) . ')';
+                    $sql_approver_groups = 'and ug.ref not in (' . implode(",", escape_check_array_values($affective_approver_groups)) . ')';
                     }
                 }
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
@@ -2614,15 +2614,15 @@ function checkperm_user_edit($user)
     $sql = "SELECT `ref` AS  'value' FROM `usergroup` WHERE ";
     if (count($approver_groups) > 0)
         {
-        $sql .= "ref in (" . implode(",", $approver_groups) . ") or ";
+        $sql .= "ref in (" . implode(",", escape_check_array_values($approver_groups)) . ") or ";
         }
     if ($U_perm_strict)
         {
-        $sql .= "FIND_IN_SET('{" . escape_check($usergroup) . "}',parent)";
+        $sql .= "FIND_IN_SET('" . escape_check($usergroup) . "',parent)";
         }
     else
         {
-        $sql .= "`ref`='{" . escape_check($usergroup) . "}' OR FIND_IN_SET('{" . escape_check($usergroup) . "}',parent)";
+        $sql .= "`ref`='" . escape_check($usergroup) . "' OR FIND_IN_SET('" . escape_check($usergroup) . "',parent)";
         }
 
 	$validgroups = sql_array($sql);
