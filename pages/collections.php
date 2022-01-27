@@ -104,6 +104,10 @@ if ($collection!="" && $collection!="undefined")
 // Load collection info. 
 // get_user_collections moved before output as function may set cookies
 $cinfo=get_collection($usercollection);
+if(!is_array($cinfo))
+    {
+    $cinfo = get_collection(get_default_user_collection(true));
+    }
 if('' == $k || $internal_share_access)
     {
     $list = get_user_collections($userref);
