@@ -369,12 +369,13 @@ if ($saveaction != '' && enforcePostRequest(false))
             $dlfile = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $new_ext;
             rename($newpath,$dlfile);
             
-            $dlparams = array(
+            $download_url = generateURL($baseurl_short . "pages/download.php", 
+            [
                 "userfile" => $ref . "_" . $randstring . "." . $new_ext,
-                "filename" => strip_extension($filename)
-                );
+                "filename" => strip_extension($filename) 
+            ]);
 
-            $dlurl = generateURL($baseurl_short . "pages/download.php", $dlparams);
+            $dlurl = generateURL($baseurl_short . "pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
             $url_params["url"]=$dlurl;
             
             $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);

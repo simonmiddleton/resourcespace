@@ -43,6 +43,8 @@ if(count($approved_users) != $usercount + 3){return false;}
 // Get all users
 $all_users=get_users("","","username");
 
+if(count($all_users) != count($approved_users) + 1){return false;}
+
 // Get users in group 1
 $group1_users=get_users(1,"","username");
 

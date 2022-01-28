@@ -110,6 +110,7 @@ define ('LOG_CODE_DISABLED',            '-');
 define ('LOG_CODE_LOCKED',              'X');
 define ('LOG_CODE_UNLOCKED',            'Y');
 define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
+define ('LOG_CODE_FAILED_LOGIN_ATTEMPT','Xl');
 define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');

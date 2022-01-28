@@ -1,7 +1,7 @@
 ref,int(11),NO,PRI,,auto_increment
 logged,datetime,YES,,,
 user,int(11),YES,,,
-log_code,char(1),YES,,,
+log_code,char(5),YES,,,
 note,text,YES,,,
 value_old,text,YES,,,
 value_new,text,YES,,,

@@ -160,7 +160,7 @@ foreach(tms_link_get_modules_mappings() as $module)
             fwrite($logfile, $logmessage);
             }
 
-        $tmsresults = tms_link_get_tms_data("", $tms_query_ids);
+        $tmsresults = tms_link_get_tms_data("", $tms_query_ids,'',$module['module_name']);
 
         if(!is_array($tmsresults) || count($tmsresults) == 0 || !array_key_exists($module['module_name'], $tmsresults))
             {

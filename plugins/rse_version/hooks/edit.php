@@ -67,10 +67,10 @@ function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field)
             $revert_date=getval("revert_" . $field["ref"],"");
             
             # Find the value of this field as of this date and time in the resource log.
-            $parameters=array("i",$ref, "i",$field["ref"]);
+            $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);
             $value=ps_value("SELECT previous_value value from resource_log 
                 where resource=? and resource_type_field=? 
-                and (type='e' or type='m') and date>{$revert_date} and previous_value is not null order by date limit 1",$parameters,-1);
+                and (type='e' or type='m') and date>? and previous_value is not null order by date limit 1",$parameters,-1);
            
             if ($value!=-1) {return $value;}
             }

@@ -1763,7 +1763,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # Always make preview sizes for smaller file sizes.
             #
             # Always make pre/thm/col sizes regardless of source image size.
-            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
+            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && isset($watermark)) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {           
                 # Debug
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
@@ -3586,9 +3586,10 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $cmd_args = [];
-    $imversion = get_imagemagick_version();
+    $imversion = get_imagemagick_version(false); # Return version in string format
+
     // Set correct syntax for commands to remove alpha channel
-    if($imversion[0] >= 7)
+    if(version_compare($imversion,"7",">="))
         {
         $alphaoff = " -alpha off";
         }
@@ -3678,7 +3679,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     $colorspace2 = "";
     if(isset($actions["srgb"]))
         {
-        if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
+        if (version_compare($imversion,"6.7.5-5",">="))
             {
             $colorspace1 = " -colorspace sRGB ";
             $colorspace2 =  " -colorspace RGB ";

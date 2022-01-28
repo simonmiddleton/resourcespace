@@ -1119,7 +1119,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             $sql_filter .= $editable_filter;
             }
         }
-
     return $sql_filter;
     }
 

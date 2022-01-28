@@ -1324,15 +1324,16 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
     }
 
 /**
-* Add nodes in array to multiple resources. Changes made using this function will not be logged
+* Add nodes in array to multiple resources. Changes made using this function will not be logged by default.
 *
-* @param  array        $resources           Array of resource IDs to add nodes to
-* @param  array        $nodes               Array of node IDs to add
-* @param  boolean      $checkperms          Check permissions before adding?
+* @param array   $resources  Array of resource IDs to add nodes to
+* @param array   $nodes      Array of node IDs to add
+* @param boolean $checkperms Check permissions before adding?
+* @param boolean $logthis    Log this? Log entries are ideally added when more data on all the changes made is available to make reverts easier.
 * 
 * @return boolean
 */
-function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true)
+function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true, bool $logthis = false)
     {
     global $userref;
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
@@ -1368,6 +1369,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             continue;
             }
 
+        $nodes_added = [];
         foreach($nodes as $node)
             {
             if(is_int_loose($node))
@@ -1377,7 +1379,13 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
                 $sql_params[] = $resource;
                 $sql_params[] = 'i';
                 $sql_params[] = $node;
+                $nodes_added[] = $node;
                 }
+            }
+
+        if($logthis)
+            {
+            log_node_changes($resource, $nodes_added, []);
             }
         }
     $nodesql = ltrim($nodesql, ',');

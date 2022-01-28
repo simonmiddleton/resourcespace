@@ -13,9 +13,7 @@ function HookRse_workflowViewPageevaluation()
     global $archive;
     global $sort;
     global $k;
-    global $applicationname;
     global $userref;
-    
     # Retrieve list of existing defined actions 
     $workflowactions = rse_workflow_get_actions();
     //$validactions=array();
@@ -60,8 +58,7 @@ function HookRse_workflowViewPageevaluation()
                         {
                         ?>
                         <script type="text/javascript">
-                        styledalert('<?php echo $lang["rse_workflow_saved"] . "','" . $lang["status" . $workflowaction["statusto"]];?>');
-                        document.location.href="<?php echo $baseurl ?>/pages/search.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>";
+                        styledalert('<?php echo $lang["success"] ?>','<?php echo $lang["rse_workflow_saved"] . "&nbsp;" . $lang["status" . $workflowaction["statusto"]];?>');
                         </script><?php
                         exit();
                         }
@@ -81,7 +78,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
     include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
 
     global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos,
-           $userref, $k, $internal_share_access;
+           $userref, $k, $internal_share_access,$modal;
 
     if(!empty($resource["lock_user"]) && $resource["lock_user"] != 0 && $resource["lock_user"] != $userref)
         {
@@ -158,7 +155,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 					<input id='resource_status_checksum_<?php echo $validaction["ref"] ?>' name='resource_status_check_<?php echo $validaction["ref"] ?>' type='hidden' value='<?php echo $resource["archive"]; ?>'>
 					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
 					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
-					<input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return CentralSpacePost(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
+					<input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
 					<?php
                     generateFormToken("resource_{$ref}_workflowaction{$validaction['ref']}");
                     hook("rse_wf_formend","",array($resource["archive"],$validaction["statusto"]));

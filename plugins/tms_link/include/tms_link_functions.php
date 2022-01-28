@@ -68,10 +68,9 @@ function tms_convert_value($value, $key, array $module)
     }
 
 
-function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "")
+function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "", $onlymodule="")
   {
-  global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,
-         $tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns, $tms_link_modules_saved_mappings;
+  global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password;
   
   $conn = odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
 
@@ -81,11 +80,29 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         return $error;
         }
 
+    if(is_int_loose($resource))
+        {
+        $resource_data = get_resource_data($resource);
+        if(!$resource_data)
+            {
+            return $lang["resourceidnotfound"];
+            }
+        }   
+
     $modules_mappings = tms_link_get_modules_mappings();
     $convertedtmsdata = array();
 
     foreach($modules_mappings as $module)
         {
+        if(trim($onlymodule) != "" && $onlymodule != $module['module_name'])
+            {
+            continue;
+            }
+        if(isset($resource_data) && !in_array($resource_data["resource_type"],$module["applicable_resource_types"])) 
+            {
+            // Not valid module for this resource
+            continue;
+            }
         // Get TMS UID value we have for this resource
         if($tms_object_id == "")
             {

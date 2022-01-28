@@ -418,13 +418,15 @@ if ($processupload)
     debug("upload_batch - received file from user '" . $username . "',  filename: '" . $upfilename . "'");
         
     # Work out the extension
-    $extension=explode(".",$upfilename);
-    $extension=trim(strtolower($extension[count($extension)-1]));
+    $parts=explode(".",$upfilename);
+    $extension=trim(strtolower($parts[count($parts)-1]));
+    if(count($parts) > 1){array_pop($parts);}
+    $filenameonly = implode('.', $parts);
 
-    // Clean the filename
-    $origuploadedfilename=escape_check($upfilename);
-    $encodedname = str_replace("/","RS_FORWARD_SLASH",base64_encode($upfilename));
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
+     // Clean the filename
+    $origuploadedfilename= escape_check($upfilename);
+    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($extension)) ? ".{$extension}" : '');
 
     # Banned extension?
     global $banned_extensions;
@@ -980,7 +982,10 @@ jQuery(document).ready(function () {
                 updatedFiles[fileid] = {
                     ...files[fileid],
                   }
-                safefilename = base64encode(`${files[fileid].name}`);
+                //Extract and re add the file extension to allow for detection of file types
+                parts = files[fileid].name.split('.');
+                extension = parts.pop();
+                safefilename = base64encode(`${parts.join('.')}`) + `.${extension}`;
                 updatedFiles[fileid].meta.name = safefilename.replace(/\//g,'RS_FORWARD_SLASH'); // To fix issue with forward slashes in base64 string
                 console.debug('file obj')
                 console.debug(files[fileid].id)
@@ -1052,7 +1057,7 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
-        limit: <?php echo ($cachestore == "apcu") ? "2" : "2"; ?>,
+        limit: <?php echo ($cachestore == "apcu") ? "5" : "2"; ?>,
         removeFingerprintOnSuccess: true,
         <?php
         if(trim($upload_chunk_size) != "")
