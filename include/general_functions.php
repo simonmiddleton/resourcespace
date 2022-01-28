@@ -645,58 +645,76 @@ function check_site_text_custom($page,$name)
  */
 function save_site_text($page,$name,$language,$group)
     {
-    global $lang;
-
-    if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
+    global $lang,$custom,$newcustom,$defaultlanguage,$newhelp;
     
-    global $custom,$newcustom,$defaultlanguage;
-    
+    if(!is_int_loose($group))
+        {
+        $group = NULL;
+        }
+    $text = getval("text","");
     if($newcustom)
         {
-        $test=sql_query("select * from site_text where page='$page' and name='$name'");
-        if (count($test)>0){return true;}
+        $params = ["s",$page,"s",$name];
+        $test=ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=?",$params);
+        if (count($test)>0)
+            {
+            return true;
+            }
         }
-    if ($custom==""){$custom=0;}
+    if (trim($custom)=="")
+        {
+        $custom=0;
+        }
     if (getval("deletecustom","")!="")
         {
-        sql_query("delete from site_text where page='$page' and name='$name'");
+        $params = ["s",$page,"s",$name];
+        ps_query("DELETE FROM site_text WHERE page=? AND name=?",$params);
         }
     elseif (getval("deleteme","")!="")
         {
-        sql_query("delete from site_text where page='$page' and name='$name' and specific_to_group $gc $g");
+        $params = ["s",$page,"s",$name,"i",$group];
+        ps_query("DELETE FROM site_text WHERE page=? AND name=? AND specific_to_group <=> ?",$params);
         }
     elseif (getval("copyme","")!="")
         {
-        sql_query("insert into site_text(page,name,text,language,specific_to_group,custom) values ('$page','$name','" . getvalescaped("text","") . "','$language',$g,'$custom')");
+        $params = ["s",$page,"s",$name,"s",$text,"s",$language,"i",$group,"i",$custom];
+        ps_query("INSERT INTO site_text(page,name,text,language,specific_to_group,custom) VALUES (?,?,?,?,?,?)",$params);
         }
     elseif (getval("newhelp","")!="")
         {
-        global $newhelp;
-        $check=sql_query("select * from site_text where page = 'help' and name='$newhelp'");
-        if (!isset($check[0])){
-            sql_query("insert into site_text(page,name,text,language,specific_to_group) values ('$page','$newhelp','','$language',$g)");
+        $params = ["s",$newhelp];
+        $check=ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text where page = 'help' and name=?",$params);
+        if (!isset($check[0]))
+            {
+            $params = ["s",$page,"s",$newhelp,"s","","s",$language,"i",$group];
+            ps_query("INSERT INTO site_text(page,name,text,language,specific_to_group) VALUES (?,?,?,?,?)",$params);
             }
-        }   
+        }
     else
         {
-        $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
-        if (count($text)==0)
+        $params = ["s",$page,"s",$name,"s",$language,"i",$group];
+        $curtext=ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=? AND language=? AND specific_to_group <=> ?",$params);
+        if (count($curtext)==0)
             {
             # Insert a new row for this language/group.
-            sql_query("insert into site_text(page,name,language,specific_to_group,text,custom) values ('$page','$name','$language',$g,'" . getvalescaped("text","") . "','$custom')");
-            log_activity($lang["text"],LOG_CODE_CREATED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
+            $params = ["s",$page,"s",$name,"s",$text,"s",$language,"i",$group,"i",$custom];
+            ps_query("INSERT INTO site_text(page,name,text,language,specific_to_group,custom) VALUES (?,?,?,?,?,?)",$params);
+            log_activity($lang["text"],LOG_CODE_CREATED,$text,'site_text',null,"'{$page}','{$name}','{$language}',{$group}");
             }
         else
             {
             # Update existing row
-            sql_query("update site_text set text='" . getvalescaped("text","") . "' where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
-            log_activity($lang["text"],LOG_CODE_EDITED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
+            $params = ["s",$text,"s",$page,"s",$name,"s",$language,"i",$group];
+            ps_query("UPDATE site_text SET text=? WHERE page=? AND name=? AND language=? AND specific_to_group <=> ?",$params);
+            log_activity($lang["text"],LOG_CODE_EDITED,$text,'site_text',null,"'{$page}','{$name}','{$language}',{$group}");
             }
-                        
-                # Language clean up - remove all entries that are exactly the same as the default text.
-                $defaulttext=sql_value ("select text value from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g","");
-                sql_query("delete from site_text where page='$page' and name='$name' and language!='$defaultlanguage' and trim(text)='" . trim(escape_check($defaulttext)) . "'");
-                
+
+        # Language clean up - remove all entries that are exactly the same as the default text.
+        $params = ["s",$page,"s",$name,"s",$defaultlanguage,"i",$group];
+        $defaulttext=ps_value("SELECT text value FROM site_text WHERE page=? AND name=? AND language=? AND specific_to_group<=>?",$params,"");
+
+        $params = ["s",$page,"s",$name,"s",$defaultlanguage,"s",trim($defaulttext)];
+        ps_query("DELETE FROM site_text WHERE page=? AND name=? AND language != ? AND trim(text)=?",$params);
         }
 
     // Clear cache
