@@ -656,19 +656,20 @@ function send_user_message($users,$text)
 /**
  * Send system notifications to specified users, checking the relevant user preference
  *
- * @param  array $users         Array of user IDs
- * @param  string $type         Type of notification e.g. resource request, user account request
- * @param  array $eventdata     Information about the related event to store against the system message
- *                              'type'  - Related activity type
- *                              'ref'   - Related activity reference
- * @param  string $message      Message text
- * @param  string $url          URL 
- * @param  string $template     Email template to use
- * @param  array $templatevars  Email template variables
+ * @param  array  $users            Array of user IDs
+ * @param  string $type             Type of notification e.g. resource request, user account request
+ * @param  array  $eventdata        Information about the related event to store against the system message
+ *                                  'type'  - Related activity type
+ *                                  'ref'   - Related activity reference
+ * @param  string $subject          Subject 
+ * @param  string $message          Message text
+ * @param  string $url              URL 
+ * @param  string $template         Email template to use
+ * @param  array  $templatevars     Email template variables
  * 
  * @return void
  */
-function send_user_notification($users=[],string $type,array $eventdata=[],string $message,string $url="",string $template="",array $templatevars=[])
+function send_user_notification($users=[],string $type,array $eventdata=[],string $subject="",string $message,string $url="",string $template="",array $templatevars=[])
     {
     global $applicationname, $lang, $userref;
     debug("BANG starting send_user_notification()");
@@ -731,6 +732,6 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
     if(trim($emails) != "")
         {        
         debug("BANG send mail using template: " . $template);
-        send_mail($emails,$applicationname . ": " . $lang["status-1"],$message,"","",$template,$templatevars);            
+        send_mail($emails,$subject,$message,"","",$template,$templatevars);            
         }
     }

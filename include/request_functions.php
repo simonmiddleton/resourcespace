@@ -90,12 +90,12 @@ function save_request($request)
             $msgurl = $baseurl . "/?q=" . $request;
             $eventdata = [];
             debug("BANG " . __LINE__);
-            send_user_notification([$assigned_to],"resource_request",$eventdata,$body,$msgurl);
+            send_user_notification([$assigned_to],"resource_request",$eventdata,$applicationname . ": " . $lang["requestassignedtoyou"],$body,$msgurl);
 
             $body   = str_replace("%",$assigned_to_user["fullname"] . " (" . $assigned_to_user["email"] . ")" ,$lang["requestassignedtouser"]);
             $msgurl = $baseurl . "/?q=" . $request;
             debug("BANG " . __LINE__);
-            send_user_notification([$currentrequest["user"]],"resource_request",$eventdata,$body,$msgurl);
+            send_user_notification([$currentrequest["user"]],"resource_request",$eventdata,$applicationname . ": " . $lang["requestupdated"] . " - " . $request,$body,$msgurl);
             }
         }
     
@@ -115,7 +115,7 @@ function save_request($request)
             # Add expiry time to message.
             $message.=$lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n\n";
             }
-                   
+    
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
         if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
@@ -704,7 +704,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                     "ref"   => $request,
                     ];
 debug("BANG ==$message==");
-                send_user_notification($assigned_to_users,"resource_request",$eventdata,$message,$templatevars['url']);
+                send_user_notification($assigned_to_users,"resource_request",$eventdata,$applicationname . ": " . $lang["requestassignedtoyou"],$message,$templatevars['url']);
                 } # End for each collection
 
             $notify_manage_request_admin = false;
@@ -748,7 +748,7 @@ debug("BANG ==$message==");
         if($notify_manage_request_admin)
             {
             debug("BANG " . __LINE__ . $admin_notify_message);
-            send_user_notification($assigned_to_users,"resource_request",$eventdata,$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
+            send_user_notification($assigned_to_users,"resource_request",$eventdata,$lang['requestassignedtoyou'],$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
             $notification_sent = true;
             }
             
@@ -779,7 +779,7 @@ debug("BANG ==$message==");
 
         debug("BANG send_user_notification using template: " . $admin_mail_template);
 
-            send_user_notification($admin_notify_users,"resource_request",$eventdata,$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
+            send_user_notification($admin_notify_users,"resource_request",$eventdata,$applicationname . ": " . $lang["requestcollection"] . " - " . $ref,$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
             }
         }
     
@@ -788,7 +788,7 @@ debug("BANG ==$message==");
         $userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
         $userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
         debug("BANG request_senduserupdates" . __LINE__ . $userconfirmmessage);
-        send_user_notification([$userref],"",$eventdata,$userconfirmmessage,$baseurl . "/?c=" . $ref); // No type so mesage will always send
+        send_user_notification([$userref],"",$eventdata,$applicationname . ": " . $lang["requestsent"] . " - " . $ref,$userconfirmmessage,$baseurl . "/?c=" . $ref); // No type so mesage will always send
         }
     
     # Increment the request counter for each resource in the requested collection
