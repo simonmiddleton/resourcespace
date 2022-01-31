@@ -47,7 +47,7 @@ if (!hook("replacelistitem"))
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
 
             if ($df[$x]['value_filter']!="")
-                {eval($df[$x]['value_filter']);}
+                {eval(eval_check_signed($df[$x]['value_filter']));}
             else if (file_exists($plugin)) 
                 {include $plugin;}
 

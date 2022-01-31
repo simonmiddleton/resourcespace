@@ -88,3 +88,39 @@ function rsDecrypt($data, $key)
 
     return $plaintext;
     }
+
+
+/**
+* Prior to eval() checks to make sure the code has been signed first, by the offline script / migration script.
+* 
+* @param  string  $code  The code to check 
+* 
+* @return  string  The code, if correctly signed, or an empty string if not.
+*/
+function eval_check_signed($code)
+    {
+    global $scramble_key;
+
+    // Check goes here.
+    $code_split=explode("\n",$code);if (count($code_split)<2) {return "echo 'UNSIGNED CODE ERROR';";} // Not enough lines to include a key, exit
+    $signature=str_replace("//","",$code[0]); // Extract signature
+    
+    // Code not signed correctly? Exit early.
+    if ($signature!=sign_code($code)) {return "echo 'UNSIGNED CODE ERROR';";}
+
+    // All is as expected, return the code ready for execution.
+    return $code;
+    }
+
+/**
+* Returns a signature for a given block of code.
+* 
+* @param  string  $code  The code to sign
+* 
+* @return  string  The signature
+*/
+function sign_code($code)
+    {
+    global $scramble_key;
+    return hash_hmac("sha256",$code,$scramble_key);
+    }

@@ -151,7 +151,7 @@ foreach ($fieldrefs as $fieldref)
                 $plugin="../../plugins/exiftool_filter_" . $name . ".php";
                 if ($exiftool_filter!="")
                     {
-                    eval($exiftool_filter);
+                    eval(eval_check_signed($exiftool_filter));
                     }
                 if (file_exists($plugin))
                     {
