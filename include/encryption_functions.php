@@ -99,12 +99,14 @@ function rsDecrypt($data, $key)
 */
 function eval_check_signed($code)
     {
-    global $scramble_key;
-
-    // Check goes here.
-    $code_split=explode("\n",$code);if (count($code_split)<2) {return "echo 'UNSIGNED CODE ERROR';";} // Not enough lines to include a key, exit
-    $signature=str_replace("//","",$code[0]); // Extract signature
+    // No need to sign empty string.
+    if (trim($code)=="") {return "";}
     
+    // Exctract the signature from the code.
+    $code_split=explode("\n",$code);if (count($code_split)<2) {return "echo 'UNSIGNED CODE ERROR';";} // Not enough lines to include a key, exit
+    $signature=str_replace("//SIG","",$code[0]); // Extract signature
+    $code=trim(substr($code,strpos($code,"\n")+1));
+
     // Code not signed correctly? Exit early.
     if ($signature!=sign_code($code)) {return "echo 'UNSIGNED CODE ERROR';";}
 
@@ -122,5 +124,60 @@ function eval_check_signed($code)
 function sign_code($code)
     {
     global $scramble_key;
-    return hash_hmac("sha256",$code,$scramble_key);
+    return hash_hmac("sha256",trim($code),$scramble_key);
     }
+
+/**
+* Returns a signature for a given block of code.
+* 
+* @param  string  $code  The code to sign
+* 
+* @return  string  The signature
+*/
+function resign_all_code($confirm=true)
+    {
+    $todo=array
+        (
+        array("resource_type_field",    "value_filter"),
+        array("resource_type_field",    "onchange_macro"),        
+        array("resource_type_field",    "autocomplete_macro"),
+        array("resource_type_field",    "exiftool_filter"),
+        array("resource_type",          "config_options"),
+        array("usergroup",              "config_options")
+        );
+    foreach ($todo as $do)
+        {
+        $table=$do[0];$column=$do[1];
+
+        // Iterate through all columns
+        $rows=ps_query("select ref,`$column` from `$table`");
+        foreach ($rows as $row)
+            {
+            $code=$row[$column];$ref=$row["ref"];if (trim($code)=="") {$code="";}
+            echo $table . " -> " . $column . " -> " . $ref;
+
+            if (eval_check_signed($code)!==$code)
+                {
+                // Code is not signed.
+
+                // Extract signature if already one present
+                if (substr($code,0,5)=="//SIG") {$code=trim(substr($code,strpos($code,"\n")+1));}
+
+                // Needs signing. Confirm it's safe.
+                if ($confirm)
+                    {
+                    echo " needs signing\n-----------------------------\n";echo $code;echo "\n-----------------------------\nIs this code safe? (y/n)";ob_flush();
+                    $line = fgets(STDIN);if (trim($line)!="y") {exit();}
+                    }
+
+                $code="//SIG" . sign_code($code) . "\n" . $code;
+                ps_query("update `$table` set `$column`=? where ref=?",array("s",$code,"i",$ref));
+                }
+            else    
+                {
+                echo " is OK\n";
+                }
+            }
+        }
+    }
+
