@@ -102,9 +102,9 @@ function eval_check_signed($code)
     // No need to sign empty string.
     if (trim($code)=="") {return "";}
     
-    // Exctract the signature from the code.
+    // Extract the signature from the code.
     $code_split=explode("\n",$code);if (count($code_split)<2) {return "echo 'UNSIGNED CODE ERROR';";} // Not enough lines to include a key, exit
-    $signature=str_replace("//SIG","",$code[0]); // Extract signature
+    $signature=str_replace("//SIG","",trim($code_split[0])); // Extract signature
     $code=trim(substr($code,strpos($code,"\n")+1));
 
     // Code not signed correctly? Exit early.
@@ -156,17 +156,18 @@ function resign_all_code($confirm=true)
             $code=$row[$column];$ref=$row["ref"];if (trim($code)=="") {$code="";}
             echo $table . " -> " . $column . " -> " . $ref;
 
-            if (eval_check_signed($code)!==$code)
+            // Extract signature if already one present
+            $purecode=$code;
+            if (substr($code,0,5)=="//SIG") {$purecode=trim(substr($code,strpos($code,"\n")+1));}
+
+            if (trim(eval_check_signed($code))!==trim($purecode))
                 {
                 // Code is not signed.
-
-                // Extract signature if already one present
-                if (substr($code,0,5)=="//SIG") {$code=trim(substr($code,strpos($code,"\n")+1));}
-
+                    
                 // Needs signing. Confirm it's safe.
                 if ($confirm)
                     {
-                    echo " needs signing\n-----------------------------\n";echo $code;echo "\n-----------------------------\nIs this code safe? (y/n)";ob_flush();
+                    echo " needs signing\n-----------------------------\n";echo $purecode;echo "\n-----------------------------\nIs this code safe? (y/n)";ob_flush();
                     $line = fgets(STDIN);if (trim($line)!="y") {exit();}
                     }
 
