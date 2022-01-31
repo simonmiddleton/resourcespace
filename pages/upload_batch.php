@@ -1445,6 +1445,9 @@ function postUploadActions()
         return;
         }
     
+    rscompleted = [];
+    processerrors = [];
+
     CentralSpaceHideProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
