@@ -2262,6 +2262,13 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             // An array of node IDs has been passed, we can use these directly
             $sent_nodes = explode(",",$value);
+            if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST]) && count($sent_nodes) > 1)
+                {
+                // Only a single value allowed
+                return false;
+                }
+            
+            $nodesfound = false;
             foreach($fieldnodes as $fieldnode)
                 {
                 // Add to array of nodes, unless it has been added to array already as a parent for a previous node
@@ -2282,11 +2289,17 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
 
                     $newnodes[] = $fieldnode["ref"];
+                    $nodesfound = true;
                     }
                 else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$sent_nodes))
                     {
                     $nodes_to_remove[] = $fieldnode["ref"];
                     }
+                }
+            if(count($newnodes) != count($sent_nodes))
+                {
+                // Unable to find all node values that were passed
+                return false;
                 }
             // Build array of new values
             foreach($newnodes as $newnode)
@@ -2330,7 +2343,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
                     else
                         {
-                        $default="";
                         for ($n=1;$n<count($fieldoptiontranslations);$n++)
                             {
                             # Not a translated string, return as-is
@@ -2360,24 +2372,25 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         $nodes_to_add[]     = $newnode;
                         $currentoptions[]   = trim($newvalue);
                         $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
-                        $newnodes[]         = $newnode;
                         debug("update_field: field option added: '" . trim($newvalue));
                         }
                     }
                 }
 
             $newvalues_translated = $newvalues;
+            array_walk(
+                $newvalues_translated,
+                function (&$value, $index)
+                    {
+                    $value = mb_strtolower(i18n_get_translated($value));
+                    }
+                );
             foreach($fieldnodes as $fieldnode)
                 {
-                $translate_newvalues = array_walk(
-                    $newvalues_translated,
-                    function (&$value, $index)
-                        {
-                        $value = mb_strtolower(i18n_get_translated($value));
-                        }
-                );
                 // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-                if (in_array(mb_strtolower(i18n_get_translated($fieldnode["name"])), $newvalues_translated) && !in_array($fieldnode["ref"], $nodes_to_add))
+                if (in_array(mb_strtolower(i18n_get_translated($fieldnode["name"])), $newvalues_translated)
+                    && !in_array($fieldnode["ref"], $nodes_to_add)
+                    )
                     {
                     $nodes_to_add[] = $fieldnode["ref"];
                     // We need to add all parent nodes for category trees
@@ -2394,34 +2407,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                             }
                         }
                     }
-                else
-                    {
-                    $nodes_to_remove[] = $fieldnode["ref"];
-                    }
-                $newvalues[] = $value;
-                }
-
-            foreach($fieldnodes as $fieldnode)
-                {
-                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-                if (in_array($fieldnode["name"],$newvalues) && !in_array($fieldnode["ref"],$nodes_to_add))
-                    {
-                    if(!in_array($fieldnode["ref"],$current_field_nodes))
-                        {
-                        $nodes_to_add[] = $fieldnode["ref"];
-                        if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents)
-                            {
-                            // Add all parent nodes for category trees
-                            $parent_nodes=get_parent_nodes($fieldnode["ref"]);
-                            foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
-                                {
-                                $nodes_to_add[]=$parent_node_ref;
-                                }
-                            }
-                        }
-                    $newnodes[] = $fieldnode["ref"];
-                    }
-                else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$newvalues))
+                elseif(!in_array($fieldnode["ref"], $nodes_to_add))
                     {
                     $nodes_to_remove[] = $fieldnode["ref"];
                     }
@@ -2435,6 +2421,14 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             $nodes_to_remove    = array_unique($nodes_to_remove);
             $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
             $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
+
+            if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
+                &&
+                (count($added_nodes) + count($current_field_nodes) - count($removed_nodes)) > 1)
+                {
+                // Only a single value allowed
+                return false;    
+                }
 
             db_begin_transaction("update_field_{$field}");
             delete_resource_nodes($resource,$nodes_to_remove,false);
