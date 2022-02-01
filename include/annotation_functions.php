@@ -328,39 +328,31 @@ function createAnnotation(array $annotation)
         }
     debug('[annotations][fct=createAnnotation] attempting to create annotation...');
 
-    
     // ResourceSpace specific properties
     $resource            = $annotation['resource'];
     $resource_type_field = $annotation['resource_type_field'];
-    $parameters=array("i",$resource, "i",$resource_type_field, "i",$userref);
+    $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
+    $tags                = $annotation['tags'] ?? [];
 
     // Annotorious annotation
     $x      = $annotation['shapes'][0]['geometry']['x'];
     $y      = $annotation['shapes'][0]['geometry']['y'];
-    $parameters=array_merge($parameters, array("i",$x, "i",$y));
-
     $width  = $annotation['shapes'][0]['geometry']['width'];
     $height = $annotation['shapes'][0]['geometry']['height'];
-    $parameters=array_merge($parameters, array("i",$width, "i",$height));
 
-    if (isset($annotation['page']) && 0 < $annotation['page']) 
-        {
-        $page = $annotation['page'];
-        $parameters=array_merge($parameters, array("i",$page));
-        }
-    else
-        {
-        $page= "NULL";
-        $parameters=array_merge($parameters, array("s",$page));
-        }
-
-    $tags = (isset($annotation['tags']) ? $annotation['tags'] : array());
-
-    $query = "INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-    ps_query($query, $parameters);
-
+    ps_query(
+        'INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            'i', $resource,
+            'i', $resource_type_field,
+            'i', $userref,
+            'd', $x,
+            'd', $y,
+            'd', $width,
+            'd', $height,
+            'i', $page,
+        ]
+    );
     $annotation_ref = sql_insert_id();
     debug('[annotations][fct=createAnnotation] annotation_ref = ' . json_encode($annotation_ref));
 
@@ -410,43 +402,31 @@ function updateAnnotation(array $annotation)
     global $userref;
 
     // ResourceSpace specific properties
+    $annotation_ref      = $annotation['ref'];
     $resource_type_field = $annotation['resource_type_field'];
     $resource            = $annotation['resource'];
-    $parameters=array("i",$resource_type_field, "i",$userref);
+    $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? $annotation['page'] : null);
+    $tags                = $annotation['tags'] ?? [];
 
     // Annotorious annotation
-    $x                   = $annotation['shapes'][0]['geometry']['x'];
-    $y                   = $annotation['shapes'][0]['geometry']['y'];
-    $parameters=array_merge($parameters, array("i",$x, "i",$y));
+    $x      = $annotation['shapes'][0]['geometry']['x'];
+    $y      = $annotation['shapes'][0]['geometry']['y'];
+    $width  = $annotation['shapes'][0]['geometry']['width'];
+    $height = $annotation['shapes'][0]['geometry']['height'];
 
-    $width               = $annotation['shapes'][0]['geometry']['width'];
-    $height              = $annotation['shapes'][0]['geometry']['height'];
-    $parameters=array_merge($parameters, array("i",$width, "i",$height));
-
-    if (isset($annotation['page']) && 0 < $annotation['page']) 
-        {
-        $page = $annotation['page'];
-        $parameters=array_merge($parameters, array("i",$page));
-        }
-    else
-        {
-        $page= "NULL";
-        $parameters=array_merge($parameters, array("s",$page));
-        }
-
-    $annotation_ref      = $annotation['ref'];
-    $parameters=array_merge($parameters, array("i",$annotation_ref));
-
-    $tags = (isset($annotation['tags']) ? $annotation['tags'] : array());
-
-    $update_query = "
-        UPDATE annotation
-           SET
-               resource_type_field = ?, user = ?, 
-               x = ?, y = ?, width = ?, height = ?',
-               page = ?
-         WHERE ref = ?";
-    ps_query($update_query, $parameters);
+    ps_query(
+        'UPDATE annotation SET resource_type_field = ?, user = ?, x = ?, y = ?, width = ?, height = ?, page = ? WHERE ref = ?',
+        [
+            'i', $resource_type_field,
+            'i', $userref,
+            'd', $x,
+            'd', $y,
+            'd', $width,
+            'd', $height,
+            'i', $page,
+            'i', $annotation_ref,
+        ]
+    );
 
     // Delete existing associations
     $nodes_to_remove = array();
@@ -462,8 +442,7 @@ function updateAnnotation(array $annotation)
         delete_resource_nodes($resource, $nodes_to_remove);
         }
     
-    $parameters=array("i",$annotation_ref);
-    ps_query("DELETE FROM annotation_node WHERE annotation = ?", $parameters);
+    ps_query("DELETE FROM annotation_node WHERE annotation = ?", ['i', $annotation_ref]);
 
     // Add any tags associated with this annotation
     if(0 < count($tags))
@@ -486,8 +465,8 @@ function updateAnnotation(array $annotation)
 /**
 * Add relations between annotation and nodes
 * 
-* @param integer $annotation_ref
-* @param array   $nodes
+* @param integer $annotation_ref The annotation ID in ResourceSpace
+* @param array   $nodes          List of node structures {@see get_nodes()}. Only the "ref" property is required.
 * 
 * @return boolean
 */
@@ -499,15 +478,14 @@ function addAnnotationNodes($annotation_ref, array $nodes)
         }
 
     $query_insert_values = '';
-    $parameters=array();
+    $parameters = [];
 
     foreach($nodes as $node)
         {
         $query_insert_values .= ',(?, ?)';
-        $parameters=array_merge(array("i",$annotation_ref, "i",$node['ref']));
+        $parameters = array_merge($parameters, ['i', $annotation_ref, 'i', $node['ref']]);
         }
-
-    $query_insert_values = substr($query_insert_values, 1); # remove leading comma if necessary
+    $query_insert_values = substr($query_insert_values, 1);
 
     ps_query("INSERT INTO annotation_node (annotation, node) VALUES  {$query_insert_values}", $parameters);
 
