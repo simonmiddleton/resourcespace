@@ -16,25 +16,39 @@
  */
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
     {
-    global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,
-    
-    $actions_resource_review,$actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup;
-        
+    global $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,$userref,
+    $actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup, $actions_notify_states;
+
+    // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
+    get_config_option($userref,'actions_resource_review', $actions_resource_review, true);
+    if($actions_resource_review === false)
+        {
+        $actions_notify_states = "";
+        }
     $actionsql = new PreparedStatementQuery();  
     $filtered = $type!="";
     
     if(!$actions_on){return array();}
         
-    if($actions_resource_review && (!$filtered || 'resourcereview'==$type))
+    if((!$filtered || 'resourcereview'==$type) && trim($actions_notify_states) != "")
         {
         $search_all_workflow_states = false;
         $default_display	= $list_display_fields;
-        
+
+        if(is_int_loose($view_title_field)) 
+            {
+            $generated_title_field = "field".$view_title_field;
+            }
+        else
+            {
+            $generated_title_field = "''";    
+            }
+
         # Function get_editable_resource_sql() now returns a query object
         $editable_resource_query=get_editable_resource_sql($countonly);
 
-        $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, 
-           field" . $view_title_field . " as description,'resourcereview' as type FROM (" . $editable_resource_query->sql . ") resources" ;
+        $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, " 
+           .$generated_title_field." as description, 'resourcereview' as type FROM (" . $editable_resource_query->sql . ") resources" ;
         $actionsql->parameters=array_merge($actionsql->parameters, $editable_resource_query->parameters);
         }
     if(checkperm("R") && $actions_resource_requests && (!$filtered || 'resourcerequest'==$type))

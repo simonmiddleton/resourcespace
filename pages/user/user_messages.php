@@ -3,6 +3,11 @@
 include "../../include/db.php";
 include "../../include/authenticate.php";
 
+if (isset($anonymous_login) && $anonymous_login == $username)
+    {
+    die($lang["error-permissions-login"]);
+    }
+
 $offset=getvalescaped("offset",0,true);
 $msg_order_by = getvalescaped("msg_order_by",getvalescaped("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
 $sort = getvalescaped("sort",getvalescaped("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);

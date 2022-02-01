@@ -95,12 +95,14 @@ function perform_login($loginuser="",$loginpass="")
         if ($approved == 2)
             {
             $result['error']=$lang["accountdisabled"];
+            log_activity('Account Disabled',LOG_CODE_FAILED_LOGIN_ATTEMPT,$ip,"user","last_ip",$userref,NULL,NULL,$user_ref);
             return $result;
             }
 
 		if ($expires!="" && $expires!="0000-00-00 00:00:00" && strtotime($expires)<=time())
 			{
 			$result['error']=$lang["accountexpired"];
+            log_activity('Account Expired',LOG_CODE_FAILED_LOGIN_ATTEMPT,$ip,"user","last_ip",$userref,NULL,NULL,$user_ref);
 			return $result;
 			}
 
@@ -128,7 +130,7 @@ function perform_login($loginuser="",$loginpass="")
 
         # Log this
         daily_stat("User session", $userref);
-        log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","ref",($userref!="" ? $userref :"null"),null,'',($userref!="" ? $userref :"null"));
+        log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","last_ip",($userref!="" ? $userref :"null"),null,'',($userref!="" ? $userref :"null"));
 
         # Blank the IP address lockout counter for this IP
         ps_query("DELETE FROM ip_lockout WHERE ip = ?",array("s",$ip));
@@ -154,6 +156,8 @@ function perform_login($loginuser="",$loginpass="")
 			{
 			# Show locked out message.
 			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+            $log_message = 'Max login attempts from IP exceeded - IP: ' . $ip;
+            log_activity($log_message,LOG_CODE_FAILED_LOGIN_ATTEMPT,$tries,'ip_lockout','ip',$ip);
 			}
 		# Increment
 		ps_query("update ip_lockout set last_try=now(),tries=tries+1 where ip=?",array("s",$ip));
@@ -176,10 +180,35 @@ function perform_login($loginuser="",$loginpass="")
 			{
 			# Show locked out message.
 			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+            $log_message = 'Max login attempts exceeded';
+            log_activity($log_message,LOG_CODE_FAILED_LOGIN_ATTEMPT,$ip,'user','ref',($user_ref != false ? $user_ref : NULL),NULL,NULL,($user_ref != false ? $user_ref : NULL));
 			}
 		ps_query("update user set login_tries=?,login_last_try=now() where username=?",array("i",$tries,"s",$username));
 		}
-
+    
+    if($valid !== true && !isset($log_message))
+        {
+        if(isset($result['error']) && $result['error'] != '')
+            {
+            $log_message = strip_tags($result['error']);
+            }
+        else
+            {
+            $log_message = 'Failed Login';
+            }
+        log_activity(
+            $log_message,                           # Note
+            LOG_CODE_FAILED_LOGIN_ATTEMPT,          # Log Code
+            $ip,                                    # Value New
+            ($user_ref != false ? 'user'    : NULL),  # Remote Table
+            ($user_ref != false ? 'last_ip' : NULL),  # Remote Column
+            ($user_ref != false ? $user_ref : NULL),  # Remote Ref
+            NULL,                                   # Ref Column Override
+            NULL,                                   # Value Old
+            ($user_ref != false ? $user_ref : NULL)   # User Ref
+        );
+        }
+    
 	return $result;
 	}
 

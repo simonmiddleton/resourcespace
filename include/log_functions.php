@@ -185,14 +185,14 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
 
             $log_code_description = escape_check($GLOBALS['lang']["collectionlog-{$log_code}"]);
 
-            $when_statements .= " WHEN ASCII('{$log_code_escaped}') THEN '{$log_code_description}'";
+            $when_statements .= " WHEN BINARY('{$log_code_escaped}') THEN '{$log_code_description}'";
 
             continue;
             }
 
         $log_code_description = escape_check($GLOBALS['lang']["log_code_{$log_code}"]);
 
-        $when_statements .= " WHEN ASCII('{$log_code_escaped}') THEN '{$log_code_description}'";
+        $when_statements .= " WHEN BINARY('{$log_code_escaped}') THEN '{$log_code_description}'";
         }
 
     $count_statement_start = "";
@@ -202,7 +202,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                  SELECT
                         `activity_log`.`logged` AS 'datetime',
                         `user`.`username` AS 'user',
-                        CASE ASCII(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END AS 'operation',
+                        CASE BINARY(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END AS 'operation',
                         `activity_log`.`note` AS 'notes',
                         NULL AS 'resource_field',
                         `activity_log`.`value_old` AS 'old_value',
@@ -227,7 +227,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR `activity_log`.`remote_table` LIKE '%{$search}%'
                             OR `activity_log`.`remote_column` LIKE '%{$search}%'
                             OR `activity_log`.`remote_ref` LIKE '%{$search}%'
-                            OR (CASE ASCII(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END) LIKE '%{$search}%'
+                            OR (CASE BINARY(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END) LIKE '%{$search}%'
                         )
 
                   UNION
@@ -235,7 +235,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                  SELECT
                         `resource_log`.`date` AS 'datetime',
                         `user`.`username` AS 'user',
-                        CASE ASCII(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END AS 'operation',
+                        CASE BINARY(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END AS 'operation',
                         `resource_log`.`notes` AS 'notes',
                         `resource_type_field`.`title` AS 'resource_field',
                         `resource_log`.`previous_value` AS 'old_value',
@@ -259,7 +259,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR 'resource' LIKE '%{$search}%'
                             OR 'ref' LIKE '%{$search}%'
                             OR `resource_log`.`resource` LIKE '%{$search}%'
-                            OR (CASE ASCII(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END) LIKE '%{$search}%'
+                            OR (CASE BINARY(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END) LIKE '%{$search}%'
                         )
 
                   UNION
@@ -267,7 +267,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                  SELECT
                         `collection_log`.`date` AS 'datetime',
                         `user`.`username` AS 'user',
-                        CASE ASCII(`collection_log`.`type`) $when_statements ELSE `collection_log`.`type` END AS 'operation',
+                        CASE BINARY(`collection_log`.`type`) $when_statements ELSE `collection_log`.`type` END AS 'operation',
                         `collection_log`.`notes` AS 'notes',
                         NULL AS 'resource_field',
                         '' AS 'old_value',
@@ -289,7 +289,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR `collection_log`.`resource` LIKE '%{$search}%'
                             OR `collection`.`name` LIKE '%{$search}%'
                             OR `user`.`username` LIKE '%{$search}%'
-                            OR (CASE ASCII(`collection_log`.`type`) {$when_statements} ELSE `collection_log`.`type` END) LIKE '%{$search}%'
+                            OR (CASE BINARY(`collection_log`.`type`) {$when_statements} ELSE `collection_log`.`type` END) LIKE '%{$search}%'
                         )
 
         ORDER BY `datetime` DESC

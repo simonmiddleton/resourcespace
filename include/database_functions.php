@@ -467,10 +467,6 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         {
         $db_connection_mode = 'read_only';
         $db_connection = $db['read_only'];
-
-        // In case it needs to retry and developer has forced a read-only
-        $logthis = 2;
-
         db_clear_connection_mode();
         }
 
@@ -494,7 +490,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                     check_db_structs();
                     db_set_connection_mode($db_connection_mode);
                     # Try again (no dbstruct this time to prevent an endless loop)
-                    return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect,$fetch_specific_columns);
+                    return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
                 $error="Bad prepared SQL statement: " . $sql;
                 errorhandler("N/A", $error, "(database)", "N/A");
@@ -556,18 +552,19 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
     else    
         {
         // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
-        $result_set=mysqli_query($db_connection,$sql);
-        $return_row_count=0;$result=array();
+        $result = $result_set = mysqli_query($db_connection, $sql);
+        $return_row_count = 0;
         $error=mysqli_error($db_connection);
-        if ($error=="")
+        if ($error=="" && $result_set instanceof mysqli_result)
             {
+            $result = [];
             while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result_set))
                 {
                 $return_row_count++;
                 $result[]=$result_row;
                 }
+            mysqli_free_result($result_set);
             }
-        mysqli_free_result($result_set);
         }
 
     if ($config_show_performance_footer){
@@ -605,7 +602,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             # SQL server connection has timed out or been killed. Try to reconnect and run query again.
             sql_connect();
             db_set_connection_mode($db_connection_mode);
-            return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false);
+            return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
             }
         else
             {
@@ -617,7 +614,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                 db_set_connection_mode($db_connection_mode);
 
                 # Try again (no dbstruct this time to prevent an endless loop)
-                return ps_query($sql,$parameters,$cache,$fetchrows,false,$reconnect,$fetch_specific_columns);
+                return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                 }
 
             errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
@@ -625,7 +622,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
 
         exit();
         }
-    elseif ($result===false)
+    elseif ($result === true)
         {
 		return array();		// no result set, (query was insert, update etc.) - simply return empty array.
         }

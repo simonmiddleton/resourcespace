@@ -699,12 +699,12 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         else
             {
             $s=explode("|",$value);
-            if (count($s)>=3)
-            {
-            $found_year=$s[0];
-            $found_month=$s[1];
-            $found_day=$s[2];
-            }
+            if(is_array($s))
+                {
+                $found_year  = $s[0];
+                $found_month = (array_key_exists(1, $s)) ? $s[1] : '';
+                $found_day   = (array_key_exists(2, $s)) ? $s[2] : '';
+                }
             ?>      
             <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anyyear"]?></option>

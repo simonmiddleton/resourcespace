@@ -1325,12 +1325,13 @@ function do_search(
             else
                 {
                 $migrateresult = 0; // filter was only for resource type, hasn't failed but no need to migrate again
+                ps_query("UPDATE usergroup SET edit_filter='' WHERE ref= ?",["i",$usergroup]);
                 }
             if(is_numeric($migrateresult))
                 {
                 debug("Migrated . " . $migrateresult);
                 // Successfully migrated - now use the new filter
-                sql_query("UPDATE usergroup SET edit_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+                ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["i",$migrateresult,"i",$usergroup]);
                 debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
                 $usereditfilter = $migrateresult;
                 }
@@ -1338,7 +1339,7 @@ function do_search(
                 {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $usersearchfilter . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
-                sql_query("UPDATE usergroup SET edit_filter_id='-1' WHERE ref='" . $usergroup . "'");
+                sql_query("UPDATE usergroup SET edit_filter_id='-1' WHERE ref=?",["i",$usergroup]);
                 $notification_users = get_notification_users();
                 message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
                 }

@@ -25,7 +25,7 @@ else
 	include "../include/authenticate.php";
 	}
 
-$url=getvalescaped("url","pages/home.php?login=true");
+$url=getval("url","pages/home.php?login=true");
 
 $newurl = hook("beforeredirectchangeurl");
 if(is_string($newurl))

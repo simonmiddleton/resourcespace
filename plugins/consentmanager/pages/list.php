@@ -1,7 +1,7 @@
 <?php
 include dirname(__FILE__)."/../../../include/db.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
+include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t")) {exit ("Permission denied.");}
 global $baseurl;
 
 $offset=getvalescaped("offset",0,true);

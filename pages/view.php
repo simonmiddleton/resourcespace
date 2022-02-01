@@ -2354,7 +2354,7 @@ function <?php echo $context ?>UpdateFSResultCount()
 <?php
 generateFormToken("{$context}findsimilar");
 
-$keywords=get_resource_top_keywords($ref,50);
+$keywords=array_values(array_unique(get_resource_top_keywords($ref,50)));
 if (count($keywords)!=0)
 	{
 		for ($n=0;$n<count($keywords);$n++)
@@ -2395,7 +2395,7 @@ if($annotate_enabled)
     ?>
     <!-- Annotorious -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.js"></script>
+    <script src="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/annotorious.min.js"></script>
 
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl; ?>/lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />

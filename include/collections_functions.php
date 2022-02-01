@@ -510,7 +510,10 @@ function collection_add_resources($collection,$resources='',$search='',$selected
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
     else if($resources ==''){$resources=do_search($search);}
 
-    if ($resources =='' || count($resources) == 0){return $lang["noresourcesfound"];}
+    if($resources === false){return $lang["noresourcesfound"];}
+    if(!is_array($resources)){$resources = explode(",",$resources);}
+
+    if (count($resources) == 0){return $lang["noresourcesfound"];}
     $collection_resources       = get_collection_resources($collection);
     $refs_to_add = array_diff($resources, $collection_resources);
 
@@ -559,8 +562,11 @@ function collection_remove_resources($collection,$resources='',$removeall=false,
         }
 
     if($selected){$resources=get_collection_resources($USER_SELECTION_COLLECTION);}
-
+    if($resources===false){return $lang["noresourcesfound"];}
+    
     $collection_resources       = get_collection_resources($collection);
+    
+    if(!is_array($resources)){$resources = explode(",",$resources);}
     $refs_to_remove = array_intersect($collection_resources, $resources);
     
     $errors=0;
@@ -5162,7 +5168,10 @@ function featured_collection_check_access_control(int $c_ref)
                        level
                   FROM cte
               ORDER BY level DESC;",
-            "featured_collections");
+            "featured_collections",
+            -1,
+            true,
+            0);
             }
         else
             {
@@ -5177,7 +5186,10 @@ function featured_collection_check_access_control(int $c_ref)
                     JOIN  collection C2
                         ON  C1.p_ref = C2.ref
                 ORDER BY  C1.lvl DESC", 
-                    "featured_collections");
+                    "featured_collections",
+                    -1,
+                    true,
+                    0);
             }
 
           foreach($allparents as $parent)

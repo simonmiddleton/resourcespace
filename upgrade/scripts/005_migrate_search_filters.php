@@ -20,10 +20,12 @@ if(PHP_SAPI != 'cli')
         // Only allow admin users to do force filter creation because the filters should be checked manually first
         include_once __DIR__ . "/../../include/authenticate.php";
         if(!checkperm('v')){exit("permission denied.");}
+        include_once __DIR__ . "/../../include/db.php";
         }
     }
 else
     {
+    include_once __DIR__ . "/../../include/db.php";
     $cli_long_options  = array('force');
     $allowpartialmigration = false;
     foreach(getopt('', $cli_long_options) as $option_name => $option_value)

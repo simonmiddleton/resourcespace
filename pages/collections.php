@@ -106,8 +106,7 @@ if ($collection!="" && $collection!="undefined")
 $cinfo=get_collection($usercollection);
 if(!is_array($cinfo))
     {
-    // If $usercollection doesn't exist default to the users default collection
-    $cinfo=get_collection(sql_value('SELECT ref AS `value` FROM collection WHERE user = "'. $userref .'" AND name = "Default Collection" ORDER BY ref LIMIT 1', 0));
+    $cinfo = get_collection(get_default_user_collection(true));
     }
 if('' == $k || $internal_share_access)
     {

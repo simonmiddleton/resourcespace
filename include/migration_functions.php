@@ -217,7 +217,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
         $all_valid_nodes = array();
         foreach($rulefieldarr as $rulefield)
             {
-            $all_fields_index = array_search($rulefield, array_column($all_fields, 'name'));
+            $all_fields_index = array_search(mb_strtolower($rulefield), array_map("mb_strtolower", array_column($all_fields, 'name')));
             $field_ref = $all_fields[$all_fields_index]["ref"];
             $field_type = $all_fields[$all_fields_index]["type"];
             $logtext .= "FILTER MIGRATION: --- filter field name: '" . $rulefield. "' , field id #" . $field_ref . "\n";

@@ -250,7 +250,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
         }
         
     $resource = get_resource_data($ref);
-    if(!is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
+    if(!is_numeric($ref) || $resource === false || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
         {
         return false;
         }
@@ -787,7 +787,7 @@ function api_get_users($find="", $exact_username_match=false)
     // Forward to the internal function - with "usepermissions" locked to TRUE.
     // Return specific columns only as there's sensitive information in the others such as password/session key.
     $return=array();
-    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.fullname,u.usergroup",$exact_username_match);
+    return get_users(0,$find,"u.username",true,-1,"",false,"u.ref,u.username,u.email,u.fullname,u.usergroup",$exact_username_match);
     }
 
 function api_save_collection(int $ref, array $coldata)

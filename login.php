@@ -68,6 +68,19 @@ $ulockouts=sql_value("select count(*) value from user where username='" . $usern
 if ($lockouts>0 || $ulockouts>0)
 	{
 	$error=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+    if ($ulockouts>0){$log_message='Account locked';}
+    else {$log_message = 'IP address locked';}
+    $userref = get_user_by_username($username);
+    log_activity(
+        $log_message,                       # Note
+        LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
+        $ip,                                # Value New
+        ($userref!="" ? "user"    : NULL),  # Remote Table
+        ($userref!="" ? "last_ip" : NULL),  # Remote Column
+        ($userref!="" ? $userref  : NULL),  # Remote Ref
+        NULL,                               # Ref Column Override
+        NULL,                               # Value Old
+        ($userref!="" ? $userref : NULL));  # User
 	}
 
 # Process the submitted login
@@ -90,7 +103,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
         $accepted = sql_value("SELECT accepted_terms value FROM user WHERE ref = '{$result['ref']}'", 0);
         if(0 == $accepted && $terms_login && !checkperm('p'))
             {
-            $redirect_url='pages/terms.php?noredir=true';
+            $redirect_url='pages/terms.php?url=' . urlencode($url);
             }
         else{
             $redirect_url=$url;
