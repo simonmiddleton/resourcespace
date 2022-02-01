@@ -67,8 +67,11 @@ function save_request($request)
     $assigned_to=getvalescaped("assigned_to","");
     $reason=getvalescaped("reason","");
     $reasonapproved=getvalescaped("reasonapproved","");
-
     $approved_declined=false;
+    $eventdata = [
+        "type"  => MANAGED_REQUEST,
+        "ref"   => $request,
+        ];
     
     # --------------------- User Assignment ------------------------
     # Process an assignment change if this user can assign requests to other users
@@ -88,7 +91,7 @@ function save_request($request)
             $assigned_to_user=get_user($assigned_to);
             $body   = $applicationname . ": " . $lang["requestassignedtoyou"];
             $msgurl = $baseurl . "/?q=" . $request;
-            $eventdata = [];
+             
             debug("BANG " . __LINE__);
             send_user_notification([$assigned_to],"resource_request",$eventdata,$applicationname . ": " . $lang["requestassignedtoyou"],$body,$msgurl);
 
@@ -108,25 +111,19 @@ function save_request($request)
         // $reasonapproved=str_replace(array("\\r","\\n"),"\n",$reasonapproved);$reasonapproved=str_replace("\n\n","\n",$reasonapproved); # Fix line breaks.
         $approved_declined = true;
         $reasonapproved = unescape($reasonapproved);
-        $message=$lang["requestapprovedmail"] . "\n\n" . $lang["approvalreason"]. ": " . $reasonapproved . "\n\n" ;
-        $message.="$baseurl/?c=" . $currentrequest["collection"] . "\n";
+        $message=$lang["requestapprovedmail"] . "\n\n" . $lang["approvalreason"]. ": " . $reasonapproved;
+        $templatevars["message"] = $message;
+        $msgurl = $baseurl . "/?c=" . $currentrequest["collection"];
+        $templatevars["url"] = $msgurl;
         if ($expires!="")
             {
             # Add expiry time to message.
-            $message.=$lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n\n";
+            $expirestext = "\n\n" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";
+            $message .= $expirestext;
+            $templatevars["expires"] = $expirestext;
             }
-    
-        get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-        if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
-            {
-            $templatevars['url'] = $baseurl."/?c=" . $currentrequest["collection"]; 
-            send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message);
-            }
-        else
-            {
-            message_add($currentrequest["user"],$message,$baseurl . "/?c=" . $currentrequest["collection"]);
-            }
-               
+        // Don't add event data for the requesting user's notification or message will be deleted immediately
+        send_user_notification([$currentrequest["user"]],"",[],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message,$baseurl . "/?c=" . $currentrequest["collection"],"requestapprovedmail_email",$templatevars);
         
         # Mark resources as full access for this user
         foreach (get_collection_resources($currentrequest["collection"]) as $resource)
@@ -144,17 +141,13 @@ function save_request($request)
         # Send declined e-mail
         $approved_declined = true;
         $reason = unescape($reason);
-        $message=$lang["requestdeclinedmail"] . "\n\n" . $lang["declinereason"] . ": ". $reason . "\n\n$baseurl/?c=" . $currentrequest["collection"] . "\n";
-               
-        get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-        if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
-            {
-            send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus2"],$message);
-            }
-        else
-            {
-            message_add($currentrequest["user"],$message,$baseurl . "/?c=" . $currentrequest["collection"]);
-            }
+        
+        $message=$lang["requestdeclinedmail"] . "\n\n" . $lang["declinereason"]. ": " . $reason;
+        $templatevars["message"] = $message;
+        $msgurl = $baseurl . "/?c=" . $currentrequest["collection"];
+        $templatevars["url"] = $msgurl;
+
+        send_user_notification([$currentrequest["user"]],"",[],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus2"],$message,$baseurl . "/?c=" . $currentrequest["collection"],"requestdeclined_email",$templatevars);
 
         # Remove access that my have been granted by an inadvertant 'approved' command.
         foreach (get_collection_resources($currentrequest["collection"]) as $resource)
@@ -697,13 +690,10 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 ps_query($request_query, $parameters);
                 $request = sql_insert_id();
 
-                debug("BANG " . $request);
-                
                 $eventdata = [
                     "type"  => MANAGED_REQUEST,
                     "ref"   => $request,
                     ];
-debug("BANG ==$message==");
                 send_user_notification($assigned_to_users,"resource_request",$eventdata,$applicationname . ": " . $lang["requestassignedtoyou"],$message,$templatevars['url']);
                 } # End for each collection
 

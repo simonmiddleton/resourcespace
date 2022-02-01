@@ -723,10 +723,7 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
     if (count($message_users)>0)
         {
         $activitytype = $eventdata["type"] ?? NULL;
-        if(!is_null($activitytype))
-            {
-            $relatedactivity = $eventdata["ref"] ?? NULL;
-            }
+        $relatedactivity = $eventdata["ref"] ?? NULL;
         message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
         }
     if(trim($emails) != "")
