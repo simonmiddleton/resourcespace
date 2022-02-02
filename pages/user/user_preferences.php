@@ -231,7 +231,7 @@ include "../../include/header.php";
 			$page_def[] = config_add_checkbox_select('actions_approve_hide_groups',$lang['actions_approve_hide_groups'],get_usergroups(true,'',true),true,300,1,true,null,!$actions_account_requests);
 			}
 
-        // Make sure are states are unchecked if they had the deprecated option $actions_resource_review set to false.
+        // Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
         // Also only show this option if it is disabled
         get_config_option($userref,'actions_resource_review', $legacy_resource_review, true);
         if(!$legacy_resource_review)
