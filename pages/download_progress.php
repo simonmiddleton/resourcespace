@@ -40,7 +40,7 @@ if (!$save_as)
 	{
 	?>
 	<script type="text/javascript">
-	window.setTimeout("document.location='<?php echo htmlspecialchars($url)?>'",1000);
+	window.setTimeout("document.location='<?php echo str_replace('\'', '%27', $url); ?>'",1000);
 	</script>
 	<?php
 	}
@@ -52,7 +52,7 @@ if (!$save_as)
 	# $save_as set or Opera browser? Provide a download link instead. Opera blocks any attempt to send it a download (meta/js redirect)	?>
     <h2>&nbsp;<h2> 
     <h1><?php echo $lang["downloadresource"]?></h1>
-    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo $url?>"><?php echo $lang["rightclicktodownload"]?></a></p>
+    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo htmlspecialchars($url); ?>"><?php echo $lang["rightclicktodownload"]?></a></p>
 	<?php } else { 
 	# Any other browser - standard 'your download will start shortly' text.
 	?>
@@ -96,7 +96,5 @@ if (!$save_as)
         }?>
 	
 </div>
-
 <?php
 include "../include/footer.php";
-?>
