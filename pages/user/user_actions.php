@@ -61,7 +61,7 @@ if ($user_preferences)
 	<li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a></li>
 	<?php 
 	}
-// Make sure are states are unchecked if they had the legacy option $actions_resource_review set to false.
+// Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
 // Also forcibly set it to true so they can still change preferences;
 if(isset($actions_resource_review) && !$actions_resource_review)
     {
