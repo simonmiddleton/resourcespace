@@ -13,6 +13,10 @@ include_once "../../include/api_functions.php";
 $iiif_debug = getval("debug","")!="";
 
 $iiif_user = get_user($iiif_userid);
+
+// Creating $userdata for use in do_search()
+$userdata[0] = $iiif_user;
+
 setup_user($iiif_user);
 
 $rootlevel = $baseurl_short . "iiif/";
