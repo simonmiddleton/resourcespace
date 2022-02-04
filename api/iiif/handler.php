@@ -13,6 +13,10 @@ include_once "../../include/api_functions.php";
 $iiif_debug = getval("debug","")!="";
 
 $iiif_user = get_user($iiif_userid);
+if($iiif_user === false)
+    {
+    iiif_error(500, ['Invalid $iiif_userid.']);
+    }
 
 // Creating $userdata for use in do_search()
 $userdata[0] = $iiif_user;
@@ -53,13 +57,19 @@ else
 		// IMAGE REQUEST (http://iiif.io/api/image/2.1/)
         // The IIIF Image API URI for requesting an image must conform to the following URI Template:
         // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
+        $identifier = trim($xpath[1] ?? '');
+        if($identifier === '')
+            {
+            iiif_error(400, ['Missing identifier']);
+            }
+
         if(!isset($xpath[2]) || $xpath[2] == "")
             {
             // Redirect to image information document
-            $redirurl = $_SERVER["REQUEST_URI"] . (!isset($xpath[2]) ? "/" : "") . "info.json";
+            $redirurl = $rootimageurl . $identifier . '/info.json';
             if(function_exists("http_response_code"))
                 {
-                http_response_code(303); # Send error status
+                http_response_code(303);
                 }
             header ("Location: " . $redirurl);
             exit();
