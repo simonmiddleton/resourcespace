@@ -108,7 +108,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 * 
 * @return boolean           success/failure flag - used for example to prevent certain users from making API calls
 */
-function setup_user($userdata)
+function setup_user(array $userdata)
 	{
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
