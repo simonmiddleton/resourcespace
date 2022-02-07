@@ -2233,6 +2233,8 @@ if (count($result)>0)
          <div id="RelatedResources">
 		<div class="RecordResouce">
 		<div class="Title"><?php echo $lang["relatedresources"]?></div>
+        <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+        <div class="clearerleft"> </div>
 		<?php
     	# loop and display the results
     	for ($n=0;$n<count($result);$n++)            
@@ -2269,9 +2271,6 @@ if (count($result)>0)
         <?php        
         }
     ?>
-    <div class="clearerleft"> </div>
-        <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
-
     </div>
     </div>
     </div>
