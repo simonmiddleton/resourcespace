@@ -1704,9 +1704,7 @@ $default_display="thumbs";
 $alternative_file_previews=true;
 $alternative_file_previews_batch=true;
 
-
-# Permission to show the replace file, preview image only and alternative files options on the resource edit page.
-# Overrides required permission of F*
+# Permission to show the upload preview image link on the resource view page. Overrides required permission of F*
 $custompermshowfile=false;
 
 # enable support for storing an alternative type for each alternate file
