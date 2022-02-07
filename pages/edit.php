@@ -2283,16 +2283,7 @@ if ($ref>0 && !$multiple)
     <?php
     global $custompermshowfile;
         hook('custompermshowfile');
-        if(     (
-                (!$is_template && !checkperm('F*'))
-                    ||
-                $custompermshowfile
-                    ||
-                $external_upload
-                )
-            &&
-                !hook('replaceeditpreview')
-            )
+        if(!$is_template && !hook('replaceeditpreview'))
             { ?>
             <div class="Question QuestionStickyRight" id="question_file">
             <div class="FloatingPreviewContainer">
@@ -2344,7 +2335,7 @@ if ($ref>0 && !$multiple)
                 <?php 
                 }
 
-            if ($allow_metadata_revert)
+            if ($allow_metadata_revert && !checkperm('F*'))
                 {?>
                 <br />
                 <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
