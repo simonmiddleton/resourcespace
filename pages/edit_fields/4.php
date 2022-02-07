@@ -75,6 +75,11 @@ else{
 		let day   = jQuery('#<?php echo $name;?>-d').val();
 		let month = jQuery('#<?php echo $name;?>-m').val();
 		let year  = jQuery('#<?php echo $name;?>-y').val(); 
+		if (!jQuery.isNumeric(year))
+			{
+			styledalert('Error','You have entered an invalid date');
+			jQuery(this).val(jQuery.data(this, 'current'));
+			}
 		if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
 			//format date string into yyyy-mm-dd
 			let date_string = year + '-' + month + '-' + day;
