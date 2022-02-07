@@ -717,27 +717,6 @@ else if(1 == $resource['has_image'])
     $previewimagelink = generateURL("{$baseurl}/pages/preview.php", $urlparams, array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
     $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
 
-    // PDFjs works only for PDF files. Because this requires the PDF file itself, we can only use this mode if user has
-    // full access to the resource.
-    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
-        {
-        // IMPORTANT: never show the real file path with this feature
-        $hide_real_filepath_initial = $hide_real_filepath;
-        $hide_real_filepath = true;
-        $pdfjs_original_file_path = get_resource_path($ref, false, '', false, $resource['file_extension']);
-        $hide_real_filepath = $hide_real_filepath_initial;
-
-        $previewimagelink = generateURL(
-            "{$baseurl}/lib/pdfjs/web/viewer.php",
-            $urlparams,
-            array(
-                'ref'  => $ref,
-                'file' => $pdfjs_original_file_path
-            )
-        );
-        $previewimagelink_onclick = '';
-        }
-
 	if (!hook("replacepreviewlink"))
         {
         ?>
@@ -1126,7 +1105,7 @@ else
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
 <?php
 
-$disable_flag = (hook('disable_flag_for_renderbeforerecorddownload') || ($use_pdfjs_viewer && $resource['file_extension'] == 'pdf') );
+$disable_flag = hook('disable_flag_for_renderbeforerecorddownload');
 hook("renderbeforerecorddownload", '', array($disable_flag));
 
 ?>
@@ -1860,15 +1839,6 @@ hook ("resourceactions") ?>
 		</a></li><?php 
 		}
 
-    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
-        {
-        $find_in_pdf_url = generateURL("{$baseurl}/pages/search_text_in_pdf.php", array( 'ref' => $ref));
-        ?>
-        <li>
-            <a href="<?php echo $find_in_pdf_url; ?>" onclick="return ModalLoad(this, true, true);"><i class='fa fa-fw fa-search'></i>&nbsp;<?php echo $lang['findtextinpdf']; ?></a>
-        </li>
-        <?php 
-        }
     } /* End replaceresourceactions */ 
 hook("afterresourceactions", "", array($ref));
 hook("afterresourceactions2");

@@ -3101,11 +3101,6 @@ $global_font="Montserrat";
 // Sort tabs alphabetically
 $sort_tabs = true;
 
-// Replace the preview of a PDF document with pdfjs viewer if user has full access to the resource. This allows the user 
-// to see the original file, having the ability to also search within the document.
-// IMPORTANT: enable this per resource type as this is only going to work for PDF files to which user has full access
-$use_pdfjs_viewer = false;
-
 // Ask users to opt-in registering to access the system. This can address requirements data protection laws (e.g. GDPR) may have
 $user_registration_opt_in = true;
 
