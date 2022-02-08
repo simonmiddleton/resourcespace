@@ -1065,3 +1065,8 @@ function api_reorder_featured_collections($refs)
     http_response_code(403);
     return false;
     }
+
+function api_get_dash_search_data($link,$promimg)
+    {
+    return get_dash_search_data($link,$promimg);    
+    }
