@@ -2118,13 +2118,13 @@ function get_dash_search_data($link='', $promimg=0)
             if(in_array($results[$n]["access"],[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
                 {
                 $use_watermark=check_use_watermark();
-                $resfile=get_resource_path($results[$n]["ref"],true,"thm",false,"jpg",-1,1,$use_watermark);
+                $resfile=get_resource_path($results[$n]["ref"],true,"pre",false,"jpg",-1,1,$use_watermark);
                 if(file_exists($resfile))
                     {
                     $searchdata["images"][$imagecount]["ref"] = $results[$n]["ref"];
                     $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
                     $searchdata["images"][$imagecount]["thumb_height"] = $results[$n]["thumb_height"];
-                    $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"],false,"thm",false,"jpg",-1,1,$use_watermark);
+                    $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"],false,"pre",false,"jpg",-1,1,$use_watermark);
                     $imagecount++;
                     }
                 }
