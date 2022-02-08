@@ -1746,7 +1746,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             // if using fetchrows some results may just be == 0 - remove from results array
             if ($results[$n]==0) 
                 {
-                unset($results[$n]); 
+                //unset($results[$n]); 
                 continue;
                 }
 
