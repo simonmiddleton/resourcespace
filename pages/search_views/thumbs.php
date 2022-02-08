@@ -241,14 +241,13 @@ if (!hook("renderresultthumb"))
                 {include $plugin;}
 
             # swap title fields if necessary
-            if (isset($metadata_template_resource_type) && isset ($metadata_template_title_field))
+            if (isset($metadata_template_resource_type) && isset($metadata_template_title_field) && is_int_loose($metadata_template_title_field))
                 {
                 if (($df[$x]['ref']==$view_title_field) && ($result[$n]['resource_type']==$metadata_template_resource_type))
                     {
                     $value=$result[$n]['field'.$metadata_template_title_field];
                     }
                 }
-
             // extended css behavior 
             if (in_array($df[$x]['ref'],$thumbs_display_extended_fields) &&
             ((isset($metadata_template_title_field) && $df[$x]['ref']!=$metadata_template_title_field) || !isset($metadata_template_title_field)))

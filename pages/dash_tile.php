@@ -209,7 +209,7 @@ if($submitdashtile && enforcePostRequest(false))
 	if($error)
 		{?>
 		<p class="FormError" style="margin-left:5px;">
-		<?php echo $error;?>
+		<?php echo htmlspecialchars($error);?>
 		</p>
 		<?php
 		}?>
@@ -218,7 +218,7 @@ if($submitdashtile && enforcePostRequest(false))
 	if($message)
 		{?>
 		<p style="margin-left:5px;">
-		<?php echo $message;?>
+		<?php echo htmlspecialchars($message);?>
 		</p>
 		<?php
 		if(strpos($link,"pages/")===0)
@@ -277,7 +277,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
 							<input 
 								type="radio" 
 								class="tlstyle" 
-								id="tile_style_<?php echo $style;?>" 
+								id="tile_style_<?php echo htmlspecialchars($style);?>" 
 								name="tlstyle" 
 								value="<?php echo $style;?>" 
 								<?php 
@@ -294,7 +294,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
 							/>
 						</td>
 						<td align="left" valign="middle" >
-							<label class="customFieldLabel" for="tile_style_<?php echo $style;?>"><?php echo $lang["tile_".$style];?></label>
+							<label class="customFieldLabel" for="tile_style_<?php echo htmlspecialchars($style);?>"><?php echo $lang["tile_".$style];?></label>
 						</td>
 						<?php
 						}?>
@@ -657,14 +657,14 @@ if('' != $tile_type && $tile_type !== "conf")
                 <option value="<?php echo htmlspecialchars($resource["ref"]); ?>"
                     <?php echo $promoted_resource === $resource['ref'] ? 'selected="selected"' : ''; ?>
                 ><?php
-                    echo str_replace(
+                    echo htmlspecialchars(str_replace(
                         array('%ref','%title'),
                         array(
                             $resource['ref'],
                             i18n_get_translated($resource['field' . $view_title_field])
                         ),
                         $lang['ref-title']
-                    );
+                    ));
                 ?></option>
                 <?php
                 }
