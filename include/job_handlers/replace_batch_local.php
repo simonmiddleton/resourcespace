@@ -71,6 +71,7 @@ foreach($foldercontents as $objectindex => $object)
             $success = @copy($full_path,$rsfile);
             if($success)
                 {
+                sql_query("update resource set file_extension = lower('" . escape_check($extension) . "') where ref = '$valid_resource'");
                 resource_log($valid_resource,"u",0);
                 if(!$no_exif) 
                     {
@@ -106,6 +107,7 @@ foreach($foldercontents as $objectindex => $object)
                     $success = @copy($full_path,$rsfile);
                     if($success)
                         {
+                        sql_query("update resource set file_extension = lower('" . escape_check($extension) . "') where ref = '$valid_resource'");
                         resource_log($valid_resource,"u",0);
                         if(!$no_exif) 
                             {
@@ -145,6 +147,7 @@ foreach($foldercontents as $objectindex => $object)
             $success = @copy($full_path,$rsfile);
             if($success)
                 {
+                sql_query("update resource set file_extension = lower('" . escape_check($extension) . "') where ref = '$targetresource'");
                 resource_log($targetresource,"u",0);
                 if(!$no_exif) 
                     {
