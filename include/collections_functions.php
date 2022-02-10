@@ -5662,7 +5662,7 @@ function get_featured_collections_by_resources(array $r_refs)
         $featured_type_filter_sql
         );
 
-    $fcs = ps_query($sql,array_merge(ps_param_fill($resources, 'i')),$featured_type_filter_sql_params);
+    $fcs = ps_query($sql, array_merge(ps_param_fill($resources, 'i'), $featured_type_filter_sql_params));
     
     $results = array();
     foreach($fcs as $fc)
