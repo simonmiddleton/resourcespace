@@ -4556,6 +4556,42 @@ function get_system_status()
         }
 
 
+    // Check configured utility paths
+    $system_utilities = [
+        'im-convert' => 'imagemagick_path',
+        'im-identify' => 'imagemagick_path',
+        'im-composite' => 'imagemagick_path',
+        'im-mogrify' => 'imagemagick_path',
+        'ghostscript' => 'ghostscript_path',
+        'ffmpeg' => 'ffmpeg_path',
+        'ffprobe' => 'ffmpeg_path',
+        'exiftool' => 'exiftool_path',
+        'php' => 'php_path',
+        'python' => 'python_path',
+        'archiver' => 'archiver_path',
+        'fits' => 'fits_path',
+    ];
+    $missing_utility_paths = [];
+    foreach($system_utilities as $name => $path_var_name)
+        {
+        if(isset($GLOBALS[$path_var_name]) && get_utility_path($name) === false)
+            {
+            $missing_utility_paths[$name] = $path_var_name;
+            }
+        }
+    if(!empty($missing_utility_paths))
+        {
+        $return['results']['system_utilities'] = [
+            'status' => 'FAIL',
+            'info' => 'Unable to get utility path',
+            'affected_utilities' => array_unique(array_keys($missing_utility_paths)),
+            'affected_utility_paths' => array_unique(array_values($missing_utility_paths)),
+        ];
+
+        return $return;
+        }
+
+
     // Check database connectivity.
     $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
     if ($check <= 0)
