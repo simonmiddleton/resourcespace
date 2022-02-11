@@ -140,7 +140,8 @@ else {
 
 // If we reached so far, it should mean we have found a user.
 // Make sure it is valid and set the user up as we need to check permissions later on
-$user_data = validate_user("u.ref = '" . escape_check($userref) . "'", true);
+$user_data = validate_user(["sql" => "u.ref = ?" ,"params" => ["i",$userref]]);
+
 if($user_data !== false && count($user_data) > 0)
     {
     setup_user($user_data[0]);

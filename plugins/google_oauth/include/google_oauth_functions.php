@@ -33,7 +33,7 @@ function google_oauth_is_authenticated()
         }
 
     $goauth_cookie = '' != $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] ? $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] : '';
-    $user_data     = validate_user("session = '" . escape_check($goauth_cookie) . "'");
+    $user_data     = validate_user(["sql" => "session = ?" ,"params" => ["s",$goauth_cookie]]);
 
     if(false === $user_data)
         {
@@ -75,7 +75,7 @@ function google_oauth_signout()
     global $google_oauth_client_id;
 
     $goauth_cookie = isset($_COOKIE[GOOGLE_OAUTH_COOKIE_NAME]) ? $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] : '';
-    $user_data     = validate_user("session = '" . escape_check($goauth_cookie) . "'");
+    $user_data     = validate_user(["sql" => "session = ?" ,"params" => ["s",$goauth_cookie]]);
 
     if(false === $user_data)
         {

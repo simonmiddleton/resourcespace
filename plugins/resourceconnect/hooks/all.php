@@ -17,10 +17,8 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
     if ($key!=substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
 
     global $resourceconnect_user; # Which user to use for remote access?
-    $userdata=validate_user("u.ref='$resourceconnect_user'");
-    setup_user($userdata[0]);
-    
-    
+    $userdata=validate_user(["sql" => "u.ref = ?", "params" => ["i",$resourceconnect_user]]);
+    setup_user($userdata[0]);    
     
     # Set that we're being accessed via resourceconnect.
     global $is_resourceconnect;

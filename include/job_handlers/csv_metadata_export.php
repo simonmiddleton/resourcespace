@@ -18,7 +18,7 @@ foreach($job_data as $arg => $value)
     }
 
 // Set up the user who requested the metadata download as it needs to be processed with their access
-$user_data = validate_user("u.ref = '{$job['user']}'", true);
+$user_data = validate_user(["sql" => "u.ref = ?","params" => ["i",$job['user']]], true);
 
 if(count($user_data) > 0)
     {

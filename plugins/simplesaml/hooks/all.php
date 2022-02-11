@@ -33,7 +33,7 @@ function HookSimplesamlAllPreheaderoutput()
     if ($simplesaml_allow_standard_login && isset($_COOKIE["user"]))
         {
         $session_hash = escape_check($_COOKIE["user"]);
-        if (validate_user("u.session='{$session_hash}'", false) === false)
+        if (validate_user(["sql" => "u.session = ?","params" => ["s",$session_hash]], false) === false)
             {
             debug("simplesaml: standard user login - invalid user session");
             rs_setcookie('user', '', 0);
@@ -448,7 +448,7 @@ function HookSimplesamlAllProvideusercredentials()
 			$sql .= " WHERE ref = '$userid'";
 			sql_query($sql);
 
-			$user_select_sql="and u.username='" . escape_check($username) . " '";
+			$user_select_sql = ["sql" => "u.username=?", "params" => ["s",$username]];
             $allow_password_change = false;
             $session_autologout = false;
 			return true;

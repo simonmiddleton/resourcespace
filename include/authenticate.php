@@ -11,39 +11,44 @@ $is_authenticated=false;
 if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset($anonymous_login) || hook('provideusercredentials'))
     {
     $username="";
-	// Resolve anonymous login user if it is configured at domain level
-	if(isset($anonymous_login) && is_array($anonymous_login))
-		{
-		foreach($anonymous_login as $key => $val)
-			{
-			if($baseurl==$key){$anonymous_login=$val;}
-			}
-		}
-	// Establish session hash
-	if (array_key_exists("user",$_GET))
-		{
-	    $session_hash=escape_check($_GET["user"]);
-		}
-	elseif (array_key_exists("user",$_COOKIE))
-  		{
-	  	$session_hash=escape_check($_COOKIE["user"]);
-	  	}
-	elseif (isset($anonymous_login))
-		{
-		$username=$anonymous_login;
-		$session_hash="";
-		$rs_session=get_rs_session_id(true);
-		}
-
-    $user_select_sql = "u.session='{$session_hash}'";
+    // Resolve anonymous login user if it is configured at domain level
+    if(isset($anonymous_login) && is_array($anonymous_login))
+        {
+        foreach($anonymous_login as $key => $val)
+            {
+            if($baseurl==$key){$anonymous_login=$val;}
+            }
+        }
+    // Establish session hash
+    if (array_key_exists("user",$_GET))
+        {
+        $session_hash=escape_check($_GET["user"]);
+        }
+    elseif (array_key_exists("user",$_COOKIE))
+        {
+        $session_hash=escape_check($_COOKIE["user"]);
+        }
+    elseif (isset($anonymous_login))
+        {
+        $username=$anonymous_login;
+        $session_hash="";
+        $rs_session=get_rs_session_id(true);
+        }  
 
     // Automatic anonymous login, do not require session hash.
+    $user_select_sql =[];
     if(isset($anonymous_login) && $username == $anonymous_login)
         {
-        $user_select_sql = "AND u.username = '{$username}' AND usergroup IN (SELECT ref FROM usergroup)";
+        $user_select_sql["sql"] = "u.username = ? AND usergroup IN (SELECT ref FROM usergroup)";
+        $user_select_sql["params"] = ["s",$username];
+        }
+    else
+        {
+        $user_select_sql["sql"] = "u.session=?";
+        $user_select_sql["params"] = ["s",$session_hash];            
         }
 
-	hook('provideusercredentials');
+    hook('provideusercredentials');
 
     $userdata = validate_user($user_select_sql, true); // validate user and get user details 
 
@@ -137,13 +142,15 @@ if (!$valid && isset($anonymous_autouser_group))
 
     // Setup the user
     $login_session_hash = (isset($login_data['session_hash']) ? escape_check($login_data['session_hash']) : '');
-    $user_data          = validate_user("u.session = '{$login_session_hash}'", true);
+
+    $user_select_sql["sql"] = "u.session=?";
+    $user_select_sql["params"] = ["s",$login_session_hash];
+    $user_data = validate_user($user_select_sql, true);
 
     $valid = false;
     if(0 < count($user_data))
         {
         $valid = true;
-
         setup_user($user_data[0]);
         }
     }

@@ -18,11 +18,14 @@ include_once __DIR__ . '/login_functions.php';
 * @return boolean|array
 */
 function validate_user($user_select_sql, $getuserdata=true)
-    {
-    if('' == $user_select_sql)
+    {    
+    if(!is_array($user_select_sql) || !is_string($user_select_sql["sql"]))
         {
         return false;
         }
+
+    $validatesql    = $user_select_sql["sql"];
+    $validateparams = $user_select_sql["params"];
 
     $full_user_select_sql = "
         approved = 1
@@ -31,12 +34,12 @@ function validate_user($user_select_sql, $getuserdata=true)
                 OR account_expires = '0000-00-00 00:00:00' 
                 OR account_expires > now()
             ) "
-        . ((strtoupper(trim(substr($user_select_sql, 0, 4))) == 'AND') ? ' ' : ' AND ')
-        . $user_select_sql;
+        . ((strtoupper(trim(substr($validatesql, 0, 4))) == 'AND') ? ' ' : ' AND ')
+        . $validatesql;
 
     if($getuserdata)
         {
-        $userdata = sql_query(
+        $userdata = ps_query(
             "   SELECT u.ref,
                        u.username,
                        u.origin,
@@ -73,18 +76,20 @@ function validate_user($user_select_sql, $getuserdata=true)
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref
-                 WHERE {$full_user_select_sql}"
+                 WHERE {$full_user_select_sql}",
+                 $validateparams
         );
 
         return $userdata;
         }
     else
         {
-        $validuser = sql_value(
+        $validuser = ps_value(
             "      SELECT u.ref AS `value`
                      FROM user AS u 
                 LEFT JOIN usergroup g ON u.usergroup = g.ref
-                    WHERE {$full_user_select_sql}"
+                    WHERE {$full_user_select_sql}",
+                    $validateparams
             ,
             ''
         );
@@ -1656,7 +1661,7 @@ function check_access_key($resources,$key)
         $external_share_view_as_internal
         && (
             isset($_COOKIE["user"])
-            && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
+            && validate_user(["sql" => "u.session = ?","params" => ["s",$_COOKIE["user"]]], false)
             && !is_authenticated()
         ))
             {
@@ -1861,10 +1866,10 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-
     hook("external_share_view_as_internal_override");
     global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename;
-    if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
+
+    if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user(["sql" => "u.session =?", "params" => ["s",$_COOKIE["user"]]], false))
         {
         // We want to authenticate the user so we can show the page as internal
         return false;

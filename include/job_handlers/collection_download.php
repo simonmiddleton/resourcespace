@@ -36,7 +36,7 @@ if(isset($job_data["ext"]))
     }
 
 // Set up the user who requested the collection download as it needs to be processed in its name
-$user_data = validate_user("u.ref = '{$job['user']}'", true);
+$user_data = validate_user(["sql" => "u.ref = ?","params" => ["i",$job['user']]], true);
 
 if(count($user_data) > 0)
     {
