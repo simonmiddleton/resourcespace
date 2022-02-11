@@ -91,7 +91,7 @@ function comments_submit()
     else
         {
         $sql_fields = "user_ref";
-        $sql_values = array("i",$userref);
+        $sql_values = array("i", (int)$userref);
         }
 
     $body = getvalescaped("body", "");
@@ -102,14 +102,14 @@ function comments_submit()
     $resource_ref =  getvalescaped("resource_ref", 0,true);
 
     $sql_values_prepend = array(
-        "i", ($parent_ref == 0 ? NULL : "'$parent_ref'"),
-        "i", ($collection_ref == 0 ? NULL : "'$collection_ref'"),
-        "i", ($resource_ref == 0 ? NULL : "'$resource_ref'")
+        "i", ($parent_ref == 0 ? NULL : (int)$parent_ref),
+        "i", ($collection_ref == 0 ? NULL : (int)$collection_ref),
+        "i", ($resource_ref == 0 ? NULL : (int)$resource_ref)
     );
 
-    $sql_values = array_merge($sql_values_prepend,$sql_values,array("s",$body));
+    $sql_values = array_merge($sql_values_prepend, $sql_values, array("s",$body));
 
-    ps_query("insert into comment (ref_parent, collection_ref, resource_ref, {$sql_fields}, body) values (" . ps_param_insert(count($sql_values)) . ")",$sql_values);
+    ps_query("insert into comment (ref_parent, collection_ref, resource_ref, {$sql_fields}, body) values (" . ps_param_insert(count($sql_values) / 2) . ")", $sql_values);
 
     // Notify anyone tagged.
     comments_notify_tagged($body,$userref,$resource_ref,$collection_ref);
