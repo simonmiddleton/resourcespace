@@ -1988,7 +1988,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
 
                 // Filter response
                 preview_resources = promoted_image > 0 && promoted_image_resource[0] !== undefined ? [promoted_image_resource[0]]
-                : promoted_image === 0 && response[0] !== undefined ? [response[0]]
+                : promoted_image === 0 && response.images[0] !== undefined ? [response.images[0]]
                 : [];
                 // Fit (adjust) the 'pre' size to the tile size
                 preview_resources = preview_resources.map(function(resource)
