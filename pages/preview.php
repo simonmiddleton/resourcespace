@@ -391,7 +391,10 @@ if($annotate_enabled)
                 resource            : <?php echo (int) $ref; ?>,
                 read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
                 // First page of a document is exactly the same as the preview
-                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>
+                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>,
+                // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
+                csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                <?php echo generateAjaxToken('RSTagging'); ?>
                 });
 
     <?php
@@ -402,6 +405,9 @@ if($annotate_enabled)
                 {
                 facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
                 resource                   : <?php echo (int) $ref; ?>,
+                // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
+                fr_csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                <?php echo generateAjaxToken('RSFaceRecognition'); ?>
                 });
         <?php
         }

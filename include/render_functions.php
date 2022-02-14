@@ -2517,6 +2517,11 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
                 let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
                 let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                if (year != "" && !jQuery.isNumeric(year))
+                    {
+                    styledalert('Error','You have entered an invalid date');
+                    jQuery(this).val(jQuery.data(this, 'current'));
+                    }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
                     //format date string into yyyy-mm-dd
                     let date_string = year + '-' + month + '-' + day;
@@ -2533,7 +2538,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
                 let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
                 let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
-                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val(); 
+                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val();
+                if (year != "" && !jQuery.isNumeric(year))
+                    {
+                    styledalert('Error','You have entered an invalid date');
+                    jQuery(this).val(jQuery.data(this, 'current'));
+                    }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
                     //format date string into yyyy-mm-dd
                     let date_string = year + '-' + month + '-' + day;

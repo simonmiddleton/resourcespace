@@ -7,6 +7,7 @@ include_once "../include/api_functions.php";
 include_once "../include/ajax_functions.php";
 include_once "../include/api_bindings.php";
 include_once "../include/login_functions.php";
+include_once "../include/dash_functions.php";
 
 if (!$enable_remote_apis) {http_response_code(403);exit("API not enabled.");}
 

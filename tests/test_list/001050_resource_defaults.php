@@ -26,7 +26,7 @@ $groupref = save_usergroup(0,$setoptions);
 
 // Add a new usergroup with defaults set
 $defuser        = new_user("DeeFawlts",$groupref);
-$defuserdata    = validate_user("u.ref='$defuser'");
+$defuserdata    = validate_user(["sql" => "u.ref=?","params" => ["i", $defuser]]);
 setup_user($defuserdata[0]);
 
 // Create  a resource, defaults should be set

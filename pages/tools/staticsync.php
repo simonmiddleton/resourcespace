@@ -688,16 +688,27 @@ function ProcessFolder($folder)
                     # Update resource table
                     $setvals = array();
                     $setvals["access"] = $accessval;
-                    $setvals["archive"] = $staticsync_defaultstate;
+
+                    if(isset($archiveval))
+                        {
+                        $setvals["archive"] = $archiveval;
+                        }
+                    else
+                        {
+                        $setvals["archive"] = $staticsync_defaultstate;
+                        }
+
                     if(isset($maprestype) && $maprestype != $type)
                         {
                         $setvals["resource_type"] = $maprestype;
                         }
+
                     if(!$enable_thumbnail_creation_on_upload)
-                        {                        
+                        {
                         $setvals["has_image"] = 0;
                         $setvals["preview_attempts"] = 0;
                         }
+
                     $updatesql = array();
                     foreach($setvals as $name => $val)
                         {

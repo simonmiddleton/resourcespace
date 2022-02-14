@@ -23,9 +23,8 @@ if ($resourceconnect_user == "" || !isset($resourceconnect_user))
 echo $lang["resourceconnect_user_not_configured"];
 exit();
 }
-$userdata=validate_user("u.ref='$resourceconnect_user'");
+$userdata=validate_user(["sql" => "u.ref=?","params" => ["i",$resourceconnect_user]]);
 setup_user($userdata[0]);
-
 
 $restypes="";
 # Resolve resource types

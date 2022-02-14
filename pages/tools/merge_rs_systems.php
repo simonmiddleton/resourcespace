@@ -338,7 +338,8 @@ if($import && !isset($user))
 
 if(isset($user))
     {
-    $user_data = validate_user("AND u.ref = '" . escape_check($user) . "'", true);
+    $user_data = validate_user(["sql" => "u.ref = ?","params" => ["i",$user]], true);
+
     if(!is_array($user_data) || count($user_data) == 0)
         {
         logScript("ERROR: Unable to validate user ID #{$user}!");

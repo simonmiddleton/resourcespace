@@ -152,7 +152,7 @@ if(!collection_readable($collection))
 
                         updateAvailableContactSheetFields('thumbnails');
                 		}
-                	jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');	
+                    jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');  
                 		">
                     <?php
                     foreach($templates as $template)
@@ -479,7 +479,6 @@ if($contactsheet_sorting)
             </div>
 
             <div class="QuestionSubmit">
-
                 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" />
             </div>
         </div> <!-- end of small BasicBox -->
@@ -502,6 +501,9 @@ if($contact_sheet_previews == true)
     }
     ?>
 </div>
-<script type="text/javascript">jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');</script>
+<script>
+    jQuery().setContactSheetCSRFTokenIdentifier('<?php echo $GLOBALS['CSRF_token_identifier']; ?>');
+    jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');
+</script>
 <?php
 include '../include/footer.php';

@@ -48,7 +48,7 @@ $userref                = escape_check(google_oauth_getRsUserRefBySubClaim($toke
 // Existing user
 if(0 < $userref)
     {
-    $user_data = validate_user("u.ref = '{$userref}'");
+    $user_data = validate_user(["sql" => "u.ref = ?" ,"params" => ["i",$userref]]);
 
     if(false === $user_data)
         {

@@ -9,7 +9,7 @@ $csv_set_options = $job_data["csv_set_options"];
 $csvfile = $job_data["csvfile"];
 
 // Set up the user who initiated the CSV upload as all permissions must be honoured
-$user_data = validate_user("u.ref = '{$job['user']}'", true);
+$user_data = validate_user(["sql" => "u.ref = ?","params" => ["i",$job['user']]], true);
 
 if(count($user_data) > 0)
     {
