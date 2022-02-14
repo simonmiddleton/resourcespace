@@ -7913,40 +7913,12 @@ function notify_resource_change($resource)
         }
         
     debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
-    $download_users=sql_query("select distinct u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
+    $download_users=ps_query("SELECT DISTINCT u.ref, u.email FROM resource_log rl LEFT JOIN user u ON rl.user=u.ref WHERE rl.type='d' AND rl.resource=? AND DATEDIFF(NOW(),date)<?",["i",$resource,"i",$notify_on_resource_change_days],"");
     $message_users=array();
     if(count($download_users)>0)
         {
         global $applicationname, $lang, $baseurl;
-        foreach ($download_users as $download_user)
-            {
-            if($download_user['ref']==""){continue;}
-            get_config_option($download_user['ref'],'user_pref_resource_notifications', $send_message);       
-            if($send_message==false){continue;}     
-            
-            get_config_option($download_user['ref'],'email_user_notifications', $send_email);
-            get_config_option($download_user['ref'],'email_and_user_notifications', $send_email_and_notify);
-            if($send_email_and_notify)
-                {
-                $message_users[]=$download_user["ref"];
-                if($download_user["email"]!="")
-                    {
-                    send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
-                    }
-                }
-            else if($send_email && $download_user["email"]!="")
-                {
-                send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
-                }
-            else
-                {
-                $message_users[]=$download_user["ref"];
-                }
-            }
-        if (count($message_users)>0)
-            {
-            message_add($message_users,str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_notification"]),$baseurl . "/?r=" . $resource);
-            }
+        send_user_notification($download_users,"resource_change",[],$lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),$baseurl . "/?r=" . $resource,'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
         }
     }
 

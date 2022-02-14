@@ -671,8 +671,7 @@ function send_user_message($users,$text)
  */
 function send_user_notification($users=[],string $type,array $eventdata=[],string $subject="",string $message,string $url="",string $template="",array $templatevars=[])
     {
-    global $applicationname, $lang, $userref;
-    debug("BANG starting send_user_notification()");
+    global $userref;
     $notifytypes = [
             "resource_request"  => "user_pref_resource_access_notifications",
             "account_request"   => "user_pref_user_management_notifications",
@@ -680,10 +679,8 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
             "research_request"  => "user_pref_resource_access_notifications",
         ];
  
-    debug("BANG users" . print_r($users,true));
     $message_users = []; // Users that will be sent a message
     $emails = ""; // User emails that will be sent an email
-    debug("BANG type" . gettype($users));
     foreach($users as $notify_user)
         {
         $userdetails = $notify_user;
@@ -692,30 +689,25 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
             $userdetails = get_user((int)$notify_user);
             if($userdetails == false)
                 {
-                debug("BANG user not found "  . (int)$notify_user);
                 continue;
                 }
             }        
         
         if(isset($notifytypes[$type]))
             {
-            debug("BANG Checking user preference for user " . $userdetails["ref"]);
             get_config_option($userdetails['ref'],$notifytypes[$type], $send_message);		  
             if($send_message==false)
                 {
-                debug("BANG user " . (int)$notify_user . " doesn't want to get messages");
                 continue;
                 }
             }
         get_config_option($userdetails['ref'],'email_user_notifications', $send_email);    
         if($send_email && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL))
             {
-            debug("BANG send email to user #" . $userdetails["ref"]);
             $emails .= "," . $userdetails["email"];
             }        
         else
             {
-            debug("BANG send message to user #" . $userdetails["ref"]);
             $message_users[]=$userdetails["ref"];
             }
         }
@@ -727,8 +719,7 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
         message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
         }
     if(trim($emails) != "")
-        {        
-        debug("BANG send mail using template: " . $template);
+        {        ;
         send_mail($emails,$subject,$message,"","",$template,$templatevars);            
         }
     }

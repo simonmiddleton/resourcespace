@@ -853,7 +853,7 @@ function email_reset_link($email,$newuser=false)
  */
 function auto_create_user_account($hash="")
     {
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
+    global $applicationname, $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
            $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash,$defaultlanguage;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
@@ -1020,40 +1020,37 @@ function auto_create_user_account($hash="")
 
         // Need to global the usergroup so that we can find the appropriate admins
 
-        $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup); 
-        $message_users=array();
-        global $user_pref_user_management_notifications, $email_user_notifications;
+        $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup);
 
         // get array of preferred languages for notify users
         $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
         // get array of language strings for selected languages
-        $language_strings_all = get_languages_notify_users($languages_approval_notify_users);  
-         
+        $language_strings_all = get_languages_notify_users($languages_approval_notify_users);
+
+        $eventdata = [
+            "type"  => USER_REQUEST,
+            "ref"   => $new,
+            ];
+
         foreach($approval_notify_users as $approval_notify_user)
             {
-            // Is notification required
-            get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
-            if(!$send_message) { continue; } // Skip this user 
-            
-            // Is an email required
-            get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications); 
-            get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications); 
-            
             // get preferred language for approval_notify_user
             $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
 
             // get preferred language for approval_notify_user
             $lang_pref = $language_strings_all[$message_language];
 
-            // Send email if required
-            if( ($approval_notify_user["email"]!="") && ($email_user_notifications || $email_and_user_notifications) ) {
-                $message=$lang_pref["userrequestnotification1"] . "\n\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang_pref["userrequestnotification3"] . "\n$baseurl?u=$new";
-                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang_pref["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
-                }        
+            $message = $lang_pref["userrequestnotification1"] . "\n\n" 
+                . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n"
+                . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" 
+                . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" 
+                . $lang_pref["ipaddress"] . ": " . $_SERVER["REMOTE_ADDR"] . "\n\n" 
+                . (trim($customContents) != "" ? $customContents . "\n\n" : "")
+                . $lang_pref["userrequestnotification3"] . "\n\n"
+                . $templatevars['linktouser'];
+                ;
 
-            // Send notification because it is required
-            $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
-            message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
+            send_user_notification($approval_notify_user,"account_request",$eventdata,$lang_pref["requestuserlogin"],$message,$templatevars['linktouser'],"emailuserrequest",$templatevars);
             }
 
         // set language back to cookie setting
@@ -1062,8 +1059,7 @@ function auto_create_user_account($hash="")
         if(file_exists($langfile))
             {
             include $langfile;
-            }
-    
+            }    
         }
 
     return true;
