@@ -1839,6 +1839,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
     $emails=$emails_keys['emails'];
     $key_required=$emails_keys['key_required'];
+    $internal_user_ids = $emails_keys['refs'];
 
     # Add the collection(s) to the user's My Collections page
     $ulist = array_map("escape_check",$ulist);
@@ -1889,11 +1890,17 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     $templatevars['fromusername']=$fromusername;
     $templatevars['from_name']=$from_name;
 
-    if(count($reflist)>1){$subject=$applicationname.": ".$lang['mycollections'];}
-    else { $subject=$applicationname.": ".$collectionname;}
+    if(count($reflist)>1)
+        {
+        $subject=$applicationname.": ".$lang['mycollections'];
+        }
+    else
+        {
+        $subject=$applicationname.": ".$collectionname;
+        }
 
     if ($fromusername==""){$fromusername=$applicationname;}
-	
+
     $externalmessage=$lang["emailcollectionmessageexternal"];
     $internalmessage=$lang["emailcollectionmessage"];
     $viewlinktext=$lang["clicklinkviewcollection"];
@@ -1905,6 +1912,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         }
         
     ##  loop through recipients
+    $themeurl = "";
     for ($nx1=0;$nx1<count($emails);$nx1++)
         {
         ## loop through collections
@@ -1915,27 +1923,27 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
             {
             $url="";
             $subject=$applicationname.": " . $themename;
-            $url=$baseurl . "/pages/collections_featured.php" . $themeurlsuffix;			
+            $url=$baseurl . "/pages/collections_featured.php" . $themeurlsuffix;
+            $internalurl = $url;
             $viewlinktext=$lang["clicklinkviewthemes"];
             $emailcollectionmessageexternal=false;
             if ($use_phpmailer){
                     $link="<a href=\"$url\">" . $themename . "</a>";	
                     
-                    $list.= $htmlbreak.$link;	
-                    // alternate list style				
+                    $list.= $htmlbreak.$link;
+                    // alternate list style
                     $list2.=$htmlbreak.$themename.' -'.$htmlbreaksingle.$url;
-                    $templatevars['list2']=$list2;					
+                    $templatevars['list2']=$list2;
                     }
                 else
                     {
                     $list.= $htmlbreak.$url;
                     }
             for ($nx2=0;$nx2<count($reflist);$nx2++)
-                {				
+                {
                 #log this
                 collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
                 }
-            
             }
         else
             {
@@ -1985,51 +1993,66 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                 #log this
                 collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
                 }
-            }
-        //$list.=$htmlbreak;	
+            }	
         $templatevars['list']=$list;
         $templatevars['from_name']=$from_name;
-        if(isset($k)){
-            if($expires==""){
+        if(isset($k))
+            {
+            if($expires=="")
+                {
                 $templatevars['expires_date']=$lang["email_link_expires_never"];
                 $templatevars['expires_days']=$lang["email_link_expires_never"];
-            }
-            else{
+                }
+            else
+                {
                 $day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
                 $templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
                 $templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
-                if($day_count>1){
+                if($day_count>1)
+                    {
                     $templatevars['expires_days'].=" ".$lang['expire_days'].".";
-                }
-                else{
+                    }
+                else
+                    {
                     $templatevars['expires_days'].=" ".$lang['expire_day'].".";
+                    }
                 }
             }
-        }
-        else{
+        else
+            {
             # Set empty expiration templatevars
             $templatevars['expires_date']='';
             $templatevars['expires_days']='';
-        }
-        if ($emailcollectionmessageexternal ){
+            }
+        $body = "";
+        if($emailcollectionmessageexternal)
+            {
             $template=($themeshare)?"emailthemeexternal":"emailcollectionexternal";
-        }
-        else {
-            $template=($themeshare)?"emailtheme":"emailcollection";
-        }
-
-        if (is_array($emails) && (count($emails) > 1) && $list_recipients===true) {
-            $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-            $templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-        }
-        else {
-            $body = "";
-        }
-        $body.=$templatevars['fromusername']." " . (($emailcollectionmessageexternal)?$externalmessage:$internalmessage) . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
-        send_mail($emails[$nx1],$subject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            // External - send email
+            if (is_array($emails) && (count($emails) > 1) && $list_recipients===true)
+                {
+                $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+                $templatevars['list-recipients'] = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+                }
+            $body .= $templatevars['fromusername']." " . $externalmessage . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
+            send_mail($emails[$nx1],$subject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            }
+        else
+            {
+            $internalmessage = ($themeshare) ? $lang["emailthememessage"] : $lang["emailcollection"];
+            $body .= $templatevars['fromusername']." " . $internalmessage . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".
+            $templatevars['list'];
+            }
         $viewlinktext=$origviewlinktext;
         }
-    hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
+
+    if(count($internal_user_ids) > 0)
+        {
+        // Internal share, send notifications
+        send_user_notification($internal_user_ids,"",[],$subject,$body,$internalurl);
+        }
+
+    //hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
     # Return an empty string (all OK).
     return "";
     }

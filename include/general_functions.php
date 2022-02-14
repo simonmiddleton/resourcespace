@@ -1115,6 +1115,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
     
+    debug("BANG email template: " . $html_template);
     global $email_from;
     $from_system = false;
     if ($from=="")
@@ -1186,6 +1187,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
         if (isset($template) && $template!="")
             {
+            debug("BANG email template: " . $template);
             preg_match_all('/\[[^\]]*\]/',$template,$test);
             foreach($test[0] as $variable)
                 {
@@ -1376,7 +1378,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     
     $mail->CharSet = "utf-8"; 
     
-    if (is_html($body)) {$mail->IsHTML(true);}      
+    if (is_html($body))
+        {
+        $mail->IsHTML(true);
+        $body = nl2br($body);
+        }      
     else {$mail->IsHTML(false);}
     
     $mail->Subject = $subject;

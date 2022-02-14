@@ -7728,7 +7728,7 @@ function payment_set_complete($collection,$emailconfirmation="")
     {
     global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$email_notify,$lang,$currency_symbol;
     // Mark items in the collection as paid so they can be downloaded.
-    sql_query("update collection_resource set purchase_complete=1 where collection='$collection'");
+    ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
     
     // For each resource, add an entry to the log to show it has been purchased.
     $resources=sql_query("select * from collection_resource where collection='$collection'");
@@ -7743,34 +7743,13 @@ function payment_set_complete($collection,$emailconfirmation="")
     $summary.="</table>";
     // Send email or notification to admin
     $message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    $notificationmessage=$lang["purchase_complete_email_admin_body"] . "\r\n" . $lang["username"] . ": " . $username . "(" . $userfullname . ")";
-    $notify_users=get_notification_users("RESOURCE_ACCESS"); 
-    $message_users=array();
-    foreach($notify_users as $notify_user)
-            {
-            get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message);          
-            if($send_message==false){continue;}     
-            
-            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-            if($send_email && $notify_user["email"]!="")
-                {
-                send_mail($notify_user["email"],$applicationname . ": " . $lang["purchase_complete_email_admin"],$message);
-                }        
-            else
-                {
-                $message_users[]=$notify_user["ref"];
-                }
-            }
-            
-    if (count($message_users)>0)
-        {       
-        message_add($message_users,$notificationmessage,$baseurl . "/?c=" . $collection,$userref);
-        }   
+    $notify_users=get_notification_users("RESOURCE_ACCESS");
+    send_user_notification($notify_users,"resource_request",[],$lang["purchase_complete_email_admin"],$message,$baseurl . "/?c=" . $collection);
     
     // Send email to user (not a notification as may need to be kept for reference)
     $confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;   
     $userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    send_mail($useremail,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
+    send_mail($confirmation_address,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
     
     // Rename so that can be viewed on my purchases page
     sql_query("update collection set name= '" . date("Y-m-d H:i") . "' where ref='$collection'");

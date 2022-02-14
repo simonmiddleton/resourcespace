@@ -674,6 +674,7 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
     global $userref;
     $notifytypes = [
             "resource_request"  => "user_pref_resource_access_notifications",
+            "resource_share"    => "user_pref_resource_access_notifications",
             "account_request"   => "user_pref_user_management_notifications",
             "resource_change"   => "user_pref_resource_notifications",
             "research_request"  => "user_pref_resource_access_notifications",
@@ -719,7 +720,12 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
         message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
         }
     if(trim($emails) != "")
-        {        ;
+        {
+        if(strpos($message,$url) == false)
+            {
+            // Add the URL to the message if not already present
+            $message = $message . "<br/><br/>" . $url;
+            }
         send_mail($emails,$subject,$message,"","",$template,$templatevars);            
         }
     }

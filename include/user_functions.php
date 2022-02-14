@@ -2153,7 +2153,7 @@ function resolve_user_emails($user_list)
     foreach($user_list as $user)
         {
         $escaped_username = escape_check($user);
-        $email_details    = sql_query("SELECT email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
+        $email_details    = sql_query("SELECT ref, email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
         if(isset($email_details[0]) && (time() < strtotime($email_details[0]['account_expires']))) 
           {
           continue;
@@ -2192,6 +2192,7 @@ function resolve_user_emails($user_list)
         // Internal, approved user account - add e-mail address from user account
         $emails_key_required['unames'][]       = $user;
         $emails_key_required['emails'][]       = $email_details[0]['email'];
+        $emails_key_required['refs'][]         = $email_details[0]['ref'];
         $emails_key_required['key_required'][] = false;
         }
 
