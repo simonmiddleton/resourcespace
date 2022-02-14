@@ -68,10 +68,19 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     $server -> setUploadDir($targetDir);
     // Create target dir
     if (!file_exists($targetDir))
-        {     		
-        mkdir($targetDir,0777,true);
+        {
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            mkdir($targetDir,0777,true);
+            }
+        catch (Exception $e)
+            {
+            // Ignore
+            }
+        unset($GLOBALS["use_error_exception"]);
         }
-        
+
     $response = $server->serve();
     // Extra check added to ensure URL uses $baseurl. Required due to reported issues with some reverse proxy configurations
     $tuslocation = $response->headers->get('location');
