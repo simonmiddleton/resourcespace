@@ -869,20 +869,28 @@ function auto_create_user_account($hash="")
 
     if ($registration_group_select)
         {
-        $usergroup=getvalescaped("usergroup","",true);
+        $usergroup=getval("usergroup","",true);
         # Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
-        if (sql_value("select allow_registration_selection value from usergroup where ref='$usergroup'",0)!=1) {exit("Invalid user group selection");}
+        if (ps_value("SELECT allow_registration_selection value FROM usergroup WHERE ref = ?",["i",$usergroup],0)!=1)
+            {
+            exit("Invalid user group selection");
+            }
         }
 
     $newusername=escape_check(make_username(getval("name","")));
 
     // Check valid email
     if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
-        {return $lang['setup-emailerr'];}
+        {
+        return $lang['setup-emailerr'];
+        }
     
     #check if account already exists
-    $check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
-    if ($check!=""){return $lang["useremailalreadyexists"];}
+    $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
+    if ($check!="")
+        {
+        return $lang["useremailalreadyexists"];
+        }
 
     # Prepare to create the user.
     $email=trim(getvalescaped("email","")) ;
@@ -919,7 +927,22 @@ function auto_create_user_account($hash="")
         }
 
     # Create the user
-    sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
+    $name = getval("name","");
+    $comment = getval("userrequestcomment","");
+    $newparams = [
+        "s",$newusername,
+        "s",$password,
+        "s",$name,
+        "s",$email,
+        "i",$usergroup,
+        "s",$customContents . (trim($comment) != "" ? "\n" . $comment : ""),
+        "i",($approve ? 1 : 0),
+        "s",$language,
+        "s",($hash != "" ? $hash : NULL),
+        ];
+
+    ps_query("INSERT INTO user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) VALUES (?,?,?,?,?,?,?,?,?)",$newparams);
+
     $new = sql_insert_id();
 
     // Create dash tiles for the new user
