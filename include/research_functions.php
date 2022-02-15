@@ -53,7 +53,7 @@ function send_research_request(array $rr_cfields)
         {
         trigger_error(json_last_error_msg());
         }
-    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : "'".$rr_cfields_json."'");
+    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : $rr_cfields_json);
 	$parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
 
 	ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
@@ -71,38 +71,11 @@ function send_research_request(array $rr_cfields)
 	
 	$message="'$username' ($userfullname - $useremail) " . $lang["haspostedresearchrequest"] . ".\n\n";
 	$notification_message = $message;
-	$message.=$templatevars['teamresearchurl'];
 	hook("modifyresearchrequestemail");
 	
-	$research_notify_emails=array();
 	$research_notify_users = array();
 	$notify_users=get_notification_users("RESEARCH_ADMIN");
-	foreach($notify_users as $notify_user)
-		{
-		get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);		  
-		if($send_message==false){continue;}		
-		
-		get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-		if($send_email && $notify_user["email"]!="")
-			{
-			$research_notify_emails[] = $notify_user['email'];				
-			}        
-		else
-			{
-			$research_notify_users[]=$notify_user["ref"];
-			}
-		}
-	
-    foreach($research_notify_emails as $research_notify_email)
-		{
-		send_mail($research_notify_email,$applicationname . ": " . $lang["newresearchrequestwaiting"],$message,$useremail,"","emailnewresearchrequestwaiting",$templatevars);
-		}
-	
-	if (count($research_notify_users)>0)
-		{
-		global $userref;
-        message_add($research_notify_users,$notification_message,$templatevars["teamresearchurl"]);
-		}
+    send_user_notification($notify_users,"research_request",[],$lang["newresearchrequestwaiting"],$notification_message,$templatevars["teamresearchurl"],"emailnewresearchrequestwaiting",$templatevars);
 	}
 
 function get_research_requests($find="",$order_by="name",$sort="ASC")
@@ -171,81 +144,56 @@ function save_research_request($ref)
 	$templatevars['url']=$baseurl . "/?c=" . $collection;
 	$templatevars['teamresearchurl']=$baseurl."/pages/team/team_research_edit.php?ref=" . $ref;	
 	
-	if ($oldstatus!=$newstatus)
-		{
-		$requesting_user=ps_query("select u.email, u.ref from user u,research_request r where u.ref=r.user and r.ref=?", $parameters);
-		$requesting_user = $requesting_user[0];
-		$message="";
-		if ($newstatus==1) 
-			{
-			$message=$lang["researchrequestassignedmessage"];$subject=$lang["researchrequestassigned"];
-			$notification_message = $message;
-			$message.=$templatevars['url'];
-			get_config_option($requesting_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $requesting_user["email"]!="")
-				{
-				send_mail ($requesting_user['email'],$applicationname . ": " . $subject,$message,"","","emailresearchrequestassigned",$templatevars);
-				}        
-			else
-				{
-				message_add($requesting_user["ref"],$notification_message,(($collection!=0)?$templatevars["url"]:"#"));
-				}
-				
-			# Log this
-			daily_stat("Assigned research request",0);
-			}
-		if ($newstatus==2)
-			{
-			$message=$lang["researchrequestcompletemessage"] . "\n\n" . $lang["clicklinkviewcollection"] . "\n\n" . $templatevars['url'];$subject=$lang["researchrequestcomplete"];
-			$notification_message = $message;
-			get_config_option($requesting_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $requesting_user["email"]!="")
-				{
-				send_mail ($requesting_user['email'],$applicationname . ": " . $subject,$message,"","","emailresearchrequestcomplete",$templatevars);
-				}        
-			else
-				{
-				message_add($requesting_user["ref"],$notification_message,(($collection!=0)?$templatevars["url"]:"#"));
-				}
-			
-			# Log this			
-			daily_stat("Processed research request",0);
-			}
-		}
-		
-	if ($oldassigned_to!=$assigned_to)
-		{
-		$message = $lang["researchrequestassigned"];
-		$subject = $lang["researchrequestassigned"];
-		$assigned_message = $message;
-		$message .= $templatevars['teamresearchurl'];
-		$assigned_to_user=get_user($assigned_to);
-		get_config_option($assigned_to,'email_user_notifications', $send_email);    
-		if($send_email && $assigned_to_user["email"]!="")
-			{
-			send_mail ($assigned_to_user['email'],$applicationname . ": " . $subject,$assigned_message,"","","emailresearchrequestassigned",$templatevars);
-			}        
-		else
-			{
-			message_add($assigned_to,$assigned_message,$templatevars['teamresearchurl']);
-			}
-		}
-	
-	$parameters=array("i",$newstatus, "i",$assigned_to, "i",$ref);
+    if ($oldstatus!=$newstatus)
+        {
+        $requesting_user=ps_query("select u.email, u.ref from user u,research_request r where u.ref=r.user and r.ref=?", $parameters);
+        $requesting_user = $requesting_user[0];
+        $message="";
+        if ($newstatus==1) 
+            {
+            $message=$lang["researchrequestassignedmessage"];
+            $subject=$lang["researchrequestassigned"];
+            send_user_notification($requesting_user['ref'],"",[],$subject,$message,$templatevars["teamresearchurl"],"emailresearchrequestassigned",$templatevars);
 
-	ps_query("update research_request set status=?, assigned_to=? where ref=?", $parameters);
-	
-	# Copy existing collection
-	$rr_copyexisting=getval("copyexisting","");
-	$rr_copyexistingref=getval("copyexistingref","");
-	if ($rr_copyexisting !="" && is_numeric($collection))
-		{
-		$parameters=array("i",$collection, "i",$rr_copyexistingref, "i",$collection);
-		ps_query("insert into collection_resource(collection,resource) 
-		           select ?, resource from collection_resource 
-				   where collection=? and resource not in (select resource from collection_resource where collection=?)", $parameters);
-		}
-	}
+            # Log this
+            daily_stat("Assigned research request",0);
+            }
+        if ($newstatus==2)
+            {
+            $message=$lang["researchrequestcompletemessage"] . "\n\n" . $lang["clicklinkviewcollection"] . "\n\n" . $templatevars['url'];
+            $subject=$lang["researchrequestcomplete"];
+            send_user_notification($requesting_user['ref'],"",[],$subject,$message,$templatevars["teamresearchurl"],"emailresearchrequestcomplete",$templatevars);
+            
+            # Log this			
+            daily_stat("Processed research request",0);
+            }
+        }
+
+    if ($oldassigned_to!=$assigned_to)
+        {
+        $message = $lang["researchrequestassigned"];
+        $subject = $lang["researchrequestassigned"];
+        $assigned_message = $message;
+        $message .= $templatevars['teamresearchurl'];
+        
+        send_user_notification($assigned_to,"research_request",[],$subject,$message,$templatevars["teamresearchurl"],"emailresearchrequestassigned",$templatevars);
+        }
+
+    $parameters=array("i",$newstatus, "i",$assigned_to, "i",$ref);
+
+    ps_query("update research_request set status=?, assigned_to=? where ref=?", $parameters);
+
+    # Copy existing collection
+    $rr_copyexisting=getval("copyexisting","");
+    $rr_copyexistingref=getval("copyexistingref","");
+    if ($rr_copyexisting !="" && is_numeric($collection))
+        {
+        $parameters=array("i",$collection, "i",$rr_copyexistingref, "i",$collection);
+        ps_query("insert into collection_resource(collection,resource) 
+                    select ?, resource from collection_resource 
+                    where collection=? and resource not in (select resource from collection_resource where collection=?)", $parameters);
+        }
+    }
 
 
 function get_research_request_collection($ref)
