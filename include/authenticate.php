@@ -36,16 +36,16 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
         }  
 
     // Automatic anonymous login, do not require session hash.
-    $user_select_sql =[];
+    $user_select_sql = new PreparedStatementQuery();
     if(isset($anonymous_login) && $username == $anonymous_login)
         {
-        $user_select_sql["sql"] = "u.username = ? AND usergroup IN (SELECT ref FROM usergroup)";
-        $user_select_sql["params"] = ["s",$username];
+        $user_select_sql->sql = "u.username = ? AND usergroup IN (SELECT ref FROM usergroup)";
+        $user_select_sql->parameters = ["s",$username];
         }
     else
         {
-        $user_select_sql["sql"] = "u.session=?";
-        $user_select_sql["params"] = ["s",$session_hash];            
+        $user_select_sql->sql = "u.session=?";
+        $user_select_sql->parameters = ["s",$session_hash];            
         }
 
     hook('provideusercredentials');
@@ -142,9 +142,9 @@ if (!$valid && isset($anonymous_autouser_group))
 
     // Setup the user
     $login_session_hash = (isset($login_data['session_hash']) ? escape_check($login_data['session_hash']) : '');
-
-    $user_select_sql["sql"] = "u.session=?";
-    $user_select_sql["params"] = ["s",$login_session_hash];
+    $user_select_sql = new PreparedStatementQuery();
+    $user_select_sql->sql = "u.session=?";
+    $user_select_sql->parameters = ["s",$login_session_hash];
     $user_data = validate_user($user_select_sql, true);
 
     $valid = false;

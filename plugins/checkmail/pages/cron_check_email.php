@@ -140,7 +140,10 @@ else {
 
 // If we reached so far, it should mean we have found a user.
 // Make sure it is valid and set the user up as we need to check permissions later on
-$user_data = validate_user(["sql" => "u.ref = ?" ,"params" => ["i",$userref]]);
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref = ?";
+$user_select_sql->parameters = ["i",$userref];
+$user_data = validate_user($user_select_sql);
 
 if($user_data !== false && count($user_data) > 0)
     {

@@ -17,7 +17,10 @@ $extension = isset($job_data["extension"]) && is_string($job_data["extension"]) 
 $file_path = isset($job_data["file_path"]) && is_string($job_data["file_path"]) ? trim($job_data["file_path"]) : null;
 
 // Set up the user who triggered this event - the upload should be done as them
-$user_data = validate_user(["sql" => "u.ref = ?","params" => ["i",$job['user']]], true);
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref = ?";
+$user_select_sql->parameters = ["i",$job['user']];
+$user_data = validate_user($user_select_sql, true);
 
 if(!is_array($user_data) || count($user_data) == 0)
     {

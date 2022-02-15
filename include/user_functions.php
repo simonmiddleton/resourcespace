@@ -12,20 +12,20 @@ include_once __DIR__ . '/login_functions.php';
 * $user_select_sql example u.session=$variable. 
 * Joins to usergroup table as g  which can be used in criteria
 *
-* @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
+* @param	object	$user_select_sql		PreparedStatementQuery instance - to validate user usually session hash or key
 * @param 	boolean	$getuserdata			default true. Return user data as required by authenticate.php
 * 
 * @return boolean|array
 */
 function validate_user($user_select_sql, $getuserdata=true)
     {    
-    if(!is_array($user_select_sql) || !is_string($user_select_sql["sql"]))
+    if(!is_a($user_select_sql,'PreparedStatementQuery'))
         {
         return false;
         }
 
-    $validatesql    = $user_select_sql["sql"];
-    $validateparams = $user_select_sql["params"];
+    $validatesql    = $user_select_sql->sql;
+    $validateparams = $user_select_sql->parameters;
 
     $full_user_select_sql = "
         approved = 1
@@ -1680,16 +1680,17 @@ function check_access_key($resources,$key)
 
     global $external_share_view_as_internal, $baseurl, $baseurl_short;
 
-    if(
-        $external_share_view_as_internal
-        && (
-            isset($_COOKIE["user"])
-            && validate_user(["sql" => "u.session = ?","params" => ["s",$_COOKIE["user"]]], false)
-            && !is_authenticated()
-        ))
+    if($external_share_view_as_internal && isset($_COOKIE["user"]))
+        {
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.session = ?";
+        $user_select_sql->parameters = ["s",$_COOKIE["user"]];
+        if(validate_user($user_select_sql, false) && !is_authenticated())
             {
+            // Authenticate the user if not already authenticated so page can appear as internal
             return false;
-            } // We want to authenticate the user if not already authenticated so we can show the page as internal
+            }
+        }
 
     $key_escaped = escape_check($key);
 
@@ -1892,10 +1893,16 @@ function check_access_key_collection($collection, $key)
     hook("external_share_view_as_internal_override");
     global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename;
 
-    if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user(["sql" => "u.session =?", "params" => ["s",$_COOKIE["user"]]], false))
+    if($external_share_view_as_internal && isset($_COOKIE["user"]))
         {
-        // We want to authenticate the user so we can show the page as internal
-        return false;
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.session = ?";
+        $user_select_sql->parameters = ["s",$_COOKIE["user"]];
+        if(validate_user($user_select_sql, false) && !is_authenticated())
+            {
+            // Authenticate the user if not already authenticated so page can appear as internal
+            return false;
+            }
         }
 
     $collection = get_collection($collection);
