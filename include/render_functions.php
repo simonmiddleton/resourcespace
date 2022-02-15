@@ -894,7 +894,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     ?>
     <div class="clearerleft"> </div>
     </div>
-    <!-- ------------------------------------------------ -->
+    <!-- ************************************************ -->
     <?php
     } # End of render_search_field
 
@@ -3291,7 +3291,7 @@ function render_help_link($page='',$return_string=false)
     $help_link_html  =      '<a ';
     $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . $page . '" ';
     $help_link_html .=          'title="' . $lang["help-tooltip"] . '" ';
-    $help_link_html .=          'class="HelpLink"';
+    $help_link_html .=          'class="HelpLink" ';
     if ($help_modal) 
         { $help_link_html .=    'onClick="return ModalLoad(this, true);" ';}
     else

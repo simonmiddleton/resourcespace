@@ -117,7 +117,7 @@ else
     include '../../include/login_background.php';
     ?>
     <div id="LoginHeader">
-        <img src="<?php echo get_header_image(); ?>" class="LoginHeaderImg"></img>
+        <img src="<?php echo get_header_image(); ?>" class="LoginHeaderImg">
     </div>
     <?php
     }
