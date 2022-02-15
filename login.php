@@ -205,7 +205,7 @@ if (!hook("replaceloginform"))
 
         <?php $header_img_src = get_header_image(); ?>
         <div id="LoginHeader">
-            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg"></img>
+            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg">
         </div>
         
         <h1><?php echo text("welcomelogin")?></h1>
