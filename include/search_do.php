@@ -1046,9 +1046,21 @@ function do_search(
     foreach($node_bucket as $node_bucket_or)
         {
         //$node_bucket_sql.='EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .  implode(',',$node_bucket_or) . ')) AND ';
-        $sql_join.=' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` IN (' . implode(',',$node_bucket_or) . ')';
-        $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
-        $rn++;
+        if($category_tree_search_use_and)
+            {
+            foreach($node_bucket_or as $node_bucket_and)
+                {
+                $sql_join.= ' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` = ' . $node_bucket_and;
+                $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
+                $rn++;
+                }
+            }
+        else 
+            {
+            $sql_join.=' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` IN (' . implode(',',$node_bucket_or) . ')';
+            $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
+            $rn++;
+            }
         }
     if ($node_hitcount!="")
         {
