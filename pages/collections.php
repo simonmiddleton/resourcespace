@@ -1133,7 +1133,7 @@ else
 
 	<?php 
 	# Loop through saved searches
-	if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $internal_share_access))
+	if (is_null($cinfo['savedsearch']) && ($k=='' || $internal_share_access))
 		{ // don't include saved search item in result if this is a smart collection  
 
 		# Setting the save search icon
