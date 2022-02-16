@@ -750,7 +750,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
     
     # Fetch any welcome message for this user group
-    $welcome=sql_value("select welcome_message value from usergroup where ref='" . escape_check($usergroup) . "'","");
+    $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
     if (trim($welcome)!="") {$welcome.="\n\n";}
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
@@ -1169,20 +1169,21 @@ function new_user($newuser, $usergroup = 0)
     {
     global $lang,$home_dash;
     # Username already exists?
-    $c=sql_value("select count(*) value from user where username='" . escape_check($newuser) . "'",0);
+    $c=ps_value("SELECT COUNT(*) value FROM user WHERE username = ?",["s",$newuser],0);
     if ($c>0) {return false;}
     
     $cols = array("username");
-    $vals = array(escape_check($newuser));
+    $sqlparams = ["s",$newuser];
     
     if($usergroup > 0)
         {
         $cols[] = "usergroup";
-        $vals[] = (int)$usergroup;    
+        $sqlparams[] = "i";
+        $sqlparams[] = $usergroup;   
         }
         
-    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES ('" . implode("','",$vals) . "')";
-    sql_query($sql);
+    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES (" .ps_param_insert(count($cols)) . ")";
+    ps_query($sql,$sqlparams);
     
     $newref=sql_insert_id();
     
@@ -1196,7 +1197,7 @@ function new_user($newuser, $usergroup = 0)
     # Create a collection for this user, the collection name is translated when displayed!
     $new=create_collection($newref,"Default Collection",0,1); # Do not translate this string!
     # set this to be the user's current collection
-    sql_query("update user set current_collection='$new' where ref='$newref'");
+    ps_query("UPDATE user SET current_collection=? WHERE ref=?",["i",$new,"i",$newref]);
     log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
     
     return $newref;
