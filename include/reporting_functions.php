@@ -318,11 +318,11 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
                                                    search_params
                                                )
                  VALUES (
-                            '%s',  # user
-                            '%s',  # report
-                            '%s',  # period
-                            '%s',  # email_days
-                            '%s'   # search_params
+                            '%s', 
+                            '%s', 
+                            '%s', 
+                            '%s', 
+                            '%s'   
                         );
         ",
         escape_check($user),
