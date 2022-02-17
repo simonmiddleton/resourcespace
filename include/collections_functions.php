@@ -1126,7 +1126,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     if ($restypes!="") 
         {
         $restypes_x=explode(",",$restypes);
-        $search_includes_themes_now=in_array("featured",$restypes_x);
+        $search_includes_themes_now=in_array("themes",$restypes_x);
         } 
 
     if ($search_includes_themes_now)
