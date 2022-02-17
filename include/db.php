@@ -82,7 +82,7 @@ debug('[db.php] Remote config support...');
 debug('[db.php] isset($remote_config_url) = ' . json_encode(isset($remote_config_url)));
 debug('[db.php] isset($_SERVER["HTTP_HOST"]) = ' . json_encode(isset($_SERVER["HTTP_HOST"])));
 debug('[db.php] getenv("RESOURCESPACE_URL") != "") = ' . json_encode(getenv("RESOURCESPACE_URL") != ""));
-if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
+if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
 	{
     debug("[db.php] \$remote_config_url = {$remote_config_url}");
 	sql_connect(); # Connect a little earlier
