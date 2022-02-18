@@ -6122,8 +6122,8 @@ function update_related_resource($ref,$related,$add=true)
                          WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
                             OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");
 		}
-	else
-		{
+    else if($add)
+        {
         $newrelated = array();
         foreach($related as $torelate)
             {
