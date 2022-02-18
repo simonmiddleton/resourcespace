@@ -16,7 +16,9 @@ function HookAuto_loginAllProvideusercredentials()
 			$username=$result['username'];
 			$hashsql='';
 			$session_hash='';
-			$user_select_sql="and u.username='$username'";
+			$user_select_sql = new PreparedStatementQuery();
+			$user_select_sql->sql = "and u.username = ?";
+			$user_select_sql->parameters = array("s", $username);
 			return true;
 			}
 		}
