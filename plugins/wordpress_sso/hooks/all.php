@@ -41,7 +41,7 @@ function HookWordpress_ssoAllProvideusercredentials()
                 if (isset($s[3])){$wpemail=$s[3];}else{$wpemail="";}
                 if (isset($s[4])){$wpdisplayname=$s[4];}else{$wpdisplayname="";}
                 $today = date("Ymd");
-                $currentrequest=sql_value("SELECT wp_authrequest AS value FROM user WHERE username='" . escape_check($username) . "'","");
+                $currentrequest = ps_value("SELECT wp_authrequest AS value FROM user WHERE username = ?", array("s", $username), "");
 
                 if ($requesthash!=md5($baseurl . $wordpress_sso_secret . $username . $today . $requestid)) // Invalid hash. Failed authentication and came from WordPress so no point redirecting.
                     {
@@ -49,7 +49,7 @@ function HookWordpress_ssoAllProvideusercredentials()
                     }
 
                 // Valid response, check if user exists
-                $c=sql_value("SELECT count(*) value FROM user WHERE username='" . escape_check($username) . "'",0);
+                $c = ps_value("SELECT count(*) value FROM user WHERE username = ?", array("s", $username), 0);
                 if ($c==0) // No user 
                     {
                     if ($wordpress_sso_auto_create) // create user if enabled
@@ -60,7 +60,8 @@ function HookWordpress_ssoAllProvideusercredentials()
                             wordpress_sso_redirect(true,false);
                             }
                         debug("wordpress_sso: Auto creating user ({$username} - {$wpemail})");
-                        sql_query("INSERT INTO user (username,password,origin,fullname,email,usergroup,comments,approved) values ('" . escape_check($username) . "','" . $hash . "','wordpress_sso','" . escape_check($wpdisplayname) . "','" . escape_check($wpemail) . "','" . $wordpress_sso_auto_create_group . "','" . $lang['wordpress_sso_auto_created'] . "'," . (($wordpress_sso_auto_approve)?1:0) . ")");
+                        ps_query("INSERT INTO user (username, password, origin, fullname, email, usergroup, comments, approved) values (?, ?,'wordpress_sso', ?, ?, ?, ?, ?)",
+                          array("s", $username, "s", $hash, "s", $wpdisplayname, "s", $wpemail, "s", $wordpress_sso_auto_create_group, "s", $lang['wordpress_sso_auto_created'], "i", (($wordpress_sso_auto_approve) ? 1 : 0)));
                         }
                     else // not current user, need to redirect
                         {
@@ -78,7 +79,9 @@ function HookWordpress_ssoAllProvideusercredentials()
                 //Set cookie and allow login
                 setcookie("wordpress_sso",$username . "|" . $hash,0,"/");
                 $hashsql="";
-                $user_select_sql="AND u.username='" . escape_check($username) . "'";
+                $user_select_sql = new PreparedStatementQuery();
+                $user_select_sql->sql = "AND u.username = ?";
+                $user_select_sql->parameters = array("s", $username);
                 $allow_password_change = false;
                 $session_autologout = false;
                 return true;
@@ -108,7 +111,7 @@ function HookWordpress_ssoAllProvideusercredentials()
                 wordpress_sso_redirect(false,false);
                 }
             // cookie is valid, check user still exists
-            $c=sql_value("select count(*) value from user where username='" . escape_check($username) . "'",0);
+            $c = ps_value("select count(*) value from user where username = ?", array("s", $username), 0);
             if ($c==0)
                 {
                 if ($wordpress_sso_auto_create)
@@ -124,11 +127,13 @@ function HookWordpress_ssoAllProvideusercredentials()
                 }
             debug("wordpress_sso - found matching ResourceSpace user");
             $dummyrequest=uniqid(); # use to prevent subsequent authentication using same querystring
-            sql_query("UPDATE user SET wp_authrequest = '$dummyrequest' WHERE username = '" . escape_check($username) . "'");
+            ps_query("UPDATE user SET wp_authrequest = ? WHERE username = ?", array("s", $dummyrequest, "s", $username));
             setcookie("wordpress_sso_test",$dummyrequest,0,"/");
 
             //allow login
-            $user_select_sql="AND u.username='" . escape_check($username) . "'";
+            $user_select_sql = new PreparedStatementQuery();
+            $user_select_sql->sql = "AND u.username = ?";
+            $user_select_sql->parameters = array("s", $username);
             $hashsql="";
             return true;
             }
@@ -162,7 +167,7 @@ function HookWordpress_ssoLoginInitialise()
 function HookWordpress_ssoTeam_user_editPassword()
     {
     global $ref, $lang;
-    $checkwpuser=sql_value("SELECT wp_authrequest AS value FROM user WHERE ref='$ref'","");
+    $checkwpuser = ps_value("SELECT wp_authrequest AS value FROM user WHERE ref = ?", array("i", (int)$ref), "");
     if  (strlen($checkwpuser)>0)
         {
         ?>
@@ -176,7 +181,7 @@ function HookWordpress_ssoTeam_user_editPassword()
 function HookWordpress_ssoTeam_user_editTicktoemailpassword()
     {
     global $ref, $lang;
-    $checkwpuser=sql_value("SELECT wp_authrequest AS value FROM user WHERE ref='$ref'","");
+    $checkwpuser = sql_value("SELECT wp_authrequest AS value FROM user WHERE ref = ?", array("i", (int)$ref), "");
     if  (strlen($checkwpuser)>0)
         {
         return true;
