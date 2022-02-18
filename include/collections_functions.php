@@ -2498,7 +2498,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
         if(is_array($fcf_sql))
             {
-            $fc_permissions_where = "(c.`type` = ? " . $fcf_sql[0] . ")";
+            $fc_permissions_where = "AND (c.`type` = ? " . $fcf_sql[0] . ")";
             $fc_permissions_where_params = array_merge(["i",COLLECTION_TYPE_FEATURED],$fcf_sql[1]);
             }
         }
