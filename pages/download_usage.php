@@ -72,10 +72,14 @@ if (getval("save",'') != '' && enforcePostRequest(false))
                                 "&sort=" . urlencode(getval("saved_sort",getval("sort",''))) .
                                 "&archive=" . urlencode(getval("saved_archive",getval("archive",''))) . 
                                 "&email=" . urlencode($email);
-                                
-        $redirect_url = empty($url) ? $redirect_url . $download_url_suffix : $url;
+        
         hook('before_usage_redirect');
-        redirect($redirect_url);
+        if(strpos($url, 'download.php') != false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
+            {
+            $download_url_suffix .='&url=' . urlencode($url);
+            }
+        
+        redirect($redirect_url . $download_url_suffix);
         }
     }
 
@@ -103,11 +107,13 @@ if(isset($download_usage_prevent_options))
     <form method="post" action="<?php echo $baseurl_short?>pages/download_usage.php<?php echo $download_url_suffix ?>" onSubmit="return CentralSpacePost(this,true);">
         <?php
         generateFormToken("download_usage");
-        
-        if($download_usage && ($col != -1)) { ?>
+
+        if($download_usage) { ?>
+        <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>"/>
+        <?php if($col != -1){?>
         <input type="hidden" name="col" value="<?php echo htmlspecialchars($col) ?>" />
-        <?php } ?>
-        <input type="hidden" name="url" value="<?php echo htmlspecialchars($url) ?>" /> 
+        <?php }
+        } ?>
         <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>" />
         <input type="hidden" name="size" value="<?php echo htmlspecialchars($size) ?>" />
         <input type="hidden" name="ext" value="<?php echo htmlspecialchars($ext) ?>" />
