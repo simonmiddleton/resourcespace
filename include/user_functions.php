@@ -597,6 +597,8 @@ function save_user($ref)
         delete_profile_image($ref);
         sql_query("DELETE FROM user WHERE ref = '" . escape_check($ref) . "'");
 
+        hook('on_delete_user', "", array($ref));
+        
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
