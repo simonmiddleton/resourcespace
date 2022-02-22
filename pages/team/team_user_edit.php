@@ -80,7 +80,11 @@ if ($user===false)
     exit();
     }
     
-if (($user["usergroup"]==3) && ($usergroup!=3)) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
+if (($user["usergroup"]==3) && ($usergroup!=3)) 
+    {
+    error_alert($lang["error-permissiondenied"],false);
+    exit();
+    }
 
 if (!checkperm_user_edit($user))
 	{
