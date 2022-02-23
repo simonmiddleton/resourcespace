@@ -98,8 +98,40 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         $order_sort=" ORDER BY $order_by $sort";
         }
 
-    $query = "SELECT * FROM (
-                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+    // Control the selected columns. $query_select_columns is for the outer SQL and $collection_select_columns
+    // is for the inner one. Both have some extra columns from the user & resource table.
+    $collection_table_columns = [
+        'ref',
+        'name',
+        'user',
+        'created',
+        'public',
+        'allow_changes',
+        'cant_delete',
+        'keywords',
+        'savedsearch',
+        'home_page_publish',
+        'home_page_text',
+        'home_page_image',
+        'session_id',
+        'description',
+        'type',
+        'parent',
+        'thumbnail_selection_method',
+        'bg_img_resource_ref',
+        'order_by',
+    ];
+    $query_select_columns = implode(', ', $collection_table_columns) . ', username, fullname, count';
+    $collection_select_columns = [];
+    foreach($collection_table_columns as $column_name)
+        {
+        $collection_select_columns[] = "c.{$column_name}";
+        }
+    $collection_select_columns = implode(', ', $collection_select_columns) . ', u.username, u.fullname, count(r.resource) AS count';
+
+    $query = "SELECT {$query_select_columns}
+                FROM (
+                         SELECT {$collection_select_columns}
                            FROM user AS u
                            JOIN collection AS c ON u.ref = c.user AND c.user = ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
@@ -108,7 +140,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
                        GROUP BY c.ref
         
                           UNION
-                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                         SELECT {$collection_select_columns}
                            FROM user_collection AS uc
                            JOIN collection AS c ON uc.collection = c.ref AND uc.user = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
@@ -117,7 +149,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
                        GROUP BY c.ref
         
                           UNION
-                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                         SELECT {$collection_select_columns}
                            FROM usergroup_collection AS gc
                            JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
