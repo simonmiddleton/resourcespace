@@ -4,6 +4,11 @@ include_once "include/login_functions.php";
 
 $url=getval("url","index.php");
 
+if (is_array($url))
+    {
+    $url = 'index.php';
+    }
+
 $modifiedurl=hook("modifyloginurl","",array($url));
 if ($modifiedurl){$url=$modifiedurl;}
 
