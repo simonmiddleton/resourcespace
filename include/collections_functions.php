@@ -41,15 +41,18 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
     elseif (strlen($find)>1 || is_numeric($find))
         {  
         $keywords=split_keywords($find);
-        $keyrefs=array();
         $keysql="";
         $keyparams = array();
         for ($n=0;$n<count($keywords);$n++)
             {
             $keyref=resolve_keyword($keywords[$n],false);
-            if ($keyref!==false) {$keyrefs[]=$keyref;}
+            if($keyref === false)
+                {
+                continue;
+                }
+
             $keysql.=" JOIN collection_keyword k" . $n . " ON k" . $n . ".collection=ref AND (k" . $n . ".keyword=?)";
-            $keyparams = array("i",$keyref);
+            $keyparams = array_merge($keyparams, ['i', $keyref]);
             }
         }
 
@@ -85,7 +88,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
             }
 
         $extrasql .= " (c.session_id=?)";
-        $extraparams = array("s",$rs_session);
+        $extraparams = array("i",$rs_session);
         }
    
     $order_sort="";
@@ -125,7 +128,16 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         $keysql
         GROUP BY ref $order_sort";
 
-    $queryparams = array_merge(array("i",$user),$condparams,$extraparams,array("i", $user,"i", $user),$condparams,array("i", $usergroup,"i",$user),$condparams,$keyparams);
+    $queryparams = array_merge(
+        array("i",$user),
+        $condparams,
+        $extraparams,
+        array("i", $user,"i", $user),
+        $condparams,
+        array("i", $usergroup,"i",$user),
+        $condparams,
+        $keyparams
+    );
 
     $return = ps_query($query,$queryparams);
 
