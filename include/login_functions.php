@@ -157,7 +157,7 @@ function perform_login($loginuser="",$loginpass="")
 			# Show locked out message.
 			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
             $log_message = 'Max login attempts from IP exceeded - IP: ' . $ip;
-            log_activity($log_message,LOG_CODE_FAILED_LOGIN_ATTEMPT,$tries,'ip_lockout','ip',$ip);
+            log_activity($log_message, LOG_CODE_FAILED_LOGIN_ATTEMPT, $tries, 'ip_lockout', 'ip', $ip, 'ip');
 			}
 		# Increment
 		ps_query("update ip_lockout set last_try=now(),tries=tries+1 where ip=?",array("s",$ip));
