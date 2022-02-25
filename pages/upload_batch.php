@@ -428,14 +428,15 @@ if ($processupload)
         
     # Work out the extension
     $parts=explode(".",$upfilename);
-    $extension=trim(strtolower($parts[count($parts)-1]));
+    $origextension=trim($parts[count($parts)-1]);
+    $extension=strtolower($origextension);
     if(count($parts) > 1){array_pop($parts);}
     $filenameonly = implode('.', $parts);
 
      // Clean the filename
     $origuploadedfilename= escape_check($upfilename);
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($extension)) ? ".{$extension}" : '');
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
 
     # Banned extension?
     global $banned_extensions;
