@@ -59,7 +59,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         (
         "i",$resource_type_field,
         "s",$name,
-        "i",(trim($parent)=="" ? NULL : $parent),
+        "i",(!isset($parent) || trim($parent)=="" ? NULL : $parent),
         "s",$order_by
         );
 
@@ -298,8 +298,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
         }
   
-
-    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
+    $parent_sql = (!isset($parent) || trim($parent) == "") ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
     if (strpos($parent_sql,"?")!==false) {$parameters[]="i";$parameters[]=$parent;}
     
     // Order by translated_name or order_by based on flag
@@ -720,7 +719,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
         $query = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ?";
         $parameters=array("i",$resource_type_field);
 
-        if (trim($parent)=="")
+        if (!isset($parent) || trim($parent)=="")
             {
             $query.=" AND parent IS NULL ";
             }
