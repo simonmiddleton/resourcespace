@@ -724,7 +724,7 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
         if(strpos($message,$url) == false)
             {
             // Add the URL to the message if not already present
-            $message = $message . "<br/><br/>" . $url;
+            $message = $message . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
             }
         send_mail($emails,$subject,$message,"","",$template,$templatevars);            
         }

@@ -64,7 +64,7 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
                 'notify_group' => $notify_group,
                 'more_notes_flag' => $more_notes,
                 'notify_user_flag' => $notify_user,
-                'email_from' => $rse_workflow_email_from,
+                'email_from' => '',
                 'bcc_admin' => $rse_workflow_bcc_admin,
                 'simple_search_flag' => $simple_search_escaped,
             ]);
@@ -77,7 +77,7 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
                        notify_group='$notify_group',
                        more_notes_flag='$more_notes',
                        notify_user_flag='$notify_user',
-                       email_from='$rse_workflow_email_from',
+                       email_from='',
                        bcc_admin='$rse_workflow_bcc_admin',
                        simple_search_flag = '$simple_search_escaped'
                  WHERE code = '$code'");
@@ -91,7 +91,7 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
     $workflowstate["notify_group"]=$notify_group;
     $workflowstate['more_notes_flag']=$more_notes;
     $workflowstate['notify_user_flag']=$notify_user;
-    $workflowstate["rse_workflow_email_from"]=$rse_workflow_email_from;
+    $workflowstate["rse_workflow_email_from"]='';
     $workflowstate["rse_workflow_bcc_admin"]=$rse_workflow_bcc_admin;
     $workflowstate["simple_search_flag"] = $simple_search;
     }   
@@ -195,10 +195,16 @@ else if ($saved)
             <input id="more_notes" type="checkbox" name="more_notes" value="1" <?php echo $more_notes_checked; ?>>
             <div class="clearerleft"></div>
         </div>
-        
-        <div class="Question" id="emailfrom_question">
-            <label for="rse_workflow_email_from"><?php echo str_replace("%EMAILFROM%",$email_from,$lang['rse_workflow_email_from']); ?></label>
-            <input class="stdwidth" type="text" name="rse_workflow_email_from" id="rse_workflow_email_from" value="<?php echo htmlspecialchars($workflowstate["rse_workflow_email_from"]);  ?>" />
+
+        <div class="Question" id="notify_user_question">
+            <label for="notify_user"><?php echo $lang['rse_workflow_notify_user_label']; ?></label>
+            <?php
+                $notify_user_checked = '';
+                if($workflowstate['notify_user_flag'] == 1) {
+                    $notify_user_checked = 'checked';
+                }
+            ?>
+            <input id="notify_user" type="checkbox" name="notify_user" value="1" <?php echo $notify_user_checked; ?>>
             <div class="clearerleft"></div>
         </div>
         
@@ -212,18 +218,6 @@ else if ($saved)
                     }
             ?>
             <input id="rse_workflow_bcc_admin" type="checkbox" name="rse_workflow_bcc_admin" value="1" <?php echo $bcc_admin; ?>>
-            <div class="clearerleft"></div>
-        </div>
-
-        <div class="Question" id="notify_user_question">
-            <label for="notify_user"><?php echo $lang['rse_workflow_notify_user_label']; ?></label>
-            <?php
-                $notify_user_checked = '';
-                if($workflowstate['notify_user_flag'] == 1) {
-                    $notify_user_checked = 'checked';
-                }
-            ?>
-            <input id="notify_user" type="checkbox" name="notify_user" value="1" <?php echo $notify_user_checked; ?>>
             <div class="clearerleft"></div>
         </div>
 

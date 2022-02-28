@@ -1098,23 +1098,12 @@ function email_user_request()
 
     foreach($approval_notify_users as $approval_notify_user)
         {
-        // Is notification required
-        // get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
-        // if(!$send_message) { continue; } // Skip this user
-
-        // // Is an email required
-        // get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications);
-        // get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications);
-
         // get preferred language for approval_notify_user
         $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
 
         // get preferred language for approval_notify_user
         $lang_pref = $language_strings_all[$message_language];
-        // $eventdata = [
-        //     "type"  => USER_REQUEST,
-        //     "ref"   => $request,
-        //     ];
+        
         $message = (user_email_exists($email) ? $lang_pref["userrequestnotificationemailprotection1"] : $lang_pref['userrequestnotification1']) . "\n\n{$lang_pref['name']}: {$name}\n\n{$lang_pref['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang_pref['comment']}: {$userrequestcomment}\n\n{$lang_pref['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang_pref['userrequestnotification2'] : $lang_pref["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
 
         send_user_notification([$approval_notify_user['ref']],"account_request",[],"{$applicationname}: {$lang_pref['requestuserlogin']} - {$name}",$message,$baseurl . "/pages/team/team_user.php");

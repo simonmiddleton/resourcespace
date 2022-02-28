@@ -777,7 +777,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         {
         $userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
         $userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
-        debug("BANG request_senduserupdates" . __LINE__ . $userconfirmmessage);
         send_user_notification([$userref],"",$eventdata,$applicationname . ": " . $lang["requestsent"] . " - " . $ref,$userconfirmmessage,$baseurl . "/?c=" . $ref); // No type so mesage will always send
         }
     
