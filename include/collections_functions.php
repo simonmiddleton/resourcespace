@@ -2644,7 +2644,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         sql_limit(null, $limit)
     );
 
-    $fc_resources = ps_array($sql,array_merge($unionparams,$subquery_params),"themeimage");
+    $fc_resources = ps_array($sql,array_merge($subquery_params,$unionparams),"themeimage");
     $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
     return $fc_resources;
     }
