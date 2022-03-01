@@ -172,7 +172,7 @@ foreach(tms_link_get_modules_mappings() as $module)
         $tmsresults = $tmsresults[$module['module_name']];
 
         // Go through this set of resources and update db/show data/do something else
-        for($ri = $tmspointer; $ri < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $ri) < $tms_link_test_count) && $ri < $tmscount; $ri++)
+        for($ri = $tmspointer; $ri < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $ri) < $tms_link_test_count) && $ri < $current_tms_count; $ri++)
             {
             $tms_data_found = false;
 
