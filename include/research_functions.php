@@ -53,7 +53,7 @@ function send_research_request(array $rr_cfields)
         {
         trigger_error(json_last_error_msg());
         }
-    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : "'".$rr_cfields_json."'");
+    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : $rr_cfields_json);
 	$parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
 
 	ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
