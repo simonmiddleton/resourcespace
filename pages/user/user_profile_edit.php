@@ -18,9 +18,10 @@ if (getval("save", "") != "" && enforcePostRequest(false))
     if ($_FILES['profile_image']['name'] != "")
         {
         $file_type = $_FILES['profile_image']['type'];
-        if ($file_type == 'image/jpeg')
+        $validjpg  = imagecreatefromjpeg($_FILES['profile_image']['tmp_name']);
+        if ($file_type == 'image/jpeg' && $validjpg)
             {
-            $image_path = get_temp_dir(false) . '/' . $userref . '_' . $_FILES['profile_image']['name'];
+            $image_path = get_temp_dir(false) . '/' . $userref . '_' . uniqid() . $_FILES['profile_image']['name'];
             $result = move_uploaded_file($_FILES['profile_image']['tmp_name'], $image_path);
             if ($result === false)
                 {
