@@ -1050,7 +1050,7 @@ function do_search(
             {
             foreach($node_bucket_or as $node_bucket_and)
                 {
-                $sql_join.= ' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` = ' . $node_bucket_and;
+                $sql_join.= ' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` = ' . escape_check($node_bucket_and);
                 $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
                 $rn++;
                 }
