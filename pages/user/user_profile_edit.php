@@ -19,7 +19,7 @@ if (getval("save", "") != "" && enforcePostRequest(false))
         {
         $parts      = explode(".",$_FILES['profile_image']['name']);
         $extension  = trim(strtolower($parts[count($parts)-1]));
-        if(in_array(strtolower($extension), array("jpg","jpeg")))
+        if(in_array($extension, array("jpg","jpeg")))
             {
             $image_path = get_temp_dir(false) . '/' . $userref . '_' . uniqid() . ".jpg";
             $result = move_uploaded_file($_FILES['profile_image']['tmp_name'], $image_path);
