@@ -6,7 +6,7 @@ function HookVideo_spliceViewAfterresourceactions()
 
    	if (!in_array($resource["file_extension"], $videosplice_allowed_extensions)) {return false;}
 
-    if (!resource_download_allowed($resource['ref'], "scr", $resource['resource_type']) )
+    if (!resource_download_allowed($resource['ref'], "scr", $resource['resource_type']) && checkperm('A') && !checkperm('c') && !checkperm('d'))
         {
         return false;
         }
