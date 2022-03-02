@@ -8,7 +8,7 @@ include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
 $ref=getvalescaped("ref","");
 $resource=getvalescaped("resource","");
-$file_path=get_licence_file_path($ref);
+$file_path=get_license_file_path($ref);
 
 # Check access
 if ($resource!="")
