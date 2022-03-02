@@ -52,13 +52,14 @@ if('' != $terms_save && enforcePostRequest(false))
         rs_setcookie("dl_key",$temp_download_key,1, $baseurl_short, "", substr($baseurl,0,5)=="https", true);
 
         global $download_usage;
-        if($download_usage && strpos($url, 'downlad_usage.php') == false)
+        if($download_usage && strpos($url, 'download_usage.php') == false)
             {
+            $params = array();
             if(($pos = strpos($url, '?')) !== false)
                 {
                 parse_str(substr($url, $pos+1), $params);
-                $url = generateURL($baseurl_short . 'pages/download_usage.php', array_merge(['url' => $url], $params)); 
                 }
+            $url = generateURL($baseurl_short . 'pages/download_usage.php', array_merge(['url' => $url], $params)); 
             }
         }
 
