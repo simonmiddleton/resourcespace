@@ -48,7 +48,11 @@ global $lang, $context, $display, $video_preview_original;
 
 // fetch resource data.
 $resource=get_resource_data($ref);
-
+if(!is_array($resource))
+    {
+    error_alert($lang['error-pageload'],false);
+    exit();
+    }
 $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
 $downloadaccess = resource_download_allowed($ref, "scr", $resource['resource_type']);
 
