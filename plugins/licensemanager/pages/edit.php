@@ -8,6 +8,7 @@ include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
 $ref=getvalescaped("ref","");
 $resource=getvalescaped("resource","");
+$file_path=get_licence_file_path($ref);
 
 # Check access
 if ($resource!="")
@@ -62,6 +63,7 @@ if (getval("submitted","")!="")
         # New record 
         sql_query("insert into license (outbound,holder,license_usage,description,expires) values ('" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
         $ref=sql_insert_id();
+        $file_path=get_license_file_path($ref); // get updated path
 
         # Add to all the selected resources
         if (getvalescaped("resources","")!="")
@@ -105,22 +107,22 @@ if (getval("submitted","")!="")
     global $banned_extensions;
     if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
         {
-        // # Work out the extension
-        // $uploadfileparts=explode(".",$upfilename);
-        // $uploadfileextension=trim($uploadfileparts[count($uploadfileparts)-1]);
-        // $uploadfileextension=strtolower($uploadfileextension);
+        # Work out the extension
+        $uploadfileparts=explode(".",$upfilename);
+        $uploadfileextension=trim($uploadfileparts[count($uploadfileparts)-1]);
+        $uploadfileextension=strtolower($uploadfileextension);
 
-        // if (in_array($uploadfileextension,$banned_extensions))
-        //     {
-        //     $error_extension = str_replace("%%FILETYPE%%",$uploadfileextension,$lang["error_upload_invalid_file"]);
-        //     error_alert($error_extension, false);
-        //     exit();
-        //     }
-        // else
-        //     {
-        //     move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
-        //     sql_query("update license set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
-        //     }
+        if (in_array($uploadfileextension,$banned_extensions))
+            {
+            $error_extension = str_replace("%%FILETYPE%%",$uploadfileextension,$lang["error_upload_invalid_file"]);
+            error_alert($error_extension, false);
+            exit();
+            }
+        else
+            {
+            move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
+            sql_query("update license set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+            }
         }
 
     # Handle file clear
