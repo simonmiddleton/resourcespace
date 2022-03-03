@@ -108,7 +108,7 @@ if (getval("submitted","")!="")
     if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
         {
         # Work out the extension
-        $uploadfileparts=explode(".",$upfilename);
+        $uploadfileparts=explode(".",$_FILES["file"]["name"]);
         $uploadfileextension=trim($uploadfileparts[count($uploadfileparts)-1]);
         $uploadfileextension=strtolower($uploadfileextension);
 
@@ -163,15 +163,15 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 
 <?php if ($resource!="") { ?>
-<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
 <?php } else { ?>
-<p><a href="<?php echo $redirect_url ?>  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
 <?php } ?>
 
 
 <h1><?php echo ($ref=="new"?$lang["new_license"]:$lang["edit_license"]) ?></h1>
 
-<form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" onSubmit="return CentralSpacePost(this,true);">
+<form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" enctype="multipart/form-data">
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
