@@ -2852,7 +2852,7 @@ function update_collection_order($neworder,$collection,$offset=0)
  *
  * @param  integer $resource
  * @param  integer $collection
- * @return array
+ * @return array|bool Returns found record data, false otherwise
  */
 function get_collection_resource_comment($resource,$collection)
 	{
