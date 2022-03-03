@@ -1925,8 +1925,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
-                    // Files of type png/gif/tif must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
-                    if ($extension=="png" || $extension=="gif" || $extension=="tif")
+                    // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
+                    if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
                         $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
