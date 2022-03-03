@@ -1226,6 +1226,9 @@ $category_tree_open=false;
 # Should searches using the category tree use AND for hierarchical keys?
 $category_tree_search_use_and=false;
 
+# Should searching with multiple values from a category tree use AND logic? 
+$category_tree_search_use_and_logic=false;
+
 # Force selection of parent nodes when selecting a sub node? 
 # If set to false then each node should be unique to avoid possible corruption when exporting/importing data
 $category_tree_add_parents=true;
