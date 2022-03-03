@@ -376,8 +376,11 @@ if ($saveaction != '' && enforcePostRequest(false))
             ]);
 
             $dlurl = generateURL($baseurl_short . "pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
+            if ($download_usage)
+                {
+                $dlurl = generateURL("pages/download_usage.php",["url" => $dlurl]);
+                }
             $url_params["url"]=$dlurl;
-            
             $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
             redirect($redirect_to_terms_url);
             exit();
