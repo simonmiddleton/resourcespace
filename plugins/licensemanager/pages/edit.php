@@ -115,7 +115,7 @@ if (getval("submitted","")!="")
         if (in_array($uploadfileextension,$banned_extensions))
             {
             $error_extension = str_replace("%%FILETYPE%%",$uploadfileextension,$lang["error_upload_invalid_file"]);
-            error_alert($error_extension, false);
+            error_alert($error_extension, true);
             exit();
             }
         else
