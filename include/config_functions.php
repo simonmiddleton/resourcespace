@@ -761,7 +761,14 @@ function config_add_boolean_select($config_var, $label, $choices = '', $width = 
 function config_checkbox_select($name, $label, $current, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false,$on_change_js=null, $hidden=false)
     {
     global $lang;
-    $currentvalues=explode(",",$current);
+    if(trim($current) != "")
+        {
+        $currentvalues=explode(",",$current);
+        }
+    else
+        {
+        $currentvalues = [];
+        }
 	$wrap = 0;
 	?>
 	<div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >

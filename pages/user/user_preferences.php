@@ -236,7 +236,6 @@ include "../../include/header.php";
         get_config_option($userref,'actions_resource_review', $legacy_resource_review, true);
         if(!$legacy_resource_review)
             {
-            $actions_notify_states = "";
             $page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true);
             }
 		$page_def[] = config_add_checkbox_select('actions_notify_states',$lang['actions_notify_states'],$available_archive_states,true,300,1,true,null);

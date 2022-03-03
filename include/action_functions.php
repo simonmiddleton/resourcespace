@@ -21,7 +21,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
 
     // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
     get_config_option($userref,'actions_resource_review', $actions_resource_review, true);
-    if($actions_resource_review === false)
+    if($actions_resource_review == false)
         {
         $actions_notify_states = "";
         }
