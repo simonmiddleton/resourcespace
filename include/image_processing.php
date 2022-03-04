@@ -3368,6 +3368,9 @@ function getSvgSize($file_path)
         {
         $svg_size[0] = (string) $attributes->width;
         $svg_size[1] = (string) $attributes->height;
+        // Remove non numeric unit values if present
+        $svg_size[0] = preg_replace("/[^.0-9]/", "", $svg_size[0]);
+        $svg_size[1] = preg_replace("/[^.0-9]/", "", $svg_size[1]);
         }
     else if(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
         {
