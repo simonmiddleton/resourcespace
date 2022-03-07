@@ -600,7 +600,7 @@ switch($csvstep)
                         echo "<td>";
                         if(count($csv_field_data["values"]) > 0)
                             {
-                            echo "<div class=\"keywordselected\">" . implode("</div><div class=\"keywordselected\">",array_slice(array_filter($csv_field_data["values"],"htmlspecialchars"),0,5)) . "</div></td>";
+                            echo "<div class=\"keywordselected\">" . implode("</div><div class=\"keywordselected\">",array_slice(array_map("htmlspecialchars",$csv_field_data["values"]),0,5)) . "</div></td>";
                             }
                         echo "</td>";
                         echo "</tr>";
