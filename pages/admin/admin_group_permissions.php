@@ -96,7 +96,7 @@ renderBreadcrumbs($links_trail);
 ?>		<div class="Listview">
 			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
+					<td colspan=2 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
 				</tr>
 <?php
 DrawOption("s", $lang["searchcapability"]);
