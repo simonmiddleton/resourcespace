@@ -233,13 +233,22 @@ function HookAction_datesCronCron()
     $subject_combined="";
 
     $subject_state = $lang['action_dates_email_subject_state'];
-    $message_state=str_replace("%%DAYSMIN",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_state']);
-    $message_state=str_replace("%%DAYSMAX",(count($email_state_days)>0 ? max($email_state_days) : $action_dates_email_admin_days),$message_state) . "\r\n";
+    if ( min($email_state_days) == max($email_state_days) ) {
+        $message_state=str_replace("%%DAYS",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_state'])."\r\n";
+    }
+    else {
+        $message_state=str_replace("%%DAYSMIN",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_range_state']);
+        $message_state=str_replace("%%DAYSMAX",(count($email_state_days)>0 ? max($email_state_days) : $action_dates_email_admin_days),$message_state) . "\r\n";
+    }
 
     $subject_restrict = $lang['action_dates_email_subject_restrict'];
-    $message_restrict=str_replace("%%DAYSMIN",(count($email_restrict_days)>0 ? min($email_restrict_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_restrict']);
-    $message_restrict=str_replace("%%DAYSMAX",(count($email_restrict_days)>0 ? max($email_restrict_days) : $action_dates_email_admin_days),$message_restrict) . "\r\n";
-    
+    if ( min($email_restrict_days) == max($email_restrict_days) ) {
+        $message_restrict=str_replace("%%DAYS",(count($email_restrict_days)>0 ? min($email_restrict_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_restrict'])."\r\n";
+    }
+    else {
+        $message_restrict=str_replace("%%DAYSMIN",(count($email_restrict_days)>0 ? min($email_restrict_days) : $action_dates_email_admin_days),$lang['action_dates_email_range_restrict']);
+        $message_restrict=str_replace("%%DAYSMAX",(count($email_restrict_days)>0 ? max($email_restrict_days) : $action_dates_email_admin_days),$message_restrict) . "\r\n";
+    }
 
     # Determine how and to whom notifications are to be sent
     $admin_notify_emails = array();
@@ -272,17 +281,26 @@ function HookAction_datesCronCron()
 
         $action_combined_days = array_merge($email_restrict_days,$email_state_days);
 
-        $message_combined=str_replace("%%DAYSMIN",min($action_combined_days),$lang['action_dates_email_text']);
-        $message_combined=str_replace("%%DAYSMAX",max($action_combined_days),$message_combined) . "\r\n";
+        if ( min($action_combined_days) == max($action_combined_days) ) {
+            $message_combined=str_replace("%%DAYS",min($action_combined_days),$lang['action_dates_email_text']) . "\r\n";
+        }
+        else {
+            $message_combined=str_replace("%%DAYSMIN",min($action_combined_days),$lang['action_dates_email_range']);
+            $message_combined=str_replace("%%DAYSMAX",max($action_combined_days),$message_combined) . "\r\n";
+        }
+
         $notification = $message_combined; 
         $notification_restrict = $message_restrict; 
         $notification_state = $message_state; 
 
+        # Reconstruct combined message for purposes of emailing 
         $message_combined = $message_restrict . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_restrict_refs) . "\r\n";
         $message_combined.= $message_state . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_state_refs) . "\r\n";
+        $templatevars['message']=$message_combined;
+
+        # Construct url lists for massage_add function
         $url_restrict = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_restrict_refs);
         $url_state = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_state_refs);
-        $templatevars['message']=$message_combined;
 
         foreach($admin_notify_emails as $admin_notify_email)
             {
