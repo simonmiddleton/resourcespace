@@ -20,8 +20,8 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     $actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup, $actions_notify_states;
 
     // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
-    get_config_option($userref,'actions_resource_review', $actions_resource_review, true);
-    if($actions_resource_review == false)
+    get_config_option($userref,'actions_resource_review', $actions_resource_review);
+    if($actions_resource_review == false && isset($actions_resource_review))
         {
         $actions_notify_states = "";
         }
