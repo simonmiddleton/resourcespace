@@ -1632,9 +1632,8 @@ if ($flv_preview_downloadable && isset($video_preview_file) && file_exists($vide
 	}
 
 hook('additionalresourcetools2', '', array($resource, $access));
-	
-include "view_alternative_files.php";
 
+include "view_alternative_files.php";
 ?>
 </table>
 
@@ -1893,30 +1892,39 @@ if (!hook('replacemetadata')) {
  
  */
 $pushed=do_search("!relatedpushed" . $ref);
+// Get metadata for all related resources to save multiple db queries
+$pushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),true,($k != "" && !$internal_share_access));
+$allpushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),false, ($k != "" && !$internal_share_access));
+
 foreach ($pushed as $pushed_resource)
 	{
-	RenderPushedMetadata($pushed_resource);
+	RenderPushedMetadata($pushed_resource, $pushedfielddata, $allpushedfielddata);
 	}
 
-function RenderPushedMetadata($resource)
-	{
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all,$ref;
-    $reset_ref    = $ref;
-	$ref          = $resource["ref"];
-    $resource     = array_merge($resource, get_resource_data($resource['ref']));
-	$fields       = get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
-    $access       = get_resource_access($ref);
-    
-	?>
-	<div class="RecordBox">
+function RenderPushedMetadata($resource, $field_data, $all_field_data)
+    {
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access;
+    // Save currentt resource data
+    $reset_ref          = $ref;
+    $reset_access       = $access;
+    $reset_fields_all   = $fields_all;
+
+    $ref            = $resource["ref"];
+    $fields         = isset($field_data[$ref]) ? $field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
+    $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
+    $access         = get_resource_access($resource);
+    ?>
+    <div class="RecordBox">
         <div class="RecordPanel">  <div class="backtoresults">&gt; <a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["view"] ?></a></div>
         <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field] ?></div>
         <?php include "view_metadata.php"; ?>
         </div>
         </div>
-	<?php
+    <?php
     $ref        = $reset_ref;
-	}
+    $access     = $reset_access;
+    $fields_all = $reset_fields_all;
+    }
 /*
 End of pushed metadata support
 ------------------------------------------
