@@ -3578,9 +3578,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
-           $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
+           $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet,
            $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
-           $system_read_only, $leaflet_maps_enable;
+           $system_read_only;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -3981,18 +3981,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 170;
         $o++;
         }
-
-	if(!$leaflet_maps_enable && ($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
-        {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/geolocate_collection.php",$urlparams);
-        $options[$o]['value']='geolocatecollection';
-        $options[$o]['label']=$lang["geolocatecollection"];
-        $options[$o]['data_attr']=$data_attribute;
-        $options[$o]['category'] = ACTIONGROUP_RESOURCE;
-        $options[$o]['order_by']  = 180;
-        $o++;            
-        }
-	
 
     // Contact Sheet
     if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))

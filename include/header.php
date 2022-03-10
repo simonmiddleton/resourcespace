@@ -262,75 +262,65 @@ $extrafooterhtml="";
 <?php
 if(!$disable_geocoding)
     {
-    if($leaflet_maps_enable)
-        {
-        // Geocoding & leaflet maps
-        // Load Leaflet and plugin files.
-        ?>
-        <!--Leaflet.js v1.7.1 files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.min.js"></script>
+    // Geocoding & leaflet maps
+    // Load Leaflet and plugin files.
+    ?>
+    <!--Leaflet.js v1.7.1 files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.min.js"></script>
 
-        <?php 
-        if($geo_leaflet_maps_sources)
-            {?>
-            <!--Leaflet Providers v1.10.2 plugin files-->
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
-            <?php
-            }
-        else
-            {
-            header_add_map_providers();
-            }?>
-
-        <!--Leaflet PouchDBCached v1.0.0 plugin file with PouchDB v7.1.1 file-->
-        <?php if ($map_default_cache || $map_layer_cache)
-            { ?>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script> <?php
-            } ?>
-
-        <!--Leaflet MarkerCluster v1.4.1 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.css"/>
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.Default.css"/>
-
-        <!--Leaflet ColorMarkers v1.0.0 plugin file-->
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.js"></script>
-
-        <!--Leaflet NavBar v1.0.1 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
-            
-        <!--Leaflet Omnivore v0.3.1 plugin file-->
-        <?php if ($map_kml)
-            { ?>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script> <?php
-            } ?>
-
-        <!--Leaflet EasyPrint v2.1.9 plugin file-->
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
-
-        <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
-
-        <!--Leaflet Zoomslider v0.7.1 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
-
-        <!--Leaflet Shades v1.0.2 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
-
+    <?php 
+    if($geo_leaflet_maps_sources)
+        {?>
+        <!--Leaflet Providers v1.10.2 plugin files-->
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
         <?php
         }
     else
         {
-        // Legacy OpenLayers code
-        ?>
-        <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
-        <?php
-        }
+        header_add_map_providers();
+        }?>
+
+    <!--Leaflet PouchDBCached v1.0.0 plugin file with PouchDB v7.1.1 file-->
+    <?php if ($map_default_cache || $map_layer_cache)
+        { ?>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script> <?php
+        } ?>
+
+    <!--Leaflet MarkerCluster v1.4.1 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.Default.css"/>
+
+    <!--Leaflet ColorMarkers v1.0.0 plugin file-->
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.js"></script>
+
+    <!--Leaflet NavBar v1.0.1 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
+        
+    <!--Leaflet Omnivore v0.3.1 plugin file-->
+    <?php if ($map_kml)
+        { ?>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script> <?php
+        } ?>
+
+    <!--Leaflet EasyPrint v2.1.9 plugin file-->
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
+
+    <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
+
+    <!--Leaflet Zoomslider v0.7.1 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
+
+    <!--Leaflet Shades v1.0.2 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
+
+    <?php
     }
 echo get_plugin_css();
 // after loading these tags we change the class on them so a new set can be added before they are removed (preventing flickering of overridden theme)
@@ -731,10 +721,8 @@ $port   = (isset($parsed_url['port']) ? ":{$parsed_url['port']}" : "");
 
 $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUEST_URI"]);
 
-if($leaflet_maps_enable)
-    {
-    get_geolibraries();
-    }
+get_geolibraries();
+
 ?>
 <script>
  
