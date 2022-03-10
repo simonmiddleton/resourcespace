@@ -135,6 +135,8 @@ if(function_exists('curl_init'))
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
     $output=curl_exec($ch);
     curl_close($ch);
     if (strpos($output,"Index of")===false)
