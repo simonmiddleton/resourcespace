@@ -277,12 +277,14 @@ function setup_user(array $userdata)
     if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
         $default_notify_states = [];
-        if(checkperm("e-2") && checkperm('d'))
+        // Add action for users who can submit 'pending submission' resources for review
+        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
             {
             $default_notify_states[] = -2;
             }
-        if(checkperm("e-1"))
+        if(checkperm("e-1") && checkperm("e0"))
             {
+            // Add action for users who can make pending resources active
             $default_notify_states[] = -1;
             }
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
