@@ -126,33 +126,14 @@ if ($success===false) {$result=$lang["status-fail"] . ": " . $homeanim_folder . 
 <?php } 
 
 # Check filestore folder browseability
-$filestoreurl = isset($storageurl) ? $storageurl : $baseurl . "/filestore";
-if(function_exists('curl_init'))
-    {
-    $ch=curl_init();
-    $checktimeout=5;
-    curl_setopt($ch, CURLOPT_URL, $filestoreurl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-    $output=curl_exec($ch);
-    curl_close($ch);
-    if (strpos($output,"Index of")===false)
-        {
-        $result=$lang["status-ok"];
-        }
-    else
-        {
-        $result=$lang["status-fail"] . ": " . $lang["noblockedbrowsingoffilestore"];
-        }
-    }
-else
-    {
-    $result=$lang["unknown"] . ": " . str_replace("%%EXTENSION%%","curl",$lang["php_extension_not_enabled"]);
-    }
-?><tr><td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"] ?> (<a href="<?php echo $filestoreurl ?>" target="_blank"><?php echo $filestoreurl ?></a>)</td><td><b><?php echo $result?></b></td></tr><?php
+$cfb = check_filestore_browseability();
+?>
+<tr>
+    <td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"]; ?> (<a href="<?php echo $cfb['filestore_url']; ?>" target="_blank"><?php echo htmlspecialchars($cfb['filestore_url']); ?></a>)</td>
+    <td>
+        <b><?php echo htmlspecialchars($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
+    </td>
+</tr><?php
 
 # Check sql logging configured correctly
 if($mysql_log_transactions)
