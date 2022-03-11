@@ -2272,7 +2272,7 @@ a.BrowseRefresh{
 /* Fixes for form checkboxes and date range fields */
 .BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 250px;}
 .BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
-.BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
+.BasicsBoxEdit .FormHelp {margin: 0 0 10px 260px;}
 
 .nodes_input_checkbox {float:left; margin-top: 5px}
 
