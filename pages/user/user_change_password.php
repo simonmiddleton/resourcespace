@@ -8,7 +8,7 @@ if($resetvalues!="")
     {
     if(substr($resetvalues,0,2) == "3D")
         {
-        // Email Smay have encoded the = character
+        // Email may have encoded the = character
         $resetvalues = substr($resetvalues,2);
         }
         
@@ -16,7 +16,7 @@ if($resetvalues!="")
     $resetuserref=substr($resetvalues,0,$rplength-15);
     $resetkey=substr($resetvalues,$rplength-15);
     $valid_reset_link=false;
-	$resetvaliduser=sql_query("select ref, username, email, fullname, usergroup, password, password_reset_hash, last_active from user where ref='" . escape_check($resetuserref)  . "'",""); 
+	$resetvaliduser = ps_query("SELECT ref, username, email, fullname, usergroup, password, password_reset_hash, last_active FROM user WHERE ref = ?", ["i", $resetuserref]);
 	if(count($resetvaliduser)==1)
 		{
 		$resetuser=$resetvaliduser[0];
