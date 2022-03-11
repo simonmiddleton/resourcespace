@@ -2115,7 +2115,7 @@ function get_dash_search_data($link='', $promimg=0)
             {
             global $access; // Needed by check_use_watermark()
             $access=get_resource_access($results[$n]);
-            if(in_array($results[$n]["access"],[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
+            if(in_array($access,[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
                 {
                 $use_watermark=check_use_watermark();
                 $resfile=get_resource_path($results[$n]["ref"],true,"pre",false,"jpg",-1,1,$use_watermark);
