@@ -53,6 +53,14 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if(!$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
+
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust

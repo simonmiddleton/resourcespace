@@ -455,7 +455,15 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         redirect($explain);
         }
     }
-  
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if($ref < 0 && !$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
+
+
 $urlparams= array(
 	'ref'				=> $ref,
     'search'			=> $search,

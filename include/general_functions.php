@@ -2249,7 +2249,7 @@ function error_alert($error, $back = true, $code = 403)
         jQuery(document).ready(function()
             {
             ModalClose();
-            styledalert('" . $lang["error"] . "', '$error');
+            styledalert('" . $lang["error"] . "', '" . htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401) . "');
             " . ($back ? "window.setTimeout(function(){history.go(-1);},2000);" : "") ."
             });
         </script>";
