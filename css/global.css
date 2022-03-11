@@ -94,12 +94,17 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     text-align: center;
 }
 
-#ResourceDownloadOptions td.DownloadFileName.AlternativeFile a 
-{
+#ResourceDownloadOptions td.DownloadFileName.AlternativeFile a {
     background-color: transparent;
     border-top: none;
     box-shadow: none;
+    padding: 0px;
 }
+
+.AlternativeFileImage, .AlternativeFileText {
+    float: left;
+    max-width: 150px;
+    }
 
 .RecordPanel:not(.RecordPanelLarge) .DownloadFileSizePicker > #size {
     max-width: 230px;
@@ -605,7 +610,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownload {float: left;width: 445px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
 .RecordPanel .RecordDownload td {padding: 5px 5px 5px 0;margin: 0;}
-.RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
+.RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;padding: 0.4rem 0.2rem;}
 .RecordPanel .RecordDownloadSpace {padding: 5px 10px 0 10px;}
 .RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 5px;list-style:none;}
 .RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 3px 0;float:left;min-width:198px;}
@@ -780,7 +785,7 @@ div.autocomplete ul li {
 
 .DownloadDisabled {font-weight: normal;}
 
-.AltThumb {float:left;padding-right:5px;max-width:85px;max-height:75px;}
+.AltThumb {padding-right:5px;max-width:85px;max-height:75px;}
 
 /* single file upload progress bar */
 .meter-wrap{position: relative;width:290px;}
