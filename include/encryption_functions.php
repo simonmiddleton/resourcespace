@@ -171,6 +171,7 @@ function resign_all_code($confirm=true)
                     $line = fgets(STDIN);if (trim($line)!="y") {exit();}
                     }
 
+                $code=trim($code);
                 $code="//SIG" . sign_code($code) . "\n" . $code;
                 ps_query("update `$table` set `$column`=? where ref=?",array("s",$code,"i",$ref));
                 }
