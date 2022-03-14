@@ -5429,14 +5429,15 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     $resource_escaped = escape_check($resource);
     $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
 
-    $fields = sql_query("
-        SELECT ref,
-               type,
-               autocomplete_macro
-          FROM resource_type_field
-         WHERE (resource_type = 0 || resource_type = '{$resource_type}')
-           AND length(autocomplete_macro) > 0
-    ", "schema");
+    $fields = sql_query(
+        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
+          FROM resource_type_field rtf
+          LEFT JOIN resource_type rt ON rt.ref = {$resource_type} 
+          WHERE length(rtf.autocomplete_macro) > 0
+          AND (   (rtf.resource_type<>0 AND rtf.resource_type = rt.ref) 
+               OR (rtf.resource_type=0  AND rt.inherit_global_fields=1)
+              )", 
+        "schema");
 
     $fields_updated = array();
 
