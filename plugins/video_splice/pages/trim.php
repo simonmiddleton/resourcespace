@@ -108,7 +108,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
 
     // create new resource
-    if ($upload_type == "new")
+    if ($upload_type == "new" && (checkperm('c') || checkperm('d')))
         {
         // create a new resource.
         $newref=copy_resource($ref);
@@ -147,15 +147,29 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
             $source_temp = str_replace("/", "\\", $source_temp);
             copy($video_original_file, $source_temp);
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-            $output = exec($shell_exec_cmd);
+            
+            $command = "{$ffmpeg_fullpath} -y -ss [ffpeg_start_time] -i [temp_source] -t [duration] " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . "[temp_target]";
+            $params  = [
+                '[ffpeg_start_time]'    => $ffmpeg_start_time,
+                '[temp_source]'         => $source_temp,
+                '[duration]'            => $ffmpeg_duration_time,
+                '[temp_target]'         => $target_temp
+            ];
+            $output  = run_command($command, false, $params);
+
             rename($target_temp, $target);
             unlink($source_temp);
             }
         else
-            {
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            $output = exec($shell_exec_cmd);
+            {           
+            $command = "{$ffmpeg_fullpath} -y -ss [ffpeg_start_time] -i [source] -t [duration] " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . "[target]";
+            $params  = [
+                '[ffpeg_start_time]'    => $ffmpeg_start_time,
+                '[source]'              => $video_original_file,
+                '[duration]'            => $ffmpeg_duration_time,
+                '[target]'              => $target
+            ];
+            $output  = run_command($command, false, $params);
             }
 
         create_previews($newref,false,$ffmpeg_preview_extension);
@@ -169,7 +183,8 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // add ref to list
         $trimmed_resources_new[] = $newref;
         }
-    elseif ($upload_type == "alt")
+    # Make sure that the user has access to actually preform the action they are trying to
+    elseif ($upload_type == "alt" && !checkperm('A') && !$disable_alternative_files)
         {
         // Upload an alternative file
         $resource_data = get_resource_data($ref);
@@ -208,15 +223,31 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
             $source_temp = str_replace("/", "\\", $source_temp);
             copy($video_original_file, $source_temp);
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-            $output = exec($shell_exec_cmd);
+            
+            $command = "{$ffmpeg_fullpath} -y -ss [ffpeg_start_time] -i [temp_source] -t [duration] " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . "[temp_target]";
+            $params  = [
+                '[ffpeg_start_time]'    => $ffmpeg_start_time,
+                '[temp_source]'         => $source_temp,
+                '[duration]'            => $ffmpeg_duration_time,
+                '[temp_target]'         => $target_temp
+            ];
+            $output  = run_command($command, false, $params);
+
             rename($target_temp, $target);
             unlink($source_temp);
             }
         else
             {
             $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            $output = exec($shell_exec_cmd);
+            
+            $command = "{$ffmpeg_fullpath}-y -ss [ffpeg_start_time] -i [source] -t [duration] " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . "[target]";
+            $params  = [
+                '[ffpeg_start_time]'    => $ffmpeg_start_time,
+                '[source]'              => $video_original_file,
+                '[duration]'            => $ffmpeg_duration_time,
+                '[target]'              => $target
+            ];
+            $output  = run_command($command, false, $params);
             }
 
         chmod($target,0777);
@@ -246,7 +277,8 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // add ref to list
         $trimmed_resources_alt[] = $alt_ref;
         }
-    else if($upload_type == 'download')
+    # Make sure that the user has access to actually preform the action they are trying to
+    else if($upload_type == 'download' && $downloadaccess)
         {
         $randstring=md5(rand() . microtime());
         $target = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $ffmpeg_preview_extension;
@@ -261,15 +293,31 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
             $source_temp = str_replace("/", "\\", $source_temp);
             copy($video_original_file, $source_temp);
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-            $output = exec($shell_exec_cmd);
+            
+            $command = "{$ffmpeg_fullpath} -y -ss [ffpeg_start_time] -i [temp_source] -t [duration] " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . "[temp_target]";
+            $params  = [
+                '[ffpeg_start_time]'    => $ffmpeg_start_time,
+                '[temp_source]'         => $source_temp,
+                '[duration]'            => $ffmpeg_duration_time,
+                '[temp_target]'         => $target_temp
+            ];
+            $output  = run_command($command, false, $params);
+
             rename($target_temp, $target);
             unlink($source_temp);
             }
         else
             {
             $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            $output = exec($shell_exec_cmd);
+            
+            $command = "{$ffmpeg_fullpath} -y -ss [ffpeg_start_time] -i [source] -t [duration] " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . "[target]";
+            $params  = [
+                '[ffpeg_start_time]'    => $ffmpeg_start_time,
+                '[source]'              => $video_original_file,
+                '[duration]'            => $ffmpeg_duration_time,
+                '[target]'              => $target
+            ];
+            $output  = run_command($command, false, $params);
             }
 
             $download_url = generateURL($baseurl. "/pages/download.php", 
@@ -280,7 +328,11 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
 
             $dlurl = generateURL($baseurl . "/pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
             $url_params["url"]=$dlurl;
-            
+            global $download_usage;
+            if ($download_usage)
+                {
+                $url_params["url"] = generateURL("pages/download_usage.php",["url" => $dlurl]);
+                }
             $redirect=generateURL("pages/terms.php",$url_params);
             redirect($redirect);
         }
