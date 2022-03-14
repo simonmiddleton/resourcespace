@@ -764,11 +764,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
             {
             $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
-            debug("BANG " . __LINE__ . $admin_notify_message);
-
-
-        debug("BANG send_user_notification using template: " . $admin_mail_template);
-
             send_user_notification($admin_notify_users,"resource_request",$eventdata,$applicationname . ": " . $lang["requestcollection"] . " - " . $ref,$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
             }
         }

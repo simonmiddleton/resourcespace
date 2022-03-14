@@ -11,6 +11,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         return true;
         }
 
+        debug("BANG " . __LINE__);
     $resources              = get_collection_resources($collection_ref);
     $resource_data          = get_resource_field_data($resources[0]); // in this case it should only have one resource
     $mapped_fields          = get_mapped_fields();
@@ -36,10 +37,11 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     $node_fields_list = array();
     $current_node = array();
 
-    foreach ($resource_nodes as $node) {
+    foreach ($resource_nodes as $node)
+        {
         get_node($node, $current_node);
         array_push($node_fields_list, $current_node);
-    }
+        }
 
     // Process each node based metadata field value pair for the resource being requested, looking for an assignee
     foreach ($node_fields_list as $r_node)
@@ -73,17 +75,20 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
     $manage_request_admin=array();  // Initialise the global array instead of attempting to unset it which does not work
 
+    debug("BANG " . __LINE__);
     return true;
     }
 
 function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $collection_data, $message, $manage_collection_request)
     {
-    global $manage_request_admin, $assigned_to_user, $email_notify, $lang, $baseurl, $applicationname, 
+    global $manage_request_admin, $assigned_to_user, $admin_mail_template, $lang, $baseurl, $applicationname, 
            $request_query, $notify_manage_request_admin;
 
+           debug("BANG " . __LINE__);
     // Do not process this any further as this should only handle collection requests
     if(!$manage_collection_request)
         {
+            debug("BANG " . __LINE__);
         return false;
         }
 
@@ -124,7 +129,6 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $collection_resources_by_assigned_user['not_managed'][] = $resource;
             }
         }
-
 
     // Create collections based on who is supposed to handle the request
     foreach ($collection_resources_by_assigned_user as $assigned_user_id => $collection_resources)
@@ -175,17 +179,22 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                 $message = $lang['user_made_request'];
                 }
 
+
+                debug("BANG " . __LINE__);
             ps_query($request_query->sql, $request_query->parameters);
             $request = sql_insert_id();
 
             // Send message
             $request_url = $baseurl . "/?q=" . $request;
+            $templatevars['request_id']    = $request;
+            $templatevars['requesturl']    = $request_url;
+            $templatevars['requestreason'] = $message;
             $eventdata = [
                 "type"  => MANAGED_REQUEST,
                 "ref"   => $request,
                 ];
-            
-            send_user_notification($assigned_to,"resource_request",$eventdata,$subject,$message,$request_url);
+                debug("BANG 1" . $templatevars["requesturl"]);
+            send_user_notification($assigned_to,"resource_request",$eventdata,$subject,$message,$request_url,$admin_mail_template,$templatevars);
             }
         $notify_manage_request_admin = false;
         }
@@ -197,7 +206,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     }
 
 function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manage_individual_requests, $collection_id, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)
- {
+    {
     global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $resource_type_request_users, $userref,$manage_request_admin, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
 
     // Collection level requests have already been created and e-mails sent so skip this step
@@ -211,9 +220,11 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     // RS own logic for dealing with requests.
     if(is_null($assigned_to_user))
         {
+            debug("BANG " . __LINE__);
         return false;
         }
 
+        debug("BANG " . __LINE__);
     // Create resource level request using SQL which was setup earlier in resource level hook or regular processing
     ps_query($request_query->sql, $request_query->parameters);
     $request = sql_insert_id();
@@ -224,7 +235,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     $request_url = $baseurl . "/?q=" . $request;
 
     $templatevars['request_id']    = $request;
-    $templatevars['requesturl']    = $baseurl . '/?q=' . $request;
+    $templatevars['requesturl']    = $request_url;
     $templatevars['requestreason'] = $message;
 
     // Attach assigned admin to this collection
@@ -232,7 +243,9 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 
     if($notify_manage_request_admin)
         {
-        send_user_notification([$assigned_to_user['ref']],"resource_request",$eventdata,$applicationname . ': ' . $lang['requestassignedtoyou'],$message,$request_url);
+            debug("BANG HERE" . $request_url);
+            debug("BANG " . __LINE__ . $lang[$admin_mail_template]);
+        send_user_notification([$assigned_to_user['ref']],"resource_request",$eventdata,$applicationname . ': ' . $lang['requestassignedtoyou'],$lang['requestassignedtoyoumail'] . ": " . $message,$request_url,$admin_mail_template,$templatevars);
         $notification_sent = true;
         }
 
@@ -260,8 +273,10 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
             }
         }
 
+        debug("BANG " . __LINE__);
     if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
         {
+            debug("BANG " . __LINE__);
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($resource_type_request_users,$admin_notify_users);
 
@@ -271,17 +286,20 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         foreach($notify_emails as $notify_email)
             {
             // These are not system users so emails must be sent
+debug("BANG 2" . $templatevars["requesturl"]);
             send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
             }
-
-        send_user_notification($notify_users,"resource_request",$eventdata,$applicationname . ': ' . $lang['user_made_request'],$admin_notify_message,$request_url);
+debug("BANG 1" . $templatevars["requesturl"]);
+        send_user_notification($notify_users,"resource_request",$eventdata,$applicationname . ': ' . $lang['user_made_request'],$admin_notify_message,$request_url,$admin_mail_template,$templatevars);
         }
    
     if ($request_senduserupdates)
         {
         $userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
+
+        $templatevars['url']    = $baseurl . "/?c=" . $collection_id;
         $userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$collection_id";
-        send_user_notification([$userref],"",[],$applicationname . ": " . $lang["requestsent"] . " - " . $collection_id,$userconfirmmessage,$baseurl . "/?c=" . $collection_id,$user_mail_template,$templatevars);
+        send_user_notification([$userref],"",[],$applicationname . ": " . $lang["requestsent"] . " - " . $collection_id,$userconfirmmessage,$templatevars['url'],$user_mail_template,$templatevars);
         }
     return true;
     }
