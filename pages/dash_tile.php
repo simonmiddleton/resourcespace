@@ -164,7 +164,7 @@ if($submitdashtile && enforcePostRequest(false))
 		else if(!$tile["all_users"] && !$all_users) # Not an all_users tile
 			{
 			$newtile = create_dash_tile($buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);
-			sql_query("UPDATE user_dash_tile SET dash_tile = ".$newtile." WHERE dash_tile=".$tile["ref"]." AND user =".$userref);
+			ps_query("UPDATE user_dash_tile SET dash_tile = ? WHERE dash_tile= ? AND user = ?", ['s', $newtitle, 'i', $tile['ref'], 'i', $userref]);
 			cleanup_dash_tiles();
 			}
 		}
