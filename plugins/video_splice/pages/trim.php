@@ -56,7 +56,7 @@ if(!is_array($resource))
 $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
 
 // not allowed to edit this resource?
-if (!($editaccess || checkperm("A")) && $ref>0) {exit ("Permission denied.");}
+if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {

@@ -5,8 +5,8 @@ function HookVideo_spliceViewAfterresourceactions()
     global $videosplice_allowed_extensions,$resource,$baseurl,$urlparams,$lang;
 
    	if (!in_array($resource["file_extension"], $videosplice_allowed_extensions)) {return false;}
-
-    if (!resource_download_allowed($resource['ref'], "scr", $resource['resource_type']) )
+    # If user has edit access or access to manage alternative files then add the link
+    if (!(get_edit_access($resource['ref'],$resource["archive"], false,$resource) || !checkperm("A")) && $resource['ref'] > 0)
         {
         return false;
         }
