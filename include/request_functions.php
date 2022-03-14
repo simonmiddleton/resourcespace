@@ -72,7 +72,7 @@ function save_request($request)
         "type"  => MANAGED_REQUEST,
         "ref"   => $request,
         ];
-    
+
     # --------------------- User Assignment ------------------------
     # Process an assignment change if this user can assign requests to other users
     if ($currentrequest["assigned_to"]!=$assigned_to && checkperm("Ra"))
@@ -91,17 +91,13 @@ function save_request($request)
             $assigned_to_user=get_user($assigned_to);
             $body   = $applicationname . ": " . $lang["requestassignedtoyou"];
             $msgurl = $baseurl . "/?q=" . $request;
-             
-            debug("BANG " . __LINE__);
             send_user_notification([$assigned_to],"resource_request",$eventdata,$applicationname . ": " . $lang["requestassignedtoyou"],$body,$msgurl);
 
             $body   = str_replace("%",$assigned_to_user["fullname"] . " (" . $assigned_to_user["email"] . ")" ,$lang["requestassignedtouser"]);
             $msgurl = $baseurl . "/?q=" . $request;
-            debug("BANG " . __LINE__);
             send_user_notification([$currentrequest["user"]],"resource_request",$eventdata,$applicationname . ": " . $lang["requestupdated"] . " - " . $request,$body,$msgurl);
             }
         }
-    
     
     # Has either the status or the expiry date changed?
     if (($oldstatus!=$status || $expires!=$currentrequest["expires"]) && $status==1)
@@ -737,17 +733,16 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         //$admin_notify_message.=$lang["clicktoviewresource"] . "<br />" . $templatevars["requesturl"];
         if($notify_manage_request_admin)
             {
-            debug("BANG " . __LINE__ . $admin_notify_message);
             send_user_notification($assigned_to_users,"resource_request",$eventdata,$lang['requestassignedtoyou'],$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
             $notification_sent = true;
             }
-            
-        $admin_notify_emails=array();    
+
+        $admin_notify_emails=array();
         $admin_notify_users=array();
 
         # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
         if(isset($resource_type_request_emails))
-            {  
+            {
             // Legacy support for $resource_type_request_emails
             $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection=?", array("i",$ref));
             $requestrestypes=array_unique($requestrestypes);
@@ -758,23 +753,23 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             foreach($admin_notify_emails as $admin_notify_email)
                 {
                 send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$admin_notify_message,($always_email_from_user)?$useremail:$email_from,($always_email_from_user)?$useremail:$email_from,$admin_mail_template,$templatevars);
-                }     
+                }
             }
-        
+
         if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
             {
             $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
             send_user_notification($admin_notify_users,"resource_request",$eventdata,$applicationname . ": " . $lang["requestcollection"] . " - " . $ref,$admin_notify_message,$templatevars['requesturl'],$admin_mail_template,$templatevars);
             }
         }
-    
+
     if ($request_senduserupdates)
         {
         $userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
         $userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
         send_user_notification([$userref],"",$eventdata,$applicationname . ": " . $lang["requestsent"] . " - " . $ref,$userconfirmmessage,$baseurl . "/?c=" . $ref); // No type so mesage will always send
         }
-    
+
     # Increment the request counter for each resource in the requested collection
     ps_query("UPDATE resource SET request_count=request_count+1  
                WHERE ref IN(SELECT cr.resource FROM collection_resource cr WHERE cr.collection=? AND cr.resource = ref)", array("i",$ref));

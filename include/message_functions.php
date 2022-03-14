@@ -673,11 +673,12 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
     {
     global $userref;
     $notifytypes = [
-            "resource_request"  => "user_pref_resource_access_notifications",
-            "resource_share"    => "user_pref_resource_access_notifications",
-            "account_request"   => "user_pref_user_management_notifications",
-            "resource_change"   => "user_pref_resource_notifications",
-            "research_request"  => "user_pref_resource_access_notifications",
+            "resource_request"      => "user_pref_resource_access_notifications",
+            "resource_share"        => "user_pref_resource_access_notifications",
+            "account_request"       => "user_pref_user_management_notifications",
+            "resource_change"       => "user_pref_resource_notifications",
+            "research_request"      => "user_pref_resource_access_notifications",
+            "system_notification"   => "user_pref_system_management_notifications",
         ];
  
     $message_users = []; // Users that will be sent a message
@@ -726,7 +727,6 @@ function send_user_notification($users=[],string $type,array $eventdata=[],strin
             // Add the URL to the message if not already present
             $message = $message . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
             }
-            debug("BANG " . $template . " " . implode(",",$templatevars));
         send_mail($emails,$subject,$message,"","",$template,$templatevars);            
         }
     }

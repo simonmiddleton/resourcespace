@@ -2904,6 +2904,7 @@ function get_collection_comments($collection)
 function send_collection_feedback($collection,$comment)
     {
     global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
+    global $userref;
 
     $cinfo=get_collection($collection);    
     if($cinfo===false)
@@ -2973,12 +2974,8 @@ function send_collection_feedback($collection,$comment)
         send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body);
         }
 
-    if(!$send_email)
-        {
-        // Add a system notification message as well if the user has not 'opted out'
-        global $userref;
-        message_add($user["ref"],$lang["collectionfeedback"] . " - " . $cinfo["name"] . "<br />" . $body,"",(isset($userref))?$userref:$user['ref'],MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
-        }
+    // Add a system notification message as well
+    message_add($user["ref"],$lang["collectionfeedback"] . " - " . $cinfo["name"] . "<br />" . $body,"",(isset($userref))?$userref:$user['ref'],MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
     }
 
 /**

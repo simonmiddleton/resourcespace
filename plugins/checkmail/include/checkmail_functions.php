@@ -21,23 +21,27 @@ function getdecodevalue($message,$coding) {
 		return $message;
 	}
 
-function skip_mail($imap,$current_message,$note,$mail=false){
+function skip_mail($imap,$current_message,$note,$mail=false)
+    {
 	// display note, and clear process lock.
-	global $lang,$applicationname,$email_errors, $imap, $current_message,$email_errors_address,$email_from;
+	global $lang,$applicationname, $imap, $current_message, $baseurl;
 	
 	echo($note."\r\n");
 
-	if ($current_message!=""){	
+	if ($current_message!="")
+        {	
 		imap_setflag_full($imap, "$current_message", "\\Seen \\Flagged");
 		echo "Marked message as seen. It will be omitted on the next run.\r\n\r\n";
-	}
+	    }
 
-	if ($mail && $email_errors){
-		send_mail($email_errors_address,$applicationname." - ".$lang["checkmail_mail_skipped"],$note,$email_from);
-	}
+	if ($mail)
+        {
+        $adminusers = get_notification_users();
+        send_user_notification($adminusers,"system_notification",[],$applicationname." - ".$lang["checkmail_mail_skipped"],$note, $baseurl . "/plugins/emu/pages/setup.php");
+	    }
 	
 	clear_process_lock("checkmail");
 	
 	die();
-}
+    }
 

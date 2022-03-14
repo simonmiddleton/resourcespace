@@ -1110,13 +1110,11 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="", $files=array())
     {
     # Include footer
-    global $email_footer, $storagedir, $mime_type_by_extension;
+    global $email_footer, $storagedir, $mime_type_by_extension, $email_from;
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
     
-    debug("BANG email template: " . $html_template);
-    global $email_from;
     $from_system = false;
     if ($from=="")
         {
@@ -1126,7 +1124,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     if ($reply_to=="") {$reply_to=$email_from;}
     global $applicationname;
     if ($from_name==""){$from_name=$applicationname;}
-    
+
     #check for html template. If exists, attempt to include vars into message
     if ($html_template!="")
         {
@@ -1182,31 +1180,27 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 if(isset($lang["all__" . $html_template])){$template=$lang["all__" . $html_template];}
                 elseif(isset($lang[$html_template])){$template=$lang[$html_template];}
                 }
-            }       
-
+            }
 
         if (isset($template) && $template!="")
             {
-            debug("BANG email template: " . $template);
             preg_match_all('/\[[^\]]*\]/',$template,$test);
             foreach($test[0] as $variable)
-                {
-            
+                {            
                 $variable=str_replace("[","",$variable);
                 $variable=str_replace("]","",$variable);
-            
-                
+
                 # get lang variables (ex. [lang_mycollections])
                 if (substr($variable,0,5)=="lang_"){
                     global $lang;
                     $$variable=$lang[substr($variable,5)];
                 }
-                
+
                 # get server variables (ex. [server_REMOTE_ADDR] for a user request)
                 else if (substr($variable,0,7)=="server_"){
                     $$variable=$_SERVER[substr($variable,7)];
                 }
-                
+
                 # [embed_thumbnail] (requires url in templatevars['thumbnail'])
                 else if (substr($variable,0,15)=="embed_thumbnail"){
                     $thumbcid=uniqid('thumb');

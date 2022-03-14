@@ -11,7 +11,6 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         return true;
         }
 
-        debug("BANG " . __LINE__);
     $resources              = get_collection_resources($collection_ref);
     $resource_data          = get_resource_field_data($resources[0]); // in this case it should only have one resource
     $mapped_fields          = get_mapped_fields();
@@ -75,7 +74,6 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
     $manage_request_admin=array();  // Initialise the global array instead of attempting to unset it which does not work
 
-    debug("BANG " . __LINE__);
     return true;
     }
 
@@ -84,11 +82,9 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     global $manage_request_admin, $assigned_to_user, $admin_mail_template, $lang, $baseurl, $applicationname, 
            $request_query, $notify_manage_request_admin;
 
-           debug("BANG " . __LINE__);
     // Do not process this any further as this should only handle collection requests
     if(!$manage_collection_request)
         {
-            debug("BANG " . __LINE__);
         return false;
         }
 
@@ -179,8 +175,6 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                 $message = $lang['user_made_request'];
                 }
 
-
-                debug("BANG " . __LINE__);
             ps_query($request_query->sql, $request_query->parameters);
             $request = sql_insert_id();
 
@@ -193,7 +187,6 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                 "type"  => MANAGED_REQUEST,
                 "ref"   => $request,
                 ];
-                debug("BANG 1" . $templatevars["requesturl"]);
             send_user_notification($assigned_to,"resource_request",$eventdata,$subject,$message,$request_url,$admin_mail_template,$templatevars);
             }
         $notify_manage_request_admin = false;
@@ -220,11 +213,9 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     // RS own logic for dealing with requests.
     if(is_null($assigned_to_user))
         {
-            debug("BANG " . __LINE__);
         return false;
         }
 
-        debug("BANG " . __LINE__);
     // Create resource level request using SQL which was setup earlier in resource level hook or regular processing
     ps_query($request_query->sql, $request_query->parameters);
     $request = sql_insert_id();
@@ -243,8 +234,6 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 
     if($notify_manage_request_admin)
         {
-            debug("BANG HERE" . $request_url);
-            debug("BANG " . __LINE__ . $lang[$admin_mail_template]);
         send_user_notification([$assigned_to_user['ref']],"resource_request",$eventdata,$applicationname . ': ' . $lang['requestassignedtoyou'],$lang['requestassignedtoyoumail'] . ": " . $message,$request_url,$admin_mail_template,$templatevars);
         $notification_sent = true;
         }
@@ -273,10 +262,8 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
             }
         }
 
-        debug("BANG " . __LINE__);
     if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
         {
-            debug("BANG " . __LINE__);
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($resource_type_request_users,$admin_notify_users);
 
@@ -286,10 +273,8 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         foreach($notify_emails as $notify_email)
             {
             // These are not system users so emails must be sent
-debug("BANG 2" . $templatevars["requesturl"]);
             send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
             }
-debug("BANG 1" . $templatevars["requesturl"]);
         send_user_notification($notify_users,"resource_request",$eventdata,$applicationname . ': ' . $lang['user_made_request'],$admin_notify_message,$request_url,$admin_mail_template,$templatevars);
         }
    
