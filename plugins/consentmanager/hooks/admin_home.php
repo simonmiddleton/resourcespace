@@ -1,6 +1,6 @@
 <?php
 
-function HookConsentmanagerTeam_homeCustomteamfunction()
+function HookConsentmanagerAdmin_homeCustomAdminfunction()
     {
     global $lang,$baseurl_short;
     ?>

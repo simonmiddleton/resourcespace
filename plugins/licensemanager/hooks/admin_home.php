@@ -1,6 +1,6 @@
 <?php
 
-function HookLicensemanagerTeam_homeCustomteamfunction()
+function HookLicensemanagerAdmin_HomeCustomAdminFunction()
     {
     global $lang,$baseurl_short;
     ?>
