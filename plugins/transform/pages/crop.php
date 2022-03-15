@@ -95,6 +95,10 @@ $imversion = get_imagemagick_version();
 $orig_ext = $resource["file_extension"];
 hook('transformcropbeforegetsize');
 $originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+
+$usesize    = "scr";
+$useext     = "jpg";
+
 if(file_exists($originalpath))
     {
     // For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
@@ -111,8 +115,6 @@ if(file_exists($originalpath))
         $origsizes  = getimagesize($originalpath);        
         $origwidth  = $origsizes[0];
         $origheight = $origsizes[1];
-        $usesize    = "scr";
-        $useext     = "jpg";
         }
     }
 else
