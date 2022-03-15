@@ -49,6 +49,18 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
             }
         }
     
+    if($returnexisting)
+        {
+        // Check for an existing match. MySQL checks case insensitive so case is checked on this side.
+        $existingnode=ps_query("SELECT ref,name FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name));
+        if(count($existingnode) > 0)
+            {
+            foreach ($existingnode as $node)
+                {
+                if($node["name"]== $name){return (int)$node["ref"];}
+                }
+            }
+        }
     if(is_null($ref) && '' == $order_by)
         {
         $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);
@@ -110,19 +122,9 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
 
         // Handle node indexing for existing nodes
         remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), NULL);
-        add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
-        }
-
-    if($returnexisting)
-        {
-        // Check for an existing match. MySQL checks case insensitive so case is checked on this side.
-        $existingnode=ps_query("SELECT ref,name FROM node WHERE resource_type_field = ? AND name = ?", array("i",$resource_type_field,"s",$name));
-        if(count($existingnode) > 0)
+        if($resource_type_field_data["keywords_index"] == 1)
             {
-            foreach ($existingnode as $node)
-                {
-                if($node["name"]== $name){return (int)$node["ref"];}
-                }
+            add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
             }
         }
 
@@ -144,8 +146,10 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
 
         // Handle node indexing for new nodes
-        add_node_keyword_mappings(array('ref' => $new_ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
-
+        if($resource_type_field_data["keywords_index"] == 1)
+            {
+            add_node_keyword_mappings(array('ref' => $new_ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
+            }
         return $new_ref;
         }
     
@@ -2247,6 +2251,7 @@ function process_node_search_syntax_to_names(array $R, string $column)
  */
 function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
     {
+    debug("BANG save_non_fixed_list_field");
     /*
     # SAVING - DONE
     The saving functionality will ensure that upon saving a text field, the system will look for a node with a matching 
@@ -2281,7 +2286,7 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
                         ? []
                         : (empty($existing_resource_node) ? [] : [$existing_resource_node['ref']]);
 
-    $delete_unsused_nodes = false;
+    $delete_unused_nodes = false;
 
     // Remove existing data (when given an empty value)
     if($value === '')
@@ -2298,7 +2303,7 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
             {
             if(--$n_use_count === 0)
                 {
-                $delete_unsused_nodes = true;
+                $delete_unused_nodes = true;
                 break;
                 }
             }
@@ -2341,9 +2346,9 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
         {
         delete_resource_nodes($resource, $nodes_to_remove, false);
 
-        if($delete_unsused_nodes)
+        if($delete_unused_nodes)
             {
-            delete_unsused_non_fixed_list_nodes($resource_type_field);
+            delete_unused_non_fixed_list_nodes($resource_type_field);
             }
         }
 
@@ -2373,7 +2378,7 @@ print_r([
  * 
  * @param integer $resource_type_field Resource type field (metadata field) ID
  */
-function delete_unsused_non_fixed_list_nodes(int $resource_type_field)
+function delete_unused_non_fixed_list_nodes(int $resource_type_field)
     {
     if($resource_type_field <= 0)
         {

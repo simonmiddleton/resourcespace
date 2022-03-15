@@ -82,7 +82,15 @@ define('NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES', array_merge($TEXT_F
 // Array of fields that do not have fixed value options but data is stil stored using node/resource_node rather than resource_data. 
 // This is now the default for new fields and will include all fields once node development is complete.
 $NODE_MIGRATED_FIELD_TYPES = array(
-    FIELD_TYPE_DATE_RANGE                 
+    FIELD_TYPE_DATE_RANGE,
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME,
+    FIELD_TYPE_EXPIRY_DATE,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+    FIELD_TYPE_WARNING_MESSAGE,
 );
 
 $NODE_FIELDS=array_merge($FIXED_LIST_FIELD_TYPES,$NODE_MIGRATED_FIELD_TYPES);
