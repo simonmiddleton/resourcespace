@@ -54,13 +54,6 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         }
     }
 
-// Check if upload should be disabled because the filestore location is indexed and browseable
-$cfb = check_filestore_browseability();
-if(!$cfb['index_disabled'])
-    {
-    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
-    }
-
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust
@@ -899,6 +892,13 @@ elseif ($upload_no_file && getval("createblank","")!="")
     redirect($redirecturl);
     exit();
 	}
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if(!$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
 
 $headerinsert.="
 <link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />";
