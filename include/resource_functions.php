@@ -2258,7 +2258,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true)
     {
-    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username,$userref;
+    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username,$userref, $NODE_MIGRATED_FIELD_TYPES;
     
     $resource_data = get_resource_data($resource);
     if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -2270,16 +2270,15 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     // accept shortnames in addition to field refs
     if(!is_numeric($field))
         {
-        $field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE name = '" . escape_check($field) . "'", '', "schema");
+        $field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE name = ?", ["s",$field], '', "schema");
         }
 
     // Fetch some information about the field
-    $fieldinfo = sql_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = '$field'", "schema");
+    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = ?",["i",$field], "schema");
 
     if(0 == count($fieldinfo))
         {
         $errors[] = "No field information about field ID '{$field}'";
-
         return false;
         }
     else
@@ -2369,9 +2368,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     # Fetch previous value
-    $existing = sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
+    //$existing = sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
+    $existing = get_data_by_field($resource,$field);
 
-    if (in_array($fieldinfo['type'], $NODE_FIELDS))
+    if (!in_array($fieldinfo['type'], $NODE_MIGRATED_FIELD_TYPES))
         {
         $newvalues_translated = $newvalues;
         $newvalues = array();
@@ -2395,10 +2395,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
                         {
                         $nodes_to_add[]=$parent_node_ref;
-                        if (!in_array(mb_strtolower(i18n_get_translated($parent_node_name)), $newvalues_translated))
-                            {
-                            $value = $parent_node_name . "," . $value; 
-                            }
                         }
                     }
                 }
@@ -2416,6 +2412,8 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $current_field_nodes = get_resource_nodes($resource,$field);
         $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
         $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
+        $keep_nodes = array_diff($current_field_nodes,$removed_nodes);
+        $all_new_nodes = array_merge($added_nodes,$keep_nodes);
 
         # Update resource_node table
         db_begin_transaction("update_field_{$field}");
@@ -2434,7 +2432,15 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             }
 
         db_end_transaction("update_field_{$field}");
-        $value = implode(",",$newvalues);
+        if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE)
+            {
+            $treetext_arr = get_tree_strings($all_new_nodes);
+            $value = implode(",",$treetext_arr);
+            }
+        else
+            {
+            $value = implode(",",$newvalues);
+            }
         }
     else
         {
@@ -2443,35 +2449,32 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             // Nothing to do
             return true;
             }
-        if ($fieldinfo["keywords_index"])
-            {
-            $is_html=($fieldinfo["type"]==8);	
-            # If there's a previous value, remove the index for those keywords
-            if (strlen($existing)>0)
-                {
-                remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
-                }
+        
+        //TODO Check if is_html neds to be checked when indexing nodes
+        // if ($fieldinfo["keywords_index"])
+        //     {
+        //     $is_html=($fieldinfo["type"]==FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);	
+        //     # If there's a previous value, remove the index for those keywords            
+        //     if (strlen($existing)>0)
+        //         {
+        //         //remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
+        //         }
+        //     }
 
-            // Index the new value
-            add_keyword_mappings($resource,i18n_get_indexable($value),$field,$fieldinfo["partial_index"],false,'','',$is_html);
-            }
+        // Remove any existing node IDs for this non-fixed list field (there should only be one)
+        $current_field_nodes = get_resource_nodes($resource,$field);
+        debug("BANG removing old nodes: " . implode(",",$current_field_nodes));
+        delete_resource_nodes($resource,$current_field_nodes, false);
 
-        # Delete the old value (if any) and add a new value.
-        sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
-
-        $value = escape_check($value);
-
-        # write to resource_data if not an empty value
-        if($value !== '')
-            {
-            sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
-            }
+        debug("BANG call set_node() for field #" .$field . " New val - '" . $value . "'");
+        $newnode = set_node(null, $field, $value, null, null);
+        add_resource_nodes($resource,[$newnode], false, false);
         }
 
     # If this is a 'joined' field we need to add it to the resource column
     $joins = get_resource_table_joins();
 
-   if(in_array($fieldinfo['ref'],$joins))
+    if(in_array($fieldinfo['ref'],$joins))
 		{
 		if ($value!="null")
 			{
@@ -2485,9 +2488,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 			}
 		else
 			{
-			$truncated_value="null";
+			$truncated_value = NULL;
 			}		
-		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . escape_check($truncated_value) . "'") ." where ref='" . escape_check($resource) . "'");
+		ps_query("UPDATE resource SET field" . intval($field) . " = ? WHERE ref = ?",["s",$truncated_value,"i",$resource]);
+        //sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . escape_check($truncated_value) . "'") ." where ref='" . escape_check($resource) . "'");
 		}			
 	
     # Add any onchange code
@@ -2499,6 +2503,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     // Log this update
     if ($log && $value != $existing)
         {
+        debug("BANG logging change from $existing to $value");
         resource_log($resource,LOG_CODE_EDITED,$field,"",$existing,unescape($value));
         }
     
