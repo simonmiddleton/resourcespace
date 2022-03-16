@@ -8,8 +8,17 @@ $ref=getvalescaped("ref","",true);
 $collection=getvalescaped("collection","",true);
 
 # Fetch collection data
-$cinfo=get_collection($collection);if ($cinfo===false) {exit("Collection not found.");}
+$cinfo=get_collection($collection);
+if($cinfo === false)
+    {
+    exit($lang['error-collectionnotfound']);
+    }
+
 $commentdata=get_collection_resource_comment($ref,$collection);
+if($commentdata === false)
+    {
+    exit($lang['resourcenotfound']);
+    }
 $comment=$commentdata["comment"];
 $rating=$commentdata["rating"];
 

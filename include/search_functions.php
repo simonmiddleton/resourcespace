@@ -1119,7 +1119,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             $sql_filter .= $editable_filter;
             }
         }
-
     return $sql_filter;
     }
 
@@ -1747,7 +1746,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             // if using fetchrows some results may just be == 0 - remove from results array
             if ($results[$n]==0) 
                 {
-                unset($results[$n]); 
+                //unset($results[$n]); 
                 continue;
                 }
 
@@ -2059,6 +2058,16 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     }
 
 
+/**
+ * Resolve keyword
+ * 
+ * @param string $keyword   The keyword to resolve
+ * @param bool   $create    If keyword not found, should we create it instead?
+ * @param bool   $normalize Should we normalize the keyword before resolving?
+ * @param bool   $stem      Should we use the keywords' stem when resolving?
+ * 
+ * @return int|bool Returns the keyword reference for $keyword, or false if no such keyword exists.
+ */
 function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     {
     debug_function_call("resolve_keyword", func_get_args());
@@ -2080,7 +2089,6 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-    # Returns the keyword reference for $keyword, or false if no such keyword exists.
     $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
     if ($return===false && $create)
         {

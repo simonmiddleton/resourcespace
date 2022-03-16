@@ -127,8 +127,8 @@ $links_trail = array(
         'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow.php"
     ),
     array(
-        'title' => $lang["rse_workflow_manage_states"],
-        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow_states.php"
+        'title' => $lang["rse_workflow_manage_actions"],
+        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow_actions.php"
     ),
     array(
         'title' => $lang["rse_workflow_action_edit_action"]

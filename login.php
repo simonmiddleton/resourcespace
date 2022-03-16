@@ -4,6 +4,11 @@ include_once "include/login_functions.php";
 
 $url=getval("url","index.php");
 
+if (is_array($url))
+    {
+    $url = 'index.php';
+    }
+
 $modifiedurl=hook("modifyloginurl","",array($url));
 if ($modifiedurl){$url=$modifiedurl;}
 
@@ -68,6 +73,19 @@ $ulockouts=sql_value("select count(*) value from user where username='" . $usern
 if ($lockouts>0 || $ulockouts>0)
 	{
 	$error=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+    if ($ulockouts>0){$log_message='Account locked';}
+    else {$log_message = 'IP address locked';}
+    $userref = get_user_by_username($username);
+    log_activity(
+        $log_message,                       # Note
+        LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
+        $ip,                                # Value New
+        ($userref!="" ? "user"    : NULL),  # Remote Table
+        ($userref!="" ? "last_ip" : NULL),  # Remote Column
+        ($userref!="" ? $userref  : NULL),  # Remote Ref
+        NULL,                               # Ref Column Override
+        NULL,                               # Value Old
+        ($userref!="" ? $userref : NULL));  # User
 	}
 
 # Process the submitted login
@@ -192,7 +210,7 @@ if (!hook("replaceloginform"))
 
         <?php $header_img_src = get_header_image(); ?>
         <div id="LoginHeader">
-            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg"></img>
+            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg">
         </div>
         
         <h1><?php echo text("welcomelogin")?></h1>

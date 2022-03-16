@@ -17,8 +17,8 @@ function HookAction_datesCronCron()
     global $baseurl,$baseurl_short;
 
     $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
-	echo "action_dates: Running cron tasks".$LINE_END;
-    
+	echo "action_dates: Running cron tasks on ".date("Y-m-d h:i:s").$LINE_END;
+
     // Check for correct day of week
     if (!in_array(date("w"),$action_dates_weekdays)) {echo "action_dates: not correct weekday to run".$LINE_END; return true;}
 
@@ -33,8 +33,12 @@ function HookAction_datesCronCron()
 
 	$allowable_fields=ps_array("select ref as value from resource_type_field where type in (4,6,10)",[], "schema");
     $email_state_refs    = array();   # List of refs which are due to undergo state change (including full deletion) in n days 
+    $email_state_days    = array();   # List of days due to undergo state change (including full deletion) in n days 
     $email_restrict_refs = array();   # List of refs which are due to be restricted in n days
+    $email_restrict_days = array();   # List of days due to be restricted in n days
     $state_change_notify = array();   # List of refs whose state has changed (excluding full deletion) 
+
+    $action_date_current = date_create(date("Y-m-d")); # Date of this run
 
     # Process resource access restriction if a restriction date has been configured
     # The restriction date will be processed if it is full date or a partial date because either will yield viable timestamps
@@ -58,10 +62,13 @@ function HookAction_datesCronCron()
 		foreach ($restrict_resources as $resource)
 			{
 			$ref=$resource["resource"];
+
+            $restrict_date_target = date_create($resource["value"]);   # Value of the restrict date from metadata
 			
-			if (time()>=strtotime($resource["value"]))		
+            # Candidate restriction date reached or passed 
+			if ($action_date_current >= $restrict_date_target)		
 				{		
-				# Restrict access to the resource as date has been reached
+				# Restrict access to the resource
 				$existing_access=ps_value("select access as value from resource where ref=?",["i",$ref],"");
 				if($existing_access==0) # Only apply to resources that are currently open
 					{
@@ -74,11 +81,14 @@ function HookAction_datesCronCron()
                 {
                 # Due to restrict in n days
                 if($action_dates_email_admin_days!="") # Set up email notification to admin of expiring resources
-                    {
-                    $action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
-                    if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
+                {
+                    $restrict_interval = date_diff($action_date_current, $restrict_date_target);
+                    $days_before_restrict = (int) $restrict_interval->format('%R%a');
+                    # Check due number of days within range for notification
+                    if ($days_before_restrict <= $action_dates_email_admin_days)		
                         {  			
-                        $email_restrict_refs[]=$ref;		
+                        $email_restrict_refs[]=$ref;
+                        $email_restrict_days[]=$days_before_restrict;		
                         }
                     }
                 }
@@ -148,9 +158,11 @@ function HookAction_datesCronCron()
         foreach($candidate_resources as $resource)
             {
             $ref = $resource['resource'];
+
+            $action_date_target = date_create($resource["value"]);   # Value of the restrict date from metadata
             
             # Candidate deletion date reached or passed 
-            if (time() >= strtotime($resource['value']))
+            if ($action_date_current >= $action_date_target)
                 {
                 if(!$change_archive_state)
                     {
@@ -187,10 +199,12 @@ function HookAction_datesCronCron()
                 # Due to be deleted (or ortherwise actioned) in n days
                 if($action_dates_email_admin_days!="") # Set up email notification to admin of resources changing state
                     {
-                    $action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
-                    if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
+                    $action_interval = date_diff($action_date_current, $action_date_target);
+                    $days_before_action = (int) $action_interval->format('%R%a');
+                    if ($days_before_action <= $action_dates_email_admin_days)		
                         {  			
-                        $email_state_refs[]=$ref;		
+                        $email_state_refs[]=$ref;	
+                        $email_state_days[]=$days_before_action;		
                         }
                     }
                 }
@@ -219,11 +233,22 @@ function HookAction_datesCronCron()
     $subject_combined="";
 
     $subject_state = $lang['action_dates_email_subject_state'];
-    $message_state=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_state']) . "\r\n";
+    if ( count($email_state_days)==0 || (min($email_state_days) == max($email_state_days)) ) {
+        $message_state=str_replace("%%DAYS",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_state'])."\r\n";
+    }
+    else {
+        $message_state=str_replace("%%DAYSMIN",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_range_state']);
+        $message_state=str_replace("%%DAYSMAX",(count($email_state_days)>0 ? max($email_state_days) : $action_dates_email_admin_days),$message_state) . "\r\n";
+    }
 
     $subject_restrict = $lang['action_dates_email_subject_restrict'];
-    $message_restrict=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text_restrict']) . "\r\n";
-    
+    if ( count($email_restrict_days)==0 || (min($email_restrict_days) == max($email_restrict_days)) ) {
+        $message_restrict=str_replace("%%DAYS",(count($email_restrict_days)>0 ? min($email_restrict_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_restrict'])."\r\n";
+    }
+    else {
+        $message_restrict=str_replace("%%DAYSMIN",(count($email_restrict_days)>0 ? min($email_restrict_days) : $action_dates_email_admin_days),$lang['action_dates_email_range_restrict']);
+        $message_restrict=str_replace("%%DAYSMAX",(count($email_restrict_days)>0 ? max($email_restrict_days) : $action_dates_email_admin_days),$message_restrict) . "\r\n";
+    }
 
     # Determine how and to whom notifications are to be sent
     $admin_notify_emails = array();
@@ -253,16 +278,29 @@ function HookAction_datesCronCron()
         {
         # Notification is for the resources whose dates are within the specified number of days
         $subject_combined = $lang['action_dates_email_subject'];
-        $message_combined=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text']) . "\r\n";
+
+        $action_combined_days = array_merge($email_restrict_days,$email_state_days);
+
+        if ( min($action_combined_days) == max($action_combined_days) ) {
+            $message_combined=str_replace("%%DAYS",min($action_combined_days),$lang['action_dates_email_text']) . "\r\n";
+        }
+        else {
+            $message_combined=str_replace("%%DAYSMIN",min($action_combined_days),$lang['action_dates_email_range']);
+            $message_combined=str_replace("%%DAYSMAX",max($action_combined_days),$message_combined) . "\r\n";
+        }
+
         $notification = $message_combined; 
         $notification_restrict = $message_restrict; 
         $notification_state = $message_state; 
 
+        # Reconstruct combined message for purposes of emailing 
         $message_combined = $message_restrict . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_restrict_refs) . "\r\n";
         $message_combined.= $message_state . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_state_refs) . "\r\n";
+        $templatevars['message']=$message_combined;
+
+        # Construct url lists for massage_add function
         $url_restrict = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_restrict_refs);
         $url_state = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_state_refs);
-        $templatevars['message']=$message_combined;
 
         foreach($admin_notify_emails as $admin_notify_email)
             {

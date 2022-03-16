@@ -306,7 +306,7 @@ if('' == $noattach)
         {
         // greatest() is used so the value is taken from the hit_count column in the event that new_hit_count
         // is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-        sql_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = '{$ref}'");
+        ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?", ['i', $ref]);
         }
     
     // We compute a file name for the download.

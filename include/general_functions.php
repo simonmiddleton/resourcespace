@@ -645,58 +645,76 @@ function check_site_text_custom($page,$name)
  */
 function save_site_text($page,$name,$language,$group)
     {
-    global $lang;
-
-    if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
+    global $lang,$custom,$newcustom,$defaultlanguage,$newhelp;
     
-    global $custom,$newcustom,$defaultlanguage;
-    
+    if(!is_int_loose($group))
+        {
+        $group = NULL;
+        }
+    $text = getval("text","");
     if($newcustom)
         {
-        $test=sql_query("select * from site_text where page='$page' and name='$name'");
-        if (count($test)>0){return true;}
+        $params = ["s",$page,"s",$name];
+        $test=ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=?",$params);
+        if (count($test)>0)
+            {
+            return true;
+            }
         }
-    if ($custom==""){$custom=0;}
+    if (trim($custom)=="")
+        {
+        $custom=0;
+        }
     if (getval("deletecustom","")!="")
         {
-        sql_query("delete from site_text where page='$page' and name='$name'");
+        $params = ["s",$page,"s",$name];
+        ps_query("DELETE FROM site_text WHERE page=? AND name=?",$params);
         }
     elseif (getval("deleteme","")!="")
         {
-        sql_query("delete from site_text where page='$page' and name='$name' and specific_to_group $gc $g");
+        $params = ["s",$page,"s",$name,"i",$group];
+        ps_query("DELETE FROM site_text WHERE page=? AND name=? AND specific_to_group <=> ?",$params);
         }
     elseif (getval("copyme","")!="")
         {
-        sql_query("insert into site_text(page,name,text,language,specific_to_group,custom) values ('$page','$name','" . getvalescaped("text","") . "','$language',$g,'$custom')");
+        $params = ["s",$page,"s",$name,"s",$text,"s",$language,"i",$group,"i",$custom];
+        ps_query("INSERT INTO site_text(page,name,text,language,specific_to_group,custom) VALUES (?,?,?,?,?,?)",$params);
         }
     elseif (getval("newhelp","")!="")
         {
-        global $newhelp;
-        $check=sql_query("select * from site_text where page = 'help' and name='$newhelp'");
-        if (!isset($check[0])){
-            sql_query("insert into site_text(page,name,text,language,specific_to_group) values ('$page','$newhelp','','$language',$g)");
+        $params = ["s",$newhelp];
+        $check=ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text where page = 'help' and name=?",$params);
+        if (!isset($check[0]))
+            {
+            $params = ["s",$page,"s",$newhelp,"s","","s",$language,"i",$group];
+            ps_query("INSERT INTO site_text(page,name,text,language,specific_to_group) VALUES (?,?,?,?,?)",$params);
             }
-        }   
+        }
     else
         {
-        $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
-        if (count($text)==0)
+        $params = ["s",$page,"s",$name,"s",$language,"i",$group];
+        $curtext=ps_query("SELECT ref,page,name,text,language,specific_to_group,custom FROM site_text WHERE page=? AND name=? AND language=? AND specific_to_group <=> ?",$params);
+        if (count($curtext)==0)
             {
             # Insert a new row for this language/group.
-            sql_query("insert into site_text(page,name,language,specific_to_group,text,custom) values ('$page','$name','$language',$g,'" . getvalescaped("text","") . "','$custom')");
-            log_activity($lang["text"],LOG_CODE_CREATED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
+            $params = ["s",$page,"s",$name,"s",$text,"s",$language,"i",$group,"i",$custom];
+            ps_query("INSERT INTO site_text(page,name,text,language,specific_to_group,custom) VALUES (?,?,?,?,?,?)",$params);
+            log_activity($lang["text"],LOG_CODE_CREATED,$text,'site_text',null,"'{$page}','{$name}','{$language}',{$group}");
             }
         else
             {
             # Update existing row
-            sql_query("update site_text set text='" . getvalescaped("text","") . "' where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
-            log_activity($lang["text"],LOG_CODE_EDITED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
+            $params = ["s",$text,"s",$page,"s",$name,"s",$language,"i",$group];
+            ps_query("UPDATE site_text SET text=? WHERE page=? AND name=? AND language=? AND specific_to_group <=> ?",$params);
+            log_activity($lang["text"],LOG_CODE_EDITED,$text,'site_text',null,"'{$page}','{$name}','{$language}',{$group}");
             }
-                        
-                # Language clean up - remove all entries that are exactly the same as the default text.
-                $defaulttext=sql_value ("select text value from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g","");
-                sql_query("delete from site_text where page='$page' and name='$name' and language!='$defaultlanguage' and trim(text)='" . trim(escape_check($defaulttext)) . "'");
-                
+
+        # Language clean up - remove all entries that are exactly the same as the default text.
+        $params = ["s",$page,"s",$name,"s",$defaultlanguage,"i",$group];
+        $defaulttext=ps_value("SELECT text value FROM site_text WHERE page=? AND name=? AND language=? AND specific_to_group<=>?",$params,"");
+
+        $params = ["s",$page,"s",$name,"s",$defaultlanguage,"s",trim($defaulttext)];
+        ps_query("DELETE FROM site_text WHERE page=? AND name=? AND language != ? AND trim(text)=?",$params);
         }
 
     // Clear cache
@@ -2231,7 +2249,7 @@ function error_alert($error, $back = true, $code = 403)
         jQuery(document).ready(function()
             {
             ModalClose();
-            styledalert('" . $lang["error"] . "', '$error');
+            styledalert('" . $lang["error"] . "', '" . htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401) . "');
             " . ($back ? "window.setTimeout(function(){history.go(-1);},2000);" : "") ."
             });
         </script>";
@@ -4538,6 +4556,42 @@ function get_system_status()
         }
 
 
+    // Check configured utility paths
+    $system_utilities = [
+        'im-convert' => 'imagemagick_path',
+        'im-identify' => 'imagemagick_path',
+        'im-composite' => 'imagemagick_path',
+        'im-mogrify' => 'imagemagick_path',
+        'ghostscript' => 'ghostscript_path',
+        'ffmpeg' => 'ffmpeg_path',
+        'ffprobe' => 'ffmpeg_path',
+        'exiftool' => 'exiftool_path',
+        'php' => 'php_path',
+        'python' => 'python_path',
+        'archiver' => 'archiver_path',
+        'fits' => 'fits_path',
+    ];
+    $missing_utility_paths = [];
+    foreach($system_utilities as $name => $path_var_name)
+        {
+        if(isset($GLOBALS[$path_var_name]) && get_utility_path($name) === false)
+            {
+            $missing_utility_paths[$name] = $path_var_name;
+            }
+        }
+    if(!empty($missing_utility_paths))
+        {
+        $return['results']['system_utilities'] = [
+            'status' => 'FAIL',
+            'info' => 'Unable to get utility path',
+            'affected_utilities' => array_unique(array_keys($missing_utility_paths)),
+            'affected_utility_paths' => array_unique(array_values($missing_utility_paths)),
+        ];
+
+        return $return;
+        }
+
+
     // Check database connectivity.
     $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
     if ($check <= 0)
@@ -4616,25 +4670,15 @@ function get_system_status()
 
 
     // Check filestore folder browseability
-    $GLOBALS['use_error_exception'] = true;
-    try
+    $cfb = check_filestore_browseability();
+    if(!$cfb['index_disabled'])
         {
-        $output = file_get_contents($GLOBALS['baseurl'] . '/filestore');
-        if(strpos($output, 'Index of') !== false)
-            {
-            $return['results']['filestore_indexed'] = [
-                'status' => 'FAIL',
-                'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
-            ];
-
-            return $return;
-            }
+        $return['results']['filestore_indexed'] = [
+            'status' => 'FAIL',
+            'info' => $cfb['info'],
+        ];
+        return $return;
         }
-    catch (Exception $e)
-        {
-        // Error accesing filestore URL - this is as expected
-        }
-    unset($GLOBALS['use_error_exception']);
 
 
     // Check write access to sql_log
@@ -4863,4 +4907,58 @@ function try_unlink($deletefile)
         }        
     unset($GLOBALS["use_error_exception"]);
     return $deleted;
+    }
+
+
+/**
+ * Check filestore folder browseability.
+ * For security reasons (e.g data breach) the filestore location shouldn't be indexed by the web server (in Apache2 - disable autoindex module)
+ * 
+ * @return array Returns data structure with following keys:-
+ *               - status: An end user status of OK/FAIL
+ *               - info: Any extra relevant information (aimed at end users)
+ *               - filestore_url: ResourceSpace URL to the filestore location
+ *               - index_disabled: PHP bool (used by code). FALSE if web server allows indexing/browsing the filestore, TRUE otherwise
+ */
+function check_filestore_browseability()
+    {
+    $filestore_url = $GLOBALS['storageurl'] ?? "{$GLOBALS['baseurl']}/filestore";
+    $timeout = 5;
+    $return = [
+        'status' => $GLOBALS['lang']['status-fail'],
+        'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
+        'filestore_url' => $filestore_url,
+        'index_disabled' => false,
+    ];
+
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $filestore_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+        $output = curl_exec($ch);
+        $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);        
+        }
+    catch (Throwable $t)
+        {
+        $return['status'] = $GLOBALS['lang']['unknown'];
+        $return['info'] = $GLOBALS['show_error_messages'] && $GLOBALS['show_detailed_errors'] ? $t->getMessage() : '';
+        return $return;
+        }
+    unset($GLOBALS['use_error_exception']);
+
+    if($response_status_code !== 200 || mb_stripos($output, 'Index of') === false)
+        {
+        $return['status'] = $GLOBALS['lang']['status-ok'];
+        $return['info'] = '';
+        $return['index_disabled'] = true;
+        }
+
+    return $return;
     }

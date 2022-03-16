@@ -8,7 +8,7 @@ if($resetvalues!="")
     {
     if(substr($resetvalues,0,2) == "3D")
         {
-        // Email Smay have encoded the = character
+        // Email may have encoded the = character
         $resetvalues = substr($resetvalues,2);
         }
         
@@ -16,7 +16,7 @@ if($resetvalues!="")
     $resetuserref=substr($resetvalues,0,$rplength-15);
     $resetkey=substr($resetvalues,$rplength-15);
     $valid_reset_link=false;
-	$resetvaliduser=sql_query("select ref, username, email, fullname, usergroup, password, password_reset_hash, last_active from user where ref='" . escape_check($resetuserref)  . "'",""); 
+	$resetvaliduser = ps_query("SELECT ref, username, email, fullname, usergroup, password, password_reset_hash, last_active FROM user WHERE ref = ?", ["i", $resetuserref]);
 	if(count($resetvaliduser)==1)
 		{
 		$resetuser=$resetvaliduser[0];
@@ -117,7 +117,7 @@ else
     include '../../include/login_background.php';
     ?>
     <div id="LoginHeader">
-        <img src="<?php echo get_header_image(); ?>" class="LoginHeaderImg"></img>
+        <img src="<?php echo get_header_image(); ?>" class="LoginHeaderImg">
     </div>
     <?php
     }
@@ -128,20 +128,21 @@ else
         }
 	
     if (!hook("replaceuserpreferencesheader")) { ?>
-	<h1><?php echo $lang["changeyourpassword"]?></h1>
-	<?php } ?> <!-- End hook("replaceuserpreferencesheader") -->
+	<p>
+        <h1><?php echo $lang["changeyourpassword"]?></h1>
+        <?php } ?> <!-- End hook("replaceuserpreferencesheader") -->
 
-    <p><?php 
-	if($password_reset_mode && $last_active=="")
-		{
-		// The user is a new account setting a password for the first time
-		echo text("introtext_new");
-		}
-	else
-		{
-		echo text("introtext");
-		}
-		?>
+        <?php 
+        if($password_reset_mode && $last_active=="")
+            {
+            // The user is a new account setting a password for the first time
+            echo text("introtext_new");
+            }
+        else
+            {
+            echo text("introtext");
+            }
+            ?>
 	</p>
 
 	<?php if (getval("expired","")!="") { ?><div class="FormError">!! <?php echo $lang["password_expired"]?> !!</div><?php } ?>
@@ -168,11 +169,6 @@ else
 	else
 	    {?>
 	    <input type="hidden" name="rp" id="resetkey" value="<?php echo htmlspecialchars($resetuserref) . htmlspecialchars($resetkey)  ?>" />    
-	    <div class="Question">
-	    <label for="username"><?php echo $lang["username"]?></label>
-	    <div class="fixed" ><?php echo $username ?></div>
-	    <div class="clearerleft"> </div>
-	    </div>
 	    <?php
 	    }
 	    ?>

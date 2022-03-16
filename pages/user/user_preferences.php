@@ -230,23 +230,21 @@ include "../../include/header.php";
 			$page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests'], $enable_disable_options, 300, '', true,$statesjs);
 			$page_def[] = config_add_checkbox_select('actions_approve_hide_groups',$lang['actions_approve_hide_groups'],get_usergroups(true,'',true),true,300,1,true,null,!$actions_account_requests);
 			}
-			
-		
-			$statesjs = "if(jQuery(this).val()==1){
-						jQuery('#question_actions_notify_states').slideDown();
-						jQuery('#question_actions_resource_types_hide').slideDown();
-						}
-					else {
-						jQuery('#question_actions_notify_states').slideUp();
-						jQuery('#question_actions_resource_types_hide').slideUp();
-						}";
-		$page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true,$statesjs);
-										
-		$page_def[] = config_add_checkbox_select('actions_notify_states',$lang['actions_notify_states'],$available_archive_states,true,300,1,true,null,!$actions_resource_review);
-		$rtypes=get_resource_types();
-		foreach($rtypes as $rtype)
-			{$actionrestypes[$rtype["ref"]]=$rtype["name"];}
-		$page_def[] = config_add_checkbox_select('actions_resource_types_hide',$lang['actions_resource_types_hide'],$actionrestypes,true,300,1,true,null,!$actions_resource_review);
+
+        // Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
+        // Also only show this option if it is disabled
+        get_config_option($userref,'actions_resource_review', $legacy_resource_review, true);
+        if(!$legacy_resource_review)
+            {
+            $page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true);
+            }
+		$page_def[] = config_add_checkbox_select('actions_notify_states',$lang['actions_notify_states'],$available_archive_states,true,300,1,true,null);
+        $rtypes=get_resource_types();       
+        foreach($rtypes as $rtype)
+            {
+            $actionrestypes[$rtype["ref"]]=$rtype["name"];
+            }
+		$page_def[] = config_add_checkbox_select('actions_resource_types_hide',$lang['actions_resource_types_hide'],$actionrestypes,true,300,1,true,null);
 		
 		$page_def[] = config_add_boolean_select('actions_modal', $lang['actions_modal'], $enable_disable_options, 300, '', true);
 		

@@ -19,13 +19,21 @@ $original_user=getval("user","");
 # Authenticate as 'resourceconnect' user.
 global $resourceconnect_user; # Which user to use for remote access?
 if ($resourceconnect_user == "" || !isset($resourceconnect_user))
-{
-echo $lang["resourceconnect_user_not_configured"];
-exit();
-}
-$userdata=validate_user("u.ref='$resourceconnect_user'");
-setup_user($userdata[0]);
+    {
+    echo $lang["resourceconnect_user_not_configured"];
+    exit();
+    }
 
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref = ?";
+$user_select_sql->parameters = ["i",$resourceconnect_user];
+$user_data = validate_user($user_select_sql);
+if(!is_array($user_data) || !isset($user_data[0]))
+    {
+    echo $lang["resourceconnect_user_not_configured"];
+    exit();
+    }
+setup_user($user_data[0]);
 
 $restypes="";
 # Resolve resource types

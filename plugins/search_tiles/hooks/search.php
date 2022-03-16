@@ -2,7 +2,7 @@
 
 function HookSearch_tilesSearchReplacedisplayselector($search="",$collections="")
     {
-    if ((substr($search,0,11)!="!collection") && ($collections!="") && is_array($collections))
+    if ((substr($search,0,11)!="!collection") && ($collections!="") && is_array($collections) && (count($collections)>0))
         {return true;}
     return false;
     }

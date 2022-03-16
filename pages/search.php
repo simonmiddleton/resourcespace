@@ -1011,7 +1011,8 @@ if($responsive_ui)
         }
      ?></div>
     <?php
-    if(!hook('replacedisplayselector','',array($search,(isset($collections)?$collections:""))))
+    $replacedisplayselector=hook('replacedisplayselector','',array($search,(isset($collections)?$collections:"")));
+    if(!$replacedisplayselector)
         {
         ?>
         <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">

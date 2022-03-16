@@ -33,8 +33,11 @@ function google_oauth_is_authenticated()
         }
 
     $goauth_cookie = '' != $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] ? $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] : '';
-    $user_data     = validate_user("session = '" . escape_check($goauth_cookie) . "'");
 
+    $user_select_sql = new PreparedStatementQuery();
+    $user_select_sql->sql = "u.session = ?";
+    $user_select_sql->parameters = ["s",$goauth_cookie];
+    $user_data = validate_user($user_select_sql);
     if(false === $user_data)
         {
         return false;
@@ -75,11 +78,13 @@ function google_oauth_signout()
     global $google_oauth_client_id;
 
     $goauth_cookie = isset($_COOKIE[GOOGLE_OAUTH_COOKIE_NAME]) ? $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] : '';
-    $user_data     = validate_user("session = '" . escape_check($goauth_cookie) . "'");
-
+    $user_select_sql = new PreparedStatementQuery();
+    $user_select_sql->sql = "u.session = ?";
+    $user_select_sql->parameters = ["s",$goauth_cookie];
+    $user_data = validate_user($user_select_sql);
     if(false === $user_data)
         {
-        return;
+        return false;
         }
 
     $user_ref = isset($user_data[0]['ref']) ? escape_check($user_data[0]['ref']) : 0;

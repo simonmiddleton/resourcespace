@@ -53,6 +53,7 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
+
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust
@@ -68,10 +69,19 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     $server -> setUploadDir($targetDir);
     // Create target dir
     if (!file_exists($targetDir))
-        {     		
-        mkdir($targetDir,0777,true);
+        {
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            mkdir($targetDir,0777,true);
+            }
+        catch (Exception $e)
+            {
+            // Ignore
+            }
+        unset($GLOBALS["use_error_exception"]);
         }
-        
+
     $response = $server->serve();
     // Extra check added to ensure URL uses $baseurl. Required due to reported issues with some reverse proxy configurations
     $tuslocation = $response->headers->get('location');
@@ -418,13 +428,16 @@ if ($processupload)
     debug("upload_batch - received file from user '" . $username . "',  filename: '" . $upfilename . "'");
         
     # Work out the extension
-    $extension=explode(".",$upfilename);
-    $extension=trim(strtolower($extension[count($extension)-1]));
+    $parts=explode(".",$upfilename);
+    $origextension=trim($parts[count($parts)-1]);
+    $extension=strtolower($origextension);
+    if(count($parts) > 1){array_pop($parts);}
+    $filenameonly = implode('.', $parts);
 
      // Clean the filename
     $origuploadedfilename= escape_check($upfilename);
-    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode(pathinfo($upfilename, PATHINFO_FILENAME)));
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($extension)) ? ".{$extension}" : '');
+    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
 
     # Banned extension?
     global $banned_extensions;
@@ -880,6 +893,13 @@ elseif ($upload_no_file && getval("createblank","")!="")
     exit();
 	}
 
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if(!$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
+
 $headerinsert.="
 <link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />";
 
@@ -1055,7 +1075,7 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
-        limit: <?php echo ($cachestore == "apcu") ? "2" : "2"; ?>,
+        limit: <?php echo ($cachestore == "apcu") ? "5" : "2"; ?>,
         removeFingerprintOnSuccess: true,
         <?php
         if(trim($upload_chunk_size) != "")
@@ -1443,6 +1463,9 @@ function postUploadActions()
         return;
         }
     
+    rscompleted = [];
+    processerrors = [];
+
     CentralSpaceHideProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
