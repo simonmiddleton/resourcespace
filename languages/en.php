@@ -1802,7 +1802,7 @@ $lang["writeaccess_sql_log"]="Write access to SQL log:";
 $lang["writeaccess_debug_log"]="Write access to debug log:";
 $lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
-$lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable; remove 'Indexes' from Apache 'Options' list.";
+$lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable. Please remove 'Indexes' from Apache 'Options' list or disable the 'autoindex' module from Apache.";
 $lang["php_extension_not_enabled"]="PHP extension %%EXTENSION%% is not enabled";
 $lang["execution_failed"]="Unexpected output when executing %command command. Output was '%output'.";  # %command and %output will be replaced, e.g. Execution failed; unexpected output when executing convert command. Output was '[stdout]'.
 $lang["exif_extension"]="EXIF extension";
@@ -2680,6 +2680,7 @@ $lang['systemconfig_show_collection_name'] = "Show collection name and descripti
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
 $lang['error_generic'] = 'Sorry, there has been an error. If this error persists please contact your system administrator';
+$lang['error_generic_misconfiguration'] = "Please contact your system administrator and ask them to resolve the issues found on the 'Installation check' page.";
 $lang['error_invalid_input'] = 'Invalid request received. If you believe this is a legitimate request please contact your system administrator';
 $lang['error_no_metadata'] = 'No metadata was found for this resource type.';
 $lang["maximise"]="Maximise";
