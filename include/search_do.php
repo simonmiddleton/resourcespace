@@ -303,7 +303,7 @@ function do_search(
     $skipped_last=false;
 
     # Do not process if a numeric search is provided (resource ID)
-    global $config_search_for_number, $category_tree_search_use_and;
+    global $config_search_for_number, $category_tree_search_use_and_logic;
     $keysearch=!($config_search_for_number && is_numeric($search));
 
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
@@ -1045,7 +1045,7 @@ function do_search(
     foreach($node_bucket as $node_bucket_or)
         {
         //$node_bucket_sql.='EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .  implode(',',$node_bucket_or) . ')) AND ';
-        if($category_tree_search_use_and)
+        if($category_tree_search_use_and_logic)
             {
             foreach($node_bucket_or as $node_bucket_and)
                 {
