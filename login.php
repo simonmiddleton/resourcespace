@@ -52,7 +52,7 @@ if (getval("nocookies","")!="" && getval("cookiecheck","")=="") {$error=$lang["n
 if (!hook("replaceauth")) {
 # First check that this IP address has not been locked out due to excessive attempts.
 $ip=get_ip();
-$lockouts=sql_value("select count(*) value from ip_lockout where ip='" . escape_check($ip) . "' and tries>='" . $max_login_attempts_per_ip . "' and date_add(last_try,interval " . $max_login_attempts_wait_minutes . " minute)>now()",0);
+$lockouts=ps_value("select count(*) value from ip_lockout where ip = ? and tries >= ? and date_add(last_try, interval ? minute) > now()", array("s", $ip, "i", $max_login_attempts_per_ip, "i", $max_login_attempts_wait_minutes), 0);
 
 $username=getvalescaped("username","");
 if (is_array($username))
@@ -63,12 +63,12 @@ if (is_array($username))
 $username=trim($username);
 if($case_insensitive_username)
     {
-    $username=sql_value("select username value from user where lower(username)=lower('" . $username ."')",$username);       
+    $username=ps_value("select username value from user where lower(username) = lower(?)", array("s", $username), $username);       
     $username=escape_check($username);
     }
     
 # Also check that the username provided has not been locked out due to excessive login attempts.
-$ulockouts=sql_value("select count(*) value from user where username='" . $username . "' and login_tries>='" . $max_login_attempts_per_username . "' and date_add(login_last_try,interval " . $max_login_attempts_wait_minutes . " minute)>now()",0);
+$ulockouts=ps_value("select count(*) value from user where username = ? and login_tries >= ? and date_add(login_last_try, interval ? minute) > now()", array("s", $username, "i", $max_login_attempts_per_username, "i", $max_login_attempts_wait_minutes), 0);
 
 if ($lockouts>0 || $ulockouts>0)
 	{
@@ -105,7 +105,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 		# the collection frame to appear full screen.
 		if (strpos($url,"pages/collections.php")!==false) {$url="index.php";}
 
-        $accepted = sql_value("SELECT accepted_terms value FROM user WHERE ref = '{$result['ref']}'", 0);
+        $accepted = ps_value("SELECT accepted_terms value FROM user WHERE ref = ?", array("i", (int)$result['ref']), 0);
         if(0 == $accepted && $terms_login && !checkperm('p'))
             {
             $redirect_url='pages/terms.php?url=' . urlencode($url);
@@ -151,13 +151,13 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
         }
 
     // Clear out special "COLLECTION_TYPE_SELECTION" collection
-    $user_selection_collection = get_user_selection_collection(sql_value("SELECT ref AS `value` FROM user WHERE session = '{$session}'", null));
+    $user_selection_collection = get_user_selection_collection(ps_value("SELECT ref AS `value` FROM user WHERE session = ?", array("s", $session), null));
     if(!is_null($user_selection_collection) && count(get_collection_resources($user_selection_collection)) > 0)
         {
         remove_all_resources_from_collection($user_selection_collection);
         }
 
-    sql_query("UPDATE user SET logged_in = 0, session = NULL, csrf_token = NULL WHERE session = '{$session}'");
+    ps_query("UPDATE user SET logged_in = 0, session = NULL, csrf_token = NULL WHERE session = ?", array("s", $session));
     hook("removeuseridcookie");
     #blank cookie
     rs_setcookie('user', '', 0);
