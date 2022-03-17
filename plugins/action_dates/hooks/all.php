@@ -298,7 +298,7 @@ function HookAction_datesCronCron()
         $message_combined.= $message_state . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_state_refs) . "\r\n";
         $templatevars['message']=$message_combined;
 
-        # Construct url lists for massage_add function
+        # Construct url lists for message_add function
         $url_restrict = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_restrict_refs);
         $url_state = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_state_refs);
 
