@@ -1460,6 +1460,7 @@ if($responsive_ui)
         <tr class="ListviewTitleStyle">
         <?php if (!hook("listcheckboxesheader")){?>
         <?php if ($use_selection_collection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
+        <?php if ($list_view_thumbnail){?><td><?php echo $lang["imagesize-thumbnail"];?></td><?php } ?>
         <?php } # end hook listcheckboxesheader 
 
         $df_count = count($df);

@@ -1408,7 +1408,7 @@ $lang["addnewcontent"]="New content (page, name)";
 $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
-$lang["addremove"]="Add/remove";
+$lang["addremove"]="+/-";
 $lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
