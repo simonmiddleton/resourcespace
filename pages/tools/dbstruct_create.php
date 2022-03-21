@@ -25,7 +25,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createTableStructure && (in_array($table,$tableFor) || count($tableFor)===0))
 		{
 			$f=fopen("../../dbstruct/table_" . $table . ".txt","w");
-			$describe=sql_query("describe $table");
+			$describe=sql_query("describe \`$table\`");
 			for ($m=0;$m<count($describe);$m++)
 				{
 				fputcsv($f,$describe[$m]);
@@ -37,7 +37,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createIndices && (in_array($table,$indicesFor) || count($indicesFor)===0))
 			{
 			$f=fopen("../../dbstruct/index_" . $table . ".txt","w");
-			$index=sql_query("show index from $table");
+			$index=sql_query("show index from `$table`");
 			for ($m=0;$m<count($index);$m++)
 				{
 				fputcsv($f,$index[$m]);
@@ -49,7 +49,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createData && (in_array($table,$dataFor) || count($dataFor)===0))
 			{
 			$f=fopen("../../dbstruct/data_" . $table . ".txt","w");
-			$index=sql_query("select * from $table");
+			$index=sql_query("select * from `$table`");
 			for ($m=0;$m<count($index);$m++)
 				{
 				fputcsv($f,$index[$m]);
