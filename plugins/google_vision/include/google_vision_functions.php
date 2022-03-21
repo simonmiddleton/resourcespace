@@ -1,7 +1,7 @@
 <?php
 function google_visionProcess($resource, $verbose = false, $ignore_resource_type_constraint = false)
     {
-    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes;
+    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_logo_field,$google_vision_restypes;
     global $baseurl,$google_vision_features, $google_vision_face_detect_field, $google_vision_face_detect_fullface, $google_vision_face_detect_verbose;
     
     if($google_vision_face_detect_field > 0)
@@ -63,27 +63,10 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
     $context  = stream_context_create($opts);
     $result = file_get_contents($url, false, $context);
 
-    debug("google_vision: \$result = " . print_r($result, true));
-
     if ($verbose) echo $result;
-    
-
-    /*
-     * Alternative CURL code if preferred or required at some future stage....
-     * 
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER,
-        array("Content-type: application/json"));
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-    $result = curl_exec($curl);
-    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
-    */
-    
+        
     $result=json_decode($result,true); # Parse and return as associative arrays
+    debug("google_vision: \$result = " . print_r($result, true));
     
     if(isset($result['error']))
     	{
@@ -141,6 +124,24 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
         update_field($resource,$google_vision_landmarks_field,join(", ",$landmarks));
         }  
         
+    #--------------------------------------------------------
+    # Process logos
+    #--------------------------------------------------------
+    if (isset($result["responses"][0]["logoAnnotations"]))      
+        {
+        # Logos found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
+        $landmarks=array();
+        foreach ($result["responses"][0]["logoAnnotations"] as $label)
+            {
+            if(isset($label["description"]) && isset($label["score"]) && $label["score"]>0.75) // High score bar of 75% for logos as in testing there were many false detections.
+                {
+                $landmarks[]=$label["description"];
+                $title=$label["description"]; # Title is always the landmark, if a landmark is visible.
+                }
+            }
+        update_field($resource,$google_vision_logo_field,join(", ",$landmarks));
+        }  
+
     #--------------------------------------------------------
     # Process text
     #--------------------------------------------------------
