@@ -135,11 +135,10 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
             {
             if(isset($label["description"]) && isset($label["score"]) && $label["score"]>0.75) // High score bar of 75% for logos as in testing there were many false detections.
                 {
-                $landmarks[]=$label["description"];
-                $title=$label["description"]; # Title is always the landmark, if a landmark is visible.
+                $logos[]=$label["description"];
                 }
             }
-        update_field($resource,$google_vision_logo_field,join(", ",$landmarks));
+        update_field($resource,$google_vision_logo_field,join(", ",$logos));
         }  
 
     #--------------------------------------------------------
