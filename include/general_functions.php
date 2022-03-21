@@ -4953,7 +4953,8 @@ function check_filestore_browseability()
         }
     unset($GLOBALS['use_error_exception']);
 
-    if($response_status_code !== 200 || mb_stripos($output, 'Index of') === false)
+    // Web servers (RFC 2616) shouldn't return a "200 OK" if the server has indexes disabled. Usually it's "404 Not Found".
+    if($response_status_code !== 200)
         {
         $return['status'] = $GLOBALS['lang']['status-ok'];
         $return['info'] = '';
