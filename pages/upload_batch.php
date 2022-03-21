@@ -178,7 +178,7 @@ if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$uplo
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
         {
-        $collectionname = "Upload " . date("YmdHis"); # Do not translate this string, the collection name is translated when displayed!
+        $collectionname = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis'); # Do not translate this string, the collection name is translated when displayed!
         $hidden_collection = true;
         } 
 	$collection_add=create_collection($userref,$collectionname);

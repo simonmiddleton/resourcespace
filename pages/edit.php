@@ -732,7 +732,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 {
                                 if($uploadparams["entercolname"] == "")
                                     {
-                                    $uploadparams["entercolname"] = "Upload " . date("YmdHis");
+                                    $uploadparams["entercolname"] = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis');
                                     $hidden_collection = true;
                                     }
                                 $collection_add = create_collection($userref,$uploadparams["entercolname"]);
