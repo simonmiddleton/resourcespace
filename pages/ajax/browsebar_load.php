@@ -356,7 +356,7 @@ switch ($returntype)
             // Create link based on parent 
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-C:" . $mycol["ref"];
-            $return_items[$n]["name"] = strip_tags_and_attributes(i18n_get_collection_name($mycol["name"]));
+            $return_items[$n]["name"] = i18n_get_collection_name($mycol["name"]);
             $return_items[$n]["class"] = "Col";
             $return_items[$n]["expandable"] = "false";
             
