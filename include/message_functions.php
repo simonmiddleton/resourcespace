@@ -1,5 +1,65 @@
 <?php
 
+// param  string $type             Type of notification e.g. resource request, user account request
+//  * 
+//  * @param  object $messagedata      Information about the message
+//  * 
+//  *                                  -  @param  array  $eventdata        Information about the related event to store against the system message
+//  *                                  'type'  - Related activity type
+//  *                                  'ref'   - Related activity reference
+//  * @param  string $subject          Subject 
+//  * @param  string $message          Message text
+//  * @param  string $url              URL 
+//  * @param  string $template         Email template to use
+//  * @param  array  $templatevars     Email template variables
+//  * 
+//  * 
+//  * 
+/**
+ * Simple class to use for user notifications
+ * 
+ * @internal
+ */
+final class ResourceSpaceUserNotification {
+   
+    /**
+     * @var array $message Array of message text components and named optional values to use for placeholders. Can include language strings which will then be translated for each user
+     */
+    public $message;
+
+    /**
+     * @var array $url
+     */
+    public $url;
+
+    /**
+     * @var array $template
+     */
+    public $template;
+
+    /**
+     * @var array $templatevars
+     */
+    public $templatevars;
+
+     /**
+     * @var string $user_preference  Optional user preference to check for when sending notification e.g. user_pref_resource_access_notifications, user_pref_system_management_notifications,     user_pref_user_management_notifications,     user_pref_resource_notifications
+     * 
+     */
+    public $user_preference;
+
+    /**
+     * Create a new ResourceSpaceUserNotification
+     * 
+     * @param string $message        Message data
+     */
+    public function __construct(array $message = [])
+        {
+        $this->message = $message;
+        }
+}
+
+
 /**
  * Gets messages for a given user (returns true if there are messages, false if not)
  * Note that messages are passed by reference.
@@ -657,76 +717,169 @@ function send_user_message($users,$text)
  * Send system notifications to specified users, checking the relevant user preference
  *
  * @param  array  $users            Array of user IDs
- * @param  string $type             Type of notification e.g. resource request, user account request
- * @param  array  $eventdata        Information about the related event to store against the system message
- *                                  'type'  - Related activity type
- *                                  'ref'   - Related activity reference
- * @param  string $subject          Subject 
- * @param  string $message          Message text
- * @param  string $url              URL 
- * @param  string $template         Email template to use
- * @param  array  $templatevars     Email template variables
+ * @param  object $messagedata      An instance of a ResourceSpaceUserNotification object holding information about the message
+ * @param  bool   $forcemail        Force systenm to send email instead of notification?
+ * 
  * 
  * @return void
  */
-function send_user_notification($users=[],string $type,array $eventdata=[],string $subject="",string $message,string $url="",string $template="",array $templatevars=[])
+//function send_user_notification($users=[],string $type,array $eventdata=[],string $subject="",string $message,string $url="",string $template="",array $templatevars=[])
+
+function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
-    global $userref;
-    $notifytypes = [
-            "resource_request"      => "user_pref_resource_access_notifications",
-            "resource_share"        => "user_pref_resource_access_notifications",
-            "account_request"       => "user_pref_user_management_notifications",
-            "resource_change"       => "user_pref_resource_notifications",
-            "research_request"      => "user_pref_resource_access_notifications",
-            "system_notification"   => "user_pref_system_management_notifications",
-        ];
+    global $userref, $lang, $plugins, $applicationname;
  
-    $message_users = []; // Users that will be sent a message
-    $emails = ""; // User emails that will be sent an email
+    if(!isset($notifymessage->subject)
+        ||
+      !isset($notifymessage->message)
+        )
+        {
+        debug("notifymessage is missing required properties");
+        return false;
+        }
+
+    $subject = $notifymessage->subject;
+
+    $userlanguages = []; // This stores the users in their relevant language key element
+
     foreach($users as $notify_user)
         {
         $userdetails = $notify_user;
-        if(!isset($userdetails["ref"]))
+        if(!isset($userdetails["lang"]))
             {
             $userdetails = get_user((int)$notify_user);
             if($userdetails == false)
                 {
                 continue;
                 }
-            }        
+            }
         
-        if(isset($notifytypes[$type]))
+        if(isset($notifymessage->user_preference))
             {
-            get_config_option($userdetails['ref'],$notifytypes[$type], $send_message);		  
+            get_config_option($userdetails['ref'],$notifymessage->user_preference, $send_message);	
+            	  
             if($send_message==false)
                 {
+                debug("Skipping notification to user #" . $userdetails['ref'] . " As not wanted based on " . $notifymessage->user_preference . " : " . print_r($send_message,true));
                 continue;
                 }
+            debug("Sending notification to user #" . $userdetails["ref"]);
             }
-        get_config_option($userdetails['ref'],'email_user_notifications', $send_email);    
-        if($send_email && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL))
+
+        get_config_option($userdetails['ref'],'email_user_notifications', $send_email);
+        if(!isset($userlanguages[$userdetails['lang']]))
             {
-            $emails .= "," . $userdetails["email"];
+            $userlanguages[$userdetails['lang']] = [];
+            $userlanguages[$userdetails['lang']]["emails"] = [];
+            $userlanguages[$userdetails['lang']]["message_users"] = [];
+            }
+        if(($send_email && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL)) || $forcemail)
+            {
+            debug("Sending email to user #" . $userdetails["ref"]);
+            $userlanguages[$userdetails['lang']]["emails"][] = $userdetails["email"];
             }        
         else
             {
-            $message_users[]=$userdetails["ref"];
+            debug("Sending system message to user #" . $userdetails["ref"]);
+            $userlanguages[$userdetails['lang']]["message_users"][]=$userdetails["ref"];
             }
         }
-    
-    if (count($message_users)>0)
+    // Get array of all language strings required
+    // $language_strings_all = get_languages_notify_users(array_keys($userlanguages));
+
+    $url = $notifymessage->url ?? NULL;
+
+    foreach($userlanguages as $userlanguage=>$notifications)
         {
-        $activitytype = $eventdata["type"] ?? NULL;
-        $relatedactivity = $eventdata["ref"] ?? NULL;
-        message_add($message_users,$message,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
-        }
-    if(trim($emails) != "")
-        {
-        if(strpos($message,$url) === false)
+        debug("Processing notifications for language: '" . $userlanguage . "'");
+        // Save the current lang array
+        $saved_lang = $lang;        
+        if ($userlanguage!="en")
             {
-            // Add the URL to the message if not already present
-            $message = $message . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+            if (substr($userlanguage, 2, 1)=='-' && substr($userlanguage, 0, 2)!='en')
+                {
+                $langpath = dirname(__FILE__)."/../languages/" . safe_file_name(substr($userlanguage, 0, 2)) . ".php";
+                if(file_exists($langpath))
+                    {
+                    include $langpath;
+                    }
+                }
+            $langpath = dirname(__FILE__)."/../languages/" . safe_file_name($userlanguage) . ".php";
+            if(file_exists($langpath))
+                {
+                include $langpath;
+                }
             }
-        send_mail($emails,$subject,$message,"","",$template,$templatevars);            
+
+        # Register plugin languages in reverse order
+        for ($n=count($plugins)-1;$n>=0;$n--)
+            {
+            if (!isset($plugins[$n]))
+                {
+                continue;
+                }
+            register_plugin_language($plugins[$n]);
+            }
+
+        lang_load_site_text($lang,"",$userlanguage);
+       
+        if(substr($subject,0,5) == "lang_")
+            {
+            $langkey = substr($subject,5);
+            debug("Attempt to use lang entry for notification subject: '" . $langkey . "'");
+            if(isset($lang[$langkey]))
+                {
+                $subject = $lang[$langkey];
+                }
+            else
+                {
+                debug("Missing \$lang entry for notification subject: '" . $langkey . "'");
+                }
+            }
+
+        $messagetext = "";
+        foreach($notifymessage->message as $messagepart)
+            {
+            if(!isset($messagepart["text"]))
+                {
+                // No text element, skip this
+                debug("Message text element is missing the 'text' index");
+                continue;
+                }
+            $text = $messagepart["text"];
+            if(substr($text,0,5) == "lang_")
+                {
+                $langkey = substr($text,5);
+                $text = $lang[$langkey];
+                }
+
+            if(isset($messagepart["replace"]))
+                {
+                foreach($messagepart["replace"] as $placeholder=>$replace)
+                    {
+                    $text = str_replace($placeholder,$replace,$text);
+                    }
+                }
+            $messagetext .= $text;
+            }
+
+        if (count($notifications["message_users"])>0)
+            {        
+            $activitytype = $notifymessage->eventdata["type"] ?? NULL;
+            $relatedactivity = $notifymessage->eventdata["ref"] ?? NULL;
+
+            message_add($notifications["message_users"],$messagetext,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
+            }
+        if (count($notifications["emails"])>0)
+            {
+            if(strpos($messagetext,$url) === false)
+                {
+                // Add the URL to the message if not already present
+                $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+                }
+            send_mail(implode(",",$notifications["emails"]),$subject,$messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
+            }
+        // Restore the saved $lang array
+        $lang = $saved_lang;
         }
     }

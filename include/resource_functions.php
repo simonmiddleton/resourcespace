@@ -7724,38 +7724,78 @@ function purchase_set_size($collection,$resource,$size,$price)
     return true;
     }
 
-function payment_set_complete($collection,$emailconfirmation="")
+/**
+ * Update ecommerce user's basket to indicate it has been purchased after PayPal callback (invoice users will pactually ay later with manual invoicing)
+ *
+ * @param  int $collection
+ * @param  string $emailconfirmation - LEGACY MUNUSED
+ * @return boolean
+ */
+function payment_set_complete($collection)
     {
-    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$email_notify,$lang,$currency_symbol;
+    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$lang,$currency_symbol;
     // Mark items in the collection as paid so they can be downloaded.
     ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
     
     // For each resource, add an entry to the log to show it has been purchased.
-    $resources=sql_query("select * from collection_resource where collection='$collection'");
-    $summary="<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>" . $lang["property-reference"] . "</strong></td><td><strong>" . $lang["size"] . "</strong></td><td><strong>" . $lang["price"] . "</strong></td></tr>";
+    $resources=sql_query("SELECT * FROM collection_resource WHERE collection='$collection'");
+
+    // Construct summary, separating lang entries from fixed text
+    $summaryparts = [];
+    $summaryparts [] = ["text" => "<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>"];
+    
+    $summaryparts [] = ["text" => "lang_property-reference"];
+    $summaryparts [] = ["text" => "</strong></td><td><strong>"];
+    $summaryparts [] = ["text" => "lang_size"];
+    $summaryparts [] = ["text" => "</strong></td><td><strong>"];
+    $summaryparts [] = ["text" => "lang_price"];
+    $summaryparts [] = ["text" => "</strong></td></tr>"];
+
     foreach ($resources as $resource)
         {
         $purchasesize=$resource["purchase_size"];
-        if ($purchasesize==""){$purchasesize=$lang["original"];}
+        if ($purchasesize=="")
+            {
+            $purchasesize=$lang["original"];
+            }
         resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
-        $summary.="<tr><td>" . $resource["resource"] . "</td><td>" . $purchasesize . "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
+        
+        $summaryparts [] = ["text" => "<tr><td>" . $resource["resource"] . "</td><td>"];
+        $summaryparts [] = ["text" => ($purchasesize=="" ? "lang_original" : $purchasesize)];
+        $summaryparts [] = ["text" => "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>"];
         }
-    $summary.="</table>";
+    $summaryparts [] = ["text" => "</table>"];
+
+    // Construct message components
+    $message =[];
+    $message[] = ["text" => "lang_purchase_complete_email_admin_body"];
+    $message[] = ["text" => "<br />"];
+    $message[] = ["text" => "lang_username"];
+    $message[] = ["text" => ": " . $username . " (" . $userfullname . ")<br />"];
+    
+    $message = array_merge($message,$summaryparts);
+
+    $message[] = ["text" => "<br /><br />" . $baseurl . "/?c=" . $collection . "<br />"];
+
     // Send email or notification to admin
-    $message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
     $notify_users=get_notification_users("RESOURCE_ACCESS");
-    send_user_notification($notify_users,"resource_request",[],$lang["purchase_complete_email_admin"],$message,$baseurl . "/?c=" . $collection);
+    $notifymessage = new ResourceSpaceUserNotification($message);
+    $notifymessage->user_preference = "user_pref_resource_access_notifications";
+    $notifymessage->subject = "lang_purchase_complete_email_admin";
+    $notifymessage->url = $baseurl . "/?c=" . $collection;
+
+    send_user_notification($notify_users,$notifymessage);
     
     // Send email to user (not a notification as may need to be kept for reference)
-    $confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;   
-    $userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    send_mail($confirmation_address,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
-    
+    $userconfirmmessage     = [];
+    $userconfirmmessage[]   = ["text" => "lang_purchase_complete_email_user_body"];
+    $userconfirmmessage     = array_merge($userconfirmmessage,$summaryparts);    
+    send_user_notification([$userref],$userconfirmmessage,true);
+        
     // Rename so that can be viewed on my purchases page
-    sql_query("update collection set name= '" . date("Y-m-d H:i") . "' where ref='$collection'");
+    ps_query("UPDATE collection SET name = ? WHERE ref = ?",["s",date("Y-m-d H:i"),"i",$collection]);
     
     return true;
-
     }
 
 
