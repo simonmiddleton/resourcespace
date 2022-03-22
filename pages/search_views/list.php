@@ -40,12 +40,12 @@ if (!hook("replacelistitem"))
         } #end hook listcheckboxes 
         if ($list_view_thumbnail)
             {
-            global $use_watermark;
+            $watermark = check_use_watermark($ref);
             ?>
             <td width="40px">
                 <a href="<?php echo $url?>" onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);">
                     <?php
-                    $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+                    $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $watermark, $result[$n]['file_modified']);
 
                     if(isset($result[$n]['thm_url']))
                         {
