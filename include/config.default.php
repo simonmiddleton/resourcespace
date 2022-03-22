@@ -2595,9 +2595,6 @@ $ctrls_to_save=false;
 # Option to show resource archive status in search results list view
 $list_view_status_column=false;
 
-# Option to show resource thumbnail image in search results list view
-$list_view_thumbnail=true;
-
 # Removes textbox on the download usage page.
 $remove_usage_textbox=false;
 
