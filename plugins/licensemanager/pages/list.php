@@ -18,7 +18,7 @@ $delete=getvalescaped("delete","");
 if ($delete!="" && enforcePostRequest(false))
 	{
 	# Delete license
-	sql_query("delete from license where ref='" . escape_check($delete) . "'");
+	ps_query("delete from license where ref= ?", ['i', $delete]);
 	}
 
 
@@ -53,16 +53,15 @@ $url_params = array(
 <input type=hidden name="delete" id="licensedelete" value="">
  
 <?php 
-$sql="";
+$sql = '';
+$params = [];
 if ($findtext!="")
     {
-    $sql="where description   like '%" . escape_check($findtext) . "%'";
-    $sql.="  or holder        like '%" . escape_check($findtext) . "%'";
-    $sql.="  or license_usage like '%" . escape_check($findtext) . "%'";
-    $sql.="  or description   like '%" . escape_check($findtext) . "%'";
-}
+    $sql    = "where description like CONCAT('%', ?, '%') or holder like CONCAT('%', ?, '%') or license_usage like CONCAT('%', ?, '%')";
+    $params = ['s', $findtext, 's', $findtext, 's', $findtext];
+    }
 
-$licenses=sql_query("select * from license $sql order by ref");
+$licenses=ps_query("select * from license $sql order by ref", $params);
 
 # pager
 $per_page=15;
