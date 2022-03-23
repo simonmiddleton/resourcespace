@@ -25,7 +25,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createTableStructure && (in_array($table,$tableFor) || count($tableFor)===0))
 		{
 			$f=fopen("../../dbstruct/table_" . $table . ".txt","w");
-			$describe=sql_query("describe \`$table\`");
+			$describe=sql_query("describe `$table`");
 			for ($m=0;$m<count($describe);$m++)
 				{
 				fputcsv($f,$describe[$m]);
