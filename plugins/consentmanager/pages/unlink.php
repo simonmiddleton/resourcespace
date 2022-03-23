@@ -9,7 +9,7 @@ $resource=getvalescaped("resource","");
 
 # Check access
 $edit_access=get_edit_access($resource);
-if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+if (!$edit_access && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without edit access
 
 $url_params = array(
     'ref'        => $resource,

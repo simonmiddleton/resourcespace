@@ -4896,10 +4896,11 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
 * @param boolean $reload       Autosave changes done on this permission
+* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
 * 
 * @return void
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false)
+function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
     {
     global $permissions,$permissions_done;
     $checked=(in_array($permission,$permissions));
@@ -4909,7 +4910,7 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
     <tr>
         <td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description?></td>
-        <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
+        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
             if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
     </tr>
     <?php

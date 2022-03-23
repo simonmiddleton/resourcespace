@@ -30,3 +30,5 @@ $lang["unlinklicense"]="Unlink license";
 $lang["selectlicence"]="Please select a License ID";
 
 $lang['license_manager_mediums']='License usage mediums';
+
+$lang["license_manager_access"]="Manage license data (where not already enabled via 'a')";

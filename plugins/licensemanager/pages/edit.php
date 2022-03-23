@@ -14,12 +14,12 @@ $resource=getvalescaped("resource","");
 if ($resource!="")
     {
     $edit_access=get_edit_access($resource);
-    if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+    if (!$edit_access && !checkperm("lm")) {exit("Access denied");} # Should never arrive at this page without edit access
     }
 else
     {
     # Editing all licenses via Manage Licenses - admin only
-    if (!checkperm("a")) {exit("Access denied");} 
+    if (!checkperm("a") && !checkperm("lm")) {exit("Access denied");} 
     }
 
 $url_params = array(
