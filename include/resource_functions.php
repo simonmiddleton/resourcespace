@@ -2133,10 +2133,10 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true,$stemmed);
             }
         }
-        
+
+    $kworig=$keyword; // Store non-stemmed word
     if (!$stemmed && $stemming && function_exists("GetStem"))
         {
-        $kworig=$keyword;
         $keyword=GetStem($keyword);debug("Using stem " . $keyword . " for keyword " . $kworig);
         if($keyword!=$kworig)
             {
@@ -2145,7 +2145,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             }
         }
 	
-    if (!(in_array($keyword,$noadd)))
+    if (!(in_array($kworig,$noadd))) // Original (non stemmed) word not in the stop list?
             {
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
