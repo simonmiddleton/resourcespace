@@ -430,7 +430,13 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
 
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
-$GLOBALS = $system_wide_config_options;
+
+# $lang is not a config option! 
+unset($system_wide_config_options['lang']);
+foreach ($system_wide_config_options as $key => $value)
+    {
+    $GLOBALS[$key] = $value;
+    }
 
 include '../../include/header.php';
 ?>
