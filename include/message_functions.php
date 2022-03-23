@@ -1,31 +1,22 @@
 <?php
-
-// param  string $type             Type of notification e.g. resource request, user account request
-//  * 
-//  * @param  object $messagedata      Information about the message
-//  * 
-//  *                                  -  @param  array  $eventdata        Information about the related event to store against the system message
-//  *                                  'type'  - Related activity type
-//  *                                  'ref'   - Related activity reference
-//  * @param  string $subject          Subject 
-//  * @param  string $message          Message text
-//  * @param  string $url              URL 
-//  * @param  string $template         Email template to use
-//  * @param  array  $templatevars     Email template variables
-//  * 
-//  * 
-//  * 
 /**
  * Simple class to use for user notifications
  * 
  * @internal
  */
-final class ResourceSpaceUserNotification {
-   
+class ResourceSpaceUserNotification
+    {   
     /**
-     * @var array $message Array of message text components and named optional values to use for placeholders. Can include language strings which will then be translated for each user
+     * @var array $message_text_arr 
+     * Array of message text components and named optional values to use for placeholders. Can include language strings which will then be translated for each user
      */
-    public $message;
+    public $message_text_arr = [];
+
+    /**
+     * @var array $subject
+     * Subject string or array of subject parts 
+     */
+    public $subject;   
 
     /**
      * @var array $url
@@ -51,13 +42,47 @@ final class ResourceSpaceUserNotification {
     /**
      * Create a new ResourceSpaceUserNotification
      * 
-     * @param string $message        Message data
+     * @param array $message        Array of message text. Each element with the following:-
+     *                              'text' key (required) - The text string (may refer to a $lang element using the 'lang_textkey' format)
+     *                              'replace' key (optional) - array of placeholders and values, with the placeholder string as the 'find' key and
+     *                                 the value as the 'replace' string.
      */
-    public function __construct(array $message = [])
+    public function __construct(array $message_text_arr= [])
         {
-        $this->message = $message;
+        $this->message_text_arr = $message_text_arr;
         }
-}
+
+    public function get_message()
+        {
+        global $lang;
+        $messagetext = "";
+        foreach($this->message_text_arr as $message_text_part)
+            {
+            if(!isset($message_text_part["text"]))
+                {
+                // No text element, skip this
+                debug("Message text element is missing the 'text' index");
+                continue;
+                }
+            $text = $message_text_part["text"];
+            if(substr($text,0,5) == "lang_")
+                {
+                $langkey = substr($text,5);
+                $text = $lang[$langkey];
+                }
+
+            if(isset($message_text_part["replace"]))
+                {
+                foreach($message_text_part["replace"] as $placeholder=>$replace)
+                    {
+                    $text = str_replace($placeholder,$replace,$text);
+                    }
+                }
+            $messagetext .= $text;
+            }
+        return $messagetext;
+        }
+    }
 
 
 /**
@@ -130,7 +155,7 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
  */
 function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,$ttl_seconds=MESSAGE_DEFAULT_TTL_SECONDS, $related_activity=0, $related_ref=0)
 	{
-	global $userref,$applicationname,$lang, $baseurl, $baseurl_short;
+	global $userref,$applicationname,$lang, $baseurl, $baseurl_short,$header_colour_style_override;
 	
 	if(!is_int_loose($notification_type))
 		{
@@ -179,7 +204,20 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                         $url = $baseurl . $url;
                         }
 					$message_text=nl2br($orig_text);
-					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$message_text . "<br/><br/><a href='" . $url . "' >" . $url . "</a>");
+
+                    // Add system header image to email
+                    $headerimghtml = "";
+                    $img_url = get_header_image(true);
+                    $img_div_style = "max-height:50px;padding: 5px;";
+                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
+                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+                              
+                    if(strpos($message_text,$url) === false)
+                        {
+                        // Add the URL to the message if not already present
+                        $message_text = $message_text . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+                        }
+					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
 					}
 				}
 			}
@@ -716,22 +754,20 @@ function send_user_message($users,$text)
 /**
  * Send system notifications to specified users, checking the relevant user preference
  *
- * @param  array  $users            Array of user IDs
+ * @param  array  $users            Array of user IDs or array of user details from get_users()
  * @param  object $messagedata      An instance of a ResourceSpaceUserNotification object holding information about the message
- * @param  bool   $forcemail        Force systenm to send email instead of notification?
+ * @param  bool   $forcemail        Force system to send email instead of notification?
  * 
  * 
  * @return void
  */
-//function send_user_notification($users=[],string $type,array $eventdata=[],string $subject="",string $message,string $url="",string $template="",array $templatevars=[])
-
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
-    global $userref, $lang, $plugins, $applicationname;
+    global $userref, $lang, $plugins, $header_colour_style_override;
  
     if(!isset($notifymessage->subject)
         ||
-      !isset($notifymessage->message)
+      !isset($notifymessage->message_text_arr)
         )
         {
         debug("notifymessage is missing required properties");
@@ -745,13 +781,18 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
     foreach($users as $notify_user)
         {
         $userdetails = $notify_user;
-        if(!isset($userdetails["lang"]))
+        if(!is_array($userdetails))
             {
-            $userdetails = get_user((int)$notify_user);
-            if($userdetails == false)
-                {
-                continue;
-                }
+            $userdetails = get_user((int)$userdetails);
+            }
+        elseif(!isset($userdetails["lang"]))
+            {
+            // Need full user info
+            $userdetails = get_user($userdetails["ref"]);
+            }        
+        if($userdetails == false)
+            {
+            continue;
             }
         
         if(isset($notifymessage->user_preference))
@@ -789,6 +830,16 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
 
     $url = $notifymessage->url ?? NULL;
 
+    $headerimghtml = "";
+    if(!isset($notifymessage->template))
+        {
+        // Add header image to email if not using template
+        $img_url = get_header_image(true);
+        $img_div_style = "max-height:50px;padding: 5px;";
+        $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
+        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+        }                
+
     foreach($userlanguages as $userlanguage=>$notifications)
         {
         debug("Processing notifications for language: '" . $userlanguage . "'");
@@ -820,49 +871,31 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 }
             register_plugin_language($plugins[$n]);
             }
-
+        // Load in the correct language strings
         lang_load_site_text($lang,"",$userlanguage);
        
-        if(substr($subject,0,5) == "lang_")
+        // Subject may also be an array containing multiple sections
+        $fullsubject = "";
+        $subjects = is_array($subject) ? $subject : [$subject];
+        foreach($subjects as $subjectpart)
             {
-            $langkey = substr($subject,5);
-            debug("Attempt to use lang entry for notification subject: '" . $langkey . "'");
-            if(isset($lang[$langkey]))
+            if(substr($subjectpart,0,5) == "lang_")
                 {
-                $subject = $lang[$langkey];
-                }
-            else
-                {
-                debug("Missing \$lang entry for notification subject: '" . $langkey . "'");
-                }
-            }
-
-        $messagetext = "";
-        foreach($notifymessage->message as $messagepart)
-            {
-            if(!isset($messagepart["text"]))
-                {
-                // No text element, skip this
-                debug("Message text element is missing the 'text' index");
-                continue;
-                }
-            $text = $messagepart["text"];
-            if(substr($text,0,5) == "lang_")
-                {
-                $langkey = substr($text,5);
-                $text = $lang[$langkey];
-                }
-
-            if(isset($messagepart["replace"]))
-                {
-                foreach($messagepart["replace"] as $placeholder=>$replace)
+                $langkey = substr($subjectpart,5);
+                // debug("Attempt to use lang entry for notification subject: '" . $langkey . "'");
+                if(isset($lang[$langkey]))
                     {
-                    $text = str_replace($placeholder,$replace,$text);
+                    $subjectpart = $lang[$langkey];
+                    }
+                else
+                    {
+                    debug("Missing \$lang entry for notification subject: '" . $langkey . "'");
                     }
                 }
-            $messagetext .= $text;
+            $fullsubject .= $subjectpart;
             }
-
+        $messagetext = $notifymessage->get_message();
+        
         if (count($notifications["message_users"])>0)
             {        
             $activitytype = $notifymessage->eventdata["type"] ?? NULL;
@@ -876,8 +909,8 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 {
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
-                }
-            send_mail(implode(",",$notifications["emails"]),$subject,$messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
+                }            
+            send_mail(implode(",",$notifications["emails"]),$fullsubject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
             }
         // Restore the saved $lang array
         $lang = $saved_lang;

@@ -4896,7 +4896,7 @@ function get_resource_access($resource)
                 debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
                 sql_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref='" . $usergroup . "'");
-                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
                 }
             }
 
@@ -5139,7 +5139,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
             sql_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref='" . $usergroup . "'");
-            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
     
@@ -5678,7 +5678,7 @@ function update_disk_usage_cron()
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
         {
-        echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br />\n";
+        echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br/>\n";
         return false;
         }
 
@@ -6948,10 +6948,10 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     hook('replace_resource_file_extra', '', array($resource));
     $log_ref = resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
-    hook("additional_replace_existing","",array($ref,$log_ref));      
+    hook("additional_replace_existing","",array($ref,$log_ref));
 						
     if($notify_on_resource_change_days != 0)
-        {								
+        {
         // we don't need to wait for this.
         ob_flush();flush();	
         notify_resource_change($ref);
@@ -7769,13 +7769,11 @@ function payment_set_complete($collection)
     // Construct message components
     $message =[];
     $message[] = ["text" => "lang_purchase_complete_email_admin_body"];
-    $message[] = ["text" => "<br />"];
+    $message[] = ["text" => "<br/><br/>"];
     $message[] = ["text" => "lang_username"];
-    $message[] = ["text" => ": " . $username . " (" . $userfullname . ")<br />"];
+    $message[] = ["text" => ": " . $username . " (" . $userfullname . ")<br/><br/>"];
     
     $message = array_merge($message,$summaryparts);
-
-    $message[] = ["text" => "<br /><br />" . $baseurl . "/?c=" . $collection . "<br />"];
 
     // Send email or notification to admin
     $notify_users=get_notification_users("RESOURCE_ACCESS");
@@ -7789,8 +7787,13 @@ function payment_set_complete($collection)
     // Send email to user (not a notification as may need to be kept for reference)
     $userconfirmmessage     = [];
     $userconfirmmessage[]   = ["text" => "lang_purchase_complete_email_user_body"];
-    $userconfirmmessage     = array_merge($userconfirmmessage,$summaryparts);    
-    send_user_notification([$userref],$userconfirmmessage,true);
+    $userconfirmmessage[]   = ["text" => "<br/><br/>"];
+    $userconfirmmessage     = array_merge($userconfirmmessage,$summaryparts);
+    $usernotifymessage = new ResourceSpaceUserNotification($userconfirmmessage);
+    $usernotifymessage->subject = "lang_purchase_complete_email_user";
+    $usernotifymessage->url = $baseurl . "/?c=" . $collection;
+
+    send_user_notification([$userref],$usernotifymessage,true);
         
     // Rename so that can be viewed on my purchases page
     ps_query("UPDATE collection SET name = ? WHERE ref = ?",["s",date("Y-m-d H:i"),"i",$collection]);
@@ -7924,7 +7927,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 function notify_resource_change($resource)
     {
     debug("notify_resource_change " . $resource);
-    global $notify_on_resource_change_days;
+    global $notify_on_resource_change_days, $baseurl;
     // Check to see if we need to notify users of this change
     if($notify_on_resource_change_days==0 || !is_int($notify_on_resource_change_days))
         {
@@ -7936,8 +7939,15 @@ function notify_resource_change($resource)
     $message_users=array();
     if(count($download_users)>0)
         {
-        global $applicationname, $lang, $baseurl;
-        send_user_notification($download_users,"resource_change",[],$lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),$baseurl . "/?r=" . $resource,'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
+        $userconfirmmessage     = [];
+        $userconfirmmessage[]   = ["text" => "lang_notify_resource_change_email","replace" => ["[days]"=>$notify_on_resource_change_days,"[url]"=>$baseurl . "/?r=" . $resource]];
+        $notifymessage = new ResourceSpaceUserNotification($userconfirmmessage);
+        $notifymessage->subject = "lang_notify_resource_change_email_subject";
+        $notifymessage->preference = "user_pref_resource_notifications";
+        $notifymessage->url = $baseurl . "/?r=" . $resource;
+        $notifymessage->template = 'notify_resource_change_email';
+        $notifymessage->templatevars = ["days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource];
+        send_user_notification($download_users,$notifymessage);
         }
     }
 
@@ -8392,7 +8402,7 @@ function delete_resource_type_field($ref)
 
     if(count($fieldvars) > 0)
         {
-        return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
+        return $lang["admin_delete_field_error"] . "<br/>\$" . implode(", \$",$fieldvars);
         }
     else if(!empty($core_field_scopes))
         {
