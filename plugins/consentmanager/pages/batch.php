@@ -31,10 +31,10 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     foreach ($resources as $resource)
         {
         // Always remove any existing relationship
-        sql_query("delete from resource_consent where consent='$ref' and resource='$resource'");
+        ps_query("delete from resource_consent where consent= ? and resource= ?", ['i', $ref, 'i', $resource]);
 
         // Add link?
-        if (!$unlink) {sql_query("insert into resource_consent (resource,consent) values ('$resource','$ref')");}
+        if (!$unlink) {ps_query("insert into resource_consent (resource,consent) values (?, ?)", ['i', $resource, 'i', $ref]);}
 
         // Log
         resource_log($resource,"","",$lang[($unlink?"un":"") . "linkconsent"] . " " . $ref);
@@ -57,7 +57,7 @@ include "../../../include/header.php";
 
 <div class="Question"><label><?php echo $lang["consent_id"]?></label>
 <select name="ref"><option value=""><?php echo $lang["select"] ?></option>
-<?php $consents=sql_query("select ref,name from consent order by ref"); foreach ($consents as $consent) { ?>
+<?php $consents=ps_query("select ref,name from consent order by ref"); foreach ($consents as $consent) { ?>
 <option value="<?php echo $consent["ref"] ?>"><?php echo $consent["ref"] ?> - <?php echo $consent["name"]; ?></option>
 <?php } ?>
 </select>
