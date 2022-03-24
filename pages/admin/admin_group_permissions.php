@@ -15,6 +15,7 @@ $order_by=getval("orderby","");
 $filter_by_parent=getval("filterbyparent","");
 $find=getval("find","");
 $filter_by_permissions=getval("filterbypermissions","");
+$copy_from=getval("copyfrom","");
 
 $url_params=
 	"?ref={$ref}" .
@@ -51,6 +52,11 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	sql_query("update usergroup set permissions='" . escape_check(join(",",$perms)) . "' where ref='$ref'");
 	}
 
+if ($copy_from!="")
+    {
+    copy_usergroup_permissions($copy_from,$ref);
+    }
+
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",$group["permissions"]));
@@ -80,8 +86,14 @@ renderBreadcrumbs($links_trail);
 ?>
 	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
 
-	<form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
-		<input type="hidden" name="save" value="1">		
+    <form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
+        <input type="hidden" name="save" value="1">
+        
+        <div >
+            <label><?php echo $lang["copypermissions"];?></label>
+            <input type="text" name="copyfrom">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]; ?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirmcopypermissions"]?>');">
+        </div>
         <?php
         generateFormToken("permissions");
 
@@ -96,7 +108,7 @@ renderBreadcrumbs($links_trail);
 ?>		<div class="Listview">
 			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
+					<td colspan=2 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
 				</tr>
 <?php
 DrawOption("s", $lang["searchcapability"]);

@@ -2754,6 +2754,19 @@ function save_usergroup($ref,$groupoptions)
     }
 
 
+function copy_usergroup_permissions($src_id,$dst_id)
+    {
+    if(!is_numeric($src_id)||!is_numeric($dst_id)){return false;}
+
+    $src_group = get_usergroup($src_id);
+    $dst_group = get_usergroup($dst_id);
+
+    if(!$src_group || !$dst_group){return false;}
+
+
+    $dst_group=["permissions" => $src_group["permissions"]];
+    return save_usergroup($dst_id,$dst_group);
+    };
  
 /**
  * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.
