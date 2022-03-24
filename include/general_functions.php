@@ -901,6 +901,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $valid_emails = array();
     foreach($check_emails as $check_email)
         {
+            debug("BANG checking" .$check_email );
         if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
             {
             debug("send_mail: Invalid e-mail address - '{$check_email}'");

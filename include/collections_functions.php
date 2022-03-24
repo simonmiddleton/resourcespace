@@ -1898,16 +1898,15 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     $templatevars['from_name']=$from_name;
 
     // Create notification message
-    $notifymessage     = [];
-    $notifymessage = new ResourceSpaceUserNotification($notifymessage);
+    $notifymessage     = new ResourceSpaceUserNotification();
     if(count($reflist)>1)
         {
-        $notifymessage->subject[] = $applicationname . ": ";
-        $notifymessage->subject[] = "lang_mycollections";
+        $notifymessage->set_subject($applicationname . ": ");
+        $notifymessage->append_subject("lang_mycollections");
         }
     else
         {
-        $notifymessage->subject[] = $applicationname.": ". $collectionname;
+        $notifymessage->set_subject($applicationname.": ". $collectionname);
         }
 
     if ($fromusername==""){$fromusername=$applicationname;}
@@ -1933,22 +1932,22 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         $origviewlinktext=$viewlinktext; // Save this text as we may change it for internal theme shares for this user
         if ($themeshare && !$key_required[$nx1]) # don't send a whole list of collections if internal, just send the theme category URL
             {
-            $notifymessage->url="";
-            $notifymessage->subject[] = $applicationname.": " . $themename;
-            $notifymessage->url=$baseurl . "/pages/collections_featured.php" . $themeurlsuffix;
+            $notifymessage->set_subject($applicationname.": " . $themename);
+            $url = $baseurl . "/pages/collections_featured.php" . $themeurlsuffix;
             $viewlinktext="lang_clicklinkviewthemes";
+            $notifymessage->url = $url;
             $emailcollectionmessageexternal=false;
             if ($use_phpmailer)
                 {
-                $link = '<a href="' . $notifymessage->url . '">' . $themename . '</a>';                    
+                $link = '<a href="' . $url . '">' . $themename . '</a>';                    
                 $list.= $htmlbreak.$link;
                 // alternate list style
-                $list2.=$htmlbreak.$themename.' -'.$htmlbreaksingle . $notifymessage->url;
+                $list2.=$htmlbreak.$themename.' -'.$htmlbreaksingle . $url;
                 $templatevars['list2']=$list2;
                 }
             else
                 {
-                $list.= $htmlbreak . $notifymessage->url;
+                $list.= $htmlbreak . $url;
                 }
             for ($nx2=0;$nx2<count($reflist);$nx2++)
                 {
@@ -1967,7 +1966,6 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
             for ($nx2=0;$nx2<count($reflist);$nx2++)
                 {
-                $notifymessage->url="";
                 $key="";
                 $emailcollectionmessageexternal=false;
 
@@ -1984,8 +1982,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     $key = $fc_key;
                     $emailcollectionmessageexternal = true;
                     }
-
-                $notifymessage->url = $baseurl . 	"/?c=" . $reflist[$nx2] . $key;		
+                $url = $baseurl . 	"/?c=" . $reflist[$nx2] . $key;
                 $collection = array();
                 $collection = ps_query("SELECT name,savedsearch FROM collection WHERE ref = ?", ["i",$reflist[$nx2]]);
                 if ($collection[0]["name"]!="")
@@ -1998,15 +1995,15 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 if ($use_phpmailer)
                     {
-                    $link='<a href="' . $notifymessage->url . '">' . $collection_name . '</a>';
+                    $link='<a href="' . $url . '">' . $collection_name . '</a>';
                     $list.= $htmlbreak.$link;
                     // alternate list style
-                    $list2.=$htmlbreak.$collection_name.' -'.$htmlbreaksingle . $notifymessage->url;
+                    $list2.=$htmlbreak.$collection_name.' -'.$htmlbreaksingle . $url;
                     $templatevars['list2']=$list2;
                     }
                 else
                     {
-                    $list.= $htmlbreak . $collection_name . $htmlbreak . $notifymessage->url . $htmlbreak;
+                    $list.= $htmlbreak . $collection_name . $htmlbreak . $url . $htmlbreak;
                     }
                 #log this
                 collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
@@ -2062,19 +2059,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                 }
             $body .= $templatevars['fromusername']." " . $externalmessage . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
 
-            $emailsubject = "";
-            foreach($notifymessage->subject as $subjectpart)
-                {
-                if(substr($subjectpart,0,5) == "lang_")
-                    {
-                    $langkey = substr($subjectpart,5);
-                    if(isset($lang[$langkey]))
-                        {
-                        $subjectpart = $lang[$langkey];
-                        }
-                    }
-                $emailsubject .= $subjectpart;
-                }
+            $emailsubject = $notifymessage->get_subject();
             send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
             }
         $viewlinktext=$origviewlinktext;
@@ -2083,12 +2068,10 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     if(count($internal_user_ids) > 0)
         {
         // Internal share, send notifications
-        $notifymessage->message_text_arr[] = ["text" => $templatevars['fromusername'] . "&nbsp;"];
-        $notifymessage->message_text_arr[] = ["text" => $internalmessage];
-        $notifymessage->message_text_arr[] = ["text" => "<br/><br/>" . $templatevars['message'] . "<br/><br/>"];
-        
-        $notifymessage->message_text_arr[] = ["text" => $viewlinktext];
-        //send_user_notification($internal_user_ids,"",[],$subject,$body,$internalurl);
+        $notifymessage->append_message($templatevars['fromusername'] . "&nbsp;");
+        $notifymessage->append_message($internalmessage);
+        $notifymessage->append_message("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
+        $notifymessage->append_message($viewlinktext);
         send_user_notification($internal_user_ids,$notifymessage);
         }
 

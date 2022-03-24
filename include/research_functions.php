@@ -3,48 +3,50 @@
 # Functions to accomodate research requests
 
 function send_research_request(array $rr_cfields)
-	{
-	# Insert a search request into the requests table.
-	
-	# Resolve resource types
-	$rt="";
-	$types=get_resource_types();
-	for ($n=0;$n<count($types);$n++) {
-		if (getval("resource" . $types[$n]["ref"],"")!="") {
-			if ($rt!="") {
-				$rt.=", ";
-			} 
-			$rt.=$types[$n]["ref"];
-		}
-	}
-	
-	global $userref, $custom_researchrequest_fields;
-	$as_user=getval("as_user",$userref,true); # If userref submitted, use that, else use this user
-	$rr_name=getval("name","");
-	$rr_description=getval("description","");
-	$parameters=array("i",$as_user, "s",$rr_name, "s",$rr_description);
+    {
+    # Insert a search request into the requests table.
+    global $baseurl,$username,$userfullname,$useremail, $userref;
 
-	$rr_deadline = getval("deadline","");
-	if($rr_deadline=="")
-		{
-	 	$rr_deadline=NULL;
-		}
-	$rr_contact = getval("contact","");
-	$rr_email = getval("email","");
-	$rr_finaluse = getval("finaluse","");
-	$parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
+    # Resolve resource types
+    $rt="";
+    $types=get_resource_types();
+    for ($n=0;$n<count($types);$n++)
+        {
+        if (getval("resource" . $types[$n]["ref"],"")!="")
+            {
+            if ($rt!="")
+                {
+                $rt.=", ";
+                } 
+            $rt.=$types[$n]["ref"];
+            }
+        }
+    $as_user=getval("as_user",$userref,true); # If userref submitted, use that, else use this user
+    $rr_name=getval("name","");
+    $rr_description=getval("description","");
+    $parameters=array("i",$as_user, "s",$rr_name, "s",$rr_description);
 
-	# $rt
-	$rr_noresources = getval("noresources","");
-	if($rr_noresources=="")
-		{
-		$rr_noresources=NULL;
-		}
-	$rr_shape = getval("shape","");
-	$parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
+    $rr_deadline = getval("deadline","");
+    if($rr_deadline=="")
+        {
+        $rr_deadline=NULL;
+        }
+    $rr_contact = getval("contact","");
+    $rr_email = getval("email","");
+    $rr_finaluse = getval("finaluse","");
+    $parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
+
+    # $rt
+    $rr_noresources = getval("noresources","");
+    if($rr_noresources=="")
+        {
+        $rr_noresources=NULL;
+        }
+    $rr_shape = getval("shape","");
+    $parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
 
     /**
-    * @var string JSON representation of custom research request fields after removing the generated HTML properties we 
+    * @var string JSON representation of custom research request fields after removing the generated HTML properties we
     *             needed during form processing
     * @see gen_custom_fields_html_props()
     */
@@ -54,28 +56,33 @@ function send_research_request(array $rr_cfields)
         trigger_error(json_last_error_msg());
         }
     $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : $rr_cfields_json);
-	$parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
+    $parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
 
-	ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
-				values (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $parameters);
-	
-	# E-mails a resource request (posted) to the team
-	global $applicationname,$email_from,$baseurl,$email_notify,$username,$userfullname,$useremail,$lang, $admin_resource_access_notifications;
-	
-	$templatevars['ref']=sql_insert_id();
-	$templatevars['teamresearchurl']=$baseurl."/pages/team/team_research_edit.php?ref=" . $templatevars['ref'];
-	$templatevars['username']=$username;
-	$templatevars['userfullname']=$userfullname;
-	$templatevars['useremail']=getvalescaped("email",$useremail); # Use provided e-mail (for anonymous access) or drop back to user email.
-	$templatevars['url']=$baseurl."/pages/team/team_research_edit.php?ref=".$templatevars['ref'];
-	
-	$message="'$username' ($userfullname - $useremail) " . $lang["haspostedresearchrequest"] . ".\n\n";
-	$notification_message = $message;
-	hook("modifyresearchrequestemail");
-	
-	$research_notify_users = array();
-	$notify_users=get_notification_users("RESEARCH_ADMIN");
-    send_user_notification($notify_users,"research_request",[],$lang["newresearchrequestwaiting"],$notification_message,$templatevars["teamresearchurl"],"emailnewresearchrequestwaiting",$templatevars);
+    ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)
+                values (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $parameters);
+
+    # Send request 
+    $templatevars['ref']=sql_insert_id();
+    $templatevars['teamresearchurl']=$baseurl."/pages/team/team_research_edit.php?ref=" . $templatevars['ref'];
+    $templatevars['username']=$username;
+    $templatevars['userfullname']=$userfullname;
+    $templatevars['useremail']=getvalescaped("email",$useremail); # Use provided e-mail (for anonymous access) or drop back to user email.
+    $templatevars['url']=$baseurl."/pages/team/team_research_edit.php?ref=".$templatevars['ref'];
+
+    $research_notify_users=get_notification_users("RESEARCH_ADMIN");
+    $userconfirmmessage = new ResourceSpaceUserNotification();
+    $userconfirmmessage->set_subject("lang_newresearchrequestwaiting");
+    $userconfirmmessage->set_message("'$username' ($userfullname - $useremail) ");
+    $userconfirmmessage->append_message("lang_haspostedresearchrequest");
+    $userconfirmmessage->append_message(".\n\n");  
+    $userconfirmmessage->preference = "user_pref_resource_access_notifications";
+    $userconfirmmessage->template = "emailnewresearchrequestwaiting";
+    $userconfirmmessage->templatevars = $templatevars;
+    $userconfirmmessage->url = $templatevars["teamresearchurl"];
+
+    // Hook needs to update the ResourceSpaceUserNotification object
+	hook("modifyresearchrequestemail", "", array($userconfirmmessage));
+    send_user_notification($research_notify_users,$userconfirmmessage);
 	}
 
 function get_research_requests($find="",$order_by="name",$sort="ASC")
@@ -146,23 +153,32 @@ function save_research_request($ref)
 	
     if ($oldstatus!=$newstatus)
         {
-        $requesting_user=ps_query("select u.email, u.ref from user u,research_request r where u.ref=r.user and r.ref=?", $parameters);
+        $requesting_user=ps_query("SELECT u.email, u.ref FROM user u,research_request r WHERE u.ref=r.user AND r.ref = ?", $parameters);
         $requesting_user = $requesting_user[0];
         $message="";
         if ($newstatus==1) 
             {
-            $message=$lang["researchrequestassignedmessage"];
-            $subject=$lang["researchrequestassigned"];
-            send_user_notification($requesting_user['ref'],"",[],$subject,$message,$templatevars["teamresearchurl"],"emailresearchrequestassigned",$templatevars);
-
+            $assignedmessage = new ResourceSpaceUserNotification();
+            $assignedmessage->set_subject("lang_researchrequestassigned");
+            $assignedmessage->set_message("lang_researchrequestassignedmessage");
+            $assignedmessage->template = "emailresearchrequestassigned";
+            $assignedmessage->templatevars = $templatevars;
+            $assignedmessage->url = $templatevars["teamresearchurl"];
+            send_user_notification([$requesting_user['ref']],$assignedmessage);
             # Log this
             daily_stat("Assigned research request",0);
             }
         if ($newstatus==2)
             {
-            $message=$lang["researchrequestcompletemessage"] . "\n\n" . $lang["clicklinkviewcollection"] . "\n\n" . $templatevars['url'];
-            $subject=$lang["researchrequestcomplete"];
-            send_user_notification($requesting_user['ref'],"",[],$subject,$message,$templatevars["teamresearchurl"],"emailresearchrequestcomplete",$templatevars);
+            $completemessage = new ResourceSpaceUserNotification();
+            $completemessage->set_subject("lang_researchrequestcomplete");
+            $completemessage->set_message("lang_researchrequestcompletemessage");
+            $completemessage->append_message("\n\n");
+            $completemessage->append_message("lang_clicklinkviewcollection");
+            $completemessage->template = "emailresearchrequestcomplete";
+            $completemessage->templatevars = $templatevars;
+            $completemessage->url = $templatevars["teamresearchurl"];
+            send_user_notification([$requesting_user['ref']],$completemessage);
             
             # Log this			
             daily_stat("Processed research request",0);
@@ -170,18 +186,18 @@ function save_research_request($ref)
         }
 
     if ($oldassigned_to!=$assigned_to)
-        {
-        $message = $lang["researchrequestassigned"];
-        $subject = $lang["researchrequestassigned"];
-        $assigned_message = $message;
-        $message .= $templatevars['teamresearchurl'];
-        
-        send_user_notification($assigned_to,"research_request",[],$subject,$message,$templatevars["teamresearchurl"],"emailresearchrequestassigned",$templatevars);
+        {        
+        $assignedmessage = new ResourceSpaceUserNotification();
+        $assignedmessage->set_subject("lang_researchrequestassigned");
+        $assignedmessage->set_message("lang_researchrequestassignedmessage");
+        $assignedmessage->template = "emailresearchrequestassigned";
+        $assignedmessage->templatevars = $templatevars;
+        $assignedmessage->url = $templatevars["teamresearchurl"];
+        send_user_notification([$assigned_to],$assignedmessage);
         }
 
     $parameters=array("i",$newstatus, "i",$assigned_to, "i",$ref);
-
-    ps_query("update research_request set status=?, assigned_to=? where ref=?", $parameters);
+    ps_query("UPDATE research_request SET status = ?, assigned_to = ? WHERE ref= ?", $parameters);
 
     # Copy existing collection
     $rr_copyexisting=getval("copyexisting","");
@@ -189,9 +205,9 @@ function save_research_request($ref)
     if ($rr_copyexisting !="" && is_numeric($collection))
         {
         $parameters=array("i",$collection, "i",$rr_copyexistingref, "i",$collection);
-        ps_query("insert into collection_resource(collection,resource) 
-                    select ?, resource from collection_resource 
-                    where collection=? and resource not in (select resource from collection_resource where collection=?)", $parameters);
+        ps_query("INSERT INTO collection_resource(collection,resource) 
+                    SELECT ?, resource FROM collection_resource 
+                    WHERE collection = ? AND resource NOT IN (SELECT resource FROM collection_resource WHERE collection = ?)", $parameters);
         }
     }
 

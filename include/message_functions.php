@@ -7,16 +7,16 @@
 class ResourceSpaceUserNotification
     {   
     /**
-     * @var array $message_text_arr 
-     * Array of message text components and named optional values to use for placeholders. Can include language strings which will then be translated for each user
+     * @var array $message_parts 
+     * Array of message text components and optional find/repalce arrays for language strings
      */
-    public $message_text_arr = [];
+    private $message_parts = [];
 
     /**
      * @var array $subject
-     * Subject string or array of subject parts 
+     * Array of subject parts 
      */
-    public $subject;   
+    private $subject = [];   
 
     /**
      * @var array $url
@@ -40,47 +40,107 @@ class ResourceSpaceUserNotification
     public $user_preference;
 
     /**
-     * Create a new ResourceSpaceUserNotification
+     * Set the notification message
+     *
+     * @param  string   $text       Text or $lang string using the 'lang_' prefix
+     * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
+     * @param  array    $replace    Array of replace strings to use for str_replace()
      * 
-     * @param array $message        Array of message text. Each element with the following:-
-     *                              'text' key (required) - The text string (may refer to a $lang element using the 'lang_textkey' format)
-     *                              'replace' key (optional) - array of placeholders and values, with the placeholder string as the 'find' key and
-     *                                 the value as the 'replace' string.
+     * @return void
      */
-    public function __construct(array $message_text_arr= [])
+    public function set_message($text,$find=[], $replace=[])
         {
-        $this->message_text_arr = $message_text_arr;
+        $this->message_parts = [[$text, $find, $replace]];
         }
 
+    /**
+     * Append text to the notification message
+     *
+      * @param  string   $text       Text or $lang string using the 'lang_' prefix
+      * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
+      * @param  array    $replace    Array of replace strings to use for str_replace()
+      * @return void
+     */
+    public function append_message($text,$find=[], $replace=[])
+        {
+        $this->message_parts[] = [$text, $find, $replace];
+        }
+
+    /**
+     * Set the notification subject
+     *
+     * @param  string   $text       Text or $lang string using the 'lang_' prefix
+     * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
+     * @param  array    $replace    Array of replace strings to use for str_replace()
+     * 
+     * @return void
+     */
+    public function set_subject($text,$find=[], $replace=[])
+        {
+        $this->subject = [[$text, $find, $replace]];
+        }
+    
+    /**
+     * Append text to the notification subject
+     *
+      * @param  string   $text       Text or $lang string using the 'lang_' prefix
+      * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
+      * @param  array    $replace    Array of replace strings to use for str_replace()
+      * @return void
+     */
+    public function append_subject($text,$find=[], $replace=[])
+        {
+        $this->subject[] = [$text, $find, $replace];
+        }
+
+    /**
+     * Get the translated version of the message with the find/replace completed
+     * Note that the correct $lang must be set by  before this is called
+     *
+     * @return void
+     */
     public function get_message()
         {
         global $lang;
         $messagetext = "";
-        foreach($this->message_text_arr as $message_text_part)
+        foreach($this->message_parts as $message_part)
             {
-            if(!isset($message_text_part["text"]))
+            $text = $message_part[0];
+            if(substr($text,0,5) == "lang_")
                 {
-                // No text element, skip this
-                debug("Message text element is missing the 'text' index");
-                continue;
+                $langkey = substr($text,5);
+                $text = $lang[$langkey];
                 }
-            $text = $message_text_part["text"];
+            if(isset($message_part[1]) && isset($message_part[2]) && count($message_part[1])  == count($message_part[2]))
+                {
+                $text = str_replace($message_part[1],$message_part[2],$text);
+                }
+            $messagetext .= $text;
+            }
+        return $messagetext;
+        }
+    
+    public function get_subject()
+        {
+        global $lang;
+        $fullsubject = "";
+        print_r($this->subject);
+        foreach($this->subject as $subjectpart)
+            {
+            $text = $subjectpart[0];
             if(substr($text,0,5) == "lang_")
                 {
                 $langkey = substr($text,5);
                 $text = $lang[$langkey];
                 }
 
-            if(isset($message_text_part["replace"]))
+            if(isset($subjectpart[1]) && isset($subjectpart[2]))
                 {
-                foreach($message_text_part["replace"] as $placeholder=>$replace)
-                    {
-                    $text = str_replace($placeholder,$replace,$text);
-                    }
+                $text = str_replace($subjectpart[1],$subjectpart[2],$text);
                 }
-            $messagetext .= $text;
+            $fullsubject .= $text;
             }
-        return $messagetext;
+        return $fullsubject;
         }
     }
 
@@ -755,7 +815,7 @@ function send_user_message($users,$text)
  * Send system notifications to specified users, checking the relevant user preference
  *
  * @param  array  $users            Array of user IDs or array of user details from get_users()
- * @param  object $messagedata      An instance of a ResourceSpaceUserNotification object holding information about the message
+ * @param  object $notifymessage    An instance of a ResourceSpaceUserNotification object holding information about the message
  * @param  bool   $forcemail        Force system to send email instead of notification?
  * 
  * 
@@ -764,18 +824,6 @@ function send_user_message($users,$text)
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
     global $userref, $lang, $plugins, $header_colour_style_override;
- 
-    if(!isset($notifymessage->subject)
-        ||
-      !isset($notifymessage->message_text_arr)
-        )
-        {
-        debug("notifymessage is missing required properties");
-        return false;
-        }
-
-    $subject = $notifymessage->subject;
-
     $userlanguages = []; // This stores the users in their relevant language key element
 
     foreach($users as $notify_user)
@@ -794,8 +842,8 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             {
             continue;
             }
-        
-        if(isset($notifymessage->user_preference))
+        $pref = $notifymessage->user_preference;
+        if($pref != "")
             {
             get_config_option($userdetails['ref'],$notifymessage->user_preference, $send_message);	
             	  
@@ -873,27 +921,8 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             }
         // Load in the correct language strings
         lang_load_site_text($lang,"",$userlanguage);
-       
-        // Subject may also be an array containing multiple sections
-        $fullsubject = "";
-        $subjects = is_array($subject) ? $subject : [$subject];
-        foreach($subjects as $subjectpart)
-            {
-            if(substr($subjectpart,0,5) == "lang_")
-                {
-                $langkey = substr($subjectpart,5);
-                // debug("Attempt to use lang entry for notification subject: '" . $langkey . "'");
-                if(isset($lang[$langkey]))
-                    {
-                    $subjectpart = $lang[$langkey];
-                    }
-                else
-                    {
-                    debug("Missing \$lang entry for notification subject: '" . $langkey . "'");
-                    }
-                }
-            $fullsubject .= $subjectpart;
-            }
+               
+        $subject = $notifymessage->get_subject();
         $messagetext = $notifymessage->get_message();
         
         if (count($notifications["message_users"])>0)
@@ -910,7 +939,8 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
                 }            
-            send_mail(implode(",",$notifications["emails"]),$fullsubject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
+            debug("BANG " . implode(",",$notifications["emails"]));
+            send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
             }
         // Restore the saved $lang array
         $lang = $saved_lang;
