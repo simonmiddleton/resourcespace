@@ -1941,7 +1941,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
         }
+      if (!in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
+        {
         hook ("edit_all_extra_modes");
+        }
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
