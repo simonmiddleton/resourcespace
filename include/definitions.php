@@ -463,3 +463,149 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'zip' => 'zip_open',
     'apcu' => 'apcu_fetch',
 ];
+
+const RS_SYSTEM_UTILITIES = [
+    'im-convert' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - convert',
+        'version_argument' => '',
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'im-identify' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - identify',
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'im-composite' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - composite',
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'im-mogrify' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - mogrify',
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'ghostscript' => [
+        'required' => true,
+        'path_var_name' => 'ghostscript_path',
+        'display_name' => 'Ghostscript',
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => '',
+                'args' => [],
+            ],
+        ],
+    ],
+    'ffmpeg' => [
+        'required' => true,
+        'path_var_name' => 'ffmpeg_path',
+        'display_name' => 'FFmpeg',
+        'version_argument' => '',
+    ],
+    'ffprobe' => [
+        'required' => true,
+        'path_var_name' => 'ffmpeg_path',
+        'display_name' => 'ffprobe',
+        'version_argument' => '',
+    ],
+    'exiftool' => [
+        'required' => true,
+        'path_var_name' => 'exiftool_path',
+        'display_name' => 'ExifTool',
+        'version_argument' => '-ver',
+    ],
+    'php' => [
+        'required' => false,
+        'path_var_name' => 'php_path',
+        'display_name' => 'PHP',
+        'version_argument' => '',
+    ],
+    'python' => [
+        'required' => false,
+        'path_var_name' => 'python_path',
+        'display_name' => 'Python',
+        'version_argument' => '',
+    ],
+    'archiver' => [
+        'required' => false,
+        'path_var_name' => 'archiver_path',
+        'display_name' => 'Archiver',
+        'version_argument' => '',
+    ],
+    'fits' => [
+        'required' => false,
+        'path_var_name' => 'fits_path',
+        'display_name' => 'FITS (File Information Tool Set)',
+        'version_argument' => '',
+    ],
+
+
+
+    // new ones found in check.php
+    'antiword' => [
+        'required' => false,
+        'path_var_name' => 'antiword_path',
+        'display_name' => 'Antiword',
+        'version_argument' => '',
+    ],
+    'pdftotext' => [
+        'required' => false,
+        'path_var_name' => 'pdftotext_path',
+        'display_name' => 'pdftotext',
+        'version_argument' => '',
+    ],
+    'blender' => [
+        'required' => false,
+        'path_var_name' => 'blender_path',
+        'display_name' => 'Blender',
+        'version_argument' => '',
+    ],
+    'utilityname' => [
+        'required' => false,
+        'path_var_name' => 'utilityname_path',
+        'display_name' => 'utilityname',
+        'version_argument' => '',
+    ],
+    'utilityname' => [
+        'required' => false,
+        'path_var_name' => 'utilityname_path',
+        'display_name' => 'utilityname',
+        'version_argument' => '',
+    ],
+    'utilityname' => [
+        'required' => false,
+        'path_var_name' => 'utilityname_path',
+        'display_name' => 'utilityname',
+        'version_argument' => '',
+    ],
+];

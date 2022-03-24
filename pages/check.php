@@ -155,14 +155,18 @@ if (!php_is_64bit()){
 }
 ?><tr><td colspan='2'><?php echo $lang['large_file_support_64_bit']; ?></td><td><b><?php echo $result?></b></td></tr><?php
 
-# Check ImageMagick/GraphicsMagick
-display_utility_status("im-convert");
+// Check system utilities
+// display_utility_status('sdfsfs'); # TODO: delete this line when done!
+foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
+    {
+    // Skip utilities which are not required and configured
+    if(!$sysu['required'] && !isset($GLOBALS[$sysu['path_var_name']]))
+        {
+        continue;
+        }
 
-# Check FFmpeg
-display_utility_status("ffmpeg");
-
-# Check Ghostscript
-display_utility_status("ghostscript");
+    display_utility_status($sysu_name);
+    }
 
 # Check Exif extension
 if (function_exists('exif_read_data')) 
@@ -175,9 +179,6 @@ else
 	$result=$lang["status-fail"];
 	}
 ?><tr><td colspan="2"><?php echo $lang["exif_extension"]?></td><td><b><?php echo $result?></b></td></tr><?php
-
-# Check ExifTool
-display_utility_status("exiftool");
 
 # Check archiver
 if (!$use_zip_extension){
@@ -306,50 +307,20 @@ function display_extension_status($extension)
     <td><b><?php echo $result?></b></td></tr><?php
     }    
 
-function get_utility_displayname($utilityname)
-    {
-
-    # Define the display name of a utility.
-    switch (strtolower($utilityname))
-        {
-        case "im-convert":
-           return "ImageMagick/GraphicsMagick";
-           break;
-        case "ghostscript":
-            return "Ghostscript";
-            break;
-        case "ffmpeg":
-            return "FFmpeg";
-            break;
-        case "exiftool":
-            return "ExifTool";
-            break;
-        case "antiword":
-            return "Antiword";
-            break;
-        case "pdftotext":
-            return "pdftotext";
-            break;
-        case "blender":
-            return "Blender";
-            break;
-        case "archiver":
-            return "Archiver";
-            break;
-        default:
-            return $utilityname;
-        }
-    }
 
 function get_utility_version($utilityname)
     {
     global $lang;
 
-    # Get utility path.
-    $utility_fullpath = get_utility_path($utilityname, $path);
+    // Is this a known utility? If not, mark it as such. 
+    if(!isset(RS_SYSTEM_UTILITIES[strtolower(trim($utilityname))]))
+        {
+        return ['name' => $utilityname, 'version' => '', 'success' => false, 'error' => $lang['unknown']];
+        }
 
-    # Get utility display name.
-    $name = get_utility_displayname($utilityname);
+    $utility = RS_SYSTEM_UTILITIES[strtolower(trim($utilityname))];
+    $utility_fullpath = get_utility_path($utilityname, $path);
+    $name = $utility['display_name'] ?? $utilityname;
 
     # Check path.
     if ($path==null)
@@ -358,7 +329,7 @@ function get_utility_version($utilityname)
         $error_msg = $lang["status-notinstalled"];
         return array("name" => $name, "version" => "", "success" => false, "error" => $error_msg);
         }
-    if ($utility_fullpath==false)
+    if ($utility_fullpath === false)
         {
         # There was a path but it was incorrect - the utility couldn't be found.
         $error_msg = $lang["status-fail"] . ":<br />" . str_replace("?", $path, $lang["softwarenotfound"]);
@@ -366,19 +337,21 @@ function get_utility_version($utilityname)
         }
 
     # Look up the argument to use to get the version.
-    switch (strtolower($utilityname))
-        {
-        case "exiftool":
-            $version_argument = "-ver";
-            break;
-        default:
-            $version_argument = "-version";
-        }
+    $version_argument = $utility['version_check']['argument'] ?? '' ?: '-version';
 
     # Check execution and find out version.
     $version_command = $utility_fullpath . " " . $version_argument;
     $version = run_command($version_command);
 
+    $expected = call_user_func_array(
+        $utility['version_check']['callback']['fct_name'],
+        array_merge([$version], $utility['version_check']['callback']['args'])
+    );
+printf('calling "%s" with %s ==> %s<br>',
+    $utility['version_check']['callback']['fct_name'],
+    json_encode($utility['version_check']['callback']['args']),
+    json_encode($expected)
+);
     switch (strtolower($utilityname))
         {
         case "im-convert":
@@ -406,6 +379,10 @@ function get_utility_version($utilityname)
                 {
                 $expected = false;
                 }
+            break;
+
+        default:
+            $expected = false;
             break;
         }
 
@@ -440,5 +417,3 @@ function php_is_64bit() {
 	} 
 
 }
-
-?>
