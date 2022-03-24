@@ -667,7 +667,7 @@ else
     <input name="migrate_data" id="migrate_data" type="hidden" value="">
 
 	<?php if ($fielddata["active"]==0) { ?>
-    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
+    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#field_edit_delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
 	<?php } ?>
 	
     </div>
