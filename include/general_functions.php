@@ -2560,7 +2560,35 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path) . " {$exiftool_global_options} ";
 
         case 'antiword':
+            if(!isset($antiword_path) || $antiword_path === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $antiword_path,
+                [
+                    'unix' => 'antiword',
+                    'win'  => 'antiword.exe'
+                ],
+                $checked_path
+            );
+
         case 'pdftotext':
+            if(!isset($pdftotext_path) || $pdftotext_path === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $pdftotext_path,
+                [
+                    'unix' => 'pdftotext',
+                    'win'  => 'pdftotext.exe'
+                ],
+                $checked_path
+            );
+
         case 'blender':
             break;
 
@@ -2630,6 +2658,26 @@ function get_utility_path($utilityname, &$checked_path = null)
             );
 
             return get_executable_path($php_path, $executable, $checked_path);
+
+        case 'unoconv':
+            if(
+                // On Windows, the utility is available only via Python's package
+                ($GLOBALS['config_windows'] && (!isset($GLOBALS['unoconv_python_path']) || $GLOBALS['unoconv_python_path'] === ''))
+                || (!isset($GLOBALS['unoconv_path']) || $GLOBALS['unoconv_path'] === '')
+                
+            )
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['config_windows'] ? $GLOBALS['unoconv_python_path'] : $GLOBALS['unoconv_path'],
+                [
+                    'unix' => 'unoconv',
+                    'win'  => 'python.exe'
+                ],
+                $checked_path
+            );
         }
 
     // No utility path found

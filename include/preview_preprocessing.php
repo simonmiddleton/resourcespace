@@ -355,20 +355,13 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
 global $unoconv_extensions;
 if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
-    global $config_windows;
-    $unocommand=$unoconv_path . "/unoconv";
-    if (!file_exists($unocommand)) {exit("Unoconv executable not found at '$unoconv_path'");}
-    if($config_windows)
-       {
-       global $unoconv_python_path;
-       $cmd_uno_python_path=$unoconv_python_path . DIRECTORY_SEPARATOR . 'python.exe';
-       if(!file_exists($cmd_uno_python_path))
-            {
-            exit("Unoconv's OpenOffice Python executable not found at '$unoconv_python_path'");
-            }
-       }
-    $cmd=($config_windows ? escapeshellarg($cmd_uno_python_path) . ' ' : '') . escapeshellarg($unocommand) . " --format=pdf " . escapeshellarg($file);
-    $output=run_command($cmd);
+    $unocommand = get_utility_path('unoconv');
+    if(!$unocommand)
+        {
+        exit("Unoconv executable not found");
+        }
+
+    $output = run_command("{$unocommand} --format=pdf %file", false, ['%file' => $file]);
 
     # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
     global $extracted_text_field;
@@ -572,6 +565,7 @@ if ($extension=="blend" && isset($blender_path) && !isset($newfile))
 */
 if ($extension=="doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile))
     {
+        TODO: port code to use get_utility_path
     $command=$antiword_path . "/antiword";
     if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
     if (!file_exists($command)) {exit("Antiword executable not found at '$antiword_path'");}

@@ -156,11 +156,11 @@ if (!php_is_64bit()){
 ?><tr><td colspan='2'><?php echo $lang['large_file_support_64_bit']; ?></td><td><b><?php echo $result?></b></td></tr><?php
 
 // Check system utilities
-// display_utility_status('sdfsfs'); # TODO: delete this line when done!
 foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
     {
-    // Skip utilities which are not required and configured
-    if(!$sysu['required'] && !isset($GLOBALS[$sysu['path_var_name']]))
+    // Skip utilities which are a sub program (e.g ImageMagick has convert, identify, composite etc., checking for convert 
+    // is enough) -or- are not required and configured
+    if(!$sysu['show_on_check_page'] || (!$sysu['required'] && !isset($GLOBALS[$sysu['path_var_name']])))
         {
         continue;
         }
@@ -308,17 +308,19 @@ function display_extension_status($extension)
     }    
 
 
-function get_utility_version($utilityname)
+function get_utility_version(string $utilityname)
     {
     global $lang;
 
+    $utilityname = strtolower(trim($utilityname));
+
     // Is this a known utility? If not, mark it as such. 
-    if(!isset(RS_SYSTEM_UTILITIES[strtolower(trim($utilityname))]))
+    if(!isset(RS_SYSTEM_UTILITIES[$utilityname]))
         {
         return ['name' => $utilityname, 'version' => '', 'success' => false, 'error' => $lang['unknown']];
         }
 
-    $utility = RS_SYSTEM_UTILITIES[strtolower(trim($utilityname))];
+    $utility = RS_SYSTEM_UTILITIES[$utilityname];
     $utility_fullpath = get_utility_path($utilityname, $path);
     $name = $utility['display_name'] ?? $utilityname;
 
@@ -341,50 +343,14 @@ function get_utility_version($utilityname)
 
     # Check execution and find out version.
     $version_command = $utility_fullpath . " " . $version_argument;
-    $version = run_command($version_command);
-
-    $expected = call_user_func_array(
+    $utilities_with_version_on_STDERR = ['python', 'antiword', 'pdftotext'];
+    $version = run_command($version_command, in_array($utilityname, $utilities_with_version_on_STDERR));
+    $version_check = call_user_func_array(
         $utility['version_check']['callback']['fct_name'],
-        array_merge([$version], $utility['version_check']['callback']['args'])
+        array_merge([$version, $utility], $utility['version_check']['callback']['args'])
     );
-printf('calling "%s" with %s ==> %s<br>',
-    $utility['version_check']['callback']['fct_name'],
-    json_encode($utility['version_check']['callback']['args']),
-    json_encode($expected)
-);
-    switch (strtolower($utilityname))
-        {
-        case "im-convert":
-           if (strpos($version, "ImageMagick")!==false) {$name = "ImageMagick";}
-           if (strpos($version, "GraphicsMagick")!==false) {$name = "GraphicsMagick";}
-           if ($name=="ImageMagick" || $name=="GraphicsMagick") {$expected = true;}
-           else {$expected = false;}
-           break;
-        case "ghostscript":
-            if (strpos(strtolower($version), "ghostscript")===false) {$expected = false;}
-            else {$expected = true;}
-            break;
-        case "ffmpeg":
-            if (strpos(strtolower($version), "ffmpeg")===false && strpos(strtolower($version), "avconv")===false ) {$expected = false;}
-            else {$expected = true;}
-            break;
-        case "exiftool":
-            if(preg_match("/^([0-9]+)+\.([0-9]+)/", $version) === 1)
-                {
-                // E.g. 8.84
-                // Note: if there is a warning like "10.11 [Warning: Library version is 10.10]" this should also be seen as expected.
-                $expected = true;
-                }
-            else
-                {
-                $expected = false;
-                }
-            break;
-
-        default:
-            $expected = false;
-            break;
-        }
+    $name = $version_check['utility']['display_name'] ?? $name;
+    $expected = $version_check['found'];
 
     if ($expected==false)
         {
@@ -396,7 +362,9 @@ printf('calling "%s" with %s ==> %s<br>',
         {
         # There was a working path and the output was the expected - the version is returned.
         $s = explode("\n", $version);
-        return array("name" => $name, "version" => $s[0], "success" => true, "error" => "");
+        $version_line = $utilityname === 'antiword' ? $s[3] : $s[0];
+
+        return array("name" => $name, "version" => $version_line, "success" => true, "error" => "");
         }
     }
 

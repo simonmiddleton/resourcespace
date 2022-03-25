@@ -469,7 +469,7 @@ const RS_SYSTEM_UTILITIES = [
         'required' => true,
         'path_var_name' => 'imagemagick_path',
         'display_name' => 'ImageMagick/GraphicsMagick - convert',
-        'version_argument' => '',
+        'show_on_check_page' => true,
         'version_check' => [
             'argument' => '',
             'callback' => [
@@ -482,6 +482,7 @@ const RS_SYSTEM_UTILITIES = [
         'required' => true,
         'path_var_name' => 'imagemagick_path',
         'display_name' => 'ImageMagick/GraphicsMagick - identify',
+        'show_on_check_page' => false,
         'version_check' => [
             'argument' => '',
             'callback' => [
@@ -494,6 +495,7 @@ const RS_SYSTEM_UTILITIES = [
         'required' => true,
         'path_var_name' => 'imagemagick_path',
         'display_name' => 'ImageMagick/GraphicsMagick - composite',
+        'show_on_check_page' => false,
         'version_check' => [
             'argument' => '',
             'callback' => [
@@ -506,6 +508,7 @@ const RS_SYSTEM_UTILITIES = [
         'required' => true,
         'path_var_name' => 'imagemagick_path',
         'display_name' => 'ImageMagick/GraphicsMagick - mogrify',
+        'show_on_check_page' => false,
         'version_check' => [
             'argument' => '',
             'callback' => [
@@ -518,6 +521,59 @@ const RS_SYSTEM_UTILITIES = [
         'required' => true,
         'path_var_name' => 'ghostscript_path',
         'display_name' => 'Ghostscript',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['ghostscript']],
+            ],
+        ],
+    ],
+    'ffmpeg' => [
+        'required' => true,
+        'path_var_name' => 'ffmpeg_path',
+        'display_name' => 'FFmpeg',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['ffmpeg', 'avconv']],
+            ],
+        ],
+    ],
+    'ffprobe' => [
+        'required' => true,
+        'path_var_name' => 'ffmpeg_path',
+        'display_name' => 'ffprobe',
+        'show_on_check_page' => false,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['ffprobe', 'avprobe']],
+            ],
+        ],
+    ],
+    'exiftool' => [
+        'required' => true,
+        'path_var_name' => 'exiftool_path',
+        'display_name' => 'ExifTool',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-ver',
+            'callback' => [
+                'fct_name' => 'check_exiftool_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'php' => [
+        'required' => false,
+        'path_var_name' => 'php_path',
+        'display_name' => 'PHP',
+        'show_on_check_page' => false,
         'version_check' => [
             'argument' => '',
             'callback' => [
@@ -526,48 +582,45 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-    'ffmpeg' => [
-        'required' => true,
-        'path_var_name' => 'ffmpeg_path',
-        'display_name' => 'FFmpeg',
-        'version_argument' => '',
-    ],
-    'ffprobe' => [
-        'required' => true,
-        'path_var_name' => 'ffmpeg_path',
-        'display_name' => 'ffprobe',
-        'version_argument' => '',
-    ],
-    'exiftool' => [
-        'required' => true,
-        'path_var_name' => 'exiftool_path',
-        'display_name' => 'ExifTool',
-        'version_argument' => '-ver',
-    ],
-    'php' => [
-        'required' => false,
-        'path_var_name' => 'php_path',
-        'display_name' => 'PHP',
-        'version_argument' => '',
-    ],
     'python' => [
         'required' => false,
         'path_var_name' => 'python_path',
         'display_name' => 'Python',
-        'version_argument' => '',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '--version',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['Python']],
+            ],
+        ],
     ],
-    'archiver' => [
+  /*  'archiver' => [
         'required' => false,
         'path_var_name' => 'archiver_path',
         'display_name' => 'Archiver',
-        'version_argument' => '',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => '',
+                'args' => [],
+            ],
+        ],
     ],
     'fits' => [
         'required' => false,
         'path_var_name' => 'fits_path',
         'display_name' => 'FITS (File Information Tool Set)',
-        'version_argument' => '',
-    ],
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => '',
+                'args' => [],
+            ],
+        ],
+    ],*/
 
 
 
@@ -576,36 +629,76 @@ const RS_SYSTEM_UTILITIES = [
         'required' => false,
         'path_var_name' => 'antiword_path',
         'display_name' => 'Antiword',
-        'version_argument' => '',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-help', # it doesn't seem to have a version flag, help is the closest we can get
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['antiword']],
+            ],
+        ],
     ],
     'pdftotext' => [
         'required' => false,
         'path_var_name' => 'pdftotext_path',
         'display_name' => 'pdftotext',
-        'version_argument' => '',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-v',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['pdftotext']],
+            ],
+        ],
     ],
     'blender' => [
         'required' => false,
         'path_var_name' => 'blender_path',
         'display_name' => 'Blender',
-        'version_argument' => '',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => '',
+                'args' => [],
+            ],
+        ],
     ],
-    'utilityname' => [
+    'unoconv' => [
         'required' => false,
-        'path_var_name' => 'utilityname_path',
-        'display_name' => 'utilityname',
-        'version_argument' => '',
+        'path_var_name' => 'unoconv_path',
+        'display_name' => 'Unoconv',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '--version',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['unoconv']],
+            ],
+        ],
     ],
-    'utilityname' => [
-        'required' => false,
-        'path_var_name' => 'utilityname_path',
-        'display_name' => 'utilityname',
-        'version_argument' => '',
-    ],
-    'utilityname' => [
-        'required' => false,
-        'path_var_name' => 'utilityname_path',
-        'display_name' => 'utilityname',
-        'version_argument' => '',
-    ],
+    // 'utilityname' => [
+    //     'required' => false,
+    //     'path_var_name' => 'utilityname_path',
+    //     'display_name' => 'utilityname',
+    //     'version_check' => [
+    //         'argument' => '',
+    //         'callback' => [
+    //             'fct_name' => '',
+    //             'args' => [],
+    //         ],
+    //     ],
+    // ],
+    // 'utilityname' => [
+    //     'required' => false,
+    //     'path_var_name' => 'utilityname_path',
+    //     'display_name' => 'utilityname',
+    //     'version_check' => [
+    //         'argument' => '',
+    //         'callback' => [
+    //             'fct_name' => '',
+    //             'args' => [],
+    //         ],
+    //     ],
+    // ],
 ];
