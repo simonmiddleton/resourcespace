@@ -543,13 +543,19 @@ if ((($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($e
 
 if ($extension=="blend" && isset($blender_path) && !isset($newfile))
     {
-    $blendercommand=$blender_path;  
-    if (!file_exists($blendercommand)|| is_dir($blendercommand)) {$blendercommand=$blender_path . "/blender";}
-    if (!file_exists($blendercommand)) {$blendercommand=$blender_path . "\blender.exe";}
-    if (!file_exists($blendercommand)) {exit("Could not find blender application. '$blendercommand'");} 
+    $blendercommand = get_utility_path('blender');
+    if(!$blendercommand)
+        {
+        exit("Could not find blender application. '$blendercommand'");
+        } 
 
-    $cmd=$blendercommand. " -b ".escapeshellarg($file)." -F JPEG -o $target -f 1";
-    $error=run_command($cmd);
+    $error = run_command(
+        "{$blendercommand} -b %file -F JPEG -o %target -f 1",
+        false,
+        [
+            '%file' => $file,
+            '%target' => $target,
+        ]);
 
     if (file_exists($target."0001"))
         {

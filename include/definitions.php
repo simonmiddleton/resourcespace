@@ -657,10 +657,10 @@ const RS_SYSTEM_UTILITIES = [
         'display_name' => 'Blender',
         'show_on_check_page' => true,
         'version_check' => [
-            'argument' => '',
+            'argument' => '-v',
             'callback' => [
-                'fct_name' => '',
-                'args' => [],
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['blender']],
             ],
         ],
     ],

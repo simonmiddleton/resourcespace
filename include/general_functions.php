@@ -2590,7 +2590,19 @@ function get_utility_path($utilityname, &$checked_path = null)
             );
 
         case 'blender':
-            break;
+            if(!isset($GLOBALS['blender_path']) || $GLOBALS['blender_path'] === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['blender_path'],
+                [
+                    'unix' => 'blender',
+                    'win'  => 'blender.exe'
+                ],
+                $checked_path
+            );
 
         case 'archiver':
             // Archiver path not configured
