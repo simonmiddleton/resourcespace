@@ -363,7 +363,6 @@ function get_utility_version(string $utilityname)
         # There was a working path and the output was the expected - the version is returned.
         $s = explode("\n", $version);
         $version_line = $utilityname === 'antiword' ? $s[3] : $s[0];
-
         return array("name" => $name, "version" => $version_line, "success" => true, "error" => "");
         }
     }

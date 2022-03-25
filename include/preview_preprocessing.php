@@ -475,7 +475,7 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
 
     $wait=run_command(
-        "xvfb-run {$calibrecommand} %file %pdffile ",
+        "{$calibrecommand} %file %pdffile ",
         false,
         [
             '%file' => $file,
