@@ -148,19 +148,9 @@ if (!hook("replacemain"))
     <div class="clearerleft"> </div>
     </div>
     <?php
-    if($user_registration_opt_in)
-        {
-        ?>
-        <div class="Question">
-            <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
-            <label for="login_opt_in" style="margin-top:0;"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
-            <div class="clearer"></div>
-        </div>
-        <?php
-        }
-    } /* END hook Replacemain */ ?>
+    } /* END hook Replacemain */
 
-<?php # Add custom fields 
+# Add custom fields 
 if (isset($custom_registration_fields))
 	{
 	$custom=explode(",",$custom_registration_fields);
@@ -305,6 +295,17 @@ $groups=get_registration_selectable_usergroups();
 <?php } /* END hook replaceuserrequestcomment */
 
 hook("userrequestadditional");
+
+if($user_registration_opt_in)
+    {
+    ?>
+    <div class="Question">
+        <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
+        <label for="login_opt_in" style="margin-top:0;"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
+        <div class="clearer"></div>
+    </div>
+    <?php
+    }
 
 if(!hook("replaceantispam"))
 	{
