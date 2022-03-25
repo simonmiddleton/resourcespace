@@ -39,7 +39,6 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
         "i",$homepage_show,
         "i",$featured_collections_show,
         "i",$login_show,
-        "i",$ref,
         "i",$resource_ref,
         "i",$homepage_show,
         "i",$featured_collections_show,
