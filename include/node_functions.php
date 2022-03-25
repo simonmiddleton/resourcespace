@@ -1000,10 +1000,10 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
             add_node_keyword($node, $kworig, $position, false, $stem);
             }
         }
-        
+
+     $unstemmed=$keyword;
      if ($stem && $stemming && function_exists("GetStem"))
         {
-        $unstemmed=$keyword;
         $keyword=GetStem($keyword);
         if($keyword!=$unstemmed)
             {
@@ -1015,7 +1015,7 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
         
         
     // $keyword should not be indexed if it can be found in the $noadd array, no need to continue
-    if(in_array($keyword, $noadd))
+    if(in_array($unstemmed, $noadd))
         {
         debug('Ignored keyword "' . $keyword . '" as it is in the $noadd array. Triggered in ' . __FUNCTION__ . '() on line ' . __LINE__);
         return false;
