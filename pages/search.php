@@ -1346,7 +1346,7 @@ if($responsive_ui)
             <?php
             if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim($collectiondata['description']) != "")
                 {
-                echo "<p>" . htmlspecialchars($collectiondata['description']) . "</p>";
+                echo "<p>" . nl2br(htmlspecialchars($collectiondata['description'])) . "</p>";
                 }
             echo "</div>";
             }
