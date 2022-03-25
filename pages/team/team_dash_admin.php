@@ -61,6 +61,7 @@ if(getvalescaped("quicksave",FALSE))
 						$force = !checkTileConfig($tile, $search_string["tlstyle"]);
 						}
 						delete_dash_tile($tile["ref"], true, $force);
+                        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
 					}
 				reorder_default_dash();
 				$dtiles_available = get_alluser_available_tiles();
