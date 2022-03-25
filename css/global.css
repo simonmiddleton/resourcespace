@@ -2275,9 +2275,9 @@ a.BrowseRefresh{
 .own_message, .own_message .user_message, .own_message .user_message_text, .own_message .profileimage {float:right;}
 
 /* Fixes for form checkboxes and date range fields */
-.BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 250px;}
+.BasicsBoxEdit .Question label:not(.customFieldLabel) {width: 200px;}
 .BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
-.BasicsBoxEdit .FormHelp {margin: 0 0 10px 260px;}
+.BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
 
 .nodes_input_checkbox {float:left; margin-top: 5px}
 
