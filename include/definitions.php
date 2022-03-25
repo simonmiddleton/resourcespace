@@ -677,27 +677,29 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
+    'calibre' => [
+        'required' => false,
+        'path_var_name' => 'calibre_path',
+        'display_name' => 'Calibre',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['calibre']],
+            ],
+        ],
+    ],
     // 'utilityname' => [
     //     'required' => false,
     //     'path_var_name' => 'utilityname_path',
     //     'display_name' => 'utilityname',
+    //     'show_on_check_page' => true,
     //     'version_check' => [
     //         'argument' => '',
     //         'callback' => [
-    //             'fct_name' => '',
-    //             'args' => [],
-    //         ],
-    //     ],
-    // ],
-    // 'utilityname' => [
-    //     'required' => false,
-    //     'path_var_name' => 'utilityname_path',
-    //     'display_name' => 'utilityname',
-    //     'version_check' => [
-    //         'argument' => '',
-    //         'callback' => [
-    //             'fct_name' => '',
-    //             'args' => [],
+    //             'fct_name' => 'check_utility_cli_version_found_by_name',
+    //             'args' => [['utilityname']],
     //         ],
     //     ],
     // ],

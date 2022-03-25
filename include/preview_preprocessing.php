@@ -464,15 +464,24 @@ global $calibre_extensions;
 global $calibre_path;
 if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($newfile))
     {
-    $calibrecommand=$calibre_path . "/ebook-convert";
-    if (!file_exists($calibrecommand)) {exit("Calibre executable not found at '$calibre_path'");}
+    $calibrecommand = get_utility_path('calibre');
+    if(!$calibrecommand)
+        {
+        exit("Calibre executable not found at '$calibre_path'");
+        }
     
     $path_parts=pathinfo($file);
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
 
-    $cmd="xvfb-run ". $calibrecommand . " " . escapeshellarg($file) . " " . escapeshellarg($pdffile) ." ";
-    $wait=run_command($cmd);
+    $wait=run_command(
+        "xvfb-run {$calibrecommand} %file %pdffile ",
+        false,
+        [
+            '%file' => $file,
+            '%pdffile' => $pdffile,
+        ]
+    );
 
     if (file_exists($pdffile))
         {
@@ -486,7 +495,7 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
 
         $parameters=array("s",$ref."-converted.pdf", "s",$alt_description, "i",filesize_unlimited($alt_path), "i",$ref, "i",$alt_ref);
         ps_query("UPDATE resource_alt_files 
-                    SET file_name=?, description=?, file_extension='pdf', file_size=? ,unoconv='1' where resource=? and ref=?");
+                    SET file_name=?, description=?, file_extension='pdf', file_size=? ,unoconv='1' where resource=? and ref=?", $parameters);
 
         # Set vars so we continue generating thumbs/previews as if this is a PDF file
         $extension="pdf";

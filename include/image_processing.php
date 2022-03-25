@@ -2836,13 +2836,14 @@ function extract_text($ref,$extension,$path="")
     # PDF extraction using pdftotext (part of the XPDF project)
     if (($extension=="pdf" || $extension=="ai") && isset($pdftotext_path))
         {
-        $command=$pdftotext_path . "/pdftotext";
-        if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
-        if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'"); return false;}
+        $command = get_utility_path('pdftotext');
+        if(!$command)
+            {
+            debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
+            return false;
+            }
 
-        $cmd=$command . " -enc UTF-8 " . escapeshellarg($path) . " -";
-        $text = run_command($cmd);
-
+        $text = run_command("{$command} -enc UTF-8 %path -", false, ['%path' => $path]);
         }
 
     # HTML extraction

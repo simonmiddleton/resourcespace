@@ -2678,6 +2678,21 @@ function get_utility_path($utilityname, &$checked_path = null)
                 ],
                 $checked_path
             );
+
+        case 'calibre':
+            if(!isset($GLOBALS['calibre_path']) || $GLOBALS['calibre_path'] === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['calibre_path'],
+                [
+                    'unix' => 'ebook-convert',
+                    'win'  => 'ebook-convert.exe'
+                ],
+                $checked_path
+            );
         }
 
     // No utility path found
