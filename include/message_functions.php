@@ -40,6 +40,13 @@ class ResourceSpaceUserNotification
     public $user_preference;
 
     /**
+     * @var array $eventdata  Optional array for linking the system message to a specific activity e.g. resource or account request so that it can be deleted once the request has been processed.
+     *                  ["type"] e.g. MANAGED_REQUEST
+     *                  ["ref"]  
+     */
+    public $eventdata = [];
+
+    /**
      * Set the notification message
      *
      * @param  string   $text       Text or $lang string using the 'lang_' prefix
@@ -64,6 +71,19 @@ class ResourceSpaceUserNotification
     public function append_message($text,$find=[], $replace=[])
         {
         $this->message_parts[] = [$text, $find, $replace];
+        }
+
+    /**
+     * Prepend text to the notification message
+     *
+      * @param  string   $text       Text or $lang string using the 'lang_' prefix
+      * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
+      * @param  array    $replace    Array of replace strings to use for str_replace()
+      * @return void
+     */
+    public function prepend_message($text,$find=[], $replace=[])
+        {
+        array_unshift($this->message_parts,[$text, $find, $replace]);
         }
 
     /**
@@ -94,22 +114,35 @@ class ResourceSpaceUserNotification
         }
 
     /**
-     * Get the translated version of the message with the find/replace completed
-     * Note that the correct $lang must be set by  before this is called
+     * Get the message text, by default this is resolved into single string with text translated and with the find/replace completed
+     * Note that if not returning raw data the correct $lang must be set by  before this is called
+      * @param  bool    $raw       Return the raw message parts to use in another message object. False by default
      *
      * @return void
      */
-    public function get_message()
+    public function get_message($raw=false)
         {
         global $lang;
+        if($raw)
+            {
+            return $this->message_parts;
+            }
         $messagetext = "";
+        debug("BANG text: " . print_r($this->message_parts,true));
         foreach($this->message_parts as $message_part)
             {
             $text = $message_part[0];
+
+        debug("BANG text: " . print_r($message_part[0],true));
             if(substr($text,0,5) == "lang_")
                 {
                 $langkey = substr($text,5);
                 $text = $lang[$langkey];
+                }
+            if(substr($text,0,5) == "i18n_")
+                {
+                $i18n_string = substr($text,5);
+                $text = i18n_get_translated($i18n_string);
                 }
             if(isset($message_part[1]) && isset($message_part[2]) && count($message_part[1])  == count($message_part[2]))
                 {
@@ -534,7 +567,6 @@ function message_send_unread_emails()
 
 		if($actions_on)
 			{
-			//debug("Checking actions for user " . $unreadmessage["userref"]);
             if(!$actions_on){break;}
 			$user_actions = get_user_actions(false);
 			if (count($user_actions) > 0)		
@@ -842,10 +874,10 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             {
             continue;
             }
-        $pref = $notifymessage->user_preference;
-        if($pref != "")
+        $preference = $notifymessage->user_preference;
+        if($preference != "")
             {
-            get_config_option($userdetails['ref'],$notifymessage->user_preference, $send_message);	
+            get_config_option($userdetails['ref'],$preference, $send_message);	
             	  
             if($send_message==false)
                 {
@@ -939,7 +971,6 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
                 }            
-            debug("BANG " . implode(",",$notifications["emails"]));
             send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
             }
         // Restore the saved $lang array

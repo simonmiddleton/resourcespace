@@ -157,10 +157,11 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $request_query = new PreparedStatementQuery();
             $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                     VALUES (?, ?, NOW(), 1, 0, ?, ?)";
-            $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message, "i",$assigned_to);
+            $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_message(), "i",$assigned_to);
 
             $subject = $applicationname . ': ' . $lang['requestassignedtoyou'];
-            $message = $lang['requestassignedtoyoumail'];
+
+            //$message = $lang['requestassignedtoyoumail'];
             if($assigned_to === 'not_managed' || !$assigned_to_user)
                 {
                 $assigned_to = get_notification_users("RESOURCE_ACCESS");
@@ -170,24 +171,27 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
 
                 $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
                 VALUES (?, ?, NOW(), 1, 0, ?)";
-                $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message);
-                $subject = $applicationname . ": " . $lang["user_made_request"];
-                $message = $lang['user_made_request'];
+                $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_message());
+                //$message->set_subject($applicationname . ": " . $lang["user_made_request"];
+                //$message = $lang['user_made_request'];
                 }
 
             ps_query($request_query->sql, $request_query->parameters);
             $request = sql_insert_id();
 
-            // Send message
-            $request_url = $baseurl . "/?q=" . $request;
+            // Send message with new request url specific to this collection
+            $message->url = $baseurl . "/?q=" . $request;
             $templatevars['request_id']    = $request;
-            $templatevars['requesturl']    = $request_url;
+            $templatevars['requesturl']    = $message->url;
             $templatevars['requestreason'] = $message;
             $eventdata = [
                 "type"  => MANAGED_REQUEST,
                 "ref"   => $request,
                 ];
-            send_user_notification($assigned_to,"resource_request",$eventdata,$subject,$message,$request_url,$admin_mail_template,$templatevars);
+            
+            $message->eventdata = $eventdata;
+            $message->templatevars = $templatevars;
+            send_user_notification($assigned_to,$message);
             }
         $notify_manage_request_admin = false;
         }
@@ -200,7 +204,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
 
 function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manage_individual_requests, $collection_id, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)
     {
-    global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $resource_type_request_users, $userref,$manage_request_admin, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
+    global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $resource_type_request_users, $userref, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
 
     // Collection level requests have already been created and e-mails sent so skip this step
     if(!$manage_individual_requests)
@@ -225,16 +229,35 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         ];
     $request_url = $baseurl . "/?q=" . $request;
 
+    // Update message with request url specific to this collection
     $templatevars['request_id']    = $request;
     $templatevars['requesturl']    = $request_url;
-    $templatevars['requestreason'] = $message;
+    $templatevars['requestreason'] = $message->get_message();
+
+    $adminmessage = new ResourceSpaceUserNotification();
+    $adminmessage->set_subject($applicationname . ": ");
+    $adminmessage->append_subject("lang_requestassignedtoyou");
+    $adminmessage->set_message("lang_requestassignedtoyoumail");
+    $adminmessage->append_message("<br/><br/>");
+    $adminmessage->append_message("lang_username");
+    $adminmessage->append_message(": " . $username . "<br/>");
+    $coremessage_arr = $message->get_message(true);
+    if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
+        {
+        foreach($coremessage_arr as $messagepart)
+            {
+            $adminmessage->append_message($messagepart[0],$messagepart[1],$messagepart[2]);
+            }
+        }
+    $adminmessage->url = $request_url;  
+    $adminmessage->eventdata = $eventdata;
+    $adminmessage->templatevars = $templatevars;
 
     // Attach assigned admin to this collection
-    add_collection($assigned_to_user['ref'], $collection_id);
-
+    add_collection($assigned_to_user['ref'], $collection_id);  
     if($notify_manage_request_admin)
         {
-        send_user_notification([$assigned_to_user['ref']],"resource_request",$eventdata,$applicationname . ': ' . $lang['requestassignedtoyou'],$lang['requestassignedtoyoumail'] . ": " . $message,$request_url,$admin_mail_template,$templatevars);
+        send_user_notification([$assigned_to_user['ref']],$adminmessage);
         $notification_sent = true;
         }
 
@@ -244,13 +267,12 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     if(isset($resource_type_request_emails))
         {
         $parameters=array("i",$collection_id);    
-        $requestrestypes=ps_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection=?", $parameters);
+        $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection = ?", $parameters);
         $requestrestypes=array_unique($requestrestypes);
         if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
             {
             // Is this a system user? If so we can send a notification instead of an email
             $emailusers = get_user_by_email($resource_type_request_emails[$requestrestypes[0]]);
-
             if(is_array($emailusers) && count($emailusers) > 0)
                 {
                 $notify_users = array_merge($notify_users,$emailusers);
@@ -267,24 +289,44 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($resource_type_request_users,$admin_notify_users);
 
-        # Send the e-mails and/or notification messages   
-        $admin_notify_message=$lang["user_made_request"] . "<br /><br />" . $lang["username"] . ": " . $username . "<br />$message<br /><br />";
-        $admin_notify_message.=$lang["clicktoviewresource"] . "<br />" . $templatevars["requesturl"];
+        # Send the e-mails and/or notification messages
+        $adminmessage = new ResourceSpaceUserNotification();
+        $adminmessage->set_subject($applicationname . ": ");
+        $adminmessage->append_subject("lang_requestcollection");
+        $adminmessage->append_subject(" - " . $collection_id);
+        $adminmessage->template = $admin_mail_template;
+        $adminmessage->templatevars= $templatevars;
         foreach($notify_emails as $notify_email)
             {
             // These are not system users so emails must be sent
-            send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
+            send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$adminmessage->get_message(),$email_from,$email_from,$admin_mail_template,$templatevars);
             }
-        send_user_notification($notify_users,"resource_request",$eventdata,$applicationname . ': ' . $lang['user_made_request'],$admin_notify_message,$request_url,$admin_mail_template,$templatevars);
+        send_user_notification($notify_users,$adminmessage);
         }
    
     if ($request_senduserupdates)
         {
-        $userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
-
-        $templatevars['url']    = $baseurl . "/?c=" . $collection_id;
-        $userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$collection_id";
-        send_user_notification([$userref],"",[],$applicationname . ": " . $lang["requestsent"] . " - " . $collection_id,$userconfirmmessage,$templatevars['url'],$user_mail_template,$templatevars);
+        $collection_url = $baseurl . "/?c=" . $collection_id;
+        $usermessage = new ResourceSpaceUserNotification();
+        $usermessage->set_subject($applicationname . ": ");
+        $usermessage->append_subject("lang_requestsent");
+        $usermessage->set_message("lang_requestsenttext");
+        $usermessage->append_message("<br/><br/>");
+        $coremessage_arr = $message->get_message(true);
+        if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
+            {
+            foreach($coremessage_arr as $messagepart)
+                {
+                $usermessage->append_message($messagepart[0],$messagepart[1],$messagepart[2]);
+                }
+            }        
+        $usermessage->append_message("<br/><br/>");
+        $usermessage->append_message("lang_clicktoviewresource");
+        $usermessage->url = $collection_url;
+        $templatevars['requesturl'] = $collection_url;
+        $usermessage->template = $user_mail_template;
+        $usermessage->templatevars = $templatevars;        
+        send_user_notification([$userref],$usermessage);
         }
     return true;
     }
