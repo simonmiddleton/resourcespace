@@ -565,13 +565,19 @@ if ($extension=="blend" && isset($blender_path) && !isset($newfile))
 */
 if ($extension=="doc" && isset($antiword_path) && isset($ghostscript_path) && !isset($newfile))
     {
-        TODO: port code to use get_utility_path
-    $command=$antiword_path . "/antiword";
-    if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
-    if (!file_exists($command)) {exit("Antiword executable not found at '$antiword_path'");}
+    $command = get_utility_path('antiword');
+    if(!$command)
+        {
+        exit("Antiword executable not found at '$antiword_path'");
+        }
 
-    $cmd=$command . " -p a4 " . escapeshellarg($file) . " > \"" . $target . ".ps" . "\"";
-    $output=run_command($cmd);
+    $output = run_command(
+        "{$command} -p a4 %file > %target",
+        false,
+        [
+            '%file' => $file,
+            '%target' => "{$target}.ps",
+        ]);
 
     if (file_exists($target . ".ps"))
         {

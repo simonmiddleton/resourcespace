@@ -2781,12 +2781,14 @@ function extract_text($ref,$extension,$path="")
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
         {
-        $command=$antiword_path . "/antiword";
-        if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
-        if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
+        $command = get_utility_path('antiword');
+        if(!$command)
+            {
+            debug("ERROR: Antiword executable not found at '$antiword_path'");
+            return false;
+            }
 
-        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
-        $text=run_command($cmd);
+        $text = run_command("{$command} -m UTF-8 %path", false, ['%path' => $path]);
         }
     
        # Microsoft OfficeOpen (docx,xlsx) extraction
