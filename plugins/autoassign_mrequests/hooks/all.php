@@ -66,7 +66,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     $request_query = new PreparedStatementQuery();
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                   VALUES (?, ?, NOW(), 1, 0, ?, ?)";
-    $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message, "i",$assigned_administrator);
+    $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message->get_message(), "i",$assigned_administrator);
 
     $assigned_to_user = get_user($assigned_administrator);
     $notify_manage_request_admin = true;
@@ -158,39 +158,45 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                     VALUES (?, ?, NOW(), 1, 0, ?, ?)";
             $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_message(), "i",$assigned_to);
-
-            $subject = $applicationname . ': ' . $lang['requestassignedtoyou'];
-
-            //$message = $lang['requestassignedtoyoumail'];
             if($assigned_to === 'not_managed' || !$assigned_to_user)
                 {
                 $assigned_to = get_notification_users("RESOURCE_ACCESS");
-
-                # Note: The refactored sprintf code had an $assigned_to parameter, but no corresponding '%s' placeholder
-                #       This has been dropped from refactored code
-
                 $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
                 VALUES (?, ?, NOW(), 1, 0, ?)";
                 $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_message());
-                //$message->set_subject($applicationname . ": " . $lang["user_made_request"];
-                //$message = $lang['user_made_request'];
                 }
 
             ps_query($request_query->sql, $request_query->parameters);
             $request = sql_insert_id();
-
-            // Send message with new request url specific to this collection
-            $message->url = $baseurl . "/?q=" . $request;
-            $templatevars['request_id']    = $request;
-            $templatevars['requesturl']    = $message->url;
-            $templatevars['requestreason'] = $message;
             $eventdata = [
                 "type"  => MANAGED_REQUEST,
                 "ref"   => $request,
                 ];
             
-            $message->eventdata = $eventdata;
-            $message->templatevars = $templatevars;
+            // Send message for this request
+            $request_url = $baseurl . "/?q=" . $request;
+            $templatevars['request_id']    = $request;
+            $templatevars['requesturl']    = $request_url;
+            $templatevars['requestreason'] = $message->get_message();
+            $adminmessage = new ResourceSpaceUserNotification();
+            $adminmessage->set_subject($applicationname . ": ");
+            $adminmessage->append_subject("lang_requestassignedtoyou");
+            $adminmessage->set_message("lang_requestassignedtoyoumail");
+            $adminmessage->append_message("<br/><br/>");
+            $adminmessage->append_message("lang_username");
+            $adminmessage->append_message(": " . $username . "<br/>");
+            $coremessage_arr = $message->get_message(true);
+            if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
+                {
+                foreach($coremessage_arr as $messagepart)
+                    {
+                    $adminmessage->append_message($messagepart[0],$messagepart[1],$messagepart[2]);
+                    }
+                }
+            $adminmessage->url = $request_url;  
+            $adminmessage->eventdata = $eventdata;
+            $adminmessage->templatevars = $templatevars;
+            $adminmessage->eventdata = $eventdata;
             send_user_notification($assigned_to,$message);
             }
         $notify_manage_request_admin = false;
