@@ -564,7 +564,7 @@ const RS_SYSTEM_UTILITIES = [
         'version_check' => [
             'argument' => '-ver',
             'callback' => [
-                'fct_name' => 'check_exiftool_cli_version_found',
+                'fct_name' => 'check_numeric_cli_version_found',
                 'args' => [],
             ],
         ],
@@ -595,7 +595,7 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-  /*  'archiver' => [
+    /*'archiver' => [
         'required' => false,
         'path_var_name' => 'archiver_path',
         'display_name' => 'Archiver',
@@ -607,20 +607,20 @@ const RS_SYSTEM_UTILITIES = [
                 'args' => [],
             ],
         ],
-    ],
+    ],*/
     'fits' => [
         'required' => false,
         'path_var_name' => 'fits_path',
-        'display_name' => 'FITS (File Information Tool Set)',
+        'display_name' => 'File Information Tool Set (FITS)',
         'show_on_check_page' => true,
         'version_check' => [
-            'argument' => '',
+            'argument' => '-v',
             'callback' => [
-                'fct_name' => '',
+                'fct_name' => 'check_numeric_cli_version_found',
                 'args' => [],
             ],
         ],
-    ],*/
+    ],
 
 
 

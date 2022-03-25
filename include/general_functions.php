@@ -5038,3 +5038,79 @@ function check_filestore_browseability()
 
     return $return;
     }
+
+/**
+ * Check CLI version found for ImageMagick is as expected.
+ * 
+ * @param string $version_output The version output for ImageMagick
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - New utility value for its display name
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_imagemagick_cli_version_found(string $version_output, array $utility)
+    {
+    $expected = ['ImageMagick', 'GraphicsMagick'];
+
+    foreach($expected as $utility_name)
+        {
+        if(mb_strpos($version_output, $utility_name) !== false)
+            {
+            $utility['display_name'] = $utility_name;
+            }
+        }
+
+    return [
+        'utility' => $utility,
+        'found' => in_array($utility['display_name'], $expected),
+    ];
+    }
+
+/**
+ * Check CLI numeric version found for a utility is as expected.
+ * 
+ * @param string $version_output The version output
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - not used
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_numeric_cli_version_found(string $version_output, array $utility)
+    {
+    return [
+        'utility' => $utility,
+        'found' => preg_match("/^([0-9]+)+\.([0-9]+)/", $version_output) === 1,
+    ];
+    }
+
+/**
+ * Check CLI version found for a utility is as expected by looking up for its name.
+ * 
+ * @param string $version_output The version output for the utility
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - not used
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_utility_cli_version_found_by_name(string $version_output, array $utility, array $lookup_names)
+    {
+    $version_output = strtolower($version_output);
+    $lookup_names = array_filter($lookup_names);
+
+    foreach($lookup_names as $utility_name)
+        {
+        if(mb_strpos($version_output, strtolower($utility_name)) !== false)
+            {
+            $found = true;
+            break;
+            }
+        }
+
+    return [
+        'utility' => $utility,
+        'found' => isset($found),
+    ];
+    }
