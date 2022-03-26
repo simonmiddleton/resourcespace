@@ -7770,12 +7770,12 @@ function payment_set_complete($collection)
     $notify_users=get_notification_users("RESOURCE_ACCESS");
     $notifymessage = new ResourceSpaceUserNotification();
     $notifymessage->set_message("lang_purchase_complete_email_admin_body");
-    $notifymessage->append_message("<br/><br/>");
-    $notifymessage->append_message("lang_username");
-    $notifymessage->append_message(": " . $username . " (" . $userfullname . ")<br/><br/>");    
+    $notifymessage->append_text("<br/><br/>");
+    $notifymessage->append_text("lang_username");
+    $notifymessage->append_text(": " . $username . " (" . $userfullname . ")<br/><br/>");    
     foreach($summaryparts as $summarypart)
         {
-        $notifymessage->append_message($summarypart);
+        $notifymessage->append_text($summarypart);
         }    
     $notifymessage->user_preference = "user_pref_resource_access_notifications";
     $notifymessage->set_subject("lang_purchase_complete_email_admin");
@@ -7785,10 +7785,10 @@ function payment_set_complete($collection)
     // Send email to user (not a notification as may need to be kept for reference)
     $userconfirmmessage = new ResourceSpaceUserNotification();
     $userconfirmmessage->set_message("lang_purchase_complete_email_user_body");
-    $userconfirmmessage->append_message("<br/><br/>");
+    $userconfirmmessage->append_text("<br/><br/>");
     foreach($summaryparts as $summarypart)
         {
-        $userconfirmmessage->append_message($summarypart);
+        $userconfirmmessage->append_text($summarypart);
         }        
     $userconfirmmessage->set_subject("lang_purchase_complete_email_user");
     $userconfirmmessage->url = $baseurl . "/?c=" . $collection;

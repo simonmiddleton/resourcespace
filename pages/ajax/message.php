@@ -382,7 +382,7 @@
 			{
 			owner = '<?php echo htmlspecialchars($applicationname, ENT_QUOTES); ?>';
 			}
-		jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(message) + "</div><br />" + url);
+		jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(message) + "</div>" + url);
 		jQuery("#modal_dialog").addClass('message_dialog');
 		jQuery("#modal_dialog").dialog({
 			title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,

@@ -55,7 +55,7 @@ class ResourceSpaceUserNotification
      * 
      * @return void
      */
-    public function set_message($text,$find=[], $replace=[])
+    public function set_text($text,$find=[], $replace=[])
         {
         $this->message_parts = [[$text, $find, $replace]];
         }
@@ -68,22 +68,37 @@ class ResourceSpaceUserNotification
       * @param  array    $replace    Array of replace strings to use for str_replace()
       * @return void
      */
-    public function append_message($text,$find=[], $replace=[])
+    public function append_text($text,$find=[], $replace=[])
         {
         $this->message_parts[] = [$text, $find, $replace];
         }
 
     /**
-     * Prepend text to the notification message
+     * Prepend text component to the notification message
      *
       * @param  string   $text       Text or $lang string using the 'lang_' prefix
       * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
       * @param  array    $replace    Array of replace strings to use for str_replace()
       * @return void
      */
-    public function prepend_message($text,$find=[], $replace=[])
+    public function prepend_text($text,$find=[], $replace=[])
         {
         array_unshift($this->message_parts,[$text, $find, $replace]);
+        }
+
+    /**
+     * Prepend multiple text elements to the notification message
+     *
+      * @param  array   $messages    Array of text components as per append_text()
+      * @return void
+     */
+    public function prepend_text_multi($textarr)
+        {
+        // Loop in reverse order so that the parts get ordered correctly at start
+        for($n=count($textarr);$n--;$n>=0)
+            {
+            array_unshift($this->message_parts,$textarr[0], $textarr[1], $textarr[2]);
+            }
         }
 
     /**
@@ -116,24 +131,21 @@ class ResourceSpaceUserNotification
     /**
      * Get the message text, by default this is resolved into single string with text translated and with the find/replace completed
      * Note that if not returning raw data the correct $lang must be set by  before this is called
-      * @param  bool    $raw       Return the raw message parts to use in another message object. False by default
+      * @param  bool    $unresolved       Return the raw message parts to use in another message object. False by default
      *
      * @return void
      */
-    public function get_message($raw=false)
+    public function get_text($unresolved=false)
         {
         global $lang;
-        if($raw)
+        if($unresolved)
             {
             return $this->message_parts;
             }
         $messagetext = "";
-        debug("BANG text: " . print_r($this->message_parts,true));
         foreach($this->message_parts as $message_part)
             {
             $text = $message_part[0];
-
-        debug("BANG text: " . print_r($message_part[0],true));
             if(substr($text,0,5) == "lang_")
                 {
                 $langkey = substr($text,5);
@@ -855,7 +867,7 @@ function send_user_message($users,$text)
  */
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
-    global $userref, $lang, $plugins, $header_colour_style_override;
+    global $userref, $lang, $plugins, $header_colour_style_override, $admin_resource_access_notifications;
     $userlanguages = []; // This stores the users in their relevant language key element
 
     foreach($users as $notify_user)
@@ -877,7 +889,13 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         $preference = $notifymessage->user_preference;
         if($preference != "")
             {
-            get_config_option($userdetails['ref'],$preference, $send_message);	
+            $default = null;
+            if($preference == "user_pref_resource_access_notifications")
+                {
+                // Need to ensure not getting the default global setting for the requeting user
+                $default = $admin_resource_access_notifications;
+                }
+            get_config_option($userdetails['ref'],$preference, $send_message,$admin_resource_access_notifications);	
             	  
             if($send_message==false)
                 {
@@ -955,7 +973,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         lang_load_site_text($lang,"",$userlanguage);
                
         $subject = $notifymessage->get_subject();
-        $messagetext = $notifymessage->get_message();
+        $messagetext = $notifymessage->get_text();
         
         if (count($notifications["message_users"])>0)
             {        

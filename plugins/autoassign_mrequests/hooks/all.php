@@ -80,7 +80,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
 function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $collection_data, $message, $manage_collection_request)
     {
     global $manage_request_admin, $assigned_to_user, $admin_mail_template, $lang, $baseurl, $applicationname, 
-           $request_query, $notify_manage_request_admin;
+           $request_query, $notify_manage_request_admin, $username;
 
     // Do not process this any further as this should only handle collection requests
     if(!$manage_collection_request)
@@ -181,16 +181,16 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $adminmessage = new ResourceSpaceUserNotification();
             $adminmessage->set_subject($applicationname . ": ");
             $adminmessage->append_subject("lang_requestassignedtoyou");
-            $adminmessage->set_message("lang_requestassignedtoyoumail");
-            $adminmessage->append_message("<br/><br/>");
-            $adminmessage->append_message("lang_username");
-            $adminmessage->append_message(": " . $username . "<br/>");
+            $adminmessage->set_text("lang_requestassignedtoyoumail");
+            $adminmessage->append_text("<br/><br/>");
+            $adminmessage->append_text("lang_username");
+            $adminmessage->append_text(": " . $username . "<br/>");
             $coremessage_arr = $message->get_message(true);
             if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
                 {
                 foreach($coremessage_arr as $messagepart)
                     {
-                    $adminmessage->append_message($messagepart[0],$messagepart[1],$messagepart[2]);
+                    $adminmessage->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
                     }
                 }
             $adminmessage->url = $request_url;  
@@ -243,16 +243,16 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     $adminmessage = new ResourceSpaceUserNotification();
     $adminmessage->set_subject($applicationname . ": ");
     $adminmessage->append_subject("lang_requestassignedtoyou");
-    $adminmessage->set_message("lang_requestassignedtoyoumail");
-    $adminmessage->append_message("<br/><br/>");
-    $adminmessage->append_message("lang_username");
-    $adminmessage->append_message(": " . $username . "<br/>");
+    $adminmessage->set_text("lang_requestassignedtoyoumail");
+    $adminmessage->append_text("<br/><br/>");
+    $adminmessage->append_text("lang_username");
+    $adminmessage->append_text(": " . $username . "<br/>");
     $coremessage_arr = $message->get_message(true);
     if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
         {
         foreach($coremessage_arr as $messagepart)
             {
-            $adminmessage->append_message($messagepart[0],$messagepart[1],$messagepart[2]);
+            $adminmessage->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
             }
         }
     $adminmessage->url = $request_url;  
@@ -293,7 +293,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
         {
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
-        $notify_users = array_merge($resource_type_request_users,$admin_notify_users);
+        $notify_users = array_merge($notify_users,$admin_notify_users);
 
         # Send the e-mails and/or notification messages
         $adminmessage = new ResourceSpaceUserNotification();
@@ -316,18 +316,18 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         $usermessage = new ResourceSpaceUserNotification();
         $usermessage->set_subject($applicationname . ": ");
         $usermessage->append_subject("lang_requestsent");
-        $usermessage->set_message("lang_requestsenttext");
-        $usermessage->append_message("<br/><br/>");
+        $usermessage->set_text("lang_requestsenttext");
+        $usermessage->append_text("<br/><br/>");
         $coremessage_arr = $message->get_message(true);
         if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
             {
             foreach($coremessage_arr as $messagepart)
                 {
-                $usermessage->append_message($messagepart[0],$messagepart[1],$messagepart[2]);
+                $usermessage->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
                 }
             }        
-        $usermessage->append_message("<br/><br/>");
-        $usermessage->append_message("lang_clicktoviewresource");
+        $usermessage->append_text("<br/><br/>");
+        $usermessage->append_text("lang_clicktoviewresource");
         $usermessage->url = $collection_url;
         $templatevars['requesturl'] = $collection_url;
         $usermessage->template = $user_mail_template;

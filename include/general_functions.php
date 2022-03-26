@@ -955,6 +955,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         cleanup_files($deletefiles);
         return true;
         }
+
+    //$message = str_replace(["<br/>","<br />","<br>"],"\n",$message);
     
     # Include footer
     global $email_footer;
