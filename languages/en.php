@@ -1748,6 +1748,7 @@ $lang['report_periodic_email_option_selected_user_groups'] = 'selected user grou
 $lang['report_periodic_email_unsubscribe_title'] = 'Unsubscribe from periodic emails';
 $lang['report_periodic_email_unsubscribe_confirmation'] = 'Please confirm you would like to unsubscribe';
 $lang['report_periodic_email_report_attached'] = 'The report \'%%REPORTTITLE%%\' is attached.';
+$lang['report-select-required']="Please select a report";
 
 #Column headers (for the default reports)
 $lang["columnheader-keyword"]="Keyword";
@@ -1804,7 +1805,7 @@ $lang["writeaccess_sql_log"]="Write access to SQL log:";
 $lang["writeaccess_debug_log"]="Write access to debug log:";
 $lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
-$lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable; remove 'Indexes' from Apache 'Options' list.";
+$lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable. Please remove 'Indexes' from Apache 'Options' list or disable the 'autoindex' module from Apache.";
 $lang["php_extension_not_enabled"]="PHP extension %%EXTENSION%% is not enabled";
 $lang["execution_failed"]="Unexpected output when executing %command command. Output was '%output'.";  # %command and %output will be replaced, e.g. Execution failed; unexpected output when executing convert command. Output was '[stdout]'.
 $lang["exif_extension"]="EXIF extension";
@@ -1854,6 +1855,8 @@ $lang["ensure_file_extension_match"]="Ensure file and extension match";
 # Permissions Manager
 $lang["permissionsmanager"]="Permissions manager";
 $lang["backtogroupmanagement"]="Back to group management";
+$lang["copypermissions"]="Copy the permissions below from user group with ID";
+$lang["confirmcopypermissions"]="This will overwrite all the permissions currently defined for this user group. Are you sure?";
 $lang["searching_and_access"]="Searching / access";
 $lang["metadatafields"]="Metadata fields";
 $lang["resource_creation_and_management"]="Resource creation / management";
@@ -2682,6 +2685,7 @@ $lang['systemconfig_show_collection_name'] = "Show collection name and descripti
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
 $lang['error_generic'] = 'Sorry, there has been an error. If this error persists please contact your system administrator';
+$lang['error_generic_misconfiguration'] = "Please contact your system administrator and ask them to resolve the issues found on the 'Installation check' page.";
 $lang['error_invalid_input'] = 'Invalid request received. If you believe this is a legitimate request please contact your system administrator';
 $lang['error_no_metadata'] = 'No metadata was found for this resource type.';
 $lang["maximise"]="Maximise";
@@ -3039,6 +3043,7 @@ $lang["date_format_error"]                  = "Error: %row% '%date%' in [%field%
 # %row% row number if in csv or similar, %date% field data, %field% field name
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
 $lang["invalid_date_error2"]                = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
+$lang["invalid_date_generic"]               = "You have entered an invalid date";
 $lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";

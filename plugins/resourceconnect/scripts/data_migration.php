@@ -109,9 +109,9 @@ if($export_collections && isset($input_fh) && isset($file_h))
             {
             continue;
             }
-        $original_username = $username;
-        $username = escape_check($username);
-        $user_select_sql = ["sql" => "u.username = ? AND usergroup IN (SELECT ref FROM usergroup)", "params" => ["s",$username]];
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.username = ? AND usergroup IN (SELECT ref FROM usergroup)";
+        $user_select_sql->parameters = ["s",$username];
         $user_data = validate_user($user_select_sql, true);
         if(!is_array($user_data) || count($user_data) == 0)
             {
@@ -130,8 +130,11 @@ if($export_collections && isset($input_fh) && isset($file_h))
                 logScript("ERROR - Invalid ResourceConnect user ID #{$resourceconnect_user}!");
                 exit(1);
                 }
-        
-        $user_data = validate_user(["sql" => "u.ref = ?", "params" => ["i",$resourceconnect_user]], true);
+
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.ref = ?";
+        $user_select_sql->parameters = ["i",$resourceconnect_user];
+        $user_data = validate_user($user_select_sql, true);
         if(!is_array($user_data) || count($user_data) == 0)
             {
             logScript("ERROR - Unable to validate ResourceConnect user ID #{$resourceconnect_user}!");
@@ -172,12 +175,12 @@ if($export_collections && isset($input_fh) && isset($file_h))
                     "{$baseurl}/pages/view.php",
                     array(
                         "ref"   => $resource_ref,
-                        "k"     => ResourceConnect\generate_k_value($original_username, $resource_ref, $scramble_key),
+                        "k"     => ResourceConnect\generate_k_value($username, $resource_ref, $scramble_key),
                         "modal" => "true",
                     ));
 
                 $exported_data[] = array(
-                    "username"        => $original_username,
+                    "username"        => $username,
                     "user_email"      => $original_user_email,
                     "collection"      => $collection_data["ref"],
                     "collection_name" => $collection_data["name"],
@@ -246,10 +249,11 @@ if($import_collections && isset($input_fh))
             {
             logScript("Validating username '{$collection_resource["username"]}'");
             $usergroup_escaped = escape_check($override_newuser_usergroup);
-            $user_select_sql = [];
-            $user_select_sql["sql"] = "u.username = ? AND u.email = ?";
-            $user_select_sql["params"] = ["s",$collection_resource["username"],"s",$collection_resource["user_email"]];
-            $user_data = validate_user($user_select_sql, true);
+
+            $user_select_sql = new PreparedStatementQuery();
+            $user_select_sql->sql = "u.username = ? AND u.email = ?";
+            $user_select_sql->parameters = ["s",$collection_resource["username"],"s",$collection_resource["user_email"]];
+            $user_data = validate_user($user_select_sql,true);
 
             if(is_array($user_data) && count($user_data) > 0)
                 {
@@ -267,7 +271,7 @@ if($import_collections && isset($input_fh))
                     "s",$password_hash,
                     "s",$collection_resource["username"],
                     "s",$collection_resource["user_email"],
-                    "s",$override_newuser_usergroup,
+                    "i",$override_newuser_usergroup,
                     ];
 
                 ps_query($insertquery,$insertparams);                

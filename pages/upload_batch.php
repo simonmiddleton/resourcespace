@@ -53,6 +53,7 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
+
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust
@@ -177,7 +178,7 @@ if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$uplo
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
         {
-        $collectionname = "Upload " . date("YmdHis"); # Do not translate this string, the collection name is translated when displayed!
+        $collectionname = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis'); # Do not translate this string, the collection name is translated when displayed!
         $hidden_collection = true;
         } 
 	$collection_add=create_collection($userref,$collectionname);
@@ -428,14 +429,15 @@ if ($processupload)
         
     # Work out the extension
     $parts=explode(".",$upfilename);
-    $extension=trim(strtolower($parts[count($parts)-1]));
+    $origextension=trim($parts[count($parts)-1]);
+    $extension=strtolower($origextension);
     if(count($parts) > 1){array_pop($parts);}
     $filenameonly = implode('.', $parts);
 
      // Clean the filename
     $origuploadedfilename= escape_check($upfilename);
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($extension)) ? ".{$extension}" : '');
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
 
     # Banned extension?
     global $banned_extensions;
@@ -890,6 +892,13 @@ elseif ($upload_no_file && getval("createblank","")!="")
     redirect($redirecturl);
     exit();
 	}
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if(!$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
 
 $headerinsert.="
 <link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />";

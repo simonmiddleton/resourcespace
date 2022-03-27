@@ -2133,10 +2133,10 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true,$stemmed);
             }
         }
-        
+
+    $kworig=$keyword; // Store non-stemmed word
     if (!$stemmed && $stemming && function_exists("GetStem"))
         {
-        $kworig=$keyword;
         $keyword=GetStem($keyword);debug("Using stem " . $keyword . " for keyword " . $kworig);
         if($keyword!=$kworig)
             {
@@ -2145,7 +2145,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             }
         }
 	
-    if (!(in_array($keyword,$noadd)))
+    if (!(in_array($kworig,$noadd))) // Original (non stemmed) word not in the stop list?
             {
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
@@ -5439,14 +5439,15 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     $resource_escaped = escape_check($resource);
     $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
 
-    $fields = sql_query("
-        SELECT ref,
-               type,
-               autocomplete_macro
-          FROM resource_type_field
-         WHERE (resource_type = 0 || resource_type = '{$resource_type}')
-           AND length(autocomplete_macro) > 0
-    ", "schema");
+    $fields = sql_query(
+        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
+          FROM resource_type_field rtf
+          LEFT JOIN resource_type rt ON rt.ref = {$resource_type} 
+          WHERE length(rtf.autocomplete_macro) > 0
+          AND (   (rtf.resource_type<>0 AND rtf.resource_type = rt.ref) 
+               OR (rtf.resource_type=0  AND rt.inherit_global_fields=1)
+              )", 
+        "schema");
 
     $fields_updated = array();
 
@@ -6132,8 +6133,8 @@ function update_related_resource($ref,$related,$add=true)
                          WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
                             OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");
 		}
-	else
-		{
+    else if($add)
+        {
         $newrelated = array();
         foreach($related as $torelate)
             {

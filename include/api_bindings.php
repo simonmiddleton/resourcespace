@@ -529,7 +529,7 @@ function api_create_collection($name,$forupload=false)
     if($forupload && trim($name) == "")
         {
         # Do not translate this string, the collection name is translated when displayed!
-        $name = "Upload " . date("YmdHis"); 
+        $name = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis');
         }
     
     return create_collection($userref,$name);

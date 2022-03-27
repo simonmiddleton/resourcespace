@@ -66,9 +66,14 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     $request_query = new PreparedStatementQuery();
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                   VALUES (?, ?, NOW(), 1, 0, ?, ?)";
-    $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message->get_message(), "i",$assigned_administrator);
+    $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message->get_text(), "i",$assigned_administrator);
 
     $assigned_to_user = get_user($assigned_administrator);
+    if (!$assigned_to_user)
+        {
+        return false;
+        }
+
     $notify_manage_request_admin = true;
 
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
@@ -157,13 +162,13 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $request_query = new PreparedStatementQuery();
             $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                     VALUES (?, ?, NOW(), 1, 0, ?, ?)";
-            $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_message(), "i",$assigned_to);
+            $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_text(), "i",$assigned_to);
             if($assigned_to === 'not_managed' || !$assigned_to_user)
                 {
                 $assigned_to = get_notification_users("RESOURCE_ACCESS");
                 $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
                 VALUES (?, ?, NOW(), 1, 0, ?)";
-                $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_message());
+                $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_text());
                 }
 
             ps_query($request_query->sql, $request_query->parameters);
@@ -177,7 +182,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $request_url = $baseurl . "/?q=" . $request;
             $templatevars['request_id']    = $request;
             $templatevars['requesturl']    = $request_url;
-            $templatevars['requestreason'] = $message->get_message();
+            $templatevars['requestreason'] = $message->get_text();
             $adminmessage = new ResourceSpaceUserNotification();
             $adminmessage->set_subject($applicationname . ": ");
             $adminmessage->append_subject("lang_requestassignedtoyou");
@@ -185,7 +190,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $adminmessage->append_text("<br/><br/>");
             $adminmessage->append_text("lang_username");
             $adminmessage->append_text(": " . $username . "<br/>");
-            $coremessage_arr = $message->get_message(true);
+            $coremessage_arr = $message->get_text(true);
             if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
                 {
                 foreach($coremessage_arr as $messagepart)
@@ -221,7 +226,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 
     // If we don't have an assigned user, it probably means system is misconfigured so go ahead and run this normally via
     // RS own logic for dealing with requests.
-    if(is_null($assigned_to_user))
+    if(is_null($assigned_to_user) || !$assigned_to_user)
         {
         return false;
         }
@@ -238,7 +243,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     // Update message with request url specific to this collection
     $templatevars['request_id']    = $request;
     $templatevars['requesturl']    = $request_url;
-    $templatevars['requestreason'] = $message->get_message();
+    $templatevars['requestreason'] = $message->get_text();
 
     $adminmessage = new ResourceSpaceUserNotification();
     $adminmessage->set_subject($applicationname . ": ");
@@ -247,7 +252,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     $adminmessage->append_text("<br/><br/>");
     $adminmessage->append_text("lang_username");
     $adminmessage->append_text(": " . $username . "<br/>");
-    $coremessage_arr = $message->get_message(true);
+    $coremessage_arr = $message->get_text(true);
     if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
         {
         foreach($coremessage_arr as $messagepart)
@@ -305,7 +310,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         foreach($notify_emails as $notify_email)
             {
             // These are not system users so emails must be sent
-            send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$adminmessage->get_message(),$email_from,$email_from,$admin_mail_template,$templatevars);
+            send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$adminmessage->get_text(),$email_from,$email_from,$admin_mail_template,$templatevars);
             }
         send_user_notification($notify_users,$adminmessage);
         }
@@ -318,7 +323,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         $usermessage->append_subject("lang_requestsent");
         $usermessage->set_text("lang_requestsenttext");
         $usermessage->append_text("<br/><br/>");
-        $coremessage_arr = $message->get_message(true);
+        $coremessage_arr = $message->get_text(true);
         if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
             {
             foreach($coremessage_arr as $messagepart)
@@ -340,4 +345,10 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 function HookAutoassign_mrequestsAllExport_add_tables()
     {
     return array("assign_request_map"=>array());
+    }
+
+function HookAutoassign_mrequestsAllOn_delete_user($ref)
+    {
+    # The user has been deleted so any mappings for them also need to be removed.
+    ps_query("DELETE FROM assign_request_map WHERE `user_id` = ?", array("i", $ref));
     }

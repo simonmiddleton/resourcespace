@@ -1223,8 +1223,12 @@ $show_extension_in_search=false;
 # Should the category tree field (if one exists) default to being open instead of closed?
 $category_tree_open=false;
 
-# Should searches using the category tree use AND for hierarchical keys?
+# Should parent nodes also be selected when selecting a child node?
 $category_tree_search_use_and=false;
+
+# If set to true any resources returned will need to contain all of the category tree nodes selected
+# If false then a returned resource could contain one or more of the selected nodes
+$category_tree_search_use_and_logic=false;
 
 # Force selection of parent nodes when selecting a sub node? 
 # If set to false then each node should be unique to avoid possible corruption when exporting/importing data

@@ -20,7 +20,7 @@ else
     }
 
 // Load consent details
-$consent=sql_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref='$ref'");
+$consent=ps_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $ref]);
 if (count($consent)==0) {exit("Consent record not found.");}
 $consent=$consent[0];
 

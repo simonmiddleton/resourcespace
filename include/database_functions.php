@@ -1262,7 +1262,7 @@ function CheckDBStruct($path,$verbose=false)
                             $row[$n]="'" . $row[$n] . "'";
                             if ($row[$n]=="''") {$row[$n]="null";}
                             }
-                        sql_query("insert into $table values (" . join (",",$row) . ")",false,-1,false);
+                        sql_query("insert into `$table` values (" . join (",",$row) . ")",false,-1,false);
                         }
                     }
                 }
@@ -1345,7 +1345,7 @@ function CheckDBStruct($path,$verbose=false)
                             if (!$found)
                                 {
                                 # Add this column.
-                                $sql="alter table $table add column ";
+                                $sql="alter table `$table` add column ";
                                 $sql.=$col[0] . " " . str_replace("§",",",$col[1]); # Allow commas to be entered using '§', necessary for a type such as decimal(2,10)
                                 if ($col[4]!="") {$sql.=" default " . $col[4];}
                                 if ($col[3]=="PRI") {$sql.=" primary key";}

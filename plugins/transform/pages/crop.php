@@ -95,6 +95,10 @@ $imversion = get_imagemagick_version();
 $orig_ext = $resource["file_extension"];
 hook('transformcropbeforegetsize');
 $originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+
+$usesize    = "scr";
+$useext     = "jpg";
+
 if(file_exists($originalpath))
     {
     // For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
@@ -111,8 +115,6 @@ if(file_exists($originalpath))
         $origsizes  = getimagesize($originalpath);        
         $origwidth  = $origsizes[0];
         $origheight = $origsizes[1];
-        $usesize    = "scr";
-        $useext     = "jpg";
         }
     }
 else
@@ -353,7 +355,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
                 !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
                 {
-                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder)), $lang['error-file-permissions']);
+                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder), $lang['error-file-permissions']));
                 exit();
                 }
             rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
@@ -376,19 +378,11 @@ if ($saveaction != '' && enforcePostRequest(false))
             ]);
 
             $dlurl = generateURL($baseurl_short . "pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
-            $url_params["url"]=$dlurl;
-
-            global $download_usage;
-            if($download_usage) 
+            if ($download_usage)
                 {
-                $url_params["url"] = generateURL($baseurl_short . "pages/download_usage.php",
-                [
-                    'url' => $dlurl,
-                    'ref' => $ref,
-                    'ext' => $new_ext
-                ]);
+                $dlurl = generateURL("pages/download_usage.php",["url" => $dlurl]);
                 }
-            
+            $url_params["url"]=$dlurl;
             $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
             redirect($redirect_to_terms_url);
             exit();

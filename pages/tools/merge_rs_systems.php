@@ -338,7 +338,10 @@ if($import && !isset($user))
 
 if(isset($user))
     {
-    $user_data = validate_user(["sql" => "u.ref = ?","params" => ["i",$user]], true);
+    $user_select_sql = new PreparedStatementQuery();
+    $user_select_sql->sql = "u.ref = ?";
+    $user_select_sql->parameters = ["i",$user];
+    $user_data = validate_user($user_select_sql, true);
 
     if(!is_array($user_data) || count($user_data) == 0)
         {

@@ -1925,8 +1925,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
-                    // alternate command for png/gif using the path from above, and omitting resizing
-                    if ($extension=="png" || $extension=="gif")
+                    // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
+                    if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
                         $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
@@ -2252,7 +2252,7 @@ function extract_mean_colour($image,$ref)
         {
         for ($x=0;$x<20;$x++)
             {
-            $rgb = imagecolorat($image, $x*($width/20), $y*($height/20));
+            $rgb = imagecolorat($image, round($x*($width/20)), round($y*($height/20)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2358,7 +2358,7 @@ function get_colour_key($image)
         {
         for ($x=0;$x<$depth;$x++)
             {
-            $rgb = imagecolorat($image, $x*($width/$depth), $y*($height/$depth));
+            $rgb = imagecolorat($image, round($x*($width/$depth)), round($y*($height/$depth)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -3368,6 +3368,9 @@ function getSvgSize($file_path)
         {
         $svg_size[0] = (string) $attributes->width;
         $svg_size[1] = (string) $attributes->height;
+        // Remove non numeric unit values if present
+        $svg_size[0] = preg_replace("/[^.0-9]/", "", $svg_size[0]);
+        $svg_size[1] = preg_replace("/[^.0-9]/", "", $svg_size[1]);
         }
     else if(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
         {

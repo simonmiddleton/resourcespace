@@ -418,12 +418,12 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             $header_img_src = get_header_image();
             if($header_link && ($k=="" || $internal_share_access))
                 {?>
-                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" ></img></a>
+                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" ></a>
                 <?php
                 }
             else
                 {?>
-                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
+                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></div>
                 <?php
                 }
             }
@@ -560,7 +560,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                     <?php 
                         if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
                             {
@@ -573,7 +573,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                             ?><span id="TeamMessages" class="Pill" style="display:none"></span><?php
                             }
                         ?>
-                    </li><?php
+                    </a></li><?php
                     } ?>
                 <!-- End of Admin link -->
                 

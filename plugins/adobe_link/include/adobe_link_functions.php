@@ -28,7 +28,10 @@ function adobe_link_check_credentials()
         return false;
         }
 
-    $user_select_sql="and u.ref='" . escape_check($adb_link_user) . " '";
+    $user_select_sql = new PreparedStatementQuery();
+    $user_select_sql->sql = "and u.ref = ?";
+    $user_select_sql->parameters = array("i", $adb_link_user);
+    
     $anonymous_login = $adb_link_user;
     $session_hash = "";
     $usercredentialsprovided = true;

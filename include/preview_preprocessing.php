@@ -34,13 +34,13 @@ putenv("MAGICK_HOME=" . $imagemagick_path);
 $snapshotcheck=false;
 if (in_array($extension, $ffmpeg_supported_extensions)){
     $snapshotcheck=file_exists(get_resource_path($ref,true,"pre",false,'jpg',-1,1,false,""));
-    if ($snapshotcheck){sql_query("update resource set has_image=1 where ref='$ref'");}
+    if ($snapshotcheck){ps_query("update resource set has_image=1 where ref=?",array("i",$ref));}
 }
 
 if ($alternative==-1 && !($snapshotcheck && in_array($extension, $ffmpeg_supported_extensions) && $ffmpeg_no_new_snapshots))
     {
     # Reset the 'has thumbnail image' status in case previewing fails with this new file. 
-    sql_query("update resource set has_image=0 where ref='$ref'"); 
+    ps_query("update resource set has_image=0 where ref=?",array("i",$ref)); 
     }
 
 
@@ -124,11 +124,11 @@ if ($exiftool_fullpath!=false)
                     # Watermark creation for additional pages.
                     global $watermark;
                     $preview_quality=get_preview_quality($size);
-                    $scr_size=sql_query("select width,height from preview_size where id='scr'");
+                    $scr_size=ps_query("select width,height from preview_size where id='scr'");
                     if(empty($scr_size))
                         {
                         # since this is not an application required size we can't assume there's a record for it
-                        $scr_size=sql_query("select width,height from preview_size where id='pre'");
+                        $scr_size=ps_query("select width,height from preview_size where id='pre'");
                         }
                     $scr_width=$scr_size[0]['width'];
                     $scr_height=$scr_size[0]['height'];            
@@ -147,17 +147,18 @@ if ($exiftool_fullpath!=false)
                 }
 
                 # Set (new resource) / update (recreate previews) page count for multi page preview if more than one preview present.
-                $ref_escaped = escape_check($ref);
-                $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = '$ref_escaped'";
-                $query = sql_value($sql, 0);
+                $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = ?";
+                $query = ps_value($sql,array("i",$ref), 0);
         
                 if($query == 0)
                     {
-                    sql_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES ('{$ref_escaped}', '{$n}', '{$filesize_indd}')");
+                    $parameters=array("i",$ref, "i",$n, "i",$filesize_indd);
+                    ps_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES (?, ?, ?)");
                     }
                 else
                     {
-                    sql_query("UPDATE resource_dimensions SET page_count = '{$n}' WHERE resource = '{$ref_escaped}'");
+                    $parameters=array("i",$n, "i",$ref);
+                    ps_query("UPDATE resource_dimensions SET page_count = ? WHERE resource = ?");
                     } 
 
                 $n=0;
@@ -375,7 +376,8 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     if (isset($extracted_text_field))
         {
         $extract_pdf_text = true;
-        $current_extracted_text = sql_value("select value from resource_data where resource='$ref' and resource_type_field='$extracted_text_field'","");
+        $parameters=array("i",$ref, "i",$extracted_text_field);
+        $current_extracted_text = ps_value("select value from resource_data where resource=? and resource_type_field=?",$parameters,"");
         if (!empty($current_extracted_text))
             {
             $extract_pdf_text = false;    
@@ -423,13 +425,16 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     else if (file_exists($pdffile))
         {
         # Attach this PDF file as an alternative download.
-        sql_query("delete from resource_alt_files where resource = '".$ref."' and unoconv='1'");    
+        ps_query("delete from resource_alt_files where resource = ? and unoconv='1'",array("i",$ref));    
         $alt_ref=add_alternative_file($ref,"PDF version");
         $alt_path=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
         global $lang;   
         $alt_description=$lang['unoconv_pdf'];
         copy($pdffile,$alt_path);unlink($pdffile);
-        sql_query("update resource_alt_files set file_name='$ref-converted.pdf',description='$alt_description',file_extension='pdf',file_size='".filesize_unlimited($alt_path)."',unoconv='1' where resource='$ref' and ref='$alt_ref'");
+
+        $parameters=array("s",$ref."-converted.pdf", "s",$alt_description, "i",filesize_unlimited($alt_path), "i",$ref, "i",$alt_ref);
+        ps_query("UPDATE resource_alt_files 
+                    SET file_name=?, description=?, file_extension='pdf', file_size=?, unoconv='1' where resource=? and ref=?");
 
         # Set vars so we continue generating thumbs/previews as if this is a PDF file
         $extension="pdf";
@@ -479,13 +484,16 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
     if (file_exists($pdffile))
         {
         # Attach this PDF file as an alternative download.
-        sql_query("delete from resource_alt_files where resource = '".$ref."' and unoconv='1'");    
+        ps_query("delete from resource_alt_files where resource = ? and unoconv='1'",array("i",$ref));    
         $alt_ref=add_alternative_file($ref,"PDF version");
         $alt_path=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
         global $lang;
         $alt_description=$lang['calibre_pdf'];  
         copy($pdffile,$alt_path);unlink($pdffile);
-        sql_query("update resource_alt_files set file_name='$ref-converted.pdf',description='$alt_description',file_extension='pdf',file_size='".filesize_unlimited($alt_path)."',unoconv='1' where resource='$ref' and ref='$alt_ref'");
+
+        $parameters=array("s",$ref."-converted.pdf", "s",$alt_description, "i",filesize_unlimited($alt_path), "i",$ref, "i",$alt_ref);
+        ps_query("UPDATE resource_alt_files 
+                    SET file_name=?, description=?, file_extension='pdf', file_size=? ,unoconv='1' where resource=? and ref=?");
 
         # Set vars so we continue generating thumbs/previews as if this is a PDF file
         $extension="pdf";
@@ -719,7 +727,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 }
             
             
-            $snapshot_size    = sql_query('SELECT width, height FROM preview_size WHERE id = "pre"');
+            $snapshot_size    = ps_query('SELECT width, height FROM preview_size WHERE id = "pre"');
 
             if(isset($snapshot_size[0]) && 0 < count($snapshot_size[0]))
                 {
@@ -815,7 +823,7 @@ if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
 
     if(!file_exists($mp3file))
         {
-        sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
+        ps_query("UPDATE resource SET preview_attempts=ifnull(preview_attempts,0) + 1 where ref=?",array("i",$ref));
         echo debug("Failed to process resource " . $ref . " - MP3 creation failed.");
         }   
     }
@@ -889,10 +897,10 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     if ($extension=="ai") {$pdf_pages=1;}
     if ($extension=="ps") {$pdf_pages=1;}
     $resolution=$pdf_resolution;
-    $scr_size=sql_query("select width,height from preview_size where id='scr'");
+    $scr_size=ps_query("select width,height from preview_size where id='scr'");
     if(empty($scr_size)){
         # since this is not an application required size we can't assume there's a record for it
-        $scr_size=sql_query("select width,height from preview_size where id='pre'");
+        $scr_size=ps_query("select width,height from preview_size where id='pre'");
     }
     $scr_width=$scr_size[0]['width'];
     $scr_height=$scr_size[0]['height'];
@@ -1039,7 +1047,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             $output=run_command($gscommand2);
 
             # Update the file extension
-            sql_query("update resource set file_extension='pdf' where ref='$copy'");
+            ps_query("update resource set file_extension='pdf' where ref=?",array("i",$copy));
         
             # Create preview for the page.
             $pdf_split_pages_to_resources=false; # So we don't get stuck in a loop creating split pages for the single page PDFs.
@@ -1050,22 +1058,20 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         }
         // set page number
         if (isset($pagecount) && $alternative!=-1){
-            sql_query("update resource_alt_files set page_count=$pagecount where ref=$alternative");
+            ps_query("UPDATE resource_alt_files SET page_count=? where ref=?",array("i",$pagecount, "i",$alternative));
             }
         else if (isset($pagecount)){
 
-            $pagecount_escaped = escape_check($pagecount);
-            $ref_escaped = escape_check($ref);
-            $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = '$ref_escaped'";
-            $query = sql_value($sql, 0);
+            $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = ?";
+            $query = ps_value($sql,array("i",$ref),0);
 
             if($query == 0)
                 {
-                sql_query("INSERT INTO resource_dimensions (resource, page_count) VALUES ('{$ref_escaped}', '{$pagecount_escaped}')");
+                ps_query("INSERT INTO resource_dimensions (resource, page_count) VALUES (?, ?)",array("i",$ref,"i",$pagecount));
                 }
             else
                 {
-                sql_query("UPDATE resource_dimensions SET page_count = '{$pagecount_escaped}' WHERE resource = '{$ref_escaped}'");
+                ps_query("UPDATE resource_dimensions SET page_count = ? WHERE resource = ?",array("i",$pagecount,"i",$ref));
                 }            
             }
     }
