@@ -266,11 +266,11 @@ if(
             $templatevars['url'] = generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",["ref"=> $ref,"proposeuser" => $userref]); 
 
             $message = new ResourceSpaceUserNotification;
-            $message->set_text("propose_changes_proposed_changes_submitted");
-            $message->append_text("<br/>");
+            $message->set_text("lang_propose_changes_proposed_changes_submitted");
+            $message->append_text("<br/><br/>");
             $message->append_text($templatevars['proposer']);
             $message->append_text("lang_propose_changes_proposed_changes_submitted_text");
-            $message->append_text($ref . "<br/>");
+            $message->append_text($ref . "<br/><br/>");
             $message->append_text_multi($changesummary->get_text(true));
             $message->set_subject("lang_propose_changes_proposed_changes_submitted");
             $message->url = $templatevars["url"];
