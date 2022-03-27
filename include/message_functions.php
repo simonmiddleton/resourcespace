@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Simple class to use for user notifications
  * 
@@ -74,6 +75,17 @@ class ResourceSpaceUserNotification
         }
 
     /**
+     * Append multiple text elements to the notification message
+     *
+      * @param  array   $messages    Array of text components as per append_text()
+      * @return void
+     */
+    public function append_text_multi($textarr)
+        {
+        $this->message_parts = array_merge( $this->message_parts,$textarr);
+        }
+
+    /**
      * Prepend text component to the notification message
      *
       * @param  string   $text       Text or $lang string using the 'lang_' prefix
@@ -114,7 +126,7 @@ class ResourceSpaceUserNotification
         {
         $this->subject = [[$text, $find, $replace]];
         }
-    
+
     /**
      * Append text to the notification subject
      *
@@ -164,12 +176,11 @@ class ResourceSpaceUserNotification
             }
         return $messagetext;
         }
-    
+
     public function get_subject()
         {
         global $lang;
         $fullsubject = "";
-        print_r($this->subject);
         foreach($this->subject as $subjectpart)
             {
             $text = $subjectpart[0];
@@ -188,7 +199,6 @@ class ResourceSpaceUserNotification
         return $fullsubject;
         }
     }
-
 
 /**
  * Gets messages for a given user (returns true if there are messages, false if not)
@@ -854,22 +864,36 @@ function send_user_message($users,$text)
     return true;
     }
 
-
 /**
- * Send system notifications to specified users, checking the relevant user preference
+ * Send system notifications to specified users, checking the user preferences first if specified
  *
  * @param  array  $users            Array of user IDs or array of user details from get_users()
- * @param  object $notifymessage    An instance of a ResourceSpaceUserNotification object holding information about the message
+ * @param  object $notifymessage    An instance of a ResourceSpaceUserNotification object holding message properties
  * @param  bool   $forcemail        Force system to send email instead of notification?
  * 
+ * @return array  Array containing resulting messages - can be used for testing when emails are not being sent
+ *                This will contain two arrays:-
+ *                          "emails"       array of emails sent, with the following elements:-
+ *                              "email"     => Email address
+ *                              "subject"   => Email subject
+ *                              "body"      => Body text
  * 
- * @return void
+ *                          "messages"      Array of system messages sent with the following elements :-
+ *                              "user"      => User ID
+ *                              "message"   => message text
+ *                              "url"       => url
  */
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
     global $userref, $lang, $plugins, $header_colour_style_override, $admin_resource_access_notifications;
+    // Need to global $applicationname as it is used inside the lang files
+    global $applicationname;
     $userlanguages = []; // This stores the users in their relevant language key element
 
+    // Set up $results array
+    $results = [];
+    $results["messages"] = [];
+    $results["emails"] = [];
     foreach($users as $notify_user)
         {
         $userdetails = $notify_user;
@@ -892,11 +916,11 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             $default = null;
             if($preference == "user_pref_resource_access_notifications")
                 {
-                // Need to ensure not getting the default global setting for the requeting user
+                // Need to ensure this won't get the default global setting for the requesting user
                 $default = $admin_resource_access_notifications;
                 }
-            get_config_option($userdetails['ref'],$preference, $send_message,$admin_resource_access_notifications);	
-            	  
+            get_config_option($userdetails['ref'],$preference, $send_message,$default);
+
             if($send_message==false)
                 {
                 debug("Skipping notification to user #" . $userdetails['ref'] . " As not wanted based on " . $notifymessage->user_preference . " : " . print_r($send_message,true));
@@ -916,16 +940,13 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             {
             debug("Sending email to user #" . $userdetails["ref"]);
             $userlanguages[$userdetails['lang']]["emails"][] = $userdetails["email"];
-            }        
+            }
         else
             {
             debug("Sending system message to user #" . $userdetails["ref"]);
             $userlanguages[$userdetails['lang']]["message_users"][]=$userdetails["ref"];
             }
         }
-    // Get array of all language strings required
-    // $language_strings_all = get_languages_notify_users(array_keys($userlanguages));
-
     $url = $notifymessage->url ?? NULL;
 
     $headerimghtml = "";
@@ -936,7 +957,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         $img_div_style = "max-height:50px;padding: 5px;";
         $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
         $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
-        }                
+        }
 
     foreach($userlanguages as $userlanguage=>$notifications)
         {
@@ -974,12 +995,14 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                
         $subject = $notifymessage->get_subject();
         $messagetext = $notifymessage->get_text();
-        
         if (count($notifications["message_users"])>0)
             {        
             $activitytype = $notifymessage->eventdata["type"] ?? NULL;
             $relatedactivity = $notifymessage->eventdata["ref"] ?? NULL;
-
+            foreach($notifications["message_users"] as $notifyuser)
+                {
+                $results["messages"][] = ["user"=>$notifyuser,"message"=>$messagetext,"url"=>$url];
+                }
             message_add($notifications["message_users"],$messagetext,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
             }
         if (count($notifications["emails"])>0)
@@ -989,9 +1012,20 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
                 }            
-            send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);            
+            send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
+
+            foreach($notifications["emails"] as $emailsent)
+                {
+                $results["emails"][] = ["email"=>$emailsent,"subject"=>$subject,"body"=>$headerimghtml . $messagetext];
+                }
+
+            foreach($notifications["message_users"] as $notifyuser)
+                {
+                $results[$notifyuser] = ["type"=>"messsage","body"=>$messagetext];
+                }
             }
         // Restore the saved $lang array
         $lang = $saved_lang;
         }
+    return $results;
     }

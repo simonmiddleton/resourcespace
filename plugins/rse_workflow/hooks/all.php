@@ -101,13 +101,17 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         foreach($cntrb_arr as $cntrb_user => $cntrb_detail)
             {
             debug("processing notification for contributing user " . $cntrb_user);
-            $message = $lang["userresources_status_change"] . $lang["status" . $archive];
+            $message = new ResourceSpaceUserNotification;
+            $message->set_subject($applicationname . ": ");
+            $message->append_subject("lang_status" . $archive);
+            $message->set_text("lang_userresources_status_change");
+            $message->append_text("lang_status" . $archive);
             if(getval('more_workflow_action_' . $workflowaction,'') != '')
                 {
-                $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
-                $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
+                $message->append_text("<br/><br/>");
+                $message->append_text("lang_rse_workflow_more_notes_title");
+                $message->append_text("<br/>" . getval('more_workflow_action_' . $workflowaction, ''));
                 }
-
             if(count($cntrb_detail["resources"]) > 200)
                 {
                 // Too many resources to link to directly
@@ -117,16 +121,18 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
                 {
                 $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$cntrb_detail["resources"]);
                 }
-
-            debug("sending notification to contributing user " . $cntrb_user);
-            send_user_notification([$cntrb_user],"",[],$applicationname . ": " . $lang["status" . $archive],$message,$linkurl);
+            $message->url = $linkurl;
+            send_user_notification([$cntrb_user],$message);
 
             if($wfstates[$archive]["rse_workflow_bcc_admin"]==1)
                 {
-                $message = $lang["user"] . ": " . $cntrb_detail["username"] . " (#" . $cntrb_user . ")\n" . $message; 
                 debug("processing bcc notifications");
+                $bccmessage = clone($message);
+                $bccmessage->set_text("lang_user");
+                $bccmessage->append_text(": " . $cntrb_detail["username"] . " (#" . $cntrb_user . ")<br/>");
+                $bccmessage->append_text_multi($message->get_text(true));
                 $bccadmin_users = get_notification_users("SYSTEM_ADMIN");
-                send_user_notification($bccadmin_users,"",[],$applicationname . ": " . $lang["status" . $archive],$message,$linkurl);
+                send_user_notification($bccadmin_users,$bccmessage);
                 }
             }
         }

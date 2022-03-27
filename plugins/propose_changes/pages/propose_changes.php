@@ -1,5 +1,7 @@
 <?php
 
+use SimpleSAML\Console\Application;
+
 include_once __DIR__ . '/../../../include/db.php';
 include __DIR__ . '/../../../include/authenticate.php';
 include_once __DIR__ . '/../include/propose_changes_functions.php';
@@ -157,28 +159,43 @@ if(
             }
 
         $templatevars['ref'] = $ref;
-        $message=$lang["propose_changes_proposed_changes_reviewed"] . $templatevars['ref'] . "<br/>";
-        $templatevars['changesummary']=$lang["propose_changes_summary_changes"] . "<br/><br/>";
-        
+        $message = new ResourceSpaceUserNotification;
+        $message->set_text("lang_propose_changes_proposed_changes_reviewed");
+        $message->append_text($templatevars['ref'] . "<br/>");
+
+        $changesummary = new ResourceSpaceUserNotification;
+        $changesummary->set_text("lang_propose_changes_summary_changes");
+        $changesummary->append_text("<br/><br/>");
         if($acceptedchangescount>0)
             {
-            $templatevars['changesummary'].=$lang["propose_changes_proposed_changes_accepted"] . "<br/>";
+            $changesummary->append_text("lang_propose_changes_proposed_changes_accepted");
+            $changesummary->append_text("<br/>");
             }
         for($n=0;$n<$acceptedchangescount;$n++)
             {
-            $templatevars['changesummary'].= $acceptedchanges[$n]["field"] . " : " . $acceptedchanges[$n]["value"] . "<br/>";
+            $changesummary->append_text($acceptedchanges[$n]["field"] . " : " . $acceptedchanges[$n]["value"] . "<br/>");
             }
         if($deletedchangescount>0)
             {
-            $templatevars['changesummary'].="<br/>" . $lang["propose_changes_proposed_changes_rejected"] . "<br/><br/>";
+            $changesummary->append_text("<br/>");
+            $changesummary->append_text("lang_propose_changes_proposed_changes_rejected");
+            $changesummary->append_text("<br/><br/>");
             }
         for($n=0;$n<$deletedchangescount;$n++)
             {
-            $templatevars['changesummary'].= $deletedchanges[$n]["field"] . " : " . htmlspecialchars($deletedchanges[$n]["value"]) . "<br/>";
+            $changesummary->append_text($deletedchanges[$n]["field"] . " : " . htmlspecialchars($deletedchanges[$n]["value"]) . "<br/>");
             }
+
+        $templatevars['changesummary']=$changesummary->get_text();
         $templatevars['url'] = generateurl($baseurl . "/pages/view.php",["ref"=> $ref]); 
-        $message.= $templatevars['changesummary'];
-        send_user_notification([$view_user],"",[],$lang["propose_changes_proposed_changes_reviewed"],$message,$templatevars['url'],"propose_changes_emailreviewed",$templatevars);
+
+        $message->append_text_multi($changesummary->get_text(true));
+        $message->set_subject("lang_propose_changes_proposed_changes_reviewed");
+        $message->url = $templatevars['url'];
+        $message->template = "propose_changes_emailreviewed";
+        $message->templatevars = $templatevars;
+
+        send_user_notification([$view_user],$message);
         if(!$modal)
             {
             redirect($baseurl_short."pages/view.php?ref=" . $ref . "&search=" . urlencode($search) . "&offset=" . $offset . "&order_by=" . $order_by . "&sort=".$sort."&archive=" . $archive . "&refreshcollectionframe=true");
@@ -235,34 +252,43 @@ if(
                     }
                 }
 
-            // send email to admin/resource owner with link	
-            $templatevars['changesummary']=$lang["propose_changes_summary_changes"] . "<br/>";
+            // send email to admin/resource owner with link
+    
+            $changesummary = new ResourceSpaceUserNotification;
+            $changesummary->set_text("lang_propose_changes_summary_changes");
+            $changesummary->append_text("<br/><br/>");
             for($n=0;$n<$submittedchangescount;$n++)
                 {
-                $templatevars['changesummary'].= $submittedchanges[$n]["field"] . " : " . htmlspecialchars($submittedchanges[$n]["value"]) . "<br/>";
+                $changesummary->append_text($submittedchanges[$n]["field"] . " : " . htmlspecialchars($submittedchanges[$n]["value"]) . "<br/>");
                 }
 
             $templatevars['proposer']=(($username=="") ? $username : $userfullname);
             $templatevars['url'] = generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",["ref"=> $ref,"proposeuser" => $userref]); 
 
-            $message=$lang["propose_changes_proposed_changes_submitted"] . "<br/>\n";
-            $message.= $templatevars['proposer'] . $lang["propose_changes_proposed_changes_submitted_text"] . $ref . "<br/>\n";
-            $message.=$templatevars['changesummary'];
-            $notification_message = $message;
-            
+            $message = new ResourceSpaceUserNotification;
+            $message->set_text("propose_changes_proposed_changes_submitted");
+            $message->append_text("<br/>");
+            $message->append_text($templatevars['proposer']);
+            $message->append_text("lang_propose_changes_proposed_changes_submitted_text");
+            $message->append_text($ref . "<br/>");
+            $message->append_text_multi($changesummary->get_text(true));
+            $message->set_subject("lang_propose_changes_proposed_changes_submitted");
+            $message->url = $templatevars["url"];
+            $message->template = "propose_changes_emailproposedchanges";
+            $message->templatevars = $templatevars;
             if($propose_changes_notify_admin)
                 {
                 debug("propose_changes: sending notifications to admins");
                 $resource_admins = get_notification_users("RESOURCE_ADMIN");
-                send_user_notification($resource_admins,"",[],$lang["propose_changes_proposed_changes_submitted"],$message,$templatevars['url'],"propose_changes_emailproposedchanges",$templatevars);
+                send_user_notification($resource_admins,$message);
                 }
             if($propose_changes_notify_contributor)
                 {
                 $notify_user=get_user($resource["created_by"]);
                 if($notify_user)
                     {
-                    debug("propose_changes: sending notification to resource contributor, " . $notify_user['username'] . "user id#" . $notify_user['ref'] . " (" . $notify_user['email'] . ")");
-                    send_user_notification([$notify_user],"",[],$lang["propose_changes_proposed_changes_submitted"],$notification_message,$templatevars['url'],"propose_changes_emailproposedchanges",$templatevars);
+                    debug("propose_changes: sending notification to resource contributor, " . $notify_user['username'] . ", user id#" . $notify_user['ref'] . " (" . $notify_user['email'] . ")");
+                    send_user_notification([$notify_user],$message);
                     }
                 }
             $resulttext=$lang["propose_changes_proposed_changes_submitted"];

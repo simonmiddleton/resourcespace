@@ -874,6 +874,10 @@ function allowed_type_mime($allowedtype)
  */
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
+    if(defined("RS_TEST_MODE"))
+        {
+        return false;
+        }
     global $always_email_from_user;
     if($always_email_from_user)
         {
@@ -901,7 +905,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $valid_emails = array();
     foreach($check_emails as $check_email)
         {
-            debug("BANG checking" .$check_email );
         if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
             {
             debug("send_mail: Invalid e-mail address - '{$check_email}'");

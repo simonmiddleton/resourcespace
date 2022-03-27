@@ -2068,10 +2068,10 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     if(count($internal_user_ids) > 0)
         {
         // Internal share, send notifications
-        $notifymessage->append_message($templatevars['fromusername'] . "&nbsp;");
-        $notifymessage->append_message($internalmessage);
-        $notifymessage->append_message("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
-        $notifymessage->append_message($viewlinktext);
+        $notifymessage->append_text($templatevars['fromusername'] . "&nbsp;");
+        $notifymessage->append_text($internalmessage);
+        $notifymessage->append_text("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
+        $notifymessage->append_text($viewlinktext);
         send_user_notification($internal_user_ids,$notifymessage);
         }
 

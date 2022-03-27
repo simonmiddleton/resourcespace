@@ -2509,8 +2509,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
 	{
-
-    // TODO - migrate to use send_user_notification()
     # Attempt to resolve all users in the string $userlist to user references.
 
     global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
@@ -2635,7 +2633,12 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
             {
             $body = "";
             }
+
+
+            
         $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
+
+
         send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
         
         # log this
@@ -7769,7 +7772,7 @@ function payment_set_complete($collection)
     // Construct message components
     $notify_users=get_notification_users("RESOURCE_ACCESS");
     $notifymessage = new ResourceSpaceUserNotification();
-    $notifymessage->set_message("lang_purchase_complete_email_admin_body");
+    $notifymessage->set_text("lang_purchase_complete_email_admin_body");
     $notifymessage->append_text("<br/><br/>");
     $notifymessage->append_text("lang_username");
     $notifymessage->append_text(": " . $username . " (" . $userfullname . ")<br/><br/>");    
@@ -7784,7 +7787,7 @@ function payment_set_complete($collection)
     
     // Send email to user (not a notification as may need to be kept for reference)
     $userconfirmmessage = new ResourceSpaceUserNotification();
-    $userconfirmmessage->set_message("lang_purchase_complete_email_user_body");
+    $userconfirmmessage->set_text("lang_purchase_complete_email_user_body");
     $userconfirmmessage->append_text("<br/><br/>");
     foreach($summaryparts as $summarypart)
         {
