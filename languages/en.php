@@ -1917,7 +1917,7 @@ $lang['geographicsearchresults'] = 'Geographic search results';
 $lang['geographicsearchmissing'] = 'Geographic search criteria missing';
 $lang['geographicsearch_help'] = 'Drag to select a search area';
 $lang['search_results_overlimit'] =  "Too many resources found. Please refine your search to enable this view";
-$lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server. Please check your \$geo_tile_servers configuration setting";
+$lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server.";
 
 $lang["purge"]="Purge";
 $lang["purgeuserstitle"]="Purge users";

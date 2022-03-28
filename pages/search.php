@@ -139,12 +139,6 @@ $all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fie
 
 # get display and normalize display specific variables
 $display=getvalescaped("display",$default_display);rs_setcookie('display', $display,0,"","",false,false);
-if(!$leaflet_maps_enable && $display == "map")
-    {
-    // Map view is not supported unless leaflet maps is enabled
-    $display = "thumbs";
-    }
-
 
 switch ($display)
     {
@@ -1084,7 +1078,7 @@ if($responsive_ui)
                     }
                 }
             
-            if (!$disable_geocoding && $leaflet_maps_enable)
+            if (!$disable_geocoding)
                 {
                 if($display == 'map')
                     { ?>
@@ -1117,7 +1111,7 @@ if($responsive_ui)
             <?php if ($display=="strip") { ?><span class="Selected"><?php echo $lang["striptitle"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["striptitle"]?></a><?php } ?>&nbsp; |&nbsp;
             <?php if ($display=="list") { ?> <span class="Selected"><?php echo $lang["list"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list"]?></a><?php } ?> <?php hook("adddisplaymode"); ?> 
             <?php
-            if(!$disable_geocoding && $leaflet_maps_enable)
+            if(!$disable_geocoding)
                 {
                 if ($display == 'map')
                     { ?>
