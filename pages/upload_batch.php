@@ -483,6 +483,7 @@ if ($processupload)
         $result["status"] = false;
         $result["message"] = str_replace("%%RESOURCES%%",implode(",",$duplicates),$lang["error_upload_duplicate_file"]);
         $result["error"] = 108;
+        unlink($upfilepath);
         die(json_encode($result));
         }
     elseif(!hook("initialuploadprocessing"))
