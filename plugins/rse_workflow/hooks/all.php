@@ -128,7 +128,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
                 {
                 debug("processing bcc notifications");
                 $bccmessage = clone($message);
-                $bccmessage->set_text("lang_user");
+                $bccmessage->set_text("lang_user");                
                 $bccmessage->append_text(": " . $cntrb_detail["username"] . " (#" . $cntrb_user . ")<br/>");
                 $bccmessage->append_text_multi($message->get_text(true));
                 $bccadmin_users = get_notification_users("SYSTEM_ADMIN");

@@ -590,7 +590,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }            
             $message->append_text("<br/>");
             $message->append_text("i18n_" . $custom[$n]);
-            $message->append_text(": " . getval("custom" . $n,"") . "\<br/>");
+            $message->append_text(": " . getval("custom" . $n,""));
             }
         }
     
@@ -599,16 +599,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $assignedmessage->append_text("<br/><br/>");
     $assignedmessage->set_subject($applicationname . ": ");
     $assignedmessage->append_subject("lang_requestassignedtoyou");
-    $coremessage_arr = $message->get_text(true);
-    $coremessagetext = $message->get_text();
-    if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
-        {
-        foreach($coremessage_arr as $messagepart)
-            {
-            $assignedmessage->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
-            }
-        }
-
+    // Add core message text (reason, custom fields etc.)
+    $assignedmessage->append_text_multi($message->get_text(true));
     $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
     if($amendedmessage)
         {
@@ -620,7 +612,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $request_query = new PreparedStatementQuery();
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments) 
                             VALUES (?, ?, NOW(), 1, 0, ?)";
-    $request_query->parameters = array("i",$userref, "i",$ref, "s",$coremessagetext);
+    $request_query->parameters = array("i",$userref, "i",$ref, "s",$message->get_text());
 
     // Set flag to send default notifications unless we override e.g. by $manage_request_admin 
     $send_default_notifications = true;
@@ -644,7 +636,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
             $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments, assigned_to)
                                     VALUES (?, ?, NOW(), 1, 0, ?, ?)";
-            $request_query->parameters = array("i",$userref, "i",$ref, "s",$coremessagetext, "i",$admin_notify_user);
+            $request_query->parameters = array("i",$userref, "i",$ref, "s",$message->get_text(), "i",$admin_notify_user);
 
             // Setup assigned to user for bypass hook later on    
             if($admin_notify_user !== 0) 
@@ -730,13 +722,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                     {
                     $request_query = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                             VALUES (?, ?, NOW(), 1, 0, ?, ?);";
-                    $parameters=array("i", $userref, "i",$collection_id, "s",$coremessagetext, "i",$assigned_to);
+                    $parameters=array("i", $userref, "i",$collection_id, "s",$message->get_text(), "i",$assigned_to);
                     }
                 else
                     {
                     $request_query = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
                                            VALUES (?, ?, NOW(), 1, 0, ?);";
-                    $parameters=array("i", $userref, "i",$collection_id, "s",$coremessagetext);
+                    $parameters=array("i", $userref, "i",$collection_id, "s",$message->get_text());
                     }
 
                 ps_query($request_query, $parameters);
@@ -788,14 +780,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->append_text("<br/><br/>");
         $admin_notify_message->append_text("lang_username");
         $admin_notify_message->append_text(": " . $username . "<br/>");
-        $coremessage_arr = $message->get_text(true);
-        if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
-            {
-            foreach($coremessage_arr as $messagepart)
-                {
-                $admin_notify_message->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
-                }
-            }
+        $admin_notify_message->append_text_multi($message->get_text(true));
         $admin_notify_message->user_preference = "user_pref_resource_access_notifications";
         $admin_notify_message->url = $templatevars['requesturl'];
         $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
@@ -833,7 +818,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }
-
     if ($request_senduserupdates)
         {
         $user_message = new ResourceSpaceUserNotification();
@@ -842,10 +826,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $user_message->append_subject(" - " . $ref);
         $user_message->set_text("lang_requestsenttext");
         $user_message->append_text("<br/><br/>");
-        foreach($coremessage as $messagepart)
-            {
-            $user_message->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
-            }
+        $user_message->append_text_multi($message->get_text(true));
         $user_message->append_text("<br/><br/>");
         $user_message->append_text("lang_clicktoviewresource");
         $user_message->url = $baseurl . "/?c=" . $ref;
@@ -1038,13 +1019,7 @@ function email_resource_request($ref,$details)
         $userconfirmmessage->prepend_text("<br/><br/>");
         $userconfirmmessage->prepend_text("lang_requestsenttext");
         $userconfirmmessage->append_text($adddetails . $c); 
-        $key_str=($k!="")? "&k=" . $k : "";    
-        
-        
-
-
-        //$userconfirmmessage = $lang["requestsenttext"] . "<br /><br />" . $lang["requestreason"] . ": " . $templatevars['details'] . $c . "<br /><br />" . $lang["clicktoviewresource"] . "\n$baseurl/?r=$ref".$k;
-
+        $key_str=($k!="") ? "&k=" . $k : "";
 
         if (isset($userref))
             {

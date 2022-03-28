@@ -84,8 +84,8 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
 
 function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $collection_data, $message, $manage_collection_request)
     {
-    global $manage_request_admin, $assigned_to_user, $admin_mail_template, $lang, $baseurl, $applicationname, 
-           $request_query, $notify_manage_request_admin, $username;
+    global $manage_request_admin, $assigned_to_user, $request_senduserupdates, $baseurl, $applicationname, 
+           $request_query, $notify_manage_request_admin, $username, $user_mail_template;
 
     // Do not process this any further as this should only handle collection requests
     if(!$manage_collection_request)
@@ -101,7 +101,8 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     // Build the collections map between assigned user and resources the collection should contain
     foreach ($resources as $resource)
         {
-        $resource_data          = get_resource_field_data($resource);
+        // Don't use permissions as requesting user may not have access to field
+        $resource_data          = get_resource_field_data($resource,false,false);
         $assigned_administrator = 0;
         $resource_not_assigned  = true;
 
@@ -113,10 +114,12 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
 
                 if($assigned_administrator === 0)
                     {
+                    debug("autoassign_mrequests: Assigning resource " . $resource . " to unmanaged");
                     $collection_resources_by_assigned_user['not_managed'][] = $resource;
                     }
                 else
                     {
+                    debug("autoassign_mrequests: Assigning resource " . $resource . " to " . $assigned_administrator);
                     $collection_resources_by_assigned_user[$assigned_administrator][] = $resource;
                     }
 
@@ -152,7 +155,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             }
 
         // Attach assigned admin to this collection
-        add_collection($user['ref'], $collections[$assigned_user_id]);
+        add_collection($assigned_user_id, $collections[$assigned_user_id]);
         }
 
     if(!empty($collections))
@@ -163,12 +166,27 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments, assigned_to)
                                     VALUES (?, ?, NOW(), 1, 0, ?, ?)";
             $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_text(), "i",$assigned_to);
-            if($assigned_to === 'not_managed' || !$assigned_to_user)
+            if($assigned_to === 'not_managed')
                 {
-                $assigned_to = get_notification_users("RESOURCE_ACCESS");
-                $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
-                VALUES (?, ?, NOW(), 1, 0, ?)";
-                $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_text());
+                if(is_array($assigned_to_user) && isset($assigned_to_user["ref"]))
+                    {
+                    $assigned_to =[$assigned_to_user["ref"]];
+                    debug("autoassign_mrequests: Send collection " . $collection_id . " to " . $assigned_to_user["ref"]);
+                    }
+                else
+                    {
+                    // No valid user assigned by $manage_request_admin
+                    $assigned_to = get_notification_users("RESOURCE_ACCESS");
+                    $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, `status`, comments)
+                    VALUES (?, ?, NOW(), 1, 0, ?)";
+                    $request_query->parameters = array("i",$user_ref, "i",$collection_id, "s",$message->get_text());
+                    debug("autoassign_mrequests: Send collection " . $collection_id . " to default notify admins");
+                    }
+                }
+            else
+                {
+                // Change assigned user into an array
+                $assigned_to =[$assigned_to];
                 }
 
             ps_query($request_query->sql, $request_query->parameters);
@@ -190,19 +208,31 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $adminmessage->append_text("<br/><br/>");
             $adminmessage->append_text("lang_username");
             $adminmessage->append_text(": " . $username . "<br/>");
-            $coremessage_arr = $message->get_text(true);
-            if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
-                {
-                foreach($coremessage_arr as $messagepart)
-                    {
-                    $adminmessage->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
-                    }
-                }
+            // Add core message text (reason, custom fields etc.)
+            $adminmessage->append_text_multi($message->get_text(true));
             $adminmessage->url = $request_url;  
             $adminmessage->eventdata = $eventdata;
             $adminmessage->templatevars = $templatevars;
             $adminmessage->eventdata = $eventdata;
-            send_user_notification($assigned_to,$message);
+            send_user_notification($assigned_to,$adminmessage);
+            }
+
+        if ($request_senduserupdates)
+            {
+            $collection_url = $baseurl . "/?c=" . $collection_data['ref'];
+            $usermessage = new ResourceSpaceUserNotification();
+            $usermessage->set_subject($applicationname . ": ");
+            $usermessage->append_subject("lang_requestsent");
+            $usermessage->set_text("lang_requestsenttext");
+            $usermessage->append_text("<br/><br/>");
+            $usermessage->append_text_multi($message->get_text(true));
+            $usermessage->append_text("<br/><br/>");
+            $usermessage->append_text("lang_clicktoviewresource");
+            $usermessage->url = $collection_url;
+            $templatevars['requesturl'] = $collection_url;
+            $usermessage->template = $user_mail_template;
+            $usermessage->templatevars = $templatevars;        
+            send_user_notification([$user_ref],$usermessage);
             }
         $notify_manage_request_admin = false;
         }
@@ -215,7 +245,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
 
 function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manage_individual_requests, $collection_id, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)
     {
-    global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $resource_type_request_users, $userref, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
+    global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $userref, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
 
     // Collection level requests have already been created and e-mails sent so skip this step
     if(!$manage_individual_requests)
@@ -323,16 +353,9 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         $usermessage->append_subject("lang_requestsent");
         $usermessage->set_text("lang_requestsenttext");
         $usermessage->append_text("<br/><br/>");
-        $coremessage_arr = $message->get_text(true);
-        if(is_array($coremessage_arr) && count($coremessage_arr) > 0)
-            {
-            foreach($coremessage_arr as $messagepart)
-                {
-                $usermessage->append_text($messagepart[0],$messagepart[1],$messagepart[2]);
-                }
-            }        
+        $usermessage->append_text_multi($message->get_text(true));
         $usermessage->append_text("<br/><br/>");
-        $usermessage->append_text("lang_clicktoviewresource");
+        $usermessage->append_text("lang_viewrequesturl");
         $usermessage->url = $collection_url;
         $templatevars['requesturl'] = $collection_url;
         $usermessage->template = $user_mail_template;

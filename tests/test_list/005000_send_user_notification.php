@@ -40,7 +40,6 @@ if(!is_array($result)
      || $result["messages"][0]["message"] != "French : appended text"
      )
     {
-        print_r($result);
     echo "ERROR - SUBTEST A\n";
     return false;
     }

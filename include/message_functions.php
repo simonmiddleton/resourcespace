@@ -990,6 +990,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 }
             register_plugin_language($plugins[$n]);
             }
+
         // Load in the correct language strings
         lang_load_site_text($lang,"",$userlanguage);
                
