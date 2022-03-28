@@ -7,7 +7,7 @@ if (PHP_SAPI != 'cli')
     }
 
 include(dirname(__FILE__) . "/../include/db.php");
-include(dirname(__FILE__) . "/../include/image_processing.php");
+include_once(dirname(__FILE__) . "/../include/image_processing.php");
 
 
 $ignoremaxsize=false;
@@ -141,10 +141,11 @@ if ($multiprocess)
 
 // We fetch the list of resources to process.
 global  $no_preview_extensions;
-$exclude="'" . implode("','",$no_preview_extensions) . "'";
-$condition="resource.has_image=0 and";
+$condition="resource.has_image = 0 and";
 if ($noimage) {$condition="";}
-$resources=sql_query("SELECT resource.ref, resource.file_extension, ifnull(resource.preview_attempts,1) preview_attempts, creation_date FROM resource WHERE $condition resource.ref>0 and (resource.preview_attempts<5 or resource.preview_attempts is NULL) and file_extension is not null and length(file_extension)>0 and lower(file_extension) not in (" . $exclude  . ")");
+$resources=ps_query("SELECT resource.ref, resource.file_extension, ifnull(resource.preview_attempts, 1) preview_attempts, creation_date FROM resource 
+    WHERE $condition resource.ref > 0 and (resource.preview_attempts < 5 or resource.preview_attempts is NULL) and file_extension is not null and length(file_extension) > 0 
+	and lower(file_extension) not in (" . ps_param_insert(count($no_preview_extensions)) . ")", ps_param_fill($no_preview_extensions,"s"));
 
 foreach($resources as $resource) // For each resources
   {
@@ -194,14 +195,14 @@ foreach($resources as $resource) // For each resources
 		# Below added to catch an issue with previews failing when large video files were taking a long time to copy to StaticSync location
 		echo "Created at: " . $resource['creation_date'] . "\nTime now: " . date("Y-m-d H:i:s") . "\n";
 		$resourceage = time() - strtotime($resource['creation_date']);		
-		if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n";sql_query("UPDATE resource SET preview_attempts=0 WHERE ref='" . $resource['ref'] . "'");continue;} 
+		if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n"; ps_query("UPDATE resource SET preview_attempts = 0 WHERE ref = ?", array("i", $resource['ref'])); continue;} 
 		
 		#check whether resource already has mp3 preview in which case we set preview_attempts to 5
 		if ($resource['file_extension']!="mp3" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))	
 			{
 			$ref=$resource['ref'];
 			echo "Resource already has mp3 preview\n";
-			sql_query("update resource set preview_attempts=5 where ref='$ref'");
+			ps_query("update resource set preview_attempts = 5 where ref = ?", array("i", $ref));
 			}
 			
 		elseif ($resource['preview_attempts']<5 and $resource['file_extension']!="") 
@@ -210,7 +211,7 @@ foreach($resources as $resource) // For each resources
 			else{$ingested=true;}
 
 			# Increment the preview count.
-			sql_query("update resource set preview_attempts=ifnull(preview_attempts,1) + 1 where ref='" . $resource['ref'] . "'");
+			ps_query("update resource set preview_attempts = ifnull(preview_attempts, 1) + 1 where ref = ?", array("i", $resource['ref']));
 
 			$success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
 			hook('after_batch_create_preview');

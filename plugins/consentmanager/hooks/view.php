@@ -6,7 +6,7 @@ function HookConsentmanagerViewCustompanels()
 	
 	if($k!=""){return false;}
 
-	$consents=sql_query("select consent.* from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource='$ref' order by ref");
+	$consents=ps_query("select consent.* from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource= ? order by ref", ['i', $ref]);
 	?>
     <div class="RecordBox">
     <div class="RecordPanel">

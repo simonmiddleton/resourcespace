@@ -21,8 +21,8 @@ $redirect_url = generateURL($baseurl_short . "/plugins/licensemanager/pages/list
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
-	sql_query("delete from license where ref='$ref'");
-	sql_query("delete from resource_license where license='$ref'");
+	ps_query("delete from license where ref= ?", ['i', $ref]);
+	ps_query("delete from resource_license where license= ?", ['i', $ref]);
 
 	redirect($redirect_url);
 	}

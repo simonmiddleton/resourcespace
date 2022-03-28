@@ -31,10 +31,10 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     foreach ($resources as $resource)
         {
         // Always remove any existing relationship
-        sql_query("delete from resource_license where license='$ref' and resource='$resource'");
+        ps_query("delete from resource_license where license= ? and resource= ?", ['i', $ref,'i',$resource]);
 
         // Add link?
-        if (!$unlink) {sql_query("insert into resource_license (resource,license) values ('$resource','$ref')");}
+        if (!$unlink) {ps_query("insert into resource_license (resource,license) values (?, ?)", ['i', $resource, 'i', $ref]);}
 
         // Log
         resource_log($resource,"","",$lang[($unlink?"un":"") . "linklicense"] . " " . $ref);
@@ -57,7 +57,7 @@ include "../../../include/header.php";
 
 <div class="Question"><label><?php echo $lang["license_id"]?></label>
 <select name="ref"><option value=""><?php echo $lang["select"] ?></option>
-<?php $licenses=sql_query("select ref,description,holder from license order by ref"); foreach ($licenses as $license) { ?>
+<?php $licenses=ps_query("select ref,description,holder from license order by ref"); foreach ($licenses as $license) { ?>
 <option value="<?php echo $license["ref"] ?>"><?php echo $license["ref"] ?> - <?php echo $license["description"] . " / " . $license["holder"]; ?></option>
 <?php } ?>
 </select>

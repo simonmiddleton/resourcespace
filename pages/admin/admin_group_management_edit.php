@@ -261,10 +261,8 @@ include "../../include/header.php";
                 <input type="button" class="stdwidth" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo $ref . $url_params; ?>',true);" value="<?php echo $lang["launchpermissionsmanager"]; ?>"></input>                       
                 <div class="clearerleft"></div>         
                 <label></label>
-                <textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo $record['permissions']; ?></textarea>
                 <div class="clearerleft"></div>
                 <label></label>
-                <div><?php echo $lang["documentation-permissions"]; ?></div>
                 <div class="clearerleft"></div>
             </div> <!-- End of permissions_area -->
         </div>

@@ -218,7 +218,7 @@ if(isset($error))
 	<?php 
 	if ($collection["savedsearch"]!="") 
 	{ 
-	$result_limit=sql_value("select result_limit value from collection_savedsearch where collection='$ref'","");	
+	$result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");	
 	?>
 	<div class="Question">
 		<label for="name"><?php echo $lang["smart_collection_result_limit"] ?></label>

@@ -122,22 +122,9 @@ function set_config_option($user_id, $param_name, $param_value)
     $param_value = config_clean($param_value);
     $param_value = escape_check($param_value);
 
-    $query = sprintf('
-            INSERT INTO user_preferences (
-                                             user,
-                                             parameter,
-                                             `value`
-                                         )
-                 VALUES (
-                            %s,     # user
-                            \'%s\', # parameter
-                            \'%s\'  # value
-                        );
-        ',
-        is_null($user_id) ? 'NULL' : '\'' . escape_check($user_id) . '\'',
-        escape_check($param_name),
-        $param_value
-    );
+    $query = "INSERT INTO user_preferences (user,parameter,`value`) VALUES (?,?,?)";
+    $params  = ["i",$user_id,"s",$param_name,"s",$param_value,];
+   
     $current_param_value = null;
     if(get_config_option($user_id, $param_name, $current_param_value))
         {
@@ -146,25 +133,16 @@ function set_config_option($user_id, $param_name, $param_value)
             return true;
             }
 
-        $query = sprintf('
-                UPDATE user_preferences
-                   SET `value` = \'%s\'
-                 WHERE user %s
-                   AND parameter = \'%s\';
-            ',
-            $param_value,
-            is_null($user_id) ? 'IS NULL' : '= \'' . escape_check($user_id) . '\'',
-            escape_check($param_name)
-        );
+        $query = "UPDATE user_preferences SET `value` = ? WHERE user = ? AND parameter = ?";
+        $params  = ["s",$param_value,"i",$user_id,"s",$param_name];
 
-		if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
-			{
-			log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . escape_check($param_name) . "'", null, $current_param_value);
-			}
+        if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
+            {
+            log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . escape_check($param_name) . "'", null, $current_param_value);
+            }
+        }
 
-		}
-
-    sql_query($query);
+    ps_query($query,$params);
 
     // Clear disk cache
     clear_query_cache("preferences");
@@ -191,17 +169,9 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
         {
         return false;
         }
-
-    $query = sprintf('
-            SELECT `value`
-              FROM user_preferences
-             WHERE user %s
-               AND parameter = "%s";
-        ',
-        is_null($user_id) ? 'IS NULL' : '= \'' . escape_check($user_id) . '\'',
-        $name
-    );
-    $config_option = sql_value($query, null);
+    $query = "SELECT `value` FROM user_preferences WHERE user = ? AND parameter = ?";
+    $params  = ["i",$user_id,"s",$name];
+    $config_option = ps_value($query,$params, null);
 
     if(is_null($default) && isset($GLOBALS['system_wide_config_options'][$name]))
         {

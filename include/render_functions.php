@@ -1941,7 +1941,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
         }
+      if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
         hook ("edit_all_extra_modes");
+        }
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
@@ -2520,7 +2523,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert('Error','You have entered an invalid date');
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2530,7 +2533,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date		= new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert('Error','You have entered an invalid date')
+                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2542,7 +2545,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo $name;?>_end_year]').val();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert('Error','You have entered an invalid date');
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2552,7 +2555,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date		= new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert('Error','You have entered an invalid date')
+                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -4907,7 +4910,6 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
     ?>
     <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
     <tr>
-        <td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description?></td>
         <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
             if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>

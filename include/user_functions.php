@@ -277,12 +277,14 @@ function setup_user(array $userdata)
     if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
         $default_notify_states = [];
-        if(checkperm("e-2") && checkperm('d'))
+        // Add action for users who can submit 'pending submission' resources for review
+        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
             {
             $default_notify_states[] = -2;
             }
-        if(checkperm("e-1"))
+        if(checkperm("e-1") && checkperm("e0"))
             {
+            // Add action for users who can make pending resources active
             $default_notify_states[] = -1;
             }
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
@@ -2752,6 +2754,19 @@ function save_usergroup($ref,$groupoptions)
     }
 
 
+function copy_usergroup_permissions($src_id,$dst_id)
+    {
+    if(!is_numeric($src_id)||!is_numeric($dst_id)){return false;}
+
+    $src_group = get_usergroup($src_id);
+    $dst_group = get_usergroup($dst_id);
+
+    if(!$src_group || !$dst_group){return false;}
+
+
+    $dst_group=["permissions" => $src_group["permissions"]];
+    return save_usergroup($dst_id,$dst_group);
+    };
  
 /**
  * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.

@@ -71,18 +71,18 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
         $mapzoom=getvalescaped('map-zoom','');        
 		if ($mapzoom>=2 && $mapzoom<=21)
 			{
-    			sql_query("update resource set geo_lat='" . escape_check($s[0]) . "',geo_long='" . escape_check($s[1]) . "',mapzoom='" . escape_check($mapzoom) . "' where ref='$ref'");    
+    			ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom= ? where ref= ?", ['d', $s[0], 'd', $s[1], 'i', $mapzoom, 'i', $ref]);    
 			}
 		else
 			{
-    			sql_query("update resource set geo_lat='" . escape_check($s[0]) . "',geo_long='" . escape_check($s[1]) . "',mapzoom=null where ref='$ref'");    
+    			ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom=null where ref=?", ['d', $s[0], 'd', $s[1],'i', $ref]);    
 			}
 		hook("savelocationextras");
 		}
 	elseif (getval('geo-loc','')=='') 
 		{
 		# Blank geo-location
-		sql_query("update resource set geo_lat=null,geo_long=null,mapzoom=null where ref='$ref'");
+		ps_query("update resource set geo_lat=null,geo_long=null,mapzoom=null where ref= ?", ['i', $ref]);
 		hook("removelocationextras");
 		}
 	# Reload resource data

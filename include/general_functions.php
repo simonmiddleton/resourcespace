@@ -2249,7 +2249,7 @@ function error_alert($error, $back = true, $code = 403)
         jQuery(document).ready(function()
             {
             ModalClose();
-            styledalert('" . $lang["error"] . "', '$error');
+            styledalert('" . $lang["error"] . "', '" . htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401) . "');
             " . ($back ? "window.setTimeout(function(){history.go(-1);},2000);" : "") ."
             });
         </script>";
@@ -3716,7 +3716,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         }
 
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+    $html = mb_convert_encoding(htmlspecialchars_decode($html), 'HTML-ENTITIES', 'UTF-8');
 
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
@@ -4670,25 +4670,15 @@ function get_system_status()
 
 
     // Check filestore folder browseability
-    $GLOBALS['use_error_exception'] = true;
-    try
+    $cfb = check_filestore_browseability();
+    if(!$cfb['index_disabled'])
         {
-        $output = file_get_contents($GLOBALS['baseurl'] . '/filestore');
-        if(strpos($output, 'Index of') !== false)
-            {
-            $return['results']['filestore_indexed'] = [
-                'status' => 'FAIL',
-                'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
-            ];
-
-            return $return;
-            }
+        $return['results']['filestore_indexed'] = [
+            'status' => 'FAIL',
+            'info' => $cfb['info'],
+        ];
+        return $return;
         }
-    catch (Exception $e)
-        {
-        // Error accesing filestore URL - this is as expected
-        }
-    unset($GLOBALS['use_error_exception']);
 
 
     // Check write access to sql_log
@@ -4917,4 +4907,59 @@ function try_unlink($deletefile)
         }        
     unset($GLOBALS["use_error_exception"]);
     return $deleted;
+    }
+
+
+/**
+ * Check filestore folder browseability.
+ * For security reasons (e.g data breach) the filestore location shouldn't be indexed by the web server (in Apache2 - disable autoindex module)
+ * 
+ * @return array Returns data structure with following keys:-
+ *               - status: An end user status of OK/FAIL
+ *               - info: Any extra relevant information (aimed at end users)
+ *               - filestore_url: ResourceSpace URL to the filestore location
+ *               - index_disabled: PHP bool (used by code). FALSE if web server allows indexing/browsing the filestore, TRUE otherwise
+ */
+function check_filestore_browseability()
+    {
+    $filestore_url = $GLOBALS['storageurl'] ?? "{$GLOBALS['baseurl']}/filestore";
+    $timeout = 5;
+    $return = [
+        'status' => $GLOBALS['lang']['status-fail'],
+        'info' => $GLOBALS['lang']['noblockedbrowsingoffilestore'],
+        'filestore_url' => $filestore_url,
+        'index_disabled' => false,
+    ];
+
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $filestore_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+        $output = curl_exec($ch);
+        $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);        
+        }
+    catch (Throwable $t)
+        {
+        $return['status'] = $GLOBALS['lang']['unknown'];
+        $return['info'] = $GLOBALS['show_error_messages'] && $GLOBALS['show_detailed_errors'] ? $t->getMessage() : '';
+        return $return;
+        }
+    unset($GLOBALS['use_error_exception']);
+
+    // Web servers (RFC 2616) shouldn't return a "200 OK" if the server has indexes disabled. Usually it's "404 Not Found".
+    if($response_status_code !== 200)
+        {
+        $return['status'] = $GLOBALS['lang']['status-ok'];
+        $return['info'] = '';
+        $return['index_disabled'] = true;
+        }
+
+    return $return;
     }

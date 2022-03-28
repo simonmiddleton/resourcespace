@@ -586,6 +586,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         }
         
     # Setup the principal create request SQL
+    global $request_query;
     $request_query = new PreparedStatementQuery();
 
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments) 

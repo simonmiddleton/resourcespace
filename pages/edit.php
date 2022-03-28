@@ -395,7 +395,7 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 if (getval("regen","")!="" && enforcePostRequest($ajax))
     {
     hook('edit_recreate_previews_extra', '', array($ref));
-    sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
+    ps_query("update resource set preview_attempts=0 WHERE ref= ?" , ['i', $ref]);
     create_previews($ref,false,$resource["file_extension"]);
     }
 
@@ -455,7 +455,17 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         redirect($explain);
         }
     }
-  
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+if($ref < 0)
+    {
+    $cfb = check_filestore_browseability();
+    if(!$cfb['index_disabled'])
+        {
+        exit(error_alert($lang['error_generic_misconfiguration'], true, 200)); 
+        }
+    }
+
 $urlparams= array(
 	'ref'				=> $ref,
     'search'			=> $search,
@@ -722,7 +732,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 {
                                 if($uploadparams["entercolname"] == "")
                                     {
-                                    $uploadparams["entercolname"] = "Upload " . date("YmdHis");
+                                    $uploadparams["entercolname"] = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis');
                                     $hidden_collection = true;
                                     }
                                 $collection_add = create_collection($userref,$uploadparams["entercolname"]);
@@ -905,7 +915,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          break;
       case "restore":
 		delete_previews($resource);
-        sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
+        ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
@@ -932,7 +942,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             }
         else
             {
-            sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");
+            ps_query("update resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
             $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         break;
@@ -2065,27 +2075,18 @@ else
 
     if($ref > 0 && !$upload_review_mode && $delete_resource_custom_access)
     {
-       $query = sprintf('
-          SELECT rca.user AS user_ref,
-          IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
-          FROM resource_custom_access AS rca
-          INNER JOIN user AS u ON rca.user = u.ref
-          WHERE resource = "%s";
-          ',
-          $ref
-          );
-       $rca_users = sql_query($query);
+       $query ='SELECT rca.user AS user_ref,
+                IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
+                FROM resource_custom_access AS rca
+                INNER JOIN user AS u ON rca.user = u.ref
+                WHERE resource = ?';
+       $rca_users = ps_query($query, ['i', $ref]);
        
-       $group_query = sprintf('
-          SELECT rca.usergroup AS usergroup_ref,
-          u.name AS name
-          FROM resource_custom_access AS rca
-          INNER JOIN usergroup AS u ON rca.usergroup = u.ref
-          WHERE resource = "%s";
-          ',
-          $ref
-          );
-       $rca_usergroups = sql_query($group_query);
+       $group_query =  'SELECT rca.usergroup AS usergroup_ref, u.name AS name
+                        FROM resource_custom_access AS rca
+                        INNER JOIN usergroup AS u ON rca.usergroup = u.ref
+                        WHERE resource = ?';
+       $rca_usergroups = ps_query($group_query, ['i', $ref]);
 
        ?>
     </div> <!-- end of previous collapsible section -->

@@ -1000,10 +1000,10 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
             add_node_keyword($node, $kworig, $position, false, $stem);
             }
         }
-        
+
+     $unstemmed=$keyword;
      if ($stem && $stemming && function_exists("GetStem"))
         {
-        $unstemmed=$keyword;
         $keyword=GetStem($keyword);
         if($keyword!=$unstemmed)
             {
@@ -1015,7 +1015,7 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
         
         
     // $keyword should not be indexed if it can be found in the $noadd array, no need to continue
-    if(in_array($keyword, $noadd))
+    if(in_array($unstemmed, $noadd))
         {
         debug('Ignored keyword "' . $keyword . '" as it is in the $noadd array. Triggered in ' . __FUNCTION__ . '() on line ' . __LINE__);
         return false;
@@ -1337,7 +1337,10 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
     global $userref;
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
         {return false;}
-    
+
+    $resources = array_values(array_filter($resources, 'is_int_loose'));
+    $nodes = array_values(array_filter(is_array($nodes) ? $nodes : [$nodes], 'is_int_loose'));
+
     if($checkperms)
         {
         // Need to check user has permissions to add nodes
@@ -1356,40 +1359,34 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             }
         }
 
-    if(!is_array($nodes))
-        {$nodes=array($nodes);}
-
-    $nodesql = "";
-    $sql_params = [];
-    foreach($resources as $resource)
+    $resources_chunks = array_chunk($resources, 500);
+    foreach($resources_chunks as $resources_chunk)
         {
-        if(!is_int_loose($resource))
+        $resource_node_values = '';
+        $sql_params = [];
+        foreach($resources_chunk as $resource)
             {
-            continue;
-            }
-
-        $nodes_added = [];
-        foreach($nodes as $node)
-            {
-            if(is_int_loose($node))
+            foreach($nodes as $node)
                 {
-                $nodesql .= ',(?, ?)';
+                $resource_node_values .= ',(?, ?)';
                 $sql_params[] = 'i';
                 $sql_params[] = $resource;
                 $sql_params[] = 'i';
                 $sql_params[] = $node;
-                $nodes_added[] = $node;
+                }
+
+            if($logthis && !empty($nodes))
+                {
+                log_node_changes($resource, $nodes, []);
                 }
             }
+        $resource_node_values = ltrim($resource_node_values, ',');
 
-        if($logthis)
+        if($resource_node_values !== '')
             {
-            log_node_changes($resource, $nodes_added, []);
+            ps_query("INSERT INTO resource_node (resource, node) VALUES {$resource_node_values} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
             }
         }
-    $nodesql = ltrim($nodesql, ',');
-
-    ps_query("INSERT INTO resource_node (resource, node) VALUES {$nodesql} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
     return true;
     }
 

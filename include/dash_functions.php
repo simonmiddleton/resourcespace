@@ -300,7 +300,13 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
  */
 function cleanup_dash_tiles()
 	{
+    global $lang;
+    $tiles = sql_query("SELECT * FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
 	sql_query("DELETE FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
+    foreach ($tiles as $tile)
+        {
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
+        }
 	}
 
 
@@ -944,15 +950,19 @@ function update_user_dash_tile_order($user,$tile,$order_by)
  */
 function delete_user_dash_tile($usertile,$user)
 	{
+    global $lang;
 	if(!is_numeric($usertile) || !is_numeric($user)){return false;}
 	
 	$row = get_user_tile($usertile,$user);
 	sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
 
 	$existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    
 	if($existing[0]["count"]<1)
 		{
+        $tile = get_tile($row["dash_tile"]);
 		delete_dash_tile($row["dash_tile"]);
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$row["dash_tile"]);
 		}
 	}
 
@@ -963,6 +973,7 @@ function delete_user_dash_tile($usertile,$user)
  */
 function empty_user_dash($user,$purge=true)
 	{
+    global $lang;
 	$usertiles = sql_query("SELECT dash_tile FROM user_dash_tile WHERE user_dash_tile.user='".escape_check($user)."'");
 	sql_query("DELETE FROM user_dash_tile WHERE user='".$user."'");
 	if($purge)
@@ -973,6 +984,7 @@ function empty_user_dash($user,$purge=true)
 			if($existing[0]["count"]<1)
 				{
 				delete_dash_tile($tile["dash_tile"]);
+                log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["dash_tile"]);
 				}
 			}
 		}	
@@ -2115,7 +2127,7 @@ function get_dash_search_data($link='', $promimg=0)
             {
             global $access; // Needed by check_use_watermark()
             $access=get_resource_access($results[$n]);
-            if(in_array($results[$n]["access"],[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
+            if(in_array($access,[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
                 {
                 $use_watermark=check_use_watermark();
                 $resfile=get_resource_path($results[$n]["ref"],true,"pre",false,"jpg",-1,1,$use_watermark);
