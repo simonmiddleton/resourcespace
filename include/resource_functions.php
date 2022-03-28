@@ -1268,8 +1268,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 function save_resource_data_multi($collection,$editsearch = array())
     {
-    global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
-    $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields;
+    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
 
@@ -1625,17 +1624,12 @@ function save_resource_data_multi($collection,$editsearch = array())
 
                     # Work out existing field value.
                     $existing = get_data_by_field($ref,$fields[$n]['ref']);
-                    // sql_value("SELECT `value` FROM resource_data WHERE resource = '".escape_check($ref)."' AND resource_type_field = '".escape_check($fields[$n]['ref'])."'", "");
-
-
-                        
                     if ($mode=="FR")
                         {
                         # Find and replace mode? Perform the find and replace.
                         
-                        $findstring=getval("find_" . $fields[$n]["ref"],"");
-                        $replacestring=getval("replace_" . $fields[$n]["ref"],"");
-                        
+                        $findstring     = getval("find_" . $fields[$n]["ref"],"");
+                        $replacestring  = getval("replace_" . $fields[$n]["ref"],"");                        
                         $val=str_replace($findstring,$replacestring,$existing);
                                                 
                         if (html_entity_decode($existing, ENT_QUOTES | ENT_HTML401) != $existing)
@@ -1661,8 +1655,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                                                         
                             $val=str_replace($html_entity_strings, $replacestring, $val);
                             }
-                        }
-                        
+                        }                        
                     
                     # Append text/option(s) mode?
                     elseif ($mode=="AP" && in_array($fields[$n]["type"],$TEXT_FIELD_TYPES))
@@ -1686,16 +1679,20 @@ function save_resource_data_multi($collection,$editsearch = array())
                     elseif ($mode=="RM")
                         {
                         # Remove text/option(s) mode
-                        $val=str_replace($origval,"",$existing);
+                        $val = str_replace($origval,"",$existing);
                         if($fields[$n]["required"] && strip_leading_comma($val)=="")
                             {
                             // Required field and  no value now set, revert to existing and add to array of failed edits
                             $val=$existing;
                             if(!isset($errors[$fields[$n]["ref"]]))
-                                {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
+                                {
+                                $errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;
+                                }
                             $errors[$fields[$n]["ref"]] .=  $ref;
-                            if($m<count($list)-1){$errors[$fields[$n]["ref"]] .= ",";}
-                            
+                            if($m<count($list)-1)
+                                {
+                                $errors[$fields[$n]["ref"]] .= ",";
+                                }
                             }
                         }
                     elseif ($mode=="CF")
@@ -1763,7 +1760,6 @@ function save_resource_data_multi($collection,$editsearch = array())
                             {
                             // Remove any existing node IDs for this non-fixed list field (there should only be one).
                             $current_field_nodes = get_resource_nodes($ref,$fields[$n]["ref"]);
-
                             debug("BANG removing old nodes: " . implode(",",$current_field_nodes));
                             $nodes_to_remove = array_merge($nodes_to_remove,$current_field_nodes);
                             }
@@ -1894,36 +1890,36 @@ function save_resource_data_multi($collection,$editsearch = array())
                     {
                     $setarchivestate=$oldarchive;
                     }
-                    
+
                 if ($setarchivestate!=$oldarchive) // Only if changed
                     {
                     update_archive_status($ref,$setarchivestate,array($oldarchive));
                     }
-                }                                                			
-			}
+                }
+            }
         }
         
-	# Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
-	if ($expiry_field_edited)
-		{
-		if (count($list)>0)
-			{
+    # Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
+    if ($expiry_field_edited)
+        {
+        if (count($list)>0)
+            {
             $successfully_edited_resources[] = $ref;
-			sql_query("update resource set expiry_notification_sent=0 where ref in (" . join(",",$list) . ")");
-			}
+            sql_query("update resource set expiry_notification_sent=0 where ref in (" . join(",",$list) . ")");
+            }
 
         foreach ($list as $key => $ref) 
             {
             $successfully_edited_resources[] = $ref;
             }
-		}
-	
-	# Also update access level
-	if (getval("editthis_created_by","")!="" && $edit_contributed_by)
+        }
+
+    # Also update access level
+    if (getval("editthis_created_by","")!="" && $edit_contributed_by)
         {
         for ($m=0;$m<count($list);$m++)
-			{
-			$ref=$list[$m];
+            {
+            $ref=$list[$m];
             $created_by = sql_value("select created_by value from resource where ref='$ref'",""); 
             $new_created_by = getvalescaped("created_by",0,true);
             if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
@@ -1935,91 +1931,90 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $successfully_edited_resources[] = $ref;
                 }
             }
-        }    
+        }
 
     # Also update access level
-	if (getval("editthis_access","")!="")
-		{
-		for ($m=0;$m<count($list);$m++)
-			{
-			$ref=$list[$m];
-			$access=getvalescaped("access",0);
-			$oldaccess=sql_value("select access value from resource where ref='$ref'","");
-			if ($access!=$oldaccess)
-				{
-				sql_query("update resource set access='$access' where ref='$ref'");				
+    if (getval("editthis_access","")!="")
+        {
+        for ($m=0;$m<count($list);$m++)
+            {
+            $ref=$list[$m];
+            $access=getvalescaped("access",0);
+            $oldaccess=sql_value("select access value from resource where ref='$ref'","");
+            if ($access!=$oldaccess)
+                {
+                sql_query("update resource set access='$access' where ref='$ref'");
                 if ($oldaccess==3)
                     {
                     # Moving out of custom access - delete custom usergroup access.
                     delete_resource_custom_access_usergroups($ref);
                     }
-				resource_log($ref,LOG_CODE_ACCESS_CHANGED,0,"",$oldaccess,$access);
+                resource_log($ref,LOG_CODE_ACCESS_CHANGED,0,"",$oldaccess,$access);
                 $successfully_edited_resources[] = $ref;
-				}
-			
-			# For access level 3 (custom) - also save custom permissions
-			if ($access==3) {save_resource_custom_access($ref);}
-			}
-		}
-	
-	# Update resource type?
-	if (getval("editresourcetype","")!="")
-		{
-		for ($m=0;$m<count($list);$m++)
-			{
-			$ref=$list[$m];
-			update_resource_type($ref,getvalescaped("resource_type",""));
+                }
+            # For access level 3 (custom) - also save custom permissions
+            if ($access==3) {save_resource_custom_access($ref);}
+            }
+        }
+
+    # Update resource type?
+    if (getval("editresourcetype","")!="")
+        {
+        for ($m=0;$m<count($list);$m++)
+            {
+            $ref=$list[$m];
+            update_resource_type($ref,getvalescaped("resource_type",""));
             $successfully_edited_resources[] = $ref;
-			}
-		}
-		
-	# Update location?
-	if (getval("editlocation","")!="")
-		{
-		$location=explode(",",getvalescaped("location",""));
-		if (count($list)>0) 
-			{
-			if (count($location)==2)
-				{
-				$geo_lat=(float)$location[0];
-				$geo_long=(float)$location[1];
-				sql_query("update resource set geo_lat=$geo_lat,geo_long=$geo_long where ref in (" . join(",",$list) . ")");
-				}
-			elseif (getvalescaped("location","")=="")
-				{
-				sql_query("update resource set geo_lat=null,geo_long=null where ref in (" . join(",",$list) . ")");
-				}
+            }
+        }
+
+    # Update location?
+    if (getval("editlocation","")!="")
+        {
+        $location=explode(",",getvalescaped("location",""));
+        if (count($list)>0) 
+            {
+            if (count($location)==2)
+                {
+                $geo_lat=(float)$location[0];
+                $geo_long=(float)$location[1];
+                ps_query("UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",array_merge(["d",$geo_lat,"d",$geo_long],ps_param_fill($list,"i")));
+                }
+            elseif (getvalescaped("location","")=="")
+                {
+                ps_query("UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
+                }
 
             foreach ($list as $key => $ref) 
                 {
                 $successfully_edited_resources[] = $ref;
                 }
-			}
-		}
+            }
+        }
 
-	# Update mapzoom?
-	if (getval("editmapzoom","")!="")
-		{
-		$mapzoom=getvalescaped("mapzoom","");
-		if (count($list)>0)
-			{
-			if ($mapzoom!="")
-				{
-				sql_query("update resource set mapzoom=$mapzoom where ref in (" . join(",",$list) . ")");
-				}
-			else
-				{
-				sql_query("update resource set mapzoom=null where ref in (" . join(",",$list) . ")");
-				}
+    # Update mapzoom?
+    if (getval("editmapzoom","")!="")
+        {
+        $mapzoom=getvalescaped("mapzoom","");
+        if (count($list)>0)
+            {
+            if ($mapzoom!="")
+                {
+                ps_query("UPDATE resource SET mapzoom = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",array_merge(["i",$mapzoom], ps_param_fill($list,"i")));
+                }
+            else
+                {
+                ps_query("UPDATE resource SET mapzoom=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
+                }
 
             foreach ($list as $key => $ref) 
                 {
                 $successfully_edited_resources[] = $ref;
                 }
-			}
-		}
+            }
+        }
 
-	hook("saveextraresourcedata","",array($list));
+    hook("saveextraresourcedata","",array($list));
 
     // Plugins can do extra actions once all fields have been saved and return errors back if needed.
     // NOTE: Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
@@ -2036,14 +2031,19 @@ function save_resource_data_multi($collection,$editsearch = array())
         foreach ($successfully_edited_resources as $key => $ref) 
             {
             daily_stat("Resource edit", $ref);
-            }            
+            }           
         }
 
-    if (count($errors)==0) {return true;} else {return $errors;}
-    
-	}
+    if (count($errors)==0)
+        {
+        return true;
+        }
+    else
+        {
+        return $errors;
+        }
+    }
 
-   
  // TODO check staticsync works - uses append_field_value()
 function append_field_value($field_data,$new_value,$existing_value)
 	{
@@ -5477,8 +5477,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         return false;
         }
 
-    $resource_escaped = escape_check($resource);
-    $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
+    $resource_type = ps_value("SELECT resource_type AS `value` FROM resource WHERE ref = ?", ["i",$resource], 0);
 
     $fields = sql_query(
         "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
@@ -5504,7 +5503,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
             }
         else
             {
-            $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource_escaped}' AND resource_type_field = '{$field['ref']}'", '');
+            $value = ps_value("SELECT `value` FROM resource_data WHERE resource = ? AND resource_type_field = ?", ["i",$resource,"i",$field['ref']], '');
             }
 
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
