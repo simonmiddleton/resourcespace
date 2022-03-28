@@ -153,12 +153,12 @@ if ($exiftool_fullpath!=false)
                 if($query == 0)
                     {
                     $parameters=array("i",$ref, "i",$n, "i",$filesize_indd);
-                    ps_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES (?, ?, ?)");
+                    ps_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES (?, ?, ?)",$parameters);
                     }
                 else
                     {
                     $parameters=array("i",$n, "i",$ref);
-                    ps_query("UPDATE resource_dimensions SET page_count = ? WHERE resource = ?");
+                    ps_query("UPDATE resource_dimensions SET page_count = ? WHERE resource = ?",$parameters);
                     } 
 
                 $n=0;
@@ -434,7 +434,7 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
 
         $parameters=array("s",$ref."-converted.pdf", "s",$alt_description, "i",filesize_unlimited($alt_path), "i",$ref, "i",$alt_ref);
         ps_query("UPDATE resource_alt_files 
-                    SET file_name=?, description=?, file_extension='pdf', file_size=?, unoconv='1' where resource=? and ref=?");
+                    SET file_name=?, description=?, file_extension='pdf', file_size=?, unoconv='1' where resource=? and ref=?",$parameters);
 
         # Set vars so we continue generating thumbs/previews as if this is a PDF file
         $extension="pdf";
@@ -493,7 +493,7 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
 
         $parameters=array("s",$ref."-converted.pdf", "s",$alt_description, "i",filesize_unlimited($alt_path), "i",$ref, "i",$alt_ref);
         ps_query("UPDATE resource_alt_files 
-                    SET file_name=?, description=?, file_extension='pdf', file_size=? ,unoconv='1' where resource=? and ref=?");
+                    SET file_name=?, description=?, file_extension='pdf', file_size=? ,unoconv='1' where resource=? and ref=?",$parameters);
 
         # Set vars so we continue generating thumbs/previews as if this is a PDF file
         $extension="pdf";
