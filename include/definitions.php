@@ -464,6 +464,22 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'apcu' => 'apcu_fetch',
 ];
 
+/*
+Example of a "utility" entry structure:-
+'utilityname' => [
+    'required' => false,
+    'path_var_name' => 'utilityname_path',
+    'display_name' => 'utilityname',
+    'show_on_check_page' => true,
+    'version_check' => [
+        'argument' => '',
+        'callback' => [
+            'fct_name' => 'check_utility_cli_version_found_by_name',
+            'args' => [['utilityname', 'anyOtherRelevantString']],
+        ],
+    ],
+],
+*/
 const RS_SYSTEM_UTILITIES = [
     'im-convert' => [
         'required' => true,
@@ -595,19 +611,19 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-    /*'archiver' => [
+    'archiver' => [
         'required' => false,
         'path_var_name' => 'archiver_path',
         'display_name' => 'Archiver',
         'show_on_check_page' => true,
         'version_check' => [
-            'argument' => '',
+            'argument' => '-h',
             'callback' => [
-                'fct_name' => '',
-                'args' => [],
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['zip', '7z']],
             ],
         ],
-    ],*/
+    ],
     'fits' => [
         'required' => false,
         'path_var_name' => 'fits_path',
@@ -621,10 +637,6 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-
-
-
-    // new ones found in check.php
     'antiword' => [
         'required' => false,
         'path_var_name' => 'antiword_path',
@@ -690,17 +702,4 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
-    // 'utilityname' => [
-    //     'required' => false,
-    //     'path_var_name' => 'utilityname_path',
-    //     'display_name' => 'utilityname',
-    //     'show_on_check_page' => true,
-    //     'version_check' => [
-    //         'argument' => '',
-    //         'callback' => [
-    //             'fct_name' => 'check_utility_cli_version_found_by_name',
-    //             'args' => [['utilityname']],
-    //         ],
-    //     ],
-    // ],
 ];
