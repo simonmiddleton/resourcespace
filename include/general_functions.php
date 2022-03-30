@@ -4736,7 +4736,7 @@ function get_system_status()
         }
 
 
-    // Check free disk space is sufficient -  WARN (or FAIL if critical low)
+    // Check free disk space is sufficient -  WARN
     $avail = disk_total_space($GLOBALS['storagedir']);
     $free = disk_free_space($GLOBALS['storagedir']);
     $calc = $free / $avail;
@@ -4747,14 +4747,6 @@ function get_system_status()
             'info' => 'Less than 5% disk space free.',
         ];
         ++$warn_tests;
-        }
-    else if($calc < 0.01)
-        {
-        $return['results']['free_disk_space'] = [
-            'status' => 'FAIL',
-            'info' => 'Less than 1% disk space free.',
-        ];
-        return $return;
         }
 
 
