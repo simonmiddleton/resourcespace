@@ -8645,7 +8645,7 @@ function get_external_shares(array $filteropts)
         {
         $share_order_by = "expires";
         }
-    $share_sort = strtoupper($share_sort) == "ASC" ? "ASC" : "DESC";
+    $share_sort = strtoupper((string) $share_sort) == "ASC" ? "ASC" : "DESC";
 
     $conditions = array();
     if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
