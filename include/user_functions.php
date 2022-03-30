@@ -157,8 +157,8 @@ function setup_user(array $userdata)
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
 
-    $ip_restrict_group=trim($userdata["ip_restrict_group"]);
-    $ip_restrict_user=trim($userdata["ip_restrict_user"]);
+    $ip_restrict_group=trim((string) $userdata["ip_restrict_group"]);
+    $ip_restrict_user=trim((string) $userdata["ip_restrict_user"]);
 
     if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
         {
@@ -222,11 +222,11 @@ function setup_user(array $userdata)
     $usereditfilter         = ($search_filter_nodes && isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
     $userderestrictfilter   = ($search_filter_nodes && isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
 
-    $hidden_collections=explode(",",$userdata["hidden_collections"]);
+    $hidden_collections=explode(",",(string) $userdata["hidden_collections"]);
     $userresourcedefaults=$userdata["resource_defaults"];
-    $userrequestmode=trim($userdata["request_mode"]);
-    $user_dl_limit=trim($userdata["download_limit"]);
-    $user_dl_days=trim($userdata["download_log_days"]);
+    $userrequestmode=trim((string) $userdata["request_mode"]);
+    $user_dl_limit=trim((string) $userdata["download_limit"]);
+    $user_dl_days=trim((string) $userdata["download_log_days"]);
 
     if((int)$user_dl_limit > 0)
         {
@@ -260,7 +260,7 @@ function setup_user(array $userdata)
         }        
 
     # Apply config override options
-    $config_options=trim($userdata["config_options"]);
+    $config_options=trim((string) $userdata["config_options"]);
     if ($config_options!="")
         {
         // We need to get all globals as we don't know what may be referenced here
