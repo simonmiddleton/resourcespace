@@ -673,23 +673,26 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
                 $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
-								
-				if(count($added_nodes)>0 || count($removed_nodes)>0)
-					{  
+
+                if(count($added_nodes) > 0 || count($removed_nodes) > 0)
+                    {
                     # If this is a 'joined' field it still needs to add it to the resource column
                     $joins=get_resource_table_joins();
                     if (in_array($fields[$n]["ref"],$joins))
                         {
-					    $new_nodevals = array();
+                        $new_nodevals = array();
                         // Build new value:
                         foreach($ui_selected_node_values as $ui_selected_node_value)
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
                         $new_nodes_val = implode(",", $new_nodevals);
-                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                        if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
+                            {
+                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                            }
                         }
-					}
+                    }
 
                 // Required fields that didn't change get the current value
                 if(1 == $fields[$n]['required'] && '' == $val)

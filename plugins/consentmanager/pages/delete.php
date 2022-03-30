@@ -21,8 +21,8 @@ $redirect_url = generateURL($baseurl_short . "/plugins/consentmanager/pages/list
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
-	sql_query("delete from consent where ref='$ref'");
-	sql_query("delete from resource_consent where consent='$ref'");
+	ps_query("delete from consent where ref= ?", ['i', $ref]);
+	ps_query("delete from resource_consent where consent= ?", ['i', $ref]);
 
 	redirect($redirect_url);
 	}

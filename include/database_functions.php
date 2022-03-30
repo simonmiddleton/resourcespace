@@ -551,10 +551,19 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         }
     else    
         {
-        // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
-        $result = $result_set = mysqli_query($db_connection, $sql);
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
+            $result = $result_set = mysqli_query($db_connection, $sql);
+            }
+        catch (Exception $e)
+            {
+            $error = $e->getMessage();
+            }
+        $GLOBALS["use_error_exception"] = false;
         $return_row_count = 0;
-        $error=mysqli_error($db_connection);
+        $error = $error ?? mysqli_error($db_connection);
         if ($error=="" && $result_set instanceof mysqli_result)
             {
             $result = [];
@@ -908,7 +917,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
                 {
                 foreach ($result_row as $name => $value)
                     {
-                    $return_rows[$return_row_count][$name] = str_replace("\\", "", stripslashes($value));        // iterate through each cell cleaning up
+                    $return_rows[$return_row_count][$name] = str_replace("\\", "", stripslashes((string) $value));        // iterate through each cell cleaning up
                     }
                 }
             else

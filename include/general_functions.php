@@ -3746,7 +3746,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
-        $function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name) : "";	
+        $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . "All" . ucfirst($name) : "";	
         	
 		if (function_exists($function)) 
 			{			
@@ -3755,7 +3755,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		else 
 			{
 			# Specific hook	
-			$function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
+            $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
 			if (function_exists($function)) 
 				{
 				$function_list[]=$function;
@@ -4811,7 +4811,7 @@ function get_system_status()
         }
 
 
-    // Check free disk space is sufficient -  WARN (or FAIL if critical low)
+    // Check free disk space is sufficient -  WARN
     $avail = disk_total_space($GLOBALS['storagedir']);
     $free = disk_free_space($GLOBALS['storagedir']);
     $calc = $free / $avail;
@@ -4822,14 +4822,6 @@ function get_system_status()
             'info' => 'Less than 5% disk space free.',
         ];
         ++$warn_tests;
-        }
-    else if($calc < 0.01)
-        {
-        $return['results']['free_disk_space'] = [
-            'status' => 'FAIL',
-            'info' => 'Less than 1% disk space free.',
-        ];
-        return $return;
         }
 
 

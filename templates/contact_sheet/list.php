@@ -3,14 +3,14 @@
 if(isset($refnumberfontsize))
     {
     ?>
-    page { font-size: <?php echo $refnumberfontsize; ?>px; }
+    page { font-size: <?php echo (int) $refnumberfontsize; ?>px; }
     <?php
     }
 
 if(isset($titlefontsize))
     {
     ?>
-    #pageTitle { font-size: <?php echo $titlefontsize; ?>px; }
+    #pageTitle { font-size: <?php echo (int) $titlefontsize; ?>px; }
     <?php
     }
     ?>
@@ -36,7 +36,7 @@ if(isset($contactsheet_header))
                 	{
                 	?>
                 	<td style="width: 60%;">
-                		<h1><?php echo $applicationname; ?></h1>
+                		<h1><?php echo htmlspecialchars($applicationname); ?></h1>
                 	</td>
                 	<?php
                 	}
@@ -64,8 +64,8 @@ if(isset($contact_sheet_footer))
         <table style="width: 100%;">
             <tr>
                 <td class="centeredText" style="width: 90%">
-                    <span><?php echo $lang['contact_sheet_footer_address']; ?></span>
-                    <p><?php echo $lang['contact_sheet_footer_copyright']; ?></p>
+                    <span><?php echo htmlspecialchars($lang['contact_sheet_footer_address']); ?></span>
+                    <p><?php echo htmlspecialchars($lang['contact_sheet_footer_copyright']); ?></p>
                 </td>
                 <td style="text-align: right; width: 10%">[[page_cu]] of [[page_nb]]</td>
             </tr>
@@ -77,7 +77,7 @@ if(isset($contact_sheet_footer))
 
 
     <!-- Real content starts here -->
-    <h3 id="pageTitle"><?php echo $title; ?></h3>
+    <h3 id="pageTitle"><?php echo htmlspecialchars($title); ?></h3>
     <table id="resourcesTable">
         <tbody>
         <?php
@@ -110,7 +110,7 @@ if(isset($contact_sheet_footer))
                 if($config_sheetthumb_include_ref)
                     {
                     ?>
-                    <span class="resourceRef"><?php echo $resource_ref; ?></span><br>
+                    <span class="resourceRef"><?php echo (int) $resource_ref; ?></span><br>
                     <?php
                     }
 

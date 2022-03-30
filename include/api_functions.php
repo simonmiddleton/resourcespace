@@ -144,7 +144,7 @@ function execute_api_call($query,$pretty=false)
         else
             {
              // Set as empty
-            debug ("API: " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API: {$param_name} -  setting empty value");
             $setparams[$n] = "";    
             }
         $n++;
