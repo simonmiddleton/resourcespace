@@ -12,7 +12,7 @@ $delete=getvalescaped("delete","");
 if ($delete!="" && enforcePostRequest(false))
 	{
 	# Delete consent
-	sql_query("delete from consent where ref='" . escape_check($delete) . "'");
+	ps_query("delete from consent where ref= ?", ['i', $delete]);
 	}
 
 
