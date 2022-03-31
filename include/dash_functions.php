@@ -306,22 +306,24 @@ function cleanup_dash_tiles()
     $tiles = ps_query(
         "SELECT * FROM dash_tile 
             WHERE allow_delete = ?
-                AND all_users = 0
+                AND all_users = ?
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)",
         array(
             "i",1,
+            "i",0,
         )
     );
 
     ps_query(
         "DELETE FROM dash_tile 
             WHERE allow_delete = ?
-                AND all_users = 0
+                AND all_users = ?
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)",
         array(
             "i",1,
+            "i",0,
         )
     );
 
