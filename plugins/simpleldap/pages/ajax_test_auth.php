@@ -38,6 +38,9 @@ else
     $ds = ldap_connect($simpleldap['ldapserver'], $simpleldap['port']);
     }
 
+ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 2); 
+ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+
 if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1) 
 	{
     if(strpos($escaped_ldapuser, $userdomain) !== false)
@@ -73,7 +76,6 @@ if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1)
 	}
 else
 	{
-	ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 	$searchdns=explode(";",$simpleldap['basedn']);
 	foreach($searchdns as $searchdn)
 		{
