@@ -160,7 +160,7 @@ function simpleldap_authenticate($username,$password)
 
         if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1)  // AD - need to set this
             {
-            ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+            ldap_set_option($ldapconnections[$x], LDAP_OPT_REFERRALS, 0);
             }
 
         $GLOBALS["use_error_exception"] = true;
