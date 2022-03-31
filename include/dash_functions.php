@@ -301,8 +301,26 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
 function cleanup_dash_tiles()
 	{
     global $lang;
-    $tiles = sql_query("SELECT * FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
-	sql_query("DELETE FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
+    $tiles = ps_query(
+        "SELECT * FROM dash_tile 
+            WHERE allow_delete = ? 
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)",
+        array(
+            "i",1,
+        )
+    );
+
+    ps_query(
+        "DELETE FROM dash_tile 
+            WHERE allow_delete = ? 
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)",
+        array(
+            "i",1,
+        )
+    );
+
     foreach ($tiles as $tile)
         {
         log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);

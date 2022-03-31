@@ -830,7 +830,17 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         db_clear_connection_mode();
         }
 
-    $result = mysqli_query($db_connection, $sql);
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
+        $result = $result_set = mysqli_query($db_connection, $sql);
+        }
+    catch (Exception $e)
+        {
+        $error = $e->getMessage();
+        }
+    $GLOBALS["use_error_exception"] = false;
     
     if ($config_show_performance_footer){
     	# Stats
@@ -850,8 +860,8 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 			}	
 		$querytime += $time_total;
 	}
-	
-	$error = mysqli_error($db_connection);
+
+    $error = $error ?? mysqli_error($db_connection);
 	
 	$return_rows=array();
     if ($error!="")
