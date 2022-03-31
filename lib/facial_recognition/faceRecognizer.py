@@ -17,15 +17,16 @@ if not os.path.isfile(IMAGE_PATH):
     sys.exit(1)
 
 (major, minor, _) = cv2.__version__.split(".")
+major = int(major)
+minor = int(minor)
 
 if (major<3 and minor<7) or minor<3:
     model = cv2.createLBPHFaceRecognizer()
     model.load(LBPH_MODEL_PATH)
-elif int(major)==4 and int(minor)==2:
+elif major == 4 and minor > 2:
     model = cv2.face.LBPHFaceRecognizer_create()
     model.read(LBPH_MODEL_PATH)
 else:
-    cv2.face
     model = cv2.face.createLBPHFaceRecognizer()
     model.load(LBPH_MODEL_PATH)
 
@@ -37,4 +38,4 @@ if testImage is None:
 
 predictedData = model.predict(testImage)
 
-print json.dumps(predictedData)
+print(json.dumps(predictedData))
