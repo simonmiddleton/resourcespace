@@ -296,14 +296,17 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
 
 /*
  * Cleanup Duplicate and Loose Tiles
- * This removes all unused tiles that are flagged as "allowed to delete"
+ * This removes all unused tiles that are flagged as:
+ * "allowed to delete"
+ * AND not "all users"
  */
 function cleanup_dash_tiles()
 	{
     global $lang;
     $tiles = ps_query(
         "SELECT * FROM dash_tile 
-            WHERE allow_delete = ? 
+            WHERE allow_delete = ?
+                AND all_users = 0
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)",
         array(
@@ -313,7 +316,8 @@ function cleanup_dash_tiles()
 
     ps_query(
         "DELETE FROM dash_tile 
-            WHERE allow_delete = ? 
+            WHERE allow_delete = ?
+                AND all_users = 0
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)",
         array(
