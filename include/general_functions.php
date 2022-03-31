@@ -2626,6 +2626,7 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path);
 
         case 'python':
+        case 'opencv':
             // Python path not configured
             if(!isset($python_path) || '' == $python_path)
                 {

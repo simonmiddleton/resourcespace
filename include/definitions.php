@@ -611,6 +611,19 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
+    'opencv' => [
+        'required' => false,
+        'path_var_name' => 'python_path',
+        'display_name' => 'OpenCV (as a Python module)',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-c "import cv2; print cv2.__version__;"',
+            'callback' => [
+                'fct_name' => 'check_numeric_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
     'archiver' => [
         'required' => false,
         'path_var_name' => 'archiver_path',
