@@ -4648,11 +4648,12 @@ function get_system_status()
         'fits' => 'fits_path',
     ];
     $missing_utility_paths = [];
-    foreach($system_utilities as $name => $path_var_name)
+    foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
         {
-        if(isset($GLOBALS[$path_var_name]) && get_utility_path($name) === false)
+        // Check only required (core to ResourceSpace) and configured utilities
+        if($sysu['required'] && isset($GLOBALS[$sysu['path_var_name']]) && get_utility_path($sysu_name) === false)
             {
-            $missing_utility_paths[$name] = $path_var_name;
+            $missing_utility_paths[$sysu_name] = $sysu['path_var_name'];
             }
         }
     if(!empty($missing_utility_paths))
