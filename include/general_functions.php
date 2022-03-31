@@ -372,7 +372,7 @@ function average_length($array)
  */
 function get_stats_activity_types()
     {
-    return ps_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type", array());
+    return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
     }
 
 /**
@@ -494,11 +494,11 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
         # If searching, also search overridden text in site_text and return that also.
         if ($findtext!="" || $findpage!="" || $findname!="")
             {
-            if ($findtext!="") {$search="text like ?"; $search_param = array("s", '%' . $findtext . '%');}
-            if ($findpage!="") {$search="page like ?"; $search_param = array("s", '%' . $findpage . '%');}
-            if ($findname!="") {$search="name like ?"; $search_param = array("s", '%' . $findname . '%');}
+            if ($findtext!="") {$search="text like '%" . escape_check($findtext) . "%'";}
+            if ($findpage!="") {$search="page like '%" . escape_check($findpage) . "%'";}         
+            if ($findname!="") {$search="name like '%" . escape_check($findname) . "%'";}          
             
-            $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where $search", $search_param);
+            $site_text=sql_query ("select * from site_text where $search");
             
             foreach ($site_text as $text)
                 {
@@ -555,33 +555,22 @@ function get_site_text($page,$name,$getlanguage,$group)
     {
     global $defaultlanguage, $lang, $language; // Registering plugin text uses $language and $lang  
     global $applicationname, $storagedir, $homeanim_folder; // These are needed as they are referenced in lang files
-
-    $params = array("s", $page, "s", $name, "s", $getlanguage);
-    if ($group == "")
-        {
-        $stg_sql_cond = ' is null';
-        }
-    else
-        {
-        $stg_sql_cond = ' = ?';
-        $params = array_merge($params, array("i", $group));
-        }
-
+    if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
     
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
+    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$getlanguage' and specific_to_group $gc $g");
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
         # Fall back to default language.
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
+    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g");
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
                 
         # Fall back to default group.
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group is null", array("s", $page, "s", $name, "s", $defaultlanguage));
+    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group is null");
     if (count($text)>0)
         {
         return $text[0]["text"];
@@ -641,7 +630,7 @@ function get_site_text($page,$name,$getlanguage,$group)
  */
 function check_site_text_custom($page,$name)
     {    
-    $check = ps_query("select custom from site_text where page = ? and name = ?", array("s", $page, "s", $name));
+    $check=sql_query ("select custom from site_text where page='$page' and name='$name'");
     if (isset($check[0]["custom"])){return $check[0]["custom"];}
     }
 
@@ -1141,7 +1130,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     if ($html_template!="")
         {
         # Attempt to verify users by email, which allows us to get the email template by lang and usergroup
-        $to_usergroup = ps_query("select lang, usergroup from user where email = ?", array("s", $email), "");
+        $to_usergroup=sql_query("select lang,usergroup from user where email ='" . escape_check($email) . "'","");
         
         if (count($to_usergroup)!=0)
             {
@@ -1159,11 +1148,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             {   
             $modified_to_usergroupref=hook("modifytousergroup","",$to_usergroupref);
             if (is_int($modified_to_usergroupref)){$to_usergroupref=$modified_to_usergroupref;}
-            $results = ps_query("select language, name, text from site_text where page = 'all' and name = ? and specific_to_group = ?", array("s", $html_template, "i", $to_usergroupref));
+            $results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group='$to_usergroupref'");
             }
         else 
             {   
-            $results = ps_query("select language, name, text from site_text where page = 'all' and name = ? and specific_to_group is null", array("s", $html_template));
+            $results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group is null");
             }
             
         global $site_text;
@@ -1491,6 +1480,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 function log_mail($email,$subject,$sender)
     {
     global $userref;
+    $to = escape_check($email);
     if (isset($userref))
         {
         $from = $userref;
@@ -1499,10 +1489,26 @@ function log_mail($email,$subject,$sender)
         {
         $from = 0;
         }
-    $sub = mb_substr($subject,0,100);
+    $sub = escape_check(mb_substr($subject,0,100));
 
     // Write log to database
-    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
+    sql_query("
+        INSERT into
+            mail_log (
+                date,
+                mail_to,
+                mail_from,
+                subject,
+                sender_email
+                )
+            VALUES (
+                NOW(),
+                '" . $to . "',
+                '" . $from . "',
+                '" . $sub . "',
+                '" . $sender . "'
+        );
+        ");
     }
 
 
@@ -1678,8 +1684,8 @@ function send_statistics()
         }
     
     # Gather stats
-    $total_users = ps_value("select count(*) value from user", array(), 0);
-    $total_resources = ps_value("select count(*) value from resource", array(), 0);
+    $total_users=sql_value("select count(*) value from user",0);
+    $total_resources=sql_value("select count(*) value from resource",0);
     
     # Send stats
     @file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
@@ -1713,7 +1719,7 @@ function remove_extension($strName)
  */
 function get_allowed_extensions_by_type($resource_type)
     {
-    $allowed_extensions = ps_value("select allowed_extensions value from resource_type where ref = ?", array("i", $resource_type), "", "schema");
+    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","", "schema");
     return $allowed_extensions;
     }
 
@@ -3013,7 +3019,8 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $query = "SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow";
+    $slideshow_records = sql_query($query, "slideshow");
 
     $slideshow_files = array();
 
@@ -3073,7 +3080,7 @@ function form_value_display($row,$name,$default="")
  */
 function user_set_usergroup($user,$usergroup)
     {
-    ps_query("update user set usergroup = ? where ref = ?", array("i", $usergroup, "i", $user));
+    sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
     }
 
 
@@ -3374,13 +3381,12 @@ function is_resourcespace_upgrade_available()
 /**
  * Fetch a count of recently active users
  *
- * @param  int  $days   How many days to look back
- * 
+ * @param  mixed $days  How many days to look back
  * @return integer
  */
 function get_recent_users($days)
     {
-    return (ps_value("select count(*) value from user where datediff(now(), last_active) <= ?", array("i", $days), 0));
+    return (sql_value("select count(*) value from user where datediff(now(),last_active) <= '" . escape_check($days) . "'",0));
     }
 
 
@@ -3404,7 +3410,7 @@ function check_script_last_ran($name, $fail_notify_allowance, &$last_ran_datetim
         }
     $name = escape_check($name);
 
-    $script_last_ran = ps_value("SELECT `value` FROM sysvars WHERE name = ?", array("s", $name), '');
+    $script_last_ran = sql_value("SELECT `value` FROM sysvars WHERE name = '{$name}'", '');
     $script_failure_notify_seconds = intval($fail_notify_allowance) * 24 * 60 * 60;
 
     if('' != $script_last_ran)
@@ -3530,11 +3536,11 @@ function set_sysvar($name,$value=null)
     global $sysvars;
     $name=escape_check($name);
     db_begin_transaction("set_sysvar");
-    ps_query("DELETE FROM `sysvars` WHERE `name` = ?", array("s", $name));
+    sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
     if($value!=null)
         {
         $safevalue=escape_check($value);
-        ps_query("INSERT INTO `sysvars` (`name`, `value`) values (?, ?)", array("s", $name, "s", $safevalue));
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$safevalue}')");
         }
     db_end_transaction("set_sysvar");
 
@@ -3560,7 +3566,7 @@ function get_sysvar($name, $default=false)
 
     // Load from db or return default
     $name=escape_check($name);
-    return ps_value("SELECT `value` FROM `sysvars` WHERE `name` = ?", array("s", $name), $default);
+    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",$default);
     }
 
 /**
@@ -3986,7 +3992,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
                 $page = $backtrace[$n]["file"];
                 }
                 
-            if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array","ps_query","ps_value","ps_array")))
+            if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array")))
                 {
                 if(in_array($backtrace[$n]["function"],array("include","include_once","require","require_once")) && isset($backtrace[$n]["args"][0]))
                     {
@@ -4079,16 +4085,16 @@ function daily_stat($activity_type,$object_ref)
     if (getval("k","")!="") {$external=1;}
     
     # First check to see if there's a row
-    $count = ps_value("select count(*) value from daily_stat where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), 0);
-    if ($count == 0)
+    $count=sql_value("select count(*) value from daily_stat where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",0);
+    if ($count==0)
         {
         # insert
-        ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , '1')", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        sql_query("insert into daily_stat(year,month,day,usergroup,activity_type,object_ref,external,count) values ('$year','$month','$day','$usergroup','$activity_type','$object_ref','$external','1')",false,-1,true,0);
         }
     else
         {
         # update
-        ps_query("update daily_stat set count = count+1 where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
         }
     }
 
@@ -4141,7 +4147,7 @@ function get_section_list($page)
     global $usergroup;
     
 
-    return ps_array("select distinct name value from site_text where page = ? and name <> 'introtext' and (specific_to_group IS NULL or specific_to_group = ?) order by name", array("s", $page, "i", $usergroup));
+    return sql_array("select distinct name value from site_text where page='" . escape_check($page) . "' and name<>'introtext' and (specific_to_group IS NULL or specific_to_group ='" . escape_check($usergroup) . "') order by name");
     
 	}
 /**
@@ -4587,7 +4593,7 @@ function get_system_status()
 
 
     // Check database connectivity.
-    $check = ps_value('SELECT count(ref) value FROM resource_type', array(), 0);
+    $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
     if ($check <= 0)
         {
         $return['results']['database_connection'] = [
