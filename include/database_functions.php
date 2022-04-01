@@ -479,7 +479,14 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                 {
                 $prepared_statement_cache=array();
                 }
-            $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
+            try
+                {
+                $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
+                }   
+            catch (Exception $e)
+                {
+                $prepared_statement_cache[$sql]=false;
+                }
             if($prepared_statement_cache[$sql]===false)
                 {
                 if ($dbstruct)
@@ -508,8 +515,18 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         if (!(isset($error) && $error!=""))
             {
             mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
-            mysqli_stmt_execute($prepared_statement_cache[$sql]);
-            $error=mysqli_stmt_error($prepared_statement_cache[$sql]);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                mysqli_stmt_execute($prepared_statement_cache[$sql]);
+                }
+            catch (Exception $e)
+                {
+                $error = $e->getMessage();
+                }
+            $GLOBALS["use_error_exception"] = false;
+
+            $error = $error ?? mysqli_stmt_error($prepared_statement_cache[$sql]);
             }
         if ($error=="")
             {

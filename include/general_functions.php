@@ -72,7 +72,7 @@ function escape_check($text)
         db_clear_connection_mode();
         }
 
-    $text = mysqli_real_escape_string($db_connection, $text);
+    $text = mysqli_real_escape_string($db_connection, (string) $text);
 
     # turn all \\' into \'
     while (!(strpos($text,"\\\\'")===false))
@@ -3671,7 +3671,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
-        $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . "All" . ucfirst($name) : "";	
+        $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . "All" . ucfirst((string) $name) : "";	
         	
 		if (function_exists($function)) 
 			{			
@@ -3680,7 +3680,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		else 
 			{
 			# Specific hook	
-            $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
+            $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . ucfirst((string) $pagename) . ucfirst((string) $name) : "";
 			if (function_exists($function)) 
 				{
 				$function_list[]=$function;

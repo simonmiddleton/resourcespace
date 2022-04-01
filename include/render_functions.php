@@ -5004,6 +5004,7 @@ function render_featured_collections_category_permissions(array $ctx)
 function show_upgrade_in_progress($dbstructonly=false)
     {
     global $lang;
+    $title = (isset($lang["upgrade_in_progress"])?$lang["upgrade_in_progress"]:"Upgrade in progress");
     $message="This system is currently being upgraded by another process. Delete filestore/tmp/process_locks/* if this process has stalled." . PHP_EOL;
     if(!$dbstructonly)
         {
@@ -5018,7 +5019,7 @@ function show_upgrade_in_progress($dbstructonly=false)
         }
     else
         {
-        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
+        echo "<h1>{$title}</h1>";
         echo nl2br($message);
         ?>
         <script>
