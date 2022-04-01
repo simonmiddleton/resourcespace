@@ -47,7 +47,7 @@ if('prepare_selected_area' == $action)
         true,
         'pre',
         true,
-        sql_value("SELECT preview_extension AS `value` FROM resource WHERE ref = '{$resource}'", 'jpg'));
+        ps_value("SELECT preview_extension AS `value` FROM resource WHERE ref = ?", ['i', $resource], 'jpg'));
     $prepared_image_path = get_resource_path(
         $resource,
         true,
