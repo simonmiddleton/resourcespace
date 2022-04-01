@@ -29,14 +29,13 @@ else
 	
 if($valid==true)
     {
-    $resourceset=implode("','",$restoreresources);
     $title_field="field".$view_title_field;
-    $resourcedetails=sql_query("select ref, $title_field, file_size from resource where ref in ('$resourceset')");
+    $resourcedetails=ps_query("select ref, $title_field, file_size from resource where ref in (". ps_param_insert(count($restoreresources)) . ")", ps_param_fill($restoreresources, 'i'));
 
     // Handle entered resources
     if(getval("restore_confirm","")!="")
         {
-        sql_query("update resource set pending_restore=1 where ref in ('$resourceset') and archive=2");
+        sql_query("update resource set pending_restore=1 where ref in (". ps_param_insert(count($restoreresources)). ") and archive=2", ps_param_fill($restoreresources, 'i'));
         foreach($resourcedetails as $resourcedetail)
             {resource_log($resourcedetail["ref"],"",0,$lang['offline_archive_resource_log_restore_set'],"","");}
         $resulttext=$lang["offline_archive_resources_restore_confirmed"];
