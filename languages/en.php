@@ -253,6 +253,8 @@ $lang['list'] = 'List';
 $lang["listtitle"]="List view";
 $lang["perpage"]="per page";
 $lang["perpage_option"]="? per page";
+$lang["powered_by"]="Powered by";
+$lang["powered_by_resourcespace"]="Powered by ResourceSpace";
 
 $lang["on"]="On";
 $lang["off"]="Off";

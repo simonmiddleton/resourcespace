@@ -666,6 +666,9 @@ $resourceid_simple_search=false;
 # Enable date option on simple search bar
 $simple_search_date=true;
 
+# Show "Powered by ResourceSpace" on simple search bar when default $linkedheaderimgsrc not used
+$show_powered_by_logo=true;
+
 # Enable sorting resources in other ways:
 $colour_sort=true;
 $popularity_sort=true;
