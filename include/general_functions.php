@@ -2762,12 +2762,12 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     if ($global_cookies)
         {
         setcookie($name, "", time() - 3600, "/pages", $domain, $secure, $httponly);
-        setcookie($name, $value, (int) $expire, "/", $domain, $secure, $httponly);
+        setcookie($name, (string) $value, (int) $expire, "/", $domain, $secure, $httponly);
         }
     else
         {
         setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
-        setcookie($name, $value, (int) $expire, $path, $domain, $secure, $httponly);
+        setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
         }
     }
 
