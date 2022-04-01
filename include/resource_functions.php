@@ -5105,7 +5105,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     $gotmatch=false;
 
     if($search_filter_nodes 
-        && strlen(trim($usereditfilter)) > 0
+        && strlen(trim((string) $usereditfilter)) > 0
         && !is_numeric($usereditfilter)
         && trim($userdata[0]["edit_filter"]) != ""
         && $userdata[0]["edit_filter_id"] != -1
@@ -5139,7 +5139,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             }
         }
     
-    if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
+    if (trim((string) $usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}
