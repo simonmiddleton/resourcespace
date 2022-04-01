@@ -2,7 +2,7 @@ import os, sys, csv, cv2
 import numpy as np
 
 if 1 == len(sys.argv):
-    print >> sys.stderr, 'Try running: FaceRecognizerTrainer.py <path/to/prepared_data.csv>'
+    print('Try running: FaceRecognizerTrainer.py <path/to/prepared_data.csv>', file = sys.stderr)
     sys.exit(1)
 
 # Init
@@ -11,7 +11,7 @@ images             = []
 labels             = []
 
 if not os.path.isfile(PREPARED_DATA_PATH):
-    print >> sys.stderr, "No file at '{}'".format(PREPARED_DATA_PATH)
+    print("No file at '{}'".format(PREPARED_DATA_PATH), file = sys.stderr)
     sys.exit(1)
 
 with open(PREPARED_DATA_PATH, 'rb') as csvFile:
@@ -28,7 +28,7 @@ with open(PREPARED_DATA_PATH, 'rb') as csvFile:
             labels.append(int(csvRow[1]))
 
 if(0 == len(images)):
-    print >> sys.stderr, 'No data found for training!'
+    print('No data found for training!', file = sys.stderr)
     sys.exit(1)
 
 # Create an LBPH model for face recognition and train it
