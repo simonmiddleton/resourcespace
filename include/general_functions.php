@@ -3566,7 +3566,7 @@ function get_sysvar($name, $default=false)
 
     // Load from db or return default
     $name=escape_check($name);
-    return ps_value("SELECT value FROM sysvars WHERE name = ?",["s","test"], $default);
+    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",$default);
     }
 
 /**
