@@ -625,7 +625,9 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             }
         elseif (strpos($error,"has gone away")!==false && $reconnect)
             {
-            # SQL server connection has timed out or been killed. Try to reconnect and run query again.
+            // SQL server connection has timed out or been killed. Try to reconnect and run query again.
+            // Unset the cache for this no longer valid
+            unset($prepared_statement_cache[$sql]);
             sql_connect();
             db_set_connection_mode($db_connection_mode);
             return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
