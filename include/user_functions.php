@@ -1040,7 +1040,7 @@ function auto_create_user_account($hash="")
         $message->append_text("lang_comment");
         $message->append_text(": " . $templatevars['userrequestcomment'] . "<br/><br/>");
         $message->append_text("lang_ipaddress");
-        $message->append_text(": " . $_SERVER["REMOTE_ADDR"] . "<br/><br/>");
+        $message->append_text(": " . get_ip() . "<br/><br/>");
         if(trim($customContents) != "")
             {
             $message->append_text($customContents . "<br/><br/>");
@@ -1097,7 +1097,7 @@ function email_user_request()
     $message->append_text("lang_comment");
     $message->append_text(": " . $userrequestcomment . "<br/><br/>");    
     $message->append_text("lang_ipaddress");
-    $message->append_text(": " . $_SERVER["REMOTE_ADDR"] . "<br/><br/>");
+    $message->append_text(": " .  get_ip()  . "<br/><br/>");
     if(trim($customContents) != "")
         {
         $message->append_text($customContents . "<br/><br/>");
