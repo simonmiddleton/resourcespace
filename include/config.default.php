@@ -2921,9 +2921,6 @@ $resource_type_extension_mapping         = array(
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg', 'weba'),
 );
 
-// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
-$view_in_browser_extensions=array("pdf","mp3","svg");
-
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 

@@ -8824,3 +8824,32 @@ function update_resource_type_order($neworder)
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
+
+/**
+ * Check if file can be rendered in browser via download.php
+ * 
+ * @param  string $path Path to file
+ * 
+ * @return bool
+ */
+function allow_in_browser($path)
+    {
+    // Extensions are listed here so cannot be overridden by config
+    $permitted_extensions = ["pdf","jpg","jpeg","gif","png","mp3","mp4"];
+    $permitted_mime[] = "application/pdf";
+    $permitted_mime[] = "image/jpeg";
+    $permitted_mime[] = "image/png";
+    $permitted_mime[] = "audio/mpeg";
+    $permitted_mime[] = "video/mp4";
+
+    $pathparts = pathinfo($path);
+    if(!in_array(strtolower($pathparts["extension"]),$permitted_extensions) || !file_exists($path))
+        {
+        return false;
+        }
+    if(in_array(mime_content_type($path),$permitted_mime))
+        {
+        return true;
+        }
+    return false;
+    }
