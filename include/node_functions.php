@@ -16,7 +16,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
     if(!is_null($name))
         {
-        $name = trim($name);
+        $name = trim((string) $name);
         }
 
     if (is_null($resource_type_field) || '' == $resource_type_field || is_null($name) || '' == $name)
