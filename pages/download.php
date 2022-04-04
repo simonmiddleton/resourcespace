@@ -318,8 +318,8 @@ if('' == $noattach)
 
 if($direct && !allow_in_browser($path))
     {
-    error_alert($lang['error-permissiondenied'],false);
-    exit($lang['error-permissiondenied']);
+    error_alert($lang['error-permissiondenied'],true);
+    exit();
     }
 
 // Set appropriate headers for attachment or streamed file
