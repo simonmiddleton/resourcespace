@@ -1892,6 +1892,7 @@ $lang["can_publish_collections_as_themes"]="Can publish collections as featured 
 $lang["can_see_all_theme_categories"]="Can see all featured collection categories";
 $lang["can_see_theme_category"]="Can see featured collection category";
 $lang["can_see_theme_sub_category"]="Can see featured collection subcategory";
+$lang["can_see_featured_collection"]="Can see featured collection ";
 $lang["display_only_resources_within_accessible_themes"]="When searching, display only resources that exist within featured collections to which the user has access";
 $lang["can_access_team_centre"]="Can access the admin area";
 $lang["can_manage_research_requests"]="Can manage research requests";

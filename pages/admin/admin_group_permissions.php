@@ -286,7 +286,17 @@ DrawOption("j*", $lang["can_see_all_theme_categories"], false, true);
 if(!in_array("j*", $permissions))
     {
     render_featured_collections_category_permissions(array("permissions" => $permissions));
+    # Add any 'loose' featured collections at top level of the tree that contain resources (so aren't in a category)
+    $loose_fcs = array_values(array_filter(get_featured_collections(0, ["access_control" => false]), function($fc) {
+        return $fc["has_resources"] > 0;
+        }));
+    foreach($loose_fcs as $loose_fc)
+        {
+        $description = $lang["can_see_featured_collection"] . i18n_get_translated($loose_fc["name"]);
+        DrawOption('j' . $loose_fc["ref"], $description, false, false);
+        }
     }
+
 DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 # ---------- end of featured collection categories
 
