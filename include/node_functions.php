@@ -785,7 +785,15 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // Fetch all nodes on change of resource type field
     if($resource_type_field !== $resource_type_field_last)
         {
-        $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+        global $node_tree_data;
+        if(!empty($node_tree_data))
+            {
+            $all_nodes = $node_tree_data;
+            }
+        else
+            {
+            $all_nodes = $node_tree_data = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+            }
         $resource_type_field_last = $resource_type_field;    
         }
 
@@ -818,21 +826,8 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     <input type="text" name="option_name" form="option_<?php echo $ref; ?>" value="<?php echo $name; ?>">
                 </td>
                 <td>
-                    <select id="node_option_<?php echo $ref; ?>_parent_select" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
+                    <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
                         <option value="">Select parent</option>
-                    <?php
-                    foreach($nodes as $node)
-                        {
-                        $selected = '';
-                        if(!(trim($parent)=="") && $node['ref'] == $parent)
-                            {
-                            $selected = ' selected';
-                            }
-                        ?>
-                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($node['name']); ?></option>
-                        <?php
-                        }
-                        ?>
                     </select>
                 </td>
                 <td><?php echo $use_count ?></td>
