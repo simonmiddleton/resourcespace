@@ -849,6 +849,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         db_clear_connection_mode();
         }
 
+    $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
     $GLOBALS["use_error_exception"] = true;
     try
         {
@@ -859,7 +860,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         {
         $error = $e->getMessage();
         }
-    $GLOBALS["use_error_exception"] = false;
+    $GLOBALS["use_error_exception"] = $use_error_exception_cache;
     
     if ($config_show_performance_footer){
     	# Stats
