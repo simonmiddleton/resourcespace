@@ -481,7 +481,7 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                 }
             try
                 {
-                $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
+                $prepared_statement_cache[$sql]=$db_connection->prepare($sql);
                 }   
             catch (Exception $e)
                 {
