@@ -189,6 +189,7 @@ define('LINK_PLUS','<i aria-hidden="true" class="fa fa-plus"></i>&nbsp;');
 define('LINK_PLUS_CIRCLE','<i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;');
 define('LINK_CHEVRON_RIGHT','<i aria-hidden="true" class="fa fa-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON','<i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;');
+define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>&nbsp;');
 define('DASH_ICON','<i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;');
 define('FEATURED_COLLECTION_ICON','<i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;');
 define('RECENT_ICON','<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;');
