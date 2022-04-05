@@ -28,7 +28,7 @@ if(db_get_connection_mode() !== "read_only")
 try
     {
     $use_error_exception = true;
-    sql_query("INSERT INTO sysvars (`name`, `value`) VALUES ('test_read_only_mode', true)");
+    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES (?,?)",["s","test_read_only_mode","s","true"]);
     }
 catch(Exception $e)
     {
