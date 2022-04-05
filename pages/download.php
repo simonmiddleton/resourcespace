@@ -316,12 +316,6 @@ if('' == $noattach)
         }
     }
 
-if($direct && !allow_in_browser($path))
-    {
-    error_alert($lang['error-permissiondenied'],true);
-    exit();
-    }
-
 // Set appropriate headers for attachment or streamed file
 if(!$direct && isset($filename))
     {
@@ -331,6 +325,11 @@ if(!$direct && isset($filename))
     }
 else
     {
+    if(!allow_in_browser($path))
+        {
+        error_alert($lang['error-permissiondenied'],true);
+        exit();
+        }
     header('Content-Disposition: inline;');
     header('Content-Transfer-Encoding: binary');
 
