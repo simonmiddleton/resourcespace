@@ -8761,3 +8761,38 @@ function update_resource_type_order($neworder)
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
+
+/**
+ * Check if file can be rendered in browser via download.php
+ * 
+ * @param  string $path Path to file
+ * 
+ * @return bool
+ */
+function allow_in_browser($path)
+    {
+    if(!file_exists($path))
+        {
+        return false;
+        }
+    // Permitted mime types can only be overridden by plugins
+    $permitted_mime[] = "application/pdf";
+    $permitted_mime[] = "image/jpeg";
+    $permitted_mime[] = "image/png";
+    $permitted_mime[] = "image/gif";
+    $permitted_mime[] = "audio/mpeg";
+    $permitted_mime[] = "video/mp4";
+    $permitted_mime[] = "text/plain";
+    $permitted_mime[] = "text/csv";
+    $allow = hook('allow_in_browser',"",[$permitted_mime]);
+    if(is_array($allow))
+        {
+        $permitted_mime = $allow;
+        }
+
+    if(in_array(mime_content_type($path),$permitted_mime))
+        {
+        return true;
+        }
+    return false;
+    }
