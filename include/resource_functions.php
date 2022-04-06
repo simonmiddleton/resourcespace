@@ -6233,7 +6233,7 @@ function truncate_join_field_value($value)
 * 
 * @return array|integer Array of all file paths found or number of files found
 */
-function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
+function get_video_snapshots($resource_id, $file_path = false, $count_only = false, $includemodified = false)
     {
     global $get_resource_path_extra_download_query_string_params, $hide_real_filepath;
 
@@ -6243,15 +6243,21 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     $template_webpath         = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', -1, 1, false, '');
 
     $i = 1;
-    do
+    do 
         {
-	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
-	if($hide_real_filepath){
-		$webpath=$template_webpath . "&snapshot_frame=" . $i;
-	}
-	else{
-		$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
-	}
+        $path=str_replace("snapshot","snapshot_" . $i,$template_path);
+        if($hide_real_filepath)
+            {
+            $webpath=$template_webpath . "&snapshot_frame=" . $i;
+            }
+        else
+            {
+            $webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+            if ($includemodified && file_exists($path))
+                {
+                $webpath .= "?v=" . urlencode(filemtime($path));
+                }
+            }
 
         $snapshot_found  = file_exists($path);
 
@@ -6262,7 +6268,7 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
 
         $i++;
         }
-    while(true === $snapshot_found);
+    while (true === $snapshot_found);
 
     return (!$count_only ? $snapshots_found : count($snapshots_found));
     }
