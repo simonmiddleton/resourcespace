@@ -5670,7 +5670,7 @@ function update_disk_usage($resource)
  * @return boolean|void
  */
 function update_disk_usage_cron()
-	{
+    {
     $lastrun = get_sysvar('last_update_disk_usage_cron', '1970-01-01');
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
@@ -5679,14 +5679,21 @@ function update_disk_usage_cron()
         return false;
         }
 
-	$resources=sql_array("select ref value from resource where ref>0 and disk_usage_last_updated is null or datediff(now(),disk_usage_last_updated)>30 limit 20000");
-	foreach ($resources as $resource)
-		{
-		update_disk_usage($resource);
+    $resources=sql_array(
+        "SELECT ref value
+            FROM resource 
+        WHERE ref>0 
+            AND disk_usage_last_updated IS null 
+                OR datediff(now(),disk_usage_last_updated)>30 
+        ORDER BY disk_usage_last_updated ASC 
+        LIMIT 20000");
+    foreach ($resources as $resource)
+        {
+        update_disk_usage($resource);
         }
     
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
-	}
+    }
 
 /**
  * Returns the total disk space used by all resources on the system
