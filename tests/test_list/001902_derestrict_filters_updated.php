@@ -14,7 +14,8 @@ function test_derestrict_filter_text_update($user,$group,$filtertext)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    sql_query("UPDATE usergroup SET derestrict_filter='" . $filtertext . "', derestrict_filter_id=NULL WHERE ref='" . $group . "'");
+    ps_query("UPDATE usergroup SET derestrict_filter=?, derestrict_filter_id=NULL WHERE ref=?",
+        ["s",$filtertext,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
     }
@@ -23,14 +24,17 @@ function test_derestrict_filter_id_update($user,$group,$filterid)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    sql_query("UPDATE usergroup SET derestrict_filter_id='" . $filterid . "' WHERE ref='" . $group . "'");
+    ps_query("UPDATE usergroup SET derestrict_filter_id=? WHERE ref=?",["s",$filterid,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
     }
 
 // Set permissions to restrict access to all resources
 $derestrictuser = new_user("derestricted");
-sql_query("INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) SELECT 'testeditgroup','s,e0,f*','','',NULL,NULL FROM usergroup WHERE ref='3';");
+ps_query(
+    "INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) 
+        SELECT 'testeditgroup','s,e0,f*','','',NULL,NULL 
+        FROM usergroup WHERE ref='3';");
 $testderestrictgroup = sql_insert_id();
 user_set_usergroup($derestrictuser, $testderestrictgroup);
 
