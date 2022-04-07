@@ -19,6 +19,13 @@ if (getval("save","")!="")
         $missingFields = array();
         if (getval("name","")=="") { $missingFields[] = $lang["yourname"]; }
         if (getval("email","")=="") { $missingFields[] = $lang["youremailaddress"]; }
+        if ($registration_group_select)
+            {
+            if (getval("usergroup", "", true) == "")
+                {
+                $missingFields[] = $lang["group"];
+                }
+            }
         }
 
     # Add custom fields
@@ -266,8 +273,9 @@ if (isset($custom_registration_fields))
 $groups=get_registration_selectable_usergroups();
 ?>
 <div class="Question">
-<label for="usergroup"><?php echo $lang["group"]?></label>
+<label for="usergroup"><?php echo $lang["group"]?> *</label>
 <select name="usergroup" id="usergroup" class="stdwidth">
+<option value></option>
 <?php for ($n=0;$n<count($groups);$n++)
 	{
 	?>
