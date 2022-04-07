@@ -965,22 +965,24 @@ function update_user_dash_tile_order($user,$tile,$order_by)
  *
  */
 function delete_user_dash_tile($usertile,$user)
-	{
+    {
     global $lang;
-	if(!is_numeric($usertile) || !is_numeric($user)){return false;}
-	
-	$row = get_user_tile($usertile,$user);
-	sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
-
-	$existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    if(!is_numeric($usertile) || !is_numeric($user)){return false;}
     
-	if($existing[0]["count"]<1)
-		{
+    $row = get_user_tile($usertile,$user);
+    sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
+
+    if (!isset($row["dash_tile"]) || !is_numeric($row["dash_tile"])) {return false;}
+    
+    $existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    
+    if($existing[0]["count"]<1)
+        {
         $tile = get_tile($row["dash_tile"]);
-		delete_dash_tile($row["dash_tile"]);
-        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$row["dash_tile"]);
-		}
-	}
+        delete_dash_tile($row["dash_tile"]);
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,($tile["title"]??""),'dash_tile',NULL,$row["dash_tile"]);
+        }
+    }
 
 /*
  * Remove all tiles from a users dash
