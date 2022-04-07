@@ -54,7 +54,7 @@ if (!hook("replaceauth")) {
 $ip=get_ip();
 $lockouts=ps_value("select count(*) value from ip_lockout where ip = ? and tries >= ? and date_add(last_try, interval ? minute) > now()", array("s", $ip, "i", $max_login_attempts_per_ip, "i", $max_login_attempts_wait_minutes), 0);
 
-$username=getvalescaped("username","");
+$username = getval("username","");
 if (is_array($username))
     {
     redirect($baseurl . "/login.php");
@@ -63,8 +63,7 @@ if (is_array($username))
 $username=trim($username);
 if($case_insensitive_username)
     {
-    $username=ps_value("select username value from user where lower(username) = lower(?)", array("s", $username), $username);       
-    $username=escape_check($username);
+    $username = ps_value("select username value from user where lower(username) = lower(?)", array("s", $username), $username);       
     }
     
 # Also check that the username provided has not been locked out due to excessive login attempts.
@@ -91,8 +90,8 @@ if ($lockouts>0 || $ulockouts>0)
 # Process the submitted login
 elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     {
-    $password=trim(getvalescaped("password",""));
-	$result=perform_login();
+    $password = trim(getval("password",""));
+	$result = perform_login();
 	if ($result['valid'])
 		{
         set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
@@ -139,7 +138,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 
 if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     {
-    $session = escape_check($_COOKIE["user"]);
+    $session = $_COOKIE["user"];
 
     // Check CSRF Token
     $csrf_token = getval($CSRF_token_identifier, "");
