@@ -6312,6 +6312,8 @@ function get_video_info($file)
 */
 function copyAllDataToResource($from, $to, $resourcedata = false)
     {
+    global $userref;
+
     if((int)(string)$from !== (int)$from || (int)(string)$to !== (int)$to)
         {
         return false;
@@ -6321,12 +6323,16 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         {
         $resourcedata = get_resource_data($to);
         }
-        
-    if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+
+    # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
+    if ($from != 0 - $userref)
         {
-        return false;
+        if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+            {
+            return false;
+            }
         }
-        
+
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
     
