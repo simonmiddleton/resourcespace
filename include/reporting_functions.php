@@ -26,7 +26,7 @@ function get_reports()
         if (!hook('ignorereport', '', array($r[$n])))
             {
             $r[$n]["name"] = get_report_name($r[$n]);
-            $r[$n]["contains_date"] = report_has_date($r[$n]["query"]);
+            $r[$n]["contains_date"] = report_has_date((string) $r[$n]["query"]);
             $return[] = $r[$n]; # Adds to return array.
             }
         }
