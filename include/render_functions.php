@@ -4072,9 +4072,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     # Handle expiry date warning messages
 	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-        $title = $lang["warningexpired"];
-        $warningtext = $lang["warningexpiredtext"];
-        $dismisstext = $lang["warningexpiredok"];
+        $title = htmlspecialchars($lang["warningexpired"]);
+        $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
+        $dismisstext = htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
         <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
         $extra.="<style>#RecordDownload {display:none;}</style>";
@@ -4094,7 +4094,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # title comes from field
         # value comes from field
         $warningtext = $value;
-        $dismisstext = $lang["warningdismiss"];
+        $dismisstext = htmlspecialchars($lang["warningdismiss"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 
@@ -4151,8 +4151,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $value = str_replace(',', '', $value);
             }
 
-		$value_unformatted=$value; # store unformatted value for replacement also
-
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # ckeditor that have not yet been edited.
         if(
@@ -4188,8 +4186,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
             $template = str_replace('[warning]', $warningtext, $template);
-            $template = str_replace('[value_unformatted]', $value_unformatted, $template);
-            $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
