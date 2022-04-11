@@ -196,3 +196,39 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
         }
     return false;
     }
+
+
+
+
+/**
+ * Recursively remove a folder and its contents. Paths to ignore can be specified.
+ *
+ * @param  string    $dir   The folder to delete. 
+ * @param   array   $ignore_dirs    An optional array of folders to ignore.
+ * @return null
+ */
+function rrmdir($dir,$ignore_dirs=array())
+    { 
+    if (is_dir($dir))
+        { 
+        $objects = scandir($dir);
+        foreach ($objects as $object)
+            { 
+            if ($object != "." && $object != "..")
+                { 
+                if (is_dir($dir. "/" .$object) && !is_link($dir."/".$object))
+                    {
+                    rrmdir($dir. "/" .$object,$ignore_dirs);
+                    }
+                else
+                    {
+                    unlink($dir. "/" .$object); 
+                    }
+                } 
+            }
+        if (!in_array($dir,$ignore_dirs))
+            {
+            debug("system_reset: remove directory " . $dir);
+            }
+        }
+    }
