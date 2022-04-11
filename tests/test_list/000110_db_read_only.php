@@ -25,14 +25,30 @@ if(db_get_connection_mode() !== "read_only")
     return false;
     }
 
+$GLOBALS["use_error_exception"]=true;
+$case0=false;
 try
     {
-    $use_error_exception = true;
-    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES (?,?)",["s","test_read_only_mode","s","true"]);
+    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES ('test_read_only_mode','true')");
     }
-catch(Exception $e)
+catch(Throwable $e)
     {
-    return true;
+    $case0 = true;
     }
+if (!$case0){echo "FAIL - subtest 0 ";return false;}
 
-return false;
+// Connection mode is cleared when running queries so must be reset
+db_set_connection_mode("read_only");
+$case1=false;
+try
+    {
+    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES (?,?)",["s",'test_read_only_mode1',"s",'true']);
+    echo "POP";
+    }
+catch(Throwable $e)
+    {
+    $case1 = true;
+    }
+if (!$case1){echo "FAIL - subtest 1 ";return false;}
+
+return true;
