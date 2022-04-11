@@ -21,7 +21,7 @@ if (getval("submitted","")!="")
             {
             // Recursively delete, ignoring storagedir and slideshow folders.
             $slideshow_dir = substr($homeanim_folder,strrpos($homeanim_folder,"/")+1);
-            rrmdir($storagedir . "/" . $folder,array($storagedir . "/system", $storagedir . "/system/" . $slideshow_dir));
+            rcRmdir($storagedir . "/" . $folder,array($storagedir . "/system", $storagedir . "/system/" . $slideshow_dir));
             }
         }
 

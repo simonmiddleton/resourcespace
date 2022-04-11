@@ -4006,10 +4006,11 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
  * Recursively removes a directory.
  *  
  * @param string $path Directory path to remove.
+ * @param array $ignore List of directories to ignore.
  *
  * @return boolean
  */
-function rcRmdir ($path)
+function rcRmdir ($path,$ignore=array())
     {
     debug("rcRmdir: " . $path);
     if (is_dir($path))
@@ -4017,7 +4018,7 @@ function rcRmdir ($path)
         $foldercontents = new DirectoryIterator($path);
         foreach($foldercontents as $objectindex => $object)
             {
-            if($object->isDot())
+            if($object->isDot() || in_array($path,$ignore))
                 {
                 continue;
                 }
@@ -4025,7 +4026,7 @@ function rcRmdir ($path)
 
             if ($object->isDir() && $object->isWritable())
                 {
-                $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname);
+                $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname,$ignore);
                 }				
             else
                 {
