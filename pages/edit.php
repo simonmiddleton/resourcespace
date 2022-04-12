@@ -1349,15 +1349,26 @@ hook("editbefresmetadata"); ?>
             
             for($n = 0; $n < count($types); $n++)
                 {
-                $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
-                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+                if(trim((string) $types[$n]['allowed_extensions']) != "")
+                    {
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    }
+                else
+                    {
+                    array();
+                    }
+                // skip showing a resource type that we do not to have permission to change to 
+                // (unless it is currently set to that). Applies to upload only
                 if((0 > $ref || $upload_review_mode)
                     && 
                         (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != "" && count($allowed_extensions) > 0 && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                        (trim($resource["file_extension"]) != ""
+                            && isset($allowed_extensions)
+                            && count($allowed_extensions) > 0 
+                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
