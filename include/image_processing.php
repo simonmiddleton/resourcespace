@@ -2380,13 +2380,14 @@ function get_colour_key($image)
     return($colkey);
     }
 
-function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1)
+function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
     {
     # Tweak all preview images
     # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
 
     # Use the screen resolution version for processing
-    global $tweak_all_images;
+    global $tweak_all_images, $ffmpeg_supported_extensions;
+
     if ($tweak_all_images){
         $file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
         if (!file_exists($file)) {
@@ -2517,7 +2518,30 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
         if ($alternative==-1){
             sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
         }
-        
+
+    if ($rotateangle != 0)
+        {
+        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions))
+            {
+            # Find snapshots for video files so they can be rotated with the thumbnail
+            $video_snapshots = get_video_snapshots($ref, true, false);
+            foreach($video_snapshots as $snapshot)
+                {
+                $snapshot_source = imagecreatefromjpeg($snapshot);
+                # Use built-in function if available, else use function in this file
+                if (function_exists("imagerotate"))
+                    {
+                    $snapshot_source = imagerotate($snapshot_source, $rotateangle, 0);
+                    }
+                else
+                    {
+                    $snapshot_source = AltImageRotate($snapshot_source, $rotateangle);
+                    }
+                imagejpeg($snapshot_source, $snapshot, 95);
+                }
+            }
+        }
+
     }
 
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){

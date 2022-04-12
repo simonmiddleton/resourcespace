@@ -105,262 +105,151 @@ echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-vali
     <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p> <?php
     }
 
-if($leaflet_maps_enable)
-    {
+
+?>
+<!--Setup Leaflet map container with sizing-->
+<div id="map_edit" style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $mapedit_mapheight;?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
+</div>
+
+<script type="text/javascript">
+    var Leaflet = L.noConflict();    
+    
+    <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
+    <?php set_geo_map_centerview(); ?>
+    var map2 = new Leaflet.map('map_edit', {
+        renderer: Leaflet.canvas(),
+        zoomsliderControl: <?php echo $zoomslider?>,
+        zoomControl: <?php echo $zoomcontrol?>,
+        worldCopyJump: true
+    }).setView(mapcenterview,mapdefaultzoom);
+
+    map2.on('baselayerchange', function (e) {
+        currentLayerID = e.layer._leaflet_id;
+        SetCookie('geo_layer', e.layer.options.name);
+        });
+
+    // Load available Leaflet basemap groups, layers, and attribute definitions.
+    <?php include '../include/map_processing.php'; ?>
+
+    <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
+    var defaultLayer = new Leaflet.tileLayer.provider('<?php echo $map_default;?>', {
+        useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
+        detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
+        attribution: default_attribute
+    }).addTo(map2);
+
+    // Load Leaflet basemap definitions.
+    <?php include '../include/map_basemaps.php'; 
+    // Get the resource type to determine the icon to use   
+    $maprestype = get_resource_types($resource['resource_type']);
+    $markercolour = (isset($maprestype[0]) && isset($MARKER_COLORS[$maprestype[0]["colour"]])) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
+    $markercolourjs =  strtolower($MARKER_COLORS[$markercolour])  . "Icon";
     ?>
-    <!--Setup Leaflet map container with sizing-->
-    <div id="map_edit" style="width: 99%; margin-top:0px; margin-bottom:0px; height: <?php echo $mapedit_mapheight;?>px; display:block; border:1px solid black; float:none; overflow: hidden;">
-    </div>
 
-    <script type="text/javascript">
-        var Leaflet = L.noConflict();    
-        
-        <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
-        <?php set_geo_map_centerview(); ?>
-        var map2 = new Leaflet.map('map_edit', {
-            renderer: Leaflet.canvas(),
-            zoomsliderControl: <?php echo $zoomslider?>,
-            zoomControl: <?php echo $zoomcontrol?>,
-            worldCopyJump: true
-        }).setView(mapcenterview,mapdefaultzoom);
+    <!--Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js-->
+    var options = {
+        container_maxHeight: '<?php echo $layer_controlheight?>px',
+        group_maxHeight: '180px',
+        exclusive: false
+    };
 
-        map2.on('baselayerchange', function (e) {
-            currentLayerID = e.layer._leaflet_id;
-            SetCookie('geo_layer', e.layer.options.name);
-            });
+    var control = Leaflet.Control.styledLayerControl(baseMaps,options);
+    map2.addControl(control);
 
-        // Load available Leaflet basemap groups, layers, and attribute definitions.
-        <?php include '../include/map_processing.php'; ?>
+    <!--Add geocoder search bar using control.geocoder.min.js-->
+    Leaflet.Control.geocoder().addTo(map2);
 
-        <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
-        var defaultLayer = new Leaflet.tileLayer.provider('<?php echo $map_default;?>', {
-            useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
-            detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
-            attribution: default_attribute
+    <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
+    <?php if ($map_zoomnavbar)
+        { ?>
+        Leaflet.control.navbar().addTo(map2); <?php
+        } ?>
+
+    <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
+    new Leaflet.control.scale().addTo(map2);
+    
+    <?php
+    hook("map_additional");
+    ?>
+    <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
+    <?php if ($map_kml)
+        { ?>
+        omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(map1); <?php
+        } ?>
+
+    <!--Fix for Microsoft Edge and Internet Explorer browsers-->
+    map2.invalidateSize(true);
+
+    <!--Limit geocoordinate values to six decimal places for display on marker hover-->
+    function georound(num) {
+        return +(Math.round(num + "e+6") + "e-6");
+    }
+
+    <!--Add a marker to the map if the resource has valid coordinates-->
+    var resourceMarker = {}; <?php
+    if (leaflet_coordinate_check($resource['geo_lat'], 'latitude') && leaflet_coordinate_check($resource['geo_long'], 'longitude'))
+        {
+        $resourcezoom = leaflet_map_zoom($resource['mapzoom']); ?>
+        resourceLat = <?php echo htmlspecialchars($resource['geo_lat']); ?>;
+        resourceLong = <?php echo htmlspecialchars($resource['geo_long']); ?>;
+        resourceZoom = <?php echo $resourcezoom; ?>;
+
+        resourceMarker = Leaflet.marker([resourceLat, resourceLong], {
+            icon: <?php echo $markercolourjs  . ","?>
+            title: georound(resourceLat) + ", " + georound(resourceLong) + " (WGS84)"
         }).addTo(map2);
+        map2.setView([resourceLat, resourceLong], resourceZoom); <?php
+        } ?>
 
-        // Load Leaflet basemap definitions.
-        <?php include '../include/map_basemaps.php'; 
-        // Get the resource type to determine the icon to use   
-        $maprestype = get_resource_types($resource['resource_type']);
-        $markercolour = (isset($maprestype[0]) && isset($MARKER_COLORS[$maprestype[0]["colour"]])) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
-        $markercolourjs =  strtolower($MARKER_COLORS[$markercolour])  . "Icon";
-        ?>
+    <!--Place a marker on the map when clicked-->
 
-        <!--Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js-->
-        var options = {
-            container_maxHeight: '<?php echo $layer_controlheight?>px',
-            group_maxHeight: '180px',
-            exclusive: false
+    map2.on('click', function(e) 
+        {
+        currentZoom = map2.getZoom();        
+        console.log('Zoom: ' + currentZoom);
+        realpoint = map2.wrapLatLng(e.latlng);
+        geoLat = realpoint.lat;
+        geoLong = realpoint.lng;
+
+        <!--Clear existing marker when locating a new marker as we only want one marker for the resource-->
+        if (resourceMarker != undefined) {
+            map2.removeLayer(resourceMarker);
         };
 
-        var control = Leaflet.Control.styledLayerControl(baseMaps,options);
-        map2.addControl(control);
+        <!--Add a marker to show where you clicked on the map last and center the map on the marker-->
+        resourceMarker = L.marker([geoLat, geoLong], {
+            icon: <?php echo $markercolourjs  . ","?>
+            title: georound(geoLat) + ", " + georound(geoLong) + " (WGS84)"
+        }).addTo(map2);
 
-        <!--Add geocoder search bar using control.geocoder.min.js-->
-        Leaflet.Control.geocoder().addTo(map2);
 
-        <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
-        <?php if ($map_zoomnavbar)
-            { ?>
-            Leaflet.control.navbar().addTo(map2); <?php
-            } ?>
-
-        <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
-        new Leaflet.control.scale().addTo(map2);
-        
-        <?php
-        hook("map_additional");
-        ?>
-        <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
-        <?php if ($map_kml)
-            { ?>
-            omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(map1); <?php
-            } ?>
-
-        <!--Fix for Microsoft Edge and Internet Explorer browsers-->
-        map2.invalidateSize(true);
-
-        <!--Limit geocoordinate values to six decimal places for display on marker hover-->
-        function georound(num) {
-            return +(Math.round(num + "e+6") + "e-6");
-        }
-
-        <!--Add a marker to the map if the resource has valid coordinates-->
-        var resourceMarker = {}; <?php
-        if (leaflet_coordinate_check($resource['geo_lat'], 'latitude') && leaflet_coordinate_check($resource['geo_long'], 'longitude'))
+        <!--Set the resource marker geolocation value-->
+        document.getElementById('map-input').value=georound(geoLat) + ', ' + georound(geoLong);
+        document.getElementById('map-zoom').value=currentZoom;
+        map2.setView([geoLat, geoLong], currentZoom);
+                
+        <?php if ($edit_autosave)
             {
-            $resourcezoom = leaflet_map_zoom($resource['mapzoom']); ?>
-            resourceLat = <?php echo htmlspecialchars($resource['geo_lat']); ?>;
-            resourceLong = <?php echo htmlspecialchars($resource['geo_long']); ?>;
-            resourceZoom = <?php echo $resourcezoom; ?>;
-
-            resourceMarker = Leaflet.marker([resourceLat, resourceLong], {
-                icon: <?php echo $markercolourjs  . ","?>
-                title: georound(resourceLat) + ", " + georound(resourceLong) + " (WGS84)"
-            }).addTo(map2);
-            map2.setView([resourceLat, resourceLong], resourceZoom); <?php
-            } ?>
-
-        <!--Place a marker on the map when clicked-->
-
-        map2.on('click', function(e) 
-            {
-            currentZoom = map2.getZoom();        
-            console.log('Zoom: ' + currentZoom);
-            realpoint = map2.wrapLatLng(e.latlng);
-            geoLat = realpoint.lat;
-            geoLong = realpoint.lng;
-
-            <!--Clear existing marker when locating a new marker as we only want one marker for the resource-->
-            if (resourceMarker != undefined) {
-                map2.removeLayer(resourceMarker);
-            };
-
-            <!--Add a marker to show where you clicked on the map last and center the map on the marker-->
-            resourceMarker = L.marker([geoLat, geoLong], {
-                icon: <?php echo $markercolourjs  . ","?>
-                title: georound(geoLat) + ", " + georound(geoLong) + " (WGS84)"
-            }).addTo(map2);
-
-
-            <!--Set the resource marker geolocation value-->
-            document.getElementById('map-input').value=georound(geoLat) + ', ' + georound(geoLong);
-            document.getElementById('map-zoom').value=currentZoom;
-            map2.setView([geoLat, geoLong], currentZoom);
-                  
-            <?php if ($edit_autosave)
-                {
-                ?>
-                jQuery.ajax({
-                    type: "POST",
-                    url: "<?php echo $baseurl_short; ?>pages/geo_edit.php",
-                    dataType: "text",
-                    data: {
-                        'submit': 'true',
-                        'ajax': 'true',
-                        'ref': '<?php echo $ref ; ?>',
-                        'geo-loc': geoLat + ',' + geoLong,
-                        'map-zoom': currentZoom,
-                        csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
-                        <?php echo generateAjaxToken('geo_edit'); ?>,
-                        }
-                    });
-                <?php
-                }?>                
-            });
-    </script>
-    <?php
-    }
-else
-    {
-    // OpenLayers legacy code
-    ?>
-    <!-- Drag mode selector -->
-    <div id="GeoDragMode">
-    <?php echo $lang["geodragmode"] ?>:&nbsp;
-    <input type="radio" name="dragmode" id="dragmodearea" checked="checked" onClick="control.point.activate()" /><label for="dragmodearea"><?php echo $lang["geodragmodearea"] ?></label>
-    &nbsp;&nbsp;
-    <input type="radio" name="dragmode" id="dragmodepan" onClick="control.point.deactivate();" /><label for="dragmodepan"><?php echo $lang["geodragmodepan"] ?></label>
-    </div>
-
-    <?php include "../include/geo_map.php";
-    if ($resource["geo_long"]!="") {
-            $zoom = $resource["mapzoom"];
-            if (!($zoom>=2 && $zoom<=21)) {
-                    // set $zoom based on precision of specified position
-                    $zoom = 18;
-                    $siglon = round(100000*abs($resource["geo_long"]))%100000;
-                    $siglat = round(100000*abs($resource["geo_lat"]))%100000;
-                    if ($siglon%100000==0 && $siglat%100000==0) {
-                            $zoom = 3;
-                    } elseif ($siglon%10000==0 && $siglat%10000==0) {
-                            $zoom = 6;
-                    } elseif ($siglon%1000==0 && $siglat%1000==0) {
-                            $zoom = 10;
-                    } elseif ($siglon%100==0 && $siglat%100==0) {
-                            $zoom = 15;
+            ?>
+            jQuery.ajax({
+                type: "POST",
+                url: "<?php echo $baseurl_short; ?>pages/geo_edit.php",
+                dataType: "text",
+                data: {
+                    'submit': 'true',
+                    'ajax': 'true',
+                    'ref': '<?php echo $ref ; ?>',
+                    'geo-loc': geoLat + ',' + geoLong,
+                    'map-zoom': currentZoom,
+                    csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                    <?php echo generateAjaxToken('geo_edit'); ?>,
                     }
-            }
-    } else {
-            $zoom = 2;
-    }
-    ?>
-    <script>
-            var zoom = <?php echo $zoom ?>;
-        <?php if ($resource["geo_long"]!=="") {?>
-        var lonLat = new OpenLayers.LonLat(<?php echo $resource["geo_long"] ?>, <?php echo $resource["geo_lat"] ?>)
-            .transform(
-                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-                map.getProjectionObject() // to Spherical Mercator Projection
-            );
-            <?php } else { ?>
-            var lonLat = new OpenLayers.LonLat(0,0);
-            <?php } ?>
-            function zoomListener (theEvent) {
-                    document.getElementById('map-zoom').value=map.getZoom();
-            }
-            map.events.on({"zoomend": zoomListener});
-    
-        var markers = new OpenLayers.Layer.Markers("<?php echo $lang["markers"]?>");
-        map.addLayer(markers);
-    <?php  
-    if (!hook("makemarker")) {
-    ?>
-            var marker = new OpenLayers.Marker(lonLat);
-    <?php
-    }
-    ?>
-        markers.addMarker(marker);
-
-        var control = new OpenLayers.Control();
-        OpenLayers.Util.extend(control, {
-        draw: function () {
-            this.point = new OpenLayers.Handler.Point( control,
-                {"done": this.notice});
-            this.point.activate();
-        },
-
-        notice: function (bounds) {
-            marker.lonlat.lon=(bounds.x);
-            marker.lonlat.lat=(bounds.y);
-            markers.addMarker(marker);
-            
-            // Update control
-            var translonlat=new OpenLayers.LonLat(bounds.x,bounds.y).transform
-                (
-            map.getProjectionObject(), // from Spherical Mercator Projection}
-                new OpenLayers.Projection("EPSG:4326") // to WGS 1984
-            );
-        
-            document.getElementById('map-input').value=translonlat.lat + ',' + translonlat.lon;
-            
-        }
-            });map.addControl(control);
-    jQuery('#UICenter').scroll(function() {
-    map.events.clearMouseCache();
-    });
-        <?php if ($resource["geo_long"]!=="") {?>                    
-        map.setCenter (lonLat, Math.min(zoom, map.getNumZoomLevels() - 1));
-        <?php } else { ?>
-
-                    <?php if (isset($_COOKIE["geobound"]))
-                            {
-                            $bounds=$_COOKIE["geobound"];
-                            }
-                    else
-                            {
-                            $bounds=$geolocation_default_bounds;
-                            }
-                    $bounds=explode(",",$bounds);
-                    ?>
-                    map.setCenter(new OpenLayers.LonLat(<?php echo $bounds[0] ?>,<?php echo $bounds[1] ?>),<?php echo $bounds[2] ?>);
-
-        <?php } ?>
-
-    </script> 
-    <?php
-    }
+                });
+            <?php
+            }?>                
+        });
+</script>
+<?php
 
 hook('rendermapfooter'); ?>
 

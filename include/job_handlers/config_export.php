@@ -61,7 +61,7 @@ if(!isset($joberror))
 
         // Get data 
         $exportcondition = isset($exportoptions["exportcondition"]) ? $exportoptions["exportcondition"] : "";
-        $datarows = sql_query("SELECT * FROM " . $exporttable . " " . $exportcondition); 
+        $datarows = ps_query("SELECT * FROM " . $exporttable . " " . $exportcondition, array()); 
         
         if(count($datarows) > 0)
             {

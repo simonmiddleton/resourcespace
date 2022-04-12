@@ -38,22 +38,22 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
 		{
 		case "rotateclock":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],270,0,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
 		}
 		break;
 		case "rotateanti":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],90,0,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
 		}
 		break;
 		case "gammaplus":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],0,1.3,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 0, 1.3, $resource["preview_extension"]);
 		}
 		break;
 		case "gammaminus":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],0,0.7,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 0, 0.7, $resource["preview_extension"]);
 		}
 		break;
         case "restore":

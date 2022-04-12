@@ -39,7 +39,7 @@ else
 
 	# SQL Connection may have hit a timeout
 	sql_connect();
-	sql_query("UPDATE resource SET is_transcoding = 1 WHERE ref = '".escape_check($ref)."'");
+	ps_query("UPDATE resource SET is_transcoding = 1 WHERE ref = ?", array("i", $ref));
 	}
 
 if(!is_numeric($ref))
@@ -337,7 +337,7 @@ if (isset($ffmpeg_alternatives))
 			# Remove any existing alternative file(s) with this name.
 			# SQL Connection may have hit a timeout
 			sql_connect();
-			$existing=sql_query("select ref from resource_alt_files where resource='$ref' and name='" . escape_check($ffmpeg_alternatives[$n]["name"]) . "'");
+			$existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
 			for ($m=0;$m<count($existing);$m++)
 				{
 				delete_alternative_file($ref,$existing[$m]["ref"]);
@@ -378,7 +378,8 @@ if (isset($ffmpeg_alternatives))
 				$file_size = filesize_unlimited($apath);
 				# SQL Connection may have hit a timeout
 				sql_connect();
-				sql_query("update resource_alt_files set file_name='" . escape_check($ffmpeg_alternatives[$n]["filename"] . "." . $ffmpeg_alternatives[$n]["extension"]) . "',file_extension='" . escape_check($ffmpeg_alternatives[$n]["extension"]) . "',file_size='" . $file_size . "',creation_date=now() where ref='$aref'");
+				ps_query("update resource_alt_files set file_name = ?, file_extension = ?, file_size = ?, creation_date = now() where ref = ?", 
+					array("s", $ffmpeg_alternatives[$n]["filename"] . "." . $ffmpeg_alternatives[$n]["extension"], "s", $ffmpeg_alternatives[$n]["extension"], "i", $file_size, "i", $aref));
 				// add this filename to be added to resource.ffmpeg_alt_previews
 				if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']==true){
 					$ffmpeg_alt_previews[]=basename($apath);
@@ -389,7 +390,7 @@ if (isset($ffmpeg_alternatives))
                 # Remove the alternative file entries with this name as ffmpeg has failed to create file.
                 # SQL Connection may have hit a timeout
                 sql_connect();
-                $existing=sql_query("select ref from resource_alt_files where resource='$ref' and name='" . escape_check($ffmpeg_alternatives[$n]["name"]) . "'");
+                $existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
                 for ($m=0;$m<count($existing);$m++)
                     {
                     delete_alternative_file($ref,$existing[$m]["ref"]);
@@ -401,7 +402,7 @@ if (isset($ffmpeg_alternatives))
 					# SQL Connection may have hit a timeout
 					sql_connect();
 					# Change flag as the preview was created and that is the most important of them all
-					sql_query("UPDATE resource SET is_transcoding = 0 WHERE ref = '" . escape_check($ref) . "'");
+					ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
 				}
 			}
 		/*// update the resource table with any ffmpeg_alt_previews	
@@ -425,7 +426,7 @@ if (RUNNING_ASYNC)
 	{
 	# SQL Connection may have hit a timeout
 	sql_connect();
-	sql_query("UPDATE resource SET is_transcoding = 0 WHERE ref = '".escape_check($ref)."'");
+	ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
 	
 	if ($previewonly)
 		{

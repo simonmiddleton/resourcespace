@@ -65,7 +65,7 @@ function do_search(
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
            $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access, $config_separators;
 
-    if($editable_only && !$returnsql && trim($k) != "" && !$internal_share_access)
+    if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
         {
         return array();
         }
@@ -1129,7 +1129,7 @@ function do_search(
     // *******************************************************************************
 
     if($search_filter_nodes 
-        && strlen(trim($usersearchfilter)) > 0
+        && strlen(trim((string) $usersearchfilter)) > 0
         && !is_numeric($usersearchfilter)
         && (
             (trim($userdata[0]["search_filter_override"]) != "" && $userdata[0]["search_filter_o_id"] != -1)
@@ -1189,7 +1189,7 @@ function do_search(
             $sql_filter .=  $search_filter_sql;
             }
         }
-    elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
+    elseif (strlen((string) $usersearchfilter)>0 && !is_numeric($usersearchfilter))
         {
         $sf=explode(";",$usersearchfilter);
         for ($n=0;$n<count($sf);$n++)

@@ -5,7 +5,8 @@ if($geo_search_heatmap)
     $defaultarchive = get_default_search_states();
     $defaultarchive = array_filter($defaultarchive,"is_int_loose");
 
-    $allgeopoints = sql_query("SELECT ROUND(geo_lat ,1) AS lat, ROUND(geo_long,1) AS lng, count(*) AS count FROM resource WHERE ref>0 AND archive IN ('" . implode("','",$defaultarchive) . "') AND geo_lat IS NOT NULL GROUP BY lat,lng");
+    $allgeopoints = ps_query("SELECT ROUND(geo_lat, 1) AS lat, ROUND(geo_long, 1) AS lng, count(*) AS count FROM resource WHERE ref > 0 
+        AND archive IN (" . ps_param_insert(count($defaultarchive)) . ") AND geo_lat IS NOT NULL GROUP BY lat, lng", ps_param_fill($defaultarchive, "i"));
 
     $heatdata = array(
         "max"   => max(array_column($allgeopoints,"count")),

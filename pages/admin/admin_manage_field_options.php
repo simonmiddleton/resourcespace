@@ -649,6 +649,16 @@ if($ajax)
 $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
+    $all_nodes = get_nodes($field, NULL, TRUE, NULL, NULL, '', TRUE);
+    foreach($all_nodes as $node)
+        {
+        $node_data[] = ['ref' => $node['ref'], 'name' => $node['name']];
+        }
+    ?>
+    <script>
+        let node_data = <?php echo json_encode($node_data); ?>;
+    </script> 
+    <?php
     $nodes_counter = count($tree_nodes);
     $i             = 0;
     $node_index    = 0;
@@ -906,6 +916,27 @@ function ToggleTreeNode(ref, field_ref)
         if(typeof response !== 'undefined')
             {
             node_children.html(response);
+            node_children.find('select').each(function(i, element)
+                {
+                var node_element = jQuery(element);
+                node_data.forEach(function(item)
+                    {
+                    let option = jQuery('<option>').attr('value', item['ref']).html(item['name']);
+                    if(item['ref'] == node_element.attr('parent_node'))
+                        {
+                        option.attr('selected', true);
+                        }
+                    if(node_element.attr('id') != undefined)
+                        {
+                        if(item['ref'] != node_element.attr('id').split('_')[2])
+                            {
+                            node_element.append(option);
+                            }
+                        }
+                    }
+                )
+                }
+            )
             jQuery('.node_parent_chosen_selector').chosen({});
 
             jQuery(table_node).data('toggleNodeMode', 'ex');

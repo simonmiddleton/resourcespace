@@ -246,6 +246,10 @@ if($generate && enforcePostRequest(false))
                 else
                     {
                     // Exported file
+                    if(!strpos($targetfile, $baseurl) && strpos($targetfile, '/var/www') !== false && strpos($targetfile, 'filestore') !== false)
+                        {
+                        $targetfile = $baseurl . '/filestore' . explode('filestore', $targetfile)[1];
+                        }
                     $message.="<br/>" . $targetfile;
                     }
                 }

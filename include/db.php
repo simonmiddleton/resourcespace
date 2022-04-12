@@ -190,6 +190,8 @@ set_time_limit($php_time_limit);
 if (!isset($storagedir)) {$storagedir=dirname(__FILE__)."/../filestore";}
 if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 
+// Reset prepared statement cache before reconnecting
+unset($prepared_statement_cache);
 sql_connect();
 
 // Track variables for any process that matters but is before we connect to the database (it needs access to sysvars table)

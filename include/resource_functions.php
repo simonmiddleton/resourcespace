@@ -676,23 +676,26 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
                 $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
-								
-				if(count($added_nodes)>0 || count($removed_nodes)>0)
-					{  
+
+                if(count($added_nodes) > 0 || count($removed_nodes) > 0)
+                    {
                     # If this is a 'joined' field it still needs to add it to the resource column
                     $joins=get_resource_table_joins();
                     if (in_array($fields[$n]["ref"],$joins))
                         {
-					    $new_nodevals = array();
+                        $new_nodevals = array();
                         // Build new value:
                         foreach($ui_selected_node_values as $ui_selected_node_value)
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
                         $new_nodes_val = implode(",", $new_nodevals);
-                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                        if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
+                            {
+                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                            }
                         }
-					}
+                    }
 
                 // Required fields that didn't change get the current value
                 if(1 == $fields[$n]['required'] && '' == $val)
@@ -2185,10 +2188,10 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true,$stemmed);
             }
         }
-        
+
+    $kworig=$keyword; // Store non-stemmed word
     if (!$stemmed && $stemming && function_exists("GetStem"))
         {
-        $kworig=$keyword;
         $keyword=GetStem($keyword);debug("Using stem " . $keyword . " for keyword " . $kworig);
         if($keyword!=$kworig)
             {
@@ -2197,7 +2200,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             }
         }
 	
-    if (!(in_array($keyword,$noadd)))
+    if (!(in_array($kworig,$noadd))) // Original (non stemmed) word not in the stop list?
             {
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
@@ -5153,7 +5156,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     $gotmatch=false;
 
     if($search_filter_nodes 
-        && strlen(trim($usereditfilter)) > 0
+        && strlen(trim((string) $usereditfilter)) > 0
         && !is_numeric($usereditfilter)
         && trim($userdata[0]["edit_filter"]) != ""
         && $userdata[0]["edit_filter_id"] != -1
@@ -5187,7 +5190,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             }
         }
     
-    if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
+    if (trim((string) $usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}
@@ -5717,7 +5720,7 @@ function update_disk_usage($resource)
  * @return boolean|void
  */
 function update_disk_usage_cron()
-	{
+    {
     $lastrun = get_sysvar('last_update_disk_usage_cron', '1970-01-01');
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
@@ -5726,14 +5729,21 @@ function update_disk_usage_cron()
         return false;
         }
 
-	$resources=sql_array("select ref value from resource where ref>0 and disk_usage_last_updated is null or datediff(now(),disk_usage_last_updated)>30 limit 20000");
-	foreach ($resources as $resource)
-		{
-		update_disk_usage($resource);
+    $resources=sql_array(
+        "SELECT ref value
+            FROM resource 
+        WHERE ref>0 
+            AND disk_usage_last_updated IS null 
+                OR datediff(now(),disk_usage_last_updated)>30 
+        ORDER BY disk_usage_last_updated ASC 
+        LIMIT 20000");
+    foreach ($resources as $resource)
+        {
+        update_disk_usage($resource);
         }
     
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
-	}
+    }
 
 /**
  * Returns the total disk space used by all resources on the system
@@ -6280,7 +6290,7 @@ function truncate_join_field_value($value)
 * 
 * @return array|integer Array of all file paths found or number of files found
 */
-function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
+function get_video_snapshots($resource_id, $file_path = false, $count_only = false, $includemodified = false)
     {
     global $get_resource_path_extra_download_query_string_params, $hide_real_filepath;
 
@@ -6290,15 +6300,21 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     $template_webpath         = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', -1, 1, false, '');
 
     $i = 1;
-    do
+    do 
         {
-	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
-	if($hide_real_filepath){
-		$webpath=$template_webpath . "&snapshot_frame=" . $i;
-	}
-	else{
-		$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
-	}
+        $path=str_replace("snapshot","snapshot_" . $i,$template_path);
+        if($hide_real_filepath)
+            {
+            $webpath=$template_webpath . "&snapshot_frame=" . $i;
+            }
+        else
+            {
+            $webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+            if ($includemodified && file_exists($path))
+                {
+                $webpath .= "?v=" . urlencode(filemtime($path));
+                }
+            }
 
         $snapshot_found  = file_exists($path);
 
@@ -6309,7 +6325,7 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
 
         $i++;
         }
-    while(true === $snapshot_found);
+    while (true === $snapshot_found);
 
     return (!$count_only ? $snapshots_found : count($snapshots_found));
     }
@@ -6346,6 +6362,8 @@ function get_video_info($file)
 */
 function copyAllDataToResource($from, $to, $resourcedata = false)
     {
+    global $userref;
+
     if((int)(string)$from !== (int)$from || (int)(string)$to !== (int)$to)
         {
         return false;
@@ -6355,12 +6373,16 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         {
         $resourcedata = get_resource_data($to);
         }
-        
-    if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+
+    # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
+    if ($from != 0 - $userref)
         {
-        return false;
+        if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+            {
+            return false;
+            }
         }
-        
+
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
     
@@ -8692,7 +8714,7 @@ function get_external_shares(array $filteropts)
         {
         $share_order_by = "expires";
         }
-    $share_sort = strtoupper($share_sort) == "ASC" ? "ASC" : "DESC";
+    $share_sort = strtoupper((string) $share_sort) == "ASC" ? "ASC" : "DESC";
 
     $conditions = array();
     if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
@@ -8871,3 +8893,38 @@ function update_resource_type_order($neworder)
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
+
+/**
+ * Check if file can be rendered in browser via download.php
+ * 
+ * @param  string $path Path to file
+ * 
+ * @return bool
+ */
+function allow_in_browser($path)
+    {
+    if(!file_exists($path))
+        {
+        return false;
+        }
+    // Permitted mime types can only be overridden by plugins
+    $permitted_mime[] = "application/pdf";
+    $permitted_mime[] = "image/jpeg";
+    $permitted_mime[] = "image/png";
+    $permitted_mime[] = "image/gif";
+    $permitted_mime[] = "audio/mpeg";
+    $permitted_mime[] = "video/mp4";
+    $permitted_mime[] = "text/plain";
+    $permitted_mime[] = "text/csv";
+    $allow = hook('allow_in_browser',"",[$permitted_mime]);
+    if(is_array($allow))
+        {
+        $permitted_mime = $allow;
+        }
+
+    if(in_array(mime_content_type($path),$permitted_mime))
+        {
+        return true;
+        }
+    return false;
+    }

@@ -57,7 +57,7 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|;|`)/i", $shell_exec_cmd))
      if(file_exists($targetfile))
         {
         $newfilesize=filesize_unlimited($targetfile);
-        sql_query("update resource_alt_files set file_size='" . $newfilesize ."' where resource='" . $job_data["resource"] . "' and ref='" . $newaltfile . "'");
+        ps_query("update resource_alt_files set file_size = ? where resource = ? and ref = ?", array("i", $newfilesize, "i", $job_data["resource"], "i", $newaltfile));
         global $alternative_file_previews, $lang, $baseurl, $view_title_field, $offline_job_delete_completed;
         if ($alternative_file_previews)
             {create_previews($job_data["resource"],false,$job_data["alt_extension"],false,false,$newaltfile);}

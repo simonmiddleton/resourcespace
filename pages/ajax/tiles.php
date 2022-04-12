@@ -54,7 +54,7 @@ while((     !is_file($file)
             $gettile
         )
     {
-    if($leaflet_maps_enable && count($geo_leaflet_sources) > 0)
+    if(isset($geo_leaflet_sources) && count($geo_leaflet_sources) > 0)
         {
         $geo_tile_urls = array();
         foreach($geo_leaflet_sources as $geo_leaflet_source)
@@ -136,46 +136,9 @@ while((     !is_file($file)
                 }
             }        
         }
-   elseif($gettile && count($geo_tile_servers) > 0)
-        {
-        while(count($geo_tile_servers) > 0)
-            {
-            // Try to get an updated tile from a tile server
-            $rnd = rand(0,count($geo_tile_servers)-1);
-            $url = 'https://'.$geo_tile_servers[$rnd];
-            $url .= "/".$z."/".$x."/".$y.".png";
-            
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $cresponse = curl_exec($ch);
-            $cerror = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $headersize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-            $header = substr($cresponse, 0, $headersize);
-            $body = substr($cresponse, $headersize);
-            curl_close($ch);
-    
-            if($cerror == 200)
-                {
-                file_put_contents($file,$body);
-                }
-    
-            // Remove this tile server from the array
-            unset($geo_tile_servers[$rnd]);
-            $geo_tile_servers = array_values($geo_tile_servers);
-            continue;
-            }
-        }
-    elseif($z <= 3)
-        {
-        // Use included tiles
-        $file = __DIR__ . "/../../gfx/geotiles/${z}_${x}_$y.png";
-        $gettile = false;
-        continue;
-        }
     else
         {
-        debug("Request for a map tile at resolution " . $z . " received but no tiles available at this resolution");
+        debug('$geo_leaflet_sources is not configured');
         $gettile = false;
         continue;
         }

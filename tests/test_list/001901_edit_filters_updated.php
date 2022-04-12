@@ -12,7 +12,7 @@ function test_edit_filter_text_update($user,$group,$filtertext)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    sql_query("UPDATE usergroup SET edit_filter='" . $filtertext . "', edit_filter_id=NULL WHERE ref='" . $group . "'");
+    ps_query("UPDATE usergroup SET edit_filter=?, edit_filter_id=NULL WHERE ref=?",["s",$filtertext,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
     }
@@ -21,14 +21,17 @@ function test_edit_filter_id_update($user,$group,$filterid)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    sql_query("UPDATE usergroup SET edit_filter_id='" . $filterid . "' WHERE ref='" . $group . "'");
+    ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["s",$filterid,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
     }
 
 // Create a new user in a new group so we can test edit access for resources
 $editor = new_user("editor");
-sql_query("INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) SELECT 'testeditgroup',permissions,'','',NULL,NULL FROM usergroup WHERE ref='3';");
+ps_query(
+    "INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) 
+        SELECT 'testeditgroup',permissions,'','',NULL,NULL 
+        FROM usergroup WHERE ref='3';");
 $testeditgroup = sql_insert_id();
 user_set_usergroup($editor, $testeditgroup);
 

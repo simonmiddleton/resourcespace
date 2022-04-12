@@ -176,7 +176,7 @@ function get_tracked_vars(int $user)
     if($user > 0)
         {
         $vars_csv = get_sysvar("track_var_{$user}", '');
-        $vars_list = explode(',', $vars_csv);
+        $vars_list = explode(',', (string) $vars_csv);
         $vars_trimmed = array_map('trim', $vars_list);
         $vars_not_empty = array_filter($vars_trimmed);
         

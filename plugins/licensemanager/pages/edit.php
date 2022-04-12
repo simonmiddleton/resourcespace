@@ -46,12 +46,12 @@ if (getval("submitted","")!="")
     # Save license data
     
     # Construct expiry date
-    $expires="'" . getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","") . "'";
+    $expires=getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","");
     
     # No expiry date ticked? Insert null
     if (getval("no_expiry_date","")=="yes")
         {
-        $expires="null";
+        $expires=null;
         }
 
     # Construct usage
@@ -61,7 +61,16 @@ if (getval("submitted","")!="")
     if ($ref=="new")
         {
         # New record 
-        sql_query("insert into license (outbound,holder,license_usage,description,expires) values ('" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
+        ps_query(
+            "insert into license (outbound,holder,license_usage,description,expires) values (?, ?, ?, ?, ?)",
+            [
+                's', getval('outbound', ''),
+                's', getval('holder', ''),
+                's', $license_usage,
+                's', getval('description',''),
+                's', $expires
+            ]
+        );	
         $ref=sql_insert_id();
 
         # Add to all the selected resources
@@ -73,7 +82,7 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    ps_query("insert into resource_license(resource,license) values (?, ?)", ['i', $r, 'i', $ref]);
                     resource_log($r,"","",$lang["new_license"] . " " . $ref);
                     }
                 }
@@ -82,10 +91,20 @@ if (getval("submitted","")!="")
     else
         {
         # Existing record	
-        sql_query("update license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires=$expires where ref='$ref'");
+        ps_query(
+            "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ? where ref= ?",
+            [
+                's', getval('outbound', ''),
+                's', getval('holder', ''),
+                's', $license_usage,
+                's', getval('description',''),
+                's', $expires,
+                'i', $ref
+            ]
+        );
 
         # Add all the selected resources
-        sql_query("delete from resource_license where license='$ref'");
+        ps_query("delete from resource_license where license= ?", ['i', $ref]);
         $resources=explode(",",getvalescaped("resources",""));
 
         if (getvalescaped("resources","")!="")
@@ -95,7 +114,7 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    ps_query("insert into resource_license(resource,license) values (?, ?)", ['i', $r, 'i', $ref]);
                     resource_log($r,"","",$lang["new_license"] . " " . $ref);
                     }
                 }
@@ -121,10 +140,10 @@ if ($ref=="new")
     }
 else
     {
-    $license=sql_query("select * from license where ref='$ref'");
+    $license=ps_query("select * from license where ref= ?", ['i', $ref]);
     if (count($license)==0) {exit("License not found.");}
     $license=$license[0];
-    $resources=sql_array("select distinct resource value from resource_license where license='$ref' order by resource");
+    $resources=ps_array("select distinct resource value from resource_license where license= ? order by resource", ['i', $ref]);
     }
         
 include "../../../include/header.php";
