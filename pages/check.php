@@ -228,28 +228,16 @@ if($php_tz == $mysql_tz)
 
 <?php
 // Check required PHP extensions 
-$npuccheck = function_exists("apcu_fetch");
-?>
-<tr>
-    <td colspan="2">php-apcu</td>
-    <td><b><?php echo (function_exists("apcu_fetch") ? $lang['status-ok'] : $lang['server_apcu_check_fail']); ?></b></td>
-</tr>
-<?php
-$extensions_required = array();
-$extensions_required["curl"] = "curl_init";
-$extensions_required["gd"] = "imagecrop";
-$extensions_required["xml"] = "xml_parser_create";
-$extensions_required["mbstring"] = "mb_strtoupper";
-$extensions_required["intl"] = "locale_get_default";
-$extensions_required["json"] = "json_decode";
-$extensions_required["zip"] = "zip_open";
+$extensions_required = SYSTEM_REQUIRED_PHP_MODULES;
 
 ksort($extensions_required, SORT_STRING);
 foreach($extensions_required as $module=> $required_fn)
     {?>
     <tr>
         <td colspan="2">php-<?php echo $module ?></td>
-        <td><b><?php echo function_exists($required_fn) ? $lang['status-ok'] : $lang['status-fail'] ?></b></td>
+        <td><b><?php 
+        if (function_exists($required_fn)){echo $lang['status-ok'];}
+        else {echo ($lang['server_' . $module . '_check_fail']??$lang['status-fail']);}?></b></td>
     </tr>
     <?php
     }
