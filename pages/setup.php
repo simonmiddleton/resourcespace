@@ -870,7 +870,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 		
 		# Tables first.
 		# Load existing tables list
-		$ts=sql_query("show tables",false,-1,false);
+		$ts = ps_query("show tables", array(), false, -1, false);
 		$tables=array();
 		for ($n=0;$n<count($ts);$n++)
 			{
@@ -882,7 +882,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 			if (substr($file,0,5)=="data_")
 				{
 				$table=str_replace(".txt","",substr($file,5));
-				sql_query("TRUNCATE $table");
+				ps_query("TRUNCATE $table", array());
 				# Add initial data
 				$data=$file;
 				if (file_exists($path . "/" . $data))
@@ -890,20 +890,17 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 					$f=fopen($path . "/" . $data,"r");
 					while (($row = fgetcsv($f,5000)) !== false)
 						{
-						# Escape values
-						for ($n=0;$n<count($row);$n++)
+						for ($n=0; $n<count($row); $n++)
 							{
-							$row[$n]=escape_check($row[$n]);
-							$row[$n]="'" . $row[$n] . "'";
-							if ($row[$n]=="''") {$row[$n]="null";}
+							if ($row[$n] == "''") {$row[$n] = null;}
 							}
-						sql_query("insert into $table values (" . join (",",$row) . ")",false,-1,false);
+						ps_query("insert into $table values (" . ps_param_insert(count($row)) . ")", array(ps_param_fill($row, "s")), false, -1, false);
 						}
 					}
 
 				# Check all indices exist
 				# Load existing indexes
-				$existing=sql_query("show index from $table",false,-1,false);
+				$existing = ps_query("show index from $table", array(), false, -1, false);
 						
 				$file=str_replace("data_","index_",$file);
 				if (file_exists($path . "/" . $file))
@@ -1011,21 +1008,23 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     $password_hash = rs_password_hash("RS{$admin_username}{$admin_password}");
 
     // Existing user?
-    $user_count = sql_value("SELECT count(*) value FROM user WHERE username = '" . escape_check($admin_username) . "'", 0);
+    $user_count = ps_value("SELECT count(*) value FROM user WHERE username = ?", array("s", $admin_username), 0);
     if(0 == $user_count)
         {
         // No existing matching user. Insert.
         // Note: First user should always be part of Super Admin, hence user group is set to 3
-        $sql_query = "INSERT INTO user(username, password, fullname, email, usergroup) VALUES('" . escape_check($admin_username) . "', '" . $password_hash . "', '" . escape_check($admin_fullname) . "', '" . escape_check($admin_email) . "', 3)";
+        $sql_query = "INSERT INTO user (username, password, fullname, email, usergroup) VALUES (?, ?, ?, ?, 3)";
+        $sql_query_params = array("s", $admin_username, "s", $password_hash, "s", $admin_fullname, "s", $admin_email);
         }
     else
         {
         // Existing user found. Update password. This is a useful mechanism for regaining access when a system is being set up again.
-        $sql_query = "UPDATE user set password='" . $password_hash . "' where username = '" . escape_check($admin_username) . "'";
+        $sql_query = "UPDATE user set password = ? where username = ?";
+        $sql_query_params = array("s", $password_hash, "s", $admin_username);
         }
 
     // Perform the insert / update
-    sql_query($sql_query);
+    ps_query($sql_query, $sql_query_params);
 
     ?>
 	<div id="intro">
