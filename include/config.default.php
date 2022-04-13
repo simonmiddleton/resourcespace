@@ -3292,3 +3292,23 @@ $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 
 // String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
 $regexp_slash_replace = 'SLASH';
+
+/*
+Metadata field designated to hold information which the system can use to determine the user group responsible for that 
+resource.
+Allowed field types are fixed list fields with only a single current value (i.e. radio buttons or drop down list).
+To disable it, set to 0 (zero).
+*/
+$owner_field = 0;
+
+/*
+Map the available field options (from the $owner_field) to ResourceSpace user groups.
+The mappings' keys will hold node IDs and the values user group IDs.
+Example:
+$owner_field_mappings = [
+    278 => 3, # Option 1 -> Super Admin
+    280 => 1, # Option 2 -> Administrators
+];
+*/
+$owner_field_mappings = [];
+
