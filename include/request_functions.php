@@ -1144,13 +1144,7 @@ function process_custom_fields_submission(array $fields, $submitted)
             // Find the selected options
             $field["selected_options"] = array_filter($field["options"], function($option) use ($field, $submitted_data)
                 {
-                $computed_value = md5("{$field["html_properties"]["id"]}_{$option}");
-                if(in_array($computed_value, $submitted_data))
-                    {
-                    return true;
-                    }
-
-                return false;
+                return in_array(md5("{$field["html_properties"]["id"]}_{$option}"), $submitted_data);
                 });
 
             $field["value"] = implode(", ", $field["selected_options"]);
