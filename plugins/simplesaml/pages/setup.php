@@ -160,25 +160,20 @@ echo config_section_header($lang['simplesaml_sp_config'], '');
 echo config_boolean_field("simplesaml_rsconfig",$lang['simplesaml_rsconfig'],$simplesaml_rsconfig,30);
 
 ?>
-
 <script>
 jQuery("#simplesaml_rsconfig").change(function(event)
     {
-    console.log(jQuery(this).val());
     if(jQuery(this).val()=="1")
         {
         jQuery("#question_simplesaml_lib_path").slideUp(0);
-        jQuery("#question_simplesaml_sp").slideUp(0);
         jQuery("#generate_sp_config_link").slideUp(0);
         }
     else
         {
         jQuery("#question_simplesaml_lib_path").slideDown(0);
-        jQuery("#question_simplesaml_sp").slideDown(0);
         jQuery("#generate_sp_config_link").slideDown(0);
         }
     });
-
 </script>
 
 
@@ -201,7 +196,7 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 <?php
 
 echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path,false,420,false,null,false,$simplesaml_rsconfig);
-echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false,$simplesaml_rsconfig);
+echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp,false,420,false,null,false);
 
 ?>
 <div class="Question">

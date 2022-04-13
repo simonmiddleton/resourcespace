@@ -49,6 +49,7 @@ function simplesaml_authenticate()
         {
         require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
         $spname = get_saml_sp_name();
+        debug("simplesaml: Using SP name '{$spname}'");
         $as = new SimpleSAML\Auth\Simple($spname);
         }
     $as->requireAuth();
@@ -330,6 +331,7 @@ function simplesaml_generate_keypair($dn)
  */
 function get_saml_sp_name()
     {
-    global $simplesaml_rsconfig, $simplesaml_sp;
-    return $simplesaml_rsconfig ?  "resourcespace-sp" : $simplesaml_sp;
+    $default_sp_name = 'default-sp';
+    $sp_name = $GLOBALS['simplesaml_sp'] ?? $default_sp_name;
+    return $sp_name !== $default_sp_name ? $sp_name : 'resourcespace-sp';
     }
