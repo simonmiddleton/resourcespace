@@ -885,19 +885,17 @@ function allowed_type_mime($allowedtype)
  */
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
-    global $always_email_from_user;
+    global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
+    global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
     if($always_email_from_user)
         {
-        global $username, $useremail, $userfullname;
         $from_name=($userfullname!="")?$userfullname:$username;
         $from=$useremail;
         $reply_to=$useremail;
         }
 
-    global $always_email_copy_admin;
     if($always_email_copy_admin)
         {
-        global $email_notify;
         $bcc.="," . $email_notify;
         }
 
@@ -956,9 +954,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $attachfiles[$filename] = $file;
         }
 
-            
+            //exit($message);
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
-    global $use_phpmailer;
     if ($use_phpmailer)
         {
         send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc,$attachfiles); 
@@ -967,8 +964,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         }
     
     # Include footer
-    global $email_footer;
-    global $disable_quoted_printable_enc;
     
     # Work out correct EOL to use for mails (should use the system EOL).
     if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
@@ -1010,10 +1005,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $subject=rs_quoted_printable_encode_subject($subject);
         }
    
-    global $email_from;
     if ($from=="") {$from=$email_from;}
     if ($reply_to=="") {$reply_to=$email_from;}
-    global $applicationname;
     if ($from_name==""){$from_name=$applicationname;}
     
     if (substr($reply_to,-1)==","){$reply_to=substr($reply_to,0,-1);}
@@ -1037,7 +1030,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $headers .= "Reply-To: $reply_to" . $eol;
     
     if ($cc!=""){
-        global $userfullname;
         #allow multiple emails, and fix for long format emails
         $ccs=explode(",",$cc);
         $headers .= "Cc: ";
@@ -1056,7 +1048,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     }
     
     if ($bcc!=""){
-        global $userfullname;
         #add bcc 
         $bccs=explode(",",$bcc);
         $headers .= "Bcc: ";
@@ -1192,87 +1183,56 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 if(isset($lang["all__" . $html_template])){$template=$lang["all__" . $html_template];}
                 elseif(isset($lang[$html_template])){$template=$lang[$html_template];}
                 }
-            }       
-
+            }
 
         if (isset($template) && $template!="")
             {
             preg_match_all('/\[[^\]]*\]/',$template,$test);
-            foreach($test[0] as $variable)
+            $setvalues=[];
+            foreach($test[0] as $placeholder)
                 {
-            
-                $variable=str_replace("[","",$variable);
-                $variable=str_replace("]","",$variable);
-            
-                
-                # get lang variables (ex. [lang_mycollections])
-                if (substr($variable,0,5)=="lang_"){
+                $placeholder=str_replace("[","",$placeholder);
+                $placeholder=str_replace("]","",$placeholder);
+
+                if (substr($placeholder,0,5)=="lang_")
+                    {
+                    // Get lang variables (ex. [lang_mycollections])
                     global $lang;
-                    $$variable=$lang[substr($variable,5)];
-                }
-                
-                # get server variables (ex. [server_REMOTE_ADDR] for a user request)
-                else if (substr($variable,0,7)=="server_"){
-                    $$variable=$_SERVER[substr($variable,7)];
-                }
-                
-                # [embed_thumbnail] (requires url in templatevars['thumbnail'])
-                else if (substr($variable,0,15)=="embed_thumbnail"){
+                    $setvalues[$placeholder] = $lang[substr($placeholder,5)];
+                    }           
+                else if (substr($placeholder,0,5)=="text_")
+                    {
+                    // Get text string (legacy)
+                    $setvalues[$placeholder] =text(substr($placeholder,5));
+                    }
+                else if ($placeholder=="client_ip")
+                    {
+                    // Get server variables (ex. [server_REMOTE_ADDR] for a user request)
+                    $setvalues[$placeholder] = get_ip();
+                    }         
+                else if($placeholder == 'img_headerlogo')
+                    {
+                    $img_url = get_header_image(true);
+                    $setvalues[$placeholder]  = '<img src="' . $img_url . '"/>';
+                    }
+                else if ($placeholder=="embed_thumbnail")
+                    {                    
+                    # [embed_thumbnail] (requires url in templatevars['thumbnail'])
                     $thumbcid=uniqid('thumb');
-                    $$variable="<img style='border:1px solid #d1d1d1;' src='cid:$thumbcid' />";
-                }
-                
-                # deprecated by improved [img_] tag below
-                # embed images (find them in relation to storagedir so that templates are portable)...  (ex [img_storagedir_/../gfx/whitegry/titles/title.gif])
-                else if (substr($variable,0,15)=="img_storagedir_"){
-                    $$variable="<img src='cid:".basename(substr($variable,15))."'/>";
-                    $images[]=dirname(__FILE__).substr($variable,15);
-                }
-
-                // embed images - ex [img_gfx/whitegry/titles/title.gif]
-                else if('img_headerlogo' == substr($variable, 0, 14))
-                    {
-                    $img_url = get_header_image(true);                    
-                    $$variable = '<img src="' . $img_url . '"/>';
+                    $embed_thumbnail = true;
+                    $setvalues[$placeholder] ="<img style='border:1px solid #d1d1d1;' src='cid:$thumbcid' />";
                     }
-                else if('img_' == substr($variable, 0, 4))
+                else
                     {
-                    $image_path = substr($variable, 4);
-
-                    // absolute paths
-                    if('/' == substr($image_path, 0, 1))
-                        {
-                        $images[] = $image_path;
-                        }
-                    // relative paths
-                    else
-                        {
-                        $image_path = str_replace('../', '', $image_path);
-                        $images[]   = dirname(__FILE__) . '/../' . $image_path;
-                        }
-
-                    $$variable = '<img src="cid:' . basename($image_path) . '"/>';
+                    // Not recognised, skip this
+                    continue;
                     }
 
-                # attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
-                else if (substr($variable,0,7)=="attach_"){
-                    $$variable="";
-                    $attachments[]=substr($variable,7);
-                }
-                
-                # get site text variables (ex. [text_footer], for example to 
-                # manage html snippets that you want available in all emails.)
-                else if (substr($variable,0,5)=="text_"){
-                    $$variable=text(substr($variable,5));
-                }
-
-                # try to get the variable from POST
-                else{
-                    $$variable=getval($variable,"");
-                }
-                
-                # avoid resetting templatevars that may have been passed here
-                if (!isset($templatevars[$variable])){$templatevars[$variable]=$$variable;}
+                # Don't overwrite templatevars that have been explicitly passed
+                if (!isset($templatevars[$placeholder]) && isset($setvalues[$placeholder]))
+                    {
+                    $templatevars[$placeholder]=$setvalues[$placeholder];
+                    }
                 }
 
             if (isset($templatevars))
@@ -1382,18 +1342,18 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 $mail->AddBCC($bccemail,$userfullname);
             }
         }
-    }
-    
+    }    
     
     $mail->CharSet = "utf-8"; 
     
-    if (is_html($body)) {$mail->IsHTML(true);}      
+    if (is_html($body)) {$mail->IsHTML(true);}
     else {$mail->IsHTML(false);}
-    
+
     $mail->Subject = $subject;
     $mail->Body    = $body;
-    
-    if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
+
+    if (isset($embed_thumbnail)&&isset($templatevars['thumbnail']))
+        {
         $mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
         }
 
