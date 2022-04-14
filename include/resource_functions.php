@@ -8853,7 +8853,7 @@ function update_resource_type_order($neworder)
  */
 function allow_in_browser($path)
     {
-    if(!file_exists($path))
+    if(!file_exists($path) || is_dir($path))
         {
         return false;
         }
@@ -8872,7 +8872,19 @@ function allow_in_browser($path)
         $permitted_mime = $allow;
         }
 
-    if(in_array(mime_content_type($path),$permitted_mime))
+    $type = mime_content_type($path);
+    if($type == "application/octet-stream")
+        {
+        # Not properly detected, try and get mime type via exiftool if possible
+        $exiftool_fullpath = get_utility_path("exiftool");
+        if ($exiftool_fullpath!=false)
+            {
+            $command=$exiftool_fullpath . " -s -s -s -t -mimetype %PATH";
+            $cmd_args['%PATH'] = $path;
+            $type = run_command($command, false, $cmd_args);
+            }
+        }
+    if(in_array($type,$permitted_mime))
         {
         return true;
         }
