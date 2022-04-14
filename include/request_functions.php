@@ -1186,3 +1186,37 @@ function can_use_request_owner_field()
         ));
     }
 
+
+function test_todo_owner_field_logic(array $resources)
+    {
+    if(!can_use_request_owner_field())
+        {
+        return [];
+        }
+
+    global $owner_field, $owner_field_mappings;
+
+    $users_to_notify = [];
+    $all_resource_access_notify_users = array_column(get_notification_users('RESOURCE_ACCESS'), 'email', 'ref');
+
+    // Determine which users should be notified based on the owner field value and its mappings
+    $resource_nodes = get_resource_nodes_batch($resources, [$owner_field], true);
+    foreach($resource_nodes as $resource_id => $rtf_rns)
+        {
+        $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
+        if($owner_field_node_id > 0)
+            {
+            echo "$resource_id => {$owner_field_node_id}. UG = {$owner_field_mappings[$owner_field_node_id]}" . PHP_EOL;
+            $group_users = array_column(
+                get_users($owner_field_mappings[$owner_field_node_id], '', 'u.username', false, -1, 1, false, 'u.ref'),
+                'ref'
+            );
+            $users_to_notify += array_intersect_key($all_resource_access_notify_users, array_flip($group_users));
+            }
+        }
+
+    echo "users_to_notify:". PHP_EOL;
+    print_r($users_to_notify);
+    return $users_to_notify;
+    }
+
