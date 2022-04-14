@@ -14,6 +14,7 @@ function comments_submit()
     $comment_to_hide = getvalescaped("comment_to_hide",0,true);
 
     if (($comment_to_hide != 0) && (checkPerm("o"))) {
+        $root = find_root_comment($comment_to_hide);
         // Does this comment have any child comments?
         if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = ?",array("i",$comment_to_hide),'') != '')
             {
@@ -23,6 +24,7 @@ function comments_submit()
             {
             ps_query("DELETE FROM comment WHERE ref = ?",array("i",$comment_to_hide));
             }
+        if(!is_null($root)){clean_comment_tree($root);}
 
         return;
     }
@@ -113,6 +115,64 @@ function comments_submit()
 
     // Notify anyone tagged.
     comments_notify_tagged($body,$userref,$resource_ref,$collection_ref);
+    }
+
+/**
+ *  Check all comments that are children of the comment ref provided. If there is a branch made up entirely of hidden comments then remove the branch.
+ * 
+ *  @param  int $ref    Ref of the comment that is being deleted. 
+ * 
+ *  @return int         Number of child comments that are not hidden.
+ */
+function clean_comment_tree($ref)
+    {
+    $all_comments = ps_query("SELECT * FROM comment WHERE ref_parent = ?", ['i', $ref]);
+    $remaining = 0;
+    
+    if(count($all_comments) > 0)
+        {
+        foreach($all_comments as $comment)
+            {
+            $remaining += clean_comment_tree($comment['ref']);
+            if($remaining == 0 && $comment['hide'] == 1)
+                {
+                ps_query("DELETE FROM comment WHERE ref = ?", ['i', $comment['ref']]);
+                }
+            }
+        }
+
+    $remaining += ps_value("SELECT count(*) as `value` FROM comment WHERE ref_parent = ? and hide = 0", ['i', $ref], 0);
+
+    if($remaining == 0)
+        {
+        ps_query("DELETE FROM comment WHERE hide = 1 and ref = ?", ['i', $ref]);
+        }
+
+    return $remaining;
+    }
+
+/**
+ * Find the root of a comment tree that the ref provided is a part of
+ * 
+ * @param   int     $ref    ref of a comment
+ * 
+ * @return  int|null        ref of the root comment or null if the comment tree has been completely removed / the comment being checked has already been deleted.
+ */
+function find_root_comment($ref)
+    {
+    $comment = ps_query('SELECT ref, ref_parent FROM comment WHERE ref = ?', ['i', $ref]);
+
+    if(is_array($comment) && !empty($comment))
+        {
+        $comment = $comment[0];
+
+        if(!empty($comment['ref_parent']))
+            {
+            return find_root_comment($comment['ref_parent']);
+            }
+        return $comment['ref'];
+        }
+    return null;
     }
 
 /**
