@@ -954,7 +954,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $attachfiles[$filename] = $file;
         }
 
-            //exit($message);
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     if ($use_phpmailer)
         {
