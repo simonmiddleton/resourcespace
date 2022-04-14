@@ -1159,3 +1159,30 @@ function process_custom_fields_submission(array $fields, $submitted)
         return $field;
         }, gen_custom_fields_html_props(get_valid_custom_fields($fields)));
     }
+
+
+/**
+ * Initialisation and system check if configuration is correctly enabled to use the owner field and mappings logic.
+ * 
+ * @return boolean Return true if the system is configured with a valid $owner_field and non numeric $owner_field_mappings, false otherwise.
+ */
+function can_use_request_owner_field()
+    {
+    $GLOBALS['owner_field'] = is_int_loose($GLOBALS['owner_field']) ? (int) $GLOBALS['owner_field'] : 0;
+
+    // Filter out non numeric user group IDs
+    $GLOBALS['owner_field_mappings'] = array_filter($GLOBALS['owner_field_mappings'], 'is_int_loose');
+
+    // Filter out non numeric node IDs
+    $GLOBALS['owner_field_mappings'] = array_intersect_key(
+        $GLOBALS['owner_field_mappings'],
+        array_flip(array_filter(array_keys($GLOBALS['owner_field_mappings']), 'is_int_loose')));
+
+    return $GLOBALS['owner_field'] > 0
+        && !empty($GLOBALS['owner_field_mappings'])
+        && in_array($GLOBALS['owner_field'], array_column(
+            get_resource_type_fields('', 'ref', 'asc', '', [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS], false),
+            'ref'
+        ));
+    }
+
