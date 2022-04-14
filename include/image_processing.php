@@ -111,8 +111,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
-            }
-    
+            }    
         else
             {
             # Work out which file has been posted
@@ -434,12 +433,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                                 break;
                             }
 
-                        if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
+                        if(isset($newval))
+                            {
+                            update_field($ref,$read_from[$i]['ref'],$newval);
+                            }
                         }
                     }
                 }
             }
-    
         # Extract text from documents (e.g. PDF, DOC)
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
@@ -459,20 +460,23 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 extract_text($ref, $extension);
                 }
             }
-        }
-    
-    
+        }    
 
     # Store original filename in field, if set
     if (isset($filename_field))
-        if(isset($amended_filename)){$filename=$amended_filename;}
         {
-        if (!$revert){
+        if(isset($amended_filename))
+            {
+            $filename=$amended_filename;
+            }
+        if (!$revert && isset($filename))
+            {
             update_field($ref,$filename_field,$filename);
             }
-        else {
+        else
+            {
             update_field($ref,$filename_field,$original_filename);
-            }       
+            }
         }
     if (!$upload_then_process || $after_upload_processing)
         {
@@ -540,6 +544,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         # Update file dimensions
         get_original_imagesize($ref,$filepath,$extension);
         }
+
     if($upload_then_process && !$after_upload_processing)
         {
         # Add this to the job queue for offline processing
