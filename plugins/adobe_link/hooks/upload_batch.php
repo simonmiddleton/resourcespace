@@ -10,3 +10,16 @@ function HookAdobe_linkUpload_batchCookies_notification_bypass()
     {
     return true;
     }
+
+function HookAdobe_linkUpload_batchInitialuploadprocessing()
+    {
+    global $username,$scramble_key, $usersession, $upfilepath;
+    if($_FILES && isset($_FILES['file']['tmp_name']))
+        {
+        debug("adobe_link - receiving file from user " . $username . ",  filename " . $_FILES['file']['name']);
+        $upfilepath = get_temp_dir() . DIRECTORY_SEPARATOR . md5(uniqid() . $scramble_key . $usersession);
+        move_uploaded_file($_FILES['file']['tmp_name'],$upfilepath);
+        }
+    return false;
+    }
+    
