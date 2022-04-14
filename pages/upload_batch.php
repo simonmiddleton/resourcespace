@@ -439,6 +439,8 @@ if ($processupload)
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
 
+    hook('modify_upload_file','',[$upfilename,$upfilepath]);
+
     # Banned extension?
     global $banned_extensions;
     if (in_array($extension,$banned_extensions))

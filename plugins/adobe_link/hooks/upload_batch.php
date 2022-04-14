@@ -11,7 +11,7 @@ function HookAdobe_linkUpload_batchCookies_notification_bypass()
     return true;
     }
 
-function HookAdobe_linkUpload_batchInitialuploadprocessing()
+function HookAdobe_linkUpload_batchModify_upload_file($filename,$filepath)
     {
     global $username,$scramble_key, $usersession, $upfilepath;
     if($_FILES && isset($_FILES['file']['tmp_name']))
