@@ -2744,6 +2744,7 @@ function delete_resource($ref)
 
 	# Delete all database entries
     clear_resource_data($ref);
+    resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
 	sql_query("delete from resource where ref='$ref'");
     sql_query("delete from collection_resource where resource='$ref'");
     sql_query("delete from resource_custom_access where resource='$ref'");
