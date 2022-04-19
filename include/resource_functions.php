@@ -6383,7 +6383,6 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
             }
         }
 
-    copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
     
     # Update 'joined' fields in resource table 
@@ -6402,82 +6401,6 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
     $joinsql = $joinsql . $joinfields . " WHERE target.ref='{$to}'";
     sql_query($joinsql);
     return true;
-    }
-
-
-/**
-* Copy resource data from one resource to another one.
-* 
-* @uses escape_check()
-* @uses sql_array()
-* @uses sql_query()
-* 
-* @param integer $from Resource we are copying data from
-* @param integer $ref  Resource we are copying data to
-* 
-* @return void
-*/    
-function copyResourceDataValues($from, $to, $resource_type = "")
-    {
-    $from            = escape_check($from);    
-    $to              = escape_check($to);
-    $omit_fields_sql = '';
-
-    // When copying normal resources from one to another, check for fields that should be excluded
-    // NOTE: this does not apply to user template resources (negative ID resource)
-    if($from > 0)
-        {
-        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
-        if (count($omitfields) > 0)
-            {
-            $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
-            }
-        else
-            {
-            $omit_fields_sql = "";
-            }
-        }
-    
-    $resource_type_sql = "AND (rtf.resource_type = r.resource_type OR rtf.resource_type = 999 OR rtf.resource_type = 0)";
-    // Don't consider resource types if saving metadata template as fields from all types should be copied.
-    global $metadata_template_resource_type;
-    if (isset($metadata_template_resource_type) && $resource_type==$metadata_template_resource_type)
-        {
-        $resource_type_sql = "";
-        }
-
-    // This is for logging after the insert statement
-    $data_to_add = sql_query("
-        SELECT
-            rd.resource_type_field AS field,
-            rd.value AS value
-        FROM resource_data AS rd
-        JOIN resource AS r ON rd.resource = r.ref
-        JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref
-        {$resource_type_sql}
-        WHERE rd.resource = '{$from}'
-        {$omit_fields_sql}
-    ");
-
-    sql_query("
-        INSERT INTO resource_data(resource, resource_type_field, value)
-             SELECT '{$to}',
-                    rd.resource_type_field,
-                    rd.value
-               FROM resource_data AS rd
-               JOIN resource AS r ON rd.resource = r.ref
-               JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref
-               {$resource_type_sql}
-              WHERE rd.resource = '{$from}'
-                {$omit_fields_sql}
-    ");
-    
-    foreach($data_to_add as $data)
-        {
-        resource_log($to,LOG_CODE_EDITED,$data["field"],'','',$data["value"]);
-        }
-
-    return;
     }
     
 /**
@@ -7521,56 +7444,22 @@ function get_data_by_field($resource, $field)
     $sql_where = 'WHERE';
     $sql_where_resource = '';
 
-        // Update cache
+     // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
         {
-        $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null, "schema");
+        $rt_fieldtype_cache[$field] = ps_value("SELECT type AS `value` FROM resource_type_field WHERE ref = ? OR name = ?", ["i",$resource_type_field,"i",$resource_type_field],null, "schema");
         }
-
-    if (!in_array($rt_fieldtype_cache[$field], $NODE_FIELDS))
+    $resnodes = get_resource_nodes($resource, $resource_type_field, TRUE);
+    if($rt_fieldtype_cache[$field] == FIELD_TYPE_CATEGORY_TREE)
         {
-        // When we're looking for the metadata field value of a particular resource, we can skip getting back already known data (e.g resource and rtf)
-        if(!is_null($resource))
-            {
-            $sql_select = 'SELECT rd.`value`';
-            $sql_where_resource = sprintf(' AND rd.resource = \'%s\'', escape_check($resource));
-            }
-
-        // Let's first check how we deal with the field value we've got
-        // Integer values => search for a specific ID
-        // String values => search by using a shortname
-        if(is_numeric($field))
-            {
-            $sql_where .= " rd.resource_type_field = '{$resource_type_field}'";
-            }
-        else
-            {
-            $sql_where .= " rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
-            }
-        $sql_where .= $sql_where_resource;
-
-        $results = sql_query("{$sql_select} {$sql_from} {$sql_where}");
-        if(0 !== count($results))
-            {
-            $return = !is_null($resource) ? $results[0]['value'] : $results;
-            }
-        // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
-        else
-            {
-            $return = !is_null($resource) ? $return : array();
-            }
-
-        if(!is_array($return) && 8 == $rt_fieldtype_cache[$field])
-            {
-            $return = strip_tags($return);
-            $return = str_replace('&nbsp;', ' ', $return);
-            }
+        $resnode_refs = array_column($resnodes,"ref");
+        $return = get_tree_strings($resnode_refs,false);
         }
     else
         {
-        $nodes = get_resource_nodes($resource, $resource_type_field, TRUE);
-        $return = implode(', ', array_column($nodes, 'name'));    
+        $return = implode(', ', array_column($resnodes, 'name')); 
         }
+
     return $return;   
     }
 
@@ -8019,7 +7908,6 @@ function notify_resource_change($resource)
 # Takes a string and add verbatim regex matches to the keywords list on found matches (for that field)
 # It solves the problem, for example, indexing an entire "nnn.nnn.nnn" string value when '.' are used as a keyword separator.
 # Uses config option $resource_field_verbatim_keyword_regex[resource type field] = '/regex/'
-# Also changes "field:<value>" type searches to "field:,<value>" for full matching for field types such as "Check box list" (config option to specify this)
 function add_verbatim_keywords(&$keywords, $string, $resource_type_field, $called_from_search=false)
     {
     global $resource_field_verbatim_keyword_regex,$resource_field_checkbox_match_full;

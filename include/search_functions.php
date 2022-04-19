@@ -769,55 +769,68 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     if(!is_array($archive)){$archive=explode(",",$archive);}
     $archive = array_filter($archive,function($state){return (string)(int)$state==(string)$state;}); // remove non-numeric values
 
-    # Start with an empty string = an open query.
-    $sql_filter="";
+    $sql_filter = new PreparedStatementQuery();
 
     # Apply resource types
     if (($restypes!="")&&(substr($restypes,0,6)!="Global") && substr($search, 0, 11) != '!collection')
         {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
+        if ($sql_filter->sql != "")
+            {
+            $sql_filter->sql.=" AND ";
+            }
         $restypes_x=explode(",",$restypes);
-        $sql_filter.="resource_type IN ('" . join("','", escape_check_array_values($restypes_x)) . "')";
+        $sql_filter->sql.="resource_type IN (" . ps_param_insert(count($restypes_x)) . ")";
+        $sql_filter->parameters = array_merge($sql_filter->parameters, ps_param_fill($restypes_x,"i"));
         }
 
     # Apply star search
     if ($starsearch!="" && $starsearch!=0 && $starsearch!=-1)
         {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.="user_rating >= '$starsearch'";
+        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+        $sql_filter->sql .= "user_rating >= ?";
+        $sql_filter->parameters = array_merge($sql_filter->parameters,"s",$starsearch);
         }   
     if ($starsearch==-1)
         {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.="user_rating = '-1'";
+        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+        $sql_filter->sql.="user_rating = ?";
+        $sql_filter->parameters = array_merge($sql_filter->parameters,"i",-1);
         }
 
     # Apply day limit
     if('' != $recent_search_daylimit && is_numeric($recent_search_daylimit))
         {
-        if('' != $sql_filter)
+        if('' != $sql_filter->sql)
             {
-            $sql_filter .= ' AND ';
+            $sql_filter->sql .= ' AND ';
             }
 
-        $sql_filter.= "creation_date > (curdate() - interval '" . escape_check($recent_search_daylimit) . "' DAY)";
+        $sql_filter->sql.= "creation_date > (curdate() - interval ? DAY)";
+        $sql_filter->parameters = array_merge($sql_filter->parameters,"i",$recent_search_daylimit);
         }
 
     # The ability to restrict access by the user that created the resource.
     if (isset($resource_created_by_filter) && count($resource_created_by_filter)>0)
         {
         $created_filter="";
+        $created_filter_params = [];
         foreach ($resource_created_by_filter as $filter_user)
-        {
-        if ($filter_user==-1) {$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
-        if ($created_filter!="") {$created_filter.=" OR ";} 
-        $created_filter.= "created_by = '" . $filter_user . "'";
-        }
+            {
+            if ($filter_user==-1) {$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
+            if ($created_filter!="")
+                {
+                $created_filter.=" OR ";
+                } 
+            $created_filter .= "created_by = ?";
+            $created_filter_params[] = "i";
+            $created_filter_params[] = $filter_user;
+            }
         if ($created_filter!="")
-        {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.="(" . $created_filter . ")";
-        }
+            {
+            if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+            $sql_filter->sql .= "(" . $created_filter . ")";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,$created_filter_params);
+            }
         }
 
 
@@ -827,11 +840,13 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
         {
         foreach ($geo_search_restrict as $zone)
-        {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.= "(geo_lat IS null OR geo_long IS null OR not(geo_lat >= '" . $zone[0] . "' AND geo_lat<= '" . $zone[2] . "'";
-        $sql_filter.= " AND geo_long >= '" . $zone[1] . "' AND geo_long<= '" . $zone[3] . "'))";
-        }
+            {
+            if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+            $sql_filter->sql.= "(geo_lat IS null OR geo_long IS null OR not(geo_lat >= ? AND geo_lat<= ?";
+            $sql_filter->sql.= " AND geo_long >= ? AND geo_long<= ?))";
+            // Note the order below is not in ascending order
+            $sql_filter->parameters = array_merge($sql_filter->parameters,$zone[0],$zone[2],$zone[1],$zone[3]);
+            }
         }
 
     # append resource type restrictions based on 'T' permission 
@@ -848,16 +863,17 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         }
     if (count($rtfilter)>0)
         {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.="resource_type NOT IN (" . join(",",$rtfilter) . ")";
+        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+        $sql_filter->sql.="resource_type NOT IN (" . ps_param_insert(count($rtfilter)) . ")";
+        $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_fill($rtfilter,"i"));
         }
 
     # append "use" access rights, do not show confidential resources unless admin
     if (!checkperm("v")&&!$access_override)
         {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
+        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
         # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
-        $sql_filter.="(r.access<>'2' OR (r.access=2 AND ((rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))))";
+        $sql_filter->sql .= "(r.access<>'2' OR (r.access=2 AND ((rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))))";
         }
         
     # append standard archive searching criteria. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
@@ -869,67 +885,85 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             # Other special searches define the archive state in search_special()
             if(substr($search,0,11)=="!collection" && $collections_omit_archived && !checkperm("e2"))
                 {
-                $sql_filter.= (($sql_filter!="")?" AND ":"") . "archive<>2";
+                $sql_filter->sql.= (($sql_filter->sql!="")?" AND ":"") . "archive<>2";
                 }
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata" || strpos($search,"integrityfail") !== false)
-            {hook("search_all_workflow_states_filter");}   
+            {
+            hook("search_all_workflow_states_filter","",[$sql_filter]);
+            }   
         elseif (count($archive) == 0 || $archive_standard && !$smartsearch)
             {
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
             # Defaults are not used if searching smartsearch collection, actual values will be used instead
-            if ($sql_filter!="") {$sql_filter.=" AND ";}
+            if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
             $defaultsearchstates = get_default_search_states();
             if(count($defaultsearchstates) == 0)
                 {
                 // Make sure we have at least one state - system has been misconfigured
                 $defaultsearchstates[] = 0;
                 }
-            $sql_filter.="archive IN (" . implode(",",$defaultsearchstates) . ")";
+            $sql_filter->sql.="archive IN (" . ps_param_insert(count($defaultsearchstates)) . ")";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_fill($defaultsearchstates,"i"));
             }
         else
             {
             # Append normal filtering - extended as advanced search now allows searching by archive state
-            if($sql_filter!="")
+            if($sql_filter->sql!="")
                 {
-                $sql_filter.=" AND ";
+                $sql_filter->sql.=" AND ";
                 }
-
-            $sql_filter.="archive IN (" . implode(",",$archive) . ")";
+            $sql_filter->sql.="archive IN (" . ps_param_insert(count($archive)) . ")";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_fill($archive,"i"));
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
-            $pending_states_visible_to_all_sql = "";
+            $pending_states_visible_to_all_sql      = "";
+            $pending_states_visible_to_all_params   = [];
             # Append standard filtering to hide resources in a pending state, whatever the search
-            if (!$pending_submission_searchable_to_all) {$pending_states_visible_to_all_sql.= "(r.archive<>-2 OR r.created_by='" . $userref . "')";}
-            if (!$pending_review_visible_to_all){$pending_states_visible_to_all_sql.=(($pending_states_visible_to_all_sql!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by='" . $userref . "')";}
+            if (!$pending_submission_searchable_to_all)
+                {
+                $pending_states_visible_to_all_sql.= "(r.archive<>-2 OR r.created_by = ?)";
+                $pending_states_visible_to_all_params = ["i",$userref];
+                }
+            if (!$pending_review_visible_to_all)
+                {
+                $pending_states_visible_to_all_sql .= (($pending_states_visible_to_all_sql!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by = ?)";
+                array_push($pending_states_visible_to_all_params,"i",$userref);
+                }
 
             if ($pending_states_visible_to_all_sql != "")
                 {
-                    #Except when the resource is type that the user has ert permission for
-                    $rtexclusions = "";
-                    for ($n=0;$n<count($userpermissions);$n++)
+                #Except when the resource is type that the user has ert permission for
+                $rtexclusions = "";
+                $rtexclusions_params = [];
+                for ($n=0;$n<count($userpermissions);$n++)
+                    {
+                    if (substr($userpermissions[$n],0,3)=="ert")
                         {
-                        if (substr($userpermissions[$n],0,3)=="ert")
+                        $rt=substr($userpermissions[$n],3);
+                        if (is_int_loose($rt))
                             {
-                            $rt=substr($userpermissions[$n],3);
-                            if (is_numeric($rt)) {$rtexclusions .= " OR (resource_type=" . $rt . ")";}
+                            $rtexclusions .= " OR (resource_type = ?)";
+                            array_push($rtexclusions_params,"i",$rt);
                             }
                         }
-                    $sql_filter .= " AND ((" . $pending_states_visible_to_all_sql . ") " . $rtexclusions . ")";
-                    unset($rtexclusions);
+                    }
+                $sql_filter->sql .= " AND ((" . $pending_states_visible_to_all_sql . ") " . $rtexclusions . ")";
+                $sql_filter->parameters = array_merge($sql_filter->parameters,$pending_states_visible_to_all_params,$rtexclusions_params);
+                unset($rtexclusions);
                 }
             }
         }
         
     # Add code to filter out resoures in archive states that the user does not have access to due to a 'z' permission
-    $filterblockstates="";
+    $filterblockstates          = [];
+    $filterblockstates_params   = [];
     for ($n=-2;$n<=3;$n++)
         {
         if(checkperm("z" . $n) && !$access_override)
             {
-            if ($filterblockstates!="") {$filterblockstates.="','";}
-            $filterblockstates .= $n;
+            $filterblockstates[] = $n;
             }
         }
 
@@ -937,21 +971,27 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         {
         if(checkperm("z" . $additional_archive_state))
             {
-            if ($filterblockstates!="") {$filterblockstates.="','";}
-            $filterblockstates .= $additional_archive_state;
+            $filterblockstates[] = $additional_archive_state;
             }
         }
-    if ($filterblockstates!=""&&!$access_override)
+    if (count($filterblockstates) > 0 && !$access_override)
         {
         if ($uploader_view_override)
             {
-            if ($sql_filter!="") {$sql_filter.=" AND ";}
-            $sql_filter.="(archive NOT IN ('$filterblockstates') OR created_by='" . $userref . "')";
+            if ($sql_filter->sql!="")
+                {
+                $sql_filter->sql.=" AND ";
+                }
+            $sql_filter->sql .= "(archive NOT IN (" . ps_param_insert(count($filterblockstates)) . ") OR created_by = ?)";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_insert($filterblockstates,"i"));
+            $sql_filter->parameters[] = "i";
+            $sql_filter->parameters[] = $userref;
             }
         else
             {
-            if ($sql_filter!="") {$sql_filter.=" AND ";}
-            $sql_filter.="archive NOT IN ('$filterblockstates')";
+            if ($sql_filter->sql!="") {$sql_filter->sql .= " AND ";}
+            $sql_filter->sql.="archive NOT IN (" . ps_param_insert(count($filterblockstates)) . ")";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_insert($filterblockstates,"i"));
             }
         }
     
@@ -959,19 +999,23 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     
     if ($heightmin!='')
         {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.= "dim.height>='$heightmin'";
+        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+        $sql_filter->sql.= "dim.height>= ? ";
+        $sql_filter->parameters[] = "i";
+        $sql_filter->parameters[] = $heightmin;
         }
 
     # append ref filter - never return the batch upload template (negative refs)
-    if ($sql_filter!="") {$sql_filter.=" AND ";}
-    $sql_filter.="r.ref>0";
+    if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+    $sql_filter->sql .= "r.ref>0";
 
     // Only users with v perm can search for resources with a specific access
     if(checkperm("v") && !is_null($access) && is_numeric($access))
         {
-        $sql_filter .= (trim($sql_filter) != "" ? " AND " : "");
-        $sql_filter .= "r.access = {$access}";
+        $sql_filter->sql .= (trim($sql_filter->sql) != "" ? " AND " : "");
+        $sql_filter->sql .= "r.access = ?";
+        $sql_filter->parameters[] = "i";
+        $sql_filter->parameters[] = $access;
         }
 
     // Append filter if only searching for editable resources
@@ -979,6 +1023,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     if($editable_only)
         {       
         $editable_filter = "";
+        $editable_filter_params = [];
 
         if(!checkperm("v") && !$access_override)
             {
@@ -998,7 +1043,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             }   
             
-        $blockeditstates=array();
+        $blockeditstates = array();
         for ($n=-2;$n<=3;$n++)
             {
             if(!checkperm("e" . $n))
@@ -1019,31 +1064,44 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         if(!checkperm("t"))
             {
             if ($editable_filter!="") {$editable_filter .= " AND ";}
-            $editable_filter.="(archive NOT IN (-2,-1) OR (created_by='" . $userref . "' ";
+            $editable_filter.="(archive NOT IN (-2,-1) OR (created_by = ?";
+            $editable_filter_params[] = "i";
+            $editable_filter_params[] = $userref;
             if(count($rtexclusions)>0)
                 {
-                $editable_filter .= " OR resource_type IN (" . implode(",",$rtexclusions) . ")";
+                $editable_filter .= " OR resource_type IN (" . ps_param_insert(count($rtexclusions)) . ")";
+                $editable_filter_params = array_merge($editable_filter_params,ps_param_fill($rtexclusions,"i"));
                 }
             $editable_filter .= "))";
             }
 
         if (count($blockeditstates) > 0)
             {
-            $blockeditoverride="";
+            $blockeditoverride          = "";
+            $blockeditoverride_params   = [];
             global $userref;
             if ($edit_access_for_contributor)
                 {
-                $blockeditoverride .= " created_by='" . $userref . "'";
+                $blockeditoverride .= " created_by = ?";
+                $blockeditoverride_params[] = "i";
+                $blockeditoverride_params[] = $userref;
                 }
             if(count($rtexclusions)>0)
                 {
                 if ($blockeditoverride!="") {$blockeditoverride.=" AND ";}
-                $blockeditoverride .= " resource_type IN (" . implode(",",$rtexclusions) . ")";
+                $blockeditoverride .= " resource_type IN (" . ps_param_insert(count($rtexclusions)) . ")";
+                $blockeditoverride_params = array_merge($blockeditoverride_params,ps_param_fill($rtexclusions,"i"));
                 }
             if ($editable_filter!="") {$editable_filter.=" AND ";}
-            $editable_filter.="(archive NOT IN ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" OR " . $blockeditoverride:"") . ")";
-            }
 
+            $editable_filter .= "(archive NOT IN (" . ps_param_insert(count($blockeditstates)) . ")";
+            $editable_filter_params = array_merge($editable_filter_params,ps_param_fill($blockeditstates,"i"));
+            if($blockeditoverride!="")
+                {
+                $editable_filter .= " OR " . $blockeditoverride . ")";
+                $editable_filter_params = array_merge($editable_filter_params,$blockeditoverride_params);
+                }
+            }
         
         // Check for blocked/allowed resource types
         $allrestypes = get_resource_types();
@@ -1112,11 +1170,11 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 
          if($editable_filter != "")
             {
-            if ($sql_filter != "")
+            if ($sql_filter->sql != "")
                 {
-                $sql_filter .= " AND ";
+                $sql_filter->sql .= " AND ";
                 }
-            $sql_filter .= $editable_filter;
+            $sql_filter->sql .= $editable_filter;
             }
         }
     return $sql_filter;
@@ -1127,6 +1185,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # Process special searches. These return early with results.
     global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     
+    $sql = new PreparedStatementQuery();
     # View Last
     if (substr($search,0,5)=="!last") 
         {
@@ -1151,11 +1210,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $last=str_replace("!last","",$last[0]);
 
         # !Last must be followed by an integer. SQL injection filter.
-        if (ctype_digit($last))
+        if (is_int_loose($last))
             {
             $last=(int)$last;
             } 
-            else
+        else
             {
             $last=1000;
             $search="!last1000";
@@ -1163,25 +1222,25 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
-        $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
-        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
+        $sql->sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
    
-    # View Resources With No Downloads
+    // View Resources With No Downloads
     if (substr($search,0,12)=="!nodownloads") 
         {
         if ($orig_order=="relevance") {$order_by="ref DESC";}
-        $sql=$sql_prefix . "SELECT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql->sql = $sql_prefix . "SELECT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql :ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     
-    # Duplicate Resources (based on file_checksum)
+    // Duplicate Resources (based on file_checksum)
     if (substr($search,0,11)=="!duplicates") 
         {
-        # Extract the resource ID
+        // Extract the resource ID
         $ref=explode(" ",$search);
         $ref=str_replace("!duplicates","",$ref[0]);
-        $ref=explode(",",$ref);// just get the number
+        $ref=explode(",",$ref); // just get the number
         $ref=escape_check($ref[0]);
 
         if ($ref!="") 
@@ -1189,12 +1248,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             # Find duplicates of a given resource
             if (ctype_digit($ref)) 
                 {
-                $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join 
+                $sql->sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join 
                     WHERE $sql_filter AND file_checksum <> '' AND file_checksum IS NOT NULL 
                                       AND file_checksum = (SELECT file_checksum FROM resource WHERE ref=$ref AND (file_checksum <> '' AND file_checksum IS NOT NULL) ) 
                     ORDER BY file_checksum, ref";    
                 if($returnsql) {return $sql;}
-                $results=sql_query($sql,false,$fetchrows);
+                $results=sql_query($sql->sql,$sql->parameters,false,$fetchrows);
                 $count=count($results);
                 if ($count>1) 
                     {
