@@ -6067,12 +6067,17 @@ function delete_resources_in_collection($collection) {
 		return TRUE;
 	}
 
-	// Delete (ie. move to resource_deletion_state set in config):
-	if(isset($resource_deletion_state))
+    // Delete (ie. move to resource_deletion_state set in config):
+    if(isset($resource_deletion_state))
         {
-		update_archive_status($r_refs,$resource_deletion_state,$r_states);
-		collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
-		sql_query("DELETE FROM collection_resource  WHERE resource IN ('" . implode("','",$r_refs) . "')");
+        update_archive_status($r_refs,$resource_deletion_state,$r_states);
+        foreach($r_refs as $ref){resource_log($ref,LOG_CODE_DELETED,'');}
+        collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
+        ps_query(
+            "DELETE FROM collection_resource  WHERE resource IN (" . ps_param_insert(count($r_refs)) . ")",
+            ps_param_fill($r_refs,"i")
+        );
+        
         }
 
 	return TRUE;
