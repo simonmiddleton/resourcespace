@@ -119,21 +119,17 @@ if (getval("send","")!="" && enforcePostRequest(false))
 		$result = ps_query("SELECT * FROM site_text WHERE page='all' AND name = 'emailfeedback'");
 		if (count($result) == 0)
 			{
-			$email_text = "[img_storagedir_/../gfx/whitegry/titles/title.gif] [message] [text_footer][attach_" . $storagedir . "/feedback/". get_feedback_results_file($storagedir . '/feedback/', 'results', false) ."]";
-			$wait = ps_query('INSERT INTO site_text (page,name,text,language) VALUES ("all","emailfeedback",?,"en-US")', array("s", $email_text));
+			$email_text = "[img_headerlogo][message] [text_footer]";
+			$wait = ps_query('INSERT INTO site_text (page,name,text,language) VALUES ("all","emailfeedback",?,"en")', array("s", $email_text));
 			}
 		
-        debug("feedback.php: Send form results to email_notify...");
-		# send form results and results.csv to email_notify
-		if ($use_phpmailer){
-            debug("feedback.php: \$use_phpmailer = " . ($use_phpmailer ? 'true' : 'false'));
-			$templatevars['message']=$message . "Survey results attached\n\n";
-			send_mail($email_notify,$username." has submitted feedback for ".$applicationname,$message,"","","emailfeedback",$templatevars);
-			}
-		
+        debug("feedback.php: Send form results");	
+        $templatevars['message']=$message . "Survey results attached\n\n";
+        $csvfile = $storagedir . "/feedback/" . get_feedback_results_file($storagedir . '/feedback/', 'results', false);
+        send_mail($email_notify,$username." has submitted feedback for ".$applicationname,$message,"","","emailfeedback",$templatevars,"","","",["feedback.csv" => $csvfile]);
+    
 		save_feedback_data($feebackData);
 		}
-
 	}
 
 include "../../../include/header.php";
