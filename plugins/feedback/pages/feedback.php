@@ -11,7 +11,7 @@ if(!is_dir($storagedir . "/feedback"))
     }
     
 # Load config
-$config 			  = get_feedback_config(__DIR__ . '../config/config.php');
+$config 			  = get_feedback_config(__DIR__ . '/../config/config.php');
 $feedback_questions   = $config['questions'];
 $feedback_prompt_text = $config['prompt_text'];
 
