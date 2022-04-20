@@ -2757,14 +2757,12 @@ function save_usergroup($ref,$groupoptions)
 /**
  * Copy the permissions string from another usergroup
  *
- * @param  mixed $src_id    The group ID to copy from
- * @param  mixed $dst_id    The group ID to copy to
- * @return void
+ * @param  int $src_id    The group ID to copy from
+ * @param  int $dst_id    The group ID to copy to
+ * @return mixed          bool|int True to indicate existing group has been updated or ID of newly created group
  */
-function copy_usergroup_permissions($src_id,$dst_id)
+function copy_usergroup_permissions(int $src_id,int $dst_id)
     {
-    if(!is_numeric($src_id)||!is_numeric($dst_id)){return false;}
-
     $src_group = get_usergroup($src_id);
     $dst_group = get_usergroup($dst_id);
 
