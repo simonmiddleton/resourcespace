@@ -13,7 +13,6 @@ $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive",0,true);
-$starsearch=getvalescaped("starsearch","");
 $default_sort_direction="DESC";
 $per_page=getvalescaped("per_page",0,true);
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
@@ -36,7 +35,7 @@ if ($go!="")
 	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
 	
 	# Re-run the search and locate the next and previous records.
-	$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch);
+	$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH);
 	if (is_array($result))
 		{
         # Locate this resource

@@ -9,7 +9,6 @@ $offset 		= getvalescaped("offset",0,true);
 $order_by 		= getvalescaped("order_by","");
 $sort 			= getvalescaped("sort","");
 $search 		= getvalescaped("search","");
-$starsearch		= getvalescaped('starsearch', '', true);
 $ref			= getvalescaped("ref", 0, true);
 
 // Share options
@@ -179,7 +178,6 @@ include "../include/header.php";
 		"order_by"		=>	$order_by,
 		"sort"			=>	$sort,
 		"collection"	=>	$collection_url,
-		"starsearch"	=>	$starsearch,
 		"find"			=>	$find,
 		"k"				=>	$k
 	);

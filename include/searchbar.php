@@ -5,7 +5,6 @@ include_once 'render_functions.php';
 $stored_restypes=(isset($restypes)?$restypes:'');
 $stored_search=(isset($search)?$search:'');
 $stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
-$stored_starsearch=(isset($starsearch)?$starsearch:'');
 $stored_category_tree_add_parents = $category_tree_add_parents;
 
 $ssearchhiddenfields = isset($_COOKIE['ssearchhiddenfields']) ? $_COOKIE['ssearchhiddenfields'] : "";
@@ -16,7 +15,6 @@ if ($simple_search_reset_after_search)
     $restypes    = '';
     $search      = '';
     $quicksearch = '';
-    $starsearch  = '';
     }
 else 
     {
@@ -38,7 +36,6 @@ else
 if($basic_simple_search)
     {
     $restypes    = '';
-    $starsearch  = '';
     }
 
 if ($hide_search_resource_types)
@@ -979,5 +976,4 @@ hook("searchbarbottom");
 $restypes=$stored_restypes;
 $search=$stored_search;
 $quicksearch=$stored_quicksearch;
-$starsearch=$stored_starsearch;
 $category_tree_add_parents = $stored_category_tree_add_parents;
