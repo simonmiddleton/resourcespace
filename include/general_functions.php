@@ -1458,7 +1458,7 @@ function log_mail($email,$subject,$sender)
         {
         $from = 0;
         }
-    $sub = mb_substr($subject,0,100);
+    $sub = mb_strcut($subject,0,100);
 
     // Write log to database
     ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
