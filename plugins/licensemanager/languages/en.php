@@ -28,5 +28,6 @@ $lang["linkedresources"]="Linked resources";
 $lang["linklicense"]="Link license";
 $lang["unlinklicense"]="Unlink license";
 $lang["selectlicence"]="Please select a License ID";
+$lang["confirmdeletelicensefile"]="Are you sure you wish to DELETE this file? This cannot be undone.";
 
 $lang['license_manager_mediums']='License usage mediums';
