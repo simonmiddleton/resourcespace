@@ -498,7 +498,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             if ($findpage!="") {$search="page like ?"; $search_param = array("s", '%' . $findpage . '%');}
             if ($findname!="") {$search="name like ?"; $search_param = array("s", '%' . $findname . '%');}
             
-            $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where $search", $search_param);
+            $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where $search", $search_param);
             
             foreach ($site_text as $text)
                 {
@@ -568,20 +568,20 @@ function get_site_text($page,$name,$getlanguage,$group)
         }
 
     
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
         # Fall back to default language.
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
                 
         # Fall back to default group.
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group is null", array("s", $page, "s", $name, "s", $defaultlanguage));
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group is null", array("s", $page, "s", $name, "s", $defaultlanguage));
     if (count($text)>0)
         {
         return $text[0]["text"];
