@@ -21,7 +21,7 @@ function test_edit_filter_id_update($user,$group,$filterid)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["s",$filterid,"i",$group]);
+    ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["i",$filterid,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
     }
