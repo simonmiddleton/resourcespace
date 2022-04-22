@@ -151,7 +151,7 @@ if (!hook("renderresultthumb"))
                                 var x_coord             = event.pageX - jQuery(this).offset().left;
                                 var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
                                 var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
-                                var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
+                                var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
                                 if(typeof(ss_img_<?php echo $ref; ?>) === "undefined")
                                     {
                                     ss_img_<?php echo $ref; ?> = new Array();
