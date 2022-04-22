@@ -5680,14 +5680,15 @@ function update_disk_usage_cron()
         return false;
         }
 
-    $resources=sql_array(
+    $resources=ps_array(
         "SELECT ref value
             FROM resource 
         WHERE ref>0 
             AND disk_usage_last_updated IS null 
                 OR datediff(now(),disk_usage_last_updated)>30 
         ORDER BY disk_usage_last_updated ASC 
-        LIMIT 20000");
+        LIMIT 20000",
+        []);
     foreach ($resources as $resource)
         {
         update_disk_usage($resource);
