@@ -23,6 +23,9 @@ use Symfony\Component\Mime\Header\Headers;
  */
 class TextPart extends AbstractPart
 {
+    /** @internal */
+    protected $_headers;
+
     private static $encoders = [];
 
     private $body;
@@ -41,6 +44,8 @@ class TextPart extends AbstractPart
      */
     public function __construct($body, ?string $charset = 'utf-8', string $subtype = 'plain', string $encoding = null)
     {
+        unset($this->_headers);
+
         parent::__construct();
 
         if (!\is_string($body) && !\is_resource($body)) {
@@ -77,7 +82,7 @@ class TextPart extends AbstractPart
      *
      * @return $this
      */
-    public function setDisposition(string $disposition)
+    public function setDisposition(string $disposition): static
     {
         $this->disposition = $disposition;
 
@@ -89,7 +94,7 @@ class TextPart extends AbstractPart
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -184,10 +189,7 @@ class TextPart extends AbstractPart
         return 'quoted-printable';
     }
 
-    /**
-     * @return array
-     */
-    public function __sleep()
+    public function __sleep(): array
     {
         // convert resources to strings for serialization
         if (null !== $this->seekable) {

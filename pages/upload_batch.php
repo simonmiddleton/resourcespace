@@ -57,7 +57,7 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust
-$cachestore = function_exists('apcu_fetch') ? "apcu" : "file";
+$cachestore = function_exists('apcu_fetch') ? "file" : "file";
 
 if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     {
@@ -1074,7 +1074,7 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
-        limit: <?php echo ($cachestore == "apcu") ? "5" : "2"; ?>,
+        limit: <?php echo ($cachestore == "apcu") ? "5" : "5"; ?>,
         removeFingerprintOnSuccess: true,
         <?php
         if(trim($upload_chunk_size) != "")
