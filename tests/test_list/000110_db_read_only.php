@@ -42,7 +42,7 @@ db_set_connection_mode("read_only");
 $case1=false;
 try
     {
-    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES (?,?)",["s",'test_read_only_mode1',"s",'true']);
+    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES ('test_read_only_mode1','true')");
     echo "POP";
     }
 catch(Throwable $e)
