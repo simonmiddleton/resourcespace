@@ -656,7 +656,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
         }
     ?>
     <script>
-        let node_data = <?php echo json_encode($node_data); ?>;
+        let node_data = <?php echo json_encode($node_data??[]); ?>;
     </script> 
     <?php
     $nodes_counter = count($tree_nodes);
