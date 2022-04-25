@@ -89,7 +89,7 @@ renderBreadcrumbs($links_trail);
     <form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
         <input type="hidden" name="save" value="1">
         
-        <div >
+        <div class="BasicsBox">
             <label><?php echo $lang["copypermissions"];?></label>
             <input type="text" name="copyfrom">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]; ?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirmcopypermissions"]?>');">
