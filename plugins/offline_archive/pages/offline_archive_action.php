@@ -16,7 +16,7 @@ if ($offline_archive_archivepath=="")
 $job_code_field = get_resource_type_field($offline_archive_archivefield);
 
 echo "Checking for pending archive jobs..\n";
-$pendingarchivejob=sql_query("SELECT archive_code, archive_date, archive_status FROM offline_archive WHERE archive_status=0 LIMIT 0,1");
+$pendingarchivejob=ps_query("SELECT archive_code, archive_date, archive_status FROM offline_archive WHERE archive_status=0 LIMIT 0,1");
 
 if(count($pendingarchivejob)<1)
 	{
@@ -28,11 +28,11 @@ else
 	echo "Found pending archive job: " . $archivecode . "\n"; 
 
 	echo "Checking for resources with the archive pending status..\n";
-	$resourcestoarchive=sql_query("SELECT ref,file_extension,file_path FROM resource WHERE archive='1'");
+	$resourcestoarchive=ps_query("SELECT ref,file_extension,file_path FROM resource WHERE archive='1'");
 
 	if(count($resourcestoarchive)<1)
 		{
-		sql_query("UPDATE offline_archive SET archive_status=2 WHERE archive_code='" . escape_check($archivecode) . "'");
+		ps_query("UPDATE offline_archive SET archive_status=2 WHERE archive_code= ?", ['s', $archivecode]);
 		echo "There are no resources pending archive\n";	
 		}
 	else
@@ -73,7 +73,7 @@ else
 				
 				// Add archive code to resource metadata
 				update_field($ref,$offline_archive_archivefield,$archivecode);
-				sql_query("UPDATE resource SET archive='2' WHERE ref='$ref'");
+				ps_query("UPDATE resource SET archive='2' WHERE ref= ?", ['i', $ref]);
 				resource_log($ref,"s",0,$lang['offline_archive_resource_log_archived'] . $archivecode,1,2);
 				}
 			else
@@ -90,13 +90,13 @@ else
 			echo $archive_error;
 			}
 			
-		sql_query("UPDATE offline_archive SET archive_status=2 WHERE archive_code='" . escape_check($archivecode) . "'");
+		ps_query("UPDATE offline_archive SET archive_status=2 WHERE archive_code= ?", ['s', $archivecode]);
 		} // Finish archive
 	} // End of archive section
 	
 //Check for restore jobs
 echo "Checking for pending restore jobs..\n";
-$pendingrestores=sql_query("SELECT ref,file_extension,file_path FROM resource WHERE pending_restore=1");
+$pendingrestores=ps_query("SELECT ref,file_extension,file_path FROM resource WHERE pending_restore=1");
 if(count($pendingrestores)==0)
 	{
 	echo "There are no resources marked for restoration from archive\n";
@@ -113,11 +113,11 @@ else
         
         if(in_array($job_code_field['type'], $FIXED_LIST_FIELD_TYPES))
             {
-            $archivecode=sql_value("SELECT n.name value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE rn.resource='$ref' AND n.resource_type_field='$offline_archive_archivefield'",'');
+            $archivecode=ps_value("SELECT n.name value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE rn.resource= ? AND n.resource_type_field= ?",['i', $ref, 'i', $offline_archive_archivefield],'');
             }
         else
             {
-            $archivecode=sql_value("SELECT value FROM resource_data WHERE resource='$ref' AND resource_type_field='$offline_archive_archivefield'",'');
+            $archivecode=ps_value("SELECT value FROM resource_data WHERE resource= ? AND resource_type_field= ?",['i', $ref, 'i', $offline_archive_archivefield],'');
             }
 
         if(trim($archivecode) == "")
@@ -176,11 +176,11 @@ else
 					if($offline_archive_preservedate)
 						{touch($restorefile,$modtime);}
 					echo "Successfully restored resource id #" . $ref. "\n";
-					sql_query("UPDATE resource SET archive='0', pending_restore=0 WHERE ref='$ref'");
+					ps_query("UPDATE resource SET archive='0', pending_restore=0 WHERE ref= ?", ['i', $ref]);
 					if ($pendingrestore["file_path"]!="")
 						{
 						echo "Staticsync file - updating file_path\n";
-						sql_query("UPDATE resource SET file_path='$dirpath' WHERE ref='$ref'");
+						sql_query("UPDATE resource SET file_path= ? WHERE ref= ?", ['s', $dirpath, 'i', $ref]);
 						}
 					resource_log($ref,"s",0,$lang['offline_archive_resource_log_restored'],2,0);
 					}

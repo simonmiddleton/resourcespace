@@ -73,7 +73,7 @@ if ($callback == "")
 				jQuery('.reload<?php echo $section; ?>class').css('text-decoration', 'none');
 			}
 		</script>
-		<h2 onclick="SystemConsole<?php echo $section; ?>Load(-1); return false;" class="CollapsibleSectionHead collapsed expanded"><?php echo $lang["systemconsole" . $section]; ?></h2>
+		<h2 onclick="SystemConsole<?php echo $section; ?>Load(-1); return false;" class="CollapsibleSectionHead collapsed"><?php echo $lang["systemconsole" . $section]; ?></h2>
 		<div class="collapsiblesection">
 			<?php foreach (array(0,1,5,10,30,60) as $secs)
 				{

@@ -53,7 +53,8 @@ input[readonly] {
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
 #ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
-.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active {
+.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active,
+.PoweredByPanel a:link, .PoweredByPanel a:visited, .PoweredByPanel a:hover {
     color:#fff;text-decoration:none;
 }
 
@@ -146,7 +147,7 @@ div.autocomplete ul li {color: #000;}
 .NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownload {  background: #fff;}
-.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0.2rem;}
+.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {background: #fff; border-color: #6D6D6D;}

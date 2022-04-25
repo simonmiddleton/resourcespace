@@ -53,6 +53,7 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
+
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust
@@ -68,10 +69,19 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     $server -> setUploadDir($targetDir);
     // Create target dir
     if (!file_exists($targetDir))
-        {     		
-        mkdir($targetDir,0777,true);
+        {
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            mkdir($targetDir,0777,true);
+            }
+        catch (Exception $e)
+            {
+            // Ignore
+            }
+        unset($GLOBALS["use_error_exception"]);
         }
-        
+
     $response = $server->serve();
     // Extra check added to ensure URL uses $baseurl. Required due to reported issues with some reverse proxy configurations
     $tuslocation = $response->headers->get('location');
@@ -168,7 +178,7 @@ if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$uplo
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
         {
-        $collectionname = "Upload " . date("YmdHis"); # Do not translate this string, the collection name is translated when displayed!
+        $collectionname = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis'); # Do not translate this string, the collection name is translated when displayed!
         $hidden_collection = true;
         } 
 	$collection_add=create_collection($userref,$collectionname);
@@ -224,29 +234,25 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         remove_all_resources_from_collection(0-$userref);
         }
 
-	# Set the redirect after upload to the start of the edit process
-    if($alternative != "") 
-        {
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/view.php",
-            array(
-                'ref' => $alternative
-            ));	
-        }
-    else
-        {
-        rs_setcookie('lockedfields', '', 1);
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/edit.php",
-            array(
-                'upload_review_mode' => true,
-                'collection_add' => $collection_add
-            ));	
-        }
+    # Set the redirect after upload to the start of the edit process
+    rs_setcookie('lockedfields', '', 1);
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+            'collection_add' => $collection_add
+        ));	
 
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
+
+# If uploading alternative file, redirect to the resource rather than search results.
+if($alternative != "") 
+    {
+    $redirecturl = generateURL("{$baseurl}/pages/view.php", array('ref' => $alternative));	
+    }
+    
 $modify_redirecturl=hook('modify_redirecturl');
 if($modify_redirecturl!==false)
 	{
@@ -419,14 +425,17 @@ if ($processupload)
         
     # Work out the extension
     $parts=explode(".",$upfilename);
-    $extension=trim(strtolower($parts[count($parts)-1]));
+    $origextension=trim($parts[count($parts)-1]);
+    $extension=strtolower($origextension);
     if(count($parts) > 1){array_pop($parts);}
     $filenameonly = implode('.', $parts);
 
      // Clean the filename
     $origuploadedfilename= escape_check($upfilename);
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($extension)) ? ".{$extension}" : '');
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
+
+    hook('modify_upload_file','',[$upfilename,$upfilepath]);
 
     # Banned extension?
     global $banned_extensions;
@@ -472,6 +481,7 @@ if ($processupload)
         $result["status"] = false;
         $result["message"] = str_replace("%%RESOURCES%%",implode(",",$duplicates),$lang["error_upload_duplicate_file"]);
         $result["error"] = 108;
+        unlink($upfilepath);
         die(json_encode($result));
         }
     elseif(!hook("initialuploadprocessing"))
@@ -881,6 +891,13 @@ elseif ($upload_no_file && getval("createblank","")!="")
     redirect($redirecturl);
     exit();
 	}
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if(!$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
 
 $headerinsert.="
 <link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />";
@@ -1445,6 +1462,9 @@ function postUploadActions()
         return;
         }
     
+    rscompleted = [];
+    processerrors = [];
+
     CentralSpaceHideProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");

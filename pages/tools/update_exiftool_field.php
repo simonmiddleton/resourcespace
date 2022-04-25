@@ -5,7 +5,7 @@
 
 include "../../include/db.php";
 
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')

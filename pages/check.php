@@ -130,31 +130,14 @@ if ($success===false) {$result=$lang["status-fail"] . ": " . $homeanim_folder . 
 <?php } 
 
 # Check filestore folder browseability
-$filestoreurl = isset($storageurl) ? $storageurl : $baseurl . "/filestore";
-if(function_exists('curl_init'))
-    {
-    $ch=curl_init();
-    $checktimeout=5;
-    curl_setopt($ch, CURLOPT_URL, $filestoreurl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, $checktimeout);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $checktimeout);
-    $output=curl_exec($ch);
-    curl_close($ch);
-    if (strpos($output,"Index of")===false)
-        {
-        $result=$lang["status-ok"];
-        }
-    else
-        {
-        $result=$lang["status-fail"] . ": " . $lang["noblockedbrowsingoffilestore"];
-        }
-    }
-else
-    {
-    $result=$lang["unknown"] . ": " . str_replace("%%EXTENSION%%","curl",$lang["php_extension_not_enabled"]);
-    }
-?><tr><td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"] ?> (<a href="<?php echo $filestoreurl ?>" target="_blank"><?php echo $filestoreurl ?></a>)</td><td><b><?php echo $result?></b></td></tr><?php
+$cfb = check_filestore_browseability();
+?>
+<tr>
+    <td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"]; ?> (<a href="<?php echo $cfb['filestore_url']; ?>" target="_blank"><?php echo htmlspecialchars($cfb['filestore_url']); ?></a>)</td>
+    <td>
+        <b><?php echo htmlspecialchars($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
+    </td>
+</tr><?php
 
 # Check sql logging configured correctly
 if($mysql_log_transactions)
@@ -249,28 +232,16 @@ if($php_tz == $mysql_tz)
 
 <?php
 // Check required PHP extensions 
-$npuccheck = function_exists("apcu_fetch");
-?>
-<tr>
-    <td colspan="2">php-apcu</td>
-    <td><b><?php echo (function_exists("apcu_fetch") ? $lang['status-ok'] : $lang['server_apcu_check_fail']); ?></b></td>
-</tr>
-<?php
-$extensions_required = array();
-$extensions_required["curl"] = "curl_init";
-$extensions_required["gd"] = "imagecrop";
-$extensions_required["xml"] = "xml_parser_create";
-$extensions_required["mbstring"] = "mb_strtoupper";
-$extensions_required["intl"] = "locale_get_default";
-$extensions_required["json"] = "json_decode";
-$extensions_required["zip"] = "zip_open";
+$extensions_required = SYSTEM_REQUIRED_PHP_MODULES;
 
 ksort($extensions_required, SORT_STRING);
 foreach($extensions_required as $module=> $required_fn)
     {?>
     <tr>
         <td colspan="2">php-<?php echo $module ?></td>
-        <td><b><?php echo function_exists($required_fn) ? $lang['status-ok'] : $lang['status-fail'] ?></b></td>
+        <td><b><?php 
+        if (function_exists($required_fn)){echo $lang['status-ok'];}
+        else {echo ($lang['server_' . $module . '_check_fail']??$lang['status-fail']);}?></b></td>
     </tr>
     <?php
     }

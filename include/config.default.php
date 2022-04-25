@@ -666,6 +666,9 @@ $resourceid_simple_search=false;
 # Enable date option on simple search bar
 $simple_search_date=true;
 
+# Show "Powered by ResourceSpace" on simple search bar when default $linkedheaderimgsrc not used
+$show_powered_by_logo=true;
+
 # Enable sorting resources in other ways:
 $colour_sort=true;
 $popularity_sort=true;
@@ -1223,8 +1226,12 @@ $show_extension_in_search=false;
 # Should the category tree field (if one exists) default to being open instead of closed?
 $category_tree_open=false;
 
-# Should searches using the category tree use AND for hierarchical keys?
+# Should parent nodes also be selected when selecting a child node?
 $category_tree_search_use_and=false;
+
+# If set to true any resources returned will need to contain all of the category tree nodes selected
+# If false then a returned resource could contain one or more of the selected nodes
+$category_tree_search_use_and_logic=false;
 
 # Force selection of parent nodes when selecting a sub node? 
 # If set to false then each node should be unique to avoid possible corruption when exporting/importing data
@@ -1704,9 +1711,7 @@ $default_display="thumbs";
 $alternative_file_previews=true;
 $alternative_file_previews_batch=true;
 
-
-# Permission to show the replace file, preview image only and alternative files options on the resource edit page.
-# Overrides required permission of F*
+# Permission to show the upload preview image link on the resource view page. Overrides required permission of F*
 $custompermshowfile=false;
 
 # enable support for storing an alternative type for each alternate file
@@ -2126,22 +2131,13 @@ $enable_thumbnail_creation_on_upload = true;
     // Show map search results in a modal?
     $geo_search_modal_results = false;
 
-    // Enable geolocating multiple resources on a map that are part of a collection?
-    $geo_locate_collection = true;
-
-    // Geolocate collection preview image size.
-    $geolocate_image_size = 'pre'; // Use 'thm' or 'pre' for thumbnail and preview image size, respectively.
-
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
-    // OpenLayers default center and zoom for the map view when selecting a new location, as a world view.
+    // Default center and zoom for the map view when selecting a new location, as a world view.
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
     $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
 
-    // OpenLayers basemap layers to make available, the first is the default.
-    // $geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
-
     // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
-    // Note that server caching is bypassed if $leaflet_maps_enable=true and $geo_leaflet_maps_sources = true;
+    // Note that server caching is bypassed if $geo_leaflet_maps_sources = true;
     // Since the client then fetches tiles directly from the source
     $geo_tile_caching = true;
 
@@ -2152,26 +2148,8 @@ $enable_thumbnail_creation_on_upload = true;
     // User agent string to use when server requests tiles from sources
     $geo_tile_user_agent = "ResourceSpace";
 
-    // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
+    // Optional path to tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
-
-    // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
-    // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
-    // information. If no servers are available, then your zoom ability will be limited.
-    // After 9.6 any defined will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable=true
-    $geo_tile_servers = array();
-    // $geo_tile_servers[] = 'a.tile.sometileserver.org';
-    // $geo_tile_servers[] = 'b.tile.sometileserver.org';
-    // $geo_tile_servers[] = 'c.tile.sometileserver.org';
-
-    // $geo_tile_servers['OpenStreetMap'] = array();
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'] = array();
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'a.tile.openstreetmap.org';
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
-
-    // Add OpenLayers configuration options to this variable to overwrite all other options.
-    $geo_override_options = "";
 
     // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
     $geo_search_restrict = array(
@@ -2183,14 +2161,10 @@ $enable_thumbnail_creation_on_upload = true;
     // Map height in pixels on the Resource View page.
     $view_mapheight = 350;
 
-    // Map height in pixels on the Geographic/Map Search page.
-    $mapsearch_mapheight = 625;
-
     // Map height in pixels on the Resource Edit page.
     $mapedit_mapheight = 625;
 
-    // New settings for leaflet maps
-    $leaflet_maps_enable = false;
+    // Settings for leaflet maps
 
     // $geo_leaflet_maps_sources: Use the standard tile sources provided by leaflet maps?
     // If this is enabled please refer to /include/map_basemaps to see the available config options that enable specific defined map providers
@@ -2947,9 +2921,6 @@ $resource_type_extension_mapping         = array(
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg', 'weba'),
 );
 
-// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
-$view_in_browser_extensions=array("pdf","mp3","svg");
-
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
@@ -3102,11 +3073,6 @@ $global_font="Montserrat";
 
 // Sort tabs alphabetically
 $sort_tabs = true;
-
-// Replace the preview of a PDF document with pdfjs viewer if user has full access to the resource. This allows the user 
-// to see the original file, having the ability to also search within the document.
-// IMPORTANT: enable this per resource type as this is only going to work for PDF files to which user has full access
-$use_pdfjs_viewer = false;
 
 // Ask users to opt-in registering to access the system. This can address requirements data protection laws (e.g. GDPR) may have
 $user_registration_opt_in = true;

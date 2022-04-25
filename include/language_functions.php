@@ -62,9 +62,9 @@ function i18n_get_translated($text)
         # Support both 2 character and 5 character language codes (for example en, en-US).
         $p=strpos($s[$n],':');
 		$textLanguage=substr($s[$n],0,$p);
-        if ($textLanguage==$language) {return substr($s[$n],$p+1);}
+        if (strtolower($textLanguage) == strtolower($language)) {return substr($s[$n],$p+1);}
         
-        if ($textLanguage==$asdefaultlanguage || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
+        if (strtolower($textLanguage) == strtolower($asdefaultlanguage) || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
         }    
     
     # Translation not found? Return default language
@@ -133,12 +133,11 @@ function i18n_get_collection_name($mixedcollection, $index="name")
 		return htmlspecialchars($lang['upload'] . ' ' . $date);
 		}
 
-    # Check if it is a Research: [..]
-    if (substr($name_untranslated,0,9)=="Research:"){
-	return $lang["research"].": ".i18n_get_translated(substr($name_untranslated,9));
-    }
-    //$name_translated = preg_replace_callback('/(^Research:)(\s.*)/', function ($matches){return i18n_get_translated($matches[2]);}, $name_untranslated, -1, $translated);
-    //if ($translated==1) {return htmlspecialchars($lang["research"] . ": " . $name_translated);}
+    # Check if it is a Research Request
+    if(substr($name_untranslated, 0, 9) == "Research:")
+        {
+        return htmlspecialchars("{$lang["research"]}: " . i18n_get_translated(substr($name_untranslated,9)));
+        }
 
     # Ordinary collection - translate with i18n_get_translated
     return htmlspecialchars(i18n_get_translated($name_untranslated, false));

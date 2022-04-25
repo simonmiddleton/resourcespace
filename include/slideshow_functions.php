@@ -22,22 +22,30 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
         return false;
         }
 
-    $ref_escaped = ((int) $ref > 0 ? "'" . escape_check($ref) . "'" : 'NULL');
-    $resource_ref = ((int) $resource_ref > 0 ? "'" . escape_check($resource_ref) . "'" : 'NULL');
-    $homepage_show = escape_check($homepage_show);
-    $featured_collections_show = escape_check($featured_collections_show);
-    $login_show = escape_check($login_show);
+    $ref = ((int) $ref > 0 ? $ref : NULL);
+    $resource_ref = ((int) $resource_ref > 0 ? $resource_ref : NULL);
 
     $query = "
         INSERT INTO slideshow (ref, resource_ref, homepage_show, featured_collections_show, login_show)
-             VALUES ({$ref_escaped}, {$resource_ref}, '{$homepage_show}', '{$featured_collections_show}', '{$login_show}')
+             VALUES (?, ?, ?, ?, ?)
                  ON DUPLICATE KEY
-             UPDATE resource_ref = {$resource_ref},
-                    homepage_show = '{$homepage_show}',
-                    featured_collections_show = '{$featured_collections_show}',
-                    login_show = '{$login_show}'";
+             UPDATE resource_ref = ?,
+                    homepage_show = ?,
+                    featured_collections_show = ?,
+                    login_show = ?";
+    $query_params = array(
+        "i",$ref,
+        "i",$resource_ref,
+        "i",$homepage_show,
+        "i",$featured_collections_show,
+        "i",$login_show,
+        "i",$resource_ref,
+        "i",$homepage_show,
+        "i",$featured_collections_show,
+        "i",$login_show,
+    );
 
-    sql_query($query);
+    ps_query($query,$query_params);
 
     // Clear cache
     clear_query_cache("slideshow");
@@ -75,9 +83,9 @@ function delete_slideshow($ref)
         return false;
         }
 
-    $ref = escape_check($ref);
-    $query = "DELETE FROM slideshow WHERE ref = '{$ref}'";
-    sql_query($query);
+    $query = "DELETE FROM slideshow WHERE ref = ?";
+    $query_params = ["i",$ref];
+    ps_query($query,$query_params);
 
     log_activity("Deleted slideshow image", LOG_CODE_DELETED, null, 'slideshow', 'ref', $ref);
 

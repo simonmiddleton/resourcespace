@@ -105,6 +105,7 @@ $rows = ps_query("SELECT id, user_id, user_group_id, field_id, field_value
                         </td>
                         <td>
                             <select name="user_id_row" for="form<?php echo $row['id']; ?>" id="user_id_row" style="width:300px">
+                            <option value="" selected=""></option>
                                 <?php
                                 foreach($users as $user)
                                 {

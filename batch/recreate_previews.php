@@ -63,7 +63,7 @@ $videoupdate = in_array("-videoupdate",$argv);
 
 function update_preview($ref, $previewbased, $sizes)
     {
-    $resourceinfo=sql_query("select * from resource where ref='$ref'");
+    $resourceinfo = ps_query("select file_path, file_extension from resource where ref = ?", array("i", (int)$ref));
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0])))
         {
         if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
@@ -78,19 +78,23 @@ function update_preview($ref, $previewbased, $sizes)
 if (!isset($collectionid))
     {
     $conditions = array();
+    $conditions_params = array("i", (int)$ref);
     if (isset($max))
         {
-        $conditions[] = "ref <='" . escape_check($max) . "'";
+        $conditions[] = "ref <= ?";
+        $conditions_params = array_merge($conditions_params, array("i", $max));
         }
     if ($videoupdate)
         {
-        $conditions[] = "file_extension in ('" . implode("','",$ffmpeg_supported_extensions) . "')";
+        $conditions[] = "file_extension in (" . ps_param_insert(count($ffmpeg_supported_extensions)) . ")";
+        $conditions_params = array_merge($conditions_params, ps_param_fill($ffmpeg_supported_extensions, "s"));
         }
      if (isset($resource_deletion_state))
         {
-        $conditions[] = "archive <> '" . $resource_deletion_state . "'";
+        $conditions[] = "archive <> ?";
+        $conditions_params = array_merge($conditions_params, array("i", $resource_deletion_state));
         }
-    $resources = sql_array("SELECT ref value FROM resource WHERE ref>='" . escape_check($ref)  . "'" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions):"") . " ORDER BY ref asc",0);
+    $resources = ps_array("SELECT ref value FROM resource WHERE ref >= ?" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions):"") . " ORDER BY ref asc", $conditions_params, 0);
     }
 else
     {

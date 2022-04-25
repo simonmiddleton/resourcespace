@@ -32,6 +32,7 @@ if(!hook('customchkboxes', '', array($field)))
         case($l > 15): $cols = 2; break;
         case($l > 10): $cols = 3; break;
         case($l > 5):  $cols = 4; break;
+        case($l > 3):  $cols = 6; break;
         default:       $cols = 8;
         }
 

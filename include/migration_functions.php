@@ -26,7 +26,7 @@ function migrate_resource_type_field_check(&$resource_type_field)
         migrate_category_tree_to_nodes($resource_type_field['ref'],$resource_type_field['options']);
 
         // important!  this signifies that this field has been migrated by prefixing with -1,,MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
-        sql_query("UPDATE `resource_type_field` SET `options`=CONCAT('" . escape_check (MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE) . "',options) WHERE `ref`={$resource_type_field['ref']}");
+        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT(?, options) WHERE `ref` = ?", array("s", MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE, "i", $resource_type_field['ref']));
 
 		}
 	else		// general comma separated fields
@@ -40,7 +40,7 @@ function migrate_resource_type_field_check(&$resource_type_field)
 			}
 
         // important!  this signifies that this field has been migrated by prefixing with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
-        sql_query("UPDATE `resource_type_field` SET `options`=CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "',',',options) WHERE `ref`={$resource_type_field['ref']}");
+        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT(? , ',', options) WHERE `ref` = ?", array("s", MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX), "i", $resource_type_field['ref']);
 		}
 	}
 
@@ -89,69 +89,6 @@ function migrate_category_tree_to_nodes($resource_type_field_ref,$category_tree_
         }
     }
 
-
-function populate_resource_nodes($startingref=0)
-	{
-	global $mysql_server,$mysql_username,$mysql_password,$mysql_db;
-	
-	// Populate resource_node with all resources that have resource_data matching 
-	// Also get hit count from resource_keyword if the normalised keyword matches
-	
-	if (is_process_lock("resource_node_migration"))
-		{
-		return false;
-		}
-		
-	debug("resource_node_migration starting from node ID: " . $startingref);
-	$nodes=sql_query("select n.ref, n.name, n.resource_type_field, f.partial_index from node n join resource_type_field f on n.resource_type_field=f.ref order by resource_type_field;");
-	$count=count($nodes);
-	
-	if($count==0)
-		{			
-		// Node table is not yet populated. Need to populate this first
-		$metadatafields=sql_query("select * from resource_type_field", "schema");
-		foreach($metadatafields as $metadatafield)
-			{
-			migrate_resource_type_field_check($metadatafield);
-			}			
-		$nodes=sql_query("select n.ref, n.name, n.resource_type_field, f.partial_index from node n join resource_type_field f on n.resource_type_field=f.ref order by resource_type_field;");
-		$count=count($nodes);
-		}
-		
-	set_process_lock("resource_node_migration");
-	
-	for($n=$startingref;$n<$count;$n++)
-		{
-		// Populate node_keyword table
-		check_node_indexed($nodes[$n], $nodes[$n]["partial_index"]);
-		
-		// Get all resources with this node string, adding a union with the resource_keyword table to get hit count.
-		// Resource keyword may give false positives for substrings so also make sure we have a hit
-		$nodekeyword = normalize_keyword(cleanse_string($nodes[$n]['name'],false));
-		sql_query("insert into resource_node (resource, node, hit_count, new_hit_count)
-				  select resource,'" . $nodes[$n]['ref'] . "', max(hit_count), max(new_hit_count)
-				  from
-						(select rk.resource, '" . $nodes[$n]['ref'] . "', rk.hit_count, rk.new_hit_count, 0 found from keyword k
-						join resource_keyword rk on rk.keyword=k.ref and rk.resource_type_field='" . $nodes[$n]['resource_type_field'] . "' and rk.resource>0
-						where
-						k.keyword='" . $nodekeyword  . "'
-					union
-						select resource, '" . $nodes[$n]['ref'] . "','1' hit_count, '1' new_hit_count, 1 found from resource_data
-						where 
-						resource_type_field='" . $nodes[$n]['resource_type_field'] . "' and resource>0 and find_in_set('" . escape_check($nodes[$n]['name']) . "',value))
-					fn where fn.found=1 group by fn.resource
-					ON DUPLICATE KEY UPDATE hit_count=hit_count");
-		
-		sql_query("delete from sysvars where name='resource_node_migration_state'");
-		sql_query("insert into sysvars (name, value) values ('resource_node_migration_state', '$n')");
-		}
-	
-	clear_process_lock("resource_node_migration");
-	sql_query("delete from sysvars where name='resource_node_migration_state'");
-	sql_query("insert into sysvars (name, value) values ('resource_node_migration_state', 'COMPLETE')");
-	return true;
-	}
-
 function migrate_filter($filtertext,$allowpartialmigration=false)
     {
     if(trim($filtertext) == "")
@@ -162,7 +99,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
     $all_fields=get_resource_type_fields();
 
     // Don't migrate if already migrated
-    $existingrules = sql_query("SELECT ref, name FROM filter");
+    $existingrules = ps_query("SELECT ref, name FROM filter", array());
    
     $logtext = "FILTER MIGRATION: Migrating filter rule. Current filter text: '" . $filtertext . "'\n";
     
@@ -178,7 +115,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
         $truncated_filter_name = mb_strcut($filtertext, 0, 200);
 
         // Create filter. All migrated filters will have AND rules
-        sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($truncated_filter_name) . "','" . RS_FILTER_ALL  . "')");
+        ps_query("INSERT INTO filter (name, filter_condition) VALUES (?, ?)", array("s", $truncated_filter_name, "i", RS_FILTER_ALL));
         $filterid = sql_insert_id();
         $logtext .= "FILTER MIGRATION: - Created new filter. ID = " . $filterid . "'\n";
         }
@@ -198,12 +135,13 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
 
         // Create filter_rule
         $logtext .=  "FILTER MIGRATION: -- Creating filter_rule for '" . $filter_rule . "'\n";
-        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
+        ps_query("INSERT INTO filter_rule (filter) VALUES (?)", array("i", $filterid));
         $new_filter_rule = sql_insert_id();
         $logtext .=  "FILTER MIGRATION: -- Created filter_rule # " . $new_filter_rule . "\n";
         
         $nodeinsert = array(); // This will contain the SQL value sets to be inserted for this rule
-        
+        $nodeinsertparams = array();
+
         $rulenot = substr($rulefields,-1) == "!";
         $node_condition = RS_FILTER_NODE_IN;
         if($rulenot)
@@ -237,7 +175,8 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
                 $nodeid = $all_valid_nodes[$nodeidx]["ref"];
                 $logtext .=  "FILTER MIGRATION: --- field option (node) exists, node id #: " . $all_valid_nodes[$nodeidx]["ref"] . "\n";
                 
-                $nodeinsert[] = "('" . $new_filter_rule . "','" . $nodeid . "','" . $node_condition . "')";
+                $nodeinsert[] = "(?, ?, ?)";
+                $nodeinsertparams = array_merge($nodeinsertparams, array("i", $new_filter_rule, "i", $nodeid, "i", $node_condition));
                 if($allowpartialmigration){$rulevalid = true;} // Atleast one rule is valid so the filter can be created
                 }
             else
@@ -257,7 +196,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
         // Insert associated filter_rules
         $logtext .=  "FILTER MIGRATION: -- Adding nodes to filter_rule\n";
         $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
-        sql_query($sql);
+        ps_query($sql, $nodeinsertparams);
         }
         
     debug("FILTER MIGRATION: filter migration completed for '" . $filtertext);
@@ -709,7 +648,7 @@ function edit_filter_to_restype_permission($filtertext, $usergroup, $existingper
     $newperms = array_diff($addpermissions,$existingperms);
     if(count($newperms) > 0)
         {
-        sql_query("UPDATE usergroup SET permissions=CONCAT(permissions,'," . implode(",",$newperms) . "') WHERE ref='" . $usergroup . "'");
+        ps_query("UPDATE usergroup SET permissions = CONCAT(permissions," . ps_param_insert(count($newperms)) . ") WHERE ref = ?", array_merge(ps_param_fill(array_map(function($v) {return ',' . $v;}, $newperms), "s"), array("i", $usergroup)));
         }
     if($updatecurrent)
         {

@@ -16,7 +16,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
     if(!is_null($name))
         {
-        $name = trim($name);
+        $name = trim((string) $name);
         }
 
     if (is_null($resource_type_field) || '' == $resource_type_field || is_null($name) || '' == $name)
@@ -59,7 +59,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         (
         "i",$resource_type_field,
         "s",$name,
-        "i",(trim($parent)=="" ? NULL : $parent),
+        "i",(!isset($parent) || trim($parent)=="" ? NULL : $parent),
         "s",$order_by
         );
 
@@ -298,8 +298,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
         }
   
-
-    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
+    $parent_sql = (!isset($parent) || trim($parent) == "") ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
     if (strpos($parent_sql,"?")!==false) {$parameters[]="i";$parameters[]=$parent;}
     
     // Order by translated_name or order_by based on flag
@@ -720,7 +719,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
         $query = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ?";
         $parameters=array("i",$resource_type_field);
 
-        if (trim($parent)=="")
+        if (!isset($parent) || trim($parent)=="")
             {
             $query.=" AND parent IS NULL ";
             }
@@ -786,7 +785,15 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // Fetch all nodes on change of resource type field
     if($resource_type_field !== $resource_type_field_last)
         {
-        $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+        global $node_tree_data;
+        if(!empty($node_tree_data))
+            {
+            $all_nodes = $node_tree_data;
+            }
+        else
+            {
+            $all_nodes = $node_tree_data = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+            }
         $resource_type_field_last = $resource_type_field;    
         }
 
@@ -819,21 +826,8 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     <input type="text" name="option_name" form="option_<?php echo $ref; ?>" value="<?php echo $name; ?>">
                 </td>
                 <td>
-                    <select id="node_option_<?php echo $ref; ?>_parent_select" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
+                    <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
                         <option value="">Select parent</option>
-                    <?php
-                    foreach($nodes as $node)
-                        {
-                        $selected = '';
-                        if(!(trim($parent)=="") && $node['ref'] == $parent)
-                            {
-                            $selected = ' selected';
-                            }
-                        ?>
-                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($node['name']); ?></option>
-                        <?php
-                        }
-                        ?>
                     </select>
                 </td>
                 <td><?php echo $use_count ?></td>
@@ -1001,10 +995,10 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
             add_node_keyword($node, $kworig, $position, false, $stem);
             }
         }
-        
+
+     $unstemmed=$keyword;
      if ($stem && $stemming && function_exists("GetStem"))
         {
-        $unstemmed=$keyword;
         $keyword=GetStem($keyword);
         if($keyword!=$unstemmed)
             {
@@ -1016,7 +1010,7 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
         
         
     // $keyword should not be indexed if it can be found in the $noadd array, no need to continue
-    if(in_array($keyword, $noadd))
+    if(in_array($unstemmed, $noadd))
         {
         debug('Ignored keyword "' . $keyword . '" as it is in the $noadd array. Triggered in ' . __FUNCTION__ . '() on line ' . __LINE__);
         return false;
@@ -1338,7 +1332,10 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
     global $userref;
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
         {return false;}
-    
+
+    $resources = array_values(array_filter($resources, 'is_int_loose'));
+    $nodes = array_values(array_filter(is_array($nodes) ? $nodes : [$nodes], 'is_int_loose'));
+
     if($checkperms)
         {
         // Need to check user has permissions to add nodes
@@ -1357,40 +1354,34 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             }
         }
 
-    if(!is_array($nodes))
-        {$nodes=array($nodes);}
-
-    $nodesql = "";
-    $sql_params = [];
-    foreach($resources as $resource)
+    $resources_chunks = array_chunk($resources, 500);
+    foreach($resources_chunks as $resources_chunk)
         {
-        if(!is_int_loose($resource))
+        $resource_node_values = '';
+        $sql_params = [];
+        foreach($resources_chunk as $resource)
             {
-            continue;
-            }
-
-        $nodes_added = [];
-        foreach($nodes as $node)
-            {
-            if(is_int_loose($node))
+            foreach($nodes as $node)
                 {
-                $nodesql .= ',(?, ?)';
+                $resource_node_values .= ',(?, ?)';
                 $sql_params[] = 'i';
                 $sql_params[] = $resource;
                 $sql_params[] = 'i';
                 $sql_params[] = $node;
-                $nodes_added[] = $node;
+                }
+
+            if($logthis && !empty($nodes))
+                {
+                log_node_changes($resource, $nodes, []);
                 }
             }
+        $resource_node_values = ltrim($resource_node_values, ',');
 
-        if($logthis)
+        if($resource_node_values !== '')
             {
-            log_node_changes($resource, $nodes_added, []);
+            ps_query("INSERT INTO resource_node (resource, node) VALUES {$resource_node_values} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
             }
         }
-    $nodesql = ltrim($nodesql, ',');
-
-    ps_query("INSERT INTO resource_node (resource, node) VALUES {$nodesql} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
     return true;
     }
 
@@ -1498,8 +1489,9 @@ function delete_resource_nodes_multi($resources=array(),$nodes=array())
     if(!is_array($nodes))
         {$nodes=array($nodes);}
         
-    $sql = "DELETE FROM resource_node WHERE resource in ('" . implode("','",$resources) . "') AND node in ('" . implode("','",$nodes) . "')";
-    sql_query($sql);
+    $sql = "DELETE FROM resource_node WHERE resource in (" . ps_param_insert(count($resources)) . ") AND node in (" . ps_param_insert(count($nodes)) . ")";
+    $params = array_merge(ps_param_fill($resources, "i"), ps_param_fill($nodes, "i"));
+    ps_query($sql, $params);
     }
 
 
@@ -1532,6 +1524,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     $resourcefrom    = escape_check($resourcefrom);
     $resourceto      = escape_check($resourceto);
     $omit_fields_sql = '';
+    $omit_fields_sql_params = array();
 
     // When copying normal resources from one to another, check for fields that should be excluded
     // NOTE: this does not apply to user template resources (negative ID resource)
@@ -1540,7 +1533,8 @@ function copy_resource_nodes($resourcefrom, $resourceto)
         $omitfields      = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", array(), "schema");
         if (count($omitfields) > 0)
             {
-            $omit_fields_sql = "AND n.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+            $omit_fields_sql = "AND n.resource_type_field NOT IN (" . ps_param_insert(count($omitfields)) . ")";
+            $omit_fields_sql_params = ps_param_fill($omitfields, "i");
             }
         else
             {
@@ -1549,23 +1543,23 @@ function copy_resource_nodes($resourcefrom, $resourceto)
         }
 
     // This is for logging after the insert statement
-    $nodes_to_add = sql_array("
+    $nodes_to_add = ps_array("
     SELECT node value
         FROM resource_node AS rnold
     LEFT JOIN node AS n ON n.ref = rnold.node
-    WHERE resource ='{$resourcefrom}'
+    WHERE resource = ?
         {$omit_fields_sql};
-    ");
+    ", array_merge(array("i", (int) $resourcefrom), $omit_fields_sql_params));
 
-    sql_query("
+    ps_query("
         INSERT INTO resource_node(resource, node, hit_count, new_hit_count)
-             SELECT '{$resourceto}', node, 0, 0
+             SELECT ?, node, 0, 0
                FROM resource_node AS rnold
           LEFT JOIN node AS n ON n.ref = rnold.node
-              WHERE resource ='{$resourcefrom}'
+              WHERE resource = ?
                 {$omit_fields_sql}
                  ON DUPLICATE KEY UPDATE hit_count = rnold.new_hit_count;
-    ");
+    ", array_merge(array("i", $resourceto, "i", $resourcefrom), $omit_fields_sql_params));
 
     log_node_changes($resourceto,$nodes_to_add,array());
 
@@ -1581,7 +1575,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
 function get_nodes_from_keywords($keywords=array())
     {
     if(!is_array($keywords)){$keywords=array($keywords);}
-    return ps_array("select node value FROM node_keyword WHERE keyword in (" . ps_param_insert(count($keywords)) . ")",ps_param_fill($keywords,"i")); 
+    return ps_array("select node value FROM node_keyword WHERE keyword in (" . ps_param_insert(count($keywords)) . ")", ps_param_fill($keywords,"i")); 
     }
     
 /**
@@ -1594,7 +1588,10 @@ function get_nodes_from_keywords($keywords=array())
 function update_resource_node_hitcount($resource,$nodes)
     {
     if(!is_array($nodes)){$nodes=array($nodes);}
-    if (count($nodes)>0) {sql_query("update resource_node set new_hit_count=new_hit_count+1 WHERE resource='$resource' AND node in (" . implode(",",$nodes) . ")",false,-1,true,0);}
+    if (count($nodes)>0) 
+        {
+        ps_query("update resource_node set new_hit_count = new_hit_count + 1 WHERE resource = ? AND node in (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
+        }
     }
 
 
@@ -1612,7 +1609,7 @@ function copy_resource_type_field_nodes($from, $to)
     global $FIXED_LIST_FIELD_TYPES;
 
     // Since field has been copied, they are both the same, so we only need to check the from field
-    $type = sql_value("SELECT `type` AS `value` FROM resource_type_field WHERE ref = '{$from}'", 0, "schema");
+    $type = ps_value("SELECT `type` AS `value` FROM resource_type_field WHERE ref = ?", array("i", $from), 0, "schema");
 
     if(!in_array($type, $FIXED_LIST_FIELD_TYPES))
         {
@@ -2113,16 +2110,18 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
 
     if($detailed)
         {
-        $sql_select .= ",n.* ";
+        $sql_select .= ", n.`name`, n.parent, n.order_by";
         }
 
     $resources = array_filter($resources,"is_int_loose"); // remove non-numeric values
-    $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN ('" . implode("','",$resources) . "')";
+    $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN (" . ps_param_insert(count($resources)) . ")";
+    $query_params = ps_param_fill($resources, "i");
 
     if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
         {
         $fields = array_filter($resource_type_fields,"is_int_loose");
-        $query .= " AND n.resource_type_field IN ('" . implode("','",$fields) . "')";
+        $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
+        $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
         }
 
     if(!is_null($node_sort))
@@ -2137,7 +2136,7 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
             }
         }
 
-    $noderows = sql_query($query);
+    $noderows = ps_query($query, $query_params);
     $results = array();
     foreach($noderows as $noderow)
         {

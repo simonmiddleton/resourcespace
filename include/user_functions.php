@@ -12,17 +12,20 @@ include_once __DIR__ . '/login_functions.php';
 * $user_select_sql example u.session=$variable. 
 * Joins to usergroup table as g  which can be used in criteria
 *
-* @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
+* @param	object	$user_select_sql		PreparedStatementQuery instance - to validate user usually session hash or key
 * @param 	boolean	$getuserdata			default true. Return user data as required by authenticate.php
 * 
 * @return boolean|array
 */
 function validate_user($user_select_sql, $getuserdata=true)
-    {
-    if('' == $user_select_sql)
+    {    
+    if(!is_a($user_select_sql,'PreparedStatementQuery'))
         {
         return false;
         }
+
+    $validatesql    = $user_select_sql->sql;
+    $validateparams = $user_select_sql->parameters;
 
     $full_user_select_sql = "
         approved = 1
@@ -31,12 +34,12 @@ function validate_user($user_select_sql, $getuserdata=true)
                 OR account_expires = '0000-00-00 00:00:00' 
                 OR account_expires > now()
             ) "
-        . ((strtoupper(trim(substr($user_select_sql, 0, 4))) == 'AND') ? ' ' : ' AND ')
-        . $user_select_sql;
+        . ((strtoupper(trim(substr($validatesql, 0, 4))) == 'AND') ? ' ' : ' AND ')
+        . $validatesql;
 
     if($getuserdata)
         {
-        $userdata = sql_query(
+        $userdata = ps_query(
             "   SELECT u.ref,
                        u.username,
                        u.origin,
@@ -73,18 +76,20 @@ function validate_user($user_select_sql, $getuserdata=true)
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref
-                 WHERE {$full_user_select_sql}"
+                 WHERE {$full_user_select_sql}",
+                 $validateparams
         );
 
         return $userdata;
         }
     else
         {
-        $validuser = sql_value(
+        $validuser = ps_value(
             "      SELECT u.ref AS `value`
                      FROM user AS u 
                 LEFT JOIN usergroup g ON u.usergroup = g.ref
-                    WHERE {$full_user_select_sql}"
+                    WHERE {$full_user_select_sql}",
+                    $validateparams
             ,
             ''
         );
@@ -108,7 +113,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 * 
 * @return boolean           success/failure flag - used for example to prevent certain users from making API calls
 */
-function setup_user($userdata)
+function setup_user(array $userdata)
 	{
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
@@ -152,8 +157,8 @@ function setup_user($userdata)
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
 
-    $ip_restrict_group=trim($userdata["ip_restrict_group"]);
-    $ip_restrict_user=trim($userdata["ip_restrict_user"]);
+    $ip_restrict_group=trim((string) $userdata["ip_restrict_group"]);
+    $ip_restrict_user=trim((string) $userdata["ip_restrict_user"]);
 
     if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
         {
@@ -217,11 +222,11 @@ function setup_user($userdata)
     $usereditfilter         = ($search_filter_nodes && isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
     $userderestrictfilter   = ($search_filter_nodes && isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
 
-    $hidden_collections=explode(",",$userdata["hidden_collections"]);
+    $hidden_collections=explode(",",(string) $userdata["hidden_collections"]);
     $userresourcedefaults=$userdata["resource_defaults"];
-    $userrequestmode=trim($userdata["request_mode"]);
-    $user_dl_limit=trim($userdata["download_limit"]);
-    $user_dl_days=trim($userdata["download_log_days"]);
+    $userrequestmode=trim((string) $userdata["request_mode"]);
+    $user_dl_limit=trim((string) $userdata["download_limit"]);
+    $user_dl_days=trim((string) $userdata["download_log_days"]);
 
     if((int)$user_dl_limit > 0)
         {
@@ -255,7 +260,7 @@ function setup_user($userdata)
         }        
 
     # Apply config override options
-    $config_options=trim($userdata["config_options"]);
+    $config_options=trim((string) $userdata["config_options"]);
     if ($config_options!="")
         {
         // We need to get all globals as we don't know what may be referenced here
@@ -272,12 +277,14 @@ function setup_user($userdata)
     if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
         $default_notify_states = [];
-        if(checkperm("e-2") && checkperm('d'))
+        // Add action for users who can submit 'pending submission' resources for review
+        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
             {
             $default_notify_states[] = -2;
             }
-        if(checkperm("e-1"))
+        if(checkperm("e-1") && checkperm("e0"))
             {
+            // Add action for users who can make pending resources active
             $default_notify_states[] = -1;
             }
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
@@ -592,6 +599,8 @@ function save_user($ref)
         delete_profile_image($ref);
         sql_query("DELETE FROM user WHERE ref = '" . escape_check($ref) . "'");
 
+        hook('on_delete_user', "", array($ref));
+        
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
@@ -745,7 +754,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
     
     # Fetch any welcome message for this user group
-    $welcome=sql_value("select welcome_message value from usergroup where ref='" . escape_check($usergroup) . "'","");
+    $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
     if (trim($welcome)!="") {$welcome.="\n\n";}
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
@@ -864,20 +873,28 @@ function auto_create_user_account($hash="")
 
     if ($registration_group_select)
         {
-        $usergroup=getvalescaped("usergroup","",true);
+        $usergroup=getval("usergroup","",true);
         # Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
-        if (sql_value("select allow_registration_selection value from usergroup where ref='$usergroup'",0)!=1) {exit("Invalid user group selection");}
+        if (ps_value("SELECT allow_registration_selection value FROM usergroup WHERE ref = ?",["i",$usergroup],0)!=1)
+            {
+            exit("Invalid user group selection");
+            }
         }
 
     $newusername=escape_check(make_username(getval("name","")));
 
     // Check valid email
     if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
-        {return $lang['setup-emailerr'];}
+        {
+        return $lang['setup-emailerr'];
+        }
     
     #check if account already exists
-    $check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
-    if ($check!=""){return $lang["useremailalreadyexists"];}
+    $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
+    if ($check!="")
+        {
+        return $lang["useremailalreadyexists"];
+        }
 
     # Prepare to create the user.
     $email=trim(getvalescaped("email","")) ;
@@ -914,7 +931,22 @@ function auto_create_user_account($hash="")
         }
 
     # Create the user
-    sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
+    $name = getval("name","");
+    $comment = getval("userrequestcomment","");
+    $newparams = [
+        "s",$newusername,
+        "s",$password,
+        "s",$name,
+        "s",$email,
+        "i",$usergroup,
+        "s",$customContents . (trim($comment) != "" ? "\n" . $comment : ""),
+        "i",($approve ? 1 : 0),
+        "s",$language,
+        "s",($hash != "" ? $hash : NULL),
+        ];
+
+    ps_query("INSERT INTO user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) VALUES (?,?,?,?,?,?,?,?,?)",$newparams);
+
     $new = sql_insert_id();
 
     // Create dash tiles for the new user
@@ -1141,20 +1173,21 @@ function new_user($newuser, $usergroup = 0)
     {
     global $lang,$home_dash;
     # Username already exists?
-    $c=sql_value("select count(*) value from user where username='" . escape_check($newuser) . "'",0);
+    $c=ps_value("SELECT COUNT(*) value FROM user WHERE username = ?",["s",$newuser],0);
     if ($c>0) {return false;}
     
     $cols = array("username");
-    $vals = array(escape_check($newuser));
+    $sqlparams = ["s",$newuser];
     
     if($usergroup > 0)
         {
         $cols[] = "usergroup";
-        $vals[] = (int)$usergroup;    
+        $sqlparams[] = "i";
+        $sqlparams[] = $usergroup;   
         }
         
-    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES ('" . implode("','",$vals) . "')";
-    sql_query($sql);
+    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES (" .ps_param_insert(count($cols)) . ")";
+    ps_query($sql,$sqlparams);
     
     $newref=sql_insert_id();
     
@@ -1168,7 +1201,7 @@ function new_user($newuser, $usergroup = 0)
     # Create a collection for this user, the collection name is translated when displayed!
     $new=create_collection($newref,"Default Collection",0,1); # Do not translate this string!
     # set this to be the user's current collection
-    sql_query("update user set current_collection='$new' where ref='$newref'");
+    ps_query("UPDATE user SET current_collection=? WHERE ref=?",["i",$new,"i",$newref]);
     log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
     
     return $newref;
@@ -1652,16 +1685,17 @@ function check_access_key($resources,$key)
 
     global $external_share_view_as_internal, $baseurl, $baseurl_short;
 
-    if(
-        $external_share_view_as_internal
-        && (
-            isset($_COOKIE["user"])
-            && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
-            && !is_authenticated()
-        ))
+    if($external_share_view_as_internal && isset($_COOKIE["user"]))
+        {
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.session = ?";
+        $user_select_sql->parameters = ["s",$_COOKIE["user"]];
+        if(validate_user($user_select_sql, false) && !is_authenticated())
             {
+            // Authenticate the user if not already authenticated so page can appear as internal
             return false;
-            } // We want to authenticate the user if not already authenticated so we can show the page as internal
+            }
+        }
 
     $key_escaped = escape_check($key);
 
@@ -1861,13 +1895,19 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-
     hook("external_share_view_as_internal_override");
     global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename;
-    if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
+
+    if($external_share_view_as_internal && isset($_COOKIE["user"]))
         {
-        // We want to authenticate the user so we can show the page as internal
-        return false;
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.session = ?";
+        $user_select_sql->parameters = ["s",$_COOKIE["user"]];
+        if(validate_user($user_select_sql, false) && !is_authenticated())
+            {
+            // Authenticate the user if not already authenticated so page can appear as internal
+            return false;
+            }
         }
 
     $collection = get_collection($collection);
@@ -2714,6 +2754,24 @@ function save_usergroup($ref,$groupoptions)
     }
 
 
+/**
+ * Copy the permissions string from another usergroup
+ *
+ * @param  int $src_id    The group ID to copy from
+ * @param  int $dst_id    The group ID to copy to
+ * @return mixed          bool|int True to indicate existing group has been updated or ID of newly created group
+ */
+function copy_usergroup_permissions(int $src_id,int $dst_id)
+    {
+    $src_group = get_usergroup($src_id);
+    $dst_group = get_usergroup($dst_id);
+
+    if(!$src_group || !$dst_group){return false;}
+
+
+    $dst_group=["permissions" => $src_group["permissions"]];
+    return save_usergroup($dst_id,$dst_group);
+    }
  
 /**
  * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.

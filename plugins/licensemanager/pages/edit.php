@@ -1,14 +1,14 @@
 <?php
 include "../../../include/db.php";
-
 include_once "../../../include/authenticate.php";
-
+include "../include/file_functions.php";
 
 # Check if it's necessary to upgrade the database structure
 include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
 $ref=getvalescaped("ref","");
 $resource=getvalescaped("resource","");
+$file_path=get_license_file_path($ref);
 
 # Check access
 if ($resource!="")
@@ -46,12 +46,12 @@ if (getval("submitted","")!="")
     # Save license data
     
     # Construct expiry date
-    $expires="'" . getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","") . "'";
+    $expires=getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","");
     
     # No expiry date ticked? Insert null
     if (getval("no_expiry_date","")=="yes")
         {
-        $expires="null";
+        $expires=null;
         }
 
     # Construct usage
@@ -61,8 +61,18 @@ if (getval("submitted","")!="")
     if ($ref=="new")
         {
         # New record 
-        sql_query("insert into license (outbound,holder,license_usage,description,expires) values ('" . getvalescaped("outbound","") . "', '" . getvalescaped("holder","") . "', '$license_usage', '" . getvalescaped("description","") . "', $expires)");	
+        ps_query(
+            "insert into license (outbound,holder,license_usage,description,expires) values (?, ?, ?, ?, ?)",
+            [
+                's', getval('outbound', ''),
+                's', getval('holder', ''),
+                's', $license_usage,
+                's', getval('description',''),
+                's', $expires
+            ]
+        );	
         $ref=sql_insert_id();
+        $file_path=get_license_file_path($ref); // get updated path
 
         # Add to all the selected resources
         if (getvalescaped("resources","")!="")
@@ -73,7 +83,7 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    ps_query("insert into resource_license(resource,license) values (?, ?)", ['i', $r, 'i', $ref]);
                     resource_log($r,"","",$lang["new_license"] . " " . $ref);
                     }
                 }
@@ -82,10 +92,20 @@ if (getval("submitted","")!="")
     else
         {
         # Existing record	
-        sql_query("update license set outbound='" . getvalescaped("outbound","") . "',holder='" . getvalescaped("holder","") . "', license_usage='$license_usage',description='" . getvalescaped("description","") . "',expires=$expires where ref='$ref'");
+        ps_query(
+            "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ? where ref= ?",
+            [
+                's', getval('outbound', ''),
+                's', getval('holder', ''),
+                's', $license_usage,
+                's', getval('description',''),
+                's', $expires,
+                'i', $ref
+            ]
+        );
 
         # Add all the selected resources
-        sql_query("delete from resource_license where license='$ref'");
+        ps_query("delete from resource_license where license= ?", ['i', $ref]);
         $resources=explode(",",getvalescaped("resources",""));
 
         if (getvalescaped("resources","")!="")
@@ -95,11 +115,40 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_license(resource,license) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    ps_query("insert into resource_license(resource,license) values (?, ?)", ['i', $r, 'i', $ref]);
                     resource_log($r,"","",$lang["new_license"] . " " . $ref);
                     }
                 }
             }
+        }
+        
+    # Handle file upload
+    global $banned_extensions;
+    if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
+        {
+        # Work out the extension
+        $uploadfileparts=explode(".",$_FILES["file"]["name"]);
+        $uploadfileextension=trim($uploadfileparts[count($uploadfileparts)-1]);
+        $uploadfileextension=strtolower($uploadfileextension);
+
+        if (in_array($uploadfileextension,$banned_extensions))
+            {
+            $error_extension = str_replace("%%FILETYPE%%",$uploadfileextension,$lang["error_upload_invalid_file"]);
+            error_alert($error_extension, true);
+            exit();
+            }
+        else
+            {
+            move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
+            sql_query("update license set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+            }
+        }
+
+    # Handle file clear
+    if (getval("clear_file","")!="")
+        {
+        if (file_exists($file_path)) {unlink($file_path);}  
+        sql_query("update license set file='' where ref='$ref'");
         }
     
     redirect($redirect_url);
@@ -115,16 +164,17 @@ if ($ref=="new")
         "holder"=>"",		
         "license_usage"=>"",
         "description"=>"",
-        "expires"=>""
+        "expires"=>"",
+        "file" =>""
         );
     if ($resource=="") {$resources=array();} else {$resources=array($resource);}
     }
 else
     {
-    $license=sql_query("select * from license where ref='$ref'");
+    $license=ps_query("select * from license where ref= ?", ['i', $ref]);
     if (count($license)==0) {exit("License not found.");}
     $license=$license[0];
-    $resources=sql_array("select distinct resource value from resource_license where license='$ref' order by resource");
+    $resources=ps_array("select distinct resource value from resource_license where license= ? order by resource", ['i', $ref]);
     }
         
 include "../../../include/header.php";
@@ -132,15 +182,15 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 
 <?php if ($resource!="") { ?>
-<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
 <?php } else { ?>
-<p><a href="<?php echo $redirect_url ?>  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
 <?php } ?>
 
 
 <h1><?php echo ($ref=="new"?$lang["new_license"]:$lang["edit_license"]) ?></h1>
 
-<form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" onSubmit="return CentralSpacePost(this,true);">
+<form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" enctype="multipart/form-data">
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
@@ -233,10 +283,32 @@ foreach ($license_usage_mediums as $medium)
 
 
 <div class="Question">
-        <label for="resources"><?php echo $lang["linkedresources"]?></label>
-        <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ",$resources)?></textarea>
-        <div class="clearerleft"> </div>
-    </div>
+    <label for="resources"><?php echo $lang["linkedresources"]?></label>
+    <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ",$resources)?></textarea>
+    <div class="clearerleft"> </div>
+</div>
+
+<div class="Question" id="file">
+    <label for="file"><?php echo $lang["file"] ?></label>
+    <?php
+    
+    if($license["file"]!="")
+        {
+        ?>
+        <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $license['file']; ?></a></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeletelicensefile"] ?>');">
+        <?php
+        }
+    else
+        {
+        ?>
+        <input type="file" name="file" style="width:300px">
+        <input type="submit" name="upload_file" value="<?php echo $lang['upload']; ?>">
+        <?php
+        }
+        ?>
+    <div class="clearerleft"></div>
+</div>
 
 
 <div class="QuestionSubmit">

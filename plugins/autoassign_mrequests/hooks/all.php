@@ -63,6 +63,11 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     $request_query->parameters = array("i",$user_ref, "i",$collection_ref, "s",$message, "i",$assigned_administrator);
 
     $assigned_to_user = get_user($assigned_administrator);
+    if (!$assigned_to_user)
+        {
+        return false;
+        }
+
     $notify_manage_request_admin = true;
 
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
@@ -186,7 +191,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 
     // If we don't have an assigned user, it probably means system is misconfigured so go ahead and run this normally via
     // RS own logic for dealing with requests.
-    if(is_null($assigned_to_user))
+    if(is_null($assigned_to_user) || !$assigned_to_user)
         {
         return false;
         }
@@ -225,7 +230,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
     if(isset($resource_type_request_emails)  )
         {
-        $parameters=array("i",$ref);    
+        $parameters=array("i",$collection_id);    
         $requestrestypes=ps_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection=?", $parameters);
         $requestrestypes=array_unique($requestrestypes);
         if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
@@ -260,7 +265,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     $admin_notify_message.=$lang["clicktoviewresource"] . "<br />" . $templatevars["requesturl"];
     foreach($admin_notify_emails as $admin_notify_email)
         {
-        send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$admin_notify_message,($always_email_from_user)?$useremail:$email_from,($always_email_from_user)?$useremail:$email_from,$admin_mail_template,$templatevars);
+        send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $collection_id",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
         }
     if (count($admin_notify_users)>0)
         {
@@ -290,4 +295,10 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 function HookAutoassign_mrequestsAllExport_add_tables()
     {
     return array("assign_request_map"=>array());
+    }
+
+function HookAutoassign_mrequestsAllOn_delete_user($ref)
+    {
+    # The user has been deleted so any mappings for them also need to be removed.
+    ps_query("DELETE FROM assign_request_map WHERE `user_id` = ?", array("i", $ref));
     }

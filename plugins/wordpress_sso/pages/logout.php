@@ -5,7 +5,7 @@ include "../../../include/db.php";
 global $baseurl, $lang, $username, $wordpress_sso_url, $wordpress_sso_secret, $global_cookies;
 
  #blank cookies
-sql_query("update user set logged_in=0,session='' where username='$username'");
+ps_query("update user set logged_in = 0, session = '' where username = ?", array("s", $username));
 	
 setcookie("wordpress_sso","",0,"/");
 setcookie("user","",0,"/");

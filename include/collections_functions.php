@@ -41,15 +41,18 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
     elseif (strlen($find)>1 || is_numeric($find))
         {  
         $keywords=split_keywords($find);
-        $keyrefs=array();
         $keysql="";
         $keyparams = array();
         for ($n=0;$n<count($keywords);$n++)
             {
             $keyref=resolve_keyword($keywords[$n],false);
-            if ($keyref!==false) {$keyrefs[]=$keyref;}
+            if($keyref === false)
+                {
+                continue;
+                }
+
             $keysql.=" JOIN collection_keyword k" . $n . " ON k" . $n . ".collection=ref AND (k" . $n . ".keyword=?)";
-            $keyparams = array("i",$keyref);
+            $keyparams = array_merge($keyparams, ['i', $keyref]);
             }
         }
 
@@ -85,7 +88,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
             }
 
         $extrasql .= " (c.session_id=?)";
-        $extraparams = array("s",$rs_session);
+        $extraparams = array("i",$rs_session);
         }
    
     $order_sort="";
@@ -95,8 +98,40 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         $order_sort=" ORDER BY $order_by $sort";
         }
 
-    $query = "SELECT * FROM (
-                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+    // Control the selected columns. $query_select_columns is for the outer SQL and $collection_select_columns
+    // is for the inner one. Both have some extra columns from the user & resource table.
+    $collection_table_columns = [
+        'ref',
+        'name',
+        'user',
+        'created',
+        'public',
+        'allow_changes',
+        'cant_delete',
+        'keywords',
+        'savedsearch',
+        'home_page_publish',
+        'home_page_text',
+        'home_page_image',
+        'session_id',
+        'description',
+        'type',
+        'parent',
+        'thumbnail_selection_method',
+        'bg_img_resource_ref',
+        'order_by',
+    ];
+    $query_select_columns = implode(', ', $collection_table_columns) . ', username, fullname, count';
+    $collection_select_columns = [];
+    foreach($collection_table_columns as $column_name)
+        {
+        $collection_select_columns[] = "c.{$column_name}";
+        }
+    $collection_select_columns = implode(', ', $collection_select_columns) . ', u.username, u.fullname, count(r.resource) AS count';
+
+    $query = "SELECT {$query_select_columns}
+                FROM (
+                         SELECT {$collection_select_columns}
                            FROM user AS u
                            JOIN collection AS c ON u.ref = c.user AND c.user = ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
@@ -105,7 +140,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
                        GROUP BY c.ref
         
                           UNION
-                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                         SELECT {$collection_select_columns}
                            FROM user_collection AS uc
                            JOIN collection AS c ON uc.collection = c.ref AND uc.user = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
@@ -114,7 +149,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
                        GROUP BY c.ref
         
                           UNION
-                         SELECT c.*, u.username, u.fullname, count(r.resource) AS count
+                         SELECT {$collection_select_columns}
                            FROM usergroup_collection AS gc
                            JOIN collection AS c ON gc.collection = c.ref AND gc.usergroup = ? AND c.user <> ?
                 LEFT OUTER JOIN collection_resource AS r ON c.ref = r.collection
@@ -125,7 +160,16 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         $keysql
         GROUP BY ref $order_sort";
 
-    $queryparams = array_merge(array("i",$user),$condparams,$extraparams,array("i", $user,"i", $user),$condparams,array("i", $usergroup,"i",$user),$condparams,$keyparams);
+    $queryparams = array_merge(
+        array("i",$user),
+        $condparams,
+        $extraparams,
+        array("i", $user,"i", $user),
+        $condparams,
+        array("i", $usergroup,"i",$user),
+        $condparams,
+        $keyparams
+    );
 
     $return = ps_query($query,$queryparams);
 
@@ -367,9 +411,37 @@ function add_resource_to_collection(
 
     if ($addpermitted)
         {
+        // If this is a featured collection  apply all the external access keys from the categories which make up its 
+        // branch path to prevent breaking existing shares for any of those featured collection categories.
+        $fc_branch_path_keys = [];
+        $collection_data = get_collection($collection, true);
+        if($collection_data !== false && $collection_data['type'] === COLLECTION_TYPE_FEATURED)
+            {
+            $branch_category_ids = array_column(
+                // determine the branch from the parent because the keys for the collection in question will be done below
+                get_featured_collection_category_branch_by_leaf($collection_data['parent'], []),
+                'ref'
+            );
+            foreach($branch_category_ids as $fc_category_id)
+                {
+                $fc_branch_path_keys = array_merge(
+                    $fc_branch_path_keys,
+                    get_external_shares([
+                        'share_collection' => $fc_category_id,
+                        'share_type' => 0,
+                        'ignore_permissions' => true
+                    ])
+                );
+                }
+            }
+
+
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys = $external_shares ?? get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
+        $keys = array_merge(
+            $external_shares ?? get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true)),
+            $fc_branch_path_keys
+        );
         if (count($keys)>0)
             {
             $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$resource],"");
@@ -1126,7 +1198,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     if ($restypes!="") 
         {
         $restypes_x=explode(",",$restypes);
-        $search_includes_themes_now=in_array("featured",$restypes_x);
+        $search_includes_themes_now=in_array("themes",$restypes_x);
         } 
 
     if ($search_includes_themes_now)
@@ -1643,6 +1715,72 @@ function save_collection($ref, $coldata=array())
         );
         usort($fcs_after_update, 'order_featured_collections');
         reorder_collections(array_column($fcs_after_update, 'ref'));
+        }
+
+    // When a collection is now saved as a Featured Collection (must have resources) under an existing branch, apply all 
+    // the external access keys from the categories which make up that path to prevent breaking existing shares.
+    if(
+        isset($sqlset['parent']) && $sqlset['parent'] > 0
+        && !empty($fc_resources = array_filter((array) get_collection_resources($ref)))
+    )
+        {
+        // Delete old branch path external share associations as they are no longer relevant
+        $old_branch_category_ids = array_column(get_featured_collection_category_branch_by_leaf((int) $oldcoldata['parent'], []), 'ref');
+        foreach($old_branch_category_ids as $fc_category_id)
+            {
+            $old_keys = get_external_shares([
+                    'share_collection' => $fc_category_id,
+                    'share_type' => 0,
+                    'ignore_permissions' => true
+                ]);
+            foreach($old_keys as $old_key_data)
+                {
+                // IMPORTANT: we delete the keys associated with the collection we've just saved. The key may still be valid for the rest of the branch categories.
+                delete_collection_access_key($ref, $old_key_data['access_key']);
+                }
+            }
+
+
+        // Copy associations of all branch parents and apply to this collection and its resources
+        $all_branch_path_keys = [];
+        $branch_category_ids = array_column(get_featured_collection_category_branch_by_leaf($sqlset['parent'], []), 'ref');
+        foreach($branch_category_ids as $fc_category_id)
+            {
+            $all_branch_path_keys = array_merge(
+                $all_branch_path_keys,
+                get_external_shares([
+                    'share_collection' => $fc_category_id,
+                    'share_type' => 0,
+                    'ignore_permissions' => true
+                ]));
+            }
+
+        foreach($all_branch_path_keys as $external_key_data)
+            {
+            foreach($fc_resources as $fc_resource_id)
+                {
+                if(!can_share_resource($fc_resource_id))
+                    {
+                    continue;
+                    }
+
+                ps_query(
+                    'INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, email, `date`, access, expires, password_hash) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)',
+                    [
+                        'i', $fc_resource_id,
+                        's', $external_key_data['access_key'],
+                        'i', $ref,
+                        'i', $GLOBALS['userref'],
+                        'i', $external_key_data['usergroup'],
+                        's', $external_key_data['email'],
+                        'i', $external_key_data['access'],
+                        's', $external_key_data['expires'] ?: null,
+                        's', $external_key_data['password_hash'] ?: null
+                    ]
+                );
+                collection_log($ref, LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH, $fc_resource_id, $external_key_data['access_key']);
+                }
+            }
         }
 
     refresh_collection_frame();
@@ -2498,7 +2636,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
         if(is_array($fcf_sql))
             {
-            $fc_permissions_where = "(c.`type` = ? " . $fcf_sql[0] . ")";
+            $fc_permissions_where = "AND (c.`type` = ? " . $fcf_sql[0] . ")";
             $fc_permissions_where_params = array_merge(["i",COLLECTION_TYPE_FEATURED],$fcf_sql[1]);
             }
         }
@@ -2600,7 +2738,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         sql_limit(null, $limit)
     );
 
-    $fc_resources = ps_array($sql,array_merge($unionparams,$subquery_params),"themeimage");
+    $fc_resources = ps_array($sql,array_merge($subquery_params,$unionparams),"themeimage");
     $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
     return $fc_resources;
     }
@@ -2808,7 +2946,7 @@ function update_collection_order($neworder,$collection,$offset=0)
  *
  * @param  integer $resource
  * @param  integer $collection
- * @return array
+ * @return array|bool Returns found record data, false otherwise
  */
 function get_collection_resource_comment($resource,$collection)
 	{
@@ -3534,9 +3672,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
-           $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
+           $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet,
            $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
-           $system_read_only, $leaflet_maps_enable;
+           $system_read_only;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -3937,18 +4075,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 170;
         $o++;
         }
-
-	if(!$leaflet_maps_enable && ($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
-        {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/geolocate_collection.php",$urlparams);
-        $options[$o]['value']='geolocatecollection';
-        $options[$o]['label']=$lang["geolocatecollection"];
-        $options[$o]['data_attr']=$data_attribute;
-        $options[$o]['category'] = ACTIONGROUP_RESOURCE;
-        $options[$o]['order_by']  = 180;
-        $o++;            
-        }
-	
 
     // Contact Sheet
     if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))
@@ -5662,7 +5788,7 @@ function get_featured_collections_by_resources(array $r_refs)
         $featured_type_filter_sql
         );
 
-    $fcs = ps_query($sql,array_merge(ps_param_fill($resources, 'i')),$featured_type_filter_sql_params);
+    $fcs = ps_query($sql, array_merge(ps_param_fill($resources, 'i'), $featured_type_filter_sql_params));
     
     $results = array();
     foreach($fcs as $fc)

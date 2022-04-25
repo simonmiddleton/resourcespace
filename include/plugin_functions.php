@@ -31,34 +31,22 @@ function activate_plugin($name)
                 $plugin_yaml['desc'] = substr(file_get_contents($about), 0, 95) . '...';
                 }
             }
-            
-        # escape the plugin information
-        $plugin_yaml_esc = array();
-        foreach (array_keys($plugin_yaml) as $thekey)
-            {
-            $plugin_yaml_esc[$thekey] = escape_check($plugin_yaml[$thekey]);
-            }
     
         # Add/Update plugin information.
         # Check if the plugin is already in the table.
-        $c = sql_value("SELECT name as value FROM plugins WHERE name='$name'",'');
+        $c = ps_value("SELECT name as value FROM plugins WHERE name = ?", array("s", $name), '');
 
         if ($c == '')
             {
-            sql_query("INSERT INTO plugins(name) VALUE ('$name')");
+            ps_query("INSERT INTO plugins (name) VALUE (?)", array("s", $name));
             }
 
-        sql_query("UPDATE plugins SET config_url='{$plugin_yaml_esc['config_url']}', " .
-            "descrip='{$plugin_yaml_esc['desc']}', author='{$plugin_yaml_esc['author']}', " .
-            "inst_version='{$plugin_yaml_esc['version']}', " .
-            "priority='{$plugin_yaml_esc['default_priority']}', " .
-            "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}', " .
-            "disable_group_select='{$plugin_yaml_esc['disable_group_select']}', " .
-            "title='{$plugin_yaml_esc['title']}', " .
-            "icon='{$plugin_yaml_esc['icon']}'" .
-            "WHERE name='{$plugin_yaml_esc['name']}'");
+        ps_query("UPDATE plugins SET config_url = ?, descrip = ?, author = ?, inst_version = ?, priority = ?, update_url = ?, info_url = ?, disable_group_select = ?,
+        title = ?, icon = ? WHERE name = ?", array("s", $plugin_yaml['config_url'], "s", $plugin_yaml['desc'], "s", $plugin_yaml['author'], "i", $plugin_yaml['version'],
+        "i", $plugin_yaml['default_priority'], "s", $plugin_yaml['update_url'], "s", $plugin_yaml['info_url'], "i", $plugin_yaml['disable_group_select'], "s",
+        $plugin_yaml['title'], "s", $plugin_yaml['icon'], "s", $plugin_yaml['name']));
 
-        log_activity(null, LOG_CODE_ENABLED, $plugin_yaml_esc['version'], 'plugins', 'inst_version', $plugin_yaml_esc['name'], 'name', '', null, true);
+        log_activity(null, LOG_CODE_ENABLED, $plugin_yaml['version'], 'plugins', 'inst_version', $plugin_yaml['name'], 'name', '', null, true);
 
         // Clear query cache
         clear_query_cache("plugins");
@@ -84,14 +72,12 @@ function activate_plugin($name)
  */
 function deactivate_plugin($name)
     {
-    $name = escape_check($name);
-
-    $inst_version = sql_value("SELECT inst_version AS value FROM plugins WHERE name = '{$name}'", '');
+    $inst_version = ps_value("SELECT inst_version AS value FROM plugins WHERE name = ?", array("s", $name), '');
   
     if($inst_version >= 0)
         {
         # Remove the version field. Leaving the rest of the plugin information.  This allows for a config column to remain (future).
-        sql_query("UPDATE plugins SET inst_version = NULL WHERE name = '{$name}'");
+        ps_query("UPDATE plugins SET inst_version = NULL WHERE name = ?", array("s", $name));
 
         log_activity(null, LOG_CODE_DISABLED, '', 'plugins', 'inst_version', $name, 'name', $inst_version, null, true);
         }
@@ -113,7 +99,7 @@ function deactivate_plugin($name)
  */
 function purge_plugin_config($name)
     {
-    sql_query("UPDATE plugins SET config=NULL, config_json=NULL where name='$name'");
+    ps_query("UPDATE plugins SET config = NULL, config_json = NULL where name = ?", array("s", $name));
 
     // Clear query cache
     clear_query_cache("plugins");
@@ -296,7 +282,7 @@ function get_plugin_config($name){
     # Need verbatum queries here
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
-    $configs = sql_query("SELECT config,config_json from plugins where name='$name'", 'plugins');
+    $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
     $configs = $configs[0];
     $mysql_verbatim_queries = $mysql_vq;
     if (!array_key_exists('config', $configs))
@@ -346,13 +332,11 @@ function set_plugin_config($plugin_name, $config)
         $config_ser_json = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $config_ser_json);
         }
 
-    $config_ser_json = mysqli_real_escape_string($db["read_write"], $config_ser_json);
-
     // We record the activity before running the query because log_activity() is trying to be clever and figure out the old value
     // which will make the new value also show up (incorrectly) as the old value.
     log_activity(null, LOG_CODE_EDITED, $config_ser_json, 'plugins', 'config_json', $plugin_name, 'name', null, null, true);
 
-    sql_query("UPDATE plugins SET config='$config_ser_bin', config_json='$config_ser_json' WHERE name='$plugin_name'");
+    ps_query("UPDATE plugins SET config = ?, config_json = ? WHERE name = ?", array("s", $config_ser_bin, "s", $config_ser_json, "s", $plugin_name));
 
     // Clear query cache
     clear_query_cache("plugins");
@@ -370,7 +354,7 @@ function set_plugin_config($plugin_name, $config)
  */
 function is_plugin_activated($name)
     {
-    $activated = sql_query("SELECT name FROM plugins WHERE name='$name' and inst_version IS NOT NULL","plugins");
+    $activated = ps_query("SELECT name FROM plugins WHERE name = ? and inst_version IS NOT NULL", array("s", $name), "plugins");
     if (is_array($activated) && count($activated)>0)
         {
         return true;
@@ -389,7 +373,7 @@ function is_plugin_activated($name)
  */
 function get_active_plugins()
     {
-    return sql_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority', 'plugins');
+    return ps_query('SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 ORDER BY priority', array(), 'plugins');
     }
 
 /**
@@ -924,10 +908,10 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
     {
     global $lang;
     if($ftype===false){
-    	$fields=sql_query('select f.ref, f.title, f.name, rt.name as rt_name from resource_type_field f left join resource_type rt on f.resource_type=rt.ref order by rt.ref, f.title, f.name', "schema");
+    	$fields = ps_query('select f.ref, f.title, f.name, rt.name as rt_name from resource_type_field f left join resource_type rt on f.resource_type = rt.ref order by rt.ref, f.title, f.name', array(), "schema");
     }
     else{
-    	$fields=sql_query('select f.ref, f.title, f.name, rt.name as rt_name from resource_type_field f left join resource_type rt on f.resource_type=rt.ref where f.resource_type="$ftype" order by f.title, f.name', "schema");
+    	$fields = ps_query('select f.ref, f.title, f.name, rt.name as rt_name from resource_type_field f left join resource_type rt on f.resource_type = rt.ref where f.resource_type = ? order by f.title, f.name', array("i", $ftype), "schema");
     }
 ?>
   <div class="Question">
@@ -1338,8 +1322,7 @@ function plugin_activate_for_setup($plugin_name)
     if (file_exists($hookpath)) {include_once $hookpath;}	
 
     // Include plugin configuration	for displaying on Options page
-    $plugin_name = escape_check($plugin_name);
-    $active_plugin = sql_query("SELECT name,enabled_groups,config,config_json FROM plugins WHERE `name` = '{$plugin_name}' AND inst_version>=0 order by priority");
+    $active_plugin = ps_query("SELECT `name`, enabled_groups, config, config_json FROM plugins WHERE `name` = ? AND inst_version >= 0 order by priority", array("s", $plugin_name));
     if (empty($active_plugin))
         {
         include_plugin_config($plugin_name);

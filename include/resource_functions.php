@@ -673,23 +673,26 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
                 $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
-								
-				if(count($added_nodes)>0 || count($removed_nodes)>0)
-					{  
+
+                if(count($added_nodes) > 0 || count($removed_nodes) > 0)
+                    {
                     # If this is a 'joined' field it still needs to add it to the resource column
                     $joins=get_resource_table_joins();
                     if (in_array($fields[$n]["ref"],$joins))
                         {
-					    $new_nodevals = array();
+                        $new_nodevals = array();
                         // Build new value:
                         foreach($ui_selected_node_values as $ui_selected_node_value)
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
                         $new_nodes_val = implode(",", $new_nodevals);
-                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                        if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
+                            {
+                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                            }
                         }
-					}
+                    }
 
                 // Required fields that didn't change get the current value
                 if(1 == $fields[$n]['required'] && '' == $val)
@@ -2133,10 +2136,10 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true,$stemmed);
             }
         }
-        
+
+    $kworig=$keyword; // Store non-stemmed word
     if (!$stemmed && $stemming && function_exists("GetStem"))
         {
-        $kworig=$keyword;
         $keyword=GetStem($keyword);debug("Using stem " . $keyword . " for keyword " . $kworig);
         if($keyword!=$kworig)
             {
@@ -2145,7 +2148,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             }
         }
 	
-    if (!(in_array($keyword,$noadd)))
+    if (!(in_array($kworig,$noadd))) // Original (non stemmed) word not in the stop list?
             {
             $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
@@ -2189,18 +2192,18 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 * not efficient if we already know what this previous value is (hence
 * it is not used for edit where multiple fields are saved)
 * 
-* @param integer $resource Resource ID
-* @param integer $field    Field ID
-* @param string  $value    The new value
-* @param array   &$errors  Any errors that may occur during update
-* @param boolean $log      Log this change in the resource log?
+* @param integer $resource      Resource ID
+* @param integer $field         Field ID
+* @param string  $value         The new value
+* @param array   &$errors       Any errors that may occur during update
+* @param boolean $log           Log this change in the resource log?
+* @param boolean $nodevalues    Set to TRUE to process the value as a comma separated list of node IDs
 * 
 * @return boolean
 */
-function update_field($resource, $field, $value, array &$errors = array(), $log=true)
+function update_field($resource, $field, $value, array &$errors = array(), $log=true, $nodevalues=false)
     {
-    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username,$userref;
-    
+    global $NODE_FIELDS, $category_tree_add_parents, $userref;
     $resource_data = get_resource_data($resource);
     if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
@@ -2209,13 +2212,13 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     // accept shortnames in addition to field refs
-    if(!is_numeric($field))
+    if(!is_int_loose($field))
         {
-        $field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE name = '" . escape_check($field) . "'", '', "schema");
+        $field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE name = ?", ["s",$field],'', "schema");
         }
 
     // Fetch some information about the field
-    $fieldinfo = sql_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = '$field'", "schema");
+    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = ?", ["i",$field],"schema");
 
     if(0 == count($fieldinfo))
         {
@@ -2228,157 +2231,219 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $fieldinfo = $fieldinfo[0];
         }
 
-    $fieldoptions = get_nodes($field, null, ($fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE));
-    $newvalues    = trim_array(explode(',', $value));
-
-    // Set up arrays of node ids to add/remove. 
-    if(in_array($fieldinfo['type'], $NODE_FIELDS))
+    if (in_array($fieldinfo['type'], $NODE_FIELDS))
         {
-        $errors[] = "WARNING: Updates for fixed list fields should not use update_field. Use add_resource_nodes or add_resource_nodes_multi instead. Field: '{$field}'";
+        // Set up arrays of node ids to add/remove and all new nodes.
         $nodes_to_add    = array();
         $nodes_to_remove = array();
-        }
+        $newnodes        = array();
+        $existingnodes   = array();
+        $fieldnodes = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
+        $node_options = array_column($fieldnodes, 'name', 'ref');
+
+        // Get all the new values into an array
+        $newvalues    = trim_array(str_getcsv($value));
+
+        // Get currently selected nodes for this field
+        $current_field_nodes = get_resource_nodes($resource, $field);
         
-    # If this is a date range field we need to add values to the field options
-    if($fieldinfo['type'] == FIELD_TYPE_DATE_RANGE)
-        {
-        $newvalues = array_map('trim', explode('/', $value));
-        $currentoptions = array();
-
-        foreach($newvalues as $newvalue)
+        // Build 'existing' value
+        foreach($current_field_nodes as $current_field_node)
             {
-            # Check if each new value exists in current options list
-            if('' != $newvalue && !in_array($newvalue, $currentoptions))
-                {
-                # Append the option and update the field
-                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
-                $nodes_to_add[]   = $newnode;
-                $currentoptions[] = trim($newvalue);
+            $existingnodes[] = $node_options[$current_field_node];
+            }        
+        $existing = implode(",",$existingnodes);
 
-                debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+        if($nodevalues)
+            {
+            // An array of node IDs has been passed, we can use these directly
+            $sent_nodes = explode(",",$value);
+            if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST]) && count($sent_nodes) > 1)
+                {
+                // Only a single value allowed
+                return false;
+                }
+            
+            $nodesfound = false;
+            foreach($fieldnodes as $fieldnode)
+                {
+                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+                if (in_array($fieldnode["ref"],$sent_nodes) && !in_array($fieldnode["ref"],$nodes_to_add))
+                    {
+                    if(!in_array($fieldnode["ref"],$current_field_nodes))
+                        {
+                        $nodes_to_add[] = $fieldnode["ref"];
+                        if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents)
+                            {
+                            // Add all parent nodes for category trees
+                            $parent_nodes=get_parent_nodes($fieldnode["ref"]);
+                            foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                                {
+                                $nodes_to_add[]=$parent_node_ref;
+                                }
+                            }
+                        }
+
+                    $newnodes[] = $fieldnode["ref"];
+                    $nodesfound = true;
+                    }
+                else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$sent_nodes))
+                    {
+                    $nodes_to_remove[] = $fieldnode["ref"];
+                    }
+                }
+            if(count($newnodes) != count($sent_nodes))
+                {
+                // Unable to find all node values that were passed
+                return false;
+                }
+            // Build array of new values
+            foreach($newnodes as $newnode)
+                {
+                $newvalues[] = $node_options[$newnode];
                 }
             }
-        }
-    elseif($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
-        {
-        # If this is a dynamic keyword we need to add it to the field options
-        $currentoptions = array();
-        foreach($fieldoptions as $fieldoption)
+        else
             {
-            $fieldoptiontranslations = explode('~', $fieldoption['name']);
-            
-            if(count($fieldoptiontranslations) < 2)
+            # If this is a date range field we need to add values to the field options
+            if($fieldinfo['type'] == FIELD_TYPE_DATE_RANGE)
                 {
-                $currentoptions[]=trim($fieldoption['name']); # Not a translatable field
-                //debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
-                }
-            else
-                {
-                $default="";
-                for ($n=1;$n<count($fieldoptiontranslations);$n++)
+                $newvalues = array_map('trim', explode('/', $value));
+                $currentoptions = array();
+
+                foreach($newvalues as $newvalue)
                     {
-                    # Not a translated string, return as-is
-                    if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
+                    # Check if each new value exists in current options list
+                    if('' != $newvalue && !in_array($newvalue, $currentoptions))
                         {
-                        $currentoptions[]=trim($fieldoption['name']);
-                        debug("update_field: current field option: '" . $fieldoption['name'] . "'<br />");
-                        }
-                    else
-                        {
-                        # Support both 2 character and 5 character language codes (for example en, en-US).
-                        $p=strpos($fieldoptiontranslations[$n],':');                         
-                        $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
-                        debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br />");
+                        # Append the option and update the field
+                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
+                        $nodes_to_add[]   = $newnode;
+                        $currentoptions[] = trim($newvalue);
+
+                        debug("update_field: field option added: '" . trim($newvalue));
                         }
                     }
                 }
-            }
-
-        foreach($newvalues as $newvalue)
-            {
-            # Check if each new value exists in current options list
-            if('' != $newvalue && !in_array($newvalue, $currentoptions))
+             # If this is a dynamic keyword field need to add any new entries to the field nodes
+            elseif($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
                 {
-                # Append the option and update the field
-                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
-                $nodes_to_add[]   = $newnode;
-                $currentoptions[] = trim($newvalue);
-
-                debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+                $currentoptions = array();
+                foreach($fieldnodes as $fieldnode)
+                    {
+                    $fieldoptiontranslations = explode('~', $fieldnode['name']);
+                    if(count($fieldoptiontranslations) < 2)
+                        {
+                        $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
+                        debug("update_field: current field option: '" . trim($fieldnode['name']));
+                        }
+                    else
+                        {
+                        for ($n=1;$n<count($fieldoptiontranslations);$n++)
+                            {
+                            # Not a translated string, return as-is
+                            if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
+                                {
+                                $currentoptions[]=trim($fieldnode['name']);
+                                debug("update_field: current field option: '" . $fieldnode['name']);
+                                }
+                            else
+                                {
+                                # Support both 2 character and 5 character language codes (for example en, en-US).
+                                $p=strpos($fieldoptiontranslations[$n],':');
+                                $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
+                                debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)));
+                                }
+                            }
+                        }
+                    }
+    
+                foreach($newvalues as $newvalue)
+                    {
+                    # Check if each new value exists in current options list
+                    if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                        {
+                        # Append the option and update the field
+                        $newnode            = set_node(null, $field, escape_check(trim($newvalue)), null, null);
+                        $nodes_to_add[]     = $newnode;
+                        $currentoptions[]   = trim($newvalue);
+                        $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
+                        debug("update_field: field option added: '" . trim($newvalue));
+                        }
+                    }
                 }
-            }
-        }
 
-    # Fetch previous value
-    $existing = sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
-
-    if (in_array($fieldinfo['type'], $NODE_FIELDS))
-        {
-        $newvalues_translated = $newvalues;
-        $newvalues = array();
-        foreach($fieldoptions as $nodedata)
-            {
-            $translate_newvalues = array_walk(
+            $newvalues_translated = $newvalues;
+            array_walk(
                 $newvalues_translated,
                 function (&$value, $index)
                     {
                     $value = mb_strtolower(i18n_get_translated($value));
                     }
-            );
-            // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-            if (in_array(mb_strtolower(i18n_get_translated($nodedata["name"])), $newvalues_translated) && !in_array($nodedata["ref"], $nodes_to_add)) 
+                );
+            foreach($fieldnodes as $fieldnode)
                 {
-                $nodes_to_add[] = $nodedata["ref"];
-                // We need to add all parent nodes for category trees
-                if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+                if (in_array(mb_strtolower(i18n_get_translated($fieldnode["name"])), $newvalues_translated)
+                    && !in_array($fieldnode["ref"], $nodes_to_add)
+                    )
                     {
-                    $parent_nodes=get_parent_nodes($nodedata["ref"]);
-                    foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                    $nodes_to_add[] = $fieldnode["ref"];
+                    // We need to add all parent nodes for category trees
+                    if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents)
                         {
-                        $nodes_to_add[]=$parent_node_ref;
-                        if (!in_array(mb_strtolower(i18n_get_translated($parent_node_name)), $newvalues_translated))
+                        $parent_nodes=get_parent_nodes($fieldnode["ref"]);
+                        foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
                             {
-                            $value = $parent_node_name . "," . $value; 
+                            $nodes_to_add[]=$parent_node_ref;
+                            if (!in_array(mb_strtolower(i18n_get_translated($parent_node_name)), $newvalues_translated))
+                                {
+                                $value = $parent_node_name . "," . $value;
+                                }
                             }
                         }
                     }
+                elseif(!in_array($fieldnode["ref"], $nodes_to_add))
+                    {
+                    $nodes_to_remove[] = $fieldnode["ref"];
+                    }
                 }
-            else
+            }
+
+        if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
+            {
+            # Update resource_node table
+            $nodes_to_add       = array_unique($nodes_to_add);
+            $nodes_to_remove    = array_unique($nodes_to_remove);
+            $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
+            $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
+
+            if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
+                &&
+                (count($added_nodes) + count($current_field_nodes) - count($removed_nodes)) > 1)
                 {
-                $nodes_to_remove[] = $nodedata["ref"];
+                // Only a single value allowed
+                return false;    
                 }
-            // Assure no duplication added
-            if(!in_array($value, $newvalues))
+
+            db_begin_transaction("update_field_{$field}");
+            delete_resource_nodes($resource,$nodes_to_remove,false);
+            if(count($nodes_to_add)>0)
                 {
-                $newvalues[] = $value;
+                add_resource_nodes($resource,$nodes_to_add, false,false);
                 }
-            }
 
-        $current_field_nodes = get_resource_nodes($resource,$field);
-        $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
-        $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
-
-        # Update resource_node table
-        db_begin_transaction("update_field_{$field}");
-        if(count($removed_nodes)>0)
-            {
-            delete_resource_nodes($resource,$nodes_to_remove, false);
-            }
-
-        if(count($added_nodes)>0)
-            {
-            add_resource_nodes($resource,$added_nodes, false, false);
-            }
-        if(count($added_nodes)>0 || count($removed_nodes)>0)
-            {
+            // Update log
             log_node_changes($resource,$added_nodes,$removed_nodes);
+            db_end_transaction("update_field_{$field}");
             }
 
-        db_end_transaction("update_field_{$field}");
         $value = implode(",",$newvalues);
         }
     else
         {
+        # Fetch previous value
+        $existing = ps_value("SELECT value FROM resource_data WHERE resource = ? AND resource_type_field = ?",["i",$resource,"i",$field],"");
         if (trim($value) === trim($existing))
             {
             // Nothing to do
@@ -2398,14 +2463,18 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             }
 
         # Delete the old value (if any) and add a new value.
-        sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
+        ps_query("DELETE FROM resource_data WHERE resource = ? AND resource_type_field = ?",["i",$resource,"i",$field]);
 
         $value = escape_check($value);
-
         # write to resource_data if not an empty value
         if($value !== '')
             {
-            sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
+            ps_query("INSERT INTO resource_data(resource,resource_type_field,value) VALUES (?,?,?)",["i",$resource,"i",$field,"s",$value]);
+            }
+        // Log this update
+        if ($log && $value != $existing)
+            {
+            resource_log($resource,LOG_CODE_EDITED,$field,"",$existing,unescape($value));
             }
         }
 
@@ -2413,35 +2482,28 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     $joins = get_resource_table_joins();
 
    if(in_array($fieldinfo['ref'],$joins))
-		{
-		if ($value!="null")
-			{
-			global $resource_field_column_limit;
-			$truncated_value = truncate_join_field_value($value);
+        {
+        if (!is_null($value))
+            {
+            $truncated_value = truncate_join_field_value($value);
             // Remove backslashes from the end of the truncated value
             if(substr($truncated_value, -1) === '\\')
                 {
                 $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
-				}
-			}
-		else
-			{
-			$truncated_value="null";
-			}		
-		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . escape_check($truncated_value) . "'") ." where ref='" . escape_check($resource) . "'");
-		}			
+                }
+            }
+        else
+            {
+            $truncated_value = null;
+            }
+        ps_query("UPDATE resource SET `field" . (int)$field."` = ? where ref= ?",["s",$truncated_value,"i",$resource]);
+        }
 	
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
         eval(eval_check_signed($fieldinfo["onchange_macro"]));    
-        }
-    
-    // Log this update
-    if ($log && $value != $existing)
-        {
-        resource_log($resource,LOG_CODE_EDITED,$field,"",$existing,unescape($value));
-        }
+        }    
     
     # Allow plugins to perform additional actions.
     hook("update_field","",array($resource,$field,$value,$existing));
@@ -2682,6 +2744,7 @@ function delete_resource($ref)
 
 	# Delete all database entries
     clear_resource_data($ref);
+    resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
 	sql_query("delete from resource where ref='$ref'");
     sql_query("delete from collection_resource where resource='$ref'");
     sql_query("delete from resource_custom_access where resource='$ref'");
@@ -5043,7 +5106,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     $gotmatch=false;
 
     if($search_filter_nodes 
-        && strlen(trim($usereditfilter)) > 0
+        && strlen(trim((string) $usereditfilter)) > 0
         && !is_numeric($usereditfilter)
         && trim($userdata[0]["edit_filter"]) != ""
         && $userdata[0]["edit_filter_id"] != -1
@@ -5077,7 +5140,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             }
         }
     
-    if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
+    if (trim((string) $usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}
@@ -5370,14 +5433,15 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     $resource_escaped = escape_check($resource);
     $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
 
-    $fields = sql_query("
-        SELECT ref,
-               type,
-               autocomplete_macro
-          FROM resource_type_field
-         WHERE (resource_type = 0 || resource_type = '{$resource_type}')
-           AND length(autocomplete_macro) > 0
-    ", "schema");
+    $fields = sql_query(
+        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
+          FROM resource_type_field rtf
+          LEFT JOIN resource_type rt ON rt.ref = {$resource_type} 
+          WHERE length(rtf.autocomplete_macro) > 0
+          AND (   (rtf.resource_type<>0 AND rtf.resource_type = rt.ref) 
+               OR (rtf.resource_type=0  AND rt.inherit_global_fields=1)
+              )", 
+        "schema");
 
     $fields_updated = array();
 
@@ -5607,7 +5671,7 @@ function update_disk_usage($resource)
  * @return boolean|void
  */
 function update_disk_usage_cron()
-	{
+    {
     $lastrun = get_sysvar('last_update_disk_usage_cron', '1970-01-01');
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
@@ -5616,14 +5680,22 @@ function update_disk_usage_cron()
         return false;
         }
 
-	$resources=sql_array("select ref value from resource where ref>0 and disk_usage_last_updated is null or datediff(now(),disk_usage_last_updated)>30 limit 20000");
-	foreach ($resources as $resource)
-		{
-		update_disk_usage($resource);
+    $resources=ps_array(
+        "SELECT ref value
+            FROM resource 
+        WHERE ref>0 
+            AND disk_usage_last_updated IS null 
+                OR datediff(now(),disk_usage_last_updated)>30 
+        ORDER BY disk_usage_last_updated ASC 
+        LIMIT 20000",
+        []);
+    foreach ($resources as $resource)
+        {
+        update_disk_usage($resource);
         }
     
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
-	}
+    }
 
 /**
  * Returns the total disk space used by all resources on the system
@@ -5996,12 +6068,17 @@ function delete_resources_in_collection($collection) {
 		return TRUE;
 	}
 
-	// Delete (ie. move to resource_deletion_state set in config):
-	if(isset($resource_deletion_state))
+    // Delete (ie. move to resource_deletion_state set in config):
+    if(isset($resource_deletion_state))
         {
-		update_archive_status($r_refs,$resource_deletion_state,$r_states);
-		collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
-		sql_query("DELETE FROM collection_resource  WHERE resource IN ('" . implode("','",$r_refs) . "')");
+        update_archive_status($r_refs,$resource_deletion_state,$r_states);
+        foreach($r_refs as $ref){resource_log($ref,LOG_CODE_DELETED,'');}
+        collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
+        ps_query(
+            "DELETE FROM collection_resource  WHERE resource IN (" . ps_param_insert(count($r_refs)) . ")",
+            ps_param_fill($r_refs,"i")
+        );
+        
         }
 
 	return TRUE;
@@ -6063,8 +6140,8 @@ function update_related_resource($ref,$related,$add=true)
                          WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
                             OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");
 		}
-	else
-		{
+    else if($add)
+        {
         $newrelated = array();
         foreach($related as $torelate)
             {
@@ -6170,7 +6247,7 @@ function truncate_join_field_value($value)
 * 
 * @return array|integer Array of all file paths found or number of files found
 */
-function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
+function get_video_snapshots($resource_id, $file_path = false, $count_only = false, $includemodified = false)
     {
     global $get_resource_path_extra_download_query_string_params, $hide_real_filepath;
 
@@ -6180,15 +6257,21 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     $template_webpath         = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', -1, 1, false, '');
 
     $i = 1;
-    do
+    do 
         {
-	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
-	if($hide_real_filepath){
-		$webpath=$template_webpath . "&snapshot_frame=" . $i;
-	}
-	else{
-		$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
-	}
+        $path=str_replace("snapshot","snapshot_" . $i,$template_path);
+        if($hide_real_filepath)
+            {
+            $webpath=$template_webpath . "&snapshot_frame=" . $i;
+            }
+        else
+            {
+            $webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+            if ($includemodified && file_exists($path))
+                {
+                $webpath .= "?v=" . urlencode(filemtime($path));
+                }
+            }
 
         $snapshot_found  = file_exists($path);
 
@@ -6199,7 +6282,7 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
 
         $i++;
         }
-    while(true === $snapshot_found);
+    while (true === $snapshot_found);
 
     return (!$count_only ? $snapshots_found : count($snapshots_found));
     }
@@ -6236,6 +6319,8 @@ function get_video_info($file)
 */
 function copyAllDataToResource($from, $to, $resourcedata = false)
     {
+    global $userref;
+
     if((int)(string)$from !== (int)$from || (int)(string)$to !== (int)$to)
         {
         return false;
@@ -6245,12 +6330,16 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         {
         $resourcedata = get_resource_data($to);
         }
-        
-    if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+
+    # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
+    if ($from != 0 - $userref)
         {
-        return false;
+        if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+            {
+            return false;
+            }
         }
-        
+
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
     
@@ -8582,7 +8671,7 @@ function get_external_shares(array $filteropts)
         {
         $share_order_by = "expires";
         }
-    $share_sort = strtoupper($share_sort) == "ASC" ? "ASC" : "DESC";
+    $share_sort = strtoupper((string) $share_sort) == "ASC" ? "ASC" : "DESC";
 
     $conditions = array();
     if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
@@ -8761,3 +8850,50 @@ function update_resource_type_order($neworder)
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
+
+/**
+ * Check if file can be rendered in browser via download.php
+ * 
+ * @param  string $path Path to file
+ * 
+ * @return bool
+ */
+function allow_in_browser($path)
+    {
+    if(!file_exists($path) || is_dir($path))
+        {
+        return false;
+        }
+    // Permitted mime types can only be overridden by plugins
+    $permitted_mime[] = "application/pdf";
+    $permitted_mime[] = "image/jpeg";
+    $permitted_mime[] = "image/png";
+    $permitted_mime[] = "image/gif";
+    $permitted_mime[] = "audio/mpeg";
+    $permitted_mime[] = "video/mp4";
+    $permitted_mime[] = "text/plain";
+    $permitted_mime[] = "text/csv";
+    $allow = hook('allow_in_browser',"",[$permitted_mime]);
+    if(is_array($allow))
+        {
+        $permitted_mime = $allow;
+        }
+
+    $type = mime_content_type($path);
+    if($type == "application/octet-stream")
+        {
+        # Not properly detected, try and get mime type via exiftool if possible
+        $exiftool_fullpath = get_utility_path("exiftool");
+        if ($exiftool_fullpath!=false)
+            {
+            $command=$exiftool_fullpath . " -s -s -s -t -mimetype %PATH";
+            $cmd_args['%PATH'] = $path;
+            $type = run_command($command, false, $cmd_args);
+            }
+        }
+    if(in_array($type,$permitted_mime))
+        {
+        return true;
+        }
+    return false;
+    }

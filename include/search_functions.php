@@ -1746,7 +1746,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             // if using fetchrows some results may just be == 0 - remove from results array
             if ($results[$n]==0) 
                 {
-                unset($results[$n]); 
+                //unset($results[$n]); 
                 continue;
                 }
 
@@ -2017,7 +2017,7 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     // Most of them should already be in $config_separators
     // but others, like &shy; don't have an actual character that we can copy and paste
     // to $config_separators
-    $string = htmlentities($string, null, 'UTF-8');
+    $string = htmlentities($string, ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8');
     $string = str_replace('&nbsp;', ' ', $string);
     $string = str_replace('&shy;', ' ', $string);
     $string = str_replace('&lsquo;', ' ', $string);
@@ -2058,6 +2058,16 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     }
 
 
+/**
+ * Resolve keyword
+ * 
+ * @param string $keyword   The keyword to resolve
+ * @param bool   $create    If keyword not found, should we create it instead?
+ * @param bool   $normalize Should we normalize the keyword before resolving?
+ * @param bool   $stem      Should we use the keywords' stem when resolving?
+ * 
+ * @return int|bool Returns the keyword reference for $keyword, or false if no such keyword exists.
+ */
 function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     {
     debug_function_call("resolve_keyword", func_get_args());
@@ -2079,7 +2089,6 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-    # Returns the keyword reference for $keyword, or false if no such keyword exists.
     $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
     if ($return===false && $create)
         {

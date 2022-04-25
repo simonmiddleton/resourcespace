@@ -43,7 +43,7 @@ if (getval("submitted","")!="")
     # Save consent data
     
     # Construct expiry date
-    $expires="'" . getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","") . "'";
+    $expires= getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","");
     
 
     # Construct usage
@@ -53,14 +53,25 @@ if (getval("submitted","")!="")
     # No expiry date ticked? Insert null
     if (getval("no_expiry_date","")=="yes")
         {
-        $expires="null";
+        $expires=null;
         }
 
    
     if ($ref=="new")
         {
         # New record 
-        sql_query("insert into consent (name,email,telephone,consent_usage,notes,expires) values ('" . getvalescaped("name","") . "', '" . getvalescaped("email","") . "', '" . getvalescaped("telephone","") . "', '" . $consent_usage . "', '" . getvalescaped("notes","") . "', $expires)");	
+        ps_query(
+            "insert into consent (name,email,telephone,consent_usage,notes,expires) values ( ?, ?, ?, ?, ?, ?)",
+            [
+                's', getval('name', ''),
+                's', getval('email', ''),
+                's', getval('telephone', ''),
+                's', $consent_usage,
+                's', getval('notes', ''),
+                's', $expires
+            ]
+            
+        );	
         $ref=sql_insert_id();
         $file_path=get_consent_file_path($ref); // get updated path
 
@@ -73,7 +84,7 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_consent(resource,consent) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    ps_query("insert into resource_consent(resource,consent) values (?, ?)", ['i', $r, 'i', $ref]);
                     resource_log($r,"","",$lang["new_consent"] . " " . $ref);
                     }
                 }
@@ -82,10 +93,21 @@ if (getval("submitted","")!="")
     else
         {
         # Existing record	
-        sql_query("update consent set name='" . getvalescaped("name","") . "',email='" . getvalescaped("email","") . "', telephone='" . getvalescaped("telephone","") . "',consent_usage='" . $consent_usage . "',notes='" . getvalescaped("notes","") . "',expires=$expires where ref='$ref'");
+        ps_query(
+            "update consent set name= ?,email= ?, telephone= ?,consent_usage= ?,notes= ?,expires= ? where ref= ?",
+            [
+                's', getval('name', ''),
+                's', getval('email', ''),
+                's', getval('telephone', ''),
+                's', $consent_usage,
+                's', getval('notes', ''),
+                's', $expires,
+                'i', $ref
+            ]
+        );
 
         # Add all the selected resources
-        sql_query("delete from resource_consent where consent='$ref'");
+        ps_query("delete from resource_consent where consent= ?",['i', $ref]);
         $resources=explode(",",getvalescaped("resources",""));
 
         if (getvalescaped("resources","")!="")
@@ -95,7 +117,7 @@ if (getval("submitted","")!="")
                 $r=trim($r);
                 if (is_numeric($r))
                     {
-                    sql_query("insert into resource_consent(resource,consent) values ('" . escape_check($r) . "','" . escape_check($ref) . "')");
+                    ps_query("insert into resource_consent(resource,consent) values (?, ?)", ['i', $r, 'i', $ref]);
                     resource_log($r,"","",$lang["new_consent"] . " " . $ref);
                     }
                 }
@@ -106,14 +128,14 @@ if (getval("submitted","")!="")
     if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
         {
         move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
-        sql_query("update consent set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+        ps_query("update consent set file= ? where ref= ?", ['s', $_FILES["file"]["name"], 'i', $ref]);
         }
 
     # Handle file clear
     if (getval("clear_file","")!="")
         {
         if (file_exists($file_path)) {unlink($file_path);}  
-        sql_query("update consent set file='' where ref='$ref'");
+        ps_query("update consent set file='' where ref= ?", ['i', $ref]);
         }
 
     redirect($redirect_url);
@@ -137,10 +159,10 @@ if ($ref=="new")
     }
 else
     {
-    $consent=sql_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref='$ref'");
+    $consent=ps_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $ref]);
     if (count($consent)==0) {exit("Consent not found.");}
     $consent=$consent[0];
-    $resources=sql_array("select distinct resource value from resource_consent where consent='$ref' order by resource");
+    $resources=ps_array("select distinct resource value from resource_consent where consent= ? order by resource", ['i', $ref]);
     }
         
 include "../../../include/header.php";

@@ -177,7 +177,7 @@ function HookMuseumplusAllHandleuserref()
         {
         global $lang, $custom_top_nav, $baseurl;
         $mplus_top_nav = [
-            'title' => $lang['museumplus_top_menu_title'],
+            'title' => '<i aria-hidden="true" class="fa fa-fw fa-unlink"></i>&nbsp;' . $lang['museumplus_top_menu_title'],
             'link' => "{$baseurl}/pages/search.php?search=%21mplus_invalid_assoc",
         ];
         $custom_top_nav[] = $mplus_top_nav;

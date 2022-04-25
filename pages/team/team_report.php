@@ -77,25 +77,37 @@ if ($report!="" && (getval("createemail","")==""))
 
 include "../../include/header.php";	
 
-if(getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
+if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
 	{
-	$report_receiver      = getval('report_receiver', '');
-	$user_group_selection = array();
-
-	switch($report_receiver)
+	if ($report!="") 
 		{
-		case 'specific_user_groups':
-			$user_group_selection = getval('user_group_selection', array());
-			break;
+		$report_receiver      = getval('report_receiver', '');
+		$user_group_selection = array();
+	
+		switch($report_receiver)
+			{
+			case 'specific_user_groups':
+				$user_group_selection = getval('user_group_selection', array());
+				break;
+			}
+	
+		# Create a new periodic e-mail report
+		create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection, $search_params);
+		?>
+		<script type="text/javascript">
+		alert("<?php echo $lang["newemailreportcreated"] ?>");
+		</script>
+		<?php
+	
 		}
-
-	# Create a new periodic e-mail report
-	create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection, $search_params);
-	?>
-	<script type="text/javascript">
-	alert("<?php echo $lang["newemailreportcreated"] ?>");
-	</script>
-	<?php
+	else 
+		{
+		?>
+		<script type="text/javascript">
+		alert("<?php echo $lang["report-select-required"] ?>");
+		</script>
+		<?php
+		}
 	}
 
 $delete = getvalescaped('delete', '');

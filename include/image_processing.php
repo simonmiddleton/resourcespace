@@ -111,8 +111,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
-            }
-    
+            }    
         else
             {
             # Work out which file has been posted
@@ -434,12 +433,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                                 break;
                             }
 
-                        if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
+                        if(isset($newval))
+                            {
+                            update_field($ref,$read_from[$i]['ref'],$newval);
+                            }
                         }
                     }
                 }
             }
-    
         # Extract text from documents (e.g. PDF, DOC)
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
@@ -459,20 +460,23 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 extract_text($ref, $extension);
                 }
             }
-        }
-    
-    
+        }    
 
     # Store original filename in field, if set
     if (isset($filename_field))
-        if(isset($amended_filename)){$filename=$amended_filename;}
         {
-        if (!$revert){
+        if(isset($amended_filename))
+            {
+            $filename=$amended_filename;
+            }
+        if (!$revert && isset($filename))
+            {
             update_field($ref,$filename_field,$filename);
             }
-        else {
+        else
+            {
             update_field($ref,$filename_field,$original_filename);
-            }       
+            }
         }
     if (!$upload_then_process || $after_upload_processing)
         {
@@ -540,6 +544,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         # Update file dimensions
         get_original_imagesize($ref,$filepath,$extension);
         }
+
     if($upload_then_process && !$after_upload_processing)
         {
         # Add this to the job queue for offline processing
@@ -1925,8 +1930,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
-                    // alternate command for png/gif using the path from above, and omitting resizing
-                    if ($extension=="png" || $extension=="gif")
+                    // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
+                    if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
                         $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
@@ -2252,7 +2257,7 @@ function extract_mean_colour($image,$ref)
         {
         for ($x=0;$x<20;$x++)
             {
-            $rgb = imagecolorat($image, $x*($width/20), $y*($height/20));
+            $rgb = imagecolorat($image, round($x*($width/20)), round($y*($height/20)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2358,7 +2363,7 @@ function get_colour_key($image)
         {
         for ($x=0;$x<$depth;$x++)
             {
-            $rgb = imagecolorat($image, $x*($width/$depth), $y*($height/$depth));
+            $rgb = imagecolorat($image, round($x*($width/$depth)), round($y*($height/$depth)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2380,13 +2385,14 @@ function get_colour_key($image)
     return($colkey);
     }
 
-function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1)
+function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
     {
     # Tweak all preview images
     # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
 
     # Use the screen resolution version for processing
-    global $tweak_all_images;
+    global $tweak_all_images, $ffmpeg_supported_extensions;
+
     if ($tweak_all_images){
         $file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
         if (!file_exists($file)) {
@@ -2517,7 +2523,30 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
         if ($alternative==-1){
             sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
         }
-        
+
+    if ($rotateangle != 0)
+        {
+        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions))
+            {
+            # Find snapshots for video files so they can be rotated with the thumbnail
+            $video_snapshots = get_video_snapshots($ref, true, false);
+            foreach($video_snapshots as $snapshot)
+                {
+                $snapshot_source = imagecreatefromjpeg($snapshot);
+                # Use built-in function if available, else use function in this file
+                if (function_exists("imagerotate"))
+                    {
+                    $snapshot_source = imagerotate($snapshot_source, $rotateangle, 0);
+                    }
+                else
+                    {
+                    $snapshot_source = AltImageRotate($snapshot_source, $rotateangle);
+                    }
+                imagejpeg($snapshot_source, $snapshot, 95);
+                }
+            }
+        }
+
     }
 
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
@@ -3368,6 +3397,9 @@ function getSvgSize($file_path)
         {
         $svg_size[0] = (string) $attributes->width;
         $svg_size[1] = (string) $attributes->height;
+        // Remove non numeric unit values if present
+        $svg_size[0] = preg_replace("/[^.0-9]/", "", $svg_size[0]);
+        $svg_size[1] = preg_replace("/[^.0-9]/", "", $svg_size[1]);
         }
     else if(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
         {

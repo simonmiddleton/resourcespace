@@ -945,6 +945,15 @@ elseif($restypes=='')
 
 <?php hook("searchbarbottomtoolbar"); ?>
 
+<?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title.svg')) { ?>
+    <div class="PoweredByPanel">
+        <a href="https://www.resourcespace.com" target="_blank">
+            <span><?php echo $lang["powered_by"]; ?></span>
+            <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php echo $lang['powered_by_resourcespace']; ?>">
+        </a>
+    </div>
+<?php } ?>
+
 </div>
 <?php
 if ($simple_search_pills_view)

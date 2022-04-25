@@ -123,7 +123,9 @@ if ($k=="" && !$modal) { ?>
 
 <?php
 #$log=get_resource_log($ref);
-$log=sql_query("select rq.created date, rq.ref ref, u.fullname username, rq.comments, rq.status status, rq.reason reason, rq.reasonapproved reasonapproved from request rq left outer join user u on u.ref=rq.user left outer join collection_resource cr on cr.collection=rq.collection where cr.resource='$ref';");
+$log=ps_query("SELECT rq.created date, rq.ref ref, u.fullname username, rq.comments, rq.status status, rq.reason reason, rq.reasonapproved reasonapproved 
+        FROM request rq left outer join user u on u.ref=rq.user left outer join collection_resource cr on cr.collection=rq.collection 
+        WHERE cr.resource=?",array("i",$ref));
 
 for ($n=0;$n<count($log);$n++)
 	{
