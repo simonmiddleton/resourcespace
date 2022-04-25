@@ -113,6 +113,10 @@ $upload_max_filesize=ini_get("upload_max_filesize");
 if (ResolveKB($upload_max_filesize)<(100*1024)) {$result=$lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);} else {$result=$lang["status-ok"];}
 ?><tr><td><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]); ?></td><td><?php echo $upload_max_filesize?></td><td><b><?php echo $result?></b></td></tr><?php
 
+# Check flag set if code needs signing
+if (get_sysvar("code_sign_required")=="YES") {$result=$lang["status-fail"];$result2=$lang["code_sign_required_warning"];} else {$result=$lang["status-ok"];$result2="";}
+?><tr><td><?php echo $lang["code_sign_required"]; ?></td><td><?php echo $result2 ?></td><td><b><?php echo $result?></b></td></tr><?php
+
 # Check write access to filestore
 $success=is_writable($storagedir);
 if ($success===false) {$result=$lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];} else {$result=$lang["status-ok"];}

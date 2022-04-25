@@ -103,12 +103,12 @@ function eval_check_signed($code)
     if (trim($code)=="") {return "";}
     
     // Extract the signature from the code.
-    $code_split=explode("\n",$code);if (count($code_split)<2) {return "throw new Exception('Unsigned code. Please run /pages/tools/resign_all_code.php.');";} // Not enough lines to include a key, exit
+    $code_split=explode("\n",$code);if (count($code_split)<2) {set_sysvar("code_sign_required","YES");return "";} // Not enough lines to include a key, exit
     $signature=str_replace("//SIG","",trim($code_split[0])); // Extract signature
     $code=trim(substr($code,strpos($code,"\n")+1));
 
     // Code not signed correctly? Exit early.
-    if ($signature!=sign_code($code)) {return "throw new Exception('Unsigned code. Please run /pages/tools/resign_all_code.php.');";}
+    if ($signature!=sign_code($code)) {set_sysvar("code_sign_required","YES");return "";}
 
     // All is as expected, return the code ready for execution.
     return $code;
@@ -183,4 +183,5 @@ function resign_all_code($confirm=true)
         }
     // Clear the cache so the code uses the updated signed code.
     clear_query_cache("schema");
+    set_sysvar("code_sign_required","");
     }
