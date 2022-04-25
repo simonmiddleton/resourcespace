@@ -783,7 +783,7 @@ function extract_exif_comment($ref,$extension="")
                         {
                         if ($read_from[$i]['exiftool_filter']!="")
                             {
-                            eval($read_from[$i]['exiftool_filter']);
+                            eval(eval_check_signed($read_from[$i]['exiftool_filter']));
                             }
         
                         $exiffieldoption=$exifoption;

@@ -1713,6 +1713,13 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
+# Check code signing flag and display warning if present
+if (get_sysvar("code_sign_required")=="YES")
+    {
+    ?><div class="Question"><div class="FormError"><?php echo $lang["code_sign_required_warning"]; ?></div></div><?php
+    }
+
+
 $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $modalTrueFalse = ($modal ? "true" : "false");
 

@@ -265,7 +265,7 @@ function setup_user(array $userdata)
         {
         // We need to get all globals as we don't know what may be referenced here
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-        eval($config_options);
+        eval(eval_check_signed($config_options));
         debug_track_vars('end@setup_user', get_defined_vars());
         }
 
@@ -1853,7 +1853,7 @@ function check_access_key($resources,$key)
 
             // We need to get all globals as we don't know what may be referenced here
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
 
             }
         }
@@ -3099,7 +3099,7 @@ function emulate_user($user, $usergroup="")
 
             // We need to get all globals as we don't know what may be referenced here
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
             }
         }
     

@@ -1010,7 +1010,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             # Add any onchange code
             if($fields[$n]["onchange_macro"]!="")
                 {
-                eval($fields[$n]["onchange_macro"]);
+                eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
 			}
 		}
@@ -1755,7 +1755,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         # Add any onchange code
                         if($fields[$n]["onchange_macro"]!="")
                             {
-                            eval($fields[$n]["onchange_macro"]);    
+                            eval(eval_check_signed($fields[$n]["onchange_macro"]));    
                             }
                         }
                     }
@@ -2502,7 +2502,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
-        eval($fieldinfo["onchange_macro"]);    
+        eval(eval_check_signed($fieldinfo["onchange_macro"]));    
         }    
     
     # Allow plugins to perform additional actions.
@@ -5465,7 +5465,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
             # Autocomplete and update using the returned value
-            $value = eval($field['autocomplete_macro']);
+            $value = eval(eval_check_signed($field['autocomplete_macro']));
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 # Multiple values are comma separated
@@ -5975,7 +5975,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
             {
             # Switch to global context and execute.
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
             debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         }
