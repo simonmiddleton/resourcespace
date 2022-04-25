@@ -26,8 +26,8 @@ use function in_array;
  * effort required to implement this interface.
  *
  * @template T
- * @extends AbstractArray<T>
- * @implements MapInterface<T>
+ * @template-extends AbstractArray<T>
+ * @template-implements MapInterface<T>
  */
 abstract class AbstractMap extends AbstractArray implements MapInterface
 {

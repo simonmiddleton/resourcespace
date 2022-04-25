@@ -36,7 +36,7 @@ namespace Ramsey\Collection;
  * ```
  *
  * @template T
- * @extends AbstractSet<T>
+ * @template-extends AbstractSet<T>
  */
 class Set extends AbstractSet
 {

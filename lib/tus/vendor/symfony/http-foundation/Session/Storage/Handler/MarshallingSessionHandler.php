@@ -27,32 +27,50 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
         $this->marshaller = $marshaller;
     }
 
-    public function open(string $savePath, string $name): bool
+    /**
+     * @return bool
+     */
+    public function open($savePath, $name)
     {
         return $this->handler->open($savePath, $name);
     }
 
-    public function close(): bool
+    /**
+     * @return bool
+     */
+    public function close()
     {
         return $this->handler->close();
     }
 
-    public function destroy(string $sessionId): bool
+    /**
+     * @return bool
+     */
+    public function destroy($sessionId)
     {
         return $this->handler->destroy($sessionId);
     }
 
-    public function gc(int $maxlifetime): int|false
+    /**
+     * @return bool
+     */
+    public function gc($maxlifetime)
     {
         return $this->handler->gc($maxlifetime);
     }
 
-    public function read(string $sessionId): string
+    /**
+     * @return string
+     */
+    public function read($sessionId)
     {
         return $this->marshaller->unmarshall($this->handler->read($sessionId));
     }
 
-    public function write(string $sessionId, string $data): bool
+    /**
+     * @return bool
+     */
+    public function write($sessionId, $data)
     {
         $failed = [];
         $marshalledData = $this->marshaller->marshall(['data' => $data], $failed);
@@ -64,12 +82,18 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
         return $this->handler->write($sessionId, $marshalledData['data']);
     }
 
-    public function validateId(string $sessionId): bool
+    /**
+     * @return bool
+     */
+    public function validateId($sessionId)
     {
         return $this->handler->validateId($sessionId);
     }
 
-    public function updateTimestamp(string $sessionId, string $data): bool
+    /**
+     * @return bool
+     */
+    public function updateTimestamp($sessionId, $data)
     {
         return $this->handler->updateTimestamp($sessionId, $data);
     }

@@ -25,7 +25,7 @@ class Request
      *
      * @return string
      */
-    public function method(): string
+    public function method() : string
     {
         return $this->request->getMethod();
     }
@@ -35,7 +35,7 @@ class Request
      *
      * @return string
      */
-    public function path(): string
+    public function path() : string
     {
         return $this->request->getPathInfo();
     }
@@ -45,7 +45,7 @@ class Request
      *
      * @return string
      */
-    public function key(): string
+    public function key() : string
     {
         return basename($this->path());
     }
@@ -55,7 +55,7 @@ class Request
      *
      * @return array
      */
-    public function allowedHttpVerbs(): array
+    public function allowedHttpVerbs() : array
     {
         return [
             HttpRequest::METHOD_GET,
@@ -75,7 +75,7 @@ class Request
      *
      * @return string|null
      */
-    public function header(string $key, $default = null): ?string
+    public function header(string $key, $default = null) : ?string
     {
         return $this->request->headers->get($key, $default);
     }
@@ -85,7 +85,7 @@ class Request
      *
      * @return string
      */
-    public function url(): string
+    public function url() : string
     {
         return rtrim($this->request->getUriForPath('/'), '/');
     }
@@ -98,7 +98,7 @@ class Request
      *
      * @return array
      */
-    public function extractFromHeader(string $key, string $value): array
+    public function extractFromHeader(string $key, string $value) : array
     {
         $meta = $this->header($key);
 
@@ -116,7 +116,7 @@ class Request
      *
      * @return string
      */
-    public function extractFileName(): string
+    public function extractFileName() : string
     {
         $name = $this->extractMeta('name') ?: $this->extractMeta('filename');
 
@@ -128,13 +128,13 @@ class Request
     }
 
     /**
-     * Extracts the metadata from the request header.
+     * Extracts the meta data from the request header.
      *
      * @param string $requestedKey
      *
      * @return string
      */
-    public function extractMeta(string $requestedKey): string
+    public function extractMeta(string $requestedKey) : string
     {
         $uploadMetaData = $this->request->headers->get('Upload-Metadata');
 
@@ -145,10 +145,7 @@ class Request
         $uploadMetaDataChunks = explode(',', $uploadMetaData);
 
         foreach ($uploadMetaDataChunks as $chunk) {
-            $pieces = explode(' ', trim($chunk));
-
-            $key   = $pieces[0];
-            $value = $pieces[1] ?? '';
+            [$key, $value] = explode(' ', $chunk);
 
             if ($key === $requestedKey) {
                 return base64_decode($value);
@@ -163,7 +160,7 @@ class Request
      *
      * @return string[]
      */
-    public function extractAllMeta(): array
+    public function extractAllMeta() : array
     {
         $uploadMetaData = $this->request->headers->get('Upload-Metadata');
 
@@ -175,10 +172,7 @@ class Request
 
         $result = [];
         foreach ($uploadMetaDataChunks as $chunk) {
-            $pieces = explode(' ', trim($chunk));
-
-            $key   = $pieces[0];
-            $value = $pieces[1] ?? '';
+            [$key, $value] = explode(' ', $chunk);
 
             $result[$key] = base64_decode($value);
         }
@@ -191,7 +185,7 @@ class Request
      *
      * @return array
      */
-    public function extractPartials(): array
+    public function extractPartials() : array
     {
         return $this->extractFromHeader('Upload-Concat', Server::UPLOAD_TYPE_FINAL . ';');
     }
@@ -201,7 +195,7 @@ class Request
      *
      * @return bool
      */
-    public function isPartial(): bool
+    public function isPartial() : bool
     {
         return Server::UPLOAD_TYPE_PARTIAL === $this->header('Upload-Concat');
     }
@@ -211,9 +205,9 @@ class Request
      *
      * @return bool
      */
-    public function isFinal(): bool
+    public function isFinal() : bool
     {
-        return null !== ($header = $this->header('Upload-Concat')) && false !== strpos($header, Server::UPLOAD_TYPE_FINAL . ';');
+        return false !== strpos($this->header('Upload-Concat'), Server::UPLOAD_TYPE_FINAL . ';');
     }
 
     /**
@@ -221,7 +215,7 @@ class Request
      *
      * @return HttpRequest
      */
-    public function getRequest(): HttpRequest
+    public function getRequest() : HttpRequest
     {
         return $this->request;
     }
@@ -233,9 +227,9 @@ class Request
      *
      * @return bool
      */
-    protected function isValidFilename(string $filename): bool
+    protected function isValidFilename(string $filename) : bool
     {
-        $forbidden = ['../', '"', "'", '&', '/', '\\', '?', '#', ':'];
+        $forbidden = ['../', '"', "'", '/', '\\'];
 
         foreach ($forbidden as $char) {
             if (false !== strpos($filename, $char)) {

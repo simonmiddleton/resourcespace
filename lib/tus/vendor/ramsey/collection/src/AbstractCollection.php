@@ -32,7 +32,6 @@ use function array_uintersect;
 use function current;
 use function end;
 use function in_array;
-use function is_int;
 use function reset;
 use function sprintf;
 use function unserialize;
@@ -43,8 +42,8 @@ use function usort;
  * minimize the effort required to implement this interface
  *
  * @template T
- * @extends AbstractArray<T>
- * @implements CollectionInterface<T>
+ * @template-extends AbstractArray<T>
+ * @template-implements CollectionInterface<T>
  */
 abstract class AbstractCollection extends AbstractArray implements CollectionInterface
 {
@@ -239,7 +238,7 @@ abstract class AbstractCollection extends AbstractArray implements CollectionInt
 
     public function merge(CollectionInterface ...$collections): CollectionInterface
     {
-        $mergedCollection = clone $this;
+        $temp = [$this->data];
 
         foreach ($collections as $index => $collection) {
             if (!$collection instanceof static) {
@@ -256,16 +255,16 @@ abstract class AbstractCollection extends AbstractArray implements CollectionInt
                 );
             }
 
-            foreach ($collection as $key => $value) {
-                if (is_int($key)) {
-                    $mergedCollection[] = $value;
-                } else {
-                    $mergedCollection[$key] = $value;
-                }
-            }
+            $temp[] = $collection->toArray();
         }
 
-        return $mergedCollection;
+        /** @var array<array-key, T> $merge */
+        $merge = array_merge(...$temp);
+
+        $collection = clone $this;
+        $collection->data = $merge;
+
+        return $collection;
     }
 
     /**
