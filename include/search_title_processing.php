@@ -377,8 +377,11 @@ if ($search_titles)
             else 
                 {
                 $udata = get_user($cuser);
-                $udisplayname = trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
-                $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
+                if($udata)
+                    {
+                    $udisplayname = trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+                    $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
+                    }
                 }
             }
         elseif (substr($search,0,8)=="!hasdata")
