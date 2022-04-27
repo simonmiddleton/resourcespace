@@ -2495,7 +2495,7 @@ $download_filename_id_only = false;
 # Required: $download_filename_id_only = true;
 $download_id_only_with_size = false;
 
-# Index the 'contributed by' field?
+# Alow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;
 
 # Use CKEditor for site content?

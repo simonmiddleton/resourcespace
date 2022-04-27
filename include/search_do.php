@@ -775,16 +775,7 @@ function do_search(
                                         {
                                         $sql_filter->sql .= " AND ";
                                         }
-        
-                                    // ----- check that keyword does not exist in the resource_keyword table -----
-    
-                                    // Filter out resources that do contain the keyword.
-                                    $sql_filter->sql .= "r.ref NOT IN (SELECT resource FROM resource_keyword WHERE keyword = ?)";
-                                    array_push($sql_filter->parameters,"i",$keyref);
-                                    $sql_filter->sql .= " AND ";
-    
-                                    // TODO: deprecate this once nodes stable END
-    
+            
                                     // ----- check that keyword does not exist via resource_node->node_keyword relationship -----
     
                                     $sql_filter->sql .= "`r`.`ref` NOT IN (SELECT `resource` FROM `resource_node` JOIN `node_keyword` ON `resource_node`.`node`=`node_keyword`.`node`" .
@@ -891,38 +882,21 @@ function do_search(
                                             " LEFT OUTER JOIN `node_keyword` nk[union_index] ON rn[union_index].node=nk[union_index].node LEFT OUTER JOIN `node` n[union_index] ON rn[union_index].node=n[union_index].ref " .
                                             " WHERE ((nk[union_index].keyword = ? " . str_replace("[keyword_match_table]","nk[union_index]", $relatedsql->sql) . ") " . $union_restriction_clause_node->sql . ")"
                                             . (($alternative_keywords_sql != "") ? (str_replace("[keyword_match_table]", "nk[union_index]", $alternative_keywords_sql->sql) . $union_restriction_clause_node->sql) : "" )
-                                            . " GROUP BY resource,resource_type_field ";					    
-                                        
+                                            . " GROUP BY resource,resource_type_field ";
+
                                         $union->parameters = array_merge(["i",$keyref],$relatedsql->parameters,$union_restriction_clause_node->parameters);
                                         if($alternative_keywords_sql != "")
                                             {
                                             $union->parameters = array_merge($union->parameters,$alternative_keywords_sql->parameters,$union_restriction_clause_node->parameters);
                                             }
 
-                                         // ----- resource_keyword sub query -----
-                     
-                                         // TODO: deprecate this once all field values are nodes  START
-                                         
-                                          $union->sql .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k[union_index]
-                                          WHERE ((k[union_index].keyword = ?"
-                                            . str_replace("[keyword_match_table]","k" . "[union_index]", $relatedsql->sql)
-                                            . str_replace("[keyword_match_table]", "k[union_index]", $alternative_keywords_sql->sql)
-                                            . ") " . $union_restriction_clause->sql . ")" .
-                                             " GROUP BY resource, resource_type_field";
-
-                                        $union->parameters = array_merge($union->parameters,["i",$keyref],$relatedsql->parameters,$alternative_keywords_sql->parameters,$union_restriction_clause->parameters);
-                                                                                                             
-                                         // TODO: deprecate this once all field values are nodes  END
-
-                                         
-                                         $sql_keyword_union[] = $union;
+                                        $sql_keyword_union[] = $union;
      
-                                         // ---- end of resource_node -> node_keyword sub query -----     
-                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
-                                         $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
-     
-                                         $sql_keyword_union_or[]=$keywords_expanded_or;
-                                            
+                                        // ---- end of resource_node -> node_keyword sub query -----
+                                        $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                                        $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
+    
+                                        $sql_keyword_union_or[]=$keywords_expanded_or;
         
                                         // Log this
                                         if($stats_logging && !$go)
@@ -1009,28 +983,18 @@ function do_search(
                             array_merge($union_restriction_clause_node->parameters,$union_restriction_clause_node->parameters,"i",$quotedfieldid);
                             }
                     
-                        $freeunion = new PreparedStatementQuery();
                         $fixedunion = new PreparedStatementQuery();
                         if ($qk==1)
                             {
-                            $freeunion->sql = " SELECT qrk_[union_index]_" . $qk . ".resource, [bit_or_condition] qrk_[union_index]_" . $qk . ".hit_count AS score FROM resource_keyword qrk_[union_index]_" . $qk;                                                
                             // Add code to find matching nodes in resource_node
                             $fixedunion->sql = " SELECT rn_[union_index]_" . $qk . ".resource, [bit_or_condition] rn_[union_index]_" . $qk . ".hit_count AS score FROM resource_node rn_[union_index]_" . $qk .
                                 " LEFT OUTER JOIN `node_keyword` nk_[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nk_[union_index]_" . $qk . ".node LEFT OUTER JOIN `node` nn[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nn[union_index]_" . $qk . ".ref " .
                                 " AND (nk_[union_index]_" . $qk . ".keyword = ? " . $union_restriction_clause_node . ")";
                             array_push($fixedunion->parameters,"i",$keyref);
-                            $freeunioncondition="qrk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
                             $fixedunioncondition="nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
                             }
                         else
                             {
-                            # For keywords other than the first one, check the position is next to the previous keyword.                                           
-                            $freeunion->sql .= " JOIN resource_keyword qrk_[union_index]_" . $qk . "
-                                ON qrk_[union_index]_" . $qk . ".resource = qrk_[union_index]_" . ($qk-1) . ".resource
-                                AND qrk_[union_index]_" . $qk . ".keyword = '" .$keyref . "'
-                                AND qrk_[union_index]_" . $qk . ".position = qrk_[union_index]_" . ($qk-1) . ".position + " . $last_key_offset . "
-                                AND qrk_[union_index]_" . $qk . ".resource_type_field = qrk_[union_index]_" . ($qk-1) . ".resource_type_field";    
-                            
                             # For keywords other than the first one, check the position is next to the previous keyword.
                             # Also check these occurances are within the same field.
                             $fixedunion->sql .=" JOIN `node_keyword` nk_[union_index]_" . $qk . " ON nk_[union_index]_" . $qk . ".node = nk_[union_index]_" . ($qk-1) . ".node AND nk_[union_index]_" . $qk . ".keyword = ? AND  nk_[union_index]_" . $qk . ".position=nk_[union_index]_" . ($qk-1) . ".position+" . $last_key_offset ;
@@ -1047,28 +1011,30 @@ function do_search(
                     if ($sql_filter->sql != "")
                         {
                         $sql_filter->sql .= " AND ";
-                        }		
-                    $sql_filter->sql .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $freeunion->sql .  " WHERE " . $freeunioncondition->sql . " GROUP BY resource UNION " .  $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-                    $sql_filter->parameters = array_merge($sql_filter->parameters,$freeunion->parameters,$freeunioncondition->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
+                        }
+                    $sql_filter->sql .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+
+
+                    $sql_filter->parameters = array_merge($sql_filter->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
                     }
-                elseif (isset($freeunion))
+                elseif (is_a($fixedunion,"PreparedStatementQuery"))
                     {
                     $addunion = new PreparedStatementQuery();
-                    $addunion->sql = $freeunion->sql .  " WHERE " . $freeunioncondition->sql . " GROUP BY resource UNION " .  $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . " GROUP BY resource ";
-                    $addunion->parameters = array_merge($freeunion->parameters,$freeunioncondition->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
+                    $addunion->sql = $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . " GROUP BY resource ";
+                    $addunion->parameters = array_merge($fixedunion->parameters,$fixedunioncondition->parameters);
                     $sql_keyword_union[] = $addunion;
                     $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
                     $sql_keyword_union_or[]=FALSE;
                     $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
 
 
-                        // TODO TESTING
-                        $addunion->parameters = ["i",33,"i",56];
-                        $sql_keyword_union[] = $addunion;
+                        // // TODO TESTING
+                        // $addunion->parameters = ["i",33,"i",56];
+                        // $sql_keyword_union[] = $addunion;
     
-                        $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
-                        $sql_keyword_union_or[]=FALSE;
-                        $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                        // $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
+                        // $sql_keyword_union_or[]=FALSE;
+                        // $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
 
                         
 

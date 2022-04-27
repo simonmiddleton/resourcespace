@@ -1718,28 +1718,26 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
-
-        //TODO - from below
-        
     
     # Search for locked resources 
     if ($search=="!locked") 
         {
-        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE lock_user<>0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
+        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
+        $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
+        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
 
     # Within this hook implementation, set the value of the global $sql variable:
     # Since there will only be one special search executed at a time, only one of the
     # hook implementations will set the value. So, you know that the value set
     # will always be the correct one (unless two plugins use the same !<type> value).
-    $sql=hook("addspecialsearch", "", array($search));
-    
-    if($sql != "")
+    $hooksql = hook("addspecialsearch", "", array($search, $select, $sql_join , $sql_filter));   
+    if(is_a($hooksql,'PreparedStatementQuery'))
         {
         debug("Addspecialsearch hook returned useful results.");
-        $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
+        $hooksql->sql = $sql_prefix . $hooksql->sql . $sql_suffix;
+        
+        return $returnsql ? $hooksql : ps_query($hooksql->sql,$hooksql->parameters,false,$fetchrows);
         }
 
      # Arrived here? There were no special searches. Return false.

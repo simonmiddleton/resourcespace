@@ -75,15 +75,18 @@ if($add!=='' || $all){
 		$add=array_values($add);
 	}
 	
-	if(count($add)>0){
-		foreach($add as $column){
+	if(count($add)>0)
+        {
+		foreach($add as $column)
+            {
 			echo "Updating column field$column...";
-			$wait = sql_query("UPDATE resource r inner join resource_data rd ON r.ref = rd.resource AND rd.resource_type_field={$column} SET r.field{$column} = SUBSTR(rd.value, 1, {$resource_field_column_limit})");
+            
+			$wait = ps_query("UPDATE resource r LEFT JOIN resource_node rn ON r.ref = rn.resource LEFT JOIN node n ON n.ref=rn.node  SET r.field{$column} = SUBSTR(n.name, 1, {$resource_field_column_limit}) WHERE n.resource_type_field = {$column}");
 			echo "done!<br/>";
 			flush();
-		}
+		    }
 		echo "Done updating columns<br/><br/>";
-	}
+	    }
 	else{
 		echo "No columns to update.<br/><br/>";
 	}

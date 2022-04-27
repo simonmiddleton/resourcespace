@@ -467,7 +467,7 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
-    global $always_record_resource_creator,$index_contributed_by, $k;
+    global $always_record_resource_creator,$$k;
 
     if(!is_numeric($archive))
         {
@@ -493,36 +493,29 @@ function create_resource($resource_type,$archive=999,$user=-1)
             }
         }
 
-	if($user == -1
-        && (
-            $archive == -2
-            || $archive == -1
-            || (isset($always_record_resource_creator) && $always_record_resource_creator)
-        )
-    )
-		{
-		# Work out user ref - note: only for content in status -2 and -1 (user submitted / pending review).
-		global $userref;
-		$user = $userref;
-		}
+    if($user == -1)
+        {
+        global $userref;
+        $user = $userref;
+        }
 
-	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
-	
-	$insert=sql_insert_id();
-	
-	# set defaults for resource here (in case there are edit filters that depend on them)
-	set_resource_defaults($insert);	
+    sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
+
+    $insert=sql_insert_id();
+
+    # set defaults for resource here (in case there are edit filters that depend on them)
+    set_resource_defaults($insert);
 
     hook('resourcecreate', '', array($insert, $resource_type));
 
-	# Autocomplete any blank fields.
-	autocomplete_blank_fields($insert, true);
+    # Autocomplete any blank fields.
+    autocomplete_blank_fields($insert, true);
 
-	# Always index the resource ID as a keyword
-	remove_keyword_mappings($insert, $insert, -1);
-	add_keyword_mappings($insert, $insert, -1);
+    # Always index the resource ID as a keyword
+    remove_keyword_mappings($insert, $insert, -1);
+    add_keyword_mappings($insert, $insert, -1);
 
-	# Log this			
+    # Log this
     daily_stat("Create resource",$insert);
 
     resource_log($insert, LOG_CODE_CREATED, 0);
@@ -530,18 +523,9 @@ function create_resource($resource_type,$archive=999,$user=-1)
         {
         resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
         }
-	
-	# Also index contributed by field, unless disabled
-	if ($index_contributed_by)
-		{
-		$resource=get_resource_data($insert);
-		$userinfo=get_user($resource["created_by"]);
-		add_keyword_mappings($insert,$userinfo["username"] . " " . $userinfo["fullname"],-1);
-		}
 
-	return $insert;
-	}
-    
+    return $insert;
+    }
 
 function update_hitcount($ref)
     {
@@ -1061,16 +1045,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
         # Always index the resource ID as a keyword
         remove_keyword_mappings($ref, $ref, -1);
         add_keyword_mappings($ref, $ref, -1);
-        
-        # Also index the resource type name, unless disabled
-        global $index_resource_type;
-        if ($index_resource_type)
-            {
-            $restypename=ps_value("SELECT rt.name value FROM resource r LEFT JOIN resource_type rt ON r.resource_type=rt.ref WHERE r.ref = ?",["i",$ref],"", "schema");
-
-            remove_all_keyword_mappings_for_field($ref,-2);
-            add_keyword_mappings($ref,$restypename,-2);
-            }
         }
 
     // Update resource_node table
@@ -2946,8 +2920,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     
     
     // Remove Category tree fields as these need special handling
-
-    $node_fields_exclude = implode(',', $NODE_FIELDS);
     $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
     $node_fields_list = implode(',', $node_fields);
 
@@ -3984,16 +3956,7 @@ function update_resource_type($ref,$type)
 	sql_query("delete from resource_data where resource='" . escape_check($ref) . "' and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
 	sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' and resource_type_field>0 and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
 	sql_query("delete from resource_node where resource='" . escape_check($ref) . "' and node>0 and node not in (select n.ref from node n left join resource_type_field rf on n.resource_type_field=rf.ref where rf.resource_type='$type' or rf.resource_type=999 or resource_type=0)");	
-    
-    # Also index the resource type name, unless disabled
-    global $index_resource_type;
-    if ($index_resource_type)
-            {
-            $restypename=sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","","schema");
-            remove_all_keyword_mappings_for_field($ref,-2);
-            add_keyword_mappings($ref,$restypename,-2);
-            }
-                
+                    
     return true;    	
 	}
 	
@@ -5555,7 +5518,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
 function reindex_resource($ref)
 	{
-	global $index_contributed_by, $index_resource_type,$FIXED_LIST_FIELD_TYPES;
+	global $FIXED_LIST_FIELD_TYPES;
 	# Reindex a resource. Delete all resource_keyword rows and create new ones.
 	
 	# Delete existing keywords
@@ -5582,22 +5545,7 @@ function reindex_resource($ref)
 			add_keyword_mappings($ref,i18n_get_indexable($value),$data[$m]["ref"],$data[$m]["partial_index"],$is_date,'','',$is_html);		
 			}
 		}
-	
-	# Also index contributed by field, unless disabled
-	if ($index_contributed_by)
-		{
-		$resource=get_resource_data($ref);
-		$userinfo=get_user($resource["created_by"]);
-		add_keyword_mappings($ref,$userinfo["username"] . " " . $userinfo["fullname"],-1);
-		}
-
-        # Also index the resource type name, unless disabled
-	if ($index_resource_type)
-		{
-		$restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","");
-		add_keyword_mappings($ref,$restypename,-2);
-		}
-                
+      
 	# Always index the resource ID as a keyword
 	add_keyword_mappings($ref, $ref, -1);
 	
