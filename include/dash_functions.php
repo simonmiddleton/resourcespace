@@ -2112,6 +2112,11 @@ function get_dash_search_data($link='', $promimg=0)
     $searchdata["count"] = 0;
     $searchdata["images"] = [];
     
+    if(!(checkPermission_dashadmin() || checkPermission_dashuser()))
+        {
+        return $searchdata;
+        }
+
     $search_string = explode('?',$link);
     parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
     $search = isset($search_string["search"]) ? $search_string["search"] :"";
