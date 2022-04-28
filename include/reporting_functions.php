@@ -257,13 +257,20 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                     $thm_path=get_resource_path($value,true,"thm",false,"",$scramble=-1,$page=1,false);
                     if (!file_exists($thm_path)){
                         $resourcedata=get_resource_data($value);
-                        $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                        if(is_array($resourcedata))
+                            {
+                            $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                            }
+                        else
+                            {
+                            $thm_url= $baseurl . "/gfx/no_preview/resource_type/type1.png";
+                            }
                         }
                     else
                         {
                         $thm_url=get_resource_path($value,false,"col",false,"",-1,1,false);
                         }
-                    $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
+                        $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
                     }
                 else
                     {
