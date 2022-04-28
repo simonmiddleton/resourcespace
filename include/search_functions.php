@@ -981,7 +981,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 $sql_filter->sql.=" AND ";
                 }
             $sql_filter->sql .= "(archive NOT IN (" . ps_param_insert(count($filterblockstates)) . ") OR created_by = ?)";
-            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_insert($filterblockstates,"i"));
+            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_fill($filterblockstates,"i"));
             $sql_filter->parameters[] = "i";
             $sql_filter->parameters[] = $userref;
             }
@@ -989,7 +989,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             {
             if ($sql_filter->sql!="") {$sql_filter->sql .= " AND ";}
             $sql_filter->sql.="archive NOT IN (" . ps_param_insert(count($filterblockstates)) . ")";
-            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_insert($filterblockstates,"i"));
+            $sql_filter->parameters = array_merge($sql_filter->parameters,ps_param_fill($filterblockstates,"i"));
             }
         }
     
@@ -1887,7 +1887,7 @@ function get_default_search_states()
 /**
 * Get the required search filter sql for the given filter for use in do_search()
 *  
-* @return array
+* @return object PreparedStatementQuery
 */
 function get_filter_sql($filterid)
     {
@@ -1913,7 +1913,6 @@ function get_filter_sql($filterid)
         
     foreach($filterrules as $filterrule)
         {
-        $filtersql = new PreparedStatementQuery();
         if(count($filterrule["nodes_on"]) > 0)
             {
             $filtersql->sql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN (" . ps_param_insert(count($filterrule["nodes_on"])) . ")) ";

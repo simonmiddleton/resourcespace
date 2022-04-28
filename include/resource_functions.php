@@ -467,7 +467,7 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
-    global $always_record_resource_creator,$$k;
+    global $always_record_resource_creator,$k;
 
     if(!is_numeric($archive))
         {
