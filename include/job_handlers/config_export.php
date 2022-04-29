@@ -6,7 +6,7 @@ Requires the following:-
 $job_data["exporttables"] - Array of table information to export
 $job_data["obfuscate"] -  Whether table data should be obfuscated or not
 */
-global $baseurl, $userref, $offline_job_delete_completed, $lang,$mysql_bin_path, $mysql_server, $mysql_db,$mysql_username,$mysql_password,$scramble_key, $system_download_config, $system_download_config_force_obfuscation;
+global $baseurl, $baseurl_short, $userref, $offline_job_delete_completed, $lang,$mysql_bin_path, $mysql_server, $mysql_db,$mysql_username,$mysql_password,$scramble_key, $system_download_config, $system_download_config_force_obfuscation;
 $exporttables   = $job_data["exporttables"];
 $obfuscate      = ($system_download_config_force_obfuscation || $job_data["obfuscate"] == "true"); 
 $userref        = $job_data["userref"];
