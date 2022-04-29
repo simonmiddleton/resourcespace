@@ -6,8 +6,8 @@ include "../include/file_functions.php";
 # Check if it's necessary to upgrade the database structure
 include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
-$ref=getvalescaped("ref","");
-$resource=getvalescaped("resource","");
+$ref=getval("ref","");
+$resource=getval("resource","");
 $file_path=get_license_file_path($ref);
 
 # Check access
@@ -46,7 +46,7 @@ if (getval("submitted","")!="")
     # Save license data
     
     # Construct expiry date
-    $expires=getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","");
+    $expires=getval("expires_year","") . "-" . getval("expires_month","") . "-" . getval("expires_day","");
     
     # No expiry date ticked? Insert null
     if (getval("no_expiry_date","")=="yes")
@@ -75,9 +75,9 @@ if (getval("submitted","")!="")
         $file_path=get_license_file_path($ref); // get updated path
 
         # Add to all the selected resources
-        if (getvalescaped("resources","")!="")
+        if (getval("resources","")!="")
             {
-            $resources=explode(", ",getvalescaped("resources",""));
+            $resources=explode(", ",getval("resources",""));
             foreach ($resources as $r)
                 {
                 $r=trim($r);
@@ -106,9 +106,9 @@ if (getval("submitted","")!="")
 
         # Add all the selected resources
         ps_query("delete from resource_license where license= ?", ['i', $ref]);
-        $resources=explode(",",getvalescaped("resources",""));
+        $resources=explode(",",getval("resources",""));
 
-        if (getvalescaped("resources","")!="")
+        if (getval("resources","")!="")
             {
             foreach ($resources as $r)
                 {
