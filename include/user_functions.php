@@ -289,6 +289,10 @@ function setup_user(array $userdata)
             }
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
         }
+    elseif ($legacy_resource_review)
+        {
+        $GLOBALS['actions_notify_states'] = $user_actions_notify_states;
+        }
 
     hook('after_setup_user');
     return true;
