@@ -645,13 +645,13 @@ function ProcessFolder($folder)
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
                                                 if(in_array($field_info['type'],array(0,1,4,5,6,8)))
                                                     {
-                                                    $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
-                                                    $value=append_field_value($field_info,$value,$old_value);
+                                                    $old_value  = get_data_by_field($r,$field);
+                                                    $value      = append_field_value($field_info,$value,$old_value);
                                                     }
                                                 }
                                             update_field ($r, $field, $value);
 
-                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
+                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field, $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
                                                 {
                                                 $value=$given_value;
                                                 }
@@ -659,9 +659,9 @@ function ProcessFolder($folder)
 
                                             // If this is a 'joined' field add it to the resource column
                                             $joins = get_resource_table_joins();
-                                            if(in_array($field_info['ref'], $joins))
+                                            if(in_array($field, $joins))
                                                 {
-                                                sql_query("UPDATE resource SET field{$field_info['ref']} = '" . escape_check(truncate_join_field_value($value)) . "' WHERE ref = '{$r}'");
+                                                ps_query("UPDATE resource SET field" . (int)$field . " = ? WHERE ref = ?", ["s",truncate_join_field_value($value),"i",$r]);
                                                 }
                                         
                                         echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
@@ -956,7 +956,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         if($ref=="")
             {
             //Primary resource file may have been ingested on a previous run - try to locate it
-            $ingested = sql_array("SELECT resource value FROM resource_data WHERE resource_type_field=" . $filename_field . " AND value LIKE '" . $altbasename . "%'");
+            $ingested = ps_array("SELECT resource value FROM resource_node LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ? AND value LIKE ?",["i",$filename_field,"s",$altbasename . "%"]);
             
             if(count($ingested) < 1)
                 {

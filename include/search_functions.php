@@ -1175,6 +1175,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             $sql_filter->sql .= $editable_filter;
             }
         }
+    debug("BANG 1 " . print_r($sql_filter,true));
     return $sql_filter;
     }
 
@@ -1413,14 +1414,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
-        
+
     # View Related
     elseif (substr($search,0,8)=="!related")
         {
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!related","",$resource[0]);
         $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
-        
+
         global $pagename, $related_search_show_self;
         $sql_self = new PreparedStatementQuery();
         if ($related_search_show_self && $pagename == 'search')
@@ -1431,8 +1432,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         $sql->sql = $sql_prefix . $sql_self->sql . "SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.related=r.ref AND t.resource = ?) " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " GROUP BY r.ref 
         UNION
-        SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') $sql_join WHERE $sql_filter GROUP BY r.ref 
-        ORDER BY $order_by" . $sql_suffix;
+        SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') " . $sql_join->sql  . " WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_self->parameters,["i",$resource],$sql_join->parameters,$sql_filter->parameters);
         return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }

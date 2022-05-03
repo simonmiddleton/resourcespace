@@ -227,7 +227,7 @@ function do_search(
     # -- Build up filter SQL that will be used for all queries
     $sql_filter = new PreparedStatementQuery();
     $sql_filter = search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
-    debug("do_search(): \$sql_filter = '" . $sql_filter->sql . "', parameters = '" . implode("','",$sql_filter->parameters));
+    debug("do_search(): \$sql_filter = '" . $sql_filter->sql . "', parameters = ['" . implode("','",$sql_filter->parameters) . "']");
 
 
     //exit(print_r($sql_filter->parameters));
@@ -273,7 +273,7 @@ function do_search(
         # Note that it's normal for null to be returned if this is a resource with non custom permissions (r.access<>3).
         $sql_filter->sql.=" NOT (rca.resource IS null AND r.access=3)";
         }
-
+        debug("BANG 2 " . __LINE__ . print_r($sql_filter,true));
     # Join thumbs_display_fields to resource table
     $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
     $sql_hitcount_select="r.hit_count";
@@ -1474,7 +1474,6 @@ function do_search(
     
     # Debug
     debug('$results_sql=' . $results_sql->sql . ", parameters: " . implode(",",$results_sql->parameters));
-
 
     if($return_refs_only)
         {

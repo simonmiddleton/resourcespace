@@ -126,7 +126,7 @@ function get_editable_resource_sql()
     # TODO Adjust return from do_search() after it is ported to return an object
     # FROM: $editable_resource_query->sql=do_search(
     # TO: $editable_resource_query=do_search(
-    $editable_resource_query->sql=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
+    $editable_resource_query=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
 
     return $editable_resource_query;
     }

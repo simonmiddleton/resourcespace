@@ -98,7 +98,6 @@ for ($n=0;$n<$totalresources;$n++)
     sql_query("update resource_alt_files set resource='$newref' where resource='$ref'");
     sql_query("update resource_consent set resource='$newref' where resource='$ref'");
     sql_query("update resource_custom_access set resource='$newref' where resource='$ref'");
-    sql_query("update resource_data set resource='$newref' where resource='$ref'");
     sql_query("update resource_dimensions set resource='$newref' where resource='$ref'");
     sql_query("update resource_keyword set resource='$newref' where resource='$ref'");
     sql_query("update resource_log set resource='$newref' where resource='$ref'");

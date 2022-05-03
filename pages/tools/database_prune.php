@@ -64,22 +64,6 @@ echo number_format(sql_affected_rows()) . " orphaned fields deleted." . $newline
 sql_query("DELETE FROM user_collection WHERE user NOT IN (SELECT ref FROM user) OR collection NOT IN (SELECT ref FROM collection)");
 echo number_format(sql_affected_rows()) . " orphaned user-collection relationships deleted." . $newline;
 
-sql_query("DELETE FROM resource_data WHERE resource NOT IN (SELECT ref FROM resource) OR resource_type_field NOT IN (SELECT ref FROM resource_type_field)");
-echo number_format(sql_affected_rows()) . " orphaned resource data rows deleted." . $newline;
-
-# Clean out and resource data that is set for fields not applicable to a given resource type.
-$r = get_resource_types();
-for ($n=0;$n<count($r);$n++)
-    {
-    $rt = $r[$n]["ref"];
-    $fields = sql_array("SELECT ref value FROM resource_type_field WHERE resource_type=0 OR resource_type=999 OR resource_type='" . $rt . "'");
-    if (count($fields) > 0)
-        {
-        sql_query("DELETE FROM resource_data WHERE resource in (SELECT ref FROM resource WHERE resource_type='$rt') AND resource_type_field NOT IN (" . join (",",$fields) . ")");
-        echo number_format(sql_affected_rows()) . " orphaned resource data rows deleted for resource type $rt." . $newline;
-        }
-    }
-
 remove_invalid_node_keyword_mappings();
 echo number_format(sql_affected_rows()) . " orphaned node-keyword relationships deleted." . $newline;
 

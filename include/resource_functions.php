@@ -554,7 +554,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // NOTE: this should NOT apply to upload.
     $check_edit_checksums = true;
 
-    // TODO  check rse_verison plugin works for individual and batch reverts
+    // TODO  check rse_version plugin works for individual and batch reverts
 
     // Save resource defaults (functionality available for upload only)
     // Call it here so that if users have access to the field and want 
@@ -583,8 +583,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	resource_type_config_override($resource_data["resource_type"]);                
     
 	# Set up arrays of node ids to add/remove. We can't remove all nodes as user may not have access
-	$nodes_to_add    = array();
-	$nodes_to_remove = array();   
+	$nodes_to_add       = [];
+	$nodes_to_remove    = [];
+    $nodes_check_delete = [];
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
@@ -969,6 +970,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     // Remove any existing node IDs for this non-fixed list field (there should only be one).
                     $current_field_nodes = array_filter(explode(",",$fields[$n]["nodes"]),"is_int_loose");
                     $nodes_to_remove = array_merge($nodes_to_remove,$current_field_nodes);
+                    $nodes_check_delete = array_merge($nodes_check_delete,$current_field_nodes);
                     }
 
                 # Add new node
@@ -1057,6 +1059,11 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if(count($nodes_to_add)>0)
         {
         add_resource_nodes($ref,$nodes_to_add, false, false);
+        }
+
+    if(count($nodes_check_delete)>0)
+        {
+        check_delete_nodes($nodes_check_delete);
         }
 
     log_node_changes($ref,$nodes_to_add,$nodes_to_remove);
@@ -2485,7 +2492,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     else
         {
         # Fetch previous value
-        //$existing = ps_value("SELECT value FROM resource_data WHERE resource = ? AND resource_type_field = ?",["i",$resource,"i",$field],"");
         $existing = get_data_by_field($resource,$field);
         if (trim($value) === trim($existing))
             {
@@ -2917,8 +2923,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     $return           = array();
     $order_by_sql     = ($ord_by ? 'order_by, resource_type, ref' : 'resource_type, order_by, ref');
-    
-    
+        
     // Remove Category tree fields as these need special handling
     $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
     $node_fields_list = implode(',', $node_fields);
@@ -2926,22 +2931,22 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $fieldsSQL = "
              SELECT group_concat(if(rn.resource = '" . escape_check($ref) . "', n.name, NULL)) AS `value`,
                     group_concat(if(rn.resource = '" . escape_check($ref) . "', n.ref, NULL)) AS `nodes`,
-                    f2.ref resource_type_field,
-                    f2.*,
-                    f2.required AS frequired,
-                    f2.ref AS fref,
-                    f2.field_constraint,
-                    f2.automatic_nodes_ordering,
-                    f2.personal_data,
-                    f2.include_in_csv_export,
-                    f2.full_width
-               FROM resource_type_field AS f2
-          LEFT JOIN node AS n ON n.resource_type_field = f2.ref
+                    f.ref resource_type_field,
+                    f.*,
+                    f.required AS frequired,
+                    f.ref AS fref,
+                    f.field_constraint,
+                    f.automatic_nodes_ordering,
+                    f.personal_data,
+                    f.include_in_csv_export,
+                    f.full_width
+               FROM resource_type_field AS f
+          LEFT JOIN node AS n ON n.resource_type_field = f.ref
           LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '" . escape_check($ref) . "'
               WHERE (
-                            f2.active=1 and
-                            f2.type IN ({$node_fields_list})
-                        AND (" . ($multi ? "1 = 1" : "f2.resource_type = 0 OR f2.resource_type = 999 OR f2.resource_type = '{$rtype}'") . ")
+                            f.active=1 and
+                            f.type IN ({$node_fields_list})
+                        AND (" . ($multi ? "1 = 1" : "f.resource_type = 0 OR f.resource_type = 999 OR f.resource_type = '{$rtype}'") . ")
                     )
            GROUP BY ref
            ORDER BY {$order_by_sql}
@@ -3131,52 +3136,30 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
         }
 
     $order_by_sql     = ($ord_by ? 'resource, order_by, resource_type, ref' : 'resource, resource_type, order_by, ref');    
-    $node_fields_exclude = implode(',', $NODE_FIELDS);
+       
     // Remove Category tree fields as these need special handling
     $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
     $node_fields_list = implode(',', $node_fields);
 
-    $fieldsSQL = "
-             SELECT d.resource,
-                    d.value,
-                    f1.ref resource_type_field,
-                    f1.*,
-                    f1.required AS frequired,
-                    f1.ref AS fref,
-                    f1.field_constraint,
-                    f1.automatic_nodes_ordering,
-                    f1.personal_data,
-                    f1.include_in_csv_export,
-                    f1.full_width
-               FROM resource_data d
-          LEFT JOIN resource_type_field AS f1
-                 ON d.resource_type_field = f1.ref
-              WHERE d.resource IN ('" . $refsin . "')
-                AND (
-                        f1.active=1 and
-                        f1.type NOT IN ({$node_fields_exclude})
-                    )
-
-              UNION
-
+    $fieldsSQL = "            
              SELECT rn.resource,
                     group_concat(if(n.name IS NOT NULL, n.name, NULL)) AS `value`,
-                    f2.ref resource_type_field,
-                    f2.*,
-                    f2.required AS frequired,
-                    f2.ref AS fref,
-                    f2.field_constraint,
-                    f2.automatic_nodes_ordering,
-                    f2.personal_data,
-                    f2.include_in_csv_export,
-                    f2.full_width
+                    f.ref resource_type_field,
+                    f.*,
+                    f.required AS frequired,
+                    f.ref AS fref,
+                    f.field_constraint,
+                    f.automatic_nodes_ordering,
+                    f.personal_data,
+                    f.include_in_csv_export,
+                    f.full_width
                FROM resource_node rn
           LEFT JOIN node n ON n.ref=rn.node
-          LEFT JOIN resource_type_field f2 ON f2.ref=n.resource_type_field
+          LEFT JOIN resource_type_field f ON f.ref=n.resource_type_field
               WHERE rn.resource IN ('" . $refsin . "')
                 AND (
-                        f2.active=1 and
-                        f2.type IN ({$node_fields_list})
+                        f.active=1 and
+                        f.type IN ({$node_fields_list})
                     )
            GROUP BY resource, ref
     ";
@@ -3374,37 +3357,18 @@ function get_resource_top_keywords($resource,$count)
     {
     # Return the top $count keywords (by hitcount) used by $resource.
     # This section is for the 'Find Similar' search.
-    # These are now derived from a join of node and resource_node for fixed keyword lists and resource_data for free text fields
     # Currently the date fields are not used for this feature
         
     $return=array();
     
-    $keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (0,1,5,8,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
-    
-    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where (rn.resource='$resource' and n.resource_type_field in (select rtf.ref from resource_type_field rtf where use_for_similar=1) ) order by new_hit_count desc limit $count");
-    
-    $combined = array_merge($keywords,$fixed_dynamic_keywords);
-    
-    foreach ( $combined as $keyword )
+    $keywords = ps_query("SELECT DISTINCT n.ref, n.name, n.resource_type_field FROM node n INNER JOIN resource_node rn ON n.ref=rn.node WHERE (rn.resource = ? AND n.resource_type_field IN (SELECT rtf.ref FROM resource_type_field rtf WHERE use_for_similar=1) ) ORDER BY new_hit_count DESC LIMIT $count",["i",$resource]);
+
+    foreach ($keywords as $keyword )
         {
-        # If isset($keyword['keyword']) this means that the value is coming free text in general    
-        if ( isset($keyword['keyword']) )
+        # Apply permissions and strip out any results the user does not have access to.
+        if (metadata_field_view_access($keyword["resource_type_field"]) && !checkperm("T" . $resource))
             {
-            # Apply permissions and strip out any results the user does not have access to.
-            if (metadata_field_view_access($keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
-                {
-                $r =  $keyword["keyword"] ;
-                }   
-            }
-            
-        else
-            {
-            # In this case the keyword is coming from nodes
-            # Apply permissions and strip out any results the user does not have access to.
-            if (metadata_field_view_access($keyword["resource_type_field"]) && !checkperm("T" . $resource))
-                {
-                $r =  $keyword["name"] ;   
-                }
+            $r =  $keyword["name"] ;
             }
 
         if(isset($r) && trim($r) != '')
@@ -3422,19 +3386,16 @@ function get_resource_top_keywords($resource,$count)
                     }
                 }
             }
-        }   
-            
+        }
     return $return;
     }
-
 
 function clear_resource_data($resource)
     {
     # Clears stored data for a resource.
-    sql_query("delete from resource_data where resource='$resource'");
-	sql_query("delete from resource_dimensions where resource='$resource'");
-	sql_query("delete from resource_keyword where resource='$resource'");
-	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
+	ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
+	ps_query("DELETE FROM resource_keyword WHERE resource = ?", ["i",$resource]);
+	ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);
     delete_all_resource_nodes($resource); 
     
     // Clear all 'joined' fields
@@ -3444,19 +3405,18 @@ function clear_resource_data($resource)
         $joins_sql = "";
         foreach ($joins as $join)
             {
-            $joins_sql .= (($joins_sql!="")?",":"") . "field" . escape_check($join) . "=NULL";
+            $joins_sql .= (($joins_sql!="")?",":"") . "field" . (int)$join . "=NULL";
             }
-        sql_query("UPDATE resource SET $joins_sql WHERE ref='$resource'");
+        ps_query("UPDATE resource SET $joins_sql WHERE ref = ?", ["i",$resource]);
         }
-        
     return true;
     }
 
 function get_max_resource_ref()
-	{
-	# Returns the highest resource reference in use.
-	return sql_value("select max(ref) value from resource",0);
-	}
+    {
+    # Returns the highest resource reference in use.
+    return ps_value("SELECT MAX(ref) value FROM resource",[],0);
+    }
 
 /**
  * Returns an array of resource references in the range $lower to $upper.
@@ -3944,22 +3904,20 @@ function get_themes_by_resource($ref)
     }
 
 function update_resource_type($ref,$type)
-	{
+    {
     if (checkperm("XU" . $type))
         {
         return false;
         }
         
-	sql_query("update resource set resource_type='$type' where ref='" . escape_check($ref) . "'");
-	
-	# Clear data that is no longer needed (data/keywords set for other types).
-	sql_query("delete from resource_data where resource='" . escape_check($ref) . "' and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
-	sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' and resource_type_field>0 and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
-	sql_query("delete from resource_node where resource='" . escape_check($ref) . "' and node>0 and node not in (select n.ref from node n left join resource_type_field rf on n.resource_type_field=rf.ref where rf.resource_type='$type' or rf.resource_type=999 or resource_type=0)");	
+    ps_query("UPDATE resource SET resource_type = ? WHERE ref = ?",["i",$type,"i",$ref]);
+
+    # Clear data that is no longer needed (data/keywords set for other types).
+    sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' and resource_type_field>0 and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
+    sql_query("delete from resource_node where resource='" . escape_check($ref) . "' and node>0 and node not in (select n.ref from node n left join resource_type_field rf on n.resource_type_field=rf.ref where rf.resource_type='$type' or rf.resource_type=999 or resource_type=0)");	
                     
     return true;    	
-	}
-	
+    }
 	
 
 /**
@@ -5459,22 +5417,9 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
     foreach($fields as $field)
         {
-        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-            {
-            if(count(get_resource_nodes($resource, $field['ref'], true)) > 0)
-                {
-                continue;
-                }
-            $value = "";
-            }
-        else
-            {
-            $value = ps_value("SELECT `value` FROM resource_data WHERE resource = ? AND resource_type_field = ?", ["i",$resource,"i",$field['ref']], '');
-            }
-
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
         # The autocomplete macro will run if the existing value is blank, or if forced to always run
-        if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
+        if(count(get_resource_nodes($resource, $field['ref'], true)) == 0 || $run_autocomplete_macro)
             {
             # Autocomplete and update using the returned value
             $value = eval($field['autocomplete_macro']);
@@ -7386,13 +7331,7 @@ function get_data_by_field($resource, $field)
 
     $return              = '';
     $resource_type_field = escape_check($field);
-
-    $sql_select = 'SELECT resource, resource_type_field, `value`';
-    $sql_from = 'FROM resource_data AS rd';
-    $sql_where = 'WHERE';
-    $sql_where_resource = '';
-
-     // Update cache
+    // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
         {
         $rt_fieldtype_cache[$field] = ps_value("SELECT type AS `value` FROM resource_type_field WHERE ref = ? OR name = ?", ["i",$resource_type_field,"i",$resource_type_field],null, "schema");
@@ -7408,7 +7347,7 @@ function get_data_by_field($resource, $field)
         $return = implode(', ', array_column($resnodes, 'name')); 
         }
 
-    return $return;   
+    return $return;
     }
 
 function get_all_image_sizes($internal=false,$restricted=false)
@@ -8317,9 +8256,6 @@ function delete_resource_type_field($ref)
     
     // Delete the resource type field
     ps_query("DELETE FROM resource_type_field WHERE ref=?",["i",$ref]);
-
-    // Remove all data	    
-    ps_query("DELETE FROM resource_data WHERE resource_type_field = ?",["i",$ref]);
 
     // Remove all nodes and keywords or resources. Always remove nodes last otherwise foreign keys will not work
     ps_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ?",["i",$ref]);

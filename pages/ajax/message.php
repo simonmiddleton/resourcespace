@@ -114,7 +114,7 @@
         $extramessages = false;
 		if($actions_on)
 			{
-			$actioncount=get_user_actions(true);
+			$actioncount=get_user_actions(true);exit("HERE");
 			if($actioncount>0)
 				{
                 $extramessage['actioncount'] = $actioncount;

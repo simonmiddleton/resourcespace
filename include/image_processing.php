@@ -79,7 +79,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            sql_query("DELETE FROM resource_data WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
             sql_query("DELETE FROM resource_node WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
             sql_query("DELETE FROM resource_keyword WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
             # clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)

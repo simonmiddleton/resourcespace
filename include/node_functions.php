@@ -2282,7 +2282,6 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
     $similar_field_nodes = get_nodes($resource_type_field, null, false, null, null, $value, true);
     $found_match = get_node_by_name($similar_field_nodes, $value, false);
 
-
     // TODO: nodes_to_add & remove should be empty if found_match=existing_resource_node
     $nodes_to_add = array_column([$found_match], 'ref');
     $nodes_to_remove = empty($nodes_to_add)
@@ -2430,3 +2429,30 @@ function get_nodes_use_count(array $nodes)
     return array_column($nodes_use_count, 'use_count', 'node');
     }
 
+/**
+ * Check array of nodes and delete any that relate to non-fixed list fields and are unused
+ * 
+ * @param array $nodes Array of node IDs
+ */
+function check_delete_nodes($nodes)
+    {
+    global $FIXED_LIST_FIELD_TYPES;
+    
+    // Check and delete unused nodes
+    $count = get_nodes_use_count($nodes);
+    foreach($nodes as $node)
+        {
+        $nodeinfo = [];
+        get_node($node,$nodeinfo);
+        $fieldinfo  = get_resource_type_field($nodeinfo["resource_type_field"]);
+        debug("check_delete_nodes: checking node " . $node . " - (" . $nodeinfo["name"] . ")");
+        if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            if(!isset($count[$node]) ||  $count[$node] == 0)
+                {
+                debug("Deleting unused node #" . $node. " - (" . $nodeinfo["name"] . ")");
+                delete_node($node);
+                }
+            }
+        }
+    }
