@@ -2545,14 +2545,25 @@ function get_utility_path($utilityname, &$checked_path = null)
                 return false;
                 }
 
-            return get_executable_path(
+            $python3 = get_executable_path(
                 $python_path,
-                array(
-                    'unix' => 'python',
+                [
+                    'unix' => 'python3',
                     'win'  => 'python.exe'
-                ),
+                ],
                 $checked_path,
                 true);
+
+            return $python3 ?: get_executable_path(
+                $python_path,
+                [
+                    'unix' => 'python',
+                    'win'  => 'python.exe'
+                ],
+                $checked_path,
+                true);
+
+
 
         case 'fits':
             // FITS path not configured
