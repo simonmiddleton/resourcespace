@@ -325,6 +325,11 @@ if(!$direct && isset($filename))
     }
 else
     {
+    if(!allow_in_browser($path))
+        {
+        error_alert($lang['error-permissiondenied'],true);
+        exit();
+        }
     header('Content-Disposition: inline;');
     header('Content-Transfer-Encoding: binary');
 

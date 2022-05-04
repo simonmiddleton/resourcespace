@@ -8,14 +8,14 @@ if (!checkperm('i'))
     }
 
 $title_field="field".$view_title_field;
-$pendingresources=sql_query("select ref, $title_field, file_size from resource where archive='1'");
+$pendingresources=ps_query("select ref, $title_field, file_size from resource where archive='1'");
 $totalpendingsize=0;
 
 // Handle create archive form post
 if (getvalescaped("create_archive","")!="" && getvalescaped("archive_name","")!="")
 	{
 	$archive_name=getvalescaped("archive_name","") . date("Ymd", time());
-	sql_query("insert into offline_archive (archive_code, archive_date, archive_status) values ('$archive_name',now(),0)");
+	ps_query("insert into offline_archive (archive_code, archive_date, archive_status) values (?,now(),0)", ['s', $archive_name]);
 	$resulttext=$lang['offline_archive_archive_created'] . ": " . $archive_name;	
 	}
 

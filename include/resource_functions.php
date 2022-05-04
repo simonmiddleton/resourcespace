@@ -1010,7 +1010,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             # Add any onchange code
             if($fields[$n]["onchange_macro"]!="")
                 {
-                eval($fields[$n]["onchange_macro"]);
+                eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
 			}
 		}
@@ -1755,7 +1755,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         # Add any onchange code
                         if($fields[$n]["onchange_macro"]!="")
                             {
-                            eval($fields[$n]["onchange_macro"]);    
+                            eval(eval_check_signed($fields[$n]["onchange_macro"]));    
                             }
                         }
                     }
@@ -2502,7 +2502,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
-        eval($fieldinfo["onchange_macro"]);    
+        eval(eval_check_signed($fieldinfo["onchange_macro"]));    
         }    
     
     # Allow plugins to perform additional actions.
@@ -2744,6 +2744,7 @@ function delete_resource($ref)
 
 	# Delete all database entries
     clear_resource_data($ref);
+    resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
 	sql_query("delete from resource where ref='$ref'");
     sql_query("delete from collection_resource where resource='$ref'");
     sql_query("delete from resource_custom_access where resource='$ref'");
@@ -5105,7 +5106,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     $gotmatch=false;
 
     if($search_filter_nodes 
-        && strlen(trim($usereditfilter)) > 0
+        && strlen(trim((string) $usereditfilter)) > 0
         && !is_numeric($usereditfilter)
         && trim($userdata[0]["edit_filter"]) != ""
         && $userdata[0]["edit_filter_id"] != -1
@@ -5139,7 +5140,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             }
         }
     
-    if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
+    if (trim((string) $usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}
@@ -5464,7 +5465,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
             # Autocomplete and update using the returned value
-            $value = eval($field['autocomplete_macro']);
+            $value = eval(eval_check_signed($field['autocomplete_macro']));
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 # Multiple values are comma separated
@@ -5670,7 +5671,7 @@ function update_disk_usage($resource)
  * @return boolean|void
  */
 function update_disk_usage_cron()
-	{
+    {
     $lastrun = get_sysvar('last_update_disk_usage_cron', '1970-01-01');
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
@@ -5679,14 +5680,22 @@ function update_disk_usage_cron()
         return false;
         }
 
-	$resources=sql_array("select ref value from resource where ref>0 and disk_usage_last_updated is null or datediff(now(),disk_usage_last_updated)>30 limit 20000");
-	foreach ($resources as $resource)
-		{
-		update_disk_usage($resource);
+    $resources=ps_array(
+        "SELECT ref value
+            FROM resource 
+        WHERE ref>0 
+            AND disk_usage_last_updated IS null 
+                OR datediff(now(),disk_usage_last_updated)>30 
+        ORDER BY disk_usage_last_updated ASC 
+        LIMIT 20000",
+        []);
+    foreach ($resources as $resource)
+        {
+        update_disk_usage($resource);
         }
     
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
-	}
+    }
 
 /**
  * Returns the total disk space used by all resources on the system
@@ -5966,7 +5975,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
             {
             # Switch to global context and execute.
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
             debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         }
@@ -6059,12 +6068,17 @@ function delete_resources_in_collection($collection) {
 		return TRUE;
 	}
 
-	// Delete (ie. move to resource_deletion_state set in config):
-	if(isset($resource_deletion_state))
+    // Delete (ie. move to resource_deletion_state set in config):
+    if(isset($resource_deletion_state))
         {
-		update_archive_status($r_refs,$resource_deletion_state,$r_states);
-		collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
-		sql_query("DELETE FROM collection_resource  WHERE resource IN ('" . implode("','",$r_refs) . "')");
+        update_archive_status($r_refs,$resource_deletion_state,$r_states);
+        foreach($r_refs as $ref){resource_log($ref,LOG_CODE_DELETED,'');}
+        collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
+        ps_query(
+            "DELETE FROM collection_resource  WHERE resource IN (" . ps_param_insert(count($r_refs)) . ")",
+            ps_param_fill($r_refs,"i")
+        );
+        
         }
 
 	return TRUE;
@@ -6233,7 +6247,7 @@ function truncate_join_field_value($value)
 * 
 * @return array|integer Array of all file paths found or number of files found
 */
-function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
+function get_video_snapshots($resource_id, $file_path = false, $count_only = false, $includemodified = false)
     {
     global $get_resource_path_extra_download_query_string_params, $hide_real_filepath;
 
@@ -6243,15 +6257,21 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     $template_webpath         = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', -1, 1, false, '');
 
     $i = 1;
-    do
+    do 
         {
-	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
-	if($hide_real_filepath){
-		$webpath=$template_webpath . "&snapshot_frame=" . $i;
-	}
-	else{
-		$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
-	}
+        $path=str_replace("snapshot","snapshot_" . $i,$template_path);
+        if($hide_real_filepath)
+            {
+            $webpath=$template_webpath . "&snapshot_frame=" . $i;
+            }
+        else
+            {
+            $webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+            if ($includemodified && file_exists($path))
+                {
+                $webpath .= "?v=" . urlencode(filemtime($path));
+                }
+            }
 
         $snapshot_found  = file_exists($path);
 
@@ -6262,7 +6282,7 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
 
         $i++;
         }
-    while(true === $snapshot_found);
+    while (true === $snapshot_found);
 
     return (!$count_only ? $snapshots_found : count($snapshots_found));
     }
@@ -6299,6 +6319,8 @@ function get_video_info($file)
 */
 function copyAllDataToResource($from, $to, $resourcedata = false)
     {
+    global $userref;
+
     if((int)(string)$from !== (int)$from || (int)(string)$to !== (int)$to)
         {
         return false;
@@ -6308,12 +6330,16 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         {
         $resourcedata = get_resource_data($to);
         }
-        
-    if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+
+    # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
+    if ($from != 0 - $userref)
         {
-        return false;
+        if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+            {
+            return false;
+            }
         }
-        
+
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
     
@@ -8824,3 +8850,50 @@ function update_resource_type_order($neworder)
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
+
+/**
+ * Check if file can be rendered in browser via download.php
+ * 
+ * @param  string $path Path to file
+ * 
+ * @return bool
+ */
+function allow_in_browser($path)
+    {
+    if(!file_exists($path) || is_dir($path))
+        {
+        return false;
+        }
+    // Permitted mime types can only be overridden by plugins
+    $permitted_mime[] = "application/pdf";
+    $permitted_mime[] = "image/jpeg";
+    $permitted_mime[] = "image/png";
+    $permitted_mime[] = "image/gif";
+    $permitted_mime[] = "audio/mpeg";
+    $permitted_mime[] = "video/mp4";
+    $permitted_mime[] = "text/plain";
+    $permitted_mime[] = "text/csv";
+    $allow = hook('allow_in_browser',"",[$permitted_mime]);
+    if(is_array($allow))
+        {
+        $permitted_mime = $allow;
+        }
+
+    $type = mime_content_type($path);
+    if($type == "application/octet-stream")
+        {
+        # Not properly detected, try and get mime type via exiftool if possible
+        $exiftool_fullpath = get_utility_path("exiftool");
+        if ($exiftool_fullpath!=false)
+            {
+            $command=$exiftool_fullpath . " -s -s -s -t -mimetype %PATH";
+            $cmd_args['%PATH'] = $path;
+            $type = run_command($command, false, $cmd_args);
+            }
+        }
+    if(in_array($type,$permitted_mime))
+        {
+        return true;
+        }
+    return false;
+    }

@@ -407,6 +407,8 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 #SearchBoxPanel {width: inherit;}
 #ResearchBoxPanel {width: 100%;margin-top: 15px;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none; overflow-x: scroll;}
+.PoweredByPanel {font-style: italic; margin: 0 15px 15px 15px; font-size: 13px;}
+.PoweredByPanel img {max-width: 215px; margin-top: 8px;}
 
 /*Resource Panel layout*/
 .ResourcePanel {padding:0;margin:0 14px 14px 0;width: 175px;float:left;position:relative; overflow: hidden;}

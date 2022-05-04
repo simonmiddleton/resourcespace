@@ -666,6 +666,9 @@ $resourceid_simple_search=false;
 # Enable date option on simple search bar
 $simple_search_date=true;
 
+# Show "Powered by ResourceSpace" on simple search bar when default $linkedheaderimgsrc not used
+$show_powered_by_logo=true;
+
 # Enable sorting resources in other ways:
 $colour_sort=true;
 $popularity_sort=true;
@@ -2918,9 +2921,6 @@ $resource_type_extension_mapping         = array(
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg', 'weba'),
 );
 
-// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
-$view_in_browser_extensions=array("pdf","mp3","svg");
-
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
@@ -3292,3 +3292,4 @@ $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 
 // String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
 $regexp_slash_replace = 'SLASH';
+

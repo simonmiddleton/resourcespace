@@ -130,7 +130,7 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
     if (isset($result["responses"][0]["logoAnnotations"]))      
         {
         # Logos found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
-        $landmarks=array();
+        $logos=array();
         foreach ($result["responses"][0]["logoAnnotations"] as $label)
             {
             if(isset($label["description"]) && isset($label["score"]) && $label["score"]>0.75) // High score bar of 75% for logos as in testing there were many false detections.

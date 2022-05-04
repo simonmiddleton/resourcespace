@@ -43,14 +43,14 @@ $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?fiel
 // Process form requests
 if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     {
-    $option_name     = trim(getvalescaped('option_name', ''));
-    $option_parent   = getvalescaped('option_parent', '');
-    $option_new_index = getvalescaped('node_order_by', '', true);
+    $option_name     = trim(getval('option_name', ''));
+    $option_parent   = getval('option_parent', '');
+    $option_new_index = getval('node_order_by', '', true);
     if ($option_new_index != "")
         {
         $option_new_index -= 1;
         }
-    $node_action     = getvalescaped('node_action', '');
+    $node_action     = getval('node_action', '');
     // [Save Option]
     if('save' === $node_action && enforcePostRequest($ajax))
         {
@@ -210,7 +210,7 @@ $submit_new_option = getvalescaped('submit_new_option', '');
 if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_new_option && enforcePostRequest($ajax))
     {
     $new_option_name     = trim(getval('new_option_name', ''));
-    $new_option_parent   = getvalescaped('new_option_parent', '');
+    $new_option_parent   = getval('new_option_parent', '');
     $new_option_order_by = get_node_order_by($field, 7 == $field_data['type'], $new_option_parent);
     $new_node_index      = $new_option_order_by/10;
 
@@ -649,6 +649,16 @@ if($ajax)
 $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
+    $all_nodes = get_nodes($field, NULL, TRUE, NULL, NULL, '', TRUE);
+    foreach($all_nodes as $node)
+        {
+        $node_data[] = ['ref' => $node['ref'], 'name' => $node['name']];
+        }
+    ?>
+    <script>
+        let node_data = <?php echo json_encode($node_data??[]); ?>;
+    </script> 
+    <?php
     $nodes_counter = count($tree_nodes);
     $i             = 0;
     $node_index    = 0;
@@ -906,6 +916,27 @@ function ToggleTreeNode(ref, field_ref)
         if(typeof response !== 'undefined')
             {
             node_children.html(response);
+            node_children.find('select').each(function(i, element)
+                {
+                var node_element = jQuery(element);
+                node_data.forEach(function(item)
+                    {
+                    let option = jQuery('<option>').attr('value', item['ref']).html(item['name']);
+                    if(item['ref'] == node_element.attr('parent_node'))
+                        {
+                        option.attr('selected', true);
+                        }
+                    if(node_element.attr('id') != undefined)
+                        {
+                        if(item['ref'] != node_element.attr('id').split('_')[2])
+                            {
+                            node_element.append(option);
+                            }
+                        }
+                    }
+                )
+                }
+            )
             jQuery('.node_parent_chosen_selector').chosen({});
 
             jQuery(table_node).data('toggleNodeMode', 'ex');

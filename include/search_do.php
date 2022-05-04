@@ -65,7 +65,7 @@ function do_search(
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
            $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access, $config_separators;
 
-    if($editable_only && !$returnsql && trim($k) != "" && !$internal_share_access)
+    if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
         {
         return array();
         }

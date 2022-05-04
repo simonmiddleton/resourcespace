@@ -1216,6 +1216,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 {
                 return false;
                 }
+
+            v = v.match(/^[^~]*/i)[0]; // Remove unique value identifier: ~id
+
             switch(v)
                 {
             <?php
@@ -4072,9 +4075,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     # Handle expiry date warning messages
 	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-        $title = $lang["warningexpired"];
-        $warningtext = $lang["warningexpiredtext"];
-        $dismisstext = $lang["warningexpiredok"];
+        $title = htmlspecialchars($lang["warningexpired"]);
+        $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
+        $dismisstext = htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
         <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
         $extra.="<style>#RecordDownload {display:none;}</style>";
@@ -4094,7 +4097,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # title comes from field
         # value comes from field
         $warningtext = $value;
-        $dismisstext = $lang["warningdismiss"];
+        $dismisstext = htmlspecialchars($lang["warningdismiss"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 
@@ -4108,7 +4111,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
     if ($field['value_filter']!="")
         {
-        eval($field['value_filter']);
+        eval(eval_check_signed($field['value_filter']));
         }
     else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
         {
@@ -4151,8 +4154,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $value = str_replace(',', '', $value);
             }
 
-		$value_unformatted=$value; # store unformatted value for replacement also
-
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # ckeditor that have not yet been edited.
         if(
@@ -4188,8 +4189,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
             $template = str_replace('[warning]', $warningtext, $template);
-            $template = str_replace('[value_unformatted]', $value_unformatted, $template);
-            $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
@@ -5004,6 +5004,7 @@ function render_featured_collections_category_permissions(array $ctx)
 function show_upgrade_in_progress($dbstructonly=false)
     {
     global $lang;
+    $title = (isset($lang["upgrade_in_progress"])?$lang["upgrade_in_progress"]:"Upgrade in progress");
     $message="This system is currently being upgraded by another process. Delete filestore/tmp/process_locks/* if this process has stalled." . PHP_EOL;
     if(!$dbstructonly)
         {
@@ -5018,7 +5019,7 @@ function show_upgrade_in_progress($dbstructonly=false)
         }
     else
         {
-        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
+        echo "<h1>{$title}</h1>";
         echo nl2br($message);
         ?>
         <script>

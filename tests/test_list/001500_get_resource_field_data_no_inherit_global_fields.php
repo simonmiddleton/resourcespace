@@ -11,7 +11,7 @@ $return = true;
 $expected_number_of_fields = 5;
 
 // Check for a resource type which is not inheriting global fields
-sql_query("UPDATE resource_type SET inherit_global_fields = 0 WHERE ref = 3");
+ps_query("UPDATE resource_type SET inherit_global_fields = 0 WHERE ref = 3");
 
 // Create new resource
 $videoresource = create_resource(3);
@@ -22,6 +22,6 @@ if($expected_number_of_fields < count(get_resource_field_data($videoresource)))
     }
 
 // Reset Video resource type to the original state:
-sql_query("UPDATE resource_type SET inherit_global_fields = 1 WHERE ref = 3");
+ps_query("UPDATE resource_type SET inherit_global_fields = 1 WHERE ref = 3");
 
 return $return;

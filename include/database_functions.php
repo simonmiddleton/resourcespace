@@ -275,27 +275,27 @@ function sql_connect()
         # Group concat limit increased to support option based metadata with more realistic limit for option entries
         # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
-        sql_query("SET SESSION group_concat_max_len = 32767", false, -1, false, 0); 
+        ps_query("SET SESSION group_concat_max_len = 32767", [], false, -1, false, 0); 
 
         if ($mysql_force_strict_mode)    
             {
             db_set_connection_mode($db_connection_mode);
-            sql_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", false, -1, false, 0);
+            ps_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", [], false, -1, false, 0);
             continue;
             }
 
         db_set_connection_mode($db_connection_mode);
-        $mysql_version = sql_query('SELECT LEFT(VERSION(), 3) AS ver');
+        $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
         if(version_compare($mysql_version[0]['ver'], '5.6', '>')) 
             {
             db_set_connection_mode($db_connection_mode);
-            $sql_mode_current = sql_query('select @@SESSION.sql_mode');
+            $sql_mode_current = ps_query('select @@SESSION.sql_mode');
             $sql_mode_string = implode(" ", $sql_mode_current[0]);
             $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
             $sql_mode_string_new = implode (",", $sql_mode_array_new);
 
             db_set_connection_mode($db_connection_mode);
-            sql_query("SET SESSION sql_mode = '$sql_mode_string_new'", false, -1, false, 0);
+            ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], false, -1, false, 0);
             }
         }
 
@@ -401,7 +401,7 @@ function db_rollback_transaction($name)
  * @param  mixed $fetch_specific_columns
  * @return array
  */
-function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
+function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
     $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
@@ -479,7 +479,14 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
                 {
                 $prepared_statement_cache=array();
                 }
-            $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
+            try
+                {
+                $prepared_statement_cache[$sql]=$db_connection->prepare($sql);
+                }   
+            catch (Exception $e)
+                {
+                $prepared_statement_cache[$sql]=false;
+                }
             if($prepared_statement_cache[$sql]===false)
                 {
                 if ($dbstruct)
@@ -508,8 +515,20 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         if (!(isset($error) && $error!=""))
             {
             mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
-            mysqli_stmt_execute($prepared_statement_cache[$sql]);
-            $error=mysqli_stmt_error($prepared_statement_cache[$sql]);
+            $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                mysqli_stmt_execute($prepared_statement_cache[$sql]);
+                }
+            catch (Exception $e)
+                {
+                $error = $e->getMessage();
+                echo $error . "\n" . $db_connection_mode;
+                }
+            $GLOBALS["use_error_exception"] = $use_error_exception_cache;
+
+            $error = $error ?? mysqli_stmt_error($prepared_statement_cache[$sql]);
             }
         if ($error=="")
             {
@@ -551,17 +570,18 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
         }
     else    
         {
+        $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
         $GLOBALS["use_error_exception"] = true;
         try
             {
             // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
             $result = $result_set = mysqli_query($db_connection, $sql);
             }
-        catch (Exception $e)
+        catch (Throwable $e)
             {
             $error = $e->getMessage();
             }
-        $GLOBALS["use_error_exception"] = false;
+        $GLOBALS["use_error_exception"] = $use_error_exception_cache;
         $return_row_count = 0;
         $error = $error ?? mysqli_error($db_connection);
         if ($error=="" && $result_set instanceof mysqli_result)
@@ -608,7 +628,9 @@ function ps_query($sql,$parameters=array(),$cache="",$fetchrows=-1,$dbstruct=tru
             }
         elseif (strpos($error,"has gone away")!==false && $reconnect)
             {
-            # SQL server connection has timed out or been killed. Try to reconnect and run query again.
+            // SQL server connection has timed out or been killed. Try to reconnect and run query again.
+            // Unset the cache for this no longer valid
+            unset($prepared_statement_cache[$sql]);
             sql_connect();
             db_set_connection_mode($db_connection_mode);
             return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
@@ -830,6 +852,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         db_clear_connection_mode();
         }
 
+    $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
     $GLOBALS["use_error_exception"] = true;
     try
         {
@@ -840,7 +863,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         {
         $error = $e->getMessage();
         }
-    $GLOBALS["use_error_exception"] = false;
+    $GLOBALS["use_error_exception"] = $use_error_exception_cache;
     
     if ($config_show_performance_footer){
     	# Stats
@@ -1032,9 +1055,9 @@ function sql_value($query, $default, $cache="")
 * @uses ps_query()
 * 
 * @param string $query      SQL query
-* @param string $parameters SQL parameters with types, as for ps_query()
+* @param array  $parameters SQL parameters with types, as for ps_query()
 * @param mixed  $default    Default value to return if no rows returned
-* @param string  $cache      Cache category (optional)
+* @param string $cache      Cache category (optional)
 * 
 * @return string
 */
@@ -1059,7 +1082,7 @@ function ps_value($query, $parameters, $default, $cache="")
 * @uses ps_query()
 * 
 * @param string $query      SQL query
-* @param string $parameters SQL parameters with types, as for ps_query()
+* @param array  $parameters SQL parameters with types, as for ps_query()
 * @param string  $cache      Cache category (optional)
 * 
 * @return array
@@ -1218,7 +1241,7 @@ function CheckDBStruct($path,$verbose=false)
 	
     # Tables first.
     # Load existing tables list
-    $ts=sql_query("show tables",false,-1,false);
+    $ts=ps_query("show tables",[],false,-1,false);
     $tables=array();
     for ($n=0;$n<count($ts);$n++)
         {
@@ -1239,10 +1262,46 @@ function CheckDBStruct($path,$verbose=false)
                 $f=fopen($path . "/" . $file,"r");
                 $hasPrimaryKey = false;
                 $pk_sql = "PRIMARY KEY (";
+                $n=0;
                 while (($col = fgetcsv($f,5000)) !== false)
                     {
                     if ($sql.="") {$sql.=", ";}
                     $sql.=$col[0] . " " . str_replace("§",",",$col[1]);
+
+                    if (strtolower(substr($col[1],0,3))=="int"
+                        || strtolower(substr($col[1],0,6))=="bigint"
+                        || strtolower(substr($col[1],0,7))=="tinyint"
+                        || strtolower(substr($col[1],0,8))=="smallint"
+                    )
+                        {
+                        # Integer
+                        $column_types[$n]="i";
+                        }
+                    else if (strtolower(substr($col[1],0,5))=="float"
+                        || strtolower(substr($col[1],0,7))=="decimal"
+                        || strtolower(substr($col[1],0,6))=="double"
+                    )
+                        {
+                        # Double
+                        $column_types[$n]="d";
+                        }
+                    else if (strtolower(substr($col[1],0,8))=="tinyblob"
+                        || strtolower(substr($col[1],0,4))=="blob"
+                        || strtolower(substr($col[1],0,10))=="mediumblob"
+                        || strtolower(substr($col[1],0,8))=="longblob"
+                    )
+                        {
+                        # Blob
+                        $column_types[$n]="b";
+                        }
+                    else
+                        {
+                        # String
+                        $column_types[$n]="s";
+                        }
+
+                    $n++;
+
                     if ($col[4]!="") {$sql.=" default " . $col[4];}
                     if ($col[3]=="PRI")
                         {
@@ -1265,23 +1324,32 @@ function CheckDBStruct($path,$verbose=false)
                 # Verbose mode, used for better output from the test script.
                 if ($verbose) {echo "$table ";ob_flush();}
 
-                sql_query("create table $table ($sql)",false,-1,false);
+                ps_query("create table $table ($sql)",[],false,-1,false);
 
                 # Add initial data
                 $data=str_replace("table_","data_",$file);
                 if (file_exists($path . "/" . $data))
                     {
+                    
                     $f=fopen($path . "/" . $data,"r");
                     while (($row = fgetcsv($f,5000)) !== false)
                         {
-                        # Escape values
+                        $sql_params = [];
                         for ($n=0;$n<count($row);$n++)
                             {
-                            $row[$n]=escape_check($row[$n]);
-                            $row[$n]="'" . $row[$n] . "'";
-                            if ($row[$n]=="''") {$row[$n]="null";}
+                            // Get type from table file
+                            $sql_params[]=$column_types[$n];
+                            if ($row[$n]=="''") {$sql_params[]=NULL;}
+                            else {$sql_params[]=$row[$n];}
                             }
-                        sql_query("insert into `$table` values (" . join (",",$row) . ")",false,-1,false);
+
+                        ps_query(
+                            "insert into `$table` values (" . ps_param_insert(count($row)) . ")",
+                            $sql_params,
+                            false,
+                            -1,
+                            false
+                        );
                         }
                     }
                 }
@@ -1290,7 +1358,7 @@ function CheckDBStruct($path,$verbose=false)
                 # Table already exists, so check all columns exist
 
                 # Load existing table definition
-                $existing=sql_query("describe $table",false,-1,false);
+                $existing=ps_query("describe $table",[],false,-1,false);
 
                 ##########
                 # Copy needed resource_data into resource for search displays
@@ -1312,7 +1380,7 @@ function CheckDBStruct($path,$verbose=false)
                             # Add this column.
                             $sql="alter table $table add column ";
                             $sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
-                            sql_query($sql,false,-1,false);
+                            ps_query($sql,[],false,-1,false);
                             }
                         }
                     }
@@ -1357,7 +1425,7 @@ function CheckDBStruct($path,$verbose=false)
                                         {
                                         debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
                                         // Update the column type
-                                        sql_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);
+                                        ps_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);
                                         }
                                     }
                                 }
@@ -1369,7 +1437,7 @@ function CheckDBStruct($path,$verbose=false)
                                 if ($col[4]!="") {$sql.=" default " . $col[4];}
                                 if ($col[3]=="PRI") {$sql.=" primary key";}
                                 if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
-                                sql_query($sql,false,-1,false);
+                                ps_query($sql,[],false,-1,false);
                                 }	
                             }
                         }
@@ -1378,7 +1446,7 @@ function CheckDBStruct($path,$verbose=false)
 
             # Check all indices exist
             # Load existing indexes
-            $existing=sql_query("show index from $table",false,-1,false);
+            $existing=ps_query("show index from $table",[],false,-1,false);
 
             $file=str_replace("table_","index_",$file);
             if (file_exists($path . "/" . $file))
@@ -1413,7 +1481,7 @@ function CheckDBStruct($path,$verbose=false)
                             }
 
                         $sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
-                        sql_query($sql,false,-1,false);
+                        ps_query($sql,[],false,-1,false);
                         $done[]=$col[2];
                         }
                     }
