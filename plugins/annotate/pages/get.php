@@ -23,14 +23,14 @@ $page = getvalescaped("page", 1, true);
 
 // Get notes based on page:
 $sql_and = '';
-
+$sql_params[] = 'i'; $sql_params[] = $ref;
 if($page >= 1)
 	{
-	$sql_and = ' AND page = ' . $page;
+	$sql_and = ' AND page = ?';
+    $sql_params[] = 'i'; $sql_params[$page];
 	}
-
-$notes=sql_query("select * from annotate_notes where ref='$ref'" . $sql_and);
-sql_query("update resource set annotation_count=".count($notes)." where ref=$ref");
+$notes=ps_query("select * from annotate_notes where ref= ?" . $sql_and, $sql_params);
+ps_query("update resource set annotation_count= ? where ref= ?", ['i', count($notes), 'i', $ref]);
 // check if display size is different from original preview size, and if so, modify coordinates
 
 $json="[";
