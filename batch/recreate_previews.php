@@ -29,22 +29,22 @@ elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) 
     }
 else
     {
-    echo "update_previews.php - update previews for all/selected resources\n\n";
+    echo "recreate_previews.php - update previews for all/selected resources\n\n";
     echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4/hls previews\n";
     echo "USAGE:\n";
-    echo "php update_previews.php [collection|resource] [id] [maxref] [sizes] [comma separated size ids][-previewbased] [-videoupdate]\n\n";
+    echo "php recreate_previews.php [collection|resource] [id] [maxref] [sizes] [comma separated size ids][-previewbased] [-videoupdate]\n\n";
     echo "examples\n";
-    echo "php update_previews.php collection 247\n";
+    echo "php recreate_previews.php collection 247\n";
     echo "- this will update previews for all resources in collection #247\n\n";
-    echo "php update_previews.php collection 380 -previewbased\n";
+    echo "php recreate_previews.php collection 380 -previewbased\n";
     echo "- this will update previews for all resources in collection #380, utilising any existing uploaded previews\n\n";
-    echo "php update_previews.php resource 19564\n";
+    echo "php recreate_previews.php resource 19564\n";
     echo "- this will update previews for all resources starting with resource ID #19564\n\n";
-    echo "php update_previews.php resource 19564 19800\n";
+    echo "php recreate_previews.php resource 19564 19800\n";
     echo "- this will update previews for resources starting with resource ID #19564 and ending with resource 19800\n\n";
-    echo "php update_previews.php resource 1 -videoupdate\n";
+    echo "php recreate_previews.php resource 1 -videoupdate\n";
     echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
-    echo "php update_previews.php collection 247 sizes scr,col\n";
+    echo "php recreate_previews.php collection 247 sizes scr,col\n";
     echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";   
     exit();
     }
