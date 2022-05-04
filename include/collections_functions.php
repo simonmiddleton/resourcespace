@@ -2528,35 +2528,56 @@ function allow_multi_edit($collection,$collectionid = 0)
                 {
                 return false;
                 }
-            }	
+            }
+        # All have edit access
+        return true;	
         }
 	else
         {
         // Instead of checking each resource we can do a comparison between a search for all resources in collection and a search for editable resources
         $resultcount = 0;
+        $all_resource_refs=array();
         if(!is_array($collection))
             {
             // Need the collection resources so need to run the search
             $collectionid = $collection;
+            # Editable_only=false (so returns resources whether editable or not)
             $collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,false);
             }
         if(is_array($collection))
             {
             $resultcount = count($collection);
+            $all_resource_refs=array_column($collection,"ref");
             }
         $editcount = 0;
+        $editable_resource_refs=array();
+        # Editable_only=true (so returns editable resources only)
         $editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,true);
         if(is_array($editresults))
             {
             $editcount = count($editresults);
+            $editable_resource_refs=array_column($editresults,"ref");
             }
-        if($resultcount != $editcount){return false;}
+
+        if($resultcount == $editcount)
+            {
+            if(hook('denyaftermultiedit', '', array($collection))) { return false; }
+            return true;
+            }
+
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
+        
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) { return false; }
+            }
+        
+        # All non_editables have grant edit
+        return true;
+
         }
-
-            
-    if(hook('denyaftermultiedit', '', array($collection))) { return false; }
-
-    return true;
     }
 
 
