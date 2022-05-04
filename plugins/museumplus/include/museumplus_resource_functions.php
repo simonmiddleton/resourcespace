@@ -152,7 +152,6 @@ function mplus_resource_clear_metadata(array $refs)
 
     $sql_in_refs = implode('\', \'', $refs);
     $sql_in_rtfs = implode('\', \'', $resource_type_fields);
-    sql_query("DELETE FROM resource_data WHERE resource IN ('{$sql_in_refs}') AND resource_type_field IN ('{$sql_in_rtfs}')");
     sql_query(
         "DELETE rn
            FROM resource_node AS rn

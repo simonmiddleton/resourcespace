@@ -9,11 +9,11 @@ function resolve_soundex($keyword)
     # the most commonly used keyword that starts with the same few letters.
 
     global $soundex_suggest_limit;
-    $soundex=sql_value("SELECT keyword value FROM keyword WHERE soundex='". escape_check(soundex($keyword))."' AND keyword NOT LIKE '% %' AND hit_count>'" . $soundex_suggest_limit . "' ORDER BY hit_count DESC LIMIT 1",false);
+    $soundex=ps_value("SELECT keyword value FROM keyword WHERE soundex = ? AND keyword NOT LIKE '% %' AND hit_count > ? ORDER BY hit_count DESC LIMIT 1",["s",soundex($keyword),"i",$soundex_suggest_limit],false);
     if (($soundex===false) && (strlen($keyword)>=4))
         {
         # No soundex match, suggest words that start with the same first few letters.
-        return sql_value("SELECT keyword value FROM keyword WHERE keyword LIKE '" . escape_check(substr($keyword,0,4)) . "%' AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",false);
+        return ps_value("SELECT keyword value FROM keyword WHERE keyword LIKE ? AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",["s",substr($keyword,0,4) . "%"],0);
         }
     return $soundex;
     }
@@ -1910,19 +1910,19 @@ function get_filter_sql($filterid)
     $filters = array();
     $filter_ors = array(); // Allow filters to be overridden in certain cases
     $filter_ors_params = array();
-        
+    $filtersql = new PreparedStatementQuery();
     foreach($filterrules as $filterrule)
         {
         if(count($filterrule["nodes_on"]) > 0)
             {
             $filtersql->sql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN (" . ps_param_insert(count($filterrule["nodes_on"])) . ")) ";
-            $filtersql->parameters = array_merge($filtersql->sql,ps_param_fill($filterrule["nodes_on"],"i"));
+            $filtersql->parameters = array_merge($filtersql->parameters,ps_param_fill($filterrule["nodes_on"],"i"));
             }
         if(count($filterrule["nodes_off"]) > 0)
             {
-            if($filtersql != "") {$filtersql .= " OR ";}
+            if($filtersql->sql != "") {$filtersql->sql .= " OR ";}
             $filtersql->sql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? "" : " NOT") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN (" . ps_param_insert(count($filterrule["nodes_off"])) . ")) ";
-            $filtersql->parameters = array_merge($filtersql->sql,ps_param_fill($filterrule["nodes_off"],"i"));
+            $filtersql->parameters = array_merge($filtersql->parameters,ps_param_fill($filterrule["nodes_off"],"i"));
             }                        
         //$filters[] = "(" . $filtersql . ")";
         $filters[] = $filtersql;
@@ -1943,7 +1943,10 @@ function get_filter_sql($filterid)
         $filter_add =  new PreparedStatementQuery();
         // Bracket the filters to ensure that there is no hanging OR to create an unintentional disjunct
         $filter_add->sql = "(" . implode($glue, array_column($filters,"sql")) . ")";
-        $filter_add->parameters = array_merge(array_column($filters,"parameters"));
+        foreach($filters as $filter)
+            {
+            $filter_add->parameters = array_merge($filter_add->parameters,$filter->parameters);
+            }
             
         # If custom access has been granted for the user or group, nullify the search filter, effectively selecting "true".
         if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
@@ -1962,6 +1965,7 @@ function get_filter_sql($filterid)
             $filter_add->sql = "((" . $filter_add->sql . ") OR (" . implode(") OR (",$filter_ors) . "))";
             $filter_add->parameters = array_merge($filter_add->parameters,$filter_ors_params);
             }
+
         return $filter_add;
         }
     return false;

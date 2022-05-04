@@ -3,7 +3,6 @@
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Check search for field specific free text search e.g. '"title:launch party"'
-
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
 $resourcec=create_resource(1,0);
