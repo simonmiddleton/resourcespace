@@ -31,7 +31,16 @@ if (!isset($collectionid) || $collectionid == 0)
     $minref = max((int)($minref),$fstemplate_alt_threshold);
     $firstref = max($fstemplate_alt_threshold, $minref);
     
-    $replace_resources = sql_array("SELECT ref value FROM resource WHERE ref >= '" . $minref . "' " . (($maxref > 0) ? " AND ref <= '" . (int)$maxref . "'" : "") . " ORDER BY ref ASC",0);
+    $sql_params = array("i", $minref);
+    $sql_condition = "";
+
+    if ($maxref > 0)
+        {
+        $sql_condition = " AND ref <= ?";
+        $sql_params = array_merge($sql_params, array("i", (int)$maxref));
+        }
+
+    $replace_resources = ps_array("SELECT ref value FROM resource WHERE ref >= ? " . $sql_condition . " ORDER BY ref ASC", $sql_params, 0);
     $logtext[] = "Replacing files for resource IDs. Min ID: " . $minref  . (($maxref > 0) ? " Max ID: " . $maxref : "");
     }
 else
@@ -60,7 +69,7 @@ foreach($foldercontents as $objectindex => $object)
     // get resource by $filename_field
     if($filename_field != 0)
         {
-        $target_resources = sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='" . escape_check($filename) . "'","");
+        $target_resources = ps_array("select resource value from resource_data where resource_type_field = ? and value = ?", array("i", $filename_field, "s", $filename), "");
         $valid_resources=array_values(array_intersect($target_resources,$replace_resources));
         
         if(count($valid_resources) == 1)
@@ -71,7 +80,7 @@ foreach($foldercontents as $objectindex => $object)
             $success = @copy($full_path,$rsfile);
             if($success)
                 {
-                sql_query("update resource set file_extension = lower('" . escape_check($extension) . "') where ref = '$valid_resource'");
+                ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $valid_resource));
                 resource_log($valid_resource,"u",0);
                 if(!$no_exif) 
                     {
@@ -107,7 +116,7 @@ foreach($foldercontents as $objectindex => $object)
                     $success = @copy($full_path,$rsfile);
                     if($success)
                         {
-                        sql_query("update resource set file_extension = lower('" . escape_check($extension) . "') where ref = '$valid_resource'");
+                        ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $valid_resource));
                         resource_log($valid_resource,"u",0);
                         if(!$no_exif) 
                             {
@@ -147,7 +156,7 @@ foreach($foldercontents as $objectindex => $object)
             $success = @copy($full_path,$rsfile);
             if($success)
                 {
-                sql_query("update resource set file_extension = lower('" . escape_check($extension) . "') where ref = '$targetresource'");
+                ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $targetresource));
                 resource_log($targetresource,"u",0);
                 if(!$no_exif) 
                     {

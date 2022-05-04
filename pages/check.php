@@ -113,6 +113,10 @@ $upload_max_filesize=ini_get("upload_max_filesize");
 if (ResolveKB($upload_max_filesize)<(100*1024)) {$result=$lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);} else {$result=$lang["status-ok"];}
 ?><tr><td><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]); ?></td><td><?php echo $upload_max_filesize?></td><td><b><?php echo $result?></b></td></tr><?php
 
+# Check flag set if code needs signing
+if (get_sysvar("code_sign_required")=="YES") {$result=$lang["status-fail"];$result2=$lang["code_sign_required_warning"];} else {$result=$lang["status-ok"];$result2="";}
+?><tr><td><?php echo $lang["code_sign_required"]; ?></td><td><?php echo $result2 ?></td><td><b><?php echo $result?></b></td></tr><?php
+
 # Check write access to filestore
 $success=is_writable($storagedir);
 if ($success===false) {$result=$lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];} else {$result=$lang["status-ok"];}
@@ -229,28 +233,16 @@ if($php_tz == $mysql_tz)
 
 <?php
 // Check required PHP extensions 
-$npuccheck = function_exists("apcu_fetch");
-?>
-<tr>
-    <td colspan="2">php-apcu</td>
-    <td><b><?php echo (function_exists("apcu_fetch") ? $lang['status-ok'] : $lang['server_apcu_check_fail']); ?></b></td>
-</tr>
-<?php
-$extensions_required = array();
-$extensions_required["curl"] = "curl_init";
-$extensions_required["gd"] = "imagecrop";
-$extensions_required["xml"] = "xml_parser_create";
-$extensions_required["mbstring"] = "mb_strtoupper";
-$extensions_required["intl"] = "locale_get_default";
-$extensions_required["json"] = "json_decode";
-$extensions_required["zip"] = "zip_open";
+$extensions_required = SYSTEM_REQUIRED_PHP_MODULES;
 
 ksort($extensions_required, SORT_STRING);
 foreach($extensions_required as $module=> $required_fn)
     {?>
     <tr>
         <td colspan="2">php-<?php echo $module ?></td>
-        <td><b><?php echo function_exists($required_fn) ? $lang['status-ok'] : $lang['status-fail'] ?></b></td>
+        <td><b><?php 
+        if (function_exists($required_fn)){echo $lang['status-ok'];}
+        else {echo ($lang['server_' . $module . '_check_fail']??$lang['status-fail']);}?></b></td>
     </tr>
     <?php
     }

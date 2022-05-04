@@ -470,7 +470,7 @@ function propose_changes_display_field($n, $field)
             
             # value filter plugin should be used regardless of whether a display template is used.
             if ($field['value_filter']!=""){
-                    eval($field['value_filter']);
+                    eval(eval_check_signed($field['value_filter']));
             }
                     else if ($field["type"]==4 || $field["type"]==6) { 
                             $value=nicedate($value,false,true);

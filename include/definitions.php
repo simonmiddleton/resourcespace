@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 18);
+define('SYSTEM_UPGRADE_LEVEL', 19);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -104,7 +104,8 @@ define ('LOG_CODE_UPLOADED',			'u');
 define ('LOG_CODE_UNSPECIFIED',			'U');
 define ('LOG_CODE_VIEWED',				'v');
 define ('LOG_CODE_DELETED',				'x');
-define ('LOG_CODE_DELETED_ALTERNATIVE',	'y');
+define ('LOG_CODE_DELETED_PERMANENTLY', 'xx');
+define ('LOG_CODE_DELETED_ALTERNATIVE', 'y');
 define ('LOG_CODE_ENABLED',             '+');
 define ('LOG_CODE_DISABLED',            '-');
 define ('LOG_CODE_LOCKED',              'X');
@@ -189,6 +190,7 @@ define('LINK_PLUS','<i aria-hidden="true" class="fa fa-plus"></i>&nbsp;');
 define('LINK_PLUS_CIRCLE','<i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;');
 define('LINK_CHEVRON_RIGHT','<i aria-hidden="true" class="fa fa-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON','<i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;');
+define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>&nbsp;');
 define('DASH_ICON','<i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;');
 define('FEATURED_COLLECTION_ICON','<i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;');
 define('RECENT_ICON','<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;');
@@ -462,6 +464,8 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'json' => 'json_decode',
     'zip' => 'zip_open',
     'apcu' => 'apcu_fetch',
+    'dom' => 'dom_import_simplexml',
+    'mysqli' => 'mysqli_init',
 ];
 
 /*

@@ -6,8 +6,8 @@ if (!checkperm('i'))
     {
     exit ($lang['error-permissiondenied']);
     }
-$completedarchives=sql_query("select archive_code, archive_date, archive_status from offline_archive order by archive_date desc");
-$offline_archive_fieldshort=sql_value("select name as value from resource_type_field where ref='$offline_archive_archivefield'","");
+$completedarchives=ps_query("select archive_code, archive_date, archive_status from offline_archive order by archive_date desc");
+$offline_archive_fieldshort=ps_value("select name as value from resource_type_field where ref= ?",['i', $offline_archive_archivefield],"");
 
 
 include '../../../include/header.php';

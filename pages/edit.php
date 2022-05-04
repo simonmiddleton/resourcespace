@@ -902,16 +902,16 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    switch($tweak)
       {
       case "rotateclock":
-         tweak_preview_images($ref,270,0,$resource["preview_extension"]);
+         tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
          break;
       case "rotateanti":
-         tweak_preview_images($ref,90,0,$resource["preview_extension"]);
+         tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
          break;
       case "gammaplus":
-         tweak_preview_images($ref,0,1.3,$resource["preview_extension"]);
+         tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
          break;
       case "gammaminus":
-         tweak_preview_images($ref,0,0.7,$resource["preview_extension"]);
+         tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
 		delete_previews($resource);
@@ -1349,15 +1349,26 @@ hook("editbefresmetadata"); ?>
             
             for($n = 0; $n < count($types); $n++)
                 {
-                $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
-                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+                if(trim((string) $types[$n]['allowed_extensions']) != "")
+                    {
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    }
+                else
+                    {
+                    array();
+                    }
+                // skip showing a resource type that we do not to have permission to change to 
+                // (unless it is currently set to that). Applies to upload only
                 if((0 > $ref || $upload_review_mode)
                     && 
                         (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != "" && count($allowed_extensions) > 0 && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                        (trim($resource["file_extension"]) != ""
+                            && isset($allowed_extensions)
+                            && count($allowed_extensions) > 0 
+                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
@@ -1701,6 +1712,13 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
+
+# Check code signing flag and display warning if present
+if (get_sysvar("code_sign_required")=="YES")
+    {
+    ?><div class="Question"><div class="FormError"><?php echo $lang["code_sign_required_warning"]; ?></div></div><?php
+    }
+
 
 $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $modalTrueFalse = ($modal ? "true" : "false");

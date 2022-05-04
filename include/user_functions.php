@@ -265,7 +265,7 @@ function setup_user(array $userdata)
         {
         // We need to get all globals as we don't know what may be referenced here
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-        eval($config_options);
+        eval(eval_check_signed($config_options));
         debug_track_vars('end@setup_user', get_defined_vars());
         }
 
@@ -288,6 +288,10 @@ function setup_user(array $userdata)
             $default_notify_states[] = -1;
             }
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
+        }
+    elseif ($legacy_resource_review)
+        {
+        $GLOBALS['actions_notify_states'] = $user_actions_notify_states;
         }
 
     hook('after_setup_user');
@@ -1853,7 +1857,7 @@ function check_access_key($resources,$key)
 
             // We need to get all globals as we don't know what may be referenced here
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
 
             }
         }
@@ -2754,10 +2758,15 @@ function save_usergroup($ref,$groupoptions)
     }
 
 
-function copy_usergroup_permissions($src_id,$dst_id)
+/**
+ * Copy the permissions string from another usergroup
+ *
+ * @param  int $src_id    The group ID to copy from
+ * @param  int $dst_id    The group ID to copy to
+ * @return mixed          bool|int True to indicate existing group has been updated or ID of newly created group
+ */
+function copy_usergroup_permissions(int $src_id,int $dst_id)
     {
-    if(!is_numeric($src_id)||!is_numeric($dst_id)){return false;}
-
     $src_group = get_usergroup($src_id);
     $dst_group = get_usergroup($dst_id);
 
@@ -2766,7 +2775,7 @@ function copy_usergroup_permissions($src_id,$dst_id)
 
     $dst_group=["permissions" => $src_group["permissions"]];
     return save_usergroup($dst_id,$dst_group);
-    };
+    }
  
 /**
  * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.
@@ -3094,7 +3103,7 @@ function emulate_user($user, $usergroup="")
 
             // We need to get all globals as we don't know what may be referenced here
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
             }
         }
     
