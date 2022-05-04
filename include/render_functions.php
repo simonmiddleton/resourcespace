@@ -1216,6 +1216,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 {
                 return false;
                 }
+
+            v = v.match(/^[^~]*/i)[0]; // Remove unique value identifier: ~id
+
             switch(v)
                 {
             <?php
