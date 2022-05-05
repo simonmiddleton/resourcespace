@@ -267,17 +267,43 @@ if($editsearch)
     $multiple = true;
     $edit_autosave = false; # Do not allow auto saving for batch editing.
 
-    // Check all resources are editable
+    # Check all resources are editable
+    
+    # Editable_only=false (so returns resources whether editable or not)
     $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
+    if (!is_array($searchitems)){$searchitems = array();}
+    $all_resources_count = count($searchitems);
+    $all_resource_refs=array_column($searchitems,"ref");
+
+    # Editable_only=true (so returns editable resources only)
     $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
     if (!is_array($edititems)){$edititems = array();}
-    $items       = array_column($edititems,"ref");
-    if(count($searchitems) != count($edititems) || count($items) == 0)
+    $editable_resources_count = count($edititems);
+    $editable_resource_refs=array_column($edititems,"ref");
+
+    # If not all resources are editable then the batch edit may not be approprate
+    if($editable_resources_count != $all_resources_count)
         {
-        $error = $lang['error-editpermissiondenied'];
-        error_alert($error);
-        exit();
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
+
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) 
+                {
+                $error = $lang['error-editpermissiondenied'];
+                error_alert($error);
+                exit();
+                }
+            }
+
+        # All non_editables have grant edit
+        # Don't exit as batch edit is OK
         }
+
+    # The $items array is used later, so must be updated with all items
+    $items = $all_resource_refs;
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
