@@ -1339,8 +1339,21 @@ function CheckDBStruct($path,$verbose=false)
                             {
                             // Get type from table file
                             $sql_params[]=$column_types[$n];
-                            if ($row[$n]=="''") {$sql_params[]=NULL;}
-                            else {$sql_params[]=$row[$n];}
+                            // dbstruct/data_*.txt files normally have nothing if the column value was null when using
+                            // the pages/tools/dbstruct_create.php script.
+                            if($row[$n] === '')
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            // Legacy? I couldn't find any dbstruct/data_*.txt file containing '' for a column value
+                            else if($row[$n] == "''")
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            else
+                                {
+                                $sql_params[] = $row[$n];
+                                }
                             }
 
                         ps_query(
