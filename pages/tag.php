@@ -43,11 +43,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
     if (count($rtfilter)>0)
         {
         $sql_filter.=" and r.resource_type not in (" . ps_param_insert(count($rtfilter)) . ")";
-        foreach ($rtfilter as $value)
-            {
-            $sql_filter_params[]="i";
-            $sql_filter_params[]=$value;
-            }
+        $sql_filter_params=ps_param_fill($rtfilter,"i");
         }
 
     # append "use" access rights, do not show restricted resources unless admin
@@ -82,12 +78,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
 
             # Find keyword(s)
             $ks=explode("|",strtolower($s[1]));
-            $ks_params=[];
-            foreach ($ks as $keyword)
-                {
-                $ks_params[]="s";
-                $ks_params[]=$keyword;
-                }
+            $ks_params=ps_param_fill($ks,"s");
+
             $modifiedsearchfilter=hook("modifysearchfilter");
             if ($modifiedsearchfilter){$ks=$modifiedsearchfilter;}
 			if ($modifiedsearchfilter){$ks=$modifiedsearchfilter;} 
@@ -104,16 +96,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
                     " JOIN resource_keyword filter" . $n . " ON r.ref=filter" . $n . ".resource
                         AND filter" . $n . ".resource_type_field in ('" . ps_param_insert(count($f)) . "')
                         AND filter" . $n . ".keyword in ('" . ps_param_insert(count($kw)) . "') ";
-                foreach($f as $value)
-                    {
-                    $sql_join_params[]="i";
-                    $sql_join_params[]=$value;
-                    }
-                foreach ($kw as $keyword)
-                    {
-                    $sql_join_params[]="i";
-                    $sql_join_params[]=$keyword;
-                    }
+                $sql_join_params = array_merge($sql_join_params,ps_param_fill($f,"i"),ps_param_fill($kw,"i"));
                 }
             else
                 {
@@ -125,17 +108,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
                         WHERE resource_type_field IN ('" . ps_param_insert(count($f)) . "')
                             AND keyword in ('" . ps_param_insert(count($kw)) . "'))";
                         # Filter out resources that do contain the keyword(s)
-                foreach($f as $value)
-                    {
-                    $sql_filter_params[]="i";
-                    $sql_filter_params[]=$value;
-                    }
-                foreach ($kw as $keyword)
-                    {
-                    $sql_filter_params[]="i";
-                    $sql_filter_params[]=$keyword;
-                    }
-            }
+                $sql_join_params = array_merge($sql_join_params,ps_param_fill($f,"i"),ps_param_fill($kw,"i"));
+                }
             }
         }
 
