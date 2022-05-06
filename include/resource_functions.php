@@ -7972,10 +7972,9 @@ function notify_resource_change($resource)
     $message_users=array();
     if(count($download_users)>0)
         {
-        $userconfirmmessage     = [];
-        $userconfirmmessage[]   = ["text" => "lang_notify_resource_change_email","replace" => ["[days]"=>$notify_on_resource_change_days,"[url]"=>$baseurl . "/?r=" . $resource]];
-        $notifymessage = new ResourceSpaceUserNotification($userconfirmmessage);
-        $notifymessage->subject = "lang_notify_resource_change_email_subject";
+        $notifymessage = new ResourceSpaceUserNotification();
+        $notifymessage->set_subject("lang_notify_resource_change_email_subject");
+        $notifymessage->set_text("lang_notify_resource_change_email",["[days]","[url]"],[$notify_on_resource_change_days,$baseurl . "/?r=" . $resource]);
         $notifymessage->preference = "user_pref_resource_notifications";
         $notifymessage->url = $baseurl . "/?r=" . $resource;
         $notifymessage->template = 'notify_resource_change_email';
