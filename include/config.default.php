@@ -2134,7 +2134,8 @@ $enable_thumbnail_creation_on_upload = true;
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
     // Default center and zoom for the map view when selecting a new location, as a world view.
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
-    $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
+    // The tools available on https://epsg.io/map can be used to get the coordinates of a location on the map or try an internet search for EPSG:3857.
+    $geolocation_default_bounds = '-450061.222543,7152059.862587,2';
 
     // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
     // Note that server caching is bypassed if $geo_leaflet_maps_sources = true;
