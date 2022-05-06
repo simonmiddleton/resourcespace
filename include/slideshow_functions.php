@@ -22,8 +22,8 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
         return false;
         }
 
-    $ref = ((int) $ref > 0 ? "'" . $ref . "'" : 'NULL');
-    $resource_ref = ((int) $resource_ref > 0 ? "'" . $resource_ref . "'" : 'NULL');
+    $ref = ((int) $ref > 0 ? $ref : NULL);
+    $resource_ref = ((int) $resource_ref > 0 ? $resource_ref : NULL);
 
     $query = "
         INSERT INTO slideshow (ref, resource_ref, homepage_show, featured_collections_show, login_show)

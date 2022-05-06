@@ -3,8 +3,8 @@
 
 $lang['format_chooser'] = 'Format chooser';
 $lang['format_chooser_configuration'] = 'Format chooser configuration';
-$lang['format_chooser_output_formats'] = 'Output formats';
-$lang['format_chooser_input_formats'] = 'Input formats';
+$lang['format_chooser_output_formats'] = 'Output formats (Image types only)';
+$lang['format_chooser_input_formats'] = 'Input formats (Image types only)';
 $lang['format_chooser_keep_format'] = 'Do not change';
 $lang['format_chooser_original_size'] = 'Original resolution';
 $lang['format_chooser_choose_profile'] = 'Choose color profile';

@@ -411,9 +411,37 @@ function add_resource_to_collection(
 
     if ($addpermitted)
         {
+        // If this is a featured collection  apply all the external access keys from the categories which make up its 
+        // branch path to prevent breaking existing shares for any of those featured collection categories.
+        $fc_branch_path_keys = [];
+        $collection_data = get_collection($collection, true);
+        if($collection_data !== false && $collection_data['type'] === COLLECTION_TYPE_FEATURED)
+            {
+            $branch_category_ids = array_column(
+                // determine the branch from the parent because the keys for the collection in question will be done below
+                get_featured_collection_category_branch_by_leaf($collection_data['parent'], []),
+                'ref'
+            );
+            foreach($branch_category_ids as $fc_category_id)
+                {
+                $fc_branch_path_keys = array_merge(
+                    $fc_branch_path_keys,
+                    get_external_shares([
+                        'share_collection' => $fc_category_id,
+                        'share_type' => 0,
+                        'ignore_permissions' => true
+                    ])
+                );
+                }
+            }
+
+
         # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
         # for this specific resource, and warn the user that this has happened.
-        $keys = $external_shares ?? get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true));
+        $keys = array_merge(
+            $external_shares ?? get_external_shares(array("share_collection"=>$collection,"share_type"=>0,"ignore_permissions"=>true)),
+            $fc_branch_path_keys
+        );
         if (count($keys)>0)
             {
             $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$resource],"");
@@ -1693,6 +1721,72 @@ function save_collection($ref, $coldata=array())
         reorder_collections(array_column($fcs_after_update, 'ref'));
         }
 
+    // When a collection is now saved as a Featured Collection (must have resources) under an existing branch, apply all 
+    // the external access keys from the categories which make up that path to prevent breaking existing shares.
+    if(
+        isset($sqlset['parent']) && $sqlset['parent'] > 0
+        && !empty($fc_resources = array_filter((array) get_collection_resources($ref)))
+    )
+        {
+        // Delete old branch path external share associations as they are no longer relevant
+        $old_branch_category_ids = array_column(get_featured_collection_category_branch_by_leaf((int) $oldcoldata['parent'], []), 'ref');
+        foreach($old_branch_category_ids as $fc_category_id)
+            {
+            $old_keys = get_external_shares([
+                    'share_collection' => $fc_category_id,
+                    'share_type' => 0,
+                    'ignore_permissions' => true
+                ]);
+            foreach($old_keys as $old_key_data)
+                {
+                // IMPORTANT: we delete the keys associated with the collection we've just saved. The key may still be valid for the rest of the branch categories.
+                delete_collection_access_key($ref, $old_key_data['access_key']);
+                }
+            }
+
+
+        // Copy associations of all branch parents and apply to this collection and its resources
+        $all_branch_path_keys = [];
+        $branch_category_ids = array_column(get_featured_collection_category_branch_by_leaf($sqlset['parent'], []), 'ref');
+        foreach($branch_category_ids as $fc_category_id)
+            {
+            $all_branch_path_keys = array_merge(
+                $all_branch_path_keys,
+                get_external_shares([
+                    'share_collection' => $fc_category_id,
+                    'share_type' => 0,
+                    'ignore_permissions' => true
+                ]));
+            }
+
+        foreach($all_branch_path_keys as $external_key_data)
+            {
+            foreach($fc_resources as $fc_resource_id)
+                {
+                if(!can_share_resource($fc_resource_id))
+                    {
+                    continue;
+                    }
+
+                ps_query(
+                    'INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, email, `date`, access, expires, password_hash) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)',
+                    [
+                        'i', $fc_resource_id,
+                        's', $external_key_data['access_key'],
+                        'i', $ref,
+                        'i', $GLOBALS['userref'],
+                        'i', $external_key_data['usergroup'],
+                        's', $external_key_data['email'],
+                        'i', $external_key_data['access'],
+                        's', $external_key_data['expires'] ?: null,
+                        's', $external_key_data['password_hash'] ?: null
+                    ]
+                );
+                collection_log($ref, LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH, $fc_resource_id, $external_key_data['access_key']);
+                }
+            }
+        }
+
     refresh_collection_frame();
     }
 
@@ -2484,35 +2578,56 @@ function allow_multi_edit($collection,$collectionid = 0)
                 {
                 return false;
                 }
-            }	
+            }
+        # All have edit access
+        return true;	
         }
 	else
         {
         // Instead of checking each resource we can do a comparison between a search for all resources in collection and a search for editable resources
         $resultcount = 0;
+        $all_resource_refs=array();
         if(!is_array($collection))
             {
             // Need the collection resources so need to run the search
             $collectionid = $collection;
+            # Editable_only=false (so returns resources whether editable or not)
             $collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,false);
             }
         if(is_array($collection))
             {
             $resultcount = count($collection);
+            $all_resource_refs=array_column($collection,"ref");
             }
         $editcount = 0;
+        $editable_resource_refs=array();
+        # Editable_only=true (so returns editable resources only)
         $editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, false, true,true);
         if(is_array($editresults))
             {
             $editcount = count($editresults);
+            $editable_resource_refs=array_column($editresults,"ref");
             }
-        if($resultcount != $editcount){return false;}
+
+        if($resultcount == $editcount)
+            {
+            if(hook('denyaftermultiedit', '', array($collection))) { return false; }
+            return true;
+            }
+
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
+        
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) { return false; }
+            }
+        
+        # All non_editables have grant edit
+        return true;
+
         }
-
-            
-    if(hook('denyaftermultiedit', '', array($collection))) { return false; }
-
-    return true;
     }
 
 
@@ -3625,9 +3740,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
-           $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
+           $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet,
            $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
-           $system_read_only, $leaflet_maps_enable;
+           $system_read_only;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -4028,18 +4143,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $options[$o]['order_by']  = 170;
         $o++;
         }
-
-	if(!$leaflet_maps_enable && ($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
-        {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/geolocate_collection.php",$urlparams);
-        $options[$o]['value']='geolocatecollection';
-        $options[$o]['label']=$lang["geolocatecollection"];
-        $options[$o]['data_attr']=$data_attribute;
-        $options[$o]['category'] = ACTIONGROUP_RESOURCE;
-        $options[$o]['order_by']  = 180;
-        $o++;            
-        }
-	
 
     // Contact Sheet
     if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))

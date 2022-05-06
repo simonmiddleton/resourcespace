@@ -154,13 +154,13 @@ function simpleldap_authenticate($username,$password)
             {
             $binduserstring = $simpleldap['loginfield'] . "=" . $ldap_username . "," . $simpleldap['basedn'];
             }
-        
-        ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 2); 
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        ldap_set_option($ldapconnections[$x], LDAP_OPT_NETWORK_TIMEOUT, 2); 
+        ldap_set_option($ldapconnections[$x], LDAP_OPT_PROTOCOL_VERSION, 3);
 
         if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1)  // AD - need to set this
             {
-            ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+            ldap_set_option($ldapconnections[$x], LDAP_OPT_REFERRALS, 0);
             }
 
         $GLOBALS["use_error_exception"] = true;

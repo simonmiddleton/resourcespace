@@ -72,7 +72,7 @@ function escape_check($text)
         db_clear_connection_mode();
         }
 
-    $text = mysqli_real_escape_string($db_connection, $text);
+    $text = mysqli_real_escape_string($db_connection, (string) $text);
 
     # turn all \\' into \'
     while (!(strpos($text,"\\\\'")===false))
@@ -372,7 +372,7 @@ function average_length($array)
  */
 function get_stats_activity_types()
     {
-    return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
+    return ps_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type", array());
     }
 
 /**
@@ -494,11 +494,11 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
         # If searching, also search overridden text in site_text and return that also.
         if ($findtext!="" || $findpage!="" || $findname!="")
             {
-            if ($findtext!="") {$search="text like '%" . escape_check($findtext) . "%'";}
-            if ($findpage!="") {$search="page like '%" . escape_check($findpage) . "%'";}         
-            if ($findname!="") {$search="name like '%" . escape_check($findname) . "%'";}          
+            if ($findtext!="") {$search="text like ?"; $search_param = array("s", '%' . $findtext . '%');}
+            if ($findpage!="") {$search="page like ?"; $search_param = array("s", '%' . $findpage . '%');}
+            if ($findname!="") {$search="name like ?"; $search_param = array("s", '%' . $findname . '%');}
             
-            $site_text=sql_query ("select * from site_text where $search");
+            $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where $search", $search_param);
             
             foreach ($site_text as $text)
                 {
@@ -555,22 +555,33 @@ function get_site_text($page,$name,$getlanguage,$group)
     {
     global $defaultlanguage, $lang, $language; // Registering plugin text uses $language and $lang  
     global $applicationname, $storagedir, $homeanim_folder; // These are needed as they are referenced in lang files
-    if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
+
+    $params = array("s", $page, "s", $name, "s", $getlanguage);
+    if ($group == "")
+        {
+        $stg_sql_cond = ' is null';
+        }
+    else
+        {
+        $stg_sql_cond = ' = ?';
+        $params = array_merge($params, array("i", $group));
+        }
+
     
-    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$getlanguage' and specific_to_group $gc $g");
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
         # Fall back to default language.
-    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g");
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
                 
         # Fall back to default group.
-    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group is null");
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group is null", array("s", $page, "s", $name, "s", $defaultlanguage));
     if (count($text)>0)
         {
         return $text[0]["text"];
@@ -630,7 +641,7 @@ function get_site_text($page,$name,$getlanguage,$group)
  */
 function check_site_text_custom($page,$name)
     {    
-    $check=sql_query ("select custom from site_text where page='$page' and name='$name'");
+    $check = ps_query("select custom from site_text where page = ? and name = ?", array("s", $page, "s", $name));
     if (isset($check[0]["custom"])){return $check[0]["custom"];}
     }
 
@@ -874,23 +885,22 @@ function allowed_type_mime($allowedtype)
  */
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
+    global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
+    global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
+
     if(defined("RS_TEST_MODE"))
         {
         return false;
         }
-    global $always_email_from_user;
     if($always_email_from_user)
         {
-        global $username, $useremail, $userfullname;
         $from_name=($userfullname!="")?$userfullname:$username;
         $from=$useremail;
         $reply_to=$useremail;
         }
 
-    global $always_email_copy_admin;
     if($always_email_copy_admin)
         {
-        global $email_notify;
         $bcc.="," . $email_notify;
         }
 
@@ -949,9 +959,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $attachfiles[$filename] = $file;
         }
 
-            
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
-    global $use_phpmailer;
     if ($use_phpmailer)
         {
         send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc,$attachfiles); 
@@ -962,8 +970,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     //$message = str_replace(["<br/>","<br />","<br>"],"\n",$message);
     
     # Include footer
-    global $email_footer;
-    global $disable_quoted_printable_enc;
     
     # Work out correct EOL to use for mails (should use the system EOL).
     if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
@@ -1005,10 +1011,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $subject=rs_quoted_printable_encode_subject($subject);
         }
    
-    global $email_from;
     if ($from=="") {$from=$email_from;}
     if ($reply_to=="") {$reply_to=$email_from;}
-    global $applicationname;
     if ($from_name==""){$from_name=$applicationname;}
     
     if (substr($reply_to,-1)==","){$reply_to=substr($reply_to,0,-1);}
@@ -1032,7 +1036,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $headers .= "Reply-To: $reply_to" . $eol;
     
     if ($cc!=""){
-        global $userfullname;
         #allow multiple emails, and fix for long format emails
         $ccs=explode(",",$cc);
         $headers .= "Cc: ";
@@ -1051,7 +1054,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     }
     
     if ($bcc!=""){
-        global $userfullname;
         #add bcc 
         $bccs=explode(",",$bcc);
         $headers .= "Bcc: ";
@@ -1135,7 +1137,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     if ($html_template!="")
         {
         # Attempt to verify users by email, which allows us to get the email template by lang and usergroup
-        $to_usergroup=sql_query("select lang,usergroup from user where email ='" . escape_check($email) . "'","");
+        $to_usergroup = ps_query("select lang, usergroup from user where email = ?", array("s", $email), "");
         
         if (count($to_usergroup)!=0)
             {
@@ -1153,11 +1155,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             {   
             $modified_to_usergroupref=hook("modifytousergroup","",$to_usergroupref);
             if (is_int($modified_to_usergroupref)){$to_usergroupref=$modified_to_usergroupref;}
-            $results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group='$to_usergroupref'");
+            $results = ps_query("select language, name, text from site_text where page = 'all' and name = ? and specific_to_group = ?", array("s", $html_template, "i", $to_usergroupref));
             }
         else 
             {   
-            $results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group is null");
+            $results = ps_query("select language, name, text from site_text where page = 'all' and name = ? and specific_to_group is null", array("s", $html_template));
             }
             
         global $site_text;
@@ -1191,79 +1193,51 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         if (isset($template) && $template!="")
             {
             preg_match_all('/\[[^\]]*\]/',$template,$test);
-            foreach($test[0] as $variable)
-                {            
-                $variable=str_replace("[","",$variable);
-                $variable=str_replace("]","",$variable);
+            $setvalues=[];
+            foreach($test[0] as $placeholder)
+                {
+                $placeholder=str_replace("[","",$placeholder);
+                $placeholder=str_replace("]","",$placeholder);
 
-                # get lang variables (ex. [lang_mycollections])
-                if (substr($variable,0,5)=="lang_"){
+                if (substr($placeholder,0,5)=="lang_")
+                    {
+                    // Get lang variables (ex. [lang_mycollections])
                     global $lang;
-                    $$variable=$lang[substr($variable,5)];
-                }
-
-                # get server variables (ex. [server_REMOTE_ADDR] for a user request)
-                else if (substr($variable,0,7)=="server_"){
-                    $$variable=$_SERVER[substr($variable,7)];
-                }
-
-                # [embed_thumbnail] (requires url in templatevars['thumbnail'])
-                else if (substr($variable,0,15)=="embed_thumbnail"){
+                    $setvalues[$placeholder] = $lang[substr($placeholder,5)];
+                    }           
+                else if (substr($placeholder,0,5)=="text_")
+                    {
+                    // Get text string (legacy)
+                    $setvalues[$placeholder] =text(substr($placeholder,5));
+                    }
+                else if ($placeholder=="client_ip")
+                    {
+                    // Get server variables (ex. [server_REMOTE_ADDR] for a user request)
+                    $setvalues[$placeholder] = get_ip();
+                    }         
+                else if($placeholder == 'img_headerlogo')
+                    {
+                    $img_url = get_header_image(true);
+                    $setvalues[$placeholder]  = '<img src="' . $img_url . '"/>';
+                    }
+                else if ($placeholder=="embed_thumbnail")
+                    {                    
+                    # [embed_thumbnail] (requires url in templatevars['thumbnail'])
                     $thumbcid=uniqid('thumb');
-                    $$variable="<img style='border:1px solid #d1d1d1;' src='cid:$thumbcid' />";
-                }
-                
-                # deprecated by improved [img_] tag below
-                # embed images (find them in relation to storagedir so that templates are portable)...  (ex [img_storagedir_/../gfx/whitegry/titles/title.gif])
-                else if (substr($variable,0,15)=="img_storagedir_"){
-                    $$variable="<img src='cid:".basename(substr($variable,15))."'/>";
-                    $images[]=dirname(__FILE__).substr($variable,15);
-                }
-
-                // embed images - ex [img_gfx/whitegry/titles/title.gif]
-                else if('img_headerlogo' == substr($variable, 0, 14))
-                    {
-                    $img_url = get_header_image(true);                    
-                    $$variable = '<img src="' . $img_url . '"/>';
+                    $embed_thumbnail = true;
+                    $setvalues[$placeholder] ="<img style='border:1px solid #d1d1d1;' src='cid:$thumbcid' />";
                     }
-                else if('img_' == substr($variable, 0, 4))
+                else
                     {
-                    $image_path = substr($variable, 4);
-
-                    // absolute paths
-                    if('/' == substr($image_path, 0, 1))
-                        {
-                        $images[] = $image_path;
-                        }
-                    // relative paths
-                    else
-                        {
-                        $image_path = str_replace('../', '', $image_path);
-                        $images[]   = dirname(__FILE__) . '/../' . $image_path;
-                        }
-
-                    $$variable = '<img src="cid:' . basename($image_path) . '"/>';
+                    // Not recognised, skip this
+                    continue;
                     }
 
-                # attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
-                else if (substr($variable,0,7)=="attach_"){
-                    $$variable="";
-                    $attachments[]=substr($variable,7);
-                }
-                
-                # get site text variables (ex. [text_footer], for example to 
-                # manage html snippets that you want available in all emails.)
-                else if (substr($variable,0,5)=="text_"){
-                    $$variable=text(substr($variable,5));
-                }
-
-                # try to get the variable from POST
-                else{
-                    $$variable=getval($variable,"");
-                }
-                
-                # avoid resetting templatevars that may have been passed here
-                if (!isset($templatevars[$variable])){$templatevars[$variable]=$$variable;}
+                # Don't overwrite templatevars that have been explicitly passed
+                if (!isset($templatevars[$placeholder]) && isset($setvalues[$placeholder]))
+                    {
+                    $templatevars[$placeholder]=$setvalues[$placeholder];
+                    }
                 }
 
             if (isset($templatevars))
@@ -1373,8 +1347,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 $mail->AddBCC($bccemail,$userfullname);
             }
         }
-    }
-    
+    }    
     
     $mail->CharSet = "utf-8"; 
     
@@ -1384,11 +1357,12 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         $body = nl2br($body);
         }      
     else {$mail->IsHTML(false);}
-    
+
     $mail->Subject = $subject;
     $mail->Body    = $body;
-    
-    if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
+
+    if (isset($embed_thumbnail)&&isset($templatevars['thumbnail']))
+        {
         $mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
         }
 
@@ -1486,7 +1460,6 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 function log_mail($email,$subject,$sender)
     {
     global $userref;
-    $to = escape_check($email);
     if (isset($userref))
         {
         $from = $userref;
@@ -1495,26 +1468,10 @@ function log_mail($email,$subject,$sender)
         {
         $from = 0;
         }
-    $sub = escape_check(mb_substr($subject,0,100));
+    $sub = mb_strcut($subject,0,100);
 
     // Write log to database
-    sql_query("
-        INSERT into
-            mail_log (
-                date,
-                mail_to,
-                mail_from,
-                subject,
-                sender_email
-                )
-            VALUES (
-                NOW(),
-                '" . $to . "',
-                '" . $from . "',
-                '" . $sub . "',
-                '" . $sender . "'
-        );
-        ");
+    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
     }
 
 
@@ -1690,8 +1647,8 @@ function send_statistics()
         }
     
     # Gather stats
-    $total_users=sql_value("select count(*) value from user",0);
-    $total_resources=sql_value("select count(*) value from resource",0);
+    $total_users = ps_value("select count(*) value from user", array(), 0);
+    $total_resources = ps_value("select count(*) value from resource", array(), 0);
     
     # Send stats
     @file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
@@ -1725,7 +1682,7 @@ function remove_extension($strName)
  */
 function get_allowed_extensions_by_type($resource_type)
     {
-    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","", "schema");
+    $allowed_extensions = ps_value("select allowed_extensions value from resource_type where ref = ?", array("i", $resource_type), "", "schema");
     return $allowed_extensions;
     }
 
@@ -2566,9 +2523,49 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path) . " {$exiftool_global_options} ";
 
         case 'antiword':
+            if(!isset($antiword_path) || $antiword_path === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $antiword_path,
+                [
+                    'unix' => 'antiword',
+                    'win'  => 'antiword.exe'
+                ],
+                $checked_path
+            );
+
         case 'pdftotext':
+            if(!isset($pdftotext_path) || $pdftotext_path === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $pdftotext_path,
+                [
+                    'unix' => 'pdftotext',
+                    'win'  => 'pdftotext.exe'
+                ],
+                $checked_path
+            );
+
         case 'blender':
-            break;
+            if(!isset($GLOBALS['blender_path']) || $GLOBALS['blender_path'] === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['blender_path'],
+                [
+                    'unix' => 'blender',
+                    'win'  => 'blender.exe'
+                ],
+                $checked_path
+            );
 
         case 'archiver':
             // Archiver path not configured
@@ -2592,20 +2589,32 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path);
 
         case 'python':
+        case 'opencv':
             // Python path not configured
             if(!isset($python_path) || '' == $python_path)
                 {
                 return false;
                 }
 
-            return get_executable_path(
+            $python3 = get_executable_path(
                 $python_path,
-                array(
-                    'unix' => 'python',
+                [
+                    'unix' => 'python3',
                     'win'  => 'python.exe'
-                ),
+                ],
                 $checked_path,
                 true);
+
+            return $python3 ?: get_executable_path(
+                $python_path,
+                [
+                    'unix' => 'python',
+                    'win'  => 'python.exe'
+                ],
+                $checked_path,
+                true);
+
+
 
         case 'fits':
             // FITS path not configured
@@ -2636,6 +2645,41 @@ function get_utility_path($utilityname, &$checked_path = null)
             );
 
             return get_executable_path($php_path, $executable, $checked_path);
+
+        case 'unoconv':
+            if(
+                // On Windows, the utility is available only via Python's package
+                ($GLOBALS['config_windows'] && (!isset($GLOBALS['unoconv_python_path']) || $GLOBALS['unoconv_python_path'] === ''))
+                || (!isset($GLOBALS['unoconv_path']) || $GLOBALS['unoconv_path'] === '')
+                
+            )
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['config_windows'] ? $GLOBALS['unoconv_python_path'] : $GLOBALS['unoconv_path'],
+                [
+                    'unix' => 'unoconv',
+                    'win'  => 'python.exe'
+                ],
+                $checked_path
+            );
+
+        case 'calibre':
+            if(!isset($GLOBALS['calibre_path']) || $GLOBALS['calibre_path'] === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['calibre_path'],
+                [
+                    'unix' => 'ebook-convert',
+                    'win'  => 'ebook-convert.exe'
+                ],
+                $checked_path
+            );
         }
 
     // No utility path found
@@ -2768,12 +2812,12 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     if ($global_cookies)
         {
         setcookie($name, "", time() - 3600, "/pages", $domain, $secure, $httponly);
-        setcookie($name, $value, (int) $expire, "/", $domain, $secure, $httponly);
+        setcookie($name, (string) $value, (int) $expire, "/", $domain, $secure, $httponly);
         }
     else
         {
         setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
-        setcookie($name, $value, (int) $expire, $path, $domain, $secure, $httponly);
+        setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
         }
     }
 
@@ -2855,7 +2899,7 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
 
     foreach($parameters as $parameter => $parameter_value)
         {
-        $query_string_params[] = $parameter . '=' . urlencode($parameter_value);
+        $query_string_params[] = $parameter . '=' . urlencode((string) $parameter_value);
         }
 
     # Ability to hook in and change the URL.
@@ -3025,8 +3069,7 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $query = "SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow";
-    $slideshow_records = sql_query($query, "slideshow");
+    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
 
     $slideshow_files = array();
 
@@ -3086,7 +3129,7 @@ function form_value_display($row,$name,$default="")
  */
 function user_set_usergroup($user,$usergroup)
     {
-    sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
+    ps_query("update user set usergroup = ? where ref = ?", array("i", $usergroup, "i", $user));
     }
 
 
@@ -3387,12 +3430,13 @@ function is_resourcespace_upgrade_available()
 /**
  * Fetch a count of recently active users
  *
- * @param  mixed $days  How many days to look back
+ * @param  int  $days   How many days to look back
+ * 
  * @return integer
  */
 function get_recent_users($days)
     {
-    return (sql_value("select count(*) value from user where datediff(now(),last_active) <= '" . escape_check($days) . "'",0));
+    return (ps_value("select count(*) value from user where datediff(now(), last_active) <= ?", array("i", $days), 0));
     }
 
 
@@ -3414,9 +3458,8 @@ function check_script_last_ran($name, $fail_notify_allowance, &$last_ran_datetim
         {
         return false;
         }
-    $name = escape_check($name);
 
-    $script_last_ran = sql_value("SELECT `value` FROM sysvars WHERE name = '{$name}'", '');
+    $script_last_ran = ps_value("SELECT `value` FROM sysvars WHERE name = ?", array("s", $name), '');
     $script_failure_notify_seconds = intval($fail_notify_allowance) * 24 * 60 * 60;
 
     if('' != $script_last_ran)
@@ -3540,13 +3583,11 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
 function set_sysvar($name,$value=null)
     {
     global $sysvars;
-    $name=escape_check($name);
     db_begin_transaction("set_sysvar");
-    sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
+    ps_query("DELETE FROM `sysvars` WHERE `name` = ?", array("s", $name));
     if($value!=null)
         {
-        $safevalue=escape_check($value);
-        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$safevalue}')");
+        ps_query("INSERT INTO `sysvars` (`name`, `value`) values (?, ?)", array("s", $name, "s", $value));
         }
     db_end_transaction("set_sysvar");
 
@@ -3571,8 +3612,7 @@ function get_sysvar($name, $default=false)
         }
 
     // Load from db or return default
-    $name=escape_check($name);
-    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",$default);
+    return ps_value("SELECT `value` FROM `sysvars` WHERE `name` = ?", array("s", $name), $default);
     }
 
 /**
@@ -3677,7 +3717,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
-        $function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . "All" . ucfirst($name) : "";	
+        $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . "All" . ucfirst((string) $name) : "";	
         	
 		if (function_exists($function)) 
 			{			
@@ -3686,7 +3726,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		else 
 			{
 			# Specific hook	
-			$function= isset($plugins[$n]) ? "Hook" . ucfirst($plugins[$n]) . ucfirst($pagename) . ucfirst($name) : "";
+            $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . ucfirst((string) $pagename) . ucfirst((string) $name) : "";
 			if (function_exists($function)) 
 				{
 				$function_list[]=$function;
@@ -3998,7 +4038,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
                 $page = $backtrace[$n]["file"];
                 }
                 
-            if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array")))
+            if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array","ps_query","ps_value","ps_array")))
                 {
                 if(in_array($backtrace[$n]["function"],array("include","include_once","require","require_once")) && isset($backtrace[$n]["args"][0]))
                     {
@@ -4022,10 +4062,11 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
  * Recursively removes a directory.
  *  
  * @param string $path Directory path to remove.
+ * @param array $ignore List of directories to ignore.
  *
  * @return boolean
  */
-function rcRmdir ($path)
+function rcRmdir ($path,$ignore=array())
     {
     debug("rcRmdir: " . $path);
     if (is_dir($path))
@@ -4033,7 +4074,7 @@ function rcRmdir ($path)
         $foldercontents = new DirectoryIterator($path);
         foreach($foldercontents as $objectindex => $object)
             {
-            if($object->isDot())
+            if($object->isDot() || in_array($path,$ignore))
                 {
                 continue;
                 }
@@ -4041,7 +4082,7 @@ function rcRmdir ($path)
 
             if ($object->isDir() && $object->isWritable())
                 {
-                $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname);
+                $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname,$ignore);
                 }				
             else
                 {
@@ -4091,16 +4132,16 @@ function daily_stat($activity_type,$object_ref)
     if (getval("k","")!="") {$external=1;}
     
     # First check to see if there's a row
-    $count=sql_value("select count(*) value from daily_stat where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",0);
-    if ($count==0)
+    $count = ps_value("select count(*) value from daily_stat where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), 0);
+    if ($count == 0)
         {
         # insert
-        sql_query("insert into daily_stat(year,month,day,usergroup,activity_type,object_ref,external,count) values ('$year','$month','$day','$usergroup','$activity_type','$object_ref','$external','1')",false,-1,true,0);
+        ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , '1')", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
         }
     else
         {
         # update
-        sql_query("update daily_stat set count=count+1 where year='$year' and month='$month' and day='$day' and usergroup='$usergroup' and activity_type='$activity_type' and object_ref='$object_ref' and external='$external'",false,-1,true,0);
+        ps_query("update daily_stat set count = count+1 where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
         }
     }
 
@@ -4153,7 +4194,7 @@ function get_section_list($page)
     global $usergroup;
     
 
-    return sql_array("select distinct name value from site_text where page='" . escape_check($page) . "' and name<>'introtext' and (specific_to_group IS NULL or specific_to_group ='" . escape_check($usergroup) . "') order by name");
+    return ps_array("select distinct name value from site_text where page = ? and name <> 'introtext' and (specific_to_group IS NULL or specific_to_group = ?) order by name", array("s", $page, "i", $usergroup));
     
 	}
 /**
@@ -4578,11 +4619,12 @@ function get_system_status()
         'fits' => 'fits_path',
     ];
     $missing_utility_paths = [];
-    foreach($system_utilities as $name => $path_var_name)
+    foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
         {
-        if(isset($GLOBALS[$path_var_name]) && get_utility_path($name) === false)
+        // Check only required (core to ResourceSpace) and configured utilities
+        if($sysu['required'] && isset($GLOBALS[$sysu['path_var_name']]) && get_utility_path($sysu_name) === false)
             {
-            $missing_utility_paths[$name] = $path_var_name;
+            $missing_utility_paths[$sysu_name] = $sysu['path_var_name'];
             }
         }
     if(!empty($missing_utility_paths))
@@ -4599,7 +4641,7 @@ function get_system_status()
 
 
     // Check database connectivity.
-    $check = sql_value('SELECT count(ref) value FROM resource_type', 0);
+    $check = ps_value('SELECT count(ref) value FROM resource_type', array(), 0);
     if ($check <= 0)
         {
         $return['results']['database_connection'] = [
@@ -4742,7 +4784,7 @@ function get_system_status()
         }
 
 
-    // Check free disk space is sufficient -  WARN (or FAIL if critical low)
+    // Check free disk space is sufficient -  WARN
     $avail = disk_total_space($GLOBALS['storagedir']);
     $free = disk_free_space($GLOBALS['storagedir']);
     $calc = $free / $avail;
@@ -4753,14 +4795,6 @@ function get_system_status()
             'info' => 'Less than 5% disk space free.',
         ];
         ++$warn_tests;
-        }
-    else if($calc < 0.01)
-        {
-        $return['results']['free_disk_space'] = [
-            'status' => 'FAIL',
-            'info' => 'Less than 1% disk space free.',
-        ];
-        return $return;
         }
 
 
@@ -4968,4 +5002,80 @@ function check_filestore_browseability()
         }
 
     return $return;
+    }
+
+/**
+ * Check CLI version found for ImageMagick is as expected.
+ * 
+ * @param string $version_output The version output for ImageMagick
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - New utility value for its display name
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_imagemagick_cli_version_found(string $version_output, array $utility)
+    {
+    $expected = ['ImageMagick', 'GraphicsMagick'];
+
+    foreach($expected as $utility_name)
+        {
+        if(mb_strpos($version_output, $utility_name) !== false)
+            {
+            $utility['display_name'] = $utility_name;
+            }
+        }
+
+    return [
+        'utility' => $utility,
+        'found' => in_array($utility['display_name'], $expected),
+    ];
+    }
+
+/**
+ * Check CLI numeric version found for a utility is as expected.
+ * 
+ * @param string $version_output The version output
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - not used
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_numeric_cli_version_found(string $version_output, array $utility)
+    {
+    return [
+        'utility' => $utility,
+        'found' => preg_match("/^([0-9]+)+\.([0-9]+)/", $version_output) === 1,
+    ];
+    }
+
+/**
+ * Check CLI version found for a utility is as expected by looking up for its name.
+ * 
+ * @param string $version_output The version output for the utility
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - not used
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_utility_cli_version_found_by_name(string $version_output, array $utility, array $lookup_names)
+    {
+    $version_output = strtolower($version_output);
+    $lookup_names = array_filter($lookup_names);
+
+    foreach($lookup_names as $utility_name)
+        {
+        if(mb_strpos($version_output, strtolower($utility_name)) !== false)
+            {
+            $found = true;
+            break;
+            }
+        }
+
+    return [
+        'utility' => $utility,
+        'found' => isset($found),
+    ];
     }

@@ -2017,7 +2017,7 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     // Most of them should already be in $config_separators
     // but others, like &shy; don't have an actual character that we can copy and paste
     // to $config_separators
-    $string = htmlentities($string, null, 'UTF-8');
+    $string = htmlentities($string, ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8');
     $string = str_replace('&nbsp;', ' ', $string);
     $string = str_replace('&shy;', ' ', $string);
     $string = str_replace('&lsquo;', ' ', $string);

@@ -113,7 +113,7 @@ if (getval("save",false) && enforcePostRequest(false))
             log_activity(null,null,null,'usergroup','group_specific_logo',$ref);
             }
 
-    foreach (array("name","permissions","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
+    foreach (array("name","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
                     "derestrict_filter_id","resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
                     "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column)		
 		

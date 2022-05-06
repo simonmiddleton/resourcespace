@@ -296,13 +296,29 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
 
 /*
  * Cleanup Duplicate and Loose Tiles
- * This removes all unused tiles that are flagged as "allowed to delete"
+ * This removes all unused tiles that are flagged as:
+ * "allowed to delete"
+ * AND not "all users"
  */
 function cleanup_dash_tiles()
 	{
     global $lang;
-    $tiles = sql_query("SELECT * FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
-	sql_query("DELETE FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
+    $tiles = ps_query(
+        "SELECT * FROM dash_tile 
+            WHERE allow_delete = 1
+                AND all_users = 0
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)"
+    );
+
+    ps_query(
+        "DELETE FROM dash_tile 
+            WHERE allow_delete = 1
+                AND all_users = 0
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)"
+    );
+
     foreach ($tiles as $tile)
         {
         log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
@@ -949,22 +965,24 @@ function update_user_dash_tile_order($user,$tile,$order_by)
  *
  */
 function delete_user_dash_tile($usertile,$user)
-	{
+    {
     global $lang;
-	if(!is_numeric($usertile) || !is_numeric($user)){return false;}
-	
-	$row = get_user_tile($usertile,$user);
-	sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
-
-	$existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    if(!is_numeric($usertile) || !is_numeric($user)){return false;}
     
-	if($existing[0]["count"]<1)
-		{
+    $row = get_user_tile($usertile,$user);
+    sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
+
+    if (!isset($row["dash_tile"]) || !is_numeric($row["dash_tile"])) {return false;}
+    
+    $existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    
+    if($existing[0]["count"]<1)
+        {
         $tile = get_tile($row["dash_tile"]);
-		delete_dash_tile($row["dash_tile"]);
-        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$row["dash_tile"]);
-		}
-	}
+        delete_dash_tile($row["dash_tile"]);
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,($tile["title"]??""),'dash_tile',NULL,$row["dash_tile"]);
+        }
+    }
 
 /*
  * Remove all tiles from a users dash

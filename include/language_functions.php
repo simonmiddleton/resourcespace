@@ -62,9 +62,9 @@ function i18n_get_translated($text)
         # Support both 2 character and 5 character language codes (for example en, en-US).
         $p=strpos($s[$n],':');
 		$textLanguage=substr($s[$n],0,$p);
-        if ($textLanguage==$language) {return substr($s[$n],$p+1);}
+        if (strtolower($textLanguage) == strtolower($language)) {return substr($s[$n],$p+1);}
         
-        if ($textLanguage==$asdefaultlanguage || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
+        if (strtolower($textLanguage) == strtolower($asdefaultlanguage) || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
         }    
     
     # Translation not found? Return default language

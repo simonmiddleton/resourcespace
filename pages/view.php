@@ -1511,10 +1511,10 @@ elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full
         }
     } 
 
-// Render a "View in browser" button
+// Render a "View in browser" button for PDF/MP3 (no longer configurable in config as SVGs can easily be disguised)
 if (strlen($resource["file_extension"]) > 0 
     && ($access == 0 || ($access == 1 && $restricted_full_download == true)) 
-    && in_array($resource["file_extension"], $view_in_browser_extensions))
+    && in_array(strtolower($resource["file_extension"]),["pdf","mp3"]))
     {
     $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
     if (resource_download_allowed($ref,"",$resource["resource_type"]) && file_exists($path))
@@ -1966,15 +1966,7 @@ if (!$disable_geocoding)
     // Only show the map if the resource is geocoded or they have the permission to geocode it.
     if ($edit_access || ($resource['geo_lat'] != '' && $resource['geo_long'] != ''))
         {
-        if($leaflet_maps_enable)
-            {
-            include '../include/geocoding_view.php';
-            }
-        else
-            {
-            // Include legacy OpenLayers code
-            include '../include/geocoding_view_ol.php';
-            }
+        include '../include/geocoding_view.php';
         }
     }
 ?>

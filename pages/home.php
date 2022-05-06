@@ -378,7 +378,7 @@ if (!hook("replaceslideshow"))
 					{
 					create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text,$delete);
 					//Turn off the promoted collection
-					sql_query("UPDATE collection SET home_page_publish=0 WHERE ref=".$home_collection["ref"]);
+					ps_query("UPDATE collection SET home_page_publish = 0 WHERE ref = ?", array("i", $home_collection["ref"]));
 					}
 				}
 			else

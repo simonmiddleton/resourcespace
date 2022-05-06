@@ -111,8 +111,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
-            }
-    
+            }    
         else
             {
             # Work out which file has been posted
@@ -434,12 +433,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                                 break;
                             }
 
-                        if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
+                        if(isset($newval))
+                            {
+                            update_field($ref,$read_from[$i]['ref'],$newval);
+                            }
                         }
                     }
                 }
             }
-    
         # Extract text from documents (e.g. PDF, DOC)
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
@@ -459,20 +460,23 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 extract_text($ref, $extension);
                 }
             }
-        }
-    
-    
+        }    
 
     # Store original filename in field, if set
     if (isset($filename_field))
-        if(isset($amended_filename)){$filename=$amended_filename;}
         {
-        if (!$revert){
+        if(isset($amended_filename))
+            {
+            $filename=$amended_filename;
+            }
+        if (!$revert && isset($filename))
+            {
             update_field($ref,$filename_field,$filename);
             }
-        else {
+        else
+            {
             update_field($ref,$filename_field,$original_filename);
-            }       
+            }
         }
     if (!$upload_then_process || $after_upload_processing)
         {
@@ -540,6 +544,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         # Update file dimensions
         get_original_imagesize($ref,$filepath,$extension);
         }
+
     if($upload_then_process && !$after_upload_processing)
         {
         # Add this to the job queue for offline processing
@@ -778,7 +783,7 @@ function extract_exif_comment($ref,$extension="")
                         {
                         if ($read_from[$i]['exiftool_filter']!="")
                             {
-                            eval($read_from[$i]['exiftool_filter']);
+                            eval(eval_check_signed($read_from[$i]['exiftool_filter']));
                             }
         
                         $exiffieldoption=$exifoption;
@@ -2380,13 +2385,14 @@ function get_colour_key($image)
     return($colkey);
     }
 
-function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1)
+function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
     {
     # Tweak all preview images
     # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
 
     # Use the screen resolution version for processing
-    global $tweak_all_images;
+    global $tweak_all_images, $ffmpeg_supported_extensions;
+
     if ($tweak_all_images){
         $file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
         if (!file_exists($file)) {
@@ -2517,7 +2523,30 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
         if ($alternative==-1){
             sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
         }
-        
+
+    if ($rotateangle != 0)
+        {
+        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions))
+            {
+            # Find snapshots for video files so they can be rotated with the thumbnail
+            $video_snapshots = get_video_snapshots($ref, true, false);
+            foreach($video_snapshots as $snapshot)
+                {
+                $snapshot_source = imagecreatefromjpeg($snapshot);
+                # Use built-in function if available, else use function in this file
+                if (function_exists("imagerotate"))
+                    {
+                    $snapshot_source = imagerotate($snapshot_source, $rotateangle, 0);
+                    }
+                else
+                    {
+                    $snapshot_source = AltImageRotate($snapshot_source, $rotateangle);
+                    }
+                imagejpeg($snapshot_source, $snapshot, 95);
+                }
+            }
+        }
+
     }
 
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
@@ -2781,12 +2810,14 @@ function extract_text($ref,$extension,$path="")
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
         {
-        $command=$antiword_path . "/antiword";
-        if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
-        if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
+        $command = get_utility_path('antiword');
+        if(!$command)
+            {
+            debug("ERROR: Antiword executable not found at '$antiword_path'");
+            return false;
+            }
 
-        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
-        $text=run_command($cmd);
+        $text = run_command("{$command} -m UTF-8 %path", false, ['%path' => $path]);
         }
     
        # Microsoft OfficeOpen (docx,xlsx) extraction
@@ -2834,13 +2865,14 @@ function extract_text($ref,$extension,$path="")
     # PDF extraction using pdftotext (part of the XPDF project)
     if (($extension=="pdf" || $extension=="ai") && isset($pdftotext_path))
         {
-        $command=$pdftotext_path . "/pdftotext";
-        if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
-        if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'"); return false;}
+        $command = get_utility_path('pdftotext');
+        if(!$command)
+            {
+            debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
+            return false;
+            }
 
-        $cmd=$command . " -enc UTF-8 " . escapeshellarg($path) . " -";
-        $text = run_command($cmd);
-
+        $text = run_command("{$command} -enc UTF-8 %path -", false, ['%path' => $path]);
         }
 
     # HTML extraction
