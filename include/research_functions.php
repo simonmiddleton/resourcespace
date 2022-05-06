@@ -73,9 +73,9 @@ function send_research_request(array $rr_cfields)
     $research_notify_users=get_notification_users("RESEARCH_ADMIN");
     $userconfirmmessage = new ResourceSpaceUserNotification();
     $userconfirmmessage->set_subject("lang_newresearchrequestwaiting");
-    $userconfirmmessage->set_message("'$username' ($userfullname - $useremail) ");
-    $userconfirmmessage->append_message("lang_haspostedresearchrequest");
-    $userconfirmmessage->append_message(".\n\n");  
+    $userconfirmmessage->set_text("'$username' ($userfullname - $useremail) ");
+    $userconfirmmessage->append_text("lang_haspostedresearchrequest");
+    $userconfirmmessage->append_text(".\n\n");  
     $userconfirmmessage->preference = "user_pref_resource_access_notifications";
     $userconfirmmessage->template = "emailnewresearchrequestwaiting";
     $userconfirmmessage->templatevars = $templatevars;
