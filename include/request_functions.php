@@ -59,7 +59,7 @@ function save_request($request)
     {
     # Use the posted form to update the request
     global $applicationname,$baseurl,$lang,$request_senduserupdates,$admin_resource_access_notifications,$userref;
-        
+
     $status=getvalescaped("status","",true);
     $expires=getvalescaped("expires","");
     $currentrequest=get_request($request);
@@ -68,7 +68,7 @@ function save_request($request)
     $reason=getvalescaped("reason","");
     $reasonapproved=getvalescaped("reasonapproved","");
     $approved_declined=false;
-    
+
     # --------------------- User Assignment ------------------------
     # Process an assignment change if this user can assign requests to other users
     if ($currentrequest["assigned_to"]!=$assigned_to && checkperm("Ra"))
@@ -93,7 +93,6 @@ function save_request($request)
             $assignedmessage->url = $baseurl . "/?q=" . $request;
             $assignedmessage->eventdata = ["type"  => MANAGED_REQUEST,"ref"   => $request];
             send_user_notification([$assigned_to],$assignedmessage);
-            
             // Change text for requesting user
             $assignedmessage->set_text("lang_requestassignedtouser",["%"],[$assigned_to_user["fullname"] . " (" . $assigned_to_user["email"] . ")" ]);
             send_user_notification([$currentrequest["user"]],$assignedmessage);
@@ -204,16 +203,14 @@ function save_request($request)
         {
         # Delete the request - this is done AFTER any e-mails have been sent out so this can be used on approval.
         ps_query("DELETE FROM request WHERE ref=?",array("i",$request));
-        
+
         # Clear any outstanding notifications about this request that may have been sent to other admins
         message_remove_related(MANAGED_REQUEST,$request);
-        
-        return true;        
+        return true;
         }
-
     }
-    
-    
+
+
 /**
  * Fetch a list of requests assigned to the logged in user
  *
@@ -226,7 +223,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
     {
     global $userref;
     $condition="";
-    
+
     $parameters=array();
 
     # Include requests assigned to the user if the user can accept requests (permission "Rb")
@@ -269,7 +266,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
         return ps_query($request_query->sql,$request_query->parameters);
         }
     }
-  
+
 /**
  * Email a collection request to the team responsible for dealing with requests. Request mode 0 only (non managed).
  *
@@ -280,19 +277,19 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
  */
 function email_collection_request($ref,$details,$external_email)
     {
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$always_email_from_user,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify;
-    
+    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify;
+
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
-    
+
     $message= new ResourceSpaceUserNotification;
-    
+
     $templatevars['url']=$baseurl."/?c=".$ref;
     $collectiondata=get_collection($ref);
     if (isset($collectiondata["name"]))
         {
         $templatevars["title"]=$collectiondata["name"];
         }
-    
+
     # Create a copy of the collection which is the one sent to the team. This is so that the admin
     # user can e-mail back an external URL to the collection if necessary, to 'unlock' full (open) access.
     # The user cannot then gain access to further resources by adding them to their original collection as the
@@ -300,12 +297,12 @@ function email_collection_request($ref,$details,$external_email)
     # A complicated scenario that is best avoided using 'managed requests'.
     $newcopy=create_collection(-1,$lang["requestcollection"]);
     copy_collection($ref,$newcopy);
-    
+
     // Make sure a collection does not include resources that may have been hidden from the user due
     // to archive state, resource type or access changes and that they are not aware they are requesting.
     // Without this a full copy can confuse the request administrator
     $col_visible = do_search("!collection" . $ref,'','','',-1,'desc',false,0,false,false,'',false,false,true);
-    $colresources = get_collection_resources($ref);    
+    $colresources = get_collection_resources($ref);
     foreach($colresources as $colresource)
         {
         if(!in_array($colresource,array_column($col_visible,"ref")))
@@ -313,21 +310,21 @@ function email_collection_request($ref,$details,$external_email)
             remove_resource_from_collection($colresource,$newcopy,false);
             }
         }
-    
+
     if($collection_empty_on_submit)
         {
-        remove_all_resources_from_collection($ref);    
+        remove_all_resources_from_collection($ref);
         }
-        
+
     $ref=$newcopy;
-    
+
     $templatevars["requesturl"]=$baseurl."/?c=".$ref;
-    
+
     $templatevars['username']=$username . " (" . $useremail . ")";
     $userdata=get_user($userref);
     if($userdata===false){return false;} # Unable to get user credentials
     $templatevars["fullname"]=$userdata["fullname"];
-    
+
     reset ($_POST);
     foreach ($_POST as $key=>$value)
         {
@@ -346,13 +343,13 @@ function email_collection_request($ref,$details,$external_email)
         $message->append_text("lang_requestreason");
         $message->append_text(": " . newlines($details) . "<br/><br/>");
         }
-    
+
     # Add custom fields
     $c="";
     global $custom_request_fields,$custom_request_required;
     if (isset($custom_request_fields))
         {
-        $custom=explode(",",$custom_request_fields);    
+        $custom=explode(",",$custom_request_fields);
         # Required fields?
         if (isset($custom_request_required))
             {
@@ -375,7 +372,7 @@ function email_collection_request($ref,$details,$external_email)
         {
         $message=$amendedmessage;
         }
-    
+
     $templatevars["requestreason"]=$message->get_text();
 
     // Create notification message
@@ -396,7 +393,7 @@ function email_collection_request($ref,$details,$external_email)
     $notification_message->user_preference = "user_pref_resource_access_notifications";
     $notification_message->template = "emailcollectionrequest";
     $notification_message->templatevars = $templatevars;
-       
+
     $notify_users = [];
     $notify_emails = [];
     # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
@@ -420,21 +417,20 @@ function email_collection_request($ref,$details,$external_email)
                 }
             }
         }
-    
+
     if((count($notify_users)==0 && count($notify_emails)==0) || $resource_type_request_emails_and_email_notify)
         {
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
-    
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
-        send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$message->get_text(),($always_email_from_user)?$useremail:$email_from,($always_email_from_user)?$useremail:$email_from,"emailcollectionrequest",$templatevars);
+        send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailcollectionrequest",$templatevars);
         }
-        
-    # $userref and $useremail will be that of the internal requestor    
-    # - We need to send the $userconfirmmessage to the internal requestor saying that their request has been submitted    
+
+    # $userref and $useremail will be that of the internal requestor
+    # - We need to send the $userconfirmmessage to the internal requestor saying that their request has been submitted
     if (isset($userref) && $request_senduserupdates)
         {
         $userconfirmmessage = clone($message);
@@ -453,12 +449,12 @@ function email_collection_request($ref,$details,$external_email)
     if (!isset($userref) && filter_var($external_email, FILTER_VALIDATE_EMAIL))
         {
         send_mail($external_email,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,NULL,"emailusercollectionrequest",$templatevars);
-        }    
-    
+        }
+
     # Increment the request counter for each resource in the requested collection
     ps_query("UPDATE resource set request_count=request_count+1
                where ref in(select cr.resource from collection_resource cr where cr.collection=? and cr.resource = ref)",array("i",$ref));
-    
+
     return true;
     }
 
@@ -476,7 +472,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,
         $watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,
         $resource_type_request_emails_and_email_notify, $manage_request_admin,$resource_request_reason_required,
-        $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit,$notify_manage_request_admin,
+        $admin_resource_access_notifications, $collection_empty_on_submit,$notify_manage_request_admin,
         $assigned_to_user, $admin_resource_access_notifications;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
@@ -494,7 +490,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
         # Allow alternative configuration settings for this resource type
         resource_type_config_override($resourcedata['resource_type']);
-        
+
         if (!file_exists($templatevars['thumbnail'])){
         $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
         }
@@ -503,7 +499,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $templatevars["filename"]=$lang["fieldtitle-original_filename"] . ": " . get_data_by_field($ref,$filename_field);}
         if (isset($resourcedata["field" . $view_title_field])){
         $templatevars["title"]=$resourcedata["field" . $view_title_field];}
-        
+
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
         add_resource_to_collection($ref,$c,true);
         $ref=$c; # Proceed as normal
@@ -513,13 +509,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         # Create a copy of the collection to attach to the request so that subsequent collection changes do not affect the request
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
         copy_collection($ref,$c);
-        
+
         // Make sure a collection does not include resources that may have been hidden from the user due
         // to archive state, resource type or access changes and that they are not aware they are requesting.
         // Without this a full copy can confuse the request administrator
         $col_visible = do_search("!collection" . $ref,'','','',-1,'desc',false,0,false,false,'',false,false,true);
         $colresources = get_collection_resources($ref);
-        
+
         foreach($colresources as $colresource)
             {
             if(!in_array($colresource,array_column($col_visible,"ref")))
@@ -527,14 +523,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 remove_resource_from_collection($colresource,$c,false);
                 }
             }
-        
         if($collection_empty_on_submit)
             {
-            remove_all_resources_from_collection($ref);    
+            remove_all_resources_from_collection($ref);
             }
-        
-        $ref=$c; # Proceed as normal        
-            
+
+        $ref=$c; # Proceed as normal
+
         $collectiondata=get_collection($ref);
         $templatevars['url']=$baseurl."/?c=".$ref;
         if (isset($collectiondata["name"])){
@@ -546,7 +541,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $templatevars["useremail"]=$useremail;
     $userdata=get_user($userref);
     $templatevars["fullname"]=$userdata["fullname"];
-    
+
     // set up notification object
     $message = new ResourceSpaceUserNotification();
 
@@ -571,17 +566,17 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $message->append_text(": " . newlines($details));
         $templatevars["requestreason"] = newlines($details);
         }
-    
+
     # Add custom fields
     $c="";
     global $custom_request_fields,$custom_request_required;
     if (isset($custom_request_fields))
         {
         $custom=explode(",",$custom_request_fields);
-    
+
         # Required fields?
         if (isset($custom_request_required)) {$required=explode(",",$custom_request_required);}
-    
+
         for ($n=0;$n<count($custom);$n++)
             {
             if (isset($required) && in_array($custom[$n],$required) && getval("custom" . $n,"")=="")
@@ -593,7 +588,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $message->append_text(": " . getval("custom" . $n,""));
             }
         }
-    
+
     $assignedmessage = new ResourceSpaceUserNotification();
     $assignedmessage->set_text("lang_requestassignedtoyoumail");
     $assignedmessage->append_text("<br/><br/>");
@@ -606,7 +601,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         {
         $assignedmessage->set_text($amendedmessage);
         }
-    
+
     # Setup the principal create request SQL
     global $request_query;
     $request_query = new PreparedStatementQuery();
@@ -616,7 +611,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
     // Set flag to send default notifications unless we override e.g. by $manage_request_admin 
     $send_default_notifications = true;
-                
+
     $notify_manage_request_admin = false;
     $notification_sent = false;
 
@@ -786,8 +781,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
         if($notify_manage_request_admin)
             {
-            $notification_sent = true;
             send_user_notification($admin_notify_user,$admin_notify_message);
+            $notification_sent = true;
             }
 
         $admin_notify_emails=array();
@@ -805,7 +800,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }  
             foreach($admin_notify_emails as $admin_notify_email)
                 {
-                send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$admin_notify_message,($always_email_from_user)?$useremail:$email_from,($always_email_from_user)?$useremail:$email_from,$admin_mail_template,$templatevars);
+                send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
                 }
             }
 
@@ -815,6 +810,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $admin_notify_message->set_subject($applicationname . ": " );
             $admin_notify_message->append_subject("lang_requestcollection");
             $admin_notify_message->append_subject(" - " . $ref);
+            $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
             send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }
@@ -902,7 +898,7 @@ function email_resource_request($ref,$details)
         }
 
     $htmlbreak="<br/><br/>";
-    
+
     $list="";
     reset ($_POST);
     foreach ($_POST as $key=>$value)
@@ -935,18 +931,18 @@ function email_resource_request($ref,$details)
         {
         $custom=explode(",",$custom_request_fields);
         # Required fields?
-        if (isset($custom_request_required)) {$required=explode(",",$custom_request_required);}    
+        if (isset($custom_request_required)) {$required=explode(",",$custom_request_required);}
         for ($n=0;$n<count($custom);$n++)
             {
             if (isset($required) && in_array($custom[$n],$required) && getval("custom" . $n,"")=="")
                 {
                 # Required field was not set.
                 return false;
-                }            
+                }
             $c.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "<br/>";
             }
         }
-    $templatevars["requestreason"]=$lang["requestreason"] . ": " . $templatevars['details']. $c ."";    
+    $templatevars["requestreason"]=$lang["requestreason"] . ": " . $templatevars['details']. $c ."";
     if(isset($username))
         {
         $message->append_text("lang_username");
@@ -967,7 +963,7 @@ function email_resource_request($ref,$details)
         $message->append_text("lang_contacttelephone");
         $message->append_text(": " . $templatevars["formtelephone"] . "<br/>");
         }
-    
+
     $notification_message = clone($message);
     $notification_message->set_subject($applicationname . ": ");
     $notification_message->append_subject("lang_requestresource");
@@ -1010,7 +1006,7 @@ function email_resource_request($ref,$details)
         {
         send_mail($notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailresourcerequest",$templatevars);
         }
-              
+
     if ($request_senduserupdates)
         {
         $userconfirmmessage = clone($message);
@@ -1025,10 +1021,10 @@ function email_resource_request($ref,$details)
             {
             $userconfirmmessage->url = $baseurl . "/?r=" . $ref . $key_str;
             send_user_notification([$userref],$userconfirmmessage);
-            }        
+            }
         else
             {
-            $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");            
+            $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");
             if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL))
                 {
                 $userconfirmmessage->append_text("<br/><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
@@ -1036,7 +1032,7 @@ function email_resource_request($ref,$details)
                 }  
             }
         }
-    
+
     # Increment the request counter
     ps_query("UPDATE resource SET request_count=request_count+1 WHERE ref = ?", array("i",$ref));
     }

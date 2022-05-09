@@ -1033,6 +1033,7 @@ function auto_create_user_account($hash="")
         $eventdata = [
             "type"  => USER_REQUEST,
             "ref"   => $new,
+            "extra" => ["usergroup"=>$usergroup],
             ];
         $message->set_subject("lang_requestuserlogin");
         $message->set_text("lang_userrequestnotification1");

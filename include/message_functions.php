@@ -914,16 +914,40 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         if($preference != "")
             {
             $default = null;
-            if($preference == "user_pref_resource_access_notifications")
+            switch ($preference)
                 {
-                // Need to ensure this won't get the default global setting for the requesting user
-                $default = $admin_resource_access_notifications;
+                // Don't send if an action will also be created
+                case "user_pref_resource_access_notifications";     
+                get_config_option($userdetails['ref'],'actions_resource_requests', $actions_set,true);
+                    if($actions_set)
+                        { 
+                        debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
+                        continue 2;
+                        }
+                    // Need to ensure this won't get the default global setting for the requesting user
+                    $default = $admin_resource_access_notifications;
+                    break;
+
+                case "user_pref_user_management_notifications";
+                    get_config_option($userdetails['ref'],'actions_account_requests', $actions_set,true);
+                    get_config_option($userdetails['ref'],'actions_approve_hide_groups', $skipgroups,"");                    
+                    $new_user_group = $notifymessage->eventdata["extra"]["usergroup"] ?? 0;
+                    if($actions_set && !in_array($new_user_group,explode(",",$skipgroups)))
+                        {
+                        debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
+                        continue 2;
+                        }
+                    break;
+
+                default;
+                    break;
                 }
+            
             get_config_option($userdetails['ref'],$preference, $send_message,$default);
 
             if($send_message==false)
                 {
-                debug("Skipping notification to user #" . $userdetails['ref'] . " As not wanted based on " . $notifymessage->user_preference . " : " . print_r($send_message,true));
+                debug("Skipping notification to user #" . $userdetails['ref'] . " based on " . $notifymessage->user_preference . " : " . print_r($send_message,true));
                 continue;
                 }
             debug("Sending notification to user #" . $userdetails["ref"]);
@@ -955,7 +979,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         // Add header image to email if not using template
         $img_url = get_header_image(true);
         $img_div_style = "max-height:50px;padding: 5px;";
-        $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
+        $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
         $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
         }
 
@@ -963,7 +987,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         {
         debug("Processing notifications for language: '" . $userlanguage . "'");
         // Save the current lang array
-        $saved_lang = $lang;        
+        $saved_lang = $lang;
         if ($userlanguage!="en")
             {
             if (substr($userlanguage, 2, 1)=='-' && substr($userlanguage, 0, 2)!='en')
@@ -993,11 +1017,11 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
 
         // Load in the correct language strings
         lang_load_site_text($lang,"",$userlanguage);
-               
+
         $subject = $notifymessage->get_subject();
         $messagetext = $notifymessage->get_text();
         if (count($notifications["message_users"])>0)
-            {        
+            {
             $activitytype = $notifymessage->eventdata["type"] ?? NULL;
             $relatedactivity = $notifymessage->eventdata["ref"] ?? NULL;
             foreach($notifications["message_users"] as $notifyuser)
@@ -1012,7 +1036,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 {
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
-                }            
+                }
             send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
 
             foreach($notifications["emails"] as $emailsent)
