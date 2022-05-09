@@ -146,7 +146,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     if ($download)
         {
         header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=" . $filename . "");
+        header("Content-disposition: attachment; filename=\"" . $filename . "\"");
         }
 
     if ($download || ($foremail && $resultcount > $report_rows_attachment_limit))
