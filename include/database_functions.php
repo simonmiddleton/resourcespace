@@ -452,7 +452,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
 
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
         {
-        debug("SQL: " . $sql);
+        debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
