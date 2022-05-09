@@ -499,7 +499,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     # Try again (no dbstruct this time to prevent an endless loop)
                     return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
-                $error="Bad prepared SQL statement: " . $sql;
+                $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters);
                 errorhandler("N/A", $error, "(database)", "N/A");
                 exit();
                 }
