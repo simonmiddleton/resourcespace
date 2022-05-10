@@ -114,7 +114,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 -1, # fetchrows
                 $search_params['sort'],
                 false, # access_override
-                $search_params['starsearch'],
+                DEPRECATED_STARSEARCH,
                 false, # ignore_filters
                 false, # return_disk_usage
                 $search_params['recentdaylimit'],

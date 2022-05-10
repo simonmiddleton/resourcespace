@@ -32,7 +32,6 @@ $search_offset=getvalescaped("search_offset",0,true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive",0,true);
-$starsearch=getvalescaped("starsearch","");
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
@@ -57,7 +56,7 @@ if ($go!="")
 	if ($modified_result_set){
 		$result=$modified_result_set;
 	} else {
-		$result=do_search($search,$restypes,$order_by,$archive,240+$search_offset+1,$sort,false,$starsearch);
+		$result=do_search($search,$restypes,$order_by,$archive,240+$search_offset+1,$sort,false,DEPRECATED_STARSEARCH);
 	}
 	if (is_array($result))
 		{

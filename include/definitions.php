@@ -404,6 +404,10 @@ define('STR_HIGHLIGHT_WHOLEWD', 2);
 define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
+// ----------------------------------------------
+// DEPRECATED PARAMETERS
+// ----------------------------------------------
+define('DEPRECATED_STARSEARCH', 0);
 
 # Keyboard control codes
 # Previous/next resource: left/right arrows

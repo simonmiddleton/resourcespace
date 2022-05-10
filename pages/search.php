@@ -400,17 +400,6 @@ else
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
 
-# if search is not a special search (ie. !recent), use starsearchvalue.
-if (getvalescaped("search","")!="" && strpos(getvalescaped("search",""),"!")!==false)
-    {
-    $starsearch="";
-    }
-else
-    {
-    $starsearch=getvalescaped("starsearch",""); 
-    rs_setcookie('starsearch', $starsearch,0,"","",false,false);
-}
-
 # If returning to an old search, restore the page/order by and other non search string parameters
 $old_search = (!array_key_exists('search', $_GET) && !array_key_exists('search', $_POST));
 if ($old_search)
@@ -537,7 +526,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         {
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
         $max_results = $saved_max_results;
         }
     }

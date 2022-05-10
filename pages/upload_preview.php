@@ -28,7 +28,6 @@ $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
-$starsearch=getvalescaped("starsearch","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive","");
 $per_page=getvalescaped("per_page",0,true);
@@ -50,7 +49,6 @@ $urlparams= array(
     'order_by'			        => $order_by,
     'offset'			        => $offset,
     'restypes'			        => $restypes,
-    'starsearch'		        => $starsearch,
     'archive'			        => $archive,
     'default_sort_direction'    => $default_sort_direction,
     'sort'				        => $sort,

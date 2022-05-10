@@ -39,8 +39,6 @@ function xmlentities($text)
 setup_user(get_user(get_user_by_username($user)));
 	
 $search=getvalescaped("search","");
-$starsearch=getvalescaped("starsearch","");
-
 
 # Append extra search parameters
 $country=getvalescaped("country","");
@@ -102,11 +100,11 @@ if (strpos($search,"!")!==false) {$restypes = "";}
 # Story only? Display as list
 #if ($restypes=="2") {$display = "list";}
 
-$result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, $starsearch);
+$result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, DEPRECATED_STARSEARCH);
 
 
 # Create a title for the feed
-$searchstring = "search=$search&restypes=$restypes&archive=$archive&starsearch=$starsearch";
+$searchstring = "search=$search&restypes=$restypes&archive=$archive";
 if (substr($search,0,11)=="!collection"){$collection=substr($search,11);$collection=explode(" ",$collection);$collection=$collection[0];$collectiondata=get_collection($collection);}
 $feed_title = xmlentities($applicationname ." - " .get_search_title($searchstring));
 

@@ -22,7 +22,7 @@
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
-* @param integer     $starsearch
+* @param integer     $starsearch              DEPRECATED_STARSEARCH passed in for backwards compatibility
 * @param boolean     $ignore_filters
 * @param boolean     $return_disk_usage
 * @param string      $recent_search_daylimit
@@ -43,7 +43,7 @@ function do_search(
     $fetchrows = -1,
     $sort = 'desc',
     $access_override = false,
-    $starsearch = 0,
+    $starsearch = DEPRECATED_STARSEARCH,     # Parameter retained for backwards compatibility
     $ignore_filters = false,
     $return_disk_usage = false,
     $recent_search_daylimit = '',
@@ -223,7 +223,7 @@ function do_search(
         }
 
     # -- Build up filter SQL that will be used for all queries
-    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
+    $sql_filter=search_filter($search,$archive,$restypes,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
     debug("do_search(): \$sql_filter = {$sql_filter}");
 
     # Initialise variables.

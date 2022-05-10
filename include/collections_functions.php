@@ -2316,20 +2316,18 @@ function add_smart_collection()
 	$restypes=getvalescaped("restypes","");
 	if($restypes=="Global"){$restypes="";}
 	$archive = getvalescaped('archive', 0, true);
-	$starsearch=getvalescaped("starsearch",0);
 	
 	// more compact search strings should work with get_search_title
 	$searchstring=array();
 	if ($search!=""){$searchstring[]="search=$search";}
 	if ($restypes!=""){$searchstring[]="restypes=$restypes";}
-	if ($starsearch!=""){$searchstring[]="starsearch=$starsearch";}
 	if ($archive!=0){$searchstring[]="archive=$archive";}
 	$searchstring=implode("&",$searchstring);
 	
-	if ($starsearch==""){$starsearch=0;}
 	$newcollection=create_collection($userref,get_search_title($searchstring),1);	
 
-	sql_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) values ('$newcollection','" . $search . "','" . $restypes . "','" . $archive . "','".$starsearch."')");
+	sql_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) 
+        values ('$newcollection','" . $search . "','" . $restypes . "','" . $archive . "','" . DEPRECATED_STARSEARCH . "')");
 	$savedsearch=sql_insert_id();
 	sql_query("update collection set savedsearch='$savedsearch' where ref='$newcollection'"); 
     set_user_collection($userref,$newcollection);
@@ -2338,7 +2336,7 @@ function add_smart_collection()
 
 /**
  * Get a display friendly name for the given search string
- * Takes a full searchstring of the form 'search=restypes=archive=starsearch=' and
+ * Takes a full searchstring of the form 'search=restypes=archive=' and
  * uses search_title_processing to autocreate a more informative title 
  *
  * @param  string $searchstring     Search string
@@ -2362,13 +2360,11 @@ function get_search_title($searchstring)
     parse_str($searchstring,$searchvars);
     if (isset($searchvars["archive"])){$archive=$searchvars["archive"];}else{$archive=0;}
     if (isset($searchvars["search"])){$search=$searchvars["search"];}else{$search="";}
-    if (isset($searchvars["starsearch"])){$starsearch=$searchvars["starsearch"];}else{$starsearch="";}
     if (isset($searchvars["restypes"])){$restypes=$searchvars["restypes"];}else{$restypes="";}
 
     $collection_dropdown_user_access_mode=false;
     include(dirname(__FILE__)."/search_title_processing.php");
 
-    if ($starsearch!=0){$search_title.="(".$starsearch;$search_title.=($starsearch>1)?" ".$lang['stars']:" ".$lang['star'];$search_title.=")";}
     if ($restypes!="")
         { 
         $resource_types=get_resource_types($restypes);
@@ -2392,11 +2388,10 @@ function get_search_title($searchstring)
  * @param  string $order_by
  * @param  string $sort
  * @param  string $daylimit
- * @param  string $starsearch
  * @param  int    $res_access          The ID of the resource access level
  * @return boolean
  */
-function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $starsearch = "",$res_access = "")
+function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $res_access = "")
 	{
     if((string)(int)$collection != $collection)
         {
@@ -2412,7 +2407,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         $search_all_workflow_states = false;
         }
    
-    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,$starsearch,false,false,$daylimit,false,true,false,false,false,$res_access);
+    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,false,false,$res_access);
 
 	if(!is_array($results) || count($results) == 0)
         {
@@ -3692,7 +3687,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
-           $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
+           $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet,
            $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
            $system_read_only;
@@ -3735,7 +3730,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
         "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
         "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
-        "starsearch"  =>  $starsearch,
         "order_by"    =>  $order_by,
         "col_order_by"=>  $col_order_by,
         "sort"        =>  $sort,

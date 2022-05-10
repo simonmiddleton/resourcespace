@@ -12,7 +12,6 @@ $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$starsearch=getvalescaped("starsearch","");
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
@@ -36,7 +35,6 @@ $urlparams= array(
     "order_by" => $order_by,
     "offset" => $offset,
     "restypes" => $restypes,
-    "starsearch" => $starsearch,
     "archive" => $archive,
     "default_sort_direction" => $default_sort_direction,
     "sort" => $sort,

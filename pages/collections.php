@@ -19,16 +19,6 @@ $collection      = getvalescaped('collection', '');
 $entername       = getvalescaped('entername', '');
 $res_access      = getvalescaped('access','');
 
-# if search is not a special search (ie. !recent), use starsearchvalue.
-if ($search !="" && strpos($search,"!")!==false)
-	{
-	$starsearch = "";
-	}
-else
-	{
-	$starsearch = getvalescaped("starsearch","");	
-    }
-
 /* 
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column 
 in collection_resource table). This means that all pages order by 'relevance' and on search page only if we search
@@ -619,7 +609,7 @@ if ($addsearch!=-1)
 			else
 				{
 				#add saved search (the items themselves rather than just the query)
-				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch, $res_access);
+				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access);
 				if (!empty($resourcesnotadded))
 					{
 					$warningtext="";
