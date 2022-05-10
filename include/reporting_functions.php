@@ -77,11 +77,11 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         {
         if ($has_date_range)
             {
-            $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+            $filename=str_replace(array(" ","(",")","-","/",","),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
             }
         else
             {
-            $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . ".csv";
+            $filename=str_replace(array(" ","(",")","-","/",","),"_",$report["name"]) . ".csv";
             }
         }
 
