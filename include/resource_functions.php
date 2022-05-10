@@ -2444,7 +2444,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         {
         # Fetch previous value
         $existing = ps_value("SELECT value FROM resource_data WHERE resource = ? AND resource_type_field = ?",["i",$resource,"i",$field],"");
-        if (trim($value) === trim($existing))
+        if ($value === $existing)
             {
             // Nothing to do
             return true;
