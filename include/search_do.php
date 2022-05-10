@@ -43,7 +43,7 @@ function do_search(
     $fetchrows = -1,
     $sort = 'desc',
     $access_override = false,
-    $starsearch = 0,                          # DEPRECATED_STARSEARCH passed in for backwards compatibility
+    $starsearch = DEPRECATED_STARSEARCH,     # Parameter retained for backwards compatibility
     $ignore_filters = false,
     $return_disk_usage = false,
     $recent_search_daylimit = '',
