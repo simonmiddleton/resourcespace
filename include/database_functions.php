@@ -452,7 +452,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
 
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
         {
-        debug("SQL: " . $sql);
+        debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
@@ -499,7 +499,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     # Try again (no dbstruct this time to prevent an endless loop)
                     return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
-                $error="Bad prepared SQL statement: " . $sql;
+                $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters);
                 errorhandler("N/A", $error, "(database)", "N/A");
                 exit();
                 }
@@ -1339,8 +1339,21 @@ function CheckDBStruct($path,$verbose=false)
                             {
                             // Get type from table file
                             $sql_params[]=$column_types[$n];
-                            if ($row[$n]=="''") {$sql_params[]=NULL;}
-                            else {$sql_params[]=$row[$n];}
+                            // dbstruct/data_*.txt files normally have nothing if the column value was null when using
+                            // the pages/tools/dbstruct_create.php script.
+                            if($row[$n] === '')
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            // Legacy? I couldn't find any dbstruct/data_*.txt file containing '' for a column value
+                            else if($row[$n] == "''")
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            else
+                                {
+                                $sql_params[] = $row[$n];
+                                }
                             }
 
                         ps_query(

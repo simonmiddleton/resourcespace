@@ -21,7 +21,7 @@ if (getval("save","")!="")
         if (getval("email","")=="") { $missingFields[] = $lang["youremailaddress"]; }
         if ($registration_group_select)
             {
-            if (getval("usergroup", "", true) == "")
+            if (getval("usergroup", 0, true) == 0)
                 {
                 $missingFields[] = $lang["group"];
                 }

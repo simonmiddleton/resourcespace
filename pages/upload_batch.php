@@ -234,29 +234,25 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         remove_all_resources_from_collection(0-$userref);
         }
 
-	# Set the redirect after upload to the start of the edit process
-    if($alternative != "") 
-        {
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/view.php",
-            array(
-                'ref' => $alternative
-            ));	
-        }
-    else
-        {
-        rs_setcookie('lockedfields', '', 1);
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/edit.php",
-            array(
-                'upload_review_mode' => true,
-                'collection_add' => $collection_add
-            ));	
-        }
+    # Set the redirect after upload to the start of the edit process
+    rs_setcookie('lockedfields', '', 1);
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+            'collection_add' => $collection_add
+        ));	
 
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
+
+# If uploading alternative file, redirect to the resource rather than search results.
+if($alternative != "") 
+    {
+    $redirecturl = generateURL("{$baseurl}/pages/view.php", array('ref' => $alternative));	
+    }
+    
 $modify_redirecturl=hook('modify_redirecturl');
 if($modify_redirecturl!==false)
 	{

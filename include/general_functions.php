@@ -498,7 +498,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             if ($findpage!="") {$search="page like ?"; $search_param = array("s", '%' . $findpage . '%');}
             if ($findname!="") {$search="name like ?"; $search_param = array("s", '%' . $findname . '%');}
             
-            $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where $search", $search_param);
+            $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where $search", $search_param);
             
             foreach ($site_text as $text)
                 {
@@ -568,20 +568,20 @@ function get_site_text($page,$name,$getlanguage,$group)
         }
 
     
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
         # Fall back to default language.
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group $stg_sql_cond", $params);
     if (count($text)>0)
         {
                 return $text[0]["text"];
                 }
                 
         # Fall back to default group.
-    $text = ps_query("select `page`, `name`, `text`, ref, `language`, ignore_me, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group is null", array("s", $page, "s", $name, "s", $defaultlanguage));
+    $text = ps_query("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where page = ? and name = ? and language = ? and specific_to_group is null", array("s", $page, "s", $name, "s", $defaultlanguage));
     if (count($text)>0)
         {
         return $text[0]["text"];
@@ -1458,7 +1458,7 @@ function log_mail($email,$subject,$sender)
         {
         $from = 0;
         }
-    $sub = mb_substr($subject,0,100);
+    $sub = mb_strcut($subject,0,100);
 
     // Write log to database
     ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
@@ -2513,9 +2513,49 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path) . " {$exiftool_global_options} ";
 
         case 'antiword':
+            if(!isset($antiword_path) || $antiword_path === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $antiword_path,
+                [
+                    'unix' => 'antiword',
+                    'win'  => 'antiword.exe'
+                ],
+                $checked_path
+            );
+
         case 'pdftotext':
+            if(!isset($pdftotext_path) || $pdftotext_path === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $pdftotext_path,
+                [
+                    'unix' => 'pdftotext',
+                    'win'  => 'pdftotext.exe'
+                ],
+                $checked_path
+            );
+
         case 'blender':
-            break;
+            if(!isset($GLOBALS['blender_path']) || $GLOBALS['blender_path'] === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['blender_path'],
+                [
+                    'unix' => 'blender',
+                    'win'  => 'blender.exe'
+                ],
+                $checked_path
+            );
 
         case 'archiver':
             // Archiver path not configured
@@ -2539,20 +2579,32 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path);
 
         case 'python':
+        case 'opencv':
             // Python path not configured
             if(!isset($python_path) || '' == $python_path)
                 {
                 return false;
                 }
 
-            return get_executable_path(
+            $python3 = get_executable_path(
                 $python_path,
-                array(
-                    'unix' => 'python',
+                [
+                    'unix' => 'python3',
                     'win'  => 'python.exe'
-                ),
+                ],
                 $checked_path,
                 true);
+
+            return $python3 ?: get_executable_path(
+                $python_path,
+                [
+                    'unix' => 'python',
+                    'win'  => 'python.exe'
+                ],
+                $checked_path,
+                true);
+
+
 
         case 'fits':
             // FITS path not configured
@@ -2583,6 +2635,41 @@ function get_utility_path($utilityname, &$checked_path = null)
             );
 
             return get_executable_path($php_path, $executable, $checked_path);
+
+        case 'unoconv':
+            if(
+                // On Windows, the utility is available only via Python's package
+                ($GLOBALS['config_windows'] && (!isset($GLOBALS['unoconv_python_path']) || $GLOBALS['unoconv_python_path'] === ''))
+                || (!isset($GLOBALS['unoconv_path']) || $GLOBALS['unoconv_path'] === '')
+                
+            )
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['config_windows'] ? $GLOBALS['unoconv_python_path'] : $GLOBALS['unoconv_path'],
+                [
+                    'unix' => 'unoconv',
+                    'win'  => 'python.exe'
+                ],
+                $checked_path
+            );
+
+        case 'calibre':
+            if(!isset($GLOBALS['calibre_path']) || $GLOBALS['calibre_path'] === '')
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $GLOBALS['calibre_path'],
+                [
+                    'unix' => 'ebook-convert',
+                    'win'  => 'ebook-convert.exe'
+                ],
+                $checked_path
+            );
         }
 
     // No utility path found
@@ -4522,11 +4609,12 @@ function get_system_status()
         'fits' => 'fits_path',
     ];
     $missing_utility_paths = [];
-    foreach($system_utilities as $name => $path_var_name)
+    foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
         {
-        if(isset($GLOBALS[$path_var_name]) && get_utility_path($name) === false)
+        // Check only required (core to ResourceSpace) and configured utilities
+        if($sysu['required'] && isset($GLOBALS[$sysu['path_var_name']]) && get_utility_path($sysu_name) === false)
             {
-            $missing_utility_paths[$name] = $path_var_name;
+            $missing_utility_paths[$sysu_name] = $sysu['path_var_name'];
             }
         }
     if(!empty($missing_utility_paths))
@@ -4904,4 +4992,80 @@ function check_filestore_browseability()
         }
 
     return $return;
+    }
+
+/**
+ * Check CLI version found for ImageMagick is as expected.
+ * 
+ * @param string $version_output The version output for ImageMagick
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - New utility value for its display name
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_imagemagick_cli_version_found(string $version_output, array $utility)
+    {
+    $expected = ['ImageMagick', 'GraphicsMagick'];
+
+    foreach($expected as $utility_name)
+        {
+        if(mb_strpos($version_output, $utility_name) !== false)
+            {
+            $utility['display_name'] = $utility_name;
+            }
+        }
+
+    return [
+        'utility' => $utility,
+        'found' => in_array($utility['display_name'], $expected),
+    ];
+    }
+
+/**
+ * Check CLI numeric version found for a utility is as expected.
+ * 
+ * @param string $version_output The version output
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - not used
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_numeric_cli_version_found(string $version_output, array $utility)
+    {
+    return [
+        'utility' => $utility,
+        'found' => preg_match("/^([0-9]+)+\.([0-9]+)/", $version_output) === 1,
+    ];
+    }
+
+/**
+ * Check CLI version found for a utility is as expected by looking up for its name.
+ * 
+ * @param string $version_output The version output for the utility
+ * @param array  $utility        Utility structure. {@see RS_SYSTEM_UTILITIES}
+ * 
+ * @return array Returns array as expected by the check.php page
+ * - utility - not used
+ * - found - PHP bool representing whether we've found what we were expecting in the version output.
+ */
+function check_utility_cli_version_found_by_name(string $version_output, array $utility, array $lookup_names)
+    {
+    $version_output = strtolower($version_output);
+    $lookup_names = array_filter($lookup_names);
+
+    foreach($lookup_names as $utility_name)
+        {
+        if(mb_strpos($version_output, strtolower($utility_name)) !== false)
+            {
+            $found = true;
+            break;
+            }
+        }
+
+    return [
+        'utility' => $utility,
+        'found' => isset($found),
+    ];
     }
