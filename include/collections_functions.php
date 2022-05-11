@@ -170,7 +170,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         $condparams,
         $keyparams
     );
-
+debug(print_r($queryparams,true));
     $return = ps_query($query,$queryparams);
 
     if ($order_by=="name")

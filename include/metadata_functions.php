@@ -344,9 +344,6 @@ function update_fieldx(int $metadata_field_ref)
     $joins=get_resource_table_joins();  // returns an array of field refs  
     if($metadata_field_ref > 0 && (in_array($metadata_field_ref,$joins)))
         {
-
-       
-
         $fieldinfo = get_resource_type_field($metadata_field_ref);
         $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
         if(in_array($fieldinfo['type'],$NODE_FIELDS))
@@ -358,7 +355,6 @@ function update_fieldx(int $metadata_field_ref)
                     $resdata = implode(",",$resvals);
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
                     ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
-                    
                     }
                 }
         else
@@ -368,15 +364,11 @@ function update_fieldx(int $metadata_field_ref)
                     $resdata = get_data_by_field($resource,$metadata_field_ref);
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
                     ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
-                    
                     }
-                
                 }
-    
          }
-
     }
-    
+
 /**
  * Set resource dimensions using data from exiftool. 
  *

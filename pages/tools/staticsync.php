@@ -599,11 +599,11 @@ function ProcessFolder($folder)
                                         # Save the value
                                         $value = $path_parts[$level-1];
                                         $modifiedval = hook('staticsync_mapvalue','',array($r, $value));
+                                        debug("BANG " . __LINE__ . $value);
                                         if($modifiedval)
                                             {
                                             $value = $modifiedval;
                                             }
-
                                         $field_info=get_resource_type_field($field);
                                         if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
@@ -635,21 +635,35 @@ function ProcessFolder($folder)
                                                     // replace any existing value the array 
                                                     $field_nodes[$field]   = $newnodes;
                                                     }
-                                                }                                            
+                                                }
                                             }
                                         else
                                             {
                                             if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                 {
                                                 $given_value=$value;
-                                                // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
-                                                if(in_array($field_info['type'],array(0,1,4,5,6,8)))
+                                                // Append the values if possible
+                                                if(in_array($field_info['type'],
+                                                        [
+                                                        FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+                                                        FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+                                                        FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+                                                        FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+                                                        FIELD_TYPE_DATE,FIELD_TYPE_WARNING_MESSAGE,
+                                                        ]))
                                                     {
-                                                    $old_value  = get_data_by_field($r,$field);
-                                                    $value      = append_field_value($field_info,$value,$old_value);
+                                                    $existing_value  = get_data_by_field($r,$field);
+                                                    $value      = $existing_value . " " . $value;
+                                                    update_field($r,$field,$value);
+                                                    // // Add this to array of nodes to add
+                                                    // $newnode = set_node(null, $field, trim($value), null, null);
+                                                    // echo "Adding node" . trim($value) . "\n";
+                                                    // $newnodes = array($newnode);
+                                                    // $field_nodes[$field]   = $newnodes;
+                                                    // $nodes_to_remove = get_resource_nodes($r,$field);
+                                                    // delete_resource_nodes($r,$nodes_to_remove);
                                                     }
                                                 }
-                                            update_field ($r, $field, $value);
 
                                             if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field, $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
                                                 {
@@ -661,9 +675,8 @@ function ProcessFolder($folder)
                                             $joins = get_resource_table_joins();
                                             if(in_array($field, $joins))
                                                 {
-                                                ps_query("UPDATE resource SET field" . (int)$field . " = ? WHERE ref = ?", ["s",truncate_join_field_value($value),"i",$r]);
+                                                update_resource_field_column($r,$field,$value);
                                                 }
-                                        
                                         echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
                                         }
                                     }

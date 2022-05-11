@@ -677,7 +677,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $new_nodes_val = implode(",", $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                            ps_query("UPDATE resource SET field" . (int)$fields[$n]["ref"] . "= ? WHERE ref = ?",["s",truncate_join_field_value(strip_leading_comma($new_nodes_val)),"i",$ref]);
                             }
                         }
                     }
@@ -795,7 +795,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             if (in_array($fields[$n]["ref"],$joins))
                                 {
                                 if(substr($val,0,1)==","){$val=substr($val,1);}
-                                sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
+                                sql_query("UPDATE resource SET field" . (int)$fields[$n]["ref"] . "= ? WHERE ref = ?",["s",truncate_join_field_value(substr($newval,1)),"i",$ref]);
                                 }
 					        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                             }
@@ -943,8 +943,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 continue;
                 }
 
-                debug("BANG Existing val for " .$fields[$n]["ref"] . " - " . $fields[$n]['value']);
-                debug("BANG new val for " .$fields[$n]["ref"] . " - " . $val);
+                //debug("BANG Existing val for " .$fields[$n]["ref"] . " - " . $fields[$n]['value']);
+                //debug("BANG new val for " .$fields[$n]["ref"] . " - " . $val);
 
 
             // If all good so far, then save the data
@@ -954,7 +954,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 str_replace("\r\n", "\n", $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
             )
 				{
-                    debug("BANG updating field" .$fields[$n]["ref"] . " - " . $val);
 				$oldval=$fields[$n]["value"];
 
 				# This value is different from the value we have on record.
@@ -976,7 +975,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 # Add new node
                 if($val !=='')
                     {
-                    debug("BANG call set_node() for field #" .$fields[$n]["ref"] . " New val - '" . $val . "'");
+                    //debug("BANG call set_node() for field #" .$fields[$n]["ref"] . " New val - '" . $val . "'");
                     $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
                     $nodes_to_add[] = $newnode;
                     }
@@ -1002,9 +1001,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 $joins=get_resource_table_joins();
                 if (in_array($fields[$n]["ref"],$joins))
                     {
-                    $sql = "UPDATE resource SET field" . $fields[$n]["ref"] . " = ? WHERE ref = ?";
-                    $params = ["s",truncate_join_field_value($val),"i",$ref];
-                    ps_query($sql,$params);
+                    update_resource_field_column($ref,$fields[$n]["ref"],$val);
                     }
                 }
             # Add any onchange code
@@ -1429,12 +1426,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         $joins = get_resource_table_joins();
                         if(in_array($fields[$n]['ref'], $joins))
                             {
-                            if(',' == substr($val, 0, 1))
-                                {
-                                $val = substr($val, 1);
-                                }
-
-                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$ref}'");
+                            update_resource_field_column($ref,$fields[$n]["ref"],$new_nodes_val);
                             }
 						}
                     }
@@ -1533,9 +1525,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                         $joins=get_resource_table_joins();
                         if (in_array($fields[$n]["ref"],$joins))
                             {
-                            if(substr($val,0,1)==","){$val=substr($val,1);}
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-                                }
+                            update_resource_field_column($ref,$fields[$n]["ref"],$newval);
+                            }
                         }               
                 }
             else
@@ -1739,7 +1730,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                             {
                             $expiry_field_edited=true;
                             }
-                        debug("BANG existing val: ".  $existing);
+                        //debug("BANG existing val: ".  $existing);
                         if(trim($existing) != "")
                             {
                             // Remove any existing node IDs for this non-fixed list field (there should only be one).
@@ -1750,7 +1741,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         # Add new node
                         if($val !=='')
                             {
-                            debug("BANG call set_node() for field #" .$fields[$n]["ref"] . " New val - '" . $val . "'");
+                            //debug("BANG call set_node() for field #" .$fields[$n]["ref"] . " New val - '" . $val . "'");
                             $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
                             
                             if(in_array($mode,["PP","AP","FR","CF","RM"]))
@@ -1768,9 +1759,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         $joins=get_resource_table_joins();
                         if (in_array($fields[$n]["ref"],$joins))
                             {
-                            $sql = "UPDATE resource SET field" . $fields[$n]["ref"] . " = ? WHERE ref = ?";
-                             $params = ["s",truncate_join_field_value($val),"i",$ref];
-                             ps_query($sql,$params);
+                            update_resource_field_column($ref,$fields[$n]["ref"],$val);
                             }		
                            
                         $oldval=$existing;
@@ -2028,29 +2017,6 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
     }
 
- // TODO check staticsync works - uses append_field_value()
-function append_field_value($field_data,$new_value,$existing_value)
-	{
-    global $TEXT_FIELD_TYPES;
-	if (!in_array($field_data["type"], $TEXT_FIELD_TYPES))
-		{
-		# Automatically append a space when appending text types.
-		$val=$existing_value . " " . $new_value;
-		}
-	else
-		{
-		# Verify a comma exists at the beginning of the value
-		if(substr($new_value,0,1)!=",")
-			{
-			$new_value=",".$new_value;
-            }
-		
-		$val=(trim($existing_value)!=","?$existing_value:"") . $new_value;
-		
-		}
-	return $val;
-	}
-
 function remove_keyword_mappings($ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
 	{
 	# Removes one instance of each keyword->resource mapping for each occurrence of that
@@ -2295,7 +2261,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             $existing = implode(",",$existingnodes);
             }           
+debug("BANG existing " . $existing);
 
+debug("BANG" . print_r($fieldnodes,true));
         if($nodevalues)
             {
             // An array of node IDs has been passed, we can use these directly
@@ -2370,10 +2338,12 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             elseif($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
                 {
+                    debug("BANG type " . $fieldinfo['type']);
                 // If this is a dynamic keyword field need to add any new entries to the field nodes
                 $currentoptions = array();
                 foreach($fieldnodes as $fieldnode)
                     {
+                        debug("BANG name " . $fieldnode['name']);
                     $fieldoptiontranslations = explode('~', $fieldnode['name']);
                     if(count($fieldoptiontranslations) < 2)
                         {
@@ -2400,7 +2370,21 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                             }
                         }
                     }
-                }            
+                }
+                
+            foreach($newvalues as $newvalue)
+                {
+                # Check if each new value exists in current options list
+               if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                    {
+                    # Append the option and update the field
+                    $newnode            = set_node(null, $field, escape_check(trim($newvalue)), null, null);
+                    $nodes_to_add[]     = $newnode;
+                    $currentoptions[]   = trim($newvalue);
+                    $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
+                    debug("update_field: field option added: '" . trim($newvalue));
+                    }
+                }
                 
             $newvalues_translated = $newvalues;
             array_walk(
@@ -2440,7 +2424,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
             if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
                 {
-                # Woprk out what nodes need to be added/reoved/kept
+                # Work out what nodes need to be added/removed/kept
                 $nodes_to_add       = array_unique($nodes_to_add);
                 $nodes_to_remove    = array_unique($nodes_to_remove);
                 $added_nodes        = array_diff($nodes_to_add,$current_field_noderefs);
@@ -2512,10 +2496,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
         // Remove any existing node IDs for this non-fixed list field (there should only be one)
         $current_field_nodes = get_resource_nodes($resource,$field);
-        debug("BANG removing old nodes: " . implode(",",$current_field_nodes));
+        //debug("BANG removing old nodes: " . implode(",",$current_field_nodes));
         delete_resource_nodes($resource,$current_field_nodes, false);
 
-        debug("BANG call set_node() for field #" .$field . " New val - '" . $value . "'");
+        //debug("BANG call set_node() for field #" .$field . " New val - '" . $value . "'");
         $newnode = set_node(null, $field, $value, null, null);
         add_resource_nodes($resource,[$newnode], false, false);
         }
@@ -2525,37 +2509,23 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
     if(in_array($fieldinfo['ref'],$joins))
         {
-        if (!is_null($value))
-            {
-            $truncated_value = truncate_join_field_value($value);
-            // Remove backslashes from the end of the truncated value
-            if(substr($truncated_value, -1) === '\\')
-                {
-                $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
-                }
-            }
-        else
-            {
-            $truncated_value = null;
-            }
-		ps_query("UPDATE resource SET field" .  (int)$field . " = ? WHERE ref = ?",["s",$truncated_value,"i",$resource]);
-        //sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . escape_check($truncated_value) . "'") ." where ref='" . escape_check($resource) . "'");
-		}			
-	
+        update_resource_field_column($resource,$field,$value);
+        }
+
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
-        eval($fieldinfo["onchange_macro"]);    
-        }    
-    
+        eval($fieldinfo["onchange_macro"]);
+        }
+
     # Allow plugins to perform additional actions.
     // Log this update
     if ($log && $value != $existing)
         {
-        debug("BANG logging change from $existing to $value");
+        //debug("BANG logging change from $existing to $value");
         resource_log($resource,LOG_CODE_EDITED,$field,"",$existing,unescape($value));
         }
-    
+
     # Allow plugins to perform additional actions.
     hook("update_field","",array($resource,$field,$value,$existing));
     return true;
@@ -4686,7 +4656,7 @@ function get_keyword_from_option($option)
 function get_resource_access($resource)
 	{
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
-        $prevent_open_access_on_edit_for_active, $search_filter_nodes, $open_access_for_contributor,
+        $prevent_open_access_on_edit_for_active, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_filter_strict, $search_all_workflow_states,
         $userderestrictfilter, $userdata;
 	# $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.	
@@ -4841,8 +4811,7 @@ function get_resource_access($resource)
 	// Check for a derestrict filter, this allows exceptions for users without the 'g' permission who normally have restricted accesss to all available resources)
 	if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim($userderestrictfilter) != "")
 		{
-        if($search_filter_nodes 
-            && strlen(trim($userderestrictfilter)) > 0
+        if( strlen(trim($userderestrictfilter)) > 0
             && !is_numeric($userderestrictfilter)
             && trim($userdata[0]["derestrict_filter"]) != ""
             && $userdata[0]["derestrict_filter_id"] != -1
@@ -4868,31 +4837,9 @@ function get_resource_access($resource)
                 }
             }
 
-        if($search_filter_nodes && is_numeric($userderestrictfilter) && $userderestrictfilter > 0)
+        if(is_int_loose($userderestrictfilter) && $userderestrictfilter > 0)
             {
             $matchedfilter = filter_check($userderestrictfilter, get_resource_nodes($ref));
-            }
-        else
-            {
-            # Old style filter 
-            if(!isset($metadata))
-                {
-                #  load metadata if not already loaded
-                $metadata=get_resource_field_data($ref,false,false);
-                }
-
-            $matchedfilter=false;
-            for ($n=0;$n<count($metadata);$n++)
-                {
-                $name=$metadata[$n]["name"];
-                $value=$metadata[$n]["value"];
-                if ($name!="")
-                    {
-                    $match=filter_match($userderestrictfilter,$name,$value);
-                    if ($match==1) {$matchedfilter=false;break;}
-                    if ($match==2) {$matchedfilter=true;} 
-                    }
-                }
             }
         if($matchedfilter)
             {
@@ -5000,20 +4947,20 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
             }
         }
 
-	# Confidential
-	if ($access==2)
-		{
-		return false;
-		}
-	
-	}
+    # Confidential
+    if ($access==2)
+        {
+        return false;
+        }
+
+    }
 
 
 function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="")
-	{
-	# For the provided resource and metadata, does the current user have edit access to this resource?
+    {
+    # For the provided resource and metadata, does the current user have edit access to this resource?
     # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
-	
+
     global $userref,$usergroup, $usereditfilter,$edit_access_for_contributor,
     $search_filter_nodes, $userpermissions, $lang, $baseurl, $userdata, $edit_only_own_contributions;
     $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
@@ -5023,17 +4970,17 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         return ('false' === $plugincustomeditaccess ? false : true);
         }
 
-	if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed 
-		{
-		$resourcedata=get_resource_data($resource);		
+    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed 
+        {
+        $resourcedata=get_resource_data($resource);
         }
     if(!is_array($resourcedata) || count($resourcedata) == 0)
         {
         return false;
         }
-	if ($status==-999) # Archive status may not be passed 
-		{$status=$resourcedata["archive"];}
-		
+    if ($status==-999) # Archive status may not be passed 
+        {$status=$resourcedata["archive"];}
+        
     if ($resource==0-$userref) {return true;} # Can always edit their own user template.
 
     # If $edit_access_for_contributor is true in config then users can always edit their own resources.
@@ -5043,7 +4990,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         {
         return false;
         }
-        
+
     # Must have edit permission to this resource first and foremost, before checking the filter.
     if ((!checkperm("e" . $status) && !checkperm("ert" . $resourcedata['resource_type']))
         ||
@@ -5054,7 +5001,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         {
         return false;
         }
-    
+
     # Cannot edit if z permission
     if (checkperm("z" . $status)) {return false;}
 
@@ -5093,7 +5040,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             {
             $migrateresult = 0; // filter was only for resource type, not failed but no need to migrate again
             }
-                
+
         $notification_users = get_notification_users();
         if(is_numeric($migrateresult))
             {
@@ -5110,49 +5057,21 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
-    
+
     if (trim((string) $usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
-		{
-		$gotmatch = true;
-		}
-    elseif($search_filter_nodes && is_numeric($usereditfilter) && $usereditfilter > 0)
+        {
+        $gotmatch = true;
+        }
+    elseif(is_int_loose($usereditfilter) && $usereditfilter > 0)
         {
         $gotmatch = filter_check($usereditfilter, get_resource_nodes($resource));
         }
-    else
-		{
-		# An old style edit filter has been set. Perform edit filter processing to establish if the user can edit this resource.
-        # Always load metadata, because the provided metadata may be missing fields due to permissions.
-		$metadata=get_resource_field_data($resource,false,false);
-				
-		for ($n=0;$n<count($metadata);$n++)
-			{
-			$name=$metadata[$n]["name"];
-			$value=$metadata[$n]["value"];			
-			if ($name!="")
-				{
-				$match=filter_match(trim($usereditfilter),$name,$value);
-				if ($match==1) {return false;} # The match for this field was incorrect, always fail in this event.
-				if ($match==2) {$gotmatch=true;} # The match for this field was correct.
-				}
-			}
-
-		# Also check resource type, if specified.
-		if (strpos($usereditfilter,"resource_type")!==false)
-			{
-			$resource_type=$resourcedata['resource_type'];
-
-			$match=filter_match(trim($usereditfilter),"resource_type",$resource_type);
-			if ($match==1) {return false;} # Resource type was specified but the value did not match. Disallow edit access.
-			if ($match==2) {$gotmatch=true;}
-			}
-		}
 
     if ($gotmatch) 
         {
         $gotmatch = !hook("denyafterusereditfilter");
         }
-    
+
     if(checkperm("ert" . $resourcedata['resource_type']))
         {
         return true;
@@ -6442,18 +6361,18 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                         // Build new value:
                         foreach($locked_nodes as $locked_node)
                             {
-                            foreach ($field_nodes as $key => $val) 
+                            foreach ($field_nodes as $key => $val)
                                 {
-                                if ($val['ref'] === $locked_node) 
+                                if ($val['ref'] === $locked_node)
                                     {
                                     array_push($node_vals, $field_nodes[$key]["name"]);
                                     }
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
                             $values_string = implode(",",$node_vals);
-                            sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='".escape_check($ref)."'");
+                            update_resource_field_column($ref,$resource_type_field,$values_string);
                             }
-                        } 
+                        }
                     }
                 }
             else
@@ -7337,14 +7256,14 @@ function get_data_by_field($resource, $field)
         $rt_fieldtype_cache[$field] = ps_value("SELECT type AS `value` FROM resource_type_field WHERE ref = ? OR name = ?", ["i",$resource_type_field,"i",$resource_type_field],null, "schema");
         }
     $resnodes = get_resource_nodes($resource, $resource_type_field, TRUE);
+
     if($rt_fieldtype_cache[$field] == FIELD_TYPE_CATEGORY_TREE)
         {
-        $resnode_refs = array_column($resnodes,"ref");
-        $return = get_tree_strings($resnode_refs,false);
+        $return = get_tree_strings($resnodes,false);
         }
     else
         {
-        $return = implode(', ', array_column($resnodes, 'name')); 
+        $return = implode(', ', array_column($resnodes, 'name'));
         }
 
     return $return;
@@ -8699,4 +8618,25 @@ function allow_in_browser($path)
         return true;
         }
     return false;
+    }
+
+/**
+* Update the value of the fieldXX field on resource table
+* 
+* @param integer $resource  - Resource ID
+* @param integer $field     - Metadata field ID
+* @param string  $value     - Value
+
+* @return boolean
+*/
+function update_resource_field_column($resource,$field,$value)
+    {
+    if(!is_int_loose($resource) || !is_int_loose($field))
+        {
+        return false;
+        }
+    $sql = "UPDATE resource SET field" . $field . " = ? WHERE ref = ?";
+    $params = ["s",truncate_join_field_value($value),"i",$resource];
+    ps_query($sql,$params);
+    return true;
     }

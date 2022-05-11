@@ -30,7 +30,7 @@
 * @param boolean     $stats_logging           Log keyword usage
 * @param boolean     $return_refs_only
 * @param boolean     $editable_only
-* @param boolean     $returnsql
+* @param boolean     $returnsql               Returns the query as a PreparedStatementQuery instance
 * @param integer     $access                  Search for resources with this access
 * 
 * @return null|string|array
@@ -58,14 +58,11 @@ function do_search(
     {
     debug_function_call("do_search", func_get_args());
         
-    # globals needed for hooks 
-    // TODO Tidy this up
-     global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
-           $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
-           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
-           $open_access_for_contributor, $usersearchfilter, $userpermissions, $usereditfilter,
-           $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access, $config_separators,
-           $date_field, $noadd, $wildcard_always_applied, $wildcard_always_applied_leading, $index_resource_type, $index_contributed_by;
+    global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $search_sql_double_pass_mode, $usergroup, 
+        $userref,$k, $DATE_FIELD_TYPES,$stemming, $usersearchfilter, $userpermissions, $usereditfilter, $userdata, 
+        $lang, $baseurl, $internal_share_access, $config_separators, $date_field, $noadd, $wildcard_always_applied,
+        $wildcard_always_applied_leading, $index_resource_type, $index_contributed_by, $max_results, $config_search_for_number,
+        $category_tree_search_use_and_logic, $date_field;
 
     if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
         {
@@ -229,9 +226,6 @@ function do_search(
     $sql_filter = search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
     debug("do_search(): \$sql_filter = '" . $sql_filter->sql . "', parameters = ['" . implode("','",$sql_filter->parameters) . "']");
 
-
-    //exit(print_r($sql_filter->parameters));
-
     # Initialise variables.
     $sql="";
     $sql_keyword_union              = array(); // An array of all the unions - at least one for each keyword
@@ -267,13 +261,17 @@ function do_search(
         $sql_join->sql  .= " LEFT OUTER JOIN resource_custom_access rca ON r.ref=rca.resource AND rca.usergroup = ? AND rca.access<>2 ";
         array_push($sql_join->parameters,"i",$usergroup);
 
-        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
+        if ($sql_filter->sql != "") {$sql_filter->sql .= " AND ";}
         # If rca.resource is null, then no matching custom access record was found
         # If r.access is also 3 (custom) then the user is not allowed access to this resource.
         # Note that it's normal for null to be returned if this is a resource with non custom permissions (r.access<>3).
         $sql_filter->sql.=" NOT (rca.resource IS null AND r.access=3)";
         }
-        debug("BANG 2 " . __LINE__ . print_r($sql_filter,true));
+
+        
+    echo __LINE__ .  var_dump($sql_join);
+
+    
     # Join thumbs_display_fields to resource table
     $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
     $sql_hitcount_select="r.hit_count";
@@ -319,7 +317,6 @@ function do_search(
     $skipped_last=false;
 
     # Do not process if a numeric search is provided (resource ID)
-    global $config_search_for_number, $category_tree_search_use_and_logic;
     $keysearch=!($config_search_for_number && is_numeric($search));
 
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
@@ -349,7 +346,6 @@ function do_search(
                 {
                 if (substr($keyword,0,1)!="!" || substr($keyword,0,6)=="!empty")
                     {
-                    global $date_field;
                     $field=0;
                     $keywordprocessed=false;
                     
@@ -490,21 +486,21 @@ function do_search(
                                 {
                                 $rangestartpos=strpos($rangestring,"start")+5;
                                 $rangestart=str_replace(" ","-",substr($rangestring,$rangestartpos,strpos($rangestring,"end")?strpos($rangestring,"end")-$rangestartpos:10));
-                                if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
-                                    {
-                                    $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "" ) . "rdr" . $c . ".value >= ?";
-                                    array_push($sql_filter->parameters,"s",$rangestart);
-                                    }
+                                // if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
+                                //     {
+                                //     $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "" ) . "rdr" . $c . ".value >= ?";
+                                //     array_push($sql_filter->parameters,"s",$rangestart);
+                                //     }
                                 }
                             if (strpos($keystring,"end")!==FALSE )
                                 {
                                 $rangeend=str_replace(" ","-",$rangestring);
                                 $rangeend=substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59";
-                                if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
-                                    {
-                                    $sql_filter->sql.= ($sql_filter->sql!=""?" AND ":"") . "rdr" . $c . ".value <= ?";
-                                    array_push($sql_filter->parameters,"s",$rangeend);
-                                    }
+                                // if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
+                                //     {
+                                //     $sql_filter->sql.= ($sql_filter->sql!=""?" AND ":"") . "rdr" . $c . ".value <= ?";
+                                //     array_push($sql_filter->parameters,"s",$rangeend);
+                                //     }
                                 }							
                            
                             // Find where the start value or the end value  is between the range values
@@ -803,6 +799,7 @@ function do_search(
                                     // these restrictions apply to both !empty searches as well as normal keyword searches (i.e. both branches of next if statement)
                                     $union_restriction_clause = new PreparedStatementQuery();
                                     $skipfields = array();
+
                                     if (!empty($sql_exclude_fields))
                                         {
                                         $union_restriction_clause->sql .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . ps_param_insert(count($sql_exclude_fields)) .  "))";
@@ -815,7 +812,6 @@ function do_search(
                                         {
                                         $union_restriction_clause->sql .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" .  ps_param_insert(count($hidden_indexed_fields)) . "))";
                                         $union_restriction_clause->parameters = array_merge($union_restriction_clause->parameters,ps_param_fill($hidden_indexed_fields,"i"));
-
                                         $skipfields = array_merge($skipfields,$hidden_indexed_fields);
                                         }
                                     if (isset($search_field_restrict) && $search_field_restrict!="") // Search is looking for a keyword in a specified field
@@ -823,7 +819,7 @@ function do_search(
                                         $union_restriction_clause->sql .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field = ?)";
                                         $union_restriction_clause->parameters = array_merge($union_restriction_clause->parameters,["i",$search_field_restrict]);
                                         }
-    
+                                     
                                     if ($empty)  // we are dealing with a special search checking if a field is empty
                                         {
                                         // First check user can see this field
@@ -907,15 +903,15 @@ function do_search(
                                                        ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "") ;
 
                                         $union->parameters = array_merge(["i",$keyref],$relatedsql->parameters,$union_restriction_clause->parameters);
-                                        if($alternative_keywords_sql != "")
+                                        if($alternative_keywords_sql->sql != "")
                                             {
-                                            $union->parameters = array_merge($union->parameters,$alternative_keywords_sql->parameters,$union_restriction_clause->parameters);
+                                            $union->parameters = array_merge($union->parameters,$alternative_keywords_sql->parameters,$union_restriction_clause->parameters);                                        
                                             }
                                         if($non_field_keyword_sql->sql != "")
                                             {
                                             $union->parameters = array_merge($union->parameters,$non_field_keyword_sql->parameters);
                                             }
-
+                                            
                                         $sql_keyword_union[] = $union;
      
                                         // ---- end of resource_node -> node_keyword sub query -----
@@ -996,7 +992,6 @@ function do_search(
                             
                         if ($quotedfieldid != "")
                             {
-                            debug("BANG ". $quotedfieldid);
                             $union_restriction_clause->sql .= " AND nn_[union_index]_" . $qk . ".resource_type_field = ?";
                             $union_restriction_clause->parameters = array_merge($union_restriction_clause->parameters,["i",$quotedfieldid]);
                             }
@@ -1209,18 +1204,19 @@ function do_search(
             }
         }
     // Old text filters are no longer supported
-    if (is_numeric($usersearchfilter) && $usersearchfilter > 0)
+    if (is_int_loose($usersearchfilter) && $usersearchfilter > 0)
         {
         $search_filter_sql = get_filter_sql($usersearchfilter);
         if (!$search_filter_sql)
             {
-            exit($lang["error_edit_filter_invalid"]);
+            exit($lang["error_search_filter_invalid"]);
             }
-        if($search_filter_sql)
+        if (is_a($search_filter_sql,"PreparedStatementQuery"))
             {
             if ($sql_filter->sql != "")
                 {$sql_filter->sql .= " AND ";}
-            $sql_filter->sql .=  $search_filter_sql;
+            $sql_filter->sql .=  $search_filter_sql->sql;
+            $sql_filter->parameters = array_merge($sql_filter->parameters,$search_filter_sql->parameters);
             }
         }
 
@@ -1279,7 +1275,7 @@ function do_search(
     $userownfilter=hook("userownfilter");
     if ($userownfilter)
         {
-        $sql_join.=$userownfilter;
+        $sql_join->sql = $userownfilter;
         }
 
     // *******************************************************************************
@@ -1344,21 +1340,17 @@ function do_search(
             " . join(", ", $sql_keyword_union_aggregation) . " from
             (" . join(" union ", $union_sql_arr) . ") AS hits GROUP BY resource) AS h ON h.resource=r.ref ";
     
-        $sql_join->parameters = array_merge($sql_join->parameters,$union_sql_params); 
-       
-        
-        //print_r($sql_keyword_union);
-        //exit(print_r(array_column($sql_keyword_union,"parameters")));
-        if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
-
+        $sql_join->parameters = array_merge($sql_join->parameters,$union_sql_params);
+        if ($sql_filter->sql != "")
+            {
+            $sql_filter->sql .= " AND ";
+            }
 
         if(count($sql_keyword_union_or)!=count($sql_keyword_union_criteria))
             {
-            //print_r($sql_keyword_union_or) . "\n"  . print_r($sql_keyword_union_criteria);
-            //die("Search error - union criteria mismatch");
-			return "ERROR";
+            debug("Search error - union criteria mismatch");
+            return "ERROR";
             }
-
 
         $sql_filter->sql.="(";
 
@@ -1389,7 +1381,7 @@ function do_search(
             $sql_filter->sql.=$sql_keyword_union_criteria[$i];
             }
 
-        $sql_filter->sql.=")";	
+        $sql_filter->sql.=")";
 
         # Use amalgamated resource_keyword hitcounts for scoring (relevance matching based on previous user activity)
         $score="h.score";
@@ -1405,11 +1397,12 @@ function do_search(
         $sql_join->sql = $collection_join . $sql_join->sql;
         }
 
-
-
+        echo __LINE__ .  var_dump($sql_join);
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
+
+    
    $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
     if ($special_results!==false)
         {
@@ -1424,7 +1417,6 @@ function do_search(
     # This must be a standard (non-special) search.
 
     # Construct and perform the standard search query.
-    #$sql="";
     $sql = new PreparedStatementQuery();
     if ($sql_filter->sql!="")
         {
@@ -1444,8 +1436,6 @@ function do_search(
         {
         $score=$sql_hitcount_select;
         } # In case score hasn't been set (i.e. empty search)
-
-    global $max_results;
 
     if (($t2->sql != "") && ($sql->sql != ""))
         {
@@ -1541,7 +1531,6 @@ function do_search(
         {
         return trim_spaces(str_replace(" " . $omit . " "," "," " . join(" ",$keywords) . " "));
         }
-debug("BANG " . print_r($lsql, true));
     if ($lsql->sql != "")
         {
         $least=ps_value("SELECT keyword value FROM keyword WHERE " . $lsql->sql . " ORDER BY hit_count asc limit 1",$lsql->parameters,"");

@@ -25,11 +25,11 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         {
         $actions_notify_states = "";
         }
-    $actionsql = new PreparedStatementQuery();  
+    $actionsql = new PreparedStatementQuery();
     $filtered = $type!="";
-    
+
     if(!$actions_on){return array();}
-        
+
     if((!$filtered || 'resourcereview'==$type) && trim($actions_notify_states) != "")
         {
         $search_all_workflow_states = false;
@@ -41,7 +41,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
             }
         else
             {
-            $generated_title_field = "''";    
+            $generated_title_field = "''";
             }
 
         # Function get_editable_resource_sql() now returns a query object
@@ -74,10 +74,10 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
             as date,ref,ref as user,comments as description,'userrequest' as type FROM (" . $account_requests_query->sql . ") users";
         $actionsql->parameters=array_merge($actionsql->parameters, $account_requests_query->parameters);
     }
-        
+
     # Following hook now returns a query object
     $hookactionsql = hook("addtoactions");
-    
+
     if($hookactionsql != false)
         {
         if ($actionsql->sql!="") 
@@ -87,27 +87,27 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         $actionsql->sql.=$hookactionsql->sql;
         $actionsql->parameters=array_merge($actionsql->parameters, $hookactionsql->parameters);
         }
-    
+
     if($actionsql->sql == ""){return $countonly?0:array();}
-    
+
     if ($countonly)
         {return ps_value("SELECT COUNT(*) value FROM (" . $actionsql->sql . ") allactions",$actionsql->parameters,0);}
     else
         {
         $final_action_sql = $actionsql;
-        $final_action_sql->sql = "SELECT date, allactions.ref,user.fullname as 
+        $final_action_sql->sql = "SELECT date, allactions.ref,user.fullname as
         user,"
-            . ($messages_actions_usergroup?"usergroup.name as usergroup,":"") . 
+            . ($messages_actions_usergroup?"usergroup.name as usergroup,":"") .
         " description, 
         type FROM (" . $actionsql->sql . ")  allactions LEFT JOIN user ON 
         allactions.user=user.ref"
-            . ($messages_actions_usergroup?" LEFT JOIN usergroup ON 
+            . ($messages_actions_usergroup?" LEFT JOIN usergroup ON
         user.usergroup=usergroup.ref":"") .
         " ORDER BY " . $order_by . " " . $sort;
         }
-    return ps_query($final_action_sql->sql, $final_action_sql->parameters);  
+    return ps_query($final_action_sql->sql, $final_action_sql->parameters);
     }
-    
+
 /**
  * Return an SQL statement to find all editable resources in $actions_notify_states.
  *
@@ -121,7 +121,7 @@ function get_editable_resource_sql()
     $rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
 
-    $editable_resource_query= new PreparedStatementQuery();  
+    $editable_resource_query= new PreparedStatementQuery();
 
     # TODO Adjust return from do_search() after it is ported to return an object
     # FROM: $editable_resource_query->sql=do_search(
@@ -130,4 +130,4 @@ function get_editable_resource_sql()
 
     return $editable_resource_query;
     }
-    
+
