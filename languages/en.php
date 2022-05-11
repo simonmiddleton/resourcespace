@@ -2927,7 +2927,7 @@ $lang["iiif_disabled"] = "IIIF is not configured";
 $lang["property-personal_data"]="May contain personal data";
 $lang["api-test-tool"]="API test tool";
 $lang["api-function"]="API function";
-$lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. Be careful - any commands you enter will be executed using your live data.';
+$lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. <strong>Be careful - any commands you enter will be executed using your live data.</strong>';
 $lang["api-view-documentation"]="View documentation";
 $lang["api-php-code"]="PHP code";
 $lang["api-php-help"]="Paste the below into the remote system to call the entered API function with the provided parameters.";
