@@ -40,7 +40,7 @@ if($camera_autorotation)
 
     if($autorotate == "")
         {
-        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : $camera_autorotation_checked);
         }
     else
         {
@@ -267,17 +267,43 @@ if($editsearch)
     $multiple = true;
     $edit_autosave = false; # Do not allow auto saving for batch editing.
 
-    // Check all resources are editable
+    # Check all resources are editable
+    
+    # Editable_only=false (so returns resources whether editable or not)
     $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
+    if (!is_array($searchitems)){$searchitems = array();}
+    $all_resources_count = count($searchitems);
+    $all_resource_refs=array_column($searchitems,"ref");
+
+    # Editable_only=true (so returns editable resources only)
     $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
     if (!is_array($edititems)){$edititems = array();}
-    $items       = array_column($edititems,"ref");
-    if(count($searchitems) != count($edititems) || count($items) == 0)
+    $editable_resources_count = count($edititems);
+    $editable_resource_refs=array_column($edititems,"ref");
+
+    # If not all resources are editable then the batch edit may not be approprate
+    if($editable_resources_count != $all_resources_count)
         {
-        $error = $lang['error-editpermissiondenied'];
-        error_alert($error);
-        exit();
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
+
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) 
+                {
+                $error = $lang['error-editpermissiondenied'];
+                error_alert($error);
+                exit();
+                }
+            }
+
+        # All non_editables have grant edit
+        # Don't exit as batch edit is OK
         }
+
+    # The $items array is used later, so must be updated with all items
+    $items = $all_resource_refs;
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
@@ -395,7 +421,7 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 if (getval("regen","")!="" && enforcePostRequest($ajax))
     {
     hook('edit_recreate_previews_extra', '', array($ref));
-    sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
+    ps_query("update resource set preview_attempts=0 WHERE ref= ?" , ['i', $ref]);
     create_previews($ref,false,$resource["file_extension"]);
     }
 
@@ -455,7 +481,17 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         redirect($explain);
         }
     }
-  
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+if($ref < 0)
+    {
+    $cfb = check_filestore_browseability();
+    if(!$cfb['index_disabled'])
+        {
+        exit(error_alert($lang['error_generic_misconfiguration'], true, 200)); 
+        }
+    }
+
 $urlparams= array(
 	'ref'				=> $ref,
     'search'			=> $search,
@@ -619,7 +655,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 # Also check for regular expression match
                                 if (trim(strlen($field["regexp_filter"]))>=1)
                                     {
-                                    if(preg_match("#^" . $field["regexp_filter"] . "$#",$field["value"],$matches) <= 0)
+                                    global $regexp_slash_replace;
+                                    if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $field["regexp_filter"]) . "$#",$field["value"],$matches) <= 0)
                                         {
                                         $fielderror = true;
                                         }
@@ -721,7 +758,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 {
                                 if($uploadparams["entercolname"] == "")
                                     {
-                                    $uploadparams["entercolname"] = "Upload " . date("YmdHis");
+                                    $uploadparams["entercolname"] = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis');
                                     $hidden_collection = true;
                                     }
                                 $collection_add = create_collection($userref,$uploadparams["entercolname"]);
@@ -891,20 +928,20 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    switch($tweak)
       {
       case "rotateclock":
-         tweak_preview_images($ref,270,0,$resource["preview_extension"]);
+         tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
          break;
       case "rotateanti":
-         tweak_preview_images($ref,90,0,$resource["preview_extension"]);
+         tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
          break;
       case "gammaplus":
-         tweak_preview_images($ref,0,1.3,$resource["preview_extension"]);
+         tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
          break;
       case "gammaminus":
-         tweak_preview_images($ref,0,0.7,$resource["preview_extension"]);
+         tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
 		delete_previews($resource);
-        sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
+        ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
@@ -931,7 +968,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             }
         else
             {
-            sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");
+            ps_query("update resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
             $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         break;
@@ -1338,15 +1375,26 @@ hook("editbefresmetadata"); ?>
             
             for($n = 0; $n < count($types); $n++)
                 {
-                $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
-                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+                if(trim((string) $types[$n]['allowed_extensions']) != "")
+                    {
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    }
+                else
+                    {
+                    array();
+                    }
+                // skip showing a resource type that we do not to have permission to change to 
+                // (unless it is currently set to that). Applies to upload only
                 if((0 > $ref || $upload_review_mode)
                     && 
                         (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != "" && count($allowed_extensions) > 0 && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                        (trim($resource["file_extension"]) != ""
+                            && isset($allowed_extensions)
+                            && count($allowed_extensions) > 0 
+                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
@@ -1690,6 +1738,13 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
+
+# Check code signing flag and display warning if present
+if (get_sysvar("code_sign_required")=="YES")
+    {
+    ?><div class="Question"><div class="FormError"><?php echo $lang["code_sign_required_warning"]; ?></div></div><?php
+    }
+
 
 $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $modalTrueFalse = ($modal ? "true" : "false");
@@ -2064,27 +2119,18 @@ else
 
     if($ref > 0 && !$upload_review_mode && $delete_resource_custom_access)
     {
-       $query = sprintf('
-          SELECT rca.user AS user_ref,
-          IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
-          FROM resource_custom_access AS rca
-          INNER JOIN user AS u ON rca.user = u.ref
-          WHERE resource = "%s";
-          ',
-          $ref
-          );
-       $rca_users = sql_query($query);
+       $query ='SELECT rca.user AS user_ref,
+                IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
+                FROM resource_custom_access AS rca
+                INNER JOIN user AS u ON rca.user = u.ref
+                WHERE resource = ?';
+       $rca_users = ps_query($query, ['i', $ref]);
        
-       $group_query = sprintf('
-          SELECT rca.usergroup AS usergroup_ref,
-          u.name AS name
-          FROM resource_custom_access AS rca
-          INNER JOIN usergroup AS u ON rca.usergroup = u.ref
-          WHERE resource = "%s";
-          ',
-          $ref
-          );
-       $rca_usergroups = sql_query($group_query);
+       $group_query =  'SELECT rca.usergroup AS usergroup_ref, u.name AS name
+                        FROM resource_custom_access AS rca
+                        INNER JOIN usergroup AS u ON rca.usergroup = u.ref
+                        WHERE resource = ?';
+       $rca_usergroups = ps_query($group_query, ['i', $ref]);
 
        ?>
     </div> <!-- end of previous collapsible section -->
@@ -2272,12 +2318,7 @@ if (!$external_upload && !$edit_upload_options_at_top)
     ?></div><?php
     }
 
-if(!hook('replacesubmitbuttons'))
-    {
-    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
-    }
-
-hook('aftereditcollapsiblesection');
+hook('appendcustomfields');
 ?>
 </div><!-- end of BasicsBoxLeft -->
 <?php
@@ -2287,16 +2328,7 @@ if ($ref>0 && !$multiple)
     <?php
     global $custompermshowfile;
         hook('custompermshowfile');
-        if(     (
-                (!$is_template && !checkperm('F*'))
-                    ||
-                $custompermshowfile
-                    ||
-                $external_upload
-                )
-            &&
-                !hook('replaceeditpreview')
-            )
+        if(!$is_template && !hook('replaceeditpreview'))
             { ?>
             <div class="Question QuestionStickyRight" id="question_file">
             <div class="FloatingPreviewContainer">
@@ -2348,7 +2380,7 @@ if ($ref>0 && !$multiple)
                 <?php 
                 }
 
-            if ($allow_metadata_revert)
+            if ($allow_metadata_revert && !checkperm('F*'))
                 {?>
                 <br />
                 <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
@@ -2361,7 +2393,21 @@ if ($ref>0 && !$multiple)
     <?php }
     ?>
 </div><!-- end of BasicsBoxRight-->
-<?php } ?>
+<?php }
+else
+    {
+    ?><div class="BasicsBoxRight"></div><?php
+    }
+
+if(!hook('replacesubmitbuttons'))
+    {
+    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
+    }
+
+hook('aftereditcollapsiblesection');
+
+?>
+
 </div><!-- end of BasicsBox -->
 </form>
 

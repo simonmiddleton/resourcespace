@@ -24,7 +24,6 @@ if(strpos($search, '!') !== false)
     }
 
 $archive      = getvalescaped('archive', 0, true);
-$starsearch   = getvalescaped('starsearch', '');
 $default_sort_direction = 'DESC';
 if(substr($order_by, 0, 5) == 'field')
     {
@@ -51,7 +50,6 @@ $urlparams = array(
     'order_by' => $order_by,
     'offset' => $offset,
     'restypes' => $restypes,
-    'starsearch' => $starsearch,
     'archive' => $archive,
     'default_sort_direction' => $default_sort_direction,
     'sort' => $sort,

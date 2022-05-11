@@ -1,7 +1,8 @@
 <?php
 include_once __DIR__ . '/../image_processing.php';
 # $job_data["resource"]
-# $job_data["extract"]
+# $job_data["extract"] -> Should the embedded metadata be extracted during this process? Please note that this is used 
+#                         for the no_exif param where false means to extract metadata!
 # $job_data["revert"]
 # $job_data["autorotate"]
 # $job_data["archive"] -> optional based on $upload_then_process_holding_state
@@ -16,7 +17,11 @@ $extension = isset($job_data["extension"]) && is_string($job_data["extension"]) 
 $file_path = isset($job_data["file_path"]) && is_string($job_data["file_path"]) ? trim($job_data["file_path"]) : null;
 
 // Set up the user who triggered this event - the upload should be done as them
-$user_data = validate_user("AND u.ref = '" . escape_check($job['user']) . "'", true);
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref = ?";
+$user_select_sql->parameters = ["i",$job['user']];
+$user_data = validate_user($user_select_sql, true);
+
 if(!is_array($user_data) || count($user_data) == 0)
     {
     job_queue_update($jobref, $job_data, STATUS_ERROR);
@@ -34,14 +39,14 @@ if($resource!==false && is_null($alternative))
         {
         $status = upload_file_by_url(
             $job_data["resource"],
-            $job_data["extract"],
+            !$job_data["extract"],
             $job_data["revert"],
             $job_data["autorotate"],
             $job_data["upload_file_by_url"]);
         }
     else
         {
-        $status=upload_file($job_data["resource"], $job_data["extract"], $job_data["revert"], $job_data["autorotate"] ,"", true);
+        $status=upload_file($job_data["resource"], !$job_data["extract"], $job_data["revert"], $job_data["autorotate"] ,"", true);
         }
 	
 	# update the archive status

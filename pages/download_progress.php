@@ -14,21 +14,25 @@ $iaccept=getvalescaped("iaccept","off");
 $usage=getval("usage","-1");
 $usagecomment=getval("usagecomment","");
 $email       = getvalescaped('email', '');
+$url=getval('url','');
 
-$download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) 
-					. "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative) . "&iaccept=" . urlencode($iaccept);
-$download_url_suffix.= hook("addtodownloadquerystring");
+if($url == '')
+    {
+    $download_url_suffix="?ref=" . urlencode($ref)  . "&size=" . urlencode($size) . "&ext=" . urlencode($ext) 
+                        . "&k=" . urlencode($k) . "&alternative=" . urlencode($alternative) . "&iaccept=" . urlencode($iaccept);
+    $download_url_suffix.= hook("addtodownloadquerystring");
 
-if ($download_usage && getval("usage","")=="" && $terms_download)
-	{
-	redirect($baseurl_short."pages/download_usage.php".$download_url_suffix);
-	}
+    if ($download_usage && getval("usage","")=="" && $terms_download)
+        {
+        redirect($baseurl_short."pages/download_usage.php".$download_url_suffix);
+        }
 
-if (!($url=hook("getdownloadurl", "", array($ref, $size, $ext, 1, $alternative)))) // used in remotedownload-plugin
-	{
-	$download_url_suffix.="&usage=" . urlencode($usage) . "&usagecomment=" . urlencode($usagecomment) . "&email=" . urlencode($email);
-	$url=$baseurl."/pages/download.php" . $download_url_suffix;
-	}
+    if (!($url=hook("getdownloadurl", "", array($ref, $size, $ext, 1, $alternative)))) // used in remotedownload-plugin
+        {
+        $download_url_suffix.="&usage=" . urlencode($usage) . "&usagecomment=" . urlencode($usagecomment) . "&email=" . urlencode($email);
+        $url=$baseurl."/pages/download.php" . $download_url_suffix;
+        }   
+    }
 
 include "../include/header.php";
 
@@ -36,7 +40,7 @@ if (!$save_as)
 	{
 	?>
 	<script type="text/javascript">
-	window.setTimeout("document.location='<?php echo $url?>'",1000);
+	window.setTimeout("document.location='<?php echo str_replace('\'', '%27', $url); ?>'",1000);
 	</script>
 	<?php
 	}
@@ -48,7 +52,7 @@ if (!$save_as)
 	# $save_as set or Opera browser? Provide a download link instead. Opera blocks any attempt to send it a download (meta/js redirect)	?>
     <h2>&nbsp;<h2> 
     <h1><?php echo $lang["downloadresource"]?></h1>
-    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo $url?>"><?php echo $lang["rightclicktodownload"]?></a></p>
+    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo htmlspecialchars($url); ?>"><?php echo $lang["rightclicktodownload"]?></a></p>
 	<?php } else { 
 	# Any other browser - standard 'your download will start shortly' text.
 	?>
@@ -92,7 +96,5 @@ if (!$save_as)
         }?>
 	
 </div>
-
 <?php
 include "../include/footer.php";
-?>

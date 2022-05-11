@@ -222,7 +222,7 @@ function rse_workflow_compile_actions(array $url_params)
     foreach($valid_actions as $action)
         {
         $option = array(
-            "value" => "rse_workflow_move_to_workflow",
+            "value" => "rse_workflow_move_to_workflow~" . $action["ref"],
             "label" => i18n_get_translated($action["buttontext"]),
             "data_attr" => array(
                 "url" => generateURL(

@@ -296,11 +296,33 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
 
 /*
  * Cleanup Duplicate and Loose Tiles
- * This removes all unused tiles that are flagged as "allowed to delete"
+ * This removes all unused tiles that are flagged as:
+ * "allowed to delete"
+ * AND not "all users"
  */
 function cleanup_dash_tiles()
 	{
-	sql_query("DELETE FROM dash_tile WHERE allow_delete = 1 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)");
+    global $lang;
+    $tiles = ps_query(
+        "SELECT * FROM dash_tile 
+            WHERE allow_delete = 1
+                AND all_users = 0
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)"
+    );
+
+    ps_query(
+        "DELETE FROM dash_tile 
+            WHERE allow_delete = 1
+                AND all_users = 0
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
+                AND ref NOT IN (SELECT DISTINCT dash_tile FROM usergroup_dash_tile)"
+    );
+
+    foreach ($tiles as $tile)
+        {
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
+        }
 	}
 
 
@@ -943,18 +965,24 @@ function update_user_dash_tile_order($user,$tile,$order_by)
  *
  */
 function delete_user_dash_tile($usertile,$user)
-	{
-	if(!is_numeric($usertile) || !is_numeric($user)){return false;}
-	
-	$row = get_user_tile($usertile,$user);
-	sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
+    {
+    global $lang;
+    if(!is_numeric($usertile) || !is_numeric($user)){return false;}
+    
+    $row = get_user_tile($usertile,$user);
+    sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
 
-	$existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
-	if($existing[0]["count"]<1)
-		{
-		delete_dash_tile($row["dash_tile"]);
-		}
-	}
+    if (!isset($row["dash_tile"]) || !is_numeric($row["dash_tile"])) {return false;}
+    
+    $existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    
+    if($existing[0]["count"]<1)
+        {
+        $tile = get_tile($row["dash_tile"]);
+        delete_dash_tile($row["dash_tile"]);
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,($tile["title"]??""),'dash_tile',NULL,$row["dash_tile"]);
+        }
+    }
 
 /*
  * Remove all tiles from a users dash
@@ -963,6 +991,7 @@ function delete_user_dash_tile($usertile,$user)
  */
 function empty_user_dash($user,$purge=true)
 	{
+    global $lang;
 	$usertiles = sql_query("SELECT dash_tile FROM user_dash_tile WHERE user_dash_tile.user='".escape_check($user)."'");
 	sql_query("DELETE FROM user_dash_tile WHERE user='".$user."'");
 	if($purge)
@@ -973,6 +1002,7 @@ function empty_user_dash($user,$purge=true)
 			if($existing[0]["count"]<1)
 				{
 				delete_dash_tile($tile["dash_tile"]);
+                log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["dash_tile"]);
 				}
 			}
 		}	
@@ -1969,16 +1999,11 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
         const SHOW_RESOURCE_COUNT = <?php echo $tile['resource_count'] ? 'true' : 'false'; ?>;
 
         let data = {
-            'search': '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>',
-            'restypes': '<?php echo htmlspecialchars($restypes, ENT_QUOTES); ?>',
-            'order_by': '<?php echo htmlspecialchars($order_by, ENT_QUOTES); ?>',
-            'archive': '<?php echo htmlspecialchars($archive, ENT_QUOTES); ?>',
-            'fetchrows': TILE_STYLE === 'multi' && !SHOW_RESOURCE_COUNT ? 4 : -1,
-            'sort': '<?php echo htmlspecialchars($sort, ENT_QUOTES); ?>',
-            'recent_search_daylimit': '',
-            'getsizes': TILE_STYLE === 'blank' ? '' : 'pre',
+            'link': '<?php echo htmlspecialchars($tile["link"], ENT_QUOTES); ?>',
+            'promimg': '<?php echo (int)$promoted_image; ?>',
         };
-        api('search_get_previews', data, function(response)
+
+        api('get_dash_search_data', data, function(response)
             {
             const TILE_ID = '<?php echo htmlspecialchars($tile_id, ENT_QUOTES); ?>';
             const TILE_WIDTH = <?php echo $tile_width; ?>;
@@ -1987,16 +2012,14 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
 
             if(TILE_STYLE === 'thmbs')
                 {
-                let promoted_image = <?php echo $promoted_image; ?>;
-                let promoted_image_resource = response.filter(resource => resource.ref == promoted_image && typeof resource.url_pre !== 'undefined');
+                let promoted_image = <?php echo (int)$promoted_image; ?>;
+                let promoted_image_resource = response.images.filter(resource => resource.ref == promoted_image && typeof resource.url !== 'undefined');
                 console.debug('promoted_image_resource = %o', promoted_image_resource);
 
-                // Find a resource with a preview
-                response = response.filter(resource => typeof resource.url_pre !== 'undefined')
+                // Filter response
                 preview_resources = promoted_image > 0 && promoted_image_resource[0] !== undefined ? [promoted_image_resource[0]]
-                    : promoted_image === 0 && response[0] !== undefined ? [response[0]]
-                    : [];
-
+                : promoted_image === 0 && response.images[0] !== undefined ? [response.images[0]]
+                : [];
                 // Fit (adjust) the 'pre' size to the tile size
                 preview_resources = preview_resources.map(function(resource)
                     {
@@ -2017,14 +2040,12 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                         var size = height < TILE_HEIGHT ? ' height="100%"' : ' width="100%"';
                         }
 
-                    return '<img src="' + resource.url_pre + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">';
+                    return '<img src="' + resource.url + '"' + size + ' class="thmbs_tile_img AbsoluteTopLeft">';
                     });
                 }
             else if(TILE_STYLE === 'multi')
                 {
-                preview_resources = response
-                    .filter(resource => typeof resource.url_pre !== 'undefined')
-                    .slice(0, 4)
+                preview_resources = response.images
                     .map(function(resource, index, resources_list)
                         {
                         let tile_working_space = <?php echo $tile['tlsize'] == '' ? 140 : 280; ?>;
@@ -2033,7 +2054,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                         let style = 'left: ' + (space * 1.5) + 'px;'
                             + ' transform: rotate(' + (20 - (index * 12)) + 'deg);';
 
-                        return '<img src="' + resource.url_pre + '" style="' + style + '">';
+                        return '<img src="' + resource.url + '" style="' + style + '">';
                         })
                     // images will be prepended to the tile container so reverse the order so that the layout ends up as 
                     // expected (from left to right, each preview on top of the previous one)
@@ -2061,10 +2082,10 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
             let tile_corner_box = jQuery('div#' + TILE_ID + ' p.tile_corner_box');
             if(SHOW_RESOURCE_COUNT)
                 {
-                tile_corner_box.append(response.length);
+                tile_corner_box.append(response.count);
                 tile_corner_box.removeClass('DisplayNone');
                 }
-            else if(response.length == 0)
+            else if(response.count == 0)
                 {
                 jQuery('div#' + TILE_ID + ' p.no_resources').removeClass('DisplayNone');
                 }
@@ -2073,4 +2094,72 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
     </script>
     <?php
     return;
+    }
+
+/**
+ * Get images and resource count for search dash tile. 
+ * This has to work on a string because the dash tile does not yet exist when on dash creation page
+ * For performance this function will return a maximum of 4 images
+ *
+ * @param  string   $link          Tile link URL
+ * @param  int      $promimg       Promoted image ref
+ * 
+ * @return array    $searchdata    Array containing the count of resources and details of preview images.
+ */
+function get_dash_search_data($link='', $promimg=0)
+    {    
+    $searchdata = [];
+    $searchdata["count"] = 0;
+    $searchdata["images"] = [];
+    
+    if(!(checkPermission_dashadmin() || checkPermission_dashuser()))
+        {
+        return $searchdata;
+        }
+
+    $search_string = explode('?',$link);
+    parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
+    $search = isset($search_string["search"]) ? $search_string["search"] :"";
+    $restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
+    $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
+    $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
+    $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+
+    $results= do_search($search,$restypes,$order_by,$archive,-1,$sort);    
+    $imagecount = 0;
+    if(is_array($results))
+        {
+        $resultcount = count($results);
+        $searchdata["count"] = $resultcount;
+        $n = 0;
+        // First see if we can get the promoted image by adding it to the front of the array
+        if($promimg != 0)
+            {
+            $add = get_resource_data($promimg);
+            if(is_array($add))
+                {
+                array_unshift($results,$add);
+                }
+            }
+        while($imagecount < 4 && $n < $resultcount)
+            {
+            global $access; // Needed by check_use_watermark()
+            $access=get_resource_access($results[$n]);
+            if(in_array($access,[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
+                {
+                $use_watermark=check_use_watermark();
+                $resfile=get_resource_path($results[$n]["ref"],true,"pre",false,"jpg",-1,1,$use_watermark);
+                if(file_exists($resfile))
+                    {
+                    $searchdata["images"][$imagecount]["ref"] = $results[$n]["ref"];
+                    $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
+                    $searchdata["images"][$imagecount]["thumb_height"] = $results[$n]["thumb_height"];
+                    $searchdata["images"][$imagecount]["url"] = get_resource_path($results[$n]["ref"],false,"pre",false,"jpg",-1,1,$use_watermark);
+                    $imagecount++;
+                    }
+                }
+            $n++;
+            }
+        }
+    return $searchdata;
     }

@@ -139,12 +139,6 @@ $all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fie
 
 # get display and normalize display specific variables
 $display=getvalescaped("display",$default_display);rs_setcookie('display', $display,0,"","",false,false);
-if(!$leaflet_maps_enable && $display == "map")
-    {
-    // Map view is not supported unless leaflet maps is enabled
-    $display = "thumbs";
-    }
-
 
 switch ($display)
     {
@@ -406,17 +400,6 @@ else
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
 
-# if search is not a special search (ie. !recent), use starsearchvalue.
-if (getvalescaped("search","")!="" && strpos(getvalescaped("search",""),"!")!==false)
-    {
-    $starsearch="";
-    }
-else
-    {
-    $starsearch=getvalescaped("starsearch",""); 
-    rs_setcookie('starsearch', $starsearch,0,"","",false,false);
-}
-
 # If returning to an old search, restore the page/order by and other non search string parameters
 $old_search = (!array_key_exists('search', $_GET) && !array_key_exists('search', $_POST));
 if ($old_search)
@@ -543,7 +526,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         {
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
         $max_results = $saved_max_results;
         }
     }
@@ -1011,7 +994,8 @@ if($responsive_ui)
         }
      ?></div>
     <?php
-    if(!hook('replacedisplayselector','',array($search,(isset($collections)?$collections:""))))
+    $replacedisplayselector=hook('replacedisplayselector','',array($search,(isset($collections)?$collections:"")));
+    if(!$replacedisplayselector)
         {
         ?>
         <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">
@@ -1036,7 +1020,7 @@ if($responsive_ui)
                 else
                     {
                     ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo $lang["xlthumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a id="xlthumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo $lang["xlthumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                         <span class="xlthumbsicon"></span>
                     </a>
                     <?php
@@ -1049,7 +1033,7 @@ if($responsive_ui)
             else
                 {
                 ?>
-                <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo $lang["largethumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                <a id="thumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo $lang["largethumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                     <span class="largethumbsicon"></span>
                 </a>
                 <?php
@@ -1061,7 +1045,7 @@ if($responsive_ui)
             else
                 {
                 ?>
-                <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo $lang["striptitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                <a id="strip_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo $lang["striptitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                     <span class="stripicon"></span>
                 </a>
                 <?php
@@ -1076,14 +1060,14 @@ if($responsive_ui)
                 else
                     {
                     ?>
-                    <a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo $lang["listtitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo $lang["listtitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                         <span class="smalllisticon"></span>
                     </a>
                     <?php
                     }
                 }
             
-            if (!$disable_geocoding && $leaflet_maps_enable)
+            if (!$disable_geocoding)
                 {
                 if($display == 'map')
                     { ?>
@@ -1091,7 +1075,7 @@ if($responsive_ui)
                     }
                 else
                     { ?>
-                    <a href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
+                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
                     if($search_map_max_results > 0  && $resources_count > $search_map_max_results)
                         {
                         echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
@@ -1116,7 +1100,7 @@ if($responsive_ui)
             <?php if ($display=="strip") { ?><span class="Selected"><?php echo $lang["striptitle"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["striptitle"]?></a><?php } ?>&nbsp; |&nbsp;
             <?php if ($display=="list") { ?> <span class="Selected"><?php echo $lang["list"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list"]?></a><?php } ?> <?php hook("adddisplaymode"); ?> 
             <?php
-            if(!$disable_geocoding && $leaflet_maps_enable)
+            if(!$disable_geocoding)
                 {
                 if ($display == 'map')
                     { ?>
@@ -1345,7 +1329,7 @@ if($responsive_ui)
             <?php
             if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim($collectiondata['description']) != "")
                 {
-                echo "<p>" . htmlspecialchars($collectiondata['description']) . "</p>";
+                echo "<p>" . nl2br(htmlspecialchars(i18n_get_translated($collectiondata['description']))) . "</p>";
                 }
             echo "</div>";
             }

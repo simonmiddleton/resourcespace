@@ -95,6 +95,10 @@ $imversion = get_imagemagick_version();
 $orig_ext = $resource["file_extension"];
 hook('transformcropbeforegetsize');
 $originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+
+$usesize    = "scr";
+$useext     = "jpg";
+
 if(file_exists($originalpath))
     {
     // For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
@@ -111,8 +115,6 @@ if(file_exists($originalpath))
         $origsizes  = getimagesize($originalpath);        
         $origwidth  = $origsizes[0];
         $origheight = $origsizes[1];
-        $usesize    = "scr";
-        $useext     = "jpg";
         }
     }
 else
@@ -353,7 +355,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
                 !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
                 {
-                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder)), $lang['error-file-permissions']);
+                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder), $lang['error-file-permissions']));
                 exit();
                 }
             rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
@@ -369,14 +371,18 @@ if ($saveaction != '' && enforcePostRequest(false))
             $dlfile = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $new_ext;
             rename($newpath,$dlfile);
             
-            $dlparams = array(
+            $download_url = generateURL($baseurl_short . "pages/download.php", 
+            [
                 "userfile" => $ref . "_" . $randstring . "." . $new_ext,
-                "filename" => strip_extension($filename)
-                );
+                "filename" => strip_extension($filename) 
+            ]);
 
-            $dlurl = generateURL($baseurl_short . "pages/download.php", $dlparams);
+            $dlurl = generateURL($baseurl_short . "pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
+            if ($download_usage)
+                {
+                $dlurl = generateURL("pages/download_usage.php",["url" => $dlurl]);
+                }
             $url_params["url"]=$dlurl;
-            
             $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
             redirect($redirect_to_terms_url);
             exit();
@@ -891,14 +897,12 @@ renderBreadcrumbs($links_trail);
             jQuery(document).ready(function ()
                 {
                 jQuery('input[type=radio][name=saveaction]').change(function()
-                    {                
+                    {        
                     jQuery('.imagetools_save_action').hide();
                     if(this.value=='alternative')
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_alternative_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -906,8 +910,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_download_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -917,6 +919,7 @@ renderBreadcrumbs($links_trail);
                         jQuery('#imagetools_slideshow_actions').show();
                         jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
                         jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
+                        jQuery('#size_preset_select').val('');
                         if(typeof jcrop_active == 'undefined' || !jcrop_active)
                             {
                             CropManager.attachCropper();
@@ -928,8 +931,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_original_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -937,8 +938,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_preview_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }

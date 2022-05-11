@@ -800,8 +800,6 @@ body {
     }
     .ResourcePanelInfo {
         text-align:center;
-        height: 35px;
-        white-space: normal;
     }
     .BottomInpageNav .InpageNavLeftBlock {
         width:auto;
@@ -993,6 +991,9 @@ body {
         float:left;
         padding: 10px;
     }
+    .AlternativeFileText {
+        max-width: 380px;
+        }
 }
 @media(max-width:400px) {
     .RecordPanel .RecordDownloadSpace ul li {

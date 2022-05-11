@@ -42,7 +42,7 @@ $lang["gotoadvancedsearch"]="高级搜索";
 $lang["viewnewmaterial"]="查看新资料";
 $lang["researchrequestservice"]="搜索要求服务";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="管理资源";
 $lang["overquota"]="磁盘已满，不能添加新的资源";
 $lang["managearchiveresources"]="管理已存档的资源";
@@ -75,7 +75,7 @@ $lang["pluginssetup"]="插件设立";
 $lang["pluginmanager"]="插件管理人";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="收件者";
 $lang["emailsubject"]="电邮主题";
 $lang["emailtext"]="电邮内容";
@@ -84,10 +84,10 @@ $lang["emailsent"]="电邮已发送.";
 $lang["mustspecifyoneuser"]="请指定最少一位用户";
 $lang["couldnotmatchusers"]="未找到匹配的用户名，或者是重复的用户名";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="反馈";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="查看用户贡献的资源-等待审查中";
 $lang["viewuserpendingsubmission"]="查看用户贡献的资料-等待提交中";
 $lang["searcharchivedresources"]="搜索已存档的资源";

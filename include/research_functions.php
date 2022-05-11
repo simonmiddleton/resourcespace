@@ -24,15 +24,23 @@ function send_research_request(array $rr_cfields)
 	$rr_description=getval("description","");
 	$parameters=array("i",$as_user, "s",$rr_name, "s",$rr_description);
 
-	$rr_deadline = getval("deadline","00-00-00")." 00:00:00";
-	$rr_contact = getval("contact","");
-	$rr_email = getval("email","");
+	$rr_deadline = getval("deadline","");
+	if($rr_deadline=="")
+		{
+	 	$rr_deadline=NULL;
+		}
+	$rr_contact = mb_strcut(getval("contact",""),0,100);
+	$rr_email = mb_strcut(getval("email",""),0,200);
 	$rr_finaluse = getval("finaluse","");
 	$parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
 
 	# $rt
-	$rr_noresources = ( (getval("noresources","")=="") ? "0" : "'".getval("noresources","")."'");
-	$rr_shape = getval("shape","");
+	$rr_noresources = getval("noresources","");
+	if($rr_noresources=="")
+		{
+		$rr_noresources=NULL;
+		}
+	$rr_shape = mb_strcut(getval("shape",""),0,50);
 	$parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
 
     /**
@@ -45,7 +53,7 @@ function send_research_request(array $rr_cfields)
         {
         trigger_error(json_last_error_msg());
         }
-    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : "'".$rr_cfields_json."'");
+    $rr_cfields_json_sql = ($rr_cfields_json == "" ? "" : $rr_cfields_json);
 	$parameters=array_merge($parameters,array("s",$rr_cfields_json_sql));
 
 	ps_query("insert into research_request(created,user,name,description,deadline,contact,email,finaluse,resource_types,noresources,shape, custom_fields_json)

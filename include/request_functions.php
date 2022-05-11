@@ -199,7 +199,7 @@ function save_request($request)
         }
 
     # Save status
-    $expires_parm=($expires=="" ? "null" : $expires);
+    $expires_parm=($expires=="" ? null : $expires);
     $parameters=array("i",$status, "s",$expires_parm, "s",$reason, "s",$reasonapproved, "i",$request);
     ps_query("update request set status=?, expires=?, reason=?, reasonapproved=? where ref=?", $parameters);
 
@@ -586,8 +586,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         }
         
     # Setup the principal create request SQL
-    $request_query = new PreparedStatementQuery();
     global $request_query;
+    $request_query = new PreparedStatementQuery();
+
     $request_query->sql = "INSERT INTO request(user, collection, created, request_mode, status, comments) 
                             VALUES (?, ?, NOW(), 1, 0, ?)";
     $request_query->parameters = array("i",$userref, "i",$ref, "s",$message);

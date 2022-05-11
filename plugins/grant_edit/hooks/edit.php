@@ -92,7 +92,7 @@ function HookGrant_editEditEditstatushide()
 	
 
 
-function HookGrant_editEditReplacesubmitbuttons()
+function HookGrant_editEditAppendcustomfields()
 	{
 	global $ref,$lang,$baseurl,$grant_editusers, $multiple, $usergroup, $grant_edit_groups, $collapsible_sections;
 	

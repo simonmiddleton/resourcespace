@@ -58,13 +58,24 @@ if ($alt_access)
                 }
             }
             ?>
-		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_height=jQuery('#previewimage').height();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').height(orig_height);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
+		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && $alternative_file_previews_mouseover)
+            {
+            ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_height=jQuery('#previewimage').height();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').height(orig_height);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php
+            } ?>>
 		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>>
-		<?php if(!hook("renderaltthumb")): ?>
-		<?php if ($alt_thm!="") { ?><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a><?php } ?>
-		<?php endif; ?>
-		<h2 class="breakall"><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
+		<?php
+        if(!hook("renderaltthumb"))
+            {
+            if ($alt_thm!="")
+                {
+                ?>
+                <div class="AlternativeFileImage" ><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a></div><?php
+                }
+            }
+        ?>
+		<div class="AlternativeFileText"><h2><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
 		<p><?php echo htmlspecialchars($altfiles[$n]["description"])?></p>
+        <div>
 		</td>
         <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
 		<td class="DownloadFileSize"><?php echo formatfilesize($altfiles[$n]["file_size"])?></td>

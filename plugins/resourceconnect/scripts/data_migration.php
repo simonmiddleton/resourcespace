@@ -109,9 +109,9 @@ if($export_collections && isset($input_fh) && isset($file_h))
             {
             continue;
             }
-        $original_username = $username;
-        $username = escape_check($username);
-        $user_select_sql = "AND u.username = '{$username}' AND usergroup IN (SELECT ref FROM usergroup)";
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.username = ? AND usergroup IN (SELECT ref FROM usergroup)";
+        $user_select_sql->parameters = ["s",$username];
         $user_data = validate_user($user_select_sql, true);
         if(!is_array($user_data) || count($user_data) == 0)
             {
@@ -130,8 +130,11 @@ if($export_collections && isset($input_fh) && isset($file_h))
                 logScript("ERROR - Invalid ResourceConnect user ID #{$resourceconnect_user}!");
                 exit(1);
                 }
-        $resourceconnect_user_escaped = escape_check($resourceconnect_user);
-        $user_data = validate_user("AND u.ref = '{$resourceconnect_user_escaped}'", true);
+
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.ref = ?";
+        $user_select_sql->parameters = ["i",$resourceconnect_user];
+        $user_data = validate_user($user_select_sql, true);
         if(!is_array($user_data) || count($user_data) == 0)
             {
             logScript("ERROR - Unable to validate ResourceConnect user ID #{$resourceconnect_user}!");
@@ -172,12 +175,12 @@ if($export_collections && isset($input_fh) && isset($file_h))
                     "{$baseurl}/pages/view.php",
                     array(
                         "ref"   => $resource_ref,
-                        "k"     => ResourceConnect\generate_k_value($original_username, $resource_ref, $scramble_key),
+                        "k"     => ResourceConnect\generate_k_value($username, $resource_ref, $scramble_key),
                         "modal" => "true",
                     ));
 
                 $exported_data[] = array(
-                    "username"        => $original_username,
+                    "username"        => $username,
                     "user_email"      => $original_user_email,
                     "collection"      => $collection_data["ref"],
                     "collection_name" => $collection_data["name"],
@@ -245,11 +248,13 @@ if($import_collections && isset($input_fh))
         if(!array_key_exists($collection_resource["username"], $valid_usernames))
             {
             logScript("Validating username '{$collection_resource["username"]}'");
-            $username_escaped = escape_check($collection_resource["username"]);
-            $email_escaped = escape_check($collection_resource["user_email"]);
             $usergroup_escaped = escape_check($override_newuser_usergroup);
-            $user_select_sql = "AND u.username = '{$username_escaped}' AND u.email = '{$email_escaped}'";
-            $user_data = validate_user($user_select_sql, true);
+
+            $user_select_sql = new PreparedStatementQuery();
+            $user_select_sql->sql = "u.username = ? AND u.email = ?";
+            $user_select_sql->parameters = ["s",$collection_resource["username"],"s",$collection_resource["user_email"]];
+            $user_data = validate_user($user_select_sql,true);
+
             if(is_array($user_data) && count($user_data) > 0)
                 {
                 $user_data = $user_data[0];
@@ -260,10 +265,16 @@ if($import_collections && isset($input_fh))
                 logScript("Warning - User not found! Creating one now...");
                 $password = make_password();
                 $password_hash = hash('sha256', md5("RS{$collection_resource["username"]}{$password}"));
+                $insertquery = "INSERT INTO user(username, password, fullname, email, usergroup, approved) VALUES (?,?,?,?,?,1)";
+                $insertparams = [
+                    "s",$collection_resource["username"],
+                    "s",$password_hash,
+                    "s",$collection_resource["username"],
+                    "s",$collection_resource["user_email"],
+                    "i",$override_newuser_usergroup,
+                    ];
 
-                sql_query("
-                    INSERT INTO user(username, password, fullname, email, usergroup, approved)
-                    VALUES ('{$username_escaped}', '{$password_hash}', '{$username_escaped}', '{$email_escaped}', '{$usergroup_escaped}', 1)");
+                ps_query($insertquery,$insertparams);                
                 $new_user_id = sql_insert_id();
 
                 $user_data = validate_user($user_select_sql, true);

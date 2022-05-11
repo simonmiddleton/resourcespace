@@ -15,7 +15,7 @@ include_once 'metadata_functions.php';
  * Upload a file from the provided path to the given resource 
  *
  * @param  int $ref                         Resource ID
- * @param  bool $no_exif                    Do not extact embedded metadate. False by default so data will be extracted
+ * @param  bool $no_exif                    Do not extract embedded metadate. False by default so data will be extracted
  * @param  bool $revert                     Delete all data and re-extract embedded data
  * @param  bool $autorotate                 Autorotate images - alters embedded orientation data in uploaded file
  * @param  string $file_path                Path to file
@@ -111,8 +111,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
-            }
-    
+            }    
         else
             {
             # Work out which file has been posted
@@ -133,6 +132,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             elseif ($file_path!="")
                 {
                 $filename=basename(urldecode($file_path)); # The file path was provided
+                $filename = str_replace("RS_FORWARD_SLASH","/",$filename);
                 if(base64_encode(base64_decode($filename)) == $filename)
                    {
                    // Should have been encoded by Uppy
@@ -433,12 +433,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                                 break;
                             }
 
-                        if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
+                        if(isset($newval))
+                            {
+                            update_field($ref,$read_from[$i]['ref'],$newval);
+                            }
                         }
                     }
                 }
             }
-    
         # Extract text from documents (e.g. PDF, DOC)
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
@@ -458,20 +460,23 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 extract_text($ref, $extension);
                 }
             }
-        }
-    
-    
+        }    
 
     # Store original filename in field, if set
     if (isset($filename_field))
-        if(isset($amended_filename)){$filename=$amended_filename;}
         {
-        if (!$revert){
+        if(isset($amended_filename))
+            {
+            $filename=$amended_filename;
+            }
+        if (!$revert && isset($filename))
+            {
             update_field($ref,$filename_field,$filename);
             }
-        else {
+        else
+            {
             update_field($ref,$filename_field,$original_filename);
-            }       
+            }
         }
     if (!$upload_then_process || $after_upload_processing)
         {
@@ -539,13 +544,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         # Update file dimensions
         get_original_imagesize($ref,$filepath,$extension);
         }
+
     if($upload_then_process && !$after_upload_processing)
         {
         # Add this to the job queue for offline processing
         
         $job_data=array();
         $job_data["resource"]=$ref;
-        $job_data["extract"]=($no_exif);
+        $job_data["extract"] = !$no_exif;
         $job_data["revert"]=$revert;
         $job_data["autorotate"]=$autorotate;
         
@@ -777,7 +783,7 @@ function extract_exif_comment($ref,$extension="")
                         {
                         if ($read_from[$i]['exiftool_filter']!="")
                             {
-                            eval($read_from[$i]['exiftool_filter']);
+                            eval(eval_check_signed($read_from[$i]['exiftool_filter']));
                             }
         
                         $exiffieldoption=$exifoption;
@@ -1762,7 +1768,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # Always make preview sizes for smaller file sizes.
             #
             # Always make pre/thm/col sizes regardless of source image size.
-            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
+            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && isset($watermark)) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {           
                 # Debug
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
@@ -1863,7 +1869,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : "");
+                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
                             {
@@ -1924,8 +1930,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
-                    // alternate command for png/gif using the path from above, and omitting resizing
-                    if ($extension=="png" || $extension=="gif")
+                    // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
+                    if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
                         $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
@@ -2251,7 +2257,7 @@ function extract_mean_colour($image,$ref)
         {
         for ($x=0;$x<20;$x++)
             {
-            $rgb = imagecolorat($image, $x*($width/20), $y*($height/20));
+            $rgb = imagecolorat($image, round($x*($width/20)), round($y*($height/20)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2357,7 +2363,7 @@ function get_colour_key($image)
         {
         for ($x=0;$x<$depth;$x++)
             {
-            $rgb = imagecolorat($image, $x*($width/$depth), $y*($height/$depth));
+            $rgb = imagecolorat($image, round($x*($width/$depth)), round($y*($height/$depth)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2379,13 +2385,14 @@ function get_colour_key($image)
     return($colkey);
     }
 
-function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1)
+function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
     {
     # Tweak all preview images
     # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
 
     # Use the screen resolution version for processing
-    global $tweak_all_images;
+    global $tweak_all_images, $ffmpeg_supported_extensions;
+
     if ($tweak_all_images){
         $file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
         if (!file_exists($file)) {
@@ -2516,7 +2523,30 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
         if ($alternative==-1){
             sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
         }
-        
+
+    if ($rotateangle != 0)
+        {
+        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions))
+            {
+            # Find snapshots for video files so they can be rotated with the thumbnail
+            $video_snapshots = get_video_snapshots($ref, true, false);
+            foreach($video_snapshots as $snapshot)
+                {
+                $snapshot_source = imagecreatefromjpeg($snapshot);
+                # Use built-in function if available, else use function in this file
+                if (function_exists("imagerotate"))
+                    {
+                    $snapshot_source = imagerotate($snapshot_source, $rotateangle, 0);
+                    }
+                else
+                    {
+                    $snapshot_source = AltImageRotate($snapshot_source, $rotateangle);
+                    }
+                imagejpeg($snapshot_source, $snapshot, 95);
+                }
+            }
+        }
+
     }
 
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
@@ -2780,12 +2810,14 @@ function extract_text($ref,$extension,$path="")
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
         {
-        $command=$antiword_path . "/antiword";
-        if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
-        if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
+        $command = get_utility_path('antiword');
+        if(!$command)
+            {
+            debug("ERROR: Antiword executable not found at '$antiword_path'");
+            return false;
+            }
 
-        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
-        $text=run_command($cmd);
+        $text = run_command("{$command} -m UTF-8 %path", false, ['%path' => $path]);
         }
     
        # Microsoft OfficeOpen (docx,xlsx) extraction
@@ -2833,13 +2865,14 @@ function extract_text($ref,$extension,$path="")
     # PDF extraction using pdftotext (part of the XPDF project)
     if (($extension=="pdf" || $extension=="ai") && isset($pdftotext_path))
         {
-        $command=$pdftotext_path . "/pdftotext";
-        if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
-        if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'"); return false;}
+        $command = get_utility_path('pdftotext');
+        if(!$command)
+            {
+            debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
+            return false;
+            }
 
-        $cmd=$command . " -enc UTF-8 " . escapeshellarg($path) . " -";
-        $text = run_command($cmd);
-
+        $text = run_command("{$command} -enc UTF-8 %path -", false, ['%path' => $path]);
         }
 
     # HTML extraction
@@ -3367,6 +3400,9 @@ function getSvgSize($file_path)
         {
         $svg_size[0] = (string) $attributes->width;
         $svg_size[1] = (string) $attributes->height;
+        // Remove non numeric unit values if present
+        $svg_size[0] = preg_replace("/[^.0-9]/", "", $svg_size[0]);
+        $svg_size[1] = preg_replace("/[^.0-9]/", "", $svg_size[1]);
         }
     else if(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
         {
@@ -3585,9 +3621,10 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $cmd_args = [];
-    $imversion = get_imagemagick_version();
+    $imversion = get_imagemagick_version(false); # Return version in string format
+
     // Set correct syntax for commands to remove alpha channel
-    if($imversion[0] >= 7)
+    if(version_compare($imversion,"7",">="))
         {
         $alphaoff = " -alpha off";
         }
@@ -3677,7 +3714,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     $colorspace2 = "";
     if(isset($actions["srgb"]))
         {
-        if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
+        if (version_compare($imversion,"6.7.5-5",">="))
             {
             $colorspace1 = " -colorspace sRGB ";
             $colorspace2 =  " -colorspace RGB ";

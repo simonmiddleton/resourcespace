@@ -268,7 +268,7 @@ for ($n=0;$n<count($fields);$n++)
              <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>""/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
 
-            <div class="Inline"><select name="field_type" class="medwidth">
+            <div class="Inline"><select name="field_type" id="new_field_type_select" class="medwidth">
          
             <?php
             foreach($field_types as $field_type=>$field_type_description)

@@ -242,7 +242,7 @@ function job_queue_purge($status=0)
     if(count($deletejobs) > 0)
         {
         $parameters = ps_param_fill(array_column($deletejobs,"ref"),"i");
-        ps_query("DELETE FROM job_queue WHERE ref IN ('" . ps_param_insert(count(array_column($deletejobs,"ref"))) . "')", $parameters);
+        ps_query("DELETE FROM job_queue WHERE ref IN (" . ps_param_insert(count(array_column($deletejobs,"ref"))) . ")", $parameters);
         }
     }
 

@@ -12,7 +12,6 @@ $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$starsearch=getvalescaped("starsearch","");
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
@@ -27,6 +26,7 @@ $collection_add = getval("collection_add",null);
 $start_time = getval("input_start",null);
 $end_time = getval("input_end",null);
 $upload_type = getval("upload_type",null);
+$access = get_resource_access($ref);
 
 $urlparams= array(
     "resource" => $ref,
@@ -35,7 +35,6 @@ $urlparams= array(
     "order_by" => $order_by,
     "offset" => $offset,
     "restypes" => $restypes,
-    "starsearch" => $starsearch,
     "archive" => $archive,
     "default_sort_direction" => $default_sort_direction,
     "sort" => $sort,
@@ -47,11 +46,15 @@ global $lang, $context, $display, $video_preview_original;
 
 // fetch resource data.
 $resource=get_resource_data($ref);
-
+if(!is_array($resource))
+    {
+    error_alert($lang['error-pageload'],false);
+    exit();
+    }
 $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
 
 // not allowed to edit this resource?
-if (!($editaccess || checkperm("A")) && $ref>0) {exit ("Permission denied.");}
+if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {

@@ -41,7 +41,7 @@ $lang["gotoadvancedsearch"]="Menuju ke Penelusuran Lanjutan";
 $lang["viewnewmaterial"]="Lihat Materi Baru";
 $lang["researchrequestservice"]="Pelayanan Permintaan Penelusuran";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Mengatur Aset";
 $lang["overquota"]="Melewati batas penggunaan ruang: tidak bisa menambah aset";
 $lang["managearchiveresources"]="Mengatur Aset Arsip";
@@ -70,7 +70,7 @@ $lang["resourceidnotfound"]="Identifikasi aset tidak bisa ditemukan";
 $lang["inclusive"]="(inklusif)";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Penerima E-mail";
 $lang["emailsubject"]="Subyek E-mail";
 $lang["emailtext"]="Teks E-mail";
@@ -79,10 +79,10 @@ $lang["emailsent"]="E-mail telah dikirimkan";
 $lang["mustspecifyoneuser"]="Anda harus menunjuk paling sedikit satu pengguna";
 $lang["couldnotmatchusers"]="Tidak dapat mencocokkan semua nama pengguna, atau nama pengguna telah terduplikasi";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Komentar";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Lihat Aset Kontribusi Pengguna Menunggu Pengamatan";
 $lang["searcharchivedresources"]="Telusur Aset Arsip";
 $lang["viewresourcespendingarchive"]="Lihat Aset Menunggu Arsip";

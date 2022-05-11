@@ -79,6 +79,10 @@ $fixedfields=sql_array("select ref value from resource_type_field where type in 
 $kwcount = sql_value("select count(*) value from resource_keyword where resource_type_field in (" . implode(",",$fixedfields) . ")",0);
 if($kwcount>0){echo "Adding nodes is populating resource_keyword"; return false;}
 
+// Add a node containing stop words and check nothing was indexed.
+$stop_list_check_node = set_node(NULL, 73, join(" ",$noadd),'',1000);
+if (ps_value("select count(*) value from node_keyword where node=?",array("i",$stop_list_check_node),0)>0) {echo "Kewords were indexed that are in the stop list.";print_r(ps_array("select keyword value from keyword where ref in (select keyword from node_keyword where node=?)",array("i",$stop_list_check_node),0));return false;}
+
 // Check that using update_field to add nodes to resource returns false
 $errors=array();
 foreach($fixedfields as $fixedfield)

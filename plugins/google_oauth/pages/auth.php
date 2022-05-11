@@ -48,8 +48,11 @@ $userref                = escape_check(google_oauth_getRsUserRefBySubClaim($toke
 // Existing user
 if(0 < $userref)
     {
-    $user_data = validate_user("u.ref = '{$userref}'");
-
+    $user_select_sql = new PreparedStatementQuery();
+    $user_select_sql->sql = "u.ref = ?";
+    $user_select_sql->parameters = ["i",$userref];
+    $user_data = validate_user($user_select_sql);
+ 
     if(false === $user_data)
         {
         echo 'Invalid user!';

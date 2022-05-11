@@ -38,22 +38,22 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
 		{
 		case "rotateclock":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],270,0,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
 		}
 		break;
 		case "rotateanti":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],90,0,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
 		}
 		break;
 		case "gammaplus":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],0,1.3,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 0, 1.3, $resource["preview_extension"]);
 		}
 		break;
 		case "gammaminus":
 		foreach ($resources as $resource){
-			tweak_preview_images($resource['ref'],0,0.7,$resource["preview_extension"]);
+			tweak_preview_images($resource['ref'], 0, 0.7, $resource["preview_extension"]);
 		}
 		break;
         case "restore":
@@ -82,13 +82,13 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
 	            $create_previews_job_success_text = str_replace('%RESOURCE', $resource['ref'], $lang['jq_create_previews_success_text']);
 	            $create_previews_job_failure_text = str_replace('%RESOURCE', $resource['ref'], $lang['jq_create_previews_failure_text']);
 	            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-	            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref = '" . $resource['ref'] . "'");
+	            ps_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref = ?", ['i', $resource['ref']]);
 	            $onload_message["text"] = $lang["recreatepreviews_pending"];
 	            }
 	        else
 	            {
 	            // Previews to be created asynchronously, not using offline jobs - requires script batch/create_previews.php -ignoremaxsize
-	            sql_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref = '" . $resource['ref'] . "'");
+	            ps_query("UPDATE resource SET preview_attempts=0, has_image=0 WHERE ref = ?", ['i', $resource['ref']]);
 	            $onload_message["text"] = $lang["recreatepreviews_pending"];
 	            }
 	        }

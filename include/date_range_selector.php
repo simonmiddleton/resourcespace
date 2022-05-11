@@ -1,5 +1,5 @@
 <!-- Period select -->
-<div class="Question">
+<div class="Question" id="date_period">
 <label for="period"><?php echo $lang["period"]?></label><select id="period" name="period" class="stdwidth" onChange="
 if (this.value==-1) {document.getElementById('DateRange').style.display='block';} else {document.getElementById('DateRange').style.display='none';}
 if (this.value==0) {document.getElementById('SpecificDays').style.display='block';} else {document.getElementById('SpecificDays').style.display='none';}

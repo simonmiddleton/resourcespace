@@ -28,7 +28,6 @@ include_once dirname(__FILE__) . '/config_functions.php';
 include_once dirname(__FILE__) . '/plugin_functions.php';
 include_once dirname(__FILE__) . '/migration_functions.php';
 include_once dirname(__FILE__) . '/metadata_functions.php';
-include_once dirname(__FILE__) . '/map_functions.php';
 include_once dirname(__FILE__) . '/job_functions.php';
 
 # Switch on output buffering.
@@ -82,7 +81,7 @@ debug('[db.php] Remote config support...');
 debug('[db.php] isset($remote_config_url) = ' . json_encode(isset($remote_config_url)));
 debug('[db.php] isset($_SERVER["HTTP_HOST"]) = ' . json_encode(isset($_SERVER["HTTP_HOST"])));
 debug('[db.php] getenv("RESOURCESPACE_URL") != "") = ' . json_encode(getenv("RESOURCESPACE_URL") != ""));
-if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
+if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
 	{
     debug("[db.php] \$remote_config_url = {$remote_config_url}");
 	sql_connect(); # Connect a little earlier
@@ -190,6 +189,8 @@ set_time_limit($php_time_limit);
 if (!isset($storagedir)) {$storagedir=dirname(__FILE__)."/../filestore";}
 if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 
+// Reset prepared statement cache before reconnecting
+unset($prepared_statement_cache);
 sql_connect();
 
 // Track variables for any process that matters but is before we connect to the database (it needs access to sysvars table)
@@ -425,6 +426,10 @@ if($facial_recognition)
     include_once __DIR__ . '/facial_recognition_functions.php';
     $facial_recognition = initFacialRecognition();
     }
+if(!$disable_geocoding) 
+    {
+    include_once __DIR__ . '/map_functions.php';
+    }    
 
 # Pre-load all text for this page.
 $site_text=array();

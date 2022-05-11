@@ -103,7 +103,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
     $diff=log_diff($current,$log["previous_value"]);
 
     # Process submit
-    if (getval("action","")=="revert" && enforcePostRequest(false))
+    if (getval("revert_action","")=="revert" && enforcePostRequest(false))
         {
         if($b_fixed_field)
             {
@@ -128,24 +128,21 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                 if(
                     $resource_field_data_index !== false
                     && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
-                )
+                    )
                     {
                     $new_joined_field_value = $resource_field_data[$resource_field_data_index]["value"];
                     $truncated_value = truncate_join_field_value($new_joined_field_value);
                     }
  
                 if (is_null($truncated_value)) 
-                {
+                    {
                     ps_query("UPDATE resource SET field{$field} = NULL WHERE ref = ?",array("i",$resource));
-                }
+                    }
                 else
-                {
+                    {
                     ps_query("UPDATE resource SET field{$field} = ? WHERE ref = ?",array("s",$truncated_value, "i",$resource));
+                    }
                 }
-
-
-                }
-
             log_node_changes($resource,$nodes_to_add,$nodes_to_remove,$lang["revert_log_note"]);
             }
         else
@@ -162,7 +159,7 @@ elseif($type==LOG_CODE_UPLOADED)
     # ----------------------------- PROCESSING FOR "u" IMAGE UPLOAD ROWS ---------------------------------------------
     
     # Process submit
-    if (getval("action","")=="revert" && enforcePostRequest(false))
+    if (getval("revert_action","")=="revert" && enforcePostRequest(false))
         {
         # Perform the reversion. First this reversion itself needs to be logged and therefore 'revertable'.
         
@@ -227,9 +224,9 @@ include "../../../include/header.php";
 <h1><?php echo $lang["revert"]?></h1>
 <p><?php echo $lang['revertingclicktoproceed'];?></p>
 
-<form method=post name="form" id="form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="CentralSpacePost(this,true);return false;">
+<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="return CentralSpacePost(this,true);">
 <input type="hidden" name="ref" value="<?php echo $ref ?>">
-<input type="hidden" name="action" value="revert">
+<input type="hidden" name="revert_action" value="revert">
 <?php
 generateFormToken("form");
 if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)

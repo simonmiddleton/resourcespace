@@ -2841,7 +2841,7 @@ $lang["setup-if_mysqlpassword"]= $lang["setup-if_mysql_read_only_password"] = "H
 $lang["collectionlogheader"]="Protokol zbierky - %collection"; # %collection will be replaced, e.g. Collection Log - Default Collection
 $lang["mycollection_notpublic"]="„Predvolenú zbierku“ nemôžete zmeniť na odporúčanú alebo verejnú zbierku. Na tento účel je potrebné vytvoriť novú zbierku.";
 $lang["requestaddedtocollection"]="Tento zdroj bol pridaný do vašej aktuálnej zbierky. Všetky položky vo svojej zbierke môžete vyžiadať kliknutím na položku „Vyžiadať všetky“ na paneli s výberom nižšie.";
-$lang["error-geotile-server-error"] = "Nepodarilo sa načítať dlaždice zo servera dlaždíc. Skontrolujte nastavenie konfigurácie \$geo_tile_servers";
+$lang["error-geotile-server-error"] = "Nepodarilo sa načítať dlaždice zo servera dlaždíc.";
 $lang["emptycollection"] = "Odstrániť všetky zdroje";
 $lang["upload_files-to_collection"]="Nahrať súbory (do zbierky '%collection')"; # %collection will be replaced, e.g. Upload Files (to the collection 'Predvolená zbierka')
 $lang['group_download_limit_title'] = "Limit na sťahovanie zdrojov. Nastavte nulovú hodnotu pre deaktiváciu limitu";

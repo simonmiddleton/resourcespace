@@ -53,8 +53,8 @@ if(getval('submitted', '') != '' && enforcePostRequest(false))
         {
         # New record 
         $parameters=array("i",$resource, "s",$usage_location, "s",$usage_medium, "s",$description, "s",$usage_date);
-        ps_query("INSERT INTO resource_usage(resource, usage_location, usage_medium, description, usage_date) 
-                    VALUES (?, ?, ?, ?, ?)". $parameters);
+        ps_query("INSERT INTO resource_usage (resource, usage_location, usage_medium, description, usage_date) 
+                    VALUES (?, ?, ?, ?, ?)", $parameters);
 
         $ref = sql_insert_id();
 

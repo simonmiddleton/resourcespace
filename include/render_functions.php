@@ -699,12 +699,12 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         else
             {
             $s=explode("|",$value);
-            if (count($s)>=3)
-            {
-            $found_year=$s[0];
-            $found_month=$s[1];
-            $found_day=$s[2];
-            }
+            if(is_array($s))
+                {
+                $found_year  = $s[0];
+                $found_month = (array_key_exists(1, $s)) ? $s[1] : '';
+                $found_day   = (array_key_exists(2, $s)) ? $s[2] : '';
+                }
             ?>      
             <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anyyear"]?></option>
@@ -894,7 +894,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     ?>
     <div class="clearerleft"> </div>
     </div>
-    <!-- ------------------------------------------------ -->
+    <!-- ************************************************ -->
     <?php
     } # End of render_search_field
 
@@ -1216,6 +1216,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 {
                 return false;
                 }
+
+            v = v.match(/^[^~]*/i)[0]; // Remove unique value identifier: ~id
+
             switch(v)
                 {
             <?php
@@ -1941,7 +1944,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
         }
+      if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
         hook ("edit_all_extra_modes");
+        }
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
@@ -2518,6 +2524,11 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
                 let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
                 let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                if (year != "" && !jQuery.isNumeric(year))
+                    {
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                    jQuery(this).val(jQuery.data(this, 'current'));
+                    }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
                     //format date string into yyyy-mm-dd
                     let date_string = year + '-' + month + '-' + day;
@@ -2525,7 +2536,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date		= new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert('Error','You have entered an invalid date')
+                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2534,7 +2545,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
                 let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
                 let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
-                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val(); 
+                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val();
+                if (year != "" && !jQuery.isNumeric(year))
+                    {
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                    jQuery(this).val(jQuery.data(this, 'current'));
+                    }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
                     //format date string into yyyy-mm-dd
                     let date_string = year + '-' + month + '-' + day;
@@ -2542,7 +2558,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date		= new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert('Error','You have entered an invalid date')
+                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2969,22 +2985,26 @@ function render_share_options($shareopts=array())
 * 
 * @param string     $label      label for the field
 * @param string     $name       name of form select
-* @param array      $ftypes     array of field types to include
+* @param array      $ftypes     Array of integer field type ids to include. See definitions.php. Will return all types if incorrect value or empty array supplied.
 * @param string     $class      array CSS class to apply
 * @param boolean    $hidden     optionally hide the question usng CSS display:none
 * @param array      $current    Current selected value
 * 
 * @return void
 */
-function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false, $current = 0)
+function render_field_selector_question($label, $name, $ftypes, $class = "stdwidth", $hidden = false, $current = 0)
     {
     global $lang;
     $fieldtypefilter = "";
     $parameters = array();
+
+    // Check only valid field types supplied. An empty array is valid i.e. return all types.
+    $ftypes = array_filter($ftypes, function($t) {global $field_types; return is_int($t) && in_array($t, array_keys($field_types));});
+        
     if(count($ftypes)>0)
         {
         $fieldtypefilter = " WHERE type IN (" . ps_param_insert(count($ftypes)) . ")";
-        $parameters = ps_param_fill($ftypes,"i");
+        $parameters = ps_param_fill($ftypes, "i");
         }
 
     $fields = ps_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
@@ -3277,7 +3297,7 @@ function render_help_link($page='',$return_string=false)
     $help_link_html  =      '<a ';
     $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . $page . '" ';
     $help_link_html .=          'title="' . $lang["help-tooltip"] . '" ';
-    $help_link_html .=          'class="HelpLink"';
+    $help_link_html .=          'class="HelpLink" ';
     if ($help_modal) 
         { $help_link_html .=    'onClick="return ModalLoad(this, true);" ';}
     else
@@ -3442,26 +3462,51 @@ function render_edit_selected_btn()
     global $baseurl_short, $lang, $USER_SELECTION_COLLECTION, $restypes, $archive;
 
     $search = "!collection{$USER_SELECTION_COLLECTION}";
+    # Editable_only=true (so returns editable resources only)
     $editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, true);
-    $non_editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
+    # Editable_only=false (so returns resources whether editable or not)
+    $all_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
 
-    if(!is_array($editable_resources) || !is_array($non_editable_resources))
+    # If there are no editable resources then don't render the edit selected button
+
+    # Setup count of editable resources
+    $editable_resources_count = 0;
+    $editable_resource_refs=array();
+    if(is_array($editable_resources))
+        {
+        $editable_resources_count = count($editable_resources);
+        $editable_resource_refs=array_column($editable_resources,"ref");
+        }
+
+    # Setup count of editable and non-editable resources
+    $all_resources_count = 0;
+    $all_resource_refs=array();
+    if(is_array($all_resources))
+        {
+        $all_resources_count = count($all_resources);
+        $all_resource_refs=array_column($all_resources,"ref");
+        }
+
+    # If both counts are zero then there cannot be any editable resources, so no edit selected button
+    if($editable_resources_count == 0 && $all_resources_count == 0)
         {
         return;
         }
 
-    $editable_resources_count = count($editable_resources);
-    $non_editable_resources_count = count($non_editable_resources);
-
-    if($editable_resources_count == 0 || $non_editable_resources_count == 0)
+    # If not all selected resources are editable then the edit selected button may be inappropriate
+    if($editable_resources_count != $all_resources_count)
         {
-        return;
-        }
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
 
-    // If not all resources are editable, don't show the batch edit button
-    if($editable_resources_count != $non_editable_resources_count)
-        {
-        return;
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) { return; }
+            }
+
+        # All non_editables have grant edit
+        # Don't return as edit button can be rendered
         }
 
     $batch_edit_url = generateURL(
@@ -4055,9 +4100,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     # Handle expiry date warning messages
 	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-        $title = $lang["warningexpired"];
-        $warningtext = $lang["warningexpiredtext"];
-        $dismisstext = $lang["warningexpiredok"];
+        $title = htmlspecialchars($lang["warningexpired"]);
+        $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
+        $dismisstext = htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
         <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
         $extra.="<style>#RecordDownload {display:none;}</style>";
@@ -4077,7 +4122,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # title comes from field
         # value comes from field
         $warningtext = $value;
-        $dismisstext = $lang["warningdismiss"];
+        $dismisstext = htmlspecialchars($lang["warningdismiss"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 
@@ -4091,7 +4136,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
     if ($field['value_filter']!="")
         {
-        eval($field['value_filter']);
+        eval(eval_check_signed($field['value_filter']));
         }
     else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
         {
@@ -4134,8 +4179,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $value = str_replace(',', '', $value);
             }
 
-		$value_unformatted=$value; # store unformatted value for replacement also
-
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # ckeditor that have not yet been edited.
         if(
@@ -4171,8 +4214,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
             $template = str_replace('[warning]', $warningtext, $template);
-            $template = str_replace('[value_unformatted]', $value_unformatted, $template);
-            $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
@@ -4358,18 +4400,19 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         <?php
         if($ref < 0 || $upload_review_mode)
             {
-            echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
+            echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
                name="save"
+               id="edit_save_button"
                class="editsave"
                type="submit"
                value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
         <?php
         if($upload_review_mode)
             {
-            ?>&nbsp;<input name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
+            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
             <?php
             }
 
@@ -4721,10 +4764,19 @@ function render_featured_collection(array $ctx, array $fc)
     $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
     $show_resources_count = (isset($ctx["show_resources_count"]) ? (bool) $ctx["show_resources_count"] : false);
+    $reorder = (bool) ($ctx['reorder'] ?? false);
 
 
     $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
     $html_container_style = array();
+    $html_container_data_items = [];
+
+    // Make featured collection tile sortable
+    if($reorder && !$is_smart_featured_collection)
+        {
+        $html_container_class[] = 'SortableItem';
+        $html_container_data_items['data-fc-ref'] = $fc['ref'];
+        }
 
 
     // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
@@ -4774,12 +4826,18 @@ function render_featured_collection(array $ctx, array $fc)
         }
 
 
+    $html_container_data = '';
+    foreach($html_container_data_items as $name => $value)
+        {
+        $html_container_data .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
+        }
+
     $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
     $html_actions_style = ['display: none;'];
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
-    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>">
+    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" class="<?php echo implode(" ", $html_container_class); ?>" style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?>>
         <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo $fc["ref"]; ?>" class="FeaturedSimpleLink">
             <div id="FeaturedSimpleTileContents_<?php echo $fc["ref"]; ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
             <?php
@@ -4877,7 +4935,6 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
     ?>
     <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
     <tr>
-        <td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description?></td>
         <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
             if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
@@ -4972,6 +5029,7 @@ function render_featured_collections_category_permissions(array $ctx)
 function show_upgrade_in_progress($dbstructonly=false)
     {
     global $lang;
+    $title = (isset($lang["upgrade_in_progress"])?$lang["upgrade_in_progress"]:"Upgrade in progress");
     $message="This system is currently being upgraded by another process. Delete filestore/tmp/process_locks/* if this process has stalled." . PHP_EOL;
     if(!$dbstructonly)
         {
@@ -4986,7 +5044,7 @@ function show_upgrade_in_progress($dbstructonly=false)
         }
     else
         {
-        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
+        echo "<h1>{$title}</h1>";
         echo nl2br($message);
         ?>
         <script>
@@ -5572,7 +5630,7 @@ function render_message($message="")
             {
             $msgdata[] = "<img title='" . htmlspecialchars($sendername) . "' alt='" . htmlspecialchars($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";  // %%PROFILEIMAGE%%
             }  
-        $msgdata[] = $message["message"];  // %%MESSAGE%%     
+        $msgdata[] = htmlspecialchars($message["message"]);  // %%MESSAGE%%     
         }
 
     $messagehtml = "<div class='%%CLASSES%%' %%EXTRA%%>

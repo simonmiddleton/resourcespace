@@ -80,7 +80,11 @@ if ($user===false)
     exit();
     }
     
-if (($user["usergroup"]==3) && ($usergroup!=3)) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
+if (($user["usergroup"]==3) && ($usergroup!=3)) 
+    {
+    error_alert($lang["error-permissiondenied"],false);
+    exit();
+    }
 
 if (!checkperm_user_edit($user))
 	{
@@ -177,16 +181,16 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 	<div class="clearerleft"> </div>
 <?php } ?>
 
-<div class="Question" ><label><?php echo $lang["username"]?></label><input name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
+<div class="Question" ><label><?php echo $lang["username"]?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password", "", array($user))) { ?>
-<div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo $lang["hidden"]; ?>">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo $lang["hidden"]; ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
 <?php } else { ?>
 <div><input name="password" id="password" type="hidden" value="<?php echo $lang["hidden"];?>" /></div>
 <?php } ?>
 
 <?php if (!hook("replacefullname")){?>
-<div class="Question"><label><?php echo $lang["fullname"]?></label><input name="fullname" type="text" class="stdwidth" value="<?php echo form_value_display($user,"fullname") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["fullname"]?></label><input name="fullname" id="user_edit_fullname" type="text" class="stdwidth" value="<?php echo form_value_display($user,"fullname") ?>"><div class="clearerleft"> </div></div>
 <?php } ?>
 
 <div class="Question"><label><?php echo $lang["group"]?></label>
@@ -213,9 +217,9 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="clearerleft"> </div></div>
 <?php hook("additionalusergroupfields"); ?>
 
-<div class="Question"><label><?php echo $lang["emailaddress"]?></label><input name="email" type="text" class="stdwidth" value="<?php echo form_value_display($user,"email") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["emailaddress"]?></label><input name="email" id="user_edit_email" type="text" class="stdwidth" value="<?php echo form_value_display($user,"email") ?>"><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["accountexpiresoptional"]?><br/><?php echo $lang["format"] . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["accountexpiresoptional"]?><br/><?php echo $lang["format"] . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict") ?>"><div class="clearerleft"> </div></div>
 
@@ -265,7 +269,7 @@ if ($search_filter_nodes)
     ?>
     <div class="Question">
         <label for="search_filter_o_id"><?php echo $lang["searchfilteroverride"]; ?></label>
-        <select name="search_filter_o_id" class="stdwidth">
+        <select id="user_edit_search_filter" name="search_filter_o_id" class="stdwidth">
             <?php
             echo "<option value='0' >" . $lang["filter_none"] . "</option>";
             foreach	($search_filters as $search_filter)
@@ -291,7 +295,7 @@ if((strlen($user['search_filter_override']) != "" && (!(is_numeric($user['search
 hook("additionaluserfields");
 if (!hook("replacecomments"))
     { ?>
-    <div class="Question"><label><?php echo $lang["comments"]?></label><textarea name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
+    <div class="Question"><label><?php echo $lang["comments"]?></label><textarea id="user_edit_comments" name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
     <?php
     } ?>
 <div class="Question"><label><?php echo $lang["created"]?></label>
@@ -411,17 +415,33 @@ if($userref != $ref)
     }  
 hook("usertool")?>
 
-<?php if ($user["approved"]==1 && !hook("loginasuser")) { ?>
-<div class="Question"><label><?php echo $lang["login"]?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>
-<div class="clearerleft"> </div></div>
-<?php } ?>
+<?php 
+if ($user["approved"]==1 && !hook("loginasuser"))
+    { 
+    if (($user['account_expires'] == "" || strtotime($user['account_expires']) > time()) && ($password_expiry == 0 || ($password_expiry > 0 && strtotime($user['password_last_change']) != "" && (time()-strtotime($user['password_last_change'])) < $password_expiry*60*60*24)))
+        {
+        ?>
+        <div class="Question"><label><?php echo $lang["login"]?></label>
+        <div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>
+        <div class="clearerleft"> </div></div>
+        <?php
+        }
+    else
+        {
+        ?>
+        <div class="Question"><label><?php echo $lang["login"]?></label>
+        <div class="Fixed"><?php echo $lang["accountorpasswordexpired"]?></div>
+        <div class="clearerleft"> </div></div>
+        <?php
+        }
+    }
+?>
 
 
 
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+<input name="save" type="submit" id="user_edit_save" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

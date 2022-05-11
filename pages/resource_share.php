@@ -13,7 +13,6 @@ $offset       = getvalescaped("offset", 0, true);
 $restypes     = getvalescaped("restypes", "");
 if (strpos($search,"!") !== false) { $restypes = ""; }
 $archive      = getvalescaped("archive", 0, true);
-$starsearch   = getvalescaped("starsearch", "");
 $default_sort_direction = (substr($order_by,0,5) == "field") ? "ASC" : "DESC";
 $sort         = getval("sort", $default_sort_direction);
 $ajax         = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);

@@ -5,15 +5,13 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
+
 include "../../include/db.php";
-
 include "../../include/authenticate.php"; 
-
 if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
-
+    {
+    exit ("Permission denied.");
+    }
 
 $ref=getvalescaped("ref","",true);
 
@@ -24,11 +22,11 @@ $field_sort=getvalescaped("field_sort","asc");
 $newfield = getval("newfield","") != "";
 $ajax = getval('ajax', '');
 $url_params = array("ref"=>$ref,
-		    "restypefilter"=>$restypefilter,
-		    "$field_order_by"=>$field_order_by,
-		    "field_sort"=>$field_sort,
-		    "find" =>$find);
-		
+        "restypefilter"=>$restypefilter,
+        "$field_order_by"=>$field_order_by,
+        "field_sort"=>$field_sort,
+        "find" =>$find);
+    
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
     {
@@ -101,6 +99,12 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			return;
 			}
 		}
+
+    if($propertyname == 'regexp_filter')
+        {
+        global $regexp_slash_replace; 
+        $currentvalue = str_replace($regexp_slash_replace, '\\', $currentvalue);
+        }
 		
 	$alt_helptext=hook('rtfieldedithelptext', 'admin_resource_type_field_edit', array($propertyname));
 	if($alt_helptext!==false){
@@ -109,13 +113,13 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 	
 	?>
 	<div class="Question" >
-		<label><?php echo ($propertytitle!="")?$propertytitle:$propertyname ?></label>
+		<label><?php echo ($propertytitle!="") ? htmlspecialchars($propertytitle) : htmlspecialchars($propertyname); ?></label>
 		<?php
 		if($propertyname=="resource_type")
 			{
 			global $resource_types;
 			?>
-            <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+            <select id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" class="stdwidth">
             <option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
 
             <?php
@@ -137,8 +141,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			//natsort($field_types);
 			?>
-                <select id="<?php echo $propertyname ?>"
-                        name="<?php echo $propertyname ?>"
+                <select id="field_edit_<?php echo htmlspecialchars($propertyname); ?>"
+                        name="<?php echo htmlspecialchars($propertyname); ?>"
                         class="stdwidth"
                         onchange="
                              <?php if(!$newfield)
@@ -166,7 +170,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                                         {
                                             this.form.submit(); 
                                         } else {
-                                            jQuery('#type').val(current_type);
+                                            jQuery('#field_edit_type').val(current_type);
                                         }
                                 }
 								else
@@ -233,7 +237,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				// The linked_data_field column is is only used for date range fields at present			
 				// Used to store the raw EDTF string submitted
 				?>
-				<input name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+				<input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
 				<?php
 				}
 			}
@@ -244,7 +248,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			
 			?>
-			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+			  <select id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" class="stdwidth">
 				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
 				<?php
 				foreach($allfields as $field)
@@ -263,24 +267,24 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			{
 			if ($propertyname=="advanced_search" && $system_date_field)
                 {
-                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                ?><input id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
                 $helptext=$lang["property-system_date_help_text"];
                 }
             else
                 {
-                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                ?><input id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
                 }
 			}
 		elseif($type==2)
 			{
 			?>
-			<textarea class="stdwidth" rows="5" id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
+			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
 			<?php
 			}
 		else
 			{
 			?>
-			<input name="<?php echo $propertyname ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+			<input id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
 			<?php
 			}
 
@@ -417,6 +421,7 @@ $type_change = false;
 
 if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false))
 	{
+    global $regexp_slash_replace;
 	# Save field config
 	$sync_field = getvalescaped("sync_field",0);
 	$existingfield = get_resource_type_field($ref);
@@ -429,7 +434,12 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			}		
 		else
 			{
-			$val=escape_check(trim(getval($column,"")));			
+			$val=trim(getval($column,""));
+            if($column == 'regexp_filter')
+                {
+                $val = str_replace('\\', $regexp_slash_replace, $val);   
+                }
+            $val = escape_check($val);
 			
 			if($column == "type" && $val != $existingfield["type"] && getval("migrate_data","") != "")
 				{
@@ -442,7 +452,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
                 {
                 $val="field" . $ref;
                 }
-			}
+            }
 		if (isset($sql))
 			{
 			$sql.=",";
@@ -657,15 +667,15 @@ else
     <input name="migrate_data" id="migrate_data" type="hidden" value="">
 
 	<?php if ($fielddata["active"]==0) { ?>
-    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
+    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#field_edit_delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
 	<?php } ?>
 	
     </div>
     <?php
     }?>
 
-<input type="hidden" name="save" id="save" value="yes"/>
-<input type="hidden" name="delete" id="delete" value=""/>
+<input type="hidden" name="save" id="field_edit_save" value="yes"/>
+<input type="hidden" name="delete" id="field_edit_delete" value=""/>
 </form>
 
 

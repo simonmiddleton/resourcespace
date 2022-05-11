@@ -8,7 +8,8 @@ $col         = getvalescaped('collection', getvalescaped('col', -1, true), true)
 $size        = getvalescaped('size', '');
 $ext         = getvalescaped('ext', '');
 $alternative = getvalescaped('alternative', -1);
-$iaccept = getvalescaped('iaccept', 'off');
+$iaccept     = getvalescaped('iaccept', 'off');
+$url         = getval('url', '');
 
 $email       = getvalescaped('email', '');
 $usage       = getvalescaped("usage", '');
@@ -73,6 +74,10 @@ if (getval("save",'') != '' && enforcePostRequest(false))
                                 "&email=" . urlencode($email);
         
         hook('before_usage_redirect');
+        if(strpos($url, 'download.php') != false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
+            {
+            $download_url_suffix .='&url=' . urlencode($url);
+            }
         
         redirect($redirect_url . $download_url_suffix);
         }
@@ -80,21 +85,20 @@ if (getval("save",'') != '' && enforcePostRequest(false))
 
 include "../include/header.php";
 
-
 if(isset($download_usage_prevent_options))
     { ?>
     <script>
         function checkvalidusage() {
             validoptions = new Array(<?php echo "'" . implode("','",$download_usage_prevent_options) . "'" ?>);
-            if(jQuery.inArray( jQuery('#usage').val(), validoptions )!=-1) {
-                jQuery('input[type="submit"]').attr('disabled','disabled')
+            if (jQuery.inArray(jQuery('#usage').find(":selected").text(), validoptions ) !=- 1) {
+                jQuery('#submit').prop('disabled', true).css("filter", "opacity(0.25)");
                 alert("<?php echo $lang["download_usage_option_blocked"] ?>");
             }
             else {
-                jQuery('input[type="submit"]').removeAttr('disabled');
+                jQuery('#submit').prop('disabled', false).css("filter", "opacity(1)");
             }
         }
-    </script>
+    </script>   
     <?php
     } ?>
 
@@ -104,9 +108,12 @@ if(isset($download_usage_prevent_options))
         <?php
         generateFormToken("download_usage");
 
-        if($download_usage && ($col != -1)) { ?>
+        if($download_usage) { ?>
+        <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>"/>
+        <?php if($col != -1){?>
         <input type="hidden" name="col" value="<?php echo htmlspecialchars($col) ?>" />
-        <?php } ?>
+        <?php }
+        } ?>
         <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>" />
         <input type="hidden" name="size" value="<?php echo htmlspecialchars($size) ?>" />
         <input type="hidden" name="ext" value="<?php echo htmlspecialchars($ext) ?>" />

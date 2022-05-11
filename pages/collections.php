@@ -19,16 +19,6 @@ $collection      = getvalescaped('collection', '');
 $entername       = getvalescaped('entername', '');
 $res_access      = getvalescaped('access','');
 
-# if search is not a special search (ie. !recent), use starsearchvalue.
-if ($search !="" && strpos($search,"!")!==false)
-	{
-	$starsearch = "";
-	}
-else
-	{
-	$starsearch = getvalescaped("starsearch","");	
-    }
-
 /* 
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column 
 in collection_resource table). This means that all pages order by 'relevance' and on search page only if we search
@@ -104,6 +94,10 @@ if ($collection!="" && $collection!="undefined")
 // Load collection info. 
 // get_user_collections moved before output as function may set cookies
 $cinfo=get_collection($usercollection);
+if(!is_array($cinfo))
+    {
+    $cinfo = get_collection(get_default_user_collection(true));
+    }
 if('' == $k || $internal_share_access)
     {
     $list = get_user_collections($userref);
@@ -615,7 +609,7 @@ if ($addsearch!=-1)
 			else
 				{
 				#add saved search (the items themselves rather than just the query)
-				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch, $res_access);
+				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access);
 				if (!empty($resourcesnotadded))
 					{
 					$warningtext="";
@@ -748,7 +742,9 @@ if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3) && $
 		}
 	}
 ?><div>
-
+<script>
+    var collection_resources = <?php echo json_encode(array_column($result,'ref'));?>; 
+</script>
 <div id="CollectionMaxDiv" style="display:<?php if ($thumbs=="show") { ?>block<?php } else { ?>none<?php } ?>"><?php
 
 hook('before_collectionmenu');
@@ -894,11 +890,11 @@ else if ($basket)
         include "search_views/resource_tools.php";  
             
 		} # End of remove link condition 
-		?>
+        ?>
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook
@@ -1127,7 +1123,7 @@ else
 
 	<?php 
 	# Loop through saved searches
-	if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $internal_share_access))
+	if (is_null($cinfo['savedsearch']) && ($k=='' || $internal_share_access))
 		{ // don't include saved search item in result if this is a smart collection  
 
 		# Setting the save search icon
@@ -1263,7 +1259,7 @@ else
 		</div>
 		<?php 
 		} # End of k="" condition 
-		 ?>
+        ?>
 		</div>
 		<?php
 		} # End of ResourceView hook

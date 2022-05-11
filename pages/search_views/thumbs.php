@@ -149,9 +149,9 @@ if (!hook("renderresultthumb"))
                             jQuery('#CentralSpace #ResourceShell<?php echo $ref; ?> a img').mousemove(function(event)
                                 {
                                 var x_coord             = event.pageX - jQuery(this).offset().left;
-                                var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref)); ?>;
+                                var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
                                 var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
-                                var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
+                                var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
                                 if(typeof(ss_img_<?php echo $ref; ?>) === "undefined")
                                     {
                                     ss_img_<?php echo $ref; ?> = new Array();
@@ -236,19 +236,18 @@ if (!hook("renderresultthumb"))
             $value=@$result[$n]['field'.$df[$x]['ref']];
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
             if ($df[$x]['value_filter']!="")
-                {eval($df[$x]['value_filter']);}
+                {eval(eval_check_signed($df[$x]['value_filter']));}
             else if (file_exists($plugin)) 
                 {include $plugin;}
 
             # swap title fields if necessary
-            if (isset($metadata_template_resource_type) && isset ($metadata_template_title_field))
+            if (isset($metadata_template_resource_type) && isset($metadata_template_title_field) && is_int_loose($metadata_template_title_field))
                 {
                 if (($df[$x]['ref']==$view_title_field) && ($result[$n]['resource_type']==$metadata_template_resource_type))
                     {
                     $value=$result[$n]['field'.$metadata_template_title_field];
                     }
                 }
-
             // extended css behavior 
             if (in_array($df[$x]['ref'],$thumbs_display_extended_fields) &&
             ((isset($metadata_template_title_field) && $df[$x]['ref']!=$metadata_template_title_field) || !isset($metadata_template_title_field)))

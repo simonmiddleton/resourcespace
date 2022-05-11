@@ -37,23 +37,23 @@ function get_emu_resources()
     {
     global $emu_irn_field, $emu_resource_types, $emu_created_by_script_field;
 
-    $resource_types_list = '\'' . implode('\', \'', $emu_resource_types) . '\'';
-
-    $emu_created_by_script_field_escaped = escape_check($emu_created_by_script_field);
-    $resource_types_list_escaped         = escape_check($resource_types_list);
-    $emu_irn_field_escaped               = escape_check($emu_irn_field);
-
-    $emu_resources = sql_query("
-            SELECT rd.resource AS resource,
-                   rd.value AS object_irn,
-                   (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '{$emu_created_by_script_field_escaped}') AS created_by_script_flag,
-                   r.file_checksum
-              FROM resource_data AS rd
-        RIGHT JOIN resource AS r ON rd.resource = r.ref AND r.resource_type IN ('{$resource_types_list_escaped}')
-             WHERE rd.resource > 0
-               AND rd.resource_type_field = '{$emu_irn_field_escaped}'
-          ORDER BY rd.resource;
-    ");
+    $sql = "SELECT 
+        rd.resource AS resource,
+        rd.value AS object_irn,
+        (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '?') AS created_by_script_flag,
+        r.file_checksum
+    FROM resource_data AS rd
+        RIGHT JOIN resource AS r ON rd.resource = r.ref AND r.resource_type IN ('" . ps_param_insert(count($emu_resource_types)) . "')
+    WHERE rd.resource > 0
+        AND rd.resource_type_field = '?'
+    ORDER BY rd.resource;
+    ";
+    $sql_params = array_merge(
+        ["i",$emu_created_by_script_field],
+        ps_param_fill($emu_resource_types,"i"),
+        ["i",$emu_irn_field]
+    );
+    $emu_resources = ps_query($sql,$sql_params);
 
     return $emu_resources;
     }
@@ -148,7 +148,7 @@ function check_config_changed()
     {
     global $emu_config_modified_timestamp;
 
-    $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
+    $script_last_ran = ps_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"',[],'');
 
     if('' == $script_last_ran)
         {
@@ -326,7 +326,13 @@ function emu_update_resource($ref, $type, $file_path)
 
     $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
 
-    sql_query("UPDATE resource SET archive = 0, file_extension = '{$file_extension}', preview_extension = '{$file_extension}', file_modified = NOW() WHERE ref = '{$ref}'");
+    $sql = "UPDATE resource SET archive = 0, file_extension = ?, preview_extension = ?, file_modified = NOW() WHERE ref = ?";
+    $sql_params = array(
+        "s",$file_extension,
+        "s",$file_extension,
+        "i",$ref
+    );
+    ps_query($sql,$sql_params);
 
     // Ensure folder is created, then create previews
     get_resource_path($ref, false, 'pre', true, $file_extension);

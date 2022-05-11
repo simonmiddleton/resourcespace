@@ -5,7 +5,7 @@
 
 include "../../include/db.php";
 
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')
@@ -151,7 +151,7 @@ foreach ($fieldrefs as $fieldref)
                 $plugin="../../plugins/exiftool_filter_" . $name . ".php";
                 if ($exiftool_filter!="")
                     {
-                    eval($exiftool_filter);
+                    eval(eval_check_signed($exiftool_filter));
                     }
                 if (file_exists($plugin))
                     {

@@ -24,7 +24,6 @@ $offset=getvalescaped("offset",0,true);
 $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
-$starsearch=getvalescaped("starsearch","");
 $page=getvalescaped("page",1,true);
 $alternative=getvalescaped("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
@@ -83,7 +82,7 @@ if ($go!="")
 	if ($modified_result_set){
 		$result=$modified_result_set;
 	} else {
-		$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch,false,false,"",false,true,true);
+		$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"",false,true,true);
 	}
 	if (is_array($result))
 		{
@@ -355,7 +354,7 @@ if($annotate_enabled)
     ?>
     <!-- Annotorious -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.js"></script>
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
 
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
@@ -391,7 +390,10 @@ if($annotate_enabled)
                 resource            : <?php echo (int) $ref; ?>,
                 read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
                 // First page of a document is exactly the same as the preview
-                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>
+                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>,
+                // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
+                csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                <?php echo generateAjaxToken('RSTagging'); ?>
                 });
 
     <?php
@@ -402,6 +404,9 @@ if($annotate_enabled)
                 {
                 facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
                 resource                   : <?php echo (int) $ref; ?>,
+                // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
+                fr_csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                <?php echo generateAjaxToken('RSFaceRecognition'); ?>
                 });
         <?php
         }

@@ -13,7 +13,7 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
 
     if($k != '' || !checkperm("a"))
         {
-        return false;
+        return array();
         }
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()

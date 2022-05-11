@@ -62,10 +62,16 @@ if($tmsid != 0)
         for($r = 1; $r <= $resultcount; $r++)
             {
             $tmsdata = odbc_fetch_array($tmsresultset, $r);
-
-            foreach($tmsdata as $name=>$value)
+            if(is_array($tmsdata))
                 {
-                echo $name . " : " . $value . "<br />";
+                foreach($tmsdata as $name=>$value)
+                    {
+                    echo $name . " : " . $value . "<br />";
+                    }
+                }
+            else
+                {
+                echo "No data returned";
                 }
             }
         }

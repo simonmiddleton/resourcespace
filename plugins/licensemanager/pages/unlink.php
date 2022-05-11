@@ -24,7 +24,7 @@ $redirect_url = generateURL($baseurl_short . "/pages/view.php",$url_params);
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
-	sql_query("delete from resource_license where license='$ref' and resource='$resource'");
+	ps_query("delete from resource_license where license= ? and resource= ?", ['i', $ref, 'i', $resource]);
 	
 	resource_log($resource,"","",$lang["unlink_license"] . " " . $ref);
 	

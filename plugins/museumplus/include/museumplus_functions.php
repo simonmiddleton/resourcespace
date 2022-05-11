@@ -359,7 +359,7 @@ function mplus_get_cfg_by_module_name(string $n)
         {
         if($module_cfg['module_name'] == $n)
             {
-            mplus_log_event('Found module configuration', ['module_name' => $n]);
+            mplus_log_event('Found module configuration', ['module_name' => $n],'debug');
             $found_index = $mod_cfg_id;
             break;
             }
@@ -707,7 +707,7 @@ function mplus_compute_data_md5(array $resources_data, string $module_name)
 */
 function mplus_log_event(string $msg, array $ctx = array(), string $lvl = 'info')
     {
-    global $userref, $username;
+    global $userref, $username, $debug_log;
 
     // Information that should always be logged
     $ctx['user'] = array($userref => $username);
@@ -725,13 +725,12 @@ function mplus_log_event(string $msg, array $ctx = array(), string $lvl = 'info'
         $json_encoded_ctx = "Please check debug log (if enabled). The context triggered the following JSON error: {$json_last_error_msg}";
         }
 
-    $q = sprintf(
-        "INSERT INTO museumplus_log (`level`, message, `context`) VALUES ('%s', %s, '%s');",
-        escape_check(sql_truncate_text_val(mb_strtolower($lvl), 10)),
-        sql_null_or_val(sql_truncate_text_val($msg, 255), $msg === ''),
-        escape_check($json_encoded_ctx)
-    );
-    sql_query($q);
+    if(strtolower($lvl) != "debug" || $debug_log)
+        {
+        $q = "INSERT INTO museumplus_log (`level`, message, `context`) VALUES (?,?,?)";
+        $params = ["s",sql_truncate_text_val(mb_strtolower($lvl), 10),"s",sql_truncate_text_val($msg, 255),"s",$json_encoded_ctx];
+        ps_query($q,$params);
+        }
 
     return;
     }

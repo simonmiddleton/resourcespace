@@ -41,7 +41,7 @@ $lang["gotoadvancedsearch"]="詳細検索へ";
 $lang["viewnewmaterial"]="新着の参照";
 $lang["researchrequestservice"]="調査依頼サービス";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="リソース管理";
 $lang["overquota"]="ディスク容量超過; リソースを追加できません";
 $lang["managearchiveresources"]="アーカイブ・リソース管理";
@@ -70,7 +70,7 @@ $lang["resourceidnotfound"]="リソースIDが見つかりません";
 $lang["inclusive"]="(包括)";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Eメール 受信者";
 $lang["emailsubject"]="Eメール 件名";
 $lang["emailtext"]="Eメール テキスト";
@@ -79,10 +79,10 @@ $lang["emailsent"]="メールは送信されました。";
 $lang["mustspecifyoneuser"]="一人以上のユーザを指定しなければなりません";
 $lang["couldnotmatchusers"]="一致するユーザ名が存在しないか重複しています";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="コメント";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="ユーザ投稿リソースのうちレビュー待ちを表示";
 $lang["searcharchivedresources"]="アーカイブされたリソースの検索";
 $lang["viewresourcespendingarchive"]="アーカイブ待ちリソースの表示";

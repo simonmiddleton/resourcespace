@@ -20,7 +20,7 @@ $newhelp       = getvalescaped('newhelp', '');
 $editlanguage  = getvalescaped('editlanguage', $language);
 $editgroup     = getvalescaped('editgroup', '');
 $save          = getvalescaped('save', '');
-$text          = getvalescaped('text', '');
+$text          = getval('text', '');
 
 // Validate HTML
 $html_validation = validate_html($text);

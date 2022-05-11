@@ -1,6 +1,8 @@
 <?php
-include_once(__DIR__ . '/../../include/db.php');
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+if('cli' != PHP_SAPI)
+    {
+    exit('This utility is command line only.');
+    }
 
 // Create the Featured collections tree
 $fc_cat_1 = create_collection($userref, "FC 1");

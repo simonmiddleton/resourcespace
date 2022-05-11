@@ -28,7 +28,7 @@ $order_by          = getvalescaped('orderby', 'relevance');
 $sort              = getvalescaped('sort', 'asc');
 $orientation       = getvalescaped('orientation', '');
 $sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
-$preview           = ('true' == getvalescaped('preview', '') ? true : false);
+$preview           = ('true' == getvalescaped('preview', ''));
 $previewpage       = getvalescaped('previewpage', 1, true);
 $includeheader     = getvalescaped('includeheader', '');
 $addlink           = getvalescaped('addlink', '');

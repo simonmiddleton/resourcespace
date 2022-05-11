@@ -12,17 +12,20 @@ include_once __DIR__ . '/login_functions.php';
 * $user_select_sql example u.session=$variable. 
 * Joins to usergroup table as g  which can be used in criteria
 *
-* @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
+* @param	object	$user_select_sql		PreparedStatementQuery instance - to validate user usually session hash or key
 * @param 	boolean	$getuserdata			default true. Return user data as required by authenticate.php
 * 
 * @return boolean|array
 */
 function validate_user($user_select_sql, $getuserdata=true)
-    {
-    if('' == $user_select_sql)
+    {    
+    if(!is_a($user_select_sql,'PreparedStatementQuery'))
         {
         return false;
         }
+
+    $validatesql    = $user_select_sql->sql;
+    $validateparams = $user_select_sql->parameters;
 
     $full_user_select_sql = "
         approved = 1
@@ -31,12 +34,12 @@ function validate_user($user_select_sql, $getuserdata=true)
                 OR account_expires = '0000-00-00 00:00:00' 
                 OR account_expires > now()
             ) "
-        . ((strtoupper(trim(substr($user_select_sql, 0, 4))) == 'AND') ? ' ' : ' AND ')
-        . $user_select_sql;
+        . ((strtoupper(trim(substr($validatesql, 0, 4))) == 'AND') ? ' ' : ' AND ')
+        . $validatesql;
 
     if($getuserdata)
         {
-        $userdata = sql_query(
+        $userdata = ps_query(
             "   SELECT u.ref,
                        u.username,
                        u.origin,
@@ -73,18 +76,20 @@ function validate_user($user_select_sql, $getuserdata=true)
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref
-                 WHERE {$full_user_select_sql}"
+                 WHERE {$full_user_select_sql}",
+                 $validateparams
         );
 
         return $userdata;
         }
     else
         {
-        $validuser = sql_value(
+        $validuser = ps_value(
             "      SELECT u.ref AS `value`
                      FROM user AS u 
                 LEFT JOIN usergroup g ON u.usergroup = g.ref
-                    WHERE {$full_user_select_sql}"
+                    WHERE {$full_user_select_sql}",
+                    $validateparams
             ,
             ''
         );
@@ -108,7 +113,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 * 
 * @return boolean           success/failure flag - used for example to prevent certain users from making API calls
 */
-function setup_user($userdata)
+function setup_user(array $userdata)
 	{
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
@@ -152,8 +157,8 @@ function setup_user($userdata)
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
 
-    $ip_restrict_group=trim($userdata["ip_restrict_group"]);
-    $ip_restrict_user=trim($userdata["ip_restrict_user"]);
+    $ip_restrict_group=trim((string) $userdata["ip_restrict_group"]);
+    $ip_restrict_user=trim((string) $userdata["ip_restrict_user"]);
 
     if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
         {
@@ -217,11 +222,11 @@ function setup_user($userdata)
     $usereditfilter         = ($search_filter_nodes && isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
     $userderestrictfilter   = ($search_filter_nodes && isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
 
-    $hidden_collections=explode(",",$userdata["hidden_collections"]);
+    $hidden_collections=explode(",",(string) $userdata["hidden_collections"]);
     $userresourcedefaults=$userdata["resource_defaults"];
-    $userrequestmode=trim($userdata["request_mode"]);
-    $user_dl_limit=trim($userdata["download_limit"]);
-    $user_dl_days=trim($userdata["download_log_days"]);
+    $userrequestmode=trim((string) $userdata["request_mode"]);
+    $user_dl_limit=trim((string) $userdata["download_limit"]);
+    $user_dl_days=trim((string) $userdata["download_log_days"]);
 
     if((int)$user_dl_limit > 0)
         {
@@ -255,17 +260,41 @@ function setup_user($userdata)
         }        
 
     # Apply config override options
-    $config_options=trim($userdata["config_options"]);
+    $config_options=trim((string) $userdata["config_options"]);
     if ($config_options!="")
         {
         // We need to get all globals as we don't know what may be referenced here
         extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-        eval($config_options);
+        eval(eval_check_signed($config_options));
         debug_track_vars('end@setup_user', get_defined_vars());
         }
 
-    hook('after_setup_user');
+    // Set default workflow states to show actions for, if not manually set by user
+    get_config_option($userref,'actions_notify_states', $user_actions_notify_states, '');
 
+    // Check if user has already explicitly asked not to see these
+    get_config_option($userref,'actions_resource_review', $legacy_resource_review, true); // Deprecated option
+    if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
+        {
+        $default_notify_states = [];
+        // Add action for users who can submit 'pending submission' resources for review
+        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
+            {
+            $default_notify_states[] = -2;
+            }
+        if(checkperm("e-1") && checkperm("e0"))
+            {
+            // Add action for users who can make pending resources active
+            $default_notify_states[] = -1;
+            }
+        $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
+        }
+    elseif ($legacy_resource_review)
+        {
+        $GLOBALS['actions_notify_states'] = $user_actions_notify_states;
+        }
+
+    hook('after_setup_user');
     return true;
     }
     
@@ -273,7 +302,8 @@ function setup_user($userdata)
 /**
  * Returns a user list. Group or search term is optional. The standard user group names are translated using $lang. Custom user group names are i18n translated.
  *
- * @param  integer $group   If set, a user group to limit the results
+ * @param  integer $group            Can be a single group, or a comma separated list of groups used to limit the results
+ *                                   If blank, zero or NULL then all users will be returned irrespective of their group
  * @param  string $find Search string to filter returned results
  * @param  string $order_by
  * @param  boolean $usepermissions
@@ -290,7 +320,13 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
     $sql = "";
     $find=escape_check(strtolower($find));
-    if ($group != 0 && (string)(int)$group == (string)$group) {$sql = "where usergroup IN ($group)";}
+    # Sanitise the incoming group(s), stripping out any which are non-numeric 
+    $grouparray=array_filter(explode(",",$group), 'ctype_digit');
+    # Reconstruct the sanitised list of group(s)
+    $grouplist=implode(",",$grouparray);
+
+    if ($group != 0 && count($grouparray)>0) {$sql = "where usergroup IN ($grouplist)";}
+
     if ($exact_username_match)
         {
         # $find is an exact username
@@ -310,11 +346,23 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
             $sql .= "LOWER(username) like '$find%'";
             }
         }
-    if ($usepermissions && (checkperm('E') || (checkperm('U') && !$U_perm_strict)))
+    
+    $approver_groups = get_approver_usergroups($usergroup);
+
+    if ($usepermissions && (checkperm('E') || ((checkperm('U') || count($approver_groups) > 0) && $U_perm_strict)))
         {
         # Only return users in children groups to the user's group
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        $sql.= "find_in_set('" . $usergroup . "',g.parent) ";
+
+        if (count($approver_groups) > 0)
+            {
+            $sql.= "(find_in_set('" . escape_check($usergroup) . "',g.parent) or g.ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+            }
+        else
+            {
+            $sql.= "find_in_set('" . escape_check($usergroup) . "',g.parent) ";
+            }
+
         $sql.= hook("getuseradditionalsql");
         }
 
@@ -325,14 +373,17 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         }
 
     // Return users in both user's user group and children groups
-    if ($usepermissions && checkperm('U') && !$U_perm_strict) {
-        $sql .= sprintf('
-                %1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))
-            ',
-            ($sql == '') ? 'WHERE' : ' AND',
-            $usergroup
-        );
-    }
+    if ($usepermissions && (checkperm('U') || count($approver_groups) > 0) && !$U_perm_strict)
+        {
+        if (count($approver_groups) > 0)
+            {
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup), implode(",", escape_check_array_values($approver_groups)));
+            }
+        else
+            {
+            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup));
+            }
+        }
     $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
     $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
     # Executes query.
@@ -425,20 +476,37 @@ function get_user_by_username($username)
 function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array = false)
     {
     # Creates a query, taking (if required) the permissions  into account.
+    global $usergroup;
+    $approver_groups = get_approver_usergroups($usergroup);
     $sql = "";
-    if ($usepermissions && checkperm("U")) {
+    if ($usepermissions && (checkperm("U") || count($approver_groups) > 0))
+        {
         # Only return users in children groups to the user's group
-        global $usergroup,$U_perm_strict;
+        global $U_perm_strict;
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        if ($U_perm_strict) {
-            //$sql.= "(parent='$usergroup')";
-            $sql.= "find_in_set('" . $usergroup . "',parent)";
+        if ($U_perm_strict)
+            {
+            if (count($approver_groups) > 0)
+                {
+                $sql.= "(find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+                }
+            else
+                {
+                $sql.= "find_in_set('" . escape_check($usergroup) . "',parent)";
+                }
+            }
+        else
+            {
+            if (count($approver_groups) > 0)
+                {
+                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+                }
+            else
+                {
+                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent))";
+                }
+            }
         }
-        else {
-            //$sql.= "(ref='$usergroup' or parent='$usergroup')";
-            $sql.= "(ref='$usergroup' or find_in_set('" . $usergroup . "',parent))";
-        }
-    }
 
     # Executes query.
     global $default_group;
@@ -535,6 +603,8 @@ function save_user($ref)
         delete_profile_image($ref);
         sql_query("DELETE FROM user WHERE ref = '" . escape_check($ref) . "'");
 
+        hook('on_delete_user', "", array($ref));
+        
         include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
@@ -688,7 +758,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
     
     # Fetch any welcome message for this user group
-    $welcome=sql_value("select welcome_message value from usergroup where ref='" . $usergroup . "'","");
+    $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
     if (trim($welcome)!="") {$welcome.="\n\n";}
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
@@ -807,20 +877,28 @@ function auto_create_user_account($hash="")
 
     if ($registration_group_select)
         {
-        $usergroup=getvalescaped("usergroup","",true);
+        $usergroup=getval("usergroup","",true);
         # Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
-        if (sql_value("select allow_registration_selection value from usergroup where ref='$usergroup'",0)!=1) {exit("Invalid user group selection");}
+        if (ps_value("SELECT allow_registration_selection value FROM usergroup WHERE ref = ?",["i",$usergroup],0)!=1)
+            {
+            exit("Invalid user group selection");
+            }
         }
 
     $newusername=escape_check(make_username(getval("name","")));
 
     // Check valid email
     if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
-        {return $lang['setup-emailerr'];}
+        {
+        return $lang['setup-emailerr'];
+        }
     
     #check if account already exists
-    $check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
-    if ($check!=""){return $lang["useremailalreadyexists"];}
+    $check=ps_value("SELECT email value FROM user WHERE email = ?",["s",$user_email],"");
+    if ($check!="")
+        {
+        return $lang["useremailalreadyexists"];
+        }
 
     # Prepare to create the user.
     $email=trim(getvalescaped("email","")) ;
@@ -857,7 +935,22 @@ function auto_create_user_account($hash="")
         }
 
     # Create the user
-    sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
+    $name = getval("name","");
+    $comment = getval("userrequestcomment","");
+    $newparams = [
+        "s",$newusername,
+        "s",$password,
+        "s",$name,
+        "s",$email,
+        "i",$usergroup,
+        "s",$customContents . (trim($comment) != "" ? "\n" . $comment : ""),
+        "i",($approve ? 1 : 0),
+        "s",$language,
+        "s",($hash != "" ? $hash : NULL),
+        ];
+
+    ps_query("INSERT INTO user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) VALUES (?,?,?,?,?,?,?,?,?)",$newparams);
+
     $new = sql_insert_id();
 
     // Create dash tiles for the new user
@@ -934,8 +1027,8 @@ function auto_create_user_account($hash="")
         $templatevars['linktouser']="$baseurl?u=$new";
 
         // Need to global the usergroup so that we can find the appropriate admins
-        global $usergroup;
-        $approval_notify_users=get_notification_users("USER_ADMIN"); 
+
+        $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup); 
         $message_users=array();
         global $user_pref_user_management_notifications, $email_user_notifications;
 
@@ -1084,20 +1177,21 @@ function new_user($newuser, $usergroup = 0)
     {
     global $lang,$home_dash;
     # Username already exists?
-    $c=sql_value("select count(*) value from user where username='" . escape_check($newuser) . "'",0);
+    $c=ps_value("SELECT COUNT(*) value FROM user WHERE username = ?",["s",$newuser],0);
     if ($c>0) {return false;}
     
     $cols = array("username");
-    $vals = array(escape_check($newuser));
+    $sqlparams = ["s",$newuser];
     
     if($usergroup > 0)
         {
         $cols[] = "usergroup";
-        $vals[] = (int)$usergroup;    
+        $sqlparams[] = "i";
+        $sqlparams[] = $usergroup;   
         }
         
-    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES ('" . implode("','",$vals) . "')";
-    sql_query($sql);
+    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES (" .ps_param_insert(count($cols)) . ")";
+    ps_query($sql,$sqlparams);
     
     $newref=sql_insert_id();
     
@@ -1111,7 +1205,7 @@ function new_user($newuser, $usergroup = 0)
     # Create a collection for this user, the collection name is translated when displayed!
     $new=create_collection($newref,"Default Collection",0,1); # Do not translate this string!
     # set this to be the user's current collection
-    sql_query("update user set current_collection='$new' where ref='$newref'");
+    ps_query("UPDATE user SET current_collection=? WHERE ref=?",["i",$new,"i",$newref]);
     log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
     
     return $newref;
@@ -1127,16 +1221,31 @@ function new_user($newuser, $usergroup = 0)
 function get_active_users()
     {
     global $usergroup, $U_perm_strict;
+    $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in=1 and unix_timestamp(now())-unix_timestamp(last_active)<(3600*2)";
-    if (checkperm("U") && $U_perm_strict)
+    if ((checkperm("U") || count($approver_groups) > 0) && $U_perm_strict)
         {
-        $sql.= " and find_in_set('" . $usergroup . "',g.parent) ";
+        if (count($approver_groups) > 0)
+            {
+            $sql.= "and (find_in_set('" . escape_check($usergroup) . "',g.parent) or usergroup in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+            }
+        else
+            {
+            $sql.= " and find_in_set('" . escape_check($usergroup) . "',g.parent) ";
+            }
         }
 
     // Return users in both user's user group and children groups
-    elseif (checkperm('U') && !$U_perm_strict)
+    elseif ((checkperm("U") || count($approver_groups) > 0)&& !$U_perm_strict)
         {
-        $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent))";
+        if (count($approver_groups) > 0)
+            {
+            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent) or usergroup in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+            }
+        else
+            {
+            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent))";
+            }
         }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
@@ -1580,16 +1689,17 @@ function check_access_key($resources,$key)
 
     global $external_share_view_as_internal, $baseurl, $baseurl_short;
 
-    if(
-        $external_share_view_as_internal
-        && (
-            isset($_COOKIE["user"])
-            && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
-            && !is_authenticated()
-        ))
+    if($external_share_view_as_internal && isset($_COOKIE["user"]))
+        {
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.session = ?";
+        $user_select_sql->parameters = ["s",$_COOKIE["user"]];
+        if(validate_user($user_select_sql, false) && !is_authenticated())
             {
+            // Authenticate the user if not already authenticated so page can appear as internal
             return false;
-            } // We want to authenticate the user if not already authenticated so we can show the page as internal
+            }
+        }
 
     $key_escaped = escape_check($key);
 
@@ -1747,7 +1857,7 @@ function check_access_key($resources,$key)
 
             // We need to get all globals as we don't know what may be referenced here
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
 
             }
         }
@@ -1789,13 +1899,19 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-
     hook("external_share_view_as_internal_override");
     global $external_share_view_as_internal, $baseurl, $baseurl_short, $pagename;
-    if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
+
+    if($external_share_view_as_internal && isset($_COOKIE["user"]))
         {
-        // We want to authenticate the user so we can show the page as internal
-        return false;
+        $user_select_sql = new PreparedStatementQuery();
+        $user_select_sql->sql = "u.session = ?";
+        $user_select_sql->parameters = ["s",$_COOKIE["user"]];
+        if(validate_user($user_select_sql, false) && !is_authenticated())
+            {
+            // Authenticate the user if not already authenticated so page can appear as internal
+            return false;
+            }
         }
 
     $collection = get_collection($collection);
@@ -2210,9 +2326,15 @@ function get_rs_session_id($create=false)
  * @param  string $userpermission
  * @return array
  */
-function get_notification_users($userpermission="SYSTEM_ADMIN")
+function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = NULL)
     {    
-    global $notification_users_cache, $usergroup,$email_notify_usergroups;
+    global $notification_users_cache, $email_notify_usergroups;
+
+    if (is_null($usergroup))
+        {
+        global $usergroup;
+        }
+
     $userpermissionindex=is_array($userpermission)?implode("_",$userpermission):$userpermission;
     if(isset($notification_users_cache[$userpermissionindex]))
         {return $notification_users_cache[$userpermissionindex];}
@@ -2230,8 +2352,21 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
         switch($userpermission)
             {
             case "USER_ADMIN";
+            $sql_approver_groups = '';
+            global $usergroup_approval_mappings;
+            if (is_numeric($usergroup) && isset($usergroup_approval_mappings))
+                {
+                // Determine which user groups should be excluded from notifications. If mapping exists it must be valid to send notification.
+                $approver_groups = array_keys($usergroup_approval_mappings);
+                $defined_approvers_for_group = get_usergroup_approvers($usergroup);
+                $affective_approver_groups = array_diff($approver_groups, $defined_approvers_for_group);
+                if (count($affective_approver_groups) > 0)
+                    {
+                    $sql_approver_groups = 'and ug.ref not in (' . implode(",", escape_check_array_values($affective_approver_groups)) . ')';
+                    }
+                }
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . escape_check($usergroup) . ")) " . $sql_approver_groups . "":""));    
             return $notification_users_cache[$userpermissionindex];
             break;
             
@@ -2511,15 +2646,30 @@ function checkperm_user_edit($user)
 		$user=get_user($user);
 		}
 	$editusergroup=$user['usergroup'];
-	if (!checkperm('U') || $editusergroup == '')    // no user editing restriction, or is not defined so return true
+    global $U_perm_strict, $usergroup;
+    $approver_groups = get_approver_usergroups($usergroup);
+
+	if ((!checkperm('U') && count($approver_groups) == 0) || $editusergroup == '')    // no user editing restriction, or is not defined so return true
 		{
 		return true;
 		}
-	global $U_perm_strict, $usergroup;
+
 	// Get all the groups that the logged in user can manage 
-	$validgroups = sql_array("SELECT `ref` AS  'value' FROM `usergroup` WHERE " .
-		($U_perm_strict ? "FIND_IN_SET('{$usergroup}',parent)" : "(`ref`='{$usergroup}' OR FIND_IN_SET('{$usergroup}',parent))")
-	);
+    $sql = "SELECT `ref` AS  'value' FROM `usergroup` WHERE ";
+    if (count($approver_groups) > 0)
+        {
+        $sql .= "ref in (" . implode(",", escape_check_array_values($approver_groups)) . ") or ";
+        }
+    if ($U_perm_strict)
+        {
+        $sql .= "FIND_IN_SET('" . escape_check($usergroup) . "',parent)";
+        }
+    else
+        {
+        $sql .= "`ref`='" . escape_check($usergroup) . "' OR FIND_IN_SET('" . escape_check($usergroup) . "',parent)";
+        }
+
+	$validgroups = sql_array($sql);
 	
 	// Return true if the target user we are checking is in one of the valid groups
 	return (in_array($editusergroup, $validgroups));
@@ -2608,6 +2758,24 @@ function save_usergroup($ref,$groupoptions)
     }
 
 
+/**
+ * Copy the permissions string from another usergroup
+ *
+ * @param  int $src_id    The group ID to copy from
+ * @param  int $dst_id    The group ID to copy to
+ * @return mixed          bool|int True to indicate existing group has been updated or ID of newly created group
+ */
+function copy_usergroup_permissions(int $src_id,int $dst_id)
+    {
+    $src_group = get_usergroup($src_id);
+    $dst_group = get_usergroup($dst_id);
+
+    if(!$src_group || !$dst_group){return false;}
+
+
+    $dst_group=["permissions" => $src_group["permissions"]];
+    return save_usergroup($dst_id,$dst_group);
+    }
  
 /**
  * Set user's profile image and profile description (bio). Used by ../pages/user/user_profile_edit.php to setup user's profile.
@@ -2935,7 +3103,7 @@ function emulate_user($user, $usergroup="")
 
             // We need to get all globals as we don't know what may be referenced here
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
             }
         }
     
@@ -2972,3 +3140,65 @@ function is_ecommerce_user()
     return ($userrequestmode == 2 || $userrequestmode == 3) ? true : false; 
     }
 
+
+/**
+ * Returns an array of the user groups the supplied user group acts as an approver for.
+ * Uses config $usergroup_approval_mappings.
+ *
+ * @param  int  $usergroup   Approving user group 
+ * 
+ * @return  array   Array of subordinate user group ids.
+ */
+function get_approver_usergroups($usergroup = "")
+    {
+    if ($usergroup == "" || !is_numeric($usergroup))
+        {
+        return array();
+        }
+
+    global $usergroup_approval_mappings;
+
+    $approval_groups = array();
+    if (isset($usergroup_approval_mappings))
+        {
+        if (array_key_exists((int)$usergroup, $usergroup_approval_mappings))
+           {
+           $approval_groups = $usergroup_approval_mappings[(int)$usergroup];
+           }
+        }
+
+    return $approval_groups;
+    }
+
+
+/**
+ * Returns an array of user groups who act as user request approvers to the user group supplied.
+ * Uses config $usergroup_approval_mappings.
+ *
+ * @param  int  $usergroup   Subordinate user group who's approval user group we need to find.
+ * 
+ * @return  array   Approval user group ids for supplied user group. Likely one value but its possible to have multiple approving groups.
+ */
+function get_usergroup_approvers($usergroup = "")
+    {
+    if ($usergroup == "" || !is_numeric($usergroup))
+        {
+        return array();
+        }
+
+    global $usergroup_approval_mappings;
+
+    $approver_groups = array();
+    if (isset($usergroup_approval_mappings))
+        {
+        foreach ($usergroup_approval_mappings as $approver => $groups)
+            {
+            if (in_array($usergroup, $groups))
+                {
+                $approver_groups[] = $approver;
+                }
+            }
+        }
+
+    return $approver_groups;
+    }

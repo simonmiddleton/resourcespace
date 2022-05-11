@@ -4,7 +4,7 @@ set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Started upgrade script - update "use
 
 $notification_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
 
-$user_tinfo = sql_query('DESCRIBE user');
+$user_tinfo = ps_query('DESCRIBE user');
 if(!is_array($user_tinfo))
     {
     $msg = '[error] Unable to describe table "user"';

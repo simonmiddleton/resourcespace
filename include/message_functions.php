@@ -251,7 +251,7 @@ function message_selectedunseen($messages)
  */
 function message_send_unread_emails()
 	{
-	global $lang, $applicationname, $actions_enable, $baseurl, $list_search_results_title_trim, $user_pref_daily_digest, $applicationname, $actions_on, $inactive_message_auto_digest_period, $user_pref_inactive_digest;
+	global $lang, $applicationname, $baseurl, $list_search_results_title_trim, $user_pref_daily_digest, $applicationname, $actions_on, $inactive_message_auto_digest_period, $user_pref_inactive_digest;
     
     $lastrun = get_sysvar('daily_digest', '1970-01-01');
     
@@ -290,16 +290,21 @@ function message_send_unread_emails()
                 }
             }
         }
-        
+
 	# Get all unread notifications created since last run, or all mesages sent to inactive users. 
     # Build array of sql query parameters
-    $parameters = ps_param_fill($digestusers,"i");
+    $parameters = array();
+    if (count($digestusers) > 0)
+        {
+        $parameters = array_merge($parameters, ps_param_fill($digestusers,"i"));
+        }
     $parameters = array_merge($parameters, array("s",$lastrun));
     if (count($sendall) > 0)
         {
         $parameters = array_merge($parameters, ps_param_fill($sendall,"i"));
         }
-    $unreadmessages=ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0 AND u.ref IN (" . ps_param_insert(count($digestusers)) . ") AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
+    $unreadmessages = ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0"
+      . (count($digestusers) > 0 ? " AND u.ref IN (" . ps_param_insert(count($digestusers)) . ")" : "") . " AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
 
     $inactive_message_auto_digest_period_saved = $inactive_message_auto_digest_period;
 	foreach($digestusers as $digestuser)
@@ -344,25 +349,31 @@ function message_send_unread_emails()
             $message = $lang['email_daily_digest_text'] . "<br /><br />";
             }
 		$message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
-		$message .= "<tr><th>" . $lang["columnheader-date_and_time"] . "</th><th>" . $lang["message"] . "</th><th></th></tr>";
-		
-		foreach($unreadmessages as $unreadmessage)
-			{
-			if($unreadmessage["userref"] == $digestuser)
-				{
-				// Message applies to this user
-				$messageflag=true;
-				$usermail = $unreadmessage["email"];
+        $message .= "<tr><th>" . $lang["columnheader-date_and_time"] . "</th><th>" . $lang["message"] . "</th><th></th></tr>";
+            
+        foreach($unreadmessages as $unreadmessage)
+            {
+            if($unreadmessage["userref"] == $digestuser)
+                {
+                // Message applies to this user
+                $messageflag=true;
+                $usermail = $unreadmessage["email"];
                 $msgurl = $unreadmessage["url"];
                 if(substr($msgurl,0,1) == "/")
                     {
                     // If a relative link is provided make sure we add the full URL when emailing
                     $msgurl = $baseurl . $msgurl;
                     }
-				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $msgurl . "'>" . $lang["link"] . "</a></td></tr>";
-				$messagerefs[]=$unreadmessage["messageref"];
-				}
-			}
+                $message .= "<tr><td>" . nicedate($unreadmessage["created"], true, true, true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $msgurl . "'>" . $lang["link"] . "</a></td></tr>";
+                $messagerefs[]=$unreadmessage["messageref"];
+                }
+            }
+
+        if(count($messagerefs) == 0)
+            {
+            $message .= "<tr><td colspan='3'>" . $lang["nomessages"] . "</td></tr>";
+            }
+
 		if($actions_on)
 			{
 			//debug("Checking actions for user " . $unreadmessage["userref"]);
@@ -421,8 +432,8 @@ function message_send_unread_emails()
 					$message .= "<td>" . tidy_trim(TidyList($user_action["description"]),$list_search_results_title_trim) . "</td>";
 					$message .= "<td>" . $lang["actions_type_" . $user_action["type"]] . "</td>";
 					$message .= "<td><div class=\"ListTools\">";
-					if($editlink!=""){$message .= "<a href=\"" . $editlink . "\" >&nbsp;&nbsp;" . $lang["action-edit"] . "</a>";}
-					if($viewlink!=""){$message .= "<a href=\"" . $viewlink . "\" >&nbsp;&nbsp;" . $lang["view"] . "</a>";}
+					if($editlink!=""){$message .= "&nbsp;&nbsp;<a href=\"" . $editlink . "\" >" . $lang["action-edit"] . "</a>";}
+					if($viewlink!=""){$message .= "&nbsp;&nbsp;<a href=\"" . $viewlink . "\" >" . $lang["view"] . "</a>";}
 					$message .= "</div>";
 					$message .= "</td></tr>";
 					} // End of each $user_actions loop

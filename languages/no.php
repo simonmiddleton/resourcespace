@@ -104,7 +104,7 @@ $lang["gotoadvancedsearch"]="Avansert søk";
 $lang["viewnewmaterial"]="Vis nytt materiale";
 $lang["researchrequestservice"]="Materialforespørsel";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Administrer materiale";
 $lang["overquota"]="Lagringskvote overskredet, opplasting ikke mulig";
 $lang["managearchiveresources"]="Administrer arkivmateriale";
@@ -137,7 +137,7 @@ $lang["pluginssetup"]="Administrer programtillegg";
 $lang["pluginmanager"]="Programtillegg-administrator";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="E-postmottagere";
 $lang["emailsubject"]="E-post emne";
 $lang["emailtext"]="E-post tekst";
@@ -146,10 +146,10 @@ $lang["emailsent"]="E-posten har blitt sendt";
 $lang["mustspecifyoneuser"]="Du må oppgi minst en mottager";
 $lang["couldnotmatchusers"]="Kunne ikke finne alle brukernavnene, eller brukernavn ble duplisert";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Kommentarer";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Gjennomgå brukerbidrag til godkjenning";
 $lang["viewuserpendingsubmission"]="Gjennomgå brukerbidrag til innsending";
 $lang["searcharchivedresources"]="Søk i arkivmateriale";

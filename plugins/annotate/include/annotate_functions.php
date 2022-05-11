@@ -105,6 +105,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		}
 		$resources=$resources_modified;
 	}
+	$size = mb_strtolower($size);
 	if (count($resources)==0){echo "nothing"; exit();}
 	if ($size == "a4") {$width=210/25.4;$height=297/25.4;} // convert to inches
 	if ($size == "a3") {$width=297/25.4;$height=420/25.4;}

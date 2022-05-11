@@ -241,7 +241,6 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions'] . '</h3><div id="SystemConfigActionsSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('actions_enable', $lang['actions-enable'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests_default'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review_default'], $enable_disable_options, 300, '', true);
 $page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests_default'], $enable_disable_options, 300, '', true);
 	
 $page_def[] = config_add_html('</div>');
@@ -431,7 +430,13 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
 
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
-$GLOBALS = $system_wide_config_options;
+
+# $lang is not a config option! 
+unset($system_wide_config_options['lang']);
+foreach ($system_wide_config_options as $key => $value)
+    {
+    $GLOBALS[$key] = $value;
+    }
 
 include '../../include/header.php';
 ?>

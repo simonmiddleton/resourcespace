@@ -242,7 +242,7 @@ $lang["gotoadvancedsearch"]="Avancerad sökning";
 $lang["viewnewmaterial"]="Visa nyaste materialet";
 $lang["researchrequestservice"]="Researchförfrågan";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Hantera material";
 $lang["overquota"]="Lagringskvoten är överskriden – du kan inte lägga till material";
 $lang["managearchiveresources"]="Hantera arkivmaterial";
@@ -276,7 +276,7 @@ $lang["pluginmanager"]="Tilläggshanteraren";
 $lang["users"]="användare";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Mottagare";
 $lang["emailsubject"]="Ämne";
 $lang["emailtext"]="Meddelande";
@@ -286,10 +286,10 @@ $lang["emailsent"]="E-postmeddelandet har skickats.";
 $lang["mustspecifyoneuser"]="Du måste ange minst en användare";
 $lang["couldnotmatchusers"]="Ett eller flera användarnamn är felaktigt eller dubblerat";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Kommentarer";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Visa material som väntar på granskning";
 $lang["userpending"]="Material som väntar på granskning";
 $lang["viewuserpendingsubmission"]="Visa material som är under registrering";

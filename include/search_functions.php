@@ -559,14 +559,10 @@ function compile_search_actions($top_actions)
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
-
-    // globals that could also be passed as a reference
-    global $starsearch;
     $urlparams = array(
         "search"        =>  $search,
         "collection"    =>  $collection,
         "restypes"      =>  $restypes,
-        "starsearch"    =>  $starsearch,
         "order_by"      =>  $order_by,
         "archive"       =>  $archive,
         "sort"          =>  $sort,
@@ -631,13 +627,12 @@ function compile_search_actions($top_actions)
         if($top_actions && $allow_smart_collections && substr($search, 0, 11) != '!collection')
             {
             $extra_tag_attributes = sprintf('
-                    data-url="%spages/collections.php?addsmartcollection=%s&restypes=%s&archive=%s&starsearch=%s"
+                    data-url="%spages/collections.php?addsmartcollection=%s&restypes=%s&archive=%s"
                 ',
                 $baseurl_short,
                 urlencode($search),
                 urlencode($restypes),
-                urlencode($archive),
-                urlencode($starsearch)
+                urlencode($archive)
             );
 
             $options[$o]['value']='save_search_smart_collection';
@@ -652,7 +647,7 @@ function compile_search_actions($top_actions)
         if($resources_count != 0 && !$system_read_only)
             {
                 $extra_tag_attributes = sprintf('
-                        data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
+                        data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s"
                     ',
                     $baseurl_short,
                     urlencode($search),
@@ -660,8 +655,7 @@ function compile_search_actions($top_actions)
                     urlencode($order_by),
                     urlencode($sort),
                     urlencode($archive),
-                    urlencode($daylimit),
-                     urlencode($starsearch)
+                    urlencode($daylimit)
                 );
 
                 $options[$o]['value']='save_search_items_to_collection';
@@ -716,14 +710,13 @@ function compile_search_actions($top_actions)
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
-        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s',
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s',
             $baseurl_short,
             urlencode($search),
             urlencode($restypes),
             urlencode($order_by),
             urlencode($archive),
-            urlencode($sort),
-            urlencode($starsearch)
+            urlencode($sort)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
@@ -753,7 +746,7 @@ function compile_search_actions($top_actions)
     return $options;
     }
 
-function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null, $smartsearch = false)
+function search_filter($search,$archive,$restypes,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false, $access = null, $smartsearch = false)
     {
     debug_function_call("search_filter", func_get_args());
 
@@ -778,18 +771,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         if ($sql_filter!="") {$sql_filter.=" AND ";}
         $restypes_x=explode(",",$restypes);
         $sql_filter.="resource_type IN ('" . join("','", escape_check_array_values($restypes_x)) . "')";
-        }
-
-    # Apply star search
-    if ($starsearch!="" && $starsearch!=0 && $starsearch!=-1)
-        {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.="user_rating >= '$starsearch'";
-        }   
-    if ($starsearch==-1)
-        {
-        if ($sql_filter!="") {$sql_filter.=" AND ";}
-        $sql_filter.="user_rating = '-1'";
         }
 
     # Apply day limit
@@ -872,7 +853,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 $sql_filter.= (($sql_filter!="")?" AND ":"") . "archive<>2";
                 }
             }
-        elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata")
+        elseif ($search_all_workflow_states || substr($search,0,8)=="!related" || substr($search,0,8)=="!hasdata" || strpos($search,"integrityfail") !== false)
             {hook("search_all_workflow_states_filter");}   
         elseif (count($archive) == 0 || $archive_standard && !$smartsearch)
             {
@@ -1119,7 +1100,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             $sql_filter .= $editable_filter;
             }
         }
-
     return $sql_filter;
     }
 
@@ -1733,11 +1713,11 @@ function rebuild_specific_field_search_from_node(array $node)
     }
 
 
-function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="DESC",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
+function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="DESC",$access_override=false,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
    {
    # Search capability.
    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
-   $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,$starsearch,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
+   $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,DEPRECATED_STARSEARCH,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
    if(is_string($getsizes)){$getsizes=explode(",",$getsizes);}
    if(is_array($results) && is_array($getsizes) && count($getsizes)>0)
         {
@@ -1747,7 +1727,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             // if using fetchrows some results may just be == 0 - remove from results array
             if ($results[$n]==0) 
                 {
-                unset($results[$n]); 
+                //unset($results[$n]); 
                 continue;
                 }
 
@@ -2018,7 +1998,7 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     // Most of them should already be in $config_separators
     // but others, like &shy; don't have an actual character that we can copy and paste
     // to $config_separators
-    $string = htmlentities($string, null, 'UTF-8');
+    $string = htmlentities($string, ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8');
     $string = str_replace('&nbsp;', ' ', $string);
     $string = str_replace('&shy;', ' ', $string);
     $string = str_replace('&lsquo;', ' ', $string);
@@ -2059,6 +2039,16 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     }
 
 
+/**
+ * Resolve keyword
+ * 
+ * @param string $keyword   The keyword to resolve
+ * @param bool   $create    If keyword not found, should we create it instead?
+ * @param bool   $normalize Should we normalize the keyword before resolving?
+ * @param bool   $stem      Should we use the keywords' stem when resolving?
+ * 
+ * @return int|bool Returns the keyword reference for $keyword, or false if no such keyword exists.
+ */
 function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
     {
     debug_function_call("resolve_keyword", func_get_args());
@@ -2080,7 +2070,6 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-    # Returns the keyword reference for $keyword, or false if no such keyword exists.
     $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
     if ($return===false && $create)
         {

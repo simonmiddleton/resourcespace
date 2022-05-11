@@ -10,7 +10,7 @@
         $parameters = array();
         if ($user != "")
             {
-            $query .= "WHERE owner = ?";
+            $query .= "WHERE `owner` = ?";
             $parameters = array_merge($parameters, array("i", $user));
             }
         if ($enabled_only)
@@ -40,7 +40,8 @@
             $orderbydirection = "DESC";
             }
 
-        $results=ps_query("SELECT search_saved.*, u.username FROM search_saved JOIN `user` u ON search_saved.owner = u.ref " . $query . " ORDER BY '{$orderby}' '{$orderbydirection}'", $parameters);
+        $results=ps_query("SELECT s.ref, s.created, s.`owner`, s.title, s.search, s.restypes, s.archive, s.enabled, s.`checksum`, s.checksum_when, s.checksum_matches, s.checksum_data, s.checksum_data_previous, u.username FROM search_saved s JOIN `user` u ON s.`owner` = u.ref " 
+		    . $query . " ORDER BY '{$orderby}' '{$orderbydirection}'", $parameters);
         return count($results) > 0;
         }
 

@@ -53,6 +53,7 @@ if ($k=="" || (!check_access_key_collection($collection_add,$k)))
         exit ("Permission denied.");
         }
     }
+
 global $usersession;
 // TUS handling
 // Use PHP APCU cache if available as more robust
@@ -68,10 +69,19 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     $server -> setUploadDir($targetDir);
     // Create target dir
     if (!file_exists($targetDir))
-        {     		
-        mkdir($targetDir,0777,true);
+        {
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            mkdir($targetDir,0777,true);
+            }
+        catch (Exception $e)
+            {
+            // Ignore
+            }
+        unset($GLOBALS["use_error_exception"]);
         }
-        
+
     $response = $server->serve();
     // Extra check added to ensure URL uses $baseurl. Required due to reported issues with some reverse proxy configurations
     $tuslocation = $response->headers->get('location');
@@ -168,7 +178,7 @@ if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$uplo
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
         {
-        $collectionname = "Upload " . date("YmdHis"); # Do not translate this string, the collection name is translated when displayed!
+        $collectionname = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis'); # Do not translate this string, the collection name is translated when displayed!
         $hidden_collection = true;
         } 
 	$collection_add=create_collection($userref,$collectionname);
@@ -199,11 +209,13 @@ if($external_upload)
         $usercollection = $ci[0];
         }
     $upload_review_col = $usercollection;
+    rs_setcookie('lockedfields', '', 1);
     $redirecturl = generateURL(
         "{$baseurl}/pages/edit.php",
         array('upload_review_mode' => true,
               'collection' => $usercollection,
-              'k' => $k)
+              'k' => $k
+              )
         );     
     }
 elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
@@ -222,28 +234,25 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         remove_all_resources_from_collection(0-$userref);
         }
 
-	# Set the redirect after upload to the start of the edit process
-    if($alternative != "") 
-        {
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/view.php",
-            array(
-                'ref' => $alternative
-            ));	
-        }
-    else
-        {
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/edit.php",
-            array(
-                'upload_review_mode' => true,
-                'collection_add' => $collection_add
-            ));	
-        }
+    # Set the redirect after upload to the start of the edit process
+    rs_setcookie('lockedfields', '', 1);
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+            'collection_add' => $collection_add
+        ));	
 
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
+
+# If uploading alternative file, redirect to the resource rather than search results.
+if($alternative != "") 
+    {
+    $redirecturl = generateURL("{$baseurl}/pages/view.php", array('ref' => $alternative));	
+    }
+    
 $modify_redirecturl=hook('modify_redirecturl');
 if($modify_redirecturl!==false)
 	{
@@ -415,13 +424,18 @@ if ($processupload)
     debug("upload_batch - received file from user '" . $username . "',  filename: '" . $upfilename . "'");
         
     # Work out the extension
-    $extension=explode(".",$upfilename);
-    $extension=trim(strtolower($extension[count($extension)-1]));
+    $parts=explode(".",$upfilename);
+    $origextension=trim($parts[count($parts)-1]);
+    $extension=strtolower($origextension);
+    if(count($parts) > 1){array_pop($parts);}
+    $filenameonly = implode('.', $parts);
 
-    // Clean the filename
-    $origuploadedfilename=escape_check($upfilename);
-    $encodedname = base64_encode($upfilename);
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
+     // Clean the filename
+    $origuploadedfilename= escape_check($upfilename);
+    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
+
+    hook('modify_upload_file','',[$upfilename,$upfilepath]);
 
     # Banned extension?
     global $banned_extensions;
@@ -467,6 +481,7 @@ if ($processupload)
         $result["status"] = false;
         $result["message"] = str_replace("%%RESOURCES%%",implode(",",$duplicates),$lang["error_upload_duplicate_file"]);
         $result["error"] = 108;
+        unlink($upfilepath);
         die(json_encode($result));
         }
     elseif(!hook("initialuploadprocessing"))
@@ -871,10 +886,18 @@ elseif ($upload_no_file && getval("createblank","")!="")
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
+    rs_setcookie('lockedfields', '', 1);
     $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true"));
     redirect($redirecturl);
     exit();
 	}
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+$cfb = check_filestore_browseability();
+if(!$cfb['index_disabled'])
+    {
+    exit(error_alert($lang['error_generic_misconfiguration'], true, 200));
+    }
 
 $headerinsert.="
 <link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />";
@@ -976,7 +999,11 @@ jQuery(document).ready(function () {
                 updatedFiles[fileid] = {
                     ...files[fileid],
                   }
-                updatedFiles[fileid].meta.name = base64encode(`${files[fileid].name}`);
+                //Extract and re add the file extension to allow for detection of file types
+                parts = files[fileid].name.split('.');
+                extension = parts.pop();
+                safefilename = base64encode(`${parts.join('.')}`) + `.${extension}`;
+                updatedFiles[fileid].meta.name = safefilename.replace(/\//g,'RS_FORWARD_SLASH'); // To fix issue with forward slashes in base64 string
                 console.debug('file obj')
                 console.debug(files[fileid].id)
                 });    
@@ -1047,7 +1074,7 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
-        limit: <?php echo ($cachestore == "apcu") ? "2" : "2"; ?>,
+        limit: <?php echo ($cachestore == "apcu") ? "5" : "2"; ?>,
         removeFingerprintOnSuccess: true,
         <?php
         if(trim($upload_chunk_size) != "")
@@ -1435,12 +1462,15 @@ function postUploadActions()
         return;
         }
     
+    rscompleted = [];
+    processerrors = [];
+
     CentralSpaceHideProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
     <?php
-    if($send_collection_to_admin && $setarchivestate == -1) 
+    if($send_collection_to_admin && $setarchivestate == -1 && !$external_upload) 
         {
         ?>
         api('send_collection_to_admin',{'collection': newcol}, function(response)

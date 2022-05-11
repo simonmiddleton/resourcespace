@@ -26,6 +26,7 @@ function get_reports()
         if (!hook('ignorereport', '', array($r[$n])))
             {
             $r[$n]["name"] = get_report_name($r[$n]);
+            $r[$n]["contains_date"] = report_has_date((string) $r[$n]["query"]);
             $return[] = $r[$n]; # Adds to return array.
             }
         }
@@ -61,14 +62,27 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     global $lang, $baseurl, $report_rows_attachment_limit;
 
     $ref_escaped = escape_check($ref);
-
     $report = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = '{$ref_escaped}'");
+
+    if (count($report) < 1)
+        {
+        return $lang['error_generic'];
+        }
+
+    $has_date_range = report_has_date($report[0]["query"]);
     $report=$report[0];
     $report['name'] = get_report_name($report);
 
     if($download || $foremail)
         {
-        $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+        if ($has_date_range)
+            {
+            $filename=str_replace(array(" ","(",")","-","/",","),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+            }
+        else
+            {
+            $filename=str_replace(array(" ","(",")","-","/",","),"_",$report["name"]) . ".csv";
+            }
         }
 
     if($results = hook("customreport", "", array($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download,$add_border, $report)))
@@ -100,7 +114,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 -1, # fetchrows
                 $search_params['sort'],
                 false, # access_override
-                $search_params['starsearch'],
+                DEPRECATED_STARSEARCH,
                 false, # ignore_filters
                 false, # return_disk_usage
                 $search_params['recentdaylimit'],
@@ -110,6 +124,11 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 false, # editable_only
                 true # returnsql
             );
+            if(!is_string($search_sql))
+                {
+                debug("Invalid SQL returned by do_search(). Report cannot be generated");
+                return false;
+                }
             $ncsql = sprintf('(SELECT ncsql.ref FROM (%s) AS ncsql)', $search_sql);
 
             $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $ncsql, $sql);
@@ -127,7 +146,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     if ($download)
         {
         header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=" . $filename . "");
+        header("Content-disposition: attachment; filename=\"" . $filename . "\"");
         }
 
     if ($download || ($foremail && $resultcount > $report_rows_attachment_limit))
@@ -238,13 +257,20 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                     $thm_path=get_resource_path($value,true,"thm",false,"",$scramble=-1,$page=1,false);
                     if (!file_exists($thm_path)){
                         $resourcedata=get_resource_data($value);
-                        $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                        if(is_array($resourcedata))
+                            {
+                            $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                            }
+                        else
+                            {
+                            $thm_url= $baseurl . "/gfx/no_preview/resource_type/type1.png";
+                            }
                         }
                     else
                         {
                         $thm_url=get_resource_path($value,false,"col",false,"",-1,1,false);
                         }
-                    $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
+                        $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
                     }
                 else
                     {
@@ -299,11 +325,11 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
                                                    search_params
                                                )
                  VALUES (
-                            '%s',  # user
-                            '%s',  # report
-                            '%s',  # period
-                            '%s',  # email_days
-                            '%s'   # search_params
+                            '%s', 
+                            '%s', 
+                            '%s', 
+                            '%s', 
+                            '%s'   
                         );
         ",
         escape_check($user),
@@ -581,4 +607,43 @@ function get_translated_activity_type($activity_type)
         {
         return $lang[$key];
         }
+    }
+
+/**
+ * Checks for the presence of date placeholders in a report's SQL query.  
+ *
+ * @param  string   $query   The report's SQL query.
+ * 
+ * @return boolean  Returns true if a date placeholder was found else false.
+ */
+function report_has_date(string $query)
+    {
+    $date_placeholders = array('[from-y]','[from-m]','[from-d]','[to-y]','[to-m]','[to-d]');
+    $date_present = false;
+
+    foreach ($date_placeholders as $placeholder)
+        {
+        $position = strpos($query,$placeholder);
+        if ($position !== false)
+            {
+            $date_present = true;
+            break;
+            }
+        }
+
+    return $date_present;
+    }
+
+/**
+ * Checks for the presence of date placeholders in a report's sql query using the report's id.
+ *
+ * @param  int   $report   Report id of the report to retrieve the query data from the report table.
+ * 
+ * @return boolean  Returns true if a date placeholder was found else false.
+ */
+function report_has_date_by_id(int $report)
+    {
+    $query = sql_value("SELECT `query` as value FROM report WHERE ref = '" . escape_check($report) . "'",0);
+    $result = report_has_date($query);
+    return $result;
     }

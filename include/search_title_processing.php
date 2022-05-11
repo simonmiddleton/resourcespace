@@ -160,7 +160,7 @@ if ($search_titles)
             $smartsearch = ps_query("select * from collection_savedsearch where ref=?",array("i",$collectiondata['savedsearch']));
             if (isset($smartsearch[0]))
                 {
-                $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "&starsearch=" . $smartsearch[0]['starsearch'] . "'";
+                $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "'";
                 }
             } 
 
@@ -406,7 +406,7 @@ if ($search_titles)
             } 
         if(isset($title_string))
             {
-            $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a>' . htmlspecialchars($searchcrumbs) . '</div></div> ';
+            $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a> ' . $searchcrumbs . '</div></div> ';
             }
         }
     elseif (!$archive_standard && strpos($archive,",")===false) // Don't construct title if more than one archive state is selected

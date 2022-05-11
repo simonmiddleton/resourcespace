@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 17);
+define('SYSTEM_UPGRADE_LEVEL', 19);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -104,12 +104,14 @@ define ('LOG_CODE_UPLOADED',			'u');
 define ('LOG_CODE_UNSPECIFIED',			'U');
 define ('LOG_CODE_VIEWED',				'v');
 define ('LOG_CODE_DELETED',				'x');
-define ('LOG_CODE_DELETED_ALTERNATIVE',	'y');
+define ('LOG_CODE_DELETED_PERMANENTLY', 'xx');
+define ('LOG_CODE_DELETED_ALTERNATIVE', 'y');
 define ('LOG_CODE_ENABLED',             '+');
 define ('LOG_CODE_DISABLED',            '-');
 define ('LOG_CODE_LOCKED',              'X');
 define ('LOG_CODE_UNLOCKED',            'Y');
 define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
+define ('LOG_CODE_FAILED_LOGIN_ATTEMPT','Xl');
 define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
@@ -188,6 +190,7 @@ define('LINK_PLUS','<i aria-hidden="true" class="fa fa-plus"></i>&nbsp;');
 define('LINK_PLUS_CIRCLE','<i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;');
 define('LINK_CHEVRON_RIGHT','<i aria-hidden="true" class="fa fa-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON','<i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;');
+define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>&nbsp;');
 define('DASH_ICON','<i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;');
 define('FEATURED_COLLECTION_ICON','<i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;');
 define('RECENT_ICON','<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;');
@@ -401,6 +404,10 @@ define('STR_HIGHLIGHT_WHOLEWD', 2);
 define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
+// ----------------------------------------------
+// DEPRECATED PARAMETERS
+// ----------------------------------------------
+define('DEPRECATED_STARSEARCH', 0);
 
 # Keyboard control codes
 # Previous/next resource: left/right arrows
@@ -461,4 +468,273 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'json' => 'json_decode',
     'zip' => 'zip_open',
     'apcu' => 'apcu_fetch',
+    'dom' => 'dom_import_simplexml',
+    'mysqli' => 'mysqli_init',
+];
+
+/*
+List of ResourceSpace system utilities (core and optional). If adding a new entry, make sure get_utility_path() is updated
+as well to handle the new entry.
+
+A system utility structure will have the following keys/properties:-
+- required = is this utility core to ResourceSpace?
+- path_var_name = the variable name holding the utility path {@see get_utility_path()}
+- display_name = self explanatory
+- show_on_check_page = when we use multiple components of a bigger "package" (e.g IM has convert, identify, composite and mogrify)
+- version_check - argument = the argument used to get the version out (NB: some utilities do this on STDERR). Default: -version
+- version_check - callback = function used to verify we got the expected version. It should return an array as expected 
+    by the check.php page:
+    * - utility - Updated utility structure (if required to do so)
+    * - found - PHP bool representing whether we've found what we were expecting in the version output.
+
+Example:
+'utilityname' => [
+    'required' => false,
+    'path_var_name' => 'utilityname_path',
+    'display_name' => 'utilityname',
+    'show_on_check_page' => true,
+    'version_check' => [
+        'argument' => '',
+        'callback' => [
+            'fct_name' => 'check_utility_cli_version_found_by_name',
+            'args' => [['utilityname', 'anyOtherRelevantString']],
+        ],
+    ],
+],
+*/
+const RS_SYSTEM_UTILITIES = [
+    'im-convert' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - convert',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'im-identify' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - identify',
+        'show_on_check_page' => false,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'im-composite' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - composite',
+        'show_on_check_page' => false,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'im-mogrify' => [
+        'required' => true,
+        'path_var_name' => 'imagemagick_path',
+        'display_name' => 'ImageMagick/GraphicsMagick - mogrify',
+        'show_on_check_page' => false,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_imagemagick_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'ghostscript' => [
+        'required' => true,
+        'path_var_name' => 'ghostscript_path',
+        'display_name' => 'Ghostscript',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['ghostscript']],
+            ],
+        ],
+    ],
+    'ffmpeg' => [
+        'required' => true,
+        'path_var_name' => 'ffmpeg_path',
+        'display_name' => 'FFmpeg',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['ffmpeg', 'avconv']],
+            ],
+        ],
+    ],
+    'ffprobe' => [
+        'required' => true,
+        'path_var_name' => 'ffmpeg_path',
+        'display_name' => 'ffprobe',
+        'show_on_check_page' => false,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['ffprobe', 'avprobe']],
+            ],
+        ],
+    ],
+    'exiftool' => [
+        'required' => true,
+        'path_var_name' => 'exiftool_path',
+        'display_name' => 'ExifTool',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-ver',
+            'callback' => [
+                'fct_name' => 'check_numeric_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'php' => [
+        'required' => false,
+        'path_var_name' => 'php_path',
+        'display_name' => 'PHP',
+        'show_on_check_page' => false,
+        'version_check' => [
+            'argument' => '',
+            'callback' => [
+                'fct_name' => '',
+                'args' => [],
+            ],
+        ],
+    ],
+    'python' => [
+        'required' => false,
+        'path_var_name' => 'python_path',
+        'display_name' => 'Python',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '--version',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['Python']],
+            ],
+        ],
+    ],
+    'opencv' => [
+        'required' => false,
+        'path_var_name' => 'python_path',
+        'display_name' => 'OpenCV (Python module)',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-c "import cv2; print cv2.__version__;"',
+            'callback' => [
+                'fct_name' => 'check_numeric_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'archiver' => [
+        'required' => false,
+        'path_var_name' => 'archiver_path',
+        'display_name' => 'Archiver',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-h',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['zip', '7z']],
+            ],
+        ],
+    ],
+    'fits' => [
+        'required' => false,
+        'path_var_name' => 'fits_path',
+        'display_name' => 'File Information Tool Set (FITS)',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-v',
+            'callback' => [
+                'fct_name' => 'check_numeric_cli_version_found',
+                'args' => [],
+            ],
+        ],
+    ],
+    'antiword' => [
+        'required' => false,
+        'path_var_name' => 'antiword_path',
+        'display_name' => 'Antiword',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-help', # it doesn't seem to have a version flag, help is the closest we can get
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['antiword']],
+            ],
+        ],
+    ],
+    'pdftotext' => [
+        'required' => false,
+        'path_var_name' => 'pdftotext_path',
+        'display_name' => 'pdftotext',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-v',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['pdftotext']],
+            ],
+        ],
+    ],
+    'blender' => [
+        'required' => false,
+        'path_var_name' => 'blender_path',
+        'display_name' => 'Blender',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '-v',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['blender']],
+            ],
+        ],
+    ],
+    'unoconv' => [
+        'required' => false,
+        'path_var_name' => 'unoconv_path',
+        'display_name' => 'Unoconv',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '--version',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['unoconv']],
+            ],
+        ],
+    ],
+    'calibre' => [
+        'required' => false,
+        'path_var_name' => 'calibre_path',
+        'display_name' => 'Calibre',
+        'show_on_check_page' => true,
+        'version_check' => [
+            'argument' => '--version',
+            'callback' => [
+                'fct_name' => 'check_utility_cli_version_found_by_name',
+                'args' => [['calibre']],
+            ],
+        ],
+    ],
 ];

@@ -22,7 +22,7 @@
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
-* @param integer     $starsearch
+* @param integer     $starsearch              DEPRECATED_STARSEARCH passed in for backwards compatibility
 * @param boolean     $ignore_filters
 * @param boolean     $return_disk_usage
 * @param string      $recent_search_daylimit
@@ -43,7 +43,7 @@ function do_search(
     $fetchrows = -1,
     $sort = 'desc',
     $access_override = false,
-    $starsearch = 0,
+    $starsearch = DEPRECATED_STARSEARCH,     # Parameter retained for backwards compatibility
     $ignore_filters = false,
     $return_disk_usage = false,
     $recent_search_daylimit = '',
@@ -65,7 +65,7 @@ function do_search(
            $open_access_for_contributor, $usersearchfilter, $search_filter_nodes,$userpermissions, $usereditfilter,
            $custom_access_overrides_search_filter, $userdata, $lang, $baseurl, $internal_share_access, $config_separators;
 
-    if($editable_only && !$returnsql && trim($k) != "" && !$internal_share_access)
+    if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
         {
         return array();
         }
@@ -223,7 +223,7 @@ function do_search(
         }
 
     # -- Build up filter SQL that will be used for all queries
-    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
+    $sql_filter=search_filter($search,$archive,$restypes,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
     debug("do_search(): \$sql_filter = {$sql_filter}");
 
     # Initialise variables.
@@ -303,7 +303,7 @@ function do_search(
     $skipped_last=false;
 
     # Do not process if a numeric search is provided (resource ID)
-    global $config_search_for_number, $category_tree_search_use_and;
+    global $config_search_for_number, $category_tree_search_use_and_logic;
     $keysearch=!($config_search_for_number && is_numeric($search));
 
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
@@ -931,18 +931,17 @@ function do_search(
 					}
                
                 $qk=1; // Set the counter to the first keyword
+                $last_key_offset=1;
 				foreach($quotedkeywords as $quotedkeyword)
 					{
 					global $noadd, $wildcard_always_applied, $wildcard_always_applied_leading;
 					if (in_array($quotedkeyword, $noadd)) # skip common words that are excluded from indexing
 						{
-						$skipped_last = true;       
+						# Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
+						++$last_key_offset;
 						}
 					else
 						{
-						$last_key_offset=1;
-						if (isset($skipped_last) && $skipped_last) {$last_key_offset=2;} # Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
-						
 						$keyref = resolve_keyword($quotedkeyword, false,true,false); # Resolve keyword.
                         if ($keyref === false)
                             {
@@ -996,7 +995,7 @@ function do_search(
                             $fixedunion .=" JOIN `node_keyword` nk_[union_index]_" . $qk . " ON nk_[union_index]_" . $qk . ".node = nk_[union_index]_" . ($qk-1) . ".node AND nk_[union_index]_" . $qk . ".keyword = '" . $keyref . "' AND  nk_[union_index]_" . $qk . ".position=nk_[union_index]_" . ($qk-1) . ".position+" . $last_key_offset ;
                             }
                         
-                        $skipped_last=false;
+                        $last_key_offset=1;
                         $qk++;
                         } // End of if keyword not excluded (not in $noadd array)
                     } // End of each keyword in quoted string
@@ -1046,9 +1045,21 @@ function do_search(
     foreach($node_bucket as $node_bucket_or)
         {
         //$node_bucket_sql.='EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .  implode(',',$node_bucket_or) . ')) AND ';
-        $sql_join.=' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` IN (' . implode(',',$node_bucket_or) . ')';
-        $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
-        $rn++;
+        if($category_tree_search_use_and_logic)
+            {
+            foreach($node_bucket_or as $node_bucket_and)
+                {
+                $sql_join.= ' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` = ' . escape_check($node_bucket_and);
+                $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
+                $rn++;
+                }
+            }
+        else 
+            {
+            $sql_join.=' JOIN `resource_node` rn' . $rn . ' ON r.`ref`=rn' . $rn . '.`resource` AND rn' . $rn . '.`node` IN (' . implode(',',$node_bucket_or) . ')';
+            $node_hitcount .= (($node_hitcount!="")?" +":"") . "rn" . $rn . ".hit_count";
+            $rn++;
+            }
         }
     if ($node_hitcount!="")
         {
@@ -1118,7 +1129,7 @@ function do_search(
     // *******************************************************************************
 
     if($search_filter_nodes 
-        && strlen(trim($usersearchfilter)) > 0
+        && strlen(trim((string) $usersearchfilter)) > 0
         && !is_numeric($usersearchfilter)
         && (
             (trim($userdata[0]["search_filter_override"]) != "" && $userdata[0]["search_filter_o_id"] != -1)
@@ -1178,7 +1189,7 @@ function do_search(
             $sql_filter .=  $search_filter_sql;
             }
         }
-    elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
+    elseif (strlen((string) $usersearchfilter)>0 && !is_numeric($usersearchfilter))
         {
         $sf=explode(";",$usersearchfilter);
         for ($n=0;$n<count($sf);$n++)
@@ -1325,12 +1336,13 @@ function do_search(
             else
                 {
                 $migrateresult = 0; // filter was only for resource type, hasn't failed but no need to migrate again
+                ps_query("UPDATE usergroup SET edit_filter='' WHERE ref= ?",["i",$usergroup]);
                 }
             if(is_numeric($migrateresult))
                 {
                 debug("Migrated . " . $migrateresult);
                 // Successfully migrated - now use the new filter
-                sql_query("UPDATE usergroup SET edit_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+                ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["i",$migrateresult,"i",$usergroup]);
                 debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
                 $usereditfilter = $migrateresult;
                 }
@@ -1338,7 +1350,7 @@ function do_search(
                 {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $usersearchfilter . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
-                sql_query("UPDATE usergroup SET edit_filter_id='-1' WHERE ref='" . $usergroup . "'");
+                ps_query("UPDATE usergroup SET edit_filter_id='-1' WHERE ref=?",["i",$usergroup]);
                 $notification_users = get_notification_users();
                 message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
                 }
@@ -1569,7 +1581,7 @@ function do_search(
     if(checkperm("J") && $search != $upload_collection)
         {
         $collection_join = " JOIN collection_resource AS jcr ON jcr.resource = r.ref JOIN collection AS jc ON jcr.collection = jc.ref";
-        $collection_join .= featured_collections_permissions_filter_sql("AND", "jc.ref");
+        $collection_join .= featured_collections_permissions_filter_sql("AND", "jc.ref",true);
 
         $sql_join = $collection_join . $sql_join;
         }
