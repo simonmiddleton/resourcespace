@@ -28,11 +28,6 @@ if (!file_exists($test_path))
     {
     mkdir($test_path,0777,true);
     }
-//chmod($test_path,0777);
-
-$debug_log=true;
-$debug_log_location = "/var/log/resourcespace/debug.log";
-$debug_extended_info = true;
 
 // Set our test config
 $staticsync_userref=$userref;
@@ -180,7 +175,6 @@ $projectresource=$results[0]["ref"];
 $mappeddata = get_data_by_field($projectresource,$project_field);
 if(trim($mappeddata) != "conferenceA")
     {
-        echo "===" . $mappeddata . "===";
     echo "Test H failed: \$staticsync_mapfolders failed - ";
     return false;
     }

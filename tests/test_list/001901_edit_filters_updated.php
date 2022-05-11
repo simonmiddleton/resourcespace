@@ -7,11 +7,6 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 $saved_edit_filter = $usereditfilter;
 $saved_user = $userref;
 
-
-$debug_log=true;
-$debug_log_location = "/var/log/resourcespace/debug.log";
-
-
 function test_edit_filter_text_update($user,$group,$filtertext)
     {
     global $userdata,$udata_cache;

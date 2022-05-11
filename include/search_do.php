@@ -269,7 +269,7 @@ function do_search(
         }
 
         
-    echo __LINE__ .  var_dump($sql_join);
+    //echo __LINE__ .  var_dump($sql_join);
 
     
     # Join thumbs_display_fields to resource table
@@ -1397,7 +1397,7 @@ function do_search(
         $sql_join->sql = $collection_join . $sql_join->sql;
         }
 
-        echo __LINE__ .  var_dump($sql_join);
+        //echo __LINE__ .  var_dump($sql_join);
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------

@@ -2087,7 +2087,6 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
         
         $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
         
-//print_r($ns) . "<br /><br />";
         if ($index && $partial_index) {
             return add_partial_index($ns);
         }
@@ -2526,10 +2525,10 @@ function get_fields_for_search_display($field_refs)
     # This returns fewer columns and doesn't require that the fields be indexed, as in this case it's only used to judge whether the field should be highlighted.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 
-    if (!is_array($field_refs)) {
-        print_r($field_refs);
+    if (!is_array($field_refs))
+        {
         exit(" passed to getfields() is not an array. ");
-    }
+        }
 
     # Executes query.
     $fields = sql_query("select *, ref, name, type, title, keywords_index, partial_index, value_filter from resource_type_field where ref in ('" . join("','",$field_refs) . "')","schema");

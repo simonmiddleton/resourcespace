@@ -599,7 +599,6 @@ function ProcessFolder($folder)
                                         # Save the value
                                         $value = $path_parts[$level-1];
                                         $modifiedval = hook('staticsync_mapvalue','',array($r, $value));
-                                        debug("BANG " . __LINE__ . $value);
                                         if($modifiedval)
                                             {
                                             $value = $modifiedval;
@@ -655,13 +654,6 @@ function ProcessFolder($folder)
                                                     $existing_value  = get_data_by_field($r,$field);
                                                     $value      = $existing_value . " " . $value;
                                                     update_field($r,$field,$value);
-                                                    // // Add this to array of nodes to add
-                                                    // $newnode = set_node(null, $field, trim($value), null, null);
-                                                    // echo "Adding node" . trim($value) . "\n";
-                                                    // $newnodes = array($newnode);
-                                                    // $field_nodes[$field]   = $newnodes;
-                                                    // $nodes_to_remove = get_resource_nodes($r,$field);
-                                                    // delete_resource_nodes($r,$nodes_to_remove);
                                                     }
                                                 }
 

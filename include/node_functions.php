@@ -1930,7 +1930,7 @@ function get_tree_strings($resource_nodes,$allnodes = false)
     // Array with node ids as indexes to ease parent tracking
     $treenodes = array();
 
-    debug(print_r($resource_nodes,true));
+    //debug(print_r($resource_nodes,true));
     while(count($resource_nodes) > 0)
         {
         $todocount = count($resource_nodes);

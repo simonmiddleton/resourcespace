@@ -677,7 +677,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $new_nodes_val = implode(",", $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
-                            ps_query("UPDATE resource SET field" . (int)$fields[$n]["ref"] . "= ? WHERE ref = ?",["s",truncate_join_field_value(strip_leading_comma($new_nodes_val)),"i",$ref]);
+                            update_resource_field_column($ref,$fields[$n]["ref"],$new_nodes_val);
                             }
                         }
                     }
@@ -794,8 +794,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             $joins=get_resource_table_joins();
                             if (in_array($fields[$n]["ref"],$joins))
                                 {
-                                if(substr($val,0,1)==","){$val=substr($val,1);}
-                                sql_query("UPDATE resource SET field" . (int)$fields[$n]["ref"] . "= ? WHERE ref = ?",["s",truncate_join_field_value(substr($newval,1)),"i",$ref]);
+                                update_resource_field_column($ref,$fields[$n]["ref"],$newval);
                                 }
 					        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                             }
@@ -2261,9 +2260,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             $existing = implode(",",$existingnodes);
             }           
-debug("BANG existing " . $existing);
+// debug("BANG existing " . $existing);
 
-debug("BANG" . print_r($fieldnodes,true));
+// debug("BANG" . print_r($fieldnodes,true));
         if($nodevalues)
             {
             // An array of node IDs has been passed, we can use these directly
@@ -2370,21 +2369,21 @@ debug("BANG" . print_r($fieldnodes,true));
                             }
                         }
                     }
-                }
-                
-            foreach($newvalues as $newvalue)
-                {
-                # Check if each new value exists in current options list
-               if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                foreach($newvalues as $newvalue)
                     {
-                    # Append the option and update the field
-                    $newnode            = set_node(null, $field, escape_check(trim($newvalue)), null, null);
-                    $nodes_to_add[]     = $newnode;
-                    $currentoptions[]   = trim($newvalue);
-                    $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
-                    debug("update_field: field option added: '" . trim($newvalue));
+                    # Check if each new value exists in current options list
+                    if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                        {
+                        # Append the option and update the field
+                        $newnode            = set_node(null, $field, escape_check(trim($newvalue)), null, null);
+                        $nodes_to_add[]     = $newnode;
+                        $currentoptions[]   = trim($newvalue);
+                        $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
+                        debug("update_field: field option added: '" . trim($newvalue));
+                        }
                     }
                 }
+                
                 
             $newvalues_translated = $newvalues;
             array_walk(
@@ -4088,7 +4087,7 @@ function write_metadata($path, $ref, $uniqid="")
                     break;
                     # Other types, already set
                 }
-            $filtervalue=hook("additionalmetadatafilter", "", Array($write_to[$i]["exiftool_field"], $writevalue));
+            $filtervalue=hook("additionalmetadatafilter", "", [$write_to[$i]["exiftool_field"], $writevalue]);
             if ($filtervalue) $writevalue=$filtervalue;
             # Add the tag name(s) and the value to the command string.
             $group_tags = explode(",", $write_to[$i]['exiftool_field']); # Each 'exiftool field' may contain more than one tag.
@@ -8635,7 +8634,7 @@ function update_resource_field_column($resource,$field,$value)
         {
         return false;
         }
-    $sql = "UPDATE resource SET field" . $field . " = ? WHERE ref = ?";
+    $sql = "UPDATE resource SET `field" . $field . "` = ? WHERE ref = ?";
     $params = ["s",truncate_join_field_value($value),"i",$resource];
     ps_query($sql,$params);
     return true;
