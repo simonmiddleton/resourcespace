@@ -2255,7 +2255,7 @@ function process_node_search_syntax_to_names(array $R, string $column)
  */
 function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
     {
-    debug("BANG save_non_fixed_list_field");
+    debug_function_call("save_non_fixed_list_field", func_get_args());
     /*
     # SAVING - DONE
     The saving functionality will ensure that upon saving a text field, the system will look for a node with a matching 
@@ -2340,27 +2340,27 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
         $new_node = set_node(null, $resource_type_field, $value, null, get_node_order_by($resource_type_field, false, null));
         $nodes_to_add = [$new_node];
         }
-
-
     
     // Update resource_node table
     db_begin_transaction('save_non_fixed_list_field_update_resource_node');
-    if(count($nodes_to_remove) > 0)
-        {
-        delete_resource_nodes($resource, $nodes_to_remove, false);
-
-        if($delete_unused_nodes)
-            {
-            delete_unused_non_fixed_list_nodes($resource_type_field);
-            }
-        }
-
+   
     if(count($nodes_to_add) > 0)
         {
         add_resource_nodes($resource, $nodes_to_add, false, false);
         }
     
     log_node_changes($resource, $nodes_to_add, $nodes_to_remove);
+
+    if(count($nodes_to_remove) > 0)
+        {
+        // This has to be after call to log_node_changes() or nodes cannot be resolved
+        delete_resource_nodes($resource, $nodes_to_remove, false);
+        if($delete_unused_nodes)
+            {
+            delete_unused_non_fixed_list_nodes($resource_type_field);
+            }
+        }
+        
     db_end_transaction('save_non_fixed_list_field_update_resource_node');
     
 
@@ -2438,6 +2438,7 @@ function get_nodes_use_count(array $nodes)
 function check_delete_nodes($nodes)
     {
     global $FIXED_LIST_FIELD_TYPES;
+    debug_function_call('check_delete_nodes',func_get_args());
     
     // Check and delete unused nodes
     $count = get_nodes_use_count($nodes);

@@ -942,28 +942,24 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 continue;
                 }
 
-                //debug("BANG Existing val for " .$fields[$n]["ref"] . " - " . $fields[$n]['value']);
-                //debug("BANG new val for " .$fields[$n]["ref"] . " - " . $val);
-
-
             // If all good so far, then save the data
-			if(
+            if(
                 in_array($fields[$n]['type'],$NODE_MIGRATED_FIELD_TYPES)
                 &&
                 str_replace("\r\n", "\n", $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
-            )
-				{
-				$oldval=$fields[$n]["value"];
+                )
+                {
+                $oldval=$fields[$n]["value"];
 
-				# This value is different from the value we have on record.
+                # This value is different from the value we have on record.
 
-				# Write this edit to the log (including the diff) (unescaped is safe because the diff is processed later)
-				//resource_log($ref,LOG_CODE_EDITED,$fields[$n]["ref"],"",$fields[$n]["value"],unescape($val));
+                # Write this edit to the log (including the diff) (unescaped is safe because the diff is processed later)
+                //resource_log($ref,LOG_CODE_EDITED,$fields[$n]["ref"],"",$fields[$n]["value"],unescape($val));
 
-				# Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
-				if ($fields[$n]["type"]==FIELD_TYPE_EXPIRY_DATE) {$expiry_field_edited=true;}
-				
-			    if(trim($fields[$n]["nodes"]) != "")
+                # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
+                if ($fields[$n]["type"]==FIELD_TYPE_EXPIRY_DATE) {$expiry_field_edited=true;}
+                
+                if(trim($fields[$n]["nodes"]) != "")
                     {
                     // Remove any existing node IDs for this non-fixed list field (there should only be one).
                     $current_field_nodes = array_filter(explode(",",$fields[$n]["nodes"]),"is_int_loose");
@@ -974,7 +970,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 # Add new node
                 if($val !=='')
                     {
-                    //debug("BANG call set_node() for field #" .$fields[$n]["ref"] . " New val - '" . $val . "'");
                     $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
                     $nodes_to_add[] = $newnode;
                     }
@@ -1057,12 +1052,14 @@ function save_resource_data($ref,$multi,$autosave_field="")
         add_resource_nodes($ref,$nodes_to_add, false, false);
         }
 
+    log_node_changes($ref,$nodes_to_add,$nodes_to_remove);
+
     if(count($nodes_check_delete)>0)
         {
+        // This has to be after call to log_node_changes() or nodes cannot be resolved
         check_delete_nodes($nodes_check_delete);
         }
 
-    log_node_changes($ref,$nodes_to_add,$nodes_to_remove);
     db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
@@ -1383,13 +1380,13 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $value_changed  = false;
 
                     $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);                    
-                    debug('Current nodes: ' . implode(',',$current_field_nodes));
+                    debug('Current nodes for resource #' . $ref . ' : ' . implode(',',$current_field_nodes));
 
                     $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
-                    debug('Adding nodes: ' . implode(',',$added_nodes));
+                    debug('Adding nodes to resource #' . $ref . ' : ' . implode(',',$added_nodes));
 
                     $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
-                    debug('Removed nodes: ' . implode(',',$removed_nodes));
+                    debug('Removed nodes from resource #' . $ref . ' : ' . implode(',',$removed_nodes));
     
                     // Work out what new nodes for this resource  will be
                     $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);      
@@ -1419,7 +1416,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 							}
                         $val = $new_nodes_val;
 
-                        log_node_changes($ref,$new_nodes,$removed_nodes);
+                        log_node_changes($ref,$added_nodes,$removed_nodes);
 
                         // If this is a 'joined' field it still needs to add it to the resource column
                         $joins = get_resource_table_joins();
@@ -1582,7 +1579,6 @@ function save_resource_data_multi($collection,$editsearch = array())
                 for ($m=0;$m<count($list);$m++)
                     {
                     $ref            = $list[$m];
-                    $resource_sql   = '';
                     $value_changed  = false;  
                     if(
                         (
@@ -1719,7 +1715,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if ($val !== $existing || $value_changed)
                         {
                         # This value is different from the value we have on record.                        
-                        # Write this edit to the log.
+                        // # Write this edit to the log.
+                        // save_non_fixed_list_field($resource,$fields[$n]["ref"],$value);
                         // TODO delete this?
                         resource_log($ref,LOG_CODE_MULTI_EDITED,$fields[$n]["ref"],"",$existing,$val);
                         $successfully_edited_resources[] = $ref;
@@ -1729,20 +1726,16 @@ function save_resource_data_multi($collection,$editsearch = array())
                             {
                             $expiry_field_edited=true;
                             }
-                        //debug("BANG existing val: ".  $existing);
                         if(trim($existing) != "")
                             {
                             // Remove any existing node IDs for this non-fixed list field (there should only be one).
                             $current_field_nodes = get_resource_nodes($ref,$fields[$n]["ref"]);
-                            debug("BANG removing old nodes: " . implode(",",$current_field_nodes));
                             $nodes_to_remove = array_merge($nodes_to_remove,$current_field_nodes);
                             }
-                        # Add new node
+                        // Add new node
                         if($val !=='')
                             {
-                            //debug("BANG call set_node() for field #" .$fields[$n]["ref"] . " New val - '" . $val . "'");
-                            $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
-                            
+                            $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);                            
                             if(in_array($mode,["PP","AP","FR","CF","RM"]))
                                 {
                                 // Don't add to $nodes_to_add if appending/prepending as the value may differ for each resource
@@ -1754,17 +1747,17 @@ function save_resource_data_multi($collection,$editsearch = array())
                                 }
                             }
                     
-                        # If this is a 'joined' field we need to add it to the resource column
+                        // If this is a 'joined' field we need to add it to the resource column
                         $joins=get_resource_table_joins();
                         if (in_array($fields[$n]["ref"],$joins))
                             {
                             update_resource_field_column($ref,$fields[$n]["ref"],$val);
-                            }		
-                           
+                            }
+                            
                         $oldval=$existing;
                         $newval=$val;
                         
-                        # Add any onchange code
+                        // Add any onchange code
                         if($fields[$n]["onchange_macro"]!="")
                             {
                             eval($fields[$n]["onchange_macro"]);    
@@ -1772,10 +1765,10 @@ function save_resource_data_multi($collection,$editsearch = array())
                         }
                     }
                 }  // End of non-node editing section 
-            $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);                
-            $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);           
-			} // End of if edit this field
-		} // End of foreach field loop
+            $all_nodes_to_add    = array_unique(array_merge($all_nodes_to_add,$nodes_to_add));
+            $all_nodes_to_remove = array_unique(array_merge($all_nodes_to_remove,$nodes_to_remove));
+            } // End of if edit this field
+        } // End of foreach field loop
 
     // Add/remove nodes for all resources (we have already created log for this)
     if(count($all_nodes_to_add)>0)
@@ -1784,7 +1777,7 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
     if(count($all_nodes_to_remove)>0)
         {
-        delete_resource_nodes_multi($list,$all_nodes_to_remove);   
+        delete_resource_nodes_multi($list,$all_nodes_to_remove); 
         }
 
     // Also save related resources field
@@ -2006,6 +1999,9 @@ function save_resource_data_multi($collection,$editsearch = array())
             }           
         }
 
+    // Check if any nodes can be deleted  
+    check_delete_nodes($all_nodes_to_remove);
+
     if (count($errors)==0)
         {
         return true;
@@ -2202,7 +2198,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 function update_field($resource, $field, $value, array &$errors = array(), $log=true, $nodevalues=false)
     {
     global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username,$userref, $NODE_MIGRATED_FIELD_TYPES;
-    
+
     $resource_data = get_resource_data($resource);
     if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
@@ -2259,10 +2255,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 $existingnodes[] = $node_options[$current_field_node];
                 }
             $existing = implode(",",$existingnodes);
-            }           
-// debug("BANG existing " . $existing);
-
-// debug("BANG" . print_r($fieldnodes,true));
+            }
         if($nodevalues)
             {
             // An array of node IDs has been passed, we can use these directly
@@ -2337,12 +2330,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             elseif($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
                 {
-                    debug("BANG type " . $fieldinfo['type']);
                 // If this is a dynamic keyword field need to add any new entries to the field nodes
                 $currentoptions = array();
                 foreach($fieldnodes as $fieldnode)
                     {
-                        debug("BANG name " . $fieldnode['name']);
                     $fieldoptiontranslations = explode('~', $fieldnode['name']);
                     if(count($fieldoptiontranslations) < 2)
                         {
@@ -2383,7 +2374,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
                     }
                 }
-                
                 
             $newvalues_translated = $newvalues;
             array_walk(
@@ -2452,7 +2442,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     }
 
                 // Update log
-
                 if(count($nodes_to_add)>0 || count($nodes_to_remove)>0)
                     {
                     log_node_changes($resource,$added_nodes,$removed_nodes);
@@ -2481,34 +2470,15 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             // Nothing to do
             return true;
             }
-        
-        //TODO Check if is_html needs to be checked when indexing nodes
-        // if ($fieldinfo["keywords_index"])
-        //     {
-        //     $is_html=($fieldinfo["type"]==FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);	
-        //     # If there's a previous value, remove the index for those keywords            
-        //     if (strlen($existing)>0)
-        //         {
-        //         //remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
-        //         }
-        //     }
-
-        // Remove any existing node IDs for this non-fixed list field (there should only be one)
-        $current_field_nodes = get_resource_nodes($resource,$field);
-        //debug("BANG removing old nodes: " . implode(",",$current_field_nodes));
-        delete_resource_nodes($resource,$current_field_nodes, false);
-
-        //debug("BANG call set_node() for field #" .$field . " New val - '" . $value . "'");
-        $newnode = set_node(null, $field, $value, null, null);
-        add_resource_nodes($resource,[$newnode], false, false);
+        save_non_fixed_list_field($resource,$field,$value);
         }
 
     # If this is a 'joined' field we need to add it to the resource column
     $joins = get_resource_table_joins();
-
     if(in_array($fieldinfo['ref'],$joins))
         {
         update_resource_field_column($resource,$field,$value);
+        $log= false; // Already logged by update_resource_field_column()
         }
 
     # Add any onchange code
@@ -2521,7 +2491,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     // Log this update
     if ($log && $value != $existing)
         {
-        //debug("BANG logging change from $existing to $value");
         resource_log($resource,LOG_CODE_EDITED,$field,"",$existing,unescape($value));
         }
 
@@ -4070,7 +4039,7 @@ function write_metadata($path, $ref, $uniqid="")
                 case 9:
                 case 12:
                     # Check box list, drop down, radio buttons or dynamic keyword list: remove initial comma if present
-                    if (substr($writevalue, 0, 1)==",") {$writevalue = substr($writevalue, 1);}
+                    $writevalue = strip_leading_comma($writevalue);
                     break;                   
                 case 4:
                 case 6:
@@ -5380,40 +5349,35 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     }
 
 function reindex_resource($ref)
-	{
-	global $FIXED_LIST_FIELD_TYPES;
-	# Reindex a resource. Delete all resource_keyword rows and create new ones.
-	
-	# Delete existing keywords
-	sql_query("DELETE FROM resource_keyword WHERE resource = '{$ref}'");
+    {
+    global $FIXED_LIST_FIELD_TYPES;
+    # Reindex a resource. Delete all resource_keyword rows and create new ones.
 
-	# Index fields
-	$data=get_resource_field_data($ref,false,false); # Fetch all fields and do not use permissions.
-	for ($m=0;$m<count($data);$m++)
-		{
-		if ($data[$m]["keywords_index"]==1 && !in_array($data[$m]["type"],$FIXED_LIST_FIELD_TYPES))
-			{
-			#echo $data[$m]["value"];
-			$value=$data[$m]["value"];
-			if ($data[$m]["type"]==3 || $data[$m]["type"]==2)
-				{
-				# Prepend a comma when indexing dropdowns
-				$value="," . $value;
-				}
-			
-			# Date field? These need indexing differently.
-			$is_date=($data[$m]["type"]==4 || $data[$m]["type"]==6);
+    # Delete existing keywords
+    ps_query("DELETE FROM resource_keyword WHERE resource = ?",["i",$ref]);
 
-			$is_html=($data[$m]["type"]==8);					
-			add_keyword_mappings($ref,i18n_get_indexable($value),$data[$m]["ref"],$data[$m]["partial_index"],$is_date,'','',$is_html);		
-			}
-		}
-      
-	# Always index the resource ID as a keyword
-	add_keyword_mappings($ref, $ref, -1);
-	
-	hook("afterreindexresource","all",array($ref));
-	}
+    # Index fields
+    $data=get_resource_field_data($ref,false,false); # Fetch all fields and do not use permissions.
+    for ($m=0;$m<count($data);$m++)
+        {
+        if ($data[$m]["keywords_index"]==1 && !in_array($data[$m]["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            #echo $data[$m]["value"];
+            $value=$data[$m]["value"];
+            
+            # Date field? These need indexing differently.
+            $is_date=($data[$m]["type"]==4 || $data[$m]["type"]==6);
+
+            $is_html=($data[$m]["type"]==8);					
+            add_keyword_mappings($ref,i18n_get_indexable($value),$data[$m]["ref"],$data[$m]["partial_index"],$is_date,'','',$is_html);		
+            }
+        }
+        
+    # Always index the resource ID as a keyword
+    add_keyword_mappings($ref, $ref, -1);
+
+    hook("afterreindexresource","all",array($ref));
+    }
 
 
 function get_page_count($resource,$alternative=-1)
