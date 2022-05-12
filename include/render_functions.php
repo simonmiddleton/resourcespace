@@ -2829,6 +2829,11 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
             $defaultheight = 75;
         break;
 
+        case "list":
+            $defaultwidth = 40;
+            $defaultheight = 40;
+        break;
+
         default:
             $defaultwidth = 75;
             $defaultheight = 75;
