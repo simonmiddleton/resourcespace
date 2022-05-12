@@ -302,6 +302,7 @@ $lang["pluginssetup"]="Plugins";
 $lang["pluginmanager"]="Plugins";
 $lang["users"]="Users";
 $lang['system_tabs'] = "Tabs";
+$lang['manage-tabs-instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
 
 # Admin - Bulk E-mails
 $lang["emailrecipients"]="E-mail recipient(s)";
@@ -911,6 +912,7 @@ $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
 $lang["counting_resources"] = "counting resources...";
 $lang["not_allowed"] = "Not allowed";
+$lang["no_results_found"] = "No results found";
 
 # Pager
 $lang["next"]="Next";

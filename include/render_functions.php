@@ -5220,7 +5220,7 @@ function render_table($tabledata)
 
     if(count($tabledata["data"]) == 0)
         {
-        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>\n";
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>" . htmlspecialchars($lang["no_results_found"]) . "</td></tr>\n";
         }
     else
         {
