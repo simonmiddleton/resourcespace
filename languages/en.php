@@ -301,8 +301,6 @@ $lang["inclusive"]="(inclusive)";
 $lang["pluginssetup"]="Plugins";
 $lang["pluginmanager"]="Plugins";
 $lang["users"]="Users";
-$lang['system_tabs'] = "Tabs";
-$lang['manage-tabs-instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
 
 # Admin - Bulk E-mails
 $lang["emailrecipients"]="E-mail recipient(s)";
@@ -347,6 +345,12 @@ $lang["smtpport"]="SMTP Port";
 $lang["smtpauth"]="Use Authentication for SMTP Server";
 $lang["smtpusername"]="SMTP Username";
 $lang["smtppassword"]="SMTP Password";
+
+
+# Admin - Tabs management
+$lang['system_tabs'] = "Tabs";
+$lang['manage_tabs_instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
+// $lang[''] = "";
 
 
 $lang["connect"]="Connect";

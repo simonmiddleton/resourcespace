@@ -1539,6 +1539,29 @@ function sql_limit($offset, $rows)
 
 
 /**
+ * Utility function to obtain the total found rows while paginating the results.
+ * 
+ * IMPORTANT: the input query MUST have a deterministic order so it can help with performance and not have an undefined behaviour
+ * 
+ * @param PreparedStatementQuery $query  SQL query
+ * @param null|int               $rows   Specifies the maximum number of rows to return. Usually set by a global 
+ *                                       configuration option (e.g $default_perpage, $default_perpage_list).
+ * @param null|int               $offset Specifies the offset of the first row to return. Use NULL to not offset.
+ * 
+ * @return array Returns a:
+ *               - total: int - count of total found records (before paging)
+ *               - data: array - paged result set 
+ */
+function sql_limit_with_total_count(PreparedStatementQuery $query, $rows, $offset)
+    {
+    $limit = sql_limit($offset, $rows);
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);
+    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$query->sql}) AS count_select", $query->parameters, 0);
+    return ['total' => $total, 'data' => $data];
+    }
+
+
+/**
 * Query helper function for the WHERE clause to avoid repetitive checks when value might be NULL or an actual value
 * 
 * @param string  $v     Non-null value
