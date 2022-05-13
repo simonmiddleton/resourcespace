@@ -2242,7 +2242,18 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $node_options = array_column($fieldnodes, 'name', 'ref');
 
         // Get all the new values into an array
-        $newvalues    = trim_array(str_getcsv($value));
+        if (($value[0] == "'" && $value[strlen($value)-1] == "'")
+            ||
+            ($value[0] == "\"" && $value[strlen($value)-1] == "\"")
+            )
+            {
+            // Quoted value - don't attempt to split on comma.
+            $newvalues[] = substr($value,1,-1);
+            }
+        else
+            {
+            $newvalues = trim_array(str_getcsv($value));
+            }
 
         // Get currently selected nodes for this field
         $current_field_nodes = get_resource_nodes($resource, $field);
