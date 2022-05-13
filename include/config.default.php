@@ -1608,8 +1608,7 @@ $top_nav_upload_user=false;
 $top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
 # Configure the maximum upload file size; this directly translates into upload's max_file_size if set
-# Value is in bytes
-# $upload_max_file_size = 50 * 1000 * 1000; 
+# $upload_max_file_size = 50mb;
 
 # You can set the following line to ''  to disable chunking.
 $upload_chunk_size='5mb';
