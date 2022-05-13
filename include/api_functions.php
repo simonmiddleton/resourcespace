@@ -52,14 +52,31 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey")
     # Calculate the expected signature and check it matches
     $expected=hash("sha256",$userkey . $querystring);
     if ($expected==$sign)
-	{
-	return true;
-	}
+        {
+        return true;
+        }
+
+    # html_build_query(), used in api/index.php, will always return uppercase html entities. $sign may contain lowercase html entities.
+    # Both upper and lowercase are acceptable so we need to check both when validating the hash.
+    # This check looks at the lower case version as checking for the upper case version previously didn't find a match.
+    $query_entities_lower = mb_strtolower($querystring, 'HTML-ENTITIES');
+    $expected=hash("sha256",$userkey . $query_entities_lower);
+    if ($expected==$sign)
+        {
+        return true;
+        }
+
     # Also try matching against the username - allows remote API use without knowing the user ID, e.g. in the event of managing multiple systems each with a common username but different ID.
-    if (hash("sha256",get_api_key($username) . $querystring)==$sign)
-	{
-	return true;
-	} 
+    if (hash("sha256",get_api_key($username) . $querystring) == $sign)
+        {
+        return true;
+        }
+
+    if (hash("sha256",get_api_key($username) . $query_entities_lower) == $sign)
+        {
+        return true;
+        }
+
     return false;
     }
     
