@@ -1,7 +1,7 @@
 <?php
 include '../../include/db.php';
 include '../../include/authenticate.php';
-if(!checkperm('a')) { exit($lang['error-permissiondenied']); }
+if(!acl_can_manage_tabs()) { exit($lang['error-permissiondenied']); }
 
 
 
@@ -30,8 +30,9 @@ $request_params = [
 
 
 $table_info = [
-    // 'class' => '',
+    'class' => 'SystemTabs',
     'headers' => [
+        'reorder_handle' => ['name' => '', 'sortable' => false, 'html' => true],
         'ref' => ['name' => $lang['property-reference'], 'sortable' => true],
         'name' => ['name' => $lang['name'], 'sortable' => false, 'width' => '50%'],
         'usage' => ['name' => $lang['usage'], 'sortable' => false],
@@ -49,7 +50,6 @@ $table_info = [
         'current' => $curpage,
         'total' => $totalpages,
         'per_page' => $per_page,
-        'break' => false, # TODO: remove, doesn't seem to be needed
     ],
 
     'data' => [
@@ -60,6 +60,7 @@ $table_info = [
 
 foreach($tab_records['data'] as $tab_record)
     {
+    $tab_record['reorder_handle'] = '<i class="fas fa-sort"></i>';
     $tab_record['name'] = i18n_get_translated($tab_record['name']);
     $tab_record['usage'] = sprintf(
         '%s %s, %s %s',
@@ -104,5 +105,28 @@ include '../../include/header.php';
 
     <?php echo render_table($table_info); ?>
 </div>
+<script>
+// Re-order capability
+jQuery(function() {
+    // Disable for touch screens
+    if(is_touch_device())
+        {
+        return false;
+        }
+
+    // Make all table rows sortable (except the header)
+    jQuery('.BasicsBox .Listview.SystemTabs > table').sortable({
+        items: 'tr:not(:first-child)',
+        update: function(event, ui)
+            {
+            let tabs_new_order = jQuery(event.target)
+                .find('tr:not(:first-child) > td:nth-child(2)')
+                .map((i, val) => parseInt(jQuery(val).text())).get();
+            console.debug('tabs_new_order=%o', tabs_new_order);
+            api('reorder_tabs', {'refs': tabs_new_order});
+            }
+    });
+});
+</script>
 <?php
 include '../../include/footer.php';

@@ -1714,7 +1714,7 @@ function save_collection($ref, $coldata=array())
             array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent_is_bp)
         );
         usort($fcs_after_update, 'order_featured_collections');
-        reorder_collections(array_column($fcs_after_update, 'ref'));
+        sql_reorder_records('collection', array_column($fcs_after_update, 'ref'));
         }
 
     // When a collection is now saved as a Featured Collection (must have resources) under an existing branch, apply all 

@@ -1639,3 +1639,47 @@ function ps_param_fill($array,$type)
         }
     return $parameters;
     }
+
+
+/**
+ * Re-order rows in the table
+ * 
+ * @param string $table Table name. MUST have an "order_by" column.
+ * @param array  $refs  List of record IDs in the new desired order
+ * 
+ * @return void
+ */
+function sql_reorder_records(string $table, array $refs)
+    {
+    if(!in_array($table, ['collection', 'tab']))
+        {
+        return;
+        }
+
+    $refs = array_values(array_filter($refs, 'is_int_loose'));
+    $order_by = 0;
+
+    // Chunking the list of IDs in batches of 500 should be within the default max_allowed_packet size (with highest ID length)
+    $refs_chunked = array_filter(count($refs) <= 500 ? [$refs] : array_chunk($refs, 500));
+    foreach($refs_chunked as $refs)
+        {
+        $cases_params = [];
+        $cases = '';
+
+        foreach($refs as $ref)
+            {
+            $order_by += 10;
+            $cases .= ' WHEN ? THEN ?';
+            $cases_params = array_merge($cases_params, ['i', $ref, 'i', $order_by]);
+            }
+
+        $sql = sprintf('UPDATE %s SET order_by = (CASE ref %s END) WHERE ref IN (%s)',
+             $table,
+             $cases,
+             ps_param_insert(count($refs))
+         );
+        ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
+        }
+
+    return;
+    }
