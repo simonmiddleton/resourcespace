@@ -208,7 +208,7 @@ if($generate && enforcePostRequest(false))
                 $deletebat = true;
                 }
 
-            $output=run_command($shell_exec_cmd);
+            $output=run_command(escapeshellcmd($shell_exec_cmd));
             if(file_exists($targetfile))
                 {
                 if($savealt)
