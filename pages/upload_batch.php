@@ -950,7 +950,7 @@ jQuery(document).ready(function () {
             <?php
             if (isset($upload_max_file_size))
                 {
-                echo "maxFileSize: '$upload_max_file_size',"; 
+                echo "maxFileSize: $upload_max_file_size,"; 
                 }
             if ($replace_resource > 0 || $single)
                 {
