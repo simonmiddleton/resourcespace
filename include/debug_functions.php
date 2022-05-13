@@ -259,6 +259,12 @@ function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
             continue;
             }
 
+        if(in_array($tracked_var, SENSITIVE_VARIABLE_NAMES))
+            {
+            log_activity('Security: tracking sensitive variables', LOG_CODE_SYSTEM, $tracked_var, null, null, null, null, null, $userref, false);
+            continue;
+            }
+
         // JSON encode the tracked variables' value. If it fails, attempt to log this event (failure) in the debug log.
         $tracked_var_value = json_encode($vars[$tracked_var], JSON_NUMERIC_CHECK);
         if(json_last_error() !== JSON_ERROR_NONE)
