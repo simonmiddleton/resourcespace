@@ -656,7 +656,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
         }
     ?>
     <script>
-        let node_data = <?php echo json_encode($node_data??[]); ?>;
+        let node_data = <?php echo json_encode($node_data); ?>;
     </script> 
     <?php
     $nodes_counter = count($tree_nodes);
@@ -691,6 +691,29 @@ if($field_data['type'] == 7 && !$tree_nodes)
 ?>
 </div><!-- end of BasicBox -->
 <script>
+jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){fill_selects(jQuery(ele))});
+
+function fill_selects(node_element)
+    {
+    if(node_element.find('option').length != 1){return;}
+    node_data.forEach(function(item)
+        {
+        let option = jQuery('<option>').attr('value', item['ref']).html(item['name']);
+        if(item['ref'] == node_element.attr('parent_node'))
+            {
+            option.attr('selected', true);
+            }
+        if(node_element.attr('id') != undefined)
+            {
+            if(item['ref'] != node_element.attr('id').split('_')[2])
+                {
+                node_element.append(option);
+                }
+            }
+        }
+    )
+    }
+
 function AddNode(parent)
     {
     var new_node_children     = jQuery('#new_node_' + parent + '_children');
@@ -726,7 +749,6 @@ function AddNode(parent)
             if(new_node_parent_children.length == 0)
                 {
                 node_parent_children.append(response);
-
                 // Mark node as parent on the UI
                 jQuery('#node_' + new_option_parent_val).data('toggleNodeMode', 'ex');
                 jQuery('#node_' + new_option_parent_val + '_toggle_button').attr('src', '<?php echo $baseurl_short; ?>gfx/interface/node_ex.gif');
@@ -747,6 +769,14 @@ function AddNode(parent)
                     ?>
 
                 new_node_parent_children.before(response);
+                }
+            if(new_option_parent_val == 0)
+                {
+                jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){fill_selects(jQuery(ele))});
+                }
+            else
+                {
+                jQuery('#node_' + new_option_parent_val + '_children').find('select').each(function(i, ele){fill_selects(jQuery(ele))});
                 }
 
             initial_new_option_name = new_option_name.val();
@@ -916,27 +946,7 @@ function ToggleTreeNode(ref, field_ref)
         if(typeof response !== 'undefined')
             {
             node_children.html(response);
-            node_children.find('select').each(function(i, element)
-                {
-                var node_element = jQuery(element);
-                node_data.forEach(function(item)
-                    {
-                    let option = jQuery('<option>').attr('value', item['ref']).html(item['name']);
-                    if(item['ref'] == node_element.attr('parent_node'))
-                        {
-                        option.attr('selected', true);
-                        }
-                    if(node_element.attr('id') != undefined)
-                        {
-                        if(item['ref'] != node_element.attr('id').split('_')[2])
-                            {
-                            node_element.append(option);
-                            }
-                        }
-                    }
-                )
-                }
-            )
+            node_children.find('select').each(function(i,ele){fill_selects(jQuery(ele))});
             jQuery('.node_parent_chosen_selector').chosen({});
 
             jQuery(table_node).data('toggleNodeMode', 'ex');
