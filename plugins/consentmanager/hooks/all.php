@@ -11,7 +11,7 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
     // Add the options to link/unlink consent
     global $search,$lang,$k,$baseurl_short;
 
-    if($k != '' || !checkperm("a"))
+    if($k != '' || !(checkperm("a") || checkperm("cm")))
         {
         return array();
         }
