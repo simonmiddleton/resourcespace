@@ -8890,7 +8890,14 @@ function allow_in_browser($path)
         $permitted_mime = $allow;
         }
 
-    $type = mime_content_type($path);
+    if (function_exists('mime_content_type'))
+        {
+        $type = mime_content_type($path);
+        }
+    else
+        {
+        $type = get_mime_type($path);
+        }
     if($type == "application/octet-stream")
         {
         # Not properly detected, try and get mime type via exiftool if possible
