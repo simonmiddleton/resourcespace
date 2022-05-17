@@ -33,6 +33,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
+    global $storagedir;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -110,8 +111,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
-            }
-    
+            }    
         else
             {
             # Work out which file has been posted
@@ -433,12 +433,14 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                                 break;
                             }
 
-                        if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
+                        if(isset($newval))
+                            {
+                            update_field($ref,$read_from[$i]['ref'],$newval);
+                            }
                         }
                     }
                 }
             }
-    
         # Extract text from documents (e.g. PDF, DOC)
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
@@ -458,20 +460,23 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 extract_text($ref, $extension);
                 }
             }
-        }
-    
-    
+        }    
 
     # Store original filename in field, if set
     if (isset($filename_field))
-        if(isset($amended_filename)){$filename=$amended_filename;}
         {
-        if (!$revert){
+        if(isset($amended_filename))
+            {
+            $filename=$amended_filename;
+            }
+        if (!$revert && isset($filename))
+            {
             update_field($ref,$filename_field,$filename);
             }
-        else {
+        else
+            {
             update_field($ref,$filename_field,$original_filename);
-            }       
+            }
         }
     if (!$upload_then_process || $after_upload_processing)
         {
@@ -539,6 +544,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         # Update file dimensions
         get_original_imagesize($ref,$filepath,$extension);
         }
+
     if($upload_then_process && !$after_upload_processing)
         {
         # Add this to the job queue for offline processing
@@ -777,7 +783,7 @@ function extract_exif_comment($ref,$extension="")
                         {
                         if ($read_from[$i]['exiftool_filter']!="")
                             {
-                            eval($read_from[$i]['exiftool_filter']);
+                            eval(eval_check_signed($read_from[$i]['exiftool_filter']));
                             }
         
                         $exiffieldoption=$exifoption;
@@ -2804,12 +2810,14 @@ function extract_text($ref,$extension,$path="")
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
         {
-        $command=$antiword_path . "/antiword";
-        if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
-        if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
+        $command = get_utility_path('antiword');
+        if(!$command)
+            {
+            debug("ERROR: Antiword executable not found at '$antiword_path'");
+            return false;
+            }
 
-        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
-        $text=run_command($cmd);
+        $text = run_command("{$command} -m UTF-8 %path", false, ['%path' => $path]);
         }
     
        # Microsoft OfficeOpen (docx,xlsx) extraction
@@ -2857,13 +2865,14 @@ function extract_text($ref,$extension,$path="")
     # PDF extraction using pdftotext (part of the XPDF project)
     if (($extension=="pdf" || $extension=="ai") && isset($pdftotext_path))
         {
-        $command=$pdftotext_path . "/pdftotext";
-        if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
-        if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'"); return false;}
+        $command = get_utility_path('pdftotext');
+        if(!$command)
+            {
+            debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
+            return false;
+            }
 
-        $cmd=$command . " -enc UTF-8 " . escapeshellarg($path) . " -";
-        $text = run_command($cmd);
-
+        $text = run_command("{$command} -enc UTF-8 %path -", false, ['%path' => $path]);
         }
 
     # HTML extraction

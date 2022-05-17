@@ -1854,7 +1854,7 @@ $lang["ensure_file_extension_match"]="Ensure file and extension match";
 # Permissions Manager
 $lang["permissionsmanager"]="Permissions manager";
 $lang["backtogroupmanagement"]="Back to group management";
-$lang["copypermissions"]="Copy the permissions below from user group with ID";
+$lang["copypermissions"]="Copy the permissions from user group with ID";
 $lang["confirmcopypermissions"]="This will overwrite all the permissions currently defined for this user group. Are you sure?";
 $lang["searching_and_access"]="Searching / access";
 $lang["metadatafields"]="Metadata fields";
@@ -3157,3 +3157,6 @@ $lang["upload_start"]                       = "Start upload";
 $lang["status_processing"]                  = "Processing";
 $lang["upload_process_successful"]          = "Continue";
 $lang["upload_view_log"]                    = "View log";
+
+$lang["code_sign_required"]                 = "Inline code signing";
+$lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";

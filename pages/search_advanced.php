@@ -15,9 +15,6 @@ foreach($archivechoices as $archivechoice)
 $archive=implode(",",$selected_archive_states);
 $archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
 
-$starsearch=getvalescaped("starsearch","");	
-rs_setcookie('starsearch', $starsearch,0,"","",false,false);
-
 # Selectedtypes is a list of (resource type) checkboxes which are checked
 # Selectedtypes can also contain Global and Media which are virtual checkboxes which are always considered to be checked
 $selectedtypes=get_selectedtypes();
@@ -68,7 +65,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Only show the results (this will appear in an iframe)
         if (substr($restypes,0,11)!="Collections")
             {
-            $result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch, false, false, "", false, true, false, false, false, $access);
+            $result=do_search($search,$restypes,"relevance",$archive,1,"",false,DEPRECATED_STARSEARCH, false, false, "", false, true, false, false, false, $access);
             }
         else 
             {
@@ -145,7 +142,7 @@ $values=array();
 	
 if (getval("resetform","")!="")
   { 
-  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$starsearch="";
+  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";
   $restypes=get_search_default_restypes();
   $selected_archive_states=array(0);
   rs_setcookie("search","",0,"","",false,false);

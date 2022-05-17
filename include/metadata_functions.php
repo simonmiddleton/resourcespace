@@ -192,7 +192,7 @@ function check_date_format($date)
     {
     global $lang;
 
-    if (is_null($date)){return false;}
+    if (is_null($date)){$date="";}
     
     // Check the format of the date to "yyyy-mm-dd hh:mm:ss"
     if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})$/", $date, $parts))

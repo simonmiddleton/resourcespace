@@ -1,13 +1,13 @@
 <?php
 function HookRss2SearchRender_search_actions_add_option($options)
     {
-    global $baseurl_short, $search, $restypes, $archive, $starsearch, $lang, $username, $userref, $api_scramble_key, $k;
+    global $baseurl_short, $search, $restypes, $archive, $lang, $username, $userref, $api_scramble_key, $k;
     
     $c = count($options);
     
     if ($k=='')
         {   
-        $querystring = "user=" . base64_encode($username) . "&search=" . $search . "&restypes=" . $restypes . "&archive=" . $archive . "&starsearch=" . $starsearch;
+        $querystring = "user=" . base64_encode($username) . "&search=" . $search . "&restypes=" . $restypes . "&archive=" . $archive;
         $private_key = get_api_key($userref);
 
         // Sign the query using the private key

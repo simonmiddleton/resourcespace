@@ -973,23 +973,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
                     $nodes_to_add[] = $newnode;
                     }
-
-                //TODO Do we need to move this $is_date logic into set_node()?
-				// if ($fields[$n]["keywords_index"]==1)
-				// 	{
-				// 	# Date field? These need indexing differently.
-				// 	$is_date=($fields[$n]["type"]==4 || $fields[$n]["type"]==6);
-
-				// 	$is_html=($fields[$n]["type"]==8);					
-					
-				// 	remove_keyword_mappings($ref, i18n_get_indexable($oldval), $fields[$n]["ref"], $fields[$n]["partial_index"],$is_date,'','',$is_html);
-				// 	add_keyword_mappings($ref, i18n_get_indexable($val), $fields[$n]["ref"], $fields[$n]["partial_index"],$is_date,'','',$is_html);
-				// 	}
-                // else
-                //     {
-                //     // Remove all entries from resource_keyword for this field, useful if setting is changed and changed back leaving stale data
-                //     remove_all_keyword_mappings_for_field($ref,$fields[$n]["ref"]);
-                //     }
 				
                 # If this is a 'joined' field we need to add it to the resource column
                 $joins=get_resource_table_joins();
@@ -1001,7 +984,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             # Add any onchange code
             if($fields[$n]["onchange_macro"]!="")
                 {
-                eval($fields[$n]["onchange_macro"]);
+                eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
 			} # End of if "allowed to edit field conditions"
 		} # End of for $fields
@@ -1760,7 +1743,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         // Add any onchange code
                         if($fields[$n]["onchange_macro"]!="")
                             {
-                            eval($fields[$n]["onchange_macro"]);    
+                            eval(eval_check_signed($fields[$n]["onchange_macro"]));    
                             }
                         }
                     }
@@ -2442,7 +2425,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     }
 
                 // Update log
-                if(count($nodes_to_add)>0 || count($nodes_to_remove)>0)
+                if($log && count($nodes_to_add)>0 || count($nodes_to_remove)>0)
                     {
                     log_node_changes($resource,$added_nodes,$removed_nodes);
                     }
@@ -2465,12 +2448,13 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         {
         # Fetch previous value
         $existing = get_data_by_field($resource,$field);
-        if (trim($value) === trim($existing))
+        if ($value === $existing)
             {
             // Nothing to do
             return true;
             }
         save_non_fixed_list_field($resource,$field,$value);
+        $log= false; // Already logged by save_non_fixed_list_field()
         }
 
     # If this is a 'joined' field we need to add it to the resource column
@@ -2478,15 +2462,14 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     if(in_array($fieldinfo['ref'],$joins))
         {
         update_resource_field_column($resource,$field,$value);
-        $log= false; // Already logged by update_resource_field_column()
         }
 
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
-        eval($fieldinfo["onchange_macro"]);
-        }
-
+        eval(eval_check_signed($fieldinfo["onchange_macro"]));    
+        }    
+    
     # Allow plugins to perform additional actions.
     // Log this update
     if ($log && $value != $existing)
@@ -2733,6 +2716,7 @@ function delete_resource($ref)
 
 	# Delete all database entries
     clear_resource_data($ref);
+    resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
 	sql_query("delete from resource where ref='$ref'");
     sql_query("delete from collection_resource where resource='$ref'");
     sql_query("delete from resource_custom_access where resource='$ref'");
@@ -5309,7 +5293,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         if(count(get_resource_nodes($resource, $field['ref'], true)) == 0 || $run_autocomplete_macro)
             {
             # Autocomplete and update using the returned value
-            $value = eval($field['autocomplete_macro']);
+            $value = eval(eval_check_signed($field['autocomplete_macro']));
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 # Multiple values are comma separated
@@ -5504,14 +5488,15 @@ function update_disk_usage_cron()
         return false;
         }
 
-    $resources=sql_array(
+    $resources=ps_array(
         "SELECT ref value
             FROM resource 
         WHERE ref>0 
             AND disk_usage_last_updated IS null 
                 OR datediff(now(),disk_usage_last_updated)>30 
         ORDER BY disk_usage_last_updated ASC 
-        LIMIT 20000");
+        LIMIT 20000",
+        []);
     foreach ($resources as $resource)
         {
         update_disk_usage($resource);
@@ -5798,7 +5783,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
             {
             # Switch to global context and execute.
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval($config_options);
+            eval(eval_check_signed($config_options));
             debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         }
@@ -5891,12 +5876,17 @@ function delete_resources_in_collection($collection) {
 		return TRUE;
 	}
 
-	// Delete (ie. move to resource_deletion_state set in config):
-	if(isset($resource_deletion_state))
+    // Delete (ie. move to resource_deletion_state set in config):
+    if(isset($resource_deletion_state))
         {
-		update_archive_status($r_refs,$resource_deletion_state,$r_states);
-		collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
-		sql_query("DELETE FROM collection_resource  WHERE resource IN ('" . implode("','",$r_refs) . "')");
+        update_archive_status($r_refs,$resource_deletion_state,$r_states);
+        foreach($r_refs as $ref){resource_log($ref,LOG_CODE_DELETED,'');}
+        collection_log($collection,'D', '', str_replace("%ARCHIVE",$resource_deletion_state,$lang['log-deleted_all']));
+        ps_query(
+            "DELETE FROM collection_resource  WHERE resource IN (" . ps_param_insert(count($r_refs)) . ")",
+            ps_param_fill($r_refs,"i")
+        );
+        
         }
 
 	return TRUE;
@@ -8557,7 +8547,7 @@ function update_resource_type_order($neworder)
  */
 function allow_in_browser($path)
     {
-    if(!file_exists($path))
+    if(!file_exists($path) || is_dir($path))
         {
         return false;
         }
@@ -8576,7 +8566,19 @@ function allow_in_browser($path)
         $permitted_mime = $allow;
         }
 
-    if(in_array(mime_content_type($path),$permitted_mime))
+    $type = mime_content_type($path);
+    if($type == "application/octet-stream")
+        {
+        # Not properly detected, try and get mime type via exiftool if possible
+        $exiftool_fullpath = get_utility_path("exiftool");
+        if ($exiftool_fullpath!=false)
+            {
+            $command=$exiftool_fullpath . " -s -s -s -t -mimetype %PATH";
+            $cmd_args['%PATH'] = $path;
+            $type = run_command($command, false, $cmd_args);
+            }
+        }
+    if(in_array($type,$permitted_mime))
         {
         return true;
         }

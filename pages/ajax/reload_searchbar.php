@@ -8,16 +8,14 @@ if ($simple_search_reset_after_search)
 	$restypes="";
 	$search="";
 	$quicksearch="";
-	$starsearch="";
-	
 	}
 else 
-	{
-	# pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
+    {
+        # pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
         if(!isset($restypes))
-            {
-            $restypes = isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "";
-            }
+                {
+                $restypes = isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "";
+                }
 
 	if(!isset($search) || strpos($search, '!') !== false)
         {
@@ -27,12 +25,7 @@ else
         {
         $quicksearch = $search;
         }
-
-	if(!isset($starsearch) || ((strpos($starsearch, '!') !== false)))
-        {
-        $starsearch = (isset($_COOKIE['starsearch']) ? $_COOKIE['starsearch'] : '');
-        } 
-	}
+    }
 
 $initial_tags = explode(',', $quicksearch);
 

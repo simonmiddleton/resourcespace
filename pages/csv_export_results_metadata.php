@@ -12,13 +12,12 @@ $restypes   = getvalescaped('restypes', '');
 $order_by   = getvalescaped('order_by', '');
 $archive    = getvalescaped('archive', '');
 $sort       = getvalescaped('sort', '');
-$starsearch = getvalescaped('starsearch', '');
 $offline    = getval("process_offline","") != "";
 $submitted  = getval("submit","") != "";
 $personaldata   = (getvalescaped('personaldata', '') != '');
 $allavailable    = (getvalescaped('allavailable', '') != '');
 
-$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch,false,false,'',false,false,true);
+$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, DEPRECATED_STARSEARCH, false,false,'',false,false,true);
 
 $resultcount = is_array($search_results) ? count($search_results) : 0;
 if($resultcount == 0)
@@ -44,7 +43,6 @@ if($submitted && $resultcount > 0)
         $job_data["restypes"]       = $restypes;
         $job_data["archive"]        = $archive;
         $job_data["sort"]           = $sort;
-        $job_data["starsearch"]     = $starsearch;
 
         $job_code = "csv_metadata_export_" . md5($userref . json_encode($job_data)); // unique code for this job, used to prevent duplicate job creation.
         $jobadded = job_queue_add("csv_metadata_export",$job_data,$userref,'',$lang["csv_export_file_ready"] . " : " . $csv_filename ,$lang["download_file_creation_failed"],$job_code);
@@ -95,7 +93,6 @@ elseif (isset($message))
         <input type="hidden" name="order_by" value="<?php echo htmlspecialchars($order_by) ?>" />
         <input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive) ?>" />
         <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort) ?>" />
-        <input type="hidden" name="starsearch" value="<?php echo htmlspecialchars($starsearch) ?>" />
         
         <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>
 

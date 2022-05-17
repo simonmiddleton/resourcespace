@@ -29,8 +29,8 @@ function send_research_request(array $rr_cfields)
 		{
 	 	$rr_deadline=NULL;
 		}
-	$rr_contact = getval("contact","");
-	$rr_email = getval("email","");
+	$rr_contact = mb_strcut(getval("contact",""),0,100);
+	$rr_email = mb_strcut(getval("email",""),0,200);
 	$rr_finaluse = getval("finaluse","");
 	$parameters=array_merge($parameters,array("s",$rr_deadline, "s",$rr_contact, "s",$rr_email, "s",$rr_finaluse));
 
@@ -40,7 +40,7 @@ function send_research_request(array $rr_cfields)
 		{
 		$rr_noresources=NULL;
 		}
-	$rr_shape = getval("shape","");
+	$rr_shape = mb_strcut(getval("shape",""),0,50);
 	$parameters=array_merge($parameters,array("s",$rt, "i",$rr_noresources, "s",$rr_shape));
 
     /**

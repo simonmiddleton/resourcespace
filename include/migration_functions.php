@@ -26,7 +26,7 @@ function migrate_resource_type_field_check(&$resource_type_field)
         migrate_category_tree_to_nodes($resource_type_field['ref'],$resource_type_field['options']);
 
         // important!  this signifies that this field has been migrated by prefixing with -1,,MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
-        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT(?, options) WHERE `ref` = ?", array("s", MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE, "i", $resource_type_field['ref']));
+        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE . "', options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 
 		}
 	else		// general comma separated fields
@@ -40,7 +40,7 @@ function migrate_resource_type_field_check(&$resource_type_field)
 			}
 
         // important!  this signifies that this field has been migrated by prefixing with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
-        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT(? , ',', options) WHERE `ref` = ?", array("s", MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX), "i", $resource_type_field['ref']);
+        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "',',',options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 		}
 	}
 
@@ -99,7 +99,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
     $all_fields=get_resource_type_fields();
 
     // Don't migrate if already migrated
-    $existingrules = ps_query("SELECT ref, name FROM filter", array());
+    $existingrules = ps_query("SELECT ref, name FROM filter");
    
     $logtext = "FILTER MIGRATION: Migrating filter rule. Current filter text: '" . $filtertext . "'\n";
     

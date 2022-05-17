@@ -124,7 +124,9 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), NULL);
         if($resource_type_field_data["keywords_index"] == 1)
             {
-            add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
+            $is_date = in_array($resource_type_field_data['type'],[FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
+            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);	
+            add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL, $is_date, $is_html);
             }
         }
 
@@ -1140,7 +1142,7 @@ function check_node_indexed(array $node, $partial_index = false)
 *  
 * @return boolean
 */
-function add_node_keyword_mappings(array $node, $partial_index = false)
+function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_date=false,bool $is_html=false)
     {
     if('' == trim($node['ref']) && '' == trim($node['name']) && '' == trim($node['resource_type_field']))
         {
@@ -1158,7 +1160,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false)
             }
         }
 
-    $keywords = split_keywords($node['name'], true, $partial_index);
+    $keywords = split_keywords($node['name'], true, $partial_index,$is_date, $is_html);
     add_verbatim_keywords($keywords, $node['name'], $node['resource_type_field']);
 
     db_begin_transaction("add_node_keyword_mappings");
@@ -1930,7 +1932,6 @@ function get_tree_strings($resource_nodes,$allnodes = false)
     // Array with node ids as indexes to ease parent tracking
     $treenodes = array();
 
-    //debug(print_r($resource_nodes,true));
     while(count($resource_nodes) > 0)
         {
         $todocount = count($resource_nodes);
@@ -2249,11 +2250,7 @@ function process_node_search_syntax_to_names(array $R, string $column)
     }
 
 
-/**
- * 
- * TODO: consider making this function deal with a list of changes (instead of one resource, rtf and value at a time)
- */
-function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value)
+function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value, bool $log=true)
     {
     debug_function_call("save_non_fixed_list_field", func_get_args());
     /*
@@ -2364,13 +2361,13 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
     db_end_transaction('save_non_fixed_list_field_update_resource_node');
     
 
-print_r([
-    'similar_field_nodes' => $similar_field_nodes,
-    'found_match' => $found_match,
-    'existing_resource_node' => $existing_resource_node,
-    'nodes_to_add' => $nodes_to_add,
-    'nodes_to_remove' => $nodes_to_remove,
-]);
+    // print_r([
+    //     'similar_field_nodes' => $similar_field_nodes,
+    //     'found_match' => $found_match,
+    //     'existing_resource_node' => $existing_resource_node,
+    //     'nodes_to_add' => $nodes_to_add,
+    //     'nodes_to_remove' => $nodes_to_remove,
+    // ]);
 
     return;
     }

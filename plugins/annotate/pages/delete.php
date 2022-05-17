@@ -17,7 +17,7 @@ if (!in_array("annotate",$plugins))
     }
 
 $id=getvalescaped('id','');
-$oldtext=sql_value("select note value from annotate_notes where ref='$ref' and note_id='$id'","");
+$oldtext=ps_value("select note value from annotate_notes where ref= ? and note_id= ?",['i', $ref, 'i', $id],"");
 
 if ($oldtext!="")
     {
@@ -25,7 +25,7 @@ if ($oldtext!="")
 	debug("Annotation: deleting keyword: " . i18n_get_indexable($oldtext). " from resource id: " . $ref);
     }
 
-$notes=sql_query("delete from annotate_notes where ref='$ref' and note_id='$id'");
-$notes=sql_query("select * from annotate_notes where ref='$ref'");
-sql_query("update resource set annotation_count=".count($notes)." where ref=$ref");
+$notes=ps_query("delete from annotate_notes where ref= ? and note_id= ?", ['i', $ref, 'i', $id]);
+$notes=ps_query("select * from annotate_notes where ref= ?", ['i', $ref]);
+ps_query("update resource set annotation_count= ? where ref= ?", ['i', count($notes), 'i', $ref]);
 

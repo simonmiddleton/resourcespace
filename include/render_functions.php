@@ -1216,6 +1216,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 {
                 return false;
                 }
+
+            v = v.match(/^[^~]*/i)[0]; // Remove unique value identifier: ~id
+
             switch(v)
                 {
             <?php
@@ -2090,7 +2093,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
                     }
 
                 $field_nodes[] = $selected_node;
-				natsort($field_nodes);
                 unset($node_data);
 				}
 
@@ -3459,26 +3461,51 @@ function render_edit_selected_btn()
     global $baseurl_short, $lang, $USER_SELECTION_COLLECTION, $restypes, $archive;
 
     $search = "!collection{$USER_SELECTION_COLLECTION}";
+    # Editable_only=true (so returns editable resources only)
     $editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, true);
-    $non_editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
+    # Editable_only=false (so returns resources whether editable or not)
+    $all_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
 
-    if(!is_array($editable_resources) || !is_array($non_editable_resources))
+    # If there are no editable resources then don't render the edit selected button
+
+    # Setup count of editable resources
+    $editable_resources_count = 0;
+    $editable_resource_refs=array();
+    if(is_array($editable_resources))
+        {
+        $editable_resources_count = count($editable_resources);
+        $editable_resource_refs=array_column($editable_resources,"ref");
+        }
+
+    # Setup count of editable and non-editable resources
+    $all_resources_count = 0;
+    $all_resource_refs=array();
+    if(is_array($all_resources))
+        {
+        $all_resources_count = count($all_resources);
+        $all_resource_refs=array_column($all_resources,"ref");
+        }
+
+    # If both counts are zero then there cannot be any editable resources, so no edit selected button
+    if($editable_resources_count == 0 && $all_resources_count == 0)
         {
         return;
         }
 
-    $editable_resources_count = count($editable_resources);
-    $non_editable_resources_count = count($non_editable_resources);
-
-    if($editable_resources_count == 0 || $non_editable_resources_count == 0)
+    # If not all selected resources are editable then the edit selected button may be inappropriate
+    if($editable_resources_count != $all_resources_count)
         {
-        return;
-        }
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
 
-    // If not all resources are editable, don't show the batch edit button
-    if($editable_resources_count != $non_editable_resources_count)
-        {
-        return;
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) { return; }
+            }
+
+        # All non_editables have grant edit
+        # Don't return as edit button can be rendered
         }
 
     $batch_edit_url = generateURL(
@@ -4027,45 +4054,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
 	$value=$field["value"];
     $title=htmlspecialchars($field["title"]);
-    # Populate field value for node based fields so it conforms to automatic ordering setting
-
-    if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
-        {
-        $treenodes = get_resource_nodes($ref, $field["ref"], true);
-        $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(", ",$treetext_arr);        
-        }
-    elseif(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
-		{
-		# Get all nodes attached to this resource and this field    
-		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);
-		
-		if((bool) $field['automatic_nodes_ordering'])
-			{
-			uasort($nodes_in_sequence,"node_name_comparator");    
-			}
-		else
-			{
-			uasort($nodes_in_sequence,"node_orderby_comparator");    
-			}
-	
-		$node_tree = get_node_tree("", $nodes_in_sequence); // get nodes as a tree in correct hierarchical order
-		$node_names = get_node_elements(array(), $node_tree, "name"); // retrieve values for a selected field in the tree 
-
-		$keyword_array=array();
-		foreach($node_names as $name)
-			{
-			$keyword_array[] = i18n_get_translated($name);
-			}
-		$value = implode(',',$keyword_array);
-		}
-
+debug("BANG " . $value);
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
     if($modified_field)
         {
 		$field=$modified_field;
 	    }
-	
+
     $warningtext="";
     $dismisstext="";
     $dismisslink="";
@@ -4108,7 +4103,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
     if ($field['value_filter']!="")
         {
-        eval($field['value_filter']);
+        eval(eval_check_signed($field['value_filter']));
         }
     else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
         {

@@ -27,7 +27,7 @@ $id=getvalescaped('id','');
 $preview_width=getvalescaped('pw','');
 $preview_height=getvalescaped('ph','');
 
-$oldtext=sql_value("select note value from annotate_notes where ref='$ref' and note_id='$id'","");
+$oldtext=ps_value("select note value from annotate_notes where ref= ? and note_id= ?",['i', $ref, 'i', $id],"");
 if ($oldtext!="")
     {
 	remove_keyword_mappings($ref,i18n_get_indexable($oldtext),-1,false,false,"annotation_ref",$id);
@@ -35,7 +35,7 @@ if ($oldtext!="")
 
 if (ctype_digit($id))
     {
-    sql_query("delete from annotate_notes where ref='$ref' and note_id='$id'");
+    ps_query("delete from annotate_notes where ref= ? and note_id= ?", ['i', $ref, 'i', $id]);
     }
 
 if (substr($text,0,strlen($username))!=$username)
@@ -43,13 +43,26 @@ if (substr($text,0,strlen($username))!=$username)
     $text=$username.": ".$text;
     }
 
-sql_query("insert into annotate_notes (ref,top_pos,left_pos,width,height,preview_width,preview_height,note,user,page) values ('$ref','$top','$left','$width','$height','$preview_width','$preview_height','$text','$userref',$page) ");
+ps_query("insert into annotate_notes (ref,top_pos,left_pos,width,height,preview_width,preview_height,note,user,page) values (?,?,?,?,?,?,?,?,?,?) ",
+[
+    'i',$ref,
+    'i',$top,
+    'i',$left,
+    'i',$width,
+    'i',$height,
+    'i',$preview_width,
+    'i',$preview_height,
+    's',$text,
+    'i',$userref,
+    'i',$page
+]
+);
 
 $annotateid = sql_insert_id();
 echo $annotateid;
 
-$notes=sql_query("select * from annotate_notes where ref='$ref'");
-sql_query("update resource set annotation_count=".count($notes)." where ref=$ref");
+$notes=ps_query("select * from annotate_notes where ref= ?", ['i', $ref]);
+ps_query("update resource set annotation_count= ? where ref= ?", ['i', count($notes), 'i', $ref]);
 
 #Add annotation to keywords
 $keywordtext = substr(strstr($text,": "),2); # don't add the username to the keywords

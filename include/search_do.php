@@ -22,7 +22,7 @@
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
-* @param integer     $starsearch
+* @param integer     $starsearch              DEPRECATED_STARSEARCH passed in for backwards compatibility
 * @param boolean     $ignore_filters
 * @param boolean     $return_disk_usage
 * @param string      $recent_search_daylimit
@@ -43,7 +43,7 @@ function do_search(
     $fetchrows = -1,
     $sort = 'desc',
     $access_override = false,
-    $starsearch = 0,
+    $starsearch = DEPRECATED_STARSEARCH,     # Parameter retained for backwards compatibility
     $ignore_filters = false,
     $return_disk_usage = false,
     $recent_search_daylimit = '',
@@ -223,7 +223,7 @@ function do_search(
 
     # -- Build up filter SQL that will be used for all queries
     $sql_filter = new PreparedStatementQuery();
-    $sql_filter = search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
+    $sql_filter = search_filter($search,$archive,$restypes,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only, $access, $smartsearch);
     debug("do_search(): \$sql_filter = '" . $sql_filter->sql . "', parameters = ['" . implode("','",$sql_filter->parameters) . "']");
 
     # Initialise variables.
@@ -465,14 +465,10 @@ function do_search(
                                 {
                                 $sql_filter->sql.=" AND ";
                                 }
-                            //$sql_filter->sql.="r.field$date_field <= '" . $keystring . " 23:59:59' ";
                             $sql_filter->sql.= ($sql_filter->sql != "" ? " AND " : "") . "rdfn" . $c . ".value <= ? ";
                             array_push($sql_filter->parameters,"s",$keystring . " 23:59:59");
 
                             $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?"; 
-
-
-							//$sql_join->sql .=" JOIN resource_data rdf" . $c . " ON rdf" . $c . ".resource=r.ref AND rdf" . $c . ".resource_type_field = ?";
                             array_push($sql_join->parameters,"s",$datefield);
                             }
                             # Additional date range filtering
@@ -524,7 +520,7 @@ function do_search(
                         // Text field numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
                         $c++;
                         $rangefield=$fieldname;
-                        $rangefieldinfo=ps_query("SELECT ref FROM resource_type_field WHERE name = ? AND type IN (0)", ["s",$fieldname]. "schema");
+                        $rangefieldinfo=ps_query("SELECT ref FROM resource_type_field WHERE name = ? AND type IN (0)", ["s",$fieldname], "schema");
                         $rangefieldinfo=$rangefieldinfo[0];
                         $rangefield=$rangefieldinfo["ref"];
                         $rangestring=substr($keystring,8);
@@ -544,21 +540,23 @@ function do_search(
                                 {
                                 // if only one number is entered, do a direct search
                                 if ($sql_filter->sql!="") {$sql_filter->sql .= " AND ";}
-                                $sql_filter->sql .= "rd" . $c . ".value = ? ";
-                                array_push($sql_filter->parameters,"s",max($min,$max));
+                                $sql_filter->sql .= "rnn" . $c . ".name = ? ";
+                                array_push($sql_filter->parameters,"d",max($min,$max));
                                 }
                             else
                                 {
                                 // else use min and max values as a range search
                                 if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
-                                $sql_filter->sql.="rd" . $c . ".value >= ? ";
-                                array_push($sql_filter->parameters,"s",$min);
+                                $sql_filter->sql.="rnn" . $c . ".name >= ? ";
+                                array_push($sql_filter->parameters,"d",$min);
                                 if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
-                                $sql_filter->sql.="rd" . $c . ".value <= ? ";
-                                array_push($sql_filter->parameters,"s",$max);
+                                $sql_filter->sql.="rnn" . $c . ".name <= ? ";
+                                array_push($sql_filter->parameters,"d",$max);
                                 }
                             }
-                        $sql_join->sql .= " JOIN resource_data rd" . $c . " ON rd" . $c . ".resource=r.ref AND rd" . $c . ".resource_type_field = ? ";
+
+                        $sql_join->sql .=" JOIN resource_node rrn" . $c . " ON rrn" . $c . ".resource=r.ref LEFT JOIN node rnn" . $c . " ON rnn" . $c . ".ref=rrn" . $c . ".node AND rnn" . $c . ".resource_type_field = ?"; 
+
                         array_push($sql_join->parameters,"i",$rangefield);
 						$keywordprocessed=true;
                         }

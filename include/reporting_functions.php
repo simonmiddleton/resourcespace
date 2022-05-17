@@ -77,11 +77,11 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         {
         if ($has_date_range)
             {
-            $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
+            $filename=str_replace(array(" ","(",")","-","/",","),"_",$report["name"]) . "_" . $from_y . "_" . $from_m . "_" . $from_d . "_" . $lang["to"] . "_" . $to_y . "_" . $to_m . "_" . $to_d . ".csv";
             }
         else
             {
-            $filename=str_replace(array(" ","(",")","-","/"),"_",$report["name"]) . ".csv";
+            $filename=str_replace(array(" ","(",")","-","/",","),"_",$report["name"]) . ".csv";
             }
         }
 
@@ -114,7 +114,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 -1, # fetchrows
                 $search_params['sort'],
                 false, # access_override
-                $search_params['starsearch'],
+                DEPRECATED_STARSEARCH,
                 false, # ignore_filters
                 false, # return_disk_usage
                 $search_params['recentdaylimit'],
@@ -146,7 +146,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     if ($download)
         {
         header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=" . $filename . "");
+        header("Content-disposition: attachment; filename=\"" . $filename . "\"");
         }
 
     if ($download || ($foremail && $resultcount > $report_rows_attachment_limit))
@@ -257,13 +257,20 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                     $thm_path=get_resource_path($value,true,"thm",false,"",$scramble=-1,$page=1,false);
                     if (!file_exists($thm_path)){
                         $resourcedata=get_resource_data($value);
-                        $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                        if(is_array($resourcedata))
+                            {
+                            $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                            }
+                        else
+                            {
+                            $thm_url= $baseurl . "/gfx/no_preview/resource_type/type1.png";
+                            }
                         }
                     else
                         {
                         $thm_url=get_resource_path($value,false,"col",false,"",-1,1,false);
                         }
-                    $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
+                        $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
                     }
                 else
                     {

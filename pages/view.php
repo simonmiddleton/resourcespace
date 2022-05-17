@@ -35,7 +35,6 @@ if(preg_match("/^field(.*)/", $order_by, $matches))
 
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
-$starsearch=getvalescaped("starsearch","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive","");
 $per_page=getvalescaped("per_page",$default_perpage,true);
@@ -58,7 +57,7 @@ if ($go!="")
     if ($modified_result_set){
         $result=$modified_result_set;
     } else {
-        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch,false,false,"", getvalescaped("go",""));
+        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"", getvalescaped("go",""));
     }
     if (is_array($result))
         {
@@ -520,7 +519,6 @@ $urlparams= array(
     'order_by'			=> $order_by,
     'offset'			=> $offset,
     'restypes'			=> $restypes,
-    'starsearch'		=> $starsearch,
     'archive'			=> $archive,
     'per_page'			=> $per_page,
     'default_sort_direction' => $default_sort_direction,
