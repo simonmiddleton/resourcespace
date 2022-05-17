@@ -454,6 +454,11 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         {
         debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }
+    if(trim($sql) == "")
+        {
+        debug("Error - empty SQL query passed");
+        return [];
+        }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
     // available using db_set_connection_mode(). An example use case for this can be reports.

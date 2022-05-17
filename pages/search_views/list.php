@@ -38,6 +38,37 @@ if (!hook("replacelistitem"))
                 }
             }
         } #end hook listcheckboxes 
+
+        # Display thumbnail of resource
+        $watermark = check_use_watermark($ref);
+        ?>
+        <td width="40px">
+            <a href="<?php echo $url?>" onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);">
+                <?php
+                $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $watermark, $result[$n]['file_modified']);
+
+                if(isset($result[$n]['thm_url']))
+                    {
+                    $thm_url = $result[$n]['thm_url'];
+                    } # Option to override thumbnail image in results
+
+                if($result[$n]['has_image'] == 1)
+                    {
+                    render_resource_image($result[$n],$thm_url,"list");
+                    }
+                else
+                    {
+                    ?>
+                    <img border=0 
+                        src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:0; height: 40px;"/>
+                    <?php 
+                    }
+                ?>
+            </a>
+        </td>
+        <?php
+        # End of thumbnail display
+
         for ($x=0;$x<count($df);$x++)
             {
             if(!in_array($df[$x]['ref'],$list_display_fields))

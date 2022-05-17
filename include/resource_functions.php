@@ -106,15 +106,15 @@ function get_resource_path(
 
         if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='" . escape_check($ref) . "'","");}
         $fp=$get_resource_path_fpcache[$ref];
-        
+
         # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
         # If using staticsync, file path will be set already, but we still want the $storagedir path for a nosize preview jpg.
         # Also, returning the original filename when a nosize 'jpg' is looked for is no good, since preview_preprocessing.php deletes $target.
-        
+
         $test_ext = explode(".",$fp);$test_ext=trim(strtolower($test_ext[count($test_ext)-1]));
-        
+
         if (($test_ext == $extension || $alternative > 0) && strlen($fp)>0 && (strpos($fp,"/")!==false || strlen($fp)>1))
-            {               
+            {
             if ($getfilepath)
                 {
                 global $syncdir; 
@@ -130,7 +130,7 @@ function get_resource_path(
                         {return $altfile["file_name"];}
                     }
                 }
-            else 
+            else
                 {
                 global $baseurl_short, $k;
                 return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}"; 
@@ -153,13 +153,12 @@ function get_resource_path(
 
         $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
         }
-    
-    
+
     if ($extension=="") {$extension="jpg";}
-    
+
     $folder="";
     #if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
-    
+
     # Original separation support
     if($originals_separate_storage)
         {
@@ -221,18 +220,18 @@ function get_resource_path(
             chmod($storagedir . $path_suffix . $folder,0777);
             }
         }
-        
+
     # Add the page to the filename for everything except page 1.
     if ($page==1) {$p="";} else {$p="_" . $page;}
-    
+
     # Add the alternative file ID to the filename if provided
     if ($alternative>0) {$a="_alt_" . $alternative;} else {$a="";}
-    
+
     # Add the watermarked url too
     if ($watermarked) {$p.="_wm";}
-    
+
     $sdir=$storagedir;
-    
+
     # FSTemplate support - for trial system templates
     if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
         {
@@ -246,25 +245,24 @@ function get_resource_path(
         $icc=true;
         $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'", 'jpg');
         }
-            
-        
+
     $filefolder=$sdir . $path_suffix . $folder;
-    
+
     # Fetching the file path? Add the full path to the file
     if ($getfilepath)
         {
-        $folder=$filefolder; 
+        $folder=$filefolder;
         }
     else
         {
         global $storageurl;$surl=$storageurl;
-        
+
         # FSTemplate support - for trial system templates
         if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
             {
             $surl=$fstemplate_alt_storageurl;
             }
-        
+
         $folder=$surl . $path_suffix . $folder;
         }
     if ($scramble && isset($skey))
@@ -289,13 +287,13 @@ function get_resource_path(
 
     # Append modified date/time to the URL so the cached copy is not used if the file is changed.
     if (!$getfilepath && $includemodified)
-        {        
+        {
         if ($file_modified=="")
             {
             # Work out the value from the file on disk
             $disk_path=get_resource_path($ref,true,$size,false,$extension,$scramble,$page,$watermarked,'',$alternative,false);
             if (file_exists($disk_path))
-                {  
+                {
                 $file .= "?v=" . urlencode(filemtime($disk_path));
                 }
             }
@@ -310,7 +308,7 @@ function get_resource_path(
         {
         // Check if there is a file at the path using no/previous scramble key or with $filestore_evenspread=false;
         // Most will normally have been moved using pages/tools/xfer_scrambled.php or pages/tools/filestore_migrate.php
-        
+
         // Flag to set whether we are migrating to even out filestore distibution or because of scramble key change
         $redistribute_mode = $filestore_migrate;
 
@@ -318,7 +316,7 @@ function get_resource_path(
         $migrating_scrambled = false;
         $filestore_migrate = false;
         $newpath = $getfilepath ? $file : get_resource_path($ref,true,$size,true,$extension,true,$page,false,'',$alternative);
-        
+
         // Use old settings to get old path before migration and migrate if found
         if($redistribute_mode)
             {
@@ -328,7 +326,7 @@ function get_resource_path(
             {
             $scramble_key_saved = $scramble_key;
             $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
-            }        
+            }
         $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
         if (file_exists($oldfilepath))
             {
@@ -338,7 +336,7 @@ function get_resource_path(
                 }
             rename ($oldfilepath,$newpath);
             }
-        
+
         // Reset key/evenspread value
         if($redistribute_mode)
             {
@@ -351,7 +349,6 @@ function get_resource_path(
             $migrating_scrambled = true;
             }
         }
-    
     return $file;
     }
 
@@ -394,7 +391,7 @@ function get_resource_data($ref,$cache=true)
                 }
             }
         }
-    
+
     if (isset($resource[0]))
         {
         $get_resource_data_cache[$ref]=$resource[0];
@@ -439,7 +436,7 @@ function get_resource_data_batch($refs)
 * @return boolean
 */
 function put_resource_data($resource,$data)
-    {   
+    {
     global $edit_contributed_by;
 
     // Check access
@@ -450,7 +447,7 @@ function put_resource_data($resource,$data)
 
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
-    
+
     $sql="";
     foreach ($data as $column=>$value)
         {
@@ -471,15 +468,15 @@ function create_resource($resource_type,$archive=999,$user=-1)
 
     if(!is_numeric($archive))
         {
-        return false;   
+        return false;
         }
 
     $alltypes=get_resource_types();    
     if(!in_array($resource_type,array_column($alltypes,"ref")))
         {
-        return false;    
+        return false;
         }
-    
+
     if ($archive==999)
         {
         # Work out an appropriate default state
@@ -537,19 +534,19 @@ function update_hitcount($ref)
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
         sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
         }
-    }   
+    }
 
 function save_resource_data($ref,$multi,$autosave_field="")
-	{
-	# Save all submitted data for resource $ref.
-	# Also re-index all keywords from indexable fields.
-	global $lang, $multilingual_text_fields,
+    {
+    # Save all submitted data for resource $ref.
+    # Also re-index all keywords from indexable fields.
+    global $lang, $multilingual_text_fields,
            $languages, $language, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
            $userref, $NODE_MIGRATED_FIELD_TYPES;
 
-	hook("befsaveresourcedata", "", array($ref));
+    hook("befsaveresourcedata", "", array($ref));
     // Ability to avoid editing conflicts by checking checksums.
     // NOTE: this should NOT apply to upload.
     $check_edit_checksums = true;
@@ -566,37 +563,37 @@ function save_resource_data($ref,$multi,$autosave_field="")
         $check_edit_checksums = false;
         }
 
-	# Loop through the field data and save (if necessary)
-	$errors=array();
+    # Loop through the field data and save (if necessary)
+    $errors=array();
     $fields=get_resource_field_data($ref,$multi, !hook("customgetresourceperms"));
 
     $expiry_field_edited=false;
     $resource_data=get_resource_data($ref);
-    
+
     if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         $errors[] = get_resource_lock_message($resource_data["lock_user"]);
         return $errors;
         }
-		
-	# Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
-	resource_type_config_override($resource_data["resource_type"]);                
-    
-	# Set up arrays of node ids to add/remove. We can't remove all nodes as user may not have access
-	$nodes_to_add       = [];
-	$nodes_to_remove    = [];
+
+    # Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
+    resource_type_config_override($resource_data["resource_type"]);                
+
+    # Set up arrays of node ids to add/remove. We can't remove all nodes as user may not have access
+    $nodes_to_add       = [];
+    $nodes_to_remove    = [];
     $nodes_check_delete = [];
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
     $user_set_values = getval('nodes', array());
-	
-	
-	// Initialise array to store new checksums that client needs after autosave, without which subsequent edits will fail
-	$new_checksums = array();		
-	
-	for ($n=0;$n<count($fields);$n++)
-		{
+
+
+    // Initialise array to store new checksums that client needs after autosave, without which subsequent edits will fail
+    $new_checksums = array();
+
+    for ($n=0;$n<count($fields);$n++)
+        {
         if(!(
             checkperm('F' . $fields[$n]['ref'])
             || (checkperm("F*") && !checkperm('F-' . $fields[$n]['ref']))
@@ -606,7 +603,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             && ('' == $autosave_field || $autosave_field == $fields[$n]['ref']
                 || (is_array($autosave_field) && in_array($fields[$n]['ref'], $autosave_field))
             )
-		)
+        )
             {
             // Fixed list  fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
@@ -615,23 +612,23 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 $val = '';
 
-                // Get currently selected nodes for this field 
+                // Get currently selected nodes for this field
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']); 
-				
-				// Check if resource field data has been changed between form being loaded and submitted				
-				$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-				$current_cs = md5(implode(",",$current_field_nodes));				
-				if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
-					{
-					$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
-					continue;
-					};
-			
+
+                // Check if resource field data has been changed between form being loaded and submitted
+                $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+                $current_cs = md5(implode(",",$current_field_nodes));
+                if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
+                    {
+                    $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+                    continue;
+                    };
+
                 debug("save_resource_data(): Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
-                
-				// Work out nodes submitted by user
+
+                // Work out nodes submitted by user
                 $ui_selected_node_values = array();
-				
+
                 if(isset($user_set_values[$fields[$n]['ref']])
                     && !is_array($user_set_values[$fields[$n]['ref']])
                     && '' != $user_set_values[$fields[$n]['ref']]
@@ -643,23 +640,23 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
-					}
+                    }
 
                 // Check nodes are valid for this field
                 $fieldnodes   = get_nodes($fields[$n]['ref'], '', (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type']));
                 $node_options = array_column($fieldnodes, 'name', 'ref');
                 $validnodes   = array_column($fieldnodes, 'ref');
 
-				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);	
-				natsort($ui_selected_node_values);
-				
+                $ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);	
+                natsort($ui_selected_node_values);
+
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
                 debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
                 $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-                $removed_nodes = array_diff($current_field_nodes,$ui_selected_node_values);    
+                $removed_nodes = array_diff($current_field_nodes,$ui_selected_node_values);
 
-                debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
+                debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
                 $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
 
                 if(count($added_nodes) > 0 || count($removed_nodes) > 0)
@@ -693,92 +690,92 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 $new_checksums[$fields[$n]['ref']] = md5(implode(',', $ui_selected_node_values));
-                }
-			else
-				{
-				if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
-					{
-					# date range type
-					# each value will be a node so we end up with a pair of nodes to represent the start and end dates
+                } // End of if in $FIXED_LIST_FIELD_TYPES
+            else
+                {
+                if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
+                    {
+                    # date range type
+                    # each value will be a node so we end up with a pair of nodes to represent the start and end dates
 
-					$daterangenodes=array();
-					$newval="";
-					
-					if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
-						{
-						// We have been passed the range in EDTF format, check it is in the correct format
-						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
-						if(!preg_match($rangeregex,$date_edtf,$matches))
-							{
-							$errors[$fields[$n]["ref"]] = $lang["information-regexp_fail"] . " : " . $date_edtf;
-							continue;
-							}
-                        if(is_numeric($fields[$n]["linked_data_field"]))
+                    $daterangenodes=array();
+                    $newval="";
+                    
+                    if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+                        {
+                        // We have been passed the range in EDTF format, check it is in the correct format
+                        $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+                        if(!preg_match($rangeregex,$date_edtf,$matches))
+                            {
+                            $errors[$fields[$n]["ref"]] = $lang["information-regexp_fail"] . " : " . $date_edtf;
+                            continue;
+                            }
+                        if(is_int_loose($fields[$n]["linked_data_field"]))
                             {
                             // Update the linked field with the raw EDTF string submitted
                             update_field($ref,$fields[$n]["linked_data_field"],$date_edtf);
                             }
-						$rangedates = explode("/",$date_edtf);
-						$rangestart=str_pad($rangedates[0],  10, "-00");
-						$rangeendparts=explode("-",$rangedates[1]);
+                        $rangedates = explode("/",$date_edtf);
+                        $rangestart=str_pad($rangedates[0],  10, "-00");
+                        $rangeendparts=explode("-",$rangedates[1]);
                         $rangeendyear=$rangeendparts[0];
                         $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
                         $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
-						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
+                        $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                         
-						$newval = $rangestart . $range_separator . $rangeend;
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
-						$daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
-						}
-					else
-						{
-						// Range has been passed via normal inputs, construct the value from the date/time dropdowns
-						$date_parts=array("_start_","_end_");
-						
-						foreach($date_parts as $date_part)
-							{
-							$val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
-							if (intval($val)<=0) 
-								{
-								$val="";
-								}
-							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="") 
-								{
-								$val.="-" . $field;
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="") 
-									{
-									$val.="-" . $field;
-									}
-								 else 
-									{
-									$val.="-00";
-									}
-								}
-							else 
-								{
-								$val.="-00-00";
-								}
-							$newval.= ($newval!=""?$range_separator:"") . $val;
-							if($val!=="")
-								{
-								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
-								}
-							}
+                        $newval = $rangestart . $range_separator . $rangeend;
+                        $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
+                        $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
+                        }
+                    else
+                        {
+                        // Range has been passed via normal inputs, construct the value from the date/time dropdowns
+                        $date_parts=array("_start_","_end_");
+                        
+                        foreach($date_parts as $date_part)
+                            {
+                            $val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                            if (intval($val)<=0) 
+                                {
+                                $val="";
+                                }
+                            elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="") 
+                                {
+                                $val.="-" . $field;
+                                if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="") 
+                                    {
+                                    $val.="-" . $field;
+                                    }
+                                    else 
+                                    {
+                                    $val.="-00";
+                                    }
+                                }
+                            else 
+                                {
+                                $val.="-00-00";
+                                }
+                            $newval.= ($newval!=""?$range_separator:"") . $val;
+                            if($val!=="")
+                                {
+                                $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
+                                }
+                            }
                         }
 
                         natsort($daterangenodes);
-                        
+
                         // Get currently selected nodes for this field 
-						$current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref'], false, SORT_ASC);
-                                            
-						// Check if resource field data has been changed between form being loaded and submitted				
-						$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-						$current_cs = md5(implode(",",$current_field_nodes));						
-						if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
-							{
-							$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
-							continue;
-							};
+                        $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref'], false, SORT_ASC);
+
+                        // Check if resource field data has been changed between form being loaded and submitted
+                        $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+                        $current_cs = md5(implode(",",$current_field_nodes));
+                        if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
+                            {
+                            $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+                            continue;
+                            };
                         
                         if($daterangenodes !== $current_field_nodes)
                             {
@@ -786,7 +783,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
                             $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
                             $removed_nodes = array_diff($current_field_nodes,$daterangenodes);  
-                            debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
+                            debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
                             $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
                             
                             $val = $newval;
@@ -796,7 +793,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 {
                                 update_resource_field_column($ref,$fields[$n]["ref"],$newval);
                                 }
-					        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
+                            $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                             }
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
@@ -845,8 +842,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_SINGLE_LINE
                         || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_MULTI_LINE
                         || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE
-                   )
-                )
+                        )
+                        )
                     {
                     # Construct a multilingual string from the submitted translations
                     $val=getvalescaped("field_" . $fields[$n]["ref"],"");
@@ -913,8 +910,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $errors[$fields[$n]["ref"]]=$error;
                     continue;
                     }
-				} // End of if not a fixed list field
-
+                } // End of if not a fixed list field
             if(
                 $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
@@ -922,7 +918,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     // No nodes submitted
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
                     // No value submitted
-                    || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strip_leading_comma($val) == '')
+                    || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && trim(strip_leading_comma($val)) == '')
                 )
                 && (
                     // Existing resource, but not in upload review mode with blank template and existing value (e.g. for resource default)
@@ -949,16 +945,17 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 str_replace("\r\n", "\n", $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
                 )
                 {
-                $oldval=$fields[$n]["value"];
-
                 # This value is different from the value we have on record.
 
                 # Write this edit to the log (including the diff) (unescaped is safe because the diff is processed later)
                 //resource_log($ref,LOG_CODE_EDITED,$fields[$n]["ref"],"",$fields[$n]["value"],unescape($val));
 
                 # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
-                if ($fields[$n]["type"]==FIELD_TYPE_EXPIRY_DATE) {$expiry_field_edited=true;}
-                
+                if ($fields[$n]["type"]==FIELD_TYPE_EXPIRY_DATE)
+                    {
+                    $expiry_field_edited=true;
+                    }
+
                 if(trim($fields[$n]["nodes"]) != "")
                     {
                     // Remove any existing node IDs for this non-fixed list field (there should only be one).
@@ -973,7 +970,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
                     $nodes_to_add[] = $newnode;
                     }
-				
+
                 # If this is a 'joined' field we need to add it to the resource column
                 $joins=get_resource_table_joins();
                 if (in_array($fields[$n]["ref"],$joins))
@@ -2220,7 +2217,18 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $node_options = array_column($fieldnodes, 'name', 'ref');
 
         // Get all the new values into an array
-        $newvalues    = trim_array(str_getcsv($value));
+        if (($value[0] == "'" && $value[strlen($value)-1] == "'")
+            ||
+            ($value[0] == "\"" && $value[strlen($value)-1] == "\"")
+            )
+            {
+            // Quoted value - don't attempt to split on comma.
+            $newvalues[] = substr($value,1,-1);
+            }
+        else
+            {
+            $newvalues = trim_array(str_getcsv($value));
+            }
 
         // Get currently selected nodes for this field
         $current_field_nodes = get_resource_nodes($resource, $field, true);
@@ -8566,7 +8574,14 @@ function allow_in_browser($path)
         $permitted_mime = $allow;
         }
 
-    $type = mime_content_type($path);
+    if (function_exists('mime_content_type'))
+        {
+        $type = mime_content_type($path);
+        }
+    else
+        {
+        $type = get_mime_type($path);
+        }
     if($type == "application/octet-stream")
         {
         # Not properly detected, try and get mime type via exiftool if possible

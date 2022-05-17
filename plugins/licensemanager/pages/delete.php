@@ -6,7 +6,7 @@ include "../../../include/authenticate.php";
 $ref=getvalescaped("ref","");
 
 # Check access
-if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
+if (!checkperm("a") && !checkperm("lm")) {exit("Access denied");} # Should never arrive at this page without admin access
 
 $url_params = array(
     'ref'        => $ref,

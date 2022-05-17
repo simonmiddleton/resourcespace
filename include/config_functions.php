@@ -123,7 +123,6 @@ function set_config_option($user_id, $param_name, $param_value)
     $param_value = escape_check($param_value);
 
     $query = "INSERT INTO user_preferences (user,parameter,`value`) VALUES (?,?,?)";
-    $params  = ["i",$user_id,"s",$param_name,"s",$param_value,];
    
     $current_param_value = null;
     if(get_config_option($user_id, $param_name, $current_param_value))
@@ -132,16 +131,29 @@ function set_config_option($user_id, $param_name, $param_value)
             {
             return true;
             }
+        $params[] = 's'; $params[] = $param_value;
+        if(is_null($user_id))
+            {
+            $user_query = 'user IS NULL';
+            }
+        else    
+            {
+            $user_query = 'user = ?';
+            $params[] = 'i'; $params[] = $user_id;
+            }
 
-        $query = "UPDATE user_preferences SET `value` = ? WHERE user = ? AND parameter = ?";
-        $params  = ["s",$param_value,"i",$user_id,"s",$param_name];
+        $query = "UPDATE user_preferences SET `value` = ? WHERE ". $user_query ." AND parameter = ?";
+        $params[] = "s"; $params[] = $param_name;
 
         if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
             {
             log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . escape_check($param_name) . "'", null, $current_param_value);
             }
         }
-
+    else
+        {
+        $params  = ["i",$user_id,"s",$param_name,"s",$param_value,];
+        }
     ps_query($query,$params);
 
     // Clear disk cache
@@ -169,10 +181,20 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
         {
         return false;
         }
-    $query = "SELECT `value` FROM user_preferences WHERE user = ? AND parameter = ?";
-    $params  = ["i",$user_id,"s",$name];
-    $config_option = ps_value($query,$params, null);
 
+    if(is_null($user_id))
+        {
+        $user_query = 'user IS NULL';
+        }
+    else    
+        {
+        $user_query = 'user = ?';
+        $params[] = 'i'; $params[] = $user_id;
+        }
+
+    $query = "SELECT `value` FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
+    $params[] = "s"; $params[] = $name;
+    $config_option = ps_value($query,$params, null);
     if(is_null($default) && isset($GLOBALS['system_wide_config_options'][$name]))
         {
         $default = $GLOBALS['system_wide_config_options'][$name];

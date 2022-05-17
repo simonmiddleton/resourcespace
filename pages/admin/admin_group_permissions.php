@@ -323,7 +323,7 @@ if (in_array("t",$permissions))
 	DrawOption("m", $lang["can_bulk-mail_users"]);
 	DrawOption("u", $lang["can_manage_users"]);
 	DrawOption("k", $lang["can_manage_keywords"]);
-	DrawOption("a", $lang["can_access_system_setup"]);
+	DrawOption("a", $lang["can_access_system_setup"],false,true);
 	}
 else
 	{

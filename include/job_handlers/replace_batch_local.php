@@ -218,5 +218,5 @@ else
     }
 
 echo " --> " . implode("\n --> ",$logtext) . "\n";
-message_add($job["user"],implode("<br />",$logtext),(count($replaced) > 0) ? $baseurl_short . "pages/search.php?search=!list" . implode(",",$replaced) : "");
+message_add($job["user"],implode("<br />",$logtext),(count($replaced) > 0) ? $baseurl_short . "pages/search.php?search=!list" . implode(":",$replaced) : "");
 
