@@ -5072,13 +5072,20 @@ function get_user_selection_collection($user)
 		$rs_session="";
         }
 
-    $sql = sprintf("SELECT ref AS `value` FROM collection WHERE `user` = '%s' AND `type` = '%s' %s ORDER BY ref ASC",
-        escape_check($user),
-        COLLECTION_TYPE_SELECTION,
-        ((isset($rs_session) && $rs_session != "") ? " AND session_id='" . $rs_session . "'"  : "")
-    );
+    $params = [
+        'i', $user,
+        'i', COLLECTION_TYPE_SELECTION,
+    ];
 
-    return sql_value($sql, null);
+    $session_id_sql = '';
+    if(isset($rs_session) && $rs_session !== '')
+        {
+        $session_id_sql = 'AND session_id = ?';
+        $params[] = 'i';
+        $params[] = $rs_session;
+        }
+
+    return ps_value("SELECT ref AS `value` FROM collection WHERE `user` = ? AND `type` = ? {$session_id_sql} ORDER BY ref ASC", $params, null);
     }
 
 
