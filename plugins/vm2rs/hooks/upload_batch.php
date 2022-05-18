@@ -1,5 +1,5 @@
 <?php
-function Hookvm2rsUpload_pluploadupload_page_bottom()
+function Hookvm2rsUpload_batchUpload_page_bottom()
     {
     global $userref, $vm2rs_field_id, $lang;
     $ref_user = 0 - $userref;

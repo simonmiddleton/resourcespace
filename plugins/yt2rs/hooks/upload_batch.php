@@ -1,5 +1,5 @@
 <?php
-function Hookyt2rsUpload_pluploadupload_page_bottom()
+function Hookyt2rsUpload_batchUpload_page_bottom()
 	{
 	global $userref, $yt2rs_field_id, $lang;
 	$ref_user = 0 - $userref;
