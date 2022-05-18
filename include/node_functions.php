@@ -125,7 +125,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         if($resource_type_field_data["keywords_index"] == 1)
             {
             $is_date = in_array($resource_type_field_data['type'],[FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
-            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);	
+            $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);
             add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL, $is_date, $is_html);
             }
         }
@@ -2249,7 +2249,16 @@ function process_node_search_syntax_to_names(array $R, string $column)
     return $R;
     }
 
-
+/**
+* Update non-fixed list field - handling node changes 
+* 
+* @param int    $resource                   Resource ID
+* @param int    $resource_type_field        Metadata field ID
+* @param string $value                      New data value
+* @param string $log                        Log this change (true by default)
+* 
+* @return array
+*/
 function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value, bool $log=true)
     {
     debug_function_call("save_non_fixed_list_field", func_get_args());
@@ -2288,9 +2297,15 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
 
     $delete_unused_nodes = false;
 
+    $fieldinfo = get_resource_type_field($resource_type_field);
+
     // Remove existing data (when given an empty value)
     if($value === '')
         {
+        if($fieldinfo['required'])
+            {
+            return false;
+            }
         $nodes_to_add = [];
         $nodes_to_remove = get_resource_nodes($resource, $resource_type_field);
 
@@ -2318,7 +2333,8 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
             && set_node($existing_resource_node['ref'], $resource_type_field, $value, null, $existing_resource_node['order_by']) !== false
         )
             {
-            echo "EDITED exiting node - {$existing_resource_node['ref']}".PHP_EOL;
+            resource_log($resource,LOG_CODE_EDITED,$resource_type_field,"",$existing_resource_node["name"],$value);
+            return true;
             }
 
         // Current node has more resources associated with it => new node created
@@ -2369,7 +2385,7 @@ function save_non_fixed_list_field(int $resource, int $resource_type_field, stri
     //     'nodes_to_remove' => $nodes_to_remove,
     // ]);
 
-    return;
+    return true;
     }
 
 
@@ -2409,7 +2425,6 @@ function remove_invalid_node_keyword_mappings()
     ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
     clear_query_cache('schema');
     }
-
 
 function get_nodes_use_count(array $nodes)
     {

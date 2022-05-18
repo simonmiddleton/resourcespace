@@ -508,10 +508,6 @@ function create_resource($resource_type,$archive=999,$user=-1)
     # Autocomplete any blank fields.
     autocomplete_blank_fields($insert, true);
 
-    # Always index the resource ID as a keyword
-    remove_keyword_mappings($insert, $insert, -1);
-    add_keyword_mappings($insert, $insert, -1);
-
     # Log this
     daily_stat("Create resource",$insert);
 
@@ -946,10 +942,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 )
                 {
                 # This value is different from the value we have on record.
-
-                # Write this edit to the log (including the diff) (unescaped is safe because the diff is processed later)
-                //resource_log($ref,LOG_CODE_EDITED,$fields[$n]["ref"],"",$fields[$n]["value"],unescape($val));
-
                 # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
                 if ($fields[$n]["type"]==FIELD_TYPE_EXPIRY_DATE)
                     {
@@ -1009,15 +1001,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
             {
             update_related_resource($ref,$to_relate,true);
             }
-        }
-
-    if ($autosave_field=="")
-        {
-        # Additional tasks when editing all fields (i.e. not autosaving)
-        
-        # Always index the resource ID as a keyword
-        remove_keyword_mappings($ref, $ref, -1);
-        add_keyword_mappings($ref, $ref, -1);
         }
 
     // Update resource_node table
@@ -2041,111 +2024,6 @@ function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$option
 		}
 	sql_query("update keyword set hit_count=hit_count-1 where ref='$keyref' limit 1");
 			
-    }
-
-
-
-function add_keyword_mappings(int $ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
-    {
-    /* For each instance of a keyword in $string, add a keyword->resource mapping.
-    * Create keywords that do not yet exist.
-    * Increase the hit count of each keyword that matches.
-    * Store the position and field the string was entered against for advanced searching.
-    */
-    if(trim($string) == '')
-        {
-        return false;
-        }
-
-    $keywords = split_keywords($string, true, $partial_index, $is_date, $is_html);
-    add_verbatim_keywords($keywords, $string, $resource_type_field); // add in any verbatim keywords (found using regex).
-
-    for($n = 0; $n < count($keywords); $n++)
-        {
-        unset($kwpos);
-        if(is_array($keywords[$n]))
-            {
-            $kwpos        = $keywords[$n]['position'];
-            $keywords[$n] = $keywords[$n]['keyword'];
-            }
-
-        $kw = $keywords[$n];
-        if(!isset($kwpos))
-            {
-            $kwpos = $n;
-            }
-
-        add_keyword_to_resource($ref, $kw, $resource_type_field, $kwpos, $optional_column, $optional_value, false);
-        }
-
-    }
-
-
-/**
- * Create a resource / keyword mapping
- *
- * @param  int      $ref                   ID of resource
- * @param  string   $keyword               Keyword to be added
- * @param  int      $resource_type_field   ID of resource type field
- * @param  int      $position
- * @param  string   $optional_column
- * @param  string   $optional_value
- * @param  boolean  $normalized            Normalize the keyword?
- * @param  boolean  $stemmed               Use stemming?
- * 
- * @return void
- */
-function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
-    {
-    global $unnormalized_index,$stemming,$noadd;
-    
-    debug("add_keyword_to_resource: resource:" . $ref . ", keyword: " . $keyword);
-    if(!$normalized)
-        {
-        $kworig=$keyword;
-        $keyword=normalize_keyword($keyword);
-        if($keyword!=$kworig && $unnormalized_index)
-            {
-            // $keyword has been changed by normalizing, also index the original value
-            add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true,$stemmed);
-            }
-        }
-
-    $kworig=$keyword; // Store non-stemmed word
-    if (!$stemmed && $stemming && function_exists("GetStem"))
-        {
-        $keyword=GetStem($keyword);debug("Using stem " . $keyword . " for keyword " . $kworig);
-        if($keyword!=$kworig)
-            {
-            // $keyword has been changed by stemming, also index the original value
-            add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,$normalized,true);
-            }
-        }
-	
-    if (!(in_array($kworig,$noadd))) // Original (non stemmed) word not in the stop list?
-            {
-            $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
-            debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
-
-            $sql_extra_select = "";
-            $sql_extra_value = "";
-            if($optional_column != '' && $optional_value != '')
-                {
-                $sql_extra_select = ", `{$optional_column}`";
-                $sql_extra_value = ", '" . escape_check($optional_value) . "'";
-                }
-            $ref = escape_check($ref);
-            $keyref = escape_check($keyref);
-            $position = escape_check($position);
-            $resource_type_field = escape_check($resource_type_field);
-            sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
-                            VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
-
-            sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
-            
-            # Log this
-            daily_stat("Keyword added to resource",$keyref);
-            }  	
     }
     
 /**
@@ -3375,38 +3253,38 @@ function get_resource_ref_range($lower,$higher)
 * @return boolean|integer
 */
 function copy_resource($from,$resource_type=-1)
-	{
+    {
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
     global $userref;
     global $always_record_resource_creator, $upload_then_edit;
+
+    # Check that the resource exists
+    if (ps_value("SELECT COUNT(*) value FROM resource WHERE ref = ?",["i",$from],0)==0)
+        {
+        return false;
+        }
+
+    # copy joined fields to the resource column
+    $joins=get_resource_table_joins();
+
+    // Filter the joined columns so we only have the ones relevant to this resource type
+    $query = 'SELECT rtf.ref AS value
+                    FROM resource_type_field AS rtf
+            INNER JOIN resource AS r ON (rtf.resource_type != r.resource_type AND rtf.resource_type != 0)
+                    WHERE r.ref = ?;';
     
-	# Check that the resource exists
-	if (sql_value("select count(*) value from resource where ref='". escape_check($from) . "'",0)==0) {return false;}
-	
-	# copy joined fields to the resource column
-	$joins=get_resource_table_joins();
+    $irrelevant_rtype_fields = ps_array($query,["i",$from]);
+    $irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
+    $filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
 
-	// Filter the joined columns so we only have the ones relevant to this resource type
-	$query = sprintf('
-			    SELECT rtf.ref AS value
-			      FROM resource_type_field AS rtf
-			INNER JOIN resource AS r ON (rtf.resource_type != r.resource_type AND rtf.resource_type != 0)
-			     WHERE r.ref = "%s";
-		',
-		$from
-	);
-	$irrelevant_rtype_fields = sql_array($query);
-	$irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
-	$filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
+    $joins_sql="";
+    foreach ($filtered_joins as $join){
+        $joins_sql.=",field$join ";
+    }
 
-	$joins_sql="";
-	foreach ($filtered_joins as $join){
-		$joins_sql.=",field$join ";
-	}
-	
-	$add="";
-	$archive=sql_value("select archive value from resource where ref='". escape_check($from) . "'",0);
-	
+    $add="";
+    $archive=ps_value("SELECT archive value FROM resource WHERE ref = ?",["i",$from],0);
+
     if ($archive == "") // Needed if user does not have a user template 
         {
         $archive =0;
@@ -3414,40 +3292,36 @@ function copy_resource($from,$resource_type=-1)
     
     # Determine if the user has access to the source archive status
     if (!checkperm("e" . $archive))
-		{
-		# Find the right permission mode to use
-		for ($n=-2;$n<3;$n++)
-			{
-			if (checkperm("e" . $n)) {$archive=$n;break;}
-			}
-		}
-        
-	# First copy the resources row
-	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by $joins_sql) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by $joins_sql from resource where ref='" . escape_check($from) . "';");
-	$to=sql_insert_id();
-	
-	# Set that this resource was created by this user. 
-	# This needs to be done if either:
-	# 1) The user does not have direct 'resource create' permissions and is therefore contributing using My Contributions directly into the active state
-	# 2) The user is contributiting via My Contributions to the standard User Contributed pre-active states.
-	if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
-		{
-		# Update the user record
-		sql_query("update resource set created_by='$userref' where ref='$to'");
+        {
+        # Find the right permission mode to use
+        for ($n=-2;$n<3;$n++)
+            {
+            if (checkperm("e" . $n)) {$archive=$n;break;}
+            }
+        }
 
-		# Also add the user's username and full name to the keywords index so the resource is searchable using this name.
-		global $username,$userfullname;
-		add_keyword_mappings($to,$username . " " . $userfullname,-1);
-		}
+    # First copy the resources row
+    sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by $joins_sql) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by $joins_sql from resource where ref='" . escape_check($from) . "';");
+    $to=sql_insert_id();
+	
+    # Set that this resource was created by this user. 
+    # This needs to be done if either:
+    # 1) The user does not have direct 'resource create' permissions and is therefore contributing using My Contributions directly into the active state
+    # 2) The user is contributiting via My Contributions to the standard User Contributed pre-active states.
+    if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
+        {
+        # Update the user record
+        sql_query("update resource set created_by='$userref' where ref='$to'");
+        }
 
     # Copy Metadata
     copyAllDataToResource($from,$to);
 
-	# Copy relationships
+    # Copy relationships
     copyRelatedResources($from, $to);
 
-	# Copy access
-	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='". escape_check($from) . "'");
+    # Copy access
+    sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='". escape_check($from) . "'");
 
     // Set any resource defaults
     // Expected behaviour: set resource defaults only on upload and when
@@ -3474,20 +3348,17 @@ function copy_resource($from,$resource_type=-1)
             }
         }
 
-	// Autocomplete any blank fields without overwriting any existing metadata
-	autocomplete_blank_fields($to, false);
+    // Autocomplete any blank fields without overwriting any existing metadata
+    autocomplete_blank_fields($to, false);
 
-	# Reindex the resource so the resource_keyword entries are created
-	reindex_resource($to);
-	
-	# Log this			
-	daily_stat("Create resource",$to);
-	resource_log($to,LOG_CODE_CREATED,0);
+    # Log this			
+    daily_stat("Create resource",$to);
+    resource_log($to,LOG_CODE_CREATED,0);
 
-	hook("afternewresource", "", array($to));
-	
-	return $to;
-	}
+    hook("afternewresource", "", array($to));
+
+    return $to;
+    }
     
 
 /**
@@ -5339,38 +5210,6 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         }
     return true;
     }
-
-function reindex_resource($ref)
-    {
-    global $FIXED_LIST_FIELD_TYPES;
-    # Reindex a resource. Delete all resource_keyword rows and create new ones.
-
-    # Delete existing keywords
-    ps_query("DELETE FROM resource_keyword WHERE resource = ?",["i",$ref]);
-
-    # Index fields
-    $data=get_resource_field_data($ref,false,false); # Fetch all fields and do not use permissions.
-    for ($m=0;$m<count($data);$m++)
-        {
-        if ($data[$m]["keywords_index"]==1 && !in_array($data[$m]["type"],$FIXED_LIST_FIELD_TYPES))
-            {
-            #echo $data[$m]["value"];
-            $value=$data[$m]["value"];
-            
-            # Date field? These need indexing differently.
-            $is_date=($data[$m]["type"]==4 || $data[$m]["type"]==6);
-
-            $is_html=($data[$m]["type"]==8);					
-            add_keyword_mappings($ref,i18n_get_indexable($value),$data[$m]["ref"],$data[$m]["partial_index"],$is_date,'','',$is_html);		
-            }
-        }
-        
-    # Always index the resource ID as a keyword
-    add_keyword_mappings($ref, $ref, -1);
-
-    hook("afterreindexresource","all",array($ref));
-    }
-
 
 function get_page_count($resource,$alternative=-1)
     {

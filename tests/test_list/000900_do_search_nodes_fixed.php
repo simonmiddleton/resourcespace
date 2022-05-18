@@ -10,6 +10,13 @@ debug("Resource A: " . $resourcea);
 debug("Resource B: " . $resourceb );
 debug("Resource C: " . $resourcec);
 
+
+$debug_log=true;
+$debug_log_location = "/var/log/resourcespace/debug.log";
+//$debug_extended_info = true;
+
+
+
 // Add new nodes to field
 $joeynode = set_node(NULL, 73, "Joey",'',1000);
 $johnnynode = set_node(NULL, 73, "Johnny",'',1000);

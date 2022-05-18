@@ -106,8 +106,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     }
                 }   
             sql_query("UPDATE resource SET " . $clear_fields . " WHERE ref='" . escape_check($ref) . "'");
-            #also add the ref back into keywords:
-            add_keyword_mappings($ref, $ref , -1);
             $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
