@@ -650,14 +650,16 @@ $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
     $all_nodes = get_nodes($field, NULL, TRUE, NULL, NULL, '', TRUE);
+
+    ?>
+    <select id="node_master_list" class="DisplayNone">
+    <?php
     foreach($all_nodes as $node)
         {
-        $node_data[] = ['ref' => $node['ref'], 'name' => $node['name']];
+        ?><option value="<?php echo htmlspecialchars($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
         }
     ?>
-    <script>
-        let node_data = <?php echo json_encode($node_data); ?>;
-    </script> 
+    </select>
     <?php
     $nodes_counter = count($tree_nodes);
     $i             = 0;
@@ -695,23 +697,20 @@ jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){fi
 
 function fill_selects(node_element)
     {
+    //Skip the select if there are already options in the list, should be 1 by default
     if(node_element.find('option').length != 1){return;}
-    node_data.forEach(function(item)
-        {
-        let option = jQuery('<option>').attr('value', item['ref']).html(item['name']);
-        if(item['ref'] == node_element.attr('parent_node'))
-            {
-            option.attr('selected', true);
-            }
-        if(node_element.attr('id') != undefined)
-            {
-            if(item['ref'] != node_element.attr('id').split('_')[2])
-                {
-                node_element.append(option);
-                }
-            }
-        }
-    )
+
+    //Get the node master list that was genereated on page load
+    let node_list = jQuery('#node_master_list').clone();
+    node_list.children().appendTo(node_element);
+
+    //Find and select the parent node from the dropdown list
+    node_element.find('[value="'+ node_element.attr('parent_node') +'"]').attr('selected', true)
+
+    //Get node ref from element id
+    let id_parts = node_element.attr('id').split('_');
+    //Hide the node in its own dropdown
+    node_element.find('option[value="'+id_parts[2]+'"]').hide();
     }
 
 function AddNode(parent)
