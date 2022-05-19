@@ -760,7 +760,15 @@ function extract_exif_comment($ref,$extension="")
                         $value=""; # blank value
                         for ($n=0;$n<count($s);$n++)
                             {
-                            if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}                             
+                            if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}
+                            # Translate the option and compare the traslated strings to the value
+                            foreach($options as $option)
+                                {
+                                if (trim($s[0])!="" && (in_array(strtolower($s[$n]),i18n_get_translations($option))))
+                                    {
+                                    $value.="," . $option;
+                                    }                
+                                }
                             }
                         }
 
