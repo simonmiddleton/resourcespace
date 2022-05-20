@@ -1,10 +1,6 @@
 <?php
 include_once '../include/db.php';
-# External access support (authenticate only if no key was provided)
-if(getvalescaped('k', '') == '')
-    {
-    include_once '../include/authenticate.php';
-    }
+include_once '../include/authenticate.php';
 include_once '../include/csv_export_functions.php';
 
 $search     = getvalescaped('search', '');
