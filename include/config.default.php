@@ -3294,3 +3294,7 @@ $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 // String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
 $regexp_slash_replace = 'SLASH';
 
+// Optional - $valid_upload_paths
+// Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
+// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
+// $valid_upload_paths = [];
