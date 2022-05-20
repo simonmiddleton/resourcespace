@@ -33,49 +33,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
-    global $storagedir, $syncdir, $batch_replace_local_folder;
 
-    if(trim($file_path) != "")
-        {
-        // Check a valid path is specified
-        $validpath = false;
-        $GLOBALS["use_error_exception"] = true;
-        try
-            {
-            $file_path = realpath($file_path);
-            }
-        catch (Exception $e)
-            {
-            debug("Invalid file path specified");
-            return false;
-            }
-        unset($GLOBALS["use_error_exception"]);
-        $valid_upload_paths = $valid_upload_paths ?? [];
-        $valid_upload_paths[] = $storagedir;
-        $valid_upload_paths[] = $syncdir;    
-        $valid_upload_paths[] = $batch_replace_local_folder;
-
-        foreach($valid_upload_paths as $valid_upload_path)
-            {
-            if(strpos($file_path,$valid_upload_path) === 0)
-                {
-                $validpath = true;
-                }
-            }
-        if (!$validpath)
-            {
-            debug("Invalid file path specified: " . $file_path);
-            return false;
-            }
-        }
-    
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
     # revert is mainly for metadata reversion, removing all metadata and simulating a reupload of the file from scratch.
 
     hook ("removeannotations","",array($ref));
-    
 
     if(!$after_upload_processing && !(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
         {
