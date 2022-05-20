@@ -25,8 +25,10 @@ function HookGoogle_visionAllBeforeuploadfile($ref)
     return true;
     }
 
-function HookGoogle_visionAllAfterpreviewcreation($resource)
+function HookGoogle_visionAllAfterpreviewcreation($resource,$alternative)
     {
+    if ($alternative>0) {return true;} // Nothing to do for alternatives; Google Vision is processed for the main file only.
+
     include_once __DIR__ . "/../include/google_vision_functions.php";
 
     google_visionProcess($resource);

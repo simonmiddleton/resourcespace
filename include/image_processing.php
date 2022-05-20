@@ -15,7 +15,7 @@ include_once 'metadata_functions.php';
  * Upload a file from the provided path to the given resource 
  *
  * @param  int $ref                         Resource ID
- * @param  bool $no_exif                    Do not extract embedded metadate. False by default so data will be extracted
+ * @param  bool $no_exif                    Do not extract embedded metadata. False by default so data will be extracted
  * @param  bool $revert                     Delete all data and re-extract embedded data
  * @param  bool $autorotate                 Autorotate images - alters embedded orientation data in uploaded file
  * @param  string $file_path                Path to file
