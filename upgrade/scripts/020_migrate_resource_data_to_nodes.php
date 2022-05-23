@@ -50,3 +50,48 @@ foreach($resource_type_fields as $resource_type_field)
     ob_flush();
     }
 
+
+// Migrate any annotations (plugin) as these are not field linked
+// The plugin may only be enabled for some usergroups so can't just check $plugins array
+$alltables = ps_query("SHOW TABLES");
+$annotate_enabled = in_array("annotate_notes",array_column($alltables,"Tables_in_dev"));
+if($annotate_enabled)
+    {
+    echo "Annotate plugin enabled, migrating to use new nodes<br/>";
+    $count = 0;
+    
+    $annotate_config = get_plugin_config("annotate");
+    echo "Checking if metadata field set: " . ($annotate_config["annotate_resource_type_field"] ?? "Not set") . "<br/>";
+    if(!isset($annotate_config["annotate_resource_type_field"]) || $annotate_config["annotate_resource_type_field"] === 0 )
+        {
+        // Create a new field to hold annotations
+        $annotate_field = create_resource_type_field("Annotations plugin",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE,"annotateplugin",true);
+        ps_query("UPDATE SET display_field=0, advanced_search=0,hide_when_uploading=1 WHERE ref = ?",["i",$annotate_field]);
+        // Set plugin to use this field
+        $annotate_config["annotate_resource_type_field"] = $annotate_field;            
+        set_plugin_config("annotate",$annotate_config);
+        echo "Set new annotation field $annotate_field<br/>";
+        }
+    else
+        {
+        $annotate_field = $annotate_config["annotate_resource_type_field"];
+        }
+    // Get existing annotations
+    $current_annotations = ps_query("SELECT ref, note, note_id, node FROM annotate_notes");
+    foreach($current_annotations as $annotation)
+        {
+        echo "Found annotation for resource  " . $annotation["ref"] . ", node: " . $annotation["node"] . "<br/>";
+        if((int)$annotation["node"] == 0)
+            {
+            // No node set, create a new one
+            echo "Migrating annotation for resource  " . $annotation["ref"] . ", note: " . $annotation["note"] . "<br/>";
+            $node = set_node(NULL,$annotate_field,$annotation["note"],NULL,10);
+            ps_query("UPDATE annotate_notes SET node = ? WHERE ref= ?",["i",$node,"i",$annotation["ref"]]);
+            // Add nodes so will be searchable
+            add_resource_nodes($ref,[$node], true,true);
+            $count++;
+            }
+        }
+    echo "Completed " . $count . " annotations<br/>";
+    }
+echo "Finished<br/>";

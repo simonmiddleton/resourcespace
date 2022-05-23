@@ -1716,8 +1716,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                             {
                             update_resource_field_column($ref,$fields[$n]["ref"],$val);
                             }
-                            
-                        $oldval=$existing;
+
                         $newval=$val;
                         
                         // Add any onchange code
@@ -2340,7 +2339,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             return true;
             }
         save_non_fixed_list_field($resource,$field,$value);
-        $log= false; // Already logged by save_non_fixed_list_field()
+        $log = false; // Already logged by save_non_fixed_list_field()
         }
 
     # If this is a 'joined' field we need to add it to the resource column
