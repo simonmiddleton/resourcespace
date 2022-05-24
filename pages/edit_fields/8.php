@@ -1,13 +1,16 @@
 <?php /* -------- Text Box (formatted / CKeditor) ---------------- */ ?>
-<br /><br />
 
 <?php hook("befckeditortextarea"); ?>
 
+<div class="ckeditorEdit">
+<br />
 <textarea class="stdwidth" rows=10 cols=80 name="<?php echo $name?>" id="<?php echo ((isset($modal) && $modal)?"Modal_":"CentralSpace_") . $name?>" <?php echo $help_js; ?>
 ><?php if($value == strip_tags($value)){
 	$value=nl2br($value);
 }
-echo htmlspecialchars(strip_tags_and_attributes($value,array("a"),array("href","target")))?></textarea><?php
+echo htmlspecialchars(strip_tags_and_attributes($value,array("a"),array("href","target")))?></textarea>
+</div>
+<?php
 
 switch (strtolower($language))
     {
