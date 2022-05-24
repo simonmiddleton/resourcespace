@@ -2218,7 +2218,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     // Fetch some information about the field
-    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = ?", ["i",$field],"schema");
+    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro, resource_type FROM resource_type_field WHERE ref = ?", ["i",$field],"schema");
 
     if(0 == count($fieldinfo))
         {
@@ -2229,6 +2229,12 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     else
         {
         $fieldinfo = $fieldinfo[0];
+        }
+
+    if (!in_array($fieldinfo['resource_type'], array(0, $resource_data['resource_type'])))
+        {
+        $errors[] = "Field is not valid for this resource type";
+        return false;
         }
 
     if (in_array($fieldinfo['type'], $NODE_FIELDS))
