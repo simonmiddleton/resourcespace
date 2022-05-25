@@ -15,7 +15,7 @@ include __DIR__ . '/../../include/db.php';
 ob_end_clean();
 restore_error_handler();
 
-$resources = sql_query("SELECT ref, file_extension FROM resource WHERE ref > 0 AND archive != {$resource_deletion_state}");
+$resources = ps_query("SELECT ref, file_extension FROM resource WHERE ref > 0 AND archive != ?",array("i",$resource_deletion_state));
 
 foreach($resources as $resource)
     {
