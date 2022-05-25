@@ -13,10 +13,12 @@ $title  = sql_value("SELECT title AS `value` FROM resource_type_field WHERE ref 
 # Perform copy
 if (getval("saveform","")!="" && enforcePostRequest(false))
 	{
+	$params=array("i",getval("resource_type",""),"i",$ref);
+
 	$sync=getvalescaped("sync","");
-	if ($sync==1) {$sync="'" . $ref . "'";} else {$sync="null";}
+	if ($sync==1) {$sync="?";$params[]="i";$params[]=$ref;} else {$sync="null";}
 	
-	sql_query("insert into resource_type_field
+	ps_query("insert into resource_type_field
 	(
 		name,
 		title,
@@ -59,7 +61,7 @@ if (getval("saveform","")!="" && enforcePostRequest(false))
 		9999,
 		keywords_index,
 		partial_index,
-		'" . getvalescaped("resource_type","") . "',
+		?,
 		resource_column,
 		display_field,
 		use_for_similar,
@@ -84,8 +86,8 @@ if (getval("saveform","")!="" && enforcePostRequest(false))
                 display_condition,
                 onchange_macro,
 		" . $sync . "
-		from resource_type_field where ref='$ref'
-		");
+		from resource_type_field where ref=?
+		",$params);
 
 	$copied = sql_insert_id();
 
