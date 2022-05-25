@@ -76,7 +76,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             $resdata = get_resource_data($resourceref);
             if(isset($resdata['created_by']) && is_numeric($resdata['created_by']))
                 {
-                $contuser = sql_query('SELECT ref, email FROM user WHERE ref = ' . $resdata['created_by'] . ';', '');
+                $contuser = ps_query('SELECT ref, email FROM user WHERE ref = ?', array("i",$resdata['created_by']));
                 if(count($contuser) == 0)
                     {
                     // No contributor listed

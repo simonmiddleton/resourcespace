@@ -1,6 +1,6 @@
 <?php
 
-function HookRse_workflowTeam_homeCustomteamfunction()
+function HookRse_workflowAdmin_homeCustomadminsetup()
 	{
 	global $baseurl;
         global $lang;
