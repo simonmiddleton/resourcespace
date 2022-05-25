@@ -19,7 +19,7 @@ for ($n=0;$n<count($s);$n++)
 	if (count($e)==2)
 		{
 		# Fetch field details
-		$field[$n]=sql_query("select * from resource_type_field where name='" . escape_check($e[0]) . "'", "schema");
+		$field[$n]=ps_query("select * from resource_type_field where name=?", array("s",$e[0]), "schema");
 		if (count($field[$n])==0) {exit();}
 		$field[$n]=$field[$n][0];
 		
