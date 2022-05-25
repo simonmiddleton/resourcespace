@@ -13,9 +13,15 @@
 // This script has been designed to work with staticsync_alt in ingest mode. It has not been tested against 
 // other configurations. Use at your own risk.
 // 
+if('cli' != PHP_SAPI)
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Command line execution only');
+    }
+
 include dirname(__FILE__) . "/../../include/db.php";
+
 include dirname(__FILE__) . "/../../include/image_processing.php";
-command_line_only();
 
 if (!(isset($staticsync_mapped_category_tree) && is_numeric($staticsync_mapped_category_tree))){
 	echo "Error: This script requires use of a mapped category tree for staticsync.\n";

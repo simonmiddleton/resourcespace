@@ -6,8 +6,12 @@
 #
 
 require dirname(__FILE__) . "/../../include/db.php";
-command_line_only();
 
+if('cli' != php_sapi_name())
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Access denied');
+    }
 
 $newline = PHP_EOL;
 

@@ -1,7 +1,10 @@
 <?php
 include "../../include/db.php";
-command_line_only();
 
+if (php_sapi_name() != "cli")
+    {
+    exit("Permission denied");
+    }
 
 // This script renumbers resources using the provided offset to shift up/down. Files are moved accordingly.
 if (!isset($argv[1])) {exit("Usage: php renumber_resources.php [offset +/-]\n");}

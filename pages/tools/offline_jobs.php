@@ -1,7 +1,11 @@
 <?php
 include_once dirname(__FILE__) . "/../../include/db.php";
-command_line_only();
 
+// This MUST only be done by having access to the server
+if(PHP_SAPI != 'cli')
+    {
+    exit("This script cannot be run from a browser");
+    }
 
 set_time_limit(0);
 

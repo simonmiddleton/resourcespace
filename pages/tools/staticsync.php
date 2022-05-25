@@ -1,7 +1,11 @@
 <?php
 include_once dirname(__FILE__) . "/../../include/db.php";
 include_once dirname(__FILE__) . "/../../include/image_processing.php";
-command_line_only();
+
+if(PHP_SAPI != 'cli')
+    {
+    exit("Command line execution only.");
+    }
 
 $send_notification  = false;
 $suppress_output    = (isset($staticsync_suppress_output) && $staticsync_suppress_output) ? true : false;

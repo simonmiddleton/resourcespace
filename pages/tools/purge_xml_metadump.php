@@ -5,9 +5,16 @@
 #
 # delete all XML metadump files in filestore
 #
+
+if('cli' != PHP_SAPI)
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Access denied - Command line only!');
+    }
+
 include "../../include/db.php";
+
 include "../../include/image_processing.php";
-command_line_only();
 
 $sql="";
 if (getval("ref","")!="") {$sql="where r.ref='" . getvalescaped("ref","",true) . "'";}

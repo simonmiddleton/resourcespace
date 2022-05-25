@@ -4,7 +4,14 @@
 # cron job.
 
 include "../../include/db.php";
-command_line_only();
+
+
+
+if('cli' != php_sapi_name())
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Access denied');
+    }
 
 if(!isset($disk_quota_limit_size_warning_noupload) && !isset($disk_quota_notification_limit_percent_warning))
 	{
