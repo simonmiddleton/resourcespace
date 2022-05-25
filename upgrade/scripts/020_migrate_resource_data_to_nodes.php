@@ -2,7 +2,7 @@
 
 // Script to migrate all non-fixed list data to nodes
 
-$tomigrate = array_diff($field_types,array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
+$tomigrate = array_diff(array_keys($field_types),array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
 $startfield = get_sysvar("node_migrated_data_field",0);
 
 $resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') AND ref > ? ORDER BY `ref`',array_merge(ps_param_fill($tomigrate,"i"),["i",$startfield]));
@@ -13,13 +13,12 @@ foreach($resource_type_fields as $resource_type_field)
     {
     $fref = $resource_type_field['ref'];
     $fname = $resource_type_field['name'];
-    $out="Migrating resource_data {$fref}:{$fname}";
-    echo $out . "\n";;
-    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);
-
+    $status = "Migrating resource_data for field " . $fref . " (" . $fname . ")";
+    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status);
+    $nodecache = [];
     $totalrows = ps_value("SELECT count(*) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
-    $out.=' (' . $totalrows . ' rows found)';
-    logScript(str_pad($out,100,' '));
+    $out = " (" . $totalrows . " rows found)";
+    logScript(str_pad($status . $out,100,' '));
     ob_flush();
     
     $chunkstart = 0;
@@ -28,18 +27,32 @@ foreach($resource_type_fields as $resource_type_field)
         $rows = ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE resource_type_field = ? ORDER BY resource ASC LIMIT " . $chunkstart . ", " . $chunksize . "",["i",$fref]);
 
         foreach($rows as $rowdata)
-            {           
-            $newnode = set_node(NULL,$fref,$rowdata["value"],NULL,NULL);
-            logScript("Updating resource " . $rowdata["resource"] . ", field #" . $fref . " (" . $fname . ") with node " . $newnode . " (" . mb_strcut($rowdata["value"],0,20) . "...)");
-            add_resource_nodes($rowdata["resource"],[$newnode]);
+            {
+            if(trim($rowdata["value"]) != "")
+                {
+                if(isset($nodecache[$rowdata["value"]]))
+                    {
+                    $newnode = $nodecache[$rowdata["value"]];
+                    }
+                else
+                    {
+                    $newnode = set_node(NULL,$fref,$rowdata["value"],NULL,NULL);                    
+                    $nodecache[$rowdata["value"]] = $newnode;
+                    }
+                logScript("Updating resource " . $rowdata["resource"] . ", field #" . $fref . " (" . $fname . ") with node " . $newnode . " (" . mb_strcut($rowdata["value"],0,20) . "...)");
+                add_resource_nodes($rowdata["resource"],[$newnode]);
+                }           
             }
 
         $chunkstart = $chunkstart + $chunksize +1;
-        $out .= " - Completed $chunkstart / $totalrows records";
+        $out = " - processed $chunkstart / $totalrows records";
         logScript(str_pad($out,100,' '));
+        set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status . $out);
         ob_flush();
-        set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);
         }
+    $out = " - Completed $chunkstart / $totalrows records";
+    logScript(str_pad($out,100,' '));
+    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status . $out);
     set_sysvar("node_migrated_data_field",$fref);
     ob_flush();
     }
