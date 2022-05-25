@@ -10,12 +10,12 @@
 // IMPORTANT! - Uncomment this line if you want to force migration of fixed field values
 // sql_query("update resource_type_field set options=replace(options,'!deprecated,','')");
 
-$check_options_column=sql_query('SHOW COLUMNS FROM `resource_type_field` LIKE \'OPTIONS\'');
+$check_options_column=ps_query('SHOW COLUMNS FROM `resource_type_field` LIKE \'OPTIONS\'');
 if(count($check_options_column)==0) {return true;}
                                 
-$resource_type_fields=sql_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' .
-    implode(',',$FIXED_LIST_FIELD_TYPES) .
-    ") AND NOT `options` LIKE '!deprecated%' ORDER BY `ref`");
+$resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' .
+    ps_param_insert(count($FIXED_LIST_FIELD_TYPES)) .
+    ") AND NOT `options` LIKE '!deprecated%' ORDER BY `ref`",ps_param_fill($FIXED_LIST_FIELD_TYPES,"i"));
 
 foreach($resource_type_fields as $resource_type_field)
     {
@@ -32,7 +32,7 @@ foreach($resource_type_fields as $resource_type_field)
     {
     $out="Migrating resource_data {$resource_type_field['ref']}:{$resource_type_field['name']}";
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);
-    $resource_data_entries=sql_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field={$resource_type_field['ref']}");
+    $resource_data_entries=ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field=?",array("i",$resource_type_field['ref']));
     $out.=' (' . count($resource_data_entries) . ' rows found)';
     echo str_pad($out,100,' ');
     ob_flush();
@@ -48,7 +48,7 @@ foreach($resource_type_fields as $resource_type_field)
         `node`
       ON
         NOT EXISTS(SELECT * FROM `resource_node` WHERE `resource`=`resource_data`.`resource` AND `node`=`node`.`ref`) AND
-        `node`.`resource_type_field`={$resource_type_field['ref']} AND
+        `node`.`resource_type_field`=? AND
         `resource_data`.`value` REGEXP CONCAT('[\\\^\\\|\\\;,]+', `node`.`name`, '[\\\$\\\|\\\;,]*')
       LEFT OUTER JOIN
         `keyword`
@@ -59,11 +59,11 @@ foreach($resource_type_fields as $resource_type_field)
       ON
         `resource_keyword`.`keyword`=`keyword`.`ref` AND `resource_keyword`.`resource`=`resource_data`.`resource`
       WHERE
-        `resource_data`.`resource_type_field`={$resource_type_field['ref']}
+        `resource_data`.`resource_type_field`=?
       GROUP BY
         `resource_data`.`resource`,
         `node`.`ref`";
-    sql_query($sql);
+    ps_query($sql,array("i",$resource_type_field['ref'],"i",$resource_type_field['ref']));
     echo mysqli_affected_rows($db);
     echo " rows inserted." . PHP_EOL;
     ob_flush();
