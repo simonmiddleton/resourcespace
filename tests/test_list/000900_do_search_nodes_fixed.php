@@ -13,9 +13,7 @@ debug("Resource C: " . $resourcec);
 
 $debug_log=true;
 $debug_log_location = "/var/log/resourcespace/debug.log";
-//$debug_extended_info = true;
-
-
+$debug_extended_info = true;
 
 // Add new nodes to field
 $joeynode = set_node(NULL, 73, "Joey",'',1000);
@@ -37,6 +35,7 @@ add_resource_nodes($resourcec,array($johnnynode));
 // straight search of ref
 debug("searching for resource by ref " . $resourcea );
 $results=do_search($resourcea);
+
 if(!isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
 debug("Successfully searched for resource by resource id");
 

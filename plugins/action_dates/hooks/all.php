@@ -31,7 +31,7 @@ function HookAction_datesCronCron()
         $eligible_states = $action_dates_eligible_states;
     }
 
-	$allowable_fields=ps_array("select ref as value from resource_type_field where type in (4,6,10)",[], "schema");
+	$allowable_fields=ps_array("select ref as value from resource_type_field where type in (FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE)",[], "schema");
     $email_state_refs    = array();   # List of refs which are due to undergo state change (including full deletion) in n days 
     $email_state_days    = array();   # List of days due to undergo state change (including full deletion) in n days 
     $email_restrict_refs = array();   # List of refs which are due to be restricted in n days
@@ -47,7 +47,7 @@ function HookAction_datesCronCron()
         $fieldinfo = get_resource_type_field($action_dates_restrictfield);
         echo "action_dates: Checking restrict action field $action_dates_restrictfield.".$LINE_END;
 
-        $sql = "SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource ";
+        $sql = "SELECT rn.resource, rn.name FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node ";
         $sql_params = array();
         if(!empty($eligible_states))
             {
@@ -55,7 +55,7 @@ function HookAction_datesCronCron()
             $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
             }
 
-        $sql .= "WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = ? and rd.value <>'' and rd.value is not null";
+        $sql .= "WHERE r.ref > 0 AND r.access=0 AND n.resource_type_field = ?";
         $sql_params = array_merge($sql_params, array('i',$action_dates_restrictfield));
 
         $restrict_resources=ps_query($sql,$sql_params);
@@ -69,11 +69,11 @@ function HookAction_datesCronCron()
 			if ($action_date_current >= $restrict_date_target)		
 				{		
 				# Restrict access to the resource
-				$existing_access=ps_value("select access as value from resource where ref=?",["i",$ref],"");
+				$existing_access=ps_value("SELECT access AS value FROM resource WHERE ref = ?",["i",$ref],"");
 				if($existing_access==0) # Only apply to resources that are currently open
 					{
 					echo " - Restricting resource {$ref}".$LINE_END;
-					ps_query("update resource set access=1 where ref=?",["i",$ref]);
+					ps_query("UPDATE resource SET access=1 WHERE ref = ?",["i",$ref]);
 					resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
 					}
 				}
@@ -107,14 +107,14 @@ function HookAction_datesCronCron()
         if($action_dates_reallydelete)
             {
             # FULL DELETION - Build candidate list of resources which have the deletion date field populated
-            $sql  ="SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource ";
+            $sql = "SELECT rn.resource, rn.name FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node ";
             $sql_params = array();
             if(!empty($eligible_states))
                 {
                 $sql .= "AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ";
                 $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
                 }
-            $sql .="WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL";
+            $sql .="WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params=array_merge($sql_params,array("i",$action_dates_deletefield));
             $candidate_resources = ps_query($sql,$sql_params);
             }
@@ -127,7 +127,7 @@ function HookAction_datesCronCron()
                 }
             # NOT FULL DELETION - Build candidate list of resources which have the deletion date field populated
             #                     and which are neither in the resource deletion state nor in the action dates new state
-            $sql = "SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource ";
+            $sql = "SELECT rn.resource, rn.name FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node ";
             $sql_params = array();
 
             if (!empty($eligible_states))
@@ -139,7 +139,7 @@ function HookAction_datesCronCron()
             $sql .= " AND r.archive NOT IN (?,?) ";
             $sql_params = array_merge($sql_params,["i",$resource_deletion_state,"i",$action_dates_new_state]);
 
-            $sql .= "WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL ";
+            $sql .= "WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params = array_merge($sql_params,["i",$action_dates_deletefield]);
 
             $candidate_resources = ps_query($sql,$sql_params);
@@ -187,7 +187,7 @@ function HookAction_datesCronCron()
                     if($action_dates_remove_from_collection)
                         {
                         // Remove the resource from any collections
-                        ps_query("delete from collection_resource where resource=?",["i",$ref]);
+                        ps_query("DELETE FROM collection_resource WHERE resource=?",["i",$ref]);
                         }
                 
                     }
@@ -376,13 +376,12 @@ function HookAction_datesCronCron()
             echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . $LINE_END;
             $sql="SELECT 
                 rd.resource, 
-                rd.value 
-            FROM resource_data rd 
+                n.name 
+            FROM resource_node rn 
                 LEFT JOIN resource r ON r.ref=rd.resource 
+                LEFT JOIN node n ON n.ref=rn.node
             WHERE r.ref > 0 
-                AND rd.resource_type_field = ? 
-                AND rd.value <> '' 
-                AND rd.value IS NOT null 
+                AND n.resource_type_field = ?
                 AND r.archive<> ? 
                 AND r.archive<> ?";
             

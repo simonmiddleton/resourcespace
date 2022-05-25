@@ -1,18 +1,11 @@
 <?php
 
-// Note: It is safe to run this script at any time as it will work on differential data if migration interrupted
-
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Step 1.  Convert any missing fixed field type options to nodes (where not already deprecated)
-// ---------------------------------------------------------------------------------------------------------------------
-
-// IMPORTANT! - Uncomment this line if you want to force migration of fixed field values
-// sql_query("update resource_type_field set options=replace(options,'!deprecated,','')");
+// Script to migrate all non-fixed list data to nodes
 
 $tomigrate = array_diff($field_types,array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
-                                
-$resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') ORDER BY `ref`',ps_param_fill($tomigrate,"i"));
+$startfield = get_sysvar("node_migrated_data_field",0);
+
+$resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') AND ref > ? ORDER BY `ref`',array_merge(ps_param_fill($tomigrate,"i"),["i",$startfield]));
 
 // Number of resource_data rows to migrate in each batch to avoid out of memory errors
 $chunksize = 5000;
@@ -26,7 +19,7 @@ foreach($resource_type_fields as $resource_type_field)
 
     $totalrows = ps_value("SELECT count(*) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
     $out.=' (' . $totalrows . ' rows found)';
-    echo str_pad($out,100,' ') . "\n";
+    logScript(str_pad($out,100,' '));
     ob_flush();
     
     $chunkstart = 0;
@@ -37,16 +30,17 @@ foreach($resource_type_fields as $resource_type_field)
         foreach($rows as $rowdata)
             {           
             $newnode = set_node(NULL,$fref,$rowdata["value"],NULL,NULL);
-            echo "Updating resource " . $rowdata["resource"] . " with node " . $newnode;
+            logScript("Updating resource " . $rowdata["resource"] . ", field #" . $fref . " (" . $fname . ") with node " . $newnode . " (" . mb_strcut($rowdata["value"],0,20) . "...)");
             add_resource_nodes($rowdata["resource"],[$newnode]);
             }
 
         $chunkstart = $chunkstart + $chunksize +1;
         $out .= " - Completed $chunkstart / $totalrows records";
-        echo str_pad($out,100,' ') . "\n";
+        logScript(str_pad($out,100,' '));
         ob_flush();
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);
-        }    
+        }
+    set_sysvar("node_migrated_data_field",$fref);
     ob_flush();
     }
 
@@ -57,20 +51,20 @@ $alltables = ps_query("SHOW TABLES");
 $annotate_enabled = in_array("annotate_notes",array_column($alltables,"Tables_in_dev"));
 if($annotate_enabled)
     {
-    echo "Annotate plugin enabled, migrating to use new nodes<br/>";
+    logScript("Annotate plugin enabled, migrating to use new nodes");
     $count = 0;
-    
+
     $annotate_config = get_plugin_config("annotate");
-    echo "Checking if metadata field set: " . ($annotate_config["annotate_resource_type_field"] ?? "Not set") . "<br/>";
+    logScript( "Checking if metadata field set: " . ($annotate_config["annotate_resource_type_field"] ?? "Not set"));
     if(!isset($annotate_config["annotate_resource_type_field"]) || $annotate_config["annotate_resource_type_field"] === 0 )
         {
         // Create a new field to hold annotations
         $annotate_field = create_resource_type_field("Annotations plugin",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE,"annotateplugin",true);
         ps_query("UPDATE SET display_field=0, advanced_search=0,hide_when_uploading=1 WHERE ref = ?",["i",$annotate_field]);
         // Set plugin to use this field
-        $annotate_config["annotate_resource_type_field"] = $annotate_field;            
+        $annotate_config["annotate_resource_type_field"] = $annotate_field;
         set_plugin_config("annotate",$annotate_config);
-        echo "Set new annotation field $annotate_field<br/>";
+        logScript("Set new annotation field " . $annotate_field);
         }
     else
         {
@@ -80,11 +74,11 @@ if($annotate_enabled)
     $current_annotations = ps_query("SELECT ref, note, note_id, node FROM annotate_notes");
     foreach($current_annotations as $annotation)
         {
-        echo "Found annotation for resource  " . $annotation["ref"] . ", node: " . $annotation["node"] . "<br/>";
+        logScript("Found annotation for resource  " . $annotation["ref"] . ", node: " . $annotation["node"]);
         if((int)$annotation["node"] == 0)
             {
             // No node set, create a new one
-            echo "Migrating annotation for resource  " . $annotation["ref"] . ", note: " . $annotation["note"] . "<br/>";
+            logScript("Migrating annotation for resource  " . $annotation["ref"] . ", note: " . $annotation["note"]);
             $node = set_node(NULL,$annotate_field,$annotation["note"],NULL,10);
             ps_query("UPDATE annotate_notes SET node = ? WHERE ref= ?",["i",$node,"i",$annotation["ref"]]);
             // Add nodes so will be searchable
@@ -92,6 +86,6 @@ if($annotate_enabled)
             $count++;
             }
         }
-    echo "Completed " . $count . " annotations<br/>";
+    logScript("Completed " . $count . " annotations");
     }
 echo "Finished<br/>";

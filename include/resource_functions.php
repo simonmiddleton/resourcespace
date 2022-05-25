@@ -464,7 +464,7 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1)
     {
     # Create a new resource.
-    global $always_record_resource_creator,$k;
+    global $k;
 
     if(!is_numeric($archive))
         {
@@ -496,7 +496,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
         $user = $userref;
         }
 
-    sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
+    ps_query("INSERT INTO resource(resource_type,creation_date,archive,created_by) VALUES (?,NOW(),?,?)",["i",$resource_type,"i",$archive,"i",$user]);
 
     $insert=sql_insert_id();
 

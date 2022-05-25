@@ -92,7 +92,6 @@ function do_search(
         $sort='asc';
         }
 
-
     // Used for collection sort order as sortorder is ASC, date is DESC
     $revsort = (strtolower($sort) == 'desc') ? "asc" : " desc";
 
@@ -182,6 +181,18 @@ function do_search(
 
     $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
+    // Used to check if ok to skip keyword due to a match with resource type/resource ID
+    if(is_int_loose($search))
+        {
+        // Resource ID is no longer indexed, if search is just for a single integer then include this
+        $searchidmatch = ps_value("SELECT COUNT(*) AS value FROM resource WHERE ref = ?",["i",$search],0) != 0;
+        }
+    if ($index_resource_type)
+        {
+        // Resource type is no longer  indexed but this will still honour the config by including in search
+        $restypenames = get_resource_types();;
+        }
+    
     # Extract search parameters and split to keywords.
     $search_params=$search;
     if (substr($search,0,1)=="!" && substr($search,0,6)!="!empty")
@@ -332,6 +343,7 @@ function do_search(
         {
         for ($n=0;$n<count($keywords);$n++)
             {
+            $canskip = false;
             $search_field_restrict="";
             $keyword=$keywords[$n];
             debug("do_search(): \$keyword = {$keyword}");
@@ -341,6 +353,32 @@ function do_search(
 
             // Extra sql to search non-field data that used to be stored in resource_keyword e.g. resource type/resource contributor
             $non_field_keyword_sql = new PreparedStatementQuery();
+
+            if($keyword == $search && is_int_loose($keyword) && $searchidmatch)
+                {
+                // Resource ID is no longer indexed, if search is just for a single integer then include this
+                $non_field_keyword_sql->sql .= " UNION (SELECT " . (int)$keyword . " AS resource, [bit_or_condition] 1 AS score)";
+                $canskip = true;
+                }
+            elseif ($index_resource_type && in_array(mb_strtolower($keyword),array_map("mb_strtolower",array_column($restypenames,"name"))))
+                {
+                // Resource type is no longer actually indexed but this will still honour the config by including in search
+                $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r LEFT JOIN resource_type rt ON r.resource_type=rt.ref WHERE r.ref > 0 AND rt.name LIKE ?)";
+                array_push($non_field_keyword_sql->parameters,"s",$keyword);
+                $canskip = true;
+                }
+            if($index_contributed_by)
+                {
+                // Resource type is no longer actually indexed but this will still honour the config by including in search
+                $matchusers = get_users(0,$keyword,"u.username",true);
+                if(count($matchusers) > 0)
+                    {
+                    $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r WHERE r.created_by IN (" .  ps_param_insert(count($matchusers)). ") AND r.ref >0)";
+                    $userparams = ps_param_fill(array_column($matchusers,"ref"),"i");
+                    $non_field_keyword_sql->parameters = array_merge($non_field_keyword_sql->parameters,$userparams);
+                    $canskip = true;
+                    }
+                }        
 
             if(!$quoted_string || ($quoted_string && strpos($keyword,":")!==false)) // If quoted string with a field specified we first need to try and resolve it to a node instead of working out keyword positions etc.
                 {
@@ -583,10 +621,10 @@ function do_search(
                         }
 
                      if($field_short_name_specified) // Need this also for string matching in a named text field
-                            {
-                            $keyword=$keystring;
-                            $search_field_restrict=$fieldinfo['ref'];
-                            }
+                        {
+                        $keyword=$keystring;
+                        $search_field_restrict=$fieldinfo['ref'];
+                        }
 
                     if(!$quoted_string && !$keywordprocessed && !($field_short_name_specified && hook('customsearchkeywordfilter', null, array($kw)))) // Need this also for string matching in a named text field
                         {
@@ -682,7 +720,7 @@ function do_search(
                                 $keyref = (!empty($original_related) && isset($original_related[0]) ? $original_related[0] : false);
                                 }
 
-                            if ($keyref === false && !$omit && !$empty && count($wildcards) == 0 && !$field_short_name_specified)
+                            if ($keyref === false && !$omit && !$empty && count($wildcards) == 0 && !$field_short_name_specified && !$canskip)
                                 {
                                 // ********************************************************************************
                                 //                                                                     No wildcards
@@ -868,27 +906,8 @@ function do_search(
                                         $sql_keyword_union_or[]= FALSE;
                                         }
                                     else  // we are dealing with a standard keyword match
-                                        { 
+                                        {
                                         // ----- resource_node -> node_keyword sub query -----
-                                        if($index_resource_type)
-                                            {
-                                            // Resource type is no longer actually indexed but this will still honour the config by including in search
-                                            $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r LEFT JOIN resource_type rt ON r.resource_type=rt.ref WHERE r.ref > 0 AND rt.name LIKE ?)";
-                                            array_push($non_field_keyword_sql->parameters,"s",$keyword);
-                                            }
-                                        if($index_contributed_by)
-                                            {
-                                            // Resource type is no longer actually indexed but this will still honour the config by including in search
-                                            $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r LEFT JOIN user u ON u.ref=r.created_by WHERE r.ref > 0 AND u.fullname LIKE ? OR u.username LIKE ?)";
-                                            array_push($non_field_keyword_sql->parameters,"s",$keyword,"s",$keyword);
-                                            }
-                                        if($keyword == $search && is_int_loose($keyword))
-                                            {
-                                            // Resource ID is no longer indexed, if search is just for a single integer then include this
-                                            $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r  WHERE r.ref LIKE ?)";
-                                            array_push($non_field_keyword_sql->parameters,"i",(int)$keyword);
-                                            }
-
                                         $union = new PreparedStatementQuery();
                                         $union->sql = " SELECT resource, [bit_or_condition] SUM(hit_count) AS score 
                                                           FROM resource_node rn[union_index]" .
