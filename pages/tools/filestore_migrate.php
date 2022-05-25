@@ -1,10 +1,7 @@
 <?php
 include "../../include/db.php";
+command_line_only();
 
-if (php_sapi_name() != "cli")
-    {
-    exit("Permission denied");
-    }
 
 
 // This script moves resources from old locations to new locations if settings are changed after initial setup
