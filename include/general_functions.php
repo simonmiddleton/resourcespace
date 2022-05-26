@@ -5069,3 +5069,19 @@ function check_utility_cli_version_found_by_name(string $version_output, array $
         'found' => isset($found),
     ];
     }
+
+
+/**
+ * Check we're running on the command line, exit otherwise. Security feature for the scripts in /pages/tools/
+ * 
+ * 
+ * @return void
+ */
+function command_line_only()
+    {
+    if('cli' != PHP_SAPI)
+        {
+        http_response_code(401);
+        exit('Access denied - Command line only!');
+        }
+    }
