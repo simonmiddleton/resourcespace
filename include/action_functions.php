@@ -53,12 +53,11 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         }
     if(checkperm("R") && $actions_resource_requests && (!$filtered || 'resourcerequest'==$type))
         {
-        # This get_requests call now returns a query object with two properties; sql string and parameters array
-        $request_query = get_requests(true,true,true);
-        $user_request_query = get_user_requests(true,true);
-        $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created 
-        as date,ref, user, substring(comments,21) as description,'resourcerequest' as type FROM (" . $request_query->sql . " UNION " . $user_request_query->sql .  ") requests";
-        $actionsql->parameters = array_merge($actionsql->parameters, $user_request_query->parameters,);
+        # This get_requests call now returns a query object with two properties; sql string and paramaters array
+        $request_query = get_requests(true,true,true);      
+        $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created
+        as date,ref, user, substring(comments,21) as description,'resourcerequest' as type FROM (" . $request_query->sql . ") requests";
+        $actionsql->parameters=array_merge($actionsql->parameters, $request_query->parameters);
         }
     if(checkperm("u") && $actions_account_requests && (!$filtered || 'userrequest'==$type))
         {
