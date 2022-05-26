@@ -673,11 +673,6 @@ if('' != $tile_type && $tile_type !== "conf")
             <div class="clearerleft"> </div>
         </div>
         <script>
-        if(!jQuery('#tile_style_thmbs').prop('checked'))
-            {
-            jQuery('#promotedresource').hide();
-            }
-
         jQuery('.tlstyle').change(function()
             {
                 checked = jQuery('.tlstyle:checked').val();
