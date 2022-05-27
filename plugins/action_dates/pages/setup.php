@@ -42,6 +42,7 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_restrictfield"] = getvalescaped('action_dates_restrictfield','',true);
     $action_dates_config["action_dates_remove_from_collection"] = getvalescaped('action_dates_remove_from_collection','');
     $action_dates_config['action_dates_workflow_actions'] = getvalescaped('action_dates_workflow_actions',false);
+    $action_dates_config["action_dates_weekdays"] = getvalescaped('action_dates_weekdays','');
     
     // Get the extra rows fom the table
     $action_date_extra_fields     = getvalescaped('action_dates_extra_field',array());
@@ -64,6 +65,7 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_extra_config"] = $action_dates_extra_config;
 
     set_plugin_config("action_dates",$action_dates_config);
+    include_plugin_config("action_dates","",json_encode($action_dates_config));
     }
    
 
@@ -221,7 +223,10 @@ foreach ($page_def as $def)
     }
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+
+// Note that config_gen_setup_post() is not used as it cannot process $action_dates_extra_config array
+// $upload_status = config_gen_setup_post($page_def, $plugin_name);
+
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, true, $plugin_page_heading);
 
