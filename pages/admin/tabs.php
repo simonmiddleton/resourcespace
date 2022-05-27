@@ -12,6 +12,12 @@ $tab_sort = (strtoupper(getval('tab_sort', 'ASC')) === 'DESC') ? 'DESC' : 'ASC';
 
 // [Paging functionality]
 $per_page = (int) getval('per_page', $default_perpage_list, true);
+if($per_page === 99999)
+    {
+    // all results option - see render_table()
+    $list_display_array['all'] = 99999;
+    $allow_reorder = true;
+    }
 $per_page = in_array($per_page, $list_display_array) ? $per_page : $default_perpage;
 rs_setcookie('per_page', $per_page);
 $offset = (int) getval('offset', 0, true);
@@ -60,7 +66,7 @@ $table_info = [
 
 foreach($tab_records['data'] as $tab_record)
     {
-    $tab_record['reorder_handle'] = '<i class="fas fa-sort"></i>';
+    $tab_record['reorder_handle'] = isset($allow_reorder) ? '<i class="fas fa-sort"></i>' : '';
     $tab_record['name'] = i18n_get_translated($tab_record['name']);
     $tab_record['usage'] = sprintf(
         '%s %s, %s %s',
@@ -69,22 +75,27 @@ foreach($tab_records['data'] as $tab_record)
         $tab_record['usage_rt'],
         mb_strtolower($lang['resourcetypes'])
     );
-    $tab_record['tools'] = [
-        // TODO: N/A for the tab ID #1 (default can't be deleted)
-        [
-        'icon' => 'fa fa-fw fa-trash',
-        'text' => $lang['action-delete'],
-        'url' => '#',
-        'modal' => false,
-        'onclick' => "update_tab(\"{$tab_record['ref']}\", \"delete_tab\");"
-        ],
-        [
+
+    // Allow users to delete tabs except the Default one which is always ID #1 (created by dbstruct).
+    if($tab_record['ref'] > 1)
+        {
+        $tab_record['tools'] = [
+            [
+                'icon' => 'fa fa-fw fa-trash',
+                'text' => $lang['action-delete'],
+                'url' => '#',
+                'modal' => false,
+                'onclick' => "update_tab(\"{$tab_record['ref']}\", \"delete_tab\");",
+            ],
+        ];
+        }
+
+    $tab_record['tools'][] = [
         'icon' => 'fa fa-fw fa-edit',
         'text' => $lang['action-edit'],
         'url' => '#',
         'modal' => false,
         'onclick' => "update_tab(\"{$tab_record['ref']}\", \"edit_tab\");"
-        ],
     ];
 
     $table_info['data'][] = $tab_record;
@@ -117,6 +128,8 @@ jQuery(function() {
     // Make all table rows sortable (except the header)
     jQuery('.BasicsBox .Listview.SystemTabs > table').sortable({
         items: 'tr:not(:first-child)',
+        handle: 'td > i.fa-sort',
+        containment: 'div.SystemTabs > table',
         update: function(event, ui)
             {
             let tabs_new_order = jQuery(event.target)
