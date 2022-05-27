@@ -914,3 +914,14 @@ function api_reorder_tabs($refs)
     http_response_code(403);
     return false;
     }
+
+function api_delete_tabs($refs)
+    {
+    if(acl_can_manage_tabs())
+        {
+        return delete_tabs($refs);
+        }
+
+    http_response_code(403);
+    return false;
+    }

@@ -40,7 +40,8 @@ $table_info = [
     'headers' => [
         'reorder_handle' => ['name' => '', 'sortable' => false, 'html' => true],
         'ref' => ['name' => $lang['property-reference'], 'sortable' => true],
-        'name' => ['name' => $lang['name'], 'sortable' => false, 'width' => '50%'],
+        'name' => ['name' => $lang['name'], 'sortable' => false,/* 'width' => '50%'*/],
+        'test_inline_edit' => ['name' => 'TODO: inline edit', 'sortable' => false, 'html' => true],
         'usage' => ['name' => $lang['usage'], 'sortable' => false],
         'tools' => ['name' => $lang['tools'], 'sortable' => false, 'width' => '20%']
     ],
@@ -68,6 +69,12 @@ foreach($tab_records['data'] as $tab_record)
     {
     $tab_record['reorder_handle'] = isset($allow_reorder) ? '<i class="fas fa-sort"></i>' : '';
     $tab_record['name'] = i18n_get_translated($tab_record['name']);
+    $tab_record['test_inline_edit'] = sprintf(
+        '<span>%s</span><input name="test_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
+        htmlspecialchars(i18n_get_translated($tab_record['name'])),
+        htmlspecialchars($tab_record['ref']),
+        htmlspecialchars($tab_record['name'])
+    );
     $tab_record['usage'] = sprintf(
         '%s %s, %s %s',
         $tab_record['usage_rtf'],
@@ -85,7 +92,7 @@ foreach($tab_records['data'] as $tab_record)
                 'text' => $lang['action-delete'],
                 'url' => '#',
                 'modal' => false,
-                'onclick' => "update_tab(\"{$tab_record['ref']}\", \"delete_tab\");",
+                'onclick' => "return delete_tabs(this, [{$tab_record['ref']}]);",
             ],
         ];
         }
@@ -95,7 +102,7 @@ foreach($tab_records['data'] as $tab_record)
         'text' => $lang['action-edit'],
         'url' => '#',
         'modal' => false,
-        'onclick' => "update_tab(\"{$tab_record['ref']}\", \"edit_tab\");"
+        'onclick' => "return update_tab(this, {$tab_record['ref']}, \"init_edit\");"
     ];
 
     $table_info['data'][] = $tab_record;
@@ -140,6 +147,43 @@ jQuery(function() {
             }
     });
 });
+
+
+function delete_tabs(el, refs)
+    {
+
+    if(confirm('<?php echo htmlspecialchars($lang["confirm-deletion"]); ?>'))
+        {
+        api('delete_tabs', {'refs': refs}, function(successful)
+            {
+            if(successful)
+                {
+                // Remove row from table
+                jQuery(el).parents('tr').remove();
+                }
+            else
+                {
+                styledalert("<?php echo htmlspecialchars($lang["error"]); ?>", "<?php echo htmlspecialchars($lang["error-failed-to-delete"]); ?>");
+                }
+            });
+        };
+
+    return false;
+    }
+
+function update_tab(el, ref, action)
+    {
+    let record = jQuery(el).parents('tr');
+    console.log('record = %o', record);
+
+    console.log('%o for ref = %o', action, ref);
+    if(action === 'init_edit')
+        {
+        console.log('edit_input = %o', record.find('input[name="test_inline_edit_'+ref+'"'));
+TODO: hide translated value (in span tag) and show the edit input instead. When (after) saving, do the opposite after getting the new value translated
+        record.find('input[name="test_inline_edit_'+ref+'"').toggleClass('DisplayNone');
+        }
+    }
 </script>
 <?php
 include '../../include/footer.php';

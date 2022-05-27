@@ -26,3 +26,36 @@ function get_tabs_with_usage_count(int $per_page, int $offset)
     return sql_limit_with_total_count($query, $per_page, $offset);
     }
 
+
+/**
+ * Delete system tabs.
+ * 
+ * IMPORTANT: never allow the "Default" tab (ref #1) to be deleted because this is the fallback location for information 
+ * that has no association with other tabs.
+ * 
+ * @param array $refs List of tab IDs
+ * 
+ * @return bool Returns TRUE if it executed the query, FALSE otherwise
+ */
+function delete_tabs(array $refs)
+    {
+    if(!acl_can_manage_tabs())
+        {
+        return false;
+        }
+
+    $refs_chunked = array_chunk(
+        // Sanitise list: only numbers and never allow the "Default" tab (ref #1) to be deleted
+        array_diff(array_filter($refs, 'is_int_loose'), [1]),
+        SYSTEM_DATABASE_IDS_CHUNK_SIZE
+    );
+    foreach($refs_chunked as $refs_list)
+        {
+        $return = ps_query(
+            "DELETE FROM tab WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")",
+            ps_param_fill($refs_list, 'i')
+        );
+        }
+
+    return isset($return);
+    }

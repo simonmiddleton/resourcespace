@@ -5268,7 +5268,7 @@ function render_table($tabledata)
                     else
                         {
                         echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) 
-                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick")) 
+                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick", 'name', 'value')) 
                                 : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
