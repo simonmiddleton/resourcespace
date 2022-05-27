@@ -1203,7 +1203,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # View Collection
     if (substr($search, 0, 11) == '!collection')
         {
-        global $userref;
+        global $userref,$ignore_collection_access;
 
         $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
@@ -1250,7 +1250,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         // Attach the negated user reference special collection
         $validcollections[] = (0 - $userref);
             
-        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
+        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection) || $ignore_collection_access)
             {
             if(!collection_readable($collection))
                 {
