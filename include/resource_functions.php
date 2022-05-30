@@ -1974,70 +1974,6 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
     }
 
-function remove_keyword_mappings($ref,$string,$resource_type_field,$partial_index=false,$is_date=false,$optional_column='',$optional_value='',$is_html=false)
-	{
-	# Removes one instance of each keyword->resource mapping for each occurrence of that
-	# keyword in $string.
-	# This is used to remove keyword mappings when a field has changed.
-	# We also decrease the hit count for each keyword.
-	if (trim($string)=="") {return false;}
-	$keywords=split_keywords($string,true,$partial_index,$is_date,$is_html);
-
-	add_verbatim_keywords($keywords, $string, $resource_type_field);		// add in any verbatim keywords (found using regex).
-
-	for ($n=0;$n<count($keywords);$n++)
-		{
-        unset ($kwpos);
-		if (is_array($keywords[$n])){
-			$kwpos=$keywords[$n]['position'];
-			$keywords[$n]=$keywords[$n]['keyword'];
-		}        
-		$kw=$keywords[$n]; 
-        if (!isset($kwpos)){$kwpos=$n;}
-		remove_keyword_from_resource($ref,$keywords[$n],$resource_type_field,$optional_column='',$optional_value='',false, $kwpos);
-		}	
-	}
-
-
-function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$optional_column='',$optional_value='',$normalized=false, $position='')
-    {
-    if(!$normalized)
-        {
-		global $unnormalized_index;
-        $kworig=$keyword;
-        $keyword=normalize_keyword($keyword);
-        if($keyword!=$kworig && $unnormalized_index)
-			{
-			// $keyword has been changed by normalizing, also remove the original value
-			remove_keyword_from_resource($ref,$kworig,$resource_type_field,$optional_column='',$optional_value='',true);
-			}
-        }		
-	
-        $keyref=resolve_keyword($keyword,true, false);
-	if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and include this condition
-		{
-		sql_query("delete from resource_keyword where resource='$ref' and keyword='$keyref' and resource_type_field='$resource_type_field'" . (($position!="")?" and position='" . $position ."'":"") . " and $optional_column= $optional_value");
-		}
-	else{
-		sql_query("delete from resource_keyword where resource='$ref' and keyword='$keyref' and resource_type_field='$resource_type_field'" . (($position!="")?" and position='" . $position ."'":""));
-		}
-	sql_query("update keyword set hit_count=hit_count-1 where ref='$keyref' limit 1");
-			
-    }
-    
-/**
- * Remove all entries from resource_keyword for this field, useful if setting is changed and changed back leaving stale data
- *
- * @param  int  $resource              ID of resource
- * @param  int  $resource_type_field   ID of resource type field
- * 
- * @return void
- */
-function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
-    {
-    sql_query("delete from resource_keyword where resource='" . escape_check($resource) . "' and resource_type_field='" . escape_check($resource_type_field) . "'");
-    }
-
 /**
 * Updates resource field. Works out the previous value, so this is
 * not efficient if we already know what this previous value is (hence
@@ -2054,7 +1990,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true, $nodevalues=false)
     {
-    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents, $username,$userref, $NODE_MIGRATED_FIELD_TYPES;
+    global $category_tree_add_parents, $userref, $NODE_MIGRATED_FIELD_TYPES;
 
     $resource_data = get_resource_data($resource);
     if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -2080,6 +2016,12 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     else
         {
         $fieldinfo = $fieldinfo[0];
+        }
+
+    $value = trim($value);
+    if($value === '' && $fieldinfo['required'])
+        {
+        return false;
         }
 
     if (!in_array($fieldinfo['type'], $NODE_MIGRATED_FIELD_TYPES))
@@ -2133,8 +2075,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 // Only a single value allowed
                 return false;
                 }
-            
-            $nodesfound = false;
+
             foreach($fieldnodes as $fieldnode)
                 {
                 // Add to array of nodes, unless it has been added to array already as a parent for a previous node
@@ -2155,7 +2096,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
 
                     $newnodes[] = $fieldnode["ref"];
-                    $nodesfound = true;
                     }
                 else if(in_array($fieldnode["ref"],$current_field_noderefs) && !in_array($fieldnode["name"],$sent_nodes))
                     {
@@ -2332,14 +2272,27 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     else
         {
         # Fetch previous value
-        $existing = get_data_by_field($resource,$field);
+        $existing_resource_node = get_resource_nodes($resource, $field, true)[0] ?? [];
+        $existing = $existing_resource_node["name"] ?? "";
         if ($value === $existing)
             {
             // Nothing to do
             return true;
             }
-        save_non_fixed_list_field($resource,$field,$value);
-        $log = false; // Already logged by save_non_fixed_list_field()
+
+        $curnode = $existing_resource_node["ref"] ?? 0 ;
+        if ($curnode > 0 && get_nodes_use_count([$curnode]) == 1)
+            {
+            // Reuse same node
+            $savenode = set_node($curnode,$field,$value,NULL,0);
+            }
+        else
+            {
+            // Remove node from resource and create new node
+            delete_resource_nodes($resource,[$curnode]);
+            $savenode = set_node(NULL,$field,$value,NULL,0);
+            add_resource_nodes($resource,[$savenode], true, true);
+            }
         }
 
     # If this is a 'joined' field we need to add it to the resource column
@@ -3201,7 +3154,6 @@ function clear_resource_data($resource)
     {
     # Clears stored data for a resource.
 	ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
-	ps_query("DELETE FROM resource_keyword WHERE resource = ?", ["i",$resource]);
 	ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);
     delete_all_resource_nodes($resource); 
     
@@ -3713,8 +3665,7 @@ function update_resource_type($ref,$type)
     ps_query("UPDATE resource SET resource_type = ? WHERE ref = ?",["i",$type,"i",$ref]);
 
     # Clear data that is no longer needed (data/keywords set for other types).
-    sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' and resource_type_field>0 and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
-    sql_query("delete from resource_node where resource='" . escape_check($ref) . "' and node>0 and node not in (select n.ref from node n left join resource_type_field rf on n.resource_type_field=rf.ref where rf.resource_type='$type' or rf.resource_type=999 or resource_type=0)");	
+    ps_query("DELETE FROM resource_node WHERE resource = ? and node>0 AND node NOT IN (SELECT n.ref FROM node n LEFT JOIN resource_type_field rf ON n.resource_type_field=rf.ref WHERE rf.resource_type = ? OR rf.resource_type=999 OR resource_type=0)",["i",$ref,"i",$type]);	
                     
     return true;    	
     }
@@ -6773,41 +6724,9 @@ function filter_check($filterid,$nodes)
 
     return false;
     }
-
-
-function update_resource_keyword_hitcount($resource,$search)
-    {
-    # For the specified $resource, increment the hitcount for each matching keyword in $search
-    # This is done into a temporary column first (new_hit_count) so existing results are not affected.
-    # copy_hitcount_to_live() is then executed at a set interval to make this data live.
-    $keywords=split_keywords($search);
-    $keys=array();
-    for ($n=0;$n<count($keywords);$n++)
-        {
-        $keyword=$keywords[$n];
-        if (strpos($keyword,":")!==false)
-            {
-            $k=explode(":",$keyword);
-            $keyword=$k[1];
-            }
-        $found=resolve_keyword($keyword);
-        if ($found!==false) {$keys[]=resolve_keyword($keyword);}
-        }   
-    if (count($keys)>0)
-        {
-        // Get all nodes matching these keywords
-        $nodes = get_nodes_from_keywords($keys);
-        update_resource_node_hitcount($resource,$nodes);
-        sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
-        }
-    }
-        
+       
 function copy_hitcount_to_live()
-    {
-    # Copy the temporary hit count used for relevance matching to the live column so it's activated (see comment for
-    # update_resource_keyword_hitcount())
-    sql_query("update resource_keyword set hit_count=new_hit_count");
-    
+    {    
     # Also update the resource table
     # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability)
     sql_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
@@ -7045,7 +6964,7 @@ function get_field_options($ref,$nodeinfo = false)
 */
 function get_data_by_field($resource, $field)
     {
-    global $rt_fieldtype_cache, $NODE_FIELDS;
+    global $rt_fieldtype_cache;
 
     $return              = '';
     $resource_type_field = escape_check($field);
@@ -7979,9 +7898,6 @@ function delete_resource_type_field($ref)
     ps_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ?",["i",$ref]);
     ps_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = ?",["i",$ref]);
     ps_query("DELETE FROM node WHERE resource_type_field = ?",["i",$ref]);
-
-    // Remove all keywords	    
-    ps_query("DELETE FROM resource_keyword where resource_type_field = ?",["i",$ref]);
 
     hook("after_delete_resource_type_field");
 

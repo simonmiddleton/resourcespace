@@ -26,7 +26,7 @@ function suggest_refinement($refs,$search)
     $in=join(",",$refs);
     $suggest=array();
     # find common keywords
-    $refine=sql_query("SELECT k.keyword,count(*) c FROM resource_keyword r join keyword k on r.keyword=k.ref AND r.resource IN ($in) AND length(k.keyword)>=3 AND length(k.keyword)<=15 AND k.keyword NOT LIKE '%0%' AND k.keyword NOT LIKE '%1%' AND k.keyword NOT LIKE '%2%' AND k.keyword NOT LIKE '%3%' AND k.keyword NOT LIKE '%4%' AND k.keyword NOT LIKE '%5%' AND k.keyword NOT LIKE '%6%' AND k.keyword NOT LIKE '%7%' AND k.keyword NOT LIKE '%8%' AND k.keyword NOT LIKE '%9%' GROUP BY k.keyword ORDER BY c DESC LIMIT 5");
+    $refine=sql_query("SELECT k.keyword,count(k.ref) c FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN node_keyword nk ON nk.node=n.ref LEFT JOIN keyword k on nk.keyword=k.ref WHERE rn.resource IN ($in) AND length(k.keyword)>=3 AND length(k.keyword)<=15 AND k.keyword NOT LIKE '%0%' AND k.keyword NOT LIKE '%1%' AND k.keyword NOT LIKE '%2%' AND k.keyword NOT LIKE '%3%' AND k.keyword NOT LIKE '%4%' AND k.keyword NOT LIKE '%5%' AND k.keyword NOT LIKE '%6%' AND k.keyword NOT LIKE '%7%' AND k.keyword NOT LIKE '%8%' AND k.keyword NOT LIKE '%9%' GROUP BY k.keyword ORDER BY c DESC LIMIT 5");
     for ($n=0;$n<count($refine);$n++)
         {
         if (strpos($search,$refine[$n]["keyword"])===false)
@@ -2383,14 +2383,6 @@ function get_suggested_keywords($search,$ref="")
     return sql_array("SELECT ak.keyword value
         FROM
             (
-            SELECT k.keyword, k.hit_count
-            FROM keyword k
-            JOIN resource_keyword rk ON rk.keyword=k.ref
-            WHERE k.keyword LIKE '" . escape_check($search) . "%'" . $restriction_clause_free . "
-            AND k.hit_count >= '$autocomplete_search_min_hitcount'
-         
-            UNION
-         
             SELECT k.keyword, k.hit_count
             FROM keyword k
             JOIN node_keyword nk ON nk.keyword=k.ref

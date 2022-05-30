@@ -1469,7 +1469,10 @@ function delete_resource_nodes(int $resourceid,$nodes=array(),$logthis=true)
             {
             $nodedata = array();
             get_node($node, $nodedata);
-            $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+            if($nodedata)
+                {
+                $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+                }
             }
         foreach ($field_nodes_arr as $key => $value)
             {
@@ -2248,146 +2251,6 @@ function process_node_search_syntax_to_names(array $R, string $column)
 
     return $R;
     }
-
-/**
-* Update non-fixed list field - handling node changes 
-* 
-* @param int    $resource                   Resource ID
-* @param int    $resource_type_field        Metadata field ID
-* @param string $value                      New data value
-* @param string $log                        Log this change (true by default)
-* 
-* @return array
-*/
-function save_non_fixed_list_field(int $resource, int $resource_type_field, string $value, bool $log=true)
-    {
-    debug_function_call("save_non_fixed_list_field", func_get_args());
-    /*
-    # SAVING - DONE
-    The saving functionality will ensure that upon saving a text field, the system will look for a node with a matching 
-    identical name. ResourceSpace will create a new node if one cannot be retrieved.
-
-    # EDITING
-    When editing a text field, the system will update the node name only if a node is not being used by more than one resource.
-
-    When more than a resource is used, the process will be as follows:
-    - create a new node for the new value (ie. the updated value input by user)
-    - link new node ID with the resource
-    - remove original node association
-
-    DONE - If the new value is an empty string, then the process is slightly different:
-    - check the current node associated is linked with any other resources. If not, remove it.
-    - remove original node association
-    */
-    $value = trim($value);
-
-    // Non-fixed list fields should only have one resource-node relationship! If you have two nodes associated with a 
-    // resource for a non-fixed list field (e.g text) then something went wrong somewhere.
-    $existing_resource_node = get_resource_nodes($resource, $resource_type_field, true)[0] ?? [];
-    $existing_rn_w_use_count = get_nodes_use_count([$existing_resource_node['ref'] ?? 0]);
-
-    $similar_field_nodes = get_nodes($resource_type_field, null, false, null, null, $value, true);
-    $found_match = get_node_by_name($similar_field_nodes, $value, false);
-
-    // TODO: nodes_to_add & remove should be empty if found_match=existing_resource_node
-    $nodes_to_add = array_column([$found_match], 'ref');
-    $nodes_to_remove = empty($nodes_to_add)
-                        ? []
-                        : (empty($existing_resource_node) ? [] : [$existing_resource_node['ref']]);
-
-    $delete_unused_nodes = false;
-
-    $fieldinfo = get_resource_type_field($resource_type_field);
-
-    // Remove existing data (when given an empty value)
-    if($value === '')
-        {
-        if($fieldinfo['required'])
-            {
-            return false;
-            }
-        $nodes_to_add = [];
-        $nodes_to_remove = get_resource_nodes($resource, $resource_type_field);
-
-        // Determine list of nodes to remove and their current use count
-        $node_use_count_dict = array_intersect_key(array_column($similar_field_nodes, 'use_count', 'ref'), array_flip($nodes_to_remove));
-
-        // If nodes will no longer be associated with any other resources, trigger a removal of "ghost" nodes. Note the 
-        // clean-up must happen after we actually delete nodes, not before.
-        foreach($node_use_count_dict as $n_ref => $n_use_count)
-            {
-            if(--$n_use_count === 0)
-                {
-                $delete_unused_nodes = true;
-                break;
-                }
-            }
-        }
-
-    // EDIT mode
-    else if(empty($found_match) && !empty($existing_resource_node))
-        {
-        // Current node is only used on this resource
-        if(
-            $existing_rn_w_use_count[$existing_resource_node['ref']] <= 1
-            && set_node($existing_resource_node['ref'], $resource_type_field, $value, null, $existing_resource_node['order_by']) !== false
-        )
-            {
-            resource_log($resource,LOG_CODE_EDITED,$resource_type_field,"",$existing_resource_node["name"],$value);
-            return true;
-            }
-
-        // Current node has more resources associated with it => new node created
-        if($existing_rn_w_use_count[$existing_resource_node['ref']] > 1)
-            {
-            // - create a new node for the new value (ie. the updated value input by user)
-            // - link new node ID with the resource
-            // - remove original node association
-            echo "TODO---EDITED: create, link and remove".PHP_EOL;
-            }
-        }
-
-    // Create a new node if unable to find a match for the new value or an existing node for the resource
-    else if(empty($found_match) && empty($existing_resource_node))
-        {
-        $new_node = set_node(null, $resource_type_field, $value, null, get_node_order_by($resource_type_field, false, null));
-        $nodes_to_add = [$new_node];
-        }
-    
-    // Update resource_node table
-    db_begin_transaction('save_non_fixed_list_field_update_resource_node');
-   
-    if(count($nodes_to_add) > 0)
-        {
-        add_resource_nodes($resource, $nodes_to_add, false, false);
-        }
-    
-    log_node_changes($resource, $nodes_to_add, $nodes_to_remove);
-
-    if(count($nodes_to_remove) > 0)
-        {
-        // This has to be after call to log_node_changes() or nodes cannot be resolved
-        delete_resource_nodes($resource, $nodes_to_remove, false);
-        if($delete_unused_nodes)
-            {
-            delete_unused_non_fixed_list_nodes($resource_type_field);
-            }
-        }
-        
-    db_end_transaction('save_non_fixed_list_field_update_resource_node');
-    
-
-    // print_r([
-    //     'similar_field_nodes' => $similar_field_nodes,
-    //     'found_match' => $found_match,
-    //     'existing_resource_node' => $existing_resource_node,
-    //     'nodes_to_add' => $nodes_to_add,
-    //     'nodes_to_remove' => $nodes_to_remove,
-    // ]);
-
-    return true;
-    }
-
 
 /**
  * Delete unused non-fixed list field nodes with a 1:1 resource association
