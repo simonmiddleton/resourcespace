@@ -117,8 +117,8 @@ else
 					}		
 				
 				// update last sent
-				sql_query("delete from sysvars where name='last_sent_disk_quota'");
-				sql_query("insert into sysvars(name,value) values ('last_sent_disk_quota',now())");
+				ps_query("delete from sysvars where name='last_sent_disk_quota'");
+				ps_query("insert into sysvars(name,value) values ('last_sent_disk_quota',now())");
 				}
 			}
 		else
@@ -195,8 +195,8 @@ else
 					message_add($admin_notify_users,escape_check($body),$baseurl . "/pages/pages/team/team_home.php", 0);
 					}		
 				// update last sent
-				sql_query("delete from sysvars where name='last_sent_disk_quota_noupload'");
-				sql_query("insert into sysvars(name,value) values ('last_sent_disk_quota_noupload',now())");
+				ps_query("delete from sysvars where name='last_sent_disk_quota_noupload'");
+				ps_query("insert into sysvars(name,value) values ('last_sent_disk_quota_noupload',now())");
 				}
 			}
 		else

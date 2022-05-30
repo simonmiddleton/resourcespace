@@ -48,7 +48,7 @@ elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
         }
     }
 
-$inst_plugins = sql_query('SELECT name, config_url, descrip, author, ' .
+$inst_plugins = ps_query('SELECT name, config_url, descrip, author, ' .
     'inst_version, update_url, info_url, enabled_groups, disable_group_select, title, icon ' .
     'FROM plugins WHERE inst_version>=0 order by name');
 /**
@@ -96,7 +96,7 @@ function load_plugins($plugins_dir)
         if (is_dir($plugins_dir.$file)&&$file[0]!='.')
             {
             #Check if the plugin is already activated.
-            $status = sql_query('SELECT inst_version, config FROM plugins WHERE name="'.$file.'"');
+            $status = ps_query('SELECT inst_version, config FROM plugins WHERE name=?',array("s",$file));
             if ((count($status)==0) || ($status[0]['inst_version']==null))
                 {
                 # Look for a <pluginname>.yaml file.

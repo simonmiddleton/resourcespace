@@ -35,7 +35,7 @@ function perform_login($loginuser="",$loginpass="")
         }
 
     // User logs in
-    if($found_user_record && rs_password_verify($password, $user_data['password'], ['username' => $username]))
+    if($found_user_record && rs_password_verify($password, $user_data['password'], ['username' => $username]) && $password != "")
         {
         $password_hash_info = get_password_hash_info();
         $algo = $password_hash_info['algo'];

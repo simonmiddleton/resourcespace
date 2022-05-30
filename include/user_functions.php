@@ -1182,6 +1182,8 @@ function new_user($newuser, $usergroup = 0)
     
     $cols = array("username");
     $sqlparams = ["s",$newuser];
+    $cols[] = 'password';
+    $sqlparams[] = 's'; $sqlparams[] = rs_password_hash("RS{$newuser}" . make_password());
     
     if($usergroup > 0)
         {

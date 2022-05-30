@@ -1580,7 +1580,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
 function get_nodes_from_keywords($keywords=array())
     {
     if(!is_array($keywords)){$keywords=array($keywords);}
-    return ps_array("select node value FROM node_keyword WHERE keyword in (" . ps_param_insert(count($keywords)) . ")", ps_param_fill($keywords,"i")); 
+    return ps_array("SELECT node value FROM node_keyword WHERE keyword IN (" . ps_param_insert(count($keywords)) . ")", ps_param_fill($keywords,"i")); 
     }
     
 /**
@@ -1595,7 +1595,7 @@ function update_resource_node_hitcount($resource,$nodes)
     if(!is_array($nodes)){$nodes=array($nodes);}
     if (count($nodes)>0) 
         {
-        ps_query("update resource_node set new_hit_count = new_hit_count + 1 WHERE resource = ? AND node in (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
+        ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
         }
     }
 

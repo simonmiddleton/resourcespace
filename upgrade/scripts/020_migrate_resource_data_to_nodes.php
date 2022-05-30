@@ -27,8 +27,6 @@ foreach($resource_type_fields as $resource_type_field)
         {
         $rows = ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE resource_type_field = ? ORDER BY resource ASC LIMIT " . $chunkstart . ", " . ($chunksize) . "",["i",$fref]);
 
-        //$rows = ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE resource_type_field = ? AND resource=4235 ORDER BY resource ASC LIMIT " . $chunkstart . ", " . ($chunksize) . "",["i",$fref]);
-
         // Get current nodes for this batch of resources
         $batchresources = array_column($rows,"resource");
         $resnodes = ps_query("SELECT rn.resource, rn.node FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE rn.resource IN (" . ps_param_insert(count($batchresources)). ") AND n.resource_type_field = ?",array_merge(ps_param_fill($batchresources,"i"),["i",$fref]));

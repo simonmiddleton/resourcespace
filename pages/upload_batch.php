@@ -691,12 +691,21 @@ if ($processupload)
                     }
                 hook('upload_original_extra', '', array($ref));
                     
-                $wait = hook('afterpluploadfile', '', array($ref, $extension));
-                                
-                $result["status"] = true;
-                $result["message"] = $lang["created"];
-                $result["id"] = htmlspecialchars($ref);
-                $result["collection"] = htmlspecialchars($collection_add);          
+                $after_upload_result = hook('afterpluploadfile', '', array($ref, $extension));
+                
+                if (is_array($after_upload_result))
+                    {
+                    $result["status"] = false;
+                    $result["error"] = $after_upload_result["code"];
+                    $result["message"] = $after_upload_result["message"];
+                    }
+                else
+                    {
+                    $result["status"] = true;
+                    $result["message"] = $lang["created"];
+                    $result["id"] = htmlspecialchars($ref);
+                    $result["collection"] = htmlspecialchars($collection_add);
+                    }
                 }
             }
         else if ($replace=="" && $replace_resource!="")

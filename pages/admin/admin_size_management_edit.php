@@ -9,12 +9,6 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-
-// Plugins add their own size properties (return is an array where index is the column name and value the value for that column - getval())
-$plg_cols = hook('get_size_extra_columns');
-$plg_cols = (!is_array($plg_cols)) ? array() : $plg_cols;
-$plg_cols_str = (is_array($plg_cols) && !empty($plg_cols)? ', ' . implode(', ', array_keys($plg_cols)) : '');
-
 $find=getval("find","");
 $order_by=getval("orderby","");
 $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}" : "");
@@ -23,7 +17,7 @@ $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}
 $new_size_id=getvalescaped("newsizeid","");
 if ($new_size_id!="" && enforcePostRequest(false))
 	{
-	sql_query("insert into preview_size(id,name,internal,width,height) values('" . strtolower($new_size_id) . "','{$new_size_id}',0,0,0)");
+	ps_query("insert into preview_size(id,name,internal,width,height) values(?,?,0,0,0)",array("s",strtolower($new_size_id),"s",$new_size_id));
 	$ref=sql_insert_id();
 	log_activity(null,LOG_CODE_CREATED,$new_size_id,'preview_size','id',$ref,null,'');
 	redirect("{$baseurl_short}pages/admin/admin_size_management_edit.php?ref={$ref}{$url_params}");	// redirect to prevent repost and expose form data
@@ -40,7 +34,7 @@ if (!sql_value("select ref as value from preview_size where ref='{$ref}' and int
 
 if (getval("deleteme", false) && enforcePostRequest(false))
 	{
-	sql_query("delete from preview_size where ref='{$ref}'");
+	ps_query("delete from preview_size where ref=?",arrau("i",$ref));
 	log_activity(null,LOG_CODE_DELETED,null,'preview_size',null,$ref);
 	redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");		// return to the size management page
 	exit;
@@ -75,11 +69,6 @@ if (getval("save", false) && enforcePostRequest(false))
 	$cols["allow_preview"]=(getval('allowpreview',false) ? "1" : "0");
 	$cols["allow_restricted"]=(getval('allowrestricted',false) ? "1" : "0");
 
-    foreach($plg_cols as $extra_column_name => $extra_column_value)
-        {
-        $cols[$extra_column_name] = $extra_column_value;
-        }
-
 	foreach ($cols as $col=>$val)
 		{
 		if (isset($sql_columns))
@@ -88,18 +77,22 @@ if (getval("save", false) && enforcePostRequest(false))
 			}
 		else
 			{
-			$sql_columns="";
+			$sql_columns="";$params=array();
 			}
-		$sql_columns.="{$col}='{$val}'";
+		$sql_columns.="{$col}=?";$params[]="s";$params[]=$val;
 		log_activity(null,LOG_CODE_EDITED,$val,'preview_size',$col,$ref);
 		}
 
-	if (isset($sql_columns)) sql_query("update preview_size set {$sql_columns} where ref={$ref}");
+	if (isset($sql_columns))
+		{
+		$params[]="i";$params[]=$ref;
+		ps_query("update preview_size set {$sql_columns} where ref=?",$params);
+		}
 	redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");		// return to the size management page
 	exit;
 	}
 
-$record = sql_query("SELECT ref, id, width, height, padtosize, `name`, internal, allow_preview, allow_restricted, quality{$plg_cols_str} FROM preview_size WHERE ref = '{$ref}'");
+$record = ps_query("SELECT ref, id, width, height, padtosize, `name`, internal, allow_preview, allow_restricted, quality FROM preview_size WHERE ref = ?",array("i",$ref));
 $record = $record[0];
 include "../../include/header.php";
 ?>

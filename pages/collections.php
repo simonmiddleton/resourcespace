@@ -526,6 +526,10 @@ if ($add!="")
                 hook("postaddtocollection");
                 }
             }
+    
+        # Update resource/keyword kit count
+        if ((strpos($search,"!")===false) && ($search!="")) {update_resource_keyword_hitcount($add,$search);}
+        
         # Show warning?
         if (isset($collection_share_warning) && $collection_share_warning)
             {

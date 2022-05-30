@@ -22,7 +22,8 @@ function safe_file_name($name)
             }
         }
 
-    $newname = mb_substr($newname, 0, 50);
+    // Set to 250 to allow for total length to be below 255 limit including filename and extension
+    $newname = mb_substr($newname, 0, 250); 
 
     return $newname;
     }

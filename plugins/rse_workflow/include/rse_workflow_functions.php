@@ -4,10 +4,10 @@ if (!function_exists("rse_workflow_get_actions")){
     function rse_workflow_get_actions($status="",$ref="")
             {
             # Check if we are searching for actions specific to a status
-            $condition="";
+            $condition="";$params=array();
             if($status!="" && is_int($status)){$condition=" where wa.statusfrom='status' ";}
-            if($ref!=""){$condition=" where wa.ref='$ref' ";}
-            $actions=sql_query("select wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto,a.notify_group,a.name as statusto_name,a.more_notes_flag,a.notify_user_flag, a.email_from, a.bcc_admin from workflow_actions wa left outer join archive_states a on wa.statusto=a.code $condition group by wa.ref order by wa.ref,wa.statusfrom,wa.statusto asc");
+            if($ref!=""){$condition=" where wa.ref=? ";$params[]="i";$params[]=$ref;}
+            $actions=ps_query("select wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto,a.notify_group,a.name as statusto_name,a.more_notes_flag,a.notify_user_flag, a.email_from, a.bcc_admin from workflow_actions wa left outer join archive_states a on wa.statusto=a.code $condition group by wa.ref order by wa.ref,wa.statusfrom,wa.statusto asc",$params);
             return $actions;
             }
     }
@@ -23,7 +23,7 @@ if (!function_exists("rse_workflow_save_action")){
             $buttontext=getvalescaped("actionbuttontext","");
             
             # Check if we are searching for actions specific to a status
-            sql_query("update workflow_actions set name='$name', text='$text', buttontext='' statusfrom='$fromstate', statusto='$tostate' where ref='$ref'");
+            ps_query("update workflow_actions set name=?, text=?, buttontext='' statusfrom=?, statusto=? where ref=?",array("s",$name,"s",$text,"i",$fromstate,"i",$tostate,"i",$ref));
             return true;
             }
     }
@@ -31,7 +31,7 @@ if (!function_exists("rse_workflow_save_action")){
 if (!function_exists("rse_workflow_delete_action")){
     function rse_workflow_delete_action($action)
         {
-        sql_query("delete from workflow_actions where ref='$action'");
+        ps_query("delete from workflow_actions where ref=?",array("i",$action));
         return true;  
         }
     }   
@@ -39,7 +39,7 @@ if (!function_exists("rse_workflow_delete_action")){
 if (!function_exists("rse_workflow_get_archive_states")){
     function rse_workflow_get_archive_states()
             {
-            $rawstates=sql_query("
+            $rawstates=ps_query("
                     SELECT code,
                            name,
                            notify_group,
@@ -49,7 +49,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                            bcc_admin,
                            simple_search_flag
                       FROM archive_states
-                  ORDER BY code ASC","workflow");
+                  ORDER BY code ASC",array(),"workflow");
 
             global $additional_archive_states, $lang;
             $states=array();
@@ -123,8 +123,8 @@ if (!function_exists("rse_workflow_get_archive_states")){
 if (!function_exists("rse_workflow_delete_state")){
     function rse_workflow_delete_state($state,$newstate)
         {		
-        sql_query("update resource set archive='" . escape_check($newstate) . "' where archive='" . escape_check($state) . "'");
-        sql_query("delete from archive_states where code='" . escape_check($state) . "'");
+        ps_query("update resource set archive=? where archive=?",array("i",$newstate,"i",$state));
+        ps_query("delete from archive_states where code=?",array("s",$state));
         clear_query_cache("workflow");
         return true;  
         }
@@ -273,19 +273,19 @@ function rse_workflow_create_state(array $data)
         $new_state_data['code'] = ++$code;
         }
 
-    $sql = sprintf(
+    $sql = ps_query(
         "INSERT INTO archive_states (code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin, simple_search_flag)
-              VALUES ('%s', '%s', '%s', '%s', '%s', %s, '%s', '%s')",
-        escape_check($new_state_data['code']),
-        escape_check($new_state_data['name']),
-        escape_check($new_state_data['notify_group']),
-        escape_check($new_state_data['more_notes_flag']),
-        escape_check($new_state_data['notify_user_flag']),
-        sql_null_or_val($new_state_data['email_from'], $new_state_data['email_from'] === ''),
-        escape_check($new_state_data['bcc_admin']),
-        escape_check($new_state_data['simple_search_flag'])        
-    );
-    sql_query($sql);
+              VALUES (" . ps_param_insert(8) . ")",
+        array(
+        "s",$new_state_data['code'],
+        "s",$new_state_data['name'],
+        "i",$new_state_data['notify_group'],
+        "i",$new_state_data['more_notes_flag'],
+        "i",$new_state_data['notify_user_flag'],
+        "s",$new_state_data['email_from'],
+        "i",$new_state_data['bcc_admin'],
+        "i",$new_state_data['simple_search_flag']        
+        ));
     $new_state_data['ref'] = sql_insert_id();
 
     return $new_state_data;

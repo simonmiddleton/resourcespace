@@ -15,7 +15,7 @@ include_once 'metadata_functions.php';
  * Upload a file from the provided path to the given resource 
  *
  * @param  int $ref                         Resource ID
- * @param  bool $no_exif                    Do not extract embedded metadate. False by default so data will be extracted
+ * @param  bool $no_exif                    Do not extract embedded metadata. False by default so data will be extracted
  * @param  bool $revert                     Delete all data and re-extract embedded data
  * @param  bool $autorotate                 Autorotate images - alters embedded orientation data in uploaded file
  * @param  string $file_path                Path to file
@@ -33,7 +33,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
-    global $storagedir;
+    global $storagedir, $syncdir, $batch_replace_local_folder;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -41,6 +41,44 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     # revert is mainly for metadata reversion, removing all metadata and simulating a reupload of the file from scratch.
 
     hook ("removeannotations","",array($ref));
+
+    if(trim($file_path) != "")
+        {
+        // Check a valid path is specified
+        $validpath = false;
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            $file_path = realpath($file_path);
+            }
+        catch (Exception $e)
+            {
+            debug("Invalid file path specified");
+            return false;
+            }
+        unset($GLOBALS["use_error_exception"]);
+        $valid_upload_paths = $valid_upload_paths ?? [];
+        $valid_upload_paths[] = $storagedir;
+        $valid_upload_paths[] = $syncdir;    
+        $valid_upload_paths[] = $batch_replace_local_folder;
+ 
+        foreach($valid_upload_paths as $valid_upload_path)
+            {
+            if(is_dir($valid_upload_path))
+                {
+                $checkpath = realpath($valid_upload_path);
+                if(strpos($file_path,$checkpath) === 0)
+                    {
+                    $validpath = true;
+                    }
+                }
+            }
+        if (!$validpath)
+            {
+            debug("Invalid file path specified: " . $file_path);
+            return false;
+            }
+        }
 
     if(!$after_upload_processing && !(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
         {
@@ -757,7 +795,15 @@ function extract_exif_comment($ref,$extension="")
                         $value=""; # blank value
                         for ($n=0;$n<count($s);$n++)
                             {
-                            if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}                             
+                            if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];}
+                            # Translate the option and compare the traslated strings to the value
+                            foreach($options as $option)
+                                {
+                                if (trim($s[0])!="" && (in_array(strtolower($s[$n]),i18n_get_translations($option))))
+                                    {
+                                    $value.="," . $option;
+                                    }                
+                                }
                             }
                         }
 

@@ -138,9 +138,9 @@ if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
                    group_concat(n.`name` SEPARATOR ', ') AS `value`
               FROM resource_node AS rn
         INNER JOIN node AS n ON rn.node = n.ref
-             WHERE n.resource_type_field = '{$html_rtf_ref}'
+             WHERE n.resource_type_field = ?
           GROUP BY rn.resource";
-    $html_data = sql_query($q);
+    $html_data = ps_query($q,array($i,$html_rtf_ref));
     }
 else
     {

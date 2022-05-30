@@ -2006,16 +2006,18 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     // Fetch some information about the field
-    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = ?",["i",$field], "schema");
-
-    if(0 == count($fieldinfo))
+    $fieldinfo = get_resource_type_field($field);
+    
+    if(!$fieldinfo)
         {
         $errors[] = "No field information about field ID '{$field}'";
         return false;
         }
-    else
+
+    if (!in_array($fieldinfo['resource_type'], array(0, $resource_data['resource_type'])))
         {
-        $fieldinfo = $fieldinfo[0];
+        $errors[] = "Field is not valid for this resource type";
+        return false;
         }
 
     $value = trim($value);
@@ -6723,6 +6725,35 @@ function filter_check($filterid,$nodes)
         }
 
     return false;
+    }
+
+
+function update_resource_keyword_hitcount($resource,$search)
+    {
+    // For the specified $resource, increment the hitcount for each matching keyword in $search
+    // This is done into a temporary column first (new_hit_count) so existing results are not affected.
+    // copy_hitcount_to_live() is then executed at a set interval to make this data live.
+    // Not that from v10 the resource_keyword table is no longer used
+
+    $keywords=split_keywords($search);
+    $keys=array();
+    for ($n=0;$n<count($keywords);$n++)
+        {
+        $keyword=$keywords[$n];
+        if (strpos($keyword,":")!==false)
+            {
+            $k=explode(":",$keyword);
+            $keyword=$k[1];
+            }
+        $found=resolve_keyword($keyword);
+        if ($found!==false) {$keys[]=resolve_keyword($keyword);}
+        }  
+    if (count($keys)>0)
+        {
+        // Get all nodes matching these keywords
+        $nodes = get_nodes_from_keywords($keys);
+        update_resource_node_hitcount($resource,$nodes);
+        }
     }
        
 function copy_hitcount_to_live()

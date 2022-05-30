@@ -650,14 +650,16 @@ $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
     $all_nodes = get_nodes($field, NULL, TRUE, NULL, NULL, '', TRUE);
+
+    ?>
+    <select id="node_master_list" class="DisplayNone">
+    <?php
     foreach($all_nodes as $node)
         {
-        $node_data[] = ['ref' => $node['ref'], 'name' => $node['name']];
+        ?><option value="<?php echo htmlspecialchars($node['ref'])?>" id="master_node_<?php echo htmlspecialchars($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
         }
     ?>
-    <script>
-        let node_data = <?php echo json_encode($node_data); ?>;
-    </script> 
+    </select>
     <?php
     $nodes_counter = count($tree_nodes);
     $i             = 0;
@@ -691,27 +693,44 @@ if($field_data['type'] == 7 && !$tree_nodes)
 ?>
 </div><!-- end of BasicBox -->
 <script>
-jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){fill_selects(jQuery(ele))});
 
-function fill_selects(node_element)
+jQuery(document).on('focus', '[id*="_parent_select_chosen"]', function(){  
+    fill_select(jQuery(this).parent().find('select'));
+});
+
+
+jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){load_parent(jQuery(ele))});
+
+function fill_select(node_element)
     {
+    let total_nodes = node_element.find('option').length
+    //Skip the select if there are already options in the list, should be 2 by default 'Select Parent' and the parent node.
+    if(total_nodes > 2){return;}
+    if(total_nodes == 2){node_element.children().last().remove()}
+
+    //Get the node master list that was genereated on page load
+    let node_list = jQuery('#node_master_list').clone();
+    node_list.children().appendTo(node_element);
+
+    //Find and select the parent node from the dropdown list
+    node_element.find('[value="'+ node_element.attr('parent_node') +'"]').attr('selected', true)
+
+    //Get node ref from element id
+    let id_parts = node_element.attr('id').split('_');
+    //Hide the node in its own dropdown
+    node_element.find('option[value="'+id_parts[2]+'"]').hide();
+    node_element.trigger('chosen:updated');
+    }
+
+function load_parent(node_element)
+    {
+    //Don't need to add the parent if the node already has options
     if(node_element.find('option').length != 1){return;}
-    node_data.forEach(function(item)
+    let parent = node_element.attr('parent_node');
+    if(parent != '')
         {
-        let option = jQuery('<option>').attr('value', item['ref']).html(item['name']);
-        if(item['ref'] == node_element.attr('parent_node'))
-            {
-            option.attr('selected', true);
-            }
-        if(node_element.attr('id') != undefined)
-            {
-            if(item['ref'] != node_element.attr('id').split('_')[2])
-                {
-                node_element.append(option);
-                }
-            }
+        jQuery('#master_node_' + node_element.attr('parent_node')).clone().attr('selected', true).appendTo(node_element);
         }
-    )
     }
 
 function AddNode(parent)
@@ -772,11 +791,11 @@ function AddNode(parent)
                 }
             if(new_option_parent_val == 0)
                 {
-                jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){fill_selects(jQuery(ele))});
+                jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){load_parent(jQuery(ele))});
                 }
             else
                 {
-                jQuery('#node_' + new_option_parent_val + '_children').find('select').each(function(i, ele){fill_selects(jQuery(ele))});
+                jQuery('#node_' + new_option_parent_val + '_children').find('select').each(function(i, ele){load_parent(jQuery(ele))});
                 }
 
             initial_new_option_name = new_option_name.val();
@@ -946,7 +965,7 @@ function ToggleTreeNode(ref, field_ref)
         if(typeof response !== 'undefined')
             {
             node_children.html(response);
-            node_children.find('select').each(function(i,ele){fill_selects(jQuery(ele))});
+            node_children.find('select').each(function(i,ele){load_parent(jQuery(ele))});
             jQuery('.node_parent_chosen_selector').chosen({});
 
             jQuery(table_node).data('toggleNodeMode', 'ex');

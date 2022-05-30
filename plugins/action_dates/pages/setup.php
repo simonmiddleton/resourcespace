@@ -41,7 +41,8 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_restrictfield"] = getvalescaped('action_dates_restrictfield','',true);
     $action_dates_config["action_dates_remove_from_collection"] = getvalescaped('action_dates_remove_from_collection','');
     $action_dates_config['action_dates_workflow_actions'] = getvalescaped('action_dates_workflow_actions',false);
-
+    $action_dates_config["action_dates_weekdays"] = getvalescaped('action_dates_weekdays','');
+    
     // Get the extra rows fom the table
     $action_date_extra_fields     = getvalescaped('action_dates_extra_field',array());
     $action_date_extra_statuses   = getvalescaped('action_dates_extra_status',array());

@@ -228,7 +228,7 @@ function save_request($request)
  * Fetch a list of requests assigned to the logged in user
  *
  * @param  boolean $excludecompleted    Exclude completed requests?
- * @param  boolean $excludeassigned     Exclude assigned requests? (e.g. if the user is able to assign unassigned requests)
+ * @param  boolean $excludeassigned     Exclude assigned requests? (e.g. if the user is able to assign unassigned requests) unless assigned to the logged in user
  * @param  boolean $returnsql           Return SQL query object instead of the results?
  * @return mixed                        Resulting array of requests or an SQL query object
  */
@@ -253,7 +253,8 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
         # Excluding assigned requests only makes sense if user is able to assign requests 
         if ($excludeassigned) 
             {
-            $condition = "WHERE r.assigned_to IS null"; 
+            $condition = "WHERE (r.assigned_to IS null OR r.assigned_to = ?)"; // Ensure they see requests that have been assigned to them
+            $parameters=array("i",$userref);
             }
         }
     # Exclude completed requests if necessary
