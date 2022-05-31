@@ -1095,10 +1095,8 @@ function remove_all_node_keyword_mappings($node)
     {
     ps_query("DELETE FROM node_keyword WHERE node = ?",array("i",$node));
     clear_query_cache("schema");
-
     return;
     }
-
 
 /**
 * Function used to check if a fields' node needs (re-)indexing
@@ -2332,4 +2330,17 @@ function check_delete_nodes($nodes)
                 }
             }
         }
+    }
+
+/**
+* Delete all keywords for all nodes associated with the specified field
+*
+* @param  integer  $field  Field ID
+*  
+* @return bool  
+*/
+function remove_field_keywords($field)
+    {
+    ps_query("DELETE nk FROM node_keyword nk LEFT JOIN node n ON n.ref=nk.node WHERE n.resource_type_field = ?", ["i",$field]);
+    return;
     }

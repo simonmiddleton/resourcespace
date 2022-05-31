@@ -25,7 +25,6 @@ else
         exit("Please specify a field ID\n e.g.\n php reindex_field.php 8\n");
         }
     }
-include_once "../../include/image_processing.php";
 
 set_time_limit(0);
 $chunk_size=100; // Number of nodes to reindex in each batch 
@@ -64,23 +63,26 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
             remove_all_node_keyword_mappings($node['ref']);
             add_node_keyword_mappings($node, $fieldinfo["partial_index"], $is_date,$is_html);
             $completed++;
-			}
+            }
         $start += ($chunk_size +1);
         }
-
-	echo "Reindex complete\n\n\n";
-	}
+    $result = PHP_SAPI == 'cli' ? "Reindex complete\n\n" : "<div class='PageInfoMessage'>Reindex of field '" . htmlspecialchars($fieldinfo["title"]) . "' complete </div>";
+    echo $result;
+    }
 
 
 if (!(PHP_SAPI == 'cli'))
     {
-    include __DIR__ . "/../../include/header.php";
     ?>
-    <form method="post" action="reindex_field.php">
-        <?php generateFormToken("reindex_field"); ?>
-    <?php render_field_selector_question("Choose field to reindex", "field",[]); ?>
-    <input type="submit" name="submit" value="Reindex field">
-    </form>
+    <div class="BasicsBox">
+        <form method="post" action="reindex_field.php">
+            <?php generateFormToken("reindex_field"); ?>
+            <?php render_field_selector_question("Choose field to reindex", "field",[]); ?>
+            <div class="Question">
+                <label></label><input type="submit" name="submit" value="Reindex field">
+            </div>
+        </form>
+    </div>
     <?php
 
     include __DIR__ . "/../../include/footer.php";

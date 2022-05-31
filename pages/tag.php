@@ -70,7 +70,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
                 }
 
             # Find field(s) - multiple fields can be returned to support several fields with the same name.
-            $f=ps_array("select ref value from resource_type_field where name=?",["s",$filterfield], "schema");
+            $f=ps_array("SELECT ref value FROM resource_type_field WHERE name = ?",["s",$filterfield], "schema");
             if (count($f)==0)
                 {
                 exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");
@@ -94,8 +94,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
                 # Standard operation ('=' syntax)
                 $sql_join.=
                     " JOIN resource_keyword filter" . $n . " ON r.ref=filter" . $n . ".resource
-                        AND filter" . $n . ".resource_type_field in ('" . ps_param_insert(count($f)) . "')
-                        AND filter" . $n . ".keyword in ('" . ps_param_insert(count($kw)) . "') ";
+                        AND filter" . $n . ".resource_type_field IN ('" . ps_param_insert(count($f)) . "')
+                        AND filter" . $n . ".keyword IN ('" . ps_param_insert(count($kw)) . "') ";
                 $sql_join_params = array_merge($sql_join_params,ps_param_fill($f,"i"),ps_param_fill($kw,"i"));
                 }
             else
