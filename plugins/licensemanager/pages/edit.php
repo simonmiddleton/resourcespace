@@ -140,7 +140,7 @@ if (getval("submitted","")!="")
         else
             {
             move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
-            sql_query("update license set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+            ps_query("UPDATE license set file=? where ref=?",array("s",$_FILES["file"]["name"], "i",$ref));
             }
         }
 
@@ -148,7 +148,7 @@ if (getval("submitted","")!="")
     if (getval("clear_file","")!="")
         {
         if (file_exists($file_path)) {unlink($file_path);}  
-        sql_query("update license set file='' where ref='$ref'");
+        ps_query("UPDATE license set file='' where ref=?",array("i",$ref));
         }
     
     redirect($redirect_url);
