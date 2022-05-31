@@ -1158,26 +1158,39 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
             }
         }
 
-    $keywords = split_keywords($node['name'], true, $partial_index,$is_date, $is_html);
-    add_verbatim_keywords($keywords, $node['name'], $node['resource_type_field']);
+    // Check for translations and split as necessary
+    if(substr($node['name'],0,1) == "~")
+        {
+        $translations = array_filter(i18n_get_translations($node['name']));
+        }
+    else
+        {
+        $translations[] = $node['name'];
+        }
 
     db_begin_transaction("add_node_keyword_mappings");
-    for($n = 0; $n < count($keywords); $n++)
+    foreach($translations as $translation)
         {
-        unset($keyword_position);
+        $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
+        add_verbatim_keywords($keywords, $translation, $node['resource_type_field']);
 
-        if(is_array($keywords[$n]))
+        for($n = 0; $n < count($keywords); $n++)
             {
-            $keyword_position = $keywords[$n]['position'];
-            $keywords[$n]     = $keywords[$n]['keyword'];
-            }
+            unset($keyword_position);
 
-        if(!isset($keyword_position))
-            {
-            $keyword_position = $n;
-            }
+            if(is_array($keywords[$n]))
+                {
+                $keyword_position = $keywords[$n]['position'];
+                $keywords[$n]     = $keywords[$n]['keyword'];
+                }
 
-        add_node_keyword($node['ref'], $keywords[$n], $keyword_position);
+            if(!isset($keyword_position))
+                {
+                $keyword_position = $n;
+                }
+
+            add_node_keyword($node['ref'], $keywords[$n], $keyword_position);
+            }
         }
     db_end_transaction("add_node_keyword_mappings");
     clear_query_cache("schema");

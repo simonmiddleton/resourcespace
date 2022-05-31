@@ -1,5 +1,11 @@
 <?php 
 
+function HookAnnotateAllInitialise()
+    {
+    global $annotate_resource_type_field;
+    config_register_core_fieldvars("Annotate plugin",['annotate_resource_type_field']);
+    }
+
 function HookAnnotateAllModifyselect()
     {
     return (" ,r.annotation_count ");
@@ -102,3 +108,15 @@ function HookAnnotateAllExport_add_tables()
     {
     return array("annotate_notes"=>array());
     }
+
+function HookAnnotateAllEdithidefield($field)
+    {
+    global $annotate_resource_type_field;
+    if(isset($field["ref"]) && $field["ref"] == $annotate_resource_type_field)
+        {
+        return true;
+        }
+    return false;
+    }
+
+

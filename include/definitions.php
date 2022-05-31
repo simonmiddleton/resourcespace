@@ -79,7 +79,7 @@ you could have 2 nodes associated (the from/to dates).
 */
 define('NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES', array_merge($TEXT_FIELD_TYPES, array_diff($DATE_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE])));
 
-// Array of fields that do not have fixed value options but data is stil stored using node/resource_node rather than resource_data. 
+// Array of fields that do not have fixed value options but data is still stored using node/resource_node rather than resource_data. 
 // This is now the default for new fields and will include all fields once node development is complete.
 $NODE_MIGRATED_FIELD_TYPES = array(
     FIELD_TYPE_DATE_RANGE,
@@ -350,8 +350,8 @@ $corefields = array(
         'iiif_description_field',
         'iiif_license_field',
         'iiif_sequence_field',
-        'facial_recognition_tag_field',
-        'join_fields'
+        'join_fields',
+        'annotate_fields',
         )
     );
 

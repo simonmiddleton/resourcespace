@@ -948,19 +948,35 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $expiry_field_edited=true;
                     }
 
+                $use_node = NULL;
                 if(trim($fields[$n]["nodes"]) != "")
                     {
-                    // Remove any existing node IDs for this non-fixed list field (there should only be one).
+                    // Remove any existing node IDs for this non-fixed list field (there should only be one) unless used by other resources.
                     $current_field_nodes = array_filter(explode(",",$fields[$n]["nodes"]),"is_int_loose");
-                    $nodes_to_remove = array_merge($nodes_to_remove,$current_field_nodes);
-                    $nodes_check_delete = array_merge($nodes_check_delete,$current_field_nodes);
+
+                    foreach($current_field_nodes as $current_field_node)
+                        {
+                        $inuse = get_nodes_use_count([$current_field_node]);
+                        $inusecount = $inuse[$current_field_node] ?? 0;
+                        if ($current_field_node > 0 && $inusecount == 1)
+                            {
+                            // Reuse same node
+                            $use_node = $current_field_node;
+                            }
+                        else
+                            {
+                            // Remove node from resource and create new node
+                            $nodes_to_remove[] = $current_field_node;
+                            $nodes_check_delete[] = $current_field_node;
+                            }
+                        }
                     }
 
                 # Add new node
                 if($val !=='')
                     {
-                    $newnode = set_node(null, $fields[$n]["ref"], $val, null, null);
-                    $nodes_to_add[] = $newnode;
+                    $newnode = set_node($use_node, $fields[$n]["ref"], $val, null, null);
+                    $nodes_to_add[] = ((int)$use_node > 0) ? $use_node : $newnode;
                     }
 
                 # If this is a 'joined' field we need to add it to the resource column
@@ -1208,7 +1224,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 function save_resource_data_multi($collection,$editsearch = array())
     {
-    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields;
+    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
 
@@ -1519,15 +1535,14 @@ function save_resource_data_multi($collection,$editsearch = array())
                     )
                     {
                     # Construct a multilingual string from the submitted translations
-                    $val=getvalescaped("field_" . $fields[$n]["ref"],"");
-                    $rawval = getval("field_" . $fields[$n]["ref"],"");
+                    $val = getval("field_" . $fields[$n]["ref"],"");
                     $val="~" . $language . ":" . $val;
                     reset ($languages);
                     foreach ($languages as $langkey => $langname)
                         {
                         if ($language!=$langkey)
                             {
-                            $val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
+                            $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
                             }
                         }
                     }
@@ -1581,21 +1596,21 @@ function save_resource_data_multi($collection,$editsearch = array())
                             $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlspecialchars($findstring));
                             $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlentities($findstring)); 
                             $html_entity_strings[] = htmlentities($findstring);
-                            $html_entity_strings[] = htmlspecialchars($findstring);                            
+                            $html_entity_strings[] = htmlspecialchars($findstring);
                             
                             // Just need one replace string
                             $replacestring = htmlspecialchars($replacestring);
                                                         
                             $val=str_replace($html_entity_strings, $replacestring, $val);
                             }
-                        }                        
-                    
+                        }
+
                     # Append text/option(s) mode?
                     elseif ($mode=="AP" && in_array($fields[$n]["type"],$TEXT_FIELD_TYPES))
                         {
                         $val = $existing . " " . $origval;
-                        }                        
-                        
+                        }
+
                     # Prepend text/option(s) mode?
                     elseif ($mode=="PP" && in_array($fields[$n]["type"],$TEXT_FIELD_TYPES))
                         {
@@ -1990,7 +2005,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true, $nodevalues=false)
     {
-    global $category_tree_add_parents, $userref, $NODE_MIGRATED_FIELD_TYPES;
+    global $category_tree_add_parents, $userref, $NODE_MIGRATED_FIELD_TYPES, $DATE_FIELD_TYPES;
 
     $resource_data = get_resource_data($resource);
     if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -7891,7 +7906,7 @@ function delete_resource_type_field($ref)
         foreach($scopevars as $varname)
             {
             global $$varname;
-            if(isset($$varname) && (is_array($$varname) && in_array($ref,$$varname) || ((int)$$varname==$ref)))
+            if(isset($$varname) && ((is_array($$varname) && in_array($ref,$$varname)) || (int)$$varname==$ref))
                 {
                 $fieldvars[] = $varname . ($scope != "BASE" ? " (" . $scope . ")" : "");
                 }
