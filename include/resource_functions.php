@@ -8090,7 +8090,25 @@ function get_download_filename($ref,$size,$alternative,$ext)
             {
             # Fetch from the resource_alt_files alternatives table (this is an alternative file)
             $origfile=get_alternative_file($ref,$alternative);
-            $origfile=$origfile["file_name"];
+            $filename=$origfile["name"];
+
+            //Try to use the name that the user has set for the file and if not then default to the original filename. 
+            if(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) == $ext)
+                {
+                $origfile=$filename;
+                }
+            elseif(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) != $ext)
+                {
+                $origfile=remove_extension($filename) . '.' . $ext;
+                }
+            elseif($ext != '' && strpos($filename, '.') == false)
+                {
+                $origfile=$filename . '.' . $ext;
+                }
+            else
+                {
+                $origfile=$origfile["file_name"];
+                }
             }
         else
             {
