@@ -7,7 +7,7 @@ $plugin_name = 'posixldapauth';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 	
-$usergroups = sql_query("SELECT ref,name FROM usergroup");
+$usergroups = ps_query("SELECT ref,name FROM usergroup",array());
 /* Set the following debug flag to true for more debugging information
 */
 $ldap_debug = true;
