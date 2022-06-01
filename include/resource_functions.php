@@ -2529,42 +2529,42 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
 	{
-	# Attempt to resolve all users in the string $userlist to user references.
+    # Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
-	
-	if ($useremail==""){$useremail=$email_from;}
-	if ($group=="") {$group=$usergroup;}
+    global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+
+    if ($useremail==""){$useremail=$email_from;}
+    if ($group=="") {$group=$usergroup;}
         
-	# remove any line breaks that may have been entered
-	$userlist=str_replace("\\r\\n",",",$userlist);
+    # remove any line breaks that may have been entered
+    $userlist=str_replace("\\r\\n",",",$userlist);
 
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
-	$userlist=resolve_userlist_groups($userlist);
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
-		{
-		$userlist_with_groups=$userlist;
-		$groups_users=resolve_userlist_groups_smart($userlist,true);
-		if($groups_users!='')
-			{
-			if($userlist!="")
-				{
-				$userlist=remove_groups_smart_from_userlist($userlist);
-				if($userlist!="")
-					{
-					$userlist.=",";
-					}
-				}
-			$userlist.=$groups_users;
-			}
-		}
-	
-	$ulist=trim_array(explode(",",$userlist));
-	$ulist=array_filter($ulist);
-	$ulist=array_values($ulist);
+    if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+    $userlist=resolve_userlist_groups($userlist);
+    if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+        {
+        $userlist_with_groups=$userlist;
+        $groups_users=resolve_userlist_groups_smart($userlist,true);
+        if($groups_users!='')
+            {
+            if($userlist!="")
+                {
+                $userlist=remove_groups_smart_from_userlist($userlist);
+                if($userlist!="")
+                    {
+                    $userlist.=",";
+                    }
+                }
+            $userlist.=$groups_users;
+            }
+        }
 
-	$emails=array();
-	$key_required=array();
+    $ulist=trim_array(explode(",",$userlist));
+    $ulist=array_filter($ulist);
+    $ulist=array_values($ulist);
+
+    $emails=array();
+    $key_required=array();
 
     $emails_keys = resolve_user_emails($ulist);
 
@@ -2577,87 +2577,97 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
     $emails       = $emails_keys['emails'];
     $key_required = $emails_keys['key_required'];
 
-	# Send an e-mail to each resolved user / e-mail address
-	$subject="$applicationname: $resourcename";
-	if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
-	if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
-	
-	$message=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);
+    # Send an e-mail to each resolved user / e-mail address
+    $subject="$applicationname: $resourcename";
+    if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
+    if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
 
-#	Commented 'no message' line out as formatted oddly, and unnecessary.
-#	if ($message==""){$message=$lang['nomessage'];}
-	$resolve_open_access=false;
-	
-	for ($n=0;$n<count($emails);$n++)
-		{
-		$key="";
-		# Do we need to add an external access key for this user (e-mail specified rather than username)?
-		if ($key_required[$n])
-			{
-			$k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
-			$key="&k=". $k;
-			}
-                elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)
-                    {debug("smart_groups: going to resolve open access");
-					# get this all done at once
-					resolve_open_access((isset($userlist_with_groups)?$userlist_with_groups:$userlist),$resource,$expires);
-					$resolve_open_access=true;
+    $message=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);
+
+    $resolve_open_access=false;
+
+    for ($n=0;$n<count($emails);$n++)
+        {
+        $key="";
+        # Do we need to add an external access key for this user (e-mail specified rather than username)?
+        if ($key_required[$n])
+            {
+            $k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
+            $key="&k=". $k;
+            }
+        elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)
+            {debug("smart_groups: going to resolve open access");
+            # get this all done at once
+            resolve_open_access((isset($userlist_with_groups)?$userlist_with_groups:$userlist),$resource,$expires);
+            $resolve_open_access=true;
+            }
+
+        # make vars available to template
+        global $watermark;       
+        $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
+        if (!file_exists($templatevars['thumbnail'])){
+            $resourcedata=get_resource_data($resource);
+            $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+        }
+        $templatevars['url']=$baseurl . "/?r=" . $resource . $key;
+        $templatevars['fromusername']=$fromusername;
+        $templatevars['message']=$message;
+        $templatevars['resourcename']=$resourcename;
+        $templatevars['from_name']=$from_name;
+        if(isset($k))
+            {
+            if($expires=="")
+                {
+                $templatevars['expires_date']=$lang["email_link_expires_never"];
+                $templatevars['expires_days']=$lang["email_link_expires_never"];
+                }
+            else
+                {
+                $day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
+                $templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
+                $templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
+                if($day_count>1)
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_days'].".";
                     }
-		
-		# make vars available to template
-		global $watermark;       
-		$templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
-		if (!file_exists($templatevars['thumbnail'])){
-			$resourcedata=get_resource_data($resource);
-			$templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
-		}
-		$templatevars['url']=$baseurl . "/?r=" . $resource . $key;
-		$templatevars['fromusername']=$fromusername;
-		$templatevars['message']=$message;
-		$templatevars['resourcename']=$resourcename;
-		$templatevars['from_name']=$from_name;
-		if(isset($k)){
-			if($expires==""){
-				$templatevars['expires_date']=$lang["email_link_expires_never"];
-				$templatevars['expires_days']=$lang["email_link_expires_never"];
-			}
-			else{
-				$day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
-				$templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
-				$templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
-				if($day_count>1){
-					$templatevars['expires_days'].=" ".$lang['expire_days'].".";
-				}
-				else{
-					$templatevars['expires_days'].=" ".$lang['expire_day'].".";
-				}
-			}
-		}
-		else{
-			# Set empty expiration tempaltevars
-			$templatevars['expires_date']='';
-			$templatevars['expires_days']='';
-		}
-		
-		# Build message and send.
-		if (count($emails) > 1 && $list_recipients===true) {
-			$body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-			$templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-		}
-		else {
-			$body = "";
-		}
-		$body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
-		send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
-		
-		# log this
-		resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
-		
-		}
-	hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
-	# Return an empty string (all OK).
-	return "";
-	}
+                else
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_day'].".";
+                    }
+                }
+            }
+        else
+            {
+            # Set empty expiration templatevars
+            $templatevars['expires_date']='';
+            $templatevars['expires_days']='';
+            }
+        
+        # Build message and send.
+        if (count($emails) > 1 && $list_recipients===true)
+            {
+            $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+            $templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+            }
+        else
+            {
+            $body = "";
+            }
+
+
+            
+        $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
+
+
+        send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        
+        # log this
+        resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);        
+        }
+    hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
+    # Return an empty string (all OK).
+    return "";
+    }
 
 function delete_resource($ref)
 	{
@@ -4910,7 +4920,7 @@ function get_resource_access($resource)
                 debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
                 sql_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref='" . $usergroup . "'");
-                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
                 }
             }
 
@@ -5153,7 +5163,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
             sql_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref='" . $usergroup . "'");
-            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
     
@@ -5693,7 +5703,7 @@ function update_disk_usage_cron()
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
         {
-        echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br />\n";
+        echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br/>\n";
         return false;
         }
 
@@ -6988,10 +6998,10 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     hook('replace_resource_file_extra', '', array($resource));
     $log_ref = resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
-    hook("additional_replace_existing","",array($ref,$log_ref));      
+    hook("additional_replace_existing","",array($ref,$log_ref));
 						
     if($notify_on_resource_change_days != 0)
-        {								
+        {
         // we don't need to wait for this.
         ob_flush();flush();	
         notify_resource_change($ref);
@@ -7764,59 +7774,81 @@ function purchase_set_size($collection,$resource,$size,$price)
     return true;
     }
 
-function payment_set_complete($collection,$emailconfirmation="")
+/**
+ * Update ecommerce user's basket to indicate it has been purchased after PayPal callback (invoice users will pactually ay later with manual invoicing)
+ *
+ * @param  int $collection
+ * @param  string $emailconfirmation - LEGACY MUNUSED
+ * @return boolean
+ */
+function payment_set_complete($collection)
     {
-    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$email_notify,$lang,$currency_symbol;
+    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$lang,$currency_symbol;
     // Mark items in the collection as paid so they can be downloaded.
-    sql_query("update collection_resource set purchase_complete=1 where collection='$collection'");
+    ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
     
     // For each resource, add an entry to the log to show it has been purchased.
-    $resources=sql_query("select * from collection_resource where collection='$collection'");
-    $summary="<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>" . $lang["property-reference"] . "</strong></td><td><strong>" . $lang["size"] . "</strong></td><td><strong>" . $lang["price"] . "</strong></td></tr>";
+    $resources=sql_query("SELECT * FROM collection_resource WHERE collection='$collection'");
+
+    // Construct summary, separating lang entries from fixed text
+    $summaryparts = [];
+    $summaryparts[] = "<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>";
+    
+    $summaryparts[] = "lang_property-reference";
+    $summaryparts[] = "</strong></td><td><strong>";
+    $summaryparts[] = "lang_size";
+    $summaryparts[] = "</strong></td><td><strong>";
+    $summaryparts[] = "lang_price";
+    $summaryparts[] = "</strong></td></tr>";
+
     foreach ($resources as $resource)
         {
         $purchasesize=$resource["purchase_size"];
-        if ($purchasesize==""){$purchasesize=$lang["original"];}
-        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
-        $summary.="<tr><td>" . $resource["resource"] . "</td><td>" . $purchasesize . "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
-        }
-    $summary.="</table>";
-    // Send email or notification to admin
-    $message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    $notificationmessage=$lang["purchase_complete_email_admin_body"] . "\r\n" . $lang["username"] . ": " . $username . "(" . $userfullname . ")";
-    $notify_users=get_notification_users("RESOURCE_ACCESS"); 
-    $message_users=array();
-    foreach($notify_users as $notify_user)
+        if ($purchasesize=="")
             {
-            get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message);          
-            if($send_message==false){continue;}     
-            
-            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-            if($send_email && $notify_user["email"]!="")
-                {
-                send_mail($notify_user["email"],$applicationname . ": " . $lang["purchase_complete_email_admin"],$message);
-                }        
-            else
-                {
-                $message_users[]=$notify_user["ref"];
-                }
+            $purchasesize=$lang["original"];
             }
-            
-    if (count($message_users)>0)
-        {       
-        message_add($message_users,$notificationmessage,$baseurl . "/?c=" . $collection,$userref);
-        }   
+        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
+        
+        $summaryparts[] = "<tr><td>" . $resource["resource"] . "</td><td>";
+        $summaryparts[] = ($purchasesize=="" ? "lang_original" : $purchasesize);
+        $summaryparts[] = "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
+        }
+    $summaryparts[] = "</table>";
+
+    // Construct message components
+    $notify_users=get_notification_users("RESOURCE_ACCESS");
+    $notifymessage = new ResourceSpaceUserNotification();
+    $notifymessage->set_text("lang_purchase_complete_email_admin_body");
+    $notifymessage->append_text("<br/><br/>");
+    $notifymessage->append_text("lang_username");
+    $notifymessage->append_text(": " . $username . " (" . $userfullname . ")<br/><br/>");    
+    foreach($summaryparts as $summarypart)
+        {
+        $notifymessage->append_text($summarypart);
+        }    
+    $notifymessage->user_preference = "user_pref_resource_access_notifications";
+    $notifymessage->set_subject("lang_purchase_complete_email_admin");
+    $notifymessage->url = $baseurl . "/?c=" . $collection;
+    send_user_notification($notify_users,$notifymessage);
     
     // Send email to user (not a notification as may need to be kept for reference)
-    $confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;   
-    $userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    send_mail($useremail,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
-    
+    $userconfirmmessage = new ResourceSpaceUserNotification();
+    $userconfirmmessage->set_text("lang_purchase_complete_email_user_body");
+    $userconfirmmessage->append_text("<br/><br/>");
+    foreach($summaryparts as $summarypart)
+        {
+        $userconfirmmessage->append_text($summarypart);
+        }        
+    $userconfirmmessage->set_subject("lang_purchase_complete_email_user");
+    $userconfirmmessage->url = $baseurl . "/?c=" . $collection;
+
+    send_user_notification([$userref],$userconfirmmessage,true);
+        
     // Rename so that can be viewed on my purchases page
-    sql_query("update collection set name= '" . date("Y-m-d H:i") . "' where ref='$collection'");
+    ps_query("UPDATE collection SET name = ? WHERE ref = ?",["s",date("Y-m-d H:i"),"i",$collection]);
     
     return true;
-
     }
 
 
@@ -7945,7 +7977,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 function notify_resource_change($resource)
     {
     debug("notify_resource_change " . $resource);
-    global $notify_on_resource_change_days;
+    global $notify_on_resource_change_days, $baseurl;
     // Check to see if we need to notify users of this change
     if($notify_on_resource_change_days==0 || !is_int($notify_on_resource_change_days))
         {
@@ -7953,40 +7985,18 @@ function notify_resource_change($resource)
         }
         
     debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
-    $download_users=sql_query("select distinct u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
+    $download_users=ps_query("SELECT DISTINCT u.ref, u.email FROM resource_log rl LEFT JOIN user u ON rl.user=u.ref WHERE rl.type='d' AND rl.resource=? AND DATEDIFF(NOW(),date)<?",["i",$resource,"i",$notify_on_resource_change_days],"");
     $message_users=array();
     if(count($download_users)>0)
         {
-        global $applicationname, $lang, $baseurl;
-        foreach ($download_users as $download_user)
-            {
-            if($download_user['ref']==""){continue;}
-            get_config_option($download_user['ref'],'user_pref_resource_notifications', $send_message);       
-            if($send_message==false){continue;}     
-            
-            get_config_option($download_user['ref'],'email_user_notifications', $send_email);
-            get_config_option($download_user['ref'],'email_and_user_notifications', $send_email_and_notify);
-            if($send_email_and_notify)
-                {
-                $message_users[]=$download_user["ref"];
-                if($download_user["email"]!="")
-                    {
-                    send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
-                    }
-                }
-            else if($send_email && $download_user["email"]!="")
-                {
-                send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
-                }
-            else
-                {
-                $message_users[]=$download_user["ref"];
-                }
-            }
-        if (count($message_users)>0)
-            {
-            message_add($message_users,str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_notification"]),$baseurl . "/?r=" . $resource);
-            }
+        $notifymessage = new ResourceSpaceUserNotification();
+        $notifymessage->set_subject("lang_notify_resource_change_email_subject");
+        $notifymessage->set_text("lang_notify_resource_change_email",["[days]","[url]"],[$notify_on_resource_change_days,$baseurl . "/?r=" . $resource]);
+        $notifymessage->preference = "user_pref_resource_notifications";
+        $notifymessage->url = $baseurl . "/?r=" . $resource;
+        $notifymessage->template = 'notify_resource_change_email';
+        $notifymessage->templatevars = ["days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource];
+        send_user_notification($download_users,$notifymessage);
         }
     }
 
@@ -8459,7 +8469,7 @@ function delete_resource_type_field($ref)
 
     if(count($fieldvars) > 0)
         {
-        return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
+        return $lang["admin_delete_field_error"] . "<br/>\$" . implode(", \$",$fieldvars);
         }
     else if(!empty($core_field_scopes))
         {

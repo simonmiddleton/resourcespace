@@ -202,7 +202,7 @@ if($external_upload)
     $ci=get_session_collections($rs_session,$userref,true);
     if (count($ci)==0)
         {
-        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_SHARE_UPLOAD));
+        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_TYPE_SHARE_UPLOAD));
         }
     else
         {

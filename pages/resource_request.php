@@ -18,11 +18,14 @@ $ref=getvalescaped("ref","",true);
 $error = '';
 hook("addcustomrequestfields");
 
-if ($k == "" && isset($anonymous_login) && $username == $anonymous_login){
-	$user_is_anon = true;
-} else {
-	$user_is_anon = false;
-}
+if ($k == "" && isset($anonymous_login) && $username == $anonymous_login)
+    {
+    $user_is_anon = true;
+    }
+else
+    {
+    $user_is_anon = false;
+    }
 $use_antispam = ($k !== '' || $user_is_anon);
 
 # Allow alternative configuration settings for this resource type.
@@ -73,36 +76,38 @@ if (getval("save","")!="" && enforcePostRequest(false))
         $error = $lang["requiredantispam"];
         }
 	else if ($k!="" || $user_is_anon || $userrequestmode==0)
-		{
-		# Request mode 0 : Simply e-mail the request.
-		if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getvalescaped("email","")==""))
-			{
-			$result=false; # Required fields not completed.
-			}
-		else
-			{
-                        $tmp = hook("emailresourcerequest"); if($tmp): $result = $tmp; else:
-			$result=email_resource_request($ref,getvalescaped("request",""));
-                        endif;
-			}
-		}
+        {
+        # Request mode 0 : Simply e-mail the request.
+        if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getvalescaped("email","")==""))
+            {
+            $result=false; # Required fields not completed.
+            }
+        else
+            {
+            $tmp = hook("emailresourcerequest"); if($tmp): $result = $tmp; else:
+            $result=email_resource_request($ref,getvalescaped("request",""));
+            endif;
+            }
+        }
 	else
-		{
-		# Request mode 1 : "Managed" mode via Manage Requests / Orders
-                $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
-		$result=managed_collection_request($ref,getvalescaped("request",""),true);
-                endif;
-		}
-	
+        {
+        # Request mode 1 : "Managed" mode via Manage Requests / Orders
+        $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
+        $result=managed_collection_request($ref,getvalescaped("request",""),true);
+        endif;
+        }
+
 	if ($result===false)
 		{
 		$error = ($error ?: $lang["requiredfields-general"]);
 		}
 	else
 		{
+        $return_url = $baseurl_short . "pages/view.php?ref=" . (int)($ref) . "&k=" . htmlspecialchars($k);
+        $doneurl = generateURL($baseurl_short . "pages/done.php",["text"=>"resource_request","resource"=>$ref,"k"=>$k,"return_url"=>$return_url]);
 		?>
 		<script>
-		CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&resource=<?php echo htmlspecialchars($ref); ?>&k=<?php echo htmlspecialchars($k); ?>",true);
+		CentralSpaceLoad("<?php echo $doneurl ?>",true);
 		</script>
 		<?php
 		}

@@ -1080,7 +1080,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             // Collection Actions
             $collection_actions_array = compile_collection_actions($collection_data, $top_actions, $resource_data);
-
             // Usual search actions
             $search_actions_array = compile_search_actions($top_actions);
 

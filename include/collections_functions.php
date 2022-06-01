@@ -674,6 +674,10 @@ function collection_writeable($collection)
             return false; // so "you cannot modify this collection"
             }
         }
+    if($collectiondata['type']==COLLECTION_TYPE_REQUEST && !checkperm('R'))
+        {
+        return false;
+        }
 
     # Load a list of attached users
     $attached = ps_array("SELECT user value FROM user_collection WHERE collection = ?",["i",$collection]);
@@ -1973,14 +1977,14 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
     $emails=$emails_keys['emails'];
     $key_required=$emails_keys['key_required'];
+    $internal_user_ids = $emails_keys['refs'];
 
     # Add the collection(s) to the user's My Collections page
-    $ulist = array_map("escape_check",$ulist);
-    $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
+    $urefs=ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
     if (count($urefs)>0)
         {
         # Delete any existing collection entries
-        sql_query("delete from user_collection where collection in ('" .join("','", $reflist) . "') and user in ('" . join("','",$urefs) . "')");
+        ps_query("DELETE FROM user_collection WHERE collection IN (" . ps_param_insert(count($reflist)) . ") AND user IN (" . ps_param_insert(count($urefs)) . ")",array_merge(ps_param_fill($reflist,"i"),ps_param_fill($urefs,"i")));
         
         # Insert new user_collection row(s)
         #loop through the collections
@@ -1989,7 +1993,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
             #loop through the users
             for ($nx2=0;$nx2<count($urefs);$nx2++)
                 {
-                sql_query("insert into user_collection(collection,user,request_feedback) values ($reflist[$nx1], $urefs[$nx2], $feedback )");
+                ps_query("INSERT INTO user_collection(collection,user,request_feedback) VALUES (?,?,?)",["i",$reflist[$nx1],"i",$urefs[$nx2],"i",$feedback ]);
                 if ($add_internal_access)
                     {		
                     foreach (get_collection_resources($reflist[$nx1]) as $resource)
@@ -2012,33 +2016,52 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     # htmlbreak is for composing list
     $htmlbreak="\r\n";
     global $use_phpmailer;
-    if ($use_phpmailer){$htmlbreak="<br /><br />";$htmlbreaksingle="<br />";} 
+    if ($use_phpmailer)
+        {
+        $htmlbreak="<br/><br/>";
+        $htmlbreaksingle="<br/>";
+        } 
 
     if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
     if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
 
     $templatevars['message']=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);	
-    if (trim($templatevars['message'])==""){$templatevars['message']=$lang['nomessage'];} 
+    if (trim($templatevars['message'])=="")
+        {
+        $templatevars['message']=$lang['nomessage'];
+        $message = "lang_nomessage";
+        } 
 
     $templatevars['fromusername']=$fromusername;
     $templatevars['from_name']=$from_name;
 
-    if(count($reflist)>1){$subject=$applicationname.": ".$lang['mycollections'];}
-    else { $subject=$applicationname.": ".$collectionname;}
+    // Create notification message
+    $notifymessage     = new ResourceSpaceUserNotification();
+    if(count($reflist)>1)
+        {
+        $notifymessage->set_subject($applicationname . ": ");
+        $notifymessage->append_subject("lang_mycollections");
+        }
+    else
+        {
+        $notifymessage->set_subject($applicationname.": ". $collectionname);
+        }
 
     if ($fromusername==""){$fromusername=$applicationname;}
-	
-    $externalmessage=$lang["emailcollectionmessageexternal"];
-    $internalmessage=$lang["emailcollectionmessage"];
-    $viewlinktext=$lang["clicklinkviewcollection"];
+
+    $externalmessage = $lang["emailcollectionmessageexternal"];
+    $internalmessage = "lang_emailcollectionmessage";
+
+    $viewlinktext="lang_clicklinkviewcollection";
     if ($themeshare) // Change the text if sharing a theme category
         {
-        $externalmessage=$lang["emailthemecollectionmessageexternal"];
-        $internalmessage=$lang["emailthememessage"];
-        $viewlinktext=$lang["clicklinkviewcollections"];
+        $externalmessage    = $lang["emailthemecollectionmessageexternal"];
+        $internalmessage    = "lang_emailthememessage";
+        $viewlinktext       = "lang_clicklinkviewcollections";
         }
         
     ##  loop through recipients
+    $themeurl = "";
     for ($nx1=0;$nx1<count($emails);$nx1++)
         {
         ## loop through collections
@@ -2047,29 +2070,28 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         $origviewlinktext=$viewlinktext; // Save this text as we may change it for internal theme shares for this user
         if ($themeshare && !$key_required[$nx1]) # don't send a whole list of collections if internal, just send the theme category URL
             {
-            $url="";
-            $subject=$applicationname.": " . $themename;
-            $url=$baseurl . "/pages/collections_featured.php" . $themeurlsuffix;			
-            $viewlinktext=$lang["clicklinkviewthemes"];
+            $notifymessage->set_subject($applicationname.": " . $themename);
+            $url = $baseurl . "/pages/collections_featured.php" . $themeurlsuffix;
+            $viewlinktext="lang_clicklinkviewthemes";
+            $notifymessage->url = $url;
             $emailcollectionmessageexternal=false;
-            if ($use_phpmailer){
-                    $link="<a href=\"$url\">" . $themename . "</a>";	
-                    
-                    $list.= $htmlbreak.$link;	
-                    // alternate list style				
-                    $list2.=$htmlbreak.$themename.' -'.$htmlbreaksingle.$url;
-                    $templatevars['list2']=$list2;					
-                    }
-                else
-                    {
-                    $list.= $htmlbreak.$url;
-                    }
+            if ($use_phpmailer)
+                {
+                $link = '<a href="' . $url . '">' . $themename . '</a>';                    
+                $list.= $htmlbreak.$link;
+                // alternate list style
+                $list2.=$htmlbreak.$themename.' -'.$htmlbreaksingle . $url;
+                $templatevars['list2']=$list2;
+                }
+            else
+                {
+                $list.= $htmlbreak . $url;
+                }
             for ($nx2=0;$nx2<count($reflist);$nx2++)
-                {				
+                {
                 #log this
                 collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
                 }
-            
             }
         else
             {
@@ -2082,7 +2104,6 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
             for ($nx2=0;$nx2<count($reflist);$nx2++)
                 {
-                $url="";
                 $key="";
                 $emailcollectionmessageexternal=false;
 
@@ -2099,18 +2120,24 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     $key = $fc_key;
                     $emailcollectionmessageexternal = true;
                     }
-
-                $url=$baseurl . 	"/?c=" . $reflist[$nx2] . $key;		
+                $url = $baseurl . 	"/?c=" . $reflist[$nx2] . $key;
                 $collection = array();
-                $collection = sql_query("select name,savedsearch from collection where ref='$reflist[$nx2]'");
-                if ($collection[0]["name"]!="") {$collection_name = i18n_get_collection_name($collection[0]);}
-                else {$collection_name = $reflist[$nx2];}
-                if ($use_phpmailer){
-                    $link="<a href=\"$url\">$collection_name</a>";	
-                    $list.= $htmlbreak.$link;	
-                    // alternate list style				
-                    $list2.=$htmlbreak.$collection_name.' -'.$htmlbreaksingle.$url;
-                    $templatevars['list2']=$list2;					
+                $collection = ps_query("SELECT name,savedsearch FROM collection WHERE ref = ?", ["i",$reflist[$nx2]]);
+                if ($collection[0]["name"]!="")
+                    {
+                    $collection_name = i18n_get_collection_name($collection[0]);
+                    }
+                else
+                    {
+                    $collection_name = $reflist[$nx2];
+                    }
+                if ($use_phpmailer)
+                    {
+                    $link='<a href="' . $url . '">' . $collection_name . '</a>';
+                    $list.= $htmlbreak.$link;
+                    // alternate list style
+                    $list2.=$htmlbreak.$collection_name.' -'.$htmlbreaksingle . $url;
+                    $templatevars['list2']=$list2;
                     }
                 else
                     {
@@ -2119,51 +2146,74 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                 #log this
                 collection_log($reflist[$nx2],LOG_CODE_COLLECTION_EMAILED_COLLECTION,0, $emails[$nx1]);
                 }
-            }
-        //$list.=$htmlbreak;	
+            }	
         $templatevars['list']=$list;
         $templatevars['from_name']=$from_name;
-        if(isset($k)){
-            if($expires==""){
+        if(isset($k))
+            {
+            if($expires=="")
+                {
                 $templatevars['expires_date']=$lang["email_link_expires_never"];
                 $templatevars['expires_days']=$lang["email_link_expires_never"];
-            }
-            else{
+                }
+            else
+                {
                 $day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
                 $templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
                 $templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
-                if($day_count>1){
+                if($day_count>1)
+                    {
                     $templatevars['expires_days'].=" ".$lang['expire_days'].".";
-                }
-                else{
+                    }
+                else
+                    {
                     $templatevars['expires_days'].=" ".$lang['expire_day'].".";
+                    }
                 }
             }
-        }
-        else{
+        else
+            {
             # Set empty expiration templatevars
             $templatevars['expires_date']='';
             $templatevars['expires_days']='';
-        }
-        if ($emailcollectionmessageexternal ){
+            }
+        $body = "";
+        if($emailcollectionmessageexternal)
+            {
             $template=($themeshare)?"emailthemeexternal":"emailcollectionexternal";
-        }
-        else {
-            $template=($themeshare)?"emailtheme":"emailcollection";
-        }
+            // External - send email
+            if (is_array($emails) && (count($emails) > 1) && $list_recipients===true)
+                {
+                $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+                $templatevars['list-recipients'] = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+                }
+            if(substr($viewlinktext,0,5) == "lang_")
+                {
+                $langkey = substr($viewlinktext,5);
+                if(isset($lang[$langkey]))
+                    {
+                    $viewlinktext = $lang[$langkey];
+                    }
+                }
+            $body .= $templatevars['fromusername']." " . $externalmessage . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
 
-        if (is_array($emails) && (count($emails) > 1) && $list_recipients===true) {
-            $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-            $templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-        }
-        else {
-            $body = "";
-        }
-        $body.=$templatevars['fromusername']." " . (($emailcollectionmessageexternal)?$externalmessage:$internalmessage) . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
-        send_mail($emails[$nx1],$subject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            $emailsubject = $notifymessage->get_subject();
+            send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            }
         $viewlinktext=$origviewlinktext;
         }
-    hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
+
+    if(count($internal_user_ids) > 0)
+        {
+        // Internal share, send notifications
+        $notifymessage->append_text($templatevars['fromusername'] . "&nbsp;");
+        $notifymessage->append_text($internalmessage);
+        $notifymessage->append_text("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
+        $notifymessage->append_text($viewlinktext);
+        send_user_notification($internal_user_ids,$notifymessage);
+        }
+
+    //hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
     # Return an empty string (all OK).
     return "";
     }
@@ -3031,6 +3081,7 @@ function get_collection_comments($collection)
 function send_collection_feedback($collection,$comment)
     {
     global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
+    global $userref;
 
     $cinfo=get_collection($collection);    
     if($cinfo===false)
@@ -3100,12 +3151,8 @@ function send_collection_feedback($collection,$comment)
         send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body);
         }
 
-    if(!$send_email)
-        {
-        // Add a system notification message as well if the user has not 'opted out'
-        global $userref;
-        message_add($user["ref"],$lang["collectionfeedback"] . " - " . $cinfo["name"] . "<br />" . $body,"",(isset($userref))?$userref:$user['ref'],MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
-        }
+    // Add a system notification message as well
+    message_add($user["ref"],$lang["collectionfeedback"] . " - " . $cinfo["name"] . "<br />" . $body,"",(isset($userref))?$userref:$user['ref'],MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
     }
 
 /**
@@ -3638,7 +3685,7 @@ function get_session_collections($rs_session,$userref="",$create=false)
         {
         $userref='NULL';
         }
-	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_SHARE_UPLOAD . "') " . $extrasql,"");
+	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_TYPE_SHARE_UPLOAD . "') " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
         if(upload_share_active())
@@ -3942,7 +3989,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Edit Collection
-    if((($userref == $collection_data['user']) || (checkperm('h')))  && ($k == '' || $internal_share_access) && !$system_read_only) 
+    if((($userref == $collection_data['user'] && !in_array($collection_data['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION])) || (checkperm('h')))  && ($k == '' || $internal_share_access) && !$system_read_only) 
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_edit.php",$urlparams);
         $options[$o]['value']='edit_collection';
@@ -4026,7 +4073,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     // Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
-    if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate() && !$system_read_only)
+    if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate() && !$system_read_only && !in_array($collection_data['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION]))
         {
         $is_smart_featured_collection = (isset($collection_data["smart"]) ? (bool) $collection_data["smart"] : false);
         $is_featured_collection_category = (is_featured_collection_category($collection_data) || is_featured_collection_category_by_children($collection_data["ref"]));
@@ -4064,7 +4111,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Add option to publish as featured collection
-    if($enable_themes && ($k == '' || $internal_share_access) && checkperm("h"))
+    if($enable_themes && ($k == '' || $internal_share_access) && checkperm("h") && !in_array($collection_data['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION]))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_set_category.php", $urlparams);
         $options[$o]['value'] = 'collection_set_category';
@@ -5675,6 +5722,7 @@ function allow_collection_share(array $c)
             || checkperm ("g") 
             || collection_min_access($c["ref"]) <= RESOURCE_ACCESS_RESTRICTED
             || $restricted_share)
+        && !in_array($c['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION])
     )
         {
         return true;
@@ -5882,9 +5930,10 @@ function allow_upload_to_collection(array $c)
         }
 
     if(
-        $c["type"] == COLLECTION_TYPE_SELECTION
+        in_array($c["type"],[COLLECTION_TYPE_SELECTION,COLLECTION_TYPE_REQUEST])
         // Featured Collection Categories can't contain resources, only other featured collections (categories or normal)
         || ($c["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category_by_children($c["ref"]))
+
     )
         {
         return false;

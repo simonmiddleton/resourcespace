@@ -432,57 +432,8 @@ if(!$disable_geocoding)
     }    
 
 # Pre-load all text for this page.
-$site_text=array();
-$results=ps_query("select language,name,text from site_text where (page=? or page='all' or page='') and (specific_to_group is null or specific_to_group=0)",array("s",$pagename),"sitetext");
-for ($n=0;$n<count($results);$n++) {$site_text[$results[$n]["language"] . "-" . $results[$n]["name"]]=$results[$n]["text"];}
-
-$query = " SELECT `name`,
-		       `text`,
-		       `page`,
-		       `language`, specific_to_group 
-		  FROM site_text
-		 WHERE (`language` = ? OR `language` = ?)
-		   AND (specific_to_group IS NULL OR specific_to_group = 0)
-	";
-$parameters=array("s",$language,"s",$defaultlanguage);
-
-if ($pagename!="admin_content") // Load all content on the admin_content page to allow management.
-    {
-    $query.="AND (page = ? OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
-    $parameters[]="s";$parameters[]=$pagename;
-    }
-
-$results=ps_query($query,$parameters,"sitetext");
-
-// Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
-$customsitetext=array();
-// Go through the results twice, setting the default language first, then repeat for the user language so we can override the default with any language specific entries
-for ($n=0;$n<count($results);$n++) 
-	{
-	if($results[$n]["language"]!=$defaultlanguage){continue;}
-	if ($results[$n]["page"]=="") 
-		{
-		$lang[$results[$n]["name"]]=$results[$n]["text"];
-		$customsitetext[$results[$n]['name']] = $results[$n]['text'];
-		} 
-	else 
-		{
-		$lang[$results[$n]["page"] . "__" . $results[$n]["name"]]=$results[$n]["text"];
-		}
-	}
-for ($n=0;$n<count($results);$n++) 
-	{
-	if($results[$n]["language"]!=$language){continue;}
-	if ($results[$n]["page"]=="") 
-		{
-		$lang[$results[$n]["name"]]=$results[$n]["text"];
-		$customsitetext[$results[$n]['name']] = $results[$n]['text'];
-		} 
-	else 
-		{
-		$lang[$results[$n]["page"] . "__" . $results[$n]["name"]]=$results[$n]["text"];
-		}
-	}
+global $site_text;
+lang_load_site_text($lang,$pagename,$language);
 	
 # Blank the header insert
 $headerinsert="";
