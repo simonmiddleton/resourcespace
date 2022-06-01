@@ -2253,9 +2253,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $node_options = array_column($fieldnodes, 'name', 'ref');
 
         // Get all the new values into an array
-        if (($value[0] == "'" && $value[strlen($value)-1] == "'")
+        if (strlen($value) > 0 && (($value[0] == "'" && $value[strlen($value)-1] == "'")
             ||
-            ($value[0] == "\"" && $value[strlen($value)-1] == "\"")
+            ($value[0] == "\"" && $value[strlen($value)-1] == "\""))
             )
             {
             // Quoted value - don't attempt to split on comma.
