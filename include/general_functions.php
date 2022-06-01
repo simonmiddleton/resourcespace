@@ -2784,7 +2784,6 @@ function is_html($string)
 function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
     {
     global $baseurl_short, $baseurl_short, $global_cookies;
-debug("BANG ");
     if($path == "")
         {
         $path =  $baseurl_short;

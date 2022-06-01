@@ -4065,7 +4065,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
 	$value=$field["value"];
     $title=htmlspecialchars($field["title"]);
-debug("BANG " . $value);
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
     if($modified_field)
         {

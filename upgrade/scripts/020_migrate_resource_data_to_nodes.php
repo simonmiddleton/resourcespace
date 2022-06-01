@@ -5,16 +5,20 @@
 $tomigrate = array_diff(array_keys($field_types),array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
 $startfield = get_sysvar("node_migrated_data_field",0);
 
+$debug_log=false; // This would slow things down too much
+$global_start_time = microtime(true);
+
 $resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') AND ref > ? ORDER BY `ref`',array_merge(ps_param_fill($tomigrate,"i"),["i",$startfield]));
 
 // Number of resource_data rows to migrate in each batch to avoid out of memory errors
-$chunksize = 5000;
+$chunksize = 2000;
 foreach($resource_type_fields as $resource_type_field)
     {
     $fref = $resource_type_field['ref'];
     $fname = $resource_type_field['name'];
     $status = "Migrating resource_data for field #" . $fref . " (" . $fname . ")";
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status);
+    $allfieldnodes= array_column(get_nodes($fref,NULL),"ref","name");
     $nodecache = [];
     $totalrows = ps_value("SELECT count(*) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
     $out = " (" . $totalrows . " rows found)";
@@ -47,7 +51,14 @@ foreach($resource_type_fields as $resource_type_field)
                     }
                 else
                     {
-                    $newnode = set_node(NULL,$fref,$rowdata["value"],NULL,NULL);
+                    if(isset($allfieldnodes[$rowdata["value"]]))
+                        {
+                        $newnode = $allfieldnodes[$rowdata["value"]];
+                        }
+                    else
+                        {
+                        $newnode = set_node(NULL,$fref,$rowdata["value"],NULL,NULL);
+                        }
                     $nodecache[$rowdata["value"]] = $newnode;
                     }
                 if(!isset($resnodearr[$rowdata["resource"]]) || !in_array($newnode,$resnodearr[$rowdata["resource"]]))
@@ -75,9 +86,8 @@ foreach($resource_type_fields as $resource_type_field)
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status . $out);
         ob_flush();
         }
-    $out = " - Completed $totalrows records";
+    $out = sprintf(" - Completed $totalrows records in %01.2f seconds.\n", microtime(true) - $global_start_time);
     logScript(str_pad($out,100,' '));
-    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status . $out);
     set_sysvar("node_migrated_data_field",$fref);
     ob_flush();
     }
