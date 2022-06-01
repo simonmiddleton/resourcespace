@@ -13,7 +13,7 @@ include "../../include/dash_functions.php";
 set_time_limit(0);
 
 //get all of the all_user dash tiles in dash tile.
-$tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by' FROM dash_tile WHERE all_users=1 ORDER BY default_order_by");
+$tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by' FROM dash_tile WHERE all_users=1 ORDER BY default_order_by");
 if(count($tiles)==0){echo $lang["nodashtilefound"];exit;}
 
 for($i=count($tiles)-1;$i>=0;$i--)

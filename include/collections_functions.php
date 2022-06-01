@@ -1825,7 +1825,7 @@ function collections_comparator_desc($a, $b)
  */
 function get_smart_theme_headers()
 	{
-	return sql_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "featured_collections");
+	return ps_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "featured_collections");
 	}
 
 /**
@@ -2751,7 +2751,7 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     if(is_featured_collection_category($c))
         {
-        $all_fcs = sql_query("SELECT ref, parent FROM collection WHERE `type`='" . COLLECTION_TYPE_FEATURED . "'", "featured_collections");
+        $all_fcs = ps_query("SELECT ref, parent FROM collection WHERE `type`=?", array("i",COLLECTION_TYPE_FEATURED), "featured_collections");
         $all_fcs_rp = array_column($all_fcs, 'parent','ref');
 
         // Array to hold resources

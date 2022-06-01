@@ -145,7 +145,7 @@ if(in_array('resource_data', $tables))
     {
     logScript("");
     logScript("Searching resource_data table...");
-    $resource_data = sql_query("SELECT resource, resource_type_field, `value` FROM resource_data");
+    $resource_data = ps_query("SELECT resource, resource_type_field, `value` FROM resource_data");
     foreach($resource_data as $row)
         {
         $current_encoding = mb_detect_encoding($row["value"], mb_detect_order(), true);
@@ -178,7 +178,7 @@ if(in_array('node', $tables))
     {
     logScript("");
     logScript("Searching node table...");
-    $nodes = sql_query("SELECT ref, name FROM node");
+    $nodes = ps_query("SELECT ref, name FROM node");
     foreach($nodes as $node)
         {
         $current_encoding = mb_detect_encoding($node["name"], mb_detect_order(), true);

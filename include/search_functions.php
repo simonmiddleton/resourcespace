@@ -2660,10 +2660,10 @@ function delete_filter($filter)
         }
     
     // Delete and cleanup any unused 
-    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
-    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
-    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+    ps_query("DELETE FROM filter WHERE ref=?",array("i",$filter)); 
+    ps_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    ps_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    ps_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
     }
@@ -2683,9 +2683,9 @@ function delete_filter_rule($filter_rule)
             }
             
     // Delete and cleanup any unused nodes
-    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
-    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+    ps_query("DELETE FROM filter_rule WHERE ref=?", array("i",$filter_rule));
+    ps_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    ps_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
     }

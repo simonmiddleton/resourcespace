@@ -205,7 +205,7 @@ function revoke_all_users_flag_cascade_delete($tile)
  */
 function append_default_position()
     {
-    $last_tile=sql_query("SELECT default_order_by from dash_tile order by default_order_by DESC LIMIT 1");
+    $last_tile=ps_query("SELECT default_order_by from dash_tile order by default_order_by DESC LIMIT 1");
     return isset($last_tile[0]["default_order_by"])?$last_tile[0]["default_order_by"]+10:10;
     }
 
@@ -216,7 +216,7 @@ function append_default_position()
  */
 function reorder_default_dash()
     {
-    $tiles = sql_query("SELECT ref FROM dash_tile WHERE all_users=1 ORDER BY default_order_by");
+    $tiles = ps_query("SELECT ref FROM dash_tile WHERE all_users=1 ORDER BY default_order_by");
     $order_by=10 * count($tiles);
     for($i=count($tiles)-1;$i>=0;$i--)
         {
@@ -407,7 +407,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
     global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $dash_tile_colour, $dash_tile_colour_options;
 
     #Build Tile Templates
-    $tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by',dash_tile.allow_delete FROM dash_tile WHERE dash_tile.all_users = 1 AND dash_tile.ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile) AND (dash_tile.allow_delete=1 OR (dash_tile.allow_delete=0 AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile))) ORDER BY default_order_by");
+    $tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by',dash_tile.allow_delete FROM dash_tile WHERE dash_tile.all_users = 1 AND dash_tile.ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile) AND (dash_tile.allow_delete=1 OR (dash_tile.allow_delete=0 AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile))) ORDER BY default_order_by");
 
     // In edit_mode, as a super admin, we want to see all user dash tiles otherwise re-ordering will be broken
     // due to tiles that are not visible but still being taken into account
@@ -943,7 +943,7 @@ function add_user_dash_tile($user,$tile,$order_by,$reorder=TRUE)
   */
  function create_new_user_dash($user)
      {
-     $tiles = sql_query("SELECT dash_tile.ref as 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order' FROM dash_tile WHERE dash_tile.all_users = 1 AND ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile) AND (dash_tile.allow_delete=1 OR (dash_tile.allow_delete=0 AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile))) ORDER BY default_order_by");
+     $tiles = ps_query("SELECT dash_tile.ref as 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order' FROM dash_tile WHERE dash_tile.all_users = 1 AND ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile) AND (dash_tile.allow_delete=1 OR (dash_tile.allow_delete=0 AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile))) ORDER BY default_order_by");
      foreach($tiles as $tile)
          {
          add_user_dash_tile($user,$tile["tile"],$tile["order"], false);

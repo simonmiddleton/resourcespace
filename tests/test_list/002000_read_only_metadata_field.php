@@ -23,7 +23,7 @@ $exiftool_write_option         = true;
 $exiftool_remove_existing      = true;
 
 // Change "Credit" and "Camera make / model" fields to be read-only
-sql_query("UPDATE resource_type_field SET `read_only` = 1 WHERE ref IN (10, 52)");
+ps_query("UPDATE resource_type_field SET `read_only` = 1 WHERE ref IN (10, 52)");
 
 function teardown_002000($tmpfile)
     {
@@ -32,7 +32,7 @@ function teardown_002000($tmpfile)
         unlink($tmpfile);
         }
 
-    sql_query("UPDATE resource_type_field SET `read_only` = 0 WHERE ref IN (10, 52)");
+    ps_query("UPDATE resource_type_field SET `read_only` = 0 WHERE ref IN (10, 52)");
 
     return;
     }

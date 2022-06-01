@@ -17,7 +17,7 @@ function get_reports()
     # The reports are always listed in the same order - regardless of the used language. 
 
     # Executes query.
-    $r = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report ORDER BY name");
+    $r = ps_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report ORDER BY name");
 
     # Translates report names in the newly created array.
     $return = array();

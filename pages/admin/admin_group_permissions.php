@@ -149,7 +149,7 @@ DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
-$fields=sql_query("select *,active from resource_type_field order by active desc,order_by", "schema");
+$fields=ps_query("select *,active from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (!in_array("f*",$permissions))
@@ -168,7 +168,7 @@ foreach ($fields as $field)
 	}
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
-$fields=sql_query("select * from resource_type_field order by active desc,order_by", "schema");
+$fields=ps_query("select * from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (in_array("F*",$permissions))	
@@ -192,7 +192,7 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=sql_query("select * from resource_type order by name", "schema");
+$rtypes=get_resource_types();
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);

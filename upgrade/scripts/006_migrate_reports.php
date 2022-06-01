@@ -4,7 +4,7 @@ include_once __DIR__ . "/../../include/migration_functions.php";
 // Migrate reports away from requiring substitutions at execution time, which was very hacky.
 // Automatically upgrade reports to use new correct syntax.
 
-$reports=sql_query("select * from report order by ref");
+$reports=ps_query("select * from report order by ref");
 foreach ($reports as $report)
     {
     $sql=$report["query"];

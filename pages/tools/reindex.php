@@ -72,7 +72,7 @@ for($n = 0; $n < count($resources); $n++)
 
     
 // Reindex nodes
-$nodes=sql_query("select n.ref, n.name, n.resource_type_field, f.partial_index from node n join resource_type_field f on n.resource_type_field=f.ref order by resource_type_field;");
+$nodes=ps_query("select n.ref, n.name, n.resource_type_field, f.partial_index from node n join resource_type_field f on n.resource_type_field=f.ref order by resource_type_field;");
 $count=count($nodes);
 for($n=0;$n<$count;$n++)
 		{

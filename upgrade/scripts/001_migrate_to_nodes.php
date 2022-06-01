@@ -8,7 +8,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 // IMPORTANT! - Uncomment this line if you want to force migration of fixed field values
-// sql_query("update resource_type_field set options=replace(options,'!deprecated,','')");
+// ps_query("update resource_type_field set options=replace(options,'!deprecated,','')");
 
 $check_options_column=ps_query('SHOW COLUMNS FROM `resource_type_field` LIKE \'OPTIONS\'');
 if(count($check_options_column)==0) {return true;}

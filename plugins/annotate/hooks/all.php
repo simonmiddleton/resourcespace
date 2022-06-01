@@ -1,7 +1,7 @@
 <?php 
 
 function HookAnnotateDatabase_pruneDbprune(){
-    sql_query("delete from resource_keyword where annotation_ref > 0 and annotation_ref not in (select note_id from annotate_notes)");
+    ps_query("delete from resource_keyword where annotation_ref > 0 and annotation_ref not in (select note_id from annotate_notes)");
     echo sql_affected_rows() . " orphaned annotation resource-keyword relationships deleted.<br/><br/>";
 }
 

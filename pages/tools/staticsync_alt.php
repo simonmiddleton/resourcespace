@@ -100,7 +100,7 @@ $done=sql_array("select file_path value from resource where archive=0 and length
 
 # Load all modification times into an array for speed
 $modtimes=array();
-$rd=sql_query("select ref,file_modified,file_path from resource where archive=0 and length(file_path)>0");
+$rd=ps_query("select ref,file_modified,file_path from resource where archive=0 and length(file_path)>0");
 for ($n=0;$n<count($rd);$n++)
 	{
 	$modtimes[$rd[$n]["file_path"]]=$rd[$n]["file_modified"];
@@ -615,7 +615,7 @@ if (!$staticsync_ingest)
 	# If not ingesting files, look for deleted files in the sync folder and archive the appropriate file from ResourceSpace.
 	echo "\nLooking for deleted files...";
 	# For all resources with filepaths, check they still exist and archive if not.
-	$rf=sql_query("select ref,file_path from resource where archive=0 and length(file_path)>0 and file_path like '%/%'");
+	$rf=ps_query("select ref,file_path from resource where archive=0 and length(file_path)>0 and file_path like '%/%'");
 	for ($n=0;$n<count($rf);$n++)
 		{
 		$fp=$syncdir . "/" . $rf[$n]["file_path"];
@@ -628,19 +628,12 @@ if (!$staticsync_ingest)
 			}
 		}
 	# Remove any themes that are now empty as a result of deleted files.
-	sql_query("delete from collection where theme is not null and length(theme)>0 and (select count(*) from collection_resource cr where cr.collection=collection.ref)=0;");
+	ps_query("delete from collection where theme is not null and length(theme)>0 and (select count(*) from collection_resource cr where cr.collection=collection.ref)=0;");
 	
-	# also set dates where none set by going back through filename until a year is found, then going forward and looking for month/year.
-	/*
-	$rf=sql_query("select ref,file_path from resource where archive=0 and length(file_path)>0 and (length(creation_date)=0 or creation_date is null)");
-	for ($n=0;$n<count($rf);$n++)
-		{
-		}
-	*/
 	echo "...Complete\n";
 	}
 
-sql_query("update sysvars set value=now() where name='lastsync'");
+ps_query("update sysvars set value=now() where name='lastsync'");
 
 clear_process_lock("staticsync");
 

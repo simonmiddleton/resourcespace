@@ -12,7 +12,7 @@ include "../../include/image_processing.php";
 
 $max=sql_value("select max(ref) value from resource",0);
 $ref=getvalescaped("ref",1);
-$ps=sql_query("select * from preview_size");
+$ps=ps_query("select * from preview_size");
 $resourceinfo=sql_query("select ref,file_extension from resource where ref='$ref'");
 if (count($resourceinfo)>0)
 	{

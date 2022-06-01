@@ -410,7 +410,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 function get_users_with_permission($permission)
     {
     # First find all matching groups.
-    $groups = sql_query("SELECT ref,permissions FROM usergroup");
+    $groups = ps_query("SELECT ref,permissions FROM usergroup");
     $matched = array();
     for ($n = 0;$n<count($groups);$n++) {
         $perms = trim_array(explode(",",$groups[$n]["permissions"]));
@@ -1435,7 +1435,7 @@ function resolve_userlist_groups($userlist)
                 {
                 # Custom group
                 # Decode the groupname
-                $untranslated_groups = sql_query("select ref, name from usergroup");
+                $untranslated_groups = ps_query("select ref, name from usergroup");
                 foreach ($untranslated_groups as $group)
                     {
                     if (i18n_get_translated($group['name'])==$translated_groupname)
@@ -1512,7 +1512,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                 { 
                 # Custom group
                 # Decode the groupname
-                $untranslated_groups = sql_query("select ref, name from usergroup");
+                $untranslated_groups = ps_query("select ref, name from usergroup");
                 
                 foreach ($untranslated_groups as $group)
                     {
@@ -1791,7 +1791,7 @@ function check_access_key($resources,$key)
         if ($emulate_plugins_set!==true)
             {
             global $plugins;
-            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            $enabled_plugins = (ps_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
             foreach($enabled_plugins as $plugin)
                 {
                 $s=explode(",",$plugin['enabled_groups']);
@@ -2012,7 +2012,7 @@ function make_username($name)
 function get_registration_selectable_usergroups()
     {
     # Executes query.
-    $r = sql_query("select ref,name from usergroup where allow_registration_selection=1 order by name");
+    $r = ps_query("select ref,name from usergroup where allow_registration_selection=1 order by name");
 
     # Translates group names in the newly created array.
     $return = array();
@@ -2333,26 +2333,26 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
             
             case "RESOURCE_ACCESS";
             // Notify users who can grant access to resources, get all users in groups with R permissions
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];     
             break;
             
             case "RESEARCH_ADMIN";
             // Notify research admins, get all users in groups with r permissions
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];     
             break;
                     
             case "RESOURCE_ADMIN";
             // Get all users in groups with t and e0 permissions
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];
             break;
             
             case "SYSTEM_ADMIN";
             default;
             // Get all users in groups with a permission (default if incorrect admin type has been passed)
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];
             break;
         
@@ -3039,7 +3039,7 @@ function emulate_user($user, $usergroup="")
         # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
         if ($emulate_plugins_set!==true)
             {
-            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            $enabled_plugins = (ps_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
             foreach($enabled_plugins as $plugin)
                 {
                 $s=explode(",",$plugin['enabled_groups']);
