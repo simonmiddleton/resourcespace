@@ -1444,7 +1444,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
                     if(!preg_match($rangeregex,$date_edtf,$matches))
                         {
-                        $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+                        $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $rangeregex;
                         continue;
                         }
                     if(is_numeric($fields[$n]["linked_data_field"]))
@@ -4287,7 +4287,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 	# Note that the file will be used at it's present location and will not be copied.
     global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue, $lang,
         $extracted_text_field, $offline_job_queue, $offline_job_in_progress, $autorotate_ingest, $enable_thumbnail_creation_on_upload,
-        $userref, $lang, $upload_then_process_holding_state;
+        $userref, $lang, $upload_then_process_holding_state,$unoconv_extensions;
 
     if($upload_then_process && !$offline_job_queue)
         {
@@ -4439,8 +4439,8 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         
             if(isset($upload_then_process_holding_state))
                 {
-                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
-                update_archive_status($ref, $upload_then_process_holding_state);
+                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$r}", "");
+                update_archive_status($r, $upload_then_process_holding_state);
                 }
         
             $job_code=$r . md5($job_data["r"] . strtotime('now'));
@@ -5966,7 +5966,7 @@ function get_resource_external_access($resource)
 function delete_resource_access_key($resource,$access_key)
     {
     global $lang;
-    sql_query("delete from external_access_keys where access_key='$access_key' and resource='$resource'");
+    ps_query("delete from external_access_keys where access_key=? and resource=?",array("s",$access_key,"i",$resource));
     resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
@@ -6085,7 +6085,7 @@ function delete_resources_in_collection($collection) {
     
 
 	// Create a comma separated list of all resources remaining in this collection:
-	$resources = sql_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = '" . $collection . "';");
+	$resources = ps_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = ?;",array("i", $collection));
 	$r_refs = array_column($resources,"resource");
     $r_states = array_column($resources,"archive");
 	
@@ -6220,9 +6220,9 @@ function can_share_resource($ref, $access="")
 * 
 */
 function delete_resource_custom_access_usergroups($ref)
-        {
-        sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
-        }
+    {
+    ps_query("delete from resource_custom_access where resource=? and usergroup is not null",array("i",$ref));
+    }
 
 /**
 * Truncate the field for insertion into the main resource table field
@@ -6323,9 +6323,8 @@ function resource_file_readonly($ref)
 	
 function delete_resource_custom_user_access($resource,$user)
     {
-    sql_query("delete from resource_custom_access where resource='$resource' and user='$user'");
+    ps_query("delete from resource_custom_access where resource=? and user=?",array("i",$resource,"i",$user));
     }
-
     
 function get_video_info($file)
     {
@@ -6666,7 +6665,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
 */    
 function copyRelatedResources($from, $to)
     {
-	sql_query("insert into resource_related(resource,related) SELECT '$to',related FROM resource_related WHERE resource='$from' AND related <> '$to'");
+	ps_query("insert into resource_related(resource,related) SELECT ?,related FROM resource_related WHERE resource=? AND related <> ?",array("i",$to,"i",$from,"i",$to));
     }
 
     
@@ -6751,7 +6750,7 @@ function update_timestamp($resource)
         {
         return false;
         }
-    sql_query("UPDATE resource SET modified=NOW() WHERE ref='" . $resource . "'");
+    ps_query("UPDATE resource SET modified=NOW() WHERE ref=?",array("i",$resource));
     }    
 
 /**
@@ -6918,7 +6917,7 @@ function save_original_file_as_alternative($ref)
     if ($alternative_file_previews)
         {
         // Move the old previews to new paths
-        $ps=sql_query("select * from preview_size");
+        $ps=ps_query("select * from preview_size",array());
         for ($n=0;$n<count($ps);$n++)
             {
             # Find the original 
@@ -7256,14 +7255,14 @@ function copy_hitcount_to_live()
     {
     # Copy the temporary hit count used for relevance matching to the live column so it's activated (see comment for
     # update_resource_keyword_hitcount())
-    sql_query("update resource_keyword set hit_count=new_hit_count");
+    ps_query("update resource_keyword set hit_count=new_hit_count");
     
     # Also update the resource table
     # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability)
-    sql_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
+    ps_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
     
     # Also now update resource_node_hitcount())
-    sql_query("update resource_node set hit_count=new_hit_count");
+    ps_query("update resource_node set hit_count=new_hit_count");
     }
 
 /**
@@ -7300,7 +7299,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $returnline["path"]=$path2;
         $returnline["url"] = get_resource_path($ref, false, "", false, $extension);
         $returnline["id"]="";
-        $dimensions = sql_query("select width,height,file_size,resolution,unit from resource_dimensions where resource='" . escape_check($ref) . "'");
+        $dimensions = ps_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=?",array("i",$ref));
         
         if (count($dimensions))
             {
@@ -7337,7 +7336,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $return[]=$returnline;
     }
     # loop through all image sizes
-    $sizes=sql_query("select * from preview_size order by width desc");
+    $sizes=ps_query("select * from preview_size order by width desc");
     
     for ($n=0;$n<count($sizes);$n++)
         {
@@ -7658,7 +7657,7 @@ function get_hidden_indexed_fields()
     if (is_array($hidden_fields_cache)){
         return $hidden_fields_cache;
     } else { 
-        $fields=sql_query("select ref,active from resource_type_field where length(name)>0","schema");
+        $fields=ps_query("select ref,active from resource_type_field where length(name)>0",array(),"schema");
         # Apply field permissions
         for ($n=0;$n<count($fields);$n++)
             {
@@ -7684,7 +7683,7 @@ function get_OR_fields()
     if (is_array($orfields_cache)){
         return $orfields_cache;
     } else {
-        $fields=sql_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by", "schema");
+        $fields=ps_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by", array(), "schema");
         $orfields=array();
         foreach ($fields as $field){
             $orfields[]=$field['name'];
@@ -7770,7 +7769,7 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
 function purchase_set_size($collection,$resource,$size,$price)
     {
     // Set the selected size for an item in a collection. This is used later on when the items are downloaded.
-    sql_query("update collection_resource set purchase_size='" . escape_check($size) . "',purchase_price='" . escape_check($price) . "' where collection='$collection' and resource='$resource'");
+    ps_query("update collection_resource set purchase_size=?,purchase_price=? where collection=? and resource=?", array("s",$size,"d",$price,"i",$collection,"i",$resource));
     return true;
     }
 
@@ -8618,9 +8617,9 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
 
     if(!$accesschecked)
         {
-        $resource_data  = get_resource_data($resource);
+        $resource_data  = get_resource_data($ref);
         $lockeduser     =  $resource_data["lock_user"];
-        $edit_access    = get_edit_access($resource,false,$resource_data);
+        $edit_access    = get_edit_access($ref,false,$resource_data);
         if(!checkperm("a")
             &&
             $lockeduser != $userref
