@@ -93,9 +93,10 @@ if($annotate_enabled)
     // Force CheckDBStruct() as this won't run if only enabled for specific groups
     CheckDBStruct("plugins/annotate/dbstruct");
     $annotate_config = get_plugin_config("annotate");
+    $annotate_field = (isset($annotate_config["annotate_resource_type_field"]) && $annotate_config["annotate_resource_type_field"] >  0) ? $annotate_config["annotate_resource_type_field"] : 0;
 
-    logScript("Checking if metadata field set: " . ($annotate_config["annotate_resource_type_field"] ?? "Not set"));
-    if(!isset($annotate_config["annotate_resource_type_field"]) || $annotate_config["annotate_resource_type_field"] === 0 )
+    logScript("Checking if metadata field set: " . ($annotate_field  > 0 ? $annotate_field : "Not set"));
+    if($annotate_field == 0)
         {
         // Create a new field to hold annotations
         $annotate_field = create_resource_type_field("Annotations plugin",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"annotateplugin",true);
