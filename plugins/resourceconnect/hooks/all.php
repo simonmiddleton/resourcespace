@@ -142,8 +142,20 @@ function HookResourceConnectAllGenerate_collection_access_key($collection,$k,$us
     $c=sql_value("select count(*) value from collection_resource where collection='$collection'",0);
     if ($c>0) {return false;} # Contains resources, key already present
     
-    sql_query("insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,'$k','$collection','$userref','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . $expires . "'"). ");");
-    
+    $sql="insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,?,?,?,?,?',now(),?,";
+    $params=array("s",$k,"i",$collection,"i",$userref,"i",$feedback,"s",$email,"i",$access);
+
+    if ($expires=="") 
+            {
+            $sql.="null";
+            }
+    else    
+            {
+            $sql.="?";
+            $params[]="s";$params[]=$expires;
+            }
+    $sql.=")";
+    ps_query($sql,$params);
     }
 
 function HookResourceconnectAllGenerateurl($url)
