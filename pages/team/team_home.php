@@ -117,7 +117,7 @@ include "../../include/header.php";
     )
         {
         ?>
-        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-th"></i><br /><?php echo $lang['manage_dash_tiles']; ?></a></li>
+        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-grip"></i><br /><?php echo $lang['manage_dash_tiles']; ?></a></li>
         <?php
         }
 
