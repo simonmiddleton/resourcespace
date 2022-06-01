@@ -85,16 +85,16 @@ foreach($resource_type_fields as $resource_type_field)
 
 // Migrate any annotations (plugin) as these are not field linked
 // The plugin may only be enabled for some usergroups so can't just check $plugins array
-$alltables = ps_query("SHOW TABLES");
-$annotate_enabled = in_array("annotate_notes",array_column($alltables,"Tables_in_" . $mysql_db));
+$annotate_enabled = ps_value("SELECT COUNT(*) value FROM plugins WHERE name='annotate' AND inst_version IS NOT NULL",[],0);
 if($annotate_enabled)
     {
     logScript("Annotate plugin enabled, migrating to use new nodes");
     $count = 0;
-
+    // Force CheckDBStruct() as this won't run if only enabled for specific groups
+    CheckDBStruct("plugins/annotate/dbstruct");
     $annotate_config = get_plugin_config("annotate");
 
-    logScript( "Checking if metadata field set: " . ($annotate_config["annotate_resource_type_field"] ?? "Not set"));
+    logScript("Checking if metadata field set: " . ($annotate_config["annotate_resource_type_field"] ?? "Not set"));
     if(!isset($annotate_config["annotate_resource_type_field"]) || $annotate_config["annotate_resource_type_field"] === 0 )
         {
         // Create a new field to hold annotations
@@ -121,7 +121,7 @@ if($annotate_enabled)
             $node = set_node(NULL,$annotate_field,$annotation["note"],NULL,10);
             ps_query("UPDATE annotate_notes SET node = ? WHERE ref= ?",["i",$node,"i",$annotation["ref"]]);
             // Add nodes so will be searchable
-            add_resource_nodes($ref,[$node], true,true);
+            add_resource_nodes($annotation["ref"],[$node], true,true);
             $count++;
             }
         }
