@@ -215,7 +215,7 @@ if($generate && enforcePostRequest(false))
                     {
                     // Save as alternative
                     $newfilesize=filesize_unlimited($targetfile);
-                    sql_query("update resource_alt_files set file_size='" . $newfilesize ."' where resource='" . $ref . "' and ref='" . $newaltfile . "'");
+                    ps_query("update resource_alt_files set file_size=? where resource=? and ref=?",array("s",$newfilesize,"i",$ref,"i",$newaltfile));
                     if ($alternative_file_previews)
                         {create_previews($ref,false,$video_track_command["extension"],false,false,$newaltfile);}
                     $message = $lang["alternative_file_created"];

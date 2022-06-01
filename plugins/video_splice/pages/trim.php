@@ -129,7 +129,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             Total duration: " . $ffmpeg_duration_time);
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
+        ps_query("update resource set created_by=?,archive=?,file_extension=? where ref=?",array("i",$userref,"i",get_default_archive_state(),"s",$ffmpeg_preview_extension,"i",$newref));
 
             // Unlink the target
         if (file_exists($target)) {unlink ($target);}

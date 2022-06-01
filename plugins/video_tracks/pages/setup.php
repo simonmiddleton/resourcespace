@@ -66,7 +66,7 @@ $video_trackshtml="<div class='Question'>
     </th>
     </tr>";
 
-$fields=sql_query('select * from resource_type_field order by title, name', "schema");
+$fields=ps_query('select * from resource_type_field order by title, name', array(), "schema");
 
 $inputconfig = $execution_lockout ? " disabled=true " : "";
 
