@@ -5907,11 +5907,11 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                 # Size could be calculated after all
                 if(!$o_size)
                     {
-                    sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES ('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                    ps_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES (?, ?, ?, ?)",array("i",$ref,"i",$sw,"i",$sh,"i",(int)$filesize));
                     }
                 else
                     {
-                    sql_query("UPDATE resource_dimensions SET width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' WHERE resource='{$ref_escaped}'");
+                    ps_query("UPDATE resource_dimensions SET width=?, height=?, file_size=? WHERE resource=?", array("i",$sw,"i",$sh,"i",$filesize,"i",$ref));
                     }
                 }
             else
@@ -5922,11 +5922,11 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                 if(!$o_size)
                     {
                     # Insert a dummy row to prevent recalculation on every view.
-                    sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES ('{$ref_escaped}','0', '0', '" . escape_check((int)$filesize) . "')");
+                    ps_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES (?,'0', '0', ?)",array("i",$ref,"i",$filesize));
                     }
                 else
                     {
-                    sql_query("UPDATE resource_dimensions SET width='0', height='0', file_size='" . escape_check($filesize) . "' WHERE resource='{$ref_escaped}'");
+                    ps_query("UPDATE resource_dimensions SET width='0', height='0', file_size=? WHERE resource=?",array("i",$filesize,"i",$ref));
                     }
                 }
             }
@@ -5960,11 +5960,18 @@ function get_resource_external_access($resource)
     # Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
     global $userref;
 
+    # Build parameters for the query
+    $params=array("i",$resource);
+
     # Restrict to only their shares unless they have the elevated 'v' permission
     $condition="";
-    if (!checkperm("v")) {$condition="AND user='" . escape_check($userref) . "'";}
+    if (!checkperm("v"))
+        {
+        $condition="AND user=?";
+        $params[]="i";$params[]=$userref;
+        }
     
-    return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource='$resource' $condition group by access_key,access,expires,collection,usergroup order by maxdate");
+    return ps_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource=? $condition group by access_key,access,expires,collection,usergroup order by maxdate",$params);
 	}
 
         
@@ -6526,12 +6533,12 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
             $ea[3]=$custom_access?!checkperm('ea3'):false;
             if($ea[$newaccess])
                 {
-                sql_query("update resource set access='" . $newaccess . "' where ref=' " . $resource["ref"] . "'");
+                ps_query("update resource set access=? where ref=?",array("i",$newaccess,"i",$resource["ref"]));
 				
                 if ($newaccess==3)
                         {
                         # Copy custom access
-                        sql_query("insert into resource_custom_access (resource,usergroup,user,access) select '" . $resource["ref"] . "', usergroup,user,access from resource_custom_access where resource = '" . $lastresource["ref"] . "'");
+                        ps_query("insert into resource_custom_access (resource,usergroup,user,access) select ?, usergroup,user,access from resource_custom_access where resource = ?",array("i",$resource["ref"],"i",$lastresource["ref"]));
 		                }
 				resource_log($resource["ref"],LOG_CODE_ACCESS_CHANGED,0,"",$resource["access"],$newaccess);
 				}
@@ -6623,7 +6630,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
                             $values_string = implode(",",$node_vals);
-                            sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='".escape_check($ref)."'");
+                            ps_query("update resource set field".$resource_type_field."=? where ref=?", array("s",truncate_join_field_value(strip_leading_comma($values_string)),"i",$ref));
                             }
                         } 
                     }
@@ -7252,7 +7259,7 @@ function update_resource_keyword_hitcount($resource,$search)
         // Get all nodes matching these keywords
         $nodes = get_nodes_from_keywords($keys);
         update_resource_node_hitcount($resource,$nodes);
-        sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
+        ps_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource=? and keyword in (" . ps_param_insert(count($keys)) . ")",array_merge(array("i",$resource),ps_param_fill($keys,"i")),false,-1,true,0);
         }
     }
         
