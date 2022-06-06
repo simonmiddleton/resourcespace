@@ -519,8 +519,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
 		$user = $userref;
 		}
 
-	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
-	
+	ps_query("insert into resource(resource_type,creation_date,archive,created_by) values (?,now(),?,?)",array("i",$resource_type,"i",$archive,"i",$user));
 	$insert=sql_insert_id();
 	
 	# set defaults for resource here (in case there are edit filters that depend on them)
@@ -2078,7 +2077,7 @@ function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$option
 	else{
 		sql_query("delete from resource_keyword where resource='$ref' and keyword='$keyref' and resource_type_field='$resource_type_field'" . (($position!="")?" and position='" . $position ."'":""));
 		}
-	sql_query("update keyword set hit_count=hit_count-1 where ref='$keyref' limit 1");
+	ps_query("update keyword set hit_count=hit_count-1 where ref=? limit 1",array("i",$keyref));
 			
     }
 
@@ -2197,7 +2196,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
  */
 function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
     {
-    sql_query("delete from resource_keyword where resource='" . escape_check($resource) . "' and resource_type_field='" . escape_check($resource_type_field) . "'");
+    ps_query("delete from resource_keyword where resource=? and resource_type_field=?",array("i",$resource,"i",$resource_type_field));
     }
 
 /**
@@ -2721,7 +2720,7 @@ function delete_resource($ref)
         resource_log($ref,LOG_CODE_DELETED,'');
 		
 		# Remove the resource from any collections
-		sql_query("delete from collection_resource where resource='$ref'");
+		ps_query("delete from collection_resource where resource=?",array("i",$ref));
 			
 		return true;
 		}
@@ -2772,7 +2771,7 @@ function delete_resource($ref)
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
-	$in_collections=sql_query("select * from collection_resource where resource = '$ref'");
+	$in_collections=ps_query("select collection,resource from collection_resource where resource = ?",array("i",$ref));
 	if (count($in_collections)>0){
 		for($n=0;$n<count($in_collections);$n++)
 			{
@@ -2785,18 +2784,18 @@ function delete_resource($ref)
 	# Delete all database entries
     clear_resource_data($ref);
     resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
-	sql_query("delete from resource where ref='$ref'");
-    sql_query("delete from collection_resource where resource='$ref'");
-    sql_query("delete from resource_custom_access where resource='$ref'");
-    sql_query("delete from external_access_keys where resource='$ref'");
-	sql_query("delete from resource_alt_files where resource='$ref'");
-    sql_query(
+	ps_query("delete from resource where ref=?",array("i",$ref));
+    ps_query("delete from collection_resource where resource=?",array("i",$ref));
+    ps_query("delete from resource_custom_access where resource=?",array("i",$ref));
+    ps_query("delete from external_access_keys where resource=?",array("i",$ref));
+	ps_query("delete from resource_alt_files where resource=?",array("i",$ref));
+    ps_query(
         "    DELETE an
                FROM annotation_node AS an
          INNER JOIN annotation AS a ON a.ref = an.annotation
-              WHERE a.resource = '{$ref}'"
+              WHERE a.resource = ?",array("i",$ref)
     );
-    sql_query("DELETE FROM annotation WHERE resource = '{$ref}'");
+    ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
 	hook("afterdeleteresource");
 	
 	return true;
@@ -2807,7 +2806,7 @@ function delete_resource($ref)
 * Returns field data from resource_type_field for the given field
 * 
 * @uses escape_check()
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param integer $field Resource type field ID
 * 
@@ -3449,10 +3448,10 @@ function get_resource_top_keywords($resource,$count)
 function clear_resource_data($resource)
     {
     # Clears stored data for a resource.
-    sql_query("delete from resource_data where resource='$resource'");
-	sql_query("delete from resource_dimensions where resource='$resource'");
-	sql_query("delete from resource_keyword where resource='$resource'");
-	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
+    ps_query("delete from resource_data where resource=?",array("i",$resource));
+	ps_query("delete from resource_dimensions where resource=?",array("i",$resource));
+	ps_query("delete from resource_keyword where resource=?",array("i",$resource));
+	ps_query("delete from resource_related where resource=? or related=?",array("i",$resource,"i",$resource));
     delete_all_resource_nodes($resource); 
     
     // Clear all 'joined' fields
@@ -3464,7 +3463,7 @@ function clear_resource_data($resource)
             {
             $joins_sql .= (($joins_sql!="")?",":"") . "field" . escape_check($join) . "=NULL";
             }
-        sql_query("UPDATE resource SET $joins_sql WHERE ref='$resource'");
+        ps_query("UPDATE resource SET $joins_sql WHERE ref=?",array("i",$resource)); // $joins_sql does not contain user provided input and is safe
         }
         
     return true;
@@ -3561,7 +3560,7 @@ function copy_resource($from,$resource_type=-1)
 	if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
 		{
 		# Update the user record
-		sql_query("update resource set created_by='$userref' where ref='$to'");
+		ps_query("update resource set created_by=? where ref=?",array("i",$userref,"i",$to));
 
 		# Also add the user's username and full name to the keywords index so the resource is searchable using this name.
 		global $username,$userfullname;
@@ -3575,7 +3574,7 @@ function copy_resource($from,$resource_type=-1)
     copyRelatedResources($from, $to);
 
 	# Copy access
-	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='". escape_check($from) . "'");
+	ps_query("insert into resource_custom_access(resource,usergroup,access) select ?,usergroup,access from resource_custom_access where resource=?",array("i",$to,"i",$from));
 
     // Set any resource defaults
     // Expected behaviour: set resource defaults only on upload and when
@@ -6676,7 +6675,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
 /**
 * Copy  related resources from one resource to another
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param integer $from Resource we are copying related resources from
 * @param integer $ref  Resource we are copying related resources to
