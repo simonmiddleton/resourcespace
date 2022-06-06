@@ -564,7 +564,7 @@ function update_hitcount($ref)
     if (!$resource_hit_count_on_downloads) 
         { 
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
+        ps_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref),false,-1,true,0);
         }
     }   
 
@@ -702,7 +702,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $new_nodes_val = implode(",", $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                            ps_query("update resource set field".$fields[$n]["ref"]."=? where ref=?",array("s",truncate_join_field_value(strip_leading_comma($new_nodes_val)),"i",$ref));
                             }
                         }
                     }
@@ -820,7 +820,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             if (in_array($fields[$n]["ref"],$joins))
                                 {
                                 if(substr($val,0,1)==","){$val=substr($val,1);}
-                                sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
+                                ps_query("update resource set field".$fields[$n]["ref"]."=? where ref=?",array("s",truncate_join_field_value(substr($newval,1)),"i",$ref));
                                 }
 					        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                             }
@@ -982,12 +982,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				$resource_column=$fields[$n]["resource_column"];	
 
 				# Purge existing data and keyword mappings, decrease keyword hitcounts.
-				sql_query("delete from resource_data where resource='$ref' and resource_type_field='" . $fields[$n]["ref"] . "'");
+				ps_query("delete from resource_data where resource=? and resource_type_field=?",array("i",$ref,"i",$fields[$n]["ref"]));
 				
 				# Insert new data and keyword mappings, increase keyword hitcounts.
 				if(escape_check($val)!=='')
 					{
-					sql_query("insert into resource_data(resource,resource_type_field,value) values('$ref','" . $fields[$n]["ref"] . "','" . escape_check($val) ."')");
+					ps_query("insert into resource_data(resource,resource_type_field,value) values(?,?,?)",array("i",$ref,"i",$fields[$n]["ref"],"s",$val));
 					}
 				
 				if ($fields[$n]["type"]==3 && substr($oldval,0,1) != ',')
@@ -1017,7 +1017,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 if (in_array($fields[$n]["ref"],$joins))
                     {
                     if(substr($val,0,1)==","){$val=substr($val,1);}
-                    sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
+                    ps_query("update resource set field".$fields[$n]["ref"]."=? where ref=?",array("s",truncate_join_field_value($val),"i",$ref));
                     }
                 }
             # Add any onchange code
@@ -1038,7 +1038,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
          # save related resources field
-         sql_query("DELETE FROM resource_related WHERE resource='$ref' OR related='$ref'"); # remove existing related items
+         ps_query("DELETE FROM resource_related WHERE resource=? OR related=?",array("i",$ref,"i",$ref)); # remove existing related items
          $related=explode(",",getvalescaped("related",""));
          # Trim whitespace from each entry
          foreach ($related as &$relatedentry) {
@@ -1802,12 +1802,12 @@ function save_resource_data_multi($collection,$editsearch = array())
             }
 
         // Clear out all relationships between related resources in this collection
-        sql_query("
+        ps_query("
                 DELETE rr
                   FROM resource_related AS rr
             INNER JOIN collection_resource AS cr ON rr.resource = cr.resource
-                 WHERE cr.collection = '{$collection}'
-        ");
+                 WHERE cr.collection = ?
+        ",array("i",$collection));
 
         for($m = 0; $m < count($list); $m++)
             {
@@ -1875,7 +1875,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 		if (count($list)>0)
 			{
             $successfully_edited_resources[] = $ref;
-			sql_query("update resource set expiry_notification_sent=0 where ref in (" . join(",",$list) . ")");
+			ps_query("update resource set expiry_notification_sent=0 where ref in (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
 			}
 
         foreach ($list as $key => $ref) 
@@ -1894,7 +1894,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             $new_created_by = getvalescaped("created_by",0,true);
             if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
                 {
-                sql_query("update resource set created_by='" . $new_created_by . "'  where ref='$ref'"); 
+                ps_query("update resource set created_by=? where ref=?",array("i",$new_created_by,"i",$ref)); 
                 $olduser=get_user($created_by,true);
                 $newuser=get_user($new_created_by,true);
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
@@ -1910,10 +1910,10 @@ function save_resource_data_multi($collection,$editsearch = array())
 			{
 			$ref=$list[$m];
 			$access=getvalescaped("access",0);
-			$oldaccess=sql_value("select access value from resource where ref='$ref'","");
+			$oldaccess=ps_value("select access value from resource where ref=?",array("i",$ref),"");
 			if ($access!=$oldaccess)
 				{
-				sql_query("update resource set access='$access' where ref='$ref'");				
+				ps_query("update resource set access=? where ref=?",array("i",$access,"i",$ref));				
                 if ($oldaccess==3)
                     {
                     # Moving out of custom access - delete custom usergroup access.
@@ -2180,7 +2180,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
                             VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
 
-            sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
+            ps_query("update keyword set hit_count=hit_count+1 where ref=?",array("i",$keyref));
             
             # Log this
             daily_stat("Keyword added to resource",$keyref);
