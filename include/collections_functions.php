@@ -1825,7 +1825,7 @@ function collections_comparator_desc($a, $b)
  */
 function get_smart_theme_headers()
 	{
-	return ps_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", "featured_collections");
+	return ps_query("SELECT ref, name, smart_theme_name, type FROM resource_type_field WHERE length(smart_theme_name) > 0 ORDER BY smart_theme_name", array(), "featured_collections");
 	}
 
 /**
