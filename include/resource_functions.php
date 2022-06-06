@@ -166,7 +166,7 @@ function get_resource_path(
         global $originals_separate_storage_ffmpegalts_as_previews;
         if($alternative>0 && $originals_separate_storage_ffmpegalts_as_previews)
             {
-            $alt_data=sql_query('select * from resource_alt_files where ref=' . $alternative);
+            $alt_data=ps_query('select ref,resource,name,description,file_name,file_extension,file_size,creation_date,unoconv,alt_type,page_count from resource_alt_files where ref=?',array("i",$alternative));
             if(!empty($alt_data))
                 {
                 // determin if this file was created from $ffmpeg_alternatives
@@ -394,7 +394,8 @@ function get_resource_data($ref,$cache=true)
                 else {$user = -1;}
                 
                 $default_archive_state = escape_check(get_default_archive_state());
-                $wait = sql_query("insert into resource (ref,resource_type,created_by, archive) values ('" . escape_check($ref) . "','$default_resource_type','$user', '{$default_archive_state}')");
+                $wait = ps_query("insert into resource (ref,resource_type,created_by, archive) values (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
+
                 $resource = ps_query("select ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " from resource where ref=?",array("i",$ref));
                 }
             }
@@ -424,7 +425,12 @@ function get_resource_data_batch($refs)
     global $get_resource_data_cache;
     truncate_cache_arrays();
     $resids = array_filter($refs,function($id){return (string)(int)$id==(string)$id;});
-    $resdata=sql_query("SELECT *,mapzoom,lock_user FROM resource WHERE ref IN ('" . implode("','",$resids)  . "')");
+
+    # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
+    $joins=get_resource_table_joins();
+    $join_fields="";foreach ($joins as $j) {$join_fields.=",field" . $j;}
+   
+    $resdata=ps_query("SELECT ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
     // Create array with resource ID as index
     $resource_data = array();
     foreach($resdata as $resdatarow)
@@ -456,15 +462,17 @@ function put_resource_data($resource,$data)
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
     
-    $sql="";
+    $sql="";$params=array();
     foreach ($data as $column=>$value)
         {
         if (!in_array($column,$safe_columns)) {return false;} // Attempted to update a column outside of the expected set
         if ($sql!="") {$sql.=",";}
-        $sql.=$column . "='" . escape_check($value) . "'";
+        $sql.=$column . "=?";
+        $params[]="s";$params[]=$value;
         }
     if ($sql=="") {return false;} // Nothing to do.
-    sql_query("update resource set $sql where ref='" . escape_check($resource) . "'");
+    $params[]="i";$params[]=$resource;
+    ps_query("update resource set $sql where ref=?",$params);
     return true;
     }
 
@@ -7573,11 +7581,12 @@ function get_all_image_sizes($internal=false,$restricted=false)
     {
         # Returns all image sizes available.
         # Standard image sizes are translated using $lang.  Custom image sizes are i18n translated.
+       
         $condition=($internal)?"":"WHERE internal!=1";
         if($restricted){$condition .= ($condition!=""?" AND ":" WHERE ") . " allow_restricted=1";}
         
         # Executes query.
-        $r = sql_query("select * from preview_size " . $condition . " order by width asc");
+        $r = ps_query("select ref,id,width,height,padtosize,name,internal,allow_preview,allow_restricted,quality from preview_size " . $condition . " order by width asc"); // $condition does not contain any user entered params and is safe for inclusion
     
         # Translates image sizes in the newly created array.
         $return = array();
@@ -7610,11 +7619,12 @@ function get_fields($field_refs)
         trigger_error("\$field_refs passed to get_fields() is not an array.");
         }
 
-    $fields=sql_query("
-        SELECT *,
+    $fields=ps_query("
+        SELECT 
                ref,
                name,
                title,
+               field_constraint,
                type,
                order_by,
                keywords_index,
@@ -7633,12 +7643,30 @@ function get_fields($field_refs)
                simple_search,
                help_text,
                display_as_dropdown,
+               external_user_access,
+               autocomplete_macro,
+               hide_when_uploading,
+               hide_when_restricted,
+               value_filter,
+               exiftool_filter,
+               omit_when_copying,
                tooltip_text,
+               regexp_filter,
+               sync_field,
                display_condition,
-               onchange_macro
+               onchange_macro,
+               linked_data_field,
+               automatic_nodes_ordering,
+               fits_field,
+               personal_data,
+               include_in_csv_export,
+               browse_bar,
+               read_only,
+               active,
+               full_width
           FROM resource_type_field
-         WHERE ref IN ('" . join("','",$field_refs) . "')
-      ORDER BY order_by", "schema");
+         WHERE ref IN (" . ps_param_insert(count($field_refs)) . ")
+      ORDER BY order_by", ps_param_fill($field_refs,"i"),"schema");
 
     $return = array();
     foreach($fields as $field)
@@ -7799,7 +7827,7 @@ function payment_set_complete($collection)
     ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
     
     // For each resource, add an entry to the log to show it has been purchased.
-    $resources=sql_query("SELECT * FROM collection_resource WHERE collection='$collection'");
+    $resources=ps_query("SELECT * FROM collection_resource WHERE collection=?",array("i",$collection));
 
     // Construct summary, separating lang entries from fixed text
     $summaryparts = [];
@@ -8493,18 +8521,18 @@ function delete_resource_type_field($ref)
     $ref = escape_check($ref);
     
     // Delete the resource type field
-    sql_query("DELETE FROM resource_type_field WHERE ref='$ref'");
+    ps_query("DELETE FROM resource_type_field WHERE ref=?",array("i",$ref));
 
     // Remove all data	    
-    sql_query("DELETE FROM resource_data WHERE resource_type_field='$ref'");
+    ps_query("DELETE FROM resource_data WHERE resource_type_field=?",array("i",$ref));
 
     // Remove all nodes and keywords or resources. Always remove nodes last otherwise foreign keys will not work
-    sql_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='$ref'");
-    sql_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = '$ref'");
-    sql_query("DELETE FROM node WHERE resource_type_field='$ref'");
+    ps_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field=?",array("i",$ref));
+    ps_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = ?",array("i",$ref));
+    ps_query("DELETE FROM node WHERE resource_type_field=?",array("i",$ref));
 
     // Remove all keywords	    
-    sql_query("DELETE FROM resource_keyword where resource_type_field='$ref'");
+    ps_query("DELETE FROM resource_keyword where resource_type_field=?",array("i",$ref));
 
     hook("after_delete_resource_type_field");
 
@@ -8643,7 +8671,7 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
             }
         }
 
-    sql_query("UPDATE resource SET lock_user='" . ($lockaction ? $newlockuser : "0") . "' WHERE ref='" . (int)$ref . "'");
+    ps_query("UPDATE resource SET lock_user=? WHERE ref=?",array("i",($lockaction ? $newlockuser : "0"),"i",(int)$ref));
     resource_log($ref,($lockaction ? LOG_CODE_LOCKED : LOG_CODE_UNLOCKED),0);
     return true;
     }
