@@ -809,7 +809,7 @@ elseif($restypes=='')
                 ?>  
     
                  <?php  echo $lang["bydate"]?><br />
-    <select id="basicyear" name="basicyear" class="SearchWidthHalf">
+    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>">
               <option selected="selected" value=""><?php echo $lang["anyyear"]?></option>
               <?php
               
@@ -824,7 +824,7 @@ elseif($restypes=='')
     
             <?php if ($searchbyday) { ?><br /><?php } ?>
     
-            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight">
+            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>">
               <option selected="selected" value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($n=1;$n<=12;$n++)
@@ -834,7 +834,7 @@ elseif($restypes=='')
                     }
               ?>
     
-            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf">
+            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php echo $lang['day'];?>">
               <option selected="selected" value=""><?php echo $lang["anyday"]?></option>
               <?php
               for ($n=1;$n<=31;$n++)
