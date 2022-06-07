@@ -526,7 +526,13 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         {
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
+        
+        // First search for refs only to get full result count
+        $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, true, $editable_only, false, $search_access);
+        $result_count = count($count_search);
+        // Actual search
         $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+
         $max_results = $saved_max_results;
         }
     }
@@ -539,8 +545,7 @@ else
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$count_result = (is_array($result) ? count($result) : 0);
-
+$result_count = $result_count ?? (is_array($result) ? count($result) : 0);
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
@@ -549,7 +554,7 @@ $same_restypes_param = (trim($restypes) === $initial_restypes_cookie);
 $same_archive_param = (trim($archive) === $initial_saved_archive_cookie);
 if(!$old_search && (!$same_search_param || !$same_restypes_param || !$same_archive_param))
     {
-    log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $count_result);
+    log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $result_count);
     }
 
 if ($collectionsearch)
@@ -917,7 +922,7 @@ if ($search_titles)
 
 if (!hook("replacesearchheader")) # Always show search header now.
     {
-    $resources_count=is_array($result)?count($result):0;
+    $resources_count = $result_count ?? (is_array($result) ? count($result) : 0);
     if (isset($collections)) 
         {
         $result_count=$colcount+$resources_count;
@@ -1479,7 +1484,6 @@ if($responsive_ui)
         global $marker_metadata_field, $use_watermark;
 
         // Loop through search results.
-        $result_count = count($result);
         for ($n = 0; $n < $result_count; $n++)
             {            
             if(!is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
@@ -1512,7 +1516,6 @@ if($responsive_ui)
     # work out common keywords among the results
     if (is_array($result) && (count($result)>$suggest_threshold) && (strpos($search,"!")===false) && ($suggest_threshold!=-1))
         {
-        $result_count = count($result);
         for ($n=0;$n<$result_count;$n++)
             {
             if(!is_array($result[$n])){continue;}

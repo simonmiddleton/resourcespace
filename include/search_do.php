@@ -58,7 +58,7 @@ function do_search(
     {
     debug_function_call("do_search", func_get_args());
         
-    global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $search_sql_double_pass_mode, $usergroup, 
+    global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $usergroup, 
         $userref,$k, $DATE_FIELD_TYPES,$stemming, $usersearchfilter, $userpermissions, $usereditfilter, $userdata, 
         $lang, $baseurl, $internal_share_access, $config_separators, $date_field, $noadd, $wildcard_always_applied,
         $wildcard_always_applied_leading, $index_resource_type, $index_contributed_by, $max_results, $config_search_for_number,
@@ -689,7 +689,7 @@ function do_search(
     
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count desc limit " . $wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
+                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . $wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
@@ -1459,16 +1459,9 @@ function do_search(
         $sql->sql = " AND " . $sql->sql;
         }
 
-    # Compile final SQL
-
-    # Performance enhancement - set return limit to number of rows required
-    if ($search_sql_double_pass_mode && $fetchrows!=-1)
-        {
-        $max_results=$fetchrows;
-        }
-  
+    # Compile final SQL  
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY $order_by limit $max_results" . $sql_suffix;
+    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . ($fetchrows > -1 ? " LIMIT " . $fetchrows : "") . $sql_suffix;
     $results_sql->parameters = array_merge($t->parameters,$t2->parameters,$sql->parameters);
     
     # Debug
@@ -1499,16 +1492,6 @@ function do_search(
         $result=ps_query($results_sql->sql,$results_sql->parameters,false,$fetchrows);
         }
 
-    # Performance improvement - perform a second count-only query and pad the result array as necessary
-    if($search_sql_double_pass_mode && count($result)>=$max_results)
-        {
-        $count_sql = new PreparedStatementQuery();
-        $count_sql->sql ="SELECT count(distinct r.ref) value FROM resource r" . $t->sql . "  WHERE " . $t2->sql .  $sql->sql;
-        $count_sql->parameters = array_merge($t->parameters,$t2->parameters,$sql->parameters);    
-        $count=ps_value($count_sql->sql,$count_sql->parameters,0);
-        $result=array_pad($result,$count,0);
-        }
-
     debug("Search found " . count($result) . " results");
     if (count($result)>0)
         {
@@ -1518,7 +1501,7 @@ function do_search(
 
     hook('zero_search_results');
 
-    # (temp) - no suggestion for field-specific searching for now - TO DO: modify function below to support this
+    // No suggestions for field-specific searching 
     if (strpos($search,":")!==false)
         {
         return "";
@@ -1550,7 +1533,7 @@ function do_search(
         }
     if ($lsql->sql != "")
         {
-        $least=ps_value("SELECT keyword value FROM keyword WHERE " . $lsql->sql . " ORDER BY hit_count asc limit 1",$lsql->parameters,"");
+        $least=ps_value("SELECT keyword value FROM keyword WHERE " . $lsql->sql . " ORDER BY hit_count ASC LIMIT 1",$lsql->parameters,"");
         return trim_spaces(str_replace(" " . $least . " "," "," " . join(" ",$keywords) . " "));
         }
     else

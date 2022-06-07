@@ -235,7 +235,8 @@ function get_node($ref, array &$returned_node)
 
 
 /**
-* Get all nodes from database for a specific metadata field or parent.
+* Get all nodes from database for a specific metadata field or parent. 
+* TO BE USED FOR FIXED LIST FIELDS ONLY
 * Use $parent = NULL and recursive = TRUE to get all nodes for a category tree field
 * 
 * Use $offset and $rows only when returning a subset.
@@ -255,12 +256,19 @@ function get_node($ref, array &$returned_node)
 function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', 
     $use_count = false, $order_by_translated_name = false)
     {
+    global $FIXED_LIST_FIELD_TYPES;
     debug_function_call("get_nodes", func_get_args());
 
-    if(!is_numeric( $resource_type_field))
-            {
-            return [];    
-            }   
+    if(!is_int_loose( $resource_type_field))
+        {
+        return [];    
+        }
+
+    $fieldinfo  = get_resource_type_field($resource_type_field);
+    if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
+        {
+        return [];
+        }
             
     global $language,$defaultlanguage;
     $asdefaultlanguage=$defaultlanguage;
@@ -764,12 +772,18 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
 */
 function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0)
     {
-    global $baseurl_short, $lang;
+    global $baseurl_short, $lang, $FIXED_LIST_FIELD_TYPES;
 
     static $resource_type_field_last = 0;
     static $all_nodes = array();    
 
     if(is_null($ref) || (trim($ref)==""))
+        {
+        return false;
+        }
+
+    $fieldinfo  = get_resource_type_field($resource_type_field);
+    if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
         {
         return false;
         }
@@ -922,6 +936,11 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
  */
 function node_field_options_override(&$field,$resource_type_field=null)
     {
+    global $FIXED_LIST_FIELD_TYPES;
+    if(isset($field["type"]) && !in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+        {
+        return false;
+        }
     if (!is_null($resource_type_field))     // we are dealing with a single specified resource type so simply return array of options
         {
         $options = get_nodes($resource_type_field);
@@ -950,7 +969,7 @@ function node_field_options_override(&$field,$resource_type_field=null)
     $field['nodes'] = array();          // setup new nodes associate array to be used by node-aware field renderers
     $field['node_options'] = array();   // setup new node options list for render of flat fields such as drop down lists (saves another iteration through nodes to grab names)
 
-    if ($field['type'] == 7)        // category tree
+    if ($field['type'] == FIELD_TYPE_CATEGORY_TREE)
         {
         $category_tree_nodes = get_nodes($field['ref'], null, false);
         if (count($category_tree_nodes) > 0)

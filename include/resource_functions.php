@@ -842,7 +842,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         )
                     {
                     # Construct a multilingual string from the submitted translations
-                    $val=getvalescaped("field_" . $fields[$n]["ref"],"");
+                    $val = getval("field_" . $fields[$n]["ref"],"");
                     $rawval = getval("field_" . $fields[$n]["ref"],"");
                     $val="~" . $language . ":" . $val;
                     reset ($languages);
@@ -850,7 +850,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         if ($language!=$langkey)
                             {
-                            $val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
+                            $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
                             }
                         }
                         
@@ -868,7 +868,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 else
                     {
                     # Set the value exactly as sent.
-                    $val=getvalescaped("field_" . $fields[$n]["ref"],"");
+                    $val=getval("field_" . $fields[$n]["ref"],"");
                     $rawval = getval("field_" . $fields[$n]["ref"],"");
                     // Check if resource field data has been changed between form being loaded and submitted				
                     $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
@@ -1200,7 +1200,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
         $field_default_value = $rule_detail[1];
 
         // Find field(s) - multiple fields can be returned to support several fields with the same name
-        $fields = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE name = '{$field_shortname}'", "schema");
+        $fields = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE name = ?",["s",$field_shortname],"schema");
 
         if(0 === count($fields))
             {
@@ -1818,8 +1818,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                         
             if (!hook('forbidsavearchive', '', array($errors)))
                 {
-                $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
-                $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching
+                $oldarchive = ps_value("SELECT archive value FROM resource WHERE ref = ?" ,["i",$ref],"");
+                $setarchivestate = getval("status",$oldarchive,true); // Originally used to get the 'archive' value but this conflicts with the archive used for searching
                 $successfully_edited_resources[] = $ref;
 
                 $set_archive_state_hook = hook("save_resource_data_multi_set_archive_state", "", array($ref, $oldarchive));
@@ -5644,7 +5644,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         return;
         }
 
-    sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
+    ps_query("UPDATE resource SET archive = ? WHERE ref IN (" . ps_param_insert(count($resource)) . ")",array_merge(["i",$archive],ps_param_fill($resource,"i")));
     hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
@@ -5652,43 +5652,45 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
     }
 
 
-function delete_resources_in_collection($collection) {
-
-	global $resource_deletion_state,$userref,$lang;
+function delete_resources_in_collection($collection)
+    {
+    global $resource_deletion_state,$userref,$lang;
 
 	// Always find all resources in deleted state and delete them permanently:
 	// Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
-	$query = sprintf("
-				SELECT ref AS value
-				  FROM resource
-			INNER JOIN collection_resource ON collection_resource.resource = resource.ref AND collection_resource.collection = '%s'
-				 %s;
-	",
-		$collection,
-		isset($resource_deletion_state) ? "WHERE archive = '" . $resource_deletion_state . "'" : ''
-	);
+	$query = " SELECT ref AS value
+				 FROM resource
+		   INNER JOIN collection_resource ON collection_resource.resource = resource.ref AND collection_resource.collection = ?";
+    $params = ["i",$collection];
 
-	$resources_in_deleted_state = array();
-	$resources_in_deleted_state = sql_array($query);
-
-	if(!empty($resources_in_deleted_state)) {
-		foreach ($resources_in_deleted_state as $resource_in_deleted_state) {
-			delete_resource($resource_in_deleted_state);
-		}
-		collection_log($collection,'D', '', 'Resource ' . $resource_in_deleted_state . ' deleted permanently.');
-	}
+    if(isset($resource_deletion_state))
+        {
+        $query .= " WHERE archive = ?";
+        $params[] = "i";$params[] = $resource_deletion_state;
+        }
     
+	$resources_in_deleted_state = ps_array($query,$params);
+
+	if(!empty($resources_in_deleted_state))
+        {
+		foreach ($resources_in_deleted_state as $resource_in_deleted_state)
+            {
+			delete_resource($resource_in_deleted_state);
+            collection_log($collection,'D', '', 'Resource ' . $resource_in_deleted_state . ' deleted permanently.');
+		    }
+	    }    
 
 	// Create a comma separated list of all resources remaining in this collection:
-	$resources = sql_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = '" . $collection . "';");
+	$resources = ps_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = ?",["i",$collection]);
 	$r_refs = array_column($resources,"resource");
     $r_states = array_column($resources,"archive");
 	
 	// If all resources had their state the same as resource_deletion_state, stop here:
 	// Note: when resource_deletion_state is null it will always stop here
-	if(empty($resources)) {
+	if(empty($resources))
+        {
 		return TRUE;
-	}
+	    }
 
     // Delete (ie. move to resource_deletion_state set in config):
     if(isset($resource_deletion_state))
@@ -5744,11 +5746,15 @@ function update_related_resource($ref,$related,$add=true)
             return false;
             }
         }
-	$currentlyrelated=sql_query("SELECT resource, related 
-                                   FROM resource_related 
-                                  WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
-                                     OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");  
-    
+
+
+    // This params array can be used for both SELECT and DELETE
+	$relatedparams = array_merge(["i",$ref],ps_param_fill($related,"i"),ps_param_fill($related,"i"),["i",$ref]);
+
+    $query = "SELECT resource, related FROM resource_related  WHERE (resource = ? AND related IN (" . ps_param_insert(count($related)) . "))
+      OR (resource IN (" . ps_param_insert(count($related)) . ") AND related = ?)";
+    $currentlyrelated = ps_query($query,$relatedparams);
+
     // Create array of all related resources
     $currentlyrelated_arr = array_unique(array_merge(
         array_column($currentlyrelated,"related"),
@@ -5758,9 +5764,9 @@ function update_related_resource($ref,$related,$add=true)
     if(count($currentlyrelated_arr) > 0 && !$add)
 		{
 		// Relationships exist and we want to remove
-		sql_query("DELETE FROM resource_related
-                         WHERE (resource='$ref' AND related IN ('" . implode("','",$related) . "'))
-                            OR (resource IN ('" . implode("','",$related) . "') AND related='$ref')");
+        $query = "DELETE FROM resource_related  WHERE (resource = ? AND related IN (" . ps_param_insert(count($related)) . "))
+        OR (resource IN (" . ps_param_insert(count($related)) . ") AND related = ?)";
+        ps_query($query,$relatedparams);
 		}
     else if($add)
         {
@@ -5774,7 +5780,7 @@ function update_related_resource($ref,$related,$add=true)
             }
         if(count($newrelated) > 0)
             {
-		    sql_query("INSERT INTO resource_related (resource,related)
+            ps_query("INSERT INTO resource_related (resource,related)
                             VALUES ('" . $ref . "','" . 
                                    implode("'),('" . $ref . "','",$newrelated) .
                                    "')");
