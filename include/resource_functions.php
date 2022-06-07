@@ -547,8 +547,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // NOTE: this should NOT apply to upload.
     $check_edit_checksums = true;
 
-    // TODO  check rse_version plugin works for individual and batch reverts
-
     // Save resource defaults (functionality available for upload only)
     // Call it here so that if users have access to the field and want 
     // to override it, they can do so

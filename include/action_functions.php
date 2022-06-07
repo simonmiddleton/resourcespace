@@ -122,10 +122,6 @@ function get_editable_resource_sql()
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
 
     $editable_resource_query= new PreparedStatementQuery();
-
-    # TODO Adjust return from do_search() after it is ported to return an object
-    # FROM: $editable_resource_query->sql=do_search(
-    # TO: $editable_resource_query=do_search(
     $editable_resource_query=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
 
     return $editable_resource_query;
