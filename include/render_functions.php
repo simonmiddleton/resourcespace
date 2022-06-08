@@ -5125,7 +5125,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - If "rowid" is specified this will be used as the id attribute for the <tr> element
  *  - The "alerticon" can be used to specify a CSS class to use for a row status icon
  *  - An additional 'tools' element can be included to add custom action icons
- *  - "class" - FontAwesome class to use for icon
+ *  - "icon" - FontAwesome class to use for icon
  *  - "text" - title attribute
  *  - "url" - URl to link to
  *  - "modal" - (boolean) Open link in modal?
@@ -5134,7 +5134,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *   e.g.
  * 
  *   array(
- *       "class"=>"fa fa-trash",
+ *       "icon"=>"fa fa-trash",
  *       "text"=>$lang["action-delete"],
  *       "url"=>"",
  *       "modal"=>false,
@@ -5142,7 +5142,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *       );
  *
  *   array(
- *       "class"=>"fa fa-info",
+ *       "icon"=>"fa fa-info",
  *       "text"=>$lang["job_details"],
  *       "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
  *       "modal"=>true,
@@ -5266,7 +5266,7 @@ function render_table($tabledata)
                                 {
                                 echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
                                 }
-                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span></a>";
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
                             }
                         echo "</div>";
                         }
