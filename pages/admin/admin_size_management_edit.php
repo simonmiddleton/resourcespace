@@ -34,7 +34,7 @@ if (!sql_value("select ref as value from preview_size where ref='{$ref}' and int
 
 if (getval("deleteme", false) && enforcePostRequest(false))
 	{
-	ps_query("delete from preview_size where ref=?",arrau("i",$ref));
+	ps_query("delete from preview_size where ref=?",array("i",$ref));
 	log_activity(null,LOG_CODE_DELETED,null,'preview_size',null,$ref);
 	redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");		// return to the size management page
 	exit;
