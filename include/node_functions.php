@@ -1250,6 +1250,11 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
 
+    if (count($nodes) == 0)
+        {
+        return false;
+        }
+
     $sql = '';
     $sql_params = [];
 
