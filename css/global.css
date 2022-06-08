@@ -418,7 +418,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;} 
 .ResourcePanelSmallIcons {padding-left: 5px;}
 .ResourcePanelTop {height: 22px;} 
-.ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
+.ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right; margin-bottom: 5px;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 .ImageColourWrapper {display: inline-block;}
@@ -543,7 +543,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0 0 10px 190px;padding: 10px 0 0;}
 .FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 10px 0;text-align: center;padding: 5px; border-radius: 6px;}
-.PageInformal, .PageInfoMessage{ font-weight: bold; font-size: 1.1em; margin: 15px 0 10px; text-align: center; padding: 3px; border-radius:4px; }
+.PageInformal, .PageInfoMessage{ font-weight: bold; font-size: 1.1em; margin: 15px 5px 10px 5px; text-align: center; padding: 3px; border-radius:4px; }
 .AutoSaveStatus {font-weight: bold;float:right;padding:6px 0 0;min-width:100px;min-height:15px;}
 .PurgeUsersMonths {width:4em;}
 /*Record Panel layout*/

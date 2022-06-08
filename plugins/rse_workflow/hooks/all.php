@@ -4,7 +4,7 @@ function HookRse_workflowAllInitialise()
 	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
 	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
-     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
+     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates, $workflowicons;
     
     # Update $archive_states and associated $lang variables with entries from database
     $searchstates = array();
@@ -26,6 +26,10 @@ function HookRse_workflowAllInitialise()
             $searchstates[] = $wfstateref;
             }
         $lang["status" . $wfstateref] =  i18n_get_translated($wfstate["name"]);
+        if(isset($wfstate['icon']) && trim($wfstate['icon']) != "")
+            {
+            $workflowicons[$wfstateref] = trim($wfstate['icon']);
+            }
 		}
     natsort($additional_archive_states);		 
     }

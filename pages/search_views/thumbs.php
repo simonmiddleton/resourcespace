@@ -5,6 +5,7 @@ if (!hook("renderresultthumb"))
     $resolved_title_trim=0; 
     $field_height = 31;
     $resource_id_height = 21;
+    $workflow_state_height = 31;
 
     hook("thumbstextheight");
 
@@ -44,6 +45,10 @@ if (!hook("renderresultthumb"))
         { 
         $thumbs_displayed_fields_height += $resource_id_height;
         $br = '<br />';
+        };
+    if($thumbs_display_archive_state)
+        { 
+        $thumbs_displayed_fields_height += $workflow_state_height;
         }; 
 
     $class = array();
@@ -193,6 +198,18 @@ if (!hook("renderresultthumb"))
             } //end hook replaceicons
         if (!hook("rendertitlethumb")) {} ?> <!-- END HOOK Rendertitlethumb -->
         <?php
+
+        if($thumbs_display_archive_state)
+            {
+            $workflow_html = "<div class='ResourcePanelInfo WorkflowState'>";
+            // Add icon
+            $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
+            $workflow_html .= "<i class='" . htmlspecialchars($icon) . "'></i>&nbsp;";
+            // Add text for workflow state
+            $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (htmlspecialchars($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
+            $workflow_html .= "</div>";
+            echo $workflow_html;
+            }
 
         if($annotate_enabled)
             {

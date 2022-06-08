@@ -189,7 +189,7 @@ function HookRse_workflowViewReplacetitleprefix($state)
 
     if ($state<=3) {return false;} # For custom states only.
 
-    $name=sql_value("select name value from archive_states where code='$state'","");
+    $name=ps_value("SELECT name value FROM archive_states WHERE code = ?",["i",$state],"");
     
     ?><span class="ResourceTitleWorkflow<?php echo $state ?>"><?php echo i18n_get_translated($name) ?>:</span>&nbsp;<?php
     return true;
