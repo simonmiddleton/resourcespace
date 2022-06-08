@@ -566,7 +566,7 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	
 # Fetch  data
 $allfields=get_resource_type_fields();
-$resource_types=sql_query("select ref, name from resource_type order by order_by,ref", "schema");
+$resource_types=get_resource_types();
 foreach($resource_types as $resource_type)
 	{
 	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];

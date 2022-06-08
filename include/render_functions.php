@@ -1080,7 +1080,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             // Collection Actions
             $collection_actions_array = compile_collection_actions($collection_data, $top_actions, $resource_data);
-
             // Usual search actions
             $search_actions_array = compile_search_actions($top_actions);
 
@@ -2827,6 +2826,11 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
         case "collection":
             $defaultwidth = 75;
             $defaultheight = 75;
+        break;
+
+        case "list":
+            $defaultwidth = 40;
+            $defaultheight = 40;
         break;
 
         default:
@@ -4924,10 +4928,11 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
 * @param boolean $reload       Autosave changes done on this permission
+* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
 * 
 * @return void
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false)
+function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
     {
     global $permissions,$permissions_done;
     $checked=(in_array($permission,$permissions));
@@ -4936,7 +4941,7 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
     <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
     <tr>
         <td><?php echo $description?></td>
-        <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
+        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
             if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
     </tr>
     <?php

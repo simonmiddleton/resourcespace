@@ -122,7 +122,8 @@ if(isset($videojs_resolution_selection))
 			$video_preview_sources[0]["label"]=isset($videojs_resolution_selection[$s]['label'])?$videojs_resolution_selection[$s]['label']:"";
 			}
 		else{
-			$alt_data=sql_query("select * from resource_alt_files where resource='" . escape_check($ref) . "' and name='{$videojs_resolution_selection[$s]['name']}'");
+			$alt_data=ps_query("select * from resource_alt_files where resource=? and name=?",
+		array("i",$ref,"s",$videojs_resolution_selection[$s]['name']));
 			if(!empty($alt_data))
 				{
 				$alt_data = $alt_data[0];

@@ -324,23 +324,25 @@ if($import_collections && isset($input_fh))
             }
 
         logScript("Adding remote resource '{$collection_resource["url"]}' to collection");
-        $rcr_insert_sql = sprintf("
+        ps_query("
             INSERT INTO resourceconnect_collection_resources(collection, thumb, large_thumb, xl_thumb, url, title)
-                 VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
-            escape_check($collection_mapping[$collection_resource["collection"]]),
-            escape_check($collection_resource["thumb"]),
-            escape_check($collection_resource["large_thumb"]),
-            escape_check($collection_resource["xl_thumb"]),
-            escape_check($collection_resource["url"]),
-            escape_check($collection_resource["title"]));
-        sql_query($rcr_insert_sql);
+                 VALUES (?, ?, ?, ?, ?, ?)",
+            array
+                (
+                "i",$collection_mapping[$collection_resource["collection"]],
+                "s",$collection_resource["thumb"],
+                "s",$collection_resource["large_thumb"],
+                "s",$collection_resource["xl_thumb"],
+                "s",$collection_resource["url"],
+                "s",$collection_resource["title"]
+                ));
         }
 
     if(!($dry_run || $rollback_transaction) && db_end_transaction("resourceconnect_data_migration"))
         {
         logScript("MySQL - Commit transaction");
         }
-    else if(db_rollback_transaction())
+    else if(db_rollback_transaction("resourceconnect_data_migration"))
         {
         logScript("MySQL - Rollback Successful");
         }

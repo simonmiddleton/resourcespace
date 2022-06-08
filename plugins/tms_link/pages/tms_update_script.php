@@ -361,5 +361,5 @@ if($tms_log)
     }
 
 clear_process_lock("tms_link");
-sql_query("delete from sysvars where name='last_tms_import'");
-sql_query("insert into sysvars values('last_tms_import', now())");
+ps_query("delete from sysvars where name='last_tms_import'");
+ps_query("insert into sysvars values('last_tms_import', now())");

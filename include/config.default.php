@@ -1338,7 +1338,7 @@ $enable_public_collections=true;
 
 # Allow user group to be selected as part of user registration?
 # User groups available for user selection must be specified using the 'Allow registration selection' option on each user group
-# in System Setup.
+# under Admin -> System -> User groups.
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
@@ -1607,8 +1607,8 @@ $top_nav_upload=true;
 $top_nav_upload_user=false;
 $top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
-# Configure the maximum upload file size; this directly translates into plupload's max_file_size if set
-# $upload_max_file_size = '50M';
+# Configure the maximum upload file size; this directly translates into upload's max_file_size if set
+# $upload_max_file_size = 50mb;
 
 # You can set the following line to ''  to disable chunking.
 $upload_chunk_size='5mb';
@@ -2461,11 +2461,8 @@ $show_searchitemsdiskusage=true;
 # This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
 $search_sql_double_pass_mode=true;
 
-# Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
+# Use the new tab ordering system. This will sort the tabs by the order by value set in Admin -> System -> Metadata fields.
 $use_order_by_tab_view=false;
-
-# Allows for themes with a taller header than standard to still be fully visible in System Setup. 
-$admin_header_height=120;
 
 # Display link to request log on view page
 $display_request_log_link=false;
@@ -3294,3 +3291,7 @@ $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 // String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
 $regexp_slash_replace = 'SLASH';
 
+// Optional - $valid_upload_paths
+// Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
+// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
+// $valid_upload_paths = [];

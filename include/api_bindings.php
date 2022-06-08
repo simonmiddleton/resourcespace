@@ -699,7 +699,7 @@ function api_get_data_by_field($ref, $field)
         }
 
     // Get the data for a specific field for a specific resource.
-    $results = get_data_by_field($ref, $field);
+    $results = metadata_field_view_access($field) ? get_data_by_field($ref, $field) : false;
     
     if(is_array($results))
         {

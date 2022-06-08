@@ -153,7 +153,7 @@ function resign_all_code($confirm=true)
         $rows=ps_query("select ref,`$column` from `$table`");
         foreach ($rows as $row)
             {
-            $code=$row[$column];$ref=$row["ref"];if (trim($code)=="") {$code="";}
+            $code=$row[$column];$ref=$row["ref"];if (trim((string)$code)=="") {$code="";}
             echo $table . " -> " . $column . " -> " . $ref;
 
             // Extract signature if already one present

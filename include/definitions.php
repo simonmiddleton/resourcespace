@@ -191,7 +191,7 @@ define('LINK_PLUS_CIRCLE','<i aria-hidden="true" class="fa fa-plus-circle"></i>&
 define('LINK_CHEVRON_RIGHT','<i aria-hidden="true" class="fa fa-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON','<i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;');
 define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>&nbsp;');
-define('DASH_ICON','<i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;');
+define('DASH_ICON','<i aria-hidden="true" class="fa fa-fw fa-grip"></i>&nbsp;');
 define('FEATURED_COLLECTION_ICON','<i aria-hidden="true" class="fa fa-fw fa-folder"></i>&nbsp;');
 define('RECENT_ICON','<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;');
 define('HELP_ICON','<i aria-hidden="true" class="fa fa-fw fa-book"></i>&nbsp;');
@@ -346,12 +346,13 @@ $core_field_refs = [];
 // ----------------------------------------------
 // COLLECTIONS
 // ----------------------------------------------
-define("COLLECTION_TYPE_STANDARD",  0);
-define("COLLECTION_TYPE_UPLOAD",    1); # for collections used in upload then edit mode
-define("COLLECTION_TYPE_SELECTION", 2); # selecting resources to be edited in batch for the active user (allowed only one per user)
-define("COLLECTION_TYPE_FEATURED",  3); # featured collections (used for both parents and children featured collections)
-define("COLLECTION_TYPE_PUBLIC",    4); # public collections
-define("COLLECTION_SHARE_UPLOAD",   5); # public collections
+define("COLLECTION_TYPE_STANDARD",      0);
+define("COLLECTION_TYPE_UPLOAD",        1); # for collections used in upload then edit mode
+define("COLLECTION_TYPE_SELECTION",     2); # selecting resources to be edited in batch for the active user (allowed only one per user)
+define("COLLECTION_TYPE_FEATURED",      3); # featured collections (used for both parents and children featured collections)
+define("COLLECTION_TYPE_PUBLIC",        4); # public collections
+define("COLLECTION_TYPE_SHARE_UPLOAD",  5); # public collections
+define("COLLECTION_TYPE_REQUEST",       6); # Resource requests - can't be edited
 
 
 $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
@@ -743,4 +744,54 @@ const RS_SYSTEM_UTILITIES = [
             ],
         ],
     ],
+];
+
+const SENSITIVE_VARIABLE_NAMES = [
+    'mysql_server',
+    'mysql_username',
+    'mysql_password',
+    'mysql_db',
+    'mysql_log_location',
+    'mysqli_ssl_server_cert',
+    'mysqli_ssl_ca_cert',
+    'read_only_db_username',
+    'read_only_db_password',
+    'storagedir',
+    'storageurl',
+    'email_notify',
+    'spider_password',
+    'scramble_key',
+    'scramble_key_old',
+    'api_scramble_key',
+    'smtp_username',
+    'smtp_password',
+    'homeanim_folder',
+    'remote_config_url',
+    'remote_config_key',
+    'syncdir',
+    'debug_log_location',
+    'log_error_messages_url',
+    'CORS_whitelist',
+    'facial_recognition_face_recognizer_models_location',
+    'fstemplate_alt_scramblekey',
+
+    // Plugins
+    'checkmail_email',
+    'checkmail_password',
+    'doi_username',
+    'doi_password',
+    'ldapauth_rootdn',
+    'ldapauth_rootpass',
+    'ldapauth',
+    'tms_link_user',
+    'tms_link_password',
+    'wordpress_sso_secret',
+    'youtube_publish_username',
+    'youtube_publish_password',
+    'vimeo_publish_client_id',
+    'vimeo_publish_client_secret',
+    'vimeo_publish_access_token',
+    'museumplus_api_user',
+    'museumplus_api_pass',
+    'emu_email_notify',
 ];

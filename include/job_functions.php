@@ -116,11 +116,12 @@ function job_queue_delete($ref)
  * @param  int    $user         Job user
  * @param  string $job_code     Unique job code
  * @param  string $job_order_by 
- * @param  string $job_sort
- * @param  string $find
- * @return array
+ * @param  string $job_sort     
+ * @param  string $find         
+ * @param  bool   $returnsql    
+ * @return mixed                Resulting array of requests or an SQL query object
  */
-function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="")
+function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_order_by="priority", $job_sort="asc", $find="", $returnsql=false)
     {
     global $userref;
     $condition = array();
@@ -212,6 +213,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
         }
 
     $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ",start_date ASC";
+    if($returnsql){return new PreparedStatementQuery($sql, $parameters);}
     $jobs=ps_query($sql, $parameters);
     return $jobs;
     }
@@ -241,8 +243,13 @@ function job_queue_purge($status=0)
     $deletejobs = job_queue_get_jobs('',$status == 0 ? '' : $status);
     if(count($deletejobs) > 0)
         {
-        $parameters = ps_param_fill(array_column($deletejobs,"ref"),"i");
-        ps_query("DELETE FROM job_queue WHERE ref IN (" . ps_param_insert(count(array_column($deletejobs,"ref"))) . ")", $parameters);
+        $deletejobs_sql = job_queue_get_jobs('',$status == 0 ? '' : $status,"","","priority","asc","",true);
+        ps_query(
+            "DELETE FROM job_queue 
+                WHERE ref IN 
+                    (SELECT jobs.ref FROM 
+                        ( " . $deletejobs_sql->sql . ") AS jobs)"
+            ,$deletejobs_sql->parameters);
         }
     }
 

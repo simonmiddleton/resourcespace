@@ -1203,7 +1203,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # View Collection
     if (substr($search, 0, 11) == '!collection')
         {
-        global $userref;
+        global $userref,$ignore_collection_access;
 
         $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
@@ -1250,7 +1250,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         // Attach the negated user reference special collection
         $validcollections[] = (0 - $userref);
             
-        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection))
+        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection) || $ignore_collection_access)
             {
             if(!collection_readable($collection))
                 {
@@ -2660,10 +2660,10 @@ function delete_filter($filter)
         }
     
     // Delete and cleanup any unused 
-    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
-    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
-    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+    ps_query("DELETE FROM filter WHERE ref=?",array("i",$filter)); 
+    ps_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    ps_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    ps_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
     }
@@ -2683,9 +2683,9 @@ function delete_filter_rule($filter_rule)
             }
             
     // Delete and cleanup any unused nodes
-    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
-    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+    ps_query("DELETE FROM filter_rule WHERE ref=?", array("i",$filter_rule));
+    ps_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    ps_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
     }

@@ -82,7 +82,7 @@ $merge_filename_with_title=false;
 $count = 0;
 $done=array();
 $errors = array();
-$syncedresources = sql_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0");
+$syncedresources = ps_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0");
 foreach($syncedresources as $syncedresource)
     {
     $done[$syncedresource["file_path"]]["ref"]=$syncedresource["ref"];
@@ -1093,7 +1093,6 @@ if (!$staticsync_ingest)
     # If not ingesting files, look for deleted files in the sync folder and archive the appropriate file from ResourceSpace.
     echo "Looking for deleted files..." . PHP_EOL;
     # For all resources with filepaths, check they still exist and archive if not.
-    //$resources_to_archive = sql_query("SELECT ref,file_path FROM resource WHERE archive=0 AND LENGTH(file_path)>0 AND file_path LIKE '%/%'");
     $resources_to_archive =array();
     $n=0;
     foreach($done as $syncedfile=>$synceddetails)    
@@ -1208,7 +1207,7 @@ if($suppress_output)
     ob_clean();
     }
 
-sql_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
+ps_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 
 clear_process_lock("staticsync");
 

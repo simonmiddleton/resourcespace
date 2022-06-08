@@ -1417,7 +1417,7 @@ $lang["addnewcontent"]="New content (page, name)";
 $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
-$lang["addremove"]="Add/remove";
+$lang["addremove"]="+/-";
 $lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
@@ -1447,7 +1447,10 @@ $lang["requestsenttext"]="Your resource request has been submitted for approval 
 $lang["requestupdated"]="Your resource request has been updated ";
 $lang["requestassignedtouser"]="Your resource request has been assigned to % for approval.";
 $lang["requestapprovedmail"]="Your request has been approved. Click the link below to view and download the requested resources.";
+$lang["requestapprovedmail_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view and download the requested resources.<br/><br/><a href='[url]'>[url]</a>";
+
 $lang["requestdeclinedmail"]="Sorry, your request for the resources in the collection below has been declined.";
+$lang["requestdeclined_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view the requested resources.<br/><br/><a href='[url]'>[url]</a>";
 
 $lang["resourceexpirymail"]="The following resources have expired:";
 $lang['resource_expiry_x_days'] = "A resource that you have previously downloaded expires in %X day(s)"; # %X should be replaced (it's a placeholder)

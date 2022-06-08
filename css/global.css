@@ -2281,6 +2281,8 @@ a.BrowseRefresh{
 .BasicsBoxEdit .Question label.InnerLabel {width: 200px;}
 .BasicsBoxEdit .FormHelp {margin: 0 0 10px 210px;}
 
+.ckeditorEdit {display: inline-block; width: 100%;}
+
 .nodes_input_checkbox {float:left; margin-top: 5px}
 
 .Question table td {

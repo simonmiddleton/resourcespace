@@ -145,7 +145,7 @@ if ($request !== false)
         # Show any warnings
         if (isset($warn_field_request_approval))
             {
-            $warnings=sql_query("select resource,value from resource_data where resource_type_field='$warn_field_request_approval' and length(value)>0 and resource in (select resource from collection_resource where collection='" . $request["collection"] . "') order by resource");
+            $warnings=ps_query("select resource,value from resource_data where resource_type_field=? and length(value)>0 and resource in (select resource from collection_resource where collection=?) order by resource",array("i",$warn_field_request_approval,"i",$request["collection"]));
             foreach ($warnings as $warning)
                 { ?>
                 <div class="Question">

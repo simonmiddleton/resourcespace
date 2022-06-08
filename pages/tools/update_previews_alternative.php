@@ -8,7 +8,7 @@
 include "../../include/db.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 $max=sql_value("select max(ref) value from resource_alt_files",0);
 $ref=getval("ref", 1);

@@ -2,7 +2,7 @@
 include dirname(__FILE__)."/../../../include/db.php";
 
 include dirname(__FILE__)."/../../../include/authenticate.php";
-if (!checkperm("a")) {exit ("Permission denied.");}
+if (!checkperm("a") && !checkperm("lm")) {exit ("Permission denied.");}
 global $baseurl;
 
 

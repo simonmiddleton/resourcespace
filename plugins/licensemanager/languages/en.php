@@ -31,3 +31,5 @@ $lang["selectlicence"]="Please select a License ID";
 $lang["confirmdeletelicensefile"]="Are you sure you wish to DELETE this file? This cannot be undone.";
 
 $lang['license_manager_mediums']='License usage mediums';
+
+$lang["license_manager_access"]="Manage license data (where not already enabled via 'a')";

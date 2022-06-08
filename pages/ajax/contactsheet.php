@@ -395,7 +395,7 @@ if($contact_sheet_resource && enforcePostRequest(getval("ajax", false)))
     // Relate all resources in collection to the new contact sheet resource
     relate_to_collection($new_resource, $collection);	
 
-    sql_query("UPDATE resource SET file_extension = 'pdf' WHERE ref = '{$new_resource}'");
+    ps_query("UPDATE resource SET file_extension = 'pdf' WHERE ref = ?",array("i",$ref));
 
     // Create the file in the new resource folder:
     $path = get_resource_path($new_resource, true, '', true, 'pdf');

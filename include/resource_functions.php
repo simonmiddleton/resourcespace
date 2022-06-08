@@ -166,7 +166,7 @@ function get_resource_path(
         global $originals_separate_storage_ffmpegalts_as_previews;
         if($alternative>0 && $originals_separate_storage_ffmpegalts_as_previews)
             {
-            $alt_data=sql_query('select * from resource_alt_files where ref=' . $alternative);
+            $alt_data=ps_query('select ref,resource,name,description,file_name,file_extension,file_size,creation_date,unoconv,alt_type,page_count from resource_alt_files where ref=?',array("i",$alternative));
             if(!empty($alt_data))
                 {
                 // determin if this file was created from $ffmpeg_alternatives
@@ -368,7 +368,12 @@ function get_resource_data($ref,$cache=true)
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
     truncate_cache_arrays();
-    $resource=sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
+
+    # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
+    $joins=get_resource_table_joins();
+    $join_fields="";foreach ($joins as $j) {$join_fields.=",field" . $j;}
+
+    $resource=ps_query("select ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " from resource where ref=?",array("i",$ref));
     if (count($resource)==0) 
         {
         if ($ref>=0)
@@ -387,10 +392,11 @@ function get_resource_data($ref,$cache=true)
                     $user = $userref;
                     }
                 else {$user = -1;}
-
+                
                 $default_archive_state = escape_check(get_default_archive_state());
-                $wait = sql_query("insert into resource (ref,resource_type,created_by, archive) values ('" . escape_check($ref) . "','$default_resource_type','$user', '{$default_archive_state}')");
-                $resource = sql_query("select *,mapzoom,lock_user from resource where ref='" . escape_check($ref) . "'");
+                $wait = ps_query("insert into resource (ref,resource_type,created_by, archive) values (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
+
+                $resource = ps_query("select ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " from resource where ref=?",array("i",$ref));
                 }
             }
         }
@@ -419,7 +425,12 @@ function get_resource_data_batch($refs)
     global $get_resource_data_cache;
     truncate_cache_arrays();
     $resids = array_filter($refs,function($id){return (string)(int)$id==(string)$id;});
-    $resdata=sql_query("SELECT *,mapzoom,lock_user FROM resource WHERE ref IN ('" . implode("','",$resids)  . "')");
+
+    # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
+    $joins=get_resource_table_joins();
+    $join_fields="";foreach ($joins as $j) {$join_fields.=",field" . $j;}
+   
+    $resdata=ps_query("SELECT ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
     // Create array with resource ID as index
     $resource_data = array();
     foreach($resdata as $resdatarow)
@@ -451,15 +462,17 @@ function put_resource_data($resource,$data)
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
     
-    $sql="";
+    $sql="";$params=array();
     foreach ($data as $column=>$value)
         {
         if (!in_array($column,$safe_columns)) {return false;} // Attempted to update a column outside of the expected set
         if ($sql!="") {$sql.=",";}
-        $sql.=$column . "='" . escape_check($value) . "'";
+        $sql.=$column . "=?";
+        $params[]="s";$params[]=$value;
         }
     if ($sql=="") {return false;} // Nothing to do.
-    sql_query("update resource set $sql where ref='" . escape_check($resource) . "'");
+    $params[]="i";$params[]=$resource;
+    ps_query("update resource set $sql where ref=?",$params);
     return true;
     }
 
@@ -506,8 +519,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
 		$user = $userref;
 		}
 
-	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
-	
+	ps_query("insert into resource(resource_type,creation_date,archive,created_by) values (?,now(),?,?)",array("i",$resource_type,"i",$archive,"i",$user));
 	$insert=sql_insert_id();
 	
 	# set defaults for resource here (in case there are edit filters that depend on them)
@@ -551,7 +563,7 @@ function update_hitcount($ref)
     if (!$resource_hit_count_on_downloads) 
         { 
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
+        ps_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref),false,-1,true,0);
         }
     }   
 
@@ -689,7 +701,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $new_nodes_val = implode(",", $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
+                            ps_query("update resource set field".$fields[$n]["ref"]."=? where ref=?",array("s",truncate_join_field_value(strip_leading_comma($new_nodes_val)),"i",$ref));
                             }
                         }
                     }
@@ -807,7 +819,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             if (in_array($fields[$n]["ref"],$joins))
                                 {
                                 if(substr($val,0,1)==","){$val=substr($val,1);}
-                                sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
+                                ps_query("update resource set field".$fields[$n]["ref"]."=? where ref=?",array("s",truncate_join_field_value(substr($newval,1)),"i",$ref));
                                 }
 					        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                             }
@@ -969,12 +981,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				$resource_column=$fields[$n]["resource_column"];	
 
 				# Purge existing data and keyword mappings, decrease keyword hitcounts.
-				sql_query("delete from resource_data where resource='$ref' and resource_type_field='" . $fields[$n]["ref"] . "'");
+				ps_query("delete from resource_data where resource=? and resource_type_field=?",array("i",$ref,"i",$fields[$n]["ref"]));
 				
 				# Insert new data and keyword mappings, increase keyword hitcounts.
 				if(escape_check($val)!=='')
 					{
-					sql_query("insert into resource_data(resource,resource_type_field,value) values('$ref','" . $fields[$n]["ref"] . "','" . escape_check($val) ."')");
+					ps_query("insert into resource_data(resource,resource_type_field,value) values(?,?,?)",array("i",$ref,"i",$fields[$n]["ref"],"s",$val));
 					}
 				
 				if ($fields[$n]["type"]==3 && substr($oldval,0,1) != ',')
@@ -1004,7 +1016,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 if (in_array($fields[$n]["ref"],$joins))
                     {
                     if(substr($val,0,1)==","){$val=substr($val,1);}
-                    sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
+                    ps_query("update resource set field".$fields[$n]["ref"]."=? where ref=?",array("s",truncate_join_field_value($val),"i",$ref));
                     }
                 }
             # Add any onchange code
@@ -1025,7 +1037,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
          # save related resources field
-         sql_query("DELETE FROM resource_related WHERE resource='$ref' OR related='$ref'"); # remove existing related items
+         ps_query("DELETE FROM resource_related WHERE resource=? OR related=?",array("i",$ref,"i",$ref)); # remove existing related items
          $related=explode(",",getvalescaped("related",""));
          # Trim whitespace from each entry
          foreach ($related as &$relatedentry) {
@@ -1444,7 +1456,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
                     if(!preg_match($rangeregex,$date_edtf,$matches))
                         {
-                        $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+                        $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $rangeregex;
                         continue;
                         }
                     if(is_numeric($fields[$n]["linked_data_field"]))
@@ -1789,12 +1801,12 @@ function save_resource_data_multi($collection,$editsearch = array())
             }
 
         // Clear out all relationships between related resources in this collection
-        sql_query("
+        ps_query("
                 DELETE rr
                   FROM resource_related AS rr
             INNER JOIN collection_resource AS cr ON rr.resource = cr.resource
-                 WHERE cr.collection = '{$collection}'
-        ");
+                 WHERE cr.collection = ?
+        ",array("i",$collection));
 
         for($m = 0; $m < count($list); $m++)
             {
@@ -1862,7 +1874,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 		if (count($list)>0)
 			{
             $successfully_edited_resources[] = $ref;
-			sql_query("update resource set expiry_notification_sent=0 where ref in (" . join(",",$list) . ")");
+			ps_query("update resource set expiry_notification_sent=0 where ref in (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
 			}
 
         foreach ($list as $key => $ref) 
@@ -1881,7 +1893,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             $new_created_by = getvalescaped("created_by",0,true);
             if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
                 {
-                sql_query("update resource set created_by='" . $new_created_by . "'  where ref='$ref'"); 
+                ps_query("update resource set created_by=? where ref=?",array("i",$new_created_by,"i",$ref)); 
                 $olduser=get_user($created_by,true);
                 $newuser=get_user($new_created_by,true);
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
@@ -1897,10 +1909,10 @@ function save_resource_data_multi($collection,$editsearch = array())
 			{
 			$ref=$list[$m];
 			$access=getvalescaped("access",0);
-			$oldaccess=sql_value("select access value from resource where ref='$ref'","");
+			$oldaccess=ps_value("select access value from resource where ref=?",array("i",$ref),"");
 			if ($access!=$oldaccess)
 				{
-				sql_query("update resource set access='$access' where ref='$ref'");				
+				ps_query("update resource set access=? where ref=?",array("i",$access,"i",$ref));				
                 if ($oldaccess==3)
                     {
                     # Moving out of custom access - delete custom usergroup access.
@@ -2065,7 +2077,7 @@ function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$option
 	else{
 		sql_query("delete from resource_keyword where resource='$ref' and keyword='$keyref' and resource_type_field='$resource_type_field'" . (($position!="")?" and position='" . $position ."'":""));
 		}
-	sql_query("update keyword set hit_count=hit_count-1 where ref='$keyref' limit 1");
+	ps_query("update keyword set hit_count=hit_count-1 where ref=? limit 1",array("i",$keyref));
 			
     }
 
@@ -2167,7 +2179,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
             sql_query("INSERT INTO resource_keyword(resource, keyword, position, resource_type_field {$sql_extra_select})
                             VALUES ('$ref', '$keyref', '$position', '$resource_type_field' {$sql_extra_value})");
 
-            sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
+            ps_query("update keyword set hit_count=hit_count+1 where ref=?",array("i",$keyref));
             
             # Log this
             daily_stat("Keyword added to resource",$keyref);
@@ -2184,7 +2196,7 @@ function add_keyword_to_resource(int $ref,$keyword,$resource_type_field,$positio
  */
 function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
     {
-    sql_query("delete from resource_keyword where resource='" . escape_check($resource) . "' and resource_type_field='" . escape_check($resource_type_field) . "'");
+    ps_query("delete from resource_keyword where resource=? and resource_type_field=?",array("i",$resource,"i",$resource_type_field));
     }
 
 /**
@@ -2218,7 +2230,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     // Fetch some information about the field
-    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = ?", ["i",$field],"schema");
+    $fieldinfo = ps_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro, resource_type FROM resource_type_field WHERE ref = ?", ["i",$field],"schema");
 
     if(0 == count($fieldinfo))
         {
@@ -2229,6 +2241,12 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     else
         {
         $fieldinfo = $fieldinfo[0];
+        }
+
+    if (!in_array($fieldinfo['resource_type'], array(0, $resource_data['resource_type'])))
+        {
+        $errors[] = "Field is not valid for this resource type";
+        return false;
         }
 
     if (in_array($fieldinfo['type'], $NODE_FIELDS))
@@ -2242,7 +2260,18 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $node_options = array_column($fieldnodes, 'name', 'ref');
 
         // Get all the new values into an array
-        $newvalues    = trim_array(str_getcsv($value));
+        if (strlen($value) > 0 && (($value[0] == "'" && $value[strlen($value)-1] == "'")
+            ||
+            ($value[0] == "\"" && $value[strlen($value)-1] == "\""))
+            )
+            {
+            // Quoted value - don't attempt to split on comma.
+            $newvalues[] = substr($value,1,-1);
+            }
+        else
+            {
+            $newvalues = trim_array(str_getcsv($value));
+            }
 
         // Get currently selected nodes for this field
         $current_field_nodes = get_resource_nodes($resource, $field);
@@ -2512,42 +2541,42 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
 	{
-	# Attempt to resolve all users in the string $userlist to user references.
+    # Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
-	
-	if ($useremail==""){$useremail=$email_from;}
-	if ($group=="") {$group=$usergroup;}
+    global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+
+    if ($useremail==""){$useremail=$email_from;}
+    if ($group=="") {$group=$usergroup;}
         
-	# remove any line breaks that may have been entered
-	$userlist=str_replace("\\r\\n",",",$userlist);
+    # remove any line breaks that may have been entered
+    $userlist=str_replace("\\r\\n",",",$userlist);
 
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
-	$userlist=resolve_userlist_groups($userlist);
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
-		{
-		$userlist_with_groups=$userlist;
-		$groups_users=resolve_userlist_groups_smart($userlist,true);
-		if($groups_users!='')
-			{
-			if($userlist!="")
-				{
-				$userlist=remove_groups_smart_from_userlist($userlist);
-				if($userlist!="")
-					{
-					$userlist.=",";
-					}
-				}
-			$userlist.=$groups_users;
-			}
-		}
-	
-	$ulist=trim_array(explode(",",$userlist));
-	$ulist=array_filter($ulist);
-	$ulist=array_values($ulist);
+    if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+    $userlist=resolve_userlist_groups($userlist);
+    if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+        {
+        $userlist_with_groups=$userlist;
+        $groups_users=resolve_userlist_groups_smart($userlist,true);
+        if($groups_users!='')
+            {
+            if($userlist!="")
+                {
+                $userlist=remove_groups_smart_from_userlist($userlist);
+                if($userlist!="")
+                    {
+                    $userlist.=",";
+                    }
+                }
+            $userlist.=$groups_users;
+            }
+        }
 
-	$emails=array();
-	$key_required=array();
+    $ulist=trim_array(explode(",",$userlist));
+    $ulist=array_filter($ulist);
+    $ulist=array_values($ulist);
+
+    $emails=array();
+    $key_required=array();
 
     $emails_keys = resolve_user_emails($ulist);
 
@@ -2560,87 +2589,97 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
     $emails       = $emails_keys['emails'];
     $key_required = $emails_keys['key_required'];
 
-	# Send an e-mail to each resolved user / e-mail address
-	$subject="$applicationname: $resourcename";
-	if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
-	if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
-	
-	$message=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);
+    # Send an e-mail to each resolved user / e-mail address
+    $subject="$applicationname: $resourcename";
+    if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
+    if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
 
-#	Commented 'no message' line out as formatted oddly, and unnecessary.
-#	if ($message==""){$message=$lang['nomessage'];}
-	$resolve_open_access=false;
-	
-	for ($n=0;$n<count($emails);$n++)
-		{
-		$key="";
-		# Do we need to add an external access key for this user (e-mail specified rather than username)?
-		if ($key_required[$n])
-			{
-			$k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
-			$key="&k=". $k;
-			}
-                elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)
-                    {debug("smart_groups: going to resolve open access");
-					# get this all done at once
-					resolve_open_access((isset($userlist_with_groups)?$userlist_with_groups:$userlist),$resource,$expires);
-					$resolve_open_access=true;
+    $message=str_replace(array("\\n","\\r","\\"),array("\n","\r",""),$message);
+
+    $resolve_open_access=false;
+
+    for ($n=0;$n<count($emails);$n++)
+        {
+        $key="";
+        # Do we need to add an external access key for this user (e-mail specified rather than username)?
+        if ($key_required[$n])
+            {
+            $k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
+            $key="&k=". $k;
+            }
+        elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)
+            {debug("smart_groups: going to resolve open access");
+            # get this all done at once
+            resolve_open_access((isset($userlist_with_groups)?$userlist_with_groups:$userlist),$resource,$expires);
+            $resolve_open_access=true;
+            }
+
+        # make vars available to template
+        global $watermark;       
+        $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
+        if (!file_exists($templatevars['thumbnail'])){
+            $resourcedata=get_resource_data($resource);
+            $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
+        }
+        $templatevars['url']=$baseurl . "/?r=" . $resource . $key;
+        $templatevars['fromusername']=$fromusername;
+        $templatevars['message']=$message;
+        $templatevars['resourcename']=$resourcename;
+        $templatevars['from_name']=$from_name;
+        if(isset($k))
+            {
+            if($expires=="")
+                {
+                $templatevars['expires_date']=$lang["email_link_expires_never"];
+                $templatevars['expires_days']=$lang["email_link_expires_never"];
+                }
+            else
+                {
+                $day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
+                $templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
+                $templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
+                if($day_count>1)
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_days'].".";
                     }
-		
-		# make vars available to template
-		global $watermark;       
-		$templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
-		if (!file_exists($templatevars['thumbnail'])){
-			$resourcedata=get_resource_data($resource);
-			$templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
-		}
-		$templatevars['url']=$baseurl . "/?r=" . $resource . $key;
-		$templatevars['fromusername']=$fromusername;
-		$templatevars['message']=$message;
-		$templatevars['resourcename']=$resourcename;
-		$templatevars['from_name']=$from_name;
-		if(isset($k)){
-			if($expires==""){
-				$templatevars['expires_date']=$lang["email_link_expires_never"];
-				$templatevars['expires_days']=$lang["email_link_expires_never"];
-			}
-			else{
-				$day_count=round((strtotime($expires)-strtotime('now'))/(60*60*24));
-				$templatevars['expires_date']=$lang['email_link_expires_date'].nicedate($expires);
-				$templatevars['expires_days']=$lang['email_link_expires_days'].$day_count;
-				if($day_count>1){
-					$templatevars['expires_days'].=" ".$lang['expire_days'].".";
-				}
-				else{
-					$templatevars['expires_days'].=" ".$lang['expire_day'].".";
-				}
-			}
-		}
-		else{
-			# Set empty expiration tempaltevars
-			$templatevars['expires_date']='';
-			$templatevars['expires_days']='';
-		}
-		
-		# Build message and send.
-		if (count($emails) > 1 && $list_recipients===true) {
-			$body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-			$templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
-		}
-		else {
-			$body = "";
-		}
-		$body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
-		send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
-		
-		# log this
-		resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
-		
-		}
-	hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
-	# Return an empty string (all OK).
-	return "";
-	}
+                else
+                    {
+                    $templatevars['expires_days'].=" ".$lang['expire_day'].".";
+                    }
+                }
+            }
+        else
+            {
+            # Set empty expiration templatevars
+            $templatevars['expires_date']='';
+            $templatevars['expires_days']='';
+            }
+        
+        # Build message and send.
+        if (count($emails) > 1 && $list_recipients===true)
+            {
+            $body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+            $templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
+            }
+        else
+            {
+            $body = "";
+            }
+
+
+            
+        $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
+
+
+        send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        
+        # log this
+        resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);        
+        }
+    hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
+    # Return an empty string (all OK).
+    return "";
+    }
 
 function delete_resource($ref)
 	{
@@ -2681,7 +2720,7 @@ function delete_resource($ref)
         resource_log($ref,LOG_CODE_DELETED,'');
 		
 		# Remove the resource from any collections
-		sql_query("delete from collection_resource where resource='$ref'");
+		ps_query("delete from collection_resource where resource=?",array("i",$ref));
 			
 		return true;
 		}
@@ -2732,7 +2771,7 @@ function delete_resource($ref)
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
-	$in_collections=sql_query("select * from collection_resource where resource = '$ref'");
+	$in_collections=ps_query("select collection,resource from collection_resource where resource = ?",array("i",$ref));
 	if (count($in_collections)>0){
 		for($n=0;$n<count($in_collections);$n++)
 			{
@@ -2745,18 +2784,18 @@ function delete_resource($ref)
 	# Delete all database entries
     clear_resource_data($ref);
     resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
-	sql_query("delete from resource where ref='$ref'");
-    sql_query("delete from collection_resource where resource='$ref'");
-    sql_query("delete from resource_custom_access where resource='$ref'");
-    sql_query("delete from external_access_keys where resource='$ref'");
-	sql_query("delete from resource_alt_files where resource='$ref'");
-    sql_query(
+	ps_query("delete from resource where ref=?",array("i",$ref));
+    ps_query("delete from collection_resource where resource=?",array("i",$ref));
+    ps_query("delete from resource_custom_access where resource=?",array("i",$ref));
+    ps_query("delete from external_access_keys where resource=?",array("i",$ref));
+	ps_query("delete from resource_alt_files where resource=?",array("i",$ref));
+    ps_query(
         "    DELETE an
                FROM annotation_node AS an
          INNER JOIN annotation AS a ON a.ref = an.annotation
-              WHERE a.resource = '{$ref}'"
+              WHERE a.resource = ?",array("i",$ref)
     );
-    sql_query("DELETE FROM annotation WHERE resource = '{$ref}'");
+    ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
 	hook("afterdeleteresource");
 	
 	return true;
@@ -2767,7 +2806,7 @@ function delete_resource($ref)
 * Returns field data from resource_type_field for the given field
 * 
 * @uses escape_check()
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param integer $field Resource type field ID
 * 
@@ -3409,10 +3448,10 @@ function get_resource_top_keywords($resource,$count)
 function clear_resource_data($resource)
     {
     # Clears stored data for a resource.
-    sql_query("delete from resource_data where resource='$resource'");
-	sql_query("delete from resource_dimensions where resource='$resource'");
-	sql_query("delete from resource_keyword where resource='$resource'");
-	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
+    ps_query("delete from resource_data where resource=?",array("i",$resource));
+	ps_query("delete from resource_dimensions where resource=?",array("i",$resource));
+	ps_query("delete from resource_keyword where resource=?",array("i",$resource));
+	ps_query("delete from resource_related where resource=? or related=?",array("i",$resource,"i",$resource));
     delete_all_resource_nodes($resource); 
     
     // Clear all 'joined' fields
@@ -3424,7 +3463,7 @@ function clear_resource_data($resource)
             {
             $joins_sql .= (($joins_sql!="")?",":"") . "field" . escape_check($join) . "=NULL";
             }
-        sql_query("UPDATE resource SET $joins_sql WHERE ref='$resource'");
+        ps_query("UPDATE resource SET $joins_sql WHERE ref=?",array("i",$resource)); // $joins_sql does not contain user provided input and is safe
         }
         
     return true;
@@ -3521,7 +3560,7 @@ function copy_resource($from,$resource_type=-1)
 	if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
 		{
 		# Update the user record
-		sql_query("update resource set created_by='$userref' where ref='$to'");
+		ps_query("update resource set created_by=? where ref=?",array("i",$userref,"i",$to));
 
 		# Also add the user's username and full name to the keywords index so the resource is searchable using this name.
 		global $username,$userfullname;
@@ -3535,7 +3574,7 @@ function copy_resource($from,$resource_type=-1)
     copyRelatedResources($from, $to);
 
 	# Copy access
-	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='". escape_check($from) . "'");
+	ps_query("insert into resource_custom_access(resource,usergroup,access) select ?,usergroup,access from resource_custom_access where resource=?",array("i",$to,"i",$from));
 
     // Set any resource defaults
     // Expected behaviour: set resource defaults only on upload and when
@@ -4260,7 +4299,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 	# Note that the file will be used at it's present location and will not be copied.
     global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue, $lang,
         $extracted_text_field, $offline_job_queue, $offline_job_in_progress, $autorotate_ingest, $enable_thumbnail_creation_on_upload,
-        $userref, $lang, $upload_then_process_holding_state;
+        $userref, $lang, $upload_then_process_holding_state,$unoconv_extensions;
 
     if($upload_then_process && !$offline_job_queue)
         {
@@ -4412,8 +4451,8 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         
             if(isset($upload_then_process_holding_state))
                 {
-                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
-                update_archive_status($ref, $upload_then_process_holding_state);
+                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$r}", "");
+                update_archive_status($r, $upload_then_process_holding_state);
                 }
         
             $job_code=$r . md5($job_data["r"] . strtotime('now'));
@@ -4893,7 +4932,7 @@ function get_resource_access($resource)
                 debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
                 sql_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref='" . $usergroup . "'");
-                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+                message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
                 }
             }
 
@@ -5136,7 +5175,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
             sql_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref='" . $usergroup . "'");
-            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
     
@@ -5676,7 +5715,7 @@ function update_disk_usage_cron()
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
         {
-        echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br />\n";
+        echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br/>\n";
         return false;
         }
 
@@ -5875,11 +5914,11 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                 # Size could be calculated after all
                 if(!$o_size)
                     {
-                    sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES ('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                    ps_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES (?, ?, ?, ?)",array("i",$ref,"i",$sw,"i",$sh,"i",(int)$filesize));
                     }
                 else
                     {
-                    sql_query("UPDATE resource_dimensions SET width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' WHERE resource='{$ref_escaped}'");
+                    ps_query("UPDATE resource_dimensions SET width=?, height=?, file_size=? WHERE resource=?", array("i",$sw,"i",$sh,"i",$filesize,"i",$ref));
                     }
                 }
             else
@@ -5890,11 +5929,11 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                 if(!$o_size)
                     {
                     # Insert a dummy row to prevent recalculation on every view.
-                    sql_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES ('{$ref_escaped}','0', '0', '" . escape_check((int)$filesize) . "')");
+                    ps_query("INSERT INTO resource_dimensions (resource, width, height, file_size) VALUES (?,'0', '0', ?)",array("i",$ref,"i",$filesize));
                     }
                 else
                     {
-                    sql_query("UPDATE resource_dimensions SET width='0', height='0', file_size='" . escape_check($filesize) . "' WHERE resource='{$ref_escaped}'");
+                    ps_query("UPDATE resource_dimensions SET width='0', height='0', file_size=? WHERE resource=?",array("i",$filesize,"i",$ref));
                     }
                 }
             }
@@ -5928,18 +5967,25 @@ function get_resource_external_access($resource)
     # Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
     global $userref;
 
+    # Build parameters for the query
+    $params=array("i",$resource);
+
     # Restrict to only their shares unless they have the elevated 'v' permission
     $condition="";
-    if (!checkperm("v")) {$condition="AND user='" . escape_check($userref) . "'";}
+    if (!checkperm("v"))
+        {
+        $condition="AND user=?";
+        $params[]="i";$params[]=$userref;
+        }
     
-    return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource='$resource' $condition group by access_key,access,expires,collection,usergroup order by maxdate");
+    return ps_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource=? $condition group by access_key,access,expires,collection,usergroup order by maxdate",$params);
 	}
 
         
 function delete_resource_access_key($resource,$access_key)
     {
     global $lang;
-    sql_query("delete from external_access_keys where access_key='$access_key' and resource='$resource'");
+    ps_query("delete from external_access_keys where access_key=? and resource=?",array("s",$access_key,"i",$resource));
     resource_log($resource,LOG_CODE_DELETED_ACCESS_KEY,'', '',str_replace('%access_key', $access_key, $lang['access_key_deleted']),'');
     }
 
@@ -6058,7 +6104,7 @@ function delete_resources_in_collection($collection) {
     
 
 	// Create a comma separated list of all resources remaining in this collection:
-	$resources = sql_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = '" . $collection . "';");
+	$resources = ps_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = ?;",array("i", $collection));
 	$r_refs = array_column($resources,"resource");
     $r_states = array_column($resources,"archive");
 	
@@ -6193,9 +6239,9 @@ function can_share_resource($ref, $access="")
 * 
 */
 function delete_resource_custom_access_usergroups($ref)
-        {
-        sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
-        }
+    {
+    ps_query("delete from resource_custom_access where resource=? and usergroup is not null",array("i",$ref));
+    }
 
 /**
 * Truncate the field for insertion into the main resource table field
@@ -6296,9 +6342,8 @@ function resource_file_readonly($ref)
 	
 function delete_resource_custom_user_access($resource,$user)
     {
-    sql_query("delete from resource_custom_access where resource='$resource' and user='$user'");
+    ps_query("delete from resource_custom_access where resource=? and user=?",array("i",$resource,"i",$user));
     }
-
     
 function get_video_info($file)
     {
@@ -6495,12 +6540,12 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
             $ea[3]=$custom_access?!checkperm('ea3'):false;
             if($ea[$newaccess])
                 {
-                sql_query("update resource set access='" . $newaccess . "' where ref=' " . $resource["ref"] . "'");
+                ps_query("update resource set access=? where ref=?",array("i",$newaccess,"i",$resource["ref"]));
 				
                 if ($newaccess==3)
                         {
                         # Copy custom access
-                        sql_query("insert into resource_custom_access (resource,usergroup,user,access) select '" . $resource["ref"] . "', usergroup,user,access from resource_custom_access where resource = '" . $lastresource["ref"] . "'");
+                        ps_query("insert into resource_custom_access (resource,usergroup,user,access) select ?, usergroup,user,access from resource_custom_access where resource = ?",array("i",$resource["ref"],"i",$lastresource["ref"]));
 		                }
 				resource_log($resource["ref"],LOG_CODE_ACCESS_CHANGED,0,"",$resource["access"],$newaccess);
 				}
@@ -6592,7 +6637,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
                             $values_string = implode(",",$node_vals);
-                            sql_query("update resource set field".$resource_type_field."='".escape_check(truncate_join_field_value(strip_leading_comma($values_string)))."' where ref='".escape_check($ref)."'");
+                            ps_query("update resource set field".$resource_type_field."=? where ref=?", array("s",truncate_join_field_value(strip_leading_comma($values_string)),"i",$ref));
                             }
                         } 
                     }
@@ -6630,7 +6675,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
 /**
 * Copy  related resources from one resource to another
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param integer $from Resource we are copying related resources from
 * @param integer $ref  Resource we are copying related resources to
@@ -6639,7 +6684,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
 */    
 function copyRelatedResources($from, $to)
     {
-	sql_query("insert into resource_related(resource,related) SELECT '$to',related FROM resource_related WHERE resource='$from' AND related <> '$to'");
+	ps_query("insert into resource_related(resource,related) SELECT ?,related FROM resource_related WHERE resource=? AND related <> ?",array("i",$to,"i",$from,"i",$to));
     }
 
     
@@ -6724,7 +6769,7 @@ function update_timestamp($resource)
         {
         return false;
         }
-    sql_query("UPDATE resource SET modified=NOW() WHERE ref='" . $resource . "'");
+    ps_query("UPDATE resource SET modified=NOW() WHERE ref=?",array("i",$resource));
     }    
 
 /**
@@ -6891,7 +6936,7 @@ function save_original_file_as_alternative($ref)
     if ($alternative_file_previews)
         {
         // Move the old previews to new paths
-        $ps=sql_query("select * from preview_size");
+        $ps=ps_query("select * from preview_size",array());
         for ($n=0;$n<count($ps);$n++)
             {
             # Find the original 
@@ -6971,10 +7016,10 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     hook('replace_resource_file_extra', '', array($resource));
     $log_ref = resource_log($ref,LOG_CODE_REPLACED,'','','');
     daily_stat('Resource upload', $ref);
-    hook("additional_replace_existing","",array($ref,$log_ref));      
+    hook("additional_replace_existing","",array($ref,$log_ref));
 						
     if($notify_on_resource_change_days != 0)
-        {								
+        {
         // we don't need to wait for this.
         ob_flush();flush();	
         notify_resource_change($ref);
@@ -7221,7 +7266,7 @@ function update_resource_keyword_hitcount($resource,$search)
         // Get all nodes matching these keywords
         $nodes = get_nodes_from_keywords($keys);
         update_resource_node_hitcount($resource,$nodes);
-        sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
+        ps_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource=? and keyword in (" . ps_param_insert(count($keys)) . ")",array_merge(array("i",$resource),ps_param_fill($keys,"i")),false,-1,true,0);
         }
     }
         
@@ -7229,14 +7274,14 @@ function copy_hitcount_to_live()
     {
     # Copy the temporary hit count used for relevance matching to the live column so it's activated (see comment for
     # update_resource_keyword_hitcount())
-    sql_query("update resource_keyword set hit_count=new_hit_count");
+    ps_query("update resource_keyword set hit_count=new_hit_count");
     
     # Also update the resource table
     # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability)
-    sql_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
+    ps_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
     
     # Also now update resource_node_hitcount())
-    sql_query("update resource_node set hit_count=new_hit_count");
+    ps_query("update resource_node set hit_count=new_hit_count");
     }
 
 /**
@@ -7273,7 +7318,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $returnline["path"]=$path2;
         $returnline["url"] = get_resource_path($ref, false, "", false, $extension);
         $returnline["id"]="";
-        $dimensions = sql_query("select width,height,file_size,resolution,unit from resource_dimensions where resource='" . escape_check($ref) . "'");
+        $dimensions = ps_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=?",array("i",$ref));
         
         if (count($dimensions))
             {
@@ -7310,7 +7355,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $return[]=$returnline;
     }
     # loop through all image sizes
-    $sizes=sql_query("select * from preview_size order by width desc");
+    $sizes=ps_query("select * from preview_size order by width desc");
     
     for ($n=0;$n<count($sizes);$n++)
         {
@@ -7535,11 +7580,12 @@ function get_all_image_sizes($internal=false,$restricted=false)
     {
         # Returns all image sizes available.
         # Standard image sizes are translated using $lang.  Custom image sizes are i18n translated.
+       
         $condition=($internal)?"":"WHERE internal!=1";
         if($restricted){$condition .= ($condition!=""?" AND ":" WHERE ") . " allow_restricted=1";}
         
         # Executes query.
-        $r = sql_query("select * from preview_size " . $condition . " order by width asc");
+        $r = ps_query("select ref,id,width,height,padtosize,name,internal,allow_preview,allow_restricted,quality from preview_size " . $condition . " order by width asc"); // $condition does not contain any user entered params and is safe for inclusion
     
         # Translates image sizes in the newly created array.
         $return = array();
@@ -7572,11 +7618,12 @@ function get_fields($field_refs)
         trigger_error("\$field_refs passed to get_fields() is not an array.");
         }
 
-    $fields=sql_query("
-        SELECT *,
+    $fields=ps_query("
+        SELECT 
                ref,
                name,
                title,
+               field_constraint,
                type,
                order_by,
                keywords_index,
@@ -7595,12 +7642,30 @@ function get_fields($field_refs)
                simple_search,
                help_text,
                display_as_dropdown,
+               external_user_access,
+               autocomplete_macro,
+               hide_when_uploading,
+               hide_when_restricted,
+               value_filter,
+               exiftool_filter,
+               omit_when_copying,
                tooltip_text,
+               regexp_filter,
+               sync_field,
                display_condition,
-               onchange_macro
+               onchange_macro,
+               linked_data_field,
+               automatic_nodes_ordering,
+               fits_field,
+               personal_data,
+               include_in_csv_export,
+               browse_bar,
+               read_only,
+               active,
+               full_width
           FROM resource_type_field
-         WHERE ref IN ('" . join("','",$field_refs) . "')
-      ORDER BY order_by", "schema");
+         WHERE ref IN (" . ps_param_insert(count($field_refs)) . ")
+      ORDER BY order_by", ps_param_fill($field_refs,"i"),"schema");
 
     $return = array();
     foreach($fields as $field)
@@ -7631,7 +7696,7 @@ function get_hidden_indexed_fields()
     if (is_array($hidden_fields_cache)){
         return $hidden_fields_cache;
     } else { 
-        $fields=sql_query("select ref,active from resource_type_field where length(name)>0","schema");
+        $fields=ps_query("select ref,active from resource_type_field where length(name)>0",array(),"schema");
         # Apply field permissions
         for ($n=0;$n<count($fields);$n++)
             {
@@ -7657,7 +7722,7 @@ function get_OR_fields()
     if (is_array($orfields_cache)){
         return $orfields_cache;
     } else {
-        $fields=sql_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by", "schema");
+        $fields=ps_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by", array(), "schema");
         $orfields=array();
         foreach ($fields as $field){
             $orfields[]=$field['name'];
@@ -7743,63 +7808,85 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
 function purchase_set_size($collection,$resource,$size,$price)
     {
     // Set the selected size for an item in a collection. This is used later on when the items are downloaded.
-    sql_query("update collection_resource set purchase_size='" . escape_check($size) . "',purchase_price='" . escape_check($price) . "' where collection='$collection' and resource='$resource'");
+    ps_query("update collection_resource set purchase_size=?,purchase_price=? where collection=? and resource=?", array("s",$size,"d",$price,"i",$collection,"i",$resource));
     return true;
     }
 
-function payment_set_complete($collection,$emailconfirmation="")
+/**
+ * Update ecommerce user's basket to indicate it has been purchased after PayPal callback (invoice users will pactually ay later with manual invoicing)
+ *
+ * @param  int $collection
+ * @param  string $emailconfirmation - LEGACY MUNUSED
+ * @return boolean
+ */
+function payment_set_complete($collection)
     {
-    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$email_notify,$lang,$currency_symbol;
+    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$lang,$currency_symbol;
     // Mark items in the collection as paid so they can be downloaded.
-    sql_query("update collection_resource set purchase_complete=1 where collection='$collection'");
+    ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
     
     // For each resource, add an entry to the log to show it has been purchased.
-    $resources=sql_query("select * from collection_resource where collection='$collection'");
-    $summary="<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>" . $lang["property-reference"] . "</strong></td><td><strong>" . $lang["size"] . "</strong></td><td><strong>" . $lang["price"] . "</strong></td></tr>";
+    $resources=ps_query("SELECT * FROM collection_resource WHERE collection=?",array("i",$collection));
+
+    // Construct summary, separating lang entries from fixed text
+    $summaryparts = [];
+    $summaryparts[] = "<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>";
+    
+    $summaryparts[] = "lang_property-reference";
+    $summaryparts[] = "</strong></td><td><strong>";
+    $summaryparts[] = "lang_size";
+    $summaryparts[] = "</strong></td><td><strong>";
+    $summaryparts[] = "lang_price";
+    $summaryparts[] = "</strong></td></tr>";
+
     foreach ($resources as $resource)
         {
         $purchasesize=$resource["purchase_size"];
-        if ($purchasesize==""){$purchasesize=$lang["original"];}
-        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
-        $summary.="<tr><td>" . $resource["resource"] . "</td><td>" . $purchasesize . "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
-        }
-    $summary.="</table>";
-    // Send email or notification to admin
-    $message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    $notificationmessage=$lang["purchase_complete_email_admin_body"] . "\r\n" . $lang["username"] . ": " . $username . "(" . $userfullname . ")";
-    $notify_users=get_notification_users("RESOURCE_ACCESS"); 
-    $message_users=array();
-    foreach($notify_users as $notify_user)
+        if ($purchasesize=="")
             {
-            get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message);          
-            if($send_message==false){continue;}     
-            
-            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-            if($send_email && $notify_user["email"]!="")
-                {
-                send_mail($notify_user["email"],$applicationname . ": " . $lang["purchase_complete_email_admin"],$message);
-                }        
-            else
-                {
-                $message_users[]=$notify_user["ref"];
-                }
+            $purchasesize=$lang["original"];
             }
-            
-    if (count($message_users)>0)
-        {       
-        message_add($message_users,$notificationmessage,$baseurl . "/?c=" . $collection,$userref);
-        }   
+        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
+        
+        $summaryparts[] = "<tr><td>" . $resource["resource"] . "</td><td>";
+        $summaryparts[] = ($purchasesize=="" ? "lang_original" : $purchasesize);
+        $summaryparts[] = "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
+        }
+    $summaryparts[] = "</table>";
+
+    // Construct message components
+    $notify_users=get_notification_users("RESOURCE_ACCESS");
+    $notifymessage = new ResourceSpaceUserNotification();
+    $notifymessage->set_text("lang_purchase_complete_email_admin_body");
+    $notifymessage->append_text("<br/><br/>");
+    $notifymessage->append_text("lang_username");
+    $notifymessage->append_text(": " . $username . " (" . $userfullname . ")<br/><br/>");    
+    foreach($summaryparts as $summarypart)
+        {
+        $notifymessage->append_text($summarypart);
+        }    
+    $notifymessage->user_preference = "user_pref_resource_access_notifications";
+    $notifymessage->set_subject("lang_purchase_complete_email_admin");
+    $notifymessage->url = $baseurl . "/?c=" . $collection;
+    send_user_notification($notify_users,$notifymessage);
     
     // Send email to user (not a notification as may need to be kept for reference)
-    $confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;   
-    $userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-    send_mail($useremail,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
-    
+    $userconfirmmessage = new ResourceSpaceUserNotification();
+    $userconfirmmessage->set_text("lang_purchase_complete_email_user_body");
+    $userconfirmmessage->append_text("<br/><br/>");
+    foreach($summaryparts as $summarypart)
+        {
+        $userconfirmmessage->append_text($summarypart);
+        }        
+    $userconfirmmessage->set_subject("lang_purchase_complete_email_user");
+    $userconfirmmessage->url = $baseurl . "/?c=" . $collection;
+
+    send_user_notification([$userref],$userconfirmmessage,true);
+        
     // Rename so that can be viewed on my purchases page
-    sql_query("update collection set name= '" . date("Y-m-d H:i") . "' where ref='$collection'");
+    ps_query("UPDATE collection SET name = ? WHERE ref = ?",["s",date("Y-m-d H:i"),"i",$collection]);
     
     return true;
-
     }
 
 
@@ -7928,7 +8015,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 function notify_resource_change($resource)
     {
     debug("notify_resource_change " . $resource);
-    global $notify_on_resource_change_days;
+    global $notify_on_resource_change_days, $baseurl;
     // Check to see if we need to notify users of this change
     if($notify_on_resource_change_days==0 || !is_int($notify_on_resource_change_days))
         {
@@ -7936,40 +8023,18 @@ function notify_resource_change($resource)
         }
         
     debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
-    $download_users=sql_query("select distinct u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
+    $download_users=ps_query("SELECT DISTINCT u.ref, u.email FROM resource_log rl LEFT JOIN user u ON rl.user=u.ref WHERE rl.type='d' AND rl.resource=? AND DATEDIFF(NOW(),date)<?",["i",$resource,"i",$notify_on_resource_change_days],"");
     $message_users=array();
     if(count($download_users)>0)
         {
-        global $applicationname, $lang, $baseurl;
-        foreach ($download_users as $download_user)
-            {
-            if($download_user['ref']==""){continue;}
-            get_config_option($download_user['ref'],'user_pref_resource_notifications', $send_message);       
-            if($send_message==false){continue;}     
-            
-            get_config_option($download_user['ref'],'email_user_notifications', $send_email);
-            get_config_option($download_user['ref'],'email_and_user_notifications', $send_email_and_notify);
-            if($send_email_and_notify)
-                {
-                $message_users[]=$download_user["ref"];
-                if($download_user["email"]!="")
-                    {
-                    send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
-                    }
-                }
-            else if($send_email && $download_user["email"]!="")
-                {
-                send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
-                }
-            else
-                {
-                $message_users[]=$download_user["ref"];
-                }
-            }
-        if (count($message_users)>0)
-            {
-            message_add($message_users,str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_notification"]),$baseurl . "/?r=" . $resource);
-            }
+        $notifymessage = new ResourceSpaceUserNotification();
+        $notifymessage->set_subject("lang_notify_resource_change_email_subject");
+        $notifymessage->set_text("lang_notify_resource_change_email",["[days]","[url]"],[$notify_on_resource_change_days,$baseurl . "/?r=" . $resource]);
+        $notifymessage->preference = "user_pref_resource_notifications";
+        $notifymessage->url = $baseurl . "/?r=" . $resource;
+        $notifymessage->template = 'notify_resource_change_email';
+        $notifymessage->templatevars = ["days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource];
+        send_user_notification($download_users,$notifymessage);
         }
     }
 
@@ -8073,7 +8138,25 @@ function get_download_filename($ref,$size,$alternative,$ext)
             {
             # Fetch from the resource_alt_files alternatives table (this is an alternative file)
             $origfile=get_alternative_file($ref,$alternative);
-            $origfile=$origfile["file_name"];
+            $filename=$origfile["name"];
+
+            //Try to use the name that the user has set for the file and if not then default to the original filename. 
+            if(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) == $ext)
+                {
+                $origfile=$filename;
+                }
+            elseif(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) != $ext)
+                {
+                $origfile=remove_extension($filename) . '.' . $ext;
+                }
+            elseif($ext != '' && strpos($filename, '.') == false)
+                {
+                $origfile=$filename . '.' . $ext;
+                }
+            else
+                {
+                $origfile=$origfile["file_name"];
+                }
             }
         else
             {
@@ -8424,7 +8507,7 @@ function delete_resource_type_field($ref)
 
     if(count($fieldvars) > 0)
         {
-        return $lang["admin_delete_field_error"] . "<br />\$" . implode(", \$",$fieldvars);
+        return $lang["admin_delete_field_error"] . "<br/>\$" . implode(", \$",$fieldvars);
         }
     else if(!empty($core_field_scopes))
         {
@@ -8437,18 +8520,18 @@ function delete_resource_type_field($ref)
     $ref = escape_check($ref);
     
     // Delete the resource type field
-    sql_query("DELETE FROM resource_type_field WHERE ref='$ref'");
+    ps_query("DELETE FROM resource_type_field WHERE ref=?",array("i",$ref));
 
     // Remove all data	    
-    sql_query("DELETE FROM resource_data WHERE resource_type_field='$ref'");
+    ps_query("DELETE FROM resource_data WHERE resource_type_field=?",array("i",$ref));
 
     // Remove all nodes and keywords or resources. Always remove nodes last otherwise foreign keys will not work
-    sql_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='$ref'");
-    sql_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = '$ref'");
-    sql_query("DELETE FROM node WHERE resource_type_field='$ref'");
+    ps_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field=?",array("i",$ref));
+    ps_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = ?",array("i",$ref));
+    ps_query("DELETE FROM node WHERE resource_type_field=?",array("i",$ref));
 
     // Remove all keywords	    
-    sql_query("DELETE FROM resource_keyword where resource_type_field='$ref'");
+    ps_query("DELETE FROM resource_keyword where resource_type_field=?",array("i",$ref));
 
     hook("after_delete_resource_type_field");
 
@@ -8573,9 +8656,9 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
 
     if(!$accesschecked)
         {
-        $resource_data  = get_resource_data($resource);
+        $resource_data  = get_resource_data($ref);
         $lockeduser     =  $resource_data["lock_user"];
-        $edit_access    = get_edit_access($resource,false,$resource_data);
+        $edit_access    = get_edit_access($ref,false,$resource_data);
         if(!checkperm("a")
             &&
             $lockeduser != $userref
@@ -8587,7 +8670,7 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
             }
         }
 
-    sql_query("UPDATE resource SET lock_user='" . ($lockaction ? $newlockuser : "0") . "' WHERE ref='" . (int)$ref . "'");
+    ps_query("UPDATE resource SET lock_user=? WHERE ref=?",array("i",($lockaction ? $newlockuser : "0"),"i",(int)$ref));
     resource_log($ref,($lockaction ? LOG_CODE_LOCKED : LOG_CODE_UNLOCKED),0);
     return true;
     }
@@ -8879,7 +8962,14 @@ function allow_in_browser($path)
         $permitted_mime = $allow;
         }
 
-    $type = mime_content_type($path);
+    if (function_exists('mime_content_type'))
+        {
+        $type = mime_content_type($path);
+        }
+    else
+        {
+        $type = get_mime_type($path);
+        }
     if($type == "application/octet-stream")
         {
         # Not properly detected, try and get mime type via exiftool if possible

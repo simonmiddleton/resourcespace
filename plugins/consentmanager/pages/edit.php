@@ -11,12 +11,12 @@ $file_path=get_consent_file_path($ref);
 if ($resource!="")
     {
     $edit_access=get_edit_access($resource);
-    if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+    if (!$edit_access && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without edit access
     }
 else
     {
     # Editing all consents via Manage Consents - admin only
-    if (!checkperm("a")) {exit("Access denied");} 
+    if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} 
     }
 
 $url_params = array(

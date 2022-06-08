@@ -43,7 +43,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 		// figure out group
 		$group = $simpleldap['fallbackusergroup'];
 		$groupmatch="";
-		$grouplist = sql_query("select * from simpleldap_groupmap");
+		$grouplist = ps_query("select * from simpleldap_groupmap");
 		if (count($grouplist)>0 && $userinfo['group']!="")
 			{
 			for ($i = 0; $i < count($grouplist); $i++)

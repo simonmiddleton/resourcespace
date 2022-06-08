@@ -2,7 +2,7 @@
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Started migrating featured collections permissions from the old format to the new one (e.g j[ID], -j[ID]) ...");
 
-$all_ugs = sql_query("SELECT ref, `name`, permissions FROM usergroup");
+$all_ugs = ps_query("SELECT ref, `name`, permissions FROM usergroup");
 foreach($all_ugs as $ug)
     {
     logScript("Analysing user group #{$ug["ref"]} '{$ug["name"]}'");

@@ -3,8 +3,8 @@ include "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 include "../include/file_functions.php";
 
-$ref=getvalescaped("ref","",true);
-$resource=getvalescaped("resource","",true);
+$ref=getval("ref",0,true);
+$resource=getval("resource",0,true);
 $file_path=get_license_file_path($ref);
 
 # Check access
@@ -20,7 +20,7 @@ else
     }
 
 // Load license details
-$license=sql_query("select outbound,holder,license_usage,description,expires,file from license where ref='$ref'");
+$license=ps_query("select outbound,holder,license_usage,description,expires,file from license where ref=?",array("i",$ref));
 if (count($license)==0) {exit("License record not found.");}
 $license=$license[0];
 

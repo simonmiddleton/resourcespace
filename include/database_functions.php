@@ -66,11 +66,11 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         }
     else if (substr(PHP_SAPI, 0, 3) == 'cli')
         {
-        echo $error_note;
-        if ($show_error_messages) 
-            {
-            echo $error_info;
-            }
+        // Always show errors when running on the command line.
+        echo "\n\n\n" . $error_note;
+        echo $error_info . "\n\n";
+        // Dump additional trace information to help with diagnosis.
+        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         echo PHP_EOL;
         }
     else
@@ -453,6 +453,11 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
         {
         debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
+        }
+    if(trim($sql) == "")
+        {
+        debug("Error - empty SQL query passed");
+        return [];
         }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if

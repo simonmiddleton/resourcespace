@@ -30,7 +30,7 @@ include ("../../include/header.php");
             <?php
             }
 
-        if(checkperm('a'))
+			if(checkperm('a'))
             {
             $failedjobs = job_queue_get_jobs("",STATUS_ERROR);
             $failedjobcount = count($failedjobs);
@@ -50,6 +50,9 @@ include ("../../include/header.php");
             </li>
             <?php
             }
+
+		// A place to add links to setup pages keeping them away from the more "sysadmin" type pages towards the bottom.
+		hook("customadminsetup");
 
         if('' != $mysql_bin_path && $system_download_config)
             {

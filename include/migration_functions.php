@@ -29,15 +29,29 @@ function migrate_resource_type_field_check(&$resource_type_field)
         ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE . "', options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 
 		}
+    elseif ($resource_type_field['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
+        {
+        $options = preg_split('/\s*,\s*/',$resource_type_field['options']);
+        $order=10;
+        foreach ($options as $option)
+            {
+            set_node(null,$resource_type_field['ref'],$option,null,$order);
+            $order+=10;
+            }
+
+        // important!  this signifies that this field has been migrated by -replacing- with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
+        // Note as the dynamic keyword fields can reach the database column length limit this no longer appends the old 'options' text - the migration script will pick up any missing options later from existing resource_data values
+        ps_query("UPDATE `resource_type_field` SET `options` = '" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "' WHERE `ref` = ?", array("i", $resource_type_field['ref']));
+        }
 	else		// general comma separated fields
 		{
-		$options = preg_split('/\s*,\s*/',$resource_type_field['options']);
-		$order=10;
-		foreach ($options as $option)
-			{
-			set_node(null,$resource_type_field['ref'],$option,null,$order);
-			$order+=10;
-			}
+        $options = preg_split('/\s*,\s*/',$resource_type_field['options']);
+        $order=10;
+        foreach ($options as $option)
+            {
+            set_node(null,$resource_type_field['ref'],$option,null,$order);
+            $order+=10;
+            }
 
         // important!  this signifies that this field has been migrated by prefixing with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
         ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "',',',options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));

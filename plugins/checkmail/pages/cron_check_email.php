@@ -3,49 +3,49 @@ include '../../../include/db.php';
 include_once '../../../include/image_processing.php';
 include_once '../include/checkmail_functions.php';
 
-
 // required: check that this plugin is activated
 $activated = ps_value("select inst_version value from plugins where name = 'checkmail'", array(), "");
 if ($activated==""){die("checkmail plugin deactivated\r\n");}
 $process_locks_max_seconds=600;
 
-
-
 // command line options
 if ($argc == 2)
-{
-	if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
-	{
-		echo "To clear the lock after a failed run, ";
-  		echo "pass in '--clearlock', '-clearlock', '-c' or '--c'.\n";
-  		exit("Bye!\n");
-  	}
-	else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
-	{
-		if ( is_process_lock("checkmail") )
-		{
-			clear_process_lock("checkmail");
-		}
-	}
-	else
-	{
-		exit("Unknown argv: " . $argv[1]);
-	}
-} 
-
+    {
+    if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
+        {
+        echo "To clear the lock after a failed run, ";
+        echo "pass in '--clearlock', '-clearlock', '-c' or '--c'.\n";
+        exit("Bye!\n");
+        }
+    else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
+        {
+        if ( is_process_lock("checkmail") )
+            {
+            clear_process_lock("checkmail");
+            }
+        }
+    else
+        {
+        exit("Unknown argv: " . $argv[1]);
+        }
+    } 
 
 # Check for a process lock
 # This script checks one e-mail at a time.
-if (is_process_lock("checkmail")) {
-	if ($email_errors){
-		$time=trim(file_get_contents(get_temp_dir() . "/process_locks/checkmail"));
-		$time_remaining=$process_locks_max_seconds-(time()-$time);
-		send_mail($email_errors_address,$applicationname."- Checkmail blocked by process lock","Your IMAP account will not be checked until this is cleared (which automatically happens in ".(round($time_remaining/60))." minutes). An error may have caused this. Run the process manually with the -c switch to clear the lock and check for any errors.",$email_from);
-	}
-	exit("Process lock is in place. Deferring\r\n");
-}
+if (is_process_lock("checkmail"))
+    {
+    $time=trim(file_get_contents(get_temp_dir() . "/process_locks/checkmail"));
+    $time_remaining=$process_locks_max_seconds-(time()-$time);
+    $adminusers = get_notification_users();
+    $message = new ResourceSpaceUserNotification;        
+    $message->set_text("Your IMAP account will not be checked until this is cleared (which automatically happens in ".(round($time_remaining/60))." minutes). An error may have caused this. Run the process manually with the -c switch to clear the lock and check for any errors.");
+    $message->set_subject($applicationname."- Checkmail blocked by process lock");
+    $message->user_preference = "user_pref_system_management_notifications";
+    $message->url =  $baseurl . "/plugins/checkmail/pages/setup.php";
+    send_user_notification($adminusers,$message);
+    exit("Process lock is in place. Deferring\r\n");
+    }
 set_process_lock("checkmail");
-
 
 // manually include plugin config since authenticate isn't being run
 $config = ps_value("select config value from plugins where name = 'checkmail'", array(), "");
@@ -78,14 +78,12 @@ ps_query("delete from sysvars where name = 'last_checkmail'", array());
 ps_query("insert into sysvars (value,name) values (now(),'last_checkmail')", array());
 
 $msgnos=imap_search($imap, 'UNSEEN');
-if ($msgnos==null){
+if ($msgnos==null)
+    {
 	skip_mail($imap,"","No new mail on ". date('l jS \of F Y h:i:s A').".");
-}
+    }
 $current_message=$msgnos[0];
 echo "\r\n\r\nChecking Latest Unread Message\r\n";
-
-
-
 
 
 // get the header info
@@ -128,15 +126,17 @@ $fromaddress=$fromaddress->mailbox."@".$fromaddress->host;
 
 // check that the user exists
 $fromuser=get_user_by_email($fromaddress); 
-if (isset($fromuser[0])){
+if (isset($fromuser[0]))
+    {
 	$fromuser=$fromuser[0];echo "Matched User: ".$fromuser['username']." (".$fromuser['fullname'].")\r\n";
 	$fromuser_ref=$fromuser['ref'];
 	$userref=$fromuser_ref; // so that create_resource will work (doesn't accept the parameter, but grabs the global;
 	$fromusername=$fromuser['username'];
 	}	
-else {
+else
+    {
 	skip_mail($imap,$current_message,"Could not find $fromaddress among Users on ". date('l jS \of F Y h:i:s A').".", true);
-}
+    }
 
 // If we reached so far, it should mean we have found a user.
 // Make sure it is valid and set the user up as we need to check permissions later on
@@ -156,7 +156,7 @@ if(
 	$checkmail_allow_users_based_on_permission
     && ( !(checkperm('c') || checkperm('d')) || in_array($userref, $checkmail_users)
     )
-)
+    )
     {
     $error_message = str_replace(
         array(

@@ -50,8 +50,7 @@ function save_proposed_changes($ref)
                         $new_nodes[] = $node['ref'];
                         }
                     }
-                }
-				
+                }				
 		else
 				{
 				if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
@@ -257,6 +256,7 @@ function save_proposed_changes($ref)
 
                 if(0 < count($new_nodes))
                     {
+                    natsort($new_nodes);
                     $val = implode(', ', $new_nodes);
                     }
                 }

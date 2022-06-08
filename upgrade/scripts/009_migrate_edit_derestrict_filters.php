@@ -4,7 +4,7 @@ include_once __DIR__ . "/../../include/migration_functions.php";
 if($search_filter_nodes && (!isset($sysvars["EDIT_FILTER_MIGRATION"]) || $sysvars["EDIT_FILTER_MIGRATION"] == 0))
     {
     $notification_users = get_notification_users();
-    $groups = sql_query("SELECT ref, name,edit_filter, derestrict_filter, permissions FROM usergroup");
+    $groups = ps_query("SELECT ref, name,edit_filter, derestrict_filter, permissions FROM usergroup");
     foreach($groups as $group)
         {
         foreach(array("edit_filter","derestrict_filter") as $filtertype)

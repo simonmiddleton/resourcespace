@@ -272,8 +272,7 @@ include "../../include/header.php";
             <select name="parent" class="stdwidth">
                 <option value="0" ><?php if ($record['parent']) echo $lang["property-user_group_remove_parent"]; ?></option>
                 <?php
-                $groups=sql_query("select ref, name from usergroup order by name");
-
+                $groups=get_usergroups();
                 foreach ($groups as $group)
                 {
                     if ($group['ref']==$ref) continue;      // not allowed to be the parent of itself

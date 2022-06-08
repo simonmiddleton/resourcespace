@@ -1,15 +1,15 @@
 <?php
 include dirname(__FILE__) . '/../../../include/db.php';
 
-$k = getvalescaped('k','');
+$k = getval('k','');
 $upload_collection = upload_share_active();
 if ($k=="" || !check_access_key_collection($upload_collection,$k))
     {
     include dirname(__FILE__) . '/../../../include/authenticate.php';
     }
 
-$field   = getvalescaped('field', '');
-$keyword = getvalescaped('keyword', '');
+$field   = getval('field', '');
+$keyword = getval('keyword', '');
 $result  = array();
 
 if(checkperm('bdk' . $field))

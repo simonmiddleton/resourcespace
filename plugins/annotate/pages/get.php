@@ -27,7 +27,7 @@ $sql_params[] = 'i'; $sql_params[] = $ref;
 if($page >= 1)
 	{
 	$sql_and = ' AND page = ?';
-    $sql_params[] = 'i'; $sql_params[$page];
+    $sql_params[] = 'i'; $sql_params[] = $page;
 	}
 $notes=ps_query("select * from annotate_notes where ref= ?" . $sql_and, $sql_params);
 ps_query("update resource set annotation_count= ? where ref= ?", ['i', count($notes), 'i', $ref]);

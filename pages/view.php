@@ -739,6 +739,7 @@ else if(1 == $resource['has_image'])
              class="Picture"
              src="<?php echo $imageurl; ?>" 
              alt="<?php echo $lang['fullscreenpreview']; ?>" 
+             onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
              GALLERYIMG="no"
         <?php
         if($annotate_enabled)

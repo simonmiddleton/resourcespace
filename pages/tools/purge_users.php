@@ -35,9 +35,12 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         }
     }
 
+$params=array();
+
 if(isset($usergroup))
     {
-    $purge_condition = "usergroup = '" . escape_check($usergroup) . "'";
+    $purge_condition = "usergroup = ?";
+    $params[]="i";$params[]=$usergroup;
     }
 
 if(!isset($purge_condition))
@@ -49,7 +52,7 @@ if(!isset($purge_condition))
 echo "Deleting users..." . PHP_EOL;
 
 $purge_sql = "DELETE FROM user WHERE {$purge_condition}";
-sql_query($purge_sql);
+ps_query($purge_sql,$params);
 
 echo "Done!";
 echo PHP_EOL;

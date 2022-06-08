@@ -180,7 +180,7 @@ if ($submitted != "")
 				# update hit count if tracking downloads only
 				if ($resource_hit_count_on_downloads) { 
 				# greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-				sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'");
+				ps_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref));
 				} 
 				
 				}
@@ -188,7 +188,7 @@ if ($submitted != "")
 		}
 
 	# Download and add external resources
-	$xt_resources=sql_query("select * from resourceconnect_collection_resources where collection='" . $collection . "'");
+	$xt_resources=ps_query("select * from resourceconnect_collection_resources where collection=?",array("i",$collection));
 	foreach ($xt_resources as $xt_resource)
 		{
 		# Work out download URL

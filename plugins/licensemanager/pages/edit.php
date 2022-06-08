@@ -14,12 +14,12 @@ $file_path=get_license_file_path($ref);
 if ($resource!="")
     {
     $edit_access=get_edit_access($resource);
-    if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+    if (!$edit_access && !checkperm("lm")) {exit("Access denied");} # Should never arrive at this page without edit access
     }
 else
     {
     # Editing all licenses via Manage Licenses - admin only
-    if (!checkperm("a")) {exit("Access denied");} 
+    if (!checkperm("a") && !checkperm("lm")) {exit("Access denied");} 
     }
 
 $url_params = array(
@@ -140,7 +140,7 @@ if (getval("submitted","")!="")
         else
             {
             move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
-            sql_query("update license set file='" . escape_check($_FILES["file"]["name"]) . "' where ref='$ref'");
+            ps_query("UPDATE license set file=? where ref=?",array("s",$_FILES["file"]["name"], "i",$ref));
             }
         }
 
@@ -148,7 +148,7 @@ if (getval("submitted","")!="")
     if (getval("clear_file","")!="")
         {
         if (file_exists($file_path)) {unlink($file_path);}  
-        sql_query("update license set file='' where ref='$ref'");
+        ps_query("UPDATE license set file='' where ref=?",array("i",$ref));
         }
     
     redirect($redirect_url);

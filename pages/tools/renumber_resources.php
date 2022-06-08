@@ -58,7 +58,7 @@ function migrate_files($ref, $newref, $alternative, $extension, $sizes)
     }
 
 
-$resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER BY ref DESC");
+$resources=ps_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER BY ref DESC");
 $migratedfiles = 0;
 $totalresources = count($resources);
 for ($n=0;$n<$totalresources;$n++)

@@ -202,7 +202,7 @@ if($external_upload)
     $ci=get_session_collections($rs_session,$userref,true);
     if (count($ci)==0)
         {
-        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_SHARE_UPLOAD));
+        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_TYPE_SHARE_UPLOAD));
         }
     else
         {
@@ -691,12 +691,21 @@ if ($processupload)
                     }
                 hook('upload_original_extra', '', array($ref));
                     
-                $wait = hook('afterpluploadfile', '', array($ref, $extension));
-                                
-                $result["status"] = true;
-                $result["message"] = $lang["created"];
-                $result["id"] = htmlspecialchars($ref);
-                $result["collection"] = htmlspecialchars($collection_add);          
+                $after_upload_result = hook('afterpluploadfile', '', array($ref, $extension));
+                
+                if (is_array($after_upload_result))
+                    {
+                    $result["status"] = false;
+                    $result["error"] = $after_upload_result["code"];
+                    $result["message"] = $after_upload_result["message"];
+                    }
+                else
+                    {
+                    $result["status"] = true;
+                    $result["message"] = $lang["created"];
+                    $result["id"] = htmlspecialchars($ref);
+                    $result["collection"] = htmlspecialchars($collection_add);
+                    }
                 }
             }
         else if ($replace=="" && $replace_resource!="")
@@ -743,7 +752,16 @@ if ($processupload)
             $filename_field=getvalescaped("filename_field",0,true);
             if($filename_field != 0)
                 {
-                $target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+                $target_resource=ps_array("
+                    select resource value from resource_data where resource_type_field = ? and value = ? AND resource > ?
+                    union
+                    select resource value from resource_node rn join node n on rn.node = n.ref where n.resource_type_field = ? and name = ? and resource > ?", 
+                    ['i', $filename_field, 
+                     's', $origuploadedfilename,
+                     'i', $fstemplate_alt_threshold,
+                     'i', $filename_field, 
+                     's', $origuploadedfilename, 
+                     'i', $fstemplate_alt_threshold],"");
                 $target_resourceDebug = $target_resource;
                 $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);
@@ -950,7 +968,7 @@ jQuery(document).ready(function () {
             <?php
             if (isset($upload_max_file_size))
                 {
-                echo "maxFileSize: '$upload_max_file_size',"; 
+                echo "maxFileSize: " . str_ireplace(array("kb","mb","gb"),array("000","000000","000000000"),$upload_max_file_size); 
                 }
             if ($replace_resource > 0 || $single)
                 {

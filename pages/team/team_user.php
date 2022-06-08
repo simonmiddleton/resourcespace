@@ -243,7 +243,7 @@ include "../../include/header.php";
 		<?php } ?>
 		<td><?php echo nicedate($users[$n]["created"]) ?></td>
 		<td><?php echo $approval_state_text[$users[$n]["approved"]] ?></td>
-		<td><?php echo nicedate($users[$n]["last_active"],true) ?></td>
+		<td><?php echo nicedate($users[$n]["last_active"],true,true,true) ?></td>
 		<?php hook("additional_user_column");?>
 		<td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
 		<a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["log"]?></a>

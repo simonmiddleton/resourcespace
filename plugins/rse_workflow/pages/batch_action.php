@@ -85,7 +85,7 @@ $result = do_search(
     $go,
     true, # $stats_logging
     false, # $return_refs_only
-    true # $editable_only
+    false # $editable_only
 );
 
 $resources = array();

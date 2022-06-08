@@ -299,7 +299,7 @@ if (!hook("replacecomments"))
     <?php
     } ?>
 <div class="Question"><label><?php echo $lang["created"]?></label>
-<div class="Fixed"><?php echo nicedate($user["created"],true) ?></div>
+<div class="Fixed"><?php echo nicedate($user["created"],true,true,true) ?></div>
 <div class="clearerleft"> </div></div>
 
 <?php 
@@ -322,7 +322,7 @@ if ($user_edit_created_by)
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["lastactive"]?></label>
-<div class="Fixed"><?php echo nicedate($user["last_active"],true) ?></div>
+<div class="Fixed"><?php echo nicedate($user["last_active"],true,true,true) ?></div>
 <div class="clearerleft"> </div></div>
 
 
