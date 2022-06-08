@@ -2337,6 +2337,11 @@ if (!$external_upload && !$edit_upload_options_at_top)
     }
 
 hook('appendcustomfields');
+
+if ($edit_upload_options_at_top)
+    {
+    ?></div><?php
+    }
 ?>
 </div><!-- end of BasicsBoxLeft -->
 <?php
