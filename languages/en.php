@@ -2921,6 +2921,7 @@ $lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resource
 $lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
 $lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+$lang["error_fail_save"] = "Unable to save";
 
 
 $lang['image_quality_100'] = "Maximum";

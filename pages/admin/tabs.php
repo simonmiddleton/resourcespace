@@ -74,8 +74,8 @@ foreach($tab_records['data'] as $tab_record)
     $tab_record['name'] = sprintf(
         '<span>%s</span><input name="tab_name_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
         htmlspecialchars(i18n_get_translated($tab_record['name'])),
-        htmlspecialchars($tab_record['ref']),
-        htmlspecialchars($tab_record['name'])
+        escape_quoted_data($tab_record['ref']),
+        escape_quoted_data($tab_record['name'])
     );
     $tab_record['usage'] = sprintf(
         '%s %s, %s %s',
@@ -139,7 +139,7 @@ include '../../include/header.php';
         ['title' => $lang['systemsetup'], 'href'  => "{$baseurl_short}pages/admin/admin_home.php"],
         ['title' => $lang['system_tabs']]
     ]); ?>
-    <p><?php echo $lang['manage_tabs_instructions']; render_help_link('systemadmin/manage-tabs'); ?></p>
+    <p><?php echo htmlspecialchars($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
 
     <?php echo render_table($table_info); ?>
 </div>
@@ -168,10 +168,9 @@ jQuery(function() {
     });
 });
 
-// TODO: create new function for escaping PHP vars in JS world
 function delete_tabs(el, refs)
     {
-    if(confirm('<?php echo htmlspecialchars($lang["confirm-deletion"]); ?>'))
+    if(confirm('<?php echo escape_quoted_data($lang["confirm-deletion"]); ?>'))
         {
         api('delete_tabs', {'refs': refs}, function(successful)
             {
@@ -182,7 +181,7 @@ function delete_tabs(el, refs)
                 }
             else
                 {
-                styledalert("<?php echo htmlspecialchars($lang["error"]); ?>", "<?php echo htmlspecialchars($lang["error-failed-to-delete"]); ?>");
+                styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error-failed-to-delete"]); ?>");
                 }
             });
         };
@@ -217,6 +216,17 @@ function update_tab(el, ref, action)
         // When (after) saving, do the opposite init_edit after getting the new value translated
         // - save (api) and if successful, get the tab name translated 
         alert('NOT implemented');
+        api('save_tabs', {}, function(successful)
+            {
+            if(successful)
+                {
+                alert('saved change!');
+                }
+            else
+                {
+                styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error_fail_save"]); ?>");
+                }
+            });
 
 
         // Show the translated tab name and hide the inline edit input
