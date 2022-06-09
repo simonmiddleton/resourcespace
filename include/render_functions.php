@@ -4579,7 +4579,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view;
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view,$show_theme_collection_stats;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
@@ -4661,7 +4661,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx["tools"][] = $tool_edit;
             }
-        if($is_featured_collection)
+        if($is_featured_collection && $show_theme_collection_stats)
             {
             $render_ctx['show_resources_count'] = true;
             }
