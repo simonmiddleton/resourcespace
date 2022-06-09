@@ -5730,3 +5730,14 @@ function render_fixed_text_question($label, $text)
         <div class='clearerleft'></div>
         </div>";
     }
+
+
+/**
+ * Output encoding for HTML & JS within a quoted context when unsafe input is rendered inside it
+ * 
+ * @return string
+ */
+function escape_quoted_data(string $unsafe)
+    {
+    return htmlspecialchars($unsafe, ENT_QUOTES);
+    }
