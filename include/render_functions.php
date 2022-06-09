@@ -5128,6 +5128,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - "icon" - FontAwesome class to use for icon
  *  - "text" - title attribute
  *  - "url" - URl to link to
+ *  - "url:class" - The styling classes for the URL. Type: string. This tool property is optional.
  *  - "modal" - (boolean) Open link in modal?
  *  - "onclick" - OnClick action to add to icon
  *  
@@ -5257,7 +5258,7 @@ function render_table($tabledata)
                         echo "<div class='ListTools'>";
                         foreach($rowdata["tools"] as $toolitem)
                             {
-                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
+                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' class=\"" . htmlspecialchars($toolitem['url:class'] ?? '') . "\" onclick='";
                             if(isset($toolitem["onclick"]))
                                 {
                                 echo htmlspecialchars($toolitem["onclick"]);

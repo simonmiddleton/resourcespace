@@ -12,12 +12,16 @@ $tab_sort = (strtoupper(getval('tab_sort', 'ASC')) === 'DESC') ? 'DESC' : 'ASC';
 
 // [Paging functionality]
 $per_page = (int) getval('per_page', $default_perpage_list, true);
+$list_display_array[] = $default_perpage_list;
+$list_display_array[] = $default_perpage;
 if($per_page === 99999)
     {
     // all results option - see render_table()
     $list_display_array['all'] = 99999;
     $allow_reorder = true;
     }
+$list_display_array = array_unique($list_display_array);
+natsort($list_display_array);
 $per_page = in_array($per_page, $list_display_array) ? $per_page : $default_perpage;
 rs_setcookie('per_page', $per_page);
 $offset = (int) getval('offset', 0, true);
@@ -40,8 +44,7 @@ $table_info = [
     'headers' => [
         'reorder_handle' => ['name' => '', 'sortable' => false, 'html' => true],
         'ref' => ['name' => $lang['property-reference'], 'sortable' => true],
-        'name' => ['name' => $lang['name'], 'sortable' => false,/* 'width' => '50%'*/],
-        'test_inline_edit' => ['name' => 'TODO: inline edit', 'sortable' => false, 'html' => true],
+        'name' => ['name' => $lang['name'], 'sortable' => false, 'html' => true, 'width' => '50%'],
         'usage' => ['name' => $lang['usage'], 'sortable' => false],
         'tools' => ['name' => $lang['tools'], 'sortable' => false, 'width' => '20%']
     ],
@@ -68,9 +71,8 @@ $table_info = [
 foreach($tab_records['data'] as $tab_record)
     {
     $tab_record['reorder_handle'] = isset($allow_reorder) ? '<i class="fas fa-sort"></i>' : '';
-    $tab_record['name'] = i18n_get_translated($tab_record['name']);
-    $tab_record['test_inline_edit'] = sprintf(
-        '<span>%s</span><input name="test_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
+    $tab_record['name'] = sprintf(
+        '<span>%s</span><input name="tab_name_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
         htmlspecialchars(i18n_get_translated($tab_record['name'])),
         htmlspecialchars($tab_record['ref']),
         htmlspecialchars($tab_record['name'])
@@ -103,6 +105,24 @@ foreach($tab_records['data'] as $tab_record)
         'url' => '#',
         'modal' => false,
         'onclick' => "return update_tab(this, {$tab_record['ref']}, \"init_edit\");"
+    ];
+
+    // Save & Cancel buttons for when editing a tab record
+    $tab_record['tools'][] = [
+        'icon' => 'fa fa-solid fa-xmark',
+        'text' => $lang['cancel'],
+        'url' => '#',
+        'url:class' => 'DisplayNone',
+        'modal' => false,
+        'onclick' => "return update_tab(this, {$tab_record['ref']}, \"cancel\");"
+    ];
+    $tab_record['tools'][] = [
+        'icon' => 'fa fa-regular fa-floppy-disk',
+        'text' => $lang['save'],
+        'url' => '#',
+        'url:class' => 'DisplayNone',
+        'modal' => false,
+        'onclick' => "return update_tab(this, {$tab_record['ref']}, \"save\");"
     ];
 
     $table_info['data'][] = $tab_record;
@@ -148,10 +168,9 @@ jQuery(function() {
     });
 });
 
-
+// TODO: create new function for escaping PHP vars in JS world
 function delete_tabs(el, refs)
     {
-
     if(confirm('<?php echo htmlspecialchars($lang["confirm-deletion"]); ?>'))
         {
         api('delete_tabs', {'refs': refs}, function(successful)
@@ -173,15 +192,48 @@ function delete_tabs(el, refs)
 
 function update_tab(el, ref, action)
     {
-    let record = jQuery(el).parents('tr');
+    console.log('%o for ref = %o', action, ref);
+    let el_obj = jQuery(el);
+    let record = el_obj.parents('tr');
+    let tools = el_obj.parents('div.ListTools');
+    let tools_edit_save_cancel = tools.find('a span.fa-edit, a span.fa-floppy-disk, a span.fa-xmark').parents('a');
+
     console.log('record = %o', record);
 
-    console.log('%o for ref = %o', action, ref);
+    let record_name_inline_edit = record.find('input[name="tab_name_inline_edit_' + ref + '"');
+    let record_name_translated = record_name_inline_edit.siblings().first();
+
     if(action === 'init_edit')
         {
-        console.log('edit_input = %o', record.find('input[name="test_inline_edit_'+ref+'"'));
-TODO: hide translated value (in span tag) and show the edit input instead. When (after) saving, do the opposite after getting the new value translated
-        record.find('input[name="test_inline_edit_'+ref+'"').toggleClass('DisplayNone');
+        // Hide the translated tab name and show the inline edit input
+        record_name_translated.toggleClass('DisplayNone');
+        record_name_inline_edit.toggleClass('DisplayNone');
+
+        // Hide the edit tool and show the Save & Cancel ones
+        tools_edit_save_cancel.toggleClass('DisplayNone');
+        }
+    else if(action === 'save')
+        {
+        // When (after) saving, do the opposite init_edit after getting the new value translated
+        // - save (api) and if successful, get the tab name translated 
+        alert('NOT implemented');
+
+
+        // Show the translated tab name and hide the inline edit input
+        record_name_translated.toggleClass('DisplayNone');
+        record_name_inline_edit.toggleClass('DisplayNone');
+
+        // Show the edit tool and hide the Save & Cancel ones
+        tools_edit_save_cancel.toggleClass('DisplayNone');
+        }
+    else if(action === 'cancel')
+        {
+        // Show the translated tab name and hide the inline edit input
+        record_name_translated.toggleClass('DisplayNone');
+        record_name_inline_edit.toggleClass('DisplayNone');
+
+        // Show the edit tool and hide the Save & Cancel ones
+        tools_edit_save_cancel.toggleClass('DisplayNone');
         }
     }
 </script>
