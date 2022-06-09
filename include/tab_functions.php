@@ -28,6 +28,37 @@ function get_tabs_with_usage_count(int $per_page, int $offset)
 
 
 /**
+ * Create a new system tab record
+ * NOTE: order_by should only be set when re-ordering the set by the user. {@see sql_reorder_records('tab', $refs)}
+ * 
+ * @return bool|int Return new tab record ID or FALSE otherwise
+ */
+function create_tab(array $tab)
+    {
+    $name = trim($tab['name'] ?? '');
+    if($name !== '' && acl_can_manage_tabs())
+        {
+        ps_query('
+            INSERT INTO tab (`name`, order_by)
+                     VALUES (
+                        ?,
+                        (
+                            SELECT * FROM (
+                                (SELECT ifnull(tab.order_by, 0) + 10 FROM tab ORDER BY ref DESC LIMIT 1)
+                                UNION SELECT 10
+                            ) AS nob
+                            LIMIT 1
+                        ))',
+             ['s', $name]
+         );
+        return sql_insert_id();
+        }
+
+    return false;
+    }
+
+
+/**
  * Delete system tabs.
  * 
  * IMPORTANT: never allow the "Default" tab (ref #1) to be deleted because this is the fallback location for information 
@@ -58,4 +89,27 @@ function delete_tabs(array $refs)
         }
 
     return isset($return);
+    }
+
+
+/**
+ * Update an existing tab.
+ * NOTE: order_by should only be set when re-ordering the set by the user. {@see sql_reorder_records('tab', $refs)}
+ * 
+ * @param array $tab A tab record (type)
+ * 
+ * @return bool Returns TRUE if it executed the query, FALSE otherwise
+ */
+function save_tab(array $tab)
+    {
+    $ref = (int) $tab['ref'];
+    $name = trim($tab['name']);
+    
+    if($ref > 0 && $name !== '' && acl_can_manage_tabs())
+        {
+        ps_query('UPDATE tab SET `name` = ? WHERE ref = ?', ['s', $name, 'i', $ref]);
+        return true;
+        }
+
+    return false;
     }

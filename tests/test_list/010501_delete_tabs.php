@@ -6,21 +6,19 @@ if('cli' != PHP_SAPI)
 
 // Set up
 $orig_userpermissions = $userpermissions;
-ps_query("INSERT INTO tab(`name`, order_by) VALUES ('10500_Tab1', 10)");
-$tab_1 = sql_insert_id();
-ps_query("INSERT INTO tab(`name`, order_by) VALUES ('10500_Tab2', 20)");
-$tab_2 = sql_insert_id();
+$tab_1 = create_tab(['name' => '10501_Tab1']);
+$tab_2 = create_tab(['name' => '10501_Tab2']);
 
 
 
-// Users without "a" perm shouldn't delete tabs
+// Users without permission to manage tabs shouldn't be able to delete them
 $userpermissions = array_diff($userpermissions, ['a']);
 $deleted_tab = delete_tabs([$tab_1]);
 $userpermissions = $orig_userpermissions;
 $found = ps_value('SELECT ref AS `value` FROM tab WHERE ref = ?', ['i', $tab_1], 0);
 if($deleted_tab || $found === 0)
     {
-    echo 'Delete tabs (not authorised) - ';
+    echo 'Delete tabs (unauthorised) - ';
     return false;
     }
 
@@ -36,9 +34,9 @@ if($found === 0)
 
 
 // Check delete tab functionality
-$deleted_tab = delete_tabs([$tab_2]);
+$deleted_tab = delete_tabs([$tab_1, $tab_2]);
 $found = ps_value('SELECT ref AS `value` FROM tab WHERE ref = ?', ['i', $tab_2], 0);
-if($found > 0)
+if($deleted_tab && $found > 0)
     {
     echo 'Delete tabs - ';
     return false;
@@ -47,6 +45,6 @@ if($found > 0)
 
 
 // Tear down
-unset($tab_1, $deleted_tab, $found);
+unset($tab_1, $tab_2, $deleted_tab, $found);
 
 return true;

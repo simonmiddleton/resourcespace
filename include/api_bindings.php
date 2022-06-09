@@ -925,3 +925,14 @@ function api_delete_tabs($refs)
     http_response_code(403);
     return false;
     }
+
+function api_save_tab($tab)
+    {
+    if(acl_can_manage_tabs())
+        {
+        return save_tab($tab);
+        }
+
+    http_response_code(403);
+    return false;
+    }

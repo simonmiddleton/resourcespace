@@ -142,6 +142,7 @@ include '../../include/header.php';
     <p><?php echo htmlspecialchars($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
 
     <?php echo render_table($table_info); ?>
+    <!-- TODO: add form to create new tabs -->
 </div>
 <script>
 // Re-order capability
@@ -213,19 +214,23 @@ function update_tab(el, ref, action)
         }
     else if(action === 'save')
         {
-        // When (after) saving, do the opposite init_edit after getting the new value translated
-        // - save (api) and if successful, get the tab name translated 
-        alert('NOT implemented');
-        api('save_tabs', {}, function(successful)
+        api(
+            'save_tab',
             {
-            if(successful)
-                {
-                alert('saved change!');
+                tab: {
+                    ref: ref,
+                    name: record_name_inline_edit.val()
                 }
-            else
-                {
-                styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error_fail_save"]); ?>");
-                }
+            },
+            function(response) {
+                if(response)
+                    {
+                    alert('saved change! TODO; use the response which will contain the translated value and update client side');
+                    }
+                else
+                    {
+                    styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error_fail_save"]); ?>");
+                    }
             });
 
 
