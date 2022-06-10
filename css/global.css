@@ -670,6 +670,8 @@ a.HomePanel {cursor:pointer;}
 }
 .TabSelected {margin-right: 5px;}
 .TabSelected a { margin: 0;}
+.NonMetadataProperties { padding-bottom: 8px; }
+div#Metadata > div.Title { padding-top: 0.3em; }
 
 .infotable {border-top: 1px solid #999999;}
 .infotable td,.infotable th {border-bottom: 1px solid #999999;}

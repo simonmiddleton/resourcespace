@@ -58,7 +58,7 @@ input[readonly] {
     color:#fff;text-decoration:none;
 }
 
-.RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
+.RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
 #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
     border-radius:4px;
     overflow: hidden;

@@ -1876,6 +1876,7 @@ if (!hook('replacemetadata')) {
     </div>
 </div>
 <?php include "view_metadata.php";
+include "view_metadata_reference.php"; # TODO: delete once done. Used as a reference while adding the new system tabs
 } /* End of replacemetadata hook */ ?>
 </div>
 

@@ -1,7 +1,8 @@
 <?php
-
 # Global everything we need, in case called inside a function (e.g. for push_metadata support)
-global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads, $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$force_display_template_order_by,$modal, $sort_tabs;
+global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads,
+       $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$force_display_template_order_by,$modal,
+       $sort_tabs;
 
 // Is this a modal?
 $modal=(getval("modal","")=="true");
@@ -58,11 +59,82 @@ foreach ($fields_tab_names as $key => $value) {
 }
 
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
-        
 ?>
-        
-        
+
 <div id="Metadata">
+    <div class="NonMetadataProperties">
+    <?php
+    hook("beforefields");
+    if($show_resourceid)
+        {
+        ?>
+        <div class="itemNarrow">
+            <h3><?php echo $lang["resourceid"]?></h3>
+            <p><?php echo htmlspecialchars($ref)?></p>
+        </div>
+        <?php
+        }
+
+    if($show_access_field)
+        {
+        ?>
+        <div class="itemNarrow">
+            <h3><?php echo $lang["access"]?></h3>
+            <p><?php echo @$lang["access" . $resource["access"]]?></p>
+        </div>
+        <?php
+        }
+
+    if($show_resource_type)
+        {
+        ?>
+        <div class="itemNarrow">
+            <h3><?php echo $lang["resourcetype"]?></h3>
+            <p><?php echo  htmlspecialchars(get_resource_type_name($resource["resource_type"]))?></p>
+        </div>
+        <?php
+        }
+
+    if($show_hitcount)
+        {
+        ?>
+        <div class="itemNarrow">
+            <h3><?php echo $resource_hit_count_on_downloads?$lang["downloads"]:$lang["hitcount"]?></h3>
+            <p><?php echo $resource["hit_count"]+$resource["new_hit_count"]?></p>
+        </div>
+        <?php
+        }
+    hook("extrafields");
+
+    // Contributed by
+    if(!hook("replacecontributedbyfield"))
+        {
+        if($show_contributed_by)
+            {
+            $udata = get_user($resource["created_by"]);
+            if($udata !== false)
+                {
+                $udata_fullname = highlightkeywords(htmlspecialchars($udata["fullname"]), $search);
+                $udata_a_tag_href = generateURL("{$baseurl_short}pages/team/team_user_edit.php", ['ref' => $udata["ref"]]);
+                $udata_a_tag = sprintf(
+                    '<a href="%s" onclick="return CentralSpaceLoad(this, true);">%s</a>',
+                    $udata_a_tag_href,
+                    $udata_fullname
+                );
+                ?>
+                <div class="itemNarrow">
+                    <h3><?php echo $lang["contributedby"]?></h3>
+                    <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
+                </div>
+                <?php
+                }
+            }
+        } // end hook replacecontributedby
+    ?>
+        <div class="clearerleft"></div>
+    </div><!-- End of NonMetadataProperties -->
+    <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
+
 <?php
 global $extra;
 $extra="";
@@ -104,26 +176,9 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 <div>
 <?php 
 #  ----------------------------- Draw standard fields ------------------------
-?>
-<?php hook("beforefields");?>
-<?php if ($show_resourceid) { ?><div class="itemNarrow"><h3><?php echo $lang["resourceid"]?></h3><p><?php echo htmlspecialchars($ref)?></p></div><?php } ?>
-<?php if ($show_access_field) { ?><div class="itemNarrow"><h3><?php echo $lang["access"]?></h3><p><?php echo @$lang["access" . $resource["access"]]?></p></div><?php } ?>
-<?php if ($show_resource_type) { ?><div class="itemNarrow"><h3><?php echo $lang["resourcetype"]?></h3><p><?php echo  htmlspecialchars(get_resource_type_name($resource["resource_type"]))?></p></div><?php } ?>
-<?php if ($show_hitcount){ ?><div class="itemNarrow"><h3><?php echo $resource_hit_count_on_downloads?$lang["downloads"]:$lang["hitcount"]?></h3><p><?php echo $resource["hit_count"]+$resource["new_hit_count"]?></p></div><?php } ?>
-<?php hook("extrafields");?>
-<?php
-# contributed by field
-if (!hook("replacecontributedbyfield")){
-$udata=get_user($resource["created_by"]);
-if ($udata!==false)
-	{
-	?>
-<?php if ($show_contributed_by){?>	<div class="itemNarrow"><h3><?php echo $lang["contributedby"]?></h3><p><?php if (checkperm("u")) { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $udata["ref"]?>"><?php } ?><?php echo highlightkeywords(htmlspecialchars($udata["fullname"]),$search)?><?php if (checkperm("u")) { ?></a><?php } ?></p></div><?php } ?>
-	<?php
-	}
-} // end hook replacecontributedby
 
-# Show field data
+// TODO: you might have to also render here the non-metadata properties if there are no tabs associated with fields
+
 $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
@@ -192,4 +247,3 @@ if(empty($fields_tab_names))
 <?php hook("renderafterresourcedetails"); ?>
 <!-- end of tabbed panel-->
 </div>
-
