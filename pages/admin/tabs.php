@@ -198,8 +198,6 @@ function update_tab(el, ref, action)
     let tools = el_obj.parents('div.ListTools');
     let tools_edit_save_cancel = tools.find('a span.fa-edit, a span.fa-floppy-disk, a span.fa-xmark').parents('a');
 
-    console.log('record = %o', record);
-
     let record_name_inline_edit = record.find('input[name="tab_name_inline_edit_' + ref + '"');
     let record_name_translated = record_name_inline_edit.siblings().first();
 
@@ -223,13 +221,13 @@ function update_tab(el, ref, action)
                 }
             },
             function(response) {
-                if(response)
+                if(response.status === 'success')
                     {
-                    alert('saved change! TODO; use the response which will contain the translated value and update client side');
+                    record_name_translated.text(response.data.name_translated);
                     }
                 else
                     {
-                    styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error_fail_save"]); ?>");
+                    styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", response.data.message);
                     }
             });
 

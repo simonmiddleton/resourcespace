@@ -10,6 +10,25 @@ function acl_can_manage_tabs()
     }
 
 
+/**
+ * Get entire tab records for a list of IDs
+ * 
+ * @param array $refs List of tab refs
+ * 
+ * @return array
+ */
+function get_tabs_by_refs(array $refs)
+    {
+    $refs = array_filter($refs, 'is_int_loose');
+    $refs_count = count($refs);
+    if($refs_count > 0)
+        {
+        return ps_query('SELECT ref, `name`, order_by FROM tab WHERE ref IN ('. ps_param_insert($refs_count) . ')', ps_param_fill($refs, 'i'));
+        }
+
+    return [];
+    }
+
 
 function get_tabs_with_usage_count(int $per_page, int $offset)
     {

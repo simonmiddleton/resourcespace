@@ -930,7 +930,14 @@ function api_save_tab($tab)
     {
     if(acl_can_manage_tabs())
         {
-        return save_tab($tab);
+        if(save_tab($tab))
+            {
+            $tab = get_tabs_by_refs([$tab['ref']])[0];
+            $tab['name_translated'] = i18n_get_translated($tab['name']);
+            return ajax_response_ok($tab);
+            }
+
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_fail_save']));
         }
 
     http_response_code(403);
