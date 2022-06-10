@@ -163,7 +163,7 @@ jQuery(function() {
             let tabs_new_order = jQuery(event.target)
                 .find('tr:not(:first-child) > td:nth-child(2)')
                 .map((i, val) => parseInt(jQuery(val).text())).get();
-            console.debug('tabs_new_order=%o', tabs_new_order);
+            console.debug('[Re-ordering tabs] tabs_new_order = %o', tabs_new_order);
             api('reorder_tabs', {'refs': tabs_new_order});
             }
     });
@@ -171,6 +171,7 @@ jQuery(function() {
 
 function delete_tabs(el, refs)
     {
+    console.debug('Called delete_tabs(refs = %o)', refs);
     if(confirm('<?php echo escape_quoted_data($lang["confirm-deletion"]); ?>'))
         {
         api('delete_tabs', {'refs': refs}, function(successful)
@@ -192,7 +193,7 @@ function delete_tabs(el, refs)
 
 function update_tab(el, ref, action)
     {
-    console.log('%o for ref = %o', action, ref);
+    console.debug('Called update_tab(ref = %o, action = %o)', ref, action);
     let el_obj = jQuery(el);
     let record = el_obj.parents('tr');
     let tools = el_obj.parents('div.ListTools');
