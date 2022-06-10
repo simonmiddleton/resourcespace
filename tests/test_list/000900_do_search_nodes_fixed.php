@@ -83,6 +83,23 @@ if($kwcount>0){echo "Adding nodes is populating resource_keyword"; return false;
 $stop_list_check_node = set_node(NULL, 73, join(" ",$noadd),'',1000);
 if (ps_value("select count(*) value from node_keyword where node=?",array("i",$stop_list_check_node),0)>0) {echo "Kewords were indexed that are in the stop list.";print_r(ps_array("select keyword value from keyword where ref in (select keyword from node_keyword where node=?)",array("i",$stop_list_check_node),0));return false;}
 
+// Check that searches work with $resource_field_verbatim_keyword_regex
+global $resource_field_verbatim_keyword_regex;
+$resource_field_verbatim_keyword_regex_cache = $resource_field_verbatim_keyword_regex??NULL;
+$resource_field_verbatim_keyword_regex = [51 => "/.+/"];
+
+// search for 'Johnny' AND 'Dee Dee' (should be just resource a)
+$results=do_search('@@' . $johnnynode . ' @@' . $deedeenode);
+if(!is_array($results) || count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) 
+    {
+    echo "Verbatim keyword regex ";
+    return false;
+    }
+debug("Successfully searched for resources with two nodes");
+
+if($resource_field_verbatim_keyword_regex_cache == NULL){unset($resource_field_verbatim_keyword_regex);}
+else {$resource_field_verbatim_keyword_regex = $resource_field_verbatim_keyword_regex_cache;}
+
 // Check that using update_field to add nodes to resource returns false
 $errors=array();
 foreach($fixedfields as $fixedfield)
