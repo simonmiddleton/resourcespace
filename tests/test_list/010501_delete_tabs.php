@@ -15,7 +15,7 @@ $tab_2 = create_tab(['name' => '10501_Tab2']);
 $userpermissions = array_diff($userpermissions, ['a']);
 $deleted_tab = delete_tabs([$tab_1]);
 $userpermissions = $orig_userpermissions;
-$found = ps_value('SELECT ref AS `value` FROM tab WHERE ref = ?', ['i', $tab_1], 0);
+$found = get_tabs_by_refs([$tab_1])[0]['ref'] ?? 0;
 if($deleted_tab || $found === 0)
     {
     echo 'Delete tabs (unauthorised) - ';
@@ -25,7 +25,7 @@ if($deleted_tab || $found === 0)
 
 // Check you can't delete the "Default" tab (always ref #1)
 $deleted_tab = delete_tabs([1]);
-$found = ps_value('SELECT ref AS `value` FROM tab WHERE ref = 1', [], 0);
+$found = get_tabs_by_refs([1])[0]['ref'] ?? 0;
 if($found === 0)
     {
     echo 'Prevent deleting the "Default" tab - ';
@@ -35,7 +35,7 @@ if($found === 0)
 
 // Check delete tab functionality
 $deleted_tab = delete_tabs([$tab_1, $tab_2]);
-$found = ps_value('SELECT ref AS `value` FROM tab WHERE ref = ?', ['i', $tab_2], 0);
+$found = get_tabs_by_refs([$tab_2])[0]['ref'] ?? 0;
 if($deleted_tab && $found > 0)
     {
     echo 'Delete tabs - ';

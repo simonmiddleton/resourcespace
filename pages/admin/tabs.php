@@ -4,11 +4,31 @@ include '../../include/authenticate.php';
 if(!acl_can_manage_tabs()) { exit($lang['error-permissiondenied']); }
 
 
-
 // [Sorting functionality]
 $tab_orderby = getval('tab_orderby', 'ref');
 $tab_sort = (strtoupper(getval('tab_sort', 'ASC')) === 'DESC') ? 'DESC' : 'ASC';
 
+// [URL]
+$admin_tabs_management_page = "{$baseurl}/pages/admin/tabs.php";
+$request_params = [
+    // 'tab_ref' => $tab_ref,
+    'tab_orderby'  => $tab_orderby,
+    'tab_sort' => $tab_sort,
+];
+$admin_tabs_management_page_url = generateURL($admin_tabs_management_page, $request_params);
+
+// [Action] Create new record
+$new_tab_name = trim(getval('new_tab_name', ''));
+if ($new_tab_name !== '' && enforcePostRequest(false))
+    {
+    $new_tab_ref = create_tab(['name' => $new_tab_name]);
+    if($new_tab_ref !== false)
+        {
+        redirect($admin_tabs_management_page_url);
+        }
+
+    $admin_tabs_management_error = "{$lang['error_fail_save']} -- $new_tab_name";
+    }
 
 // [Paging functionality]
 $per_page = (int) getval('per_page', $default_perpage_list, true);
@@ -30,15 +50,6 @@ $totalpages = ceil($tab_records['total'] / $per_page);
 $curpage = floor($offset / $per_page) + 1;
 
 
-$request_params = [
-    // 'tab_ref' => $tab_ref,
-    'tab_orderby'  => $tab_orderby,
-    'tab_sort' => $tab_sort,
-];
-
-
-
-
 $table_info = [
     'class' => 'SystemTabs',
     'headers' => [
@@ -54,7 +65,7 @@ $table_info = [
     'sortname' => 'tab_sort',
     'sort' => $tab_sort,
 
-    'defaulturl' => "{$baseurl}/pages/admin/tabs.php",
+    'defaulturl' => $admin_tabs_management_page,
     'params' => $request_params,
     'pager' => [
         'current' => $curpage,
@@ -62,9 +73,7 @@ $table_info = [
         'per_page' => $per_page,
     ],
 
-    'data' => [
-        // 'modal' => false,
-    ],
+    'data' => [],
 ];
 
 
@@ -128,13 +137,11 @@ foreach($tab_records['data'] as $tab_record)
     $table_info['data'][] = $tab_record;
     }
 
-
-
-
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
     <?php
+    render_top_page_error_style($admin_tabs_management_error ?? '');
     renderBreadcrumbs([
         ['title' => $lang['systemsetup'], 'href'  => "{$baseurl_short}pages/admin/admin_home.php"],
         ['title' => $lang['system_tabs']]
@@ -142,7 +149,25 @@ include '../../include/header.php';
     <p><?php echo htmlspecialchars($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
 
     <?php echo render_table($table_info); ?>
-    <!-- TODO: add form to create new tabs -->
+
+    <!-- Create new tab form -->
+    <form method="post" action="<?php echo $admin_tabs_management_page_url; ?>" onsubmit="return CentralSpacePost(this, false);">
+        <?php generateFormToken('admin_tabs'); ?>
+        <div class="Question">
+            <label for="new_tab_name"><?php echo htmlspecialchars($lang['tabs_create_new']); ?></label>
+            <div class="tickset">
+                <div class="Inline">
+                    <input name="new_tab_name" type="text" value="" id="new_tab_name" class="shrtwidth">
+                </div>
+                <div class="Inline">
+                    <input name="action_create" type="submit"
+                           value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang['create']); ?>&nbsp;&nbsp;"
+                           onclick="return (this.form.elements[0].value != '');">
+                </div>
+            </div>
+            <div class="clearerleft"></div>
+        </div>
+    </form>
 </div>
 <script>
 // Re-order capability

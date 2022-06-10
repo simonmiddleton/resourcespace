@@ -350,6 +350,7 @@ $lang["smtppassword"]="SMTP Password";
 # Admin - Tabs management
 $lang['system_tabs'] = "Tabs";
 $lang['manage_tabs_instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
+$lang['tabs_create_new'] = "Create tab called...";
 // $lang[''] = "";
 
 

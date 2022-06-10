@@ -42,7 +42,7 @@ if(!isset($error_triggered))
 // Edit an exiting tab
 $new_tab_name = '10503_Tab modified';
 $save_status = save_tab(['ref' => $tab, 'name' => $new_tab_name]);
-$found = ps_value('SELECT `name` AS `value` FROM tab WHERE ref = ?', ['i', $tab], '');
+$found = get_tabs_by_refs([$tab])[0]['name'] ?? '';
 if($save_status && $found !== $new_tab_name)
     {
     echo 'Save tab - ';

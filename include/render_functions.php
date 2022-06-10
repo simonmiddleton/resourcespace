@@ -5375,10 +5375,10 @@ function render_question_form_helper(string $txt, string $id, array $ctx)
     $ctx_style = (isset($ctx['style']) && is_string($ctx['style']) ? $ctx['style'] : ''); # Use a class if possible!
 
 
-    $class = htmlspecialchars(join(' ', array_merge(array('FormHelp'), $ctx_class)));
-    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', htmlspecialchars($ctx_style)) : '');
+    $class = escape_quoted_data(join(' ', array_merge(array('FormHelp'), $ctx_class)));
+    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', escape_quoted_data($ctx_style)) : '');
     ?>
-    <div id="help_<?php echo htmlspecialchars($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
+    <div id="help_<?php echo escape_quoted_data($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
         <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
     </div>
     <?php

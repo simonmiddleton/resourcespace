@@ -70,7 +70,10 @@ function create_tab(array $tab)
                         ))',
              ['s', $name]
          );
-        return sql_insert_id();
+        $ref = sql_insert_id();
+        log_activity(null, LOG_CODE_CREATED, $name, 'tab', 'name', $ref);
+
+        return $ref;
         }
 
     return false;
@@ -94,6 +97,7 @@ function delete_tabs(array $refs)
         return false;
         }
 
+    $batch_activity_logger = function($ref) { return log_activity(null, LOG_CODE_DELETED, null, 'tab', 'name', $ref); };
     $refs_chunked = array_chunk(
         // Sanitise list: only numbers and never allow the "Default" tab (ref #1) to be deleted
         array_diff(array_filter($refs, 'is_int_loose'), [1]),
@@ -102,9 +106,11 @@ function delete_tabs(array $refs)
     foreach($refs_chunked as $refs_list)
         {
         $return = ps_query(
-            "DELETE FROM tab WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")",
+            'DELETE FROM tab WHERE ref IN (' . ps_param_insert(count($refs_list)) . ')',
             ps_param_fill($refs_list, 'i')
         );
+
+        array_walk($refs_list, $batch_activity_logger);
         }
 
     return isset($return);
@@ -126,6 +132,7 @@ function save_tab(array $tab)
     
     if($ref > 0 && $name !== '' && acl_can_manage_tabs())
         {
+        log_activity(null, LOG_CODE_EDITED, $name, 'tab', 'name', $ref);
         ps_query('UPDATE tab SET `name` = ? WHERE ref = ?', ['s', $name, 'i', $ref]);
         return true;
         }
