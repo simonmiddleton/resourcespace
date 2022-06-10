@@ -1488,7 +1488,6 @@ $lang['plugins-activate'] = 'Activate';
 $lang['plugins-purge'] = 'Purge&nbsp;configuration';
 $lang['plugins-headertext'] = 'Plugins extend the functionality of ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Activated via config.php';
-$lang['plugins-download'] = 'Download&nbsp;configuration';
 $lang['plugins-upload-title'] = 'Get configuration from file';
 $lang['plugins-upload'] = 'Upload configuration';
 $lang['plugins-getrsc'] = 'File to use:';

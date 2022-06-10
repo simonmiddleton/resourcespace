@@ -1129,7 +1129,6 @@ $lang['plugins-activate'] = 'Aktivoi';
 $lang['plugins-purge'] = 'Poista&nbsp;asetukset';
 $lang['plugins-headertext'] = 'Lisäosat laajentavat ResourceSpacen toiminnallisuutta.';
 $lang['plugins-legacyinst'] = 'Aktivoitu config.php-tiedostossa';
-$lang['plugins-download'] = 'Lataa&nbsp;asetukset';
 $lang['plugins-upload-title'] = 'Hanki asetukset tiedostosta';
 $lang['plugins-upload'] = 'Lataa asetukset';
 $lang['plugins-getrsc'] = 'Käytettävä tiedosto:';

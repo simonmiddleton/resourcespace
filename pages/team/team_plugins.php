@@ -332,10 +332,6 @@ if($searching)
                    else
                     {$pluginlugin_config_url = $baseurl . $plugin['config_url'];}
                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $pluginlugin_config_url . '">' . LINK_CARET .$lang['options'].'</a> ';        
-                   if (sql_value("SELECT config_json as value from plugins where name='".$plugin['name']."'",'')!='' && function_exists('json_decode'))
-                         {
-                         echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$plugin['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
-                         }
                    }
                 ?>
                     </div><!-- End of ListTools -->
@@ -431,10 +427,6 @@ if (count($inst_plugins)>0)
                else
                 {$plugin_config_url = $baseurl . $p['config_url'];}
                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '">' . LINK_CARET .$lang['options'].'</a> ';        
-               if (sql_value("SELECT config_json as value from plugins where name='".$p['name']."'",'')!='' && function_exists('json_decode'))
-                     {
-                     echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$p['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
-                     }
                }
             echo '</div></td></tr>';
             } 

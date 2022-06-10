@@ -1411,7 +1411,6 @@ $lang['plugins-activate'] = 'Aktivovať';
 $lang['plugins-purge'] = 'Odstrániť konfiguráciu';
 $lang['plugins-headertext'] = 'Doplnky rozširujú funkčnosť ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Aktivované v config.php';
-$lang['plugins-download'] = 'Stiahnuť&nbsp;konfiguráciu';
 $lang['plugins-upload-title'] = 'Získať konfiguráciu zo súboru';
 $lang['plugins-upload'] = 'Nahrať konfiguráciu na server';
 $lang['plugins-getrsc'] = 'Súbor na použitie:';

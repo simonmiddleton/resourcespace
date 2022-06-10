@@ -112,7 +112,7 @@ foreach($resources as $resource_ref => $resource)
 		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
 			{
 			?>
-			<span><?php echo htmlspecialchars($contact_sheet_field); ?></span><br>
+			<span><?php echo wordwrap(htmlspecialchars($contact_sheet_field),$column_width/7,"<br>",true); ?></span><br>
 			<?php
 			}
 		}
@@ -139,13 +139,13 @@ foreach($resources as $resource_ref => $resource)
                 {
                 $contact_sheet_field=explode(': ', $contact_sheet_field);
                 ?>
-                <span><b><?php echo htmlspecialchars($contact_sheet_field[0]); ?></b>: <?php echo htmlspecialchars($contact_sheet_field[1]); ?></span><br>
+                <span><b><?php echo htmlspecialchars($contact_sheet_field[0]); ?></b>: <?php echo wordwrap(htmlspecialchars($contact_sheet_field[1]),$column_width/7,"<br>",true); ?></span><br>
                 <?php
                 }
             else
                 {
                 ?>
-                <span><?php echo htmlspecialchars($contact_sheet_field); ?></span><br>
+                <span><?php echo wordwrap(htmlspecialchars($contact_sheet_field),$column_width/7,"<br>",true); ?></span><br>
                 <?php
                 }
 			}

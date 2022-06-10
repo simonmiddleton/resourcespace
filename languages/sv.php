@@ -1211,7 +1211,6 @@ $lang['plugins-activate'] = 'Aktivera';
 $lang['plugins-purge'] = 'Rensa ut konfiguration';
 $lang['plugins-headertext'] = 'Tillägg kan ge nya funktioner och ny stil till ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Aktiverat via ’config.php’';
-$lang['plugins-download'] = 'Hämta&nbsp;inställningar';
 $lang['plugins-upload-title'] = 'Överför inställningar från fil';
 $lang['plugins-upload'] = 'Överför inställningar';
 $lang['plugins-getrsc'] = 'Fil att använda:';

@@ -1210,7 +1210,6 @@ $lang["requestassignedtouser"]="Ihre Ressourcenanfrage wurde % zur Überprüfung
  $lang['plugins-purge'] = 'Konfiguration bereinigen';
  $lang['plugins-headertext'] = 'Plugins erweitern die Funktionalität von ResourceSpace.';
  $lang['plugins-legacyinst'] = 'Aktiviert durch die Datei config.php';
-$lang['plugins-download'] = 'Konfiguration&nbsp;herunterladen';
 $lang['plugins-upload-title'] = 'Konfiguration aus Datei laden';
 $lang['plugins-upload'] = 'Konfiguration hochladen';
 $lang['plugins-getrsc'] = 'Datei:';
