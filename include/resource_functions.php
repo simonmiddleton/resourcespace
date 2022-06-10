@@ -7618,6 +7618,11 @@ function get_fields($field_refs)
         trigger_error("\$field_refs passed to get_fields() is not an array.");
         }
 
+    if (count($field_refs) === 0)
+        {
+        return array();
+        }
+
     $fields=ps_query("
         SELECT 
                ref,
