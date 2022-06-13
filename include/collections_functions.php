@@ -919,10 +919,10 @@ function delete_collection($collection)
         }
 
 	hook("beforedeletecollection","",array($ref));
-	sql_query("DELETE FROM collection WHERE ref='$ref'");
-	sql_query("DELETE FROM collection_resource WHERE collection='$ref'");
-	sql_query("DELETE FROM collection_keyword WHERE collection='$ref'");
-	sql_query("DELETE FROM external_access_keys WHERE collection='$ref'");
+	ps_query("DELETE FROM collection WHERE ref=?",array("i",$ref));
+	ps_query("DELETE FROM collection_resource WHERE collection=?",array("i",$ref));
+	ps_query("DELETE FROM collection_keyword WHERE collection=?",array("i",$ref));
+	ps_query("DELETE FROM external_access_keys WHERE collection=?",array("i",$ref));
 	
 	if($home_dash)
 		{
@@ -930,8 +930,8 @@ function delete_collection($collection)
 		$collection_dash_tiles=sql_array("SELECT ref value FROM dash_tile WHERE link LIKE '%search.php?search=!collection" . $ref . "&%'",0);
 		if(count($collection_dash_tiles)>0)
 			{
-			sql_query("DELETE FROM dash_tile WHERE ref IN (" .  implode(",",$collection_dash_tiles) . ")");
-			sql_query("DELETE FROM user_dash_tile WHERE dash_tile IN (" .  implode(",",$collection_dash_tiles) . ")");
+			ps_query("DELETE FROM dash_tile WHERE ref IN (" .  ps_param_insert(count($collection_dash_tiles)) . ")",ps_param_fill($collection_dash_tiles,"i"));
+			ps_query("DELETE FROM user_dash_tile WHERE dash_tile IN (" .  ps_param_insert(count($collection_dash_tiles)) . ")",ps_param_fill($collection_dash_tiles,"i"));
 			}
 		}
 
@@ -1233,7 +1233,7 @@ function add_collection($user,$collection)
 		{return false;}
 
 	remove_collection($user,$collection);
-	sql_query("insert into user_collection(user,collection) values ('" . escape_check($user) . "','" . escape_check($collection) . "')");
+	ps_query("insert into user_collection(user,collection) values (?,?)",array("i",$user,"i",$collection));
     clear_query_cache('col_total_ref_count_w_perm');
 	collection_log($collection,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 
@@ -1249,7 +1249,7 @@ function add_collection($user,$collection)
  */
 function remove_collection($user,$collection)
 	{
-	sql_query("delete from user_collection where user='" . escape_check($user) . "' and collection='" . escape_check($collection) . "'");
+	ps_query("delete from user_collection where user=? and collection=?",array("i",$user,"i",$collection));
     clear_query_cache('col_total_ref_count_w_perm');
 	collection_log($collection,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
@@ -1263,8 +1263,8 @@ function remove_collection($user,$collection)
  */
 function index_collection($ref,$index_string='')
 	{
-	# 
-	sql_query("delete from collection_keyword where collection='" . escape_check($ref) . "'"); # Remove existing keywords
+    # Remove existing indexed keywords
+	ps_query("delete from collection_keyword where collection=?",array("i",$ref)); # Remove existing keywords
 	# Define an indexable string from the name, themes and keywords.
 
 	global $index_collection_titles;
@@ -1284,7 +1284,7 @@ function index_collection($ref,$index_string='')
 	
 	// if an index string wasn't supplied, generate one
 	if (!strlen($index_string) > 0){
-		$indexarray = sql_query("select $indexfields from collection c left join user u on u.ref=c.user where c.ref = '" . escape_check($ref) . "'");
+		$indexarray = ps_query("select $indexfields from collection c left join user u on u.ref=c.user where c.ref = ?",array("i",$ref));
 		for ($i=0; $i<count($indexarray); $i++){
 			$index_string = "," . implode(',',$indexarray[$i]);
 		} 
@@ -1295,7 +1295,7 @@ function index_collection($ref,$index_string='')
 		{
 		if(trim($keywords[$n])==""){continue;}
 		$keyref=resolve_keyword($keywords[$n],true);
-		sql_query("insert into collection_keyword values ('" . escape_check($ref) . "','$keyref')");
+		ps_query("insert into collection_keyword values (?,?)",array("i",$ref,"i",$keyref));
 		}
 	// return the number of keywords indexed
 	return $n;
@@ -1579,7 +1579,7 @@ function save_collection($ref, $coldata=array())
         if ($attach_user_smart_groups)
             {
             $old_attached_groups=sql_array("SELECT usergroup value FROM usergroup_collection WHERE collection='$ref'");
-            sql_query("delete from usergroup_collection where collection='$ref'");
+            ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
             }
     
         # Build a new list and insert
@@ -1624,13 +1624,13 @@ function save_collection($ref, $coldata=array())
                     { 
                     foreach ($groups as $group)
                         {
-                        sql_query("insert into usergroup_collection(collection,usergroup) values ('$ref','$group')");
+                        ps_query("insert into usergroup_collection(collection,usergroup) values (?,?)",array("i",$ref,"i",$group));
                         // get the group name
                         if($groupnames!='')
                             {
                             $groupnames.=", ";
                             }
-                        $groupnames.=sql_value("select name value from usergroup where ref='{$group}'","");
+                        $groupnames.=ps_value("select name value from usergroup where ref=?",array("i",$group),"");
                         }
 
                     $new_attached_groups=array_diff($groups, $old_attached_groups);
@@ -1684,7 +1684,7 @@ function save_collection($ref, $coldata=array())
     # Update limit count for saved search
 	if (isset($coldata["result_limit"]) && (int)$coldata["result_limit"] > 0)
         {
-        sql_query("update collection_savedsearch set result_limit='" . $coldata["result_limit"] . "' where collection='$ref'");
+        ps_query("update collection_savedsearch set result_limit=? where collection=?",array("i",$coldata["result_limit"],"i",$ref));
         }
 
     // Re-order featured collections tree at the level of this collection (if applicable - only for featured collections)
@@ -2337,8 +2337,7 @@ function get_saved_searches($collection)
  */
 function add_saved_search($collection)
 	{
-	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('" 
-		. escape_check($collection) . "','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","") . "')");
+	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"i",getval("archive","")));
 	}
 
 /**
@@ -2350,7 +2349,7 @@ function add_saved_search($collection)
  */
 function remove_saved_search($collection,$search)
 	{
-	sql_query("delete from collection_savedsearch where collection='" . escape_check($collection) . "' and ref='" . escape_check($search) . "'");
+	ps_query("delete from collection_savedsearch where collection=? and ref=?",array("i",$collection,"i",$search));
 	}
 
 /**
@@ -2376,10 +2375,10 @@ function add_smart_collection()
 	
 	$newcollection=create_collection($userref,get_search_title($searchstring),1);	
 
-	sql_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) 
-        values ('$newcollection','" . $search . "','" . $restypes . "','" . $archive . "','" . DEPRECATED_STARSEARCH . "')");
+	ps_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) 
+        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"i",$archive,"i",DEPRECATED_STARSEARCH));
 	$savedsearch=sql_insert_id();
-	sql_query("update collection set savedsearch='$savedsearch' where ref='$newcollection'"); 
+	ps_query("update collection set savedsearch=? where ref=?",array("i",$savedsearch,"i",$newcollection)); 
     set_user_collection($userref,$newcollection);
     refresh_collection_frame($newcollection);
 	}
@@ -2519,8 +2518,8 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
             $resource=$results[$n]["ref"];
             if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
                 {
-                sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
-                sql_query("insert into collection_resource(resource,collection,sortorder) values ('$resource','$collection','$n')");
+                ps_query("delete from collection_resource where resource=? and collection=?",array("i",$resource,"i",$collection));
+                ps_query("insert into collection_resource(resource,collection,sortorder) values (?,?,'$n')",array("i",$resource,"i",$collection,"s",$n));
                 
                 #log this
                 collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
@@ -2910,9 +2909,8 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
         {
         return $images;
         }
-    $refs_list = "'" . implode("','", $refs_list) . "'";
 
-    $refs_rtype = sql_query("SELECT ref, resource_type FROM resource WHERE ref IN ({$refs_list})", 'featured_collections');
+    $refs_rtype = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")", ps_param_fill($refs_list,"i"),'featured_collections');
 
     foreach($refs_rtype as $ref_rt)
         {
@@ -2946,8 +2944,8 @@ function swap_collection_order($resource1,$resource2,$collection)
 	}
 	//exit ("Swapping " . $resource1 . " for " . $resource2);
 	
-	$query = "select resource,date_added,sortorder  from collection_resource where collection='$collection' and resource in ('$resource1','$resource2')  order by sortorder asc, date_added desc";
-	$existingorder = sql_query($query);
+	$query = "select resource,date_added,sortorder  from collection_resource where collection=? and resource in (?,?)  order by sortorder asc, date_added desc";
+	$existingorder = ps_query($query,array("i",$collection,"i",$resource1,"i",$resource2));
 
 	$counter = 1;
 	foreach ($existingorder as $record){
@@ -3016,7 +3014,7 @@ function update_collection_order($neworder,$collection,$offset=0)
  */
 function get_collection_resource_comment($resource,$collection)
 	{
-	$data=sql_query("select *,use_as_theme_thumbnail from collection_resource where collection='" . escape_check($collection) . "' and resource='" . escape_check($resource) . "'","");
+	$data=ps_query("select *,use_as_theme_thumbnail from collection_resource where collection=? and resource=?",array("i",$collection,"i",$resource),"");
     if (!isset($data[0]))
 		{
 		return false;
@@ -3068,7 +3066,7 @@ function relate_to_collection($ref,$collection)
  */
 function get_collection_comments($collection)
 	{
-	return sql_query("select * from collection_resource where collection='" . escape_check($collection) . "' and length(comment)>0 order by date_added");
+	return sql_query("select * from collection_resource where collection=? and length(comment)>0 order by date_added",array("i",$collection));
 	}
 
 /**
@@ -3166,12 +3164,12 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='" . escape_check($copied) . "'","");
+	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
 	
 	if ($remove_existing)
 		{
 		#delete all existing data in the current collection
-		sql_query("delete from collection_resource where collection='" . escape_check($current) . "'");
+		ps_query("delete from collection_resource where collection=?",array("i",$current));
 		collection_log($current,LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES,0);
 		}
 	
@@ -3269,14 +3267,14 @@ function get_collection_external_access($collection)
 	global $userref;
 
 	# Restrict to only their shares unless they have the elevated 'v' permission
-    $condition="AND upload=0 ";
+    $condition="AND upload=0 ";$params=array("i",$collection);
     if (!checkperm("v"))
         {
-        $condition .= "AND user='" . escape_check($userref) . "'";
+        $condition .= "AND user=?";
+        $params[]="i";$params[]=$userref;
         }
-	return sql_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload from external_access_keys WHERE collection='" . escape_check($collection) . "' $condition group by access_key order by date");
+	return ps_query("SELECT access_key,GROUP_CONCAT(DISTINCT user ORDER BY user SEPARATOR ', ') users,GROUP_CONCAT(DISTINCT email ORDER BY email SEPARATOR ', ') emails,MAX(date) maxdate,MAX(lastused) lastused,access,expires,usergroup,password_hash,upload from external_access_keys WHERE collection=? $condition group by access_key order by date",$params);
 	}
-
 
 /**
  * Delete a specific collection access key, withdrawing access via that key to the collection in question
@@ -3290,12 +3288,14 @@ function delete_collection_access_key($collection,$access_key)
 	# Get details for log
 	$users = sql_value("SELECT group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value FROM external_access_keys WHERE collection='" . escape_check($collection) . "' AND access_key = '" . escape_check($access_key) . "' group by access_key ", "");
 	# Deletes the given access key.
-    $sql = "DELETE FROM external_access_keys WHERE access_key='" . escape_check($access_key) . "'";
+    $params=array("s",$access_key);
+    $sql = "DELETE FROM external_access_keys WHERE access_key=?";
     if($collection != 0)
         {
-        $sql .= " AND collection='" . escape_check($collection) . "'";
+        $sql .= " AND collection=?";
+        $params[]="i";$params[]=$collection;
         }
-    sql_query($sql);
+    ps_query($sql,$params);
 	# log changes
 	collection_log($collection,LOG_CODE_COLLECTION_STOPPED_RESOURCE_ACCESS,"",$users . " (" . $access_key. ")");
 	}
@@ -3327,9 +3327,9 @@ function collection_log($collection,$type,$resource,$notes = "")
     $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
     $notes = escape_check(mb_strcut($notes, 0, 255));
 
-	sql_query("
+	ps_query("
         INSERT INTO collection_log (date, user, collection, type, resource, notes)
-             VALUES (now(), {$user}, '{$collection}', '{$type}', {$resource}, '{$notes}')");
+             VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"i",$type,"i",$resource,"s",$notes));
 	}
     
 /**
@@ -3351,7 +3351,7 @@ function get_collection_log($collection, $fetchrows = -1)
         $extra_fields = "";
         }
 
-	return sql_query("
+	return ps_query("
                  SELECT c.ref,
                         c.date,
                         u.username,
@@ -3364,8 +3364,8 @@ function get_collection_log($collection, $fetchrows = -1)
                    FROM collection_log AS c
         LEFT OUTER JOIN user AS u ON u.ref = c.user
         LEFT OUTER JOIN resource AS r ON r.ref = c.resource
-                  WHERE collection = '{$collection}'
-               ORDER BY c.ref DESC", false, $fetchrows);
+                  WHERE collection = ?
+               ORDER BY c.ref DESC", array("i",$collection), false, $fetchrows);
 	}
         
 /**
@@ -3464,8 +3464,8 @@ function collection_min_access($collection)
 function collection_set_public($collection)
 	{
 		if (is_numeric($collection)){
-			$sql = "UPDATE collection SET `type` = " . COLLECTION_TYPE_PUBLIC . " WHERE ref = '$collection'";
-			sql_query($sql);
+			$sql = "UPDATE collection SET `type` = " . COLLECTION_TYPE_PUBLIC . " WHERE ref = ?";
+			ps_query($sql,array("i",$collection));
 			return true;
 		} else {
 			return false;
@@ -3489,15 +3489,15 @@ function remove_all_resources_from_collection($ref){
         collection_log($ref, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
         }
 
-    sql_query("DELETE FROM collection_resource WHERE collection = '" . escape_check($ref) . "'");
-    sql_query("DELETE FROM external_access_keys WHERE collection = '" . escape_check($ref) . "' AND upload!=1");
+    ps_query("DELETE FROM collection_resource WHERE collection = ?",array("i",$ref));
+    ps_query("DELETE FROM external_access_keys WHERE collection = ? AND upload!=1",array("i",$ref));
     }	
 
 function get_home_page_promoted_collections()
 	{
     global $COLLECTION_PUBLIC_TYPES;
-    $public_types = join(", ", $COLLECTION_PUBLIC_TYPES);
-	return sql_query("select collection.ref, collection.`type`,collection.name,collection.home_page_publish,collection.home_page_text,collection.home_page_image,resource.thumb_height,resource.thumb_width, resource.resource_type, resource.file_extension from collection left outer join resource on collection.home_page_image=resource.ref where collection.`type` IN ({$public_types}) and collection.home_page_publish=1 order by collection.ref desc");
+    $public_types = join(", ", $COLLECTION_PUBLIC_TYPES); // Note this is a constant and not user input - does not need to be a a parameter in the next line.
+	return ps_query("select collection.ref, collection.`type`,collection.name,collection.home_page_publish,collection.home_page_text,collection.home_page_image,resource.thumb_height,resource.thumb_width, resource.resource_type, resource.file_extension from collection left outer join resource on collection.home_page_image=resource.ref where collection.`type` IN ({$public_types}) and collection.home_page_publish=1 order by collection.ref desc");
 	}
 
 
@@ -3713,7 +3713,7 @@ function update_collection_user($collection,$newuser)
 	if (!collection_writeable($collection))
 		{debug("FAILED TO CHANGE COLLECTION USER " . $collection);return false;}
 		
-	sql_query("UPDATE collection SET user='" . escape_check($newuser) . "' WHERE ref='" . escape_check($collection) . "'");  
+	ps_query("UPDATE collection SET user=? WHERE ref=?",array("i",$newuser,"i",$collection));  
 	return true;	
 	}
 
@@ -4587,7 +4587,7 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     if ($resource_hit_count_on_downloads)
         { 
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='" . escape_check($ref) . "'");
+        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref));
         }
 
     return;
@@ -4686,7 +4686,7 @@ function collection_download_process_data_only_types(array $result, $id, $collec
             /*greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero
             to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).*/
             $resource_ref_escaped = escape_check($result[$n]['ref']);
-            sql_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = '{$resource_ref_escaped}'");
+            ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?",array("i",$resource_ref_escaped));
             }
         }
     }
@@ -5171,9 +5171,7 @@ function delete_old_collections($userref=0, $days=30)
 */
 function get_all_featured_collections()
     {
-    return sql_query(
-        sprintf(
-              "SELECT DISTINCT c.ref,
+    return ps_query("SELECT DISTINCT c.ref,
                       c.`name`,
                       c.`type`,
                       c.parent,
@@ -5185,11 +5183,9 @@ function get_all_featured_collections()
                  FROM collection AS c
             LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
             LEFT JOIN collection AS cc ON c.ref = cc.parent
-                WHERE c.`type` = %s
+                WHERE c.`type` = ?
              GROUP BY c.ref",
-            COLLECTION_TYPE_FEATURED
-        ),
-        "featured_collections");
+            array("i",COLLECTION_TYPE_FEATURED),"featured_collections");
     }
 
 
@@ -5208,12 +5204,22 @@ function get_featured_collections(int $parent, array $ctx)
         {
         return array();
         }
-
     $access_control = (isset($ctx["access_control"]) && is_bool($ctx["access_control"]) ? $ctx["access_control"] : true);
 
-    $allfcs = sql_query(
-        sprintf(
-              "SELECT DISTINCT c.ref,
+
+    $params=array("i",COLLECTION_TYPE_FEATURED);
+    if ($parent==0)
+        {
+        // When searching for parent '0' we're looking for a null value on the parent column denoting the top level of the featured collection tree.
+        $parentquery="IS NULL";
+        }
+    else
+        {
+        // Numeric parent value.
+        $parentquery="=?";$params[]="i";$params[]=$parent;
+        }
+
+    $allfcs = ps_query("SELECT DISTINCT c.ref,
                       c.`name`,
                       c.`type`,
                       c.parent,
@@ -5226,14 +5232,10 @@ function get_featured_collections(int $parent, array $ctx)
                  FROM collection AS c
             LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
             LEFT JOIN collection AS cc ON c.ref = cc.parent
-                WHERE c.`type` = %s
-                  AND c.parent %s
+                WHERE c.`type` = ?
+                  AND c.parent $parentquery
              GROUP BY c.ref
-             ORDER BY c.order_by",
-            COLLECTION_TYPE_FEATURED,
-            sql_is_null_or_eq_val((string) $parent, $parent == 0)
-            )
-        );
+             ORDER BY c.order_by",$params);
 
     if(!$access_control)
         {
