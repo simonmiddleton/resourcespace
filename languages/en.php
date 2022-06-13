@@ -1640,6 +1640,7 @@ $lang["metadatatobewritten"]="Metadata which will be written";
 $lang["embeddedvalue"]="Embedded value";
 $lang["exiftooltag"]="Exiftool tag";
 $lang["error"]="Error";
+$lang['success']="Success";
 $lang["exiftoolnotfound"]="Could not find Exiftool";
 $lang["existing_tags"]="Existing Exiftool tags";
 $lang["new_tags"]="New Exiftool tags (which will be added upon download)";
