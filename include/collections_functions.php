@@ -1574,7 +1574,7 @@ function save_collection($ref, $coldata=array())
             $collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
             }
         
-        sql_query("delete from user_collection where collection='$ref'");
+        ps_query("delete from user_collection where collection=?",array("i",$ref));
         
         if ($attach_user_smart_groups)
             {
@@ -3066,7 +3066,7 @@ function relate_to_collection($ref,$collection)
  */
 function get_collection_comments($collection)
 	{
-	return sql_query("select * from collection_resource where collection=? and length(comment)>0 order by date_added",array("i",$collection));
+	return ps_query("select * from collection_resource where collection=? and length(comment)>0 order by date_added",array("i",$collection));
 	}
 
 /**
@@ -3164,7 +3164,7 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
+	$copied_collection=ps_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
 	
 	if ($remove_existing)
 		{
