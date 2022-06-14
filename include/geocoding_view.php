@@ -241,7 +241,7 @@ if($view_panels)
             jQuery(this).parent().children('.Title').removeClass('Selected');
             jQuery(this).addClass('Selected');
             jQuery('#' + jQuery(this).attr('panel')).show();
-            <?php echo $map_container_obj; ?>.invalidateSize(true);
+            <?php echo $map_container_obj??"" . ".invalidateSize(true);";?>
             });
         </script> <?php
         } ?>
