@@ -49,7 +49,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 
 	$perms = array_unique($perms);
 	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
-	sql_query("update usergroup set permissions='" . escape_check(join(",",$perms)) . "' where ref='$ref'");
+    ps_query("update usergroup set permissions=? where ref=?",["s",join(",",$perms),"i",$ref]);
 	}
 
 if ($copy_from!="")
