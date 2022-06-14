@@ -72,7 +72,13 @@ if (!hook("replacelistitem"))
         for ($x=0;$x<count($df);$x++)
             {
             if(!in_array($df[$x]['ref'],$list_display_fields))
-                {continue;}
+                {
+                # Field not present on this resource, so insert a blank element to preserve column integrity 
+                ?>
+                <td>&nbsp;</td> 
+                <?php         
+                continue;
+                }
 
             $value=@$result[$n]['field'.$df[$x]['ref']];
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
