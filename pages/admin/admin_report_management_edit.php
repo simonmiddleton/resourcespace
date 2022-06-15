@@ -14,15 +14,15 @@ $order_by=getval("orderby","");
 $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}" : "");
 
 $ref=getval("ref","");
-$copyreport=getvalescaped("copyreport","");
+$copyreport=getval("copyreport","");
 
 # create new record from callback
-$new_report_name=getvalescaped("newreportname","");
+$new_report_name=getval("newreportname","");
 if ($new_report_name!="" && enforcePostRequest(false))
 	{
-	sql_query("insert into report(name) values('{$new_report_name}')");
+	ps_query("INSERT into report (name) values(?)",array("s",$new_report_name));
 	$ref=sql_insert_id();
-	log_activity(null,LOG_CODE_CREATED,escape_check($new_report_name),'report','name',$ref);
+	log_activity(null,LOG_CODE_CREATED,$new_report_name,'report','name',$ref);
 
 	redirect($baseurl_short."pages/admin/admin_report_management_edit.php?ref={$ref}{$url_params}");	// redirect to prevent repost and expose form data
 	exit;
@@ -30,13 +30,13 @@ if ($new_report_name!="" && enforcePostRequest(false))
 elseif ($copyreport!="" && enforcePostRequest(false))
 	{
 	// Copy report?
-	sql_query("insert into report (name, query) select concat('" . $lang["copy_of"] . " ',name), query from report where ref='$ref'");
+	ps_query("INSERT into report (name, query) select concat('" . $lang["copy_of"] . " ',name), query from report where ref=?",array("i",$ref));
 	$from_ref=$ref;
 	$ref=sql_insert_id();
-	$new_copied_name = sql_value("SELECT `name` AS 'value' FROM `report` WHERE `ref`='{$ref}'",'');
-	log_activity($lang["copy_of"] . ' ' . $from_ref,LOG_CODE_COPIED,escape_check($new_copied_name),'report','name',$ref,null,'');
+	$new_copied_name = ps_value("SELECT `name` AS 'value' FROM `report` WHERE `ref`=?",array("i",$ref),'');
+	log_activity($lang["copy_of"] . ' ' . $from_ref,LOG_CODE_COPIED,$new_copied_name,'report','name',$ref,null,'');
 	}
-elseif (!sql_value("select ref as value from report where ref='{$ref}'",false))
+elseif (!ps_value("select ref as value from report where ref=?",array("i",$ref),false))
 	{
 	redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// fail safe by returning to the report management page if duff ref passed
 	exit;
@@ -45,13 +45,13 @@ elseif (!sql_value("select ref as value from report where ref='{$ref}'",false))
 if (getval("deleteme",false) && enforcePostRequest(false))
 	{
 	log_activity(null,LOG_CODE_DELETED,null,'report','name',$ref);
-	sql_query("delete from report where ref='{$ref}'");
+	ps_query("DELETE from report where ref=?",array("i",$ref));
 	redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");		// return to the report management page
 	exit;
 	}
 
-$name=getvalescaped("name","");
-$query=getvalescaped("query","");
+$name=getval("name","");
+$query=getval("query","");
 if (getval("save",false))
 	{
 	if (strlen(trim($query)) == 0) 
@@ -60,24 +60,19 @@ if (getval("save",false))
 		}
 	if (!isset($error) && enforcePostRequest(false))
 		{
-		log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
-		log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
+		log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,ps_value("SELECT `name` AS value FROM `report` WHERE ref=?",array("i",$ref),""));
+		log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,ps_value("SELECT `query` AS value FROM `report` WHERE ref=?",array("i",$ref),""),null,true);
 
         $support_non_correlated_sql = (int) (mb_strpos($query, REPORT_PLACEHOLDER_NON_CORRELATED_SQL) !== false);
 
-        sql_query(sprintf(
-            "UPDATE report SET name = '%s', query = '%s', support_non_correlated_sql = '%s' WHERE ref = '%s'",
-            $name,
-            $query,
-            $support_non_correlated_sql,
-            escape_check($ref)
-        ));
+		$parameters=array("s",$name, "s",$query, "i",$support_non_correlated_sql, "i",$ref);
+        ps_query("UPDATE report SET name = ?, query = ?, support_non_correlated_sql = ? WHERE ref = ?",$parameters);
 		redirect("{$baseurl_short}pages/admin/admin_report_management.php?{$url_params}");
 		exit;
 		}
 	}
 
-$record = sql_query("select * from report where ref={$ref}");
+$record = ps_query("select * from report where ref=?",array("i",$ref));
 $record = $record[0];
 
 include "../../include/header.php";
