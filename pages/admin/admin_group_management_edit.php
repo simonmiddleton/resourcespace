@@ -23,7 +23,7 @@ $url_params=
     ($filter_by_permissions ? "&filterbypermissions={$filter_by_permissions}" : "");
 
 # create new record from callback
-$new_group_name=getvalescaped("newusergroupname","");
+$new_group_name=getval("newusergroupname","");
 if ($new_group_name!="" && enforcePostRequest(false))
     {
     $setoptions =array("request_mode" => 1, "name" => $new_group_name);
@@ -37,25 +37,25 @@ if ($new_group_name!="" && enforcePostRequest(false))
     exit;
     }
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref","");
 
-if (!sql_value("select ref as value from usergroup where ref='{$ref}'",false))
+if (!ps_value("select ref as value from usergroup where ref = ?", array("i", $ref), false))
     {
     redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // fail safe by returning to the user group management page if duff ref passed
     exit;
     }
 
-$dependant_user_count=sql_value("select count(*) as value from user where usergroup='{$ref}'",0);
-$dependant_groups=sql_value("select count(*) as value from usergroup where parent='{$ref}'",0);
-$has_dependants=$dependant_user_count + $dependant_groups > 0;
+$dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $ref), 0);
+$dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $ref), 0);
+$has_dependants = $dependant_user_count + $dependant_groups > 0;
     
 if (!$has_dependants && getval("deleteme",false) && enforcePostRequest(false))
     {
-    sql_query("delete from usergroup where ref='{$ref}'");
+    ps_query("delete from usergroup where ref = ?", array("i", $ref));
     log_activity('',LOG_CODE_DELETED,null,'usergroup',null,$ref);
 
     // No need to keep any records of language content for this user group
-    sql_query('DELETE FROM site_text WHERE specific_to_group = "' . $ref . '";');
+    ps_query('DELETE FROM site_text WHERE specific_to_group = ?', array("i", $ref));
 
     redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // return to the user group management page
     exit;
@@ -68,7 +68,7 @@ if (getval("save",false) && enforcePostRequest(false))
 
     if (isset($_POST['removelogo']))
         {
-        $logo_extension=sql_value("select group_specific_logo as value from usergroup where ref='{$ref}'", false);
+        $logo_extension = ps_value("select group_specific_logo as value from usergroup where ref = ?", array("i", $ref), false);
         $logo_filename="{$logo_dir}/group{$ref}.{$logo_extension}";
         
         if ($logo_extension && file_exists($logo_filename) && unlink($logo_filename))
@@ -108,58 +108,68 @@ if (getval("save",false) && enforcePostRequest(false))
 
         if (isset($logo_extension))
             {
-            $logo_extension_escaped = escape_check($logo_extension);
-            sql_query("UPDATE usergroup SET group_specific_logo = '{$logo_extension_escaped}' WHERE ref = '{$ref}'");
+            ps_query("UPDATE usergroup SET group_specific_logo = ? WHERE ref = ?", array("s", $logo_extension, "i", $ref));
             log_activity(null,null,null,'usergroup','group_specific_logo',$ref);
             }
 
+    $update_sql_params = array();
     foreach (array("name","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
                     "derestrict_filter_id","resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
                     "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column)		
-		
-		{
+
+        {
         if ($execution_lockout && $column=="config_options")
             {
             # Do not allow config overrides to be changed from UI if $execution_lockout is set.
             continue;
             }
 
-		if (in_array($column,array("allow_registration_selection")))
-			{
-			$val=getval($column,"0") ? "1" : "0";
-			}
-
-		elseif($column=="inherit_flags" && getvalescaped($column,'')!="")
-			{
-			$val=implode(",",getvalescaped($column,''));
-			}
-		elseif(in_array($column,array("parent","download_limit","download_log_days","search_filter_id","edit_filter_id","derestrict_filter_id")))
-			{
-			$val=getval($column,0,true);
-			}
-		elseif($column=="request_mode")
-			{
-			$val=getval($column, 1, true);
+        if (in_array($column,array("allow_registration_selection")))
+            {
+            $val=getval($column,"0") ? "1" : "0";
+            $update_sql_params = array_merge($update_sql_params, array("i", $val));
             }
-		else
-			{
-			$val=getvalescaped($column,"");
-			}
 
-		if (isset($sql))
-			{
-			$sql.=",";
-			}
-		else
-			{
-			$sql="update usergroup set ";
-			}		
-		$sql.="{$column}='{$val}'";
-		log_activity(null,LOG_CODE_EDITED,$val,'usergroup',$column,$ref);
-		}
-    
-    $sql.=" where ref='{$ref}'";
-    sql_query($sql);
+        elseif($column=="inherit_flags" && getval($column,'')!="")
+            {
+            $val = getval($column,'');
+            if (is_array($val))
+                {
+                $val=implode(",", $val);
+                }
+            $update_sql_params = array_merge($update_sql_params, array("s", $val));
+            }
+        elseif(in_array($column,array("parent","download_limit","download_log_days","search_filter_id","edit_filter_id","derestrict_filter_id")))
+            {
+            $val=getval($column,0,true);
+            $update_sql_params = array_merge($update_sql_params, array("i", $val));
+            }
+        elseif($column=="request_mode")
+            {
+            $val=getval($column, 1, true);
+            $update_sql_params = array_merge($update_sql_params, array("i", $val));
+            }
+        else
+            {
+            $val=getval($column,"");
+            $update_sql_params = array_merge($update_sql_params, array("s", $val));
+            }
+
+        if (isset($sql))
+            {
+            $sql.=",";
+            }
+        else
+            {
+            $sql="update usergroup set ";
+            }
+        $sql.="{$column} = ?";
+        log_activity(null,LOG_CODE_EDITED,$val,'usergroup',$column,$ref);
+        }
+
+    $sql.=" where ref = ?";
+    $update_sql_params = array_merge($update_sql_params, array("i", $ref));
+    ps_query($sql, $update_sql_params);
 
 	hook("usergroup_edit_add_form_save","",array($ref));
 	if(!$error)
