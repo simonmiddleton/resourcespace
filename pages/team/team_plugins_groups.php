@@ -22,7 +22,7 @@ if($py['disable_group_select'])
     }
 
 # Fetch current access level
-$access=sql_value("select enabled_groups value from plugins where name='$plugin'","");
+$access=ps_value("select enabled_groups value from plugins where name= ?",['s', $plugin],"");
 
 # Fetch user groups
 $groups=get_usergroups();
@@ -44,7 +44,7 @@ if (getval("save", "") != "" && enforcePostRequest(false))
 		}
 	# Update database
 	log_activity(null,LOG_CODE_EDITED,$access,'plugins','enabled_groups',$plugin,'name');
-	sql_query("update plugins set enabled_groups='$access' where name='$plugin'","");
+	ps_query("update plugins set enabled_groups= ? where name= ?", ['s', $access, 's', $plugin],"");
 	clear_query_cache("plugins");
 	redirect("pages/team/team_plugins.php");
 	}
