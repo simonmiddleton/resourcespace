@@ -4131,11 +4131,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$value=implode($range_separator,$rangedates);
 		}
 	
-    if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_DROP_DOWN_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))
+        if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
         {
-        $value=TidyList($value);
+        $treenodes = get_resource_nodes($ref, $field["ref"], true);
+        $treetext_arr = get_tree_strings($treenodes);
+        $value = implode(", ",$treetext_arr);        
         }
-	
+    
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
 		if (!$valueonly)

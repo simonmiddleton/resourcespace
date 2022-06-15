@@ -19,8 +19,8 @@ foreach($resource_type_fields as $resource_type_field)
     $status = "Migrating resource_data for field #" . $fref . " (" . $fname . ")";
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status);
 
-    // get_nodes() can cause memory errors for non-fixed list fields so will get md5 hash and compare on that
-    $nodeinfo =  ps_query("SELECT ref, MD5(name) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
+    // get_nodes() can cause memory errors for non-fixed list fields so will get hash (a single md5 is too susceptible to collisions for large datasets) and compare on that
+    $nodeinfo =  ps_query("SELECT ref, concat(MD5(name),MD5(CONCAT('!',name)) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
     $allfieldnodes= array_column($nodeinfo,"ref","hash");
 
     $totalrows = ps_value("SELECT count(resource) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
@@ -52,9 +52,9 @@ foreach($resource_type_fields as $resource_type_field)
                 {
                 if(trim($rowdata["value"]) != "")
                     {
-                    if(isset($allfieldnodes[md5($rowdata["value"])]))
+                    if(isset($allfieldnodes[md5($rowdata["value"]) . md5('!'. $rowdata["value"])]))
                         {
-                        $newnode = $allfieldnodes[md5($rowdata["value"])];
+                        $newnode = $allfieldnodes[md5($rowdata["value"]) . md5('!'. $rowdata["value"])];
                         }
                     else
                         {
@@ -71,7 +71,7 @@ foreach($resource_type_fields as $resource_type_field)
                         $copykeywordquery = "INSERT INTO node_keyword (node, keyword, position) SELECT ?, keyword, position FROM resource_keyword WHERE resource = ? AND resource_type_field = ?";
                         $copykeywordparams = ["i",$newnode,"i",$rowdata["resource"],"i", $fref];
                         ps_query($copykeywordquery,$copykeywordparams);
-                        $allfieldnodes[md5($rowdata["value"])] = $newnode;
+                        $allfieldnodes[md5($rowdata["value"]) . md5("!" . $rowdata["value"])] = $newnode;
                         }
                     if(!isset($resnodearr[$rowdata["resource"]]) || !in_array($newnode,$resnodearr[$rowdata["resource"]]))
                         {

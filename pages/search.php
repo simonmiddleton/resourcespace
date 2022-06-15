@@ -111,6 +111,11 @@ foreach($keywords as $keyword)
         continue;
         }
 
+    if(!metadata_field_view_access($resource_type_field))
+        {
+        // User can't search against a metadata field they don't have access to
+        continue;
+        }
     $nodes = get_nodes($resource_type_field, null, true);
     
     // Check if multiple nodes have been specified for an OR search
@@ -526,13 +531,21 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         {
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
-        
         // First search for refs only to get full result count
         $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, true, $editable_only, false, $search_access);
-        $result_count = count($count_search);
-        // Actual search
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
-
+        
+        if(is_array($count_search))
+            {
+            $result_count = count($count_search);
+            // Do actual search and get all data
+            $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+            }
+        else
+            {
+            $result_count = 0;
+            $result = $count_search;
+            }
+      
         $max_results = $saved_max_results;
         }
     }
