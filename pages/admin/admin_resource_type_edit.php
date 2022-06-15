@@ -15,25 +15,25 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-$ref                   = getvalescaped('ref', '', true);
-$name                  = getvalescaped('name', '');
-$config_options        = getvalescaped('config_options', '');
-$allowed_extensions    = getvalescaped('allowed_extensions', '');
-$tab                   = getvalescaped('tab', '');
-$colour                = getvalescaped('colour', 0, true);
-$push_metadata         = ('' != getvalescaped('push_metadata', '') ? 1 : 0);
-$inherit_global_fields = ('' != getvalescaped('inherit_global_fields', '') ? 1 : 0);
-$icon                  = getvalescaped('icon', '');
+$ref                   = getval('ref', '', true);
+$name                  = getval('name', '');
+$config_options        = getval('config_options', '');
+$allowed_extensions    = getval('allowed_extensions', '');
+$tab                   = getval('tab', '');
+$colour                = getval('colour', 0, true);
+$push_metadata         = ('' != getval('push_metadata', '') ? 1 : 0);
+$inherit_global_fields = ('' != getval('inherit_global_fields', '') ? 1 : 0);
+$icon                  = getval('icon', '');
 
-$restype_order_by=getvalescaped("restype_order_by","rt");
-$restype_sort=getvalescaped("restype_sort","asc");
+$restype_order_by=getval("restype_order_by","rt");
+$restype_sort=getval("restype_sort","asc");
 
 $url_params = array("ref"=>$ref,
 		    "restype_order_by"=>$restype_order_by,
 		    "restype_sort"=>$restype_sort);
 $url=generateURL($baseurl . "/pages/admin/admin_resource_type_edit.php",$url_params);
 
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_resource_types.php?ref=" . $ref;
@@ -49,18 +49,14 @@ if (getval("save","")!="" && enforcePostRequest(false))
 
     if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
         
-    sql_query("
-        UPDATE resource_type
-           SET `name`= '{$name}',
-               config_options = '{$config_options}',
-               allowed_extensions = '{$allowed_extensions}',
-               tab_name = '{$tab}',
-               push_metadata = '{$push_metadata}',
-               inherit_global_fields = '{$inherit_global_fields}',
-               colour = '{$colour}',
-               icon = '{$icon}'
-         WHERE ref = '$ref'
-     ");
+    $parameters=array("s",$name, "s",$config_options, "s",$allowed_extensions,
+                      "s",$tab, "i",$push_metadata, "i",$inherit_global_fields,
+                      "i",$colour, "s",$icon, "i", $ref );
+    ps_query("UPDATE resource_type
+               SET `name` = ?, config_options = ?, allowed_extensions = ?,
+               tab_name = ?, push_metadata = ?, inherit_global_fields = ?,
+               colour = ?, icon = ?
+               WHERE ref = ?",$parameters);
     clear_query_cache("schema");
 
     redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
@@ -71,9 +67,9 @@ $confirm_delete = false;
 $confirm_move_associated_rtf = false;
 if(getval("delete", "") != "" && enforcePostRequest(false))
     {
-    $targettype=getvalescaped("targettype","");
+    $targettype=getval("targettype","");
     $prereq_action = getval("prereq_action", "");
-    $affectedresources=sql_array("select ref value from resource where resource_type='$ref' and ref>0",0);
+    $affectedresources=ps_array("select ref value from resource where resource_type=? and ref>0",array("i",$ref),0);
     $affected_rtfs = get_resource_type_fields(array($ref), "ref", "asc", "", array(), true);
     if(count($affectedresources)>0 && $targettype=="")
         {
@@ -101,17 +97,18 @@ if(getval("delete", "") != "" && enforcePostRequest(false))
                 {
                 foreach($affected_rtfs as $affected_rtf)
                     {
-                    sql_query("UPDATE resource_type_field SET resource_type = '{$targettype}' WHERE ref = '{$affected_rtf['ref']}'");
+                    ps_query("UPDATE resource_type_field SET resource_type = ? 
+                               WHERE ref = ?",array("i",$targettype, "i",$affected_rtf['ref']));
                     clear_query_cache("schema");
                     }
                 }
             }
 
-        $affectedresources = sql_array("SELECT ref AS value FROM resource WHERE resource_type = '$ref' AND ref > 0", 0);
+        $affectedresources = ps_array("SELECT ref AS value FROM resource WHERE resource_type = ? AND ref > 0",array("i",$ref),0);
         $affected_rtfs = get_resource_type_fields(array($ref), "ref", "asc", "", array(), true);
         if(count($affectedresources) === 0 && count($affected_rtfs) === 0)
             {
-            sql_query("delete from resource_type where ref='$ref'");
+            ps_query("DELETE from resource_type where ref=?",array("i",$ref));
             clear_query_cache("schema");
             redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
             }
@@ -119,22 +116,13 @@ if(getval("delete", "") != "" && enforcePostRequest(false))
     }
 $actions_required = ($confirm_delete || $confirm_move_associated_rtf);
 
-# Fetch  data
-$restypedata=sql_query ("
-      SELECT ref,
-             name,
-             order_by,
-             config_options,
-             allowed_extensions,
-             tab_name,
-             push_metadata,
-             inherit_global_fields,
-             colour,
-             icon
-        FROM resource_type
-       WHERE ref = '{$ref}'
-    ORDER BY `name`
-", "schema");
+# Fetch data
+$restypedata=ps_query("SELECT ref, name, order_by, config_options, allowed_extensions,
+                        tab_name, push_metadata, inherit_global_fields,
+                        colour, icon
+                        FROM resource_type
+                        WHERE ref = ?
+                        ORDER BY `name`",array("i",$ref),"schema");
 if (count($restypedata)==0) {exit("Resource type not found.");} // Should arrive here unless someone has an old/incorrect URL.
 $restypedata=$restypedata[0];
 
@@ -197,18 +185,9 @@ if($actions_required)
     </div>
     <?php
     
-    $destrestypes=$resource_types=sql_query ("
-	select 
-		ref,
-		name
-        from
-		resource_type
-	where
-	    ref<>'$ref'
-	order by name asc
-	"
-    );
-    
+    $destrestypes=$resource_types= ps_query("SELECT ref, name FROM resource_type
+	                                          WHERE ref<>?
+	                                          ORDER BY name asc",array("i",$ref));
     ?>
     <div class="Question">  
     <label for="targettype"><?php echo $lang["resourcetype"]; ?></label>    
