@@ -12,7 +12,7 @@ $print=(getval("print","")!=""); # Print mode?
 if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
     {
     # Load a saved report
-    $report=sql_query("select * from user_report where ref='$ref' and user='$userref'");if (count($report)==0) {exit("Report not found.");}
+    $report=ps_query("select * from user_report where ref= ? and user= ?", ['i', $ref, 'i', $userref]);if (count($report)==0) {exit("Report not found.");}
     $report=$report[0];
     $params = unserialize($report['params']);
 
@@ -69,14 +69,20 @@ if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(g
     if ($ref=="")
         {
         # New report
-        sql_query("insert into user_report(name,user) values ('" . getvalescaped("name","") . "','$userref')");
+        ps_query("insert into user_report(name,user) values (?, ?)", ['s', getval("name",""), 'i', $userref]);
         $ref=sql_insert_id();
         }
     # Saving
     unset($_POST[$CSRF_token_identifier]);
     unset($_POST['save']);
     $params=serialize($_POST);
-    sql_query("update user_report set `name`='" . getvalescaped("name","") . "',`params`='" . escape_check($params) . "' where ref='$ref' and user='$userref'");
+    ps_query(
+        "update user_report set `name`= ?,`params`= ? where ref= ? and user= ?", 
+        ['s', getval("name",""), 
+         's', $params, 
+         'i', $ref, 
+         'i', $userref]
+    );
     }
     
 
