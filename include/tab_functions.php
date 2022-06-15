@@ -46,6 +46,13 @@ function get_tabs_with_usage_count(int $per_page, int $offset)
     }
 
 
+function get_all_tabs()
+    {
+    return ps_query('SELECT ref, `name`, order_by FROM tab');
+    }
+
+
+
 /**
  * Create a new system tab record
  * NOTE: order_by should only be set when re-ordering the set by the user. {@see sql_reorder_records('tab', $refs)}
