@@ -49,7 +49,7 @@ $external_access_keys_query =
     GROUP BY access_key
     ORDER BY date
 ";
-$external_shares = sql_query($external_access_keys_query);
+$external_shares = ps_query($external_access_keys_query);
 
 include '../../include/header.php';
 ?>
