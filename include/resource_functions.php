@@ -8547,50 +8547,6 @@ function delete_resource_type_field($ref)
     return true;
     }
 
-/**
- * Function to return a list of tab names retrieved from $fields array containing metadata fields
- * 
- * if there is at least one field with a value for tab_name, then if there is at another field that does not have a tab_name value, it is assigned the value "Default"
- * 
- * @param   array   fields  array of metadata fields to display
- * @global  array   lang    array of config-defined language strings
- * 
- * @return  array   $fields_tab_names   array of unique tab names contained in the $fields array
- */
-function tab_names($fields)
-    {
-    global $lang; // language strings
-
-    $fields_tab_names = array();
-    $tabs_set = false; // by default no tabs set
-    
-    // loop through fields array and identify whether to use tabs
-    foreach ($fields as $field)
-        {
-        $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
-        }
-        
-    // loop through fields and create list of tab names, including default string if any fields present with empty string values for tab_name  
-    foreach ($fields as $field)
-        {   
-        if ($tabs_set === true)
-            {
-            $fieldtabname = $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
-            }
-        else
-            {
-            $fieldtabname = "";
-            }
-        $fields_tab_names[] = $fieldtabname;
-        }
-    
-    // get list of unique tab names
-    $fields_tab_names = array_values(array_unique($fields_tab_names));
-
-    // return list of tab names
-    return $fields_tab_names;
-    }
-
 
 function get_resource_table_joins(){
 
