@@ -1611,14 +1611,14 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 
     $extra .= " {$onchange}";
 	?>
-	<div class="<?php echo implode(" ", $div_class); ?>">
-		<label><?php echo $label; ?></label>
-		<select  name="<?php echo $inputname ?>" class="<?php echo $input_class ?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
+	<div class="<?php echo escape_quoted_data(implode(" ", $div_class)); ?>">
+		<label><?php echo htmlspecialchars($label); ?></label>
+		<select  name="<?php echo escape_quoted_data($inputname); ?>" class="<?php echo escape_quoted_data($input_class); ?>" id="<?php echo escape_quoted_data($inputname); ?>" <?php echo $extra; ?>>
 		<?php
 		foreach ($options as $optionvalue=>$optiontext)
 			{
 			?>
-			<option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+			<option value="<?php echo escape_quoted_data(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
 			<?php
 			}
 		?>
