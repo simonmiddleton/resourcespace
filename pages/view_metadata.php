@@ -69,7 +69,7 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
         {
         ?>
         <div class="itemNarrow">
-            <h3><?php echo $lang["resourceid"]?></h3>
+            <h3><?php echo htmlspecialchars($lang["resourceid"]); ?></h3>
             <p><?php echo htmlspecialchars($ref)?></p>
         </div>
         <?php
@@ -77,10 +77,11 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
 
     if($show_access_field)
         {
+        $resource["access"] = 50;
         ?>
         <div class="itemNarrow">
-            <h3><?php echo $lang["access"]?></h3>
-            <p><?php echo @$lang["access" . $resource["access"]]?></p>
+            <h3><?php echo htmlspecialchars($lang["access"]); ?></h3>
+            <p><?php echo htmlspecialchars($lang["access{$resource['access']}"] ?? ''); ?></p>
         </div>
         <?php
         }
@@ -89,7 +90,7 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
         {
         ?>
         <div class="itemNarrow">
-            <h3><?php echo $lang["resourcetype"]?></h3>
+            <h3><?php echo htmlspecialchars($lang["resourcetype"]); ?></h3>
             <p><?php echo  htmlspecialchars(get_resource_type_name($resource["resource_type"]))?></p>
         </div>
         <?php
@@ -123,7 +124,7 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
                 );
                 ?>
                 <div class="itemNarrow">
-                    <h3><?php echo $lang["contributedby"]?></h3>
+                    <h3><?php echo htmlspecialchars($lang["contributedby"]); ?></h3>
                     <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
                 </div>
                 <?php
