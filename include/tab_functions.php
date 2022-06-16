@@ -63,7 +63,26 @@ function get_all_tabs()
 function get_tab_name_options()
     {
     // The no selection option is always first
-    return array_map('i18n_get_translated', [0 => ''] + array_column(get_all_tabs(), 'name', 'ref'));
+    $tabs = array_map('i18n_get_translated', [0 => ''] + array_column(get_all_tabs(), 'name', 'ref'));
+    return sort_tabs_as_configured($tabs);
+    }
+
+
+/**
+ * Sort list of tab names (preserving their key ID)
+ * 
+ * @param array $tabs List of tab ID and tab translated name pairs
+ * 
+ * @return array
+ * */
+function sort_tabs_as_configured(array $tabs)
+    {
+    if($GLOBALS['sort_tabs'] ?? false)
+        {
+        asort($tabs);
+        }
+
+    return $tabs; 
     }
 
 
