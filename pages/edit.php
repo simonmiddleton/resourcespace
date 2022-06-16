@@ -627,6 +627,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $fielderror = false;
                                 if($field['required'] == 1
                                     && $field['hide_when_uploading'] != 1
+                                    && !checkperm('F' . $field["ref"])
                                     &&  (
                                         $field["resource_type"] == $resource["resource_type"]
                                         ||
