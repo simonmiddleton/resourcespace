@@ -2064,6 +2064,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $type = 0;
         }
 
+    // The visibility status (block/none) will be sent to the server for validation purposes
+    echo "<input id='field_" . $field['ref']  . "_displayed' name='" . "field_" . $field['ref']  . "_displayed' type='hidden' value='block'>";
+
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
@@ -3987,7 +3990,9 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status);                   
+                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    // The visibility status (block/none) will be sent to the server in the following field
+                    jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
 
                 <?php
                 // Batch edit mode

@@ -952,8 +952,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 && !$is_template
             )
                 {
+                $field_visibility_status=getval("field_".$fields[$n]['ref']."_displayed","");
                 # Register an error only if the required field was actually displayed
-                if (is_field_displayed($fields[$n]))
+                if (is_field_displayed($fields[$n]) && $field_visibility_status=="block")
                    {
                    $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
                    }
