@@ -2829,6 +2829,7 @@ function get_resource_type_field($field)
                 iptc_equiv,
                 display_template,
                 tab_name,
+                tab,
                 required,
                 smart_theme_name,
                 exiftool_field,

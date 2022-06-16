@@ -23,7 +23,10 @@ function get_tabs_by_refs(array $refs)
     $refs_count = count($refs);
     if($refs_count > 0)
         {
-        return ps_query('SELECT ref, `name`, order_by FROM tab WHERE ref IN ('. ps_param_insert($refs_count) . ')', ps_param_fill($refs, 'i'));
+        return ps_query(
+            'SELECT ref, `name`, order_by FROM tab WHERE ref IN ('. ps_param_insert($refs_count) . ') ORDER BY order_by',
+            ps_param_fill($refs, 'i')
+        );
         }
 
     return [];
@@ -39,7 +42,7 @@ function get_tabs_with_usage_count(int $per_page, int $offset)
                 (SELECT count(ref) FROM resource_type_field WHERE tab = t.ref) AS usage_rtf,
                 (SELECT count(ref) FROM resource_type WHERE tab = t.ref) AS usage_rt
            FROM tab AS t
-           ORDER BY order_by ASC' # TODO: needs to be parameterised
+           ORDER BY order_by' # TODO: needs to be parameterised
     );
 
     return sql_limit_with_total_count($query, $per_page, $offset);
@@ -48,9 +51,20 @@ function get_tabs_with_usage_count(int $per_page, int $offset)
 
 function get_all_tabs()
     {
-    return ps_query('SELECT ref, `name`, order_by FROM tab');
+    return ps_query('SELECT ref, `name`, order_by FROM tab ORDER BY order_by');
     }
 
+
+/**
+ * Get list of all tabs. Used to render the select options.
+ * 
+ * @return array Key is the tabs' ID and value its translated name.
+ */
+function get_tab_name_options()
+    {
+    // The no selection option is always first
+    return array_map('i18n_get_translated', [0 => ''] + array_column(get_all_tabs(), 'name', 'ref'));
+    }
 
 
 /**

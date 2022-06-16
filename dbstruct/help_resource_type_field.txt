@@ -13,7 +13,7 @@ display_field,int(11),Determines if a field is visible on the resource view page
 use_for_similar,int(11),Means the field is available to help users find similar resources
 iptc_equiv,varchar(20),IPTC codes for extracting embedded metadata. See https://www.resourcespace.com/knowledge-base/resourceadmin/metadata-read-write-mapping
 display_template,text,Custom HTML display template
-tab_name,varchar(50),Tab name under which this field should be rendered when viewing a resource.
+tab_name,varchar(50),Tab name under which this field should be rendered when viewing a resource. DEPRECATED - use the tab column instead. From version >9.8 all tab names have been migrated to the system tabs.
 required,int(11),Mark field as mandatory.
 smart_theme_name,varchar(200),Generate featured collections based on the values of this field
 exiftool_field,varchar(200),Exif values for extracting from embedded metadata.
@@ -42,3 +42,4 @@ browse_bar,tinyint(1),Set to 1 to show field in the browse bar
 read_only,tinyint(1),Set to 1 to make field read-only and not write back to the file on download.
 active,tinyint(1),Set to 1 to have field active, 0 to be disabled.
 full_width,tinyint(1),Set to 1 to have the field be displayed full width on the view page.
+tab,int(11),Reference to a system tab. See the "tab" table.
