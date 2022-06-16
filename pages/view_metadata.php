@@ -8,7 +8,54 @@ global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hi
 $modal=(getval("modal","")=="true");
 
 // -----------------------  Tab calculation -----------------
+$system_tabs = array_filter(get_tab_name_options(), 'mb_strlen');
 
+$configured_resource_type_tabs = [];
+if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
+    {
+    $configured_resource_type_tabs = ps_array(
+           "SELECT DISTINCT t.ref AS `value`
+              FROM resource_type AS rt
+        INNER JOIN tab AS t ON t.ref = rt.tab
+             WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
+        array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
+        'schema'
+    );
+    }
+
+$tabs_with_data = [];
+foreach($system_tabs as $tab_ref => $tab_name)
+    {
+    // Always keep the Resource type tabs if configured so
+    if(in_array($tab_ref, $configured_resource_type_tabs))
+        {
+        $tabs_with_data[$tab_ref] = $tab_name;
+        continue;
+        }
+
+
+    for($i = 0; $i < count($fields); ++$i)
+        {
+        // $fields[$i]['tab'] = ''; #TODO; delete after testing
+        $fields[$i]['tab'] = (int) $fields[$i]['tab'] ?: 1; # Place on the default tab (ref #1) if unassigned
+
+        if(
+            $tab_ref == $fields[$i]['tab']
+            && $fields[$i]['display_field'] == 1
+            && $fields[$i]['value'] != ''
+            && $fields[$i]['value'] != ','
+            && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted']))
+            && check_view_display_condition($fields, $i, $fields_all)
+        )
+            {
+            $tabs_with_data[$tab_ref] = $tab_name;
+            }
+        }
+    }
+$fields_tab_names = $tabs_with_data;
+
+
+/* TODO; delete once done
 $fields_tab_names = tab_names($fields);
 
 // Clean the tabs by removing the ones that would just be empty:
@@ -57,7 +104,7 @@ foreach ($fields_tab_names as $key => $value) {
 		unset($fields_tab_names[$key]);
 	}
 }
-
+*/
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
 ?>
 
@@ -149,7 +196,7 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 	<div class="TabBar">
 	
 	<?php
-		foreach ($fields_tab_names as $tabname) { 
+		foreach ($fields_tab_names as $tab_ref => $tabname) { 
             if ($modal) 
                 {
                 $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",true);";
@@ -184,7 +231,7 @@ $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
 $show_default_related_resources = TRUE;
-foreach($fields_tab_names as $tabname)
+foreach($fields_tab_names as $tab_ref => $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
         {
@@ -192,7 +239,7 @@ foreach($fields_tab_names as $tabname)
 
         if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] || $resource['resource_type'] == $metadata_template_resource_type)
             {
-            if($displaycondition && $tabname == $fields[$i]['tab_name'])
+            if($displaycondition && $tab_ref == $fields[$i]['tab'])
                 {
                 if(!hook('renderfield', '', array($fields[$i], $resource)))
                     {

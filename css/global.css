@@ -2392,3 +2392,5 @@ input[type="text"]#iconpicker-input {
     border: none;
     box-shadow: none;
 }
+
+body {overflow: scroll;} /*TODO:  delete, it's just annoying when having to debug the code and you can't scroll!*/
