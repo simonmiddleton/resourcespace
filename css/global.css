@@ -2360,7 +2360,7 @@ input[type="text"]#iconpicker-input {
     top: 0;
     position: -webkit-sticky; 
     position: sticky;
-    background-color: #f2f2f2;
+    background-color: #efefef;
     border-bottom: 1px solid #c1c1c1;
     box-shadow: 0 12px 10px -12px #bbbbbb;
     z-index: 101;

@@ -7,7 +7,7 @@
  */
 
 /* Default text and background colour */
-body,html {color:#474747;background: #f2f2f2;}
+body,html {color:#474747;background: #efefef;}
 
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
@@ -22,8 +22,8 @@ input[readonly] {
 }
 
 /* Header styling */
-#Header {background: rgba(0, 0, 0, 0.6);transform: translate3d(0, 0, 0);border: none;}
-#Header li a {color:#fff; opacity:0.7;}
+#Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
+#Header li a {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
@@ -32,6 +32,7 @@ input[readonly] {
 #Header .current {opacity:1;text-decoration: none}
 /* links in Header overflow dropdown menu */
 #HiddenLinks li a {color:#fff; opacity:0.7;}
+#Header .UploadButton a {color: #fff;}
 
 /* Colours for $header_text_title */
 #TextHeader, #TextHeader a, #TextDesc {color:#fff;}
@@ -105,7 +106,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Default colours for search, dash tiles, browse bar etc */
 #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab {
-    background: rgba(0, 0, 0, 0.47);
+    background: rgba(0, 0, 0, 0.4);
     color:#FFF;
 }
 
