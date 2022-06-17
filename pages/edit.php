@@ -1395,7 +1395,7 @@ hook("editbefresmetadata"); ?>
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != ""
+                        (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 
                             && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))

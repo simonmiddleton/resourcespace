@@ -1448,7 +1448,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 			}
 		} /* end hook previewlinkbar */
 	}
-elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
+elseif (strlen((string) $resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
 	{
 	# Files without multiple download sizes (i.e. no alternative previews generated).
 	$path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -1481,7 +1481,7 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 		$nodownloads=true;
 		}
 	} 
-elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full_download==false))
+elseif (strlen((string) $resource["file_extension"])>0 && ($access==1 && $restricted_full_download==false))
     {
     # Files without multiple download sizes (i.e. no alternative previews generated).
     $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -1511,7 +1511,7 @@ elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full
     } 
 
 // Render a "View in browser" button for PDF/MP3 (no longer configurable in config as SVGs can easily be disguised)
-if (strlen($resource["file_extension"]) > 0 
+if (strlen((string) $resource["file_extension"]) > 0 
     && ($access == 0 || ($access == 1 && $restricted_full_download == true)) 
     && in_array(strtolower($resource["file_extension"]),["pdf","mp3"]))
     {

@@ -45,7 +45,7 @@ function get_resource_path(
     {
     # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
-    if(!preg_match('/^[a-zA-Z0-9]+$/', $extension))
+    if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
         {
         $extension = 'jpg';
         }
@@ -425,6 +425,11 @@ function get_resource_data_batch($refs)
     global $get_resource_data_cache;
     truncate_cache_arrays();
     $resids = array_filter($refs,function($id){return (string)(int)$id==(string)$id;});
+
+    if (count($resids) === 0)
+        {
+        return array();
+        }
 
     # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
     $joins=get_resource_table_joins();
@@ -4118,7 +4123,7 @@ function write_metadata($path, $ref, $uniqid="")
         $writable_formats = run_command("{$exiftool_fullpath} -listwf");
         $writable_formats = str_replace("\n", "", $writable_formats);
         $writable_formats_array = explode(" ", $writable_formats);
-        if(!in_array(strtoupper($extension), $writable_formats_array))
+        if(!in_array(strtoupper((string) $extension), $writable_formats_array))
             {
             debug("[write_metadata()][ref={$ref}] Extension '{$extension}' not in writable_formats_array - " . json_encode($writable_formats_array));
             return false;
@@ -7757,7 +7762,7 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
     
     $col=($col_size?"_col":"");
     $folder=dirname(dirname(__FILE__)) . "/gfx/";
-    $extension=strtolower($extension);
+    $extension=strtolower((string) $extension);
 
     # Metadata template? Always use icon for 'mdtr', although typically no file will be attached.
     global $metadata_template_resource_type;

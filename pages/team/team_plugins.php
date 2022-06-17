@@ -414,7 +414,7 @@ if (count($inst_plugins)>0)
                }
             if (!$p['disable_group_select'])
                 {
-                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim($p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
+                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim((string) $p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
                 $p['enabled_groups'] = array($p['enabled_groups']);
                 }
             if ($p['config_url']!='')        
