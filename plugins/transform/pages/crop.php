@@ -446,6 +446,7 @@ if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
         array(
             'title' => $lang["systemsetup"],
             'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manage_slideshow"],

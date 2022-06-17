@@ -496,7 +496,8 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["pluginmanager"],

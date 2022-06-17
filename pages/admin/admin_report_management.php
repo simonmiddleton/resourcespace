@@ -25,7 +25,8 @@ $reports=sql_query("select ref, `name`, support_non_correlated_sql from report" 
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+			'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["page-title_report_management"],

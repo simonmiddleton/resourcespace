@@ -104,7 +104,8 @@ function deletestate(code)
 $links_trail = array(
     array(
 	    'title' => $lang["teamcentre"],
-	    'href'  => $baseurl_short . "pages/team/team_home.php"
+	    'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["rse_workflow_manage_workflow"],

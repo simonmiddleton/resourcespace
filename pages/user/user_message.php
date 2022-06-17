@@ -151,7 +151,8 @@ if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"team_user
     {    
     $links_trail[] = array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
         );
     $links_trail[] = array(
         'title' => $lang["manageusers"],

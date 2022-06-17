@@ -2631,7 +2631,15 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"<?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>"
+                
+                <?php if (isset($links[$i]["menu"]) && $links[$i]["menu"]) { ?>
+                    onclick="ModalClose();return ModalLoad(this, true, true, 'right');"
+                <?php } else { ?>
+                    onclick="return CentralSpaceLoad(this, true);"
+                <?php } ?>
+                
+                <?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
             if (isset($links[$i]['help']))
                 {
                 render_help_link($links[$i]['help']);

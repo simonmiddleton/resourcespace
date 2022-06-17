@@ -153,7 +153,8 @@ else if (strpos($backurl, "pages/team/team_user.php") !== false)
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manageusers"],
@@ -167,7 +168,8 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manageusers"],
