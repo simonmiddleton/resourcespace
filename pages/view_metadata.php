@@ -8,7 +8,9 @@ global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hi
 $modal=(getval("modal","")=="true");
 
 // -----------------------  Tab calculation -----------------
-$system_tabs = array_filter(get_tab_name_options(), 'mb_strlen');
+$disable_tabs = true;
+$system_tabs = get_tab_name_options();
+$tabs_fields_assoc = [];
 
 $configured_resource_type_tabs = [];
 if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
@@ -23,25 +25,25 @@ if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
     );
     }
 
-// Clean the tabs by removing the ones that would just be empty:
-$tabs_with_data = [];
+// Clean the tabs by removing the ones that would end up being empty
 foreach($system_tabs as $tab_ref => $tab_name)
     {
     // Always keep the Resource type tabs if configured so
     if(in_array($tab_ref, $configured_resource_type_tabs))
         {
-        $tabs_with_data[$tab_ref] = $tab_name;
+        // Related resources can be rendered in tabs shown alongside the regular data tabs instead of in their usual position lower down the page 
+        $tabs_fields_assoc[$tab_ref] = [];
         continue;
         }
 
-
     for($i = 0; $i < count($fields); ++$i)
         {
-        // $fields[$i]['tab'] = ''; #TODO; delete after testing
-        $fields[$i]['tab'] = (int) $fields[$i]['tab'] ?: 1; # Place on the default tab (ref #1) if unassigned
+        $fields[$i]['tab'] = (int) $fields[$i]['tab'];
 
+        // Check if the field can show on this tab
         if(
-            $tab_ref == $fields[$i]['tab']
+            $tab_ref > 0
+            && $tab_ref == $fields[$i]['tab']
             && $fields[$i]['display_field'] == 1
             && $fields[$i]['value'] != ''
             && $fields[$i]['value'] != ','
@@ -49,64 +51,39 @@ foreach($system_tabs as $tab_ref => $tab_name)
             && check_view_display_condition($fields, $i, $fields_all)
         )
             {
-            $tabs_with_data[$tab_ref] = $tab_name;
+            $tabs_fields_assoc[$tab_ref][$i] = $fields[$i]['ref'];
+            $disable_tabs = false;
+            }
+        // Unassigned or invalid tab links end up in the "not set" list
+        else if(
+            !isset($tabs_fields_assoc[0][$i])
+            && (0 === $fields[$i]['tab'] || !isset($system_tabs[$fields[$i]['tab']]))
+        )
+            {
+            $tabs_fields_assoc[0][$i] = $fields[$i]['ref'];
             }
         }
     }
-$fields_tab_names = $tabs_with_data;
 
-
-/* TODO; delete once done
-$fields_tab_names = tab_names($fields);
-
-// Clean the tabs by removing the ones that would just be empty:
-$tabs_with_data = array();
-foreach ($fields_tab_names as $tabname)
+// System is configured with tabs once at least a field has been associated with a valid tab and the field will be rendered
+if($disable_tabs)
     {
-    for ($i = 0; $i < count($fields); $i++)
+    $tabs_fields_assoc = [];
+    }
+else if(isset($tabs_fields_assoc[0]) && count($tabs_fields_assoc[0]) > 0)
+    {
+    foreach(array_keys($tabs_fields_assoc[0]) as $i)
         {
-        if (trim($fields[$i]['tab_name']) == "")
-            {
-            $fields[$i]["tab_name"] = $lang["default"];
-            }
+        $fields[$i]['tab'] = 1;
+        }
 
-        $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-
-        if($displaycondition && $tabname == $fields[$i]['tab_name'] && $fields[$i]['value'] != '' && $fields[$i]['value'] != ',' && $fields[$i]['display_field'] == 1 && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted'])))
-            {
-            $tabs_with_data[] = $tabname;
-            }
-    	}
+    // Any fields marked as "not set" get placed in the Default (ref #1) tab
+    $tabs_fields_assoc[1] = $tabs_fields_assoc[0];
+    unset($tabs_fields_assoc[0]);
     }
-
-$fields_tab_names = array_intersect($fields_tab_names, $tabs_with_data);
-
-if ($sort_tabs)
-    {
-    sort($fields_tab_names);
-    }
-
-// Related resources can be rendered in tabs shown alongside the regular data tabs instead of in their usual position lower down the page 
-if(isset($related_type_show_with_data)) {
-    // Fetch the tab names for the resource types which have been specifed for rendering in related tabs
-    // Exclude the current resource type 
-    $show_related_type_tab_list = implode(",",$related_type_show_with_data);
-    $resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type 
-                                           WHERE ref IN(".$show_related_type_tab_list.") and ref<>'" . $resource['resource_type'] . "'", "schema");
-    $resource_type_tab_names = array_values(array_unique($resource_type_tab_names));
-
-    // This is the list of tab names which will be rendered for the resource specified
-    $fields_tab_names = array_values(array_unique((array_merge($fields_tab_names, $resource_type_tab_names))));
-}
-
-// Make sure the fields_tab_names is empty if there are no values:
-foreach ($fields_tab_names as $key => $value) {
-	if(empty($value)) {
-		unset($fields_tab_names[$key]);
-	}
-}
-*/
+$fields_tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
+// -----------------------  END: Tab calculation -----------------
 ?>
 
 <div id="Metadata">
@@ -191,12 +168,13 @@ $extra="";
 $tabname="";
 $tabcount=0;
 $tmp = hook("tweakfielddisp", "", array($ref, $fields)); if($tmp) $fields = $tmp;
-if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0) { ?>
-	
+if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0)
+    {
+    ?>
 	<div class="TabBar">
-	
 	<?php
-		foreach ($fields_tab_names as $tab_ref => $tabname) { 
+		foreach ($fields_tab_names as $tab_name) {
+            $class_TabSelected = $tabcount == 0 ? ' TabSelected' : '';
             if ($modal) 
                 {
                 $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",true);";
@@ -206,27 +184,24 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
                 $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",false);";
                 }
             ?>
-			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php if($tabcount == 0) { ?> TabSelected<?php } ?>">
-            <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo i18n_get_translated($tabname)?></a>
+			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
+                <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo htmlspecialchars($tab_name); ?></a>
 			</div>
-		
-		<?php 
+            <?php 
 			$tabcount++;
-		} ?>
-
+		}
+        ?>
 	</div> <!-- end of TabBar -->
+    <?php
+    }
 
-<?php
-} ?>
-<?php $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;?>
+$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
+?>
 <div id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
 <div class="clearerleft"> </div>
 <div>
 <?php 
 #  ----------------------------- Draw standard fields ------------------------
-
-// TODO: you might have to also render here the non-metadata properties if there are no tabs associated with fields
-
 $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
