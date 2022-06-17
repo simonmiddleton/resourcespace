@@ -23,6 +23,7 @@ if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
     );
     }
 
+// Clean the tabs by removing the ones that would just be empty:
 $tabs_with_data = [];
 foreach($system_tabs as $tab_ref => $tab_name)
     {
@@ -124,7 +125,6 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
 
     if($show_access_field)
         {
-        $resource["access"] = 50;
         ?>
         <div class="itemNarrow">
             <h3><?php echo htmlspecialchars($lang["access"]); ?></h3>
