@@ -25,7 +25,7 @@ $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2
 if (getval("unlock","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# reset user lock
-	sql_query("update user set login_tries='0' where ref='$ref'");
+	ps_query("update user set login_tries='0' where ref= ?", ['i', $ref]);
 	}
 elseif(getval("suggest","")!="")
 	{
@@ -247,7 +247,7 @@ if($search_filter_nodes)
             message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $user['search_filter_override'] . "'",generateURL($baseurl . "/pages/team/team_user_edit.php",array("ref"=>$user['ref'])));
             
             // Successfully migrated - now use the new filter
-            sql_query("UPDATE user SET search_filter_o_id='" . $migrateresult . "' WHERE ref='" . $user['ref'] . "'");
+            ps_query("UPDATE user SET search_filter_o_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $user['ref']]);
             
             $search_filter_migrated = true;
             $user['search_filter_o_id'] = $migrateresult;
@@ -306,7 +306,7 @@ if (!hook("replacecomments"))
 <?php 
 if ($user_edit_created_by)
 	{ 
-	$account_creation_data=sql_query('select u.fullname, u.email from user u left join activity_log al on u.ref=al.user where al.log_code="c" and al.remote_table="user" and al.remote_column="ref" and al.remote_ref=' . $ref);
+	$account_creation_data=ps_query('select u.fullname, u.email from user u left join activity_log al on u.ref=al.user where al.log_code="c" and al.remote_table="user" and al.remote_column="ref" and al.remote_ref= ?', ['i', $ref]);
 	$account_created_by=(!empty($account_creation_data) ? $account_creation_data[0]['fullname'] . ($user_edit_created_by_email ? ' (' . $account_creation_data[0]['email'] . ')' : '') : $lang['user_autocreated']);
 	?>
 	<div class="Question">
@@ -376,7 +376,7 @@ if(!hook('ticktoemailpassword'))
 <?php 
 if ($user_edit_approved_by && $user["approved"]==1)
 	{ 
-	$account_approval_data=sql_query('select u.fullname, u.email from user u left join activity_log al on u.ref=al.user where al.log_code="e" and al.remote_table="user" and al.remote_column="approved" and al.remote_ref=' . $ref);
+	$account_approval_data=ps_query('select u.fullname, u.email from user u left join activity_log al on u.ref=al.user where al.log_code="e" and al.remote_table="user" and al.remote_column="approved" and al.remote_ref= ?', ['i', $ref]);
 	$account_approved_by=(!empty($account_approval_data) ? $account_approval_data[0]['fullname'] . ($user_edit_approved_by_email ? ' (' . $account_approval_data[0]['email'] . ')' : '') : $lang['user_autoapproved']);
 	?>
 	<div class="Question">
