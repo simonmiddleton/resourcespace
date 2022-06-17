@@ -1215,7 +1215,7 @@ function processFile(file, forcepost)
         };
     
     forceprocess = typeof forcepost != "undefined";
- 
+
     <?php
     // == EXTRA DATA SECTION - Add any extra data to send after upload required here ==
 
@@ -1236,6 +1236,25 @@ function processFile(file, forcepost)
                 // Add to array to process later
                 processafter.push(file);
                 console.debug("Added " + file.name + " to process after array");
+                if(processafter.length == count)
+                    {
+                    if(newcol > 0)
+                        {
+                        api('do_search', {'search' : '!collection' + newcol}, function(response){
+                            if(response.length > 0)
+                                {
+                                response.forEach(function(resource){  
+                                    {
+                                    resource_filename = resource['field<?php echo htmlspecialchars($filename_field)?>']
+                                    resource_ids_for_alternatives[resource['ref']] = resource_filename.substr(0, resource_filename.lastIndexOf('.' + resource['file_extension']));;
+                                    }
+                                })
+                                }
+                            //No non alt files uploaded so we can now process the alt files.
+                            jQuery('#CentralSpace').trigger("ProcessedMain");
+                        });
+                        }              
+                    }
                 return false;
                 }
             else
@@ -1251,9 +1270,10 @@ function processFile(file, forcepost)
                     }
                 else
                     {                    
+                    processerrors.push(filename);
                     jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
-                    return false; 
+                    return postUploadActions(); 
                     }
                 }
             }
