@@ -19,6 +19,7 @@ $restypefilter=getval("restypefilter","");
 $restypesfilter=($restypefilter != "")?array((int)$restypefilter):"";
 $field_order_by=getvalescaped("field_order_by","order_by");
 $field_sort=getvalescaped("field_sort","asc");
+$reorder_view=getval("reorder_view",false);
 
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
@@ -28,7 +29,7 @@ if($backurl=="")
 
 $allow_reorder=false;
 // Allow sorting if we are ordering metadata fields for all resource types (ie Resource type == "All" and $restypefilter=="")
-if($restypefilter=="")
+if($restypefilter=="" && $reorder_view)
     {
     $allow_reorder=true;
     }
@@ -126,12 +127,46 @@ $results=count($fields);
 </div>
 
 <?php
- if($allow_reorder)
-    {  ?>
-<p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
-<a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("restypefilter" => (($use_order_by_tab_view) ? "" : $restypefilter),"field_order_by" => "order_by","fieldsort"=>"asc")); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php if($use_order_by_tab_view){echo $lang["admin_resource_type_field_reorder_mode_all"];}else{echo $lang["admin_resource_type_field_reorder_mode"];}?></a></p>  
-<?php
-    } ?>
+if($allow_reorder  )
+    {
+    ?>
+    <p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
+    <?php
+    }
+else if ($restypefilter=="")
+    {
+    ?>
+    <a href="<?php 
+    echo generateURL(
+        $baseurl . "/pages/admin/admin_resource_type_fields.php",
+        $url_params,
+        array(
+            "restypefilter" => (($use_order_by_tab_view) ? "" : $restypefilter),
+            "field_order_by" => "order_by",
+            "fieldsort"=>"asc",
+            "reorder_view"=>"true"
+        )
+    ); 
+    ?>" 
+    onClick="return CentralSpaceLoad(this,true);">
+    <?php echo LINK_CARET ?>
+    <?php if($use_order_by_tab_view)
+        {
+        echo $lang["admin_resource_type_field_reorder_mode_all"];
+        }
+    else
+        {
+        echo $lang["admin_resource_type_field_reorder_mode"];
+        }?></a>
+    <?php
+    }
+else
+    {
+    ?>
+    <p><?php echo  $lang["admin_resource_type_field_reorder_select_restype"] ?></p>   
+    <?php
+    }
+?>
 
 <form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params); ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm"); ?>       
@@ -394,8 +429,13 @@ function enableFieldsort(){
              
             }).disableSelection();
     }
-    
-enableFieldsort();
+
+<?php
+if ($allow_reorder)
+    {
+    ?> enableFieldsort(); <?php
+    }
+?>
 
 jQuery(".moveuplink").click(function() {
     if (jQuery(this).prop('disabled')) {
