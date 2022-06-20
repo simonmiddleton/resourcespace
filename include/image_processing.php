@@ -2270,13 +2270,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             extract_mean_colour($target,$ref);
             # flag database so a thumbnail appears on the site
-            sql_query("update resource set has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() where ref='$ref'");
+            ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$ref]);
             }
         else
             {
             if(!$target)
                 {
-                sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
+                ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?",["i",$ref]);
                 }
             }
         
