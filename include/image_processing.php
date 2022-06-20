@@ -1630,6 +1630,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             }
         
         $created_count=0;
+        $override_size = false;
         for ($n=0;$n<count($ps);$n++)
             {
             if($imagemagick_mpr)
@@ -1642,6 +1643,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if ($keep_for_hpr && $ps[$n]['id']=="hpr")
                 {
                 rename($file,$hpr_path); // $keep_for_hpr is switched to false below
+                $override_size = true; // Prevent using original file when hpr size is smaller than pre size - always create pre size.
                 }
             
             # If we've already made the LPR or SCR then use those for the remaining previews.
@@ -1676,7 +1678,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if(file_exists($pre_source))
                             {
                             list($checkw,$checkh) = @getimagesize($pre_source);
-                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'])
+                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size)
                                 {
                                 $file = $pre_source;
                                 if($file == $origfile)
