@@ -40,19 +40,15 @@ else {
 		else{
 			echo "Updaing values for field ".$field_data['title']."<br/>";
 			# get resource data
-			$sql="select * from resource_data where resource_type_field=$field";
+			$sql="select * from resource_data where resource_type_field= ?"; 
+            $params[] = 'i'; $params[] = $field;
 			if($refs!=0){
 				$refs=explode(", ",$refs);
-				$rsids='';
-				foreach($refs as $ref){
-					if($rsids==''){$rsids="(".$ref;}
-					else{$rsids.=",$ref";}
-				}
-				$rsids.=")";
-				$sql.=" and resource in $rsids";
+				$sql.=" and resource in (". ps_param_insert(count($refs)) .")";
+                $params = array_merge($params, ps_param_fill($refs, 'i'));
 			}
 			echo "<br/>";
-			$edit_resources=sql_query($sql);
+			$edit_resources=ps_query($sql, $params);
 			foreach($edit_resources as $edit_resource){
 				echo "Modifying resource ".$edit_resource['resource']."...";
 				# remove html tags
