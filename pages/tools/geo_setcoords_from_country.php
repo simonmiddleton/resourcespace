@@ -21,19 +21,19 @@ else
     if (in_array($country_type, $FIXED_LIST_FIELD_TYPES))
         {
         # Build array for country metadata which is node based
-        $resource_countries=sql_query("select distinct rn.resource, upper(n.name) name from resource_node rn "
+        $resource_countries=ps_query("select distinct rn.resource, upper(n.name) name from resource_node rn "
                                     ."join node n on n.ref=rn.node "
                                     ."join resource r on r.ref=rn.resource "
-                                    ."where n.resource_type_field='$country_ref' "
-                                    ."  and (r.geo_lat is null or r.geo_lat is null)");
+                                    ."where n.resource_type_field= ? "
+                                    ."and (r.geo_lat is null or r.geo_lat is null)", ['i', $country_ref]);
         }
     else 
         {
         # Build array for country metadata which is text based
-        $resource_countries=sql_query("select distinct rd.resource, upper(trim(rd.value)) name from resource_data rd "
+        $resource_countries=ps_query("select distinct rd.resource, upper(trim(rd.value)) name from resource_data rd "
 									."join resource r on r.ref=rd.resource "
-									."where rd.resource_type_field='$country_ref' "
-									."  and (r.geo_lat is null or r.geo_lat is null)");
+									."where rd.resource_type_field= ? "
+									."and (r.geo_lat is null or r.geo_lat is null)", ['i', $country_ref]);
         }
 
     # Convert two dimension results array to single dimension for sorting 
@@ -80,8 +80,10 @@ function update_country_coords($refs,$latlong)
 {
 if(count($latlong)==2)
     {
-    sql_query("UPDATE resource SET geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
-    "WHERE ref IN('" . join("','",$refs) . "')");
+    ps_query(
+        "UPDATE resource SET geo_lat= ?, geo_long= ? WHERE ref IN('". ps_param_insert(count($refs)) ."')",
+        array_merge(['i', $latlong[0], 'i', $latlong[1]], ps_param_fill($refs, 'i'))
+    );
     }
 }
 
