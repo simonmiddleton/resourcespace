@@ -32,7 +32,7 @@ foreach($resource_type_fields as $resource_type_field)
     $status = "Migrating resource_data for field #" . $fref . " (" . $fname . ")";
     
    // get_nodes() can cause memory errors for non-fixed list fields so will get hash (a single md5 is too susceptible to collisions for large datasets) and compare on that
-   $nodeinfo =  ps_query("SELECT ref, concat(MD5(name),MD5(CONCAT('!',name)) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
+   $nodeinfo =  ps_query("SELECT ref, concat(MD5(name),MD5(CONCAT('!',name))) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
 
     $totalrows = ps_value("SELECT count(*) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
 
