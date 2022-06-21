@@ -373,7 +373,7 @@ EOT;
             echo "</div>";
 
 
-            echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";
+            echo "<div class='CommentEntryInfoDetails'>" . date("D", strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";
             echo "</div>";	// end of CommentEntryInfoDetails
             echo "</div>";	// end of CommentEntryInfoLine
             echo "</div>";	// end CommentEntryInfoContainer
