@@ -661,6 +661,7 @@ function save_user($ref)
             }
 
         $passsql = '';
+        $passsql_params =[];
         if($password != $lang['hidden'])
             {
             # Save password.
@@ -669,7 +670,8 @@ function save_user($ref)
                 $password = rs_password_hash("RS{$username}{$password}");
                 }
 
-            $passsql = ",password='" . $password . "',password_last_change=now()";
+            $passsql = ",password=?,password_last_change=now()";
+            $passsql_params = ["s",$password];
             }
 
         // Full name checks
@@ -703,17 +705,36 @@ function save_user($ref)
         log_activity(null, LOG_CODE_EDITED, $comments, 'user', 'comments', $ref);
         log_activity(null, LOG_CODE_EDITED, $approved, 'user', 'approved', $ref);
 
-        sql_query("update user set
-        username='" . $username . "'" . $passsql . ",
-        fullname='" . $fullname . "',
-        email='" . escape_check($email) . "',
-        usergroup='" . $usergroup . "',
-        account_expires=$expires,
-        ip_restrict='" . $ip_restrict . "',
-        search_filter_override='" . $search_filter_override . "',
-        search_filter_o_id='" . $search_filter_o_id . "',
-        comments='" . $comments . "',
-        approved='" . $approved . "' " . $additional_sql . " where ref='$ref'");
+        $sql = "UPDATE user SET username=?";
+        $sql_params = ["s",$username];
+
+        $sql .= $passsql;
+        $sql_params = array_merge($sql_params,$passsql_params);
+
+        $sql .= ",fullname=?,email=?";
+        $sql_params = array_merge($sql_params,["s",$fullname,"s",$email]);
+
+        if($email != $current_user_data["email"]){$sql .= ",email_invalid=0";}
+
+        $sql .=",
+        usergroup=?,
+        account_expires=?,
+        ip_restrict=?,
+        search_filter_override=?,
+        search_filter_o_id=?,
+        comments=?,
+        approved=? " . $additional_sql . " where ref=?";
+        $sql_params  = array_merge($sql_params,
+            ["i",$usergroup,
+            "s",($expires="null"?NULL:$expires),
+            "s",$ip_restrict,
+            "s",$search_filter_override,
+            "i",$search_filter_o_id,
+            "s",$comments,
+            "i",$approved,
+            "i",$ref
+        ]);
+        ps_query($sql,$sql_params);
         }
 
         // Add user group dash tiles as soon as we've changed the user group
