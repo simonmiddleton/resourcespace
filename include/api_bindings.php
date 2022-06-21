@@ -902,3 +902,8 @@ function api_get_dash_search_data($link,$promimg)
     {
     return get_dash_search_data($link,$promimg);    
     }
+
+function api_mark_email_as_invalid($email)
+    {
+    return mark_email_as_invalid($email);
+    }
