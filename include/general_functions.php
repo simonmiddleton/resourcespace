@@ -888,7 +888,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
     global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
 
-    if(defined("RS_TEST_MODE"))
+    if(defined("RS_TEST_MODE") || check_email_invalid($email))
         {
         return false;
         }
@@ -1122,6 +1122,8 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
+    
+    if (check_email_invalid($email)){return false;}
     
     $from_system = false;
     if ($from=="")
