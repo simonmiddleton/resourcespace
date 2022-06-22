@@ -23,8 +23,6 @@ foreach($resource_type_fields as $resource_type_field)
     $nodeinfo =  ps_query("SELECT ref, concat(MD5(name),MD5(CONCAT('!',name))) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
     $allfieldnodes= array_column($nodeinfo,"ref","hash");
 
-    $allfieldnodes= array_column($nodeinfo,"ref","hash");
-
     $totalrows = ps_value("SELECT count(resource) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
     $out = " (" . $totalrows . " rows found)";
     logScript(str_pad($status . $out,100,' '));
