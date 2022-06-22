@@ -2254,7 +2254,7 @@ function check_email_invalid(string $email)
     foreach ($users as $user)
         {
         # Check email is exact match 
-        if(strtolower($email) == strtolower($user["email"]) || $user["email_invalid"]==1){$email_invalid=true;}
+        if(strtolower($email) == strtolower($user["email"]) && $user["email_invalid"]==1){$email_invalid=true;}
         }
         
     return $email_invalid;

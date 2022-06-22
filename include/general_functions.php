@@ -888,7 +888,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
     global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
 
-    if(defined("RS_TEST_MODE") || check_email_invalid($email))
+    if(defined("RS_TEST_MODE"))
         {
         return false;
         }
@@ -915,7 +915,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $valid_emails = array();
     foreach($check_emails as $check_email)
         {
-        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
+        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL) || check_email_invalid($check_email))
             {
             debug("send_mail: Invalid e-mail address - '{$check_email}'");
             continue;
