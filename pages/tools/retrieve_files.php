@@ -26,15 +26,9 @@
 *  **** CAUTION SHOULD BE USED IF SERVER IS ON AN INTERNAL NETWORK ****
 */
 
-
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Access denied - Command line only!');
-    }
-
 include __DIR__ . '/../../include/db.php';
 include_once __DIR__ . '/../../include/resource_functions.php';
+command_line_only();
 set_time_limit(0);
 $use_error_exception = true;
 

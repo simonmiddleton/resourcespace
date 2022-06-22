@@ -3,15 +3,10 @@
 WARNING: read what this does before even attempting to run it as it will convert data encoding to UTF-8 or potentially
          double encode
 */
-if('cli' != PHP_SAPI)
-    {
-    http_response_code(401);
-    exit('Access denied - Command line only!');
-    }
-
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
 include_once "{$webroot}/include/log_functions.php";
+command_line_only();
 
 
 function checkEncoding($string, $string_encoding)
