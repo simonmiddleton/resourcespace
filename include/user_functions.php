@@ -2215,7 +2215,7 @@ function resolve_user_emails($user_list)
     }
 
 /**
- * Finds all users with matching email and marks email_invalid = 1
+ * Finds all users with matching email and marks them as having an invalid email
  *
  * @param  string  $email
  * @return boolean 
