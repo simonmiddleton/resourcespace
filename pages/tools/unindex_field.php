@@ -14,14 +14,15 @@ include "../../include/image_processing.php";
 set_time_limit(0);
 
 # Unindex a single field
-$field=getvalescaped("field","");
+$field=getval("field","");
 if ($field=="") {exit("Specify field with ?field=");}
 
 # Unindex only resources in specified collection
-$collectionid=getvalescaped("col", "");
+$collectionid=getval("col", "");
 
 # Fetch field info
-$fieldinfo=sql_query("select * from resource_type_field where ref='$field'");$fieldinfo=$fieldinfo[0];
+$fieldinfo=ps_query("select * from resource_type_field where ref=?",array("i",$field));
+$fieldinfo=$fieldinfo[0];
 
 if (getval("submit","")!="" && enforcePostRequest(false))
 	{
@@ -29,19 +30,19 @@ if (getval("submit","")!="" && enforcePostRequest(false))
 	
 	$joinkeyword="";
 	$joindata="";
-	$condition = "";
 	$conditionand = "";
+	$parameters=array("i",$field);
 	if ($collectionid != "")
 			{
 			$joinkeyword=" inner join collection_resource on collection_resource.resource=resource_keyword.resource "; 
 			$joindata=" inner join collection_resource on collection_resource.resource=resource_data.resource "; 
-			$condition = "where collection_resource.collection = '$collectionid' ";
-			$conditionand = "and collection_resource.collection = '$collectionid' ";
+			$conditionand = "and collection_resource.collection = ? ";
+			$parameters=array_merge($parameters,array("i",$collectionid));
 			}
 	
 	
 	# Delete existing keywords index for this field
-	sql_query("delete resource_keyword.* from resource_keyword $joinkeyword where resource_type_field='$field' $conditionand");
+	ps_query("delete resource_keyword.* from resource_keyword $joinkeyword where resource_type_field=? $conditionand",$parameters);
 	echo "Complete";
 	}
 else
@@ -49,7 +50,7 @@ else
 	$extratext="";
 	if ($collectionid != "")
 		{
-		$collectionname=sql_value("select name as value from collection where ref='$collectionid'",'');
+		$collectionname=ps_value("select name as value from collection where ref=?",array("i",$collectionid),'');
 		$extratext=" for collection '" . $collectionname .  "'";
 		}
 	?>
