@@ -900,6 +900,7 @@ if (isset($result_title_height))
         {
         white-space:normal;
         height: <?php echo $result_title_height ?>px;
+        text-align: left;
         }
     </style>
     <?php
