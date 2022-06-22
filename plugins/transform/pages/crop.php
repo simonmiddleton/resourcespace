@@ -242,7 +242,7 @@ if ($saveaction != '' && enforcePostRequest(false))
 
     // Determine output format
     // prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
-    $new_ext = getval("new_ext","");
+    $new_ext = strtolower(getval("new_ext",""));
     if ($saveaction == "slideshow" || $saveaction == "preview")
         {
         $new_ext = "jpg";

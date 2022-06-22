@@ -1304,7 +1304,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
                     {
                     // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
+                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
                     }
                 else
                     {
@@ -1649,7 +1649,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # If we've already made the LPR or SCR then use those for the remaining previews.
             # As we start with the large and move to the small, this will speed things up.
             $using_original = false;
-            if(in_array($extension, $preview_keep_alpha_extensions)) // These need to use original source for transparency
+            if(in_array(strtolower($extension), $preview_keep_alpha_extensions)) // These need to use original source for transparency
                 {
                 $file = $origfile;
                 $using_original = true;
@@ -1711,7 +1711,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
           
             if($prefix == "cr2:" 
                 || $prefix == "nef:"
-                || in_array($extension, $preview_no_flatten_extensions)
+                || in_array(strtolower($extension), $preview_no_flatten_extensions)
                 || getval("noflatten","")!=""
                 )
                 {
@@ -1724,7 +1724,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
             $addcheckbdpre = "";
             $addcheckbdafter = "";
-            if(in_array($extension,$preview_keep_alpha_extensions))
+            if(in_array(strtolower($extension), $preview_keep_alpha_extensions))
                 {
                 // Add checkerboard code
                 $cb_scale = 100;
@@ -1918,7 +1918,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
                             {
@@ -1976,7 +1976,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
@@ -2125,7 +2125,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array(strtolower($extension), $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -3781,7 +3781,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' -units PixelsPerInch -density %resolution';
         }
 
-    if(in_array($sf_parts['extension'], $preview_no_flatten_extensions)
+    if(in_array(strtolower($sf_parts['extension']), $preview_no_flatten_extensions)
         || 
         (isset($actions["noflatten"]) && $actions["noflatten"] == "true")
         )
