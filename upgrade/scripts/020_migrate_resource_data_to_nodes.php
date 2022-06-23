@@ -2,6 +2,9 @@
 
 // Script to migrate all non-fixed list data to nodes
 
+// Ensure node name column is moved to mediumtext
+check_db_structs();
+
 $tomigrate = array_diff(array_keys($field_types),array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
 $startfield = get_sysvar("node_migrated_data_field",0);
 

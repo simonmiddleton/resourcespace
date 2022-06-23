@@ -16,6 +16,9 @@ if(isset($argv[1]))
     $endtime = time() + ((int)$argv[1]*60);
     }
 
+// Ensure node name column is moved to mediumtext
+check_db_structs();
+
 $debug_log=false; // This would slow things down too much
 $global_start_time = microtime(true);
 $tomigrate = array_diff(array_keys($field_types),array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
