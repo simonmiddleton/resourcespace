@@ -362,15 +362,16 @@ function get_collection_resources_with_data($ref)
 /**
  * Add resource $resource to collection $collection
  *
- * @param  integer $resource
- * @param  integer $collection
- * @param  boolean $smartadd
- * @param  string $size
- * @param  string $addtype
- * @param  boolean $col_access_control  Collection access control. Is user allowed to add to it? You can leave it null 
- *                                      to allow this function to determine it but it may have performance issues.
- * @param  array $external_shares  List of external share keys. {@see get_external_shares()}. You can leave it null 
- *                                 to allow this function to determine it but it will affect performance.
+ * @param  integer  $resource
+ * @param  integer  $collection
+ * @param  boolean  $smartadd
+ * @param  string   $size
+ * @param  string   $addtype
+ * @param  boolean  $col_access_control     Collection access control. Is user allowed to add to it? You can leave it null 
+ *                                          to allow this function to determine it but it may have performance issues.
+ * @param  array    $external_shares        List of external share keys. {@see get_external_shares()}. You can leave it null 
+ *                                          to allow this function to determine it but it will affect performance.
+ * @param  string   $search                 Optionsl search string. Used to update resource_node hit count
  * 
  * @return boolean | string
  */
@@ -381,7 +382,8 @@ function add_resource_to_collection(
     $size="",
     $addtype="",
     bool $col_access_control = null,
-    array $external_shares = null
+    array $external_shares = null,
+    string $search = ''
 )
     {
     global $lang;
@@ -491,6 +493,12 @@ function add_resource_to_collection(
                 'INSERT INTO collection_resource(collection, resource, purchase_size) VALUES (?, ?, ?)',
                 ['i', $collection, 'i', $resource, 's', $size ?: null]
             );
+            }
+        
+        # Update the hitcounts for the search nodes (if search specified)
+        if (strpos($search,NODE_TOKEN_PREFIX) !== false)
+            {
+            update_node_hitcount_from_search($resource,$search);
             }
         
         collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);

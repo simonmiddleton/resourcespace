@@ -2359,3 +2359,19 @@ function remove_field_keywords($field)
     ps_query("DELETE nk FROM node_keyword nk LEFT JOIN node n ON n.ref=nk.node WHERE n.resource_type_field = ?", ["i",$field]);
     return;
     }
+
+/**
+ * For the specified $resource, increment the hitcount for each node in array
+ *
+ * @param  integer $resource
+ * @param  array $nodes
+ * @return void
+ */
+function update_resource_node_hitcount($resource,$nodes)
+{
+if(!is_array($nodes)){$nodes=array($nodes);}
+if (count($nodes)>0) 
+    {
+    ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
+    }
+}

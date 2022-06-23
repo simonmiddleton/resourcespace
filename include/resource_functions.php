@@ -6862,33 +6862,21 @@ function filter_check($filterid,$nodes)
     }
 
 
-function update_resource_keyword_hitcount($resource,$search)
+function update_node_hitcount_from_search($resource,$search)
     {
-    // For the specified $resource, increment the hitcount for each matching keyword in $search
+    // For the specified $resource, increment the hitcount for each node that has been used in $search
     // This is done into a temporary column first (new_hit_count) so existing results are not affected.
     // copy_hitcount_to_live() is then executed at a set interval to make this data live.
     // Note that from v10 the resource_keyword table is no longer used
-
-    $keywords=split_keywords($search, false,false,false,false,true);
-    $keys=array();
-    for ($n=0;$n<count($keywords);$n++)
+    $nodes = [];
+    $notsearchednodes = [];
+    resolve_given_nodes($search, $nodes, $notsearchednodes);
+    if (count($nodes)>0)
         {
-        $keyword=$keywords[$n];
-        if (strpos($keyword,":")!==false)
-            {
-            $k=explode(":",$keyword);
-            $keyword=$k[1];
-            }
-        $found=resolve_keyword($keyword);
-        if ($found!==false) {$keys[]=resolve_keyword($keyword);}
-        }
-    if (count($keys)>0)
-        {
-        // Get all nodes matching these keywords
-        $nodes = get_nodes_from_keywords($keys);
-        update_resource_node_hitcount($resource,$nodes);
+        update_resource_node_hitcount($resource,array_column($nodes,0));
         }
     }
+    
 
 function copy_hitcount_to_live()
     {
