@@ -7,8 +7,7 @@ function HookAnnotateDatabase_pruneDbprune(){
 
 function HookAnnotateAllAfterreindexresource($ref){
     // make sure annotation indexing isn't lost when doing a reindex.
-    $ref_escaped = escape_check($ref);
-    $notes=sql_query("select * from annotate_notes where ref='$ref_escaped'");
+    $notes= ps_query("select * from annotate_notes where ref= ?", ['i', $ref]);
     global $pagename;
 
     foreach($notes as $note){
@@ -26,11 +25,9 @@ return (" ,r.annotation_count ");
 
 function HookAnnotateAllRemoveannotations(){
     global $ref;
-
-    $ref_escaped = escape_check($ref);
-    sql_query("delete from annotate_notes where ref='$ref_escaped'");
-    sql_query("update resource set annotation_count=0 where ref='$ref_escaped'");   
-    sql_query("delete from resource_keyword where resource='$ref_escaped' and annotation_ref>0");;
+    ps_query("delete from annotate_notes where ref= ?", ['i', $ref]);
+    ps_query("update resource set annotation_count=0 where ref= ?", ['i', $ref]);   
+    ps_query("delete from resource_keyword where resource= ? and annotation_ref>0", ['i', $ref]);
 }
 
 function HookAnnotateAllRender_actions_add_collection_option($top_actions, array $options, $collection_data, array $urlparams){
