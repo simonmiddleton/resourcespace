@@ -1318,6 +1318,7 @@ function do_search(
 
     if ($editable_only)
 		{
+        $usereditfilter = $usereditfilter??"";
         if($search_filter_nodes 
             && strlen(trim($usereditfilter)) > 0
             && !is_numeric($usereditfilter)
