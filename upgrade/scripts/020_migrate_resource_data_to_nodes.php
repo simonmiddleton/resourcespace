@@ -23,15 +23,36 @@ foreach($resource_type_fields as $resource_type_field)
     $nodeinfo =  ps_query("SELECT ref, concat(MD5(name),MD5(CONCAT('!',name))) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
     $allfieldnodes= array_column($nodeinfo,"ref","hash");
 
-    $totalrows = ps_value("SELECT count(resource) AS value FROM `resource_data` WHERE resource_type_field = ?",["i",$fref],0);
+    $todorows = ps_query("SELECT MIN(resource) AS minref, MAX(resource) as maxref, count(resource) AS count FROM `resource_data` WHERE resource_type_field = ?",["i",$fref]);
+    $totalrows  = $todorows[0]["count"] ?? 0;
+    $minref     = $todorows[0]["minref"] ?? 0;    
+    $maxref     = $todorows[0]["maxref"] ?? 0;
     $out = " (" . $totalrows . " rows found)";
     logScript(str_pad($status . $out,100,' '));
     ob_flush();
-    $chunkstart = 0;
+    $resourcestart = $minref;
     $processed = 0;
-    while($chunkstart < $totalrows)
+    while($resourcestart <= $maxref)
+    {
+   // Test performance improvement
+    $rows = ps_query("SELECT rd.resource, rd.value
+                        FROM resource_data rd 
+                        JOIN (SELECT resource, resource_type_field FROM resource_data WHERE resource_type_field = ?) rd2
+                          ON rd2.resource=rd.resource AND rd.resource_type_field=rd2.resource_type_field
+                       WHERE rd.resource >= ? AND rd.resource < ?",
+                       [
+                        "i",$fref,
+                        "i",$resourcestart,
+                        "i",($resourcestart+$chunksize),
+                        ]
+                    );
+
+    if(count($rows) == 0)
         {
-        $rows = ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE resource_type_field = ? ORDER BY resource ASC LIMIT " . $chunkstart . ", " . ($chunksize) . "",["i",$fref]);
+        // Nothing for this batch of resources
+        $resourcestart = $resourcestart + $chunksize;
+        continue;
+        }
         // Process in smaller chunks for inserts
         $rowbatches = array_chunk($rows, 2000);
 
@@ -78,7 +99,7 @@ foreach($resource_type_fields as $resource_type_field)
                         logScript("Updating resource " . $rowdata["resource"] . ", field #" . $fref . " (" . $fname . ") with node " . $newnode . " (" . str_replace("\n"," ",mb_strcut($rowdata["value"],0,30)) . "...)");
                         // Not using add_resource_nodes() here to speed things up 
                         ps_query("INSERT INTO resource_node(resource, node) VALUES (?,?)", ["i",$rowdata["resource"],"i",$newnode]);
-                        //$resnodearr[$rowdata["resource"]][] = $newnode;
+                        $resnodearr[$rowdata["resource"]][] = $newnode;
                         }
                     else
                         {
@@ -99,8 +120,8 @@ foreach($resource_type_fields as $resource_type_field)
             db_end_transaction("populate_nodes_from_data");
             }
 
-        $chunkstart = $chunkstart + $chunksize;
-        $out = " - processed $processed / $totalrows records for field # ". $fref;
+        $resourcestart = $resourcestart + $chunksize;
+        $out = " - processed " . $processed . "/" . $totalrows . " records for field # ". $fref;
         logScript(str_pad($out,100,' '));
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$status . $out);
         ob_flush();
