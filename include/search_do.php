@@ -452,9 +452,24 @@ function do_search(
 
                             $val=str_replace("n","_", $keystring);
                             $val=str_replace("|","-", $val);
-                            // Find where the searched value is between the range values
-                            $sql_join->sql .=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field='" . $datefield . "' AND drn" . $c . "s.name >= ? JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field='" . $datefield . "' AND drn" . $c . "e.name <= ?";
-                            array_push($sql_join->parameters,"s",$val,"s",$val);
+
+                            if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
+                                {
+                                // Find where the searched value is between the range values
+                                $sql_join->sql .=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field='" . $datefield . "' AND drn" . $c . "s.name >= ? JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field='" . $datefield . "' AND DATE(drn" . $c . "e.name) <= ?";
+                                array_push($sql_join->parameters,"s",$val,"s",$val);
+                                }
+                            else
+                                {
+                                $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field='" . $datefield . "'";
+                                
+                                $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "dn" . $c . ".name like ?";
+                                array_push($sql_filter->parameters,"s",$val . "%");
+                                }
+
+                                    
+                            // Find where the searched value is LIKE the range values
+                           
                             }
                         elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {

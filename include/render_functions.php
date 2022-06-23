@@ -2213,49 +2213,51 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
 	
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
-	{
-	$found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
-	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
-	if($forsearch)
-		{
-		// Get the start/end date from the string
-		$startvalue=strpos($value,"start")!==false?substr($value,strpos($value,"start")+5,10):"";
-		$endvalue=strpos($value,"end")!==false?substr($value,strpos($value,"end")+3,10):"";
-		}
-	else
-		{
-		if($value!="" && strpos($value,",")!==false)
-			{
-			// Extract the start date from the value obtained from get_resource_field_data
-			$rangevalues = explode(",",$value);
-			$startvalue = $rangevalues[0];
-			$endvalue = $rangevalues[1];
-			}
-		elseif(strlen($value)==10 && strpos($value,"-") !==  false)
-			{
-			$startvalue = $value;
-			$endvalue = "";
-			}
-		else
-			{
-			$startvalue = "";
-			$endvalue = "";
-			}
-		}
+    {
+    $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
+    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
+    if($forsearch)
+        {
+        // Get the start/end date from the string
+        $startpos   = strpos($value,"start");
+        $endpos     = strpos($value,"end");
+        $startvalue = $startpos !== false ? substr($value,$startpos+5,($endpos ? ($endpos - ($startpos + 5)) : NULL)) : "";
+        $endvalue   = $endpos !== false ? substr($value,strpos($value,"end")+3,10) : "";
+        }
+    else
+        {
+        if($value!="" && strpos($value,",")!==false)
+            {
+            // Extract the start date from the value obtained from get_resource_field_data
+            $rangevalues = explode(",",$value);
+            $startvalue = $rangevalues[0];
+            $endvalue = $rangevalues[1];
+            }
+        elseif(strlen($value)==10 && strpos($value,"-") !==  false)
+            {
+            $startvalue = $value;
+            $endvalue = "";
+            }
+        else
+            {
+            $startvalue = "";
+            $endvalue = "";
+            }
+        }
 				
 	$ss=explode("-",$startvalue);
-	if (count($ss)>=3)
+	if (count($ss)>=1)
 		{
-		$found_start_year=$ss[0];
-		$found_start_month=$ss[1];
-		$found_start_day=$ss[2];
+		$found_start_year   = $ss[0] ?? "";
+		$found_start_month  = $ss[1] ?? "";
+		$found_start_day    = $ss[2] ?? "";
 		}
 	$se=explode("-",$endvalue);
-	if (count($se)>=3)
+	if (count($se)>=1)
 		{
-		$found_end_year=$se[0];
-		$found_end_month=$se[1];
-		$found_end_day=$se[2];
+		$found_end_year     = $se[0] ?? "";
+		$found_end_month    = $se[1] ?? "";
+		$found_end_day      = $se[2] ?? "";
 		}
         
     // If the form has been submitted (but not reset) but data was not saved get the submitted values   
