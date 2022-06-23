@@ -24,9 +24,9 @@ if (!(is_numeric($collection) and $collection > 0)){
 set_time_limit(60*60*5);
 echo "<pre>";
 
-$resources=sql_query("select r.ref,u.username,u.fullname from 
+$resources=ps_query("select r.ref,u.username,u.fullname from 
 collection_resource left join resource r on collection_resource.resource = r.ref 
-left outer join user u on r.created_by=u.ref where collection_resource.collection = '$collection' order by ref");
+left outer join user u on r.created_by=u.ref where collection_resource.collection = ? order by ref", ['i', $collection]);
 
 for ($n=0;$n<count($resources);$n++)
 	{
