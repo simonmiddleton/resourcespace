@@ -7140,8 +7140,6 @@ function update_resource_keyword_hitcount($resource,$search)
     if (count($keys)>0)
         {
         // Get all nodes matching these keywords
-        $nodes = get_nodes_from_keywords($keys);
-        update_resource_node_hitcount($resource,$nodes);
         sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
         }
     }
