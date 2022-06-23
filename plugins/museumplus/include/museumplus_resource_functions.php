@@ -14,7 +14,7 @@ function mplus_resource_get_data(array $refs)
         return [];
         }
 
-    $results = sql_query("SELECT ref, museumplus_data_md5, museumplus_technical_id FROM resource WHERE ref IN ('" . implode("', '", $r_refs) . "')");
+    $results = ps_query("SELECT ref, museumplus_data_md5, museumplus_technical_id FROM resource WHERE ref IN (". ps_param_insert(count($r_refs)) .")", ps_param_fill($r_refs, 'i'));
     return $results;
     }
 
@@ -34,6 +34,7 @@ function mplus_resource_mark_validation_failed(array $resources)
         }
 
     $qvals = [];
+    $params = [];
     foreach($resources as $ref => $md5)
         {
         // Sanitise input
@@ -43,20 +44,19 @@ function mplus_resource_mark_validation_failed(array $resources)
             }
 
         // Prepare SQL query values
-        $qvals[$ref] = sprintf('(\'%s\', \'%s\', NULL)', $ref, escape_check($md5));
+        $qvals[$ref] = '(?, ? , NULL)';
+        $params = array_merge($params, ['i', $ref, 's', $md5]);
         }
     if(empty($qvals)) { return; }
 
     // Validate the list of resources input to avoid creating new resources. We only want to update existing ones
-    $sql_ref_in = implode('\', \'', array_keys($qvals));
-    $valid_refs = sql_array("SELECT ref AS `value` FROM resource WHERE ref IN ('$sql_ref_in')");
+    $valid_refs = ps_array("SELECT ref AS `value` FROM resource WHERE ref IN (". ps_param_insert(count($qvals)) .")", ps_param_fill(array_keys($qvals), 'i'));
     if(empty($valid_refs)) { return; }
 
     // Update resources with the new computed MD5s
-    $sql_values = implode(', ', array_intersect_key($qvals, array_flip($valid_refs)));
-    $query = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES {$sql_values}
+    $query = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES ". implode(',', $qvals) ."
                        ON DUPLICATE KEY UPDATE museumplus_data_md5 = VALUES(museumplus_data_md5), museumplus_technical_id = VALUES(museumplus_technical_id)";
-    sql_query($query);
+    ps_query($query, $params);
 
     mplus_log_event('Validation failed!', [ 'resources' => $valid_refs], 'error');
 
@@ -91,24 +91,37 @@ function mplus_resource_update_association(array $resources, array $md5s)
 
         $md5 = (isset($md5s[$ref]) ? $md5s[$ref] : '');
 
-        // Prepare SQL query values
-        $qvals[$ref] = sprintf('(\'%s\', %s, %s)',
-            $ref,
-            sql_null_or_val($md5, $md5 == ''),
-            sql_null_or_val($mplus_technical_id, $mplus_technical_id == ''));
+        // Prepare SQL query values        
+        $qvals[$ref] = '?, ';
+        if($md5 == '')
+            {
+            $qvals[$ref] .= 'NULL, ';
+            }
+            else
+            {
+            $qvals[$ref] .= '?, '; $params[] = 's'; $params[] = $md5;
+            }
+
+        if($mplus_technical_id == '')
+            {
+            $qvals[$ref] .= 'NULL, ';
+            }
+            else
+            {
+            $qvals[$ref] .= '?, '; $params[] = 'i'; $params[] = $mplus_technical_id;
+            }
         }
     if(empty($qvals)) { return; }
 
     // Validate the list of resources input to avoid creating new resources. We only want to update existing ones
-    $sql_ref_in = implode('\', \'', array_keys($qvals));
-    $valid_refs = sql_array("SELECT ref AS `value` FROM resource WHERE ref IN ('$sql_ref_in')");
+    $valid_refs = ps_array("SELECT ref AS `value` FROM resource WHERE ref IN (". ps_param_insert(count($qvals)) .")", ps_param_fill(array_keys($qvals), 'i'));
     if(empty($valid_refs)) { return; }
 
     // Update resources with the new computed MD5s
-    $sql_values = implode(', ', array_intersect_key($qvals, array_flip($valid_refs)));
-    $q = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES {$sql_values}
+    $sql_strings = array_intersect_key($qvals, array_flip($valid_refs));
+    $q = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES ". implode(',', $sql_strings) ."
                    ON DUPLICATE KEY UPDATE museumplus_data_md5 = VALUES(museumplus_data_md5), museumplus_technical_id = VALUES(museumplus_technical_id)";
-    sql_query($q);
+    ps_query($q, $params);
 
     mplus_log_event('Updated resource module association!', [ 'qvals' => $qvals], 'info');
 
@@ -150,16 +163,15 @@ function mplus_resource_clear_metadata(array $refs)
     $resource_type_fields = array_values(array_filter(array_unique($resource_type_fields), 'ctype_digit'));
     if(empty($resource_type_fields)) { return; }
 
-    $sql_in_refs = implode('\', \'', $refs);
-    $sql_in_rtfs = implode('\', \'', $resource_type_fields);
-    sql_query("DELETE FROM resource_data WHERE resource IN ('{$sql_in_refs}') AND resource_type_field IN ('{$sql_in_rtfs}')");
-    sql_query(
-        "DELETE rn
-           FROM resource_node AS rn
-      LEFT JOIN node AS n ON n.ref = rn.node
-      LEFT JOIN resource_type_field AS rtf ON rtf.ref = n.resource_type_field
-          WHERE rn.resource IN ('{$sql_in_refs}')
-            AND rtf.ref IN ('{$sql_in_rtfs}')"
+    $ref_params = ps_param_fill($refs, 'i');
+    $rtf_params = ps_param_fill($resource_type_fields, 'i');
+
+    ps_query("DELETE FROM resource_data WHERE resource IN (". ps_param_insert(count($refs)) .") AND resource_type_field IN (". ps_param_insert(count($resource_type_fields)) .")", 
+              array_merge($ref_params, $rtf_params)
+    );
+    ps_query("DELETE rn FROM resource_node AS rn LEFT JOIN node AS n ON n.ref = rn.node LEFT JOIN resource_type_field AS rtf ON rtf.ref = n.resource_type_field 
+              WHERE rn.resource IN (". ps_param_insert(count($refs)) .") AND rtf.ref IN (". ps_param_insert(count($resource_type_fields)) .")", 
+              array_merge($ref_params, $rtf_params)
     );
 
     // Clear related 'joined' fields
@@ -171,14 +183,13 @@ function mplus_resource_clear_metadata(array $refs)
             {
             continue;
             }
-
-        $sql_joins .= sprintf('%sfield%s = NULL',
-            ($sql_joins != '' ? ', ' : ''),
-            escape_check($join));
+        $sql_joins .= 'field' . $join . ' = NULL,';
         }
+
     if($sql_joins !== '')
         {
-        sql_query("UPDATE resource SET {$sql_joins} WHERE ref IN ('{$sql_in_refs}')");
+        $sql_joins = trim($sql_joins, ',');
+        ps_query("UPDATE resource SET {$sql_joins} WHERE ref IN (". ps_param_insert(count($refs)) .")", $ref_params);
         }
 
     mplus_log_event('Cleared metadata field values', ['refs' => $refs, 'resource_type_fields' => $resource_type_fields]);
@@ -207,13 +218,15 @@ function mplus_resource_get_association_data(array $filters)
 
     // Additional filters (as required by caller code)
     $additional_filters = [];
+    $additional_params = [];
     foreach(mplus_validate_resource_association_filters($filters) as $filter_name => $filter_args)
         {
         switch($filter_name)
             {
             case 'byref':
                 $refs = array_filter($filter_args, 'is_int_loose');
-                $additional_filters[] = 'AND r.ref IN (' . implode(', ', $refs) . ')';
+                $additional_filters[] = 'AND r.ref IN ('. ps_param_insert(count($refs)) .')';
+                $additional_params = ps_param_fill($refs, 'i');
                 break;
             }
         }
@@ -237,26 +250,17 @@ function mplus_resource_get_association_data(array $filters)
             return [];
             }
 
-        $sqlq = sprintf('
-               SELECT r.ref AS `value`
-                 FROM resource AS r
-                WHERE r.archive = 0
-                  AND r.resource_type IN (\'%s\')
-                  %s # Additional filters
-            ORDER BY r.ref DESC
-            ',
-            implode('\', \'', $applicable_resource_types),
-            implode(PHP_EOL, $additional_filters)
-        );
-
-        return sql_array($sqlq);
+        return ps_array('SELECT r.ref `value` FROM resource r WHERE r.archive = 0 
+                          AND r.resource_type IN('. ps_param_insert(count($applicable_resource_types)) .')' . $additional_filters,
+                          array_merge(ps_param_fill($applicable_resource_types, 'i'), $additional_params)
+                        );
         }
-
 
     // Get filters required at a "per module configuration" level.
     // IMPORTANT: do not continue if the plugin isn't properly configured (ie. this information is missing or corrupt)
     $rs_uid_fields = [];
     $per_module_cfg_filters = [];
+    $params = [];
     $modules_config = plugin_decode_complex_configs($GLOBALS['museumplus_modules_saved_config']);
     foreach($modules_config as $mcfg)
         {
@@ -271,33 +275,24 @@ function mplus_resource_get_association_data(array $filters)
 
         if($module_name !== '' && !empty($applicable_resource_types) && is_int_loose($rs_uid_field) && $rs_uid_field > 0)
             {
-            $per_module_cfg_filters[] = sprintf(
-                '(%s = \'%s\' AND r.resource_type IN (\'%s\'))',
-                ($module_name === 'Object' ? 'coalesce(n.`name`, \'Object\')' : 'n.`name`'),
-                $module_name,
-                implode('\', \'', $applicable_resource_types)
-            );
+            $per_module_cfg_filters[] = '('. ($module_name === 'Object' ? 'coalesce(n.`name`, \'Object\')' : 'n.`name`')  .' = ? AND r.resource_type IN('. ps_param_insert(count($applicable_resource_types)) .'))';
+            $params[] = 's'; $params[] = $module_name;
+            $params = array_merge($params, ps_param_fill($applicable_resource_types, 'i'));
             }
         }
     if(empty($rs_uid_fields) || empty($per_module_cfg_filters)) { return []; }
 
 
     $module_name_field_ref = $GLOBALS['museumplus_module_name_field'];
-    $sqlq = sprintf('
-           SELECT r.ref AS `value`
-             FROM resource AS r
-        LEFT JOIN resource_node AS rn ON r.ref = rn.resource
-        LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
-            WHERE r.archive = 0
-              %s # Filters specific to each module configuration (e.g applicable resource types)
-              %s # Additional filters
-        GROUP BY r.ref
-        ORDER BY r.ref DESC
-        ',
-        escape_check($module_name_field_ref),
-        'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $per_module_cfg_filters) . PHP_EOL . ')',
-        implode(PHP_EOL, $additional_filters)
-    );
 
-    return sql_array($sqlq);
+    return ps_array('SELECT r.ref AS `value`
+                        FROM resource AS r
+                    LEFT JOIN resource_node AS rn ON r.ref = rn.resource
+                    LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
+                    WHERE r.archive = 0
+                        '. 'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $per_module_cfg_filters) . PHP_EOL . ')' .' # Filters specific to each module configuration (e.g applicable resource types)
+                        '.  implode(PHP_EOL, $additional_filters) .' # Additional filters
+                    GROUP BY r.ref
+                    ORDER BY r.ref DESC', array_merge(['i', $module_name_field_ref], $params, $additional_params)
+    );
     }
