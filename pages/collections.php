@@ -82,8 +82,8 @@ if ($collection!="" && $collection!="undefined")
 		}
 	elseif((!isset($usercollection) || $collection!=$usercollection) && $collection!='false')
 		{
-                $validcollection=sql_value("select ref value from collection where ref='$collection'",0);
-                # Switch the existing collection
+		$validcollection=ps_value("select ref value from collection where ref=?",array("i",$collection), 0);
+		# Switch the existing collection
 		if ($k=="" || $internal_share_access) {set_user_collection($userref,$collection);}
 		$usercollection=$collection;
 		}
@@ -851,7 +851,7 @@ else if ($basket)
 				$title_field=$metadata_template_title_field;
 				}	
 			}	
-		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
+		$field_type=ps_value("select type value from resource_type_field where ref=?",array("i",$title_field),"", "schema");
 		if($field_type==8){
 			$title=str_replace("&nbsp;"," ",$title);
 		}
@@ -1216,7 +1216,7 @@ else
 				$title_field=$metadata_template_title_field;
 				}	
 			}	
-		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
+		$field_type=ps_value("select type value from resource_type_field where ref=?",array("i",$title_field), "", "schema");
 		if($field_type==8){
 			$title=str_replace("&nbsp;"," ",$title);
 		}

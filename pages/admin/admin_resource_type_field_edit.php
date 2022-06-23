@@ -68,7 +68,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 	global $lang;
  	
 	$addconstraint=true;
-	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0, "schema");
+	$constraint=ps_value("select field_constraint value from resource_type_field where ref=?",array("i",$ref),0, "schema");
 	?>
 		<div class="clearerleft"></div>
 	</div> <!-- end question -->

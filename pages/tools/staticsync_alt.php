@@ -106,7 +106,7 @@ for ($n=0;$n<count($rd);$n++)
 	$modtimes[$rd[$n]["file_path"]]=$rd[$n]["file_modified"];
 	}
 
-$lastsync=sql_value("select value from sysvars where name='lastsync'","");
+$lastsync=ps_value("select value from sysvars where name='lastsync'",array(), "");
 if (strlen($lastsync)>0) {$lastsync=strtotime($lastsync);} else {$lastsync="";}
 
 
@@ -418,7 +418,7 @@ function ProcessFolder($folder)
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
                                                 if(in_array($field['type'],array(0,1,4,5,6,8)))
                                                     {
-                                                    $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
+                                                    $old_value=ps_value("select value value from resource_data where resource=? and resource_type_field=?",array("i",$r,"i",$field),"");
                                                     $value=append_field_value($field_info,$value,$old_value);
                                                     }
                                                 }

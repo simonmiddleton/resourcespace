@@ -121,7 +121,7 @@ if(isset($staticsync_alternative_file_text) && (!$staticsync_ingest || $staticsy
     
     
 
-$lastsync = sql_value("SELECT value FROM sysvars WHERE name='lastsync'","");
+$lastsync = ps_value("SELECT value FROM sysvars WHERE name='lastsync'",array(), "");
 $lastsync = (strlen($lastsync) > 0) ? strtotime($lastsync) : '';
 
 echo "done." . PHP_EOL;
@@ -336,7 +336,7 @@ function ProcessFolder($folder)
             if (!isset($done[$shortpath]))
                 {
                 // Extra check to make sure we don't end up with duplicates
-                $existing=sql_value("SELECT ref value FROM resource WHERE file_path = '" . escape_check($shortpath) . "'",0);
+                $existing=ps_value("SELECT ref value FROM resource WHERE file_path = ?",array("s",$shortpath), 0);
                 if($existing>0 || hook('staticsync_plugin_add_to_done'))
                     {
                     $done[$shortpath]["processed"]=true;
@@ -641,7 +641,7 @@ function ProcessFolder($folder)
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
                                                 if(in_array($field_info['type'],array(0,1,4,5,6,8)))
                                                     {
-                                                    $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
+                                                    $old_value=ps_value("select value value from resource_data where resource=? and resource_type_field=?",array("i",$r,"i",$field), "");
                                                     $value=append_field_value($field_info,$value,$old_value);
                                                     }
                                                 }

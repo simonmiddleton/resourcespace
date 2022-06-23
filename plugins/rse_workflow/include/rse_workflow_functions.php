@@ -269,7 +269,7 @@ function rse_workflow_create_state(array $data)
     if(!isset($new_state_data['code']))
         {
         // Get the current maximum code reference
-        $code = sql_value('SELECT MAX(code) AS `value` FROM archive_states', 0);
+        $code = ps_value('SELECT MAX(code) AS `value` FROM archive_states', array(), 0);
         $new_state_data['code'] = ++$code;
         }
 

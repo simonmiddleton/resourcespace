@@ -128,7 +128,7 @@ else
     {
     # Dash 
     # Load title
-    $title= getvalescaped("tltitle",sql_value("select title value from dash_tile where ref='$tile'",""));
+    $title= getvalescaped("tltitle",ps_value("select title value from dash_tile where ref=?",array("i",$tile), ""));
     ?>
     <div style="padding:10px 15px">
     <h2 style="font-size:120%;margin:0;padding:0 0 8px 0;background:none;white-space: nowrap;overflow: hidden;

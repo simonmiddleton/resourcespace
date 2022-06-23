@@ -26,7 +26,7 @@ function HookOffline_archiveViewRenderbeforeresourceview($resource)
 	global $ref,$lang;
 	if ($resource["archive"]==2)
 		{
-		$checkrestorepending=sql_value("select pending_restore as value from resource where ref='$ref'",0);
+		$checkrestorepending=ps_value("select pending_restore as value from resource where ref=?",array("i",$ref), 0);
 		if($checkrestorepending==1)
 			{
 			echo "<div class=\"PageInformal\">" . $lang['offline_archive_restore_pending'] . "</div>";

@@ -151,7 +151,7 @@ if ($share_resource_include_related && $enable_related_resources && checkperm("s
 				?>
 				<div class="sharerelatedtype">
 				<?php
-				$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","", "schema");
+				$restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype), "", "schema");
 				$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
 				?><!--Panel for related resources-->
 				

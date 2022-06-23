@@ -26,7 +26,7 @@ if ($new_size_id!="" && enforcePostRequest(false))
 
 $ref = getvalescaped('ref', '');
 
-if (!sql_value("select ref as value from preview_size where ref='{$ref}' and internal<>'1'",false) && !$internal_preview_sizes_editable)		// note that you are not allowed to edit internal sizes without $internal_preview_sizes_editable=true
+if (!ps_value("select ref as value from preview_size where ref=? and internal<>'1'",array("i",$ref), false) && !$internal_preview_sizes_editable)		// note that you are not allowed to edit internal sizes without $internal_preview_sizes_editable=true
 	{
 	redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");		// fail safe by returning to the size management page if duff ref passed
 	exit;

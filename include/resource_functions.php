@@ -104,7 +104,7 @@ function get_resource_path(
         global $get_resource_path_fpcache;
         truncate_cache_arrays();
 
-        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='" . escape_check($ref) . "'","");}
+        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=ps_value("select file_path value from resource where ref=?",array("i",$ref),"");}
         $fp=$get_resource_path_fpcache[$ref];
         
         # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
@@ -1069,7 +1069,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         global $index_resource_type;
         if ($index_resource_type)
                 {
-                $restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","", "schema");
+                $restypename=ps_value("select name value from resource_type where ref in (select resource_type from resource where ref=?)",array("i",$ref), "", "schema");
                 remove_all_keyword_mappings_for_field($ref,-2);
                 add_keyword_mappings($ref,$restypename,-2);
                 }
@@ -1851,7 +1851,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         
             if (!hook('forbidsavearchive', '', array($errors)))
                 {
-                $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
+                $oldarchive=ps_value("select archive value from resource where ref=?",array("i",$ref),"");
                 $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching
                 $successfully_edited_resources[] = $ref;
 
@@ -2905,7 +2905,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # Find the resource type.
     if (is_null($originalref)) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
-    $rtype = sql_value("select resource_type value FROM resource WHERE ref='" . escape_check($originalref) . "'",0);
+    $rtype = ps_value("select resource_type value FROM resource WHERE ref=?",array("i",$originalref),0);
     $rtype = ($rtype == "") ? 0 : $rtype;
 
     # If using metadata templates, 
@@ -3275,7 +3275,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             // this resource type
             if(!isset($inherit_global_fields[$fields[$n]["ref"]]))
                 {
-                $inherit_global_fields[$fields[$n]["ref"]] = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = '{$rtype}'", true, "schema");
+                $inherit_global_fields[$fields[$n]["ref"]] = (bool) ps_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?", array("i",$rtype), true, "schema");
                 }
             if($inherit_global_fields[$fields[$n]["ref"]])
                 {
@@ -3514,7 +3514,7 @@ function copy_resource($from,$resource_type=-1)
     global $always_record_resource_creator, $upload_then_edit;
     
 	# Check that the resource exists
-	if (sql_value("select count(*) value from resource where ref='". escape_check($from) . "'",0)==0) {return false;}
+	if (ps_value("select count(*) value from resource where ref=?",array("i",$from),0)==0) {return false;}
 	
 	# copy joined fields to the resource column
 	$joins=get_resource_table_joins();
@@ -3538,7 +3538,7 @@ function copy_resource($from,$resource_type=-1)
 	}
 	
 	$add="";
-	$archive=sql_value("select archive value from resource where ref='". escape_check($from) . "'",0);
+	$archive=ps_value("select archive value from resource where ref=?",array("i",$from),0);
 	
     if ($archive == "") // Needed if user does not have a user template 
         {
@@ -3912,7 +3912,7 @@ function get_custom_access($resource,$usergroup,$return_default=true)
 	global $custom_access,$default_customaccess;
 	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
 
-	$result=sql_value("select access value from resource_custom_access where resource='" . escape_check($resource) . "' and usergroup='$usergroup'",'');
+	$result=ps_value("select access value from resource_custom_access where resource=? and usergroup=?",array("i",$resource,"i",$usergroup),'');
 	if($result=='' && $return_default)
 		{
 		return $default_customaccess;
@@ -4457,7 +4457,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         
             if(isset($upload_then_process_holding_state))
                 {
-                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$r}", "");
+                $job_data["archive"]=ps_value("SELECT archive value from resource where ref=?", array("i",$r), "");
                 update_archive_status($r, $upload_then_process_holding_state);
                 }
         
@@ -4803,7 +4803,7 @@ function get_resource_access($resource)
 		{
 
 		# External access - check how this was shared.
-		$extaccess = sql_value("SELECT access `value` FROM external_access_keys WHERE resource = '{$ref}' AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+		$extaccess = ps_value("SELECT access `value` FROM external_access_keys WHERE resource = ? AND access_key = ? AND (expires IS NULL OR expires > NOW())", array("i",$ref,"s",$k), -1);
 
 		if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
             {
@@ -4981,7 +4981,7 @@ function get_resource_access($resource)
 	
 function get_custom_access_user($resource,$user)
 	{
-	return sql_value("select access value from resource_custom_access where resource='$resource' and user='$user' and (user_expires is null or user_expires>now())",false);
+	return ps_value("select access value from resource_custom_access where resource=? and user=? and (user_expires is null or user_expires>now())",array("i",$resource,"i",$user),false);
 	}
 
 function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sharepwd="")

@@ -84,7 +84,7 @@ if (isset($resulttext))
                     {
                     $ref=$resourcedetail['ref'];
                     $thumbpath=get_resource_path($ref,false,"col",false,"jpg");
-                    $archivecode=sql_value("select value from resource_data where resource='$ref' and resource_type_field='$offline_archive_archivefield'",'');
+                    $archivecode=ps_value("select value from resource_data where resource=? and resource_type_field=?",array("i",$ref,"i",$offline_archive_archivefield), '');
                     if($archivecode!=""){$codes[]=$archivecode;}
                     echo '<tr onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">
                     <td>

@@ -33,7 +33,7 @@ for ($n=0;$n<count($resources);$n++)
 	$ref=$resources[$n]["ref"];
 	reindex_resource($ref);
 	
-	$words=sql_value("select count(*) value from resource_keyword where resource='$ref'",0);
+	$words=ps_value("select count(*) value from resource_keyword where resource=?",array("i",$ref), 0);
 	echo "Done $ref ($n/" . count($resources) . ") - $words words<br />\n";
 	}
 ?>

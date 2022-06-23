@@ -67,7 +67,7 @@ else
 	$extratext="";
 	if ($collectionid != "")
 		{
-		$collectionname=sql_value("select name as value from collection where ref='$collectionid'",'');
+		$collectionname=ps_value("select name as value from collection where ref=?",array("i",$collectionid), '');
 		$extratext=" for collection '" . $collectionname .  "'";
 		}
 	?>

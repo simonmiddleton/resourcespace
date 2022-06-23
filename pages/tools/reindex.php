@@ -61,7 +61,7 @@ for($n = 0; $n < count($resources); $n++)
 
     reindex_resource($ref);
 
-    $words = sql_value("SELECT count(*) `value` FROM resource_keyword WHERE resource = '{$ref}'", 0);
+    $words = ps_value("SELECT count(*) `value` FROM resource_keyword WHERE resource = ?", array("i",$ref), 0);
 
     echo "Done {$ref} ({$n}/" . count($resources) . ") - $words words<br />" . PHP_EOL;
 

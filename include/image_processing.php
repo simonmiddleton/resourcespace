@@ -147,7 +147,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             sql_query("UPDATE resource SET " . $clear_fields . " WHERE ref='" . escape_check($ref) . "'");
             #also add the ref back into keywords:
             add_keyword_mappings($ref, $ref , -1);
-            $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
+            $extension=ps_value("SELECT file_extension value FROM resource WHERE ref=?",array("i",$ref), "");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
             }    
@@ -276,7 +276,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
             hook("beforeremoveexistingfile", "", array( "ref" => $ref ) );
 
-            $old_extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
+            $old_extension=ps_value("select file_extension value from resource where ref=?",array("i",$ref),"");
             if ($old_extension!="") 
                 {
                 $old_path=get_resource_path($ref,true,"",true,$old_extension);
@@ -596,7 +596,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         
         if(isset($upload_then_process_holding_state))
             {
-            $job_data["archive"]=sql_value("SELECT archive value from resource where ref='" . escape_check($ref) . "'", "");
+            $job_data["archive"]=ps_value("SELECT archive value from resource where ref=?", array("i",$ref), "");
             update_archive_status($ref, $upload_then_process_holding_state);
             }
         
@@ -1255,7 +1255,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # Handle alternative image file generation.
     global $image_alternatives;
     # Check against the resource extension as extension might refer to a jpg preview file
-    $resource_extension = sql_value('SELECT file_extension value FROM resource WHERE ref=' . $ref . ';','');
+    $resource_extension = ps_value('SELECT file_extension value FROM resource WHERE ref=?', array("i",$ref), '');
     
     if(isset($image_alternatives) && $alternative == -1)
         {
@@ -2542,7 +2542,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     
     # record what was done so that we can reconstruct later if needed
     # current format is rotation|gamma. Additional could be tacked on if more manipulation options are added
-    $current_preview_tweak = sql_value("select preview_tweaks value from resource where ref = '$ref'","");
+    $current_preview_tweak = ps_value("select preview_tweaks value from resource where ref = ?",array("i",$ref), "");
     }
     
     if (strlen($current_preview_tweak) == 0)
@@ -2823,7 +2823,7 @@ function upload_preview($ref)
     create_previews($ref,false,$extension,true);
     
     # Delete temporary file, if not transcoding.
-    if(file_exists($filepath) && !sql_value("SELECT is_transcoding value FROM resource WHERE ref = '".escape_check($ref)."'", false))
+    if(file_exists($filepath) && !ps_value("SELECT is_transcoding value FROM resource WHERE ref = ?", array("i",$ref), false))
         {
         unlink($filepath);
         }
@@ -3070,7 +3070,7 @@ function AutoRotateImage($src_image, $ref = false)
         if ($ref != false) 
             {
             # use the original file to get the orientation info
-            $extension = sql_value("select file_extension value from resource where ref='{$ref}'", '');
+            $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), '');
             $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
             # get the orientation
             $orientation = get_image_orientation($file);

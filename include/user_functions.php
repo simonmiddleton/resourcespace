@@ -461,7 +461,7 @@ function get_user_by_username($username)
         {
         return false;
         }
-    return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
+    return ps_value("select ref value from user where username=?",array("s",$username),false);
     }
 
 /**
@@ -812,7 +812,7 @@ function email_reset_link($email,$newuser=false)
         $templatevars['username']=$details["username"];
 
         // Fetch any welcome message for this user group
-        $welcome = sql_value('SELECT welcome_message AS value FROM usergroup WHERE ref = \'' . $details['usergroup'] . '\'', '');
+        $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', array("i",$details['usergroup']), '');
 
         if(trim($welcome) != '')
             {
@@ -1343,7 +1343,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
         $user_refs = array();
         foreach ($ulist as $user)
             {
-            $user_ref = sql_value("SELECT ref AS value FROM user WHERE username='" . escape_check($user) . "'", false);
+            $user_ref = ps_value("SELECT ref AS value FROM user WHERE username=?", array("s",$user), false);
             if ($user_ref !== false)
                 {
                 array_push($user_refs,$user_ref);
@@ -1499,7 +1499,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                         # Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
                         $untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
                         $untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
-                        $groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
+                        $groupref = ps_value("select ref as value from usergroup where lower(name)=?",array("s",$untranslated_groupname),false);
                         if ($groupref!==false)
                             {
                             $default_group = true;
@@ -2094,7 +2094,7 @@ function resolve_open_access($userlist,$resource,$expires)
         foreach($userlist_array as $option)
             {
             #user
-            $userid=sql_value("select ref value from user where username='$option'","");
+            $userid=ps_value("select ref value from user where username=?",array("s",$option),"");
             if($userid!="")
                 {
                 open_access_to_user($userid,$resource,$expires);   
@@ -2817,7 +2817,7 @@ function delete_profile_image($user_ref)
     {
     global $storagedir;
 
-    $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
+    $profile_image_name = ps_value("select profile_image value from user where ref = ?",array("i",$user_ref), "");
     
     if ($profile_image_name != "")
         {
@@ -2877,7 +2877,7 @@ function get_profile_image($user_ref = "", $by_image = "")
  */
 function get_profile_text($user_ref)
     {
-    return sql_value("select profile_text value from user where ref = '" . escape_check($user_ref) . "'","");
+    return ps_value("select profile_text value from user where ref = ?",array("i",$user_ref), "");
     }
 
 

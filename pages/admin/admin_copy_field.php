@@ -8,7 +8,7 @@ if(!checkperm('a'))
 
 $ref    = getvalescaped('ref', '');
 $copied = '';
-$title  = sql_value("SELECT title AS `value` FROM resource_type_field WHERE ref = '{$ref}'", '', "schema");
+$title  = ps_value("SELECT title AS `value` FROM resource_type_field WHERE ref = ?", array("i",$ref), '', "schema");
 
 # Perform copy
 if (getval("saveform","")!="" && enforcePostRequest(false))

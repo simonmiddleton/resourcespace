@@ -23,7 +23,7 @@ echo "\n<pre>\n";
 for ($checking=$start_id; $checking <= $max_id; $checking++){
 	$thedir = dirname(get_resource_path($checking,true,'',false));
 	if (!file_exists($thedir)) continue;
-	$exists = sql_value("select count(ref) value from resource where ref = '$checking'",0);
+	$exists = ps_value("select count(ref) value from resource where ref = ?",array("i",$checking), 0);
 	if ($exists == 0){
 		// No database record for this directory!
 		echo "$checking: checking $thedir\n";

@@ -1568,10 +1568,10 @@ function save_collection($ref, $coldata=array())
         {
         $old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
         $new_attached_users=array();
-        $collection_owner=sql_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
+        $collection_owner=ps_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
         if($collection_owner=='')
             {
-            $collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
+            $collection_owner=ps_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
             }
         
         ps_query("delete from user_collection where collection=?",array("i",$ref));
@@ -1606,7 +1606,7 @@ function save_collection($ref, $coldata=array())
         if (count($old_attached_groups) > 0)
             {
             foreach($old_attached_groups as $old_group)
-            $was_shared_with[] = "Group (Smart): " . sql_value("select name value from usergroup where ref='" . escape_check($old_group) . "'","");
+            $was_shared_with[] = "Group (Smart): " . ps_value("select name value from usergroup where ref=?",array("i",$old_group),"");
             }
         if (count($urefs) == 0 && count($was_shared_with) > 0)
             {
@@ -3192,7 +3192,7 @@ function copy_collection($copied,$current,$remove_existing=false)
  */
 function collection_is_research_request($collection)
 	{
-	return (sql_value("select count(*) value from research_request where collection='" . escape_check($collection) . "'",0)>0);
+	return (ps_value("select count(*) value from research_request where collection=?",array("i",$collection),0)>0);
 	}
 
 
@@ -3286,7 +3286,7 @@ function get_collection_external_access($collection)
 function delete_collection_access_key($collection,$access_key)
 	{
 	# Get details for log
-	$users = sql_value("SELECT group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value FROM external_access_keys WHERE collection='" . escape_check($collection) . "' AND access_key = '" . escape_check($access_key) . "' group by access_key ", "");
+	$users = ps_value("SELECT group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value FROM external_access_keys WHERE collection=? AND access_key = ? group by access_key ", array("i",$collection,"s",$access_key),"");
 	# Deletes the given access key.
     $params=array("s",$access_key);
     $sql = "DELETE FROM external_access_keys WHERE access_key=?";
@@ -3642,7 +3642,7 @@ function show_hide_collection($colref, $show=true, $user="")
             return false;
             }
         //Get hidden collections for user
-        $hidden_collections=explode(",",sql_value("SELECT hidden_collections FROM user WHERE ref='" . escape_check($user) . "'",""));
+        $hidden_collections=explode(",",ps_value("SELECT hidden_collections FROM user WHERE ref=?",array("i",$user), ""));
         }
         
     if($show)
@@ -3935,7 +3935,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     else
         {
-        $research = sql_value('SELECT ref value FROM research_request WHERE collection="' . escape_check($collection_data['ref']) . '";', 0);
+        $research = ps_value('SELECT ref value FROM research_request WHERE collection=?', array("i",$collection_data['ref']),0);
 
         // Manage research requests
         $data_attribute['url'] = generateURL($baseurl_short . "pages/team/team_research.php",$urlparams);
@@ -4244,7 +4244,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         if(!checkperm('b') && !$system_read_only)
             {
             // Hide Collection
-            $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='Default Collection' order by ref limit 1","");
+            $user_mycollection=ps_value("select ref value from collection where user=? and name='Default Collection' order by ref limit 1",array("i",$userref),"");
             // check that this collection is not hidden. use first in alphabetical order otherwise
             if(in_array($user_mycollection,$hidden_collections)){
                 $hidden_collections_list=implode(",",array_filter($hidden_collections));

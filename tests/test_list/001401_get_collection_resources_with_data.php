@@ -9,7 +9,7 @@ $original_user_data = $userdata;
 $user_general = new_user("test_001401_general", 2);
 if($user_general === false)
     {
-    $user_general = sql_value("SELECT ref AS `value` FROM user WHERE username = 'test_001401_general'", 0);
+    $user_general = ps_value("SELECT ref AS `value` FROM user WHERE username = 'test_001401_general'", array(), 0);
     }
 if($user_general === 0)
     {

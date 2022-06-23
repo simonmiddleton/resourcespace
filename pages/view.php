@@ -122,7 +122,7 @@ resource_type_config_override($resource["resource_type"]);
 # get comments count
 $resource_comments=0;
 if($comments_resource_enable && $comments_view_panel_show_marker){
-    $resource_comments=sql_value("select count(*) value from comment where resource_ref='" . escape_check($ref) . "'","0");
+    $resource_comments=ps_value("select count(*) value from comment where resource_ref=?",array("i",$ref),"0");
 }
 
 # Should the page use a larger resource preview layout?
@@ -2157,7 +2157,7 @@ if (count($result)>0)
                 // Don't show this type again.
                 continue;
                 }
-            $restypename=sql_value("select name as value from resource_type where ref = '" . escape_check($rtype) . "'","", "schema");
+            $restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype), "", "schema");
             $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
             ?>
             <div class="Title"><?php echo str_replace_formatted_placeholder("%restype%", $restypename, $lang["relatedresources-restype"]); ?></div>

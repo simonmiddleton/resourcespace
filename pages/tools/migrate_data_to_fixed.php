@@ -80,7 +80,7 @@ if(getval("submit","") != "")
 
     $chunksize = 1000;    
     $lower=0;
-    $total = sql_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = '{$migrate_field}'",0);
+    $total = ps_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = ?",array("i",$migrate_field), 0);
 
     while($migrated < $total && ($maxrows == 0 || $migrated < $maxrows))
         {
