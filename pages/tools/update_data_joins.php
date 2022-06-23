@@ -14,7 +14,7 @@ $remove=getval("remove","");
 
 $all=(($add=='' && $remove=='')?true:false);
 
-$fields=sql_array("SELECT `COLUMN_NAME` value FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='{$mysql_db}' AND `TABLE_NAME`='resource' AND `COLUMN_NAME` LIKE 'field%'");
+$fields=ps_array("SELECT `COLUMN_NAME` value FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`= ? AND `TABLE_NAME`='resource' AND `COLUMN_NAME` LIKE 'field%'", ['s', $mysql_db]);
 echo "fields:";print_r($fields);echo"<br/><br/>";
 
 echo "data_joins:";print_r($data_joins);echo"<br/><br/>";
@@ -44,10 +44,10 @@ if($remove!=='' || $all){
 	
 	if(count($remove)>0){
 		foreach($remove as $column){
-			echo "Dropping column $column...";
-			$wait=@sql_query("alter table resource drop column field{$column}");
-			echo "done!<br/>";
-			flush();
+            echo "Dropping column $column...";
+            $wait=@ps_query("alter table resource drop column field{$column}");
+            echo "done!<br/>";
+            flush();               
 		}
 		echo "Done dropping columns<br/><br/>";
 	}
@@ -78,7 +78,7 @@ if($add!=='' || $all){
 	if(count($add)>0){
 		foreach($add as $column){
 			echo "Updating column field$column...";
-			$wait = sql_query("UPDATE resource r inner join resource_data rd ON r.ref = rd.resource AND rd.resource_type_field={$column} SET r.field{$column} = SUBSTR(rd.value, 1, {$resource_field_column_limit})");
+			$wait = ps_query("UPDATE resource r inner join resource_data rd ON r.ref = rd.resource AND rd.resource_type_field= ? SET r.field{$column} = SUBSTR(rd.value, 1, ?)", ['i', $column, 'i', $resource_field_column_limit]);
 			echo "done!<br/>";
 			flush();
 		}
