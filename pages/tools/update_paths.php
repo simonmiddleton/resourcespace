@@ -10,10 +10,10 @@ include "../../include/db.php";
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";
 
-$max=sql_value("select max(ref) value from resource",0);
+$max=ps_value("select max(ref) value from resource",[],0);
 $ref=getvalescaped("ref",1);
 $ps=ps_query("select * from preview_size");
-$resourceinfo=sql_query("select ref,file_extension from resource where ref='$ref'");
+$resourceinfo=ps_query("select ref,file_extension from resource where ref= ?", ['i', $ref]);
 if (count($resourceinfo)>0)
 	{
 	$extension = $resourceinfo[0]['file_extension'];
