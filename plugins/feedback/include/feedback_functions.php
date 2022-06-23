@@ -79,7 +79,7 @@ function save_feedback_data(array $data)
                     # This is to skip fields that are marked as lables so that the question ids match up correctly 
                     $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?', array("i",$offset+$n), '');;
                     }
-                sql_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES("'. ($offset+$n) .'","'. escape_check($datum) .'","'. escape_check($date) .'", "'. escape_check($user) .'")');
+                ps_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES(?, ?, ?, ?)', ['i', $offset+$n, 's', $datum, 's', $date, 's', $user]);
                 $n++;
                 }
             }
@@ -100,7 +100,7 @@ function update_feedback_fields(array $fielddata)
             $n=0;
             foreach($fielddata as $data)
                 {
-                sql_query('INSERT INTO feedback_fields (version, text, type, options) VALUES ("'. escape_check($version) .'","'. escape_check($data['text']) .'","'. escape_check($data['type']) .'","'. escape_check($data['options']) .'")');
+                ps_query('INSERT INTO feedback_fields (version, text, type, options) VALUES (?, ?, ?, ?)', ['i', $version, 's', $data['text'], 'i', $data['type'], 's', $data['options']]);
                 }
             }
         }
