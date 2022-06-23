@@ -2849,7 +2849,7 @@ function get_profile_image($user_ref = "", $by_image = "")
         # Only check the db if the profile image name has not been provided.
         if ($by_image == "" && $user_ref != "")
             {
-            $profile_image_name = ps_value("select profile_image value from user where ref = ?'",array("i",$user_ref), "");
+            $profile_image_name = ps_value("select profile_image value from user where ref = ?",array("i",$user_ref), "");
             }
         else
             {
