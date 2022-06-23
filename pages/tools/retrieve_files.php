@@ -73,27 +73,28 @@ else
 
 $filtersql = "";
 $joinsql = "";
+$params = [];
 
 if (!isset($collectionid))
     {
-    $filtersql .= " r.ref >='" . escape_check($min) . "'";
+    $filtersql .= " r.ref >= ?"; $params[] = 'i'; $params[] = $min;
     if (isset($max))
         {
-        $filtersql .= "AND r.ref <='" . escape_check($max) . "'";
+        $filtersql .= "AND r.ref <= ?"; $params[] = 'i'; $params[] = $max;
         }
     }
 else
     {
     $joinsql .= "RIGHT JOIN collection_resource cr ON cr.resource=r.ref";
-    $filtersql .= "cr.collection='" . escape_check($collectionid) . "'";
+    $filtersql .= "cr.collection= ?"; $params[] = 'i'; $params[] = $collectionid;
     }
     
-$resources = sql_query("SELECT r.ref, r.file_path, r.file_extension  FROM resource r {$joinsql} WHERE {$filtersql} ORDER BY r.ref $orderby");
+$resources = ps_query("SELECT r.ref, r.file_path, r.file_extension  FROM resource r {$joinsql} WHERE {$filtersql} ORDER BY r.ref $orderby", $params);
 
 $errors = array();
 $missingfiles = array();
 $copied = array();
-$sizearray = sql_array("select id value from preview_size",false);
+$sizearray = ps_array("select id value from preview_size",[],false);
 $sizearray[] = ""; // Add jpg version of original if present
 
 $hide_real_filepath = (isset($remote_hidden_paths) && $remote_hidden_paths) ? true : false;
