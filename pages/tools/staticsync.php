@@ -408,7 +408,7 @@ function ProcessFolder($folder)
                             if($parent == 0){$parent_sql = 'IS NULL';}
                             else{$parent_sql = '= ?';$params[] = 'i'; $params[] = $parent;}
 
-                            $fc_categ_ref_sql = 'SELECT DISTINCT ref AS `value` FROM collections c LEFT JOIN collection_resource cr on c.ref = cr.collection
+                            $fc_categ_ref_sql = 'SELECT DISTINCT ref AS `value` FROM collection c LEFT JOIN collection_resource cr on c.ref = cr.collection
                                                  WHERE parent '. $parent_sql .' AND type = ? AND name = ? GROUP BY c.ref HAVING count(DISTINCT cr.resource) = 0';
                             $fc_categ_ref = ps_value($fc_categ_ref_sql,array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', $fc_categ_name]), 0);
                             if($fc_categ_ref == 0)
@@ -458,7 +458,7 @@ function ProcessFolder($folder)
 
                         $collection_sql = 'SELECT DISTINCT ref as `value` FROM collection c LEFT JOIN collection_resource cr on c.ref = cr.collection 
                                            WHERE parent '. $parent_sql .' AND type = ? AND name = ? GROUP BY c.ref HAVING count(DISTINCT cr.resource) > 0';
-                        $collection = ps_query($collection_sql, array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]), 0);
+                        $collection = ps_value($collection_sql, array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]), 0);
 
                         if($collection == 0)
                             {
