@@ -354,10 +354,10 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 
 // example field :-
 // "name of table column"=>array(
-// <language string for the friendly name of this property>,
-// <lang string for the help text explaining what this property means>,
-// <value to denote the field type(0=text,1=boolean,2=text area),
-// < boolean value to indicate whether this is a field that is synchronised? 0=No 1=Yes > 
+// 0: <language string for the friendly name of this property>,
+// 1: <lang string for the help text explaining what this property means>,
+// 2: <value to denote the field type(0=text,1=boolean,2=text area),
+// 3: < boolean value to indicate whether this is a field that is synchronised? 0=No 1=Yes > 
 // )
 // IMPORTANT - Make sure advanced field properties are listed after the 'partial_index' so that these will be hidden from users by default
 
@@ -425,7 +425,8 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 	# Save field config
 	$sync_field = getvalescaped("sync_field",0);
 	$existingfield = get_resource_type_field($ref);
-	
+	$params=array();$syncparams=array();
+
 	foreach ($fieldcolumns as $column=>$column_detail)		
 		{
 		if ($column_detail[2]==1)
@@ -462,7 +463,18 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			$sql="update resource_type_field set ";
 			}		
 		
-		$sql.="{$column}=" . (($val=="")?"NULL":"'{$val}'");
+		$sql.="{$column}=";
+        if ($val=="")
+            {
+            $sql.="NULL";
+            }
+        else    
+            {
+            $sql.="?";
+            $params[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+            $params[]=$val;
+            }
+
 		log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
 
 		// Add SQL to update synced fields if field is marked as a sync field
@@ -476,25 +488,40 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 				{
 				$syncsql="update resource_type_field set ";
 				}
-			$syncsql.="{$column}=" . (($val=="")?"NULL":"'{$val}'");
+			$syncsql.="{$column}=";
+            if ($val=="")
+                {
+                $syncsql.="NULL";
+                }
+            else    
+                {
+                $syncsql.="?";
+                $syncparams[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+                $syncparams[]=$val;
+                }
 			}
 		}
 	// add field_constraint sql
 	if (getvalescaped("field_constraint","")!=""){$sql.=",field_constraint='".getvalescaped("field_constraint",0)."'";}
 
     // Add automatic nodes ordering if set (available only for fixed list fields - except category trees)
-    $sql .= ", automatic_nodes_ordering = '" . (1 == getval('automatic_nodes_ordering', 0, true) ? 1 : 0) . "'";
+    $sql .= ", automatic_nodes_ordering = ?";
+    $params[]="i";$params[]= (1 == getval('automatic_nodes_ordering', 0, true) ? 1 : 0);
 
-    $sql .= " WHERE ref = '{$ref}'";
+    $sql .= " WHERE ref = ?";
+    $params[]="i";$params[]=$ref;
 
-	sql_query($sql);
+	ps_query($sql,$params);
 	clear_query_cache("schema");
 	clear_query_cache("featured_collections");
 
 	if($sync_field!="" && $sync_field>0)
 		{
-		$syncsql.=" where ref='$sync_field' or sync_field='$ref'";
-		sql_query($syncsql);
+		$syncsql.=" where ref=? or sync_field=?";
+        $syncparams[]="i";$syncparams[]=$sync_field;
+        $syncparams[]="i";$syncparams[]=$sync_field;
+
+		ps_query($syncsql,$syncparams);
 		}
 	
 	hook('afterresourcetypefieldeditsave');
