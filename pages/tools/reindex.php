@@ -33,25 +33,26 @@ include_once "../../include/image_processing.php";
 $mysql_log_transactions=false;
 
 $sql = '';
+$params = [];
 
 set_time_limit(0);
 echo "<pre>" . PHP_EOL;
 
 if(isset($start))    {
-    $sql= "where r.ref>=" . $start;
+    $sql= "where r.ref>= ?"; $params[] = 'i'; $params[] = $start;
 	if(isset($end))
 		{
-		$sql.= " and r.ref<=" . $end;
+		$sql.= " and r.ref<= ?"; $params[] = 'i'; $params[] = $end;
 		}
     }	
 
 // Re-index only one resource
 if(0 < $start && 0 == $end)
     {
-    $sql = "WHERE r.ref = '{$start}'";
+    $sql = "WHERE r.ref = ?"; $params[] = 'i'; $params[] = $start;
     }
 	
-$resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref");
+$resources = ps_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref", $params);
 
 $time_start = microtime(true);
 
