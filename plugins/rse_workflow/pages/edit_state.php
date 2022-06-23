@@ -55,8 +55,6 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
         }
     if($errortext=="")
         {
-        $simple_search_escaped = escape_check($simple_search);
-
         if($code=="new")
             {
             rse_workflow_create_state([
@@ -66,21 +64,31 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
                 'notify_user_flag' => $notify_user,
                 'email_from' => '',
                 'bcc_admin' => $rse_workflow_bcc_admin,
-                'simple_search_flag' => $simple_search_escaped,
+                'simple_search_flag' => $simple_search,
             ]);
             }
         else
             {
-            sql_query("
+            ps_query("
                 UPDATE archive_states
-                   SET name='$name',
-                       notify_group='$notify_group',
-                       more_notes_flag='$more_notes',
-                       notify_user_flag='$notify_user',
+                   SET name=?,
+                       notify_group=?,
+                       more_notes_flag=?,
+                       notify_user_flag=?,
                        email_from='',
-                       bcc_admin='$rse_workflow_bcc_admin',
-                       simple_search_flag = '$simple_search_escaped'
-                 WHERE code = '$code'");
+                       bcc_admin=?,
+                       simple_search_flag = ?
+                 WHERE code = ?",
+                array(
+                    "s",$name,
+                    "i",$notify_group,
+                    "i",$more_notes,
+                    "i",$notify_user,
+                    "i",$rse_workflow_bcc_admin,
+                    "i",$simple_search,
+                    "i",$code
+                )
+            );
             }
         
         clear_query_cache("workflow");
