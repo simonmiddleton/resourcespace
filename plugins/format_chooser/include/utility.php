@@ -101,7 +101,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	
     // Handle alpha/ matte channels
     $target_extension = pathinfo($target, PATHINFO_EXTENSION);
-    if(!in_array($target_extension, $preview_no_flatten_extensions))
+    if(!in_array(strtolower($target_extension), $preview_no_flatten_extensions))
         {
         $transform_actions['background'] = 'white';
         }

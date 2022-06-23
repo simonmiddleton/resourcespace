@@ -3,7 +3,7 @@
 function HookResourceconnectCollectionsThumblistextra()
 	{
 	global $usercollection, $lang, $baseurl;
-	$thumbs=sql_query("select * from resourceconnect_collection_resources where collection='$usercollection' order by date_added asc");
+	$thumbs=ps_query("select * from resourceconnect_collection_resources where collection=? order by date_added asc",array("i",$usercollection));
 
 	foreach ($thumbs as $thumb)
 		{

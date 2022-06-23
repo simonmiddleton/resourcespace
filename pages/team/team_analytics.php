@@ -15,7 +15,7 @@ $delete=getvalescaped("delete","");
 if ($delete != "" && enforcePostRequest(false))
 	{
 	# Delete report
-	sql_query("delete from user_report where ref='$delete' and user='$userref'");
+	ps_query("delete from user_report where ref= ? and user= ?", ['i', $delete, 'i', $userref]);
 	}
 
 include dirname(__FILE__)."/../../include/header.php";
@@ -27,7 +27,8 @@ include dirname(__FILE__)."/../../include/header.php";
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["rse_analytics"],
@@ -39,8 +40,13 @@ $links_trail = array(
 renderBreadcrumbs($links_trail);
 
 $search_sql="";
-if ($findtext!="") {$search_sql="and name like '%" . $findtext . "%'";}
-$reports=sql_query("select * from user_report where user='$userref' $search_sql order by ref");
+$params = ['i', $userref];
+if ($findtext!="") 
+    {
+    $search_sql="and name like CONCAT('%', ? ,'%')";
+    $params[] = 's'; $params[] = $findtext;
+    }
+$reports=ps_query("select * from user_report where user= ? $search_sql order by ref", $params);
 
 # pager
 $per_page=15;

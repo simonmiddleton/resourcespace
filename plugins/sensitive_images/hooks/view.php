@@ -2,15 +2,16 @@
 
 function HookSensitive_imagesViewReplacepreviewlink()
     {
-    global $ref,$sensitive_images_field,$resource,$image_preview_zoom;
+    global $ref,$sensitive_images_field, $sensitive_images_blur_level, $resource, $image_preview_zoom;
     if ($sensitive_images_field==0) {return false;} // not configured yet
     $sensitive=$resource["field" . $sensitive_images_field];
+    $sensitive_images_blur_preview=$sensitive_images_blur_level + 16;    
     if ($sensitive!="")
         {
         $image_preview_zoom=false;
         ?>
         <style>
-        #previewimage {filter: blur(15px);}
+        #previewimage {filter: blur(<?php echo $sensitive_images_blur_preview; ?>px);}
 
         #previewimagewrapper::before 
                 {

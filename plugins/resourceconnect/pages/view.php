@@ -9,7 +9,7 @@ if ($k!="")
 	$kauth=false;
 	
 	$col=getvalescaped("col","");
-	$keys=sql_query("select access_key from external_access_keys where collection='$col' and access_key='$k'");
+	$keys=ps_query("select access_key from external_access_keys where collection=? and access_key=?",array("i",$col,"s",$k));
 	$kauth=count($keys)>0;
 	}
 

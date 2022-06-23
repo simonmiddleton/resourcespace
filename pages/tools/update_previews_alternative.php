@@ -10,7 +10,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include_once "../../include/image_processing.php";
 
-$max=sql_value("select max(ref) value from resource_alt_files",0);
+$max=ps_value("select max(ref) value from resource_alt_files",array(), 0);
 $ref=getval("ref", 1);
 $previewbased=getvalescaped("previewbased",false);
 

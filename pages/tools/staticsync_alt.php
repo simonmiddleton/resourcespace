@@ -100,13 +100,13 @@ $done=sql_array("select file_path value from resource where archive=0 and length
 
 # Load all modification times into an array for speed
 $modtimes=array();
-$rd=sql_query("select ref,file_modified,file_path from resource where archive=0 and length(file_path)>0");
+$rd=ps_query("select ref,file_modified,file_path from resource where archive=0 and length(file_path)>0");
 for ($n=0;$n<count($rd);$n++)
 	{
 	$modtimes[$rd[$n]["file_path"]]=$rd[$n]["file_modified"];
 	}
 
-$lastsync=sql_value("select value from sysvars where name='lastsync'","");
+$lastsync=ps_value("select value from sysvars where name='lastsync'",array(), "");
 if (strlen($lastsync)>0) {$lastsync=strtotime($lastsync);} else {$lastsync="";}
 
 
@@ -251,10 +251,10 @@ function ProcessFolder($folder)
 					$name=(count($e)==1?"":$e[count($e)-2]);
 					echo date('Y-m-d H:i:s    ');
 					echo "\nCollection $name, theme=$theme";
-					$collection=sql_value("select ref value from collection where name='" . escape_check($name) . "' and theme='" . escape_check($theme) . "'",0);
+					$collection=ps_value("select ref value from collection where name=? and theme=?",array("s",$name,"s",$theme), 0);
 					if ($collection==0)
 						{
-						sql_query("insert into collection (name,created,public,theme,allow_changes) values ('" . escape_check($name) . "',now(),1,'" . escape_check($theme) . "',0)");
+						ps_query("insert into collection (name,created,public,theme,allow_changes) values (?,now(),1,?,0)",array("s",$name,"s",$theme));
 						$collection=sql_insert_id();
 						}
 					}
@@ -418,7 +418,7 @@ function ProcessFolder($folder)
                                                 // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
                                                 if(in_array($field['type'],array(0,1,4,5,6,8)))
                                                     {
-                                                    $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
+                                                    $old_value=ps_value("select value value from resource_data where resource=? and resource_type_field=?",array("i",$r,"i",$field),"");
                                                     $value=append_field_value($field_info,$value,$old_value);
                                                     }
                                                 }
@@ -453,7 +453,7 @@ function ProcessFolder($folder)
 						}
 
                                         // add the timestamp from this run to the keywords field to help retrieve this batch later
-                                        $currentkeywords = sql_value("select value from resource_data where resource = '$r' and resource_type_field = '1'","");
+                                        $currentkeywords = ps_value("select value from resource_data where resource = '$r' and resource_type_field = '1'",array("i",$r),"");
 					if (strlen($currentkeywords) > 0){
 						$currentkeywords .= ',';
 					}
@@ -615,7 +615,7 @@ if (!$staticsync_ingest)
 	# If not ingesting files, look for deleted files in the sync folder and archive the appropriate file from ResourceSpace.
 	echo "\nLooking for deleted files...";
 	# For all resources with filepaths, check they still exist and archive if not.
-	$rf=sql_query("select ref,file_path from resource where archive=0 and length(file_path)>0 and file_path like '%/%'");
+	$rf=ps_query("select ref,file_path from resource where archive=0 and length(file_path)>0 and file_path like '%/%'");
 	for ($n=0;$n<count($rf);$n++)
 		{
 		$fp=$syncdir . "/" . $rf[$n]["file_path"];
@@ -628,19 +628,12 @@ if (!$staticsync_ingest)
 			}
 		}
 	# Remove any themes that are now empty as a result of deleted files.
-	sql_query("delete from collection where theme is not null and length(theme)>0 and (select count(*) from collection_resource cr where cr.collection=collection.ref)=0;");
+	ps_query("delete from collection where theme is not null and length(theme)>0 and (select count(*) from collection_resource cr where cr.collection=collection.ref)=0;");
 	
-	# also set dates where none set by going back through filename until a year is found, then going forward and looking for month/year.
-	/*
-	$rf=sql_query("select ref,file_path from resource where archive=0 and length(file_path)>0 and (length(creation_date)=0 or creation_date is null)");
-	for ($n=0;$n<count($rf);$n++)
-		{
-		}
-	*/
 	echo "...Complete\n";
 	}
 
-sql_query("update sysvars set value=now() where name='lastsync'");
+ps_query("update sysvars set value=now() where name='lastsync'");
 
 clear_process_lock("staticsync");
 

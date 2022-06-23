@@ -49,7 +49,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 
 	$perms = array_unique($perms);
 	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
-	sql_query("update usergroup set permissions='" . escape_check(join(",",$perms)) . "' where ref='$ref'");
+    ps_query("update usergroup set permissions=? where ref=?",["s",join(",",$perms),"i",$ref]);
 	}
 
 if ($copy_from!="")
@@ -67,7 +67,8 @@ $permissions_done=array();
     $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["page-title_user_group_management"],
@@ -149,7 +150,7 @@ DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
-$fields=sql_query("select *,active from resource_type_field order by active desc,order_by", "schema");
+$fields=ps_query("select *,active from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (!in_array("f*",$permissions))
@@ -168,7 +169,7 @@ foreach ($fields as $field)
 	}
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
-$fields=sql_query("select * from resource_type_field order by active desc,order_by", "schema");
+$fields=ps_query("select * from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (in_array("F*",$permissions))	
@@ -192,7 +193,7 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=sql_query("select * from resource_type order by name", "schema");
+$rtypes=get_resource_types();
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);

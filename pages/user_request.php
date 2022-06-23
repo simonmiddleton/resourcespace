@@ -279,7 +279,7 @@ $groups=get_registration_selectable_usergroups();
 <?php for ($n=0;$n<count($groups);$n++)
 	{
 	?>
-	<option value="<?php echo $groups[$n]["ref"] ?>"><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
+	<option value="<?php echo $groups[$n]["ref"] ?>" <?php if($groups[$n]["ref"] == getval("usergroup", 0, true)){echo " selected";} ?>><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
 	<?php
 	}
 ?>

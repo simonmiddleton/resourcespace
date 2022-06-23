@@ -410,7 +410,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 function get_users_with_permission($permission)
     {
     # First find all matching groups.
-    $groups = sql_query("SELECT ref,permissions FROM usergroup");
+    $groups = ps_query("SELECT ref,permissions FROM usergroup");
     $matched = array();
     for ($n = 0;$n<count($groups);$n++) {
         $perms = trim_array(explode(",",$groups[$n]["permissions"]));
@@ -461,7 +461,7 @@ function get_user_by_username($username)
         {
         return false;
         }
-    return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
+    return ps_value("select ref value from user where username=?",array("s",$username),false);
     }
 
 /**
@@ -812,7 +812,7 @@ function email_reset_link($email,$newuser=false)
         $templatevars['username']=$details["username"];
 
         // Fetch any welcome message for this user group
-        $welcome = sql_value('SELECT welcome_message AS value FROM usergroup WHERE ref = \'' . $details['usergroup'] . '\'', '');
+        $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', array("i",$details['usergroup']), '');
 
         if(trim($welcome) != '')
             {
@@ -861,7 +861,7 @@ function email_reset_link($email,$newuser=false)
  */
 function auto_create_user_account($hash="")
     {
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
+    global $applicationname, $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
            $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash,$defaultlanguage;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
@@ -985,7 +985,7 @@ function auto_create_user_account($hash="")
                 }
 
             $username=$anonymous_login;
-            $userref=sql_value("SELECT ref value FROM user where username='$anonymous_login'","");
+            $userref=ps_value("SELECT ref value FROM user where username=?",array($anonymous_login),"");
             $sessioncollections=get_session_collections($rs_session,$userref,false);
             if(count($sessioncollections)>0)
                 {
@@ -1024,54 +1024,40 @@ function auto_create_user_account($hash="")
         $templatevars['email']=getval("email","");
         $templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
         $templatevars['userrequestcustom']=strip_tags($customContents);
-        $templatevars['linktouser']="$baseurl?u=$new";
+        $url = $baseurl . "?u=" . $new;
+        $templatevars['linktouser'] = "<a href='" . $url . "'>" . $url . "</a>";
 
-        // Need to global the usergroup so that we can find the appropriate admins
+        $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup);
 
-        $approval_notify_users = get_notification_users("USER_ADMIN", $usergroup); 
-        $message_users=array();
-        global $user_pref_user_management_notifications, $email_user_notifications;
-
-        // get array of preferred languages for notify users
-        $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
-        // get array of language strings for selected languages
-        $language_strings_all = get_languages_notify_users($languages_approval_notify_users);  
-         
-        foreach($approval_notify_users as $approval_notify_user)
+        $message = new ResourceSpaceUserNotification;
+        $eventdata = [
+            "type"  => USER_REQUEST,
+            "ref"   => $new,
+            "extra" => ["usergroup"=>$usergroup],
+            ];
+        $message->set_subject("lang_requestuserlogin");
+        $message->set_text("lang_userrequestnotification1");
+        $message->append_text("<br/><br/>");
+        $message->append_text("lang_name");
+        $message->append_text(": " . $templatevars['name'] . "<br/><br/>");
+        $message->append_text("lang_email");
+        $message->append_text(": " . $templatevars['email'] . "<br/><br/>");
+        $message->append_text("lang_comment");
+        $message->append_text(": " . $templatevars['userrequestcomment'] . "<br/><br/>");
+        $message->append_text("lang_ipaddress");
+        $message->append_text(": " . get_ip() . "<br/><br/>");
+        if(trim($customContents) != "")
             {
-            // Is notification required
-            get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
-            if(!$send_message) { continue; } // Skip this user 
-            
-            // Is an email required
-            get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications); 
-            get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications); 
-            
-            // get preferred language for approval_notify_user
-            $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
-
-            // get preferred language for approval_notify_user
-            $lang_pref = $language_strings_all[$message_language];
-
-            // Send email if required
-            if( ($approval_notify_user["email"]!="") && ($email_user_notifications || $email_and_user_notifications) ) {
-                $message=$lang_pref["userrequestnotification1"] . "\n\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang_pref["userrequestnotification3"] . "\n$baseurl?u=$new";
-                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang_pref["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
-                }        
-
-            // Send notification because it is required
-            $notificationmessage=$lang_pref["userrequestnotification1"] . "\n" . $lang_pref["name"] . ": " . $templatevars['name'] . "\n" . $lang_pref["email"] . ": " . $templatevars['email'] . "\n" . $lang_pref["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang_pref["userrequestnotification3"];
-            message_add($approval_notify_user["ref"],$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
+            $message->append_text($customContents . "<br/><br/>");
             }
-
-        // set language back to cookie setting
-        $language = setLanguage();
-        $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
-        if(file_exists($langfile))
-            {
-            include $langfile;
-            }
-    
+        $message->append_text("lang_userrequestnotification3");
+        $message->append_text("<br/><br/>" . $templatevars['linktouser']);
+        $message->user_preference = "user_pref_user_management_notifications";
+        $message->url = $url;
+        $message->template = "account_request";
+        $message->templatevars = $templatevars;
+        $message->eventdata = $eventdata;
+        send_user_notification($approval_notify_users,$message);
         }
 
     return true;
@@ -1098,60 +1084,33 @@ function email_user_request()
     $user_registration_opt_in_message = "";
     if($user_registration_opt_in && getval("login_opt_in", "") == "yes")
         {
-        $user_registration_opt_in_message .= "\n\n{$lang["user_registration_opt_in_message"]}";
+        $user_registration_opt_in_message .= $lang["user_registration_opt_in_message"];
         }
-
     
-    $approval_notify_users = get_notification_users("USER_ADMIN"); 
-    $message_users         = array();
-
-    // get array of preferred languages for notify users
-    $languages_approval_notify_users = array_unique(array_column($approval_notify_users, "lang"));
-    // get array of language strings for selected languages
-    $language_strings_all = get_languages_notify_users($languages_approval_notify_users);    
-
-    foreach($approval_notify_users as $approval_notify_user)
+    $approval_notify_users = get_notification_users("USER_ADMIN");
+    $message = new ResourceSpaceUserNotification;
+    $message->set_subject($applicationname . ": ");
+    $message->append_subject("lang_requestuserlogin");
+    $message->append_subject(" - " . $name);
+    $message->set_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
+    $message->append_text("<br/><br/>");
+    $message->append_text("lang_name");
+    $message->append_text(": " . $name . "<br/><br/>");
+    $message->append_text("lang_email");
+    $message->append_text(": " . $email . "<br/><br/>");
+    $message->append_text($user_registration_opt_in_message . "<br/><br/>");
+    $message->append_text("lang_comment");
+    $message->append_text(": " . $userrequestcomment . "<br/><br/>");    
+    $message->append_text("lang_ipaddress");
+    $message->append_text(": " .  get_ip()  . "<br/><br/>");
+    if(trim($customContents) != "")
         {
-        // Is notification required
-        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
-        if(!$send_message) { continue; } // Skip this user
-
-        // Is an email required
-        get_config_option($approval_notify_user['ref'],'email_user_notifications', $email_user_notifications);
-        get_config_option($approval_notify_user['ref'],'email_and_user_notifications', $email_and_user_notifications);
-
-        // get preferred language for approval_notify_user
-        $message_language = isset($approval_notify_user["lang"]) && $approval_notify_user["lang"] != "" ? $approval_notify_user["lang"] : $defaultlanguage;
-
-        // get preferred language for approval_notify_user
-        $lang_pref = $language_strings_all[$message_language];
-
-        // Send email if required
-        if( ($approval_notify_user['email'] != '') && ($email_user_notifications || $email_and_user_notifications) ) {
-            $message = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n\n{$lang_pref['name']}: {$name}\n\n{$lang_pref['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang_pref['comment']}: {$userrequestcomment}\n\n{$lang_pref['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang_pref['userrequestnotification2'] : $lang_pref["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
-            send_mail(
-                $approval_notify_user['email'],
-                "{$applicationname}: {$lang_pref['requestuserlogin']} - {$name}",
-                $message,
-                '',
-                $user_email,
-                '',
-                '',
-                $name);
-            }
-
-        // Send notification because it is required
-        $notificationmessage = ($account_email_exists_note ? $lang_pref['userrequestnotification1'] : $lang_pref["userrequestnotificationemailprotection1"]) . "\n" . $lang_pref["name"] . ": " . $name . "\n" . $lang_pref["email"] . ": " . $email . "\n" . $lang_pref["comment"] . ": " . $userrequestcomment . "\n" . $lang_pref["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
-        message_add($approval_notify_user['ref'], $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
+        $message->append_text($customContents . "<br/><br/>");
         }
-
-    // set language back to cookie setting
-    $language = setLanguage();
-    $langfile= dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
-    if(file_exists($langfile))
-        {
-        include $langfile;
-        }
+    $message->append_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
+    $message->user_preference = "user_pref_user_management_notifications";
+    $message->url = $baseurl . "/pages/team/team_user.php";
+    send_user_notification($approval_notify_users,$message);
 
     // Send a confirmation e-mail to requester
     if($account_request_send_confirmation_email_to_requester)
@@ -1384,7 +1343,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
         $user_refs = array();
         foreach ($ulist as $user)
             {
-            $user_ref = sql_value("SELECT ref AS value FROM user WHERE username='" . escape_check($user) . "'", false);
+            $user_ref = ps_value("SELECT ref AS value FROM user WHERE username=?", array("s",$user), false);
             if ($user_ref !== false)
                 {
                 array_push($user_refs,$user_ref);
@@ -1463,7 +1422,7 @@ function resolve_userlist_groups($userlist)
                         # Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
                         $untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
                         $untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
-                        $groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
+                        $groupref = ps_value("select ref as value from usergroup where lower(name)=?",array("s",$untranslated_groupname),false);
                         if ($groupref!==false)
                             {
                             $default_group = true;
@@ -1476,7 +1435,7 @@ function resolve_userlist_groups($userlist)
                 {
                 # Custom group
                 # Decode the groupname
-                $untranslated_groups = sql_query("select ref, name from usergroup");
+                $untranslated_groups = ps_query("select ref, name from usergroup");
                 foreach ($untranslated_groups as $group)
                     {
                     if (i18n_get_translated($group['name'])==$translated_groupname)
@@ -1540,7 +1499,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                         # Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
                         $untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
                         $untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
-                        $groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
+                        $groupref = ps_value("select ref as value from usergroup where lower(name)=?",array("s",$untranslated_groupname),false);
                         if ($groupref!==false)
                             {
                             $default_group = true;
@@ -1553,7 +1512,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                 { 
                 # Custom group
                 # Decode the groupname
-                $untranslated_groups = sql_query("select ref, name from usergroup");
+                $untranslated_groups = ps_query("select ref, name from usergroup");
                 
                 foreach ($untranslated_groups as $group)
                     {
@@ -1832,7 +1791,7 @@ function check_access_key($resources,$key)
         if ($emulate_plugins_set!==true)
             {
             global $plugins;
-            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            $enabled_plugins = (ps_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
             foreach($enabled_plugins as $plugin)
                 {
                 $s=explode(",",$plugin['enabled_groups']);
@@ -2039,7 +1998,7 @@ function make_username($name)
     while (!$unique)
         {
         $num++;
-        $c=sql_value("select count(*) value from user where username='" . escape_check($name . (($num==0)?"":$num)) . "'",0);
+        $c=ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
         $unique=($c==0);
         }
     return $name . (($num==0)?"":$num);
@@ -2053,7 +2012,7 @@ function make_username($name)
 function get_registration_selectable_usergroups()
     {
     # Executes query.
-    $r = sql_query("select ref,name from usergroup where allow_registration_selection=1 order by name");
+    $r = ps_query("select ref,name from usergroup where allow_registration_selection=1 order by name");
 
     # Translates group names in the newly created array.
     $return = array();
@@ -2135,7 +2094,7 @@ function resolve_open_access($userlist,$resource,$expires)
         foreach($userlist_array as $option)
             {
             #user
-            $userid=sql_value("select ref value from user where username='$option'","");
+            $userid=ps_value("select ref value from user where username=?",array("s",$option),"");
             if($userid!="")
                 {
                 open_access_to_user($userid,$resource,$expires);   
@@ -2168,9 +2127,8 @@ function remove_access_to_user($user,$resource)
 function user_email_exists($email)
     {
     $email=escape_check(trim(strtolower($email)));
-    return (sql_value("select count(*) value from user where email like '$email'",0)>0);
+    return (ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?",["s",$email],0)>0);
     }
-
 
 /**
 * Return an array of emails from a list of usernames and email addresses. 
@@ -2189,7 +2147,7 @@ function resolve_user_emails($user_list)
     foreach($user_list as $user)
         {
         $escaped_username = escape_check($user);
-        $email_details    = sql_query("SELECT email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
+        $email_details    = sql_query("SELECT ref, email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
         if(isset($email_details[0]) && (time() < strtotime($email_details[0]['account_expires']))) 
           {
           continue;
@@ -2211,7 +2169,7 @@ function resolve_user_emails($user_list)
             continue;
             }
 
-        // Skip internal, not approved accounts
+        // Skip internal, not approved/disabled accounts
         if($email_details[0]['approved'] != 1)
             {
             debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
@@ -2228,6 +2186,7 @@ function resolve_user_emails($user_list)
         // Internal, approved user account - add e-mail address from user account
         $emails_key_required['unames'][]       = $user;
         $emails_key_required['emails'][]       = $email_details[0]['email'];
+        $emails_key_required['refs'][]         = $email_details[0]['ref'];
         $emails_key_required['key_required'][] = false;
         }
 
@@ -2374,26 +2333,26 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
             
             case "RESOURCE_ACCESS";
             // Notify users who can grant access to resources, get all users in groups with R permissions
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];     
             break;
             
             case "RESEARCH_ADMIN";
             // Notify research admins, get all users in groups with r permissions
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];     
             break;
                     
             case "RESOURCE_ADMIN";
             // Get all users in groups with t and e0 permissions
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];
             break;
             
             case "SYSTEM_ADMIN";
             default;
             // Get all users in groups with a permission (default if incorrect admin type has been passed)
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];
             break;
         
@@ -2469,7 +2428,7 @@ function verify_antispam($spamcode="",$usercode="",$spamtime=0)
 function check_share_password($key,$password,$cookie)
     {
     global $scramble_key, $baseurl;
-    $sharehash = sql_value("SELECT password_hash value FROM external_access_keys WHERE access_key='" . escape_check($key) . "'","");
+    $sharehash = ps_value("SELECT password_hash value FROM external_access_keys WHERE access_key=?",array("s",$key),"");
     if($password != "")
         {
         $hashcheck = hash('sha256', $key . $password . $scramble_key);
@@ -2858,7 +2817,7 @@ function delete_profile_image($user_ref)
     {
     global $storagedir;
 
-    $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
+    $profile_image_name = ps_value("select profile_image value from user where ref = ?",array("i",$user_ref), "");
     
     if ($profile_image_name != "")
         {
@@ -2890,7 +2849,7 @@ function get_profile_image($user_ref = "", $by_image = "")
         # Only check the db if the profile image name has not been provided.
         if ($by_image == "" && $user_ref != "")
             {
-            $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
+            $profile_image_name = ps_value("select profile_image value from user where ref = ?",array("i",$user_ref), "");
             }
         else
             {
@@ -2918,7 +2877,7 @@ function get_profile_image($user_ref = "", $by_image = "")
  */
 function get_profile_text($user_ref)
     {
-    return sql_value("select profile_text value from user where ref = '" . escape_check($user_ref) . "'","");
+    return ps_value("select profile_text value from user where ref = ?",array("i",$user_ref), "");
     }
 
 
@@ -3080,7 +3039,7 @@ function emulate_user($user, $usergroup="")
         # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
         if ($emulate_plugins_set!==true)
             {
-            $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            $enabled_plugins = (ps_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
             foreach($enabled_plugins as $plugin)
                 {
                 $s=explode(",",$plugin['enabled_groups']);

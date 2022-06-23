@@ -43,7 +43,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 		// figure out group
 		$group = $simpleldap['fallbackusergroup'];
 		$groupmatch="";
-		$grouplist = sql_query("select * from simpleldap_groupmap");
+		$grouplist = ps_query("select * from simpleldap_groupmap");
 		if (count($grouplist)>0 && $userinfo['group']!="")
 			{
 			for ($i = 0; $i < count($grouplist); $i++)
@@ -164,7 +164,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 				
 				
 				// Update with information from LDAP	
-				$rsgroupname=sql_value("select name value from usergroup where ref='$group'",'');
+				$rsgroupname=ps_value("select name value from usergroup where ref=?", array("i",$group), '');
 				sql_query("update user set origin='simpleldap', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments='" . $lang["simpleldap_usercomment"] . (($groupmatch!="")?"\r\nLDAP group: " . escape_check($groupmatch):"") . "\r\nAdded to RS group " . escape_check($rsgroupname) . "(" . $group . ")' where ref='$ref'");
 						
 				

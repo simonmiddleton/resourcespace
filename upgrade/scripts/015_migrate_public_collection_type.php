@@ -3,7 +3,7 @@ set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Starting migrating public collection
 
 // Check public and theme are set in order to be able to continue with this script. This should apply to new systems 
 // where these columns are not generated anymore
-$collection_structure = array_column(sql_query("DESCRIBE collection", "", -1, false), "Field");
+$collection_structure = array_column(ps_query("DESCRIBE collection", array(), "", -1, false), "Field");
 if(!in_array("public", $collection_structure) || !in_array("theme", $collection_structure))
     {
     return;

@@ -100,7 +100,7 @@ function ResourceConnectCollectionWarning($languagestring,$collection)
     {
     global $lang;
     # Are there any remote assets?
-    $c=sql_value("select count(*) value from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'",0);
+    $c=ps_value("select count(*) value from resourceconnect_collection_resources where collection=?",array("i",$collection),0);
     if ($c>0)
         {
         # Add a warning.
@@ -139,11 +139,23 @@ function HookResourceConnectAllSearchfiltertop()
 function HookResourceConnectAllGenerate_collection_access_key($collection,$k,$userref,$feedback,$email,$access,$expires)
     {
     # When sharing externally, add the external access key to an empty row if the collection is empty, so the key still validates.
-    $c=sql_value("select count(*) value from collection_resource where collection='$collection'",0);
+    $c=ps_value("select count(*) value from collection_resource where collection=?",array("i",$collection), 0);
     if ($c>0) {return false;} # Contains resources, key already present
     
-    sql_query("insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,'$k','$collection','$userref','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . $expires . "'"). ");");
-    
+    $sql="insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,?,?,?,?,?',now(),?,";
+    $params=array("s",$k,"i",$collection,"i",$userref,"i",$feedback,"s",$email,"i",$access);
+
+    if ($expires=="") 
+            {
+            $sql.="null";
+            }
+    else    
+            {
+            $sql.="?";
+            $params[]="s";$params[]=$expires;
+            }
+    $sql.=")";
+    ps_query($sql,$params);
     }
 
 function HookResourceconnectAllGenerateurl($url)
@@ -284,8 +296,7 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
 
 function HookResourceconnectAllCountresult($collection,$count)
 	{
-	return $count+sql_value("select count(*) value from resourceconnect_collection_resources where collection='$collection'",0);
-
+	return $count+ps_value("select count(*) value from resourceconnect_collection_resources where collection=?",array("i",$collection),0);
 	}
 
 function HookResourceConnectAllgetRemoteResources($collection)

@@ -1,9 +1,5 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
-
+command_line_only();
 
 // Set up test
 $src_filename = 'test_000502.jpg';

@@ -310,7 +310,7 @@ if('' == $noattach)
         }
     
     // We compute a file name for the download.
-    if(!isset($filename) || $filename == "")
+    if(!isset($filename) || $filename == "" || $alternative != -1)
         {
         $filename = get_download_filename($ref, $size, $alternative, $ext);
         }

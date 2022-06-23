@@ -7,8 +7,15 @@ if (!checkperm('i'))
     exit ($lang['error-permissiondenied']);
     }
 
-$title_field="field".$view_title_field;
-$pendingresources=ps_query("select ref, $title_field, file_size from resource where archive='1'");
+if(is_int($view_title_field))
+    {
+    $title_field="field".$view_title_field;
+    $pendingresources=ps_query("select ref, $title_field, file_size from resource where archive='1'");
+    }
+else
+    {
+    $pendingresource = [];
+    }
 $totalpendingsize=0;
 
 // Handle create archive form post

@@ -153,7 +153,8 @@ else if (strpos($backurl, "pages/team/team_user.php") !== false)
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manageusers"],
@@ -167,7 +168,8 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manageusers"],
@@ -345,13 +347,13 @@ $select_table_url = generateURL(
                 {
                 ?>
                 <tr>
-                    <td><?php echo htmlspecialchars(nicedate($record['datetime'], true, true, true)); ?></td>
-                    <td><?php echo htmlspecialchars($record['user']); ?></td>
-                    <td><?php echo htmlspecialchars($record['operation']); ?></td>
-                    <td><?php echo hook("userdisplay","",array(array("access_key"=>$record['access_key'],'username'=>$record['user'])))?"":htmlspecialchars($record['notes']); ?></td>
-                    <td><?php echo htmlspecialchars($record['resource_field']); ?></td>
-                    <td><?php echo htmlspecialchars($record['old_value']); ?></td>
-                    <td><?php echo htmlspecialchars($record['new_value']); ?></td>
+                    <td><?php echo htmlspecialchars((string) nicedate($record['datetime'], true, true, true)); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['user']); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['operation']); ?></td>
+                    <td><?php echo hook("userdisplay","",array(array("access_key"=>$record['access_key'],'username'=>$record['user'])))?"":htmlspecialchars((string) $record['notes']); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['resource_field']); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['old_value']); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['new_value']); ?></td>
                     <td><?php echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)

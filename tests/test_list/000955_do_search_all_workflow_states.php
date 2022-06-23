@@ -1,6 +1,5 @@
 <?php
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 // Check for searching using $search_all_workflow_states=false;
 

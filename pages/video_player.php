@@ -21,13 +21,12 @@ if(
     {
     $use_video_alts = true;
 
-    $alternative = sql_value("
+    $alternative = ps_value("
             SELECT ref AS `value`
               FROM resource_alt_files
-             WHERE resource = '{$ref_escaped}'
-               AND name = '{$video_player_thumbs_view_alt_name_escaped}'
-        ",
-        -1);
+             WHERE resource = ?
+               AND name = ?
+        ",array("i",$ref,"s",$video_player_thumbs_view_alt_name_escaped),-1);
     }
 
 //Create array of video sources

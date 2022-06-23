@@ -59,7 +59,16 @@ function HookRse_workflowViewPageevaluation()
                         ?>
                         <script type="text/javascript">
                         styledalert('<?php echo $lang["success"] ?>','<?php echo $lang["rse_workflow_saved"] . "&nbsp;" . $lang["status" . $workflowaction["statusto"]];?>');
-                        </script><?php
+                        if(jQuery("#modal").is(":visible"))
+                            {
+                            ModalClose();
+                            }
+                        else
+                            {
+                            window.setTimeout(function(){CentralSpaceLoad(baseurl_short);},1000);
+                            }
+                        </script>
+                        <?php
                         exit();
                         }
                     else
@@ -189,7 +198,7 @@ function HookRse_workflowViewReplacetitleprefix($state)
 
     if ($state<=3) {return false;} # For custom states only.
 
-    $name=sql_value("select name value from archive_states where code='$state'","");
+    $name=ps_value("select name value from archive_states where code=?", array("s",$state), "");
     
     ?><span class="ResourceTitleWorkflow<?php echo $state ?>"><?php echo i18n_get_translated($name) ?>:</span>&nbsp;<?php
     return true;

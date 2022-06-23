@@ -1,8 +1,6 @@
 <?php
-if(PHP_SAPI != 'cli')
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setting up the test
 $original_user_data = $userdata;
@@ -20,7 +18,7 @@ $add_ref_to_col_fct = function($ref, $col, $col_state)
 $user_general = new_user("test_001903_general", 2);
 if($user_general === false)
     {
-    $user_general = sql_value("SELECT ref AS `value` FROM user WHERE username = 'test_001903_general'", 0);
+    $user_general = ps_value("SELECT ref AS `value` FROM user WHERE username = 'test_001903_general'", array(), 0);
     }
 if($user_general === 0)
     {

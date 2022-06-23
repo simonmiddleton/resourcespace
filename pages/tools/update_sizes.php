@@ -10,7 +10,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";
 
-$max=sql_value("select max(ref) value from resource",0);
+$max=ps_value("select max(ref) value from resource",array(), 0);
 $ref=getvalescaped("ref",1);
 
 $resourceinfo=sql_query("select ref,file_extension from resource where ref='$ref'");

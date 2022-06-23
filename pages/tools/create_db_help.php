@@ -1,10 +1,7 @@
 <?php
 // Creates or updates the database help files, ready for manual completion by adding a note to each column.
-if('cli' != PHP_SAPI)
-    {
-    http_response_code(401);
-    exit('Access denied - Command line only!');
-    }
+include "../../include/db.php";
+command_line_only();
 
 $folder=dirname(__FILE__) . "/../../dbstruct/";
 

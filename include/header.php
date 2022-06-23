@@ -408,12 +408,12 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             $header_img_src = get_header_image();
             if($header_link && ($k=="" || $internal_share_access))
                 {?>
-                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" ></a>
+                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></a>
                 <?php
                 }
             else
                 {?>
-                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></div>
+                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></div>
                 <?php
                 }
             }

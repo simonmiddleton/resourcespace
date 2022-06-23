@@ -69,7 +69,7 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
 global $baseurl;
 
 // Retrieve list of groups for use in mapping dropdown
-$rsgroups = sql_query('select ref, name from usergroup order by name asc');
+$rsgroups = ps_query('select ref, name from usergroup order by name asc',array());
 
 // If any new values aren't set yet, fudge them so we don't get an undefined error
 // this is important for updates to the plugin that introduce new variables

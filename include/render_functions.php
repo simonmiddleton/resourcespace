@@ -1080,7 +1080,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             // Collection Actions
             $collection_actions_array = compile_collection_actions($collection_data, $top_actions, $resource_data);
-
             // Usual search actions
             $search_actions_array = compile_search_actions($top_actions);
 
@@ -2071,6 +2070,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $type = 0;
         }
 
+    // The visibility status (block/none) will be sent to the server for validation purposes
+    echo "<input id='field_" . $field['ref']  . "_displayed' name='" . "field_" . $field['ref']  . "_displayed' type='hidden' value='block'>";
+
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
@@ -2636,7 +2638,15 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"<?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>"
+                
+                <?php if (isset($links[$i]["menu"]) && $links[$i]["menu"]) { ?>
+                    onclick="ModalClose();return ModalLoad(this, true, true, 'right');"
+                <?php } else { ?>
+                    onclick="return CentralSpaceLoad(this, true);"
+                <?php } ?>
+                
+                <?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
             if (isset($links[$i]['help']))
                 {
                 render_help_link($links[$i]['help']);
@@ -2784,10 +2794,14 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div class="ImageColourWrapper" style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto;"><img
-    border="0"
-    width="<?php echo $width ?>" 
-    height="<?php echo $height ?>"
+    <div class="ImageColourWrapper" 
+    style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
+    width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto; 
+    <?php 
+    $blurbleedstopper = hook("stopblurbleed"); 
+    if ($blurbleedstopper) { echo $blurbleedstopper; }
+    ?>">
+    <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>"
     src="<?php echo $img_url ?>" 
     alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field]))))); ?>"
     /></div>
@@ -3995,7 +4009,9 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status);                   
+                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    // The visibility status (block/none) will be sent to the server in the following field
+                    jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
 
                 <?php
                 // Batch edit mode
@@ -4556,7 +4572,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view;
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view,$show_theme_collection_stats;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
@@ -4638,7 +4654,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx["tools"][] = $tool_edit;
             }
-        if($is_featured_collection)
+        if($is_featured_collection && $show_theme_collection_stats)
             {
             $render_ctx['show_resources_count'] = true;
             }

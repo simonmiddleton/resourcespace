@@ -1292,6 +1292,11 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
 
+    if (count($nodes) == 0)
+        {
+        return false;
+        }
+
     $sql = '';
     $sql_params = [];
 
@@ -1605,43 +1610,10 @@ function copy_resource_nodes($resourcefrom, $resourceto)
 
     return;
     }
-
-/**
- * Return an array of all node IDs where the node contains any of the keyword IDs passed
- *
- * @param  array $keywords An array of keyword IDs for the indexed content
- * @return array Matching node IDs
- */
-function get_nodes_from_keywords($keywords=array())
-    {
-    if(!is_array($keywords)){$keywords=array($keywords);}
-    return ps_array("SELECT node value FROM node_keyword WHERE keyword IN (" . ps_param_insert(count($keywords)) . ")", ps_param_fill($keywords,"i")); 
-    }
+    
     
 /**
- * For the specified $resource, increment the hitcount for each node in array
- *
- * @param  integer $resource
- * @param  array $nodes
- * @return void
- */
-function update_resource_node_hitcount($resource,$nodes)
-    {
-    if(!is_array($nodes)){$nodes=array($nodes);}
-    if (count($nodes)>0) 
-        {
-        $node_chunks = array_chunk($nodes,1000);
-        db_begin_transaction('update_resource_node_hitcount');
-        foreach($node_chunks as $node_chunk)
-            {
-            ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($node_chunk)) . ")", array_merge(array("i", $resource), ps_param_fill($node_chunk, "i")), false, -1, true, 0);
-            }
-        db_end_transaction('update_resource_node_hitcount');
-        }
-    }
-
-
-/**
+* Copy all nodes from one metadata field to another one.
 * Copy all nodes from one metadata field to another one.
 * Used mostly with copy field functionality
 * 

@@ -167,7 +167,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
     global $baseurl,$k;
     if (substr($search,0,11)!="!collection") {return false;} # Not a collection. Exit.
     $collection=substr($search,11);
-    $affiliate_resources=sql_query("select * from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'");
+    $affiliate_resources=ps_query("select * from resourceconnect_collection_resources where collection=?",array("i",$collection));
     if (count($affiliate_resources)==0) {return false;} # No affiliate resources. Exit.
 
     #echo "<pre>";

@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 include_once dirname(__FILE__, 3) . '/include/annotation_functions.php';
 

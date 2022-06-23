@@ -269,14 +269,14 @@ function HookSimplesamlAllProvideusercredentials()
 
         $userid = 0;
         $update_hash = false; // Only update password hash if necessary as computationally intensive
-        $currentuser = sql_query("SELECT ref, usergroup, last_active FROM user WHERE username='" . escape_check($username) . "'");
+        $currentuser = ps_query("SELECT ref, usergroup, last_active FROM user WHERE username=?",array("s",$username));
         $legacy_username_used = false;
 
         // Attempt one more time with ".sso" suffix. Legacy way of distinguishing between SSO accounts and normal accounts
         if(is_array($currentuser) && count($currentuser) == 0)
             {
-            $legacy_username_escaped = escape_check("{$username}.sso");
-            $currentuser = sql_query("SELECT ref, usergroup, last_active FROM user WHERE username = '{$legacy_username_escaped}'");
+            $legacy_username = "{$username}.sso";
+            $currentuser = ps_query("SELECT ref, usergroup, last_active FROM user WHERE username = ?",array("s",$legacy_username));
             $legacy_username_used = true;
             }
 
@@ -286,9 +286,7 @@ function HookSimplesamlAllProvideusercredentials()
 
             if($legacy_username_used)
                 {
-                $username_escaped = escape_check($username);
-                $userid_escaped = escape_check($userid);
-                sql_query("UPDATE user SET username = '{$username_escaped}' WHERE ref = '{$userid_escaped}'");
+                ps_query("UPDATE user SET username = ? WHERE ref = ?",array("s",$username,"i",$userid));
                 }
 
             // Update hash if not logged on in last day
@@ -349,7 +347,7 @@ function HookSimplesamlAllProvideusercredentials()
 			{
             // User authenticated, but does not exist
             // First see if there is a matching account
-            $email_matches=sql_query("SELECT ref, username, fullname, origin FROM user WHERE email='" . escape_check($email) . "'");				
+            $email_matches=ps_query("SELECT ref, username, fullname, origin FROM user WHERE email=?",array("s",$email));				
 
             if(count($email_matches)>0 && trim($email) != "")
 				{
@@ -421,35 +419,47 @@ function HookSimplesamlAllProvideusercredentials()
 			// Update user info
 			global $simplesaml_update_group, $session_autologout;
             $hash_update = "";
+            $sql = "UPDATE user SET origin='simplesaml', username=?,";
+            $params=array("s",$username);
+
             if($update_hash)
                 {
                 $password_hash = rs_password_hash('RSSAML' . generateSecureKey(64) . $username);
-                $hash_update = "password = '$password_hash', ";
+                $sql .= "password = ?, ";
+                $params[]="s";$params[]=$password_hash;
                 }
-            $sql = "UPDATE user SET origin='simplesaml', username='" . escape_check($username) . "'," . $hash_update . " fullname='" . escape_check($displayname) . "'";
-            
+
+            $sql.=" fullname=?";
+            $params[]="s";$params[]=$displayname;
+
             if(isset($email) && $email != "")
                 {
                 // Only set email if provided. Allows accounts without an email address to have one set by the admin without it getting overwritten
-                $sql .= ", email='" . escape_check($email) . "'";
+                $sql .= ", email=?";
+                $params[]="s";$params[]=$email;
                 }
             if(isset($comment))
                 {
-                $sql .= ",comments=concat(comments,'\n" . date("Y-m-d") . " " . escape_check($comment) . "')";
+                $sql .= ",comments=concat(comments,?)";
+                $params[]="s";$params[]="\n" . date("Y-m-d") . " " . $comment;
+
                 log_activity($comment, LOG_CODE_UNSPECIFIED, 'simplesaml', 'user', 'origin', $userid, null, (isset($origin) ? $origin : null), $userid);
                 }
 			if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"] == ""))
 				{
-				$sql .= ", usergroup = '$group'";
+				$sql .= ", usergroup = ?";
+                $params[]="i";$params[]=$group;
 				}
             if(0 < count($custom_attributes))
                 {
                 $custom_attributes = json_encode($custom_attributes);
-                $sql .=",simplesaml_custom_attributes = '" . escape_check($custom_attributes) . "'";
+                $sql .=",simplesaml_custom_attributes = ?";
+                $params[]="s";$params[]=$custom_attributes;
                 }
 
-			$sql .= " WHERE ref = '$userid'";
-			sql_query($sql);
+			$sql .= " WHERE ref = ?";
+            $params[]="i";$params[]=$userid;
+			ps_query($sql,$params);
 
             $user_select_sql = new PreparedStatementQuery();
             $user_select_sql->sql = "u.username = ?";

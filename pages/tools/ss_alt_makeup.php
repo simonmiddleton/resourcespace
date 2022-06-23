@@ -13,15 +13,9 @@
 // This script has been designed to work with staticsync_alt in ingest mode. It has not been tested against 
 // other configurations. Use at your own risk.
 // 
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Command line execution only');
-    }
-
 include dirname(__FILE__) . "/../../include/db.php";
-
 include dirname(__FILE__) . "/../../include/image_processing.php";
+command_line_only();
 
 if (!(isset($staticsync_mapped_category_tree) && is_numeric($staticsync_mapped_category_tree))){
 	echo "Error: This script requires use of a mapped category tree for staticsync.\n";
@@ -86,11 +80,11 @@ foreach ($files as $thefile){
 			$filename = $matches['2'];
 
 			$sql = "select rdf.resource value from resource_data rdp 
-			left join resource_data rdf on rdp.resource = rdf.resource and rdf.resource_type_field = $filename_field
-			where rdp.resource_type_field = $staticsync_mapped_category_tree and rdp.value like 
-			'%,$searchpath' and rdf.value like '$filename%' limit 1";
+			left join resource_data rdf on rdp.resource = rdf.resource and rdf.resource_type_field = ?
+			where rdp.resource_type_field = $ and rdp.value like 
+			? and rdf.value like ? limit 1";
 
-			$resource = sql_value($sql,'0');
+			$resource = ps_value($sql,array("i",$filename_field,"i",$staticsync_mapped_category_tree,"s","%," . $searchpath,"s",$filename . "%"),'0');
 
 			$ext = $matches[4];
 			$thisfilesuffix = $matches[3];

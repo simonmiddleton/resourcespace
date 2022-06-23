@@ -305,6 +305,9 @@ if($editsearch)
     # The $items array is used later, so must be updated with all items
     $items = $all_resource_refs;
 
+    # Establish a list of resource types which will be involved in this edit
+    $items_resource_types = array_unique(array_column($items,"resource_type"));
+
     $last_resource_edit = get_last_resource_edit_array($items); 
 
     # This is a multiple item edit (even if there is only one item in the list), so use the first resource as the template
@@ -624,6 +627,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $fielderror = false;
                                 if($field['required'] == 1
                                     && $field['hide_when_uploading'] != 1
+                                    && !checkperm('F' . $field["ref"])
                                     &&  (
                                         $field["resource_type"] == $resource["resource_type"]
                                         ||
@@ -1391,7 +1395,7 @@ hook("editbefresmetadata"); ?>
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != ""
+                        (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 
                             && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
@@ -1648,6 +1652,21 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
+
+# Only include fields whose resource type is global or is present in the resource(s) being edited
+if ($multiple) 
+    {
+    $fields_to_include = array();
+    foreach ($fields as $field_candidate) 
+        {
+        if( ($field_candidate["resource_type"] == 0) || (in_array($field_candidate["resource_type"],$items_resource_types) ) ) 
+            {
+            $fields_to_include[]=$field_candidate;
+            }
+        }    
+    $fields=$fields_to_include;
+    }
+
 $all_selected_nodes = get_resource_nodes($use);
 
 if($upload_here)
@@ -2319,6 +2338,11 @@ if (!$external_upload && !$edit_upload_options_at_top)
     }
 
 hook('appendcustomfields');
+
+if ($edit_upload_options_at_top)
+    {
+    ?></div><?php
+    }
 ?>
 </div><!-- end of BasicsBoxLeft -->
 <?php

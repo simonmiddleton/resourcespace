@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $resource_ref = create_resource(1, 0);
 $valid_k      = generate_resource_access_key($resource_ref, $userref, 0, date('Y-m-d H:i:s', strtotime('+3 days')), 'testEmail@testDomain.com');

@@ -1,14 +1,12 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setup test specific user
 $user_general = new_user("test_001402_general", 2);
 if($user_general === false)
     {
-    $user_general = sql_value("SELECT ref AS `value` FROM user WHERE username = 'test_001402_general'", 0);
+    $user_general = ps_value("SELECT ref AS `value` FROM user WHERE username = 'test_001402_general'", array(), 0);
     }
 if($user_general === 0)
     {

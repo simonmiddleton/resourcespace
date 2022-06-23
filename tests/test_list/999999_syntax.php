@@ -1,9 +1,7 @@
 <?php
 # Simple syntax check of pages 
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $TestPage = function($page) {
     $html="";

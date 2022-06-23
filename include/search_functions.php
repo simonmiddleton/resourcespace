@@ -1782,7 +1782,7 @@ function rebuild_specific_field_search_from_node(array $node)
         return '';
         }
 
-    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field WHERE ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}", "schema");
+    $field_shortname = ps_value("SELECT name AS `value` FROM resource_type_field WHERE ref = ?", array("i",$node['resource_type_field']), "field{$node['resource_type_field']}", "schema");
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
@@ -2160,7 +2160,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-    $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
+    $return=ps_value("select ref value from keyword where keyword=?",array("s",trim($keyword)),false);
     if ($return===false && $create)
         {
         # Create a new keyword.
@@ -2742,10 +2742,10 @@ function delete_filter($filter)
         }
     
     // Delete and cleanup any unused 
-    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
-    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
-    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+    ps_query("DELETE FROM filter WHERE ref=?",array("i",$filter)); 
+    ps_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    ps_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    ps_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
     }
@@ -2765,9 +2765,9 @@ function delete_filter_rule($filter_rule)
             }
             
     // Delete and cleanup any unused nodes
-    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
-    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+    ps_query("DELETE FROM filter_rule WHERE ref=?", array("i",$filter_rule));
+    ps_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    ps_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
     }
@@ -3106,7 +3106,7 @@ function search_title_node_processing($string)
         $node_id=substr(ltrim($string), 2);
         $node_data=array();
         get_node($node_id, $node_data);
-        $field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '', 'schema');
+        $field_title=ps_value("select name value from resource_type_field where ref=?", array("i",$node_data['resource_type_field']), '', 'schema');
         return $field_title . ":" . $node_data['name'];
         }
     return $string;

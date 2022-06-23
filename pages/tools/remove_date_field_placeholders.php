@@ -3,7 +3,7 @@ include "../../include/db.php";
 include_once "../../include/authenticate.php";
 if(!checkperm("a")){exit("Access denied");}
 
-$datedata = sql_query("SELECT rd.resource, rd.resource_type_field, rd.value FROM resource_data rd LEFT JOIN resource_type_field rtf ON rd.resource_type_field=rtf.ref WHERE rtf.type IN (" . implode(",",$DATE_FIELD_TYPES) . ")");
+$datedata = ps_query("SELECT rd.resource, rd.resource_type_field, rd.value FROM resource_data rd LEFT JOIN resource_type_field rtf ON rd.resource_type_field=rtf.ref WHERE rtf.type IN (". ps_param_insert(count($DATE_FIELD_TYPES)) .")", ps_param_fill($DATE_FIELD_TYPES, 'i'));
 $datefields = get_resource_type_fields("","ref","asc","",$DATE_FIELD_TYPES);
 $datefieldarr = array();
 foreach($datefields as $datefield)
@@ -32,7 +32,7 @@ foreach($datedata as $date_row)
         $toupdate++;
         if($update)
             {
-            sql_query("UPDATE resource_data SET value='" . escape_check($newval) . "' WHERE resource='" . $date_row["resource"] . "' AND resource_type_field='" . $date_row["resource_type_field"] . "'");
+            ps_query("UPDATE resource_data SET value= ? WHERE resource= ? AND resource_type_field= ?", ['s', $newval, 'i', $date_row["resource"], 'i', $date_row["resource_type_field"]]);
             $log .= " - UPDATED";
             $count++;
             }

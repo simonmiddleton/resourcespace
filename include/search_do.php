@@ -6,8 +6,8 @@
 * @uses debug()
 * @uses hook()
 * @uses escape_check()
-* @uses sql_value()
-* @uses sql_query()
+* @uses ps_value()
+* @uses ps_query()
 * @uses split_keywords()
 * @uses add_verbatim_keywords()
 * @uses search_filter()
@@ -216,11 +216,6 @@ function do_search(
     else
         {
         $keywords = array();
-        }
-
-    foreach (get_indexed_resource_type_fields() as $resource_type_field)
-        {
-        add_verbatim_keywords($keywords,$search,$resource_type_field,true);      // add any regex matched verbatim keywords for those indexed resource type fields
         }
 
     $search=trim($search);
@@ -1519,6 +1514,7 @@ function do_search(
     # Remove keywords, least used first, until we get results.
     $lsql = new PreparedStatementQuery();
     $omitmatch=false;
+    $params=array();
 
     for ($n=0;$n<count($keywords);$n++)
         {
@@ -1552,7 +1548,7 @@ function do_search(
 
 // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
 //
-// UNDER DEVELOPMENT.  Currently supports:
+// Currently supports:
 // @@!<node id> (NOT)
 // @@<node id>@@<node id> (OR)
 function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)

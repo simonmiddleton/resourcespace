@@ -1,8 +1,5 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
 $resource_portrait = create_resource(1, 0);
 ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 2000)",["i",$resource_portrait]);

@@ -887,6 +887,11 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     {
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
     global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
+
+    if(defined("RS_TEST_MODE"))
+        {
+        return false;
+        }
     if($always_email_from_user)
         {
         $from_name=($userfullname!="")?$userfullname:$username;
@@ -1112,12 +1117,11 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="", $files=array())
     {
     # Include footer
-    global $email_footer, $storagedir, $mime_type_by_extension;
+    global $email_footer, $storagedir, $mime_type_by_extension, $email_from;
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
 
-    global $email_from;
     $from_system = false;
     if ($from=="")
         {
@@ -1348,7 +1352,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     
     $mail->CharSet = "utf-8"; 
 
-    if (is_html($body)) {$mail->IsHTML(true);}
+    if (is_html($body))
+        {
+        $mail->IsHTML(true);
+        $body = nl2br($body);
+        }      
     else {$mail->IsHTML(false);}
 
     $mail->Subject = $subject;

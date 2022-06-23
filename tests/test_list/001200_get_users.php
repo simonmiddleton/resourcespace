@@ -1,4 +1,7 @@
 <?php
+command_line_only();
+
+
 // Count existing users first
 $existingusers=get_users("","","username",true,-1,1);
 $usercount = count($existingusers);

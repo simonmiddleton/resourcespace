@@ -26,9 +26,11 @@ elseif(isset($argv[1]) && is_int_loose($argv[1]))
 $mysql_log_transactions=false;
 
 $sql = '';
+$params = [];
 
 set_time_limit(0);
 echo "<pre>" . PHP_EOL;
+$time_start = microtime(true);
 $time_start = microtime(true);
 
 // Reindex nodes, by field to minimise chance of memory issues
@@ -75,6 +77,7 @@ foreach($allfields as $field)
         }
     }
 
+$time_end = microtime(true);
 $time_end = microtime(true);
 $time     = $time_end - $time_start;
 

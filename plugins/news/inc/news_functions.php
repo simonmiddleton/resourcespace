@@ -9,23 +9,23 @@ function get_news($ref="",$recent="",$findtext="")
 	$findtext=trim($findtext);
 	debug ($recent);
 	$sql="news n ";
-	
+	$params = [];
 	if ($ref!="" || $findtext!=""){
 		$sql.=" where (";
 	}
 	
-	if ($ref!=""){$sql.="ref='$ref'";}
+	if ($ref!=""){$sql.="ref= ?"; $params[] = 'i'; $params[] = $ref;}
 	
 	if ($findtext!="") {
 		$findtextarray=explode(" ",$findtext);
 		if ($ref!=""){$sql.=" and (";}
 		for ($n=0;$n<count($findtextarray);$n++){
-		  $sql.=' body like "%'.$findtextarray[$n].'%"';
+		  $sql.=' body like "%?%"'; $params[] = 's'; $params[] = $findtextarray[$n];
 		  if ($n+1!=count($findtextarray)){$sql.=" and ";}
 		}
 		$sql.=") or (";
 		for ($n=0;$n<count($findtextarray);$n++){
-		  $sql.=' title like "%'.$findtextarray[$n].'%"';
+		  $sql.=' title like "%?%"'; $params[] = 's'; $params[] = $findtextarray[$n];
 		  if ($n+1!=count($findtextarray)){$sql.=" and ";}
 		}
 		if ($ref!=""){$sql.=")";}

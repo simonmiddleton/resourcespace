@@ -305,7 +305,7 @@ $home_dash = true;
 # Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank', 'analytics');
+$tile_styles['conf']  = array('blank', 'analytics','thmsl','custm','pend');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
@@ -696,7 +696,7 @@ $use_recent_as_home=false;
 $theme_images=true;
 $theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
 $theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
-$show_theme_collection_stats=false; # Show count of themes and resources in theme category
+$show_theme_collection_stats=false; # Show count of themes and resources in category. $themes_simple_view=false only.
 
 # Theme direct jump mode
 # If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
@@ -1338,7 +1338,7 @@ $enable_public_collections=true;
 
 # Allow user group to be selected as part of user registration?
 # User groups available for user selection must be specified using the 'Allow registration selection' option on each user group
-# in System Setup.
+# under Admin -> System -> User groups.
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
@@ -2461,11 +2461,8 @@ $show_searchitemsdiskusage=true;
 # This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
 $search_sql_double_pass_mode=true;
 
-# Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
+# Use the new tab ordering system. This will sort the tabs by the order by value set in Admin -> System -> Metadata fields.
 $use_order_by_tab_view=false;
-
-# Allows for themes with a taller header than standard to still be fully visible in System Setup. 
-$admin_header_height=120;
 
 # Display link to request log on view page
 $display_request_log_link=false;

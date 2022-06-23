@@ -49,7 +49,7 @@ $external_access_keys_query =
     GROUP BY access_key
     ORDER BY date
 ";
-$external_shares = sql_query($external_access_keys_query);
+$external_shares = ps_query($external_access_keys_query);
 
 include '../../include/header.php';
 ?>
@@ -58,7 +58,8 @@ include '../../include/header.php';
         $links_trail = array(
             array(
                 'title' => $lang["teamcentre"],
-                'href'  => $baseurl_short . "pages/team/team_home.php"
+                'href'  => $baseurl_short . "pages/team/team_home.php",
+                'menu' =>  true
             ),
             array(
                 'title' => $lang["manage_external_shares"],

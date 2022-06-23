@@ -8,7 +8,7 @@ if(!checkperm('a'))
 
 $ref    = getvalescaped('ref', '');
 $copied = '';
-$title  = sql_value("SELECT title AS `value` FROM resource_type_field WHERE ref = '{$ref}'", '', "schema");
+$title  = ps_value("SELECT title AS `value` FROM resource_type_field WHERE ref = ?", array("i",$ref), '', "schema");
 
 # Perform copy
 if (getval("saveform","")!="" && enforcePostRequest(false))
@@ -111,7 +111,8 @@ include "../../include/header.php";
 $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["admin_resource_type_fields"],

@@ -202,7 +202,7 @@ if($external_upload)
     $ci=get_session_collections($rs_session,$userref,true);
     if (count($ci)==0)
         {
-        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_SHARE_UPLOAD));
+        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_TYPE_SHARE_UPLOAD));
         }
     else
         {
@@ -752,7 +752,16 @@ if ($processupload)
             $filename_field=getvalescaped("filename_field",0,true);
             if($filename_field != 0)
                 {
-                $target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+                $target_resource=ps_array("
+                    select resource value from resource_data where resource_type_field = ? and value = ? AND resource > ?
+                    union
+                    select resource value from resource_node rn join node n on rn.node = n.ref where n.resource_type_field = ? and name = ? and resource > ?", 
+                    ['i', $filename_field, 
+                     's', $origuploadedfilename,
+                     'i', $fstemplate_alt_threshold,
+                     'i', $filename_field, 
+                     's', $origuploadedfilename, 
+                     'i', $fstemplate_alt_threshold],"");
                 $target_resourceDebug = $target_resource;
                 $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);
@@ -1206,7 +1215,7 @@ function processFile(file, forcepost)
         };
     
     forceprocess = typeof forcepost != "undefined";
- 
+
     <?php
     // == EXTRA DATA SECTION - Add any extra data to send after upload required here ==
 
@@ -1227,6 +1236,25 @@ function processFile(file, forcepost)
                 // Add to array to process later
                 processafter.push(file);
                 console.debug("Added " + file.name + " to process after array");
+                if(processafter.length == count)
+                    {
+                    if(newcol > 0)
+                        {
+                        api('do_search', {'search' : '!collection' + newcol}, function(response){
+                            if(response.length > 0)
+                                {
+                                response.forEach(function(resource){  
+                                    {
+                                    resource_filename = resource['field<?php echo htmlspecialchars($filename_field)?>']
+                                    resource_ids_for_alternatives[resource['ref']] = resource_filename.substr(0, resource_filename.lastIndexOf('.' + resource['file_extension']));;
+                                    }
+                                })
+                                }
+                            //No non alt files uploaded so we can now process the alt files.
+                            jQuery('#CentralSpace').trigger("ProcessedMain");
+                        });
+                        }              
+                    }
                 return false;
                 }
             else
@@ -1242,9 +1270,10 @@ function processFile(file, forcepost)
                     }
                 else
                     {                    
+                    processerrors.push(filename);
                     jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
-                    return false; 
+                    return postUploadActions(); 
                     }
                 }
             }

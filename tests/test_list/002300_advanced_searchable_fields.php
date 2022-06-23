@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 
 define ('ECHOFEEDBACK',false); # Whether or not to echo progress; for testing of this test script

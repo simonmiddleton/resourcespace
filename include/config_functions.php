@@ -1182,7 +1182,7 @@ function get_header_image($full = false)
         }
     else 
         {
-        $header_img_src = $baseurl.'/gfx/titles/title.svg';
+        $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
         }
         
     return $header_img_src;

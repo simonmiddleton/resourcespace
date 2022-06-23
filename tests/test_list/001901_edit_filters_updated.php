@@ -1,5 +1,6 @@
 <?php
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
+
 
 // Test edit filters in a similar way to search filters
 
