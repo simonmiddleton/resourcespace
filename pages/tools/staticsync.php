@@ -109,7 +109,7 @@ if (isset($numeric_alt_suffixes) && $numeric_alt_suffixes > 0)
 if(isset($staticsync_alternative_file_text) && (!$staticsync_ingest || $staticsync_ingest_force))
     {
     // Add any staticsynced alternative files to the array so we don't process them unnecessarily
-    $syncedalternatives = sql_query("SELECT ref, file_name, resource, creation_date FROM resource_alt_files WHERE file_name like '%" . escape_check($syncdir) . "%'");
+    $syncedalternatives = ps_query("SELECT ref, file_name, resource, creation_date FROM resource_alt_files WHERE file_name like concat('%',?,'%')", ['s', $syncdir]);
     foreach($syncedalternatives as $syncedalternative)
         {
         $shortpath=str_replace($syncdir . '/', '', $syncedalternative["file_name"]);      
@@ -357,7 +357,7 @@ function ProcessFolder($folder)
                         {
                         $checksum=md5_file($fullpath);
                         }  
-                    $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+                    $duplicates=ps_array("select ref value from resource where file_checksum= ?", ['s', $checksum]);
                     if(count($duplicates)>0)
                         {
                         $message = str_replace("%resourceref%", implode(",",$duplicates), str_replace("%filename%", $fullpath, $lang['error-duplicatesfound']));
@@ -404,20 +404,13 @@ function ProcessFolder($folder)
                             $parent = ($b == 0 ? 0 : $proposed_branch_path[($b - 1)]);
                             $fc_categ_name = ucwords($proposed_fc_categories[$b]);
 
-                            $fc_categ_ref_sql = sprintf(
-                                "SELECT DISTINCT ref AS `value`
-                                    FROM collection AS c
-                                LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                                    WHERE `type` = %s
-                                    AND parent %s
-                                    AND `name` = '%s'
-                                GROUP BY c.ref
-                                HAVING count(DISTINCT cr.resource) = 0",
-                                COLLECTION_TYPE_FEATURED,
-                                sql_is_null_or_eq_val($parent, $parent == 0),
-                                escape_check($fc_categ_name)
-                            );
-                            $fc_categ_ref = sql_value($fc_categ_ref_sql, 0);
+                            $params = [];
+                            if($parent == 0){$parent_sql = 'IS NULL';}
+                            else{$parent_sql = '= ?';$params[] = 'i'; $params[] = $parent;}
+
+                            $fc_categ_ref_sql = 'SELECT DISTINCT ref AS `value` FROM collections c LEFT JOIN collection_resource cr on c.ref = cr.collection
+                                                 WHERE parent '. $parent_sql .' AND type = ? AND name = ? GROUP BY c.ref HAVING count(DISTINCT cr.resource) = 0';
+                            $fc_categ_ref = ps_value($fc_categ_ref_sql,array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', $fc_categ_name]), 0);
                             if($fc_categ_ref == 0)
                                 {
                                 echo "Creating new Featured Collection category named '{$fc_categ_name}'" . PHP_EOL;
@@ -459,21 +452,13 @@ function ProcessFolder($folder)
                             }
                         echo "Collection parent should be ref #{$collection_parent}" . PHP_EOL;
 
-                        $collection = sql_value(
-                            sprintf(
-                                "SELECT DISTINCT ref AS `value`
-                                    FROM collection AS c
-                                LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                                    WHERE `type` = %s
-                                    AND parent %s
-                                    AND `name` = '%s'
-                                GROUP BY c.ref
-                                HAVING count(DISTINCT cr.resource) > 0",
-                                COLLECTION_TYPE_FEATURED,
-                                sql_is_null_or_eq_val($collection_parent, $collection_parent == 0),
-                                escape_check(ucwords($name))
-                            ),
-                            0);
+                        $params = [];
+                        if($collection_parent == 0){$parent_sql = 'IS NULL';}
+                        else{$parent_sql = '= ?';$params[] = 'i'; $params[] = $collection_parent;}
+
+                        $collection_sql = 'SELECT DISTINCT ref as `value` FROM collection c LEFT JOIN collection_resource cr on c.ref = cr.collection 
+                                           WHERE parent '. $parent_sql .' AND type = ? AND name = ? GROUP BY c.ref HAVING count(DISTINCT cr.resource) > 0';
+                        $collection = ps_query($collection_sql, array_merge($params, ['i', COLLECTION_TYPE_FEATURED, 's', ucwords($name)]), 0);
 
                         if($collection == 0)
                             {
@@ -655,9 +640,9 @@ function ProcessFolder($folder)
 
                                             // If this is a 'joined' field add it to the resource column
                                             $joins = get_resource_table_joins();
-                                            if(in_array($field_info['ref'], $joins))
+                                            if(in_array($field_info['ref'], $joins) && is_numeric($field_info['ref']))
                                                 {
-                                                sql_query("UPDATE resource SET field{$field_info['ref']} = '" . escape_check(truncate_join_field_value($value)) . "' WHERE ref = '{$r}'");
+                                                ps_query("UPDATE resource SET field{$field_info['ref']} = ? WHERE ref = ?", ['s', truncate_join_field_value($value), 'i', $r]);
                                                 }
                                         
                                         echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
@@ -706,12 +691,13 @@ function ProcessFolder($folder)
                         }
 
                     $updatesql = array();
+                    $params = [];
                     foreach($setvals as $name => $val)
                         {
-                        $updatesql[] = $name . "='" . escape_check($val) . "'";
+                        $updatesql[] = $name . "= ? "; $params[] = 'i';$params[] = $val;
                         }
-
-                    sql_query("UPDATE resource SET " . implode(",",$updatesql) . " WHERE ref = '" . $r . "'");
+                    $params[] = 'i'; $params[] = $r;
+                    ps_query("UPDATE resource SET " . implode(",",$updatesql) . " WHERE ref = ?", $params);
 
                     # Add any alternative files
                     $altpath = $fullpath . $staticsync_alternatives_suffix;
@@ -761,10 +747,10 @@ function ProcessFolder($folder)
                         // between categories and collections by checking for children collections.
                         if(!is_featured_collection_category_by_children($collection))
                             {
-                            $test = sql_query("SELECT * FROM collection_resource WHERE collection='$collection' AND resource='$r'");
+                            $test = ps_query("SELECT * FROM collection_resource WHERE collection= ? AND resource= ?", ['i', $collection, 'i', $r]);
                             if(count($test) == 0)
                                 {
-                                sql_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES ('$collection', '$r', NOW())");
+                                ps_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES (?, ?, NOW())", ['i', $collection, 'i', $r]);
                                 }
                             }
                         else
@@ -808,11 +794,11 @@ function ProcessFolder($folder)
                     chmod($destination,0777);
                     if($alternative == -1)
                         {
-                        sql_query("UPDATE resource SET file_path=NULL WHERE ref = '{$existing}'");
+                        ps_query("UPDATE resource SET file_path=NULL WHERE ref = ?", ['i', $existing]);
                         }
                     else
                         {
-                        sql_query("UPDATE resource_alt_files SET file_name = '" . escape_check($file) . "' WHERE resource = '{$existing}' AND ref='{$alternative}'");                            
+                        ps_query("UPDATE resource_alt_files SET file_name = ? WHERE resource = ? AND ref= ?", ['s', $file, 'i', $existing, 'i', $alternative]);                            
                         }
                     }
                 }
@@ -832,8 +818,7 @@ function ProcessFolder($folder)
                     
                     $count++;
                     # File has been modified since we last created previews. Create again.
-                    $rd = sql_query("SELECT ref, has_image, file_modified, file_extension, archive FROM resource 
-                                        WHERE file_path='" . escape_check($shortpath) . "'");
+                    $rd = ps_query("SELECT ref, has_image, file_modified, file_extension, archive FROM resource WHERE file_path= ?", ['s', $shortpath]);
                     if (count($rd) > 0)
                         {
                         $rd   = $rd[0];
@@ -879,7 +864,15 @@ function ProcessFolder($folder)
                             {
                             create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
                             }
-                        sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref='$rref'");
+                        $sql = '';
+                        $params = [];
+                        if(isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))
+                            {
+                            $sql .= ", archive='" . $staticsync_revive_state . "'"; 
+                            $params[] = 'i'; $params[] = $staticsync_revive_state;
+                            }    
+                        $params[] = 'i'; $params[] = $rref;
+                        ps_query("UPDATE resource SET file_modified=NOW() " . $sql . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref= ?", $params);
 
                         if(isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))
                             {
@@ -952,7 +945,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         if($ref=="")
             {
             //Primary resource file may have been ingested on a previous run - try to locate it
-            $ingested = sql_array("SELECT resource value FROM resource_data WHERE resource_type_field=" . $filename_field . " AND value LIKE '" . $altbasename . "%'");
+            $ingested = ps_array("SELECT resource value FROM resource_data WHERE resource_type_field= ? AND value LIKE CONCAT( ?, '%')", ['i', $filename_field, 's', $altbasename]);
             
             if(count($ingested) < 1)
                 {
@@ -1033,7 +1026,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         // An existing alternative file has changed, update previews if required
         debug("Alternative file changed, recreating previews");
 		create_previews($ref, false,  pathinfo($alternativefile, PATHINFO_EXTENSION), false, false, $alternative, false, $staticsync_ingest);
-        sql_query("UPDATE resource_alt_files SET creation_date=NOW() WHERE ref='$alternative'"); 
+        ps_query("UPDATE resource_alt_files SET creation_date=NOW() WHERE ref= ?", ['i', $alternative]); 
         $done[$shortpath]["processed"]=true;           
         }	
 	echo "Completed path : " . $shortpath . PHP_EOL;
@@ -1123,7 +1116,7 @@ if (!$staticsync_ingest)
         if ($fp!="" && !file_exists($fp))
             {
 			// Additional check - make sure the archive state hasn't changed since the start of the script
-			$cas=sql_value("SELECT archive value FROM resource where ref='{$rf["ref"]}'",0);
+			$cas= ps_value("SELECT archive value FROM resource where ref=' ?",['i', $rf['ref']],0);
 			if(isset($staticsync_ignore_deletion_states) && !in_array($cas,$staticsync_ignore_deletion_states))
 				{
 				if(!isset($rf["alternative"]))
@@ -1132,7 +1125,7 @@ if (!$staticsync_ingest)
 					# Set to archived, unless state hasn't changed since script started.
 					if (isset($staticsync_deleted_state))
 						{
-						sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
+						ps_query("UPDATE resource SET archive= ? WHERE ref= ?", ['i', $staticsync_deleted_state, 'i', $rf['ref']]);
 						}
 					else
 						{
@@ -1141,7 +1134,7 @@ if (!$staticsync_ingest)
 					if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
 						{
 						// Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
-						sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");
+						ps_query("DELETE FROM collection_resource WHERE resource= ?", ['i', $rf['ref']]);
 						}
 					# Log this
 					resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
@@ -1149,7 +1142,7 @@ if (!$staticsync_ingest)
 				else
 					{
 					echo "Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
-					sql_query("DELETE FROM resource_alt_files WHERE ref='" . $rf["alternative"] . "'");
+					ps_query("DELETE FROM resource_alt_files WHERE ref= ?", ['i', $rf['alternative']]);
 					}
 				}
             }
