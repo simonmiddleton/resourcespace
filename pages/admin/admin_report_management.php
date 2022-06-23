@@ -17,7 +17,12 @@ $order_by=getval("orderby","name");
 $url_params = array("find" => $find, "orderby" => $order_by);
 $url=generateURL($baseurl . "/pages/admin/admin_report_management.php", $url_params);
 
-$reports=sql_query("select ref, `name`, support_non_correlated_sql from report" . ($find=="" ? "" : " where ref like '%{$find}%' or name like '%{$find}%'") . " order by {$order_by}");
+if($find!="")
+    {
+    $find_sql = " WHERE ref LIKE ? OR name LIKE ?";
+    $sql_params = ["s","%" . $find . "%","s","%" . $find . "%"];
+    }
+$reports=ps_query("SELECT ref, `name`, support_non_correlated_sql FROM report {$find_sql} ORDER BY {$order_by}",$sql_params??[]);
 
 ?><div class="BasicsBox"> 
 	
