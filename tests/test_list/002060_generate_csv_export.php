@@ -15,14 +15,14 @@ debug("Resource C: " . $resourcec);
 
 // create new 'person' field
 $personfield = create_resource_type_field("Person",0,FIELD_TYPE_CHECK_BOX_LIST,"person");
-sql_query("UPDATE resource_type_field SET personal_data=1 WHERE ref = '$personfield'");
+ps_query("UPDATE resource_type_field SET personal_data=1 WHERE ref = ?",["i",$personfield]);
 
 // create new 'Shape' field
 $shapefield = create_resource_type_field("Shape",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "shape");
 
 // create new 'Technical data' field  - not to be included in export
 $technicalfield = create_resource_type_field("Technical data",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "technical");
-sql_query("UPDATE resource_type_field SET include_in_csv_export=0 WHERE ref = '$technicalfield'");
+ps_query("UPDATE resource_type_field SET include_in_csv_export=0 WHERE ref = ?",["i",$technicalfield]);
 
 // Add new nodes to person field
 $pricenode = set_node(NULL, $personfield, "Vincent Price",'',1000);
