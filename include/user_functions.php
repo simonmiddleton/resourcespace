@@ -1998,7 +1998,7 @@ function make_username($name)
     while (!$unique)
         {
         $num++;
-        $c=sql_value("select count(*) value from user where username='" . escape_check($name . (($num==0)?"":$num)) . "'",0);
+        $c=ps_value("select count(*) value from user where username=?",array("s",($name . (($num==0)?"":$num))),0);
         $unique=($c==0);
         }
     return $name . (($num==0)?"":$num);
@@ -2428,7 +2428,7 @@ function verify_antispam($spamcode="",$usercode="",$spamtime=0)
 function check_share_password($key,$password,$cookie)
     {
     global $scramble_key, $baseurl;
-    $sharehash = sql_value("SELECT password_hash value FROM external_access_keys WHERE access_key='" . escape_check($key) . "'","");
+    $sharehash = ps_value("SELECT password_hash value FROM external_access_keys WHERE access_key=?",array("s",$key),"");
     if($password != "")
         {
         $hashcheck = hash('sha256', $key . $password . $scramble_key);
@@ -2849,7 +2849,7 @@ function get_profile_image($user_ref = "", $by_image = "")
         # Only check the db if the profile image name has not been provided.
         if ($by_image == "" && $user_ref != "")
             {
-            $profile_image_name = sql_value("select profile_image value from user where ref = '" . escape_check($user_ref) . "'","");
+            $profile_image_name = ps_value("select profile_image value from user where ref = ?'",array("i",$user_ref), "");
             }
         else
             {

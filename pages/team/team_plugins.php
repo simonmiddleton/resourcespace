@@ -105,7 +105,7 @@ function load_plugins($plugins_dir)
                     {
                     $plugins_avail[$file][$key] = $value ;
                     }
-                $plugins_avail[$file]['config']=(sql_value("SELECT config AS value FROM plugins WHERE name='$file'",'') != '');
+                $plugins_avail[$file]['config']=(ps_value("SELECT config AS value FROM plugins WHERE name=?",array("s",$file), '') != '');
                 # If no yaml, or yaml file but no description present, 
                 # attempt to read an 'about.txt' file
                 if ($plugins_avail[$file]["desc"]=="")

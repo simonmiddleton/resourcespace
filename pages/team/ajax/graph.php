@@ -58,23 +58,31 @@ if ($tile!="")
     }
 
 $condition="where
-activity_type='$activity_type' and 
+activity_type=? and 
 (
-d.year>$from_y
+d.year>?
 or 
-(d.year=$from_y and d.month>$from_m)
+(d.year=? and d.month>?)
 or
-(d.year=$from_y and d.month=$from_m and d.day>=$from_d)
+(d.year=? and d.month=? and d.day>=?)
 )
 and
 (
-d.year<$to_y
+d.year<?
 or 
-(d.year=$to_y and d.month<$to_m)
+(d.year=? and d.month<?)
 or
-(d.year=$to_y and d.month=$to_m and d.day<=$to_d)
+(d.year=? and d.month=? and d.day<=?)
 )";
-if ($groups!="") {$condition.=" and d.usergroup in ('" . join("','",explode(",",$groups)) . "')";}
+$params=array("s",$activity_type,"s",$from_y,"s",$from_y,"s",$from_m,"s",$from_y,"s",$from_m,"s",$from_d,"s",$to_y,"s",$to_y,"s",$to_m,"s",$to_y,"s",$to_m,"s",$to_d);
+
+
+if ($groups!="")
+    {
+    $groups_explode=explode(",",$groups);
+    $condition.=" and d.usergroup in (" . ps_param_insert(count($groups_explode)). ")";
+    $params=array_merge($params,ps_param_fill($groups_explode,"i"));
+    }
 
 // Activity types in table daily_stat where object_ref refers to a resource ID
 $resource_activity_types = array(
@@ -89,13 +97,18 @@ $resource_activity_types = array(
 // Add extra SQL condition if filtering by resource type
 if ($resource_type!="" && in_array($activity_type, $resource_activity_types))
     {
-    $condition.=" and d.object_ref in (select resource.ref from resource join resource_type where resource.resource_type=resource_type.ref and resource_type.ref=$resource_type)";
+    $condition.=" and d.object_ref in (select resource.ref from resource join resource_type where resource.resource_type=resource_type.ref and resource_type.ref=?)";
+    $params[]="i";$params[]=$resource_type;
     }
 
 $join="";
 # Using a subquery has proven to be faster for collection limitation (at least with MySQL 5.5 and MyISAM)... left the original join method here in case that proves to be faster with MySQL 5.6 and/or a switch to InnoDB.
 #if ($collection!="") {$join.=" join collection_resource cr on cr.collection='$collection' and d.object_ref=cr.resource ";}
-if ($collection!="") {$condition.=" and d.object_ref in (select cr.resource from collection_resource cr where cr.collection='$collection')";}
+if ($collection!="")
+    {
+    $condition.=" and d.object_ref in (select cr.resource from collection_resource cr where cr.collection=?)";
+    $params[]="i";$params[]=$collection;
+    }
 
 # External conditions
 # 0 = external shares are ignored
@@ -161,9 +174,10 @@ if ($type=="pie")
         $join_display="fullname";
         }
         
-    $data=sql_query("select d.object_ref,j." . $join_display . " name,sum(count) c from daily_stat d join $join_table j on d.object_ref=j.ref $join $condition group by object_ref,j." . $join_display . " order by c desc limit 50");
+    $data=ps_query("select d.object_ref,j." . $join_display . " name,sum(count) c from daily_stat d join $join_table j on d.object_ref=j.ref $join $condition group by object_ref,j." . $join_display . " order by c desc limit 50",$params); // Note only params in $condition need to be prepared statement parameters - the rest are hardcoded above.
+
     # Work out total so we can add an "other" block.
-    $total=sql_value("select sum(count) value from daily_stat d $join $condition",0);
+    $total=ps_value("select sum(count) value from daily_stat d $join $condition",$params, 0); 
     if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit();}
     ?>
     <script type="text/javascript"> 
@@ -231,7 +245,7 @@ if ($type=="pie")
             $usergroup_resolve="if(d.external=0,d.usergroup,-1)";
                 $name_resolve="if(d.external=0,ug.name,'" .$lang["report_external_share"] . "')";
             }
-        $data=sql_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc");
+        $data=ps_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc",$params);
         if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
         ?>
         <script type="text/javascript"> 
@@ -278,7 +292,7 @@ if ($type=="pieresourcetype")
         {
     // Pie chart to break down resource activities by type
         
-    $data=sql_query("
+    $data=ps_query("
         select
             ret.name as res_type_name,
             sum(count) c
@@ -292,7 +306,7 @@ if ($type=="pieresourcetype")
         group by
             ret.name
         order by
-            c desc"
+            c desc",$params
         );
 
     // No data found
@@ -354,7 +368,7 @@ if ($type=="pieresourcetype")
     
 if ($type=="line")
     {
-    $data=sql_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t");
+    $data=ps_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t",$params);
     if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
     
     # Find zero days and fill in the gaps
@@ -469,8 +483,8 @@ if ($type=="summary")
     ?>
     <table style="width:100%;" class="ReportSummary">
     <tr>
-    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_total"]   ?> <span class="ReportMetric"><?php echo sql_value("select ifnull(format(sum(count),0),0) value from daily_stat d $join $condition",0); ?></span></td>
-    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_average"] ?> <span class="ReportMetric"><?php echo sql_value("select ifnull(format(avg(c),1),0) value from (select year,month,day,sum(count) c from daily_stat d $join $condition group by year,month,day) intable",0); ?></span></td>
+    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_total"]   ?> <span class="ReportMetric"><?php echo ps_value("select ifnull(format(sum(count),0),0) value from daily_stat d $join $condition",$params,0); ?></span></td>
+    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_average"] ?> <span class="ReportMetric"><?php echo ps_value("select ifnull(format(avg(c),1),0) value from (select year,month,day,sum(count) c from daily_stat d $join $condition group by year,month,day) intable",$params,0); ?></span></td>
     </table>    
     <?php 
     }
