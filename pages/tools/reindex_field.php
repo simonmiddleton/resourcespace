@@ -25,12 +25,12 @@ $collectionid=getvalescaped("col", "");
 $startid=getvalescaped("startid", "");
 
 # Fetch field info
-$fieldinfo=sql_query("select * from resource_type_field where ref='$field'");$fieldinfo=$fieldinfo[0];
+$fieldinfo=ps_query("select * from resource_type_field where ref= ?", ['i', $field]);$fieldinfo=$fieldinfo[0];
 
 if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
     {
     // Always reindex nodes for these field types
-    $nodes=sql_query("select n.ref, n.name, n.resource_type_field, f.partial_index from resource_type_field f LEFT JOIN node n on n.resource_type_field=f.ref WHERE f.ref = " . $field . ";");
+    $nodes=ps_query("select n.ref, n.name, n.resource_type_field, f.partial_index from resource_type_field f LEFT JOIN node n on n.resource_type_field=f.ref WHERE f.ref = ?;", ['i', $field]);
     $count=count($nodes);
     for($n=0;$n<$count;$n++)
             {
@@ -53,20 +53,20 @@ if (getval("submit","")!="" && enforcePostRequest(false))
 		{
 		if ($collectionid != "")
 			{
-			$resources=sql_array("select resource value from collection_resource where collection_resource.collection = '" . $collectionid . "' order by resource asc limit " . $resourcecount . "," . $reindex_chunk_size);
+			$resources=ps_array("select resource value from collection_resource where collection_resource.collection = ? order by resource asc limit ?, ?", ['i', $collectionid, 'i', $resourcecount, 'i', $reindex_chunk_size]);
 			}
 		else
 			{
-			$resources=sql_array("select ref value from resource where ref >='" . $startid . "' order by ref asc limit " . $resourcecount . "," . $reindex_chunk_size);
+			$resources=ps_array("select ref value from resource where ref >= ? order by ref asc limit ?, ?", ['i', $startid, 'i', $resourcecount, 'i', $reindex_chunk_size]);
 			}
 		$todo=count($resources);
 		if($todo>0)
 			{
 			# Delete existing keywords index for this field
-			sql_query("delete from resource_keyword where resource in (" . implode(",",$resources) . ") and resource_type_field='$field'");
+			ps_query("delete from resource_keyword where resource in (". ps_param_insert(count($resources)) .") and resource_type_field= ?", array_merge(ps_param_fill($resources, 'i'),['i', $field]));
 			
 			# Index data
-			$data=sql_query("select * from resource_data rd where resource in (" . implode(",",$resources) . ") and resource_type_field='$field' and length(rd.value)>0 and rd.value is not null order by rd.resource asc");
+			$data=ps_query("select * from resource_data rd where resource in (". ps_param_insert(count($resources)) .") and resource_type_field= ? and length(rd.value)>0 and rd.value is not null order by rd.resource asc", array_merge(ps_param_fill($resources, 'i'),['i', $field]));
 			$n=0;
 			$total=count($data);
 			
@@ -111,7 +111,7 @@ else
 	$extratext="";
 	if ($collectionid != "")
 		{
-		$collectionname=sql_value("select name as value from collection where ref='$collectionid'",'');
+		$collectionname=ps_value("select name as value from collection where ref= ?", ['i', $collectionid],'');
 		$extratext=" for collection '" . $collectionname .  "'";
 		}
 	if ($startid != "")
