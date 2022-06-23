@@ -45,8 +45,7 @@ foreach($allfields as $field)
         }
     // node query
     $query = "SELECT n.ref, n.name, n.resource_type_field, f.partial_index FROM node n JOIN resource_type_field f ON n.resource_type_field=f.ref WHERE n.resource_type_field = ?";
-    $params[] = "i";
-    $params[] = $field["ref"];    
+    $params = ["i",$field["ref"]];    
     
     $nodes=ps_query($query,$params);
     $count=count($nodes);
