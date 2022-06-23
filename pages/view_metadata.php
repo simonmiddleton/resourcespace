@@ -26,7 +26,7 @@ if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
     }
 
 // Clean the tabs by removing the ones that would end up being empty
-foreach($system_tabs as $tab_ref => $tab_name)
+foreach(array_keys($system_tabs) as $tab_ref)
     {
     // Always keep the Resource type tabs if configured so
     if(in_array($tab_ref, $configured_resource_type_tabs))

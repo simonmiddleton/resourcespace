@@ -1768,7 +1768,57 @@ $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $modalTrueFalse = ($modal ? "true" : "false");
 
 if($tabs_on_edit)
-    {  
+    {
+    // -----------------------  Tab calculation -----------------
+    $system_tabs = get_tab_name_options();
+    $tabs_fields_assoc = [];
+    // echo "<h2>system_tabs</h2>";echo "<pre>";print_r($system_tabs);echo "</pre>";
+
+    // Clean the tabs by removing the ones that would end up being empty
+    foreach(array_keys($system_tabs) as $tab_ref)
+        {
+        foreach($fields as $field_idx => $field_data)
+            {
+            $fields[$field_idx]['tab'] = $field_data['tab'] = (int) $field_data['tab'];
+            // $fields[$field_idx]['tab'] = $field_data['tab'] = 0; # TODO: delete once done testing
+
+            if(!is_field_displayed($field_data))
+                {
+                continue;
+                }
+
+            // Check if the field can show on this tab
+            if($tab_ref > 0 && $tab_ref === $field_data['tab'])
+                {
+                $tabs_fields_assoc[$tab_ref][$field_idx] = $field_data['ref'];
+                }
+            // Fields with unassigned or invalid tab IDs will end up on the "Default" list (ref #1)
+            else if(
+                !isset($tabs_fields_assoc[1][$field_idx])
+                && (0 === $field_data['tab'] || !isset($system_tabs[$field_data['tab']]))
+            )
+                {
+                $tabs_fields_assoc[1][$field_idx] = $field_data['ref'];
+                }
+            }
+        }
+    echo "<h2>tabs_fields_assoc</h2>";echo "<pre>";print_r($tabs_fields_assoc);echo "</pre>";
+    // echo "<h2>fields</h2>";echo "<pre>";print_r(array_column($fields, 'tab', 'ref'));echo "</pre>";
+    $tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
+    // echo "<h2>tab_names</h2>";echo "<pre>";print_r($tab_names);echo "</pre>";
+
+    echo "<h2>fields</h2>";echo "<pre>";print_r(array_column($fields, 'ref'));echo "</pre>";
+    $fields_tab_ordered = [];
+    foreach($tabs_fields_assoc as $tab_ref => $fields_data)
+        {
+        $fields_tab_ordered = array_merge($fields_tab_ordered, array_intersect_key($fields, $fields_data));
+        }
+    echo "<h2>fields_tab_ordered</h2>";echo "<pre>";print_r(array_column($fields_tab_ordered, 'ref'));echo "</pre>";
+    TODO; double check if this is correct!
+    die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
+    // -----------------------  END: Tab calculation -----------------
+
+/*
     $tab_names = tab_names($fields);
 
     // if config option set do case-sensitive alphabetical sort
@@ -1791,8 +1841,47 @@ if($tabs_on_edit)
 
     // update $fields array with re-ordered fields array, ready to display   
     $fields = $fields_tab_ordered;   
-
+*/
     #  -----------------------------  Draw tabs ---------------------------
+    $tabcount = 0;
+    $tabtophtml = '';
+    foreach($tab_names as $tab_name)
+        {
+        if($tabcount === 0)
+            {
+            $tabtophtml .= '<div id="BasicsBoxTabs" class="BasicsBox"><div class="TabBar">';
+            }
+        $tabtophtml .= sprintf(
+            '<div id="%stabswitch%s-%s" class="Tab %s">',
+            $modal ? 'Modal' : '',
+            $tabcount,
+            $ref,
+            $tabcount === 0 ? 'TabSelected' : ''
+        );
+        $tabtophtml .= sprintf(
+            '<a href="#" onclick="SelectMetaTab(%s, %s, %s); return false;">%s</a></div>',
+            $ref,
+            $tabcount,
+            $modalTrueFalse,
+            htmlspecialchars($tab_name)
+        );
+        ++$tabcount;
+        }
+
+    if($tabcount > 1)
+        {
+        $StyledTabbedPanel_class = $tabcount > 0 ? 'StyledTabbedPanel': '';
+
+        echo $tabtophtml;
+        ?>
+        </div><!-- end of TabBar -->
+        <div id="tabbedpanelfirst" class="TabbedPanel<?php echo escape_quoted_data($tabModalityClass); echo $StyledTabbedPanel_class; ?>">
+        <div class="clearerleft"></div>
+        <div class="TabPanelInner">
+        <?php
+        }
+
+/*
   $tabname="";
   $tabcount=0;
   if (count($fields)>0)
@@ -1837,7 +1926,7 @@ if($tabs_on_edit)
         <div class="clearerleft"> </div>
         <div class="TabPanelInner">
         <?php
-        }
+        }*/
     }
 
     #  -----------------------------  Draw fields ---------------------------
