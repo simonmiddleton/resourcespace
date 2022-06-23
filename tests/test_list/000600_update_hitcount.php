@@ -1,5 +1,5 @@
 <?php
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 # Also tests copy_hitcount_to_live() and get_resource_data()
 

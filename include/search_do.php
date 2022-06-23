@@ -6,8 +6,8 @@
 * @uses debug()
 * @uses hook()
 * @uses escape_check()
-* @uses sql_value()
-* @uses sql_query()
+* @uses ps_value()
+* @uses ps_query()
 * @uses split_keywords()
 * @uses add_verbatim_keywords()
 * @uses search_filter()
@@ -153,7 +153,7 @@ function do_search(
         # If fieldx is being used this will be needed in the inner select to be used in ordering
         $include_fieldx=true;
         # Check for field type
-        $field_order_check=sql_value("SELECT field_constraint value FROM resource_type_field WHERE ref=".str_replace("field","",$order_by),"", "schema");
+        $field_order_check=ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref=?",array("i",str_replace("field","",$order_by)),"", "schema");
         # Establish sort order (numeric or otherwise)
         # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
         if ($field_order_check==1)
@@ -582,7 +582,7 @@ function do_search(
     
                             if (!is_numeric($nodatafield))
                                 {
-                                $nodatafield = sql_value("SELECT ref value FROM resource_type_field WHERE name='" . escape_check($nodatafield) . "'", "", "schema");
+                                $nodatafield = ps_value("SELECT ref value FROM resource_type_field WHERE name=?", array("s",$nodatafield), "", "schema");
                                 }
     
                             if ($nodatafield == "" || !is_numeric($nodatafield))
@@ -806,7 +806,7 @@ function do_search(
                                             return false;
                                             }
                                             
-                                        $rtype = sql_value("SELECT resource_type value FROM resource_type_field WHERE ref='$nodatafield'", 0, "schema");
+                                        $rtype = ps_value("SELECT resource_type value FROM resource_type_field WHERE ref=?", array("i",$nodatafield), 0, "schema");
                                         if ($rtype != 0)
                                             {
                                             if ($rtype == 999)
@@ -828,7 +828,7 @@ function do_search(
                                             $restypesql = "";
                                             }
 										
-										$nodatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$nodatafield}'", 0, "schema");	
+										$nodatafieldtype = ps_value("SELECT  `type` value FROM resource_type_field WHERE ref = ?", array("i",$nodatafield), 0, "schema");	
 										
                                         if(in_array($nodatafieldtype,$FIXED_LIST_FIELD_TYPES))
                                             {   
@@ -1688,6 +1688,7 @@ function do_search(
     # Remove keywords, least used first, until we get results.
     $lsql="";
     $omitmatch=false;
+    $params=array();
 
     for ($n=0;$n<count($keywords);$n++)
         {
@@ -1700,7 +1701,8 @@ function do_search(
             {
             $lsql.=" or ";
             }
-        $lsql.="keyword='" . escape_check($keywords[$n]) . "'";
+        $lsql.="keyword=?";
+        $params[]="s";$params[]=$keywords[$n];
         }
 
     if ($omitmatch)
@@ -1710,7 +1712,7 @@ function do_search(
 
     if ($lsql!="")
         {
-        $least=sql_value("SELECT keyword value FROM keyword WHERE $lsql ORDER BY hit_count asc limit 1","");
+        $least=ps_value("SELECT keyword value FROM keyword WHERE $lsql ORDER BY hit_count asc limit 1",$params,"");
         return trim_spaces(str_replace(" " . $least . " "," "," " . join(" ",$keywords) . " "));
         }
     else
@@ -1721,7 +1723,7 @@ function do_search(
 
 // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
 //
-// UNDER DEVELOPMENT.  Currently supports:
+// Currently supports:
 // @@!<node id> (NOT)
 // @@<node id>@@<node id> (OR)
 function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)

@@ -1,5 +1,5 @@
 <?php
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 // Test to ensure that searching for editable resources (using parameter foredit=true) returns all valid resources and no invalid resources
 

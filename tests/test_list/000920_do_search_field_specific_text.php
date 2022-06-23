@@ -1,6 +1,5 @@
 <?php
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 // Check search for field specific free text search e.g. '"title:launch party"'
 

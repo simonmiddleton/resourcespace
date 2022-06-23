@@ -2,10 +2,8 @@
 /*
 IMPORTANT: User edit filters are tested in 001901_edit_filters_updated
 */
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setup test
 $original_user_data = $userdata;

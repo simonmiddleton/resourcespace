@@ -17,7 +17,7 @@ $dryrun = getval('dryrun','');
 if (strlen($dryrun) > 0) $dryrun = true; else $dryrun = false;
 
 $start_id = 1;
-$max_id = sql_value("select max(ref) value from resource",1);
+$max_id = ps_value("select max(ref) value from resource",array(),1);
 echo "\n<pre>\n";
 
 for ($checking=$start_id; $checking <= $max_id; $checking++){

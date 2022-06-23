@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Create the Featured collections tree
 $fc_cat_1 = create_collection($userref, "FC 1");

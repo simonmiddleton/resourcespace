@@ -251,10 +251,10 @@ function ProcessFolder($folder)
 					$name=(count($e)==1?"":$e[count($e)-2]);
 					echo date('Y-m-d H:i:s    ');
 					echo "\nCollection $name, theme=$theme";
-					$collection=sql_value("select ref value from collection where name='" . escape_check($name) . "' and theme='" . escape_check($theme) . "'",0);
+					$collection=ps_value("select ref value from collection where name=? and theme=?",array("s",$name,"s",$theme), 0);
 					if ($collection==0)
 						{
-						sql_query("insert into collection (name,created,public,theme,allow_changes) values ('" . escape_check($name) . "',now(),1,'" . escape_check($theme) . "',0)");
+						ps_query("insert into collection (name,created,public,theme,allow_changes) values (?,now(),1,?,0)",array("s",$name,"s",$theme));
 						$collection=sql_insert_id();
 						}
 					}
@@ -453,7 +453,7 @@ function ProcessFolder($folder)
 						}
 
                                         // add the timestamp from this run to the keywords field to help retrieve this batch later
-                                        $currentkeywords = sql_value("select value from resource_data where resource = '$r' and resource_type_field = '1'","");
+                                        $currentkeywords = ps_value("select value from resource_data where resource = '$r' and resource_type_field = '1'",array("i",$r),"");
 					if (strlen($currentkeywords) > 0){
 						$currentkeywords .= ',';
 					}

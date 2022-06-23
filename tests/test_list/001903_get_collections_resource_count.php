@@ -1,8 +1,6 @@
 <?php
-if(PHP_SAPI != 'cli')
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setting up the test
 $original_user_data = $userdata;

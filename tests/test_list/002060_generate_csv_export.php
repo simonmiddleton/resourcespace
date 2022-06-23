@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 
 include_once __DIR__ . '/../../include/csv_export_functions.php';
 

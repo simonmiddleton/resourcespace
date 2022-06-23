@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 
 // Save current settings
 $saved_search_filter_nodes = $search_filter_nodes;

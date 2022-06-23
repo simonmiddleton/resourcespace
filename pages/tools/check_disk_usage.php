@@ -74,7 +74,7 @@ else
 				
 				if(isset($disk_quota_notification_email))
 					{
-					$disk_quota_notification_user=sql_value("select ref value from user where email ='" . $disk_quota_notification_email . "'",0);
+					$disk_quota_notification_user=ps_value("select ref value from user where email = ?",array("s",$disk_quota_notification_email),0);
 					if($disk_quota_notification_user>0)
 						{
 						$admin_notify_users[]=$disk_quota_notification_user;	

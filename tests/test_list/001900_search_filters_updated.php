@@ -1,7 +1,6 @@
 <?php
+command_line_only();
 
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Save current settings
 $saved_search_filter_nodes = $search_filter_nodes;

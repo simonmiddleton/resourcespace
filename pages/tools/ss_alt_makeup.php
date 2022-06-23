@@ -80,11 +80,11 @@ foreach ($files as $thefile){
 			$filename = $matches['2'];
 
 			$sql = "select rdf.resource value from resource_data rdp 
-			left join resource_data rdf on rdp.resource = rdf.resource and rdf.resource_type_field = $filename_field
-			where rdp.resource_type_field = $staticsync_mapped_category_tree and rdp.value like 
-			'%,$searchpath' and rdf.value like '$filename%' limit 1";
+			left join resource_data rdf on rdp.resource = rdf.resource and rdf.resource_type_field = ?
+			where rdp.resource_type_field = $ and rdp.value like 
+			? and rdf.value like ? limit 1";
 
-			$resource = sql_value($sql,'0');
+			$resource = ps_value($sql,array("i",$filename_field,"i",$staticsync_mapped_category_tree,"s","%," . $searchpath,"s",$filename . "%"),'0');
 
 			$ext = $matches[4];
 			$thisfilesuffix = $matches[3];

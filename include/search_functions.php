@@ -9,11 +9,11 @@ function resolve_soundex($keyword)
     # the most commonly used keyword that starts with the same few letters.
 
     global $soundex_suggest_limit;
-    $soundex=sql_value("SELECT keyword value FROM keyword WHERE soundex='". escape_check(soundex($keyword))."' AND keyword NOT LIKE '% %' AND hit_count>'" . $soundex_suggest_limit . "' ORDER BY hit_count DESC LIMIT 1",false);
+    $soundex=ps_value("SELECT keyword value FROM keyword WHERE soundex=? AND keyword NOT LIKE '% %' AND hit_count>? ORDER BY hit_count DESC LIMIT 1",array("s",soundex($keyword),"i",$soundex_suggest_limit),false);
     if (($soundex===false) && (strlen($keyword)>=4))
         {
         # No soundex match, suggest words that start with the same first few letters.
-        return sql_value("SELECT keyword value FROM keyword WHERE keyword LIKE '" . escape_check(substr($keyword,0,4)) . "%' AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",false);
+        return ps_value("SELECT keyword value FROM keyword WHERE keyword LIKE ? AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",array("s", substr($keyword,0,4) . "%"),false);
         }
     return $soundex;
     }
@@ -1273,7 +1273,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 }
             else
                 {
-                $smartsearch_ref = sql_value('SELECT savedsearch value FROM collection WHERE ref="' . $collection . '"', '');
+                $smartsearch_ref = ps_value('SELECT savedsearch value FROM collection WHERE ref=?', array("i",$collection), '');
                 $smartsearch_ref_cache[$collection] = $smartsearch_ref;
                 }
 
@@ -1504,7 +1504,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,8)=="!hasdata") 
         {
         $fieldref=intval(trim(substr($search,8)));
-        $hasdatafieldtype = sql_value("SELECT `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0, "schema");
+        $hasdatafieldtype = ps_value("SELECT `type` value FROM resource_type_field WHERE ref = ?", array("i",$fieldref), 0, "schema");
 
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
             {
@@ -1705,7 +1705,7 @@ function rebuild_specific_field_search_from_node(array $node)
         return '';
         }
 
-    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field WHERE ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}", "schema");
+    $field_shortname = ps_value("SELECT name AS `value` FROM resource_type_field WHERE ref = ?", array("i",$node['resource_type_field']), "field{$node['resource_type_field']}", "schema");
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
@@ -2070,7 +2070,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-    $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
+    $return=ps_value("select ref value from keyword where keyword=?",array("s",trim($keyword)),false);
     if ($return===false && $create)
         {
         # Create a new keyword.
@@ -3025,7 +3025,7 @@ function search_title_node_processing($string)
         $node_id=substr(ltrim($string), 2);
         $node_data=array();
         get_node($node_id, $node_data);
-        $field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '', 'schema');
+        $field_title=ps_value("select name value from resource_type_field where ref=?", array("i",$node_data['resource_type_field']), '', 'schema');
         return $field_title . ":" . $node_data['name'];
         }
     return $string;

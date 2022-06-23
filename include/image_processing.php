@@ -1194,7 +1194,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (!$previewonly)
         {
         // make sure the extension is the same as the original so checksums aren't done for previews
-        $o_ext=sql_value("select file_extension value from resource where ref='{$ref}'","");
+        $o_ext=ps_value("select file_extension value from resource where ref=?",array("i",$ref),"");
         if($extension==$o_ext && $checksum_required)
             {
             debug("create_previews - generate checksum for $ref");

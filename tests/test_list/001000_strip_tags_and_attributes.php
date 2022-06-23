@@ -1,8 +1,5 @@
 <?php
-if('cli' !== php_sapi_name())
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
 $use_cases = [
     /*

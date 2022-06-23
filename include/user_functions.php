@@ -985,7 +985,7 @@ function auto_create_user_account($hash="")
                 }
 
             $username=$anonymous_login;
-            $userref=sql_value("SELECT ref value FROM user where username='$anonymous_login'","");
+            $userref=ps_value("SELECT ref value FROM user where username=?",array($anonymous_login),"");
             $sessioncollections=get_session_collections($rs_session,$userref,false);
             if(count($sessioncollections)>0)
                 {
@@ -1422,7 +1422,7 @@ function resolve_userlist_groups($userlist)
                         # Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
                         $untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
                         $untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
-                        $groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
+                        $groupref = ps_value("select ref as value from usergroup where lower(name)=?",array("s",$untranslated_groupname),false);
                         if ($groupref!==false)
                             {
                             $default_group = true;
