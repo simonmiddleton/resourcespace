@@ -2727,6 +2727,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f.iptc_equiv,
                     f.display_template,
                     f.tab_name,
+                    f.required,
                     f.required AS frequired,
                     f.smart_theme_name,
                     f.exiftool_field,
