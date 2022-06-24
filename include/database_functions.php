@@ -1664,8 +1664,7 @@ function sql_reorder_records(string $table, array $refs)
     $refs = array_values(array_filter($refs, 'is_int_loose'));
     $order_by = 0;
 
-    // Chunking the list of IDs in batches of 500 should be within the default max_allowed_packet size (with highest ID length)
-    $refs_chunked = array_filter(count($refs) <= 500 ? [$refs] : array_chunk($refs, 500));
+    $refs_chunked = array_filter(count($refs) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE ? [$refs] : array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE));
     foreach($refs_chunked as $refs)
         {
         $cases_params = [];

@@ -1359,7 +1359,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             }
         }
 
-    $resources_chunks = array_chunk($resources, 500);
+    $resources_chunks = array_chunk($resources, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
     foreach($resources_chunks as $resources_chunk)
         {
         $resource_node_values = '';
