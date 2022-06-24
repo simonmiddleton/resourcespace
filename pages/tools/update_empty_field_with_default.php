@@ -13,19 +13,19 @@ include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission
 set_time_limit(0);
 
 # update a single field
-$field=getvalescaped("field","");
+$field=getval("field","");
 
 if ($field=="") {exit("Specify field with ?field=");}
 elseif(!in_array($field,$default_to_first_node_for_fields)) {exit("This field is not set to use a default option!");}
 
-$fieldinfo=sql_query("select * from resource_type_field where ref='$field'");
+$fieldinfo=ps_query("SELECT * from resource_type_field where ref=?",array("i",$field));
 $fieldinfo=$fieldinfo[0];
-//echo "fielddata:";print_r($fieldinfo);echo"<br/>";
 
 if($fieldinfo['type']!=3) {exit("This field is not a dropdown so a default value cannot be set!");}
 
-# update only resources in specified collection
-$collectionid=getvalescaped("col", "");
+# THIS IS NOT FULLY IMPLEMENTED - update only resources in specified collection
+$collectionid=getval("col", "");
+if ($collectionid != "") {exit("Update by collection not implemented!");}
 
 # Fetch node info for field
 $nodes = get_nodes($field);
@@ -33,7 +33,7 @@ if(empty($nodes))
 	{
 	exit("This field does not have any options!");
 	}
-//echo "nodes:";print_r($nodes);echo"<br/>";
+
 $default_node_value=$nodes[0]['name'];
 	
 if (getval("submit","")!="" && enforcePostRequest(false))
@@ -44,11 +44,23 @@ if (getval("submit","")!="" && enforcePostRequest(false))
 		{
 		$node_refs[]=$nodes[$n]['ref'];
 		}
-	# make this a list
-	$node_refs=implode(",",$node_refs);
 	
 	# get all resources without a value currently set for this field
-	$refs=sql_array("select ref value from resource where ref>0 and ref not in (select resource from resource_node where node in (" . $node_refs . ") )" . ($fieldinfo['resource_type']!=='0' ? " and resource_type=" . $fieldinfo['resource_type'] : "" ) . " order by ref");
+	$parameters=ps_param_fill($node_refs, "i");
+	$query="SELECT ref value from resource 
+			 WHERE ref>0 
+			   AND ref not in (SELECT resource from resource_node WHERE node in (" . ps_param_insert(count($node_refs)) . ") )";
+
+	if ($fieldinfo['resource_type']!=0)
+		{
+		$query.=" AND resource_type=?";
+		$parameters=array_merge($parameters,array("i",$fieldinfo['resource_type'])); 
+		}
+	
+	$query.=" ORDER BY ref";
+
+	$refs=ps_array($query,$parameters);
+
 	$r_count=count($refs);
 	echo "There are " . $r_count . " resources to update.<br/>";
 	foreach($refs as $ref)
