@@ -43,7 +43,7 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
     $groups_sql = "SELECT ref, name,search_filter FROM usergroup WHERE ";
     if($allowpartialmigration){$groups_sql.='search_filter_id=-1';}
     else {$groups_sql .= "search_filter_id IS NULL OR search_filter_id=0";}
-    $groups = sql_query($groups_sql);
+    $groups = ps_query($groups_sql);
     foreach($groups as $group)
         {
         $filtertext = trim($group["search_filter"]);
@@ -58,13 +58,13 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
             {
             message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
             // Successfully migrated - now use the new filter
-            sql_query("UPDATE usergroup SET search_filter_id='" . $migrateresult . "' WHERE ref='" . $group["ref"] . "'");
+            ps_query("UPDATE usergroup SET search_filter_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $group['ref']]);
             }
         elseif(is_array($migrateresult))
             {
             debug("FILTER MIGRATION: Error migrating filter: '" . $filtertext . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
-            sql_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref='" . $group["ref"] . "'");
+            ps_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref= ?", ['i', $group['ref']]);
                 
             message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
@@ -84,13 +84,13 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
             {
             message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
             // Successfully migrated - now use the new filter
-            sql_query("UPDATE user SET search_filter_o_id='" . $migrateresult . "' WHERE ref='" . $user["ref"] . "'");
+            ps_query("UPDATE user SET search_filter_o_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $user['ref']]);
             }
         elseif(is_array($migrateresult))
             {
             debug("FILTER MIGRATION: Error migrating filter: '" . $filtertext . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure to be sorted manually
-            sql_query("UPDATE user SET search_filter_o_id='0' WHERE ref='" . $user["ref"] . "'");
+            ps_query("UPDATE user SET search_filter_o_id='0' WHERE ref= ?", ['i', $user['ref']]);
             message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }            
         }
