@@ -80,7 +80,7 @@ function get_all_tabs()
 
 
 /**
- * Get list of all tabs. Used to render the select options.
+ * Get list of all tabs sorted based on current configuration. This always adds a fake record (ref #0) to indicate no assignment.
  * 
  * @return array Key is the tabs' ID and value its translated name.
  */
