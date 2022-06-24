@@ -411,7 +411,7 @@ switch ($returntype)
             $return_items[$n]["modal"] = false;
             
             // Set an icon
-            $icon = $workflowicons[$showstate] ?? WORKFLOW_DEFAULT_ICON;
+            $icon = $workflowicons[$showstate] ?? (WORKFLOW_DEFAULT_ICONS[$showstate] ?? WORKFLOW_DEFAULT_ICON);  
             $return_items[$n]["icon"] = "<i class='fa-fw " . $icon  . "'></i>";
             $n++;
             }
