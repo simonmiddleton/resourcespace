@@ -19,7 +19,7 @@ include_once __DIR__ . '/login_functions.php';
 */
 function validate_user($user_select_sql, $getuserdata=true)
     {    
-    if(!is_a($user_select_sql,'PreparedStatementQuery'))
+    if(!is_a($user_select_sql, 'PreparedStatementQuery'))
         {
         return false;
         }
@@ -237,7 +237,7 @@ function setup_user(array $userdata)
             }
         }
 
-    $userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . escape_check($userref) . "' AND parameter = 'colour_theme';","preferences") : FALSE;
+    $userpreferences = ($user_preferences) ? ps_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = ? AND parameter = 'colour_theme';", array("i", $userref), "preferences") : FALSE;
     $userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
 
     # Some alternative language choices for basket mode / e-commerce
@@ -302,48 +302,60 @@ function setup_user(array $userdata)
 /**
  * Returns a user list. Group or search term is optional. The standard user group names are translated using $lang. Custom user group names are i18n translated.
  *
- * @param  integer $group            Can be a single group, or a comma separated list of groups used to limit the results
- *                                   If blank, zero or NULL then all users will be returned irrespective of their group
- * @param  string $find Search string to filter returned results
- * @param  string $order_by
- * @param  boolean $usepermissions
- * @param  integer $fetchrows
- * @param  string $approvalstate
- * @param  boolean $returnsql
- * @param  string $selectcolumns
- * @param  boolean $selectcolumns    Denotes $find must be an exact username
- * @return array  Matching user records 
+ * @param  integer        $group                  Can be a single group, or a comma separated list of groups used to limit the results
+ *                                                If blank, zero or NULL then all users will be returned irrespective of their group
+ * @param  string         $find                   Search string to filter returned results
+ * @param  string         $order_by
+ * @param  boolean        $usepermissions
+ * @param  integer        $fetchrows
+ * @param  string         $approvalstate
+ * @param  boolean        $returnsql               Return prepared statement object containing sql query and parameters.
+ * @param  string         $selectcolumns
+ * @param  boolean        $exact_username_match    Denotes $find must be an exact username
+ * 
+ * @return array|object   Matching user records    Returns an array of user information or prepared statement object containing sql query and parameters.
  */
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="",$exact_username_match=false)
     {
     global $usergroup, $U_perm_strict;
 
+    if (!in_array($order_by, array("u.created", "u.username", "approved", "u.fullname", 'g.name', 'email', 'created', 'last_active')))
+        {
+        $order_by = "u.username";
+        }
+
     $sql = "";
-    $find=escape_check(strtolower($find));
+    $sql_params = array();
+    $find=strtolower($find);
     # Sanitise the incoming group(s), stripping out any which are non-numeric 
     $grouparray=array_filter(explode(",",$group), 'ctype_digit');
-    # Reconstruct the sanitised list of group(s)
-    $grouplist=implode(",",$grouparray);
 
-    if ($group != 0 && count($grouparray)>0) {$sql = "where usergroup IN ($grouplist)";}
+    if ($group != 0 && count($grouparray)>0)
+        {
+        $sql = "where usergroup IN (" . ps_param_insert(count($grouparray)) . ")";
+        $sql_params = ps_param_fill($grouparray, "i");
+        }
 
     if ($exact_username_match)
         {
         # $find is an exact username
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        $sql .= "LOWER(username)='$find'";
+        $sql .= "LOWER(username) = ?";
+        $sql_params = array_merge($sql_params, array("s", $find));
         }
     else    
         {
         if (strlen($find)>1)
             {
             if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-            $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";      
+            $sql .= "(LOWER(username) like ? or LOWER(fullname) like ? or LOWER(email) like ? or LOWER(comments) like ?)";
+            $sql_params = array_merge($sql_params, array("s", "%".$find."%", "s", "%".$find."%", "s", "%".$find."%", "s", "%".$find."%"));
             }
-            if (strlen($find)==1)
+        if (strlen($find)==1)
             {
             if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-            $sql .= "LOWER(username) like '$find%'";
+            $sql .= "LOWER(username) like ?";
+            $sql_params = array_merge($sql_params, array("s", "%".$find."%"));
             }
         }
     
@@ -356,20 +368,28 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
         if (count($approver_groups) > 0)
             {
-            $sql.= "(find_in_set('" . escape_check($usergroup) . "',g.parent) or g.ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+            $sql.= "(find_in_set(?, g.parent) or g.ref in (" . ps_param_insert(count($approver_groups)) . "))";
+            $sql_params = array_merge($sql_params, array("i", $usergroup), ps_param_fill($approver_groups, "i"));
             }
         else
             {
-            $sql.= "find_in_set('" . escape_check($usergroup) . "',g.parent) ";
+            $sql.= "find_in_set(?, g.parent) ";
+            $sql_params = array_merge($sql_params, array("i", $usergroup));
             }
 
-        $sql.= hook("getuseradditionalsql");
+        $sql_hook_return = hook("getuseradditionalsql");
+        if(is_a($sql_hook_return, 'PreparedStatementQuery'))
+            {
+            $sql .= $sql_hook_return->sql;
+            $sql_params = array_merge($sql_params, $sql_hook_return->parameters);
+            }
         }
 
     if (is_numeric($approvalstate))
         {
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        $sql .= "u.approved='$approvalstate'";
+        $sql .= "u.approved = ?";
+        $sql_params = array_merge($sql_params, array("i", $approvalstate));
         }
 
     // Return users in both user's user group and children groups
@@ -377,18 +397,40 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         {
         if (count($approver_groups) > 0)
             {
-            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent) OR g.ref IN (%3$s))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup), implode(",", escape_check_array_values($approver_groups)));
+            $sql .= sprintf('%1$s (g.ref = ? OR find_in_set(?, g.parent) OR g.ref IN (' . ps_param_insert(count($approver_groups)) . '))',($sql == '') ? 'WHERE' : ' AND');
+            $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups, "i"));
             }
         else
             {
-            $sql .= sprintf('%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))',($sql == '') ? 'WHERE' : ' AND', escape_check($usergroup));
+            $sql .= sprintf('%1$s (g.ref = ? OR find_in_set(?, g.parent))',($sql == '') ? 'WHERE' : ' AND');
+            $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
             }
         }
-    $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
-    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
+
+    if ($selectcolumns != "")
+        {
+        $selectcolumns = explode(",", $selectcolumns);
+        $selectcolumns = array_map('trim', $selectcolumns);
+        $selectcolumns = array_unique(array_merge($selectcolumns, array('u.created', 'u.fullname', 'u.email', 'u.username', 'u.comments', 'u.ref', 'u.usergroup', 'u.approved')));
+        $select = implode(",", $selectcolumns);
+        }
+    else
+        {
+        $select = "u.*, g.name groupname, g.ref groupref, g.parent groupparent";
+        }
+
+    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup = g.ref $sql order by $order_by";
+
     # Executes query.
-    if($returnsql){return $query;}
-    $r = sql_query($query, false, $fetchrows);
+    if($returnsql)
+        {
+        $return_sql = new PreparedStatementQuery();
+        $return_sql->sql = $query;
+        $return_sql->parameters = $sql_params;
+        return $return_sql;
+        }
+
+    $r = ps_query($query, $sql_params, false, $fetchrows);
 
     # Translates group names in the newly created array.
     for ($n = 0;$n<count($r);$n++)
@@ -417,7 +459,11 @@ function get_users_with_permission($permission)
         if (in_array($permission,$perms)) {$matched[] = $groups[$n]["ref"];}
     }
     # Executes query.
-    $r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE (g.ref IN ('" . join("','",$matched) . "') OR (find_in_set('permissions',g.inherit_flags)>0 AND g.parent IN ('" . join("','",$matched) . "'))) ORDER BY username",false);
+    $r = ps_query("SELECT u.*, g.name groupname, g.ref groupref, g.parent groupparent FROM user u
+                   LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref 
+                   WHERE (g.ref IN (" . ps_param_insert(count($matched)) . ") OR (find_in_set('permissions', g.inherit_flags) > 0 
+                   AND g.parent IN (" . ps_param_insert(count($matched)) . "))) ORDER BY username",
+                   array_merge(ps_param_fill($matched, "i"), ps_param_fill($matched, "i")), false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -437,7 +483,7 @@ function get_users_with_permission($permission)
  */
 function get_user_by_email($email)
 {
-    $r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE u.email LIKE '%$email%' ORDER BY username",false);
+    $r = ps_query("SELECT u.*, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -479,6 +525,7 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
     global $usergroup;
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "";
+    $sql_params = array();
     if ($usepermissions && (checkperm("U") || count($approver_groups) > 0))
         {
         # Only return users in children groups to the user's group
@@ -488,29 +535,35 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
             {
             if (count($approver_groups) > 0)
                 {
-                $sql.= "(find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+                $sql.= "(find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
+                $sql_params = array_merge(array("i", $usergroup), ps_param_fill($approver_groups, "i"));
                 }
             else
                 {
-                $sql.= "find_in_set('" . escape_check($usergroup) . "',parent)";
+                $sql.= "find_in_set(?, parent)";
+                $sql_params = array("i", $usergroup);
                 }
             }
         else
             {
             if (count($approver_groups) > 0)
                 {
-                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent) or ref in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+                $sql.= "(ref = ? or find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
+                $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups, "i"));
                 }
             else
                 {
-                $sql.= "(ref='" . escape_check($usergroup) . "' or find_in_set('" . escape_check($usergroup) . "',parent))";
+                $sql.= "(ref = ? or find_in_set(?, parent))";
+                $sql_params = array("i", $usergroup, "i", $usergroup);
                 }
             }
         }
 
     # Executes query.
     global $default_group;
-    $r = sql_query("select *,inherit_flags, download_limit, download_log_days from usergroup $sql order by (ref='$default_group') desc,name");
+    $r = ps_query("select ref, `name`, permissions, parent, search_filter, edit_filter, derestrict_filter, ip_restrict, resource_defaults, config_options,
+        welcome_message, request_mode, allow_registration_selection, group_specific_logo, inherit_flags, search_filter_id, download_limit, download_log_days,
+        edit_filter_id, derestrict_filter_id from usergroup $sql order by (ref = ?) desc, name", array_merge($sql_params, array("i", $default_group)));
 
     # Translates group names in the newly created array.
     $return = array();
@@ -555,7 +608,9 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
  */
 function get_usergroup($ref)
     {
-    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags, download_limit, download_log_days, edit_filter_id, derestrict_filter_id " . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
+    $return = ps_query("SELECT ref, name, permissions, parent, search_filter, search_filter_id, edit_filter, ip_restrict, resource_defaults, config_options, welcome_message, 
+            request_mode, allow_registration_selection, derestrict_filter, group_specific_logo, inherit_flags, download_limit, download_log_days, edit_filter_id, derestrict_filter_id " 
+            . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref = ?", array("i", $ref));
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
@@ -573,11 +628,22 @@ function get_usergroup($ref)
 function get_user($ref)
     {
     global $udata_cache;
-        if (isset($udata_cache[$ref])){
-          $return=$udata_cache[$ref];
-        } else {
-    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override,(select count(*) from collection where ref=u.current_collection) as current_collection_valid,u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter, g.search_filter_id, g.download_limit, g.download_log_days, g.edit_filter_id, g.derestrict_filter_id FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='" . escape_check($ref) . "'");
-    }
+    if (isset($udata_cache[$ref]))
+        {
+        $return = $udata_cache[$ref];
+        }
+    else
+        {
+        $udata_cache[$ref] = ps_query("SELECT u.ref, u.username, u.password, u.fullname, u.email, u.usergroup, u.last_active, u.logged_in, u.last_browser, u.last_ip, 
+            u.current_collection, u.accepted_terms, u.account_expires, u.comments, u.session, u.password_last_change, u.login_tries, 
+            u.login_last_try, u.approved, u.lang, u.created, u.hidden_collections, u.password_reset_hash, u.origin, u.unique_hash, u.csrf_token,
+            u.profile_image, u.profile_text, if(find_in_set('permissions', g.inherit_flags) > 0 AND pg.permissions IS NOT NULL, pg.permissions, g.permissions) permissions, 
+            g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, 
+            (select count(*) from collection where ref = u.current_collection) as current_collection_valid, u.search_filter_o_id, g.resource_defaults, 
+            if(find_in_set('config_options',g.inherit_flags) > 0 AND pg.config_options IS NOT NULL, pg.config_options, g.config_options) config_options, g.request_mode, 
+            g.derestrict_filter, g.search_filter_id, g.download_limit, g.download_log_days, g.edit_filter_id, g.derestrict_filter_id FROM user u LEFT JOIN usergroup g 
+            ON u.usergroup = g.ref LEFT JOIN usergroup pg ON g.parent = pg.ref WHERE u.ref = ?", array("i", $ref));
+        }
     
     # Return a user's credentials.
     if (count($udata_cache[$ref])>0) {return $udata_cache[$ref][0];} else {return false;}
@@ -601,7 +667,7 @@ function save_user($ref)
     if('' != getval('deleteme', ''))
         {
         delete_profile_image($ref);
-        sql_query("DELETE FROM user WHERE ref = '" . escape_check($ref) . "'");
+        ps_query("DELETE FROM user WHERE ref = ?", array("i", $ref));
 
         hook('on_delete_user', "", array($ref));
         
@@ -615,21 +681,21 @@ function save_user($ref)
     else
         {
         // Get submitted values
-        $username               = trim(getvalescaped('username', ''));
-        $password               = trim(getvalescaped('password', ''));
-        $fullname               = str_replace("\t", ' ', trim(getvalescaped('fullname', '')));
+        $username               = trim(getval('username', ''));
+        $password               = trim(getval('password', ''));
+        $fullname               = str_replace("\t", ' ', trim(getval('fullname', '')));
         $email                  = trim(getval('email', '')); //To be escaped on usage in DB
-        $usergroup              = trim(getvalescaped('usergroup', ''));
-        $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
-        $search_filter_override = trim(getvalescaped('search_filter_override', ''));
-        $search_filter_o_id     = trim(getvalescaped('search_filter_o_id', 0, true));
-        $comments               = trim(getvalescaped('comments', ''));
+        $usergroup              = trim(getvalescaped('usergroup', ''));  // escaping required until build_usergroup_dash() moved to prepared statements
+        $ip_restrict            = trim(getval('ip_restrict', ''));
+        $search_filter_override = trim(getval('search_filter_override', ''));
+        $search_filter_o_id     = trim(getval('search_filter_o_id', 0, true));
+        $comments               = trim(getval('comments', ''));
         $suggest                = getval('suggest', '');
         $emailresetlink         = getval('emailresetlink', '');
         $approved               = getval('approved', 0, true);
 
         # Username or e-mail address already exists?
-        $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . escape_check($email) . "')", 0);
+        $c = ps_value("SELECT count(*) value FROM user WHERE ref <> ? AND (username = ? OR email = ?)", array("i", $ref, "s", $username, "s", $email), 0);
         if($c > 0 && $email != '')
             {
             return false;
@@ -650,10 +716,10 @@ function save_user($ref)
             }
 
         # Get valid expiry date
-        $expires=getvalescaped("account_expires","");
+        $expires = getval("account_expires","");
         if($expires == "" || strtotime($expires)==false)
             {
-            $expires = 'null';
+            $expires = null;
             }
         else   
             {
@@ -661,6 +727,7 @@ function save_user($ref)
             }
 
         $passsql = '';
+        $sql_params = array();
         if($password != $lang['hidden'])
             {
             # Save password.
@@ -669,7 +736,8 @@ function save_user($ref)
                 $password = rs_password_hash("RS{$username}{$password}");
                 }
 
-            $passsql = ",password='" . $password . "',password_last_change=now()";
+            $passsql = ", password = ?, password_last_change = now()";
+            $sql_params = array("s", $password);
             }
 
         // Full name checks
@@ -685,7 +753,14 @@ function save_user($ref)
             $ip_restrict = (false === filter_var($ip_restrict, FILTER_VALIDATE_IP) ? '' : $ip_restrict);
             }
 
-        $additional_sql = hook('additionaluserfieldssave');
+        $additional_sql = '';
+        $additional_sql_params = array();
+        $sql_hook_return =  hook('additionaluserfieldssave');
+        if(is_a($sql_hook_return, 'PreparedStatementQuery'))
+            {
+            $additional_sql = $sql_hook_return->sql;
+            $additional_sql_params = $sql_hook_return->parameters;
+            }
 
         log_activity(null, LOG_CODE_EDITED, $username, 'user', 'username', $ref);
         log_activity(null, LOG_CODE_EDITED, $fullname, 'user', 'fullname', $ref);
@@ -694,7 +769,7 @@ function save_user($ref)
         if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
             {
             log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
-            sql_query("DELETE FROM resource WHERE ref = '-{$ref}'");
+            ps_query("DELETE FROM resource WHERE ref = ?", array("i", $ref));
             }
 
         log_activity(null, LOG_CODE_EDITED, $ip_restrict, 'user', 'ip_restrict', $ref, null, '');
@@ -703,17 +778,21 @@ function save_user($ref)
         log_activity(null, LOG_CODE_EDITED, $comments, 'user', 'comments', $ref);
         log_activity(null, LOG_CODE_EDITED, $approved, 'user', 'approved', $ref);
 
-        sql_query("update user set
-        username='" . $username . "'" . $passsql . ",
-        fullname='" . $fullname . "',
-        email='" . escape_check($email) . "',
-        usergroup='" . $usergroup . "',
-        account_expires=$expires,
-        ip_restrict='" . $ip_restrict . "',
-        search_filter_override='" . $search_filter_override . "',
-        search_filter_o_id='" . $search_filter_o_id . "',
-        comments='" . $comments . "',
-        approved='" . $approved . "' " . $additional_sql . " where ref='$ref'");
+        $sql_params = array_merge(array("s", $username),
+                                  $sql_params,
+                                  array("s", $fullname,
+                                        "s", $email,
+                                        "i", $usergroup,
+                                        "s", $expires,
+                                        "s", $ip_restrict,
+                                        "s", $search_filter_override,
+                                        "i", $search_filter_o_id,
+                                        "s", $comments,
+                                        "i", $approved),
+                                  $additional_sql_params,
+                                  array("i", $ref));
+        ps_query("update user set username = ?" . $passsql . ", fullname = ?, email = ?, usergroup = ?, account_expires = ?, ip_restrict = ?,
+            search_filter_override = ?, search_filter_o_id = ?, comments = ?, approved = ? " . $additional_sql . " where ref = ?", $sql_params);
         }
 
         // Add user group dash tiles as soon as we've changed the user group
@@ -722,7 +801,7 @@ function save_user($ref)
             // If user group has changed, remove all user dash tiles that were valid for the old user group
             if($current_user_data['usergroup'] != $usergroup)
                 {
-                sql_query("DELETE FROM user_dash_tile WHERE user = '{$ref}' AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = '{$current_user_data['usergroup']}')");
+                ps_query("DELETE FROM user_dash_tile WHERE user = ? AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = ?)", array("i", $ref, "i", $current_user_data['usergroup']));
 
                 include_once __DIR__ . '/dash_functions.php';
                 build_usergroup_dash($usergroup, $ref);
@@ -788,7 +867,7 @@ function email_reset_link($email,$newuser=false)
         return false;
         }
 
-    $details = sql_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
+    $details = ps_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE ? AND approved = 1 AND (account_expires IS NULL OR account_expires > now());", array("s", $email));
     sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
@@ -885,7 +964,7 @@ function auto_create_user_account($hash="")
             }
         }
 
-    $newusername=escape_check(make_username(getval("name","")));
+    $newusername = make_username(getval("name",""));
 
     // Check valid email
     if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
@@ -901,8 +980,8 @@ function auto_create_user_account($hash="")
         }
 
     # Prepare to create the user.
-    $email=trim(getvalescaped("email","")) ;
-    $password=make_password();
+    $email = trim(getval("email", "")) ;
+    $password = make_password();
     $password = rs_password_hash("RS{$newusername}{$password}");
 
     # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
@@ -993,7 +1072,7 @@ function auto_create_user_account($hash="")
                     {
                     update_collection_user($sessioncollection,$new);
                     }
-                sql_query("UPDATE user SET current_collection='$sessioncollection' WHERE ref='$new'");
+                ps_query("UPDATE user SET current_collection = ? WHERE ref = ?", array("i", $sessioncollection, "i", $new));
                 }
             }
         }
@@ -1183,34 +1262,39 @@ function get_active_users()
     {
     global $usergroup, $U_perm_strict;
     $approver_groups = get_approver_usergroups($usergroup);
-    $sql = "where logged_in=1 and unix_timestamp(now())-unix_timestamp(last_active)<(3600*2)";
+    $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
+    $sql_params = array();
     if ((checkperm("U") || count($approver_groups) > 0) && $U_perm_strict)
         {
         if (count($approver_groups) > 0)
             {
-            $sql.= "and (find_in_set('" . escape_check($usergroup) . "',g.parent) or usergroup in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+            $sql.= "and (find_in_set(?, g.parent) or usergroup in (" . ps_param_insert(count($approver_groups)) . "))";
+            $sql_params = array_merge(array("i", $usergroup), ps_param_fill($approver_groups, "i"));
             }
         else
             {
-            $sql.= " and find_in_set('" . escape_check($usergroup) . "',g.parent) ";
+            $sql.= " and find_in_set(?, g.parent) ";
+            $sql_params = array("i", $usergroup);
             }
         }
 
     // Return users in both user's user group and children groups
-    elseif ((checkperm("U") || count($approver_groups) > 0)&& !$U_perm_strict)
+    elseif ((checkperm("U") || count($approver_groups) > 0) && !$U_perm_strict)
         {
         if (count($approver_groups) > 0)
             {
-            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent) or usergroup in (" . implode(",", escape_check_array_values($approver_groups)) . "))";
+            $sql .= " and (g.ref = ? OR find_in_set(?, g.parent) or usergroup in (" . ps_param_insert(count($approver_groups)) . "))";
+            $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups,"i"));
             }
         else
             {
-            $sql .= " and (g.ref = '" . escape_check($usergroup) . "' OR find_in_set('" . escape_check($usergroup) . "', g.parent))";
+            $sql .= " and (g.ref = ? OR find_in_set(?, g.parent))";
+            $sql_params = array("i", $usergroup, "i", $usergroup);
             }
         }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
-    return sql_query("select u.ref, u.username,round((unix_timestamp(now())-unix_timestamp(u.last_active))/60,0) t from user u left outer join usergroup g on u.usergroup=g.ref $sql order by t;");
+    return ps_query("select u.ref, u.username, round((unix_timestamp(now()) - unix_timestamp(u.last_active)) / 60, 0) t from user u left outer join usergroup g on u.usergroup = g.ref $sql order by t;", $sql_params);
     }
 
 /**
@@ -1233,8 +1317,8 @@ function change_password($password)
     # Check password is not the same as the current
     if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
     
-    sql_query("update user set password='$password_hash', password_reset_hash=NULL, login_tries=0, password_last_change=now() where ref='$userref' limit 1");
-        return true;
+    ps_query("update user set password = ?, password_reset_hash = NULL, login_tries = 0, password_last_change = now() where ref = ? limit 1", array("s", $password_hash, "i", $userref));
+    return true;
     }
 
 /**
@@ -1373,7 +1457,7 @@ function get_user_log($user, $fetchrows=-1)
     {
     global $view_title_field;
     # Executes query.
-    $r = sql_query("select r.ref resourceid,r.field".$view_title_field." resourcetitle,l.date,l.type,f.title,l.purchase_size,l.purchase_price, l.notes,l.diff from resource_log l left outer join resource r on l.resource=r.ref left outer join resource_type_field f on f.ref=l.resource_type_field where l.user='$user' order by l.date desc",false,$fetchrows);
+    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), false, $fetchrows);
 
     # Translates field titles in the newly created array.
     $return = array();
@@ -1447,7 +1531,7 @@ function resolve_userlist_groups($userlist)
                 }
 
             # Find and add the users.
-            $users = sql_array("SELECT username AS `value` FROM user WHERE usergroup = '{$groupref}'");
+            $users = ps_array("SELECT username AS `value` FROM user WHERE usergroup = ?", array("i", $groupref));
             if ($newlist!="") {$newlist.=",";}
             $newlist.=join(",",$users);
             }
@@ -1525,7 +1609,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                 }
             if($return_usernames)
                 {
-                $users = sql_array("select username value from user where usergroup='$groupref'");
+                $users = ps_array("select username value from user where usergroup = ?", array("i", $groupref));
                 if ($newlist!="") {$newlist.=",";}
                 $newlist.=join(",",$users);
                 }
@@ -1617,7 +1701,7 @@ function check_password($password)
 function resolve_users($users)
     {
     if (trim($users)=="") {return "";}
-    $resolved=sql_array("select concat(fullname,' (',username,')') value from user where ref in ($users)");
+    $resolved = ps_array("select concat(fullname, ' (',username,')') value from user where ref in (?)", array("s", $users));
     return join(", ",$resolved);
     }
 
@@ -1662,9 +1746,7 @@ function check_access_key($resources,$key)
             }
         }
 
-    $key_escaped = escape_check($key);
-
-    $keys = sql_query("
+    $keys = ps_query("
             SELECT k.user,
                    k.usergroup,
                    k.expires,
@@ -1672,12 +1754,13 @@ function check_access_key($resources,$key)
                    k.access,
                    k.resource
             FROM external_access_keys k 
-            LEFT JOIN user u ON u.ref=k.user
-            WHERE k.access_key = '$key_escaped'
-               AND k.resource IN ('" . implode("','",$resources) . "')
+            LEFT JOIN user u ON u.ref = k.user
+            WHERE k.access_key = ?
+               AND k.resource IN (" .ps_param_insert(count($resources)) . ")
                AND (k.expires IS NULL OR k.expires > now())
-               AND u.approved=1
-               ORDER BY k.access");
+               AND u.approved = 1
+               ORDER BY k.access",
+            array_merge(array("s", $key), ps_param_fill($resources, "i")));
 
     if(count($keys) == 0 || count(array_diff($resources,array_column($keys,"resource"))) > 0)
         {
@@ -1702,19 +1785,19 @@ function check_access_key($resources,$key)
     if($keys[0]["access"] == -1)
         {
         // If the resources have -1 as access they may have been added without the correct expiry etc.
-        sql_query("UPDATE external_access_keys ak
-            LEFT JOIN (SELECT * FROM external_access_keys ake WHERE access_key='$key_escaped' ORDER BY access DESC, expires ASC LIMIT 1) ake
-                ON ake.access_key=ak.access_key
-                AND ake.collection=ak.collection
-            SET ak.expires=ake.expires, 
-                ak.access=ake.access,
-                ak.usergroup=ake.usergroup,
-                ak.email=ake.email,
-                ak.password_hash=ake.password_hash
-            WHERE ak.access_key = '$key_escaped'
-            AND ak.access='-1'
-            AND ak.expires IS NULL");
-        return false;            
+        ps_query("UPDATE external_access_keys ak
+            LEFT JOIN (SELECT * FROM external_access_keys ake WHERE access_key = ? ORDER BY access DESC, expires ASC LIMIT 1) ake
+                ON ake.access_key = ak.access_key
+                AND ake.collection = ak.collection
+            SET ak.expires = ake.expires, 
+                ak.access = ake.access,
+                ak.usergroup = ake.usergroup,
+                ak.email = ake.email,
+                ak.password_hash = ake.password_hash
+            WHERE ak.access_key = ?
+            AND ak.access = '-1'
+            AND ak.expires IS NULL", array("s", $key, "s", $key));
+        return false;
         }
 
     if($keys[0]["password_hash"] != "" && PHP_SAPI != "cli")
@@ -1750,15 +1833,17 @@ function check_access_key($resources,$key)
     emulate_user($user, $group);
     
     global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
-            $groupjoin="u.usergroup=g.ref";
-            $permissionselect="g.permissions";
+            $groupjoin = "u.usergroup = g.ref";
+            $permissionselect = "g.permissions";
+            $groupjoin_params = array();
             if ($keys[0]["usergroup"]!="")
                 {
                 # Select the user group from the access key instead.
-                $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
-                $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
+                $groupjoin = "g.ref = ? LEFT JOIN usergroup pg ON g.parent = pg.ref";
+                $groupjoin_params = array("i", $keys[0]["usergroup"]);
+                $permissionselect = "if(find_in_set('permissions', g.inherit_flags) AND pg.permissions IS NOT NULL, pg.permissions, g.permissions) permissions";
                 }
-    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id , g.derestrict_filter_id from user u join usergroup g on $groupjoin where u.ref='$user'");
+    $userinfo = ps_query("select g.ref usergroup," . $permissionselect . " , g.search_filter, g.config_options, g.search_filter_id, g.derestrict_filter_id, u.search_filter_override, u.search_filter_o_id from user u join usergroup g on $groupjoin where u.ref = ?", array_merge($groupjoin_params, array("i", $user)));
     if (count($userinfo)>0)
         {
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
@@ -1840,7 +1925,7 @@ function check_access_key($resources,$key)
         }
     
     # Set the 'last used' date for this key
-    sql_query("UPDATE external_access_keys SET lastused = now() WHERE resource IN ('" . implode("','",$resources) . "') AND access_key = '$key_escaped'");
+    ps_query("UPDATE external_access_keys SET lastused = now() WHERE resource IN (" . ps_param_insert(count($resources)) . ") AND access_key = ?", array_merge(ps_param_fill($resources, "i"), array("s", $key)));
     
     return true;
     }
@@ -1880,10 +1965,9 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-    
-    $key_escaped = escape_check($key);
+
     // Get key info 
-    $keyinfo = sql_query("
+    $keyinfo = ps_query("
                     SELECT user,
                            usergroup,
                            expires,
@@ -1891,8 +1975,8 @@ function check_access_key_collection($collection, $key)
                            password_hash,
                            collection
                       FROM external_access_keys
-                     WHERE access_key = '{$key_escaped}'
-                       AND (expires IS NULL OR expires > now())");
+                     WHERE access_key = ?
+                       AND (expires IS NULL OR expires > now())", array("s", $key));
     
     if(count($keyinfo) == 0)
         {
@@ -1923,7 +2007,7 @@ function check_access_key_collection($collection, $key)
             exit();
             }
         }
-       
+
     $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '" . $collection["ref"] . "' AND access_key = '{$key}'";
 
     if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
@@ -2037,10 +2121,10 @@ function get_registration_selectable_usergroups()
 function open_access_to_user($user,$resource,$expires)
     {
     # Delete any existing custom access
-    sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
+    ps_query("delete from resource_custom_access where user = ? and resource = ?", array("i", $user, "i", $resource));
     
     # Insert new row
-    sql_query("insert into resource_custom_access(resource,access,user,user_expires) values ('$resource','0','$user'," . ($expires==""?"null":"'$expires'") . ")");
+    ps_query("insert into resource_custom_access (resource, access, user, user_expires) values (?, '0', ?, ?)", array("i", $resource, "i", $user, "s", $expires == "" ? null : $expires));
     
     return true;
     }
@@ -2056,10 +2140,10 @@ function open_access_to_user($user,$resource,$expires)
 function open_access_to_group($group,$resource,$expires)
     {
     # Delete any existing custom access
-    sql_query("delete from resource_custom_access where usergroup='$group' and resource='$resource'");
+    ps_query("delete from resource_custom_access where usergroup = ? and resource = ?", array("i", $group, "i", $resource));
     
     # Insert new row
-    sql_query("insert into resource_custom_access(resource,access,usergroup,user_expires) values ('$resource','0','$group'," . ($expires==""?"null":"'$expires'") . ")");
+    ps_query("insert into resource_custom_access (resource, access, usergroup, user_expires) values (?, '0', ?, ?)", array("i", $resource, "i", $group, "s", $expires == "" ? null : $expires));
     
     return true;
     }
@@ -2113,11 +2197,11 @@ function resolve_open_access($userlist,$resource,$expires)
 function remove_access_to_user($user,$resource)
     {
     # Delete any existing custom access
-    sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
-    
+    ps_query("delete from resource_custom_access where user = ? and resource = ?", array("i", $user, "i", $resource));
+
     return true;
     }
-    
+
 /**
  * Returns true if a user account exists with e-mail address $email
  *
@@ -2126,8 +2210,7 @@ function remove_access_to_user($user,$resource)
  */
 function user_email_exists($email)
     {
-    $email=escape_check(trim(strtolower($email)));
-    return (ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?",["s",$email],0)>0);
+    return (ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?", ["s", trim(strtolower($email))], 0) > 0);
     }
 
 /**
@@ -2146,8 +2229,7 @@ function resolve_user_emails($user_list)
 
     foreach($user_list as $user)
         {
-        $escaped_username = escape_check($user);
-        $email_details    = sql_query("SELECT ref, email, approved, account_expires FROM user WHERE username = '{$escaped_username}'");
+        $email_details    = ps_query("SELECT ref, email, approved, account_expires FROM user WHERE username = ?", array("s", $user));
         if(isset($email_details[0]) && (time() < strtotime($email_details[0]['account_expires']))) 
           {
           continue;
@@ -2158,7 +2240,7 @@ function resolve_user_emails($user_list)
             {
             if(false === strpos($user, '@') || (isset($user_select_internal) && $user_select_internal))
                 {
-                error_alert("{$lang['couldnotmatchallusernames']}: {$escaped_username}");
+                error_alert(htmlspecialchars("{$lang['couldnotmatchallusernames']}: {$user}"));
                 die();
                 }
 
@@ -2205,8 +2287,8 @@ function create_password_reset_key($username)
     {
     global $scramble_key;
     $resetuniquecode=make_password();
-    $password_reset_hash=hash('sha256', date("Ymd") . md5("RS" . $resetuniquecode . $username . $scramble_key));  
-    sql_query("update user set password_reset_hash='$password_reset_hash' where username='" . escape_check($username) . "'");   
+    $password_reset_hash=hash('sha256', date("Ymd") . md5("RS" . $resetuniquecode . $username . $scramble_key));
+    ps_query("update user set password_reset_hash = ? where username = ?", array("s", $password_reset_hash, "s", $username));
     $password_reset_url_key=substr(hash('sha256', date("Ymd") . $password_reset_hash . $username . $scramble_key),0,15);
     return $password_reset_url_key;
     }
@@ -2254,7 +2336,7 @@ function get_rs_session_id($create=false)
                     }
                 }
 
-            $valid = sql_query("select ref,usergroup,account_expires from user where username='" . escape_check($anonymous_login) . "'");
+            $valid = ps_query("select ref, usergroup, account_expires from user where username = ?", array("s", $anonymous_login));
 
             if (count($valid) >= 1)
                 {
@@ -2303,7 +2385,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
     if(is_array($email_notify_usergroups) && count($email_notify_usergroups)>0)
         {
         // If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
-        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email, lang from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
+        $notification_users_cache[$userpermissionindex] = ps_query("select ref, email, lang from user where usergroup in (" . ps_param_insert(count($email_notify_usergroups)) . ") and email <> '' AND approved = 1 AND (account_expires IS NULL OR account_expires > NOW())", ps_param_fill($email_notify_usergroups, "i"));
         return $notification_users_cache[$userpermissionindex];
         }
     
@@ -2314,38 +2396,47 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
             {
             case "USER_ADMIN";
             $sql_approver_groups = '';
+            $sql_approver_groups_params = array();
             global $usergroup_approval_mappings;
-            if (is_numeric($usergroup) && isset($usergroup_approval_mappings))
+
+            if (is_numeric($usergroup))
                 {
-                // Determine which user groups should be excluded from notifications. If mapping exists it must be valid to send notification.
-                $approver_groups = array_keys($usergroup_approval_mappings);
-                $defined_approvers_for_group = get_usergroup_approvers($usergroup);
-                $affective_approver_groups = array_diff($approver_groups, $defined_approvers_for_group);
-                if (count($affective_approver_groups) > 0)
+                $sql_approver_groups = " and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref = (select parent from usergroup where ref = ?)) ";
+                $sql_approver_groups_params = array("i", $usergroup);
+                if (isset($usergroup_approval_mappings))
                     {
-                    $sql_approver_groups = 'and ug.ref not in (' . implode(",", escape_check_array_values($affective_approver_groups)) . ')';
+                    // Determine which user groups should be excluded from notifications. If mapping exists it must be valid to send notification.
+                    $approver_groups = array_keys($usergroup_approval_mappings);
+                    $defined_approvers_for_group = get_usergroup_approvers($usergroup);
+                    $affective_approver_groups = array_diff($approver_groups, $defined_approvers_for_group);
+                    if (count($affective_approver_groups) > 0)
+                        {
+                        $sql_approver_groups .= 'and ug.ref not in (' .ps_param_insert(count($affective_approver_groups)) . ')';
+                        $sql_approver_groups_params = array_merge($sql_approver_groups_params, ps_param_fill($affective_approver_groups, "i"));
+                        }
                     }
                 }
+
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_numeric($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . escape_check($usergroup) . ")) " . $sql_approver_groups . "":""));    
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup = ug.ref where find_in_set(binary 'u', ug.permissions) <> 0 and u.ref <> '' and u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . $sql_approver_groups, $sql_approver_groups_params);
             return $notification_users_cache[$userpermissionindex];
             break;
             
             case "RESOURCE_ACCESS";
             // Notify users who can grant access to resources, get all users in groups with R permissions
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
             return $notification_users_cache[$userpermissionindex];     
             break;
             
             case "RESEARCH_ADMIN";
             // Notify research admins, get all users in groups with r permissions
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
             return $notification_users_cache[$userpermissionindex];     
             break;
                     
             case "RESOURCE_ADMIN";
             // Get all users in groups with t and e0 permissions
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
             return $notification_users_cache[$userpermissionindex];
             break;
             
@@ -2361,13 +2452,15 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
     else
         {
         // An array has been passed, find all users with these permissions
-        $condition="";
+        $condition = "";
+        $condition_sql_params = array();
         foreach ($userpermission as $permission)
             {
-            if($condition!=""){$condition.=" and ";}
-            $condition.="find_in_set(binary '" . $permission . "',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())";
+            if($condition != "") {$condition .= " and ";}
+            $condition .= "find_in_set(binary ?, ug.permissions) <> 0 AND u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())";
+            $condition_sql_params = array_merge($condition_sql_params, array("s", $permission));
             }
-        $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where $condition");  
+        $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup = ug.ref where $condition", $condition_sql_params);
         return $notification_users_cache[$userpermissionindex];
         }
     }
@@ -2390,7 +2483,7 @@ function verify_antispam($spamcode="",$usercode="",$spamtime=0)
     $antispam_code_valid = ($spamcode === hash("SHA256", strtoupper($usercode) . $scramble_key . $spamtime));
     $previous_hash = in_array(
         md5($usercode . $spamtime),
-        sql_array("SELECT unique_hash AS `value` FROM user WHERE unique_hash IS NOT null", '')
+        ps_array("SELECT unique_hash AS `value` FROM user WHERE unique_hash IS NOT null", array(), '')
     );
 
     if($data_valid && $honeypot_intact && $antispam_code_valid && !$previous_hash)
@@ -2617,20 +2710,24 @@ function checkperm_user_edit($user)
 
 	// Get all the groups that the logged in user can manage 
     $sql = "SELECT `ref` AS  'value' FROM `usergroup` WHERE ";
+    $sql_params = array();
     if (count($approver_groups) > 0)
         {
-        $sql .= "ref in (" . implode(",", escape_check_array_values($approver_groups)) . ") or ";
+        $sql .= "ref in (" . ps_param_insert(count($approver_groups)) . ") or ";
+        $sql_params = array_merge($sql_params, ps_param_fill($approver_groups,"i"));
         }
     if ($U_perm_strict)
         {
-        $sql .= "FIND_IN_SET('" . escape_check($usergroup) . "',parent)";
+        $sql .= "FIND_IN_SET(?, parent)";
+        $sql_params = array_merge($sql_params, array("i", $usergroup));
         }
     else
         {
-        $sql .= "`ref`='" . escape_check($usergroup) . "' OR FIND_IN_SET('" . escape_check($usergroup) . "',parent)";
+        $sql .= "`ref` = ? OR FIND_IN_SET(?, parent)";
+        $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
         }
 
-	$validgroups = sql_array($sql);
+	$validgroups = ps_array($sql, $sql_params);
 	
 	// Return true if the target user we are checking is in one of the valid groups
 	return (in_array($editusergroup, $validgroups));
@@ -2687,7 +2784,7 @@ function save_usergroup($ref,$groupoptions)
         if(isset($groupoptions[$column]))
             {
             $sqlcols[$n] = $column;
-            $sqlvals[$n] = escape_check($groupoptions[$column]);
+            $sqlvals[$n] = $groupoptions[$column];
             $n++;
             }
         }
@@ -2697,10 +2794,10 @@ function save_usergroup($ref,$groupoptions)
         $sqlsetvals = array();
         for($n=0;$n<count($sqlcols);$n++)
             {
-            $sqlsetvals[] = $sqlcols[$n] . "='" . $sqlvals[$n] . "'";
+            $sqlsetvals[] = $sqlcols[$n] . " = ?";
             }
-        $sql = "UPDATE usergroup SET " . implode(",",$sqlsetvals) . " WHERE ref=" . (int)$ref;
-        sql_query($sql);
+        $sql = "UPDATE usergroup SET " . implode(",",$sqlsetvals) . " WHERE ref = ?";
+        ps_query($sql, array_merge(ps_param_fill($sqlvals, "s"), array("i", (int) $ref)));
         return true;
         }
     else
@@ -2708,10 +2805,10 @@ function save_usergroup($ref,$groupoptions)
         $sqlsetvals = array();
         for($n=0;$n<count($sqlcols);$n++)
             {
-            $sqlsetvals[] = $sqlcols[$n] . "='" . $sqlvals[$n] . "'";
+            $sqlsetvals[] = $sqlcols[$n] . " = ?";
             }
-        $sql = "INSERT INTO usergroup (" . implode(",",$sqlcols) . ") VALUES ('" . implode("','",$sqlvals) . "')";
-        sql_query($sql);
+        $sql = "INSERT INTO usergroup (" . implode(",",$sqlcols) . ") VALUES (" . ps_param_insert(count($sqlvals)) . ")";
+        ps_query($sql, ps_param_fill($sqlvals, "s"));
         $newgroup = sql_insert_id();
         return $newgroup;
         }
@@ -2787,7 +2884,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         $output = run_command($command);
 
         # Store reference to user image.
-        sql_query("update user set profile_image = '$profile_image_name' where ref = '" . escape_check($user_ref) . "'");
+        ps_query("update user set profile_image = ? where ref = ?", array("s", $profile_image_name, "i", $user_ref));
 
         # Remove temp file.
         if (file_exists($profile_image_path))
@@ -2801,7 +2898,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         }
 
     # Update user to set user.profile
-    sql_query("update user set profile_text = '" . substr(strip_tags(escape_check($profile_text)),0,500) . "' where ref = '" . escape_check($user_ref) . "'");
+    ps_query("update user set profile_text = ? where ref = ?", array("s", substr(strip_tags($profile_text), 0, 500), "i", $user_ref));
 
     return true;
     }
@@ -2828,7 +2925,7 @@ function delete_profile_image($user_ref)
             unlink($path_to_file);
             }
     
-        sql_query("update user set profile_image = '' where ref = '" . escape_check($user_ref) . "'");
+        ps_query("update user set profile_image = '' where ref = ?", array("i", $user_ref));
         }
     }
     
@@ -2979,16 +3076,19 @@ function emulate_user($user, $usergroup="")
         return false;
         }
 
-    $groupjoin="u.usergroup=g.ref";
-    $permissionselect="g.permissions";
-
-    if ($usergroup!="")
+    $groupjoin = "u.usergroup = g.ref";
+    $permissionselect = "g.permissions";
+    $groupjoin_params = array();
+    if ($usergroup != "")
         {
         # Select the user group from the access key instead.
-        $groupjoin="g.ref='" . escape_check($usergroup) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
-        $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
+        $groupjoin = "g.ref = ? LEFT JOIN usergroup pg ON g.parent = pg.ref";
+        $groupjoin_params = array("i", $usergroup);
+        $permissionselect = "if(find_in_set('permissions', g.inherit_flags) AND pg.permissions IS NOT NULL, pg.permissions, g.permissions) permissions";
         }
-    $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,g.derestrict_filter_id,u.search_filter_override, u.search_filter_o_id, g.derestrict_filter_id, g.resource_defaults from user u join usergroup g on $groupjoin where u.ref='$user'");
+    $userinfo = ps_query("select g.ref usergroup," . $permissionselect . " , g.search_filter, g.config_options, g.search_filter_id, g.derestrict_filter_id, u.search_filter_override,
+        u.search_filter_o_id, g.resource_defaults from user u join usergroup g on $groupjoin where u.ref = ?",
+        array_merge($groupjoin_params, array("i", $user)));
     if (count($userinfo)>0)
         {
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
@@ -3039,7 +3139,7 @@ function emulate_user($user, $usergroup="")
         # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
         if ($emulate_plugins_set!==true)
             {
-            $enabled_plugins = (ps_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+            $enabled_plugins = (ps_query("SELECT name, enabled_groups, config, config_json FROM plugins WHERE inst_version >= 0 AND length(enabled_groups) > 0 ORDER BY priority"));
             foreach($enabled_plugins as $plugin)
                 {
                 $s=explode(",",$plugin['enabled_groups']);
