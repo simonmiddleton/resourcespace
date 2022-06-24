@@ -110,7 +110,7 @@ function get_resource_path(
         # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
         # If using staticsync, file path will be set already, but we still want the $storagedir path for a nosize preview jpg.
         # Also, returning the original filename when a nosize 'jpg' is looked for is no good, since preview_preprocessing.php deletes $target.
-        
+        $fp = $fp ?? "";
         $test_ext = explode(".",$fp);$test_ext=trim(strtolower($test_ext[count($test_ext)-1]));
         
         if (($test_ext == $extension || $alternative > 0) && strlen($fp)>0 && (strpos($fp,"/")!==false || strlen($fp)>1))
