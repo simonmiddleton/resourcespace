@@ -352,7 +352,6 @@ $lang['system_tabs'] = "Tabs";
 $lang['manage_tabs_instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
 $lang['tabs_create_new'] = "Create tab called...";
 $lang['tabs_migration_log_note'] = "Migrated to system tab: %s";
-// $lang[''] = "";
 
 
 $lang["connect"]="Connect";
