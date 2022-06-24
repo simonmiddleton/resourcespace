@@ -266,7 +266,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
         else if($propertyname === 'tab')
             {
             ?>
-            <select name="<?php echo escape_quoted_data($propertyname); ?>">
+            <select class="stdwidth" name="<?php echo escape_quoted_data($propertyname); ?>">
             <?php
             foreach(get_tab_name_options() as $tab_ref => $tab_name)
                 {
