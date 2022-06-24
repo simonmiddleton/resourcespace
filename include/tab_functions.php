@@ -33,22 +33,46 @@ function get_tabs_by_refs(array $refs)
     }
 
 
-function get_tabs_with_usage_count(int $per_page, int $offset)
+/**
+ * Get tabs (paged) based on some criteria (currently only order by and limit).
+ * 
+ * @param array $criteria Array holding criteria information (order_by and limit).
+ * 
+ * @return array {@see sql_limit_with_total_count()}
+ * */
+function get_tabs_with_usage_count(array $criteria)
     {
+    $order_by_columns = ['order_by', 'ref'];
+    $sort_options = ['ASC', 'DESC'];
+
+    $order_by = isset($criteria['order_by'][0]) && in_array($criteria['order_by'][0], $order_by_columns)
+                ? $criteria['order_by'][0]
+                : 'order_by';
+    $sort = isset($criteria['order_by'][1]) && in_array($criteria['order_by'][1], $sort_options)
+            ? $criteria['order_by'][1]
+            : 'ASC';
+
+    $per_page = $criteria['limit']['per_page'] ?? null;
+    $offset = $criteria['limit']['offset'] ?? null;
+
     $query = new PreparedStatementQuery(
-        'SELECT t.ref,
+        "SELECT t.ref,
                 t.`name`,
                 t.order_by,
                 (SELECT count(ref) FROM resource_type_field WHERE tab = t.ref) AS usage_rtf,
                 (SELECT count(ref) FROM resource_type WHERE tab = t.ref) AS usage_rt
            FROM tab AS t
-           ORDER BY order_by' # TODO: needs to be parameterised
+           ORDER BY {$order_by} {$sort}"
     );
 
     return sql_limit_with_total_count($query, $per_page, $offset);
     }
 
 
+/**
+ * Get all tab records, sorted by the order_by column
+ * @return array
+ * */
 function get_all_tabs()
     {
     return ps_query('SELECT ref, `name`, order_by FROM tab ORDER BY order_by');

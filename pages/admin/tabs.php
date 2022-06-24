@@ -11,7 +11,6 @@ $tab_sort = (strtoupper(getval('tab_sort', 'ASC')) === 'DESC') ? 'DESC' : 'ASC';
 // [URL]
 $admin_tabs_management_page = "{$baseurl}/pages/admin/tabs.php";
 $request_params = [
-    // 'tab_ref' => $tab_ref,
     'tab_orderby'  => $tab_orderby,
     'tab_sort' => $tab_sort,
 ];
@@ -39,13 +38,22 @@ if($per_page === 99999)
     // all results option - see render_table()
     $list_display_array['all'] = 99999;
     $allow_reorder = true;
+
+    // When viewing all, switch to order by the "order_by" column since we also enabled re-ordering
+    $tab_orderby = 'order_by';
+    $tab_sort = 'ASC';
+    $request_params = [];
+    $admin_tabs_management_page_url = generateURL($admin_tabs_management_page, $request_params);
     }
 $list_display_array = array_unique($list_display_array);
 natsort($list_display_array);
 $per_page = in_array($per_page, $list_display_array) ? $per_page : $default_perpage;
 rs_setcookie('per_page', $per_page);
 $offset = (int) getval('offset', 0, true);
-$tab_records = get_tabs_with_usage_count($per_page, $offset);
+$tab_records = get_tabs_with_usage_count([
+    'order_by' => [$tab_orderby, $tab_sort],
+    'limit' => ['per_page' => $per_page, 'offset' => $offset],
+]);
 $totalpages = ceil($tab_records['total'] / $per_page);
 $curpage = floor($offset / $per_page) + 1;
 
@@ -54,7 +62,7 @@ $table_info = [
     'class' => 'SystemTabs',
     'headers' => [
         'reorder_handle' => ['name' => '', 'sortable' => false, 'html' => true],
-        'ref' => ['name' => $lang['property-reference'], 'sortable' => true],
+        'ref' => ['name' => $lang['property-reference'], 'sortable' => !isset($allow_reorder)],
         'name' => ['name' => $lang['name'], 'sortable' => false, 'html' => true, 'width' => '50%'],
         'usage' => ['name' => $lang['usage'], 'sortable' => false],
         'tools' => ['name' => $lang['tools'], 'sortable' => false, 'width' => '20%']
@@ -143,8 +151,8 @@ include '../../include/header.php';
     <?php
     render_top_page_error_style($admin_tabs_management_error ?? '');
     renderBreadcrumbs([
-        ['title' => $lang['systemsetup'], 'href'  => "{$baseurl_short}pages/admin/admin_home.php"],
-        ['title' => $lang['system_tabs']]
+        ['title' => $lang['systemsetup'], 'href' => "{$baseurl_short}pages/admin/admin_home.php"],
+        ['title' => $lang['system_tabs']],
     ]); ?>
     <p><?php echo htmlspecialchars($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
 
