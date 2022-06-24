@@ -658,7 +658,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 a.HomePanel {text-decoration:none;}
 a.HomePanel {cursor:pointer;}
 
-.TabBar {padding:8px 0 0 0;margin-bottom: -1px; background-color: #ededed;}
+.TabBar {padding:8px 0 0 0;margin-bottom: -1px; background-color: #f2f2f2;}
 .Tab a {margin:0 5px 0 0;padding:5px 1rem;display:inline-block; border-top-right-radius:5px;border-top-left-radius:5px;}
 .Tab a:hover {text-decoration: none;}
 .Tab {display:inline;}
