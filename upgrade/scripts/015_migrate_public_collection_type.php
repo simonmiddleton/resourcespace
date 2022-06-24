@@ -9,14 +9,10 @@ if(!in_array("public", $collection_structure) || !in_array("theme", $collection_
     return;
     }
 
-$public_collections = sql_array(sprintf("SELECT ref AS `value` FROM collection WHERE `type` = %s AND public = 1 AND (theme IS NULL OR length(trim(theme)) = 0)", COLLECTION_TYPE_STANDARD));
+$public_collections = ps_array("SELECT ref AS `value` FROM collection WHERE `type` = ? AND public = 1 AND (theme IS NULL OR length(trim(theme)) = 0)", ['i', COLLECTION_TYPE_STANDARD]);
 if(!empty($public_collections))
     {
-    sql_query(
-        sprintf(
-            "UPDATE collection SET `type` = %s WHERE ref IN ('%s')",
-            COLLECTION_TYPE_PUBLIC,
-            join("', '", $public_collections)));
+    ps_query("UPDATE collection SET `type` = ? WHERE ref IN (". ps_param_insert(count($public_collections)) .")",array_merge(['i', COLLECTION_TYPE_PUBLIC],ps_param_fill($public_collections, 'i')));
     }
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Successfully migrated public collections to use the new 'COLLECTION_TYPE_PUBLIC' type");
