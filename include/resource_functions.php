@@ -5612,12 +5612,12 @@ function get_page_count($resource,$alternative=-1)
 
     if ($alternative!=-1)
         {
-        $pagecount=sql_value("select page_count value from resource_alt_files where ref='{$alternative_escaped}'","");
+        $pagecount=ps_value("select page_count value from resource_alt_files where ref=?",array("i",$alternative_escaped),"");
         $resource=get_alternative_file($ref,$alternative);
         }
     else
         {
-        $pagecount=sql_value("select page_count value from resource_dimensions where resource='{$ref_escaped}'","");
+        $pagecount=ps_value("select page_count value from resource_dimensions where resource=?", array("i",$ref_escaped), "");
         }
     if (!empty($pagecount)) { return $pagecount; }
     # or, populate this column with exiftool or image magick (for installations with many pdfs already
@@ -5630,7 +5630,7 @@ function get_page_count($resource,$alternative=-1)
 	else if ($alternative==-1)
 		{
 		# some unoconv files are not pdfs but this needs to use the auto-alt file
-		$alt_ref=sql_value("select ref value from resource_alt_files where resource='{$ref_escaped}' and unoconv=1","");
+		$alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref_escaped), "");
 		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
 		}
 	else
@@ -5682,7 +5682,7 @@ function get_page_count($resource,$alternative=-1)
 function update_disk_usage($resource)
 	{
 	# we're also going to record the size of the primary resource here before we do the entire folder
-	$ext = sql_value("SELECT file_extension value FROM resource where ref = '" . escape_check($resource) . "' AND file_path IS NULL",'jpg');
+	$ext = ps_value("SELECT file_extension value FROM resource where ref = ? AND file_path IS NULL",array("i",$resource), 'jpg');
 	$path = get_resource_path($resource,true,'',false,$ext);
 	if (file_exists($path)){
 		$rsize = filesize_unlimited($path);
@@ -5750,7 +5750,7 @@ function update_disk_usage_cron()
 function get_total_disk_usage()
     {
     global $fstemplate_alt_threshold;
-    return sql_value("select ifnull(sum(disk_usage),0) value from resource where ref>'$fstemplate_alt_threshold'",0);
+    return ps_value("select ifnull(sum(disk_usage),0) value from resource where ref>?",array("i",$fstemplate_alt_threshold), 0);
     }
 
 function overquota()
@@ -6022,7 +6022,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
     if ($config_override_required)
         {
         # Look for config and execute.
-        $config_options=sql_value("select config_options value from resource_type where ref='" . escape_check($resource_type) . "'","","schema");
+        $config_options=ps_value("select config_options value from resource_type where ref=?",array("i",$resource_type), "","schema");
         if ($config_options!="")
             {
             # Switch to global context and execute.
@@ -7309,7 +7309,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
 
     # add the original image
     $return=array();
-    $lastname=sql_value("select name value from preview_size where width=(select max(width) from preview_size)",""); # Start with the highest resolution.
+    $lastname=ps_value("select name value from preview_size where width=(select max(width) from preview_size)",array(), ""); # Start with the highest resolution.
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
@@ -7431,7 +7431,7 @@ function get_preview_quality($size)
     if($preview_quality_unique)
         {
         debug("convert: select quality value from preview_size where id='$size'");
-        $quality_val=sql_value("select quality value from preview_size where id='{$size}'",'');
+        $quality_val=ps_value("select quality value from preview_size where id=?",array("s",$size), '');
         if($quality_val!='')
             {
             $preview_quality=$quality_val;
@@ -7459,7 +7459,7 @@ function get_field_options($ref,$nodeinfo = false)
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
         {
-        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","", "schema");
+        $ref = ps_value("select ref value from resource_type_field where name=?'",array("s",$ref), "", "schema"); // $ref is a string in this case
         }
         
     $options = get_nodes($ref, null, true);
@@ -7530,7 +7530,7 @@ function get_data_by_field($resource, $field)
         // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
         {
-        $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null, "schema");
+        $rt_fieldtype_cache[$field] = ps_value("SELECT type AS `value` FROM resource_type_field WHERE ref = ? OR name = ?", array("i",$resource_type_field,"i",$resource_type_field), null, "schema");
         }
 
     if (!in_array($rt_fieldtype_cache[$field], $NODE_FIELDS))
@@ -7604,7 +7604,7 @@ function get_all_image_sizes($internal=false,$restricted=false)
 function image_size_restricted_access($id)
     {
     # Returns true if the indicated size is allowed for a restricted user.
-    return sql_value("select allow_restricted value from preview_size where id='$id'",false);
+    return ps_value("select allow_restricted value from preview_size where id=?",array("s",$id), false);
     }
 
 
@@ -8091,7 +8091,7 @@ function add_verbatim_keywords(&$keywords, $string, $resource_type_field, $calle
         is_array($resource_field_checkbox_match_full) &&
         in_array($resource_type_field,$resource_field_checkbox_match_full))
         {
-        $found_name = sql_value("SELECT `name` AS 'value' FROM `resource_type_field` WHERE `ref`='{$resource_type_field}'", "");
+        $found_name = ps_value("SELECT `name` AS 'value' FROM `resource_type_field` WHERE `ref`=?", array("i",$resource_type_field), "");
         preg_match_all('/' . $found_name . ':([^,]+)/', $string, $matches);
         if (isset($matches[1][0]))
             {
@@ -8410,9 +8410,7 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
         $shortname = mb_substr(mb_strtolower(str_replace("_","",safe_file_name($name))),0,20);
         }
 
-    $duplicate = (boolean) sql_value(sprintf(
-        "SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = '%s'",
-        escape_check($shortname)), 0, "schema");
+    $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$shortname), 0, "schema");
 
     sql_query(sprintf("INSERT INTO resource_type_field (title, resource_type, type, `name`, keywords_index) VALUES ('%s', '%s', '%s', '%s', %s)",
         escape_check($name),

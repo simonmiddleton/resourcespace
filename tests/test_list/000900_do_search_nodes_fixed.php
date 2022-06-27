@@ -77,7 +77,7 @@ debug("Successfully searched for resources with quoted node string");
 
 // Check that adding nodes to resource does not add anything to resource keyword
 $fixedfields=sql_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")");
-$kwcount = sql_value("select count(*) value from resource_keyword where resource_type_field in (" . implode(",",$fixedfields) . ")",0);
+$kwcount = ps_value("select count(*) value from resource_keyword where resource_type_field in (" . ps_param_insert(count($fixedfields)) . ")",ps_param_fill($fixedfields,"i"), 0);
 if($kwcount>0){echo "Adding nodes is populating resource_keyword"; return false;}
 
 // Add a node containing stop words and check nothing was indexed.
