@@ -535,15 +535,8 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	{
     $confirmdelete=getvalescaped("confirmdelete","");
     # Check for resources of this  type
-    $affected_resources=sql_array("select distinct resource value from
-                                (
-                                select resource from resource_data where resource>0 and resource_type_field='$ref'
-                                UNION
-                                select resource from resource_node where resource>0 and node in (select ref from node where resource_type_field='$ref')
-                                ) all_resources
-                                
-                                ",0);
-    
+    $affected_resources=ps_array("SELECT resource value FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE n.resource_type_field = ?",["i",$ref]);
+        
     $affected_resources_count=count($affected_resources);
     if($affected_resources_count==0 || $confirmdelete!="")
         {    

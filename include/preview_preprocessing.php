@@ -369,8 +369,7 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     if (isset($extracted_text_field))
         {
         $extract_pdf_text = true;
-        $parameters=array("i",$ref, "i",$extracted_text_field);
-        $current_extracted_text = ps_value("select value from resource_data where resource=? and resource_type_field=?",$parameters,"");
+        $current_extracted_text = get_data_by_field($ref,$extracted_text_field);
         if (!empty($current_extracted_text))
             {
             $extract_pdf_text = false;    
