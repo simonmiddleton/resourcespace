@@ -51,7 +51,6 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
     {
     $is_date = in_array($fieldinfo['type'],[FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
     $is_html = ($fieldinfo["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);
-    $nodecount = get_nodes_count($field);
     $offset = 0;
     do
         {
