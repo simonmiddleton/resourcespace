@@ -1119,7 +1119,7 @@ function do_search(
 
     $select .= ", " . $sql_hitcount_select . " total_hit_count";
 
-    $sql_filter->sql  =$node_bucket_sql . $sql_filter->sql;
+    $sql_filter->sql  = $node_bucket_sql . $sql_filter->sql;
 
     if(count($node_bucket_not)>0)
         {

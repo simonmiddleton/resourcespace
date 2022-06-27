@@ -235,9 +235,9 @@ function get_node($ref, array &$returned_node)
 
 /**
 * Get all nodes from database for a specific metadata field or parent. 
-* TO BE USED FOR FIXED LIST FIELDS ONLY
-* Use $parent = NULL and recursive = TRUE to get all nodes for a category tree field
 * 
+* Use $parent = NULL and recursive = TRUE to get all nodes for a category tree field
+*  
 * Use $offset and $rows only when returning a subset.
 * 
 * @param  integer  $resource_type_field         ID of the metadata field
@@ -245,7 +245,9 @@ function get_node($ref, array &$returned_node)
 * @param  boolean  $recursive                   Set to true to get children nodes as well.
 *                                               IMPORTANT: this should be used only with category trees
 * @param  integer  $offset                      Specifies the offset of the first row to return
-* @param  integer  $rows                        Specifies the maximum number of rows to return
+* @param  integer  $rows                        Specifies the maximum number of rows to return.
+*                                               IMPORTANT! For non-fixed list fields this is capped at 10000
+*                                               to avoid out of memory errors
 * @param  string   $name                        Filter by name of node
 * @param  boolean  $use_count                   Show how many resources use a particular node in the node properties
 * @param  boolean  $order_by_translated_name    Flag to order by translated names rather then the order_by column
@@ -264,9 +266,9 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         }
 
     $fieldinfo  = get_resource_type_field($resource_type_field);
-    if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
+    if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
         {
-        return [];
+        $rows = 10000;
         }
             
     global $language,$defaultlanguage;
