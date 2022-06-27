@@ -1092,7 +1092,7 @@ function ps_value($query, $parameters, $default, $cache="")
 * 
 * @return array
 */
-function ps_array($query,$parameters,$cache="")
+function ps_array($query,$parameters=array(),$cache="")
 	{
 	$return = array();
 

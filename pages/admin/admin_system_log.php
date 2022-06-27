@@ -39,11 +39,11 @@ $tables_data = array(
 );
 
 // TODO: over time, these can be put under tables_data once we can use the referenced information (ie. if there is a function to do so - see examples above)
-$no_reference_data_tables = sql_array('
+$no_reference_data_tables = ps_array('
         SELECT DISTINCT remote_table AS "value"
           FROM activity_log
          WHERE remote_table IS NOT NULL AND remote_table <> ""
-    ',
+    ',array(),
     "");
 
 if(!checkperm('a') || $requesteduser == $actasuser && $requesteduser != 0)

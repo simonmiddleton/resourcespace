@@ -94,8 +94,8 @@ catch(Exception $e)
     }
 
 // Ensure that the resulting order is as expected
-$resource_order_sql = "select resource value from collection_resource WHERE collection='".escape_check($collection_ref)."' ORDER BY sortorder";
-$resource_order = sql_array($resource_order_sql);
+$resource_order_sql = "select resource value from collection_resource WHERE collection=? ORDER BY sortorder";
+$resource_order = ps_array($resource_order_sql,array("i",$collection_ref));
 
 $expected_order=array($resource_list[3],$resource_list[0],$resource_list[2],$resource_list[1]);
 if ($resource_order != $expected_order)

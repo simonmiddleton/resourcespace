@@ -40,8 +40,6 @@ for ($n=0;$n<count($s);$n++)
 	$e=explode(":",$s[$n]);
 	if (count($e)==2 && $n!=$nofilter)
 		{
-#		$values=sql_array("select distinct k.keyword value from resource r join resource_keyword rk on rk.resource=r.ref and r.archive=0 and r.ref>0 and rk.resource_type_field='" . $field[$n]["ref"] . "' join keyword k on rk.keyword=k.ref " . $sql);
-
 		$values=sql_array("select distinct k.keyword value from resource_keyword rk join keyword k on rk.keyword=k.ref " . $sql . " where rk.resource>0 and rk.resource_type_field='" . $field[$n]["ref"] . "'");
 		
 		# Fetch the full list of available options

@@ -927,7 +927,7 @@ function delete_collection($collection)
 	if($home_dash)
 		{
 		// Delete any dash tiles pointing to this collection
-		$collection_dash_tiles=sql_array("SELECT ref value FROM dash_tile WHERE link LIKE '%search.php?search=!collection" . $ref . "&%'",0);
+		$collection_dash_tiles=ps_array("SELECT ref value FROM dash_tile WHERE link LIKE ?",array("s","%search.php?search=!collection" . $ref . "&%"),0);
 		if(count($collection_dash_tiles)>0)
 			{
 			ps_query("DELETE FROM dash_tile WHERE ref IN (" .  ps_param_insert(count($collection_dash_tiles)) . ")",ps_param_fill($collection_dash_tiles,"i"));
@@ -1566,7 +1566,7 @@ function save_collection($ref, $coldata=array())
     # If 'users' is specified (i.e. access is private) then rebuild users list
 	if (isset($coldata["users"]))
         {
-        $old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
+        $old_attached_users=ps_array("SELECT user value FROM user_collection WHERE collection=?",array("i",$ref));
         $new_attached_users=array();
         $collection_owner=ps_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
         if($collection_owner=='')
@@ -1578,7 +1578,7 @@ function save_collection($ref, $coldata=array())
         
         if ($attach_user_smart_groups)
             {
-            $old_attached_groups=sql_array("SELECT usergroup value FROM usergroup_collection WHERE collection='$ref'");
+            $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
             ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
             }
     
@@ -1586,7 +1586,7 @@ function save_collection($ref, $coldata=array())
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
         $ulist = array_map("escape_check",$ulist);
-        $urefs=sql_array("select ref value from user where username in ('" . join("','",$ulist) . "')");
+        $urefs=ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
         if (count($urefs)>0)
             {
             sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
@@ -1602,7 +1602,7 @@ function save_collection($ref, $coldata=array())
         # log the removal of users / smart groups
         $was_shared_with = array();
         $old_attached_users = array_map("escape_check",$old_attached_users);
-        $was_shared_with = sql_array("select username value from user where ref in ('" . join("','",$old_attached_users) . "')");
+        $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
         if (count($old_attached_groups) > 0)
             {
             foreach($old_attached_groups as $old_group)
@@ -1638,7 +1638,7 @@ function save_collection($ref, $coldata=array())
                         {
                         foreach($new_attached_groups as $newg)
                             {
-                            $group_users=sql_array("SELECT ref value FROM user WHERE usergroup=$newg");
+                            $group_users=ps_array("SELECT ref value FROM user WHERE usergroup=?",array("i",$newg));
                             $new_attached_users=array_merge($new_attached_users, $group_users);
                             }
                         }
@@ -3484,7 +3484,7 @@ function collection_set_public($collection)
  */
 function remove_all_resources_from_collection($ref){
     // abstracts it out of save_collection()
-    $removed_resources = sql_array("SELECT resource AS value FROM collection_resource WHERE collection = '" . escape_check($ref) . "';");
+    $removed_resources = ps_array("SELECT resource AS value FROM collection_resource WHERE collection = ?",array("i",$ref));
 
     collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
     foreach($removed_resources as $removed_resource_id)
@@ -3680,15 +3680,17 @@ function show_hide_collection($colref, $show=true, $user="")
 function get_session_collections($rs_session,$userref="",$create=false)
 	{
 	$extrasql="";
+    $params=array("s",$rs_session);
 	if($userref!="")
 		{
-		$extrasql="AND user='" . escape_check($userref) ."'";	
+		$extrasql="AND user=?";	
+        $params[]="i";$params[]=$userref;
         }
     else
         {
         $userref='NULL';
         }
-	$collectionrefs=sql_array("SELECT ref value FROM collection WHERE session_id='" . escape_check($rs_session) . "' AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_TYPE_SHARE_UPLOAD . "') " . $extrasql,"");
+	$collectionrefs=ps_array("SELECT ref value FROM collection WHERE session_id=? AND type IN ('" . COLLECTION_TYPE_STANDARD . "','" . COLLECTION_TYPE_UPLOAD . "','" . COLLECTION_TYPE_SHARE_UPLOAD . "') " . $extrasql,$params,"");
 	if(count($collectionrefs)<1 && $create)
 		{
         if(upload_share_active())
@@ -5165,7 +5167,7 @@ function delete_old_collections($userref=0, $days=30)
     $days = escape_check($days);
 
     $deletioncount = 0;
-    $old_collections=sql_array("SELECT ref value FROM collection WHERE user ='{$userref}' AND created < DATE_SUB(NOW(), INTERVAL '{$days}' DAY) AND `type` = " . COLLECTION_TYPE_STANDARD, 0);
+    $old_collections=ps_array("SELECT ref value FROM collection WHERE user = ? AND created < DATE_SUB(NOW(), INTERVAL ? DAY) AND `type` = " . COLLECTION_TYPE_STANDARD, array("i",$userref,"i",$days), 0);
     foreach($old_collections as $old_collection)
         {
         delete_collection($old_collection);

@@ -23,19 +23,14 @@ if(is_null($find_by_last_theme_name))
     redirect("{$baseurl}/pages/collections_featured.php");
     }
 
-$found_fc_categ_refs = sql_array(
-    sprintf(
-          "SELECT DISTINCT c.ref AS `value`
+$found_fc_categ_refs = ps_array("SELECT DISTINCT c.ref AS `value`
              FROM collection AS c
         LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-            WHERE c.`type`= %s
-              AND c.`name` = '%s'
+            WHERE c.`type`= ?
+              AND c.`name` = ?
          GROUP BY c.ref
            HAVING count(DISTINCT cr.resource) = 0",
-        COLLECTION_TYPE_FEATURED,
-        escape_check($find_by_last_theme_name)
-    )
-);
+        array("s",COLLECTION_TYPE_FEATURED,"s",$find_by_last_theme_name));
 
 $redirect_params = array();
 foreach($found_fc_categ_refs as $found_fc_categ_ref)

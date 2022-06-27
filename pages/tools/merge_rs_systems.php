@@ -1226,7 +1226,7 @@ if($import && isset($folder_path))
     $new_nodes_mapping = $new_nodes_mapping ?? [];
     $nodes_not_created = $nodes_not_created ?? [];
     $src_nodes = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "nodes_export.json", "r+b"));
-    $dest_node_refs = sql_array('SELECT ref AS `value` FROM node');
+    $dest_node_refs = ps_array('SELECT ref AS `value` FROM node',array());
     foreach($src_nodes as $src_node)
         {
         if(array_key_exists($src_node['ref'], $new_nodes_mapping) || in_array($src_node['ref'], $nodes_not_created))

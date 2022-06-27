@@ -622,7 +622,7 @@ function do_search(
     
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                $wildcards = sql_array("SELECT ref value FROM keyword WHERE keyword like '" . escape_check(str_replace("*", "%", $keyword)) . "' ORDER BY hit_count desc limit " . $wildcard_expand_limit);
+                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count desc limit " . $wildcard_expand_limit,array("s",str_replace("*", "%", $keyword)));
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.

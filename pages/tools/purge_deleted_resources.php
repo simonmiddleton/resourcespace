@@ -49,7 +49,7 @@ echo "\n------------------------------------------------------------\n";
 unset($resource_deletion_state);
 
 
-$topurge = sql_array("select ref as value from resource where archive = '3'");
+$topurge = ps_array("select ref as value from resource where archive = '3'",array());
 
 $purgecount = 0;
 

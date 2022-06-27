@@ -207,7 +207,7 @@ function HookResourceconnectAllGenerateurl($url)
     FROM 
         collection_resource 
     WHERE 
-        collection='" . escape_check($collection) . "'
+        collection=?
     ORDER BY 
         sortorder asc, 
         date_added desc, 
@@ -220,11 +220,11 @@ function HookResourceconnectAllGenerateurl($url)
     FROM 
         resourceconnect_collection_resources 
     WHERE 
-        collection='$collection'    
+        collection=? 
     )
     ";
     
-        return sql_array($sql);
+        return ps_array($sql,array("i",$collection,"i",$collection));
     
         }  
 
@@ -288,7 +288,7 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
         $collection = $collection["ref"];
         }
     # retrieve only local resources from collection for access key validation
-    $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
+    $resources = ps_array('SELECT resource AS value FROM collection_resource WHERE collection = ?',array("i",$collection));    
     
     return $resources;
     }
@@ -301,7 +301,7 @@ function HookResourceconnectAllCountresult($collection,$count)
 
 function HookResourceConnectAllgetRemoteResources($collection)
     {
-    return count(sql_array("SELECT ref AS value FROM resourceconnect_collection_resources WHERE collection='". escape_check($collection) ."'"));
+    return count(ps_array("SELECT ref AS value FROM resourceconnect_collection_resources WHERE collection=?",array("i",$collection)));
     }
 
 function HookResourceConnectAllrenderadditionalthumbattributes($resource)

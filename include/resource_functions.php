@@ -1240,7 +1240,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
         $field_default_value = $rule_detail[1];
 
         // Find field(s) - multiple fields can be returned to support several fields with the same name
-        $fields = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE name = '{$field_shortname}'", "schema");
+        $fields = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE name = ?", array("s",$field_shortname), "schema");
 
         if(0 === count($fields))
             {
@@ -2978,7 +2978,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $fields = sql_query($fieldsSQL);
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type','schema');
+    $validtypes = ps_array('SELECT ref AS `value` FROM resource_type',array(),'schema');
 
     # Support archive and global.
     $validtypes[] = 0;
@@ -3491,7 +3491,7 @@ function get_max_resource_ref()
  */
 function get_resource_ref_range($lower,$higher)
 	{
-	return sql_array("select ref value from resource where ref>='$lower' and ref<='$higher' and archive=0 order by ref",0);
+	return ps_array("select ref value from resource where ref>=? and ref<=? and archive=0 order by ref",array("i",$lower,"i",$higher),0);
 	}
 
 /**
@@ -3520,15 +3520,12 @@ function copy_resource($from,$resource_type=-1)
 	$joins=get_resource_table_joins();
 
 	// Filter the joined columns so we only have the ones relevant to this resource type
-	$query = sprintf('
-			    SELECT rtf.ref AS value
+	$query = 'SELECT rtf.ref AS value
 			      FROM resource_type_field AS rtf
 			INNER JOIN resource AS r ON (rtf.resource_type != r.resource_type AND rtf.resource_type != 0)
-			     WHERE r.ref = "%s";
-		',
-		$from
-	);
-	$irrelevant_rtype_fields = sql_array($query);
+			     WHERE r.ref = ?';
+
+	$irrelevant_rtype_fields = ps_array($query,array("i",$from));
 	$irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
 	$filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
 
@@ -4564,7 +4561,7 @@ function delete_alternative_file($resource,$ref)
         $extensions[]='jpg'; // always look for jpegs, just in case
 	$extensions[]='icc'; // always look for extracted icc profiles
 	$extensions=array_unique($extensions);
-        $sizes = sql_array('select id value from preview_size');
+        $sizes = ps_array('select id value from preview_size',array());
 	
         // in some cases, a jpeg original is generated for non-jpeg files like PDFs. Delete if it exists.
         $path=get_resource_path($resource, true,'', true, 'jpg', -1, 1, false, "", $ref);
@@ -6088,18 +6085,16 @@ function delete_resources_in_collection($collection) {
 
 	// Always find all resources in deleted state and delete them permanently:
 	// Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
-	$query = sprintf("
-				SELECT ref AS value
-				  FROM resource
-			INNER JOIN collection_resource ON collection_resource.resource = resource.ref AND collection_resource.collection = '%s'
-				 %s;
-	",
-		$collection,
-		isset($resource_deletion_state) ? "WHERE archive = '" . $resource_deletion_state . "'" : ''
-	);
+	$query = "SELECT ref AS value FROM resource INNER JOIN collection_resource ON collection_resource.resource = resource.ref AND collection_resource.collection = ?";
+    $params=array("i",$collection);
 
-	$resources_in_deleted_state = array();
-	$resources_in_deleted_state = sql_array($query);
+    if (isset($resource_deletion_state))
+        {
+        $query.=" WHERE archive = ?";
+        $params[]="i";$params[]=$resource_deletion_state;
+        }
+
+	$resources_in_deleted_state = ps_array($query,$params);
 
 	if(!empty($resources_in_deleted_state)) {
 		foreach ($resources_in_deleted_state as $resource_in_deleted_state) {
@@ -6417,8 +6412,8 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 * Copy resource data from one resource to another one.
 * 
 * @uses escape_check()
-* @uses sql_array()
-* @uses sql_query()
+* @uses ps_array()
+* @uses ps_query()
 * 
 * @param integer $from Resource we are copying data from
 * @param integer $ref  Resource we are copying data to
@@ -6435,7 +6430,7 @@ function copyResourceDataValues($from, $to, $resource_type = "")
     // NOTE: this does not apply to user template resources (negative ID resource)
     if($from > 0)
         {
-        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", "schema");
+        $omitfields      = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", array(), "schema");
         if (count($omitfields) > 0)
             {
             $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
@@ -7450,7 +7445,7 @@ function get_preview_quality($size)
 */
 function get_related_resources($ref)
     {
-    return sql_array("select related value from resource_related where resource='" . escape_check($ref) . "' union select resource value from resource_related where related='" . escape_check($ref) . "'");
+    return ps_array("select related value from resource_related where resource=? union select resource value from resource_related where related=?",array("i",$ref,"i",$ref));
     }
 
 
@@ -7906,7 +7901,7 @@ function payment_set_complete($collection)
  */
 function get_indexed_resource_type_fields()
     {
-    return sql_array("select ref as value from resource_type_field where keywords_index=1","schema");
+    return ps_array("select ref as value from resource_type_field where keywords_index=1",array(),"schema");
     }
 
 
@@ -8268,7 +8263,7 @@ function get_download_filename($ref,$size,$alternative,$ext)
 */
 function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
     {
-    $resource_types = sql_array("SELECT ref AS value FROM resource_type");
+    $resource_types = ps_array("SELECT ref AS value FROM resource_type",array());
     foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
         {
         if (!checkperm('T' . $resource_type_id))

@@ -23,7 +23,7 @@
  * </code>
  * 
  * @param string $fieldname Name to use for the field.
- * @param string $opt_array Array of options to fill the select with
+ * @param array $opt_array Array of options to fill the select with
  * @param mixed $selected If matches value the option is marked as selected
  * @param string $groupby Column to group by
  * @return string HTML output.
@@ -221,7 +221,7 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 */
 function get_config_option_users($option,$value)
     {
-    $users = sql_array("SELECT user value FROM user_preferences WHERE parameter = '" . escape_check($option). "' AND value='" . escape_check($value) . "'","preferences");
+    $users = ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value=?",array("s",$option,"s",$value), "preferences");
     return $users;   
     }
 

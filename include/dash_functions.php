@@ -811,14 +811,14 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
         }
     else
         {
-        $user_group_tiles = sql_array( "SELECT 
+        $user_group_tiles = ps_array( "SELECT 
                                             dash_tile.ref AS `value`
                                         FROM
                                             usergroup_dash_tile
                                                 JOIN
                                             dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref
                                         WHERE
-                                            usergroup_dash_tile.usergroup = '{$user_group}'
+                                            usergroup_dash_tile.usergroup = ?
                                                 AND dash_tile.all_users = 1
                                                 AND (dash_tile.allow_delete = 1
                                                 OR (dash_tile.allow_delete = 0
@@ -826,7 +826,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
                                                     user_dash_tile.dash_tile
                                                 FROM
                                                     user_dash_tile)))
-                                        ORDER BY usergroup_dash_tile.default_order_by;");
+                                        ORDER BY usergroup_dash_tile.default_order_by;",array("i",$user_group));
         }
 
     // If client code has specified a user ID, then just add the tiles for it
@@ -843,7 +843,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
         return;
         }
 
-    $user_list = sql_array("SELECT ref AS `value` FROM user WHERE usergroup = '{$user_group}'");
+    $user_list = ps_array("SELECT ref AS `value` FROM user WHERE usergroup = ?",array("i",$user_group));
     foreach($user_list as $user)
         {
         $starting_order  = 99999;
@@ -859,7 +859,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
 
 function get_tile_user_groups($tile_id)
     {
-    return sql_array("SELECT usergroup AS `value` FROM usergroup_dash_tile WHERE dash_tile = '{$tile_id}';");
+    return ps_array("SELECT usergroup AS `value` FROM usergroup_dash_tile WHERE dash_tile = ?",array("i",$tile_id));
     }
 
 

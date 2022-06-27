@@ -2777,14 +2777,14 @@ function check_duplicate_checksum($filepath,$replace_resource){
         if ($file_checksums_50k)
             {
             # Fetch the string used to generate the unique ID
-            $use=filesize_unlimited($filepath) . "_" . file_get_contents($filepath,null,null,0,50000);
+            $use=filesize_unlimited($filepath) . "_" . file_get_contents($filepath,false,null,0,50000);
             $checksum=md5($use);
             }
         else
             {
             $checksum=md5_file($filepath);
             }
-        $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+        $duplicates=ps_array("select ref value from resource where file_checksum=?",array("s",$checksum));
         if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
             {
             return $duplicates;                       
@@ -3340,7 +3340,7 @@ function delete_previews($resource,$alternative=-1)
     $dirinfo=pathinfo($fullsizejpgpath);    
     $resourcefolder = $dirinfo["dirname"];
 
-    $presizes=sql_array("select id value from preview_size");
+    $presizes=ps_array("select id value from preview_size",array());
     $presizes[]="snapshot"; // To include any video snapshots
     $pagecount=get_page_count($resource_data,$alternative);
     foreach($presizes as $presize)

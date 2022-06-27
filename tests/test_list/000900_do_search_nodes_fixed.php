@@ -76,7 +76,7 @@ if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$reso
 debug("Successfully searched for resources with quoted node string");
 
 // Check that adding nodes to resource does not add anything to resource keyword
-$fixedfields=sql_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")");
+$fixedfields=ps_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")",array());
 $kwcount = ps_value("select count(*) value from resource_keyword where resource_type_field in (" . ps_param_insert(count($fixedfields)) . ")",ps_param_fill($fixedfields,"i"), 0);
 if($kwcount>0){echo "Adding nodes is populating resource_keyword"; return false;}
 

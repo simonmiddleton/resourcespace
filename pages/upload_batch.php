@@ -740,7 +740,7 @@ if ($processupload)
                 $conditions = array();
                 $batch_replace_min = max((int)($batch_replace_min),$fstemplate_alt_threshold);
                 $firstref = max($fstemplate_alt_threshold, $batch_replace_min);                                
-                $replace_resources = sql_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",0);
+                $replace_resources = ps_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",array("i",$batch_replace_min,"i",$batch_replace_max,"i",$batch_replace_max),0);
                 debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
                 }
             else
