@@ -52,20 +52,20 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
     $is_date = in_array($fieldinfo['type'],[FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
     $is_html = ($fieldinfo["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);
     $nodecount = get_nodes_count($field);
-    $completed = 0;
-    $start = 0;
-    while($completed < $nodecount)
+    $offset = 0;
+    do
         {
-        $nodes = get_nodes($field,NULL,(FIELD_TYPE_CATEGORY_TREE == $fieldinfo['type']),$start,$chunk_size);
+        $nodes = get_nodes($field, NULL, (FIELD_TYPE_CATEGORY_TREE == $fieldinfo['type']), $offset, $chunk_size);
         foreach($nodes as $node)
-            {            
+            {
             // Populate node_keyword table
             remove_all_node_keyword_mappings($node['ref']);
-            add_node_keyword_mappings($node, $fieldinfo["partial_index"], $is_date,$is_html);
-            $completed++;
+            add_node_keyword_mappings($node, $fieldinfo["partial_index"], $is_date, $is_html);
             }
-        $start += ($chunk_size +1);
+        $offset += $chunk_size;
         }
+    while(!empty($nodes));
+
     $result = PHP_SAPI == 'cli' ? "Reindex complete\n\n" : "<div class='PageInfoMessage'>Reindex of field '" . htmlspecialchars($fieldinfo["title"]) . "' complete </div>";
     echo $result;
     }
