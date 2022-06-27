@@ -989,8 +989,14 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         }
                     }
 
-                # Add new node
-                if($val !=='')
+                # Add new node unlesss empty string
+                if($val == '')
+                    {
+                    // Remove and delete node
+                    $nodes_to_remove[] = $current_field_node;
+                    $nodes_check_delete[] = $current_field_node;
+                    }
+                else
                     {
                     $newnode = set_node($use_node, $fields[$n]["ref"], $val, null, null);
                     $nodes_to_add[] = ((int)$use_node > 0) ? $use_node : $newnode;
