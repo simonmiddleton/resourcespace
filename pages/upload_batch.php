@@ -645,19 +645,16 @@ if ($processupload)
                 if($success && $auto_generated_resource_title_format != '' && !$upload_then_edit)
                     {
                     $new_auto_generated_title = '';
-                    $ref_escaped = escape_check($ref);
 
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
-                        $view_title_field_escaped = escape_check($view_title_field);
-
-                        $resource_detail = sql_query ("
-                            SELECT r.ref, r.file_extension, rd.value
-                            FROM resource r
-                            LEFT JOIN resource_data AS rd ON r.ref = rd.resource
-                            AND rd.resource_type_field = '{$view_title_field_escaped}'
-                            WHERE r.ref = '{$ref_escaped}'
-                                        ");
+                        $resource_detail = ps_query ("
+                            SELECT r.ref, r.file_extension, n.value
+                              FROM resource r
+                         LEFT JOIN resource_node rn ON rn.resource=r.ref 
+                         LEFT JOIN node n ON N.ref=rn.node 
+                             WHERE n.resource_type_field = ? AND r.ref= ?",
+                                ["i",$view_title_field,"i",$ref]);
 
                         $new_auto_generated_title = str_replace(
                             array('%title', '%resource', '%extension'),
@@ -670,10 +667,10 @@ if ($processupload)
                         }
                     else
                         {
-                        $resource_detail = sql_query ("
-                                SELECT r.ref, r.file_extension
-                                FROM resource r
-                                WHERE r.ref = '{$ref_escaped}'");
+                        $resource_detail = ps_query ("
+                            SELECT r.ref, r.file_extension FROM resource r WHERE r.ref = ?",
+                            ["i",$ref]
+                            );
 
                         $new_auto_generated_title = str_replace(
                             array('%resource', '%extension'),

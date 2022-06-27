@@ -144,12 +144,7 @@ $resource=get_resource_data($ref);
 
 # Load existing keywords
 $existing=array();
-
-$words=ps_value(
-    "SELECT value FROM resource_data WHERE resource = ? AND resource_type_field = ?",
-    ["i",$ref,"i",$speedtaggingfield],
-    ""
-    );
+$words = get_data_by_field($ref,$speedtaggingfield);
 
 include "../include/header.php";
 ?>
