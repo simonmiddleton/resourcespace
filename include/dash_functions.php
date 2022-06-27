@@ -63,7 +63,18 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
         }
     else
         {
-        $result = sql_query("INSERT INTO dash_tile (url,link,title,reload_interval_secs,all_users,default_order_by,resource_count,allow_delete,txt) VALUES ('".$url."','".$link."','".escape_check($title)."',".$reload_interval.",".$all_users.",".$default_order_by.",".$resource_count.",".$delete.",'".escape_check($text)."')");
+        $result = ps_query("INSERT INTO dash_tile (url,link,title,reload_interval_secs,all_users,default_order_by,resource_count,allow_delete,txt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            [
+                            's', $url,
+                            's', $link,
+                            's', $title,
+                            'i', $reload_interval,
+                            'i', $all_users,
+                            'i', $default_order_by,
+                            'i', $resource_count,
+                            'i', $delete,
+                            's', $text
+                            ]);
         $tile=sql_insert_id();
 
         foreach($specific_user_groups as $user_group_id)
@@ -78,8 +89,8 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
     
     if($all_users==1 && empty($specific_user_groups))
         {
-        sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$tile);
-        $result = sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile."',5 FROM user");
+        ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile]);
+        $result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile."',5 FROM user");
         }
     
     hook('after_create_dash_tile', '', array($tile));
@@ -102,7 +113,6 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
         {$reload_interval=0;}
     $delete = $delete?1:0;
     $all_users=$all_users?1:0;
-    $escaped_tile_ref = escape_check($tile['ref']);
 
     if(!is_numeric($default_order_by))
         {
@@ -110,19 +120,20 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
         }
     $resource_count = $resource_count?1:0;
 
-    sql_query("UPDATE dash_tile 
-                SET 
-                    url='".escape_check($url)."',
-                    link='".escape_check($link)."',
-                    title='".escape_check($title)."',
-                    reload_interval_secs=".$reload_interval.",
-                    all_users='".$all_users."',
-                    default_order_by='".$default_order_by."',
-                    resource_count='".$resource_count."',
-                    allow_delete='".$delete."',
-                    txt='".escape_check($text)."'
-                WHERE 
-                    ref='".$tile["ref"]."'");
+    ps_query("UPDATE dash_tile SET url= ?, link= ?, title= ?, reload_interval_secs= ?, all_users= ?, default_order_by= ?, resource_count= ?, allow_delete= ?, txt= ? WHERE ref= ?",
+            [
+            's', $url,
+            's', $link,
+            's', $title,
+            'i', $reload_interval,
+            'i', $all_users,
+            'i', $default_order_by,
+            'i', $resource_count,
+            'i', $delete,
+            's', $text,
+            'i', $tile['ref']
+            ]
+        );
 
     if($tile_audience=='true') // All users tile
         {
@@ -130,12 +141,12 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
         if (count($current_specific_user_groups)>0 || $tile["all_users"]==0)
             {
             #Delete the users existing record to ensure they don't get a duplicate.
-            sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$escaped_tile_ref);
-            sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$escaped_tile_ref."',5 FROM user");
+            ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile['ref']]);
+            ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref, ?,5 FROM user", ['i', $tile['ref']]);
             }
 
         // This is an all users dash tile, delete any existing usergroup entries
-        sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$escaped_tile_ref}'");
+        ps_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = ?", ['i', $tile['ref']]);
            }
     elseif($tile_audience=='specific_user_groups') // Specific usergroups tile
         {
@@ -144,28 +155,28 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
         if(count($current_specific_user_groups)==0)
             {
             // This was an all users/usergroup dash tile, delete any existing user entries
-            sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$escaped_tile_ref}'");
+            ps_query("DELETE FROM user_dash_tile WHERE dash_tile = ?", ['i', $tile['ref']]);
             }
         
         // Remove tile from old user groups                    
         foreach(array_diff($current_specific_user_groups,$specific_user_groups) as $remove_group)
             {					
-            delete_usergroup_dash_tile($escaped_tile_ref,$remove_group);
+            delete_usergroup_dash_tile($tile['ref'],$remove_group);
             }                
         
         // Newly selected user groups.
         foreach(array_diff($specific_user_groups,$current_specific_user_groups) as $add_group)
             {
-            add_usergroup_dash_tile($add_group, $escaped_tile_ref, $default_order_by);
-            build_usergroup_dash($add_group,0,$escaped_tile_ref);
+            add_usergroup_dash_tile($add_group, $tile['ref'], $default_order_by);
+            build_usergroup_dash($add_group,0,$tile['ref']);
             }
         }
     else // Tile is now just for the current user
         {
         // This was an all users/usergroup dash tile, delete any existing user entries and add just for this user
-        sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$escaped_tile_ref}'");
-        sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$escaped_tile_ref}'");
-        add_user_dash_tile($userref, $escaped_tile_ref, $default_order_by); 
+        ps_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = ?", ['i', $tile['ref']]);
+        ps_query("DELETE FROM user_dash_tile WHERE dash_tile = ?", ['i', $tile['ref']]);
+        add_user_dash_tile($userref, $tile['ref'], $default_order_by); 
         }
         
     hook('after_update_dash_tile');
@@ -180,11 +191,11 @@ function delete_dash_tile($tile,$cascade=TRUE,$force=FALSE)
     {
     #Force Delete ignores the allow_delete flag (This allows removal of config tiles)
     $allow_delete = $force? "":"AND allow_delete=1";
-    sql_query("DELETE FROM dash_tile WHERE ref='".$tile."' ".$allow_delete);
+    ps_query("DELETE FROM dash_tile WHERE ref= ? ".$allow_delete, ['i', $tile]);
     if($cascade)
         {
-        sql_query("DELETE FROM user_dash_tile WHERE dash_tile='".$tile."'");
-        sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$tile}'");
+        ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile]);
+        ps_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = ?", ['i', $tile]);
         }
     hook('after_delete_dash_tile', '', array($tile, $cascade , $force));
     }
@@ -195,8 +206,8 @@ function delete_dash_tile($tile,$cascade=TRUE,$force=FALSE)
  */
 function revoke_all_users_flag_cascade_delete($tile)
     {
-    sql_query("UPDATE dash_tile SET `all_users`=0 WHERE `ref`='{$tile}'");
-    sql_query("DELETE FROM `user_dash_tile` WHERE `dash_tile`='{$tile}'");
+    ps_query("UPDATE dash_tile SET `all_users`=0 WHERE `ref`= ?", ['i', $tile]);
+    ps_query("DELETE FROM `user_dash_tile` WHERE `dash_tile`= ?", ['i', $tile]);
     }
 
 /*
@@ -229,7 +240,7 @@ function reorder_default_dash()
  */
 function update_default_dash_tile_order($tile,$order_by)
     {
-    return sql_query("UPDATE dash_tile SET default_order_by='".$order_by."' WHERE ref='".$tile."'");
+    return ps_query("UPDATE dash_tile SET default_order_by= ? WHERE ref= ?", ['i', $order_by, 'i', $tile]);
     }
 /*
  * Gets the full content from a tile record row
@@ -237,7 +248,7 @@ function update_default_dash_tile_order($tile,$order_by)
  */
 function get_tile($tile)
      {
-     $result=sql_query("SELECT * FROM dash_tile WHERE ref='".$tile."'");
+     $result=ps_query("SELECT ref, title, txt, all_users, default_order_by, url, link, reload_interval_secs, resource_count, allow_delete FROM dash_tile WHERE ref= ?", ['i', $tile]);
      return isset($result[0])?$result[0]:false;
      }
 
@@ -247,7 +258,7 @@ function get_tile($tile)
  */
 function all_user_dash_tile_active($tile)
     {
-    return	sql_query("
+    return	ps_query("
             SELECT 
                 dash_tile.ref AS 'tile',
                 dash_tile.title,
@@ -260,7 +271,7 @@ function all_user_dash_tile_active($tile)
             WHERE 
                 dash_tile.all_users=1 
                 AND
-                dash_tile.ref=".$tile."
+                dash_tile.ref= ?
                 AND 
                 (
                     dash_tile.allow_delete=1 
@@ -271,7 +282,7 @@ function all_user_dash_tile_active($tile)
                         dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
                     )
                 ) ORDER BY default_order_by
-            ");
+            ", ['i', $tile]);
     }
 
 /*
@@ -281,8 +292,17 @@ function all_user_dash_tile_active($tile)
  */
 function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_count,$text="")
     {
-    $sql = "SELECT ref FROM dash_tile WHERE url='".$url."' AND link='".$link."' AND title='".escape_check($title)."' AND reload_interval_secs=".$reload_interval." AND all_users=".$all_users." AND resource_count=".$resource_count." AND txt='".escape_check($text)."'";
-    $existing = sql_query($sql);
+    $existing = ps_query("SELECT ref FROM dash_tile WHERE url= ? AND link= ? AND title= ? AND reload_interval_secs= ? AND all_users= ? AND resource_count= ? AND txt= ?",
+                          [
+                            's', $url,
+                            's', $link,
+                            's', $title,
+                            'i', $reload_interval,
+                            'i', $all_users,
+                            'i', $resource_count,
+                            's', $text
+                          ]
+                        );
     if(isset($existing[0]["ref"]))
         {
         return true;
@@ -303,7 +323,7 @@ function cleanup_dash_tiles()
     {
     global $lang;
     $tiles = ps_query(
-        "SELECT * FROM dash_tile 
+        "SELECT ref, title, txt, all_users, default_order_by, url, link, reload_interval_secs, resource_count, allow_delete FROM dash_tile 
             WHERE allow_delete = 1
                 AND all_users = 0
                 AND ref NOT IN (SELECT DISTINCT dash_tile FROM user_dash_tile)
@@ -365,9 +385,17 @@ function checkConfigCustomHomePanels($tile,$tile_style)
  */
 function get_alluser_available_tiles($tile="null")
     {
-    $tilecheck = (is_numeric($tile)) ? "AND ref='".$tile."'":"";
-    return sql_query
-        (
+    if(is_numeric($tile))
+        {
+        $tilecheck = 'AND ref = ?'; $params = ['i', $tile];
+        }
+    else
+        {
+        $tilecheck = '';
+        $params = [];
+        }
+    
+    return ps_query(
             "
             SELECT 
                 dash_tile.ref,
@@ -394,7 +422,7 @@ function get_alluser_available_tiles($tile="null")
             default_order_by
 
             "
-        );
+        , $params);
     }
 
 /*
@@ -455,7 +483,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
         if($dash_tile_colour)
             {
             $buildstring = explode('?', $tile['url']);
-            parse_str(str_replace('&amp;', '&', ($build_url_parts[1]??"")), $buildstring);
+            parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
 
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
                 {
@@ -617,18 +645,16 @@ function get_managed_dash()
     if(checkPermission_anonymoususer() && !$anonymous_default_dash)
         {
         // Anonymous user but may have had dash customised dash configured first
-        $tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by'
+        $tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by'
                        FROM user_dash_tile
                             JOIN dash_tile
                             ON user_dash_tile.dash_tile = dash_tile.ref
-                            WHERE user_dash_tile.user='".$userref."'
-                            ORDER BY user_dash_tile.order_by");    
+                            WHERE user_dash_tile.user= ?
+                            ORDER BY user_dash_tile.order_by", ['i', $userref]);    
         }
     else
         {
-        $usergroup_escaped = escape_check($usergroup);
-
-        $tiles = sql_query("
+        $tiles = ps_query("
             SELECT dash_tile.ref AS 'tile',
                    dash_tile.title,
                    dash_tile.url,
@@ -639,11 +665,11 @@ function get_managed_dash()
                         SELECT ugdt.default_order_by
                           FROM usergroup_dash_tile AS ugdt
                          WHERE ugdt.dash_tile = dash_tile.ref
-                           AND ugdt.usergroup = '{$usergroup_escaped}'
+                           AND ugdt.usergroup = ?
                    ) AS 'usergroup_default_order_by'
               FROM dash_tile
              WHERE dash_tile.all_users = 1
-               AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = '{$usergroup_escaped}')
+               AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = ?)
                 OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
                AND (
                     dash_tile.allow_delete = 1
@@ -653,7 +679,7 @@ function get_managed_dash()
                        )
                    )
             ORDER BY usergroup_default_order_by ASC, default_order_by ASC
-        ");
+        ", ['i', $usergroup, 'i', $usergroup]);
         }
     
     foreach($tiles as $tile)
@@ -662,7 +688,7 @@ function get_managed_dash()
     if($dash_tile_colour)
             {
             $buildstring = explode('?', $tile['url']);
-            parse_str(str_replace('&amp;', '&', ($build_url_parts[1]??"")), $buildstring);
+            parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
             
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
                 {
@@ -741,10 +767,10 @@ function add_usergroup_dash_tile($usergroup, $tile, $default_order_by)
         $reorder          = false;
         }
 
-    $existing = sql_query("SELECT * FROM usergroup_dash_tile WHERE usergroup = '{$usergroup}' AND dash_tile = {$tile}");
+    $existing = ps_query("ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $usergroup, 'i', $tile]);
     if(!$existing)
         {
-        $result = sql_query("INSERT INTO usergroup_dash_tile (usergroup, dash_tile, default_order_by) VALUES ('{$usergroup}', '{$tile}', '{$default_order_by}')");
+        $result = ps_query("INSERT INTO usergroup_dash_tile (usergroup, dash_tile, default_order_by) VALUES (?, ?, ?)", ['i', $usergroup, 'i', $tile, 'i', $default_order_by]);
         }
     else
         {
@@ -765,14 +791,14 @@ function add_usergroup_dash_tile($usergroup, $tile, $default_order_by)
  */
 function append_usergroup_position($usergroup)
     {
-    $last_tile = sql_query("SELECT order_by FROM usergroup_dash_tile WHERE usergroup = '{$usergroup}' ORDER BY default_order_by DESC LIMIT 1");
+    $last_tile = ps_query("SELECT order_by FROM usergroup_dash_tile WHERE usergroup = ? ORDER BY default_order_by DESC LIMIT 1", ['i', $usergroup]);
 
     return isset($last_tile[0]['default_order_by']) ? $last_tile[0]['order_by'] + 10 : 10;
     }
 
 function reorder_usergroup_dash($usergroup)
     {
-    $usergroup_tiles = sql_query("SELECT usergroup_dash_tile.dash_tile FROM usergroup_dash_tile LEFT JOIN dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref WHERE usergroup_dash_tile.usergroup = '{$usergroup}' ORDER BY usergroup_dash_tile.default_order_by");
+    $usergroup_tiles = ps_query("SELECT usergroup_dash_tile.dash_tile FROM usergroup_dash_tile LEFT JOIN dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref WHERE usergroup_dash_tile.usergroup = ? ORDER BY usergroup_dash_tile.default_order_by", ['i', $usergroup]);
     $order_by        = 10 * count($usergroup_tiles);
 
     for($i = count($usergroup_tiles) - 1; $i >= 0; $i--)
@@ -788,7 +814,7 @@ function update_usergroup_dash_tile_order($usergroup, $tile, $default_order_by)
     $tile = escape_check($tile);
     $default_order_by = escape_check($default_order_by);
 
-    sql_query("UPDATE usergroup_dash_tile SET default_order_by = '{$default_order_by}' WHERE usergroup = '{$usergroup}' AND dash_tile = '{$tile}'");
+    ps_query("UPDATE usergroup_dash_tile SET default_order_by = ? WHERE usergroup = ? AND dash_tile = ?", ['i', $default_order_by, 'i', $usergroup, 'i', $tile]);
     }
 
     
@@ -871,12 +897,14 @@ function get_usergroup_available_tiles($user_group_id, $tile = '')
         }
 
     $tile_sql = '';
+    $params = [];
     if('' != $tile)
         {
-        $tile_sql = "AND dt.ref = '" . escape_check($tile) . "'";
+        $tile_sql = "AND dt.ref = ?";
+        $params = ['i', $tile];
         }
-
-    return sql_query("SELECT dt.ref, dt.ref AS `tile`, dt.title, dt.txt, dt.link, dt.url, dt.reload_interval_secs, dt.resource_count, dt.all_users, dt.allow_delete, dt.default_order_by, udt.order_by , 1 AS 'dash_tile' FROM dash_tile AS dt LEFT JOIN usergroup_dash_tile AS udt ON dt.ref = udt.dash_tile WHERE dt.all_users = 1 AND udt.usergroup = '{$user_group_id}' {$tile_sql} ORDER BY udt.default_order_by ASC");
+    $params[] = 'i'; $params[] = $user_group_id;
+    return ps_query("SELECT dt.ref, dt.ref AS `tile`, dt.title, dt.txt, dt.link, dt.url, dt.reload_interval_secs, dt.resource_count, dt.all_users, dt.allow_delete, dt.default_order_by, udt.order_by , 1 AS 'dash_tile' FROM dash_tile AS dt LEFT JOIN usergroup_dash_tile AS udt ON dt.ref = udt.dash_tile WHERE dt.all_users = 1 AND udt.usergroup = ? {$tile_sql} ORDER BY udt.default_order_by ASC", $params);
     }
 
 /**
@@ -889,7 +917,7 @@ function get_usergroup_available_tiles($user_group_id, $tile = '')
  */
  function get_usergroup_tile($tile_id, $user_group_id)
     {
-    $return = sql_query("SELECT * FROM usergroup_dash_tile WHERE dash_tile = '" . escape_check($tile_id) . "' AND usergroup = '" . escape_check($user_group_id) . "'");
+    $return = ps_query("SELECT ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE dash_tile = ? AND usergroup = ?", ['i', $tile_id, 'i', $user_group_id]);
 
     if(0 < count($return))
         {
@@ -917,7 +945,7 @@ function add_user_dash_tile($user,$tile,$order_by,$reorder=TRUE)
         $reorder=FALSE;
         }
         
-    sql_query("INSERT INTO user_dash_tile (user,dash_tile,order_by) VALUES (".$user.",".$tile.",".$order_by.")  ON DUPLICATE KEY UPDATE order_by='" . $order_by . "'");
+    ps_query("INSERT INTO user_dash_tile (user,dash_tile,order_by) VALUES (?, ?, ?)  ON DUPLICATE KEY UPDATE order_by= ?", ['i', $user, 'i', $tile, 'i', $order_by, 'i', $order_by]);
         
     if($reorder){reorder_user_dash($user);}
     return true;
@@ -931,7 +959,7 @@ function add_user_dash_tile($user,$tile,$order_by,$reorder=TRUE)
  */
  function get_user_tile($usertile,$user)
      {
-     $result=sql_query("SELECT * FROM user_dash_tile WHERE ref='".escape_check($usertile)."' AND user=".escape_check($user));
+     $result=ps_query("SELECT ref, user, dash_tile, order_by FROM user_dash_tile WHERE ref= ? AND user= ?", ['i', $usertile, 'i', $user]);
      return isset($result[0])?$result[0]:false;
      }
 
@@ -954,7 +982,7 @@ function add_user_dash_tile($user,$tile,$order_by,$reorder=TRUE)
  */
 function update_user_dash_tile_order($user,$tile,$order_by)
     {
-    return sql_query("UPDATE user_dash_tile SET order_by='".escape_check($order_by)."' WHERE user='".escape_check($user)."' and ref='".$tile."'");
+    return ps_query("UPDATE user_dash_tile SET order_by= ? WHERE user= ? and ref= ?", ['i', $order_by, 'i', $user, 'i', $tile]);
     }
 /*
  * Delete a tile from a user dash
@@ -969,11 +997,11 @@ function delete_user_dash_tile($usertile,$user)
     if(!is_numeric($usertile) || !is_numeric($user)){return false;}
     
     $row = get_user_tile($usertile,$user);
-    sql_query("DELETE FROM user_dash_tile WHERE ref='".$usertile."' and user='".$user."'");
+    ps_query("DELETE FROM user_dash_tile WHERE ref= ? and user= ?", ['i', $usertile, 'i', $user]);
 
     if (!isset($row["dash_tile"]) || !is_numeric($row["dash_tile"])) {return false;}
     
-    $existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$row["dash_tile"]."'");
+    $existing = ps_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile= ?", ['i', $row['dash_tile']]);
     
     if($existing[0]["count"]<1)
         {
@@ -991,13 +1019,13 @@ function delete_user_dash_tile($usertile,$user)
 function empty_user_dash($user,$purge=true)
     {
     global $lang;
-    $usertiles = sql_query("SELECT dash_tile FROM user_dash_tile WHERE user_dash_tile.user='".escape_check($user)."'");
-    sql_query("DELETE FROM user_dash_tile WHERE user='".$user."'");
+    $usertiles = ps_query("SELECT dash_tile FROM user_dash_tile WHERE user_dash_tile.user= ?", ['i', $user]);
+    ps_query("DELETE FROM user_dash_tile WHERE user= ?", ['i', $user]);
     if($purge)
         {
         foreach($usertiles as $tile)
             {
-            $existing = sql_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile='".$tile["dash_tile"]."'");
+            $existing = ps_query("SELECT count(*) as 'count' FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile['dash_tile']]);
             if($existing[0]["count"]<1)
                 {
                 delete_dash_tile($tile["dash_tile"]);
@@ -1015,7 +1043,7 @@ function empty_user_dash($user,$purge=true)
  */
 function reorder_user_dash($user)
     {
-    $user_tiles = sql_query("SELECT user_dash_tile.ref FROM user_dash_tile LEFT JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
+    $user_tiles = ps_query("SELECT user_dash_tile.ref FROM user_dash_tile LEFT JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user= ? ORDER BY user_dash_tile.order_by", ['i', $user]);
     if (count($user_tiles) < 2)
         {
         return;	
@@ -1023,13 +1051,15 @@ function reorder_user_dash($user)
     $order_by=10 * count($user_tiles);
     
     $sql="UPDATE user_dash_tile SET order_by = (CASE ";
+    $params = [];
     for($i=count($user_tiles)-1;$i>=0;$i--)
         {
-        $sql.=" WHEN ref='" . $user_tiles[$i]["ref"] . "' THEN '" . $order_by . "' ";
+        $sql.=" WHEN ref= ? THEN ? ";
         $order_by-=10;
+        $params = array_merge($params, ['i', $user_tiles[$i]["ref"], 'i', $order_by]);
         }
     $sql.=" END) WHERE user='" . $user . "'";
-    sql_query($sql);
+    ps_query($sql, $params);
     }
 
 /*
@@ -1038,7 +1068,7 @@ function reorder_user_dash($user)
  */
 function append_user_position($user)
     {
-    $last_tile=sql_query("SELECT order_by FROM user_dash_tile WHERE user='".$user."' ORDER BY order_by DESC LIMIT 1");
+    $last_tile=ps_query("SELECT order_by FROM user_dash_tile WHERE user= ? ORDER BY order_by DESC LIMIT 1", ['i', $user]);
     return isset($last_tile[0]["order_by"])?$last_tile[0]["order_by"]+10:10;
     }
 
@@ -1049,9 +1079,13 @@ function append_user_position($user)
  */
 function get_user_available_tiles($user,$tile="null")
     {
-    $tilecheck = (is_numeric($tile)) ? "WHERE ref='".$tile."'":"";
-    return sql_query
-        (
+    $tilecheck = ''; $params = [];
+    if(is_numeric($tile))
+        {
+        $tilecheck = 'WHERE ref = ?';
+        $params = ['i', $tile];
+        }
+    return ps_query(
             "
             SELECT 
                 result.*
@@ -1090,7 +1124,7 @@ function get_user_available_tiles($user,$tile="null")
                             user_dash_tile.dash_tile = dash_tile.ref
 
                         WHERE
-                            user_dash_tile.user = '".$user."'
+                            user_dash_tile.user = ?
                     )
                 AND ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile)
                 )
@@ -1118,14 +1152,14 @@ function get_user_available_tiles($user,$tile="null")
                 ON 
                     user_dash_tile.dash_tile = dash_tile.ref
                 WHERE
-                    user_dash_tile.user = '".$user."'
+                    user_dash_tile.user = ?
                 )
             ) result
             ".$tilecheck."
             ORDER BY result.order_by,result.default_order_by
 
             "
-        );
+        , array_merge(['i', $user, 'i', $user], $params));
     }
 
 /*
@@ -1149,7 +1183,7 @@ function get_user_dash($user)
         $tile_custom_style = '';
 
         $buildstring = explode('?', $tile['url']);
-        parse_str(str_replace('&amp;', '&', ($build_url_parts[1]??"")), $buildstring);
+        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
 
         $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
 
@@ -1386,7 +1420,7 @@ function build_dash_tile_list($dtiles_available)
               {$checked=true;}
 
           $buildstring = explode('?',$tile["url"]);
-        parse_str(str_replace("&amp;","&",($build_url_parts[1]??"")),$buildstring);
+        parse_str(str_replace("&amp;","&",($buildstring[1]??"")),$buildstring);
           ?>
           <tr id="tile<?php echo $tile["ref"];?>" <?php if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf") {echo "class=\"conftile\"";} ?>>
               <td>
@@ -1653,8 +1687,8 @@ function get_tile_custom_style($buildstring)
 function delete_usergroup_dash_tile($tile,$group)
     {
     if(!is_numeric($tile) || !is_numeric($group)){return false;}	
-    sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$group}' AND dash_tile = '{$tile}'");					
-    sql_query("DELETE ud.* FROM user_dash_tile ud LEFT JOIN user u ON ud.user=u.ref LEFT JOIN usergroup ug ON ug.ref=u.usergroup WHERE ud.dash_tile='" . $tile . "' and ug.ref='" . $group . "'");
+    ps_query("DELETE FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $group, 'i', $tile]);					
+    ps_query("DELETE ud.* FROM user_dash_tile ud LEFT JOIN user u ON ud.user=u.ref LEFT JOIN usergroup ug ON ug.ref=u.usergroup WHERE ud.dash_tile= ? and ug.ref= ?", ['i', $tile, 'i', $group]);
     }
 
 
