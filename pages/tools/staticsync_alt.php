@@ -433,7 +433,7 @@ function ProcessFolder($folder)
                                             $joins = get_resource_table_joins();
                                             if(in_array($field_info['ref'], $joins))
                                                 {
-                                                sql_query("UPDATE resource SET field{$field_info['ref']} = '" . escape_check(truncate_join_field_value($value)) . "' WHERE ref = '{$r}'");
+                                                ps_query("UPDATE resource SET field{$field_info['ref']} = ? WHERE ref = ?", ['s', truncate_join_field_value($value), 'i', $r]);
                                                 }
                                         
                                         echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
@@ -552,7 +552,7 @@ function ProcessFolder($folder)
 					# Add to collection
 					if ($staticsync_autotheme)
 						{
-						sql_query("insert into collection_resource(collection,resource,date_added) values ('$collection','$r',now())");
+						ps_query("insert into collection_resource(collection,resource,date_added) values (?,?,now())", ['i', $collection, 'i', $r]);
 						}
 
                                         // fix permissions
@@ -586,7 +586,7 @@ function ProcessFolder($folder)
 				if (array_key_exists($shortpath,$modtimes) && ($filemod>strtotime($modtimes[$shortpath])))
 					{
 					# File has been modified since we last created previews. Create again.
-					$rd=sql_query("select ref,has_image,file_modified,file_extension from resource where file_path='" . (escape_check($shortpath)) . "'");
+					$rd=ps_query("select ref,has_image,file_modified,file_extension from resource where file_path= ?", ['s', $shortpath]);
 					if (count($rd)>0)
 						{
 						$rd=$rd[0];
@@ -595,7 +595,7 @@ function ProcessFolder($folder)
 						echo date('Y-m-d H:i:s    ');
 						echo "Resource $rref has changed, regenerating previews: $fullpath\n";
 						create_previews($rref,false,$rd["file_extension"]);
-						sql_query("update resource set file_modified=now() where ref='$rref'");
+						ps_query("update resource set file_modified=now() where ref= ?", ['i', $rref]);
 						}
 					}
 				}
@@ -623,8 +623,8 @@ if (!$staticsync_ingest)
 			{
 			echo "File no longer exists: " . $rf[$n]["ref"] . " (" . $fp . ")\n";
 			# Set to archived.
-			sql_query("update resource set archive=2 where ref='" . $rf[$n]["ref"] . "'");
-			sql_query("delete from collection_resource where resource='" . $rf[$n]["ref"] . "'");
+			ps_query("update resource set archive=2 where ref= ?", ['i', $rf[$n]["ref"]]);
+			ps_query("delete from collection_resource where resource= ?", ['i', $rf[$n]["ref"]]);
 			}
 		}
 	# Remove any themes that are now empty as a result of deleted files.
