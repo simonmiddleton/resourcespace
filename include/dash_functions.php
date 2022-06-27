@@ -20,9 +20,8 @@
  */
 function existing_dash_tile(string $url="", string $link="", string $title="", string $text="", int $reload_interval=0, int $all_users=0, int $resource_count=0)
     {
-
-    $existing_tile_ref = sql_value("SELECT ref as `value` FROM dash_tile WHERE url='". escape_check($url)."' AND link='". escape_check($link) ."' AND title='" . escape_check($title)."' AND txt='".escape_check($text) . "' AND reload_interval_secs='". escape_check($reload_interval) ."' AND all_users='". escape_check($all_users) . "' AND resource_count='". escape_check($resource_count)."'" , 0);
-    
+    $existing_tile_ref = ps_value("SELECT ref as `value` FROM dash_tile WHERE url=? AND link=? AND title=? AND txt=? AND reload_interval_secs=? AND all_users=? AND resource_count=?" , 
+    array("s",$url,"s",$link,"s",$title,"s",$text,"i",$reload_interval,"i",$all_users,"i",$resource_count),0);
     return (int) $existing_tile_ref;
     }
 

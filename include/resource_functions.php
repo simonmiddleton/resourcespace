@@ -9,7 +9,7 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 * IMPORTANT: the download URL should always be used client side (public)
 *            whilst filstore path is private for internal use only
 * 
-* @uses sql_value()
+* @uses ps_value()
 * @uses get_alternative_file()
 * @uses get_resource_data()
 * 
@@ -244,7 +244,7 @@ function get_resource_path(
         {
         $size='';
         $icc=true;
-        $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'", 'jpg');
+        $extension=ps_value("select file_extension value from resource where ref=?", array("i",$ref), 'jpg');
         }
             
         
@@ -1618,7 +1618,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         }
 
                     # Work out existing field value.
-                    $existing = sql_value("SELECT `value` FROM resource_data WHERE resource = '".escape_check($ref)."' AND resource_type_field = '".escape_check($fields[$n]['ref'])."'", "");
+                    $existing = ps_value("SELECT `value` FROM resource_data WHERE resource = ? AND resource_type_field = ?", array("i",$ref,"i",$fields[$n]['ref']),"");
                         
                     if (getval("modeselect_" . $fields[$n]["ref"],"")=="FR")
                         {
@@ -1895,7 +1895,7 @@ function save_resource_data_multi($collection,$editsearch = array())
         for ($m=0;$m<count($list);$m++)
 			{
 			$ref=$list[$m];
-            $created_by = sql_value("select created_by value from resource where ref='$ref'",""); 
+            $created_by = ps_value("select created_by value from resource where ref=?",array("i",$ref),""); 
             $new_created_by = getvalescaped("created_by",0,true);
             if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
                 {
@@ -3029,7 +3029,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     // Resource types can be configured to not have global fields in which case we only present the user fields valid for
     // this resource type
-    $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = '{$rtype}'", true, "schema");
+    $inherit_global_fields = (bool) ps_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?", array("i",$rtype), true, "schema");
     if(!$inherit_global_fields && !$multi)
         {
         $validtypes = array($rtype);
@@ -3478,7 +3478,7 @@ function clear_resource_data($resource)
 function get_max_resource_ref()
 	{
 	# Returns the highest resource reference in use.
-	return sql_value("select max(ref) value from resource",0);
+	return ps_value("select max(ref) value from resource",array(),0);
 	}
 
 /**
@@ -3984,7 +3984,7 @@ function update_resource_type($ref,$type)
     global $index_resource_type;
     if ($index_resource_type)
             {
-            $restypename=sql_value("select name value from resource_type where ref='" . escape_check($type) . "'","","schema");
+            $restypename=ps_value("select name value from resource_type where ref=?",array("i",$type),"","schema");
             remove_all_keyword_mappings_for_field($ref,-2);
             add_keyword_mappings($ref,$restypename,-2);
             }
@@ -5046,7 +5046,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 	global $userref;
 	if (isset($userref))
 		{
-		$complete=sql_value("select cr.purchase_complete value from collection_resource cr join collection c on cr.collection=c.ref where c.user='$userref' and cr.resource='$resource' and cr.purchase_size='" . escape_check($size) . "'",0);
+		$complete=ps_value("select cr.purchase_complete value from collection_resource cr join collection c on cr.collection=c.ref where c.user=? and cr.resource=? and cr.purchase_size=?",array("i",$userref,"i",$resource,"s",$size), 0);
 		if ($complete==1) {return true;}
 		}
 
@@ -5070,7 +5070,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         else
             {
             # Return the restricted access setting for this resource type.
-            return (sql_value("select allow_restricted value from preview_size where id='" . escape_check($size) . "'",0)==1);
+            return (ps_value("select allow_restricted value from preview_size where id=?",array("i",$size),0)==1);
             }
         }
 
@@ -5451,7 +5451,7 @@ function check_use_watermark($download_key = "", $resource="")
 * Fill in any blank fields for the resource
 * 
 * @uses escape_check()
-* @uses sql_value()
+* @uses ps_value()
 * @uses sql_query()
 * @uses update_field()
 * @uses get_resource_nodes()
@@ -5476,7 +5476,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         }
 
     $resource_escaped = escape_check($resource);
-    $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
+    $resource_type = ps_value("SELECT resource_type AS `value` FROM resource WHERE ref = ?", array("i",$resource_escaped), 0);
 
     $fields = sql_query(
         "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
@@ -5502,7 +5502,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
             }
         else
             {
-            $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource_escaped}' AND resource_type_field = '{$field['ref']}'", '');
+            $value = ps_value("SELECT `value` FROM resource_data WHERE resource = ? AND resource_type_field = ?", array("i",$resource_escaped,"i",$field['ref']),'');
             }
 
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
@@ -5590,7 +5590,7 @@ function reindex_resource($ref)
         # Also index the resource type name, unless disabled
 	if ($index_resource_type)
 		{
-		$restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","");
+		$restypename=ps_value("select name value from resource_type where ref in (select resource_type from resource where ref=?)",array("i",$ref), "");
 		add_keyword_mappings($ref,$restypename,-2);
 		}
                 

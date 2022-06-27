@@ -1108,7 +1108,7 @@ function ps_array($query,$parameters,$cache="")
 	}
 
 /**
-* Like sql_value() but returns an array of all values found
+* Returns an array of all values found
 * 
 * NOTE: The value returned must have the column name aliased to 'value'
 * 

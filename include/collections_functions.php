@@ -1235,7 +1235,7 @@ function add_collection($user,$collection)
 	remove_collection($user,$collection);
 	ps_query("insert into user_collection(user,collection) values (?,?)",array("i",$user,"i",$collection));
     clear_query_cache('col_total_ref_count_w_perm');
-	collection_log($collection,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
+	collection_log($collection,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, ps_value ("select username as value from user where ref = ?",array("i",$user),""));
 
     return true;
 	}
@@ -1251,7 +1251,7 @@ function remove_collection($user,$collection)
 	{
 	ps_query("delete from user_collection where user=? and collection=?",array("i",$user,"i",$collection));
     clear_query_cache('col_total_ref_count_w_perm');
-	collection_log($collection,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
+	collection_log($collection,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, ps_value ("select username as value from user where ref = ?",array("i",$user),""));
 	}
 
 /**
@@ -2006,7 +2006,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 
                 #log this
-                collection_log($reflist[$nx1],LOG_CODE_COLLECTION_SHARED_COLLECTION,0, sql_value ("select username as value from user where ref = $urefs[$nx2]",""));
+                collection_log($reflist[$nx1],LOG_CODE_COLLECTION_SHARED_COLLECTION,0, ps_value ("select username as value from user where ref = ?",array($urefs[$nx2]), ""));
                 }
             }
         }
@@ -3429,7 +3429,10 @@ function collection_min_access($collection)
     if($k != "")
 		{
 		# External access - check how this was shared. If internal share access and share is more open than the user's access return that
-		$minextaccess = sql_value("SELECT max(access) value FROM external_access_keys WHERE resource IN ('" . implode("','",array_column($result,"ref")) . "') AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+        $params=ps_param_fill(array_column($result,"ref"),"i");
+        $params[]="s";$params[]=$k;
+
+		$minextaccess = ps_value("SELECT max(access) value FROM external_access_keys WHERE resource IN (" . ps_param_insert(count($result)) . ") AND access_key = ? AND (expires IS NULL OR expires > NOW())", $params, -1);
         if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))
             {
             return ($minextaccess);
@@ -4248,7 +4251,14 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             // check that this collection is not hidden. use first in alphabetical order otherwise
             if(in_array($user_mycollection,$hidden_collections)){
                 $hidden_collections_list=implode(",",array_filter($hidden_collections));
-                $user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "'" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
+                $sql="select ref value from collection where user=?";
+                $params=array("i",$userref);
+                if (count($hidden_collections)>0)
+                    {
+                    $sql.=" and ref not in(" . ps_param_insert(count($hidden_collections)) . ")";
+                    $params=array_merge($params,ps_param_fill($hidden_collections,"i"));
+                    }
+                $user_mycollection=ps_value($sql . " order by ref limit 1",$params,"");
             }
             $extra_tag_attributes = sprintf('
                     data-mycol="%s"
@@ -5489,18 +5499,14 @@ function is_featured_collection_category(array $fc)
 */
 function is_featured_collection_category_by_children(int $c_ref)
     {
-    $sql = sprintf(
+    $found_ref = ps_value(
           "SELECT DISTINCT c.ref AS `value`
              FROM collection AS c
         LEFT JOIN collection AS cc ON c.ref = cc.parent
-            WHERE c.`type` = %s
-              AND c.ref = '%s'
+            WHERE c.`type` = ?
+              AND c.ref = ?
          GROUP BY c.ref
-           HAVING count(DISTINCT cc.ref) > 0",
-        COLLECTION_TYPE_FEATURED,
-        escape_check($c_ref)
-    );
-    $found_ref = sql_value($sql, 0);
+           HAVING count(DISTINCT cc.ref) > 0",array("s",COLLECTION_TYPE_FEATURED,"i",$c_ref),0);
 
     return ($found_ref > 0);
     }
@@ -5643,15 +5649,19 @@ function get_featured_collection_ref_by_name(string $name, $parent)
         return null;
         }
 
-    $ref = sql_value(
-        sprintf("SELECT ref AS `value` FROM collection WHERE `name` = '%s' AND `type` = '%s' AND parent %s",
-            escape_check(trim($name)),
-            COLLECTION_TYPE_FEATURED,
-            sql_is_null_or_eq_val((string) $parent, is_null($parent))
-        ), 
-        null,
-        "featured_collections"
-    );
+    $sql="SELECT ref AS `value` FROM collection WHERE `name` = ? AND `type` = ? AND ";
+    $params=array("s",trim($name),"s",COLLECTION_TYPE_FEATURED);
+
+    if (is_null($parent))
+        {
+        $sql.="parent is null";
+        }
+    else
+        {
+        $sql.="parent = ?";
+        $params[]="i";$params[]=$parent;
+        }
+    $ref = ps_value($sql,$params,null,"featured_collections");
 
     return (is_null($ref) ? null : (int) $ref);
     }
@@ -5881,21 +5891,19 @@ function get_featured_collections_by_resources(array $r_refs)
 */
 function can_delete_featured_collection(int $ref)
     {
-    $sql = sprintf(
-          "SELECT DISTINCT c.ref AS `value`
+    $sql = "SELECT DISTINCT c.ref AS `value`
              FROM collection AS c
         LEFT JOIN collection AS cc ON c.ref = cc.parent
         LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-            WHERE c.`type` = %s
-              AND c.ref = '%s'
+            WHERE c.`type` = ?
+              AND c.ref = ?
          GROUP BY c.ref
            HAVING count(DISTINCT cr.resource) = 0
-              AND count(DISTINCT cc.ref) = 0",
-        COLLECTION_TYPE_FEATURED,
-        escape_check($ref)
-    );
+              AND count(DISTINCT cc.ref) = 0";
+    
+    $params=array("s",COLLECTION_TYPE_FEATURED,"i",$ref);
 
-    return (sql_value($sql, 0) > 0);
+    return (ps_value($sql, $params, 0) > 0);
     }
 
 
@@ -6405,7 +6413,7 @@ function external_upload_notify($collection, $k, $tempcollection)
     get_config_option($user,'email_user_notifications', $send_email);    
     if($send_email)
         {
-        $notify_email=sql_value("select email value from user where ref='$user'","");
+        $notify_email=ps_value("select email value from user where ref=?",array("i",$user),"");
         if($notify_email!='')
             {
             send_mail($notify_email,$applicationname . ": " . $lang["notify_upload_share_new_subject"],$message,"","","emailnotifyuploadsharenew",$templatevars);
