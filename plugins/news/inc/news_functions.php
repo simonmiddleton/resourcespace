@@ -36,49 +36,58 @@ function get_news($ref="",$recent="",$findtext="")
 	}
 	
 	$sql.=" order by date desc, ref desc";
-	if ($recent!=""){$sql.=" limit 0,$recent";}
+	if ($recent!="")
+        {
+        $sql.=" limit 0, ?";
+        $params = array_merge($params, ['i', $recent]);
+        }
 	
-	return sql_query ("select distinct ref, date, title, body from $sql");
+	return ps_query ("select distinct ref, date, title, body from $sql", $params);
 	}
 	
 function get_news_headlines($ref="",$recent="")
 	{
 	# Returns a list of news headlines.	
 	$sql="news n ";
-	
+	$params = [];
 	if ($ref!=""){
-		$sql.=" where ref='$ref'";
+		$sql.=" where ref= ?";
+        $params = ['i', $ref]
 	}
 					
 	$sql.=" order by date desc, ref desc";
-	if ($recent!=""){$sql.=" limit 0,$recent";}	
+	if ($recent!="")
+        {
+        $sql.=" limit 0, ?";
+        $params = array_merge($params, ['i', $recent]);
+        }	
 
-	return sql_query ("select distinct ref, date, title, body from $sql");
+	return ps_query ("select distinct ref, date, title, body from $sql", $params);
 	}
 	
 	
 function get_news_ref($maxmin)
 	{
 	# Returns a reference to the latest or oldest news headline.	
-	$sql="news n";
-	return sql_query ("select " . $maxmin ."(ref) from $sql");
+    if(strtolower($maxmin) != 'min' && strtolower($maxmin) != 'max'){return;}
+	return ps_query ("select " . $maxmin ."(ref) from news n");
 	}
 	
 function delete_news($ref)
 	{
 	# Deletes the news item with reference $ref
-	sql_query("delete from news where ref='$ref'");
+	ps_query("delete from news where ref= ?", ['i', $ref]);
 	}
 	
 function add_news($date,$title,$body)
 	{
 	# Saves the news item with reference $ref
-	sql_query("insert into news (title,body,date) values ('" . escape_check($title) . "','" . escape_check($body) . "','" . escape_check($date) . "')");
+	ps_query("insert into news (title,body,date) values (?, ?, ?)", ['s', $title, 's', $body, 's', $date]);
 	}
 	
 function update_news($ref,$date,$title,$body)
 	{
 	# Updates the news item with reference $ref
-	sql_query("update news set title='" . escape_check($title) . "', body='" . escape_check($body) . "', date='" . escape_check($date) . "' where ref='$ref'");
+	ps_query("update news set title= ?, body= ?, date= ? where ref= ?", ['s', $title, 's', $body, 's', $date, 'i', $ref]);
 	}
 ?>
