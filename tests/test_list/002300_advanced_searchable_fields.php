@@ -24,7 +24,7 @@ $fldref=array();
 # TEST 1 SETUP
 # Set all metadata fields so that they are not on advanced search 
 $sql = "update resource_type_field set advanced_search=0"; 
-sql_query($sql);
+ps_query($sql);
 
 # Create several resource type text fields with resource type 1 (Photo) which are marked with advanced_search as per list below 
 
@@ -64,8 +64,8 @@ $fldref[] = make_field("VideoAreaSearch", 3, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, AD
 $ref_first=$fldref[0];
 $ref_last=$fldref[count($fldref)-1];
 
-$sql = "select ref, title from resource_type_field where ref between ".$ref_first." and ".$ref_last; 
-$fldset= sql_query($sql);
+$sql = "select ref, title from resource_type_field where ref between ? and ?"; 
+$fldset= ps_query($sql,array("i",$ref_first,"i",$ref_last));
 
 feedback(PHP_EOL);
 foreach($fldset as $fldentry ) {
@@ -132,8 +132,8 @@ return true;
 
 function make_field($fieldname, $resourcetype, $fieldtype, $advanced) {
     $ref = create_resource_type_field($fieldname, $resourcetype, $fieldtype);
-    $sql = "update resource_type_field set advanced_search=".$advanced.", keywords_index=".$advanced." where ref=".$ref; 
-    sql_query($sql);
+    $sql = "update resource_type_field set advanced_search=?, keywords_index=? where ref=".$ref; 
+    ps_query($sql,array("i",$advanced,"i",$advanced));
     return $ref;
 }
 

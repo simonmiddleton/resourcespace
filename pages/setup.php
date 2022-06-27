@@ -927,7 +927,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 								if ($col2[2]==$col[2]) {$cols[]=$col2[4];}
 								}
 							$sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
-							sql_query($sql,false,-1,false);
+							ps_query($sql,array(),false,-1,false);
 							$done[]=$col[2];
 							}
 						}

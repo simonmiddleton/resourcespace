@@ -65,9 +65,6 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         $get_groups=implode(",",array_diff(array_column($availgroups,"ref"),explode(",",$actions_approve_hide_groups)));
 
         $account_requests_query = new PreparedStatementQuery();
-        # TODO Adjust return from get_users() after it is ported to return an object
-        # FROM: $account_requests_query->sql=get_users(
-        # TO: $account_requests_query=get_users(
         $account_requests_query->sql = get_users($get_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username, u.comments"); 
 
         $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created 
@@ -123,9 +120,6 @@ function get_editable_resource_sql()
 
     $editable_resource_query= new PreparedStatementQuery();  
 
-    # TODO Adjust return from do_search() after it is ported to return an object
-    # FROM: $editable_resource_query->sql=do_search(
-    # TO: $editable_resource_query=do_search(
     $editable_resource_query->sql=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
 
     return $editable_resource_query;

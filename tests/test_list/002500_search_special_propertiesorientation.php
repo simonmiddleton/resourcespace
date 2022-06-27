@@ -2,7 +2,7 @@
 command_line_only();
 
 $resource_portrait = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_portrait', 1000, 2000)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 2000)",array("i",$resource_portrait));
 $search = search_special(
     "!propertiesorientation:portrait",
     "",
@@ -26,7 +26,7 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_portrait, arr
 
 
 $resource_landscape = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_landscape', 3000, 1500)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 3000, 1500)",array("i",$resource_landscape));
 $search = search_special(
     "!propertiesorientation:landscape",
     "",
@@ -50,7 +50,7 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_landscape, ar
 
 
 $resource_square = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_square', 1000, 1000)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 1000)",array("i",$resource_square));
 $search = search_special(
     "!propertiesorientation:square",
     "",
@@ -74,7 +74,7 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_square, array
 
 
 $resource_height_null = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_height_null', 1000, NULL)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (? , 1000, NULL)",array("i",$resource_height_null));
 $search = search_special(
     "!propertiesorientation:landscape",
     "",
