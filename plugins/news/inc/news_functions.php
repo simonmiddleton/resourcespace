@@ -52,7 +52,7 @@ function get_news_headlines($ref="",$recent="")
 	$params = [];
 	if ($ref!=""){
 		$sql.=" where ref= ?";
-        $params = ['i', $ref]
+        $params = ['i', $ref];
 	}
 					
 	$sql.=" order by date desc, ref desc";
