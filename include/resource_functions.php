@@ -105,7 +105,7 @@ function get_resource_path(
         truncate_cache_arrays();
 
         if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=ps_value("select file_path value from resource where ref=?",array("i",$ref),"");}
-        $fp=$get_resource_path_fpcache[$ref];
+        $fp=$get_resource_path_fpcache[$ref]??"";
         
         # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
         # If using staticsync, file path will be set already, but we still want the $storagedir path for a nosize preview jpg.
