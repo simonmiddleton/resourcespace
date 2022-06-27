@@ -144,7 +144,7 @@ function logScript($message, $file = null)
 /**
 * Get activity log entries from log tables (e.g activity_log, resource_log and collection_log)
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param  string  $search  Search text to filter down results using fuzzy searching
 * @param  integer $offset  Specifies the offset of the first row to return

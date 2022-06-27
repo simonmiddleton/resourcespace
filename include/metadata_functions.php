@@ -96,7 +96,7 @@ function getFitsMetadataFieldValue(SimpleXMLElement $xml , $fits_field)
 * 
 * @uses get_resource_data()
 * @uses escape_check()
-* @uses sql_query()
+* @uses ps_query()
 * @uses runFitsForFile()
 * @uses getFitsMetadataFieldValue()
 * @uses update_field()

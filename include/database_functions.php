@@ -1032,7 +1032,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 * 
 * NOTE: The value returned must have the column name aliased to 'value'
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param string $query    SQL query
 * @param mixed  $default  Default value
@@ -1112,7 +1112,7 @@ function ps_array($query,$parameters=array(),$cache="")
 * 
 * NOTE: The value returned must have the column name aliased to 'value'
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param string $query SQL query
 * 

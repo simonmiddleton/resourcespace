@@ -5449,7 +5449,7 @@ function check_use_watermark($download_key = "", $resource="")
 * 
 * @uses escape_check()
 * @uses ps_value()
-* @uses sql_query()
+* @uses ps_query()
 * @uses update_field()
 * @uses get_resource_nodes()
 * 
@@ -6492,7 +6492,7 @@ function copyResourceDataValues($from, $to, $resource_type = "")
 * @uses resource_log()
 * @uses checkperm()
 * @uses escape_check()
-* @uses sql_query()
+* @uses ps_query()
 * @uses checkperm()
 * 
 * @param array $resource - existing resource data
@@ -6568,7 +6568,7 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
 * @uses get_resource_field_data()
 * @uses update_field()
 * @uses escape_check()
-* @uses sql_query()
+* @uses ps_query()
 * 
 * @param integer $ref - resource id being updated
 * @param array $fields - resource $fields array
