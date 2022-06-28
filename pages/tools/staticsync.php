@@ -584,7 +584,6 @@ function ProcessFolder($folder)
                                             {
                                             $value = $modifiedval;
                                             }
-
                                         $field_info=get_resource_type_field($field);
                                         if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
@@ -616,23 +615,30 @@ function ProcessFolder($folder)
                                                     // replace any existing value the array 
                                                     $field_nodes[$field]   = $newnodes;
                                                     }
-                                                }                                            
+                                                }
                                             }
                                         else
                                             {
                                             if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                 {
                                                 $given_value=$value;
-                                                // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
-                                                if(in_array($field_info['type'],array(0,1,4,5,6,8)))
+                                                // Append the values if possible
+                                                if(in_array($field_info['type'],
+                                                        [
+                                                        FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+                                                        FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+                                                        FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+                                                        FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+                                                        FIELD_TYPE_DATE,FIELD_TYPE_WARNING_MESSAGE,
+                                                        ]))
                                                     {
-                                                    $old_value=ps_value("select value value from resource_data where resource=? and resource_type_field=?",array("i",$r,"i",$field), "");
-                                                    $value=append_field_value($field_info,$value,$old_value);
+                                                    $existing_value  = get_data_by_field($r,$field);
+                                                    $value      = $existing_value . " " . $value;
+                                                    update_field($r,$field,$value);
                                                     }
                                                 }
-                                            update_field ($r, $field, $value);
 
-                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
+                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field, $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
                                                 {
                                                 $value=$given_value;
                                                 }
@@ -642,9 +648,8 @@ function ProcessFolder($folder)
                                             $joins = get_resource_table_joins();
                                             if(in_array($field_info['ref'], $joins) && is_numeric($field_info['ref']))
                                                 {
-                                                ps_query("UPDATE resource SET field{$field_info['ref']} = ? WHERE ref = ?", ['s', truncate_join_field_value($value), 'i', $r]);
+                                                update_resource_field_column($r,$field,$value);
                                                 }
-                                        
                                         echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
                                         }
                                     }
@@ -945,7 +950,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         if($ref=="")
             {
             //Primary resource file may have been ingested on a previous run - try to locate it
-            $ingested = ps_array("SELECT resource value FROM resource_data WHERE resource_type_field= ? AND value LIKE CONCAT( ?, '%')", ['i', $filename_field, 's', $altbasename]);
+            $ingested = ps_array("SELECT resource value FROM resource_node LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ? AND value LIKE ?",["i",$filename_field,"s",$altbasename . "%"]);
             
             if(count($ingested) < 1)
                 {

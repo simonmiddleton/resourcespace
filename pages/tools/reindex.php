@@ -2,8 +2,7 @@
 #
 # Reindex.php
 #
-#
-# Reindexes the resource metadata. This should be unnecessary unless the resource_keyword table has been corrupted.
+# Reindexes all nodes. This should be unnecessary unless the node_keyword table has been corrupted.
 #
 
 include "../../include/db.php";
@@ -12,23 +11,17 @@ if (!(PHP_SAPI == 'cli'))
 	{
 	include "../../include/authenticate.php";
 	if (!checkperm("a")) {exit("Permission denied");}
-	$start = getvalescaped('ref', 0, true);
-	$end   = getvalescaped('end', 0, true);
+	$indexfield = getvalescaped('field', 0, true);
 	}
-elseif(isset($argv[1]) && is_numeric($argv[1]))
+elseif(isset($argv[1]) && is_int_loose($argv[1]))
 	{
-    $start = $argv[1];
-	if(isset($argv[2]) && is_numeric($argv[2])){$end   = $argv[2];} else {$end  =0;}
+    $indexfield= $argv[1];
+    if (isset($argv[2]) && $argv[2]=="nodebug")
+        {
+        $debug_log=false; // This will hobble performance 
+        }
 	}
-else{
-    $start=0;
-    $end=0;
-}
 	
-
-
-include_once "../../include/image_processing.php";
-
 // Disable sql_logging
 $mysql_log_transactions=false;
 
@@ -37,52 +30,54 @@ $params = [];
 
 set_time_limit(0);
 echo "<pre>" . PHP_EOL;
-
-if(isset($start))    {
-    $sql= "where r.ref>= ?"; $params[] = 'i'; $params[] = $start;
-	if(isset($end))
-		{
-		$sql.= " and r.ref<= ?"; $params[] = 'i'; $params[] = $end;
-		}
-    }	
-
-// Re-index only one resource
-if(0 < $start && 0 == $end)
-    {
-    $sql = "WHERE r.ref = ?"; $params[] = 'i'; $params[] = $start;
-    }
-	
-$resources = ps_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref", $params);
-
+$time_start = microtime(true);
 $time_start = microtime(true);
 
-for($n = 0; $n < count($resources); $n++)
+// Reindex nodes, by field to minimise chance of memory issues
+$allfields = get_resource_type_fields();
+foreach($allfields as $field)
     {
-    $ref = $resources[$n]['ref'];
+    if(isset($indexfield) && $indexfield != $field["ref"])
+        {
+        continue;
+        }
+    if(PHP_SAPI == 'cli')
+        {
+        echo "Indexing nodes for field# " . $field["ref"] . " (" . $field["title"] . ")\n";
+        }
+    // node query
+    $query = "SELECT n.ref, n.name, n.resource_type_field, f.partial_index FROM node n JOIN resource_type_field f ON n.resource_type_field=f.ref WHERE n.resource_type_field = ?";
+    $params = ["i",$field["ref"]];    
+    
+    $nodes=ps_query($query,$params);
+    $count=count($nodes);
 
-    reindex_resource($ref);
+    echo "Found " . $count . " nodes for field #" . $field["ref"] . " (" . $field["title"] . ")\n";
+    $start = 0;
+    $batchsize = 100;
+    $indexed = 0;
 
-    $words = ps_value("SELECT count(*) `value` FROM resource_keyword WHERE resource = ?", array("i",$ref), 0);
-
-    echo "Done {$ref} ({$n}/" . count($resources) . ") - $words words<br />" . PHP_EOL;
-
-
-    @flush();
-    @ob_flush();
+    while($indexed < $count)
+        {
+        db_begin_transaction("reindex_field_nodes");
+        for($n=$start;$n<($start + $batchsize) && $indexed < $count;$n++)
+            {
+            // Populate node_keyword table
+            remove_all_node_keyword_mappings($nodes[$n]['ref']);
+            add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
+            $indexed ++;
+            }
+        db_end_transaction("reindex_field_nodes");
+        if(PHP_SAPI == 'cli')
+            {
+            echo round(($indexed/$count*100),2) . "% completed " . $indexed . "/" . $count . " nodes for field #" . $field["ref"] . " (" . $field["title"] . ")\n";
+            ob_flush();
+            }
+        $start += $batchsize;
+        }
     }
 
-    
-// Reindex nodes
-$nodes=ps_query("select n.ref, n.name, n.resource_type_field, f.partial_index from node n join resource_type_field f on n.resource_type_field=f.ref order by resource_type_field;");
-$count=count($nodes);
-for($n=0;$n<$count;$n++)
-		{
-		// Populate node_keyword table
-        remove_all_node_keyword_mappings($nodes[$n]['ref']);
-        add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
-        }
-
-
+$time_end = microtime(true);
 $time_end = microtime(true);
 $time     = $time_end - $time_start;
 

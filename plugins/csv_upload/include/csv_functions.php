@@ -19,7 +19,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     {
     // Ensure /r line endings (such as those created in MS Excel) are handled correctly
     $save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
-    global $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $userref,$username,
+    global $NODE_MIGRATED_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES, $userref,$username,
     $category_tree_add_parents, $mysql_verbatim_queries, $baseurl, $scramble_key, $lang,
     $search_all_workflow_states;
     
@@ -576,7 +576,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
             // Check for multiple options
             // cell value may be a series of values, but not for radio or drop down types
-            if(in_array($field_type, $NODE_FIELDS) && !in_array($field_type,array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS))) 
+            if(!in_array($field_type, $NODE_MIGRATED_FIELD_TYPES) && !in_array($field_type,array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS))) 
                     {
                     // Replace curly quotes with standard quotes and use split_keywords() to get separate entries
                     $cell_value_array = str_getcsv($cell_value);
@@ -604,7 +604,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     }
 
                 #if the field type has options and the value is not in the current option list:
-                if (in_array($field_type,$NODE_FIELDS))
+                if (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
                     {
                     // Check nodes are valid for this field, remove quotes 
                     //echo "Checking for '" . htmlspecialchars($cell_value_item) . "' in ('" . implode("','",$currentoptions) . "')<br/>";

@@ -29,9 +29,9 @@ function get_request($request)
 /**
  * Fetch a list of all requests for a user
  *
- * @param  boolean $excludecompleted  Exclude requests that have already been completed
- * @param  mixed $returnsql Return the SQL for the execution rather than the results
- * @return void
+ * @param  bool $excludecompleted  Exclude requests that have already been completed
+ * @param  bool $returnsql Return the SQL for the execution rather than the results
+ * @return mixed 
  */
 function get_user_requests($excludecompleted=false,$returnsql=false)
     {

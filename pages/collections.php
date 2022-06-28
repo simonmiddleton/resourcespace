@@ -509,69 +509,67 @@ if ($add!="")
             }
         }
 
-	if($allowadd)
-		{
-		foreach ($addarray as $add)
-			{
-			hook("preaddtocollection");
-			#add to current collection		
-			if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getvalescaped("size",""))==false)
-				{ ?>
-				<script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
-				}
-			else
-				{		
-				# Log this	
-				daily_stat("Add resource to collection",$add);
-			
-				# Update resource/keyword kit count
-				if ((strpos($search,"!")===false) && ($search!="")) {update_resource_keyword_hitcount($add,$search);}
-				hook("postaddtocollection");
-				}
-			}
-		# Show warning?
-		if (isset($collection_share_warning) && $collection_share_warning)
-			{
-			?><script language="Javascript">alert("<?php echo $lang["sharedcollectionaddwarning"]?>");</script><?php
-			}
-		}
-	}
+    if($allowadd)
+        {
+        foreach ($addarray as $add)
+            {
+            hook("preaddtocollection");
+            #add to current collection		
+            if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getvalescaped("size",""))==false)
+                { ?>
+                <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+                }
+            else
+                {		
+                # Log this	
+                daily_stat("Add resource to collection",$add);
+                hook("postaddtocollection");
+                }
+            }
+            
+        # Show warning?
+        if (isset($collection_share_warning) && $collection_share_warning)
+            {
+            ?><script language="Javascript">alert("<?php echo $lang["sharedcollectionaddwarning"]?>");</script><?php
+            }
+        }
+    }
 
 $remove=getvalescaped("remove","");
 if ($remove!="")
-	{
-	// If we provide a collection ID use that one instead
-	$from_collection = getvalescaped('fromCollection', '');
+    {
+    // If we provide a collection ID use that one instead
+    $from_collection = getvalescaped('fromCollection', '');
 
-	if(strpos($remove,",")>0)
-		{
-		$removearray=explode(",",$remove);
-		}
-	else
-		{
-		$removearray[0]=$remove;
-		unset($remove);
-		}	
-	foreach ($removearray as $remove)
-		{
-		hook("preremovefromcollection");
-		#remove from current collection
-		if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
-			{
-			?><script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
-			}
-		else
-			{
-			# Log this	
-			daily_stat("Removed resource from collection",$remove);		
-			hook("postremovefromcollection");
-			}
-		}
-	}
-	
+    if(strpos($remove,",")>0)
+        {
+        $removearray=explode(",",$remove);
+        }
+    else
+        {
+        $removearray[0]=$remove;
+        unset($remove);
+        }	
+    foreach ($removearray as $remove)
+        {
+        hook("preremovefromcollection");
+        #remove from current collection
+        if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
+            {
+            ?><script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+            }
+        else
+            {
+            # Log this	
+            daily_stat("Removed resource from collection",$remove);
+            hook("postremovefromcollection");
+            }
+        }
+    }
+
 $addsearch=getvalescaped("addsearch",-1);
 if ($addsearch!=-1)
-	{
+    {
     /*
     When adding search default collection sort should be relevance to address multiple types of searches. If collection
     is used then it will error if user did a simple search and not a !collection search since there is no collection
@@ -589,61 +587,61 @@ if ($addsearch!=-1)
         {
         hook("preaddsearch");
         $externalkeys=get_collection_external_access($usercollection);
-		if(checkperm("noex") && count($externalkeys)>0)
-			{
-			// If collection has been shared externally users with this permission can't add resources			
+        if(checkperm("noex") && count($externalkeys)>0)
+            {
+            // If collection has been shared externally users with this permission can't add resources
             ?>
             <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
             <?php
-			}
-		else
-			{		
-			if (getval("mode","")=="")
-				{
-				#add saved search
-				add_saved_search($usercollection);
+            }
+        else
+            {		
+            if (getval("mode","")=="")
+                {
+                #add saved search
+                add_saved_search($usercollection);
 
-				# Log this
-				daily_stat("Add saved search to collection",0);
-				}
-			else
-				{
-				#add saved search (the items themselves rather than just the query)
-				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access);
-				if (!empty($resourcesnotadded))
-					{
-					$warningtext="";
-					if(isset($resourcesnotadded["blockedtypes"]))
-						{
-						// There are resource types blocked due to $collection_block_restypes
-						$warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
-						//$restypes=get_resource_types(implode(",",$collection_block_restypes));
-						$blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
-						foreach($blocked_types as $blocked_type)
-							{
-							if($warningtext==""){$warningtext.="<ul>";}
-							$warningtext.= "<li>" . $blocked_type["name"] . "</li>";
-							}
-						$warningtext.="</ul>";
-						unset($resourcesnotadded["blockedtypes"]);
-						}
-				
-					if (!empty($resourcesnotadded))	
-						{
-						// There are resources blocked from being added due to archive state
-						if($warningtext==""){$warningtext.="<br /><br />";}
-						$warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
-						}
-			
-					?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
-					}
-				# Log this
-				daily_stat("Add saved search items to collection",0);
-				}
-			hook("postaddsearch");
-			}
-		}
-	}
+                # Log this
+                daily_stat("Add saved search to collection",0);
+                }
+            else
+                {
+                #add saved search (the items themselves rather than just the query)
+                $resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access);
+                if (!empty($resourcesnotadded))
+                    {
+                    $warningtext="";
+                    if(isset($resourcesnotadded["blockedtypes"]))
+                        {
+                        // There are resource types blocked due to $collection_block_restypes
+                        $warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
+                        //$restypes=get_resource_types(implode(",",$collection_block_restypes));
+                        $blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
+                        foreach($blocked_types as $blocked_type)
+                            {
+                            if($warningtext==""){$warningtext.="<ul>";}
+                            $warningtext.= "<li>" . $blocked_type["name"] . "</li>";
+                            }
+                        $warningtext.="</ul>";
+                        unset($resourcesnotadded["blockedtypes"]);
+                        }
+                
+                    if (!empty($resourcesnotadded))
+                        {
+                        // There are resources blocked from being added due to archive state
+                        if($warningtext==""){$warningtext.="<br /><br />";}
+                        $warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
+                        }
+
+                    ?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
+                    }
+                # Log this
+                daily_stat("Add saved search items to collection",0);
+                }
+            hook("postaddsearch");
+            }
+        }
+    }
 
 $removesearch=getvalescaped("removesearch","");
 if ($removesearch!="")
@@ -659,19 +657,18 @@ if ($removesearch!="")
         remove_saved_search($usercollection,$removesearch);
         hook("postremovesearch");
         }
-	}
+    }
 	
 $addsmartcollection=getvalescaped("addsmartcollection",-1);
 if ($addsmartcollection!=-1)
-	{
-	
-	# add collection which autopopulates with a saved search 
-	add_smart_collection();
-		
-	# Log this
-	daily_stat("Added smart collection",0);	
-	}
-	
+    {
+    # add collection which autopopulates with a saved search 
+    add_smart_collection();
+        
+    # Log this
+    daily_stat("Added smart collection",0);	
+    }
+
 $research=getvalescaped("research","");
 if ($research!="")
 	{

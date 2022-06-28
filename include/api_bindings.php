@@ -480,14 +480,14 @@ function api_get_user_collections()
     return get_user_collections($userref);
     }
     
-function api_add_resource_to_collection($resource,$collection='')
+function api_add_resource_to_collection($resource,$collection='',$search='')
     {
     global $usercollection;
     if($collection=='')
         {
         $collection = $usercollection;
         }
-    return add_resource_to_collection($resource,$collection);
+    return add_resource_to_collection($resource,$collection,false,'','',null,null,$search);
     }
     
 function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)

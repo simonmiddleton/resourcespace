@@ -231,10 +231,14 @@ if (getval("refreshcollectionframe","")!="")
 	refresh_collection_frame();
 	}
 
-# Update the hitcounts for the search keywords (if search specified)
+# Update the hitcounts for the search nodes (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
 $usearch= isset($_GET["search"]) ? $_GET["search"] : "";
-if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_hitcount($ref,$usearch);}
+# Update resource/node hit count
+if (strpos($usearch,NODE_TOKEN_PREFIX) !== false)
+    {
+    update_node_hitcount_from_search($ref,$usearch);
+    }
 
 # Log this activity
 daily_stat("Resource view",$ref);

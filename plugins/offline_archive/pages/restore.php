@@ -30,7 +30,7 @@ else
 if($valid==true)
     {
     $title_field="field".$view_title_field;
-    $resourcedetails=ps_query("select ref, $title_field, file_size from resource where ref in (". ps_param_insert(count($restoreresources)) . ")", ps_param_fill($restoreresources, 'i'));
+    $resourcedetails=ps_query("SELECT ref, $title_field, file_size FROM resource WHERE ref IN (". ps_param_insert(count($restoreresources)) . ")", ps_param_fill($restoreresources, 'i'));
 
     // Handle entered resources
     if(getval("restore_confirm","")!="")
@@ -84,7 +84,7 @@ if (isset($resulttext))
                     {
                     $ref=$resourcedetail['ref'];
                     $thumbpath=get_resource_path($ref,false,"col",false,"jpg");
-                    $archivecode=ps_value("select value from resource_data where resource=? and resource_type_field=?",array("i",$ref,"i",$offline_archive_archivefield), '');
+                    $archivecode = get_data_by_field($ref,$offline_archive_archivefield);
                     if($archivecode!=""){$codes[]=$archivecode;}
                     echo '<tr onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">
                     <td>

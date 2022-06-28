@@ -7,8 +7,7 @@ $src_fpath = get_temp_dir(false, 'test_000502') . "/{$src_filename}";
 $src_url = get_temp_dir(true, 'test_000502') . "/{$src_filename}";
 copy(dirname(__DIR__, 2) . '/gfx/homeanim/1.jpg', $src_fpath);
 
-
-if(temp_local_download_remote_file($src_url) !== false)
+if(temp_local_download_remote_file($src_url) === false)
     {
     echo 'Downloading from a bad URL - ';
     return false;

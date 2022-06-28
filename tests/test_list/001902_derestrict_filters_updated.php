@@ -18,6 +18,7 @@ function test_derestrict_filter_text_update($user,$group,$filtertext)
         ["s",$filtertext,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
+    $userdata = [$userdata];
     }
 
 function test_derestrict_filter_id_update($user,$group,$filterid)
@@ -27,6 +28,7 @@ function test_derestrict_filter_id_update($user,$group,$filterid)
     ps_query("UPDATE usergroup SET derestrict_filter_id=? WHERE ref=?",["i",$filterid,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
+    $userdata = [$userdata];
     }
 
 // Set permissions to restrict access to all resources
@@ -65,26 +67,9 @@ add_resource_nodes($resourced,array($apacnode, $sensitivenode));
 add_resource_nodes($resourcee,array($apacnode,$opennode));
 add_resource_nodes($resourcef,array($americasnode,$topsecretnode));
 
-// SUBTEST A: old style derestrict filter
-$search_filter_nodes = false;
+// SUBTEST A: old style derestrict filter migrated
 $userderestrictfilter = "classification=Open;region=EMEA";
 test_derestrict_filter_text_update($derestrictuser,$testderestrictgroup,$userderestrictfilter);
-
-$openaccessa = get_resource_access($resourcea) == 0;
-$openaccessb = get_resource_access($resourceb) == 0;
-$openaccessc = get_resource_access($resourcec) == 0;
-$openaccessd = get_resource_access($resourced) == 0;
-$openaccesse = get_resource_access($resourcee) == 0;
-$openaccessf = get_resource_access($resourcef) == 0;
-
-if($openaccessa || !$openaccessb || $openaccessc || $openaccessd || $openaccesse || $openaccessf)
-	{
-    echo "SUBTEST A";
-    return false;
-    }
-
-// SUBTEST B: old style derestrict filter migrated
-$search_filter_nodes = true;
 $migrateresult = migrate_filter($userderestrictfilter);
 test_derestrict_filter_id_update($derestrictuser,$testderestrictgroup,$migrateresult);
 
@@ -101,7 +86,6 @@ if($openaccessa || !$openaccessb || $openaccessc || $openaccessd || $openaccesse
     }
 
 // Reset saved settings
-$search_filter_nodes = $saved_search_filter_nodes;
 $userdata = $original_user_data;
 setup_user($original_user_data);
 

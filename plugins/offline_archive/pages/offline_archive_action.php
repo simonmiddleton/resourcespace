@@ -111,15 +111,8 @@ else
 		$extension=$pendingrestore["file_extension"];
         echo "Attempting to restore resource #" . $ref . "\n";
         
-        if(in_array($job_code_field['type'], $FIXED_LIST_FIELD_TYPES))
-            {
-            $archivecode=ps_value("SELECT n.name value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE rn.resource= ? AND n.resource_type_field= ?",['i', $ref, 'i', $offline_archive_archivefield],'');
-            }
-        else
-            {
-            $archivecode=ps_value("SELECT value FROM resource_data WHERE resource= ? AND resource_type_field= ?",['i', $ref, 'i', $offline_archive_archivefield],'');
-            }
-
+        
+		$archivecode = get_data_by_field($ref,$offline_archive_archivefield);
         if(trim($archivecode) == "")
             {
 			$restore_errors[]="Invalid archive code found\n";

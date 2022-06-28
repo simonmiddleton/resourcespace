@@ -145,13 +145,20 @@ if ($request !== false)
         # Show any warnings
         if (isset($warn_field_request_approval))
             {
-            $warnings=ps_query("select resource,value from resource_data where resource_type_field=? and length(value)>0 and resource in (select resource from collection_resource where collection=?) order by resource",array("i",$warn_field_request_approval,"i",$request["collection"]));
+            $warnings=ps_query("SELECT rn.resource,n.name
+                                  FROM collection_resource cr
+                            RIGHT JOIN resource_node rn ON cr.resource=rn.resource
+                            RIGHT JOIN node n ON n.ref=rn.node AND n.resource_type_field = ?
+                                 WHERE cr.collection = ?
+                              ORDER BY rn.resource",
+                              ["i",$warn_field_request_approval,"i",$request["collection"]]
+                            );
             foreach ($warnings as $warning)
                 { ?>
                 <div class="Question">
                     <div class="FormError">
                         <?php echo str_replace("%","<a onClick='return CentralSpaceLoad(this,true);' href=".$baseurl_short."pages/view.php?ref=" . $warning["resource"] . ">" . $warning["resource"] . "</a>",$lang["warningrequestapprovalfield"]) ?><br/>
-                        <?php echo $warning["value"] ?>
+                        <?php echo $warning["name"] ?>
                     </div>
                     <div class="clearerleft"></div>
                 </div>

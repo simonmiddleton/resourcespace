@@ -118,9 +118,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            ps_query("DELETE FROM resource_data WHERE resource= ?" . $staticsync_mod, ['i', $ref]);
             ps_query("DELETE FROM resource_node WHERE resource= ?" . $staticsync_mod, ['i', $ref]);
-            ps_query("DELETE FROM resource_keyword WHERE resource= ?" . $staticsync_mod, ['i', $ref]);
             # clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
             $display_fields=get_resource_table_joins();
             if ($staticsync_mod!="")
@@ -145,8 +143,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     }
                 }   
             ps_query("UPDATE resource SET " . $clear_fields . " WHERE ref= ?", ['i', $ref]);
-            #also add the ref back into keywords:
-            add_keyword_mappings($ref, $ref , -1);
             $extension=ps_value("SELECT file_extension value FROM resource WHERE ref=?",array("i",$ref), "");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;

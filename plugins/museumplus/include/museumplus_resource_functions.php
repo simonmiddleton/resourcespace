@@ -166,9 +166,6 @@ function mplus_resource_clear_metadata(array $refs)
     $ref_params = ps_param_fill($refs, 'i');
     $rtf_params = ps_param_fill($resource_type_fields, 'i');
 
-    ps_query("DELETE FROM resource_data WHERE resource IN (". ps_param_insert(count($refs)) .") AND resource_type_field IN (". ps_param_insert(count($resource_type_fields)) .")", 
-              array_merge($ref_params, $rtf_params)
-    );
     ps_query("DELETE rn FROM resource_node AS rn LEFT JOIN node AS n ON n.ref = rn.node LEFT JOIN resource_type_field AS rtf ON rtf.ref = n.resource_type_field 
               WHERE rn.resource IN (". ps_param_insert(count($refs)) .") AND rtf.ref IN (". ps_param_insert(count($resource_type_fields)) .")", 
               array_merge($ref_params, $rtf_params)

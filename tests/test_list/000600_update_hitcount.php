@@ -2,16 +2,17 @@
 command_line_only();
 
 # Also tests copy_hitcount_to_live() and get_resource_data()
+$resourcehit=create_resource(1,0);
 
 # Update the hit count
-update_hitcount(1);
-update_hitcount(1);
+update_hitcount($resourcehit);
+update_hitcount($resourcehit);
 
 # Transfer hit count data to live.
-copy_hitcount_to_live(1);
+copy_hitcount_to_live($resourcehit);
 
 # Read the resource data.
-$data=get_resource_data(1,false); # Fetch without caching.
+$data=get_resource_data($resourcehit,false); # Fetch without caching.
 
 # Should be a hit count of two now.
 return ($data["hit_count"]==2);

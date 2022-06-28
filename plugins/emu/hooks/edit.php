@@ -22,7 +22,7 @@ function HookEmuEditEditbeforesectionhead()
 
     if(0 > $ref && in_array($resource['resource_type'], $emu_resource_types))
         {
-        $value = htmlspecialchars(ps_value("SELECT `value` FROM resource_data WHERE resource = ? AND resource_type_field = ?", array("i",$ref,"i",$emu_irn_field), ''));
+        $value = htmlspecialchars(get_data_by_field($ref,$emu_irn_field));
         ?>
         <div id="question_emu" class="Question">
             <label for="question_emu"><?php echo $lang['emu_upload_emu_field_label']; ?></label>

@@ -2493,7 +2493,7 @@ $download_filename_id_only = false;
 # Required: $download_filename_id_only = true;
 $download_id_only_with_size = false;
 
-# Index the 'contributed by' field?
+# Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;
 
 # Use CKEditor for site content?
@@ -3124,13 +3124,6 @@ $ghostscript_extensions = array('ps', 'pdf');
 // Generate only the internal preview sizes and show only the original file for download for any of the 
 // extensions found in a merge of $non_image_types, $ffmpeg_supported_extensions, $unoconv_extensions and $ghostscript_extensions list
 $non_image_types_generate_preview_only = true;
-
-// Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
-// Once enabled the filters will gradually be updated as users search.
-// NOTE - from v9.3 onwards, enabling this will also update edit and derestrict filters to use the same filters
-// To update all the search filters immediately run upgrade/scripts/005_migrate_search_filters.php
-// To update edit and derestrict filters run upgrade/scripts/009_migrate_edit_derestrict_filters.php
-$search_filter_nodes = true;
 
 // Browse bar 
 // Enable/Disable browse bar - in system config

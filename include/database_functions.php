@@ -504,7 +504,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     # Try again (no dbstruct this time to prevent an endless loop)
                     return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
-                $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters);
+                $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters) . " - " . $db_connection->error;
                 errorhandler("N/A", $error, "(database)", "N/A");
                 exit();
                 }
@@ -715,7 +715,6 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             }
        }
     */
-
 
     return $result;        
     }
@@ -1423,13 +1422,13 @@ function CheckDBStruct($path,$verbose=false)
                                     # Check the column is of the correct type
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$basecoltype,$matchbase);
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$existingcoltype,$matchexisting);
+
                                     // Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
                                     // - If column is of same type but smaller number, update
                                     // - If target column is of type text, update
                                     // - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
                                     // - If target column is of type mediumtext and currently is text, update
                                     // - If target column is of type longtext and currently is text
-
                                     if(
                                         (count($matchbase) == 3 && count($matchexisting) == 3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
                                         || (stripos($basecoltype, "text") !== false && stripos($existingcoltype, "text") === false)

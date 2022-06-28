@@ -645,19 +645,16 @@ if ($processupload)
                 if($success && $auto_generated_resource_title_format != '' && !$upload_then_edit)
                     {
                     $new_auto_generated_title = '';
-                    $ref_escaped = escape_check($ref);
 
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
-                        $view_title_field_escaped = escape_check($view_title_field);
-
-                        $resource_detail = sql_query ("
-                            SELECT r.ref, r.file_extension, rd.value
-                            FROM resource r
-                            LEFT JOIN resource_data AS rd ON r.ref = rd.resource
-                            AND rd.resource_type_field = '{$view_title_field_escaped}'
-                            WHERE r.ref = '{$ref_escaped}'
-                                        ");
+                        $resource_detail = ps_query ("
+                            SELECT r.ref, r.file_extension, n.value
+                              FROM resource r
+                         LEFT JOIN resource_node rn ON rn.resource=r.ref 
+                         LEFT JOIN node n ON N.ref=rn.node 
+                             WHERE n.resource_type_field = ? AND r.ref= ?",
+                                ["i",$view_title_field,"i",$ref]);
 
                         $new_auto_generated_title = str_replace(
                             array('%title', '%resource', '%extension'),
@@ -670,10 +667,10 @@ if ($processupload)
                         }
                     else
                         {
-                        $resource_detail = sql_query ("
-                                SELECT r.ref, r.file_extension
-                                FROM resource r
-                                WHERE r.ref = '{$ref_escaped}'");
+                        $resource_detail = ps_query ("
+                            SELECT r.ref, r.file_extension FROM resource r WHERE r.ref = ?",
+                            ["i",$ref]
+                            );
 
                         $new_auto_generated_title = str_replace(
                             array('%resource', '%extension'),
@@ -752,16 +749,19 @@ if ($processupload)
             $filename_field=getvalescaped("filename_field",0,true);
             if($filename_field != 0)
                 {
-                $target_resource=ps_array("
-                    select resource value from resource_data where resource_type_field = ? and value = ? AND resource > ?
-                    union
-                    select resource value from resource_node rn join node n on rn.node = n.ref where n.resource_type_field = ? and name = ? and resource > ?", 
-                    ['i', $filename_field, 
-                     's', $origuploadedfilename,
-                     'i', $fstemplate_alt_threshold,
-                     'i', $filename_field, 
-                     's', $origuploadedfilename, 
-                     'i', $fstemplate_alt_threshold],"");
+                $target_resource = ps_array(
+                    'SELECT resource value
+                       FROM resource_node AS rn
+                       JOIN node AS n ON rn.node = n.ref
+                      WHERE n.resource_type_field = ?
+                        AND name = ?
+                        AND resource > ?', 
+                    [
+                        'i', $filename_field, 
+                        's', $origuploadedfilename, 
+                        'i', $fstemplate_alt_threshold
+                    ]
+                );
                 $target_resourceDebug = $target_resource;
                 $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);

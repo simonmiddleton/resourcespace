@@ -16,16 +16,14 @@ if (!in_array("annotate",$plugins))
     exit($lang["error-plugin-not-activated"]);
     }
 
-$id=getvalescaped('id','');
-$oldtext=ps_value("select note value from annotate_notes where ref= ? and note_id= ?",['i', $ref, 'i', $id],"");
-
-if ($oldtext!="")
+$id=getval('id',0,true);
+$oldtextnode=ps_value("SELECT node value FROM annotate_notes WHERE ref= ? AND note_id= ?",['i', $ref, 'i', $id],"");
+if ($oldtextnode > 0)
     {
-	remove_keyword_mappings($ref,i18n_get_indexable($oldtext),-1,false,false,"annotation_ref",$id);
-	debug("Annotation: deleting keyword: " . i18n_get_indexable($oldtext). " from resource id: " . $ref);
+    check_delete_nodes([$oldtextnode]);
     }
 
-$notes=ps_query("delete from annotate_notes where ref= ? and note_id= ?", ['i', $ref, 'i', $id]);
-$notes=ps_query("select * from annotate_notes where ref= ?", ['i', $ref]);
-ps_query("update resource set annotation_count= ? where ref= ?", ['i', count($notes), 'i', $ref]);
+$notes=ps_query("DELETE FROM annotate_notes WHERE ref= ? AND note_id= ?", ['i', $ref, 'i', $id]);
+$notes=ps_query("SELECT COUNT(note_id) FROM annotate_notes WHERE ref= ?", ['i', $ref]);
+ps_query("UPDATE resource SET annotation_count= ? WHERE ref= ?", ['i', count($notes), 'i', $ref]);
 

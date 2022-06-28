@@ -1926,12 +1926,18 @@ function display_field($n, $field, $newtab=false,$modal=false)
         ?>
         <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
         <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo $lang["edit_copy_from_field"]?></option>
-        <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
         <?php
+        if(!$multilingual_text_fields)
+            {
+            // Prepending text doesn't work wih multilingual fields
+            ?>
+            <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
+            <?php
+            }
         }
-      if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
+      if((in_array($field['type'], $TEXT_FIELD_TYPES) && !$multilingual_text_fields) || in_array($field['type'], [FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]))
         {
-        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields only.
+        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields onl.
         ?>
         <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
         <?php
@@ -2095,7 +2101,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
                     }
 
                 $field_nodes[] = $selected_node;
-				natsort($field_nodes);
                 unset($node_data);
 				}
 
@@ -2210,49 +2215,51 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
 	
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
-	{
-	$found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
-	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
-	if($forsearch)
-		{
-		// Get the start/end date from the string
-		$startvalue=strpos($value,"start")!==false?substr($value,strpos($value,"start")+5,10):"";
-		$endvalue=strpos($value,"end")!==false?substr($value,strpos($value,"end")+3,10):"";
-		}
-	else
-		{
-		if($value!="" && strpos($value,",")!==false)
-			{
-			// Extract the start date from the value obtained from get_resource_field_data
-			$rangevalues = explode(",",$value);
-			$startvalue = $rangevalues[0];
-			$endvalue = $rangevalues[1];
-			}
-		elseif(strlen($value)==10 && strpos($value,"-") !==  false)
-			{
-			$startvalue = $value;
-			$endvalue = "";
-			}
-		else
-			{
-			$startvalue = "";
-			$endvalue = "";
-			}
-		}
+    {
+    $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
+    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
+    if($forsearch)
+        {
+        // Get the start/end date from the string
+        $startpos   = strpos($value,"start");
+        $endpos     = strpos($value,"end");
+        $startvalue = $startpos !== false ? substr($value,$startpos+5,($endpos ? ($endpos - ($startpos + 5)) : NULL)) : "";
+        $endvalue   = $endpos !== false ? substr($value,strpos($value,"end")+3,10) : "";
+        }
+    else
+        {
+        if($value!="" && strpos($value,",")!==false)
+            {
+            // Extract the start date from the value obtained from get_resource_field_data
+            $rangevalues = explode(",",$value);
+            $startvalue = $rangevalues[0];
+            $endvalue = $rangevalues[1];
+            }
+        elseif(strlen($value)==10 && strpos($value,"-") !==  false)
+            {
+            $startvalue = $value;
+            $endvalue = "";
+            }
+        else
+            {
+            $startvalue = "";
+            $endvalue = "";
+            }
+        }
 				
 	$ss=explode("-",$startvalue);
-	if (count($ss)>=3)
+	if (count($ss)>=1)
 		{
-		$found_start_year=$ss[0];
-		$found_start_month=$ss[1];
-		$found_start_day=$ss[2];
+		$found_start_year   = $ss[0] ?? "";
+		$found_start_month  = $ss[1] ?? "";
+		$found_start_day    = $ss[2] ?? "";
 		}
 	$se=explode("-",$endvalue);
-	if (count($se)>=3)
+	if (count($se)>=1)
 		{
-		$found_end_year=$se[0];
-		$found_end_month=$se[1];
-		$found_end_day=$se[2];
+		$found_end_year     = $se[0] ?? "";
+		$found_end_month    = $se[1] ?? "";
+		$found_end_day      = $se[2] ?? "";
 		}
         
     // If the form has been submitted (but not reset) but data was not saved get the submitted values   
@@ -4076,45 +4083,12 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
 	$value=$field["value"];
     $title=htmlspecialchars($field["title"]);
-    # Populate field value for node based fields so it conforms to automatic ordering setting
-
-    if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
-        {
-        $treenodes = get_resource_nodes($ref, $field["ref"], true);
-        $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(", ",$treetext_arr);        
-        }
-    elseif(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
-		{
-		# Get all nodes attached to this resource and this field    
-		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);
-		
-		if((bool) $field['automatic_nodes_ordering'])
-			{
-			uasort($nodes_in_sequence,"node_name_comparator");    
-			}
-		else
-			{
-			uasort($nodes_in_sequence,"node_orderby_comparator");    
-			}
-	
-		$node_tree = get_node_tree("", $nodes_in_sequence); // get nodes as a tree in correct hierarchical order
-		$node_names = get_node_elements(array(), $node_tree, "name"); // retrieve values for a selected field in the tree 
-
-		$keyword_array=array();
-		foreach($node_names as $name)
-			{
-			$keyword_array[] = i18n_get_translated($name);
-			}
-		$value = implode(',',$keyword_array);
-		}
-
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
     if($modified_field)
         {
 		$field=$modified_field;
 	    }
-	
+
     $warningtext="";
     $dismisstext="";
     $dismisslink="";
@@ -4175,11 +4149,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$value=implode($range_separator,$rangedates);
 		}
 	
-    if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_DROP_DOWN_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))
+        if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
         {
-        $value=TidyList($value);
+        $treenodes = get_resource_nodes($ref, $field["ref"], true);
+        $treetext_arr = get_tree_strings($treenodes);
+        $value = implode(", ",$treetext_arr);        
         }
-	
+    
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
 		if (!$valueonly)

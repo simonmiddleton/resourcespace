@@ -86,6 +86,7 @@ for ($n=0;$n<$totalresources;$n++)
         }
 
 
+
     # The following tables are not subjected to the renumbering process and were never intended to because this is a one-off script:-
     # collection_log, resource
     # external_access_keys, resource

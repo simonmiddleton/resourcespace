@@ -48,5 +48,6 @@ catch(Throwable $e)
     $case1 = true;
     }
 if (!$case1){echo "FAIL - subtest 1 ";return false;}
+$GLOBALS["use_error_exception"]=false;
 
 return true;

@@ -33,12 +33,6 @@ echo number_format(sql_affected_rows()) . " orphaned external access keys delete
 ps_query("DELETE FROM ip_lockout");
 echo number_format(sql_affected_rows()) . " IP address lock-outs deleted." . $newline;
 
-ps_query("DELETE FROM resource_keyword WHERE resource NOT IN (SELECT ref FROM resource)");
-echo number_format(sql_affected_rows()) . " orphaned resource-keyword relationships deleted." . $newline;
-
-ps_query("DELETE FROM keyword WHERE ref NOT IN (SELECT keyword FROM resource_keyword) AND ref NOT IN (SELECT keyword FROM keyword_related) AND ref NOT IN (SELECT related FROM keyword_related) AND ref NOT IN (SELECT keyword FROM collection_keyword)");
-echo number_format(sql_affected_rows()) . " unused keywords deleted." . $newline;
-
 ps_query("DELETE FROM resource_alt_files WHERE resource NOT IN (SELECT ref FROM resource)");
 echo number_format(sql_affected_rows()) . " orphaned alternative files deleted." . $newline;
 
@@ -60,24 +54,7 @@ echo number_format(sql_affected_rows()) . " orphaned fields deleted." . $newline
 ps_query("DELETE FROM user_collection WHERE user NOT IN (SELECT ref FROM user) OR collection NOT IN (SELECT ref FROM collection)");
 echo number_format(sql_affected_rows()) . " orphaned user-collection relationships deleted." . $newline;
 
-ps_query("DELETE FROM resource_data WHERE resource NOT IN (SELECT ref FROM resource) OR resource_type_field NOT IN (SELECT ref FROM resource_type_field)");
-echo number_format(sql_affected_rows()) . " orphaned resource data rows deleted." . $newline;
-
-# Clean out and resource data that is set for fields not applicable to a given resource type.
-$r = get_resource_types();
-for ($n=0;$n<count($r);$n++)
-    {
-    $rt = $r[$n]["ref"];
-    $fields = ps_array("SELECT ref value FROM resource_type_field WHERE resource_type=0 OR resource_type=999 OR resource_type=?",array("i",$rt));
-    if (count($fields) > 0)
-        {
-        $params=
-        ps_query("DELETE FROM resource_data WHERE resource in (SELECT ref FROM resource WHERE resource_type=?) AND resource_type_field NOT IN (" . ps_param_insert(count($fields)) . ")",array_merge(array("i",$rt),ps_param_fill($fields,"i")));
-
-        echo number_format(sql_affected_rows()) . " orphaned resource data rows deleted for resource type $rt." . $newline;
-        }
-    }
+remove_invalid_node_keyword_mappings();
+echo number_format(sql_affected_rows()) . " orphaned node-keyword relationships deleted." . $newline;
 
 hook("dbprune");
-
-?>

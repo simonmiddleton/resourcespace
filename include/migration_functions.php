@@ -105,6 +105,7 @@ function migrate_category_tree_to_nodes($resource_type_field_ref,$category_tree_
 
 function migrate_filter($filtertext,$allowpartialmigration=false)
     {
+    global $FIXED_LIST_FIELD_TYPES;
     if(trim($filtertext) == "")
         {
         return false;
@@ -173,6 +174,13 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
             $field_ref = $all_fields[$all_fields_index]["ref"];
             $field_type = $all_fields[$all_fields_index]["type"];
             $logtext .= "FILTER MIGRATION: --- filter field name: '" . $rulefield. "' , field id #" . $field_ref . "\n";
+
+            if(!in_array($field_type,$FIXED_LIST_FIELD_TYPES))
+                {
+                $errors[] = "Invalid field  '" . $field_ref . "' specified for rule: '" . $filtertext . "', skipping"; 
+                $logtext .=  "FILTER MIGRATION: --- Invalid field  '" . $field_ref . "', skipping\n";
+                continue;
+                }
 
             $field_nodes = get_nodes($field_ref, NULL, (FIELD_TYPE_CATEGORY_TREE == $field_type ? true : false));
             $all_valid_nodes = array_merge($all_valid_nodes,$field_nodes);

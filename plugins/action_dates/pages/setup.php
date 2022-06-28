@@ -10,8 +10,8 @@ global $resource_deletion_state;
 
 $plugin_name = 'action_dates';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
-	
+    {plugin_activate_for_setup($plugin_name);}
+
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'action_dates';
 $plugin_page_heading = $lang['action_dates_configuration'];
@@ -26,7 +26,6 @@ foreach(get_editable_states($userref) as $archive_state)
         $editable_states_less_deleted[$archive_state['id']] = $archive_state['name'];
         }
     }
-
 
 $allowable_fields = get_resource_type_fields('','order_by','asc','',$DATE_FIELD_TYPES);
 if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(false))
@@ -47,10 +46,10 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     // Get the extra rows fom the table
     $action_date_extra_fields     = getvalescaped('action_dates_extra_field',array());
     $action_date_extra_statuses   = getvalescaped('action_dates_extra_status',array());
-    	
-    $action_dates_extra_config = array();	
+
+    $action_dates_extra_config = array();
     $mappingcount=0;
-    
+
     // Store the extra config in a new array
     for ($i=0; $i < count($action_date_extra_fields); $i++)
         {
@@ -60,14 +59,13 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
             $action_dates_extra_config[$mappingcount]["field"] = (int)$action_date_extra_fields[$i];
             $action_dates_extra_config[$mappingcount]["status"] = (int)$action_date_extra_statuses[$i];
             $mappingcount++;
-            }			
-        }    
+            }
+        }
     $action_dates_config["action_dates_extra_config"] = $action_dates_extra_config;
-
     set_plugin_config("action_dates",$action_dates_config);
+    // Refresh config
     include_plugin_config("action_dates","",json_encode($action_dates_config));
     }
-   
 
 if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
 
@@ -117,8 +115,8 @@ foreach($action_dates_extra_config as $action_dates_extra_config)
                     }
                 $page_def_extra .=  ">" . $allowable_field['title'] . "</option>\n";
                 }
-    
-        $page_def_extra .= "         
+
+        $page_def_extra .= "
         </select>
         </td>
         <td>
@@ -225,8 +223,7 @@ foreach ($page_def as $def)
 // Do the page generation ritual -- don't change this section.
 
 // Note that config_gen_setup_post() is not used as it cannot process $action_dates_extra_config array
-// $upload_status = config_gen_setup_post($page_def, $plugin_name);
-
+//$upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, true, $plugin_page_heading);
 

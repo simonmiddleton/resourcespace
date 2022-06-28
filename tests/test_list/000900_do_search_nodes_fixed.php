@@ -31,6 +31,7 @@ add_resource_nodes($resourcec,array($johnnynode));
 // straight search of ref
 debug("searching for resource by ref " . $resourcea );
 $results=do_search($resourcea);
+
 if(!isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
 debug("Successfully searched for resource by resource id");
 
@@ -75,11 +76,6 @@ $results=do_search('"Dee Dee"');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
 debug("Successfully searched for resources with quoted node string");
 
-// Check that adding nodes to resource does not add anything to resource keyword
-$fixedfields=ps_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")",array());
-$kwcount = ps_value("select count(*) value from resource_keyword where resource_type_field in (" . ps_param_insert(count($fixedfields)) . ")",ps_param_fill($fixedfields,"i"), 0);
-if($kwcount>0){echo "Adding nodes is populating resource_keyword"; return false;}
-
 // Add a node containing stop words and check nothing was indexed.
 $stop_list_check_node = set_node(NULL, 73, join(" ",$noadd),'',1000);
 if (ps_value("select count(*) value from node_keyword where node=?",array("i",$stop_list_check_node),0)>0) {echo "Kewords were indexed that are in the stop list.";print_r(ps_array("select keyword value from keyword where ref in (select keyword from node_keyword where node=?)",array("i",$stop_list_check_node),0));return false;}
@@ -103,9 +99,10 @@ else {$resource_field_verbatim_keyword_regex = $resource_field_verbatim_keyword_
 
 // Check that using update_field to add nodes to resource returns false
 $errors=array();
+$fixedfields=sql_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")");
 foreach($fixedfields as $fixedfield)
     {
-    update_field($resourcea,$fixedfield,'DUMMY STRING');
+    update_field($resourcea,$fixedfield,'DUMMY STRING', $errors);
     if(!is_array($errors)){echo "Using update_field should return false if updating a node field"; return false;}
     }
 
