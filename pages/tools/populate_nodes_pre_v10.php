@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include __DIR__ . "/../../include/db.php";
 if (PHP_SAPI != 'cli')
     {
     exit('Access denied - Command line only!');
