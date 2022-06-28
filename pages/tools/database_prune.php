@@ -33,9 +33,6 @@ echo number_format(sql_affected_rows()) . " orphaned external access keys delete
 ps_query("DELETE FROM ip_lockout");
 echo number_format(sql_affected_rows()) . " IP address lock-outs deleted." . $newline;
 
-ps_query("DELETE FROM keyword WHERE ref NOT IN (SELECT keyword FROM resource_keyword) AND ref NOT IN (SELECT keyword FROM keyword_related) AND ref NOT IN (SELECT related FROM keyword_related) AND ref NOT IN (SELECT keyword FROM collection_keyword)");
-echo number_format(sql_affected_rows()) . " unused keywords deleted." . $newline;
-
 ps_query("DELETE FROM resource_alt_files WHERE resource NOT IN (SELECT ref FROM resource)");
 echo number_format(sql_affected_rows()) . " orphaned alternative files deleted." . $newline;
 
