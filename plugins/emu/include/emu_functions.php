@@ -50,7 +50,7 @@ function get_emu_resources()
 
     $sql = "SELECT 
                    rn.resource AS resource,
-                   CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END AS object_irn,
+                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS object_irn,
                    max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS created_by_script_flag,
                    r.file_checksum
               FROM resource_node AS rn
