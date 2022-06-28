@@ -23,18 +23,6 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         {
         return false;
         }
-    
-    if(!is_null($parent))
-        {
-        if(is_int_loose($parent))
-            {
-            $parent = (int) $parent;
-            }
-        else 
-            {
-            return false;
-            }
-        }
 
     // Prevent the creation of duplicate nodes unless type is category tree and the nodes have different parents in the tree.
     $resource_type_field_data = get_resource_type_field($resource_type_field);
@@ -83,7 +71,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         (
         "i",$resource_type_field,
         "s",$name,
-        "i",$parent,
+        "i",(trim($parent)=="" ? NULL : $parent),
         "s",$order_by
         );
 
@@ -277,18 +265,6 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         return [];    
         }
 
-    if(!is_null($parent))
-        {
-        if(is_int_loose($parent))
-            {
-            $parent = (int) $parent;
-            }
-        else 
-            {
-            return false;
-            }
-        }
-
     $fieldinfo  = get_resource_type_field($resource_type_field);
     if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
         {
@@ -338,7 +314,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         }
   
 
-    $parent_sql = is_null($parent) ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
+    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
     if (strpos($parent_sql,"?")!==false) {$parameters[]="i";$parameters[]=$parent;}
     
     // Order by translated_name or order_by based on flag

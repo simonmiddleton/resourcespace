@@ -614,7 +614,7 @@ function get_usergroup($ref)
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
-        $return[0]["inherit"]=explode(",",trim($return[0]["inherit_flags"]??""));
+        $return[0]["inherit"]=explode(",",trim($return[0]["inherit_flags"]));
         return $return[0];
     }
 }
