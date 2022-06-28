@@ -57,7 +57,7 @@ if ($findtext!="")
 $consents=sql_query("select * from consent $sql order by ref");
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($consents);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

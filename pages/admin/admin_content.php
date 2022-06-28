@@ -57,7 +57,7 @@ echo empty($int_text)?"":"<p>".$int_text."</p>";
 $text=get_all_site_text($findpage, $findname,$findtext);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($text);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

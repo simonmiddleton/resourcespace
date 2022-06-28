@@ -65,7 +65,7 @@ if ($findtext!="")
 $licenses=ps_query("select * from license $sql order by ref", $params);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($licenses);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

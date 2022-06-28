@@ -49,7 +49,7 @@ if ($findtext!="")
 $reports=ps_query("select * from user_report where user= ? $search_sql order by ref", $params);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($reports);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

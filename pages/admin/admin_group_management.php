@@ -67,7 +67,7 @@ $groups=sql_query("
 );
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($groups);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
