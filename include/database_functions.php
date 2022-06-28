@@ -1427,6 +1427,7 @@ function CheckDBStruct($path,$verbose=false)
                                     // - If column is of same type but smaller number, update
                                     // - If target column is of type text, update
                                     // - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
+                                    // - If target column is of type mediumtext and currently is text, update
                                     // - If target column is of type longtext and currently is text
 
                                     if(
@@ -1438,6 +1439,7 @@ function CheckDBStruct($path,$verbose=false)
                                         && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT")
                                         )
                                         || (strtoupper(substr($basecoltype, 0, 7)) == "VARCHAR" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
+                                        || (strtoupper(substr($basecoltype, 0, 10)) == "MEDIUMTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
                                         || (strtoupper(substr($basecoltype, 0, 8)) == "LONGTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
                                         )
                                         {
