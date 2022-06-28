@@ -31,16 +31,16 @@ foreach($resource_type_fields as $resource_type_field)
     {
     $fref = $resource_type_field['ref'];
     $fname = $resource_type_field['name'];
-    
+
     $status = "Migrating resource_data for field #" . $fref . " (" . $fname . ")";
-    
+
     // get_nodes() can cause memory errors for non-fixed list fields so will get hash (a single md5 is too susceptible to collisions for large datasets) and compare on that
     $nodeinfo =  ps_query("SELECT ref, concat(MD5(name),MD5(CONCAT('!',name))) hash FROM node WHERE resource_type_field = ?" , ["i", $fref]);
     $allfieldnodes= array_column($nodeinfo,"ref","hash");
 
     $todorows = ps_query("SELECT MIN(resource) AS minref, MAX(resource) as maxref, count(resource) AS count FROM `resource_data` WHERE resource_type_field = ?",["i",$fref]);
     $totalrows  = $todorows[0]["count"] ?? 0;
-    $minref     = $todorows[0]["minref"] ?? 0;    
+    $minref     = $todorows[0]["minref"] ?? 0;
     $maxref     = $todorows[0]["maxref"] ?? 0;
     $out = " (" . $totalrows . " rows found)";
     logScript(str_pad($status . $out,100,' '));
@@ -51,7 +51,7 @@ foreach($resource_type_fields as $resource_type_field)
         {
        // Test performance improvement
         $rows = ps_query("SELECT rd.resource, rd.value
-                            FROM resource_data rd 
+                            FROM resource_data rd
                             JOIN (SELECT resource, resource_type_field FROM resource_data WHERE resource_type_field = ?) rd2
                               ON rd2.resource=rd.resource AND rd.resource_type_field=rd2.resource_type_field
                            WHERE rd.resource >= ? AND rd.resource < ?",
@@ -101,10 +101,10 @@ foreach($resource_type_fields as $resource_type_field)
                         }
                     else
                         {
-                        // Not using set_node() here as that will reindex node. 
+                        // Not using set_node() here as that will reindex node.
                         // The existing data from resource_keyword can be used instead to speed things up
                         $addnodequery = "INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES (?, ?, NULL, 0)";
-                        $parameters=array  
+                        $parameters=array
                             (
                             "i",$fref,
                             "s",$rowdata["value"],
@@ -115,7 +115,6 @@ foreach($resource_type_fields as $resource_type_field)
                         $copykeywordparams = ["i",$newnode,"i",$rowdata["resource"],"i", $fref];
                         ps_query($copykeywordquery,$copykeywordparams);
                         $allfieldnodes[md5($rowdata["value"]) . md5('!'. $rowdata["value"])] = $newnode;
-                        $resnodearr[$rowdata["resource"]][] = $newnode;
                         }
 
                     if(!isset($resnodearr[$rowdata["resource"]]) || !in_array($newnode,$resnodearr[$rowdata["resource"]]))
