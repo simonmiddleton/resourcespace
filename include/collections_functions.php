@@ -2527,7 +2527,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
             if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
                 {
                 ps_query("delete from collection_resource where resource=? and collection=?",array("i",$resource,"i",$collection));
-                ps_query("insert into collection_resource(resource,collection,sortorder) values (?,?,'$n')",array("i",$resource,"i",$collection,"s",$n));
+                ps_query("insert into collection_resource(resource,collection,sortorder) values (?,?,?)",array("i",$resource,"i",$collection,"s",$n));
                 
                 #log this
                 collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
