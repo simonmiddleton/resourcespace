@@ -749,16 +749,19 @@ if ($processupload)
             $filename_field=getvalescaped("filename_field",0,true);
             if($filename_field != 0)
                 {
-                $target_resource=ps_array("
-                    select resource value from resource_data where resource_type_field = ? and value = ? AND resource > ?
-                    union
-                    select resource value from resource_node rn join node n on rn.node = n.ref where n.resource_type_field = ? and name = ? and resource > ?", 
-                    ['i', $filename_field, 
-                     's', $origuploadedfilename,
-                     'i', $fstemplate_alt_threshold,
-                     'i', $filename_field, 
-                     's', $origuploadedfilename, 
-                     'i', $fstemplate_alt_threshold],"");
+                $target_resource = ps_array(
+                    'SELECT resource value
+                       FROM resource_node AS rn
+                       JOIN node AS n ON rn.node = n.ref
+                      WHERE n.resource_type_field = ?
+                        AND name = ?
+                        AND resource > ?', 
+                    [
+                        'i', $filename_field, 
+                        's', $origuploadedfilename, 
+                        'i', $fstemplate_alt_threshold
+                    ]
+                );
                 $target_resourceDebug = $target_resource;
                 $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);
