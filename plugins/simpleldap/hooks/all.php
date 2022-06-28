@@ -32,7 +32,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
         $addsuffix     = ($usersuffix=="") ? "" : (substr($usersuffix,0,1)=="." ? "" : ".") . $usersuffix;
         $username      = escape_check($uname . $addsuffix);
         $password_hash = rs_password_hash("RSLDAP" . $uname . $addsuffix . $pword);
-        $user          = sql_query("SELECT ref, approved, account_expires FROM user WHERE username = '{$username}'");
+        $user          = ps_query("SELECT ref, approved, account_expires FROM user WHERE username = ?", ['s', $username]);
 		
         $email         = escape_check($userinfo["email"]);
         $phone         = escape_check($userinfo["phone"]);
@@ -74,12 +74,29 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 			// user exists, so update info
 			if($simpleldap['update_group'])
 				{
-				sql_query("update user set origin='simpleldap', password = '$password_hash', usergroup = '$group', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
+				ps_query("update user set origin='simpleldap', password = ?, usergroup = ?, fullname= ?, email= ?, telephone= ? where ref = ?",
+                    [
+                    's', $password_hash,
+                    'i', $group,
+                    's', $displayname,
+                    's', $email,
+                    's', $phone,
+                    'i', $userid
+                    ]
+                );
 				
 				}
 			else
 				{
-				sql_query("update user set origin='simpleldap', password = '$password_hash', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
+				ps_query("update user set origin='simpleldap', password = ?, fullname= ?, email= ?, telephone= ? where ref = ?",
+                [
+                    's', $password_hash,
+                    's', $displayname,
+                    's', $email,
+                    's', $phone,
+                    'i', $userid
+                ]
+                );
 				}
 			return true;
 			}
@@ -88,7 +105,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 			// user authenticated, but does not exist, so adopt/create if necessary
 			if ($simpleldap['createusers'] || $simpleldap['create_new_match_email'])
 				{	
-				$email_matches=sql_query("select ref, username, fullname from user where email='" . $email . "'");				
+				$email_matches= ps_query("select ref, username, fullname from user where email= ?", ['s', $email]);				
 												
 				if(count($email_matches)>0)
 					{				
@@ -98,11 +115,32 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 						debug("LDAP - user authenticated with matching email for existing user . " . $email . ", updating user account " . $email_matches[0]["username"] . " to new username " . $username);
 						if($simpleldap['update_group'])
 							{
-							sql_query("update user set origin='simpleldap',username='$username', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments=concat(comments,'\n" . date("Y-m-d") . " " . $lang["simpleldap_usermatchcomment"] . "') where ref='" . $email_matches[0]["ref"] . "'");
+							ps_query("update user set origin='simpleldap',username= ?, password= ?, fullname= ?,email= ?,telephone= ?,usergroup= ?,comments=concat(comments,'\n', ?) where ref= ?",
+                                [
+                                's', $username,
+                                's', $password_hash,
+                                's', $displayname,
+                                's', $email,
+                                's', $phone,
+                                'i', $group,
+                                's', date("Y-m-d") . " " . $lang["simpleldap_usermatchcomment"] ,
+                                'i', $email_matches[0]["ref"]
+                                ]
+                            );
 							}
 						else
 							{
-							sql_query("update user set origin='simpleldap',username='$username', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',comments=concat(comments,'\n" . date("Y-m-d") . " Updated to LDAP user by SimpleLDAP.') where ref='" . $email_matches[0]["ref"] . "'");
+							ps_query("update user set origin='simpleldap',username= ?, password= ?, fullname= ?,email= ?,telephone= ?,comments=concat(comments,'\n', ?) where ref= ?",
+                                [
+                                's', $username,
+                                's', $password_hash,
+                                's', $displayname,
+                                's', $email,
+                                's', $phone,
+                                's', date("Y-m-d") . " " . $lang["simpleldap_usermatchcomment"] ,
+                                'i', $email_matches[0]["ref"]
+                                ]
+                            );
 							}
 						return true;
 						}
@@ -165,7 +203,17 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 				
 				// Update with information from LDAP	
 				$rsgroupname=ps_value("select name value from usergroup where ref=?", array("i",$group), '');
-				sql_query("update user set origin='simpleldap', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments='" . $lang["simpleldap_usercomment"] . (($groupmatch!="")?"\r\nLDAP group: " . escape_check($groupmatch):"") . "\r\nAdded to RS group " . escape_check($rsgroupname) . "(" . $group . ")' where ref='$ref'");
+				ps_query("update user set origin='simpleldap', password= ?, fullname= ?,email= ?,telephone= ?,usergroup= ?,comments= ? where ref= ?",
+                    [
+                    's', $password_hash,
+                    's', $displayname,
+                    's', $email,
+                    's', $phone,
+                    'i', $group,
+                    's', $lang["simpleldap_usercomment"] . (($groupmatch!="")?"\r\nLDAP group: " . $groupmatch:"") . "\r\nAdded to RS group " . $rsgroupname . "(" . $group . ")",
+                    'i', $ref
+                    ]
+                );
 						
 				
 				return true;
