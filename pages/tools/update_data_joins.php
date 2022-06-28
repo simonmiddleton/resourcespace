@@ -91,23 +91,8 @@ if($add!=='' || $all)
         foreach($add as $column)
             {
             echo "Updating column field$column...";
-            $start =  ps_value("SELECT min(ref) value FROM resource",[],0);;
-            $end = $start + SYSTEM_DATABASE_IDS_CHUNK_SIZE;
-            $count = ps_value("SELECT max(ref) value FROM resource",[],0);
-            while ($start < $count)
-                {
-                $wait = ps_query(
-                    "UPDATE resource r 
-                        INNER JOIN resource_data rd 
-                            ON r.ref = rd.resource 
-                            AND rd.resource_type_field= ? 
-                    SET r.field{$column} = SUBSTR(rd.value, 1, ?)
-                    WHERE r.ref >= ? AND r.ref < ?",
-                    ['i', $column, 'i', $resource_field_column_limit,"i",$start,"i",$end]
-                );
-                $start = $end;
-                $end += SYSTEM_DATABASE_IDS_CHUNK_SIZE;
-                }echo "done!<br/>";
+            $wait = ps_query("UPDATE resource r LEFT JOIN resource_node rn ON r.ref = rn.resource LEFT JOIN node n ON n.ref=rn.node  SET r.field{$column} = SUBSTR(n.name, 1, ?) WHERE n.resource_type_field = ?",["i",$resource_field_column_limit,"i",$column]);
+            echo "done!<br/>";
             flush();
             }
         echo "Done updating columns<br/><br/>";
