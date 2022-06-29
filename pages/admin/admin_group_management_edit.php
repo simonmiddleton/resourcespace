@@ -308,98 +308,48 @@ include "../../include/header.php";
         <?php
         $filters = get_filters("name","ASC");
         $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
-
-		if ($search_filter_nodes)
-			{
-            // Show filter selector if already migrated or no filter has been set
-            // Add the option to indicate filter migration failed
-			?>
-			<div class="Question">
-				<label for="search_filter_id"><?php echo $lang["property-search_filter"]; ?></label>
-				<select name="search_filter_id" class="stdwidth">
-					<?php
-					echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
-					foreach	($filters as $filter)
-						{
-						echo "<option value='" . $filter['ref'] . "' " . ($record['search_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
-						}
-                    ?>
-				</select>
-				<div class="clearerleft"></div>
-			</div>
-			<?php	
-			}
-		if((strlen($record['search_filter']) != "" && (!(is_numeric($record['search_filter_id']) || $record['search_filter_id'] < 1))) || !$search_filter_nodes)
-			{
-            // Show old style text filter input - will not appear once a new style filter has been selected
-			?>
-			<div class="Question">
-				<label for="search_filter"><?php echo $lang["property-search_filter"]; ?></label>
-				<textarea name="search_filter" class="stdwidth" rows="3" cols="50" <?php echo ($search_filter_nodes ? "readonly" : "");?>><?php echo $record['search_filter']; ?></textarea>
-				<div class="clearerleft"></div>
-			</div>
-			<?php
-            }
-        
-		if ($search_filter_nodes)
-            {
-            ?>
-            <div class="Question">
-                <label for="edit_filter_id"><?php echo $lang["property-edit_filter"]; ?></label>
-                <select name="edit_filter_id" class="stdwidth">
-                    <?php
-                    echo "<option value='0' >" . ($record['edit_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
-                    foreach	($filters as $filter)
-                        {
-                        echo "<option value='" . $filter['ref'] . "' " . ($record['edit_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
-                        }
-                    ?>
-                </select>
-                <div class="clearerleft"></div>
-            </div>
-            <?php	
-            }
-
-        if((strlen($record['edit_filter']) != "" && (!is_numeric($record['edit_filter_id']) || (int)$record['edit_filter_id'] < 1)) || !$search_filter_nodes)
-            {
-            ?>
-            <div class="Question">
-                <label for="edit_filter"><?php echo $search_filter_nodes ? "" : $lang["property-edit_filter"]; ?></label>
-                <textarea name="edit_filter" class="stdwidth" rows="3" cols="50" <?php echo ($search_filter_nodes ? "readonly" : "");?>><?php echo $record['edit_filter']; ?></textarea>
-                <div class="clearerleft"></div>
-            </div>
-            <?php
-            }
-        
-        if ($search_filter_nodes)
-            {
-            ?>
-            <div class="Question">
-                <label for="derestrict_filter_id"><?php echo $lang["fieldtitle-derestrict_filter"]; ?></label>
-                <select name="derestrict_filter_id" class="stdwidth">
-                    <?php
-                    echo "<option value='0' >" . ($record['derestrict_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
-                    foreach	($filters as $filter)
-                        {
-                        echo "<option value='" . $filter['ref'] . "' " . ($record['derestrict_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
-                        }
-                    ?>
-                </select>
-                <div class="clearerleft"></div>
-            </div>
-            <?php	
-            }
-        if((strlen($record['derestrict_filter']) != "" && (!(is_numeric($record['derestrict_filter_id']) || $record['derestrict_filter_id'] < 1))) || !$search_filter_nodes)
-            {
-            ?>
-            <div class="Question">
-                <label for="derestrict_filter"><?php echo $lang["fieldtitle-derestrict_filter"]; ?></label>
-                <textarea name="derestrict_filter" class="stdwidth" rows="3" cols="50" <?php echo ($search_filter_nodes ? "readonly" : "");?>><?php echo $record['derestrict_filter']; ?></textarea>
-                <div class="clearerleft"></div>
-            </div>
-            <?php
-            }?>
-
+        // Show filter selector if already migrated or no filter has been set
+        // Add the option to indicate filter migration failed
+        ?>
+        <div class="Question">
+            <label for="search_filter_id"><?php echo $lang["property-search_filter"]; ?></label>
+            <select name="search_filter_id" class="stdwidth">
+                <?php
+                echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+                foreach	($filters as $filter)
+                    {
+                    echo "<option value='" . $filter['ref'] . "' " . ($record['search_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
+                    }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
+        <div class="Question">
+            <label for="edit_filter_id"><?php echo $lang["property-edit_filter"]; ?></label>
+            <select name="edit_filter_id" class="stdwidth">
+                <?php
+                echo "<option value='0' >" . ($record['edit_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+                foreach	($filters as $filter)
+                    {
+                    echo "<option value='" . $filter['ref'] . "' " . ($record['edit_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
+                    }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
+        <div class="Question">
+            <label for="derestrict_filter_id"><?php echo $lang["fieldtitle-derestrict_filter"]; ?></label>
+            <select name="derestrict_filter_id" class="stdwidth">
+                <?php
+                echo "<option value='0' >" . ($record['derestrict_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+                foreach	($filters as $filter)
+                    {
+                    echo "<option value='" . $filter['ref'] . "' " . ($record['derestrict_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
+                    }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
         <div class="Question">
             <label for="download_limit"><?php echo $lang["group_download_limit_title"]; ?></label>
             <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars($record['download_limit']); ?>">

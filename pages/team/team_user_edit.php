@@ -225,74 +225,58 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict") ?>"><div class="clearerleft"> </div></div>
 
 <?php
-if($search_filter_nodes)
+if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
     {
-    if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
-        {
-        //Filter is set and migrated
-        $search_filter_migrated = true;
-        $search_filter_set      = true;
-        }
-    else if ($user['search_filter_override'] != "" && ($user['search_filter_o_id'] == 0 || $user['search_filter_o_id'] == NULL))
-        {
-        // Filter requires migration
-        $search_filter_migrated = false;
-        $search_filter_set      = true;
+    //Filter is set and migrated
+    $search_filter_migrated = true;
+    $search_filter_set      = true;
+    }
+else if ($user['search_filter_override'] != "" && ($user['search_filter_o_id'] == 0 || $user['search_filter_o_id'] == NULL))
+    {
+    // Filter requires migration
+    $search_filter_migrated = false;
+    $search_filter_set      = true;
 
-        // Attempt to migrate filter
-        $migrateresult = migrate_filter($user['search_filter_override']);
-        $notification_users = get_notification_users();
-        if(is_numeric($migrateresult))
+    // Attempt to migrate filter
+    $migrateresult = migrate_filter($user['search_filter_override']);
+    $notification_users = get_notification_users();
+    if(is_numeric($migrateresult))
+        {
+        message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $user['search_filter_override'] . "'",generateURL($baseurl . "/pages/team/team_user_edit.php",array("ref"=>$user['ref'])));
+        
+        // Successfully migrated - now use the new filter
+        ps_query("UPDATE user SET search_filter_o_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $user['ref']]);
+        
+        $search_filter_migrated = true;
+        $user['search_filter_o_id'] = $migrateresult;
+        debug("FILTER MIGRATION: Migrated filter - new filter id#" . $usersearchfilter);
+        }
+    }
+else if ($user['search_filter_override'] == "" && $user['search_filter_o_id'] == 0)
+    {
+    // Filter is not set (migrated by convention)
+    $search_filter_migrated = true;
+    $search_filter_set      = false;
+    }
+
+// Show filter selector if already migrated or no filter has been set
+$search_filters = get_filters("name","ASC");
+$filters[] = array("ref" => -1, "name" => $lang["disabled"]);
+?>
+<div class="Question">
+    <label for="search_filter_o_id"><?php echo $lang["searchfilteroverride"]; ?></label>
+    <select id="user_edit_search_filter" name="search_filter_o_id" class="stdwidth">
+        <?php
+        echo "<option value='0' >" . $lang["filter_none"] . "</option>";
+        foreach	($search_filters as $search_filter)
             {
-            message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $user['search_filter_override'] . "'",generateURL($baseurl . "/pages/team/team_user_edit.php",array("ref"=>$user['ref'])));
-            
-            // Successfully migrated - now use the new filter
-            ps_query("UPDATE user SET search_filter_o_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $user['ref']]);
-            
-            $search_filter_migrated = true;
-            $user['search_filter_o_id'] = $migrateresult;
-            debug("FILTER MIGRATION: Migrated filter - new filter id#" . $usersearchfilter);
-            }
-        }
-    else if ($user['search_filter_override'] == "" && $user['search_filter_o_id'] == 0)
-        {
-        // Filter is not set (migrated by convention)
-        $search_filter_migrated = true;
-        $search_filter_set      = false;
-        }
-    }
-
-if ($search_filter_nodes)
-    {
-    // Show filter selector if already migrated or no filter has been set
-    $search_filters = get_filters("name","ASC");
-    $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
-    ?>
-    <div class="Question">
-        <label for="search_filter_o_id"><?php echo $lang["searchfilteroverride"]; ?></label>
-        <select id="user_edit_search_filter" name="search_filter_o_id" class="stdwidth">
-            <?php
-            echo "<option value='0' >" . $lang["filter_none"] . "</option>";
-            foreach	($search_filters as $search_filter)
-                {
-                echo "<option value='" . $search_filter['ref'] . "' " . ($user['search_filter_o_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
-                }?>
-        </select>
-        <div class="clearerleft"></div>
-    </div>
-    <?php	
-    }
-if((strlen($user['search_filter_override']) != "" && (!(is_numeric($user['search_filter_o_id']) || $user['search_filter_o_id'] < 1))) || !$search_filter_nodes)
-    {
-    ?>
-    <div class="Question">
-        <label for="search_filter"><?php echo $lang["searchfilteroverride"]; ?></label>
-        <input name="search_filter_override" type="text" class="stdwidth" <?php echo ($search_filter_nodes ? "readonly" : "");?>value="<?php echo form_value_display($user,"search_filter_override")?>">
-        <div class="clearerleft"></div>
-    </div>
-    <?php
-    }
-            
+            echo "<option value='" . $search_filter['ref'] . "' " . ($user['search_filter_o_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
+            }?>
+    </select>
+    <div class="clearerleft"></div>
+</div>
+<?php
+           
 hook("additionaluserfields");
 if (!hook("replacecomments"))
     { ?>

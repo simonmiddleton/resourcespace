@@ -4875,7 +4875,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
 
     global $userref,$usergroup, $usereditfilter,$edit_access_for_contributor,
-    $search_filter_nodes, $userpermissions, $lang, $baseurl, $userdata, $edit_only_own_contributions;
+    $userpermissions, $lang, $baseurl, $userdata, $edit_only_own_contributions;
     $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
 
     if($plugincustomeditaccess)
@@ -4936,8 +4936,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 
     $gotmatch=false;
 
-    if($search_filter_nodes
-        && strlen(trim((string) $usereditfilter)) > 0
+    if(strlen(trim((string) $usereditfilter)) > 0
         && !is_numeric($usereditfilter)
         && trim($userdata[0]["edit_filter"]) != ""
         && $userdata[0]["edit_filter_id"] != -1

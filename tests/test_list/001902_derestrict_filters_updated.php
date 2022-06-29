@@ -3,9 +3,6 @@ command_line_only();
 
 
 // Test derestrict filters 
-
-// Save current settings
-$saved_search_filter_nodes = $search_filter_nodes;
 $saved_edit_filter = $usereditfilter;
 $saved_user = $userref;
 $original_user_data = $userdata;

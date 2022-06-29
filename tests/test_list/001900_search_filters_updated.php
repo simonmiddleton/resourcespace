@@ -1,11 +1,6 @@
 <?php
 command_line_only();
 
-
-// Save current settings
-$saved_search_filter_nodes = $search_filter_nodes;
-$search_filter_nodes = true;
-
 $allresources = do_search('');
 $pre_count = is_array($allresources) ? count($allresources) : 0;
 
@@ -147,9 +142,3 @@ if(count($results) != ($pre_count + 1) || !in_array($resourced,array_column($res
     echo "SUBTEST C";
     return false;
     }
-
-
-// Reset before next script
-$usersearchfilter = '';
-$search_filter_nodes = $saved_search_filter_nodes;
-return true;

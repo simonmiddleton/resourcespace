@@ -121,7 +121,7 @@ function setup_user(array $userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $search_filter_nodes, $USER_SELECTION_COLLECTION;
+           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -197,20 +197,18 @@ function setup_user(array $userdata)
         }
 
     $newfilter = false;
-    if ($search_filter_nodes)
+  
+    if(isset($userdata["search_filter_o_id"]) && is_numeric($userdata["search_filter_o_id"]) && $userdata['search_filter_o_id'] > 0)
         {
-        if(isset($userdata["search_filter_o_id"]) && is_numeric($userdata["search_filter_o_id"]) && $userdata['search_filter_o_id'] > 0)
-            {
-            // User search filter override
-            $usersearchfilter = $userdata["search_filter_o_id"];
-            $newfilter = true;
-            }
-        elseif(isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]) && $userdata['search_filter_id'] > 0)
-            {
-            // Group search filter
-            $usersearchfilter = $userdata["search_filter_id"];
-            $newfilter = true;
-            }
+        // User search filter override
+        $usersearchfilter = $userdata["search_filter_o_id"];
+        $newfilter = true;
+        }
+    elseif(isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]) && $userdata['search_filter_id'] > 0)
+        {
+        // Group search filter
+        $usersearchfilter = $userdata["search_filter_id"];
+        $newfilter = true;
         }
         
     if(!$newfilter)
@@ -219,8 +217,8 @@ function setup_user(array $userdata)
         $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
         }
             
-    $usereditfilter         = ($search_filter_nodes && isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
-    $userderestrictfilter   = ($search_filter_nodes && isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
+    $usereditfilter         = (isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
+    $userderestrictfilter   = (isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
 
     $hidden_collections=explode(",",(string) $userdata["hidden_collections"]);
     $userresourcedefaults=$userdata["resource_defaults"];
@@ -1832,7 +1830,7 @@ function check_access_key($resources,$key)
     # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
     emulate_user($user, $group);
     
-    global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
+    global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
             $groupjoin = "u.usergroup = g.ref";
             $permissionselect = "g.permissions";
             $groupjoin_params = array();
@@ -1849,23 +1847,15 @@ function check_access_key($resources,$key)
         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
         $userpermissions=explode(",",$userinfo[0]["permissions"]);
         
-        if ($search_filter_nodes)
+        if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
             {
-            if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
-                {
-                // User search filter override
-                $usersearchfilter = $userinfo[0]["search_filter_o_id"];
-                }
-            elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
-                {
-                // Group search filter
-                $usersearchfilter = $userinfo[0]["search_filter_id"];
-                }
+            // User search filter override
+            $usersearchfilter = $userinfo[0]["search_filter_o_id"];
             }
-        else
+        elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
             {
-            // Old style search filter that hasn't been migrated
-            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            // Group search filter
+            $usersearchfilter = $userinfo[0]["search_filter_id"];
             }
 
         if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
@@ -3066,7 +3056,7 @@ function get_upload_url($collection="",$k="")
 function emulate_user($user, $usergroup="")
     {
     debug_function_call("emulate_user",func_get_args());
-    global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $search_filter_nodes, $userresourcedefaults;
+    global $userref, $userpermissions, $userrequestmode, $usersearchfilter, $userresourcedefaults;
     global $external_share_groups_config_options, $emulate_plugins_set, $plugins;
     global $username,$baseurl, $anonymous_login, $upload_link_workflow_state;
 
@@ -3114,23 +3104,16 @@ function emulate_user($user, $usergroup="")
             $userresourcedefaults = $userinfo[0]["resource_defaults"];
             }
         
-        if ($search_filter_nodes)
+        
+        if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
             {
-            if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
-                {
-                // User search filter override
-                $usersearchfilter = $userinfo[0]["search_filter_o_id"];
-                }
-            elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
-                {
-                // Group search filter
-                $usersearchfilter = $userinfo[0]["search_filter_id"];
-                }
+            // User search filter override
+            $usersearchfilter = $userinfo[0]["search_filter_o_id"];
             }
-        else
+        elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
             {
-            // Old style search filter that hasn't been migrated
-            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            // Group search filter
+            $usersearchfilter = $userinfo[0]["search_filter_id"];
             }
 
         if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
