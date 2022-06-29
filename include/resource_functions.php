@@ -3711,12 +3711,12 @@ function get_resource_custom_access_users_usergroups($resource)
 function save_resource_custom_access($resource)
 	{
 	$groups=get_resource_custom_access($resource);
-	sql_query("delete from resource_custom_access where resource='$resource' and usergroup is not null");
+	ps_query("delete from resource_custom_access where resource=? and usergroup is not null",array("i",$resource));
 	for ($n=0;$n<count($groups);$n++)
 		{
 		$usergroup=$groups[$n]["ref"];
 		$access=getvalescaped("custom_" . $usergroup,0);
-		sql_query("insert into resource_custom_access(resource,usergroup,access) values ('$resource','$usergroup','$access')");
+		ps_query("insert into resource_custom_access(resource,usergroup,access) values (?,?,?)", array("i",$resource,"i",$usergroup,"i",$access));
 		}
 	}
 
@@ -4131,7 +4131,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
 
         # Store extension/data in the database
-        sql_query("update resource set archive=0,file_path='".$file_path."',file_extension='$extension',preview_extension='$extension',file_modified=now() where ref='$r'");
+        ps_query("update resource set archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=now() where ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
 
         # Store original filename in field, if set
         if (!$ingest)
@@ -4398,7 +4398,7 @@ function delete_alternative_file($resource,$ref)
         hook('delete_alternative_mp3_extra', '', array($path));
 
 	# Delete the database row
-	sql_query("delete from resource_alt_files where resource='" . escape_check($resource) . "' and ref='" . escape_check($ref) . "'");
+	ps_query("delete from resource_alt_files where resource=? and ref=?", array("i",$resource,"i",$ref));
 
 	# Log the deletion
 	resource_log($resource,LOG_CODE_DELETED_ALTERNATIVE,'');
@@ -4414,18 +4414,16 @@ function get_alternative_file($resource,$ref)
     $resource = escape_check($resource);
     $ref = escape_check($ref);
 	# Returns the row for the requested alternative file
-	$return=sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='$resource' and ref='$ref'");
+	$return=ps_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource=? and ref=?",array("i",$resource,"i",$ref));
 	if (count($return)==0) {return false;} else {return $return[0];}
 	}
 
 function save_alternative_file($resource,$ref)
 	{
 	# Saves the 'alternative file' edit form back to the database
-	$sql="";
-
-	# Save data back to the database.
-	sql_query("update resource_alt_files set name='" . getvalescaped("name","") . "',description='" . getvalescaped("description","") . "',alt_type='" . getvalescaped("alt_type","") . "' $sql where resource='$resource' and ref='$ref'");
-    	}
+	ps_query("update resource_alt_files set name=?,description=?,alt_type=? where resource=? and ref=?",
+    array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref));
+    }
 
 function user_rating_save($userref,$ref,$rating)
 	{
@@ -4438,9 +4436,9 @@ function user_rating_save($userref,$ref,$rating)
 
 	# modify behavior to allow only one current rating per user (which can be re-edited)
 	global $user_rating_only_once;
-	if ($user_rating_only_once){
-		$ratings=array();
-		$ratings=sql_query("select user,rating from user_rating where ref='$ref'");
+	if ($user_rating_only_once)
+        {
+		$ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
 
 		#Calculate ratings total and get current rating for user if available
 		$total=0;
@@ -4459,28 +4457,30 @@ function user_rating_save($userref,$ref,$rating)
 		if ($current!=""){
 			$total=$total-$current+$rating;
 			if ($rating == 0) {  //rating remove feature
-				sql_query("delete from user_rating where user='$userref' and ref='$ref'");
+				ps_query("delete from user_rating where user=? and ref=?",array("i",$userref,"i",$ref));
 				$count--;
 			} else {
-				sql_query("update user_rating set rating='$rating' where user='$userref' and ref='$ref'");
+				ps_query("update user_rating set rating=? where user=? and ref=?",array("i",$rating,"i",$userref,"i",$ref));
 			}
 		}
 
 		# if user does not have a current rating, add it
-		else {
-			if ($rating != 0) {  //rating remove feature
+		else
+            {
+			if ($rating != 0)
+                { // rating remove feature
 				$total=$total+$rating;
 				$count++;
-				sql_query("insert into user_rating (user,ref,rating) values ('$userref','$ref','$rating')");
-			}
-		}
-
-	}
-	else {
+				ps_query("insert into user_rating (user,ref,rating) values (?,?,?)",array("i",$userref,"i",$ref,"i",$rating));
+			    }   
+		    }
+    	}
+	else
+        {
 		# If not using $user_rating_only_once, Increment the total and count
 		$total+=$rating;
 		$count++;
-	}
+	    }
 
 	if ($count==0){
 		# avoid division by zero
@@ -4491,8 +4491,7 @@ function user_rating_save($userref,$ref,$rating)
 	}
 
 	# Save to the database
-	sql_query("update resource set user_rating='$average',user_rating_total='$total',user_rating_count='$count' where ref='$ref'");
-
+	ps_query("update resource set user_rating=?,user_rating_total=?,user_rating_count=? where ref='$ref'",array("d",$average,"i",$total,"i",$count));
 	}
 
 /**
@@ -4727,7 +4726,7 @@ function get_resource_access($resource)
             if(is_numeric($migrateresult))
                 {
                 // Successfully migrated - now use the new filter
-                sql_query("UPDATE usergroup SET derestrict_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+                ps_query("UPDATE usergroup SET derestrict_filter_id=? WHERE ref=?",array("i",$migrateresult,"i",$usergroup));
                 debug("FILTER MIGRATION: Migrated derestrict_filter_id filter - '" . $userderestrictfilter . "' filter id#" . $migrateresult);
                 $userderestrictfilter = $migrateresult;
                 }
@@ -4735,7 +4734,7 @@ function get_resource_access($resource)
                 {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $userderestrictfilter . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure
-                sql_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref='" . $usergroup . "'");
+                ps_query("UPDATE usergroup SET derestrict_filter_id='-1' WHERE ref=?",array("i",$usergroup));
                 message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
                 }
             }
@@ -4947,7 +4946,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         if(is_numeric($migrateresult))
             {
             // Successfully migrated - now use the new filter
-            sql_query("UPDATE usergroup SET edit_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+            ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",array("i",$migrateresult,"i",$usergroup));
             debug("FILTER MIGRATION: Migrated edit filter - '" . $usereditfilter . "' filter id#" . $migrateresult);
             $usereditfilter = $migrateresult;
             }
@@ -4955,7 +4954,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
             {
             debug("FILTER MIGRATION: Error migrating filter: '" . $usereditfilter . "' - " . implode('\n' ,$migrateresult));
             // Error - set flag so as not to reattempt migration and notify admins of failure
-            sql_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref='" . $usergroup . "'");
+            ps_query("UPDATE usergroup SET edit_filter_id='0' WHERE ref=?",array("i",$usergroup));
             message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br/>" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
             }
         }
@@ -5128,10 +5127,15 @@ function get_resource_collections($ref)
    		}
 	if ($sql!="") {$sql="where " . $sql;}
 
-	$return=sql_query ("select * from
-	(select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user='$userref' left outer join collection_resource r on c.ref=r.collection group by c.ref
+	$return=ps_query ("select * from
+	(select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user=? left outer join collection_resource r on c.ref=r.collection group by c.ref
 	union
-	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user='$userref' and c.user<>'$userref' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref group by c.ref) clist where clist.ref in (select collection from collection_resource cr where cr.resource=$ref)");
+	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user=? and c.user<>? left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref group by c.ref) clist where clist.ref in (select collection from collection_resource cr where cr.resource=?)",array(
+        "i",$userref,
+        "i",$userref,
+        "i",$userref,
+        "i",$ref    
+        ));
 
 	return $return;
 	}
@@ -5224,15 +5228,14 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
     $resource_type = ps_value("SELECT resource_type AS `value` FROM resource WHERE ref = ?", ["i",$resource], 0);
 
-    $fields = sql_query(
+    $fields = ps_query(
         "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
           FROM resource_type_field rtf
-          LEFT JOIN resource_type rt ON rt.ref = {$resource_type}
+          LEFT JOIN resource_type rt ON rt.ref = ?
           WHERE length(rtf.autocomplete_macro) > 0
           AND (   (rtf.resource_type<>0 AND rtf.resource_type = rt.ref)
                OR (rtf.resource_type=0  AND rt.inherit_global_fields=1)
-              )",
-        "schema");
+              )",array("i",$resource_type),"schema");
 
     $fields_updated = array();
 
@@ -6076,7 +6079,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 
     # Update 'joined' fields in resource table
     $joins=get_resource_table_joins();
-    $joinsql = "UPDATE resource AS target LEFT JOIN resource AS source ON source.ref='{$from}' SET ";
+    $joinsql = "UPDATE resource AS target LEFT JOIN resource AS source ON source.ref=? SET ";
     $joinfields = "";
     foreach($joins as $joinfield)
         {
@@ -6084,11 +6087,11 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
             {
             $joinfields .= ",";
             }
+        $joinfield=(int)$joinfield; // Ensure integer for inclusion in SQL.
         $joinfields .= "target.field{$joinfield} = source.field{$joinfield}";
-
         }
-    $joinsql = $joinsql . $joinfields . " WHERE target.ref='{$to}'";
-    sql_query($joinsql);
+    $joinsql = $joinsql . $joinfields . " WHERE target.ref=?";
+    ps_query($joinsql,array("i",$from,"i",$to));
     return true;
     }
 
@@ -6435,8 +6438,8 @@ function get_last_resource_edit_array($resources = array())
     	return false;
         }
 
-    $lastmodified  = sql_query("SELECT r.ref, r.modified FROM resource r WHERE r.ref IN ('" . implode("','",$resources). "') ORDER BY r.modified DESC");
-    $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
+    $lastmodified  = ps_query("SELECT r.ref, r.modified FROM resource r WHERE r.ref IN (" . ps_param_insert(count($resources)) . ") ORDER BY r.modified DESC",ps_param_fill($resources,"i"));
+    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e'",array("i",$lastmodified[0]["ref"]));
     if(count($lastuserdetails) == 0)
         {
         return false;
@@ -7964,18 +7967,13 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 
     $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$shortname), 0, "schema");
 
-    sql_query(sprintf("INSERT INTO resource_type_field (title, resource_type, type, `name`, keywords_index) VALUES ('%s', '%s', '%s', '%s', %s)",
-        escape_check($name),
-        escape_check($restype),
-        escape_check($type),
-        escape_check($shortname),
-        ($index ? "1" : "0")
-    ));
+    ps_query("INSERT INTO resource_type_field (title, resource_type, type, `name`, keywords_index) VALUES (?, ?, ?, ?, ?)",
+    array("s",$name,"i",$restype,"i",$type,"s",$shortname,"i",($index ? "1" : "0")));
     $new = sql_insert_id();
 
     if($duplicate)
         {
-        sql_query(sprintf("UPDATE resource_type_field SET `name` = '%s' WHERE ref = '%s'", escape_check($shortname . $new), $new));
+        ps_query("UPDATE resource_type_field SET `name` = ? WHERE ref = ?", array("s",$shortname . $new,"i",$new));
         }
 
     log_activity(null, LOG_CODE_CREATED, $name, 'resource_type_field', 'title', $new, null, '');
@@ -8452,13 +8450,15 @@ function update_resource_type_field_order($neworder)
 	}
 
 	$updatesql= "update resource_type_field set order_by=(case ref ";
-	$counter = 10;
+	$counter = 10;$params=array();
 	foreach ($neworder as $restype){
-		$updatesql.= "when '$restype' then '$counter' ";
-		$counter = $counter + 10;
+		$updatesql.= "when ? then ? ";
+        $params[]="i";$params[]=$restype;
+        $params[]="i";$params[]=$counter;
+        $counter = $counter + 10;
 	}
 	$updatesql.= "else order_by END)";
-	sql_query($updatesql);
+	ps_query($updatesql,$params);
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypefieldreordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type_field','order_by');
 	}
@@ -8479,12 +8479,16 @@ function update_resource_type_order($neworder)
 
 	$updatesql= "update resource_type set order_by=(case ref ";
 	$counter = 10;
+    $params=array();
+
 	foreach ($neworder as $restype){
-		$updatesql.= "when '$restype' then '$counter' ";
+		$updatesql.= "when ? then ? ";
+        $params[]="i";$params[]=$restype;
+        $params[]="i";$params[]=$counter;
 		$counter = $counter + 10;
 	}
 	$updatesql.= "else order_by END)";
-	sql_query($updatesql);
+	ps_query($updatesql,$params);
 	clear_query_cache("schema");
 	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
 	}
