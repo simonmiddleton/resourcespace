@@ -522,7 +522,7 @@ if ($processupload)
                     $file_size = @filesize_unlimited($path);
                     
                     # Save alternative file data.
-                    sql_query("update resource_alt_files set file_name='" . escape_check($upfilename) . "',file_extension='" . escape_check($extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$alternative' and ref='$aref'");
+                    ps_query("update resource_alt_files set file_name=?,file_extension=?,file_size=?,creation_date=now() where resource=? and ref=?",array("s",$upfilename,"s",$extension,"i",$file_size,"i",$alternative,"i",$aref));
                     
                     if ($alternative_file_previews)
                         {
