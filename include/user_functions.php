@@ -1998,7 +1998,7 @@ function check_access_key_collection($collection, $key)
             }
         }
 
-    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = '" . $collection["ref"] . "' AND access_key = '{$key}'";
+    $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = ? AND access_key = ?";
 
     if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
         {
@@ -2022,14 +2022,14 @@ function check_access_key_collection($collection, $key)
             return false;
             }
 
-        sql_query(sprintf($sql, escape_check($collection_ref)));
+        ps_query($sql, array("i", $collection_ref, "s", $key));
         }
 
     if($is_featured_collection_category)
         {
         // Update the last used for the dummy record we have for the featured collection category (ie. no resources since
         // a category contains only collections)
-        sql_query(sprintf($sql, escape_check($collection["ref"])));
+        ps_query($sql, array("i", $collection["ref"], "s", $key));
         }
 
     return true;
