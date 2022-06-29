@@ -23,10 +23,12 @@ function suggest_refinement($refs,$search)
     # Given an array of resource references ($refs) and the original
     # search query ($search), produce a list of suggested search refinements to 
     # reduce the result set intelligently.
-    $in=join(",",$refs);
+
+    if (count($refs)==0) {return array();} // Nothing to do, nothing to return
+    $in=ps_param_insert(count($refs));
     $suggest=array();
     # find common keywords
-    $refine=sql_query("SELECT k.keyword,count(k.ref) c FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN node_keyword nk ON nk.node=n.ref LEFT JOIN keyword k on nk.keyword=k.ref WHERE rn.resource IN ($in) AND length(k.keyword)>=3 AND length(k.keyword)<=15 AND k.keyword NOT LIKE '%0%' AND k.keyword NOT LIKE '%1%' AND k.keyword NOT LIKE '%2%' AND k.keyword NOT LIKE '%3%' AND k.keyword NOT LIKE '%4%' AND k.keyword NOT LIKE '%5%' AND k.keyword NOT LIKE '%6%' AND k.keyword NOT LIKE '%7%' AND k.keyword NOT LIKE '%8%' AND k.keyword NOT LIKE '%9%' GROUP BY k.keyword ORDER BY c DESC LIMIT 5");
+    $refine=ps_query("SELECT k.keyword,count(k.ref) c FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN node_keyword nk ON nk.node=n.ref LEFT JOIN keyword k on nk.keyword=k.ref WHERE rn.resource IN ($in) AND length(k.keyword)>=3 AND length(k.keyword)<=15 AND k.keyword NOT LIKE '%0%' AND k.keyword NOT LIKE '%1%' AND k.keyword NOT LIKE '%2%' AND k.keyword NOT LIKE '%3%' AND k.keyword NOT LIKE '%4%' AND k.keyword NOT LIKE '%5%' AND k.keyword NOT LIKE '%6%' AND k.keyword NOT LIKE '%7%' AND k.keyword NOT LIKE '%8%' AND k.keyword NOT LIKE '%9%' GROUP BY k.keyword ORDER BY c DESC LIMIT 5",ps_param_fill($refs,"i"));
     for ($n=0;$n<count($refine);$n++)
         {
         if (strpos($search,$refine[$n]["keyword"])===false)
@@ -2172,7 +2174,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         {
         # Create a new keyword.
         debug("resolve_keyword: Creating new keyword for " . $keyword);
-        sql_query("insert into keyword (keyword,soundex,hit_count) values ('" . escape_check($keyword) . "',left('".soundex(escape_check($keyword))."',10),0)");
+        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,?,10)",array("s",$keyword,"s",soundex($keyword)));
         $return=sql_insert_id();
         }
     
@@ -2463,7 +2465,7 @@ function save_related_keywords($keyword,$related)
         {
         for ($n=0;$n<count($s);$n++)
             {
-            sql_query("insert into keyword_related (keyword,related) values ('$keyref','" . resolve_keyword($s[$n],true,false,false) . "')");
+            ps_query("insert into keyword_related (keyword,related) values (?,?)",array("i",$keyref,"i",resolve_keyword($s[$n],true,false,false)));
             }
         }
     return true;
