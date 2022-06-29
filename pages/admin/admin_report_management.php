@@ -17,6 +17,7 @@ $order_by=getval("orderby","name");
 $url_params = array("find" => $find, "orderby" => $order_by);
 $url=generateURL($baseurl . "/pages/admin/admin_report_management.php", $url_params);
 
+$find_sql="";
 if($find!="")
     {
     $find_sql = " WHERE ref LIKE ? OR name LIKE ?";
