@@ -99,7 +99,7 @@ else {$resource_field_verbatim_keyword_regex = $resource_field_verbatim_keyword_
 
 // Check that using update_field to add nodes to resource returns false
 $errors=array();
-$fixedfields=sql_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")");
+$fixedfields=ps_array("select ref value from resource_type_field where type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")",array()); // No need to use PS params for constants
 foreach($fixedfields as $fixedfield)
     {
     update_field($resourcea,$fixedfield,'DUMMY STRING', $errors);

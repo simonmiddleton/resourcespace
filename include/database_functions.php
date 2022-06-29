@@ -1024,32 +1024,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     return $return_rows;        
     }
-	
-
-/**
-* Return a single value from a database query, or the default if no rows
-* 
-* NOTE: The value returned must have the column name aliased to 'value'
-* 
-* @uses ps_query()
-* 
-* @param string $query    SQL query
-* @param mixed  $default  Default value
-* 
-* @return string
-*/
-function sql_value($query, $default, $cache="")
-    {
-    db_set_connection_mode("read_only");
-    $result = sql_query($query, $cache, -1, true, 0, true, false);
-
-    if(count($result) == 0)
-        {
-        return $default;
-        }
-
-        return $result[0]["value"];
-    }
 
 /**
 * Return a single value from a database query, or the default if no rows

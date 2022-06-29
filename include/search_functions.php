@@ -487,7 +487,7 @@ function refine_searchstring($search)
     $keywords=split_keywords($search, false, false, false, false, true);
 
     $orfields=get_OR_fields(); // leave checkbox type fields alone
-    $dynamic_keyword_fields=sql_array("SELECT name value FROM resource_type_field where type=9", "schema");
+    $dynamic_keyword_fields=ps_array("SELECT name value FROM resource_type_field where type=9", array(), "schema");
     
     $fixedkeywords=array();
     foreach ($keywords as $keyword)
@@ -2377,33 +2377,34 @@ function get_suggested_keywords($search,$ref="")
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
     $hidden_indexed_fields=get_hidden_indexed_fields();
     
-    $restriction_clause_free = "";
     $restriction_clause_node = ""; 
-    
+    $params=array("s",$search . "%");
+
     if (count($hidden_indexed_fields) > 0)
         {
-        $restriction_clause_free .= " AND rk.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";
-        $restriction_clause_node .= " AND n.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";                                 
+        $restriction_clause_node .= " AND n.resource_type_field NOT IN (" . ps_param_insert(count($hidden_indexed_fields)) . ")";
+        $params=array_merge($params,ps_param_fill($hidden_indexed_fields,"i"));
         }
     
     if ((string)(int)$ref == $ref)
         {
-        $restriction_clause_free .= " AND rk.resource_type_field = '" . $ref . "'";
-        $restriction_clause_node .= " AND n.resource_type_field = '" . $ref . "'";                                        
+        $restriction_clause_node .= " AND n.resource_type_field = ?";
+        $params[]="i";$params[]=$ref;
         }    
     
-    return sql_array("SELECT ak.keyword value
+    $params[]="i";$params[]=$autocomplete_search_items;
+
+    return ps_array("SELECT ak.keyword value
         FROM
             (
             SELECT k.keyword, k.hit_count
             FROM keyword k
             JOIN node_keyword nk ON nk.keyword=k.ref
             JOIN node n ON n.ref=nk.node
-            WHERE k.keyword LIKE '" . escape_check($search) . "%'" . $restriction_clause_node . "
+            WHERE k.keyword LIKE ? " . $restriction_clause_node . "
             ) ak
         GROUP BY ak.keyword, ak.hit_count 
-        ORDER BY ak.hit_count DESC LIMIT " . $autocomplete_search_items
-        );
+        ORDER BY ak.hit_count DESC LIMIT ?",$params);
     }
 
 
@@ -2420,11 +2421,11 @@ function get_related_keywords($keyref)
         return $related_keywords_cache[$keyref];
     } else {
         if ($keyword_relationships_one_way){
-            $related_keywords_cache[$keyref]=sql_array("select related value from keyword_related where keyword='$keyref'");
+            $related_keywords_cache[$keyref]=ps_array("select related value from keyword_related where keyword=?",array("i",$keyref));
             return $related_keywords_cache[$keyref];
             }
         else {
-            $related_keywords_cache[$keyref]=sql_array("select keyword value from keyword_related where related='$keyref' union select related value from keyword_related where (keyword='$keyref' or keyword in (select keyword value from keyword_related where related='$keyref')) and related<>'$keyref'");
+            $related_keywords_cache[$keyref]=ps_array("select keyword value from keyword_related where related=? union select related value from keyword_related where (keyword=? or keyword in (select keyword value from keyword_related where related=?)) and related<>?",array("i",$keyref,"i",$keyref,"i",$keyref,"i",$keyref));
             return $related_keywords_cache[$keyref];
             }
         }
@@ -2742,8 +2743,8 @@ function delete_filter($filter)
             }
             
     // Check for existing use of filter
-    $checkgroups = sql_array("SELECT ref value FROM usergroup WHERE search_filter_id='" . $filter . "'","");
-    $checkusers  = sql_array("SELECT ref value FROM user WHERE search_filter_o_id='" . $filter . "'","");
+    $checkgroups = ps_array("SELECT ref value FROM usergroup WHERE search_filter_id=?",array("i",$filter), "");
+    $checkusers  = ps_array("SELECT ref value FROM user WHERE search_filter_o_id=?",array("i",$filter),"");
     
     if(count($checkgroups)>0 || count($checkusers)>0)
         {
@@ -2797,7 +2798,7 @@ function copy_filter($filter)
             
     sql_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref={$filter}"); 
     $newfilter = sql_insert_id();
-    $rules = sql_array("SELECT ref value from filter_rule  WHERE filter={$filter}"); 
+    $rules = ps_array("SELECT ref value from filter_rule  WHERE filter=?",array("i",$filter)); 
     foreach($rules as $rule)
         {
         sql_query("INSERT INTO filter_rule (filter) VALUES ({$newfilter})");
