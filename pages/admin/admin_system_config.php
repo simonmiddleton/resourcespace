@@ -467,7 +467,7 @@ include '../../include/header.php';
     <?php 
     if ($custom_font != "") 
         {
-        ?><script>document.getElementById("question_global_font").hidden = true;</script>";
+        ?><script>document.getElementById("question_global_font").hidden = true;</script>
     <?php
         } 
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); 
