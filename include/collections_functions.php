@@ -2387,7 +2387,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
  */
 function get_saved_searches($collection)
 	{
-	return sql_query("select " . columns_in("collection_savedsearch") . " from collection_savedsearch where collection='" . escape_check($collection) . "' order by created");
+	return ps_query("select " . columns_in("collection_savedsearch") . " from collection_savedsearch where collection= ? order by created", ['i', $collection]);
 	}
 
 /**
