@@ -8,7 +8,6 @@ function HookPropose_changesViewAfterresourceactions()
 	if($edit_access)
 		{
 		$userproposals= ps_value("select count(*) value from propose_changes_data where resource=?",array("i",$ref),0);
-		//print_r($userproposals);
         if ($userproposals>0)
 			{
 			global $baseurl, $lang;

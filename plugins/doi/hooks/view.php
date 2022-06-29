@@ -223,8 +223,6 @@ HTML;
 							          style="width: 100%; resize: none;"
 							          readonly><?php echo $url; ?></textarea>
 							<br>
-<!--							<a href="#" onclick="doiShowHideXml();"-->
-<!--							   id="doiShowHideXml">--><?php //echo '&gt; ' . $lang['doi_show_meta']; ?><!--</a><br>-->
 							<div id="divDoiXml" style="display: block">
 								<br>
 								<label for="editDoiXml">XML</label>

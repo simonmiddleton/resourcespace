@@ -995,7 +995,6 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
         $sql_filter->parameters[] = $access;
         }
     // Append filter if only searching for editable resources
-    // ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
     if($editable_only)
         {
         $editable_filter = new PreparedStatementQuery();
@@ -1420,8 +1419,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         $sql->sql = $sql_prefix . $sql_self->sql . "SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.related=r.ref AND t.resource = ?) " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " GROUP BY r.ref 
         UNION
-        SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') " . $sql_join->sql  . " WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
-        $sql->parameters = array_merge($sql_self->parameters,["i",$resource],$sql_join->parameters,$sql_filter->parameters);
+        SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related = ?) " . $sql_join->sql  . " WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
+        $sql->parameters = array_merge($sql_self->parameters, ["i", $resource], $sql_join->parameters, $sql_filter->parameters, ["i", $resource], $sql_join->parameters, $sql_filter->parameters);
         return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
 

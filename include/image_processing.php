@@ -1049,7 +1049,6 @@ function extract_exif_comment($ref,$extension="")
         if ($data!==false)
             {
             $comment="";
-            #echo "<pre>EXIF\n";print_r($data);exit();
 
             if (isset($data["ImageDescription"])) {$comment=$data["ImageDescription"];}
             if (($comment=="") && (isset($data["COMPUTED"]["UserComment"]))) {$comment=$data["COMPUTED"]["UserComment"];}
@@ -1084,7 +1083,6 @@ function extract_exif_comment($ref,$extension="")
         if (isset($info["APP13"]))
             {
             $iptc = iptcparse($info["APP13"]);
-            #echo "<pre>IPTC\n";print_r($iptc);exit();
 
             # Look for iptc fields, and insert.
             $fields=ps_query("select ref, type, iptc_equiv from resource_type_field where length(iptc_equiv)>0", array(), "schema");

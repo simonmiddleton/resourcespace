@@ -188,7 +188,7 @@ if ($submitted != "")
 		}
 
 	# Download and add external resources
-	$xt_resources=ps_query("select * from resourceconnect_collection_resources where collection=?",array("i",$collection));
+	$xt_resources=ps_query("select ref,collection,date_added,title,thumb,large_thumb,xl_thumb,url,source_ref from resourceconnect_collection_resources where collection=?",array("i",$collection));
 	foreach ($xt_resources as $xt_resource)
 		{
 		# Work out download URL

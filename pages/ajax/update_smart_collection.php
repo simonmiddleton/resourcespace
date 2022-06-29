@@ -49,7 +49,6 @@ if (isset($smartsearch[0]['search']))
 			}
 		}
 		
-	//echo "Comparing results...";		
 	$results_contents_add = array_values(array_diff($results_contents, $current_contents));
 	$current_contents_remove = array_values(array_diff($current_contents, $results_contents));
 							

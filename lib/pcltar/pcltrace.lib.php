@@ -376,7 +376,6 @@ if (!defined("PCLTRACE_LIB"))
         else
           echo "<td width=10><div align=center><font size=2 face=$v_font>|</font></div></td>";
       }
-      //echo "<td>&nbsp</td>";
       echo "</tr></table></td>";
 
       echo "<td width=2></td>";

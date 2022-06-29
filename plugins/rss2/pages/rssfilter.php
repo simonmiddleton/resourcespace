@@ -92,13 +92,9 @@ if (!array_key_exists("search",$_GET))
 	}
 
 $refs = array();
-#echo "search=$search";
 
 # Special query? Ignore restypes
 if (strpos($search,"!")!==false) {$restypes = "";}
-
-# Story only? Display as list
-#if ($restypes=="2") {$display = "list";}
 
 $result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, DEPRECATED_STARSEARCH);
 
@@ -152,10 +148,6 @@ for ($n=0;$n<count($result);$n++)
 	$title=xmlentities(i18n_get_translated($result[$n]["field".$view_title_field]));
 	$creation_date=$result[$n]["creation_date"];
 	
-	//echo $time = time();//date("r");
-	
-	// 2007-12-12 23:32:43
-	// 0123456789012345678
     $year = (int)substr($creation_date, 0, 4);
     $month = (int)substr($creation_date, 5, 2);
     $day = (int)substr($creation_date, 8, 2);

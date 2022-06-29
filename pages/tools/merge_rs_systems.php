@@ -1647,16 +1647,18 @@ if($import && isset($folder_path))
             continue;
             }
 
-        sql_query(sprintf(
-            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', %s)",
-            $resources_mapping[$src_rdms["resource"]],
-            $src_rdms["width"],
-            $src_rdms["height"],
-            $src_rdms["file_size"],
-            $src_rdms["resolution"],
-            escape_check($src_rdms["unit"]),
-            sql_null_or_val((string) $src_rdms["page_count"], !is_int_loose($src_rdms["page_count"]))
-        ));
+        ps_query(
+            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [
+                'i', $resources_mapping[$src_rdms["resource"]],
+                'i', $src_rdms["width"],
+                'i', $src_rdms["height"],
+                'i', $src_rdms["file_size"],
+                'i', $src_rdms["resolution"],
+                's', $src_rdms["unit"],
+                'i', is_int_loose($src_rdms["page_count"]) ? $src_rdms["page_count"] : null,
+            ]
+        );
 
         $processed_resource_dimensions[] = $process_rdms_value;
         fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
@@ -1676,7 +1678,7 @@ if($import && isset($folder_path))
 
     foreach($src_resource_related_chunks as $src_resource_related_chunk)
         {
-        $insertvals = [];
+        $insertvals = $insertvals_bparams = [];
         $temp_processed_related = [];
         $temp_processed_related_log  = "";
         foreach($src_resource_related_chunk as $src_rr)
@@ -1698,14 +1700,18 @@ if($import && isset($folder_path))
                 continue;
                 }
 
-            $insertvals[] = "('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')";
+            $insertvals[] = "(?, ?)";
+            $insertvals_bparams = array_merge(
+                $insertvals_bparams,
+                ps_param_fill([$resources_mapping[$src_rr["resource"]], $resources_mapping[$src_rr["related"]]], 'i')
+            );
 
             $temp_processed_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
             $temp_processed_related_log .= "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL;
             }
         if(count($insertvals) > 0)
             {
-            sql_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals));
+            ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals), $insertvals_bparams);
             $processed_resource_related = array_merge($processed_resource_related,$temp_processed_related);
             fwrite($progress_fh, $temp_processed_related_log);
             }

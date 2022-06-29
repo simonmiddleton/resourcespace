@@ -607,7 +607,6 @@ function api_add_resource_nodes($resource,$nodestring)
             $joined_fields_to_update[] = $returned_node['resource_type_field'];
             }
         }
-    //$joined_fields_to_update = array_unique($joined_fields_to_update);
     foreach ($joined_fields_to_update as $field_update)
         {
         $resource_node_data = get_data_by_field($resource, $field_update);

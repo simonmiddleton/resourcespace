@@ -21,9 +21,6 @@ for ($s=0;$s<60;$s+=10) # Do this once every 10 seconds for a minute, then this 
 	# Fetch process list
 	$list=explode("\n",run_command($mysql_command . " processlist"));
 	
-	#echo "<pre>";
-	#print_r($list);
-	
 	for ($n=3;$n<count($list)-2;$n++)
 		{
 		$vals=explode("|",$list[$n]);

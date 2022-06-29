@@ -398,7 +398,6 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
 	if(!$updaterendition)
 	  {
 	  debug("tms_link: ERROR: Unable to update media rendition");
-	  //echo "tms_link: ERROR: Unable to update media rendition<br>";
 	  return false;
 	  }
 	  
@@ -409,7 +408,6 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
 	$mediaxrefid=tms_add_mediaxref($mediamasterid,$tms_object_id,true);
 	if(!$mediaxrefid)
 	  {
-	  //echo "Unable to create row in MediaXRefs <br>";
 	  debug("tms_link: ERROR: Unable to create row in MediaXRefs");
 	  return false;
 	  }

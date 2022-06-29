@@ -287,7 +287,6 @@ for ($n=0;$n<count($types);$n++)
         if (($activity_type=="" || $activity_type==$types[$n]) && ($collection=="" || in_array($types[$n],$resource_activity_types)))
             {
             $graph_params="report=" . $ref . "&n=" . $n . "&activity_type=" . urlencode($types[$n]) . "&groups=" . urlencode(join(",",$groups)) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . $period . "&period_days=" . $period_days . "&collection=" . $collection  . "&resource_type=" . $resource_type . "&external=" . $external;
-            #echo $graph_params;
             
             # Show the object breakdown for certain types only.
             $show_breakdown=false;

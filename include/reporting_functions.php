@@ -91,6 +91,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     else
         {
         // Generate report results normally
+        $sql_parameters=array();
         $sql=$report["query"];
         $sql=str_replace("[from-y]",$from_y,$sql);
         $sql=str_replace("[from-m]",$from_m,$sql);
@@ -102,10 +103,10 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         global $view_title_field;
         $sql=str_replace("[title_field]",$view_title_field,$sql);
 
-        // IF report supports being run on search results
-        if($report['support_non_correlated_sql'] === '1' && !empty($search_params))
+        // If report supports being run on search results, embed the non correlated sql necessary to feed the report
+        if($report['support_non_correlated_sql'] == 1 && !empty($search_params))
             {
-            $search_sql = do_search(
+            $returned_search = do_search(
                 $search_params['search'],
                 $search_params['restypes'],
                 $search_params['order_by'],
@@ -123,17 +124,18 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 false, # editable_only
                 true # returnsql
             );
-            if(!is_string($search_sql))
+            if(!is_string($returned_search->sql))
                 {
                 debug("Invalid SQL returned by do_search(). Report cannot be generated");
                 return false;
                 }
-            $ncsql = sprintf('(SELECT ncsql.ref FROM (%s) AS ncsql)', $search_sql);
+            $sql_parameters=array_merge($sql_parameters,$returned_search->parameters);
+            $noncorsql = sprintf('(SELECT noncorsql.ref FROM (%s) AS noncorsql)', $returned_search->sql);
 
-            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $ncsql, $sql);
+            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $noncorsql, $sql);
             }
 
-        $results = sql_query($sql);
+        $results = ps_query($sql,$sql_parameters);
         }
     
     $resultcount = count($results);

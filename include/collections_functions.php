@@ -1884,7 +1884,6 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array
     // For each option, if it is in use, add it to the return list
     for($n = 0; $n < count($nodes); $n++)
         {
-        //$cleaned_option_base = str_replace('-', ' ', $options_base[$n]);
         $cleaned_option_base = preg_replace('/\W/',' ',$options_base[$n]);      // replace any non-word characters with a space
         $cleaned_option_base = trim($cleaned_option_base);      // trim (just in case prepended / appended space characters)
 
