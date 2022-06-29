@@ -1080,31 +1080,6 @@ function ps_array($query,$parameters=array(),$cache="")
     return $return;
 	}
 
-/**
-* Returns an array of all values found
-* 
-* NOTE: The value returned must have the column name aliased to 'value'
-* 
-* @uses ps_query()
-* 
-* @param string $query SQL query
-* 
-* @return array
-*/
-function sql_array($query,$cache="")
-	{
-	$return = array();
-
-    db_set_connection_mode("read_only");
-    $result = sql_query($query, $cache, -1, true, 0, true, false);
-
-    for($n = 0; $n < count($result); $n++)
-    	{
-    	$return[] = $result[$n]["value"];
-    	}
-
-    return $return;
-	}
 
 /**
  * Return the ID of the previously inserted row.

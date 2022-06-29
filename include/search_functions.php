@@ -50,7 +50,8 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=sql_query("SELECT *, ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", "schema");
+    $fields=ps_query("SELECT ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
+
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
@@ -2440,17 +2441,27 @@ function get_grouped_related_keywords($find="",$specific="")
     debug_function_call("get_grouped_related_keywords", func_get_args());
 
     # Returns each keyword and the related keywords grouped, along with the resolved keywords strings.
-    $sql="";
-    if ($find!="") {$sql="where k1.keyword='" . escape_check($find) . "' or k2.keyword='" . escape_check($find) . "'";}
-    if ($specific!="") {$sql="where k1.keyword='" . escape_check($specific) . "'";}
+    $sql="";$params=array();
+
+    if ($find!="")
+        {
+        $sql="where k1.keyword=? or k2.keyword=?";
+        $params[]="s";$params[]=$find;
+        $params[]="s";$params[]=$find;
+        }
+    if ($specific!="")
+        {
+        $sql="where k1.keyword=?";
+        $params[]="s";$params[]=$specific;
+        }
     
-    return sql_query("
+    return ps_query("
         select k1.keyword,group_concat(k2.keyword order by k2.keyword separator ', ') related from keyword_related kr
             join keyword k1 on kr.keyword=k1.ref
             join keyword k2 on kr.related=k2.ref
         $sql
         group by k1.keyword order by k1.keyword
-        ");
+        ",$params);
     }
 
 function save_related_keywords($keyword,$related)
@@ -2460,7 +2471,7 @@ function save_related_keywords($keyword,$related)
     $keyref = resolve_keyword($keyword, true, false, false);
     $s=trim_array(explode(",",$related));
 
-    sql_query("DELETE FROM keyword_related WHERE keyword = '$keyref'");
+    ps_query("DELETE FROM keyword_related WHERE keyword = ?", array("i",$keyref));
     if (trim($related)!="")
         {
         for ($n=0;$n<count($s);$n++)
@@ -2517,7 +2528,7 @@ function get_fields_for_search_display($field_refs)
         }
 
     # Executes query.
-    $fields = sql_query("select *, ref, name, type, title, keywords_index, partial_index, value_filter from resource_type_field where ref in ('" . join("','",$field_refs) . "')","schema");
+    $fields = ps_query("select ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active, value_filter from resource_type_field where ref in (" . ps_param_insert(count($field_refs)) . ")",ps_param_fill($field_refs,"i"), "schema");
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
@@ -2557,15 +2568,22 @@ function get_filters($order = "ref", $sort = "ASC", $find = "")
         
     $condition = "";
     $join = "";
-    
+    $params = array();
+
     if(trim($find) != "")
         {
         $join = " LEFT JOIN filter_rule_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
-        $condition = " WHERE f.name LIKE '%" . escape_check($find) . "%' OR n.name LIKE '%" . escape_check($find) . "%' OR rtf.name LIKE '" . escape_check($find) . "' OR rtf.title LIKE '" . escape_check($find) . "'";
+        $condition = " WHERE f.name LIKE ? OR n.name LIKE ? OR rtf.name LIKE ? OR rtf.title LIKE ?";
+
+        $params[]="s";$params[]="%" . $find . "%";
+        $params[]="s";$params[]="%" . $find . "%";
+        $params[]="s";$params[]="" . $find . "";
+        $params[]="s";$params[]="" . $find . "";
         }
         
-    $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}";
-    $filters = sql_query($sql);
+    $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}"; // $order and $sort are already confirmed to be valid.
+
+    $filters = ps_query($sql,$params);
     return $filters;
     }
 
@@ -2589,7 +2607,7 @@ function get_filter($filterid)
             return false;    
             }
             
-    $filter  = sql_query("SELECT ref, name, filter_condition FROM filter f WHERE ref={$filterid}"); 
+    $filter  = ps_query("SELECT ref, name, filter_condition FROM filter f WHERE ref=?",array("i",$filterid)); 
     
     if(count($filter) > 0)
         {
@@ -2608,8 +2626,8 @@ function get_filter($filterid)
 */       
 function get_filter_rules($filterid)
     {
-    $filter_rule_nodes  = sql_query("SELECT fr.ref as rule, frn.node_condition, frn.node FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "'"); 
-        
+    $filter_rule_nodes  = ps_query("SELECT fr.ref as rule, frn.node_condition, frn.node FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter=?", array("i",$filterid)); 
+
     // Convert results into useful array    
     $rules = array();
     foreach($filter_rule_nodes as $filter_rule_node)
@@ -2643,7 +2661,7 @@ function get_filter_rules($filterid)
 */       
 function get_filter_rule($ruleid)
     {    
-    $rule_data = sql_query("SELECT fr.ref, frn.node_condition, group_concat(frn.node) AS nodes, n.resource_type_field FROM filter_rule fr JOIN filter_rule_node frn ON frn.filter_rule=fr.ref join node n on frn.node=n.ref WHERE fr.ref='" . escape_check($ruleid) . "' GROUP BY n.resource_type_field,frn.node_condition"); 
+    $rule_data = ps_query("SELECT fr.ref, frn.node_condition, group_concat(frn.node) AS nodes, n.resource_type_field FROM filter_rule fr JOIN filter_rule_node frn ON frn.filter_rule=fr.ref join node n on frn.node=n.ref WHERE fr.ref=? GROUP BY n.resource_type_field,frn.node_condition",array("i",$ruleid)); 
     if(count($rule_data) > 0)
         {
         return $rule_data;
@@ -2674,11 +2692,11 @@ function save_filter($filter,$filter_name,$filter_condition)
             {
             return false;    
             }
-        sql_query("UPDATE filter SET name='" . escape_check($filter_name). "', filter_condition='{$filter_condition}' WHERE ref = '" . escape_check($filter)  . "'");
+        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"i",$filter));
         }
     else
         {
-        $newfilter = sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filter_name). "','{$filter_condition}')");
+        $newfilter = ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
         $newfilter = sql_insert_id();
         return $newfilter;
         }
@@ -2704,28 +2722,32 @@ function save_filter_rule($filter_rule, $filterid, $rule_data)
         
     if($filter_rule != "new" && is_int_loose($filter_rule) && $filter_rule > 0)
         {
-        sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
+        ps_query("DELETE FROM filter_rule_node WHERE filter_rule = ?",array("i",$filter_rule));
         }
     else
         {
-        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
+        ps_query("INSERT INTO filter_rule (filter) VALUES (?)",array("i",$filterid));
         $filter_rule = sql_insert_id();
         }    
         
     if(count($rule_data) > 0)
         {
         $nodeinsert = array();
+        $params=array();
         for($n=0;$n<count($rule_data);$n++)
             {
             $condition = $rule_data[$n][0];
             for($rd=0;$rd<count($rule_data[$n][1]);$rd++)
                 {
                 $nodeid = $rule_data[$n][1][$rd];
-                $nodeinsert[] = "('" . $filter_rule . "','" . $nodeid . "','" . $condition . "')";
+                $nodeinsert[] = "(?,?,?)";
+                $params[]="i";$params[]=$filter_rule;
+                $params[]="i";$params[]=$nodeid;
+                $params[]="i";$params[]=$condition;
                 }
             }
         $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
-        sql_query($sql);
+        ps_query($sql,$params);
         }
     return $filter_rule;
     }
@@ -2798,14 +2820,14 @@ function copy_filter($filter)
             return false;    
             }
             
-    sql_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref={$filter}"); 
+    ps_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref=?",array("i",$filter)); 
     $newfilter = sql_insert_id();
     $rules = ps_array("SELECT ref value from filter_rule  WHERE filter=?",array("i",$filter)); 
     foreach($rules as $rule)
         {
-        sql_query("INSERT INTO filter_rule (filter) VALUES ({$newfilter})");
+        ps_query("INSERT INTO filter_rule (filter) VALUES (?)",array("i",$newfilter));
         $newrule = sql_insert_id();
-        sql_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT '{$newrule}', node_condition, node FROM filter_rule_node WHERE filter_rule='{$rule}'");
+        ps_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT ? , node_condition, node FROM filter_rule_node WHERE filter_rule=?",array("i",$newfilter,"i",$rule));
         }
 
     return $newfilter;
