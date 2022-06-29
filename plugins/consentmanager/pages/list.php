@@ -49,12 +49,14 @@ $url_params = array(
  
 <?php 
 $sql="";
+$params = [];
 if ($findtext!="")
     {
-    $sql="where name   like '%" . escape_check($findtext) . "%'";
+    $sql="where name   like '%?%'";
+    $params = ['s', $findtext];
 	}
 
-$consents=sql_query("select * from consent $sql order by ref");
+$consents= ps_query("select * from consent $sql order by ref", $params);
 
 # pager
 $per_page = $default_perpage_list;
