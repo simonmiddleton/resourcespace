@@ -32,7 +32,7 @@ if ($filter_by_permissions != "")
 			{
 			$sql_permision_filter="(";
 			}
-		$permission = preg_replace('(\W+)','\\\\\\\$0',$permission);		// we need to pass two "\" before the escaped char for regex to take it literally (doubled here as sql_query() will convert most of them)
+		$permission = preg_replace('(\W+)','\\\\\\\$0',$permission);		// we need to pass two "\" before the escaped char for regex to take it literally (doubled here as ps_query() will convert most of them)
 		$sql_permision_filter .= "(usergroup.permissions regexp binary '^{$permission}|,{$permission},|,{$permission}\$|^{$permission}\$' OR (find_in_set('permissions',usergroup.inherit_flags) AND parentusergroup.permissions regexp binary '^{$permission}|,{$permission},|,{$permission}\$|^{$permission}\$'))";
 		}
 	$sql_permision_filter .= ")";

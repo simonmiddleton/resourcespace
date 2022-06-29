@@ -3575,7 +3575,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
  * Get resource log records. The standard field titles are translated using $lang. Custom field titles are i18n translated.
  *
  * @param  int    $resource    Resource ID - set to NULL and specify r.ref=>[id] in the $filters array to retrieve a specific log entry by log ref
- * @param  int    $fetchrows   If $fetchrows is set we don't have to loop through all the returned rows. @see sql_query()
+ * @param  int    $fetchrows   If $fetchrows is set we don't have to loop through all the returned rows. @see ps_query()
  * @param  array  $filters     List of filters to include in the where clause. The key of the array is linked to the
  *                             available columns in the sql statement so they must match!
  *
@@ -4504,28 +4504,7 @@ function user_rating_save($userref,$ref,$rating)
 function get_field($field)
     {
     $r = sql_query("
-        SELECT ref,
-               name,
-               title,
-               type,
-               order_by,
-               keywords_index,
-               partial_index,
-               resource_type,
-               resource_column,
-               display_field,
-               use_for_similar,
-               iptc_equiv,
-               display_template,
-               tab_name,
-               required,
-               smart_theme_name,
-               exiftool_field,
-               advanced_search,
-               simple_search,
-               help_text,
-               display_as_dropdown,
-               automatic_nodes_ordering
+        SELECT " . columns_in("resource_type_field") . "
           FROM resource_type_field
          WHERE ref = '{$field}'
      ", "schema");
