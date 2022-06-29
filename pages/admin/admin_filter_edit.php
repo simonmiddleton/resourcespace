@@ -250,7 +250,6 @@ include "../../include/header.php";
                                 $ruletext = array();
                                 foreach($ruleinfo["fields"] as $rulefield)
                                     {
-                                    //print_r($rulefield);
                                     if(isset($rulefield["values_on"]) && count($rulefield["values_on"]) > 0)
                                         {
                                         $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_on"]) . "')";

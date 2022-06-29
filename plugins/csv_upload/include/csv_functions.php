@@ -265,8 +265,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             $resource_type_set = $csv_set_options["resource_type_default"];
             }
 
-        // echo "Resource type: " . $resource_type_set . "<br>";
-
         // Check that required fields are present for new resources
         if(!$csv_set_options["update_existing"])
             {
@@ -519,7 +517,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
 
             $fieldid        = $csv_set_options["fieldmapping"][$column_id];
-            //echo "Checking column id : " . $column_id  . " field id #" . $fieldid . "<br/>";
             $field_def      = $allfields[$fieldid];
 			$field_name     = $field_def['name'];
             $field_type 	= $field_def['type'];
@@ -549,7 +546,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 }
 
                 $cell_value=trim($line[$column_id]);		// important! we trim values, as options may contain a space after the comma
-                //echo "Found value for " . $field_name . ": " . $cell_value . "<br>";
 
             // Raise error if it's a required field and has an empty or null value
             if (in_array($cell_value,  array(null,"") ))
@@ -607,8 +603,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 if (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
                     {
                     // Check nodes are valid for this field, remove quotes 
-                    //echo "Checking for '" . htmlspecialchars($cell_value_item) . "' in ('" . implode("','",$currentoptions) . "')<br/>";
-
                     if('' != $cell_value_item && !in_array(mb_strtolower($cell_value_item), $currentoptions))
                         {
                         switch ($field_type)
@@ -774,11 +768,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 {
                                 foreach($translations as $translation)
                                     {
-                                    // echo "Checking for '" . htmlspecialchars($node_translation) . "' in ('" . implode("','",$cell_value_array) . "')<br/>";
                                     // Add to array of nodes, unless it has been added to array already as a parent for a previous node
                                     if (in_array($translation, $cell_value_array))
                                         {
-                                        //echo "Found node " . $node_id . "<br/>";
                                         $setnodes[] = $node_id;
                                         // We need to add all parent nodes for category trees
                                         if($field_def['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 

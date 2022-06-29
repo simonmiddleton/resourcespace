@@ -309,7 +309,6 @@ function google_visionTranslate($labels)
         debug("google_vision: \$result = " . print_r($result, true));
   
         $result=json_decode($result);
-        #print_r($result);
         if (isset($result->data->translations[0]->translatedText))
             {
             $new_labels=array_merge($new_labels,explode(" :: ",$result->data->translations[0]->translatedText));

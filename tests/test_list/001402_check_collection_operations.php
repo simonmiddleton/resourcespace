@@ -22,8 +22,6 @@ $resource_list[] = create_resource(1, 0);
 $resource_list[] = create_resource(1, 0);
 $resource_list[] = create_resource(1, 0);
 
-// print_r($resource_list);
-
 // Ensure creation was successful
 foreach ($resource_list as $resource_entry)
     {

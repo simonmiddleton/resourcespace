@@ -45,9 +45,6 @@ while($s=strpos($svg_source,"[",$e))
     }
 if (count($params)==0) exit("No template parameters found.");
 
-//print_r($params);
-//echo json_encode($params);
-
 foreach ($params as $param)
     {
     ?>
@@ -142,10 +139,6 @@ UpdateSVG();
 if (!$rsvg_installed)
     {
     echo "<p>" . $lang["stencilvg-rsvg-not-installed"] . "</p>";
-    }
-else    
-    {
-    // echo "<p>" . $rsvg_version . "</p>"; 
     }
 ?>
 

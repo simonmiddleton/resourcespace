@@ -98,9 +98,7 @@ foreach($sharedcols as $sharedcol)
         $allsharedcols[$sharedcol] = i18n_get_translated($coldetails["name"]);
         }
     }
-    
 
-//echo "<pre>" . print_r($shares) . "</pre>";
 $expiredshares = 0;
 $per_page =getvalescaped("per_page",$default_perpage, true); 
 $per_page = (!in_array($per_page,$list_display_array)) ? $default_perpage_list : $per_page;

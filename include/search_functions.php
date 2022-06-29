@@ -995,7 +995,6 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
         $sql_filter->parameters[] = $access;
         }
     // Append filter if only searching for editable resources
-    // ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
     if($editable_only)
         {
         $editable_filter = new PreparedStatementQuery();

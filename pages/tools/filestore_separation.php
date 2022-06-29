@@ -34,7 +34,6 @@ function reverse_filestore_location($path,$size,$url=false, $ffmpeg_alt=false){
 	echo "Path trim:$path_trim<br/>";
 	if($originals_separate_storage){
 		if($originals_separate_storage_ffmpegalts_as_previews && $ffmpeg_alt){
-			//echo 'found original alt<br/>';
 			// we have to consider the fact that this may be in either location
 			if(strpos($path_trim, '/original')===0){
 				$path_trim=substr($path_trim, 9);

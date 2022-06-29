@@ -81,10 +81,6 @@ function reap_children()
       {
       array_push($tmp, $pid);
       }
-    // else
-    // {
-    //   echo "[SIGCHLD] child $pid reaped.\n";
-    // }
     }
 
   $children = $tmp;
@@ -112,8 +108,6 @@ function sigalrm_handler()
 function sigchld_handler($signal)
   {
   $running_jobs = reap_children();
-
-  // echo "[SIGCHLD] jobs left: $running_jobs\n";
 
   pcntl_waitpid(-1, $status, WNOHANG);
   }
@@ -174,7 +168,6 @@ foreach($resources as $resource) // For each resources
     else if ($pid)
       {
       array_push($children, $pid);
-      // echo sprintf("[MASTER] spawned client %d [PID:%d]...\n", count($children), $pid);
       }
     else
       {

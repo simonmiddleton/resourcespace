@@ -472,10 +472,9 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         $used=$avail-$free;
         }
         
-    # echo "free: ".$free."<br/>";
     # convert limit
     $limit=$disk_quota_limit_size_warning_noupload*1024*1024*1024;
-    # echo "no_upload: ".$limit."<br/>";
+
     # compare against size setting
     if($free<=$limit)
         {
