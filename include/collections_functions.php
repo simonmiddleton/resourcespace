@@ -2140,7 +2140,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 if ($use_phpmailer)
                     {
-                    $link='<a href="' . $url . '">' . $collection_name . '</a>';
+                    $link='<a href="' . $url . '">' . htmlspecialchars($collection_name) . '</a>';
                     $list.= $htmlbreak.$link;
                     // alternate list style
                     $list2.=$htmlbreak.$collection_name.' -'.$htmlbreaksingle . $url;
@@ -2220,7 +2220,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         send_user_notification($internal_user_ids,$notifymessage);
         }
 
-    //hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
+    hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
     # Return an empty string (all OK).
     return "";
     }
