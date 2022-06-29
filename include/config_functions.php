@@ -879,7 +879,7 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
     $params = [];
 	if(count($ftypes)>0)
 		{
-		$fieldtypefilter = " type in ('". ps_param_insert(count($ftypes)) ."')";
+		$fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
         $params = ps_param_fill($ftypes, 'i');
 		}
 		
