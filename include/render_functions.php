@@ -5722,3 +5722,105 @@ function render_fixed_text_question($label, $text)
         <div class='clearerleft'></div>
         </div>";
     }
+
+
+/**
+ * Renders a fontawesome icon selector question
+ * Requires lib/fontawesome/resourcespace/icon_classes.php to be included in the page using the function
+ *
+ * @param  string $label
+ * @param  string $name     Input name
+ * @param  string $current  Current value
+ * 
+ * @return void
+ */
+function render_fa_icon_selector(string $label="",string $name="icon",string $current="")
+    {
+    global $lang, $font_awesome_icons;
+
+    if(trim($label) == "")
+        {
+        $label = $lang["property-icon"];
+        }
+    ?>
+    <div class="Question">
+        <label><?php echo htmlspecialchars($label) ?></label>
+        <?php $blank_icon = ($current == "" || !in_array($current, $font_awesome_icons)); ?>
+        <div id="iconpicker-question">
+            <input name="<?php echo htmlspecialchars($name) ?>" type="text" id="iconpicker-input" value="<?php echo htmlspecialchars($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : htmlspecialchars($current)?>" id="iconpicker-button-fa"></i></span>
+        </div>
+        <div id="iconpicker-container">
+            <div class="iconpicker-title">
+                <input type="text" id="iconpicker-filter" placeholder="<?php echo $lang['icon_picker_placeholder'] ?>" onkeyup="filterIcons()">
+            </div>
+            <div class="iconpicker-content">
+                <?php foreach ($font_awesome_icons as $icon_name)
+                    {
+                    ?>
+                    <div class="iconpicker-content-icon" data-icon="<?php echo htmlspecialchars(trim($icon_name)) ?>" title="<?php echo htmlspecialchars(trim($icon_name)) ?>">
+                        <i class="fa-fw <?php echo htmlspecialchars(trim($icon_name)) ?>"></i>
+                    </div>
+                    <?php
+                    } ?>
+            </div>
+        </div>
+        <div class="clearerleft"> </div>
+    </div>
+
+    <script type="text/javascript">
+
+    jQuery("#iconpicker-button").click(function()
+        {
+        jQuery("#iconpicker-container").toggle();
+        });
+
+    jQuery("#iconpicker-input").focus(function()
+        {
+        jQuery("#iconpicker-container").show();
+        });
+
+    jQuery(".iconpicker-content-icon").click(function()
+        {
+        var icon_name = jQuery(this).data("icon");
+        jQuery("#iconpicker-input").val(icon_name);
+        jQuery("#iconpicker-button i").attr("class","fa-fw " + icon_name);
+        });
+
+    jQuery(document).mouseup(function(e) 
+        {
+        var container = jQuery("#iconpicker-container");
+        var question = jQuery("#iconpicker-question");
+
+        if (!container.is(e.target) && container.has(e.target).length === 0
+            && !question.is(e.target) && question.has(e.target).length === 0) 
+            {
+            container.hide();
+            }
+        });
+
+    function filterIcons()
+        {
+        filter_text = document.getElementById("iconpicker-filter");
+        var filter_upper = filter_text.value.toLowerCase();
+
+        container = document.getElementById("iconpicker-container");
+        icon_divs = container.getElementsByClassName("iconpicker-content-icon");
+
+        for (i = 0; i < icon_divs.length; i++)
+            {
+            icon_short_name = icon_divs[i].getAttribute("data-icon");
+            if (icon_short_name.toLowerCase().indexOf(filter_upper) > -1)
+                {
+                icon_divs[i].style.display = "inline-block";
+                }
+            else
+                {
+                icon_divs[i].style.display = "none";
+                }
+            }
+        }
+
+    </script>
+    <?php
+    }
+

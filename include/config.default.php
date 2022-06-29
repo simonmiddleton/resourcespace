@@ -3288,3 +3288,6 @@ $regexp_slash_replace = 'SLASH';
 // Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
 // The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
 // $valid_upload_paths = [];
+
+// Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
+$thumbs_display_archive_state = false;

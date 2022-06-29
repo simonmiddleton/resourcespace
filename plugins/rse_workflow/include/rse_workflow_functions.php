@@ -5,9 +5,9 @@ if (!function_exists("rse_workflow_get_actions")){
             {
             # Check if we are searching for actions specific to a status
             $condition="";$params=array();
-            if($status!="" && is_int($status)){$condition=" where wa.statusfrom='status' ";}
-            if($ref!=""){$condition=" where wa.ref=? ";$params[]="i";$params[]=$ref;}
-            $actions=ps_query("select wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto,a.notify_group,a.name as statusto_name,a.more_notes_flag,a.notify_user_flag, a.email_from, a.bcc_admin from workflow_actions wa left outer join archive_states a on wa.statusto=a.code $condition group by wa.ref order by wa.ref,wa.statusfrom,wa.statusto asc",$params);
+            if($status!="" && is_int($status)){$condition=" WHERE wa.statusfrom='status' ";}
+            if($ref!=""){$condition=" WHERE wa.ref=? ";$params[]="i";$params[]=$ref;}
+            $actions=ps_query("SELECT wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto,a.notify_group,a.name AS statusto_name,a.more_notes_flag,a.notify_user_flag, a.email_from, a.bcc_admin FROM workflow_actions wa LEFT OUTER JOIN archive_states a ON wa.statusto=a.code $condition GROUP BY wa.ref ORDER BY wa.ref,wa.statusfrom,wa.statusto ASC",$params);
             return $actions;
             }
     }
@@ -23,7 +23,7 @@ if (!function_exists("rse_workflow_save_action")){
             $buttontext=getvalescaped("actionbuttontext","");
             
             # Check if we are searching for actions specific to a status
-            ps_query("update workflow_actions set name=?, text=?, buttontext='' statusfrom=?, statusto=? where ref=?",array("s",$name,"s",$text,"i",$fromstate,"i",$tostate,"i",$ref));
+            ps_query("UPDATE workflow_actions SET name = ?, text = ?, buttontext = '' statusfrom = ?, statusto = ? WHERE ref = ?",array("s",$name,"s",$text,"i",$fromstate,"i",$tostate,"i",$ref));
             return true;
             }
     }
@@ -31,7 +31,7 @@ if (!function_exists("rse_workflow_save_action")){
 if (!function_exists("rse_workflow_delete_action")){
     function rse_workflow_delete_action($action)
         {
-        ps_query("delete from workflow_actions where ref=?",array("i",$action));
+        ps_query("DELETE FROM workflow_actions WHERE ref = ?",array("i",$action));
         return true;  
         }
     }   
@@ -47,7 +47,8 @@ if (!function_exists("rse_workflow_get_archive_states")){
                            notify_user_flag,
                            email_from,
                            bcc_admin,
-                           simple_search_flag
+                           simple_search_flag,
+                           icon
                       FROM archive_states
                   ORDER BY code ASC",array(),"workflow");
 
@@ -63,6 +64,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                 $states[$rawstate['code']]['rse_workflow_email_from']=$rawstate['email_from'];
                 $states[$rawstate['code']]['rse_workflow_bcc_admin']=$rawstate['bcc_admin'];
                 $states[$rawstate['code']]['simple_search_flag'] = $rawstate['simple_search_flag'];
+                $states[$rawstate['code']]['icon'] = $rawstate['icon'] != "" ? $rawstate['icon'] : (WORKFLOW_DEFAULT_ICONS[$rawstate['code']] ?? WORKFLOW_DEFAULT_ICON);
                 // Identify states that are set in config.php and cannot be deleted from plugin                
                 if(in_array($rawstate['code'],$additional_archive_states))
                     {
@@ -104,10 +106,12 @@ if (!function_exists("rse_workflow_get_archive_states")){
                     {
                     $simple_search_flag = ($workflow_state == 0 ? 1 : 0);
 
+                    $icon = WORKFLOW_DEFAULT_ICONS[$workflow_state] ?? 'fas cogs';
                     rse_workflow_create_state([
                         'code' => $workflow_state,
                         'name' => $workflow_state_name,
                         'simple_search_flag' => $simple_search_flag,
+                        'icon' => $icon,
                     ]);
                     clear_query_cache("workflow");
                     }
@@ -123,8 +127,8 @@ if (!function_exists("rse_workflow_get_archive_states")){
 if (!function_exists("rse_workflow_delete_state")){
     function rse_workflow_delete_state($state,$newstate)
         {		
-        ps_query("update resource set archive=? where archive=?",array("i",$newstate,"i",$state));
-        ps_query("delete from archive_states where code=?",array("s",$state));
+        ps_query("UPDATE resource SET archive = ? WHERE archive = ?",array("i",$newstate,"i",$state));
+        ps_query("DELETE FROM archive_states WHERE code = ?",array("s",$state));
         clear_query_cache("workflow");
         return true;  
         }
@@ -258,6 +262,7 @@ function rse_workflow_create_state(array $data)
         'email_from'         => '',
         'bcc_admin'          => 0,
         'simple_search_flag' => 0,
+        'icon'               => 'fas cogs',
     ];
     $new_state_data = array_map('trim', $data + $defaults);
 
@@ -269,13 +274,13 @@ function rse_workflow_create_state(array $data)
     if(!isset($new_state_data['code']))
         {
         // Get the current maximum code reference
-        $code = ps_value('SELECT MAX(code) AS `value` FROM archive_states', array(), 0);
+        $code = ps_value('SELECT MAX(code) AS `value` FROM archive_states', [], 0);
         $new_state_data['code'] = ++$code;
         }
 
     $sql = ps_query(
-        "INSERT INTO archive_states (code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin, simple_search_flag)
-              VALUES (" . ps_param_insert(8) . ")",
+        "INSERT INTO archive_states (code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin, simple_search_flag, icon)
+              VALUES (" . ps_param_insert(9) . ")",
         array(
         "s",$new_state_data['code'],
         "s",$new_state_data['name'],
@@ -284,7 +289,8 @@ function rse_workflow_create_state(array $data)
         "i",$new_state_data['notify_user_flag'],
         "s",$new_state_data['email_from'],
         "i",$new_state_data['bcc_admin'],
-        "i",$new_state_data['simple_search_flag']        
+        "i",$new_state_data['simple_search_flag'],
+        "s",$new_state_data['icon']  
         ));
     $new_state_data['ref'] = sql_insert_id();
 

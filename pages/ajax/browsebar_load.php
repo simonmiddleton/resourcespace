@@ -410,18 +410,9 @@ switch ($returntype)
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
             
-            // Set an icon 
-            switch($showstate)
-                {
-                case -2: $icon="file-import"; break;
-                case -1: $icon="eye"; break;
-                case 0: $icon="check"; break;
-                case 1: $icon="clock"; break;
-                case 2: $icon="archive"; break;
-                case 3: $icon="trash"; break;
-                default: $icon="cogs"; # All additional workflow states show gears icon to indicate workflow
-                }
-            $return_items[$n]["icon"] = "<i class='fa fa-fw fa-" . $icon  . "'></i>";
+            // Set an icon
+            $icon = $workflowicons[$showstate] ?? (WORKFLOW_DEFAULT_ICONS[$showstate] ?? WORKFLOW_DEFAULT_ICON);  
+            $return_items[$n]["icon"] = "<i class='fa-fw " . $icon  . "'></i>";
             $n++;
             }
 

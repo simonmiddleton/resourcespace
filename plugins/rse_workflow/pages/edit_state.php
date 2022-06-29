@@ -7,15 +7,17 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 unset($additional_archive_states);$additional_archive_states=array();
 include_once '../include/rse_workflow_functions.php';
+include __DIR__ . "/../../../lib/fontawesome/resourcespace/icon_classes.php";
 
-$code=getvalescaped("code","");
-$name=getvalescaped("name","");
-$notify_group=getvalescaped("notify_group",0, true);
-$more_notes = getvalescaped('more_notes', 0, true);
-$notify_user = getvalescaped('notify_user', 0, true);
-$rse_workflow_email_from = getvalescaped('rse_workflow_email_from', '');
-$rse_workflow_bcc_admin = getvalescaped('rse_workflow_bcc_admin', 0, true);
+$code=getval("code","");
+$name=getval("name","");
+$notify_group=getval("notify_group",0, true);
+$more_notes = getval('more_notes', 0, true);
+$notify_user = getval('notify_user', 0, true);
+$rse_workflow_email_from = getval('rse_workflow_email_from', '');
+$rse_workflow_bcc_admin = getval('rse_workflow_bcc_admin', 0, true);
 $simple_search = getval('simple_search', 0, true);
+$icon = getval('icon', '');
 $errortext="";
 $saved=false;
 
@@ -33,6 +35,7 @@ if($code=="new")
     $workflowstate["rse_workflow_email_from"] = "";
     $workflowstate["rse_workflow_bcc_admin"] = 0;
     $workflowstate["simple_search_flag"] = 0;
+    $workflowstate["icon"] = WORKFLOW_DEFAULT_ICON;
     }
 else
     {   
@@ -47,7 +50,7 @@ else
     }
 
 
-if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
+if (getval("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
     {
     if ($name=="")
         {
@@ -65,30 +68,33 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
                 'email_from' => '',
                 'bcc_admin' => $rse_workflow_bcc_admin,
                 'simple_search_flag' => $simple_search,
+                'icon' => $icon,
             ]);
             }
         else
             {
             ps_query("
                 UPDATE archive_states
-                   SET name=?,
-                       notify_group=?,
-                       more_notes_flag=?,
-                       notify_user_flag=?,
-                       email_from='',
-                       bcc_admin=?,
-                       simple_search_flag = ?
+                   SET name = ?,
+                       notify_group = ?,
+                       more_notes_flag = ?,
+                       notify_user_flag = ?,
+                       email_from = '',
+                       bcc_admin = ?,
+                       simple_search_flag = ?,
+                       icon = ?
                  WHERE code = ?",
-                array(
+                    [
                     "s",$name,
                     "i",$notify_group,
                     "i",$more_notes,
                     "i",$notify_user,
                     "i",$rse_workflow_bcc_admin,
                     "i",$simple_search,
-                    "i",$code
-                )
-            );
+                    "s",$icon,
+                    "i",$code,
+                    ]
+                );
             }
         
         clear_query_cache("workflow");
@@ -102,6 +108,7 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
     $workflowstate["rse_workflow_email_from"]='';
     $workflowstate["rse_workflow_bcc_admin"]=$rse_workflow_bcc_admin;
     $workflowstate["simple_search_flag"] = $simple_search;
+    $workflowstate["icon"] = $icon;
     }   
     
     
@@ -250,7 +257,10 @@ else if ($saved)
             </div>
             <?php
             }
-            ?>
+
+    render_fa_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
+    ?>
+
     <div class="Question" id="QuestionSubmit">
         <label for="buttons"> </label>
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>

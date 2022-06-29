@@ -238,26 +238,9 @@ else
 	<div class="clearerleft"> </div>
     </div>
 
-    <div class="Question">
-        <label><?php echo $lang["property-icon"]?></label>
-        <?php $blank_icon = ($restypedata["icon"] == "" || !in_array($restypedata["icon"], $font_awesome_icons)); ?>
-        <div id="iconpicker-question">
-            <input name="icon" type="text" id="iconpicker-input" value="<?php echo htmlspecialchars($restypedata["icon"])?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : htmlspecialchars($restypedata['icon'])?>" id="iconpicker-button-fa"></i></span>
-        </div>
-        <div id="iconpicker-container">
-            <div class="iconpicker-title">
-                <input type="text" id="iconpicker-filter" placeholder="<?php echo $lang['icon_picker_placeholder'] ?>" onkeyup="filterIcons()">
-            </div>
-            <div class="iconpicker-content">
-                <?php foreach ($font_awesome_icons as $icon_name) { ?>
-                    <div class="iconpicker-content-icon" data-icon="<?php echo htmlspecialchars(trim($icon_name)) ?>" title="<?php echo htmlspecialchars(trim($icon_name)) ?>">
-                        <i class="fa-fw <?php echo htmlspecialchars(trim($icon_name)) ?>"></i>
-                    </div>
-                <?php } ?>
-            </div>
-        </div>
-        <div class="clearerleft"> </div>
-    </div>
+    <?php
+    render_fa_icon_selector($lang["property-icon"],"icon",$restypedata['icon']);
+    ?>
     
     <div class="Question">
 	<label><?php echo $lang["property-allowed_extensions"]?></label>
@@ -328,62 +311,6 @@ else
 
 </form>
 </div><!-- End of Basics Box -->
-
-<script type="text/javascript">
-
-    jQuery("#iconpicker-button").click(function()
-        {
-        jQuery("#iconpicker-container").toggle();
-        });
-
-    jQuery("#iconpicker-input").focus(function()
-        {
-        jQuery("#iconpicker-container").show();
-        });
-
-    jQuery(".iconpicker-content-icon").click(function()
-        {
-        var icon_name = jQuery(this).data("icon");
-        jQuery("#iconpicker-input").val(icon_name);
-        jQuery("#iconpicker-button i").attr("class","fa-fw " + icon_name);
-        });
-
-    jQuery(document).mouseup(function(e) 
-        {
-        var container = jQuery("#iconpicker-container");
-        var question = jQuery("#iconpicker-question");
-
-        if (!container.is(e.target) && container.has(e.target).length === 0
-            && !question.is(e.target) && question.has(e.target).length === 0) 
-            {
-            container.hide();
-            }
-        });
-
-    function filterIcons()
-        {
-        filter_text = document.getElementById("iconpicker-filter");
-        var filter_upper = filter_text.value.toLowerCase();
-
-        container = document.getElementById("iconpicker-container");
-        icon_divs = container.getElementsByClassName("iconpicker-content-icon");
-
-        for (i = 0; i < icon_divs.length; i++)
-            {
-            icon_short_name = icon_divs[i].getAttribute("data-icon");
-            if (icon_short_name.toLowerCase().indexOf(filter_upper) > -1)
-                {
-                icon_divs[i].style.display = "inline-block";
-                }
-            else
-                {
-                icon_divs[i].style.display = "none";
-                }
-            }
-        }
-
-</script>
-
 <?php
 include "../../include/footer.php";
 ?>

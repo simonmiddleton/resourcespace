@@ -807,3 +807,13 @@ const SENSITIVE_VARIABLE_NAMES = [
     'museumplus_api_pass',
     'emu_email_notify',
 ];
+
+const WORKFLOW_DEFAULT_ICON = "fa-solid fa-gears";
+const WORKFLOW_DEFAULT_ICONS = [
+    '-2'    => 'fa-solid fa-file-import',
+    '-1'    => 'fa-solid fa-eye',
+    '0'     => 'fa-solid fa-check',
+    '1'     => 'fa-solid fa-clock',
+    '2'     => 'fa-solid fa-box-archive',
+    '3'     => 'fa-solid fa-trash',
+    ];
