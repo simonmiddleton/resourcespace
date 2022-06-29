@@ -17,8 +17,7 @@
 * @param string      $restypes                Optionally used to specify which resource types to search for
 * @param string      $order_by
 * @param string      $archive                 Allows searching in more than one archive state
-* @param integer     $fetchrows               Fetch "$fetchrows" rows but pad the array to the full result set size with
-*                                             empty values (@see sql_query())
+* @param integer     $fetchrows               Fetch "$fetchrows" rows
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
@@ -435,7 +434,7 @@ function do_search(
                             }
                         else
                             {
-                            $datefieldinfo=sql_query("SELECT ref FROM resource_type_field WHERE name='" . escape_check($fieldname) . "' AND type IN (" . FIELD_TYPE_DATE_AND_OPTIONAL_TIME . "," . FIELD_TYPE_EXPIRY_DATE . "," . FIELD_TYPE_DATE . "," . FIELD_TYPE_DATE_RANGE . ")", "schema");
+                            $datefieldinfo=ps_query("SELECT ref FROM resource_type_field WHERE name = ? AND type IN (" . FIELD_TYPE_DATE_AND_OPTIONAL_TIME . "," . FIELD_TYPE_EXPIRY_DATE . "," . FIELD_TYPE_DATE . "," . FIELD_TYPE_DATE_RANGE . ")",["s",$fieldname], "schema");
                             $datefieldinfo_cache[$fieldname]=$datefieldinfo;
                             }
 
@@ -1218,7 +1217,7 @@ function do_search(
                 }
             else
                 {
-                sql_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref = ?",["i",$usergroup]);
+                ps_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref = ?",["i",$usergroup]);
                 }
 
             message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
@@ -1472,7 +1471,7 @@ function do_search(
 
     if($return_refs_only)
         {
-        # Execute query but only ask for ref columns back from mysql_query();
+        # Execute query but only ask for ref columns back from ps_query();
         # We force verbatim query mode on (and restore it afterwards) as there is no point trying to strip slashes etc. just for a ref column
         global $mysql_verbatim_queries;
         $mysql_vq=$mysql_verbatim_queries;
