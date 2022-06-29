@@ -886,13 +886,13 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 
     $insert_columns = array_keys($setcolumns);
     $insert_values  = array_values($setcolumns);
-
+    
     $sql = "INSERT INTO collection
             (" . implode(",",$insert_columns) . ", created)
             VALUES
-            ('" . implode("','",$insert_values). "',NOW())";
+            (". ps_param_insert(count($setcolumns)) .",NOW())";
     
-    sql_query($sql);
+    ps_query($sql, ps_param_fill($insert_values, 's'));
 
     $ref = sql_insert_id();
     index_collection($ref);
@@ -1507,6 +1507,7 @@ function save_collection($ref, $coldata=array())
                 'bg_img_resource_ref',
                 'order_by',
             ];
+            $params = [];
             foreach($sqlset as $colopt => $colset)
                 {
                 // Only valid collection columns should be processed
@@ -1527,7 +1528,14 @@ function save_collection($ref, $coldata=array())
 
                 if(in_array($colopt, array("parent", "thumbnail_selection_method", "bg_img_resource_ref")))
                     {
-                    $sqlupdate .= $colopt . " = " . sql_null_or_val((string) $colset, $colset == 0);
+                    $sqlupdate .= $colopt . " = ";
+                    if($colset == 0){$sqlupdate .= 'NULL';}
+                    else
+                        {
+                        $sqlupdate .= '?';
+                        $params = array_merge($params,['i', $colset]);
+                        }
+                    
                     continue;
                     }
 
@@ -1536,12 +1544,13 @@ function save_collection($ref, $coldata=array())
                     $colset = (int) $colset;
                     }
 
-                $sqlupdate .= $colopt . " = '" . escape_check($colset) . "' ";
+                $sqlupdate .= $colopt . " = ? ";
+                $params = array_merge($params, ['s', $colset]);
                 }
             if($sqlupdate !== '')
                 {
-                $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = '{$ref}'";
-                sql_query($sql);
+                $sql = "UPDATE collection SET {$sqlupdate} WHERE ref = ?";
+                ps_query($sql, array_merge($params, ['i', $ref]));
 
                 if($clear_fc_query_cache)
                     {
@@ -1593,11 +1602,15 @@ function save_collection($ref, $coldata=array())
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
-        $ulist = array_map("escape_check",$ulist);
         $urefs=ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
         if (count($urefs)>0)
             {
-            sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
+            $params = [];
+            foreach($urefs as $uref)
+                {
+                $params[] = $ref; $params[] = $uref; 
+                }
+            ps_query("insert into user_collection(collection,user) values " . trim(str_repeat('(?, ?),', count($urefs)), ','), ps_param_fill($params, 'i'));
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
 
@@ -2285,19 +2298,39 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
         $shareable_resources = array_filter($r, function($resource_ref) { return can_share_resource($resource_ref); });
         foreach($shareable_resources as $resource_ref)
             {
-            $sql = sprintf("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW(), '%s', %s, %s)",
-                $resource_ref,
-                $k,
-                escape_check($collection),
-                $userref,
-                escape_check($group),
-                escape_check($feedback),
-                escape_check($email),
-                escape_check($access),
-                sql_null_or_val($expires, $expires == ""),
-                sql_null_or_val(hash("sha256", $k . $sharepwd . $scramble_key), !($sharepwd != "" && $sharepwd != "(unchanged)"))
+            $sql = '';
+            $params = [];
+            if($expires == '')
+                {
+                $sql = 'NULL, ';
+                }
+            else
+                {
+                $sql .= '?, ';
+                $params[] = 's'; $params[] = $expires;
+                }
+            if(!($sharepwd != "" && $sharepwd != "(unchanged)"))
+                {
+                $sql .= 'NULL';
+                }
+            else
+                {
+                $sql = '?';
+                $params[] = 's'; $params[] = hash("sha256", $k . $sharepwd . $scramble_key);
+                }
+            ps_query("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, {$sql})",
+            array_merge(
+            [
+            'i', $resource_ref,
+            's', $k,
+            'i', $collection,
+            'i', $userref,
+            'i', $group,
+            's', $feedback,
+            's', $email,
+            'i', $access
+            ], $params)
             );
-            sql_query($sql);
             $created_sub_fc_access_key = true;
             }
 
@@ -2306,20 +2339,41 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
 
     if($is_featured_collection_category && $created_sub_fc_access_key)
         {
+        $sql = '';
+        $params = [];
+        if($expires == '')
+            {
+            $sql = 'NULL, ';
+            }
+        else
+            {
+            $sql = '?, ';
+            $params[] = 's'; $params[] = $expires;
+            }
+        if(!($sharepwd != "" && $sharepwd != "(unchanged)"))
+            {
+            $sql = 'NULL';
+            }
+        else
+            {
+            $sql = '?';
+            $params[] = 's'; $params[] = hash("sha256", $k . $sharepwd . $scramble_key);
+            }
         // add for FC category. No resource. This is a dummy record so we can have a way to edit the external share done 
         // at the featured collection category level
-        $sql = sprintf("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s', NOW(), '%s', %s, %s)",
-            $k,
-            escape_check($main_collection["ref"]),
-            $userref,
-            escape_check($group),
-            escape_check($feedback),
-            escape_check($email),
-            escape_check($access),
-            sql_null_or_val($expires, $expires == ""),
-            sql_null_or_val(hash("sha256", $k . $sharepwd . $scramble_key), !($sharepwd != "" && $sharepwd != "(unchanged)"))
+        ps_query("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, {$sql})",
+            array_merge(
+            [
+            's', $k,
+            'i', $main_collection["ref"],
+            'i', $userref,
+            'i', $group,
+            's', $feedback,
+            's', $email,
+            'i', $access
+            ], $params)
         );
-        sql_query($sql);
+
         }
 
     return $k;
@@ -2480,7 +2534,13 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
     $searchcount = count($results);
     if($searchcount > 0)
         {
-        sql_query("UPDATE collection_resource SET sortorder = if(isnull(sortorder),'" . $searchcount . "',sortorder + '" . $searchcount . "') WHERE collection='" . $collection . "'");
+        ps_query("UPDATE collection_resource SET sortorder = if(isnull(sortorder), ?,sortorder + ?) WHERE collection= ?",
+            [
+            'i', $searchcount,
+            'i', $searchcount,
+            'i', $collection
+            ]
+        );
         }
 
 	for ($r=0;$r<$searchcount;$r++)
@@ -2503,8 +2563,31 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                 }
             for ($n=0;$n<count($keys);$n++)
                 {
+                $sql = '';
+                $params = [];
+                if($keys[$n]["expires"]==''){$sql .= 'NULL, ';}
+                else
+                    {
+                    $sql .= '?, ';
+                    $params[] = 's'; $params[] = $keys[$n]["expires"];
+                    }
+                if($keys[$n]["usergroup"]=""){$sql .= 'NULL';}
+                else
+                    {
+                    $sql .= '?';
+                    $params[] = 's'; $params[] = $keys[$n]["usergroup"];
+                    }
                 # Insert a new access key entry for this resource/collection.
-                sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
+                ps_query("insert into external_access_keys(resource,access_key,user,collection,date,access,password_hash,expires,usergroup) values (?, ?, ?, ?,now(), ?, ?, {$sql})",
+                    array_merge([
+                    'i', $resource,
+                    's', $keys[$n]["access_key"],
+                    'i', $userref,
+                    'i', $collection,
+                    's', $keys[$n]["access"],
+                    's', $keys[$n]["password_hash"]
+                    ], $params)
+                );
                 #log this
                 collection_log($collection,LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH,$resource, $keys[$n]["access_key"]);
                 
@@ -2967,17 +3050,22 @@ function swap_collection_order($resource1,$resource2,$collection)
 		$counter++;	
 	}
 
-	
-	$sql1 = "update collection_resource set date_added = '" . $rec[1]['date_added'] . "', 
-		sortorder = " . $rec[1]['sortorder'] . " where collection = '$collection' 
-		and resource = '" . $rec[2]['resource'] . "'";
-
-	$sql2 = "update collection_resource set date_added = '" . $rec[2]['date_added'] . "', 
-		sortorder = " . $rec[2]['sortorder'] . " where collection = '$collection' 
-		and resource = '" . $rec[1]['resource'] . "'";
-
-	sql_query($sql1);
-	sql_query($sql2);
+	ps_query("update collection_resource set date_added = ?, sortorder = ? where collection = ? and resource = ?", 
+        [
+        's', $rec[1]['date_added'],
+        'i', $rec[1]['sortorder'], 
+        'i', $collection, 
+        'i', $rec[2]['resource']
+        ]
+    );
+	ps_query("update collection_resource set date_added = ?, sortorder = ? where collection = ? and resource = ?",
+        [
+        's', $rec[2]['date_added'],
+        'i', $rec[2]['sortorder'], 
+        'i', $collection, 
+        'i', $rec[1]['resource']
+        ]
+    );
 
 	}
 
@@ -2999,16 +3087,18 @@ function update_collection_order($neworder,$collection,$offset=0)
     if (count($neworder)>0) {
         $updatesql= "update collection_resource set sortorder=(case resource ";
         $counter = 1 + $offset;
+        $params = [];
         foreach ($neworder as $colresource)
             {
-            $updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
+            $updatesql.= "when ? then ? ";
+            $params = array_merge($params, ['i', $colresource, 'i', $counter]);
             $counter++;    
             }
-        $updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
-        sql_query($updatesql);
+        $updatesql.= "else sortorder END) WHERE collection= ?";
+        ps_query($updatesql, array_merge($params, ['i', $collection]));
     }
-	$updatesql="update collection_resource set sortorder=99999 WHERE collection='" . escape_check($collection) . "' and sortorder is NULL";
-	sql_query($updatesql);
+	$updatesql="update collection_resource set sortorder=99999 WHERE collection= ? and sortorder is NULL";
+	ps_query($updatesql, ['i', $collection]);
 	}
     
     
@@ -3041,8 +3131,30 @@ function get_collection_resource_comment($resource,$collection)
 function save_collection_resource_comment($resource,$collection,$comment,$rating)
 	{
 	# get data before update so that changes can be logged.	
-	$data=sql_query("select comment,rating from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
-	sql_query("update collection_resource set comment='" . escape_check($comment) . "',rating=" . (($rating!="")?"'" . escape_check($rating) . "'":"null") . ",use_as_theme_thumbnail='" . (getval("use_as_theme_thumbnail","")==""?0:1) . "' where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
+	$data= ps_query("select comment,rating from collection_resource where resource= ? and collection= ?",
+        [
+        'i', $resource,
+        'i', $collection
+        ]
+    );
+    $params = [];
+    if($rating  != "")
+        {
+        $sql = '?';
+        $params = ['i', $rating];
+        }
+    else{$sql = 'null';}
+	ps_query("update collection_resource set rating= {$sql},comment= ?,use_as_theme_thumbnail= ? where resource= ? and collection= ?",
+        array_merge(
+            $params,
+            [
+            's', $comment,
+            'i', (getval("use_as_theme_thumbnail","")==""?0:1),
+            'i', $resource,
+            'i', $collection
+            ]
+        )
+    );
 	
 	# log changes
 	if ($comment!=$data[0]['comment']){collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE_COMMENT,$resource);}
@@ -3061,8 +3173,13 @@ function save_collection_resource_comment($resource,$collection,$comment,$rating
 function relate_to_collection($ref,$collection)	
 	{
     $colresources = get_collection_resources($collection);
-    sql_query("delete from resource_related where resource='" . escape_check($ref) . "' and related in ('" . join("','",$colresources) . "')");  
-    sql_query("insert into resource_related(resource,related) values (" . escape_check($ref) . "," . join("),(" . $ref . ",",$colresources) . ")");
+    ps_query("delete from resource_related where resource= ? and related in (". ps_param_insert(count($colresources)) .")", array_merge(['i', $ref], ps_param_fill($colresources, 'i')));  
+    $params = [];
+    foreach($colresources as $colresource)
+        {
+        $params = array_merge($params, ['i', $ref, 'i', $colresource]);
+        }
+    ps_query("insert into resource_related(resource,related) values ". str_repeat('(?, ?)', count($colresources)), $params);
 	}
 
 /**
@@ -3602,7 +3719,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
         $setsql .= $setsql == "" ? "" : ",";
         $setsql .= $setkey . "=" . $setval ;
         }
-	sql_query("UPDATE external_access_keys
+	ps_query("UPDATE external_access_keys
                   SET " . $setsql . "
                 WHERE access_key='$key'" . 
                       (isset($collection) ? " AND collection='" . (int)$collection . "'": "")
@@ -3671,7 +3788,7 @@ function show_hide_collection($colref, $show=true, $user="")
             $hidden_collections[]=$colref;
             }
         }
-    sql_query("UPDATE user SET hidden_collections ='" . implode(",",$hidden_collections) . "' WHERE ref='" . escape_check($user) . "'");
+    ps_query("UPDATE user SET hidden_collections = ? WHERE ref= ?", ['s', implode(',', $hidden_collections), 'i', $user]);
     return true;
     }
 	
@@ -5005,12 +5122,12 @@ function collection_cleanup_inaccessible_resources($collection)
     global $userref;
 
     $editable_states = array_column(get_editable_states($userref), 'id');
-    sql_query("DELETE a 
+    ps_query("DELETE a 
                 FROM   collection_resource AS a 
                 INNER JOIN resource AS b 
                 ON a.resource = b.ref 
-                WHERE  a.collection = '" . $collection . "' 
-                AND b.archive NOT IN ( '" . implode("', '", $editable_states) . "' );");
+                WHERE  a.collection = ? 
+                AND b.archive NOT IN (". ps_param_insert(count($editable_states)) .")", array_merge(['i', $collection], ps_param_fill($editable_states, 'i')));
     }
 /**
 * Relate all resources in a collection
@@ -5033,9 +5150,9 @@ function relate_all_collection($collection, $checkperms = true)
             {
             if ($rlist[$n]!=$rlist[$m]) # Don't relate a resource to itself
                 { 
-                if (count(sql_query("SELECT 1 FROM resource_related WHERE resource='".$rlist[$n]."' and related='".$rlist[$m]."' LIMIT 1"))!=1) 
+                if (count(ps_query("SELECT 1 FROM resource_related WHERE resource= ? and related= ? LIMIT 1", ['i', $rlist[$n], 'i', $rlist[$m]]))!=1) 
                     {
-                    sql_query("insert into resource_related (resource,related) values ('" . $rlist[$n] . "','" . $rlist[$m] . "')");
+                    ps_query("insert into resource_related (resource,related) values (?, ?)", ['i', $rlist[$n], 'i', $rlist[$m]]);
                     }
                 }
             }
@@ -5080,10 +5197,8 @@ function update_collection_type($cid, $type, $log = true)
             collection_log($ref, LOG_CODE_EDITED, "", "Update collection type to '{$type}'");
             }
         }
-        
-    $cid_list = "'" . implode("', '", $cid) . "'";
 
-    sql_query("UPDATE collection SET `type` = '{$type}' WHERE ref IN ({$cid_list})");
+    ps_query("UPDATE collection SET `type` = ? WHERE ref IN (". ps_param_insert(count($cid)) .")", array_merge(['i', $type], ps_param_fill($cid, 'i')));
 
     return true;
     }
@@ -5105,7 +5220,7 @@ function update_collection_parent(int $cid, int $parent)
         }
 
     collection_log($cid, LOG_CODE_EDITED, "", "Update collection parent to '{$parent}'");
-    sql_query("UPDATE collection SET `parent` = '{$parent}' WHERE ref = '{$cid}'");
+    ps_query("UPDATE collection SET `parent` = ? WHERE ref = ?", ['i', $parent, 'i', $cid]);
 
     return true;
     }
@@ -5360,17 +5475,17 @@ function featured_collection_check_access_control(int $c_ref)
     else
         {        
         // Get all parents. Query varies according to MySQL cte support
-        $mysql_version = sql_query('SELECT LEFT(VERSION(), 3) AS ver');
+        $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
         if(version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
             {
-            $allparents = sql_query("
+            $allparents = ps_query("
                 WITH RECURSIVE cte(ref,parent, level) AS
                         (
                         SELECT  ref,
                                 parent,
                                 1 AS level
                           FROM  collection
-                         WHERE  ref= '" . $c_ref . "'
+                         WHERE  ref= ?
                      UNION ALL
                         SELECT  c.ref,
                                 c.parent,
@@ -5383,7 +5498,7 @@ function featured_collection_check_access_control(int $c_ref)
                        parent,
                        level
                   FROM cte
-              ORDER BY level DESC;",
+              ORDER BY level DESC;", ['i', $c_ref], 
             "featured_collections",
             -1,
             true,
@@ -5391,17 +5506,17 @@ function featured_collection_check_access_control(int $c_ref)
             }
         else
             {
-            $allparents = sql_query("
+            $allparents = ps_query("
                     SELECT  C2.ref, C2.parent
                     FROM  (SELECT @r AS p_ref,
                             (SELECT @r := parent FROM collection WHERE ref = p_ref) AS parent,
                             @l := @l + 1 AS lvl
-                    FROM  (SELECT @r := '" . $c_ref . "', @l := 0) vars,
+                    FROM  (SELECT @r := ?, @l := 0) vars,
                             collection c
                     WHERE  @r <> 0) C1
                     JOIN  collection C2
                         ON  C1.p_ref = C2.ref
-                ORDER BY  C1.lvl DESC", 
+                ORDER BY  C1.lvl DESC", ['i', $c_ref],
                     "featured_collections",
                     -1,
                     true,
@@ -5991,7 +6106,7 @@ function compute_featured_collections_access_control()
         return $CACHE_FC_ACCESS_CONTROL;
         }
 
-    $all_fcs = sql_query(sprintf("SELECT ref, parent FROM collection WHERE `type` = %s", COLLECTION_TYPE_FEATURED), "featured_collections");
+    $all_fcs = ps_query("SELECT ref, parent FROM collection WHERE `type` = ?", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
     $all_fcs_rp = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
     // Set up arrays to store permitted/blocked featured collections
     $includerefs = array();
@@ -6096,8 +6211,13 @@ function can_reorder_featured_collections()
 function cleanup_anonymous_collections(int $limit = 100)
     {
     global $anonymous_login;
-
-    $sql_limit = $limit == 0 ? "" : "LIMIT " . $limit;
+    
+    $params = [];
+    if($limit != 0)
+        {
+        $sql_limit = 'LIMIT ?';
+        $params = ['i', $limit];
+        }
 
     if(!is_array($anonymous_login))
         {
@@ -6108,7 +6228,7 @@ function cleanup_anonymous_collections(int $limit = 100)
         $user = get_user_by_username($anonymous_user);
         if(is_int_loose($user))
             {
-            sql_query("DELETE FROM collection WHERE user ='" . $user . "' AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit);
+            ps_query("DELETE FROM collection WHERE user ='" . $user . "' AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit, array_merge(['i', $user], $params));
             }
         }
     }
@@ -6228,8 +6348,8 @@ function create_upload_link($collection,$shareoptions)
 
         $sql = "INSERT INTO external_access_keys
                 (" . implode(",",$insert_columns) . ")
-                VALUES  ('" . implode("','",$insert_values). "')";
-        sql_query($sql);
+                VALUES  (". ps_param_insert(count($insert_values)) .")";
+        ps_query($sql, ps_param_fill($insert_values, 's'));
 
         $newshares[$n] = $newkeys[$n];
 
@@ -6468,18 +6588,22 @@ function purge_expired_shares($filteropts)
         }
    
     $conditions = array();
+    $params = [];
     if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user)))
         {
-        $conditions[] = "user ='" . (int)$share_user . "'";
+        $conditions[] = "user = ?";
+        $params = array_merge($params, ['i', $share_user]);
         }
     elseif(!checkperm('a') && !checkperm('ex'))
         {
-        $conditions[] = "user ='" . (int)$userref . "'";
+        $conditions[] = "user = ?";
+        $params = array_merge($params, ['i', $userref]);
         }
 
     if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
         {
-        $conditions[] = "usergroup ='" . (int)$share_group . "'";
+        $conditions[] = "usergroup = ?";
+        $params = array_merge($params, ['i', $share_group]);
         }
     if($share_type == 0)
         {
@@ -6491,7 +6615,8 @@ function purge_expired_shares($filteropts)
         }
     if((int)$share_collection > 0)
         {
-        $conditions[] = "collection ='" . (int)$share_collection . "'";
+        $conditions[] = "collection = ?";
+        $params = array_merge($params, ['i', $share_collection]);
         }
 
     $conditional_sql=" WHERE expires < now()";
@@ -6501,7 +6626,7 @@ function purge_expired_shares($filteropts)
         }
 
     $purge_query = "DELETE FROM external_access_keys " . $conditional_sql;
-    sql_query($purge_query);
+    ps_query($purge_query, $params);
     $deleted = sql_affected_rows();
     return $deleted;
     }
