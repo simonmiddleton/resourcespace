@@ -390,7 +390,7 @@ function get_resource_data($ref,$cache=true)
                     }
                 else {$user = -1;}
                 
-                $default_archive_state = escape_check(get_default_archive_state());
+                $default_archive_state = get_default_archive_state();
                 $wait = ps_query("insert into resource (ref,resource_type,created_by, archive) values (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
 
                 $resource = ps_query("select ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " from resource where ref=?",array("i",$ref));
@@ -1220,7 +1220,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
     foreach(explode(';', $userresourcedefaults) as $rule)
         {
         $rule_detail         = explode('=', $rule);
-        $field_shortname     = escape_check($rule_detail[0]);
+        $field_shortname     = $rule_detail[0];
         $field_default_value = $rule_detail[1];
 
         // Find field(s) - multiple fields can be returned to support several fields with the same name
@@ -2168,7 +2168,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     if('' != $newvalue && !in_array($newvalue, $currentoptions))
                         {
                         # Append the option and update the field
-                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null);
+                        $newnode          = set_node(null, $field, trim($newvalue), null, null);
                         $nodes_to_add[]   = $newnode;
                         $currentoptions[] = trim($newvalue);
 
@@ -2214,7 +2214,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     if(!in_array($newvalue, $currentoptions) && $newvalue != '')
                         {
                         # Append the option and update the field
-                        $newnode            = set_node(null, $field, escape_check(trim($newvalue)), null, null);
+                        $newnode            = set_node(null, $field, trim($newvalue), null, null);
                         $nodes_to_add[]     = $newnode;
                         $currentoptions[]   = trim($newvalue);
                         $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
@@ -2510,7 +2510,6 @@ function delete_resource($ref)
 	{
     global $userref;
 	# Delete the resource, all related entries in tables and all files on disk
-	$ref      = escape_check($ref);
 	$resource = get_resource_data($ref);
 
 	if (!$resource
@@ -2630,7 +2629,6 @@ function delete_resource($ref)
 /**
 * Returns field data from resource_type_field for the given field
 *
-* @uses escape_check()
 * @uses ps_query()
 *
 * @param integer $field Resource type field ID
@@ -2639,7 +2637,6 @@ function delete_resource($ref)
 */
 function get_resource_type_field($field)
     {
-    $field = escape_check($field);
     $rtf_query="SELECT ref,
                 name,
                 title,
@@ -2684,13 +2681,9 @@ function get_resource_type_field($field)
                 full_width,
                 read_only" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
-          WHERE ref = '{$field}'
+          WHERE ref = ?
     ";
-    $modified_rtf_query=hook('modify_rtf_query','', array($field, $rtf_query));
-    if($modified_rtf_query!==false){
-        $rtf_query=$modified_rtf_query;
-    }
-    $return = sql_query($rtf_query, "schema");
+    $return = ps_query($rtf_query, array("i",$field), "schema");
 
     if(0 == count($return))
         {
@@ -3393,7 +3386,7 @@ function copy_resource($from,$resource_type=-1)
     if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
         {
         # Update the user record
-        sql_query("update resource set created_by='$userref' where ref='$to'");
+        ps_query("update resource set created_by=? where ref=?",array("i",$userref,"i",$to));
         }
 
     # Copy Metadata
@@ -3563,7 +3556,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
     if ($resource === RESOURCE_LOG_APPEND_PREVIOUS)
         {
-        sql_query("UPDATE `resource_log` SET `diff`=left(concat(`diff`,'\n','" . escape_check($diff) . "'),60000) WHERE `ref`=" . $resource_log_previous_ref);
+        ps_query("UPDATE `resource_log` SET `diff`=left(concat(`diff`,'\n',?),60000) WHERE `ref`=?",array("s",$diff,"i",$resource_log_previous_ref));
         return $resource_log_previous_ref;
         }
     else
@@ -3812,9 +3805,7 @@ function update_resource_type($ref,$type)
 */
 function get_exiftool_fields($resource_type)
     {
-    $resource_type = escape_check($resource_type);
-
-    return sql_query("
+    return ps_query("
            SELECT f.ref,
                   f.type,
                   f.exiftool_field,
@@ -3825,9 +3816,9 @@ function get_exiftool_fields($resource_type)
              FROM resource_type_field AS f
         LEFT JOIN node AS n ON f.ref = n.resource_type_field
             WHERE length(exiftool_field) > 0
-              AND (resource_type = '$resource_type' OR resource_type = '0')
+              AND (resource_type = ? OR resource_type = '0')
          GROUP BY f.ref
-         ORDER BY exiftool_field", "schema");
+         ORDER BY exiftool_field", array("i",$resource_type),"schema");
     }
 
 /**
@@ -4513,7 +4504,6 @@ function user_rating_save($userref,$ref,$rating)
 */
 function get_field($field)
     {
-    $field_escaped = escape_check($field);
     $r = sql_query("
         SELECT ref,
                name,
@@ -4538,7 +4528,7 @@ function get_field($field)
                display_as_dropdown,
                automatic_nodes_ordering
           FROM resource_type_field
-         WHERE ref = '{$field_escaped}'
+         WHERE ref = '{$field}'
      ", "schema");
 
     # Translates the field title if the searched field is found.
@@ -5149,7 +5139,7 @@ function get_resource_collections($ref)
 function download_summary($resource)
 	{
 	# Returns a summary of downloads by usage type
-	return sql_query("select usageoption,count(*) c from resource_log where resource='$resource' and type='D' group by usageoption order by usageoption");
+	return ps_query("select usageoption,count(*) c from resource_log where resource=? and type='D' group by usageoption order by usageoption",array("i",$resource));
 	}
 
 /*
@@ -5299,17 +5289,15 @@ function get_page_count($resource,$alternative=-1)
     # also handle alternative file multipage previews by switching $resource array if necessary
     # $alternative specifies an actual alternative file
     $ref=$resource['ref'];
-    $ref_escaped = escape_check($ref);
-    $alternative_escaped = escape_check($alternative);
 
     if ($alternative!=-1)
         {
-        $pagecount=ps_value("select page_count value from resource_alt_files where ref=?",array("i",$alternative_escaped),"");
+        $pagecount=ps_value("select page_count value from resource_alt_files where ref=?",array("i",$alternative),"");
         $resource=get_alternative_file($ref,$alternative);
         }
     else
         {
-        $pagecount=ps_value("select page_count value from resource_dimensions where resource=?", array("i",$ref_escaped), "");
+        $pagecount=ps_value("select page_count value from resource_dimensions where resource=?", array("i",$ref), "");
         }
     if (!empty($pagecount)) { return $pagecount; }
     # or, populate this column with exiftool or image magick (for installations with many pdfs already
@@ -5322,7 +5310,7 @@ function get_page_count($resource,$alternative=-1)
 	else if ($alternative==-1)
 		{
 		# some unoconv files are not pdfs but this needs to use the auto-alt file
-		$alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref_escaped), "");
+		$alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref), "");
 		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
 		}
 	else
@@ -5361,11 +5349,11 @@ function get_page_count($resource,$alternative=-1)
 
 	if ($alternative!=-1)
 		{
-		sql_query("update resource_alt_files set page_count='$pages' where ref='{$alternative_escaped}'");
+		ps_query("update resource_alt_files set page_count=? where ref=?",array("i",$pages,"i",$alternative));
 		}
 	else
 		{
-		sql_query("update resource_dimensions set page_count='$pages' where resource='{$ref_escaped}'");
+		ps_query("update resource_dimensions set page_count=? where resource=?",array("i",$pages,"i",$ref));
 		}
 	return $pages;
 	}
@@ -5392,12 +5380,10 @@ function update_disk_usage($resource)
 		if ($f!=".." && $f!=".")
 			{
 			$s=filesize_unlimited($dir . "/" .$f);
-			#echo "<br/>-". $f . " : " . $s;
 			$total+=$s;
 			}
 		}
-	#echo "<br/>total=" . $total;
-	sql_query("update resource set disk_usage='$total',disk_usage_last_updated=now(),file_size='$rsize' where ref='" . escape_check($resource) . "'");
+	ps_query("update resource set disk_usage=?,disk_usage_last_updated=now(),file_size=? where ref=?",array("i",$total,"i",$rsize,"i",$resource));
 	return true;
 	}
 
@@ -5501,14 +5487,13 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         return false;
         }
 
-    $ref_escaped = escape_check($ref);
-    $o_size=sql_query("SELECT * FROM resource_dimensions WHERE resource='{$ref_escaped}'");
+    $o_size=ps_query("SELECT * FROM resource_dimensions WHERE resource=?",array("i",$ref));
     if(!empty($o_size))
         {
         if(count($o_size)>1)
             {
             # delete all the records and start fresh. This is a band-aid should there be multiple records as a result of using api_search
-            sql_query("DELETE FROM resource_dimensions WHERE resource='{$ref_escaped}'");
+            ps_query("DELETE FROM resource_dimensions WHERE resource=?",array("i",$ref));
             $o_size=false;
             $forcefromfile=true;
             }
@@ -5552,11 +5537,11 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
             {
             if(!$o_size)
                 {
-                sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                ps_query("insert into resource_dimensions (resource, width, height, file_size) values(?, ?, ?, ?)",array("i",$ref,"i",$sw,"i",$sh,"i",(int)$filesize));
                 }
             else
                 {
-                sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
+                ps_query("update resource_dimensions set width=?, height=?, file_size=? where resource=?'",array("i",$sw,"i",$sh,"i",(int)$filesize,"i",$ref));
                 }
             }
         }
@@ -5571,11 +5556,11 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
             {
             if(!$o_size)
                 {
-                sql_query("insert into resource_dimensions (resource, width, height, file_size) values('{$ref_escaped}', '". escape_check($sw) ."', '". escape_check($sh) ."', '" . escape_check((int)$filesize) . "')");
+                ps_query("insert into resource_dimensions (resource, width, height, file_size) values(?, ?, ?, ?)",array("i",$ref,"i",$sw,"i",$sh,"i",(int)$filesize));
                 }
             else
                 {
-                sql_query("update resource_dimensions set width='". escape_check($sw) ."', height='". escape_check($sh) ."', file_size='" . escape_check($filesize) . "' where resource='{$ref_escaped}'");
+                ps_query("update resource_dimensions set width=?, height=?, file_size=? where resource=?",array("i",$sw,"i",$sh,"i",(int)$filesize,"i",$ref));
                 }
             }
         else
