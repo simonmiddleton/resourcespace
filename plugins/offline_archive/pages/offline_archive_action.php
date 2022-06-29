@@ -173,7 +173,7 @@ else
 					if ($pendingrestore["file_path"]!="")
 						{
 						echo "Staticsync file - updating file_path\n";
-						sql_query("UPDATE resource SET file_path= ? WHERE ref= ?", ['s', $dirpath, 'i', $ref]);
+						ps_query("UPDATE resource SET file_path= ? WHERE ref= ?", ['s', $dirpath, 'i', $ref]);
 						}
 					resource_log($ref,"s",0,$lang['offline_archive_resource_log_restored'],2,0);
 					}
