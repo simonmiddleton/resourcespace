@@ -2333,7 +2333,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
  */
 function get_saved_searches($collection)
 	{
-	return sql_query("select * from collection_savedsearch where collection='" . escape_check($collection) . "' order by created");
+	return sql_query("select " . columns_in("collection_savedsearch") . " from collection_savedsearch where collection='" . escape_check($collection) . "' order by created");
 	}
 
 /**
@@ -3021,7 +3021,7 @@ function update_collection_order($neworder,$collection,$offset=0)
  */
 function get_collection_resource_comment($resource,$collection)
 	{
-	$data=ps_query("select *,use_as_theme_thumbnail from collection_resource where collection=? and resource=?",array("i",$collection,"i",$resource),"");
+	$data=ps_query("select " . columns_in("collection_resource") . " from collection_resource where collection=? and resource=?",array("i",$collection,"i",$resource),"");
     if (!isset($data[0]))
 		{
 		return false;

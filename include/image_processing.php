@@ -1359,7 +1359,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
             if ((list($sw,$sh) = @getimagesize($file))===false) {return false;}
         
-            $ps=ps_query("select * from preview_size $sizes", $params);
+            $ps=ps_query("select " . columns_in("preview_size") . " from preview_size $sizes", $params);
             for ($n=0;$n<count($ps);$n++)
                 {
                 # fetch target width and height
@@ -1554,7 +1554,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $all_sizes= false;
             }
         
-        $ps = ps_query("SELECT * FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
+        $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
         if($lean_preview_generation && $all_sizes)
             {
             $force_make=array("pre","thm","col");
@@ -2503,10 +2503,10 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     
     # Save all images
     if ($tweak_all_images){
-        $ps=ps_query("select * from preview_size where id<> ?", ['i', $top]);
+        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where id<> ?", ['i', $top]);
     }
     else {
-        $ps=ps_query("select * from preview_size where (internal=1 or allow_preview=1) and id<> ?", ['i', $top]);
+        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where (internal=1 or allow_preview=1) and id<> ?", ['i', $top]);
     }
     for ($n=0;$n<count($ps);$n++)
         {

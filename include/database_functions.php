@@ -1571,3 +1571,29 @@ function ps_param_fill($array,$type)
         }
     return $parameters;
     }
+
+/**
+* Returns a comma separated list of table columns from the given table. Optionally, will use an alias instead of the table name to prefix the columns. For inclusion in SQL to replace "select *" which is not supported when using prepared statements.
+* 
+* @param string $table The source table
+* @param string $alias Optionally, a different alias to use
+* @param string $plugin Specifies that this table is defined in a plugin with the supplied name
+* 
+* @return string
+*/
+function columns_in($table,$alias=null,$plugin=null)
+    {
+    if (is_null($alias)) {$alias=$table;}
+
+    // Locate the table definition file
+    $table_file=dirname(__FILE__) . "/../dbstruct/table_" . safe_file_name($table) . ".txt";
+    if (!is_null($plugin))
+        {
+        $table_file="plugins/" . safe_file_name($plugin) . "/" . $table_file;
+        }
+    $structure=explode("\n",trim(file_get_contents($table_file)));
+    $columns=array();
+    foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
+    return $alias . "." . join(", " . $alias . ".",$columns);
+    }
+

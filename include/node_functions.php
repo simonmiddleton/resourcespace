@@ -220,7 +220,7 @@ function get_node($ref, array &$returned_node)
         return false;
         }
 
-    $node  = ps_query("SELECT * FROM node WHERE ref = ?",array("i", $ref),"schema");
+    $node  = ps_query("SELECT " . columns_in("node") . " FROM node WHERE ref = ?",array("i", $ref),"schema");
 
     if(count($node)==0)
         {
