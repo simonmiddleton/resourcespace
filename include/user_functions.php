@@ -1062,7 +1062,7 @@ function auto_create_user_account($hash="")
                 }
 
             $username=$anonymous_login;
-            $userref=ps_value("SELECT ref value FROM user where username=?",array($anonymous_login),"");
+            $userref=ps_value("SELECT ref value FROM user where username=?",array("s",$anonymous_login),"");
             $sessioncollections=get_session_collections($rs_session,$userref,false);
             if(count($sessioncollections)>0)
                 {
