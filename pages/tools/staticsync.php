@@ -752,7 +752,7 @@ function ProcessFolder($folder)
                         // between categories and collections by checking for children collections.
                         if(!is_featured_collection_category_by_children($collection))
                             {
-                            $test = ps_query("SELECT * FROM collection_resource WHERE collection= ? AND resource= ?", ['i', $collection, 'i', $r]);
+                            $test = ps_query("SELECT " . columns_in("collection_resource") . " FROM collection_resource WHERE collection= ? AND resource= ?", ['i', $collection, 'i', $r]);
                             if(count($test) == 0)
                                 {
                                 ps_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES (?, ?, NOW())", ['i', $collection, 'i', $r]);

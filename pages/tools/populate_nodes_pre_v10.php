@@ -23,7 +23,7 @@ $debug_log=false; // This would slow things down too much
 $global_start_time = microtime(true);
 $tomigrate = array_diff(array_keys($field_types),array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
 
-$resource_type_fields=ps_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') ORDER BY `ref`',ps_param_fill($tomigrate,"i"));
+$resource_type_fields=ps_query('SELECT " . columns_in("resource_type_field") . " FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') ORDER BY `ref`',ps_param_fill($tomigrate,"i"));
 
 // Number of resource_data rows to migrate in each batch to avoid out of memory errors
 $chunksize = 10000;

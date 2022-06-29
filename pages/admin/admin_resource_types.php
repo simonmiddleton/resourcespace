@@ -36,7 +36,7 @@ if ($newtype!="" && enforcePostRequest(false))
 	}
 
 $resource_types=ps_query ("
-	select * from 
+	select " . columns_in("resource_type","rt") . " from 
 		(
 		select if(rt is null, rt.ref, rt) rt,
 		name,

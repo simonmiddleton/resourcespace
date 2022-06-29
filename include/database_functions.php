@@ -1586,14 +1586,17 @@ function columns_in($table,$alias=null,$plugin=null)
     if (is_null($alias)) {$alias=$table;}
 
     // Locate the table definition file
-    $table_file=dirname(__FILE__) . "/../dbstruct/table_" . safe_file_name($table) . ".txt";
+    $table_file= "/dbstruct/table_" . safe_file_name($table) . ".txt";
     if (!is_null($plugin))
         {
         $table_file="plugins/" . safe_file_name($plugin) . "/" . $table_file;
         }
+    $table_file=dirname(__FILE__) . "/../" . $table_file; // Locate relative to this file.
+
+    // Fetch structure and return column names as a list.
     $structure=explode("\n",trim(file_get_contents($table_file)));
     $columns=array();
     foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
-    return $alias . "." . join(", " . $alias . ".",$columns);
+    return "`" . $alias . "`.`" . join("`, `" . $alias . "`.`",$columns) . "`";
     }
 

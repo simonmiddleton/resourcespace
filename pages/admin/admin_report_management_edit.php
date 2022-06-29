@@ -72,7 +72,7 @@ if (getval("save",false))
 		}
 	}
 
-$record = ps_query("select * from report where ref=?",array("i",$ref));
+$record = ps_query("select " . columns_in("report") . " from report where ref=?",array("i",$ref));
 $record = $record[0];
 
 include "../../include/header.php";

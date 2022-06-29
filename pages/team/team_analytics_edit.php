@@ -12,7 +12,7 @@ $print=(getval("print","")!=""); # Print mode?
 if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
     {
     # Load a saved report
-    $report=ps_query("select * from user_report where ref= ? and user= ?", ['i', $ref, 'i', $userref]);if (count($report)==0) {exit("Report not found.");}
+    $report=ps_query("select " . columns_in("user_report") . " from user_report where ref= ? and user= ?", ['i', $ref, 'i', $userref]);if (count($report)==0) {exit("Report not found.");}
     $report=$report[0];
     $params = unserialize($report['params']);
 

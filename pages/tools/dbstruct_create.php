@@ -49,7 +49,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createData && (in_array($table,$dataFor) || count($dataFor)===0))
 			{
 			$f=fopen("../../dbstruct/data_" . $table . ".txt","w");
-			$index=ps_query("select * from `$table`");
+			$index=ps_query("select * from `$table`"); // Select * is fine here as no parameters
 			for ($m=0;$m<count($index);$m++)
 				{
 				fputcsv($f,$index[$m]);

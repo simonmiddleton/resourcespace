@@ -30,7 +30,7 @@ include_once "../../include/image_processing.php";
  */
 function update_preview($ref){
     global $previewbased;
-    $resourceinfo=ps_query("select * from resource where ref=?",array("i",$ref));
+    $resourceinfo=ps_query("select " . columns_in("resource") . " from resource where ref=?",array("i",$ref));
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0]))){
     	if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
     	else{$ingested=true;}

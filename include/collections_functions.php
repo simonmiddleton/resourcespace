@@ -3073,7 +3073,7 @@ function relate_to_collection($ref,$collection)
  */
 function get_collection_comments($collection)
 	{
-	return ps_query("select * from collection_resource where collection=? and length(comment)>0 order by date_added",array("i",$collection));
+	return ps_query("select " . columns_in("collection_resource") . " from collection_resource where collection=? and length(comment)>0 order by date_added",array("i",$collection));
 	}
 
 /**

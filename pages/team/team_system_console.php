@@ -356,11 +356,11 @@ switch ($callback)
 
 		if ($filter == "")
 			{
-			$results = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
+			$results = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by); // select * is fine here as no parameters
 			}
 		else
 			{
-			$result_rows = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
+			$result_rows = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by); // select * is fine here as no parameters
 
 			foreach ($result_rows as $row)
 				{

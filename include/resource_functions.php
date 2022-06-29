@@ -5490,7 +5490,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         return false;
         }
 
-    $o_size=ps_query("SELECT * FROM resource_dimensions WHERE resource=?",array("i",$ref));
+    $o_size=ps_query("SELECT " . columns_in("resource_dimensions") . " FROM resource_dimensions WHERE resource=?",array("i",$ref));
     if(!empty($o_size))
         {
         if(count($o_size)>1)
@@ -6955,7 +6955,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $return[]=$returnline;
     }
     # loop through all image sizes
-    $sizes=ps_query("select * from preview_size order by width desc");
+    $sizes=ps_query("select " . columns_in("preview_size") . " from preview_size order by width desc");
 
     for ($n=0;$n<count($sizes);$n++)
         {
