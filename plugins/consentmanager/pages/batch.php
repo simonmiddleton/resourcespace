@@ -2,7 +2,7 @@
 include "../../../include/db.php";
 
 include_once "../../../include/authenticate.php";
-if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
+if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without admin access
 
 
 $collection=trim(str_replace("!collection","",getvalescaped("collection","")));

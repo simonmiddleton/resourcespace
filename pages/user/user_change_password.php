@@ -71,7 +71,7 @@ if(getval("save", "") != "" && enforcePostRequest(false))
 	{
     if($case_insensitive_username)
         {
-        $username=sql_value("select username value from user where lower(username)=lower('" . escape_check($username) ."')",$username);       
+        $username=ps_value("select username value from user where lower(username)=lower(?)",array("s",$username),$username);       
         $username=escape_check($username);
         }
 	if (hook('saveadditionaluserpreferences'))

@@ -522,7 +522,6 @@ $lang['plugins-author']="Autor";
 $lang['plugins-availableheader']="Plugins Disponibles";
 $lang['plugins-configvar']="Setea la variable de configuración: $%cvn";//%cvn se reemplaza por el nombre de la variable de configuración que se setee";
 $lang['plugins-deactivate']="Desactivar";
-$lang['plugins-download']="Bajar&nbsp;configuración";
 $lang['plugins-headertext']="Los Plugins extienden las funcionalidades de ResourceSpace";
 $lang['plugins-installedheader']="Plugins activos";
 $lang['plugins-instversion']="Versión Instalada";

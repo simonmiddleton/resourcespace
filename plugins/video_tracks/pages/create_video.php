@@ -208,14 +208,14 @@ if($generate && enforcePostRequest(false))
                 $deletebat = true;
                 }
 
-            $output=run_command($shell_exec_cmd);
+            $output=run_command(escapeshellcmd($shell_exec_cmd));
             if(file_exists($targetfile))
                 {
                 if($savealt)
                     {
                     // Save as alternative
                     $newfilesize=filesize_unlimited($targetfile);
-                    sql_query("update resource_alt_files set file_size='" . $newfilesize ."' where resource='" . $ref . "' and ref='" . $newaltfile . "'");
+                    ps_query("update resource_alt_files set file_size=? where resource=? and ref=?",array("i",$newfilesize,"i",$ref,"i",$newaltfile));
                     if ($alternative_file_previews)
                         {create_previews($ref,false,$video_track_command["extension"],false,false,$newaltfile);}
                     $message = $lang["alternative_file_created"];

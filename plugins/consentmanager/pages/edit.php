@@ -3,20 +3,20 @@ include "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 include "../include/file_functions.php";
 
-$ref=getvalescaped("ref","");if (!is_numeric($ref)) {$ref="new";} // force to either a number or "new"
-$resource=getvalescaped("resource","",true);
+$ref=getval("ref","");if (!is_numeric($ref)) {$ref="new";} // force to either a number or "new"
+$resource=getval("resource","",true);
 $file_path=get_consent_file_path($ref);
 
 # Check access
 if ($resource!="")
     {
     $edit_access=get_edit_access($resource);
-    if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+    if (!$edit_access && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without edit access
     }
 else
     {
     # Editing all consents via Manage Consents - admin only
-    if (!checkperm("a")) {exit("Access denied");} 
+    if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} 
     }
 
 $url_params = array(
@@ -43,7 +43,7 @@ if (getval("submitted","")!="")
     # Save consent data
     
     # Construct expiry date
-    $expires= getvalescaped("expires_year","") . "-" . getvalescaped("expires_month","") . "-" . getvalescaped("expires_day","");
+    $expires= getval("expires_year","") . "-" . getval("expires_month","") . "-" . getval("expires_day","");
     
 
     # Construct usage
@@ -76,9 +76,9 @@ if (getval("submitted","")!="")
         $file_path=get_consent_file_path($ref); // get updated path
 
         # Add to all the selected resources
-        if (getvalescaped("resources","")!="")
+        if (getval("resources","")!="")
             {
-            $resources=explode(", ",getvalescaped("resources",""));
+            $resources=explode(", ",getval("resources",""));
             foreach ($resources as $r)
                 {
                 $r=trim($r);
@@ -108,9 +108,9 @@ if (getval("submitted","")!="")
 
         # Add all the selected resources
         ps_query("delete from resource_consent where consent= ?",['i', $ref]);
-        $resources=explode(",",getvalescaped("resources",""));
+        $resources=explode(",",getval("resources",""));
 
-        if (getvalescaped("resources","")!="")
+        if (getval("resources","")!="")
             {
             foreach ($resources as $r)
                 {

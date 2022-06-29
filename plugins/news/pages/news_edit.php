@@ -39,7 +39,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 $news=get_news("","",$findtext);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($news);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

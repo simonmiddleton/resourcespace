@@ -1,5 +1,6 @@
 <?php
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
+
 
 $resourcea=create_resource(1,0);
 

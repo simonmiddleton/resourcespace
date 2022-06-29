@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Set up
 $resource_a = create_resource(1, 0);
@@ -13,9 +11,9 @@ update_field($resource_a, $view_title_field, "integrationTest_926");
 update_field($resource_b, $view_title_field, "integrationTest_926");
 update_field($resource_c, $view_title_field, "integrationTest_926");
 
-ps_query("UPDATE resource SET access = ? WHERE ref = ?",["i",0,"i",$resource_a]);
-ps_query("UPDATE resource SET access = ? WHERE ref = ?",["i",1,"i",$resource_b]);
-ps_query("UPDATE resource SET access = ? WHERE ref = ?",["i",1,"i",$resource_c]);
+ps_query("UPDATE resource SET access = 0 WHERE ref = ?",["i",$resource_a]);
+ps_query("UPDATE resource SET access = 1 WHERE ref = ?",["i",$resource_b]);
+ps_query("UPDATE resource SET access = 1 WHERE ref = ?",["i",$resource_c]);
 
 $test_case = function ($access, $assertion)
     {

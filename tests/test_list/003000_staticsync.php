@@ -1,9 +1,7 @@
 <?php
 // Test of staticsync functionality
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Staticsync affects this so keep a copy and restore it later
 $saved_user_data    = $userdata;
@@ -28,7 +26,6 @@ if (!file_exists($test_path))
     {
     mkdir($test_path,0777,true);
     }
-//chmod($test_path,0777);
 
 // Set our test config
 $staticsync_userref=$userref;
@@ -159,7 +156,7 @@ if (!is_array($results) || count($results)==0 || $results[0]["resource_type"] !=
 
 // Test F - $staticsync_mapped_category_tree
 $treedata = get_data_by_field($resid,$sync_tree_field);
-if($treedata != "test_folder, featured")
+if(!is_array($treedata) || count($treedata) != 1 || !in_array("test_folder/featured",$treedata))
     {
     echo "Test F failed: \$staticsync_mapped_category_tree failed - ";
     return false;
@@ -176,7 +173,7 @@ $projectresource=$results[0]["ref"];
 $mappeddata = get_data_by_field($projectresource,$project_field);
 if(trim($mappeddata) != "conferenceA")
     {
-    echo "Test H failed: \$staticsync_mapped_category_tree failed - ";
+    echo "Test H failed: \$staticsync_mapfolders failed - ";
     return false;
     }
 

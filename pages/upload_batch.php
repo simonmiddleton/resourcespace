@@ -202,7 +202,7 @@ if($external_upload)
     $ci=get_session_collections($rs_session,$userref,true);
     if (count($ci)==0)
         {
-        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_SHARE_UPLOAD));
+        $usercollection = create_collection($userref,"New uploads",1,1,0,false,array("type" => COLLECTION_TYPE_SHARE_UPLOAD));
         }
     else
         {
@@ -234,29 +234,25 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         remove_all_resources_from_collection(0-$userref);
         }
 
-	# Set the redirect after upload to the start of the edit process
-    if($alternative != "") 
-        {
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/view.php",
-            array(
-                'ref' => $alternative
-            ));	
-        }
-    else
-        {
-        rs_setcookie('lockedfields', '', 1);
-        $redirecturl = generateURL(
-            "{$baseurl}/pages/edit.php",
-            array(
-                'upload_review_mode' => true,
-                'collection_add' => $collection_add
-            ));	
-        }
+    # Set the redirect after upload to the start of the edit process
+    rs_setcookie('lockedfields', '', 1);
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+            'collection_add' => $collection_add
+        ));	
 
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
+
+# If uploading alternative file, redirect to the resource rather than search results.
+if($alternative != "") 
+    {
+    $redirecturl = generateURL("{$baseurl}/pages/view.php", array('ref' => $alternative));	
+    }
+    
 $modify_redirecturl=hook('modify_redirecturl');
 if($modify_redirecturl!==false)
 	{
@@ -439,6 +435,8 @@ if ($processupload)
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
 
+    hook('modify_upload_file','',[$upfilename,$upfilepath]);
+
     # Banned extension?
     global $banned_extensions;
     if (in_array($extension,$banned_extensions))
@@ -524,7 +522,7 @@ if ($processupload)
                     $file_size = @filesize_unlimited($path);
                     
                     # Save alternative file data.
-                    sql_query("update resource_alt_files set file_name='" . escape_check($upfilename) . "',file_extension='" . escape_check($extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$alternative' and ref='$aref'");
+                    ps_query("update resource_alt_files set file_name=?,file_extension=?,file_size=?,creation_date=now() where resource=? and ref=?",array("s",$upfilename,"s",$extension,"i",$file_size,"i",$alternative,"i",$aref));
                     
                     if ($alternative_file_previews)
                         {
@@ -647,19 +645,16 @@ if ($processupload)
                 if($success && $auto_generated_resource_title_format != '' && !$upload_then_edit)
                     {
                     $new_auto_generated_title = '';
-                    $ref_escaped = escape_check($ref);
 
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
-                        $view_title_field_escaped = escape_check($view_title_field);
-
-                        $resource_detail = sql_query ("
-                            SELECT r.ref, r.file_extension, rd.value
-                            FROM resource r
-                            LEFT JOIN resource_data AS rd ON r.ref = rd.resource
-                            AND rd.resource_type_field = '{$view_title_field_escaped}'
-                            WHERE r.ref = '{$ref_escaped}'
-                                        ");
+                        $resource_detail = ps_query ("
+                            SELECT r.ref, r.file_extension, n.value
+                              FROM resource r
+                         LEFT JOIN resource_node rn ON rn.resource=r.ref 
+                         LEFT JOIN node n ON N.ref=rn.node 
+                             WHERE n.resource_type_field = ? AND r.ref= ?",
+                                ["i",$view_title_field,"i",$ref]);
 
                         $new_auto_generated_title = str_replace(
                             array('%title', '%resource', '%extension'),
@@ -672,10 +667,10 @@ if ($processupload)
                         }
                     else
                         {
-                        $resource_detail = sql_query ("
-                                SELECT r.ref, r.file_extension
-                                FROM resource r
-                                WHERE r.ref = '{$ref_escaped}'");
+                        $resource_detail = ps_query ("
+                            SELECT r.ref, r.file_extension FROM resource r WHERE r.ref = ?",
+                            ["i",$ref]
+                            );
 
                         $new_auto_generated_title = str_replace(
                             array('%resource', '%extension'),
@@ -693,12 +688,21 @@ if ($processupload)
                     }
                 hook('upload_original_extra', '', array($ref));
                     
-                $wait = hook('afterpluploadfile', '', array($ref, $extension));
-                                
-                $result["status"] = true;
-                $result["message"] = $lang["created"];
-                $result["id"] = htmlspecialchars($ref);
-                $result["collection"] = htmlspecialchars($collection_add);          
+                $after_upload_result = hook('afterpluploadfile', '', array($ref, $extension));
+                
+                if (is_array($after_upload_result))
+                    {
+                    $result["status"] = false;
+                    $result["error"] = $after_upload_result["code"];
+                    $result["message"] = $after_upload_result["message"];
+                    }
+                else
+                    {
+                    $result["status"] = true;
+                    $result["message"] = $lang["created"];
+                    $result["id"] = htmlspecialchars($ref);
+                    $result["collection"] = htmlspecialchars($collection_add);
+                    }
                 }
             }
         else if ($replace=="" && $replace_resource!="")
@@ -733,7 +737,7 @@ if ($processupload)
                 $conditions = array();
                 $batch_replace_min = max((int)($batch_replace_min),$fstemplate_alt_threshold);
                 $firstref = max($fstemplate_alt_threshold, $batch_replace_min);                                
-                $replace_resources = sql_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",0);
+                $replace_resources = ps_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",array("i",$batch_replace_min,"i",$batch_replace_max,"i",$batch_replace_max),0);
                 debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
                 }
             else
@@ -745,7 +749,19 @@ if ($processupload)
             $filename_field=getvalescaped("filename_field",0,true);
             if($filename_field != 0)
                 {
-                $target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+                $target_resource = ps_array(
+                    'SELECT resource value
+                       FROM resource_node AS rn
+                       JOIN node AS n ON rn.node = n.ref
+                      WHERE n.resource_type_field = ?
+                        AND name = ?
+                        AND resource > ?', 
+                    [
+                        'i', $filename_field, 
+                        's', $origuploadedfilename, 
+                        'i', $fstemplate_alt_threshold
+                    ]
+                );
                 $target_resourceDebug = $target_resource;
                 $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);
@@ -952,7 +968,7 @@ jQuery(document).ready(function () {
             <?php
             if (isset($upload_max_file_size))
                 {
-                echo "maxFileSize: '$upload_max_file_size',"; 
+                echo "maxFileSize: " . str_ireplace(array("kb","mb","gb"),array("000","000000","000000000"),$upload_max_file_size); 
                 }
             if ($replace_resource > 0 || $single)
                 {
@@ -1199,7 +1215,7 @@ function processFile(file, forcepost)
         };
     
     forceprocess = typeof forcepost != "undefined";
- 
+
     <?php
     // == EXTRA DATA SECTION - Add any extra data to send after upload required here ==
 
@@ -1220,6 +1236,25 @@ function processFile(file, forcepost)
                 // Add to array to process later
                 processafter.push(file);
                 console.debug("Added " + file.name + " to process after array");
+                if(processafter.length == count)
+                    {
+                    if(newcol > 0)
+                        {
+                        api('do_search', {'search' : '!collection' + newcol}, function(response){
+                            if(response.length > 0)
+                                {
+                                response.forEach(function(resource){  
+                                    {
+                                    resource_filename = resource['field<?php echo htmlspecialchars($filename_field)?>']
+                                    resource_ids_for_alternatives[resource['ref']] = resource_filename.substr(0, resource_filename.lastIndexOf('.' + resource['file_extension']));;
+                                    }
+                                })
+                                }
+                            //No non alt files uploaded so we can now process the alt files.
+                            jQuery('#CentralSpace').trigger("ProcessedMain");
+                        });
+                        }              
+                    }
                 return false;
                 }
             else
@@ -1235,9 +1270,10 @@ function processFile(file, forcepost)
                     }
                 else
                     {                    
+                    processerrors.push(filename);
                     jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
-                    return false; 
+                    return postUploadActions(); 
                     }
                 }
             }

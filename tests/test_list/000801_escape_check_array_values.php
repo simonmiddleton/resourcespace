@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // The point of this test is not to check the escape_check() which already has its own test but to ensure an array of 
 // values will be handled accordingly

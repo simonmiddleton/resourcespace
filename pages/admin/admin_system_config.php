@@ -446,6 +446,7 @@ include '../../include/header.php';
 	    array(
 	        'title' => $lang["systemsetup"],
 	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["systemconfig"],

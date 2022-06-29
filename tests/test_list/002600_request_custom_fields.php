@@ -1,8 +1,5 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
 $webroot = dirname(__DIR__, 2);
 include_once("{$webroot}/include/request_functions.php");

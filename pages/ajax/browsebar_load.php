@@ -123,7 +123,7 @@ switch ($returntype)
             }
         // Resource types can be configured to not have global fields in which case we only present the user fields valid for
         // this resource type
-        $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = '{$returnid}'", true, "schema");
+        $inherit_global_fields = (bool) ps_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?", array("i",$returnid), true, "schema");
         $gettypes = ($inherit_global_fields == true) ? array(0) : array(); // determine whether to display global fields
         $gettypes[] = (int)$returnid; // add selected resource type fields
         $allfields = get_resource_type_fields($gettypes,"order_by",'asc','',$FIXED_LIST_FIELD_TYPES);
@@ -410,18 +410,9 @@ switch ($returntype)
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
             
-            // Set an icon 
-            switch($showstate)
-                {
-                case -2: $icon="file-import"; break;
-                case -1: $icon="eye"; break;
-                case 0: $icon="check"; break;
-                case 1: $icon="clock"; break;
-                case 2: $icon="archive"; break;
-                case 3: $icon="trash"; break;
-                default: $icon="cogs"; # All additional workflow states show gears icon to indicate workflow
-                }
-            $return_items[$n]["icon"] = "<i class='fa fa-fw fa-" . $icon  . "'></i>";
+            // Set an icon
+            $icon = $workflowicons[$showstate] ?? (WORKFLOW_DEFAULT_ICONS[$showstate] ?? WORKFLOW_DEFAULT_ICON);  
+            $return_items[$n]["icon"] = "<i class='fa-fw " . $icon  . "'></i>";
             $n++;
             }
 

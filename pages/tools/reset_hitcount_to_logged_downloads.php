@@ -11,13 +11,15 @@ set_time_limit(60*60*40);
 
 echo "Resetting hit counts to download counts derived from the resource log...";
 
-$rd=sql_query("select ref from resource");
+$rd=ps_query("select ref from resource");
 for ($n=0;$n<count($rd);$n++)
 	{
 	$ref=$rd[$n]['ref'];
 	echo "Updating " . $ref. "<br />";
-	$count=sql_query("select * from resource_log where resource=$ref and type='d'");
-	sql_query("update resource set hit_count=0,new_hit_count=".count($count)." where ref='$ref'");
+	$parameters=array("i",$ref);
+	$count=ps_value("select count(*) value from resource_log where resource=? and type='d'",$parameters,0);
+	$parameters=array("i",$count, "i",$ref);
+	ps_query("update resource set hit_count=0,new_hit_count=? where ref=?",$parameters);
 	}
 echo "...done.";
 

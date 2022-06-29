@@ -101,7 +101,7 @@ function filestore_relocate($from,$to){
 
 if($refs==''){
 	# start with a list of all resources
-	$refs=sql_array("select ref value from resource where ref>0 order by ref");
+	$refs=ps_array("select ref value from resource where ref>0 order by ref");
 }
 else{
 	$refs=explode(",",$refs);

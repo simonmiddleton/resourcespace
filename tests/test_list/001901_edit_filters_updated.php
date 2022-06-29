@@ -1,10 +1,10 @@
 <?php
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
+
 
 // Test edit filters in a similar way to search filters
 
 // Save current settings
-$saved_search_filter_nodes = $search_filter_nodes;
 $saved_edit_filter = $usereditfilter;
 $saved_user = $userref;
 
@@ -15,17 +15,18 @@ function test_edit_filter_text_update($user,$group,$filtertext)
     ps_query("UPDATE usergroup SET edit_filter=?, edit_filter_id=NULL WHERE ref=?",["s",$filtertext,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
+    $userdata = [$userdata];
     }
 
 function test_edit_filter_id_update($user,$group,$filterid)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["s",$filterid,"i",$group]);
+    ps_query("UPDATE usergroup SET edit_filter_id=? WHERE ref=?",["i",$filterid,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
+    $userdata = [$userdata];
     }
-
 // Create a new user in a new group so we can test edit access for resources
 $editor = new_user("editor");
 ps_query(
@@ -60,24 +61,22 @@ add_resource_nodes($resourcec,array($itnode, $rednode));
 add_resource_nodes($resourced,array($bluenode, $itnode));
 add_resource_nodes($resourcee,array($itnode,$rednode,$bluenode));
 
-// SUBTEST A: old style edit filter
-$search_filter_nodes = false;
+// SUBTEST A: old style edit filter migrated
 $usereditfilter = "editdepartment=Sales;colour=Red";
 test_edit_filter_text_update($editor,$testeditgroup,$usereditfilter);
-
-// Check 'editable' search
+$migrateresult = migrate_filter($usereditfilter);
+test_edit_filter_id_update($editor,$testeditgroup,$migrateresult);
 $results = do_search('','','',0,-1,'desc',false,0,false,false,'',false,false,true,true);
-
 if(count($results) != 2 || !isset($results[0]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourcea,$resourceb))
-	)
-	{
+    )
+    {
     echo "SUBTEST A";
     return false;
     }
 
-// SUBTEST B: Check get_edit_access() for same filter
+// SUBTEST B: Check get_edit_access() after migration
 $accessa = get_edit_access($resourcea);
 $accessb = get_edit_access($resourceb);
 $accessc = get_edit_access($resourcec);
@@ -87,63 +86,11 @@ if(!$accessa || !$accessb || $accessc || $accessd || $accesse)
 	{
     echo "SUBTEST B";
     return false;
-    }
+    }    
 
-// SUBTEST C: old style edit filter migrated
-$search_filter_nodes = true;
-$migrateresult = migrate_filter($usereditfilter);
-test_edit_filter_id_update($editor,$testeditgroup,$migrateresult);
-$results = do_search('','','',0,-1,'desc',false,0,false,false,'',false,false,true,true);
-if(count($results) != 2 || !isset($results[0]['ref'])
-    ||
-    !match_values(array_column($results,'ref'),array($resourcea,$resourceb))
-    )
-    {
-    echo "SUBTEST C";
-    return false;
-    }
-
-// SUBTEST D: Check get_edit_access() after migration
-$accessa = get_edit_access($resourcea);
-$accessb = get_edit_access($resourceb);
-$accessc = get_edit_access($resourcec);
-$accessd = get_edit_access($resourced);
-$accesse = get_edit_access($resourcee);
-if(!$accessa || !$accessb || $accessc || $accessd || $accesse)
-	{
-    echo "SUBTEST D";
-    return false;
-    }
-    
-
-// SUBTEST E: old style edit filter with resource_type
-$search_filter_nodes = false;
+// SUBTEST C: old style edit filter with resource_type - migrated to new code
 $usereditfilter = "editdepartment=IT;resource_type=1";
 test_edit_filter_text_update($editor,$testeditgroup,$usereditfilter);
-$results = do_search('','','',0,-1,'desc',false,0,false,false,'',false,false,true,true);
-if(count($results) != 1 || !isset($results[0]['ref'])
-	||
-    !match_values(array_column($results,'ref'),array($resourceb))
-	)
-	{
-    echo "SUBTEST E";
-    return false;
-    }
-
-// SUBTEST F: Check get_edit_access() 
-$accessa = get_edit_access($resourcea);
-$accessb = get_edit_access($resourceb);
-$accessc = get_edit_access($resourcec);
-$accessd = get_edit_access($resourced);
-$accesse = get_edit_access($resourcee);
-if($accessa || !$accessb || $accessc || $accessd || $accesse)
-	{
-    echo "SUBTEST F";
-    return false;
-    }
-
-// SUBTEST G: old style edit filter with resource_type - migrated to new code
-$search_filter_nodes = true;
 $filtertext = edit_filter_to_restype_permission($usereditfilter, $testeditgroup,$userpermissions);
 $migrateresult = migrate_filter($filtertext);
 test_edit_filter_id_update($editor,$testeditgroup,$migrateresult);
@@ -154,11 +101,11 @@ if(count($results) != 1 || !isset($results[0]['ref'])
     !match_values(array_column($results,'ref'),array($resourceb))
 	)
 	{
-    echo "SUBTEST G";
+    echo "SUBTEST C";
     return false;
     }
 
-// SUBTEST H: Check get_edit_access() 
+// SUBTEST D: Check get_edit_access() 
 $accessa = get_edit_access($resourcea);
 $accessb = get_edit_access($resourceb);
 $accessc = get_edit_access($resourcec);
@@ -166,12 +113,11 @@ $accessd = get_edit_access($resourced);
 $accesse = get_edit_access($resourcee);
 if($accessa || !$accessb || $accessc || $accessd || $accesse)
 	{
-    echo "SUBTEST H";
+    echo "SUBTEST D";
     return false;
     }
 
 // Reset saved settings
-$search_filter_nodes = $saved_search_filter_nodes;
 $usereditfilter = $saved_edit_filter;
 $userdata = get_user($saved_user);
 setup_user($userdata);

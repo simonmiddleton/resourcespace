@@ -10,7 +10,7 @@
 
  # Show an error when someone tries to request an account with an email already in the system.
 # Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
-$account_email_exists_note=true;
+$account_email_exists_note=false;
 
  # "U" permission allows management of users in the current group as well as children groups. TO test stricter adherence to the idea of "children only", set this to true. 
 $U_perm_strict=false;

@@ -9,7 +9,7 @@ function HookWinauthLoginLoginformlink()
         {
         $url = urldecode(getval("url",""));
         $redirecturl = (trim($url) != "/" && trim($url) != "") ? $url : "pages/" . $default_home_page;
-        $winauthurl = generateURL($baseurl_short, array("url" => $redirecturl,"winauth_login" => "true"));
+        $winauthurl = generateURL("{$baseurl_short}plugins/winauth/pages/secure/winauth.php", array("url" => $redirecturl,"winauth_login" => "true"));
         echo "<a href='" . $winauthurl . "' >" . '<i class="fab fa-fw fa-windows"></i>&nbsp;' . $lang["winauth_use_win_login"] . "</a><br/>";
         }
     }

@@ -26,21 +26,35 @@ function migrate_resource_type_field_check(&$resource_type_field)
         migrate_category_tree_to_nodes($resource_type_field['ref'],$resource_type_field['options']);
 
         // important!  this signifies that this field has been migrated by prefixing with -1,,MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
-        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT(?, options) WHERE `ref` = ?", array("s", MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE, "i", $resource_type_field['ref']));
+        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE . "', options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 
 		}
+    elseif ($resource_type_field['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
+        {
+        $options = preg_split('/\s*,\s*/',$resource_type_field['options']);
+        $order=10;
+        foreach ($options as $option)
+            {
+            set_node(null,$resource_type_field['ref'],$option,null,$order);
+            $order+=10;
+            }
+
+        // important!  this signifies that this field has been migrated by -replacing- with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
+        // Note as the dynamic keyword fields can reach the database column length limit this no longer appends the old 'options' text - the migration script will pick up any missing options later from existing resource_data values
+        ps_query("UPDATE `resource_type_field` SET `options` = '" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "' WHERE `ref` = ?", array("i", $resource_type_field['ref']));
+        }
 	else		// general comma separated fields
 		{
-		$options = preg_split('/\s*,\s*/',$resource_type_field['options']);
-		$order=10;
-		foreach ($options as $option)
-			{
-			set_node(null,$resource_type_field['ref'],$option,null,$order);
-			$order+=10;
-			}
+        $options = preg_split('/\s*,\s*/',$resource_type_field['options']);
+        $order=10;
+        foreach ($options as $option)
+            {
+            set_node(null,$resource_type_field['ref'],$option,null,$order);
+            $order+=10;
+            }
 
         // important!  this signifies that this field has been migrated by prefixing with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
-        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT(? , ',', options) WHERE `ref` = ?", array("s", MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX), "i", $resource_type_field['ref']);
+        ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "',',',options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 		}
 	}
 
@@ -91,6 +105,7 @@ function migrate_category_tree_to_nodes($resource_type_field_ref,$category_tree_
 
 function migrate_filter($filtertext,$allowpartialmigration=false)
     {
+    global $FIXED_LIST_FIELD_TYPES;
     if(trim($filtertext) == "")
         {
         return false;
@@ -99,7 +114,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
     $all_fields=get_resource_type_fields();
 
     // Don't migrate if already migrated
-    $existingrules = ps_query("SELECT ref, name FROM filter", array());
+    $existingrules = ps_query("SELECT ref, name FROM filter");
    
     $logtext = "FILTER MIGRATION: Migrating filter rule. Current filter text: '" . $filtertext . "'\n";
     
@@ -159,6 +174,13 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
             $field_ref = $all_fields[$all_fields_index]["ref"];
             $field_type = $all_fields[$all_fields_index]["type"];
             $logtext .= "FILTER MIGRATION: --- filter field name: '" . $rulefield. "' , field id #" . $field_ref . "\n";
+
+            if(!in_array($field_type,$FIXED_LIST_FIELD_TYPES))
+                {
+                $errors[] = "Invalid field  '" . $field_ref . "' specified for rule: '" . $filtertext . "', skipping"; 
+                $logtext .=  "FILTER MIGRATION: --- Invalid field  '" . $field_ref . "', skipping\n";
+                continue;
+                }
 
             $field_nodes = get_nodes($field_ref, NULL, (FIELD_TYPE_CATEGORY_TREE == $field_type ? true : false));
             $all_valid_nodes = array_merge($all_valid_nodes,$field_nodes);

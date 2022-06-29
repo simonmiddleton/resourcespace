@@ -12,7 +12,6 @@ $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$starsearch=getvalescaped("starsearch","");
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
@@ -36,7 +35,6 @@ $urlparams= array(
     "order_by" => $order_by,
     "offset" => $offset,
     "restypes" => $restypes,
-    "starsearch" => $starsearch,
     "archive" => $archive,
     "default_sort_direction" => $default_sort_direction,
     "sort" => $sort,
@@ -131,7 +129,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             Total duration: " . $ffmpeg_duration_time);
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
+        ps_query("update resource set created_by=?,archive=?,file_extension=? where ref=?",array("i",$userref,"i",get_default_archive_state(),"s",$ffmpeg_preview_extension,"i",$newref));
 
             // Unlink the target
         if (file_exists($target)) {unlink ($target);}
@@ -192,7 +190,14 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         );
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$alt_ref'");
+        ps_query("update resource set created_by= ?,archive= ?,file_extension= ? where ref= ?",
+                [
+                'i', $userref,
+                'i', get_default_archive_state(),
+                's', $ffmpeg_preview_extension,
+                'i', $alt_ref
+                ]        
+        );
 
         // Unlink the target
         if (file_exists($target)) {unlink ($target);}
@@ -222,7 +227,15 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         $file_size = @filesize_unlimited($target);
 
         // Save alternative file data.
-        sql_query("update resource_alt_files set file_name='" . escape_check($alt_filename) . "',file_extension='" . escape_check($ffmpeg_preview_extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$ref' and ref='$alt_ref'");
+        ps_query("update resource_alt_files set file_name= ?,file_extension= ?,file_size= ?,creation_date=now() where resource= ? and ref= ?",
+                [
+                's', $alt_filename,
+                's', $ffmpeg_preview_extension,
+                'i', $file_size,
+                'i', $ref,
+                'i', $alt_ref
+                ]
+        );
 
         if ($alternative_file_previews)
             {

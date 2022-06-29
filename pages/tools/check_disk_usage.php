@@ -4,14 +4,7 @@
 # cron job.
 
 include "../../include/db.php";
-
-
-
-if('cli' != php_sapi_name())
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Access denied');
-    }
+command_line_only();
 
 if(!isset($disk_quota_limit_size_warning_noupload) && !isset($disk_quota_notification_limit_percent_warning))
 	{
@@ -58,7 +51,7 @@ else
 				}
 			else
 				{
-				$last_sent=sql_value("select value from sysvars where name='last_sent_disk_quota'","");
+				$last_sent=ps_value("select value from sysvars where name='last_sent_disk_quota'",array(), "");
 				echo "Last Sent:".strtotime($last_sent)." - ".$last_sent."<br/>";
 				echo "Now:".time()." - ".date("Y-m-d H:i:s")."<br/>";
 				echo "Interval:".($disk_quota_notification_interval*60*60)."<br/>";
@@ -81,7 +74,7 @@ else
 				
 				if(isset($disk_quota_notification_email))
 					{
-					$disk_quota_notification_user=sql_value("select ref value from user where email ='" . $disk_quota_notification_email . "'",0);
+					$disk_quota_notification_user=ps_value("select ref value from user where email = ?",array("s",$disk_quota_notification_email),0);
 					if($disk_quota_notification_user>0)
 						{
 						$admin_notify_users[]=$disk_quota_notification_user;	
@@ -117,8 +110,8 @@ else
 					}		
 				
 				// update last sent
-				sql_query("delete from sysvars where name='last_sent_disk_quota'");
-				sql_query("insert into sysvars(name,value) values ('last_sent_disk_quota',now())");
+				ps_query("delete from sysvars where name='last_sent_disk_quota'");
+				ps_query("insert into sysvars(name,value) values ('last_sent_disk_quota',now())");
 				}
 			}
 		else
@@ -139,7 +132,7 @@ else
 				}
 			else
 				{
-				$last_sent=sql_value("select value from sysvars where name='last_sent_disk_quota_noupload'","");
+				$last_sent=ps_value("select value from sysvars where name='last_sent_disk_quota_noupload'",array(), "");
 				echo "Last Sent:".strtotime($last_sent)." - ".$last_sent."<br/>";
 				echo "Now:".time()." - ".date("Y-m-d H:i:s")."<br/>";
 				echo "Interval:".($disk_quota_notification_interval*60*60)."<br/>";
@@ -160,7 +153,7 @@ else
 				$notify_users=get_notification_users("SYSTEM_ADMIN");
 				if(isset($disk_quota_notification_email))
 					{
-					$disk_quota_notification_user=sql_value("select ref value from user where email ='" . $disk_quota_notification_email . "'",0);
+					$disk_quota_notification_user=ps_value("select ref value from user where email = ?",array("s",$disk_quota_notification_email), 0);
 					if($disk_quota_notification_user>0)
 						{
 						$notify_users[]=array("ref" => $disk_quota_notification_user, "email" => $disk_quota_notification_email);
@@ -195,8 +188,8 @@ else
 					message_add($admin_notify_users,escape_check($body),$baseurl . "/pages/pages/team/team_home.php", 0);
 					}		
 				// update last sent
-				sql_query("delete from sysvars where name='last_sent_disk_quota_noupload'");
-				sql_query("insert into sysvars(name,value) values ('last_sent_disk_quota_noupload',now())");
+				ps_query("delete from sysvars where name='last_sent_disk_quota_noupload'");
+				ps_query("insert into sysvars(name,value) values ('last_sent_disk_quota_noupload',now())");
 				}
 			}
 		else

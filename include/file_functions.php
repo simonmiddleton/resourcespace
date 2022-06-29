@@ -22,7 +22,8 @@ function safe_file_name($name)
             }
         }
 
-    $newname = mb_substr($newname, 0, 50);
+    // Set to 250 to allow for total length to be below 255 limit including filename and extension
+    $newname = mb_substr($newname, 0, 250); 
 
     return $newname;
     }
@@ -133,17 +134,38 @@ function temp_local_download_remote_file(string $url)
     // Remove query string from URL
     $url = explode('?', $url);
     $url = reset($url);
-
-    // Get the file name + extension (if found)
+    
     $path_parts = pathinfo(basename($url));
     $filename = safe_file_name($path_parts['filename'] ?? '');
     $extension = $path_parts['extension'] ?? '';
-    if($filename === '')
-        {
-        return false;
-        }
     $filename .= ($extension !== '' ? ".{$extension}" : '');
 
+    if(strpos($filename,".") == false && filter_var($url_original, FILTER_VALIDATE_URL))
+        {
+        // $filename not valid, try and get from HTTP header
+        $headers = get_headers($url_original,true);
+        foreach($headers as $header=>$headervalue)
+            {
+            if(strtolower($header) == "content-disposition")
+                {
+                // Check for double quotes first (e.g. attachment; filename="O'Malley's Bar.pdf")
+                if(preg_match('/.*filename=[\"]([^\"]+)/', $headervalue, $matches))
+                    {
+                    $filename = $matches[1];
+                    }
+                // Check for single quotes (e.g. attachment; filename='Space Travel.jpg')
+                elseif(preg_match('/.*filename=[\']([^\']+)/', $headervalue, $matches))
+                    {
+                    $filename = $matches[1];
+                    }
+                // Get file name up to first space
+                else if(preg_match("/.*filename=([^ ]+)/", $headervalue, $matches))
+                    {
+                    $filename = $matches[1];
+                    }
+                }
+            }
+        }
     // Get temp location
     $tmp_uniq_path_id = sprintf('remote_files/%s_%s', $userref, generateUserFilenameUID($userref));
     $tmp_file_path = sprintf('%s/%s',

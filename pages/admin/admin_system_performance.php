@@ -17,17 +17,17 @@ $disk_baseline=20558;
 
 <?php
 # Database read/write speed
-sql_query("drop table if exists performance_test");
-sql_query("create table performance_test (c int(11),d char(64))");
+ps_query("drop table if exists performance_test");
+ps_query("create table performance_test (c int(11),d char(64))");
 $timer=microtime(true);$counter=0;
 while (microtime(true)<($timer+1)) // Run for one second
     {
     $d=escape_check(md5(microtime()));
-    sql_query("insert into performance_test(c,d) values ('$counter','" . $d . "')");
-    sql_query("select * from performance_test where c='$counter'");
+    ps_query("insert into performance_test(c,d) values (?,?)",array("i",$counter,"s",$d));
+    ps_query("select * from performance_test where c=?",array("i",$counter));
     $counter++;
     }
-sql_query("drop table if exists performance_test");
+ps_query("drop table if exists performance_test");
 ?>
 <div class="Question">
 <label><?php echo $lang["mysql_throughput"] ?></label><div class="Fixed"><?php echo round(($counter/$mysql_baseline) * 100,1) ?></div>

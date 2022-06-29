@@ -15,7 +15,7 @@ function HookLicensemanagerViewCustompanels()
     <div class="RecordPanel">
     <div class="Title"><?php echo $lang["license_management"] ?></div>
 
-    <?php if ($edit_access) { 
+    <?php if ($edit_access || checkperm("lm")) { 
         $new_license_url_params = array(
             'ref'        => 'new',
             'resource'   => $ref,
@@ -42,7 +42,7 @@ function HookLicensemanagerViewCustompanels()
 		<td><?php echo $lang["description"] ?></a></td>
 		<td><?php echo $lang["fieldtitle-expiry_date"] ?></a></td>
 
-		<?php if ($edit_access) { ?>
+		<?php if ($edit_access || checkperm("lm")) { ?>
 		<td><div class="ListTools"><?php echo $lang["tools"] ?></div></td>
 		<?php } ?>
 		
@@ -70,7 +70,7 @@ function HookLicensemanagerViewCustompanels()
 			<td><?php echo $license["description"] ?></td>
 			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
 		
-			<?php if ($edit_access) { ?>
+			<?php if ($edit_access || checkperm("lm")) { ?>
 			<td><div class="ListTools">
 			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
 			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]?></a>

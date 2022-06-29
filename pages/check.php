@@ -65,10 +65,10 @@ else
     }
 $encoding = mysqli_character_set_name($db["read_write"]);
 $encoding_str = str_replace("%encoding", $encoding, $lang["client-encoding"]);
-$db_encoding = sql_value("
+$db_encoding = ps_value("
     SELECT default_character_set_name AS `value`
       FROM information_schema.SCHEMATA
-     WHERE `schema_name` = '" . escape_check($mysql_db) . "';", $lang["unknown"]);
+     WHERE `schema_name` = ?;", array("s",$mysql_db),$lang["unknown"]);
 $db_encoding_str = str_replace("%encoding", $db_encoding, $lang["db-default-encoding"]);
 $encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str}";
 ?>
@@ -113,6 +113,10 @@ $upload_max_filesize=ini_get("upload_max_filesize");
 if (ResolveKB($upload_max_filesize)<(100*1024)) {$result=$lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);} else {$result=$lang["status-ok"];}
 ?><tr><td><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]); ?></td><td><?php echo $upload_max_filesize?></td><td><b><?php echo $result?></b></td></tr><?php
 
+# Check flag set if code needs signing
+if (get_sysvar("code_sign_required")=="YES") {$result=$lang["status-fail"];$result2=$lang["code_sign_required_warning"];} else {$result=$lang["status-ok"];$result2="";}
+?><tr><td><?php echo $lang["code_sign_required"]; ?></td><td><?php echo $result2 ?></td><td><b><?php echo $result?></b></td></tr><?php
+
 # Check write access to filestore
 $success=is_writable($storagedir);
 if ($success===false) {$result=$lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];} else {$result=$lang["status-ok"];}
@@ -155,14 +159,18 @@ if (!php_is_64bit()){
 }
 ?><tr><td colspan='2'><?php echo $lang['large_file_support_64_bit']; ?></td><td><b><?php echo $result?></b></td></tr><?php
 
-# Check ImageMagick/GraphicsMagick
-display_utility_status("im-convert");
+// Check system utilities
+foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
+    {
+    // Skip utilities which are a sub program (e.g ImageMagick has convert, identify, composite etc., checking for convert 
+    // is enough) -or- are not required and configured
+    if(!$sysu['show_on_check_page'] || (!$sysu['required'] && !isset($GLOBALS[$sysu['path_var_name']])))
+        {
+        continue;
+        }
 
-# Check FFmpeg
-display_utility_status("ffmpeg");
-
-# Check Ghostscript
-display_utility_status("ghostscript");
+    display_utility_status($sysu_name);
+    }
 
 # Check Exif extension
 if (function_exists('exif_read_data')) 
@@ -175,9 +183,6 @@ else
 	$result=$lang["status-fail"];
 	}
 ?><tr><td colspan="2"><?php echo $lang["exif_extension"]?></td><td><b><?php echo $result?></b></td></tr><?php
-
-# Check ExifTool
-display_utility_status("exiftool");
 
 # Check archiver
 if (!$use_zip_extension){
@@ -208,7 +213,7 @@ if ($collection_download || isset($zipcommand)) # Only check if it is going to b
 
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
 $php_tz = date_default_timezone_get();
-$mysql_tz = sql_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", '');
+$mysql_tz = ps_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", array(), '');
 $tz_check_fail_msg = str_replace(array('%phptz%', '%mysqltz%'), array($php_tz, $mysql_tz), $lang['server_timezone_check_fail']);
 $timezone_check = "{$lang['status-warning']}: {$tz_check_fail_msg}";
 if($php_tz == $mysql_tz)
@@ -222,7 +227,7 @@ if($php_tz == $mysql_tz)
 </tr>
 <tr>
 <td><?php echo $lang["lastscheduledtaskexection"] ?></td>
-<td><?php $last_cron=sql_value("select datediff(now(),value) value from sysvars where name='last_cron'",$lang["status-never"]);echo $last_cron ?></td>
+<td><?php $last_cron=ps_value("select datediff(now(),value) value from sysvars where name='last_cron'",array(),$lang["status-never"]);echo $last_cron ?></td>
 <td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo $lang["status-warning"] ?></b><br/><?php echo $lang["executecronphp"] ?><?php } else {?><b><?php echo $lang["status-ok"] ?></b><?php } ?></td>
 </tr>
 
@@ -294,50 +299,22 @@ function display_extension_status($extension)
     <td><b><?php echo $result?></b></td></tr><?php
     }    
 
-function get_utility_displayname($utilityname)
-    {
 
-    # Define the display name of a utility.
-    switch (strtolower($utilityname))
-        {
-        case "im-convert":
-           return "ImageMagick/GraphicsMagick";
-           break;
-        case "ghostscript":
-            return "Ghostscript";
-            break;
-        case "ffmpeg":
-            return "FFmpeg";
-            break;
-        case "exiftool":
-            return "ExifTool";
-            break;
-        case "antiword":
-            return "Antiword";
-            break;
-        case "pdftotext":
-            return "pdftotext";
-            break;
-        case "blender":
-            return "Blender";
-            break;
-        case "archiver":
-            return "Archiver";
-            break;
-        default:
-            return $utilityname;
-        }
-    }
-
-function get_utility_version($utilityname)
+function get_utility_version(string $utilityname)
     {
     global $lang;
 
-    # Get utility path.
-    $utility_fullpath = get_utility_path($utilityname, $path);
+    $utilityname = strtolower(trim($utilityname));
 
-    # Get utility display name.
-    $name = get_utility_displayname($utilityname);
+    // Is this a known utility? If not, mark it as such. 
+    if(!isset(RS_SYSTEM_UTILITIES[$utilityname]))
+        {
+        return ['name' => $utilityname, 'version' => '', 'success' => false, 'error' => $lang['unknown']];
+        }
+
+    $utility = RS_SYSTEM_UTILITIES[$utilityname];
+    $utility_fullpath = get_utility_path($utilityname, $path);
+    $name = $utility['display_name'] ?? $utilityname;
 
     # Check path.
     if ($path==null)
@@ -346,7 +323,7 @@ function get_utility_version($utilityname)
         $error_msg = $lang["status-notinstalled"];
         return array("name" => $name, "version" => "", "success" => false, "error" => $error_msg);
         }
-    if ($utility_fullpath==false)
+    if ($utility_fullpath === false)
         {
         # There was a path but it was incorrect - the utility couldn't be found.
         $error_msg = $lang["status-fail"] . ":<br />" . str_replace("?", $path, $lang["softwarenotfound"]);
@@ -354,48 +331,18 @@ function get_utility_version($utilityname)
         }
 
     # Look up the argument to use to get the version.
-    switch (strtolower($utilityname))
-        {
-        case "exiftool":
-            $version_argument = "-ver";
-            break;
-        default:
-            $version_argument = "-version";
-        }
+    $version_argument = $utility['version_check']['argument'] ?? '' ?: '-version';
 
     # Check execution and find out version.
     $version_command = $utility_fullpath . " " . $version_argument;
-    $version = run_command($version_command);
-
-    switch (strtolower($utilityname))
-        {
-        case "im-convert":
-           if (strpos($version, "ImageMagick")!==false) {$name = "ImageMagick";}
-           if (strpos($version, "GraphicsMagick")!==false) {$name = "GraphicsMagick";}
-           if ($name=="ImageMagick" || $name=="GraphicsMagick") {$expected = true;}
-           else {$expected = false;}
-           break;
-        case "ghostscript":
-            if (strpos(strtolower($version), "ghostscript")===false) {$expected = false;}
-            else {$expected = true;}
-            break;
-        case "ffmpeg":
-            if (strpos(strtolower($version), "ffmpeg")===false && strpos(strtolower($version), "avconv")===false ) {$expected = false;}
-            else {$expected = true;}
-            break;
-        case "exiftool":
-            if(preg_match("/^([0-9]+)+\.([0-9]+)/", $version) === 1)
-                {
-                // E.g. 8.84
-                // Note: if there is a warning like "10.11 [Warning: Library version is 10.10]" this should also be seen as expected.
-                $expected = true;
-                }
-            else
-                {
-                $expected = false;
-                }
-            break;
-        }
+    $utilities_with_version_on_STDERR = ['python', 'antiword', 'pdftotext'];
+    $version = run_command($version_command, in_array($utilityname, $utilities_with_version_on_STDERR));
+    $version_check = call_user_func_array(
+        $utility['version_check']['callback']['fct_name'],
+        array_merge([$version, $utility], $utility['version_check']['callback']['args'])
+    );
+    $name = $version_check['utility']['display_name'] ?? $name;
+    $expected = $version_check['found'];
 
     if ($expected==false)
         {
@@ -407,7 +354,8 @@ function get_utility_version($utilityname)
         {
         # There was a working path and the output was the expected - the version is returned.
         $s = explode("\n", $version);
-        return array("name" => $name, "version" => $s[0], "success" => true, "error" => "");
+        $version_line = $utilityname === 'antiword' ? $s[3] : $s[0];
+        return array("name" => $name, "version" => $version_line, "success" => true, "error" => "");
         }
     }
 
@@ -428,5 +376,3 @@ function php_is_64bit() {
 	} 
 
 }
-
-?>

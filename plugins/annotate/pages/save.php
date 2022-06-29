@@ -3,7 +3,7 @@ include_once "../../../include/db.php";
 include_once "../include/annotate_functions.php";
 include_once "../../../include/authenticate.php";
 
-$ref=getvalescaped("ref", 0, true);
+$ref=getval("ref", 0, true);
 if ($ref==0)
     {
     die($lang["annotate_ref_not_supplied"]);
@@ -16,26 +16,40 @@ if (!in_array("annotate",$plugins))
     exit($lang["error-plugin-not-activated"]);
     }
 
-$top=getvalescaped('top','');
-$left=getvalescaped('left','');
-$width=getvalescaped('width','');
-$height=getvalescaped('height','');
-$text=getvalescaped('text','');
+$top=getval('top','');
+$left=getval('left','');
+$width=getval('width','');
+$height=getval('height','');
+$text=getval('text','');
 $text=str_replace("<br />\n"," ",$text);// remove the breaks added by get.php
-$page = getvalescaped('page', 1);
-$id=getvalescaped('id','');
-$preview_width=getvalescaped('pw','');
-$preview_height=getvalescaped('ph','');
+$page = getval('page', 1);
+$id=getval('id',0,true);
+$preview_width=getval('pw','');
+$preview_height=getval('ph','');
 
-$oldtext=sql_value("select note value from annotate_notes where ref='$ref' and note_id='$id'","");
-if ($oldtext!="")
+$curnode=ps_value("SELECT node value FROM annotate_notes WHERE ref= ? AND note_id= ?",['i', $ref, 'i', $id],"");
+
+if (substr($text,0,strlen($username))!=$username)
     {
-	remove_keyword_mappings($ref,i18n_get_indexable($oldtext),-1,false,false,"annotation_ref",$id);
+    $text=$username.": ".$text;
     }
 
-if (ctype_digit($id))
+if ($curnode > 0 && get_nodes_use_count([$curnode]) == 1)
     {
-    sql_query("delete from annotate_notes where ref='$ref' and note_id='$id'");
+    // Reuse same node
+    $savenode = set_node($curnode,$annotate_resource_type_field,$text,NULL,0);
+    }
+else
+    {
+    // Remove node from resource and create new node
+    delete_resource_nodes($ref,[$curnode]);
+    $savenode = set_node(NULL,$annotate_resource_type_field,$text,NULL,0);
+    add_resource_nodes($ref,[$savenode], true, true);
+    }
+
+if ($id > 0)
+    {
+    ps_query("DELETE FROM annotate_notes WHERE ref= ? AND note_id= ?", ['i', $ref, 'i', $id]);
     }
 
 if (substr($text,0,strlen($username))!=$username)
@@ -43,17 +57,23 @@ if (substr($text,0,strlen($username))!=$username)
     $text=$username.": ".$text;
     }
 
-sql_query("insert into annotate_notes (ref,top_pos,left_pos,width,height,preview_width,preview_height,note,user,page) values ('$ref','$top','$left','$width','$height','$preview_width','$preview_height','$text','$userref',$page) ");
+ps_query("INSERT INTO annotate_notes (ref,top_pos,left_pos,width,height,preview_width,preview_height,node,user,`page`) VALUES (?,?,?,?,?,?,?,?,?,?) ",
+[
+    'i',$ref,
+    'i',$top,
+    'i',$left,
+    'i',$width,
+    'i',$height,
+    'i',$preview_width,
+    'i',$preview_height,
+    'i',$savenode,
+    'i',$userref,
+    'i',$page
+]
+);
 
 $annotateid = sql_insert_id();
 echo $annotateid;
 
-$notes=sql_query("select * from annotate_notes where ref='$ref'");
-sql_query("update resource set annotation_count=".count($notes)." where ref=$ref");
-
-#Add annotation to keywords
-$keywordtext = substr(strstr($text,": "),2); # don't add the username to the keywords
-debug("adding annotation to resource keywords. Keywords: " . $keywordtext);
-
-add_keyword_mappings($ref,i18n_get_indexable($keywordtext),-1,false,false,"annotation_ref",$annotateid);
-#add_keyword_mappings($ref,$text,-1);
+$notes=ps_query("SELECT count(note_id) FROM annotate_notes WHERE ref= ?", ['i', $ref]);
+ps_query("UPDATE resource SET annotation_count= ? WHERE ref= ?", ['i', count($notes), 'i', $ref]);

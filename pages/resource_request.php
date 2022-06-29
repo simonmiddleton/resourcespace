@@ -23,11 +23,14 @@ $ref=getval("ref","",true);
 $error = '';
 hook("addcustomrequestfields");
 
-if ($k == "" && isset($anonymous_login) && $username == $anonymous_login){
-	$user_is_anon = true;
-} else {
-	$user_is_anon = false;
-}
+if ($k == "" && isset($anonymous_login) && $username == $anonymous_login)
+    {
+    $user_is_anon = true;
+    }
+else
+    {
+    $user_is_anon = false;
+    }
 $use_antispam = ($k !== '' || $user_is_anon);
 
 # Allow alternative configuration settings for this resource type.
@@ -105,9 +108,11 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		}
 	else
 		{
+        $return_url = $baseurl_short . "pages/view.php?ref=" . (int)($ref) . "&k=" . htmlspecialchars($k);
+        $doneurl = generateURL($baseurl_short . "pages/done.php",["text"=>"resource_request","resource"=>$ref,"k"=>$k,"return_url"=>$return_url]);
 		?>
 		<script>
-		CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&resource=<?php echo htmlspecialchars($ref); ?>&k=<?php echo htmlspecialchars($k); ?>",true);
+		CentralSpaceLoad("<?php echo $doneurl ?>",true);
 		</script>
 		<?php
 		}

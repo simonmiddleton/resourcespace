@@ -66,11 +66,11 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         }
     else if (substr(PHP_SAPI, 0, 3) == 'cli')
         {
-        echo $error_note;
-        if ($show_error_messages) 
-            {
-            echo $error_info;
-            }
+        // Always show errors when running on the command line.
+        echo "\n\n\n" . $error_note;
+        echo $error_info . "\n\n";
+        // Dump additional trace information to help with diagnosis.
+        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         echo PHP_EOL;
         }
     else
@@ -452,7 +452,12 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
 
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
         {
-        debug("SQL: " . $sql);
+        debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
+        }
+    if(trim($sql) == "")
+        {
+        debug("Error - empty SQL query passed");
+        return [];
         }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
@@ -499,7 +504,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     # Try again (no dbstruct this time to prevent an endless loop)
                     return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
-                $error="Bad prepared SQL statement: " . $sql;
+                $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters) . " - " . $db_connection->error;
                 errorhandler("N/A", $error, "(database)", "N/A");
                 exit();
                 }
@@ -710,7 +715,6 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             }
        }
     */
-
 
     return $result;        
     }
@@ -1020,32 +1024,6 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     return $return_rows;        
     }
-	
-
-/**
-* Return a single value from a database query, or the default if no rows
-* 
-* NOTE: The value returned must have the column name aliased to 'value'
-* 
-* @uses sql_query()
-* 
-* @param string $query    SQL query
-* @param mixed  $default  Default value
-* 
-* @return string
-*/
-function sql_value($query, $default, $cache="")
-    {
-    db_set_connection_mode("read_only");
-    $result = sql_query($query, $cache, -1, true, 0, true, false);
-
-    if(count($result) == 0)
-        {
-        return $default;
-        }
-
-        return $result[0]["value"];
-    }
 
 /**
 * Return a single value from a database query, or the default if no rows
@@ -1087,7 +1065,7 @@ function ps_value($query, $parameters, $default, $cache="")
 * 
 * @return array
 */
-function ps_array($query,$parameters,$cache="")
+function ps_array($query,$parameters=array(),$cache="")
 	{
 	$return = array();
 
@@ -1102,31 +1080,6 @@ function ps_array($query,$parameters,$cache="")
     return $return;
 	}
 
-/**
-* Like sql_value() but returns an array of all values found
-* 
-* NOTE: The value returned must have the column name aliased to 'value'
-* 
-* @uses sql_query()
-* 
-* @param string $query SQL query
-* 
-* @return array
-*/
-function sql_array($query,$cache="")
-	{
-	$return = array();
-
-    db_set_connection_mode("read_only");
-    $result = sql_query($query, $cache, -1, true, 0, true, false);
-
-    for($n = 0; $n < count($result); $n++)
-    	{
-    	$return[] = $result[$n]["value"];
-    	}
-
-    return $return;
-	}
 
 /**
  * Return the ID of the previously inserted row.
@@ -1339,8 +1292,21 @@ function CheckDBStruct($path,$verbose=false)
                             {
                             // Get type from table file
                             $sql_params[]=$column_types[$n];
-                            if ($row[$n]=="''") {$sql_params[]=NULL;}
-                            else {$sql_params[]=$row[$n];}
+                            // dbstruct/data_*.txt files normally have nothing if the column value was null when using
+                            // the pages/tools/dbstruct_create.php script.
+                            if($row[$n] === '')
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            // Legacy? I couldn't find any dbstruct/data_*.txt file containing '' for a column value
+                            else if($row[$n] == "''")
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            else
+                                {
+                                $sql_params[] = $row[$n];
+                                }
                             }
 
                         ps_query(
@@ -1405,12 +1371,13 @@ function CheckDBStruct($path,$verbose=false)
                                     # Check the column is of the correct type
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$basecoltype,$matchbase);
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$existingcoltype,$matchexisting);
+
                                     // Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
                                     // - If column is of same type but smaller number, update
                                     // - If target column is of type text, update
                                     // - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
+                                    // - If target column is of type mediumtext and currently is text, update
                                     // - If target column is of type longtext and currently is text
-
                                     if(
                                         (count($matchbase) == 3 && count($matchexisting) == 3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
                                         || (stripos($basecoltype, "text") !== false && stripos($existingcoltype, "text") === false)
@@ -1420,6 +1387,7 @@ function CheckDBStruct($path,$verbose=false)
                                         && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT")
                                         )
                                         || (strtoupper(substr($basecoltype, 0, 7)) == "VARCHAR" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
+                                        || (strtoupper(substr($basecoltype, 0, 10)) == "MEDIUMTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
                                         || (strtoupper(substr($basecoltype, 0, 8)) == "LONGTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
                                         )
                                         {

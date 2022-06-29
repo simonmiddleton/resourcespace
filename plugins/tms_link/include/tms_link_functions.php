@@ -177,23 +177,31 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
 
 function tms_link_get_tms_resources(array $module)
     {
-    if($module['rs_uid_field'] == 0)
+    $module_rtfs = array_filter(array_filter(array_map('intval', [$module['rs_uid_field'], $module['checksum_field']])), 'is_int_loose');
+    if(empty($module_rtfs))
         {
-        return array();
+        return [];
         }
 
-    $tms_resources = sql_query("
-           SELECT rd.resource AS resource,
-                  rd.value AS objectid,
-                  rd2.value AS checksum
-             FROM resource_data AS rd
-        LEFT JOIN resource_data AS rd2 ON rd2.resource = rd.resource AND rd2.resource_type_field = '{$module['checksum_field']}'
-            WHERE rd.resource > 0
-              AND rd.resource_type_field = '{$module['rs_uid_field']}'
-              AND rd.value <> ''
-         ORDER BY rd.resource");
+    $sql_rtf_in = ps_param_insert(count($module_rtfs));
 
-    return $tms_resources;    
+    return ps_query(
+        "   SELECT rn.resource,
+                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS objectid,
+                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS `checksum`
+              FROM resource_node AS rn
+        INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field IN ({$sql_rtf_in})
+             WHERE rn.resource > 0
+          GROUP BY rn.resource
+          ORDER BY rn.resource",
+        array_merge(
+            [
+                'i', $module['rs_uid_field'],
+                'i', $module['checksum_field'],
+            ],
+            ps_param_fill($module_rtfs, 'i')
+        )
+    );
     }
   
   
@@ -358,7 +366,7 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
 	$mediamasterid = tms_get_mediamasterid();
 	if(!$mediamasterid)
 	  {
-	  debug("tms_link: ERROR: Unable to get a MediaMasterID. " . $errormessage);
+	  debug("tms_link: ERROR: Unable to get a MediaMasterID. ");
 	  return false;
 	  }      
 	debug("tms_link: Using MediaMasterID: " . $mediamasterid);
@@ -366,7 +374,7 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
 	$renditionid=tms_get_renditionid($mediamasterid,$resource,true);
 	if(!$renditionid)
 	  {
-	  debug("tms_link: ERROR - Unable to create a new RenditionID. " . $errormessage);
+	  debug("tms_link: ERROR - Unable to create a new RenditionID. ");
 	  return false;
 	  }     
     debug("Using RenditionID: " . $renditionid);        

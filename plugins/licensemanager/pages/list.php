@@ -2,7 +2,7 @@
 include dirname(__FILE__)."/../../../include/db.php";
 
 include dirname(__FILE__)."/../../../include/authenticate.php";
-if (!checkperm("a")) {exit ("Permission denied.");}
+if (!checkperm("a") && !checkperm("lm")) {exit ("Permission denied.");}
 global $baseurl;
 
 
@@ -39,7 +39,8 @@ $url_params = array(
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+			'menu' =>  true
         ),
         array(
             'title' => $lang["managelicenses"]
@@ -64,7 +65,7 @@ if ($findtext!="")
 $licenses=ps_query("select * from license $sql order by ref", $params);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($licenses);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

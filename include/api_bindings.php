@@ -65,7 +65,8 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
-    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,0,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
+    $getsizes = array_map('trim', $getsizes);
+    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
     
     if (!is_array($results))
         {
@@ -479,14 +480,14 @@ function api_get_user_collections()
     return get_user_collections($userref);
     }
     
-function api_add_resource_to_collection($resource,$collection='')
+function api_add_resource_to_collection($resource,$collection='',$search='')
     {
     global $usercollection;
     if($collection=='')
         {
         $collection = $usercollection;
         }
-    return add_resource_to_collection($resource,$collection);
+    return add_resource_to_collection($resource,$collection,false,'','',null,null,$search);
     }
     
 function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
@@ -699,7 +700,7 @@ function api_get_data_by_field($ref, $field)
         }
 
     // Get the data for a specific field for a specific resource.
-    $results = get_data_by_field($ref, $field);
+    $results = metadata_field_view_access($field) ? get_data_by_field($ref, $field) : false;
     
     if(is_array($results))
         {

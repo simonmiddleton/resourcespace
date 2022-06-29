@@ -8,7 +8,7 @@ include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission
 
 echo "<pre>";
 
-$site_texts=sql_query("select * from site_text order by page,name,ref");
+$site_texts=ps_query("select * from site_text order by page,name,ref");
 foreach ($site_texts as $site_text)
     {
     $html=trim($site_text["text"]);

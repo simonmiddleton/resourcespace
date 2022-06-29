@@ -67,7 +67,7 @@ $groups=sql_query("
 );
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($groups);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
@@ -101,7 +101,8 @@ function addColumnHeader($orderName, $labelKey)
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+			'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["page-title_user_group_management"],

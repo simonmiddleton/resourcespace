@@ -26,15 +26,16 @@ if($backurl=="")
     $backurl=$baseurl . "/pages/admin/admin_home.php";
     }
     
-if (getval("newtype","")!="" && enforcePostRequest(false))
+$newtype=getval("newtype","");
+if ($newtype!="" && enforcePostRequest(false))
 	{
-	sql_query("insert into resource_type (name) values ('" . getvalescaped("newtype","") . "')");
+	ps_query("insert into resource_type (name) values (?) ",array("s",$newtype));
 	$new=sql_insert_id();
 	clear_query_cache("schema");
 	redirect($baseurl_short."pages/admin/admin_resource_type_edit.php?ref=" . $new);
 	}
 
-$resource_types=sql_query ("
+$resource_types=ps_query ("
 	select * from 
 		(
 		select if(rt is null, rt.ref, rt) rt,
@@ -102,7 +103,8 @@ function addColumnHeader($orderName, $labelKey)
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+			'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["resource_types_manage"],

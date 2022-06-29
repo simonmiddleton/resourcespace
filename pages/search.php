@@ -104,13 +104,18 @@ foreach($keywords as $keyword)
         }
 
     $field_shortname = escape_check($field_shortname);
-    $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0, "schema");
+    $resource_type_field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$field_shortname), 0, "schema");
 
     if(0 == $resource_type_field)
         {
         continue;
         }
 
+    if(!metadata_field_view_access($resource_type_field))
+        {
+        // User can't search against a metadata field they don't have access to
+        continue;
+        }
     $nodes = get_nodes($resource_type_field, null, true);
     
     // Check if multiple nodes have been specified for an OR search
@@ -400,17 +405,6 @@ else
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
 
-# if search is not a special search (ie. !recent), use starsearchvalue.
-if (getvalescaped("search","")!="" && strpos(getvalescaped("search",""),"!")!==false)
-    {
-    $starsearch="";
-    }
-else
-    {
-    $starsearch=getvalescaped("starsearch",""); 
-    rs_setcookie('starsearch', $starsearch,0,"","",false,false);
-}
-
 # If returning to an old search, restore the page/order by and other non search string parameters
 $old_search = (!array_key_exists('search', $_GET) && !array_key_exists('search', $_POST));
 if ($old_search)
@@ -537,7 +531,21 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         {
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+        // First search for refs only to get full result count
+        $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, true, $editable_only, false, $search_access);
+        
+        if(is_array($count_search))
+            {
+            $result_count = count($count_search);
+            // Do actual search and get all data
+            $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+            }
+        else
+            {
+            $result_count = 0;
+            $result = $count_search;
+            }
+      
         $max_results = $saved_max_results;
         }
     }
@@ -550,8 +558,7 @@ else
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$count_result = (is_array($result) ? count($result) : 0);
-
+$result_count = $result_count ?? (is_array($result) ? count($result) : 0);
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
@@ -560,7 +567,7 @@ $same_restypes_param = (trim($restypes) === $initial_restypes_cookie);
 $same_archive_param = (trim($archive) === $initial_saved_archive_cookie);
 if(!$old_search && (!$same_search_param || !$same_restypes_param || !$same_archive_param))
     {
-    log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $count_result);
+    log_search_event(trim(strip_leading_comma($search)), explode(',', $restypes), explode(',', $archive), $result_count);
     }
 
 if ($collectionsearch)
@@ -911,6 +918,7 @@ if (isset($result_title_height))
         {
         white-space:normal;
         height: <?php echo $result_title_height ?>px;
+        text-align: left;
         }
     </style>
     <?php
@@ -928,7 +936,7 @@ if ($search_titles)
 
 if (!hook("replacesearchheader")) # Always show search header now.
     {
-    $resources_count=is_array($result)?count($result):0;
+    $resources_count = $result_count ?? (is_array($result) ? count($result) : 0);
     if (isset($collections)) 
         {
         $result_count=$colcount+$resources_count;
@@ -1340,7 +1348,7 @@ if($responsive_ui)
             <?php
             if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim($collectiondata['description']) != "")
                 {
-                echo "<p>" . nl2br(htmlspecialchars($collectiondata['description'])) . "</p>";
+                echo "<p>" . nl2br(htmlspecialchars(i18n_get_translated($collectiondata['description']))) . "</p>";
                 }
             echo "</div>";
             }
@@ -1454,6 +1462,7 @@ if($responsive_ui)
         <tr class="ListviewTitleStyle">
         <?php if (!hook("listcheckboxesheader")){?>
         <?php if ($use_selection_collection){?><td><?php echo $lang['addremove'];?></td><?php } ?>
+        <td><?php echo $lang["imagesize-thumbnail"];?></td>
         <?php } # end hook listcheckboxesheader 
 
         $df_count = count($df);
@@ -1489,7 +1498,6 @@ if($responsive_ui)
         global $marker_metadata_field, $use_watermark;
 
         // Loop through search results.
-        $result_count = count($result);
         for ($n = 0; $n < $result_count; $n++)
             {            
             if(!is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
@@ -1522,7 +1530,6 @@ if($responsive_ui)
     # work out common keywords among the results
     if (is_array($result) && (count($result)>$suggest_threshold) && (strpos($search,"!")===false) && ($suggest_threshold!=-1))
         {
-        $result_count = count($result);
         for ($n=0;$n<$result_count;$n++)
             {
             if(!is_array($result[$n])){continue;}

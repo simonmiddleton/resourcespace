@@ -100,7 +100,7 @@ function ResourceConnectCollectionWarning($languagestring,$collection)
     {
     global $lang;
     # Are there any remote assets?
-    $c=sql_value("select count(*) value from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'",0);
+    $c=ps_value("select count(*) value from resourceconnect_collection_resources where collection=?",array("i",$collection),0);
     if ($c>0)
         {
         # Add a warning.
@@ -139,11 +139,23 @@ function HookResourceConnectAllSearchfiltertop()
 function HookResourceConnectAllGenerate_collection_access_key($collection,$k,$userref,$feedback,$email,$access,$expires)
     {
     # When sharing externally, add the external access key to an empty row if the collection is empty, so the key still validates.
-    $c=sql_value("select count(*) value from collection_resource where collection='$collection'",0);
+    $c=ps_value("select count(*) value from collection_resource where collection=?",array("i",$collection), 0);
     if ($c>0) {return false;} # Contains resources, key already present
     
-    sql_query("insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,'$k','$collection','$userref','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . $expires . "'"). ");");
-    
+    $sql="insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,?,?,?,?,?',now(),?,";
+    $params=array("s",$k,"i",$collection,"i",$userref,"i",$feedback,"s",$email,"i",$access);
+
+    if ($expires=="") 
+            {
+            $sql.="null";
+            }
+    else    
+            {
+            $sql.="?";
+            $params[]="s";$params[]=$expires;
+            }
+    $sql.=")";
+    ps_query($sql,$params);
     }
 
 function HookResourceconnectAllGenerateurl($url)
@@ -195,7 +207,7 @@ function HookResourceconnectAllGenerateurl($url)
     FROM 
         collection_resource 
     WHERE 
-        collection='" . escape_check($collection) . "'
+        collection=?
     ORDER BY 
         sortorder asc, 
         date_added desc, 
@@ -208,11 +220,11 @@ function HookResourceconnectAllGenerateurl($url)
     FROM 
         resourceconnect_collection_resources 
     WHERE 
-        collection='$collection'    
+        collection=? 
     )
     ";
     
-        return sql_array($sql);
+        return ps_array($sql,array("i",$collection,"i",$collection));
     
         }  
 
@@ -276,7 +288,7 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
         $collection = $collection["ref"];
         }
     # retrieve only local resources from collection for access key validation
-    $resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($collection) . ';');    
+    $resources = ps_array('SELECT resource AS value FROM collection_resource WHERE collection = ?',array("i",$collection));    
     
     return $resources;
     }
@@ -284,13 +296,12 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
 
 function HookResourceconnectAllCountresult($collection,$count)
 	{
-	return $count+sql_value("select count(*) value from resourceconnect_collection_resources where collection='$collection'",0);
-
+	return $count+ps_value("select count(*) value from resourceconnect_collection_resources where collection=?",array("i",$collection),0);
 	}
 
 function HookResourceConnectAllgetRemoteResources($collection)
     {
-    return count(sql_array("SELECT ref AS value FROM resourceconnect_collection_resources WHERE collection='". escape_check($collection) ."'"));
+    return count(ps_array("SELECT ref AS value FROM resourceconnect_collection_resources WHERE collection=?",array("i",$collection)));
     }
 
 function HookResourceConnectAllrenderadditionalthumbattributes($resource)

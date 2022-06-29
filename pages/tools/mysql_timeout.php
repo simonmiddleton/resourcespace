@@ -1,11 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Command line execution only');
-    }
-
 include "../../include/db.php";
+command_line_only();
 
 
 # Fetch a list of MySQL processes and kill any that exceed the timeout limit.

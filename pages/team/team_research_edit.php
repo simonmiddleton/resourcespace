@@ -71,7 +71,7 @@ include "../../include/header.php";
 <?php } ?>
 
 <?php if (!hook("replaceresearcheditnoresources")){?>
-<div class="Question"><label><?php echo htmlspecialchars($lang["noresourcesrequired"])?></label><div class="Fixed"><?php echo htmlspecialchars($research["noresources"])?></div>
+<div class="Question"><label><?php echo htmlspecialchars($lang["noresourcesrequired"])?></label><div class="Fixed"><?php echo htmlspecialchars((string) $research["noresources"])?></div>
 <div class="clearerleft"> </div></div>
 <?php }
 

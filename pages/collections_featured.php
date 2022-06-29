@@ -107,7 +107,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
     {
     // Smart fields. If a category tree, then a parent could be passed once user requests a lower level than root of the tree
     $resource_type_field = get_resource_type_field($smart_rtf);
-    if($resource_type_field !== false)
+    if($resource_type_field !== false && in_array($resource_type_field["type"],$FIXED_LIST_FIELD_TYPES))
         {
         // We go one level at a time so we don't need it to search recursively even if this is a FIELD_TYPE_CATEGORY_TREE
         $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent, $resource_type_field);

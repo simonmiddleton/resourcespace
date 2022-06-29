@@ -305,7 +305,7 @@ $home_dash = true;
 # Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank', 'analytics');
+$tile_styles['conf']  = array('blank', 'analytics','thmsl','custm','pend');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
@@ -696,7 +696,7 @@ $use_recent_as_home=false;
 $theme_images=true;
 $theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
 $theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
-$show_theme_collection_stats=false; # Show count of themes and resources in theme category
+$show_theme_collection_stats=false; # Show count of themes and resources in category. $themes_simple_view=false only.
 
 # Theme direct jump mode
 # If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
@@ -1338,7 +1338,7 @@ $enable_public_collections=true;
 
 # Allow user group to be selected as part of user registration?
 # User groups available for user selection must be specified using the 'Allow registration selection' option on each user group
-# in System Setup.
+# under Admin -> System -> User groups.
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
@@ -1607,8 +1607,8 @@ $top_nav_upload=true;
 $top_nav_upload_user=false;
 $top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
-# Configure the maximum upload file size; this directly translates into plupload's max_file_size if set
-# $upload_max_file_size = '50M';
+# Configure the maximum upload file size; this directly translates into upload's max_file_size if set
+# $upload_max_file_size = 50mb;
 
 # You can set the following line to ''  to disable chunking.
 $upload_chunk_size='5mb';
@@ -2134,7 +2134,8 @@ $enable_thumbnail_creation_on_upload = true;
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
     // Default center and zoom for the map view when selecting a new location, as a world view.
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
-    $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
+    // The tools available on https://epsg.io/3857 can be used to get the coordinates of a location on the map or try an internet search for EPSG:3857.
+    $geolocation_default_bounds = '-450061.222543,7152059.862587,2';
 
     // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
     // Note that server caching is bypassed if $geo_leaflet_maps_sources = true;
@@ -2460,11 +2461,8 @@ $show_searchitemsdiskusage=true;
 # This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
 $search_sql_double_pass_mode=true;
 
-# Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
+# Use the new tab ordering system. This will sort the tabs by the order by value set in Admin -> System -> Metadata fields.
 $use_order_by_tab_view=false;
-
-# Allows for themes with a taller header than standard to still be fully visible in System Setup. 
-$admin_header_height=120;
 
 # Display link to request log on view page
 $display_request_log_link=false;
@@ -2495,7 +2493,7 @@ $download_filename_id_only = false;
 # Required: $download_filename_id_only = true;
 $download_id_only_with_size = false;
 
-# Index the 'contributed by' field?
+# Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;
 
 # Use CKEditor for site content?
@@ -3127,13 +3125,6 @@ $ghostscript_extensions = array('ps', 'pdf');
 // extensions found in a merge of $non_image_types, $ffmpeg_supported_extensions, $unoconv_extensions and $ghostscript_extensions list
 $non_image_types_generate_preview_only = true;
 
-// Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
-// Once enabled the filters will gradually be updated as users search.
-// NOTE - from v9.3 onwards, enabling this will also update edit and derestrict filters to use the same filters
-// To update all the search filters immediately run upgrade/scripts/005_migrate_search_filters.php
-// To update edit and derestrict filters run upgrade/scripts/009_migrate_edit_derestrict_filters.php
-$search_filter_nodes = true;
-
 // Browse bar 
 // Enable/Disable browse bar - in system config
 $browse_bar = true;
@@ -3312,3 +3303,10 @@ $owner_field_mappings = [
 */
 $owner_field_mappings = [];
 
+// Optional - $valid_upload_paths
+// Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
+// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
+// $valid_upload_paths = [];
+
+// Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
+$thumbs_display_archive_state = false;

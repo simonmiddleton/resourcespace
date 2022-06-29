@@ -41,9 +41,8 @@ if ($sort_tabs)
 if(isset($related_type_show_with_data)) {
     // Fetch the tab names for the resource types which have been specifed for rendering in related tabs
     // Exclude the current resource type 
-    $show_related_type_tab_list = implode(",",$related_type_show_with_data);
-    $resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type 
-                                           WHERE ref IN(".$show_related_type_tab_list.") and ref<>'" . $resource['resource_type'] . "'", "schema");
+    $resource_type_tab_names = ps_array("SELECT tab_name as value FROM resource_type 
+                                           WHERE ref IN(". ps_param_insert(count($related_type_show_with_data)).") and ref<>?", array_merge(ps_param_fill($related_type_show_with_data,"i"),array("i",$resource["resource_type"])),"schema");
     $resource_type_tab_names = array_values(array_unique($resource_type_tab_names));
 
     // This is the list of tab names which will be rendered for the resource specified

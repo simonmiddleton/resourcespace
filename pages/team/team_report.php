@@ -203,7 +203,8 @@ else
 	    $links_trail = array(
 	        array(
 	            'title' => $lang["systemsetup"],
-	        	'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        	'href'  => $baseurl_short . "pages/admin/admin_home.php",
+				'menu' =>  true
 	        ),
 	        array(
 	            'title' => $lang["page-title_report_management"],
@@ -216,7 +217,8 @@ else
 		$links_trail = array(
 	        array(
 	            'title' => $lang["teamcentre"],
-                'href'  => $baseurl_short . "pages/team/team_home.php"
+                'href'  => $baseurl_short . "pages/team/team_home.php",
+				'menu' =>  true
 	        )
 		);
 		}

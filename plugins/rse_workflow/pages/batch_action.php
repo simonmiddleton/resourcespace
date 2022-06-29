@@ -59,7 +59,6 @@ $archive = getvalescaped("archive", "0");
 $per_page = getvalescaped("per_page", null, true);
 $offset = getvalescaped("offset", 0, true);
 $sort = getvalescaped("sort", "desc");
-$starsearch = getvalescaped("starsearch", 0, true);
 $recent_search_daylimit = getvalescaped("recent_search_daylimit", "");
 $go = getvalescaped("go", "");
 
@@ -79,14 +78,14 @@ $result = do_search(
     -1,
     $sort,
     false, # $access_override
-    $starsearch,
+    DEPRECATED_STARSEARCH,
     false, # $ignore_filters 
     false, # $return_disk_usage
     $recent_search_daylimit,
     $go,
     true, # $stats_logging
     false, # $return_refs_only
-    true # $editable_only
+    false # $editable_only
 );
 
 $resources = array();
@@ -135,7 +134,6 @@ $form_action = generateURL($_SERVER['PHP_SELF'],
         "per_page" => $per_page,
         "offset" => $offset,
         "sort" => $sort,
-        "starsearch" => $starsearch,
         "recent_search_daylimit" => $recent_search_daylimit,
         "go" => $go,
 

@@ -1,7 +1,7 @@
 <?php
 include dirname(__FILE__)."/../../../include/db.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t")) {exit ("Permission denied.");}
+include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t") && !checkperm("cm")) {exit ("Permission denied.");}
 global $baseurl;
 
 $offset=getvalescaped("offset",0,true);
@@ -33,7 +33,8 @@ $url_params = array(
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+			'menu' =>  true
         ),
         array(
             'title' => $lang["manageconsents"]
@@ -56,7 +57,7 @@ if ($findtext!="")
 $consents=sql_query("select * from consent $sql order by ref");
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($consents);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

@@ -151,8 +151,8 @@ switch ($callback)
 			unset ($debug_log_override);
 			}
 
-		$debug_user = sql_value("SELECT value FROM sysvars WHERE name='debug_override_user'", "");
-		$debug_expires = sql_value("SELECT value FROM sysvars WHERE name='debug_override_expires'", "");
+		$debug_user = ps_value("SELECT value FROM sysvars WHERE name='debug_override_user'", [], "");
+		$debug_expires = ps_value("SELECT value FROM sysvars WHERE name='debug_override_expires'", [], "");
 
 		if ($debug_expires != "")
 			{
@@ -335,23 +335,32 @@ switch ($callback)
 		$order_by = "";
 		if ($sortby)
 			{
-			if ($sortasc)
-				{
-				$order_by = " ORDER BY `{$sortby}` ASC";
-				}
-			else
-				{
-				$order_by = " ORDER BY `{$sortby}` DESC";
-				}
+            //Checking if the sort by is a valid column from the table;
+            $fields = ps_query('DESCRIBE INFORMATION_SCHEMA.PROCESSLIST');
+            foreach($fields as $field)
+                {
+                if(strtolower($sortby) == strtolower($field['Field']))
+                    {
+                    if ($sortasc)
+                        {
+                        $order_by = " ORDER BY `{$sortby}` ASC";
+                        }
+                    else
+                        {
+                        $order_by = " ORDER BY `{$sortby}` DESC";
+                        }
+                    break;
+                    }
+                }
 			}
 
 		if ($filter == "")
 			{
-			$results = sql_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
+			$results = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
 			}
 		else
 			{
-			$result_rows = sql_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
+			$result_rows = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
 
 			foreach ($result_rows as $row)
 				{

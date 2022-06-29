@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 if(!db_use_multiple_connection_modes())
     {
@@ -42,7 +40,7 @@ db_set_connection_mode("read_only");
 $case1=false;
 try
     {
-    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES (?,?)",["s",'test_read_only_mode1',"s",'true']);
+    ps_query("INSERT INTO sysvars (`name`, `value`) VALUES ('test_read_only_mode1','true')");
     echo "POP";
     }
 catch(Throwable $e)
@@ -50,5 +48,6 @@ catch(Throwable $e)
     $case1 = true;
     }
 if (!$case1){echo "FAIL - subtest 1 ";return false;}
+$GLOBALS["use_error_exception"]=false;
 
 return true;

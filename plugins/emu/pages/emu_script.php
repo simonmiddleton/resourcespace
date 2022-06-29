@@ -61,7 +61,14 @@ $emu_script_last_ran = '';
 if(!check_script_last_ran('last_emu_import', $emu_script_failure_notify_days, $emu_script_last_ran))
     {
     $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - WARNING';
-    send_mail($email_notify, $emu_script_failed_subject, "WARNING: The EMu Import Script has not completed since '{$emu_script_last_ran}'.\r\n\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.", $email_from);
+    $adminusers = get_notification_users();
+    $message = new ResourceSpaceUserNotification;
+    $message->set_text("lang_emu_script_problem",["%days%"],[$emu_script_failure_notify_days]);
+    $message->append_text($emu_script_last_ran);
+    $message->set_subject($emu_script_failed_subject);
+    $message->user_preference = "user_pref_system_management_notifications";
+    $message->url =  $baseurl . "/plugins/emu/pages/setup.php";
+    send_user_notification($adminusers,$message);
     }
 
 // Check for a process lock
@@ -70,12 +77,16 @@ if(is_process_lock('emu_import'))
     echo 'EMu script lock is in place. Deferring.' . PHP_EOL . 'To clear the lock after a failed run use --clearlock flag.' . PHP_EOL;
 
     $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - FAILED';
-    send_mail($email_notify, $emu_script_failed_subject, "The EMu script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\n\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\n\r\nphp emu_script.php --clearlock\r\n", $email_from);
+    $adminusers = get_notification_users();
+    $message = new ResourceSpaceUserNotification;
+    $message->set_text("The EMu script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\n\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\n\r\nphp emu_script.php --clearlock\r\n");
+    $message->set_subject($emu_script_failed_subject);
+    $message->user_preference = "user_pref_system_management_notifications";
+    $message->url =  $baseurl . "/plugins/emu/pages/setup.php";
+    send_user_notification($adminusers,$message);
     exit();
     }
 set_process_lock('emu_import');
-
-
 
 $emu_script_start_time = microtime(true);
 $emu_resources         = get_emu_resources();
@@ -276,7 +287,16 @@ else
     emu_script_log($emu_status_text, $emu_log_file);
     }
 
-send_mail($email_notify, ($emu_test_mode ? 'TEST MODE - ' : '') . "EMu Import script - {$emu_status_text}", $emu_log_text, $email_from);
+$adminusers = get_notification_users();
+$message = str_replace("%days%",$emu_script_failure_notify_days,$lang["emu_script_problem"]) . $emu_script_last_ran;
+
+$message = new ResourceSpaceUserNotification;
+$message->set_text(($emu_test_mode ? 'TEST MODE - ' : '') . "EMu Import script - {$emu_status_text} <br/><br/>");
+$message->append_text($emu_log_text);
+$message->set_subject(($emu_test_mode ? 'TEST MODE - ' : '') . "EMu Import script - {$emu_status_text}");
+$message->user_preference = "user_pref_system_management_notifications";
+$message->url =  $baseurl . "/plugins/emu/pages/setup.php";
+send_user_notification($adminusers,$message);
 
 echo $emu_log_text;
 

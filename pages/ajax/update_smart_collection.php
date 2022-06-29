@@ -10,11 +10,11 @@ if (RUNNING_ASYNC)
 	if (empty($_SERVER['argv'][1])) {exit();}
 
 	$collection=$_SERVER['argv'][1];
-	$smartsearch_ref=sql_value("select savedsearch value from collection where ref='$collection'","");	
+	$smartsearch_ref=ps_value("select savedsearch value from collection where ref= ?", ['i', $collection],"");	
 	}
 
 
-$smartsearch=sql_query("select search,restypes,starsearch,archive,created,result_limit from collection_savedsearch where ref='$smartsearch_ref'");
+$smartsearch=ps_query("select search,restypes,starsearch,archive,created,result_limit from collection_savedsearch where ref= ?", ['i', $smartsearch_ref]);
 
 if (isset($smartsearch[0]['search']))
 	{
@@ -29,7 +29,7 @@ if (isset($smartsearch[0]['search']))
 	//$startTime = microtime(true); 
 	# results is a list of the current search without any restrictions
 	# we need to compare against the current collection contents to minimize inserts and deletions
-	$current_contents=sql_array("select resource value from collection_resource where collection='$collection'");
+	$current_contents=ps_array("select resource value from collection_resource where collection= ?", ['i', $collection]);
 		
 	$results_contents=array();
 	$counter=0;

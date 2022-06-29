@@ -116,7 +116,7 @@ include "../include/header.php";
             ?>
             <div class="Question" id="email">
                 <label for="email"><?php echo $lang["email"]?></label>
-                <input id="email" name="email" class="stdwidth" type="text" value="<?php echo htmlspecialchars($email) ?>">
+                <input id="email" name="email" class="stdwidth" type="text" maxlength="200" value="<?php echo htmlspecialchars($email) ?>">
                 <div class="clearerleft"> </div>
                 <?php if (isset($error_email)) { ?><div class="FormError"><?php echo $lang["setup-emailerr"]?></div><?php } ?>
             </div>
@@ -124,7 +124,7 @@ include "../include/header.php";
 
         <div class="Question" id="contacttelephone">
             <label for="contact"><?php echo $lang["contacttelephone"]?></label>
-            <input id="contact" name="contact" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
+            <input id="contact" name="contact" class="stdwidth" type="text" maxlength="100" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
             <div class="clearerleft"></div>
         </div>
 

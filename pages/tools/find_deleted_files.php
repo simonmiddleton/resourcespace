@@ -4,18 +4,13 @@
 * 
 * Note: the script does not care about previews since these can be recreated
 */
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Access denied - Command line only!');
-    }
-
 include __DIR__ . '/../../include/db.php';
+command_line_only();
 
 ob_end_clean();
 restore_error_handler();
 
-$resources = sql_query("SELECT ref, file_extension FROM resource WHERE ref > 0 AND archive != {$resource_deletion_state}");
+$resources = ps_query("SELECT ref, file_extension FROM resource WHERE ref > 0 AND archive != ?",array("i",$resource_deletion_state));
 
 foreach($resources as $resource)
     {

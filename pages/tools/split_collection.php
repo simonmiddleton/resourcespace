@@ -16,8 +16,8 @@ if ($collectionid == false)
     }
 
 $collectionresources = get_collection_resources($collectionid);
-$collectionname = sql_value("SELECT name AS value FROM collection WHERE ref = " . escape_check($collectionid), "Collection");
-$collectionuser = sql_value("SELECT user AS value FROM collection WHERE ref = " . escape_check($collectionid), 1);
+$collectionname = ps_value("SELECT name AS value FROM collection WHERE ref = ?", array("i",$collectionid), "Collection");
+$collectionuser = ps_value("SELECT user AS value FROM collection WHERE ref = ?", array("i",$collectionid), 1);
 
 if (!is_array($collectionresources))
     {

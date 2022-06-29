@@ -35,7 +35,6 @@ if(preg_match("/^field(.*)/", $order_by, $matches))
 
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
-$starsearch=getvalescaped("starsearch","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive","");
 $per_page=getvalescaped("per_page",$default_perpage,true);
@@ -58,7 +57,7 @@ if ($go!="")
     if ($modified_result_set){
         $result=$modified_result_set;
     } else {
-        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch,false,false,"", getvalescaped("go",""));
+        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"", getvalescaped("go",""));
     }
     if (is_array($result))
         {
@@ -123,7 +122,7 @@ resource_type_config_override($resource["resource_type"]);
 # get comments count
 $resource_comments=0;
 if($comments_resource_enable && $comments_view_panel_show_marker){
-    $resource_comments=sql_value("select count(*) value from comment where resource_ref='" . escape_check($ref) . "'","0");
+    $resource_comments=ps_value("select count(*) value from comment where resource_ref=?",array("i",$ref),"0");
 }
 
 # Should the page use a larger resource preview layout?
@@ -232,10 +231,14 @@ if (getval("refreshcollectionframe","")!="")
 	refresh_collection_frame();
 	}
 
-# Update the hitcounts for the search keywords (if search specified)
+# Update the hitcounts for the search nodes (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
 $usearch= isset($_GET["search"]) ? $_GET["search"] : "";
-if ((strpos($usearch,"!")===false) && ($usearch!="")) {update_resource_keyword_hitcount($ref,$usearch);}
+# Update resource/node hit count
+if (strpos($usearch,NODE_TOKEN_PREFIX) !== false)
+    {
+    update_node_hitcount_from_search($ref,$usearch);
+    }
 
 # Log this activity
 daily_stat("Resource view",$ref);
@@ -520,7 +523,6 @@ $urlparams= array(
     'order_by'			=> $order_by,
     'offset'			=> $offset,
     'restypes'			=> $restypes,
-    'starsearch'		=> $starsearch,
     'archive'			=> $archive,
     'per_page'			=> $per_page,
     'default_sort_direction' => $default_sort_direction,
@@ -741,6 +743,7 @@ else if(1 == $resource['has_image'])
              class="Picture"
              src="<?php echo $imageurl; ?>" 
              alt="<?php echo $lang['fullscreenpreview']; ?>" 
+             onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
              GALLERYIMG="no"
         <?php
         if($annotate_enabled)
@@ -1449,7 +1452,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 			}
 		} /* end hook previewlinkbar */
 	}
-elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
+elseif (strlen((string) $resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
 	{
 	# Files without multiple download sizes (i.e. no alternative previews generated).
 	$path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -1482,7 +1485,7 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 		$nodownloads=true;
 		}
 	} 
-elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full_download==false))
+elseif (strlen((string) $resource["file_extension"])>0 && ($access==1 && $restricted_full_download==false))
     {
     # Files without multiple download sizes (i.e. no alternative previews generated).
     $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
@@ -1512,7 +1515,7 @@ elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full
     } 
 
 // Render a "View in browser" button for PDF/MP3 (no longer configurable in config as SVGs can easily be disguised)
-if (strlen($resource["file_extension"]) > 0 
+if (strlen((string) $resource["file_extension"]) > 0 
     && ($access == 0 || ($access == 1 && $restricted_full_download == true)) 
     && in_array(strtolower($resource["file_extension"]),["pdf","mp3"]))
     {
@@ -2158,7 +2161,7 @@ if (count($result)>0)
                 // Don't show this type again.
                 continue;
                 }
-            $restypename=sql_value("select name as value from resource_type where ref = '" . escape_check($rtype) . "'","", "schema");
+            $restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype), "", "schema");
             $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
             ?>
             <div class="Title"><?php echo str_replace_formatted_placeholder("%restype%", $restypename, $lang["relatedresources-restype"]); ?></div>

@@ -1410,7 +1410,7 @@ $lang["addnewcontent"]="New content (page, name)";
 $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
-$lang["addremove"]="Add/remove";
+$lang["addremove"]="+/-";
 $lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
@@ -1440,7 +1440,10 @@ $lang["requestsenttext"]="Your resource request has been submitted for approval 
 $lang["requestupdated"]="Your resource request has been updated ";
 $lang["requestassignedtouser"]="Your resource request has been assigned to % for approval.";
 $lang["requestapprovedmail"]="Your request has been approved. Click the link below to view and download the requested resources.";
+$lang["requestapprovedmail_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view and download the requested resources.<br/><br/><a href='[url]'>[url]</a>";
+
 $lang["requestdeclinedmail"]="Sorry, your request for the resources in the collection below has been declined.";
+$lang["requestdeclined_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view the requested resources.<br/><br/><a href='[url]'>[url]</a>";
 
 $lang["resourceexpirymail"]="The following resources have expired:";
 $lang['resource_expiry_x_days'] = "A resource that you have previously downloaded expires in %X day(s)"; # %X should be replaced (it's a placeholder)
@@ -1477,7 +1480,6 @@ $lang['plugins-activate'] = 'Activate';
 $lang['plugins-purge'] = 'Purge&nbsp;configuration';
 $lang['plugins-headertext'] = 'Plugins extend the functionality of ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Activated via config.php';
-$lang['plugins-download'] = 'Download&nbsp;configuration';
 $lang['plugins-upload-title'] = 'Get configuration from file';
 $lang['plugins-upload'] = 'Upload configuration';
 $lang['plugins-getrsc'] = 'File to use:';
@@ -1638,6 +1640,7 @@ $lang["metadatatobewritten"]="Metadata which will be written";
 $lang["embeddedvalue"]="Embedded value";
 $lang["exiftooltag"]="Exiftool tag";
 $lang["error"]="Error";
+$lang['success']="Success";
 $lang["exiftoolnotfound"]="Could not find Exiftool";
 $lang["existing_tags"]="Existing Exiftool tags";
 $lang["new_tags"]="New Exiftool tags (which will be added upon download)";
@@ -1854,7 +1857,7 @@ $lang["ensure_file_extension_match"]="Ensure file and extension match";
 # Permissions Manager
 $lang["permissionsmanager"]="Permissions manager";
 $lang["backtogroupmanagement"]="Back to group management";
-$lang["copypermissions"]="Copy the permissions below from user group with ID";
+$lang["copypermissions"]="Copy the permissions from user group with ID";
 $lang["confirmcopypermissions"]="This will overwrite all the permissions currently defined for this user group. Are you sure?";
 $lang["searching_and_access"]="Searching / access";
 $lang["metadatafields"]="Metadata fields";
@@ -2326,6 +2329,7 @@ $lang["admin_resource_type_field_reorder_information_tab_order"]="Reordering is 
 $lang["admin_resource_type_field_reorder_mode"]="Show in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_mode_all"]="Show all fields in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_select_restype"]="Select 'All' for Resource Type in order to enable reordering ";
+$lang["admin_resource_type_field_reorder_select_enable_reordering"]="Select 'Show in display order' to enable reordering";
 $lang["admin_resource_type_fields"]="Metadata fields";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Do you want to migrate existing data?";
 $lang["admin_resource_type_field_cannot_migrate_data_prompt"] = "Resource data cannot be migrated from a fixed list field to a text field. Do you want to continue?";
@@ -2927,7 +2931,7 @@ $lang["iiif_disabled"] = "IIIF is not configured";
 $lang["property-personal_data"]="May contain personal data";
 $lang["api-test-tool"]="API test tool";
 $lang["api-function"]="API function";
-$lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. Be careful - any commands you enter will be executed using your live data.';
+$lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. <strong>Be careful - any commands you enter will be executed using your live data.</strong>';
 $lang["api-view-documentation"]="View documentation";
 $lang["api-php-code"]="PHP code";
 $lang["api-php-help"]="Paste the below into the remote system to call the entered API function with the provided parameters.";
@@ -3051,6 +3055,7 @@ $lang["filechecksum"]                       = "File checksum";
 $lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";
+$lang["error_search_filter_invalid"]        = "The search filter is not correctly configured for this user group. Please contact your administrator";
 $lang["action_lock"]                        = "Lock";
 $lang["action_unlock"]                      = "Unlock";
 $lang["status_locked"]                      = "Locked";
@@ -3156,3 +3161,6 @@ $lang["upload_start"]                       = "Start upload";
 $lang["status_processing"]                  = "Processing";
 $lang["upload_process_successful"]          = "Continue";
 $lang["upload_view_log"]                    = "View log";
+
+$lang["code_sign_required"]                 = "Inline code signing";
+$lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";

@@ -160,7 +160,7 @@ if ($search_titles)
             $smartsearch = ps_query("select * from collection_savedsearch where ref=?",array("i",$collectiondata['savedsearch']));
             if (isset($smartsearch[0]))
                 {
-                $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "&starsearch=" . $smartsearch[0]['starsearch'] . "'";
+                $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "'";
                 }
             } 
 
@@ -377,8 +377,11 @@ if ($search_titles)
             else 
                 {
                 $udata = get_user($cuser);
-                $udisplayname = trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
-                $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
+                if($udata)
+                    {
+                    $udisplayname = trim($udata["fullname"]) != "" ? $udata["fullname"] : $udata["username"];
+                    $title_string = $lang["contributedby"] . " " . $udisplayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"");
+                    }
                 }
             }
         elseif (substr($search,0,8)=="!hasdata")
