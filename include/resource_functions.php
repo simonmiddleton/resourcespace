@@ -3358,7 +3358,6 @@ function copy_resource($from,$resource_type=-1)
         $joins_sql.=",field$join ";
     }
 
-    $add="";
     $archive=ps_value("SELECT archive value FROM resource WHERE ref = ?",["i",$from],0);
 
     if ($archive == "") // Needed if user does not have a user template
@@ -3376,8 +3375,12 @@ function copy_resource($from,$resource_type=-1)
             }
         }
 
+    $sql = ''; $params = [];
+    if($resource_type == -1){$sql = 'resource_type';}
+    else{$sql = '?'; $params = ['i', $resource_type];}
+
     # First copy the resources row
-    sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by $joins_sql) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by $joins_sql from resource where ref='" . escape_check($from) . "';");
+    ps_query("insert into resource(resource_type,creation_date,rating,archive,access,created_by $joins_sql) select {$sql},now(),rating, ?,access,created_by $joins_sql from resource where ref= ?", array_merge($params, ['i', $archive, 'i', $from]));
     $to=sql_insert_id();
 
     # Set that this resource was created by this user.
@@ -3562,10 +3565,21 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         }
     else
         {
-        sql_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`, " .
-            "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
-            (($userref != "") ? "'" . escape_check($userref) . "'" : "null") . ",'" . escape_check($resource) . "','" . escape_check($type) . "'," . (($field=="" || !is_numeric($field)) ? "null" : "'" . escape_check($field) . "'") . ",'" . escape_check($notes) . "','" .
-            escape_check($diff) . "','" . escape_check($usage) . "','" . escape_check($purchase_size) . "','" . escape_check($purchase_price) . "'," . ((isset($k) && !$internal_share_access) ? "'" . mb_strcut($k, 0, 50) . "'" : "null") . ",'" . escape_check($fromvalue) . "')");
+        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`,`purchase_price`, `access_key`, `previous_value`) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
+            [
+            'i', (($userref != "") ? $userref : null),
+            'i', $resource, 
+            's', $type,
+            'i', (($field=="" || !is_numeric($field)) ? null : $field),
+            's', $notes,
+            's', $diff, 
+            'i', $usage,
+            's', $purchase_size,
+            'i', $purchase_price,
+            'i', ((isset($k) && !$internal_share_access) ? mb_strcut($k, 0, 50): null),
+            's', $fromvalue
+            ]
+        );
         $log_ref = sql_insert_id();
         $resource_log_previous_ref = $log_ref;
         return $log_ref;
@@ -3598,18 +3612,20 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         }
 
     // Create filter SQL
-    $filterarr = array();
+    $filterarr = array(); $params = [];
     if(is_int_loose($resource))
         {
-        $filterarr[] = "r.resource='" . $resource . "'";
+        $filterarr[] = "r.resource= ?";
+        $params = array_merge($params, ['i', $resource]);
         }
     foreach($filters as $column => $filter_value)
         {
-        $filterarr[] = escape_check(trim($column)) . "='" . escape_check($filter_value) . "'";
+        $filterarr[] = escape_check(trim($column)) . "= ?";
+        $params = array_merge($params, ['s', $filter_value]);
         }
     $sql_filter = "WHERE " . implode(" AND ", $filterarr);
 
-    $log = sql_query(
+    $log = ps_query(
                 "SELECT r.ref,
                         r.resource,
                         r.date,
@@ -3635,7 +3651,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
                         {$sql_filter}
                GROUP BY r.ref
-               ORDER BY r.ref DESC",
+               ORDER BY r.ref DESC", $params,
         false,
         $fetchrows);
 
@@ -3663,26 +3679,26 @@ function get_resource_custom_access($resource)
     {
     /*Return a list of usergroups with the custom access level for resource $resource (if set).
     The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.*/
-    $sql = '';
+    $sql = ''; $params = [];
     if(checkperm('E'))
         {
         // Restrict to this group and children groups only.
         global $usergroup, $usergroupparent;
-
         $sql = "WHERE g.parent = '{$usergroup}' OR g.ref = '{$usergroup}' OR g.ref = '{$usergroupparent}'";
+        $params = ['i', $usergroup, 'i', $usergroup, 'i', $usergroupparent];
         }
 
-    $resource_custom_access = sql_query("
+    $resource_custom_access = ps_query("
                    SELECT g.ref,
                           g.name,
                           g.permissions,
                           c.access
                      FROM usergroup AS g
-          LEFT OUTER JOIN resource_custom_access AS c ON g.ref = c.usergroup AND c.resource = '{$resource}'
+          LEFT OUTER JOIN resource_custom_access AS c ON g.ref = c.usergroup AND c.resource = ?
                      $sql
                  GROUP BY g.ref
                  ORDER BY (g.permissions LIKE '%v%') DESC, g.name
-     ");
+     ", array_merge(['i', $resource], $params));
 
     for($n = 0; $n < count($resource_custom_access); $n++)
         {
@@ -3695,7 +3711,7 @@ function get_resource_custom_access($resource)
 function get_resource_custom_access_users_usergroups($resource)
     {
     # Returns only matching custom_access rows, with users and groups expanded
-    return sql_query("
+    return ps_query("
                  SELECT g.name usergroup,
                         u.username user,
                         c.access,
@@ -3703,9 +3719,9 @@ function get_resource_custom_access_users_usergroups($resource)
                    FROM resource_custom_access AS c
         LEFT OUTER JOIN usergroup AS g ON g.ref = c.usergroup
         LEFT OUTER JOIN user AS u ON u.ref = c.user
-                  WHERE c.resource = '{$resource}'
+                  WHERE c.resource = ?
                ORDER BY g.name, u.username
-    ");
+    ", ['i', $resource]);
     }
 
 
@@ -3746,18 +3762,13 @@ function get_themes_by_resource($ref)
     {
     global $lang;
 
-    $sql = sprintf(
-                "SELECT c.ref, c.`name`, c.`type`, u.fullname
-                   FROM collection_resource AS cr
-                   JOIN collection AS c ON cr.collection = c.ref AND cr.resource = '%s' AND c.`type` IN (%s)
-        LEFT OUTER JOIN user AS u ON c.user = u.ref
-                  %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
-        escape_check($ref),
-        COLLECTION_TYPE_FEATURED . ", " . COLLECTION_TYPE_PUBLIC,
-        trim(featured_collections_permissions_filter_sql("WHERE", "c.ref",true))
-    );
+    $sql = "SELECT c.ref, c.`name`, c.`type`, u.fullname FROM collection_resource AS cr
+            JOIN collection AS c ON cr.collection = c.ref AND cr.resource = ? AND c.`type` IN (?, ?)
+            LEFT OUTER JOIN user AS u ON c.user = u.ref
+            ". trim(featured_collections_permissions_filter_sql("WHERE", "c.ref",true)) ." # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)";
+        
 
-    $results = sql_query($sql);
+    $results = ps_query($sql, ['i', $ref, 'i', COLLECTION_TYPE_FEATURED, 'i', COLLECTION_TYPE_PUBLIC]);
     $branch_path_fct = function($carry, $item) { return sprintf("%s / %s", $carry, strip_prefix_chars(i18n_get_translated($item["name"]),"*")); };
 
     foreach($results as $i => $col)
@@ -4345,7 +4356,17 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
 
-	sql_query("INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check((int)$file_size) . "','" . escape_check($alt_type) . "')");
+	ps_query("INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
+        [
+        'i', $resource,
+        's', $name,
+        's', $description,
+        's', $file_name,
+        's', $file_extension,
+        'i', $file_size,
+        'i', $alt_type
+        ]
+    );
 	return sql_insert_id();
 	}
 
@@ -4504,11 +4525,11 @@ function user_rating_save($userref,$ref,$rating)
 */
 function get_field($field)
     {
-    $r = sql_query("
+    $r = ps_query("
         SELECT " . columns_in("resource_type_field") . "
           FROM resource_type_field
-         WHERE ref = '{$field}'
-     ", "schema");
+         WHERE ref = ?
+     ", ['i', $field], "schema");
 
     # Translates the field title if the searched field is found.
     if(0 == count($r))
@@ -4744,8 +4765,20 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 	global $userref,$usergroup, $scramble_key;
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	if ($key==""){return false;}
+    if ($sharepwd != "(unchanged)")
+        {
+        $sql = "password_hash= ?,";
+        $params = ['s', (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key))];
+        }
+        else{$sql = "";}
 	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
+	ps_query("update external_access_keys set {$sql} access= ?, expires= ?,date=now(),usergroup= ? where access_key='$key'",
+        array_merge($params, [
+        'i', $access,
+        's', (($expires=="")?null: $expires),
+        'i', $group,
+        ])
+    );
     hook('edit_resource_external_access','',array($key,$access,$expires,$group));
     return true;
 	}
@@ -5086,7 +5119,7 @@ function get_metadata_templates()
 	{
 	# Returns a list of all metadata templates; i.e. resources that have been set to the resource type specified via '$metadata_template_resource_type'.
 	global $metadata_template_resource_type,$metadata_template_title_field;
-	return sql_query("select ref,field$metadata_template_title_field from resource where ref>0 and resource_type='$metadata_template_resource_type' order by field$metadata_template_title_field");
+	return ps_query("select ref,field$metadata_template_title_field from resource where ref>0 and resource_type= ? order by field$metadata_template_title_field", ['i', $metadata_template_resource_type]);
 	}
 
 function get_resource_collections($ref)
@@ -5622,7 +5655,18 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
         global $userref,$usergroup, $scramble_key;
 		if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
         $k=substr(md5(time()),0,10);
-		sql_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup,password_hash) values ('$resource','$k','$userref','$access'," . (($expires=="")?"null":"'" . $expires . "'"). ",'" . escape_check($email) . "',now(),'$group'," . (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
+		ps_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup,password_hash) values (?, ?, ?, ?, ?, ?,now(), ?, ?);",
+            [
+            'i', $resource,
+            's', $k,
+            'i', $userref,
+            'i', $access,
+            's', (($expires=="")? null : $expires),
+            's', $email,
+            'i', $group,
+            's', (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) : null)
+            ]    
+        );
 		hook("generate_resource_access_key","",array($resource,$k,$userref,$email,$access,$expires,$group));
         return $k;
         }
@@ -7460,10 +7504,11 @@ function get_indexed_resource_type_fields()
 */
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
     {
-    $conditionsql="";
+    $conditionsql=""; $params = [];
     if(is_array($restypes))
         {
-        $conditionsql = " WHERE resource_type IN (" . implode(",",$restypes) . ")";
+        $conditionsql = " WHERE resource_type IN (". ps_param_insert(count($restypes)) .")";
+        $params = ps_param_fill($restypes, 'i');
         }
     if ($include_inactive==false)
         {
@@ -7487,7 +7532,8 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
             {
             $conditionsql .= " WHERE ( ";
             }
-        $conditionsql.=" name LIKE '%" . $find . "%' OR title LIKE '%" . $find . "%' OR tab_name LIKE '%" . $find . "%' OR exiftool_field LIKE '%" . $find . "%' OR help_text LIKE '%" . $find . "%' OR ref LIKE '%" . $find . "%' OR tooltip_text LIKE '%" . $find . "%' OR display_template LIKE '%" . $find . "%')";
+        $conditionsql.=" name LIKE '%?%' OR title LIKE '%?%' OR tab_name LIKE '%?%' OR exiftool_field LIKE '%?%' OR help_text LIKE '%?%' OR ref LIKE '%?%' OR tooltip_text LIKE '%?%' OR display_template LIKE '%?%')";
+        $params = array_merge($params, ['s', $find, 's', $find, 's', $find, 's', $find, 's', $find, 's', $find, 's', $find, 's', $find]);
         }
 
     $newfieldtypes = array_filter($fieldtypes,function($v){return (string)(int)$v == $v;});
@@ -7502,12 +7548,13 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 			{
 			$conditionsql .= " WHERE ( ";
 			}
-        $conditionsql .= " type IN ('" . implode("','",$newfieldtypes) . "'))";
+        $conditionsql .= " type IN (". ps_param_insert(count($newfieldtypes)) ."))";
+        $params = array_merge($params, ps_param_fill($newfieldtypes, 'i'));
 		}
     // Allow for sorting, enabled for use by System Setup pages
     //if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}
 
-    $allfields = sql_query("
+    $allfields = ps_query("
         SELECT ref,
                name,
                title,
@@ -7551,7 +7598,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                active,
                read_only,
                full_width
-          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort), "schema");
+          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort), $params, "schema");
 
     return $allfields;
     }
@@ -8244,15 +8291,17 @@ function get_external_shares(array $filteropts)
         }
     $share_sort = strtoupper((string) $share_sort) == "ASC" ? "ASC" : "DESC";
 
-    $conditions = array();
+    $conditions = array(); $params = [];
     if((int)$share_user > 0 && ($share_user == $userref || checkperm_user_edit($share_user))
         )
         {
-        $conditions[] = "eak.user ='" . (int)$share_user . "'";
+        $conditions[] = "eak.user = ?";
+        $params = ['i', (int)$share_user];
         }
     elseif(!checkperm('a') && !$ignore_permissions)
         {
-        $usercondition = "eak.user ='" . (int)$userref . "'";
+        $usercondition = "eak.user = ?";
+        $params = array_merge($params, ['i', (int)$userref]);
         if(checkperm("ex"))
             {
             // Can also see shares that never expire
@@ -8263,12 +8312,14 @@ function get_external_shares(array $filteropts)
 
     if(!is_null($share_group) && (int)$share_group > 0  && checkperm('a'))
         {
-        $conditions[] = "eak.usergroup ='" . (int)$share_group . "'";
+        $conditions[] = "eak.usergroup = ?";
+        $params = array_merge($params, ['i', (int)$share_group]);
         }
 
     if(!is_null($access_key))
         {
-        $conditions[] = "eak.access_key ='" . escape_check($access_key) . "'";
+        $conditions[] = "eak.access_key = ?";
+        $params = array_merge($params, ['s', $access_key]);
         }
 
     if((int)$share_type === 0)
@@ -8281,11 +8332,13 @@ function get_external_shares(array $filteropts)
         }
     if(is_int_loose($share_collection) && $share_collection != 0)
         {
-        $conditions[] = "eak.collection ='" . (int)$share_collection . "'";
+        $conditions[] = "eak.collection = ?";
+        $params = array_merge($params, ['i', (int)$share_collection]);
         }
     if((int)$share_resource > 0)
         {
-        $conditions[] = "eak.resource ='" . (int)$share_resource . "'";
+        $conditions[] = "eak.resource = ?";
+        $params = array_merge($params, ['i', (int)$share_resource]);
         }
 
     $conditional_sql="";
@@ -8318,7 +8371,7 @@ function get_external_shares(array $filteropts)
      " GROUP BY access_key, collection
        ORDER BY " . escape_check($share_order_by) . " " . $share_sort;
 
-    $external_shares = sql_query($external_access_keys_query);
+    $external_shares = ps_query($external_access_keys_query, $params);
     return $external_shares;
     }
 

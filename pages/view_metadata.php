@@ -158,7 +158,6 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
     ?>
         <div class="clearerleft"></div>
     </div><!-- End of NonMetadataProperties -->
-    <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
 
 <?php
 global $extra;
@@ -171,6 +170,7 @@ $tmp = hook("tweakfielddisp", "", array($ref, $fields)); if($tmp) $fields = $tmp
 if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0)
     {
     ?>
+    <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
 	<div class="TabBar">
 	<?php
 		foreach ($fields_tab_names as $tab_name) {
