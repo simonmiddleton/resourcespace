@@ -255,7 +255,7 @@ else
     </div>
 
     <?php
-    render_fa_icon_selector($lang["property-icon"],"icon",$restypedata['icon']);
+    render_fa_icon_selector($lang["property-icon"],"icon",($restypedata['icon'] ?? ""));
     ?>
     
     <div class="Question">

@@ -11,9 +11,11 @@ if (!checkperm("a"))
 
 include "../../include/header.php";
 
-$find=getvalescaped("find","");
-$filter_by_parent=getvalescaped("filterbyparent", "");
-$filter_by_permissions=getvalescaped("filterbypermissions","");
+$find = getval("find","");
+$filter_by_parent = getval("filterbyparent", "");
+$filter_by_permissions = getval("filterbypermissions","");
+
+$sql_permision_filter_params = array();
 
 if ($filter_by_permissions != "")
 	{
@@ -33,20 +35,47 @@ if ($filter_by_permissions != "")
 			$sql_permision_filter="(";
 			}
 		$permission = preg_replace('(\W+)','\\\\\\\$0',$permission);		// we need to pass two "\" before the escaped char for regex to take it literally (doubled here as ps_query() will convert most of them)
-		$sql_permision_filter .= "(usergroup.permissions regexp binary '^{$permission}|,{$permission},|,{$permission}\$|^{$permission}\$' OR (find_in_set('permissions',usergroup.inherit_flags) AND parentusergroup.permissions regexp binary '^{$permission}|,{$permission},|,{$permission}\$|^{$permission}\$'))";
+		$sql_permision_filter .= "(cast(usergroup.permissions AS BINARY) regexp binary ? OR (find_in_set('permissions',usergroup.inherit_flags) AND cast(parentusergroup.permissions AS BINARY) regexp binary ?))";
+		$sql_permision_filter_params = array("s", "^{$permission}|,{$permission},|,{$permission}$|^{$permission}$", "s", "^{$permission}|,{$permission},|,{$permission}$|^{$permission}$",);
 		}
 	$sql_permision_filter .= ")";
 	}
 
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("orderby","name");
+$offset = getval("offset",0,true);
+$order_by = getval("orderby","name");
 
-$groups=sql_query("
+$sql_where = "";
+$sql_params = array();
+
+if ($find != "")
+    {
+    $sql_where = " and (usergroup.ref like ? or usergroup.name like ? or parentusergroup.name like ?)";
+    $sql_params = array_merge($sql_params, array("s", "%".$find."%", "s", "%".$find."%", "s", "%".$find."%"));
+    }
+if ($filter_by_parent != "")
+    {
+    $sql_where .= " and parentusergroup.ref = ?";
+    $sql_params = array_merge($sql_params, array("i", $filter_by_parent));
+    }
+if ($filter_by_permissions != "")
+    {
+    $sql_where .= " and $sql_permision_filter";
+    $sql_params = array_merge($sql_params, $sql_permision_filter_params);
+    }
+
+$offset = getval("offset",0,true);
+$order_by = getval("orderby","name");
+
+if (!in_array($order_by, array("ref","name","users","pname","ref desc","name desc","users desc","pname desc")))
+    {
+    $order_by = "name";
+    }
+
+$groups = ps_query("
 	select 
 		usergroup.ref as ref,
 		usergroup.name as name,
 		count(user.ref) as users,
-		parentusergroup.ref as pref,
 		if (usergroup.parent is not null and usergroup.parent<>'' and usergroup.parent<>'0' and (parentusergroup.name is null or parentusergroup.name=''),usergroup.ref,parentusergroup.ref) as pref,
 		if (usergroup.parent is not null and usergroup.parent<>'' and usergroup.parent<>'0' and (parentusergroup.name is null or parentusergroup.name=''),'orphaned',parentusergroup.name) as pname,
 		(usergroup.parent is not null and usergroup.parent<>'' and usergroup.parent<>'0' and (parentusergroup.name is null or parentusergroup.name='')) as orphaned
@@ -57,14 +86,11 @@ $groups=sql_query("
 		usergroup.parent=parentusergroup.ref
 	left outer join user
 	on
-		usergroup.ref=user.usergroup where true" .
-	($find=="" ? "" : " and (usergroup.ref like '%{$find}%' or usergroup.name like '%{$find}%' or parentusergroup.name like '%{$find}%')") .
-	($filter_by_parent=="" ? "" : " and parentusergroup.ref={$filter_by_parent}") .
-	($filter_by_permissions=="" ? "" : " and {$sql_permision_filter}") .
+		usergroup.ref=user.usergroup where true" . $sql_where .
 	" group by
 		usergroup.ref
 	order by {$order_by}"
-);
+, $sql_params);
 
 # pager
 $per_page = $default_perpage_list;

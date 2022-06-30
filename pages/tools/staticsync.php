@@ -325,7 +325,7 @@ function ProcessFolder($folder)
 
             global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
-            if(array_search($extension, $banned_extensions) !== false)
+            if(array_search(strtolower($extension), array_map('strtolower', $banned_extensions)) !== false)
                 {
                 continue;
                 }

@@ -64,8 +64,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         $availgroups=get_usergroups(true);
         $get_groups=implode(",",array_diff(array_column($availgroups,"ref"),explode(",",$actions_approve_hide_groups)));
 
-        $account_requests_query = new PreparedStatementQuery();
-        $account_requests_query->sql = get_users($get_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username, u.comments"); 
+        $account_requests_query = get_users($get_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username, u.comments"); 
 
         $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created 
             as date,ref,ref as user,comments as description,'userrequest' as type FROM (" . $account_requests_query->sql . ") users";

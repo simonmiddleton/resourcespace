@@ -259,7 +259,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             }
 
         # Banned extension?
-        if (in_array($extension,$banned_extensions)) {return false;}
+        if (in_array(strtolower($extension), array_map('strtolower', $banned_extensions))) {return false;}
 
         # ensure extension is no longer than 10 characters due to resource.file_extension field def: varchar(10)
         if (strlen($extension) > 10) {return false;}
