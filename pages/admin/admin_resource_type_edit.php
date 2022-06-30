@@ -19,7 +19,7 @@ $ref                   = getval('ref', '', true);
 $name                  = getval('name', '');
 $config_options        = getval('config_options', '');
 $allowed_extensions    = getval('allowed_extensions', '');
-$tab                   = getval('tab', '');
+$tab                   = (int) getval('tab', 0);
 $colour                = getval('colour', 0, true);
 $push_metadata         = ('' != getval('push_metadata', '') ? 1 : 0);
 $inherit_global_fields = ('' != getval('inherit_global_fields', '') ? 1 : 0);
@@ -45,18 +45,33 @@ if (getval("save","")!="" && enforcePostRequest(false))
     log_activity(null,LOG_CODE_EDITED,$name,'resource_type','name',$ref);
     log_activity(null,LOG_CODE_EDITED,$config_options,'resource_type','config_options',$ref);
     log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
-    log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab_name',$ref);
+    log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab',$ref);
 
     if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
-        
-    $parameters=array("s",$name, "s",$config_options, "s",$allowed_extensions,
-                      "s",$tab, "i",$push_metadata, "i",$inherit_global_fields,
-                      "i",$colour, "s",$icon, "i", $ref );
-    ps_query("UPDATE resource_type
-               SET `name` = ?, config_options = ?, allowed_extensions = ?,
-               tab_name = ?, push_metadata = ?, inherit_global_fields = ?,
-               colour = ?, icon = ?
-               WHERE ref = ?",$parameters);
+
+    ps_query(
+        "UPDATE resource_type
+            SET `name` = ?,
+                config_options = ?,
+                allowed_extensions = ?,
+                tab = ?,
+                push_metadata = ?,
+                inherit_global_fields = ?,
+                colour = ?,
+                icon = ?
+          WHERE ref = ?",
+        [
+        's', $name,
+        's', $config_options,
+        's', $allowed_extensions,
+        'i', $tab ?: null,
+        'i', $push_metadata,
+        'i', $inherit_global_fields,
+        'i', $colour,
+        's', $icon,
+        'i', $ref,
+        ]
+    );
     clear_query_cache("schema");
 
     redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
@@ -117,19 +132,20 @@ if(getval("delete", "") != "" && enforcePostRequest(false))
 $actions_required = ($confirm_delete || $confirm_move_associated_rtf);
 
 # Fetch data
-$restypedata=ps_query("SELECT ref, name, order_by, config_options, allowed_extensions,
-                        tab_name, push_metadata, inherit_global_fields,
-                        colour, icon
-                        FROM resource_type
-                        WHERE ref = ?
-                        ORDER BY `name`",array("i",$ref),"schema");
+$restypedata=ps_query(
+    "SELECT ref, name, order_by, config_options, allowed_extensions, tab, push_metadata, inherit_global_fields, colour, icon
+       FROM resource_type
+      WHERE ref = ?
+    ORDER BY `name`",
+    array("i",$ref),
+    "schema"
+);
 if (count($restypedata)==0) {exit("Resource type not found.");} // Should arrive here unless someone has an old/incorrect URL.
 $restypedata=$restypedata[0];
 
 $inherit_global_fields_checked = ((bool) $restypedata['inherit_global_fields'] ? 'checked' : '');
 
 include "../../include/header.php";
-
 ?>
 <script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
@@ -263,19 +279,10 @@ else
 	</div>
 	<div class="clearerleft"> </div>
     </div>
-    <?php } ?>
+    <?php }
 
-    <div class="Question">
-	<label><?php echo $lang["property-tab_name"]?></label>
-	<input name="tab" type="text" class="stdwidth" value="<?php echo htmlspecialchars($restypedata["tab_name"])?>" />
-	<div class="FormHelp" style="padding:0;clear:left;" >
-	    <div class="FormHelpInner"><?php echo $lang["admin_resource_type_tab_info"] ?>
-	    </div>
-	</div>
-	<div class="clearerleft"> </div>
-    </div>
+    render_dropdown_question($lang['property-tab_name'], 'tab', get_tab_name_options(), $restypedata['tab']);
 
-    <?php
     $MARKER_COLORS[-1] = $lang["select"];
     ksort($MARKER_COLORS);
     render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"],'',array("input_class"=>"stdwidth"));

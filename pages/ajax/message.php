@@ -380,7 +380,7 @@
 			}
 		if (typeof owner==="undefined" || owner=='')
 			{
-			owner = '<?php echo htmlspecialchars($applicationname, ENT_QUOTES); ?>';
+			owner = '<?php echo escape_quoted_data($applicationname); ?>';
 			}
 		jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(message) + "</div>" + url);
 		jQuery("#modal_dialog").addClass('message_dialog');

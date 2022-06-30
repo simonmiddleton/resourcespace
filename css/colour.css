@@ -59,7 +59,7 @@ input[readonly] {
     color:#fff;text-decoration:none;
 }
 
-.RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
+.RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
 #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
     border-radius:4px;
     overflow: hidden;
@@ -179,6 +179,8 @@ div.autocomplete ul li {color: #000;}
 .Listview {background-color: white;border-radius:6px;}
 .highlight {color: #000;background-color: #ff0;}
 .Tab a {padding: 8px 1rem;background: rgba(255, 255, 255, 0.4);}
+.TabBar { background-color: #ededed; }
+#BasicsBoxTabs > .TabBar { background-color: #f2f2f2;} /* On Edit page w/ $tabs_on_edit  */
 .StyledTabbedPanel {background: #fff;}
 .TabSelected {border-left: #bbbbbb;}
 .TabSelected a {background: #ffffff; color: #666666; border-bottom: 1px solid #ffffff; }

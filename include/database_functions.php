@@ -1494,6 +1494,29 @@ function sql_limit($offset, $rows)
 
 
 /**
+ * Utility function to obtain the total found rows while paginating the results.
+ * 
+ * IMPORTANT: the input query MUST have a deterministic order so it can help with performance and not have an undefined behaviour
+ * 
+ * @param PreparedStatementQuery $query  SQL query
+ * @param null|int               $rows   Specifies the maximum number of rows to return. Usually set by a global 
+ *                                       configuration option (e.g $default_perpage, $default_perpage_list).
+ * @param null|int               $offset Specifies the offset of the first row to return. Use NULL to not offset.
+ * 
+ * @return array Returns a:
+ *               - total: int - count of total found records (before paging)
+ *               - data: array - paged result set 
+ */
+function sql_limit_with_total_count(PreparedStatementQuery $query, $rows, $offset)
+    {
+    $limit = sql_limit($offset, $rows);
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);
+    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$query->sql}) AS count_select", $query->parameters, 0);
+    return ['total' => $total, 'data' => $data];
+    }
+
+
+/**
 * Query helper function for the WHERE clause to avoid repetitive checks when value might be NULL or an actual value
 * 
 * @param string  $v     Non-null value
@@ -1572,6 +1595,50 @@ function ps_param_fill($array,$type)
     return $parameters;
     }
 
+
+/**
+ * Re-order rows in the table
+ * 
+ * @param string $table Table name. MUST have an "order_by" column.
+ * @param array  $refs  List of record IDs in the new desired order
+ * 
+ * @return void
+ */
+function sql_reorder_records(string $table, array $refs)
+    {
+    if(!in_array($table, ['collection', 'tab']))
+        {
+        return;
+        }
+
+    $refs = array_values(array_filter($refs, 'is_int_loose'));
+    $order_by = 0;
+
+    $refs_chunked = array_filter(count($refs) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE ? [$refs] : array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE));
+    foreach($refs_chunked as $refs)
+        {
+        $cases_params = [];
+        $cases = '';
+
+        foreach($refs as $ref)
+            {
+            $order_by += 10;
+            $cases .= ' WHEN ? THEN ?';
+            $cases_params = array_merge($cases_params, ['i', $ref, 'i', $order_by]);
+            }
+
+        $sql = sprintf('UPDATE %s SET order_by = (CASE ref %s END) WHERE ref IN (%s)',
+             $table,
+             $cases,
+             ps_param_insert(count($refs))
+         );
+        ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
+        }
+
+    return;
+    }
+
+
 /**
 * Returns a comma separated list of table columns from the given table. Optionally, will use an alias instead of the table name to prefix the columns. For inclusion in SQL to replace "select *" which is not supported when using prepared statements.
 * 
@@ -1612,4 +1679,3 @@ function columns_in($table,$alias=null,$plugin=null)
 
     return "`" . $alias . "`.`" . join("`, `" . $alias . "`.`",$columns) . "`";
     }
-

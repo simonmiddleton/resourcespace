@@ -1764,112 +1764,129 @@ if (get_sysvar("code_sign_required")=="YES")
     }
 
 
-$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
+$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-"). (int) $ref;
 $modalTrueFalse = ($modal ? "true" : "false");
 
 if($tabs_on_edit)
-    {  
-    $tab_names = tab_names($fields);
-
-    // if config option set do case-sensitive alphabetical sort
-    if ($sort_tabs)
     {
-        sort($tab_names);
-    }
+    // -----------------------  Tab calculation -----------------
+    $system_tabs = get_tab_name_options();
+    $tabs_fields_assoc = [];
 
-    // create new array of fields, maintaining field order, and the tab order as defined above
-    $fields_tab_ordered = array();
-
-    // append fields that do not have a tab name and that will be displayed in the default tab
-    $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", "", $fields_tab_ordered);
-
-    foreach($tab_names as $tab_name)
+    // Clean the tabs by removing the ones that would end up being empty
+    foreach(array_keys($system_tabs) as $tab_ref)
         {
-        // get relevant fields from $fields using tab name
-        $fields_tab_ordered = ($tab_name != "") ? search_array_by_keyvalue($fields,"tab_name", $tab_name, $fields_tab_ordered) : $fields_tab_ordered;
-        }
-
-    // update $fields array with re-ordered fields array, ready to display   
-    $fields = $fields_tab_ordered;   
-
-    #  -----------------------------  Draw tabs ---------------------------
-  $tabname="";
-  $tabcount=0;
-  if (count($fields)>0)
-    { 
-    $extra="";
-    $tabname=null;
-    $tabcount=0;
-    $tabtophtml="";
-
-    $fields_count = count($fields);
-    for ($n=0;$n<$fields_count;$n++)
-        {   
-        # If field is displayable then render its tab name when the tab name changes
-        if (is_field_displayed($fields[$n]))
+        foreach($fields as $field_idx => $field_data)
             {
-            if ( $fields[$n]["tab_name"] !== $tabname )
-                {
-                $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
+            // Ensure tab IDs are always numbers. Fields unassigned will end up on the "Default" list (ref #1)
+            $fields[$field_idx]['tab'] = $field_data['tab'] = (int) $field_data['tab'] ?: 1;
 
-                if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
-                $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
-                if($tabcount==0){$tabtophtml.=" TabSelected ";}
-                $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$ref.",".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
-                ++$tabcount;
-                $tabname=$fields[$n]["tab_name"];
+            if(!is_field_displayed($field_data))
+                {
+                continue;
+                }
+
+            // Check tab assignment
+            if($tab_ref > 0 && $tab_ref === $field_data['tab'])
+                {
+                $tabs_fields_assoc[$tab_ref][$field_idx] = $field_data['ref'];
+                }
+            // Fields with invalid tab IDs will end up on the "Default" list (ref #1)
+            else if(!isset($tabs_fields_assoc[1][$field_idx]) && !isset($system_tabs[$field_data['tab']]))
+                {
+                // Override the fields' tab value in order for it to be rendered on the correct tab
+                $fields[$field_idx]['tab'] = 1;
+                $tabs_fields_assoc[1][$field_idx] = $field_data['ref'];
                 }
             }
         }
+    $tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
 
-    if ($tabcount>1)
+    // Sort fields based on the order of the tabs they belong to. Maintain the overall order of the fields.
+    $fields_tab_ordered = [];
+    foreach($tabs_fields_assoc as $fields_idx_ref)
         {
-        echo $tabtophtml;
-        echo "</div><!-- end of TabBar -->";
+        $subset_fields_data = array_intersect_key($fields, $fields_idx_ref);
+        $fields_tab_ordered = array_merge($fields_tab_ordered, $subset_fields_data);
+        }
+    $fields = $fields_tab_ordered;
+    // -----------------------  END: Tab calculation -----------------
+
+    #  -----------------------------  Draw tabs ---------------------------
+    $tabcount = 0;
+    $tabtophtml = '';
+    foreach($tab_names as $tab_name)
+        {
+        if($tabcount === 0)
+            {
+            $tabtophtml .= '<div id="BasicsBoxTabs" class="BasicsBox"><div class="TabBar">';
+            }
+        $tabtophtml .= sprintf(
+            '<div id="%stabswitch%s-%s" class="Tab %s">',
+            $modal ? 'Modal' : '',
+            $tabcount,
+            $ref,
+            $tabcount === 0 ? 'TabSelected' : ''
+        );
+        $tabtophtml .= sprintf(
+            '<a href="#" onclick="SelectMetaTab(%s, %s, %s); return false;">%s</a></div>',
+            $ref,
+            $tabcount,
+            $modalTrueFalse,
+            htmlspecialchars($tab_name)
+        );
+        ++$tabcount;
         }
 
-    }
-
-    if ($tabcount>1)
+    // Tabs on edit configuration will always show at least the Default (ref #1) tab.
+    if($tabcount > 0)
         {
+        $StyledTabbedPanel_class = $tabcount > 0 ? ' StyledTabbedPanel': '';
+
+        echo $tabtophtml;
         ?>
-        <div id="tabbedpanelfirst" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
-        <div class="clearerleft"> </div>
-        <div class="TabPanelInner">
+        </div><!-- end of TabBar -->
+        <div id="tabbedpanelfirst" class="TabbedPanel<?php echo $tabModalityClass . $StyledTabbedPanel_class; ?>">
+            <div class="clearerleft"></div>
+            <div class="TabPanelInner">
         <?php
         }
     }
 
     #  -----------------------------  Draw fields ---------------------------
-    $tabname=null;
-    $tabcount=0; 
-    $fields_count = count($fields);   
-    for ($n=0;$n<$fields_count;$n++)
+    $tabcount = 0;
+    $last_tab_drawn = 0;
+    foreach($fields as $n => $field)
         {
-        # Should this field be displayed?
-        if (is_field_displayed($fields[$n]))
+        if(!(is_field_displayed($field) && !in_array($field['resource_type'], $hide_resource_types)))
             {
-            if(in_array($fields[$n]['resource_type'], $hide_resource_types)) { continue; }
-            $newtab=false;  
-            # Draw new tab panel?
-            if ($tabs_on_edit && ($fields[$n]["tab_name"]!==$tabname))
-                {
-                # Also display the custom formatted data $extra at the bottom of this tab panel.
-                ?><div class="clearerleft"> </div>
-                <?php if(isset($extra)){echo $extra;} ?>
-                </div><!-- end of TabPanelInner --></div>
-                <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div class="TabPanelInner"><?php  
-                ++$tabcount;
-                $extra="";
-                $newtab=true;
-                $tabname=$fields[$n]["tab_name"];
-                }
-            
-            node_field_options_override($fields[$n]);
-            display_field($n, $fields[$n], $newtab, $modal);
+            continue;
             }
-        }
 
+        // Draw a new tab panel?
+        $newtab = $tabs_on_edit && $field['tab'] !== $last_tab_drawn;  
+        if($newtab)
+            {
+            $new_TabbedPanel_id = sprintf('%stab%s-%s', $modal ? 'Modal' : '', $tabcount, (int) $ref);
+            ?>
+            <div class="clearerleft"></div>
+            <?php
+            // Display the custom formatted data (ie customer template) $extra at the bottom of this tab panel.
+            if(isset($extra)) { echo $extra; }
+            ?>
+                </div><!-- end of TabPanelInner -->
+            </div><!-- end of TabbedPanel -->
+            <div id="<?php echo $new_TabbedPanel_id; ?>" class="TabbedPanel <?php echo $tabModalityClass; ?> StyledTabbedPanel" style="display:none;">
+                <div class="TabPanelInner">
+            <?php
+            ++$tabcount;
+            $extra = '';
+            $last_tab_drawn = $field['tab'];
+            }
+
+        node_field_options_override($field);
+        display_field($n, $field, $newtab, $modal);
+        }
 
     if ($tabs_on_edit && $tabcount>0)
         {

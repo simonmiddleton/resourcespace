@@ -1611,14 +1611,14 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 
     $extra .= " {$onchange}";
 	?>
-	<div class="<?php echo implode(" ", $div_class); ?>">
-		<label><?php echo $label; ?></label>
-		<select  name="<?php echo $inputname ?>" class="<?php echo $input_class ?>" id="<?php echo $inputname?>" <?php echo $extra; ?>>
+	<div class="<?php echo escape_quoted_data(implode(" ", $div_class)); ?>">
+		<label><?php echo htmlspecialchars($label); ?></label>
+		<select  name="<?php echo escape_quoted_data($inputname); ?>" class="<?php echo escape_quoted_data($input_class); ?>" id="<?php echo escape_quoted_data($inputname); ?>" <?php echo $extra; ?>>
 		<?php
 		foreach ($options as $optionvalue=>$optiontext)
 			{
 			?>
-			<option value="<?php echo htmlspecialchars(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+			<option value="<?php echo escape_quoted_data(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
 			<?php
 			}
 		?>
@@ -2638,7 +2638,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>"
+                { ?><a href="<?php echo escape_quoted_data($links[$i]['href']); ?>"
                 
                 <?php if (isset($links[$i]["menu"]) && $links[$i]["menu"]) { ?>
                     onclick="ModalClose();return ModalLoad(this, true, true, 'right');"
@@ -5118,16 +5118,17 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *  - If "rowid" is specified this will be used as the id attribute for the <tr> element
  *  - The "alerticon" can be used to specify a CSS class to use for a row status icon
  *  - An additional 'tools' element can be included to add custom action icons
- *  - "class" - FontAwesome class to use for icon
+ *  - "icon" - FontAwesome class to use for icon
  *  - "text" - title attribute
  *  - "url" - URl to link to
+ *  - "url:class" - The styling classes for the URL. Type: string. This tool property is optional.
  *  - "modal" - (boolean) Open link in modal?
  *  - "onclick" - OnClick action to add to icon
  *  
  *   e.g.
  * 
  *   array(
- *       "class"=>"fa fa-trash",
+ *       "icon"=>"fa fa-trash",
  *       "text"=>$lang["action-delete"],
  *       "url"=>"",
  *       "modal"=>false,
@@ -5135,7 +5136,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  *       );
  *
  *   array(
- *       "class"=>"fa fa-info",
+ *       "icon"=>"fa fa-info",
  *       "text"=>$lang["job_details"],
  *       "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
  *       "modal"=>true,
@@ -5218,7 +5219,7 @@ function render_table($tabledata)
 
     if(count($tabledata["data"]) == 0)
         {
-        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>No results found<td></tr>\n";
+        echo "<tr><td colspan='" . (strval(count($tabledata["headers"]))) . "'>" . htmlspecialchars($lang["no_results_found"]) . "</td></tr>\n";
         }
     else
         {
@@ -5250,7 +5251,7 @@ function render_table($tabledata)
                         echo "<div class='ListTools'>";
                         foreach($rowdata["tools"] as $toolitem)
                             {
-                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' onclick='";
+                            echo "<a aria-hidden='true' href='" . htmlspecialchars($toolitem["url"]) . "' class=\"" . htmlspecialchars($toolitem['url:class'] ?? '') . "\" onclick='";
                             if(isset($toolitem["onclick"]))
                                 {
                                 echo htmlspecialchars($toolitem["onclick"]);
@@ -5259,14 +5260,14 @@ function render_table($tabledata)
                                 {
                                 echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
                                 }
-                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span></a>";
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
                             }
                         echo "</div>";
                         }
                     else
                         {
                         echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) 
-                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick")) 
+                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick", 'name', 'value')) 
                                 : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
@@ -5367,10 +5368,10 @@ function render_question_form_helper(string $txt, string $id, array $ctx)
     $ctx_style = (isset($ctx['style']) && is_string($ctx['style']) ? $ctx['style'] : ''); # Use a class if possible!
 
 
-    $class = htmlspecialchars(join(' ', array_merge(array('FormHelp'), $ctx_class)));
-    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', htmlspecialchars($ctx_style)) : '');
+    $class = escape_quoted_data(join(' ', array_merge(array('FormHelp'), $ctx_class)));
+    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', escape_quoted_data($ctx_style)) : '');
     ?>
-    <div id="help_<?php echo htmlspecialchars($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
+    <div id="help_<?php echo escape_quoted_data($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
         <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
     </div>
     <?php
@@ -5725,6 +5726,17 @@ function render_fixed_text_question($label, $text)
 
 
 /**
+ * Output encoding for HTML & JS within a quoted context when unsafe input is rendered inside it
+ * 
+ * @return string
+ */
+function escape_quoted_data(string $unsafe)
+    {
+    return htmlspecialchars($unsafe, ENT_QUOTES);
+    }
+
+
+/**
  * Renders a fontawesome icon selector question
  * Requires lib/fontawesome/resourcespace/icon_classes.php to be included in the page using the function
  *
@@ -5823,4 +5835,3 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
     </script>
     <?php
     }
-

@@ -890,7 +890,7 @@ function api_reorder_featured_collections($refs)
     {
     if(can_reorder_featured_collections())
         {
-        reorder_collections($refs);
+        sql_reorder_records('collection', $refs);
         return true;
         }
 
@@ -901,4 +901,45 @@ function api_reorder_featured_collections($refs)
 function api_get_dash_search_data($link,$promimg)
     {
     return get_dash_search_data($link,$promimg);    
+    }
+
+function api_reorder_tabs($refs)
+    {
+    if(acl_can_manage_tabs())
+        {
+        sql_reorder_records('tab', $refs);
+        return true;
+        }
+
+    http_response_code(403);
+    return false;
+    }
+
+function api_delete_tabs($refs)
+    {
+    if(acl_can_manage_tabs())
+        {
+        return delete_tabs($refs);
+        }
+
+    http_response_code(403);
+    return false;
+    }
+
+function api_save_tab($tab)
+    {
+    if(acl_can_manage_tabs())
+        {
+        if(save_tab($tab))
+            {
+            $tab = get_tabs_by_refs([$tab['ref']])[0];
+            $tab['name_translated'] = i18n_get_translated($tab['name']);
+            return ajax_response_ok($tab);
+            }
+
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_fail_save']));
+        }
+
+    http_response_code(403);
+    return false;
     }

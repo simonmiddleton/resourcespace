@@ -406,7 +406,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         <input id="<?php echo $name; ?>"
                name="<?php echo $name; ?>"
                type="<?php echo $password ? 'password' : 'text'; ?>"
-               value="<?php echo htmlspecialchars($current, ENT_QUOTES); ?>"
+               value="<?php echo escape_quoted_data($current); ?>"
                <?php if($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
                style="width:<?php echo $width; ?>px" />
         <?php
@@ -569,7 +569,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             }
             " style="float: left;" />
         <div id="container_<?php echo $name; ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
-            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="text" value="<?php echo htmlspecialchars($current, ENT_QUOTES); ?>" onchange="<?php
+            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="text" value="<?php echo escape_quoted_data($current); ?>" onchange="<?php
             if ($autosave)
                 {
                 ?>AutoSaveConfigOption('<?php echo $name; ?>');<?php
@@ -785,7 +785,7 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
 	$wrap = 0;
 	?>
 	<div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-	<label for="<?php echo htmlspecialchars($name)?>" ><?php echo htmlspecialchars($label)?></label>
+	<label for="<?php echo escape_quoted_data($name)?>" ><?php echo htmlspecialchars($label)?></label>
 		<?php
         if($autosave)
             {

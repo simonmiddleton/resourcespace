@@ -139,7 +139,7 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
 		echo "<div class='Question'>\n<label for='alt_type'>".$lang["alternatetype"]."</label><select name='alt_type' id='alt_type'>";
 		foreach($alt_types as $thealttype){
 			if ($thealttype == $file['alt_type']){$alt_type_selected = " selected='selected'"; } else { $alt_type_selected = ''; }
-			$thealttype = htmlspecialchars($thealttype,ENT_QUOTES);
+			$thealttype = escape_quoted_data($thealttype);
 			echo "\n   <option value='$thealttype' $alt_type_selected >$thealttype</option>";
 		}
 		echo "\n</select>\n<div class='clearerleft'> </div>\n</div>";

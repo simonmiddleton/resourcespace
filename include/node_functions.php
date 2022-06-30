@@ -1368,20 +1368,24 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
     }
 
 /**
-* Add nodes in array to multiple resources. Changes made using this function will not be logged
+* Add nodes in array to multiple resources. Changes made using this function will not be logged by default.
 *
-* @param  array        $resources           Array of resource IDs to add nodes to
-* @param  array        $nodes               Array of node IDs to add
-* @param  boolean      $checkperms          Check permissions before adding?
+* @param array   $resources  Array of resource IDs to add nodes to
+* @param array   $nodes      Array of node IDs to add
+* @param boolean $checkperms Check permissions before adding?
+* @param boolean $logthis    Log this? Log entries are ideally added when more data on all the changes made is available to make reverts easier.
 * 
 * @return boolean
 */
-function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true)
+function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true, bool $logthis = false)
     {
     global $userref;
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
         {return false;}
-    
+
+    $resources = array_values(array_filter($resources, 'is_int_loose'));
+    $nodes = array_values(array_filter(is_array($nodes) ? $nodes : [$nodes], 'is_int_loose'));
+
     if($checkperms)
         {
         // Need to check user has permissions to add nodes
@@ -1400,33 +1404,34 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             }
         }
 
-    if(!is_array($nodes))
-        {$nodes=array($nodes);}
-
-    $nodesql = "";
-    $sql_params = [];
-    foreach($resources as $resource)
+    $resources_chunks = array_chunk($resources, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach($resources_chunks as $resources_chunk)
         {
-        if(!is_int_loose($resource))
+        $resource_node_values = '';
+        $sql_params = [];
+        foreach($resources_chunk as $resource)
             {
-            continue;
-            }
-
-        foreach($nodes as $node)
-            {
-            if(is_int_loose($node))
+            foreach($nodes as $node)
                 {
-                $nodesql .= ',(?, ?)';
+                $resource_node_values .= ',(?, ?)';
                 $sql_params[] = 'i';
                 $sql_params[] = $resource;
                 $sql_params[] = 'i';
                 $sql_params[] = $node;
                 }
+
+            if($logthis && !empty($nodes))
+                {
+                log_node_changes($resource, $nodes, []);
+                }
+            }
+        $resource_node_values = ltrim($resource_node_values, ',');
+
+        if($resource_node_values !== '')
+            {
+            ps_query("INSERT INTO resource_node (resource, node) VALUES {$resource_node_values} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
             }
         }
-    $nodesql = ltrim($nodesql, ',');
-
-    ps_query("INSERT INTO resource_node (resource, node) VALUES {$nodesql} ON DUPLICATE KEY UPDATE hit_count=hit_count", $sql_params);
     return true;
     }
 
