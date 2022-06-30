@@ -199,6 +199,7 @@ else
 <table id="resource_type_field_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <?php  
+$system_tabs = get_tab_name_options();
 
 addColumnHeader('ref', 'property-reference');
 addColumnHeader('title', 'property-title');
@@ -241,7 +242,7 @@ for ($n=0;$n<count($fields);$n++)
         </td>
     <?php if (!hook('replacetabnamecolumn')) {
         ?><td>
-            <?php echo str_highlight(i18n_get_translated($fields[$n]["tab_name"]),$find,STR_HIGHLIGHT_SIMPLE);?>
+            <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', $find, STR_HIGHLIGHT_SIMPLE); ?>
         </td><?php
     }?>
         <td>

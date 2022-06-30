@@ -7521,7 +7521,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                use_for_similar,
                iptc_equiv,
                display_template,
-               tab_name,
+               tab,
                required,
                smart_theme_name,
                exiftool_field,
