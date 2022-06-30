@@ -2651,6 +2651,7 @@ function get_resource_type_field($field)
                 iptc_equiv,
                 display_template,
                 tab_name,
+                tab,
                 required,
                 smart_theme_name,
                 exiftool_field,
@@ -2760,7 +2761,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f.use_for_similar,
                     f.iptc_equiv,
                     f.display_template,
-                    f.tab_name,
+                    f.tab,
                     f.required,
                     f.required AS frequired,
                     f.smart_theme_name,
@@ -3575,7 +3576,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
  * Get resource log records. The standard field titles are translated using $lang. Custom field titles are i18n translated.
  *
  * @param  int    $resource    Resource ID - set to NULL and specify r.ref=>[id] in the $filters array to retrieve a specific log entry by log ref
- * @param  int    $fetchrows   If $fetchrows is set we don't have to loop through all the returned rows. @see sql_query()
+ * @param  int    $fetchrows   If $fetchrows is set we don't have to loop through all the returned rows. @see ps_query()
  * @param  array  $filters     List of filters to include in the where clause. The key of the array is linked to the
  *                             available columns in the sql statement so they must match!
  *
@@ -4504,28 +4505,7 @@ function user_rating_save($userref,$ref,$rating)
 function get_field($field)
     {
     $r = sql_query("
-        SELECT ref,
-               name,
-               title,
-               type,
-               order_by,
-               keywords_index,
-               partial_index,
-               resource_type,
-               resource_column,
-               display_field,
-               use_for_similar,
-               iptc_equiv,
-               display_template,
-               tab_name,
-               required,
-               smart_theme_name,
-               exiftool_field,
-               advanced_search,
-               simple_search,
-               help_text,
-               display_as_dropdown,
-               automatic_nodes_ordering
+        SELECT " . columns_in("resource_type_field") . "
           FROM resource_type_field
          WHERE ref = '{$field}'
      ", "schema");
@@ -5490,7 +5470,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         return false;
         }
 
-    $o_size=ps_query("SELECT * FROM resource_dimensions WHERE resource=?",array("i",$ref));
+    $o_size=ps_query("SELECT " . columns_in("resource_dimensions") . " FROM resource_dimensions WHERE resource=?",array("i",$ref));
     if(!empty($o_size))
         {
         if(count($o_size)>1)
@@ -6955,7 +6935,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $return[]=$returnline;
     }
     # loop through all image sizes
-    $sizes=ps_query("select * from preview_size order by width desc");
+    $sizes=ps_query("select " . columns_in("preview_size") . " from preview_size order by width desc");
 
     for ($n=0;$n<count($sizes);$n++)
         {
@@ -7541,7 +7521,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                use_for_similar,
                iptc_equiv,
                display_template,
-               tab_name,
+               tab,
                required,
                smart_theme_name,
                exiftool_field,
@@ -8094,51 +8074,6 @@ function delete_resource_type_field($ref)
 
     return true;
     }
-
-/**
- * Function to return a list of tab names retrieved from $fields array containing metadata fields
- *
- * if there is at least one field with a value for tab_name, then if there is at another field that does not have a tab_name value, it is assigned the value "Default"
- *
- * @param   array   fields  array of metadata fields to display
- * @global  array   lang    array of config-defined language strings
- *
- * @return  array   $fields_tab_names   array of unique tab names contained in the $fields array
- */
-function tab_names($fields)
-    {
-    global $lang; // language strings
-
-    $fields_tab_names = array();
-    $tabs_set = false; // by default no tabs set
-
-    // loop through fields array and identify whether to use tabs
-    foreach ($fields as $field)
-        {
-        $field["tab_name"] != "" ? $tabs_set = true : $tabs_set = $tabs_set;
-        }
-
-    // loop through fields and create list of tab names, including default string if any fields present with empty string values for tab_name
-    foreach ($fields as $field)
-        {
-        if ($tabs_set === true)
-            {
-            $fieldtabname = $field["tab_name"] != "" ? $field["tab_name"] : $lang["default"];
-            }
-        else
-            {
-            $fieldtabname = "";
-            }
-        $fields_tab_names[] = $fieldtabname;
-        }
-
-    // get list of unique tab names
-    $fields_tab_names = array_values(array_unique($fields_tab_names));
-
-    // return list of tab names
-    return $fields_tab_names;
-    }
-
 
 function get_resource_table_joins(){
 

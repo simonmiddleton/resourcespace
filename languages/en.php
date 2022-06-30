@@ -347,6 +347,13 @@ $lang["smtpusername"]="SMTP Username";
 $lang["smtppassword"]="SMTP Password";
 
 
+# Admin - Tabs management
+$lang['system_tabs'] = "Tabs";
+$lang['manage_tabs_instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
+$lang['tabs_create_new'] = "Create tab called...";
+$lang['tabs_migration_log_note'] = "Migrated to system tab: %s";
+
+
 $lang["connect"]="Connect";
 
 # User contributions
@@ -910,6 +917,7 @@ $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
 $lang["counting_resources"] = "counting resources...";
 $lang["not_allowed"] = "Not allowed";
+$lang["no_results_found"] = "No results found";
 
 # Pager
 $lang["next"]="Next";
@@ -2636,6 +2644,8 @@ $lang['userpreference_tilenavdefault']='Use a tile layout for the navigation men
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';
+$lang['systemconfig_customfont_label'] = 'Use custom font file - Caution: Some fonts may cause unexpected display issues.';
+$lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
@@ -2915,6 +2925,7 @@ $lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resource
 $lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
 $lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+$lang["error_fail_save"] = "Unable to save";
 
 
 $lang['image_quality_100'] = "Maximum";

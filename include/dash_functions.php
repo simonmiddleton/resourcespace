@@ -2028,17 +2028,17 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
     <script>
     jQuery(document).ready(function()
         {
-        const TILE_STYLE = '<?php echo htmlspecialchars($tile_style, ENT_QUOTES); ?>';
+        const TILE_STYLE = '<?php echo escape_quoted_data($tile_style); ?>';
         const SHOW_RESOURCE_COUNT = <?php echo $tile['resource_count'] ? 'true' : 'false'; ?>;
 
         let data = {
-            'link': '<?php echo htmlspecialchars($tile["link"], ENT_QUOTES); ?>',
+            'link': '<?php echo escape_quoted_data($tile["link"]); ?>',
             'promimg': '<?php echo (int)$promoted_image; ?>',
         };
 
         api('get_dash_search_data', data, function(response)
             {
-            const TILE_ID = '<?php echo htmlspecialchars($tile_id, ENT_QUOTES); ?>';
+            const TILE_ID = '<?php echo escape_quoted_data($tile_id); ?>';
             const TILE_WIDTH = <?php echo $tile_width; ?>;
             const TILE_HEIGHT = <?php echo $tile_height; ?>;
             var preview_resources;

@@ -213,6 +213,9 @@ $collection_bar_foreground_override='';
 # Used for changing colour of default blue buttons
 $button_colour_override='';
 
+# Used by system settings page when setting a custom system font 
+$custom_font='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)

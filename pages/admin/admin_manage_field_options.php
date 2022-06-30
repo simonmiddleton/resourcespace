@@ -44,7 +44,7 @@ $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?fiel
 if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     {
     $option_name     = trim(getval('option_name', ''));
-    $option_parent   = getval('option_parent', '');
+    $option_parent   = trim(getval('option_parent', ''));
     $option_new_index = getval('node_order_by', '', true);
     if ($option_new_index != "")
         {
@@ -57,10 +57,31 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         $response['refresh_page'] = false;
         $node_ref_data            = array();
 
-        if(trim($option_parent) != '' || (get_node($node_ref, $node_ref_data) && $node_ref_data['parent'] != $option_parent))
-            {
-            $response['refresh_page'] = true;
+        // If node baing saved has a parent and the parent changes then we need to reload
+        $existing_parent="";
+        if (get_node($node_ref, $node_ref_data)) { 
+            $existing_parent=$node_ref_data["parent"]; 
+        }
+
+        if ($option_parent != '') { // Incoming parent is populated
+            if ($option_parent == $existing_parent) {
+                // Parent unchanged; no need to refresh
             }
+            else {
+                // Parent being changed; refresh
+                $response['refresh_page'] = true;
+            }
+        }
+        else { // Incoming parent is blank
+            if ($option_parent == $existing_parent) {
+                // No parent being established; no need to refresh
+            }
+            else {
+                // Parent being removed; refresh
+                $response['refresh_page'] = true;
+            }
+
+        }
 
         // Option order_by is not being sent because that can be asynchronously changed and we might not know about it,
         // thus this will be checked upon saving the data. If order_by is null / empty string, then we will use the current value

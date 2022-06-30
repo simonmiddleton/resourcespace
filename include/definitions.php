@@ -477,7 +477,10 @@ $MARKER_COLORS = array(
 // Reports
 const REPORT_PLACEHOLDER_NON_CORRELATED_SQL = '[non_correlated_sql]';
 
+
+// ----------------------------------------------
 // SYSTEM - GENERAL
+// ----------------------------------------------
 const SYSTEM_REQUIRED_PHP_MODULES = [
     'curl' => 'curl_init',
     'gd' => 'imagecrop',
@@ -490,6 +493,9 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'dom' => 'dom_import_simplexml',
     'mysqli' => 'mysqli_init',
 ];
+
+// Chunking a list of IDs (with the highest ID length) in batches of this size should be well within the default max_allowed_packet size
+const SYSTEM_DATABASE_IDS_CHUNK_SIZE = 500;
 
 /*
 List of ResourceSpace system utilities (core and optional). If adding a new entry, make sure get_utility_path() is updated

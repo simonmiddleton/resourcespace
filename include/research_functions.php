@@ -104,7 +104,7 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 		{
 		$use_sort = $sort;		
 		}
-	return ps_query("select *,(select username from user u where u.ref=r.user) username, 
+	return ps_query("select " . columns_in("research_request","r") . ",(select username from user u where u.ref=r.user) username, 
 		(select username from user u where u.ref=r.assigned_to) assigned_username from research_request r 
 		$searchsql 
 		order by $use_order_by $use_sort", $parameters);

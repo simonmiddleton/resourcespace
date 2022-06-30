@@ -46,7 +46,7 @@ if ($findtext!="")
     $search_sql="and name like CONCAT('%', ? ,'%')";
     $params[] = 's'; $params[] = $findtext;
     }
-$reports=ps_query("select * from user_report where user= ? $search_sql order by ref", $params);
+$reports=ps_query("select " . columns_in("user_report") . " from user_report where user= ? $search_sql order by ref", $params);
 
 # pager
 $per_page = $default_perpage_list;

@@ -263,6 +263,22 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				</select>
 			<?php
 			}
+        else if($propertyname === 'tab')
+            {
+            ?>
+            <select class="stdwidth" name="<?php echo escape_quoted_data($propertyname); ?>">
+            <?php
+            foreach(get_tab_name_options() as $tab_ref => $tab_name)
+                {
+                $selected = $tab_ref === (int) $currentvalue ? 'selected' : '';
+                ?>
+                <option value="<?php echo (int) $tab_ref; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($tab_name); ?></option>
+                <?php
+                }
+            ?>
+            </select>
+            <?php
+            }
 		elseif($type==1)
 			{
 			if ($propertyname=="advanced_search" && $system_date_field)
@@ -385,7 +401,7 @@ $fieldcolumns = array(
     'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
     'help_text'                => array($lang['property-help_text'],'',2,1),
     'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
-    'tab_name'                 => array($lang['property-tab_name'],'',0,0),
+    'tab'                      => array($lang['property-tab_name'], '', 0, 0),
     'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
     'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),					
     'display_template'         => array($lang['property-display_template'],'',2,1),
@@ -400,7 +416,7 @@ $fieldcolumns = array(
     'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
     'sync_field'               => array($lang['property-sync_with_field'],'',0,0),
     'onchange_macro'           => array($lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1),
-    'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1)	
+    'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
 );
 
 # Remove some items if $execution_lockout is set to prevent code execution
@@ -452,6 +468,11 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			if($column=="name" && ($val=="" || in_array($val,array("basicday","basicmonth","basicyear"))))
                 {
                 $val="field" . $ref;
+                }
+
+            if($column === 'tab' && $val == 0)
+                {
+                $val = ''; # set to blank so the code will convert to SQL NULL later
                 }
             }
 		if (isset($sql))

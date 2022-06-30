@@ -31,7 +31,7 @@ $sort = getval("sort",$default_sort_direction);
 
 <tr><td><b><?php echo htmlspecialchars($lang["user"])?></b></td><td><b><?php echo htmlspecialchars($lang["rating"])?></b></td></tr><?php
 $users = get_users(0,"","u.username",true);
-$ratings = ps_query("select * from user_rating where ref = ?", array("i", $ref));
+$ratings = ps_query("select " . columns_in("user_rating") . " from user_rating where ref = ?", array("i", $ref));
 for ($n=0;$n<count($ratings);$n++){
 	for ($x=0;$x<count($users);$x++){
 		if ($ratings[$n]['user']==$users[$x]['ref']){

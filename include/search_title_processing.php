@@ -157,7 +157,7 @@ if ($search_titles)
         $alt_text = '';
         if ($pagename=="search" && isset($collectiondata['savedsearch']) && $collectiondata['savedsearch']!='')
             {
-            $smartsearch = ps_query("select * from collection_savedsearch where ref=?",array("i",$collectiondata['savedsearch']));
+            $smartsearch = ps_query("select " . columns_in("collection_savedsearch") . " from collection_savedsearch where ref=?",array("i",$collectiondata['savedsearch']));
             if (isset($smartsearch[0]))
                 {
                 $alt_text = "title='search=" . $smartsearch[0]['search'] . "&restypes=" . $smartsearch[0]['restypes'] . "&archive=" . $smartsearch[0]['archive'] . "'";

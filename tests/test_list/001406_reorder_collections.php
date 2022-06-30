@@ -38,7 +38,7 @@ $use_cases = [
 ];
 foreach($use_cases as $use_case)
     {
-    reorder_collections($use_case['new_order']);
+    sql_reorder_records('collection', $use_case['new_order']);
     if($get_collections_order($all) !== $use_case['expected'])
         {
         echo "Use case: {$use_case['name']} - ";
@@ -46,7 +46,7 @@ foreach($use_cases as $use_case)
         }
 
     // Reset order to the initial one
-    reorder_collections($all);
+    sql_reorder_records('collection', $all);
     }
 
 

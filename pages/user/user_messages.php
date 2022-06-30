@@ -202,9 +202,9 @@ include "../../include/header.php";
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)
                 {
                 $fullmessage = escape_check(strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border")));
-                $fullmessage = htmlspecialchars($fullmessage,ENT_QUOTES);
+                $fullmessage = escape_quoted_data($fullmessage);
                 $message = strip_tags_and_attributes($messages[$n]["message"]);
-                $message = nl2br($message,ENT_QUOTES);
+                $message = nl2br($message);
                 $url_encoded = urlencode($messages[$n]["url"]);
                 $unread_css = ($messages[$n]["seen"] == 0 ? " MessageUnread" : "");
                 $userbyname = get_user_by_username($messages[$n]["owner"]);

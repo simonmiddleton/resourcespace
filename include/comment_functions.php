@@ -126,7 +126,7 @@ function comments_submit()
  */
 function clean_comment_tree($ref)
     {
-    $all_comments = ps_query("SELECT * FROM comment WHERE ref_parent = ?", ['i', $ref]);
+    $all_comments = ps_query("SELECT " . columns_in("comment") . " FROM comment WHERE ref_parent = ?", ['i', $ref]);
     $remaining = 0;
     
     if(count($all_comments) > 0)

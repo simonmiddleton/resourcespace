@@ -325,7 +325,7 @@ function ProcessFolder($folder)
 
             global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
-            if(array_search($extension, $banned_extensions) !== false)
+            if(array_search(strtolower($extension), array_map('strtolower', $banned_extensions)) !== false)
                 {
                 continue;
                 }
@@ -752,7 +752,7 @@ function ProcessFolder($folder)
                         // between categories and collections by checking for children collections.
                         if(!is_featured_collection_category_by_children($collection))
                             {
-                            $test = ps_query("SELECT * FROM collection_resource WHERE collection= ? AND resource= ?", ['i', $collection, 'i', $r]);
+                            $test = ps_query("SELECT " . columns_in("collection_resource") . " FROM collection_resource WHERE collection= ? AND resource= ?", ['i', $collection, 'i', $r]);
                             if(count($test) == 0)
                                 {
                                 ps_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES (?, ?, NOW())", ['i', $collection, 'i', $r]);

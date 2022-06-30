@@ -62,7 +62,7 @@ if ($findtext!="")
     $params = ['s', $findtext, 's', $findtext, 's', $findtext];
     }
 
-$licenses=ps_query("select * from license $sql order by ref", $params);
+$licenses=ps_query("select " . columns_in("license",null,"licensemanager") . " from license $sql order by ref", $params);
 
 # pager
 $per_page = $default_perpage_list;

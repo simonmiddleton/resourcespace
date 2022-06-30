@@ -78,7 +78,7 @@ if(isset($count) && $count==0)
 <input type="hidden" name="months" value="<?php echo $months ?>">
 <input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo $lang["purgeusers"]?>&nbsp;&nbsp;" />
 </p>
-<?php $users=ps_query("select * from user where $condition"); ?>
+<?php $users=ps_query("select " . columns_in("user") . " from user where $condition"); ?>
 <table class="InfoTable">
 	<tr>
 		<td><strong><?php echo $lang["username"] ?></strong></td>

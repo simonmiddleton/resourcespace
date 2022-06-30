@@ -3,13 +3,9 @@ include ("../../include/db.php");
 include ("../../include/authenticate.php");if (!checkperm("a")){exit ("Permission denied.");}
 include ("../../include/header.php");
 ?>
-
 <div class="BasicsBox"> 
-   
   <h1><?php echo $lang["systemsetup"]?></h1>
   <?php if (getval("modal","")=="") { ?><p><?php echo text("introtext")?></p><?php } ?>
-  
-
   <div class="<?php echo ($tilenav?"TileNav":"VerticalNav TileReflow") ?>">
 	<ul>
 		<?php if (!hook('replacegroupadmin')) { ?>
@@ -65,7 +61,6 @@ include ("../../include/header.php");
 
 		if (checkperm('a'))
 			{
-			
 			if ($enable_remote_apis)
 			  {
 			  ?>
@@ -73,7 +68,8 @@ include ("../../include/header.php");
 			  <?php
 			  }
 			?>
-			<li><a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-check-square"></i><br /><?php echo $lang["installationcheck"]?></a></li>
+			<li><a href="<?php echo $baseurl_short; ?>pages/admin/tabs.php" onclick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-window-restore"></i><br /><?php echo $lang['system_tabs']; ?></a></li>
+            <li><a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-check-square"></i><br /><?php echo $lang["installationcheck"]?></a></li>
 			<li><a href="<?php echo $baseurl_short; ?>pages/admin/admin_system_log.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-history"></i><br /><?php echo $lang["systemlog"]; ?></a></li>
 			<li><a href="<?php echo $baseurl?>/pages/team/team_system_console.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-terminal"></i><br /><?php echo $lang["systemconsole"]?></a></li>
 			<li><a href="<?php echo $baseurl_short?>pages/admin/admin_system_performance.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-bolt"></i><br /><?php echo $lang["system_performance"]?></a></li>
@@ -82,13 +78,8 @@ include ("../../include/header.php");
 			}
 hook("customadminfunction");
 ?>
-
 	</ul>
 	</div>
 </div> <!-- End of BasicsBox -->
-
-
 <?php
-
-
 include("../../include/footer.php");

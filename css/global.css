@@ -658,7 +658,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 a.HomePanel {text-decoration:none;}
 a.HomePanel {cursor:pointer;}
 
-.TabBar {padding:8px 0 0 0;margin-bottom: -1px; background-color: #ededed;}
+.TabBar {padding:8px 0 0 0;margin-bottom: -1px;}
 .Tab a {margin:0 5px 0 0;padding:5px 1rem;display:inline-block; border-top-right-radius:5px;border-top-left-radius:5px;}
 .Tab a:hover {text-decoration: none;}
 .Tab {display:inline;}
@@ -670,6 +670,8 @@ a.HomePanel {cursor:pointer;}
 }
 .TabSelected {margin-right: 5px;}
 .TabSelected a { margin: 0;}
+.NonMetadataProperties { padding-bottom: 8px; }
+div#Metadata > div.Title { padding-top: 0.3em; }
 
 .infotable {border-top: 1px solid #999999;}
 .infotable td,.infotable th {border-bottom: 1px solid #999999;}
@@ -2390,3 +2392,4 @@ input[type="text"]#iconpicker-input {
     border: none;
     box-shadow: none;
 }
+

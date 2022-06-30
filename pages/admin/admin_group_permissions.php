@@ -150,7 +150,7 @@ DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
-$fields=ps_query("select *,active from resource_type_field order by active desc,order_by", array(), "schema");
+$fields=ps_query("select " . columns_in("resource_type_field") . " from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (!in_array("f*",$permissions))
@@ -169,7 +169,7 @@ foreach ($fields as $field)
 	}
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
-$fields=ps_query("select * from resource_type_field order by active desc,order_by", array(), "schema");
+$fields=ps_query("select " . columns_in("resource_type_field") . " from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (in_array("F*",$permissions))	

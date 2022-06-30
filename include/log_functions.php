@@ -36,7 +36,7 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 
 	if (is_null($value_old) && !is_null($remote_table) && !is_null($remote_column) && !is_null($remote_ref))	// only try and get the old value if not explicitly set and we have table details
 		{
-		$row = ps_query("SELECT * FROM `{$remote_table}` WHERE `" . (is_null($ref_column_override) ? 'ref' : escape_check($ref_column_override)) . "` = ?",array("i",$remote_ref));
+		$row = ps_query("SELECT " . columns_in($remote_table) . " FROM `{$remote_table}` WHERE `" . (is_null($ref_column_override) ? 'ref' : escape_check($ref_column_override)) . "` = ?",array("i",$remote_ref));
 		if (isset($row[0][$remote_column]))
 			{
 			$value_old = $row[0][$remote_column];

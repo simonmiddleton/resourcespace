@@ -3563,7 +3563,7 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
 
     // fake having these permissions temporarily
     $o_perm = $userpermissions;
-    $userpermissions = array_values(array_merge($userpermissions, $perms));
+    $userpermissions = array_values(array_merge($userpermissions ?? [], $perms));
 
     $result = call_user_func_array($f, $p);
 

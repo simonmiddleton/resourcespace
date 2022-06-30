@@ -13,7 +13,7 @@ include "../../include/image_processing.php";
 $max=ps_value("select max(ref) value from resource",array(), 0);
 $ref=getvalescaped("ref",1);
 
-$resourceinfo=sql_query("select ref,file_extension from resource where ref='$ref'");
+$resourceinfo= ps_query("select ref,file_extension from resource where ref= ?", ['i', $ref]);
 if (count($resourceinfo)>0)
 	{
 	$extension = $resourceinfo[0]['file_extension'];
@@ -36,14 +36,14 @@ if (count($resourceinfo)>0)
 		@list(,$sw,$sh) = $smatches;
 		if (($sw!='') && ($sh!=''))
 		  {
-			$size_db=sql_query("select 'true' from resource_dimensions where resource = ". $ref);
+			$size_db= ps_query("select 'true' from resource_dimensions where resource = ?", ['i', $ref]);
 			if (count($size_db))
 				{
-				sql_query("update resource_dimensions set width=". $sw .", height=". $sh .", file_size='$filesize' where resource=". $ref);
+				ps_query("update resource_dimensions set width= ?, height= ?, file_size= ? where resource= ?", ['i', $sw, 'i', $sh, 'i', $filesize, 'i', $ref]);
 				}
 			else
 				{
-				sql_query("insert into resource_dimensions (resource, width, height, file_size) values(". $ref .", ". $sw .", ". $sh .", '$filesize')");
+				ps_query("insert into resource_dimensions (resource, width, height, file_size) values(?, ?, ?, ?)", ['i', $ref, 'i', $sw, 'i', $sh, 'i', $filesize]);
 				}
 			}
 		}
@@ -52,14 +52,14 @@ if (count($resourceinfo)>0)
 		# fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
 		if (!((@list($sw,$sh) = @getimagesize($file))===false))
 		 	{
-			$size_db=sql_query("select 'true' from resource_dimensions where resource = ". $ref);
+			$size_db= ps_query("select 'true' from resource_dimensions where resource = ?", ['i', $ref]);
 			if (count($size_db))
 				{
-				sql_query("update resource_dimensions set width=". $sw .", height=". $sh .", file_size='$filesize' where resource=". $ref);
+				ps_query("update resource_dimensions set width= ?, height= ?, file_size= ? where resource= ?", ['i', $sw, 'i', $sh, 'i', $filesize, 'i', $ref]);
 				}
 			else
 				{
-				sql_query("insert into resource_dimensions (resource, width, height, file_size) values(". $ref .", ". $sw .", ". $sh .",'$file_size')");
+				ps_query("insert into resource_dimensions (resource, width, height, file_size) values(?, ?, ?, ?)", ['i', $ref, 'i', $sw, 'i', $sh, 'i', $file_size]);
 				}
 			}
 		}
