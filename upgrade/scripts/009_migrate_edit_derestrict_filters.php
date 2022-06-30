@@ -25,13 +25,13 @@ if($search_filter_nodes && (!isset($sysvars["EDIT_FILTER_MIGRATION"]) || $sysvar
                 {
                 message_add(array_column($notification_users,"ref"), $lang["filter_migrate_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
                 // Successfully migrated - now use the new filter
-                sql_query("UPDATE usergroup SET " . $filtertype . "_id='" . $migrateresult . "' WHERE ref='" . $group["ref"] . "'");
+                ps_query("UPDATE usergroup SET " . $filtertype . "_id= ? WHERE ref= ?", ['i', $migrateresult, 'i', $group['ref']]);
                 }
             elseif(is_array($migrateresult))
                 {
                 debug("FILTER MIGRATION: Error migrating filter: '" . $filtertext . "' - " . implode('\n' ,$migrateresult));
                 // Error - set flag so as not to reattempt migration and notify admins of failure to be sorted manually
-                sql_query("UPDATE usergroup SET " . $filtertype . "_id='0' WHERE ref='" . $group["ref"] . "'");
+                ps_query("UPDATE usergroup SET " . $filtertype . "_id='0' WHERE ref= ?", ['i', $group["ref"]]);
                 message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_migrate_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
                 }
             }

@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // @todo use the dirname level argument once PHP 7.0 is supported
 $webroot = dirname(dirname(__DIR__));

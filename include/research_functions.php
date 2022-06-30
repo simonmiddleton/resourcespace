@@ -104,7 +104,7 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
 		{
 		$use_sort = $sort;		
 		}
-	return ps_query("select *,(select username from user u where u.ref=r.user) username, 
+	return ps_query("select " . columns_in("research_request","r") . ",(select username from user u where u.ref=r.user) username, 
 		(select username from user u where u.ref=r.assigned_to) assigned_username from research_request r 
 		$searchsql 
 		order by $use_order_by $use_sort", $parameters);
@@ -161,7 +161,7 @@ function save_research_request($ref)
             {
             $assignedmessage = new ResourceSpaceUserNotification();
             $assignedmessage->set_subject("lang_researchrequestassigned");
-            $assignedmessage->set_message("lang_researchrequestassignedmessage");
+            $assignedmessage->set_text("lang_researchrequestassignedmessage");
             $assignedmessage->template = "emailresearchrequestassigned";
             $assignedmessage->templatevars = $templatevars;
             $assignedmessage->url = $templatevars["teamresearchurl"];
@@ -173,9 +173,9 @@ function save_research_request($ref)
             {
             $completemessage = new ResourceSpaceUserNotification();
             $completemessage->set_subject("lang_researchrequestcomplete");
-            $completemessage->set_message("lang_researchrequestcompletemessage");
-            $completemessage->append_message("\n\n");
-            $completemessage->append_message("lang_clicklinkviewcollection");
+            $completemessage->set_text("lang_researchrequestcompletemessage");
+            $completemessage->append_text("\n\n");
+            $completemessage->append_text("lang_clicklinkviewcollection");
             $completemessage->template = "emailresearchrequestcomplete";
             $completemessage->templatevars = $templatevars;
             $completemessage->url = $templatevars["teamresearchurl"];
@@ -190,7 +190,7 @@ function save_research_request($ref)
         {        
         $assignedmessage = new ResourceSpaceUserNotification();
         $assignedmessage->set_subject("lang_researchrequestassigned");
-        $assignedmessage->set_message("lang_researchrequestassignedmessage");
+        $assignedmessage->set_text("lang_researchrequestassignedmessage");
         $assignedmessage->template = "emailresearchrequestassigned";
         $assignedmessage->templatevars = $templatevars;
         $assignedmessage->url = $templatevars["teamresearchurl"];

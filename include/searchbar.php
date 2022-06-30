@@ -942,7 +942,7 @@ elseif($restypes=='')
 
 <?php hook("searchbarbottomtoolbar"); ?>
 
-<?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title.svg')) { ?>
+<?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
     <div class="PoweredByPanel">
         <a href="https://www.resourcespace.com" target="_blank">
             <span><?php echo $lang["powered_by"]; ?></span>

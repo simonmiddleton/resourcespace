@@ -72,7 +72,7 @@ if (getval("save",false))
 		}
 	}
 
-$record = ps_query("select * from report where ref=?",array("i",$ref));
+$record = ps_query("select " . columns_in("report") . " from report where ref=?",array("i",$ref));
 $record = $record[0];
 
 include "../../include/header.php";
@@ -90,7 +90,8 @@ include "../../include/header.php";
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+			'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["page-title_report_management"],

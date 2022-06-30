@@ -420,7 +420,7 @@ else if($edit)
     if(isset($buildstring["tltype"]))
         {
         $tile_type=$buildstring["tltype"];
-        $tile_nostyle = isset($buildstring["tlstyle"])? FALSE : TRUE;
+        $tile_nostyle = isset($buildstring["tlstyle"]) && $tile_type!="conf" ? FALSE : TRUE;
         $tile_style=$buildstring["tlstyle"];
 
         $tile_style_colour = '';

@@ -240,7 +240,7 @@ function flattenParts($messageParts, $flattenedParts = array(), $prefix = '', $i
 }
 
 $parts = flattenParts($structure->parts); 
-//print_r($parts);
+
 // count attachments now, collect body
 $att_count=0;
 $body="";
@@ -271,7 +271,6 @@ foreach ($parts as $key=>$part){
 		echo $body_part;
 		$body.=$body_part; // this is for apple mails I've seen which have multiple text parts
 		// of different charsets
-		//echo $body;
 	}
 	if (strtoupper($part->subtype)=="HTML"){echo " retrieving HTML body...";
 		$body_html=getdecodevalue(imap_fetchbody($imap,$current_message,$key),$part->encoding);
@@ -280,10 +279,6 @@ foreach ($parts as $key=>$part){
 		}
 		echo $body_html;
 	}
-	// ignore related. Instead, use HTML and inline attachments
-	//if ($part->subtype=="RELATED"){echo " retrieving RELATED body..";
-	//	$related=imap_fetchbody($imap,$current_message,$key);
-	//}
 
 	if ($part->ifdisposition){
 		// save inline image data
@@ -434,51 +429,6 @@ if ($delete && $checkmail_purge) {
 	echo "Deleting Email... \r\n";
 }
 
-
-/*  experimental postprocessing of html (handling stylesheets, inline images?)
- * 
- *  basic html *should* be easy to handle, but I recommend sticking to plain text alts. 
- *  many issues are created by very complex html mails, scripts/links, necessary stylesheets that conflict with RS if included in display, etc...
- *  Even simple html emails can become unsupportable when e-mail clients do not write inline styles.
- *  This code is left here only to suggest some of the difficult problems that arise in trying to make use of HTML parts.
- * 
-function get_tag( $attr, $value, $xml, $tag=null ) {
-  if( is_null($tag) )
-    $tag = '\w+';
-  else
-    $tag = preg_quote($tag);
-
-  $attr = preg_quote($attr);
-  $value = preg_quote($value);
-
-  $tag_regex = "/<(".$tag.")[^>]*$attr\s*=\s*".
-                "(['\"])$value\\2[^>]*>(.*?)<\/\\1>/";
-
-  preg_match_all($tag_regex,
-                 $xml,
-                 $matches,
-                 PREG_PATTERN_ORDER);
-
-  return $matches[3];
-}
-
-// final pass for inline files
-// fix replace inline images with new links
-if (isset($body_html)){
-foreach ($refs as $ref){
-	echo "for resource $ref, ";
-	foreach ($files as $file){
-		if (isset($file['id'])){
-			echo "trying to match ".$file['id'];
-			$colpath=get_resource_path($file['ref'],false,"col",false);
-			//print_r(get_tag("src","cid:".$file['id'],$body_html));
-			$body_html=str_replace("cid:".$file['id'],$colpath,$body_html);	
-		}
-	}
-	update_field($ref,$checkmail_body_field,$body_html);
-}
-}
-*/
 imap_expunge($imap);
 imap_close($imap);
 clear_process_lock("checkmail");

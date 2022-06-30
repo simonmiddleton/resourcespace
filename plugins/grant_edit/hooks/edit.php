@@ -100,8 +100,7 @@ function HookGrant_editEditAppendcustomfields()
 	if(!in_array($usergroup, $grant_edit_groups) || $ref<0){return;}
 	
 	$grant_editusers=ps_query("select ea.user, u.fullname, u.username, ea.expiry from grant_edit ea left join user u on u.ref = ea.user where ea.resource = ? and (ea.expiry is NULL or ea.expiry >= NOW()) order by expiry, u.username", array("i",$ref));
-	//print_r($grant_editusers);
-	//exit();
+
 	?>
     <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo $lang["grant_edit_title"]?></h2>
     <?php
@@ -128,7 +127,6 @@ function HookGrant_editEditAppendcustomfields()
 			<?php
 			foreach($grant_editusers as $grant_edituser)
 				{
-				//print_r($grant_edituser);
 				echo "<tr id='grant_edit" . $grant_edituser['user'] . "'>
 						<td>" . (($grant_edituser['fullname']!="")?$grant_edituser['fullname']:$grant_edituser['username']) . "</td>
 						<td>" . (($grant_edituser['expiry']!="")?nicedate($grant_edituser['expiry']):$lang['never'])  . "</td>

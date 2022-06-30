@@ -81,8 +81,12 @@ foreach($savedconfigs as $savedconfig)
     $saved[$savedconfig] = $$savedconfig;
     }
     
+// Save existing $baseurl so tests will still use valid URLs
+
+$saved_url = $baseurl != "http://my.site/resourcespace" ? $baseurl : "http://localhost";
 include "../include/config.default.php";
 eval(file_get_contents("../include/config.new_installs.php"));
+$baseurl = $saved_url;
    
 foreach($saved as $key => $savedsetting)    
     {

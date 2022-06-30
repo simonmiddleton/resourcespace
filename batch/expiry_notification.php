@@ -2,8 +2,14 @@
 include(dirname(__FILE__) . "/../include/db.php");
 include_once(dirname(__FILE__) . "/../include/image_processing.php");
 
-$expired_resources = ps_query('select r.ref, r.field8 as title from resource r join resource_data rd on r.ref = rd.resource join resource_type_field rtf on
-    rd.resource_type_field = rtf.ref and rtf.type = ? where r.expiry_notification_sent <> 1 and rd.value <> "" and rd.value <= now()', array("i", FIELD_TYPE_EXPIRY_DATE));
+$expired_resources = ps_query('SELECT r.ref, r.field8 AS title 
+                                 FROM resource r 
+                                 JOIN resource_node AS rn ON r.ref = rn.resource
+                                 JOIN node n ON n.ref=rn.node
+                                 JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref AND rtf.type = ?
+                                WHERE r.expiry_notification_sent<>1 AND n.name <> "" AND n.name <= NOW()',
+                                array("i", FIELD_TYPE_EXPIRY_DATE));
+
 if (count($expired_resources)>0)
 	{
 	# Send notifications
@@ -63,14 +69,14 @@ if (count($expired_resources)>0)
 		}	
 
 	# Update notification flag so an expiry is not sent again until the expiry field(s) is edited.
-	ps_query("update resource set expiry_notification_sent = 1 where ref in (" . ps_param_insert(count($refs)) . ")", ps_param_fill($refs, "i"));
+	ps_query("UPDATE resource SET expiry_notification_sent = 1 WHERE ref IN (" . ps_param_insert(count($refs)) . ")", ps_param_fill($refs, "i"));
 	}
 
 
 // Send a notification X days prior to expiry to all users who have ever downloaded the resources
 if(isset($notify_on_resource_expiry_days))
     {
-    echo "<br>Sending a notification {$notify_on_resource_expiry_days} day(s) prior to expiry to all users who have ever downloaded these resources.";
+    echo "<br>Sending a notification {$notify_on_resource_expiry_days} day(s) prior to expiry to all users who have ever downloaded these resources.\n";
     $data = ps_query(
          'SELECT rl.`user`,
                  rte.ref AS `resource`,
@@ -79,13 +85,15 @@ if(isset($notify_on_resource_expiry_days))
             JOIN (
                      SELECT r.ref
                        FROM resource AS r
-                       JOIN resource_data AS rd ON r.ref = rd.resource
-                       JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref AND rtf.type = ?
-                      WHERE rd.`value` <> ""
-                        AND DATE(rd.`value`) = DATE(DATE_ADD(NOW(), INTERVAL ? DAY))
+                  LEFT JOIN resource_node AS rn ON r.ref = rn.resource
+                  LEFT JOIN node n ON n.ref=rn.node
+                  LEFT JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref AND rtf.type = ?
+                      WHERE n.`name` <> ""
+                        AND DATE(n.`name`) = DATE(DATE_ADD(NOW(), INTERVAL ? DAY))
                  ) AS rte ON rte.ref = rl.resource
             JOIN user AS u ON u.ref = rl.user
            WHERE rl.`type` = ?
+           GROUP BY resource, rl.user
         ORDER BY rte.ref ASC',
         array("i", FIELD_TYPE_EXPIRY_DATE, "i", (int)$notify_on_resource_expiry_days, "s", LOG_CODE_DOWNLOADED));
 

@@ -44,7 +44,7 @@ if(getval("submit","") != "")
     {
     ob_start();
     
-    $valid_fields = sql_array("SELECT ref value FROM resource_type_field WHERE type IN ('" . implode("','", $FIXED_LIST_FIELD_TYPES) . "')");
+    $valid_fields = ps_array("SELECT ref value FROM resource_type_field WHERE type IN (". ps_param_insert(count($FIXED_LIST_FIELD_TYPES)) .")", ps_param_fill($FIXED_LIST_FIELD_TYPES,'i'));
     $messages = array();
     
     if($showprogress)
@@ -80,17 +80,17 @@ if(getval("submit","") != "")
 
     $chunksize = 1000;    
     $lower=0;
-    $total = sql_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = '{$migrate_field}'",0);
+    $total = ps_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = ?",array("i",$migrate_field), 0);
 
     while($migrated < $total && ($maxrows == 0 || $migrated < $maxrows))
         {
-        $resdata = sql_query(
+        $resdata = ps_query(
             "SELECT resource,
                     `value` 
                 FROM resource_data 
-                WHERE resource_type_field = '{$migrate_field}'
+                WHERE resource_type_field = ?
                 ORDER BY resource
-                LIMIT " . $lower . "," . $chunksize
+                LIMIT ? , ?", ['i', $migrate_field, 'i', $lower, 'i', $chunksize]
             );
 
         // Process each data row
@@ -195,8 +195,8 @@ if(getval("submit","") != "")
             $fp = fopen($logfile, 'a');
             fwrite($fp, $logtext);
             fclose($fp);
-            sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
-            sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
+            ps_query("delete from resource_data where resource_type_field= ? AND resource IN (". ps_param_insert(count($resdata)) .")", array_merge(['i', $migrate_field], ps_param_fill(array_column($resdata, "resource"), 'i')));
+            ps_query("delete from resource_keyword where resource_type_field= ? AND resource IN (". ps_param_insert(count($resdata)) .")",  array_merge(['i', $migrate_field], ps_param_fill(array_column($resdata, "resource"), 'i')));
             $lower = 0;
             }
         else

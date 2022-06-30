@@ -39,15 +39,20 @@ if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag",""
 
 	if (count($ldapgroups) > 0)
 		{
-		sql_query('delete from simpleldap_groupmap where rsgroup is not null');
+		ps_query('delete from simpleldap_groupmap where rsgroup is not null');
 		}
 
 	for ($i=0; $i < count($ldapgroups); $i++)
 		{
 		if ($ldapgroups[$i] <> '' && $rsgroups[$i] <> '' && is_numeric($rsgroups[$i]))
 			{
-			$query = "replace into simpleldap_groupmap (ldapgroup,rsgroup,priority) values ('" . escape_check($ldapgroups[$i]) . "','" . $rsgroups[$i] . "' ," . (($priority[$i]!="")?"'" . escape_check($priority[$i]) . "'":"NULL") .")";
-			sql_query($query);		
+			ps_query("replace into simpleldap_groupmap (ldapgroup,rsgroup,priority) values (?, ?, ?)", 
+                [
+                'i', $ldapgroups[$i],
+                'i', $rsgroups[$i],
+                'i', (($priority[$i]!="")? $priority[$i] : NULL)
+                ]    
+            );		
 			}
 		} 
 
@@ -67,7 +72,7 @@ if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag",""
 
 
 // retrieve list if groups for use in mapping dropdown
-$rsgroups = sql_query('select ref, name from usergroup order by name asc');
+$rsgroups = ps_query('select ref, name from usergroup order by name asc');
 
 include "../../../include/header.php";
 
@@ -309,7 +314,7 @@ echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['lda
 </tr>
 
 <?php
-	$grouplist = sql_query('select ldapgroup,rsgroup, priority from simpleldap_groupmap order by priority desc');
+	$grouplist = ps_query('select ldapgroup,rsgroup, priority from simpleldap_groupmap order by priority desc');
 	for($i = 0; $i < count($grouplist)+1; $i++){
 		if ($i >= count($grouplist)){
 			$thegroup = array();

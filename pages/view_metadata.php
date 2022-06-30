@@ -210,6 +210,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
         {
+        echo "<h1>Field #{$fields[$i]['ref']}</h1>";
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
         if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] || $resource['resource_type'] == $metadata_template_resource_type)
@@ -218,6 +219,10 @@ foreach($fields_tab_names as $tab_ref => $tabname)
                 {
                 if(!hook('renderfield', '', array($fields[$i], $resource)))
                     {
+                        
+        echo "<p>displaycondition = ".json_encode($displaycondition)."</p>";
+        echo "<p>tab_ref = $tab_ref</p>";
+        echo "<p>fields[$i]['tab'] = {$fields[$i]['tab']}</p>";
                     display_field_data($fields[$i]);
                     }
                 }

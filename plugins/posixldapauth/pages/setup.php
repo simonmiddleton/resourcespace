@@ -58,13 +58,8 @@ if (isset($_POST["submit"])) {
 			$ldapauth['groupmap'][$grpName]['enabled'] = isset($_POST['ldapGroupEnable'][$grpName]);
 		}
 	}
-	//echo "<pre>";
-	//print_r($_POST);
-	//echo "</pre>";
 		
 	set_plugin_config("posixldapauth", $ldapauth);
-//	exit;
-	//redirect("pages/team/team_home.php");
 
 } else {
 	if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Submit not Detected, attempting to load config from DB "); }
@@ -332,7 +327,6 @@ include "../../../include/header.php";
 		        $tmpx = count($ldapGroupList);	
 				for ($i=0; $i < $tmpx; $i++) 
 				{
-				    //echo $ldapGroupList[$i]['cn'] ." : " . $info[$i]['gidnumber']. "<br>";
 					echo "<tr>";
 					echo '<td><input name="ldapGroupName[]" type="text" value="'. $ldapGroupList[$i]['cn'] . '" size="30" readonly="readonly"></td>';
 					echo "<td>";

@@ -106,7 +106,6 @@ if (count($resources) == 0){
 				$command .= " -rotate $rotation ";
 			}
 			$command .= " \"$newpath\"";
-			//echo "   $command<br>";
 			$shell_result = run_command($command);
 			if (file_exists($newpath) && filesize_unlimited($newpath) > 0){
 				// success!

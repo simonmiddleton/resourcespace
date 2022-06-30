@@ -14,7 +14,7 @@ include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission
 set_time_limit(0);
 
 # get all resources in the DB
-$resources=sql_query("select ref,field".$view_title_field.",file_extension from resource where ref>0 order by ref DESC");
+$resources=ps_query("select ref,field".$view_title_field.",file_extension from resource where ref>0 order by ref DESC");
 
 //loop:
 foreach($resources as $resource){
@@ -22,20 +22,20 @@ foreach($resources as $resource){
    if (file_exists($resource_path)) {
 	    $filesize=filesize_unlimited($resource_path);
 		
-		sql_query("update resource_dimensions set file_size=$filesize where resource='".$resource['ref']."'");
+		ps_query("update resource_dimensions set file_size= ? where resource= ?", ['i', $filesize, 'i', $resource['ref']]);
 		echo ("Ref: ".$resource['ref']." - ".$resource['field'.$view_title_field]." - updating resource_dimensions file_size column - ".formatfilesize($filesize)); 
 	    echo "<br />";
    
    }
 	
-   $alt_files=sql_query("select file_extension,file_name,ref from resource_alt_files where resource=".$resource['ref']);
+   $alt_files= ps_query("select file_extension,file_name,ref from resource_alt_files where resource= ?", ['i', $resource['ref']]);
    if (count($alt_files)>0){
 	   foreach ($alt_files as $alt){
 		   $alt_path=get_resource_path($resource['ref'],true,"",false,$alt['file_extension'],-1,1,false,"",$alt['ref']);
 		   if (file_exists($alt_path)){
 			   // allow to re-run script without re-copying files
 			   $filesize=filesize_unlimited($alt_path);
-			   sql_query("update resource_alt_files set file_size=$filesize where resource='".$resource['ref']."' and ref='".$alt['ref']."'");
+			   ps_query("update resource_alt_files set file_size= ? where resource= ? and ref= ?", ['i', $filesize, 'i', $resource['ref'], 'i', $alt['ref']]);
 		       echo ("&nbsp;&nbsp;&nbsp;&nbsp;ALT - ".$alt['file_name']." - updating alt file size - ".formatfilesize($filesize)); 
 	           echo "<br />";
 	       }   

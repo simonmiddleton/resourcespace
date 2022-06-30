@@ -100,7 +100,7 @@ $form_action = generateURL(
         'id' => $id,
     )
 );
-$rtfs = sql_query('SELECT * FROM resource_type_field ORDER BY title, name', 'schema');
+$rtfs = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', [],'schema');
 
 include '../../../include/header.php';
 ?>

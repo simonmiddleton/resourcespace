@@ -1,8 +1,5 @@
 <?php
-if('cli' !== PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
 $original_scramble_key = $scramble_key;
 $scramble_key          = 'c8cf6994c288cf9d75c64017c57d16b24a0fdb4f0b826c66bfa7da19541178e9';

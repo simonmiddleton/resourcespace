@@ -405,12 +405,6 @@ if (isset($ffmpeg_alternatives))
 					ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
 				}
 			}
-		/*// update the resource table with any ffmpeg_alt_previews	
-		if (count($ffmpeg_alt_previews)>0){
-			$ffmpeg_alternative_previews=implode(",",$ffmpeg_alt_previews);
-			sql_query("update resource set ffmpeg_alt_previews='".escape_check($ffmpeg_alternative_previews)."' where ref='$ref'");
-		}
-		*/
 	}
 }
 

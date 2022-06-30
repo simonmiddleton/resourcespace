@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 if(!db_use_multiple_connection_modes())
     {
@@ -50,5 +48,6 @@ catch(Throwable $e)
     $case1 = true;
     }
 if (!$case1){echo "FAIL - subtest 1 ";return false;}
+$GLOBALS["use_error_exception"]=false;
 
 return true;

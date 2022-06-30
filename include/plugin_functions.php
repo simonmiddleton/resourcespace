@@ -283,7 +283,7 @@ function get_plugin_config($name){
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
     $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
-    $configs = $configs[0];
+    $configs = $configs[0] ?? [];
     $mysql_verbatim_queries = $mysql_vq;
     if (!array_key_exists('config', $configs))
         {
@@ -496,7 +496,8 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["pluginmanager"],

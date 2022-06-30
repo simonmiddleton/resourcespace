@@ -1,10 +1,7 @@
 <?php
 include "../../include/db.php";
+command_line_only();
 
-if (php_sapi_name() != "cli")
-    {
-    exit("Permission denied");
-    }
 
 // This script renumbers resources using the provided offset to shift up/down. Files are moved accordingly.
 if (!isset($argv[1])) {exit("Usage: php renumber_resources.php [offset +/-]\n");}
@@ -88,22 +85,31 @@ for ($n=0;$n<$totalresources;$n++)
         migrate_files($ref, $newref, $alternative["ref"], $alternative["file_extension"], $sizes);
         }
 
-    # Update the ref everywhere
-    sql_query("update resource set ref='$newref' where ref='$ref'");
-    sql_query("update resource set ref='$newref' where ref='$ref'");
-    sql_query("update annotation set resource='$newref' where resource='$ref'");
-    sql_query("update collection_resource set resource='$newref' where resource='$ref'");
-    sql_query("update comment set resource_ref='$newref' where resource_ref='$ref'");
-    sql_query("update resource_license set resource='$newref' where resource='$ref'");
-    sql_query("update resource_alt_files set resource='$newref' where resource='$ref'");
-    sql_query("update resource_consent set resource='$newref' where resource='$ref'");
-    sql_query("update resource_custom_access set resource='$newref' where resource='$ref'");
-    sql_query("update resource_data set resource='$newref' where resource='$ref'");
-    sql_query("update resource_dimensions set resource='$newref' where resource='$ref'");
-    sql_query("update resource_keyword set resource='$newref' where resource='$ref'");
-    sql_query("update resource_log set resource='$newref' where resource='$ref'");
-    sql_query("update resource_node set resource='$newref' where resource='$ref'");
-    sql_query("update resource_related set resource='$newref' where resource='$ref'");
+
+
+    # The following tables are not subjected to the renumbering process and were never intended to because this is a one-off script:-
+    # collection_log, resource
+    # external_access_keys, resource
+    # grant_edit, resource
+    # propose_changes_data, resource
+    # slideshow, resource_ref
+
+    $parameters=array("i",$newref, "i",$ref);
+    # Update the ref on following tables
+    ps_query("update resource set ref=? where ref=?",$parameters);
+    ps_query("update annotation set resource=? where resource=?",$parameters);
+    ps_query("update collection_resource set resource=? where resource=?",$parameters);
+    ps_query("update comment set resource_ref=? where resource_ref=?",$parameters);
+    ps_query("update resource_license set resource=? where resource=?",$parameters);
+    ps_query("update resource_alt_files set resource=? where resource=?",$parameters);
+    ps_query("update resource_consent set resource=? where resource=?",$parameters);
+    ps_query("update resource_custom_access set resource=? where resource=?",$parameters);
+    ps_query("update resource_data set resource=? where resource=?",$parameters);
+    ps_query("update resource_dimensions set resource=? where resource=?",$parameters);
+    ps_query("update resource_keyword set resource=? where resource=?",$parameters);
+    ps_query("update resource_log set resource=? where resource=?",$parameters);
+    ps_query("update resource_node set resource=? where resource=?",$parameters);
+    ps_query("update resource_related set resource=? where resource=?",$parameters);
 
     }
-    
+

@@ -118,9 +118,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            sql_query("DELETE FROM resource_data WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
-            sql_query("DELETE FROM resource_node WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
-            sql_query("DELETE FROM resource_keyword WHERE resource='" . escape_check($ref) . "' $staticsync_mod");
+            ps_query("DELETE FROM resource_node WHERE resource= ?" . $staticsync_mod, ['i', $ref]);
             # clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
             $display_fields=get_resource_table_joins();
             if ($staticsync_mod!="")
@@ -144,10 +142,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     $clear_fields.=",";
                     }
                 }   
-            sql_query("UPDATE resource SET " . $clear_fields . " WHERE ref='" . escape_check($ref) . "'");
-            #also add the ref back into keywords:
-            add_keyword_mappings($ref, $ref , -1);
-            $extension=sql_value("SELECT file_extension value FROM resource WHERE ref='" . escape_check($ref) . "'","");
+            ps_query("UPDATE resource SET " . $clear_fields . " WHERE ref= ?", ['i', $ref]);
+            $extension=ps_value("SELECT file_extension value FROM resource WHERE ref=?",array("i",$ref), "");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
             }    
@@ -276,7 +272,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
             hook("beforeremoveexistingfile", "", array( "ref" => $ref ) );
 
-            $old_extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
+            $old_extension=ps_value("select file_extension value from resource where ref=?",array("i",$ref),"");
             if ($old_extension!="") 
                 {
                 $old_path=get_resource_path($ref,true,"",true,$old_extension);
@@ -386,12 +382,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         $has_image=",has_image=0";
         }
-    sql_query("UPDATE resource SET file_extension='$extension',preview_extension='jpg',file_modified=NOW() $has_image WHERE ref='" . escape_check($ref) . "'");
+    ps_query("UPDATE resource SET file_extension= ?,preview_extension='jpg',file_modified=NOW() $has_image WHERE ref= ?", ['s', $extension, 'i', $ref]);
     
     if(!$upload_then_process || $after_upload_processing)
         {
         # delete existing resource_dimensions
-        sql_query("DELETE FROM resource_dimensions WHERE resource='" . escape_check($ref) . "'");
+        ps_query("DELETE FROM resource_dimensions WHERE resource= ?", ['i', $ref]);
         
         # get file metadata 
         if(!$no_exif) 
@@ -576,7 +572,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
                 delete_previews($ref);
-                sql_query("update resource set has_image=0 where ref='" . escape_check($ref) . "'");
+                ps_query("update resource set has_image=0 where ref= ?", ['i', $ref]);
                 }
             }
     
@@ -596,7 +592,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         
         if(isset($upload_then_process_holding_state))
             {
-            $job_data["archive"]=sql_value("SELECT archive value from resource where ref='" . escape_check($ref) . "'", "");
+            $job_data["archive"]=ps_value("SELECT archive value from resource where ref=?", array("i",$ref), "");
             update_archive_status($ref, $upload_then_process_holding_state);
             }
         
@@ -744,7 +740,7 @@ function extract_exif_comment($ref,$extension="")
             }
 
         // We try to fetch the original filename from database.
-        $resources = sql_query("SELECT resource.file_path FROM resource WHERE resource.ref = " . $ref);
+        $resources = ps_query("SELECT resource.file_path FROM resource WHERE resource.ref = ?" ,['i', $ref]);
 
         if($resources)
             {
@@ -761,7 +757,7 @@ function extract_exif_comment($ref,$extension="")
         # Geolocation Metadata Support
         if (!$disable_geocoding && $dec_long!=0 && $dec_lat!=0)
             {
-             sql_query("update resource set geo_long='" . escape_check($dec_long) . "',geo_lat='" . escape_check($dec_lat) . "' where ref='$ref'");
+             ps_query("update resource set geo_long= ?,geo_lat= ? where ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
             }
         
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
@@ -1053,7 +1049,6 @@ function extract_exif_comment($ref,$extension="")
         if ($data!==false)
             {
             $comment="";
-            #echo "<pre>EXIF\n";print_r($data);exit();
 
             if (isset($data["ImageDescription"])) {$comment=$data["ImageDescription"];}
             if (($comment=="") && (isset($data["COMPUTED"]["UserComment"]))) {$comment=$data["COMPUTED"]["UserComment"];}
@@ -1088,10 +1083,9 @@ function extract_exif_comment($ref,$extension="")
         if (isset($info["APP13"]))
             {
             $iptc = iptcparse($info["APP13"]);
-            #echo "<pre>IPTC\n";print_r($iptc);exit();
 
             # Look for iptc fields, and insert.
-            $fields=ps_query("select * from resource_type_field where length(iptc_equiv)>0", array(), "schema");
+            $fields=ps_query("select ref, type, iptc_equiv from resource_type_field where length(iptc_equiv)>0", array(), "schema");
             for ($n=0;$n<count($fields);$n++)
                 {
                 $iptc_equiv=$fields[$n]["iptc_equiv"];
@@ -1194,7 +1188,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (!$previewonly)
         {
         // make sure the extension is the same as the original so checksums aren't done for previews
-        $o_ext=sql_value("select file_extension value from resource where ref='{$ref}'","");
+        $o_ext=ps_value("select file_extension value from resource where ref=?",array("i",$ref),"");
         if($extension==$o_ext && $checksum_required)
             {
             debug("create_previews - generate checksum for $ref");
@@ -1202,7 +1196,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             }
         }
     # first reset preview tweaks to 0
-    sql_query("update resource set preview_tweaks = '0|1' where ref = '$ref'");
+    ps_query("update resource set preview_tweaks = '0|1' where ref = ?", ['i', $ref]);
 
     // for compatibility with transform plugin, remove any
         // transform previews for this resource when regenerating previews
@@ -1221,7 +1215,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # Make sure the file exists, if not update preview_attempts so that we don't keep trying to generate a preview
     if (!file_exists($file)) 
         {
-        sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
+        ps_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref= ?", ['i', $ref]);
         return false;
         }
     
@@ -1255,7 +1249,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # Handle alternative image file generation.
     global $image_alternatives;
     # Check against the resource extension as extension might refer to a jpg preview file
-    $resource_extension = sql_value('SELECT file_extension value FROM resource WHERE ref=' . $ref . ';','');
+    $resource_extension = ps_value('SELECT file_extension value FROM resource WHERE ref=?', array("i",$ref), '');
     
     if(isset($image_alternatives) && $alternative == -1)
         {
@@ -1265,7 +1259,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             if(in_array($resource_extension, $exts))
                 {
                 # Remove any existing alternative file(s) with this name.
-                $existing = sql_query("SELECT ref FROM resource_alt_files WHERE resource = '$ref' AND name = '" . escape_check($image_alternatives[$n]['name']) . "'");
+                $existing = ps_query("SELECT ref FROM resource_alt_files WHERE resource = ? AND name = ?", ['i', $ref, 's', $image_alternatives[$n]['name']]);
                 for($m = 0; $m < count($existing); $m++)
                     {
                     delete_alternative_file($ref, $existing[$m]['ref']);
@@ -1304,7 +1298,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
                     {
                     // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
+                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
                     }
                 else
                     {
@@ -1317,7 +1311,14 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     {
                     # Update the database with the new file details.
                     $file_size = filesize_unlimited($apath);
-                    sql_query("UPDATE resource_alt_files SET file_name = '" . escape_check($image_alternatives[$n]['filename'] . '.' . $image_alternatives[$n]['target_extension']) . "', file_extension = '" . escape_check($image_alternatives[$n]['target_extension']) . "', file_size = '" . $file_size . "',creation_date=now() WHERE ref = '$aref'");
+                    ps_query("UPDATE resource_alt_files SET file_name = ?, file_extension = ?, file_size = ?,creation_date=now() WHERE ref = ?",
+                        [
+                        's', $image_alternatives[$n]['filename'] . '.' . $image_alternatives[$n]['target_extension'],
+                        's', $image_alternatives[$n]['target_extension'],
+                        'i', $file_size,
+                        'i', $aref
+                        ]    
+                    );
                     }
                 }
             }
@@ -1347,16 +1348,18 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             $sizes="";
             if ($thumbonly) {$sizes=" where id='thm' or id='col'";}
             if ($previewonly) {$sizes=" where id='thm' or id='col' or id='pre' or id='scr'";}
+            $params=[];
             if (count($onlysizes) > 0 )
                 {
                 $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
-                $sizes=" where id in ('" . implode("','", $onlysizes) . "')";   
+                $sizes=" where id in (". ps_param_insert(count($onlysizes)) .")";
+                $params= ps_param_fill($onlysizes, 's');   
                 }
 
             # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
             if ((list($sw,$sh) = @getimagesize($file))===false) {return false;}
         
-            $ps=sql_query("select * from preview_size $sizes");
+            $ps=ps_query("select " . columns_in("preview_size") . " from preview_size $sizes", $params);
             for ($n=0;$n<count($ps);$n++)
                 {
                 # fetch target width and height
@@ -1413,14 +1416,14 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     # If the source is smaller than the pre/thm/col, we still need these sizes; just copy the file
                     copy($file,get_resource_path($ref,true,$id,false,$extension,-1,1,false,"",$alternative));
                     if ($id=="thm") {
-                        sql_query("update resource set thumb_width='$sw',thumb_height='$sh' where ref='$ref'");
+                        ps_query("update resource set thumb_width= ?,thumb_height= ? where ref= ?", ['i', $sw, 'i', $sh, 'i', $ref]);
                         }
                     }
                 }
             # flag database so a thumbnail appears on the site
             if ($alternative==-1) # not for alternatives
                 {
-                sql_query("update resource set has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() where ref='$ref'");
+                ps_query("update resource set has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() where ref= ?", ['i', $ref]);
                 }
             }
         }
@@ -1534,6 +1537,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             }
         
         $sizes="";
+        $params = [];
         if ($thumbonly)
             {
             $sizes=" WHERE id='thm' or id='col'";
@@ -1545,11 +1549,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         elseif (is_array($onlysizes) && count($onlysizes) > 0 )
             {
             $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            $sizes=" WHERE id IN ('" . implode("','", $sizefilter) . "')";
+            $sizes=" WHERE id IN (". ps_param_insert(count($sizefilter)) .")";
+            $params = ps_param_fill($sizefilter, 's');
             $all_sizes= false;
             }
         
-        $ps = sql_query("SELECT * FROM preview_size $sizes ORDER BY width DESC, height DESC");
+        $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
         if($lean_preview_generation && $all_sizes)
             {
             $force_make=array("pre","thm","col");
@@ -1630,6 +1635,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             }
         
         $created_count=0;
+        $override_size = false;
         for ($n=0;$n<count($ps);$n++)
             {
             if($imagemagick_mpr)
@@ -1642,12 +1648,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if ($keep_for_hpr && $ps[$n]['id']=="hpr")
                 {
                 rename($file,$hpr_path); // $keep_for_hpr is switched to false below
+                $override_size = true; // Prevent using original file when hpr size is smaller than pre size - always create pre size.
                 }
             
             # If we've already made the LPR or SCR then use those for the remaining previews.
             # As we start with the large and move to the small, this will speed things up.
             $using_original = false;
-            if(in_array($extension, $preview_keep_alpha_extensions)) // These need to use original source for transparency
+            if(in_array(strtolower($extension), $preview_keep_alpha_extensions)) // These need to use original source for transparency
                 {
                 $file = $origfile;
                 $using_original = true;
@@ -1676,7 +1683,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if(file_exists($pre_source))
                             {
                             list($checkw,$checkh) = @getimagesize($pre_source);
-                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'])
+                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size)
                                 {
                                 $file = $pre_source;
                                 if($file == $origfile)
@@ -1709,7 +1716,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
           
             if($prefix == "cr2:" 
                 || $prefix == "nef:"
-                || in_array($extension, $preview_no_flatten_extensions)
+                || in_array(strtolower($extension), $preview_no_flatten_extensions)
                 || getval("noflatten","")!=""
                 )
                 {
@@ -1722,7 +1729,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
             $addcheckbdpre = "";
             $addcheckbdafter = "";
-            if(in_array($extension,$preview_keep_alpha_extensions))
+            if(in_array(strtolower($extension), $preview_keep_alpha_extensions))
                 {
                 // Add checkerboard code
                 $cb_scale = 100;
@@ -1916,7 +1923,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
                             {
@@ -1974,7 +1981,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array($extension,$preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
                     
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
@@ -2123,7 +2130,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array(strtolower($extension), $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
                 $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -2268,13 +2275,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             extract_mean_colour($target,$ref);
             # flag database so a thumbnail appears on the site
-            sql_query("update resource set has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() where ref='$ref'");
+            ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$ref]);
             }
         else
             {
             if(!$target)
                 {
-                sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
+                ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?",["i",$ref]);
                 }
             }
         
@@ -2334,7 +2341,17 @@ function extract_mean_colour($image,$ref)
 
     update_portrait_landscape_field($ref,$image);
 
-    sql_query("update resource set image_red='$totalred', image_green='$totalgreen', image_blue='$totalblue',colour_key='$colkey',thumb_width='$width', thumb_height='$height' where ref='$ref'");
+    ps_query("update resource set image_red= ?, image_green= ?, image_blue= ?,colour_key= ?,thumb_width= ?, thumb_height= ? where ref= ?", 
+        [
+        'i', $totalred, 
+        'i', $totalgreen, 
+        'i', $totalblue, 
+        's', $colkey, 
+        'i', $width, 
+        'i', $height, 
+        'i', $ref
+        ]
+    );
     }
 
 function update_portrait_landscape_field($ref,$image=null){
@@ -2486,10 +2503,10 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     
     # Save all images
     if ($tweak_all_images){
-        $ps=sql_query("select * from preview_size where id<>'$top'");
+        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where id<> ?", ['i', $top]);
     }
     else {
-        $ps=sql_query("select * from preview_size where (internal=1 or allow_preview=1) and id<>'$top'");
+        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where (internal=1 or allow_preview=1) and id<> ?", ['i', $top]);
     }
     for ($n=0;$n<count($ps);$n++)
         {
@@ -2521,8 +2538,14 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     if ($rotateangle!=0 && $alternative==-1)
         {
         # Swap thumb heights/widths
-        $ts=sql_query("select thumb_width,thumb_height from resource where ref='$ref'");
-        sql_query("update resource set thumb_width='" . $ts[0]["thumb_height"] . "',thumb_height='" . $ts[0]["thumb_width"] . "' where ref='$ref'");
+        $ts=ps_query("select thumb_width,thumb_height from resource where ref= ?", ['i', $ref]);
+        ps_query("update resource set thumb_width= ?,thumb_height= ? where ref= ?", 
+                [
+                'i', $ts[0]["thumb_height"],
+                'i', $ts[0]["thumb_width"],
+                'i', $ref
+                ]
+            );
         
         global $portrait_landscape_field,$lang;
         if (isset($portrait_landscape_field))
@@ -2536,11 +2559,11 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     # Update the modified date to force the browser to reload the new thumbs.
     $current_preview_tweak ='';
     if ($alternative==-1){
-        sql_query("update resource set file_modified=now() where ref='$ref'");
+        ps_query("update resource set file_modified=now() where ref= ?", ['i', $ref]);
     
     # record what was done so that we can reconstruct later if needed
     # current format is rotation|gamma. Additional could be tacked on if more manipulation options are added
-    $current_preview_tweak = sql_value("select preview_tweaks value from resource where ref = '$ref'","");
+    $current_preview_tweak = ps_value("select preview_tweaks value from resource where ref = ?",array("i",$ref), "");
     }
     
     if (strlen($current_preview_tweak) == 0)
@@ -2568,7 +2591,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
             tweak_wm_preview_images($ref,$rotateangle,$gamma,"jpg",$alternative);
         }
         if ($alternative==-1){
-            sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
+            ps_query("update resource set preview_tweaks = ? where ref = ?", ['s', $newrotate . '|' . $newgamma, 'i', $ref]);
         }
 
     if ($rotateangle != 0)
@@ -2738,9 +2761,7 @@ function generate_file_checksum($resource,$extension,$anyway=false)
         if (file_exists($path))
             {
             $checksum = get_checksum($path);
-            sql_query(sprintf("UPDATE resource SET file_checksum = '%s', last_verified = NOW(), integrity_fail = 0 WHERE ref='%s'",
-                escape_check($checksum),
-                escape_check($resource)));
+            ps_query("UPDATE resource SET file_checksum = ?, last_verified = NOW(), integrity_fail = 0 WHERE ref= ?", ['s', $checksum, 'i', $resource]);
             $generated = true;
             }
         }
@@ -2760,7 +2781,7 @@ function generate_file_checksum($resource,$extension,$anyway=false)
 
 function clear_file_checksum($resource){
     if (strlen($resource) > 0 && is_numeric($resource)){
-        sql_query("UPDATE resource SET file_checksum='' WHERE ref='$resource'");
+        ps_query("UPDATE resource SET file_checksum='' WHERE ref= ?", ['i', $resource]);
         return true;
     } else {
     return false;
@@ -2775,14 +2796,14 @@ function check_duplicate_checksum($filepath,$replace_resource){
         if ($file_checksums_50k)
             {
             # Fetch the string used to generate the unique ID
-            $use=filesize_unlimited($filepath) . "_" . file_get_contents($filepath,null,null,0,50000);
+            $use=filesize_unlimited($filepath) . "_" . file_get_contents($filepath,false,null,0,50000);
             $checksum=md5($use);
             }
         else
             {
             $checksum=md5_file($filepath);
             }
-        $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+        $duplicates=ps_array("select ref value from resource where file_checksum=?",array("s",$checksum));
         if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
             {
             return $duplicates;                       
@@ -2821,7 +2842,7 @@ function upload_preview($ref)
     create_previews($ref,false,$extension,true);
     
     # Delete temporary file, if not transcoding.
-    if(file_exists($filepath) && !sql_value("SELECT is_transcoding value FROM resource WHERE ref = '".escape_check($ref)."'", false))
+    if(file_exists($filepath) && !ps_value("SELECT is_transcoding value FROM resource WHERE ref = ?", array("i",$ref), false))
         {
         unlink($filepath);
         }
@@ -3068,7 +3089,7 @@ function AutoRotateImage($src_image, $ref = false)
         if ($ref != false) 
             {
             # use the original file to get the orientation info
-            $extension = sql_value("select file_extension value from resource where ref='{$ref}'", '');
+            $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), '');
             $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
             # get the orientation
             $orientation = get_image_orientation($file);
@@ -3338,7 +3359,7 @@ function delete_previews($resource,$alternative=-1)
     $dirinfo=pathinfo($fullsizejpgpath);    
     $resourcefolder = $dirinfo["dirname"];
 
-    $presizes=sql_array("select id value from preview_size");
+    $presizes=ps_array("select id value from preview_size",array());
     $presizes[]="snapshot"; // To include any video snapshots
     $pagecount=get_page_count($resource_data,$alternative);
     foreach($presizes as $presize)
@@ -3779,7 +3800,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' -units PixelsPerInch -density %resolution';
         }
 
-    if(in_array($sf_parts['extension'], $preview_no_flatten_extensions)
+    if(in_array(strtolower($sf_parts['extension']), $preview_no_flatten_extensions)
         || 
         (isset($actions["noflatten"]) && $actions["noflatten"] == "true")
         )

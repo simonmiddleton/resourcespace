@@ -210,7 +210,6 @@ jQuery('document').ready(function()
     });
 </script>
 <?php
-//echo "<pre>" . print_r($csv_set_options) . "</pre>";
 
 $restypearr = get_resource_types();
 $resource_types = array();

@@ -2337,6 +2337,7 @@ $lang["admin_resource_type_field_reorder_information_tab_order"]="Reordering is 
 $lang["admin_resource_type_field_reorder_mode"]="Show in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_mode_all"]="Show all fields in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_select_restype"]="Select 'All' for Resource Type in order to enable reordering ";
+$lang["admin_resource_type_field_reorder_select_enable_reordering"]="Select 'Show in display order' to enable reordering";
 $lang["admin_resource_type_fields"]="Metadata fields";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Do you want to migrate existing data?";
 $lang["admin_resource_type_field_cannot_migrate_data_prompt"] = "Resource data cannot be migrated from a fixed list field to a text field. Do you want to continue?";
@@ -3063,6 +3064,7 @@ $lang["filechecksum"]                       = "File checksum";
 $lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";
+$lang["error_search_filter_invalid"]        = "The search filter is not correctly configured for this user group. Please contact your administrator";
 $lang["action_lock"]                        = "Lock";
 $lang["action_unlock"]                      = "Unlock";
 $lang["status_locked"]                      = "Locked";

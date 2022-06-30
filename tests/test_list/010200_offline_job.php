@@ -1,10 +1,8 @@
 <?php
 
 // Validate that an offline extract_text job functions
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $testresource=create_resource(2,0);
 $settext = "This is test text from an offline job";

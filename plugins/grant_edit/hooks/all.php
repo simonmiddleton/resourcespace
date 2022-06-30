@@ -10,12 +10,13 @@ function HookGrant_editAllCustomediteaccess($ref)
 
 function HookGrant_editAllModifysearcheditable($editable_filter, $user)
 	{
-    if(!is_numeric($user) || $editable_filter == "")
+    if(!is_numeric($user) || $editable_filter->sql == "")
         {
         // There is no restriction on editing so granting edit access is moot
         return false;
         }
-    $editable_filter = " ( " . $editable_filter . " OR (r.ref IN (SELECT resource FROM grant_edit WHERE user='$user' AND (expiry IS null OR expiry>=NOW()))))";    
+    $editable_filter->sql = " ( " . $editable_filter . " OR (r.ref IN (SELECT resource FROM grant_edit WHERE user = ? AND (expiry IS null OR expiry>=NOW()))))";
+    $editable_filter->parameters = array_merge($editable_filter->parameters,["i",$user]); 
 	return $editable_filter;
     }
 

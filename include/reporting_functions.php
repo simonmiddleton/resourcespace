@@ -61,8 +61,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     # Run report with id $ref for the date range specified. Returns a result array.
     global $lang, $baseurl, $report_rows_attachment_limit;
 
-    $ref_escaped = escape_check($ref);
-    $report = sql_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = '{$ref_escaped}'");
+    $report = ps_query("SELECT ref, `name`, `query`, support_non_correlated_sql FROM report WHERE ref = ?",array("i",$ref));
 
     if (count($report) < 1)
         {
@@ -92,6 +91,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     else
         {
         // Generate report results normally
+        $sql_parameters=array();
         $sql=$report["query"];
         $sql=str_replace("[from-y]",$from_y,$sql);
         $sql=str_replace("[from-m]",$from_m,$sql);
@@ -103,10 +103,10 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         global $view_title_field;
         $sql=str_replace("[title_field]",$view_title_field,$sql);
 
-        // IF report supports being run on search results
-        if($report['support_non_correlated_sql'] === '1' && !empty($search_params))
+        // If report supports being run on search results, embed the non correlated sql necessary to feed the report
+        if($report['support_non_correlated_sql'] == 1 && !empty($search_params))
             {
-            $search_sql = do_search(
+            $returned_search = do_search(
                 $search_params['search'],
                 $search_params['restypes'],
                 $search_params['order_by'],
@@ -124,17 +124,18 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 false, # editable_only
                 true # returnsql
             );
-            if(!is_string($search_sql))
+            if(!is_string($returned_search->sql))
                 {
                 debug("Invalid SQL returned by do_search(). Report cannot be generated");
                 return false;
                 }
-            $ncsql = sprintf('(SELECT ncsql.ref FROM (%s) AS ncsql)', $search_sql);
+            $sql_parameters=array_merge($sql_parameters,$returned_search->parameters);
+            $noncorsql = sprintf('(SELECT noncorsql.ref FROM (%s) AS noncorsql)', $returned_search->sql);
 
-            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $ncsql, $sql);
+            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $noncorsql, $sql);
             }
 
-        $results = sql_query($sql);
+        $results = ps_query($sql,$sql_parameters);
         }
     
     $resultcount = count($results);
@@ -302,43 +303,21 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 function create_periodic_email($user, $report, $period, $email_days, array $user_groups, array $search_params)
     {
     # Delete any matching rows for this report/period.
-    $query = sprintf("
-            DELETE
-              FROM report_periodic_emails
-             WHERE user = '%s'
-               AND report = '%s'
-               AND period = '%s';
-        ",
-        escape_check($user),
-        escape_check($report),
-        escape_check($period)
-    );
-    sql_query($query);
+    $query = "DELETE FROM report_periodic_emails
+              WHERE user = ?
+              AND report = ?
+              AND period = ?";
+    $parameters=array("i",$user, "i",$report, "i",$period);
+    ps_query($query,$parameters);
 
     # Insert a new row.
-    $query = sprintf("
-            INSERT INTO report_periodic_emails (
-                                                   user,
-                                                   report,
-                                                   period,
-                                                   email_days,
-                                                   search_params
-                                               )
-                 VALUES (
-                            '%s', 
-                            '%s', 
-                            '%s', 
-                            '%s', 
-                            '%s'   
-                        );
-        ",
-        escape_check($user),
-        escape_check($report),
-        escape_check($period),
-        escape_check($email_days),
-        escape_check(json_encode($search_params, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK))
-    );
-    sql_query($query);
+    $query = "INSERT INTO report_periodic_emails 
+                        (user, report, period, email_days, search_params)
+                 VALUES (?,?,?,?,?)";
+    $parameters=array("i",$user, "i",$report, "i",$period, "i",$email_days, 
+                      "s",json_encode($search_params, JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK));
+    ps_query($query,$parameters);
+
     $ref = sql_insert_id();
     
     # Send to all users?
@@ -361,7 +340,7 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
                 }
             }
 
-            sql_query("UPDATE report_periodic_emails SET user_groups = '" . $ugstring . "' WHERE ref = '" . escape_check($ref) . "';");
+            ps_query("UPDATE report_periodic_emails SET user_groups = '" . $ugstring . "' WHERE ref = ?",array("i",$ref));
             }
         }
 
@@ -398,7 +377,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
     // Keep record of temporary CSV/ZIP files to delete after emails have been sent
     $deletefiles = array();
 
-    $reports=sql_query($query);
+    $reports=ps_query($query);
     foreach ($reports as $report)
         {
         $start=time()-(60*60*24*$report["period"]);
@@ -457,16 +436,12 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
         $email=$report["email"];
 
         // Check user unsubscribed from this report
-        $query = sprintf('
-                SELECT true as `value`
+        $query = 'SELECT true as `value`
                   FROM report_periodic_emails_unsubscribe
-                 WHERE user_id = "%s"
-                   AND periodic_email_id = "%s";
-            ',
-            $report['user'],
-            $report['ref']
-        );
-        $unsubscribed_user = sql_value($query, false);
+                 WHERE user_id = ?
+                   AND periodic_email_id = ?';
+        $parameters=array("i",$report['user'], "i",$report['ref']);
+        $unsubscribed_user = ps_value($query, $parameters, false);
         if(!$unsubscribed_user)
             {
             if ($echo_out) {echo $lang["sendingreportto"] . " " . $email . "<br />" . $output . $delete_link . $unsubscribe . "<br />";}
@@ -477,7 +452,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
         if(!$report['send_all_users'] && empty($report['user_groups']))
             {
             # Mark as done.
-            sql_query('UPDATE report_periodic_emails set last_sent = now() where ref = "' . $report['ref'] . '";');
+            ps_query('UPDATE report_periodic_emails set last_sent = now() where ref = ?',array("i",$report['ref']));
             
             continue;
             }
@@ -522,16 +497,12 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
                 }
 
             // Check user unsubscribed from this report
-            $query = sprintf('
-                    SELECT true as `value`
+            $query = 'SELECT true as `value`
                       FROM report_periodic_emails_unsubscribe
-                     WHERE user_id = "%s"
-                       AND periodic_email_id = "%s";
-                ',
-                $user['ref'],
-                $report['ref']
-            );
-            $unsubscribed_user = sql_value($query, false);
+                     WHERE user_id = ?
+                       AND periodic_email_id = ?';
+            $parameters=array("i",$report['user'], "i",$report['ref']);
+            $unsubscribed_user = ps_value($query, $parameters, false);
 
             if(!$unsubscribed_user)
                 {
@@ -547,7 +518,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             }
 
         # Mark as done.
-        sql_query('UPDATE report_periodic_emails set last_sent = now() where ref = "' . $report['ref'] . '";');
+        ps_query('UPDATE report_periodic_emails set last_sent = now() where ref = ?',array("i",$report['ref']));
         }
 
     $GLOBALS["use_error_exception"] = true;
@@ -568,28 +539,18 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
 function delete_periodic_report($ref)
     {
     global $userref;
-    sql_query('DELETE FROM report_periodic_emails WHERE user = "' . $userref . '" AND ref = "' . $ref . '";');
-    sql_query('DELETE FROM report_periodic_emails_unsubscribe WHERE periodic_email_id = "' . $ref . '"');
+    ps_query('DELETE FROM report_periodic_emails WHERE user = ? AND ref = ?', array("i",$userref, "i",$ref));
+    ps_query('DELETE FROM report_periodic_emails_unsubscribe WHERE periodic_email_id = ?', array("i", $ref));
 
     return true;
     }
 
 function unsubscribe_user_from_periodic_report($user_id, $periodic_email_id)
     {
-    $query = sprintf('
-            INSERT INTO report_periodic_emails_unsubscribe (
-                                                               user_id,
-                                                               periodic_email_id
-                                                           )
-                 VALUES (
-                            "%s", # user_id
-                            "%s"  # periodic_email_id
-                        );
-        ',
-        $user_id,
-        $periodic_email_id
-    );
-    sql_query($query);
+    $query = 'INSERT INTO report_periodic_emails_unsubscribe 
+                  (user_id, periodic_email_id)
+                 VALUES (?, ?)';
+    ps_query($query, array("i",$user_id, "i",$periodic_email_id));
 
     return true;
     }
@@ -643,7 +604,7 @@ function report_has_date(string $query)
  */
 function report_has_date_by_id(int $report)
     {
-    $query = sql_value("SELECT `query` as value FROM report WHERE ref = '" . escape_check($report) . "'",0);
+    $query = ps_value("SELECT `query` as value FROM report WHERE ref = ?", array("i",$report), 0);
     $result = report_has_date($query);
     return $result;
     }

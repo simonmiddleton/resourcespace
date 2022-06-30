@@ -1,6 +1,5 @@
 <?php
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 // Set up a test user to receive notifications
 $notifyuser = new_user("notifyuser005000");

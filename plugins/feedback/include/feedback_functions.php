@@ -62,7 +62,7 @@ function save_feedback_data(array $data)
     {
     if(is_array($data))
         {
-        $offset = sql_value('SELECT MIN(id) `value` FROM feedback_fields WHERE version = (SELECT MAX(version) FROM feedback_fields) ORDER BY VERSION DESC LIMIT 1', '1');
+        $offset = ps_value('SELECT MIN(id) `value` FROM feedback_fields WHERE version = (SELECT MAX(version) FROM feedback_fields) ORDER BY VERSION DESC LIMIT 1', array(), '1');
         $n      = 0;
         foreach($data as $key => $datum)
             {
@@ -72,14 +72,14 @@ function save_feedback_data(array $data)
                 }
             else
                 {
-                $type = sql_value('SELECT type AS value FROM feedback_fields WHERE id = '. ($offset+$n) ,'');
+                $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?',array("i",$offset+$n),'');
                 while($type == 4)
                     {
                     $n++;
                     # This is to skip fields that are marked as lables so that the question ids match up correctly 
-                    $type = sql_value('SELECT type AS value FROM feedback_fields WHERE id = '. ($offset+$n) ,'');;
+                    $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?', array("i",$offset+$n), '');;
                     }
-                sql_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES("'. ($offset+$n) .'","'. escape_check($datum) .'","'. escape_check($date) .'", "'. escape_check($user) .'")');
+                ps_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES(?, ?, ?, ?)', ['i', $offset+$n, 's', $datum, 's', $date, 's', $user]);
                 $n++;
                 }
             }
@@ -94,13 +94,13 @@ function update_feedback_fields(array $fielddata)
     {
     if(is_array($fielddata))
         {
-        $version = sql_value('SELECT (IFNULL(MAX(version), 0) + 1) as value FROM feedback_fields', '');
+        $version = ps_value('SELECT (IFNULL(MAX(version), 0) + 1) as value FROM feedback_fields', array(), '');
         if($version !== '')
             {
             $n=0;
             foreach($fielddata as $data)
                 {
-                sql_query('INSERT INTO feedback_fields (version, text, type, options) VALUES ("'. escape_check($version) .'","'. escape_check($data['text']) .'","'. escape_check($data['type']) .'","'. escape_check($data['options']) .'")');
+                ps_query('INSERT INTO feedback_fields (version, text, type, options) VALUES (?, ?, ?, ?)', ['i', $version, 's', $data['text'], 'i', $data['type'], 's', $data['options']]);
                 }
             }
         }

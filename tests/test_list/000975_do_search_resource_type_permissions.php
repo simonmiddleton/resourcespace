@@ -1,7 +1,6 @@
 <?php
+command_line_only();
 
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 // Test to ensure that $editable_only search returns all relevant resources that can be edited.
 
 $saved_userref = $userref;
@@ -55,15 +54,16 @@ $userref = 1;
 | Total    | 5      | 3             | 5    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("v","s","e0","e-1");
-
+$userpermissions = array("v","s","e0","e-1","f*");
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E
+
 if (!is_array($results) || count($results)!=3 || !match_values(array_column($results,'ref'),array($resourcea,$resourcec,$resourcee)))
 {
     echo "ERROR - SUBTEST A.i\n";
     return false;
 }
+
 // Search Results, all resources
 $results=do_search("subject:test000975","","ref","-1,0",-1,"asc"); //this should return all assets
 if (!is_array($results) || count($results)!=5 || !match_values(array_column($results,'ref'),array($resourcea,$resourceb,$resourcec,$resourced,$resourcee)))
@@ -113,7 +113,7 @@ if (!is_array($results) || count($results)!=5 || !match_values(array_column($res
 | Total    | 5      | 3             | 4    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("ert1","s","e0","e-1");
+$userpermissions = array("ert1","s","e0","e-1","f*");
 
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E
@@ -165,7 +165,7 @@ if (!is_array($results) || count($results)!=4 || !match_values(array_column($res
 | Total    | 3      | 3             | 3    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("ert1","e0","z-1");
+$userpermissions = array("ert1","e0","z-1","f*");
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E
 if (!is_array($results) || count($results)!=3 || !match_values(array_column($results,'ref'),array($resourcea,$resourcec,$resourcee)))
@@ -213,7 +213,7 @@ if (!is_array($results) || count($results)!=3 || !match_values(array_column($res
 | Total    | 4      | 3             | 4    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("ert1","e0","e-1","rws-1");
+$userpermissions = array("ert1","e0","e-1","rws-1","f*");
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E
 if (!is_array($results) || count($results)!=3 || !match_values(array_column($results,'ref'),array($resourcea,$resourcec,$resourcee)))
@@ -260,7 +260,7 @@ if (!is_array($results) || count($results)!=4 || !match_values(array_column($res
 | Total    | 3      | 3             | 3    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("e0","e-1");
+$userpermissions = array("e0","e-1","f*");
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E
 if (!is_array($results) || count($results)!=3 || !match_values(array_column($results,'ref'),array($resourcea,$resourcec,$resourcee)))
@@ -307,7 +307,7 @@ if (!is_array($results) || count($results)!=3 || !match_values(array_column($res
 | Total    | 3      | 3             | 3    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("e0","e-1","z-1");
+$userpermissions = array("e0","e-1","z-1","f*");
 $results=do_search('000975','','',0,-1,"desc",false,0,false,false,'',false,false,false,true);  // this should return three assets
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E
@@ -355,7 +355,7 @@ if (!is_array($results) || count($results)!=3 || !match_values(array_column($res
 | Total    | 3      | 3             | 3    | 3           |
 +----------+--------+---------------+------+-------------+
 */
-$userpermissions = array("e0","e-1","rws-1");
+$userpermissions = array("e0","e-1","rws-1","f*");
 $results=do_search('000975','','',0,-1,"desc",false,0,false,false,'',false,false,false,true);  // this should return three assets
 // Search Results, active resources
 $results=do_search("subject:test000975","","ref","0",-1,"asc"); //this should return three assets: A, C, E

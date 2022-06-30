@@ -24,12 +24,8 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 			{
 			for ($i=0; $i<count($meta[$field['resource_type']][$field['name']]['options']); $i++) 
 				{
-				//echo "ref: " . $meta[$field['resource_type']][$field['name']]['remote_ref'] . "<br>";
-				//echo "name: " . $meta[$field['resource_type']][$field['name']]['nicename'] . "<br>";
-				//echo "type " . $meta[$field['resource_type']][$field['name']]['type'] . "<br>";
 				if(isset($meta[$field['resource_type']][$field['name']]['options'][$i]))
 					{
-					//echo "options: " . $meta[$field['resource_type']][$field['name']]['options'][$i] . "<br>";
 					$meta[$field['resource_type']][$field['name']]['options'][$i]=trim ($meta[$field['resource_type']][$field['name']]['options'][$i]);
 					}
 				}

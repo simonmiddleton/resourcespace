@@ -65,7 +65,8 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
-    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,0,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
+    $getsizes = array_map('trim', $getsizes);
+    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
     
     if (!is_array($results))
         {
@@ -479,14 +480,14 @@ function api_get_user_collections()
     return get_user_collections($userref);
     }
     
-function api_add_resource_to_collection($resource,$collection='')
+function api_add_resource_to_collection($resource,$collection='',$search='')
     {
     global $usercollection;
     if($collection=='')
         {
         $collection = $usercollection;
         }
-    return add_resource_to_collection($resource,$collection);
+    return add_resource_to_collection($resource,$collection,false,'','',null,null,$search);
     }
     
 function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
@@ -606,7 +607,6 @@ function api_add_resource_nodes($resource,$nodestring)
             $joined_fields_to_update[] = $returned_node['resource_type_field'];
             }
         }
-    //$joined_fields_to_update = array_unique($joined_fields_to_update);
     foreach ($joined_fields_to_update as $field_update)
         {
         $resource_node_data = get_data_by_field($resource, $field_update);

@@ -39,7 +39,6 @@ class FindInFileTail extends \php_user_filter
         {
         while($bucket = stream_bucket_make_writeable($in))
             {
-            // echo sprintf('<h2>Filter %s - bucket #%s</h2>%s', $this->filtername, ++$this->i, nl2br($bucket->data));
             $consumed += $bucket->datalen;
             array_unshift($this->data_queue, $bucket->data);
             }
@@ -50,8 +49,6 @@ class FindInFileTail extends \php_user_filter
             array_pop($this->data_queue);
             }
         $this->data = implode('', $this->data_queue);
-        // echo sprintf('<h2>Filter %s - data</h2>%s', $this->filtername, nl2br($this->data));
-
 
         // Find lines that match our search
         if(!is_null($this->pattern))
@@ -83,7 +80,6 @@ class FindInFileTail extends \php_user_filter
 
         if($this->filtered_data !== '')
             {
-            // echo sprintf('<h2>Filter %s - filtered data</h2>%s', $this->filtername, nl2br($this->filtered_data));
             $filtered_bucket = stream_bucket_new($this->stream, $this->filtered_data);
             stream_bucket_append($out, $filtered_bucket);
 
@@ -94,7 +90,6 @@ class FindInFileTail extends \php_user_filter
             return PSFS_PASS_ON;
             }
 
-        // echo '<br>---PSFS_FEED_ME';
         return PSFS_FEED_ME;
         }
     }

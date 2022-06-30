@@ -16,8 +16,13 @@ function HookAction_datesCronCron()
 
     global $baseurl,$baseurl_short;
 
+    $validfieldtypes = [FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE];
+
     $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
-	echo "action_dates: Running cron tasks on ".date("Y-m-d h:i:s").$LINE_END;
+    if(PHP_SAPI == "cli")
+        {
+        echo "action_dates: Running cron tasks on ".date("Y-m-d h:i:s").$LINE_END;
+        }
 
     // Check for correct day of week
     if (!in_array(date("w"),$action_dates_weekdays)) {echo "action_dates: not correct weekday to run".$LINE_END; return true;}
@@ -31,7 +36,7 @@ function HookAction_datesCronCron()
         $eligible_states = $action_dates_eligible_states;
     }
 
-	$allowable_fields=ps_array("select ref as value from resource_type_field where type in (4,6,10)",[], "schema");
+	$allowable_fields=ps_array("SELECT ref AS value FROM resource_type_field WHERE type in (" . ps_param_insert(count($validfieldtypes)) . ")" , ps_param_fill($validfieldtypes,"i"),"schema");
     $email_state_refs    = array();   # List of refs which are due to undergo state change (including full deletion) in n days 
     $email_state_days    = array();   # List of days due to undergo state change (including full deletion) in n days 
     $email_restrict_refs = array();   # List of refs which are due to be restricted in n days
@@ -45,9 +50,12 @@ function HookAction_datesCronCron()
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
         $fieldinfo = get_resource_type_field($action_dates_restrictfield);
-        echo "action_dates: Checking restrict action field $action_dates_restrictfield.".$LINE_END;
+        if(PHP_SAPI == "cli")
+            {
+            echo "action_dates: Checking restrict action field $action_dates_restrictfield.".$LINE_END;
+            }
 
-        $sql = "SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource ";
+        $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource ";
         $sql_params = array();
         if(!empty($eligible_states))
             {
@@ -55,28 +63,31 @@ function HookAction_datesCronCron()
             $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
             }
 
-        $sql .= "WHERE r.ref > 0 and r.access=0 and rd.resource_type_field = ? and rd.value <>'' and rd.value is not null";
+        $sql .= "WHERE r.ref > 0 AND r.access=0 AND n.resource_type_field = ?";
         $sql_params = array_merge($sql_params, array('i',$action_dates_restrictfield));
 
         $restrict_resources=ps_query($sql,$sql_params);
-		foreach ($restrict_resources as $resource)
-			{
-			$ref=$resource["resource"];
+        foreach ($restrict_resources as $resource)
+            {
+            $ref=$resource["resource"];
 
             $restrict_date_target = date_create($resource["value"]);   # Value of the restrict date from metadata
-			
+            
             # Candidate restriction date reached or passed 
-			if ($action_date_current >= $restrict_date_target)		
-				{		
-				# Restrict access to the resource
-				$existing_access=ps_value("select access as value from resource where ref=?",["i",$ref],"");
-				if($existing_access==0) # Only apply to resources that are currently open
-					{
-					echo " - Restricting resource {$ref}".$LINE_END;
-					ps_query("update resource set access=1 where ref=?",["i",$ref]);
-					resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
-					}
-				}
+            if ($action_date_current >= $restrict_date_target)		
+                {
+                # Restrict access to the resource
+                $existing_access=ps_value("SELECT access AS value FROM resource WHERE ref = ?",["i",$ref],"");
+                if($existing_access==0) # Only apply to resources that are currently open
+                    {
+                    if(PHP_SAPI == "cli")
+                        {
+                        echo " - Restricting resource {$ref}".$LINE_END;
+                        }
+                    ps_query("UPDATE resource SET access=1 WHERE ref = ?",["i",$ref]);
+                    resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
+                    }
+                }
             else
                 {
                 # Due to restrict in n days
@@ -102,19 +113,22 @@ function HookAction_datesCronCron()
         $change_archive_state = false;
 
         $fieldinfo = get_resource_type_field($action_dates_deletefield);
-        echo "action_dates: Checking state action field $action_dates_deletefield.".$LINE_END;
+        if(PHP_SAPI == "cli")
+            {
+            echo "action_dates: Checking state action field $action_dates_deletefield.".$LINE_END;
+            }
 
         if($action_dates_reallydelete)
             {
             # FULL DELETION - Build candidate list of resources which have the deletion date field populated
-            $sql  ="SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource ";
+            $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource ";
             $sql_params = array();
             if(!empty($eligible_states))
                 {
                 $sql .= "AND r.archive IN (" . ps_param_insert(count($eligible_states)) . ") ";
                 $sql_params = array_merge($sql_params,ps_param_fill($eligible_states,"i"));
                 }
-            $sql .="WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL";
+            $sql .="WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params=array_merge($sql_params,array("i",$action_dates_deletefield));
             $candidate_resources = ps_query($sql,$sql_params);
             }
@@ -127,7 +141,7 @@ function HookAction_datesCronCron()
                 }
             # NOT FULL DELETION - Build candidate list of resources which have the deletion date field populated
             #                     and which are neither in the resource deletion state nor in the action dates new state
-            $sql = "SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource ";
+            $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource ";
             $sql_params = array();
 
             if (!empty($eligible_states))
@@ -139,7 +153,7 @@ function HookAction_datesCronCron()
             $sql .= " AND r.archive NOT IN (?,?) ";
             $sql_params = array_merge($sql_params,["i",$resource_deletion_state,"i",$action_dates_new_state]);
 
-            $sql .= "WHERE r.ref > 0 AND rd.resource_type_field = ? AND value <> '' AND rd.value IS NOT NULL ";
+            $sql .= "WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params = array_merge($sql_params,["i",$action_dates_deletefield]);
 
             $candidate_resources = ps_query($sql,$sql_params);
@@ -164,16 +178,18 @@ function HookAction_datesCronCron()
             # Candidate deletion date reached or passed 
             if ($action_date_current >= $action_date_target)
                 {
-                if(!$change_archive_state)
+                if(PHP_SAPI == "cli")
                     {
-                    // Delete the resource as date has been reached
-                    echo " - Deleting resource {$ref}".$LINE_END;
+                    if(!$change_archive_state)
+                        {
+                        // Delete the resource as date has been reached
+                        echo " - Deleting resource {$ref}".$LINE_END;
+                        }
+                    else
+                        {
+                        echo " - Moving resource {$ref} to archive state '{$resource_deletion_state}'".$LINE_END;
+                        }
                     }
-                else
-                    {
-                    echo " - Moving resource {$ref} to archive state '{$resource_deletion_state}'".$LINE_END;
-                    }
-                
                 if ($action_dates_reallydelete)
                     {
                     # FULL DELETION
@@ -187,7 +203,7 @@ function HookAction_datesCronCron()
                     if($action_dates_remove_from_collection)
                         {
                         // Remove the resource from any collections
-                        ps_query("delete from collection_resource where resource=?",["i",$ref]);
+                        ps_query("DELETE FROM collection_resource WHERE resource=?",["i",$ref]);
                         }
                 
                     }
@@ -309,7 +325,10 @@ function HookAction_datesCronCron()
                 
         if (count($admin_notify_users)>0)
             {
-            echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+            if(PHP_SAPI == "cli")
+                {
+                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+                }
             # Note that message_add can also send an additional email
             message_add($admin_notify_users,$notification_restrict,$url_restrict,0);
             message_add($admin_notify_users,$notification_state,$url_state,0);
@@ -336,7 +355,10 @@ function HookAction_datesCronCron()
                 
         if (count($admin_notify_users)>0)
             {
-            echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+            if(PHP_SAPI == "cli")
+                {
+                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+                }
             # Note that message_add can also send an additional email
             message_add($admin_notify_users,$notification_state,$url,0);
             }
@@ -358,12 +380,14 @@ function HookAction_datesCronCron()
                 
         if (count($admin_notify_users)>0)
             {
-            echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+            if(PHP_SAPI == "cli")
+                {
+                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+                }
             # Note that message_add can also send an additional email
             message_add($admin_notify_users,$notification_restrict,$url,0);
             }
         }
-        
 
     # Perform additional actions if configured
     foreach($action_dates_extra_config as $action_dates_extra_config_setting)
@@ -373,16 +397,18 @@ function HookAction_datesCronCron()
         $newstatus = $action_dates_extra_config_setting["status"];
         if(in_array($datefield['type'],$DATE_FIELD_TYPES))
             {
-            echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . $LINE_END;
+            if(PHP_SAPI == "cli")
+                {
+                echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . $LINE_END;
+                }
             $sql="SELECT 
-                rd.resource, 
-                rd.value 
-            FROM resource_data rd 
-                LEFT JOIN resource r ON r.ref=rd.resource 
+                rn.resource, 
+                n.name AS value 
+            FROM resource_node rn 
+                LEFT JOIN resource r ON r.ref=rn.resource 
+                LEFT JOIN node n ON n.ref=rn.node
             WHERE r.ref > 0 
-                AND rd.resource_type_field = ? 
-                AND rd.value <> '' 
-                AND rd.value IS NOT null 
+                AND n.resource_type_field = ?
                 AND r.archive<> ? 
                 AND r.archive<> ?";
             
@@ -392,15 +418,18 @@ function HookAction_datesCronCron()
                 "i",$newstatus
             );
             $additional_resources=ps_query($sql,$sql_params);
-            
+
             foreach ($additional_resources as $resource)
                 {
                 $ref=$resource["resource"];
 			
-                if (time()>=strtotime($resource["value"]))		
-                    {		
-                    echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus].$LINE_END;
-                    update_archive_status($ref, $newstatus);		
+                if (time()>=strtotime($resource["value"]))
+                    {
+                    if(PHP_SAPI == "cli")
+                        {
+                        echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus].$LINE_END;
+                        }
+                    update_archive_status($ref, $newstatus);
                     }
                 }
             }

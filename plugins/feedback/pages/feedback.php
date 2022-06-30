@@ -116,7 +116,7 @@ if (getval("send","")!="" && enforcePostRequest(false))
 		fclose($f);
 		
 		# install email template
-		$result = ps_query("SELECT * FROM site_text WHERE page='all' AND name = 'emailfeedback'");
+		$result = ps_query("SELECT " . columns_in("site_text") . " FROM site_text WHERE page='all' AND name = 'emailfeedback'");
 		if (count($result) == 0)
 			{
 			$email_text = "[img_headerlogo][message] [text_footer]";

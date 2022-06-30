@@ -30,11 +30,12 @@ set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,"Checking for any missing resource_dat
 
 $last_check_field=get_sysvar("resource_node_check_field");
 
-$resource_type_fields=sql_query("SELECT * FROM `resource_type_field` WHERE `type` IN (" . implode(',',$FIXED_LIST_FIELD_TYPES) . ") and ref>'" . $last_check_field . "' ORDER BY `ref`");
+$resource_type_fields=ps_query("SELECT * FROM `resource_type_field` WHERE `type` IN (". ps_param_insert(count($FIXED_LIST_FIELD_TYPES)) .") and ref> ? ORDER BY `ref`",
+                                array_merge(ps_param_fill($FIXED_LIST_FIELD_TYPES, 'i'), ['i', $last_check_field]));
 
 foreach($resource_type_fields as $resource_type_field)
     {
-    $resource_data_entries=sql_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field={$resource_type_field['ref']}");
+    $resource_data_entries=ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field= ?", ['i', $resource_type_field['ref']]);
     $datarowcount=count($resource_data_entries);
 	$out = PHP_EOL . "Updating resource_node values for resource_type_field {$resource_type_field['ref']}:{$resource_type_field['name']}" . 
         " (" . $datarowcount . " rows found)" . PHP_EOL;

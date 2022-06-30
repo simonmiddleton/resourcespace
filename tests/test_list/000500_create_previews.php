@@ -1,5 +1,6 @@
 <?php
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
+
 include_once(dirname(__FILE__) . "/../../include/image_processing.php");
 
 # Copy the default slideshow image to the location of the first resource

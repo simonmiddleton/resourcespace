@@ -181,7 +181,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 			unset($notes);
 			if ($resources[$n]['annotation_count']!=0)
 				{
-				$notes=sql_query("select * from annotate_notes where ref='$ref' and page='$page'");
+				$notes=ps_query("select ref,top_pos,left_pos,width,height,preview_width,preview_height,note,note_id,user,page from annotate_notes where ref=? and page=?",array("i",$notes,"i",$page));
 				$notepages=1; // Normally notes will all fit on one page, but may not
 				foreach ($notes as $note)
 					{

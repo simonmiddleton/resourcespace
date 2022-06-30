@@ -12,7 +12,7 @@ $getuserref=(getvalescaped("getuserref",""));
 if (!empty($getuserref))
     {
     ob_clean();
-    echo sql_value("select max(ref) as value from user where username='" . escape_check($getuserref) . "'",'');
+    echo ps_value("select max(ref) as value from user where username=?",array("s",$getuserref), '');
     return;
     }
 

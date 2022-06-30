@@ -754,9 +754,7 @@ window.onresize=function()
 </script>
 <?php
 // Non-ajax specific hook 
-hook("start_centralspace");
-
-	
+hook("start_centralspace");	
 
 if ($k!="" && !$internal_share_access) { ?>
 <style>
@@ -772,4 +770,3 @@ if ($ajax) {
     <?php
     hook("afterheaderajax");
 }
-?>

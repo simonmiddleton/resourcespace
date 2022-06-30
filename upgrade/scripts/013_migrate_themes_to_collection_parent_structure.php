@@ -25,28 +25,28 @@ foreach($featured_collections as $collection)
             continue;
             }
 
-        $parent_sql_val = sql_is_null_or_eq_val((string) $parent, is_null($parent));
+        $parent_params = [];
+        if(is_null($parent))
+            {
+            $parent_sql = 'IS NULL';
+            }
+        else
+            {
+            $parent_sql = '= ?'; $parent_params = ['i', $parent];
+            }
         $new_fc_name = escape_check($collection[$col]);
 
         logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent {$parent_sql_val}");
 
-        $fc_ref = sql_value(
-            sprintf("SELECT ref AS `value` FROM collection WHERE `name` = '%s' AND public = 1 AND `type` = '%s' AND parent %s",
-                $new_fc_name,               // name
-                COLLECTION_TYPE_FEATURED,   // type
-                $parent_sql_val             // parent
-            ), null);
+        $fc_ref = ps_value(
+            "SELECT ref AS `value` FROM collection WHERE `name` = ? AND public = 1 AND `type` = ? AND parent " . $parent_sql,
+            array_merge(['s', $collection[$col], 'i', COLLECTION_TYPE_FEATURED], $parent_params),null);
 
         if(is_null($fc_ref))
             {
-            $sql = sprintf("INSERT INTO collection(name, public, type, parent, thumbnail_selection_method) VALUES ('%s', 1, '%s', %s, %s)",
-                $new_fc_name,
-                COLLECTION_TYPE_FEATURED,
-                sql_null_or_val((string) $parent, is_null($parent)),
-                $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"]
-            );
+            $sql = "INSERT INTO collection(name, public, type, parent, thumbnail_selection_method) VALUES ( ?, 1, ?, ?, ?)";
             logScript($sql);
-            sql_query($sql);
+            ps_query($sql, ['s', $new_fc_name, 'i', COLLECTION_TYPE_FEATURED, 'i', $parent, 'i', $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"]]);
             $fc_ref = sql_insert_id();
             logScript("Created new FC #{$fc_ref}");
             }
@@ -57,12 +57,14 @@ foreach($featured_collections as $collection)
     
     // The necessary parts of the tree now exist to support this collection. Drop it into the tree.
     logScript("Update collection parent for the actual collection: {$collection["ref"]} with parent '$parent'");
-    sql_query(sprintf("UPDATE collection SET `type` = '%s', parent = %s, thumbnail_selection_method = '%s' WHERE ref = '%s'",
-        COLLECTION_TYPE_FEATURED,
-        sql_null_or_val((string) $parent, is_null($parent)),
-        $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],
-        $collection["ref"]        
-    ));
+    ps_query("UPDATE collection SET `type` = ?, parent = ?, thumbnail_selection_method = ? WHERE ref = ?", 
+        [
+        'i', COLLECTION_TYPE_FEATURED, 
+        'i', (is_null($parent)?NULL:$parent), 
+        'i', $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"], 
+        'i', $collection["ref"]
+        ]
+    );
     }
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Successfully migrated themes to collections using the parent structure");

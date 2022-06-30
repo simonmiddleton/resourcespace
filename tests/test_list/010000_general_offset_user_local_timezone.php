@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $date_time = date('Y-m-d H:i:s', strtotime('2019-04-05 12:00:00'));
 $use_cases = array(

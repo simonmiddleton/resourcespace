@@ -4,7 +4,7 @@ function HookRse_workflowAllInitialise()
 	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
 	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
-     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
+     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates, $workflowicons;
     
     # Update $archive_states and associated $lang variables with entries from database
     $searchstates = array();
@@ -26,6 +26,10 @@ function HookRse_workflowAllInitialise()
             $searchstates[] = $wfstateref;
             }
         $lang["status" . $wfstateref] =  i18n_get_translated($wfstate["name"]);
+        if(isset($wfstate['icon']) && trim($wfstate['icon']) != "")
+            {
+            $workflowicons[$wfstateref] = trim($wfstate['icon']);
+            }
 		}
     natsort($additional_archive_states);		 
     }
@@ -78,23 +82,23 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             $resdata = get_resource_data($resourceref);
             if(isset($resdata['created_by']) && is_numeric($resdata['created_by']))
                 {
-                $contuser = ps_query('SELECT ref, email FROM user WHERE ref = ?', array("i",$resdata['created_by']));
-                if(count($contuser) == 0)
+                $contuser = get_user($resdata['created_by']);
+                if(!$contuser)
                     {
                     // No contributor listed
-                    debug("No contributor listed for resource " . $resourceref);
+                    debug("No valid contributor listed for resource " . $resourceref);
                     continue;
                     }
                     
-                if(!isset($cntrb_arr[$contuser[0]["ref"]]))
+                if(!isset($cntrb_arr[$contuser["ref"]]))
                     {
                     // This contributor needs to be added to the array of users to notify
-                    $cntrb_arr[$contuser[0]["ref"]] = array();
-                    $cntrb_arr[$contuser[0]["ref"]]["resources"] = array();
-                    $cntrb_arr[$contuser[0]["ref"]]["email"] = $contuser[0]["email"];
-                    $cntrb_arr[$contuser[0]["ref"]]["username"] = $contuser[0]["username"];
+                    $cntrb_arr[$contuser["ref"]] = array();
+                    $cntrb_arr[$contuser["ref"]]["resources"] = array();
+                    $cntrb_arr[$contuser["ref"]]["email"] = $contuser["email"];
+                    $cntrb_arr[$contuser["ref"]]["username"] = $contuser["username"];
                     }
-                $cntrb_arr[$contuser[0]["ref"]]["resources"][] = $resourceref;
+                $cntrb_arr[$contuser["ref"]]["resources"][] = $resourceref;
                 }
             }
         // Construct messages for each user    

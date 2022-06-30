@@ -69,7 +69,8 @@ foreach($foldercontents as $objectindex => $object)
     // get resource by $filename_field
     if($filename_field != 0)
         {
-        $target_resources = ps_array("select resource value from resource_data where resource_type_field = ? and value = ?", array("i", $filename_field, "s", $filename), "");
+        $target_resources = ps_array("SELECT resource value FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE n.resource_type_field = ? AND n.name = ?", ["i", $filename_field, "s", $filename], "");
+
         $valid_resources=array_values(array_intersect($target_resources,$replace_resources));
         
         if(count($valid_resources) == 1)

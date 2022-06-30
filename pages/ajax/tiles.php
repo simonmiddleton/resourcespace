@@ -105,7 +105,6 @@ while((     !is_file($file)
                     }
                 
                 $url = str_replace($find,$replace,$url);
-                //echo($url);
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_HEADER, true);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -118,8 +117,6 @@ while((     !is_file($file)
                 $header = substr($cresponse, 0, $headersize);
                 $body = substr($cresponse, $headersize);
                 curl_close($ch);
-
-                //print_r($cresponse);
         
                 if($cerror == 200)
                     {

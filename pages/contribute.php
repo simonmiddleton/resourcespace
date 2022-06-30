@@ -40,19 +40,9 @@ foreach(get_workflow_states() as $workflow_state)
         ));
     $ws_a_text = str_replace('%workflow_state_name', $lang["status{$workflow_state}"], $lang["view_my_contributions_ws"]);
     
-    # Some default icons for the standard workflow states
-    switch($workflow_state)
-        {
-        case -2: $icon="file-import"; break;
-        case -1: $icon="eye"; break;
-        case 0: $icon="check"; break;
-        case 1: $icon="clock"; break;
-        case 2: $icon="archive"; break;
-        case 3: $icon="trash"; break;
-        default: $icon="cogs"; # All additional workflow states show gears icon to indicate workflow
-        }
+    $icon = $workflowicons[$workflow_state] ?? (WORKFLOW_DEFAULT_ICONS[$workflow_state] ?? WORKFLOW_DEFAULT_ICON);   
     ?>
-    <li><i class="fa fa-fw fa-<?php echo $icon ?>"></i> <a href="<?php echo $ws_a_href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo htmlspecialchars($ws_a_text); ?></a></li>
+    <li><a href="<?php echo $ws_a_href; ?>" onClick="return CentralSpaceLoad(this, true);"><i class="fa-fw <?php echo $icon ?>"></i>&nbsp;<?php echo htmlspecialchars($ws_a_text); ?></a></li>
     <?php
     }
 

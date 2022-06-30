@@ -65,10 +65,10 @@ else
     }
 $encoding = mysqli_character_set_name($db["read_write"]);
 $encoding_str = str_replace("%encoding", $encoding, $lang["client-encoding"]);
-$db_encoding = sql_value("
+$db_encoding = ps_value("
     SELECT default_character_set_name AS `value`
       FROM information_schema.SCHEMATA
-     WHERE `schema_name` = '" . escape_check($mysql_db) . "';", $lang["unknown"]);
+     WHERE `schema_name` = ?;", array("s",$mysql_db),$lang["unknown"]);
 $db_encoding_str = str_replace("%encoding", $db_encoding, $lang["db-default-encoding"]);
 $encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str}";
 ?>
@@ -213,7 +213,7 @@ if ($collection_download || isset($zipcommand)) # Only check if it is going to b
 
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
 $php_tz = date_default_timezone_get();
-$mysql_tz = sql_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", '');
+$mysql_tz = ps_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", array(), '');
 $tz_check_fail_msg = str_replace(array('%phptz%', '%mysqltz%'), array($php_tz, $mysql_tz), $lang['server_timezone_check_fail']);
 $timezone_check = "{$lang['status-warning']}: {$tz_check_fail_msg}";
 if($php_tz == $mysql_tz)
@@ -227,7 +227,7 @@ if($php_tz == $mysql_tz)
 </tr>
 <tr>
 <td><?php echo $lang["lastscheduledtaskexection"] ?></td>
-<td><?php $last_cron=sql_value("select datediff(now(),value) value from sysvars where name='last_cron'",$lang["status-never"]);echo $last_cron ?></td>
+<td><?php $last_cron=ps_value("select datediff(now(),value) value from sysvars where name='last_cron'",array(),$lang["status-never"]);echo $last_cron ?></td>
 <td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo $lang["status-warning"] ?></b><br/><?php echo $lang["executecronphp"] ?><?php } else {?><b><?php echo $lang["status-ok"] ?></b><?php } ?></td>
 </tr>
 

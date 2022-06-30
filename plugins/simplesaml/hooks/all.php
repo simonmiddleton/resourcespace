@@ -123,7 +123,7 @@ function HookSimplesamlAllProvideusercredentials()
             {
             debug("simplesaml: checking for anonymous user");
             $anonymous_login_escaped = escape_check($anonymous_login);
-            $anonymous_login_found   = sql_value("SELECT username AS `value` FROM user WHERE username = '{$anonymous_login_escaped}'", '');
+            $anonymous_login_found   = ps_value("SELECT username AS `value` FROM user WHERE username = ?", array("s",$anonymous_login_escaped), '');
 
             // If anonymous_login is not set to a real username then use SSO to authenticate
             if($anonymous_login_found == '')

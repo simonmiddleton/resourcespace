@@ -1,8 +1,6 @@
 <?php
-if(PHP_SAPI != 'cli')
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Defaults arguments which we don't have to test
 $order_by = 'name';

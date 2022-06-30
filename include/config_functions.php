@@ -23,7 +23,7 @@
  * </code>
  * 
  * @param string $fieldname Name to use for the field.
- * @param string $opt_array Array of options to fill the select with
+ * @param array $opt_array Array of options to fill the select with
  * @param mixed $selected If matches value the option is marked as selected
  * @param string $groupby Column to group by
  * @return string HTML output.
@@ -221,7 +221,7 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 */
 function get_config_option_users($option,$value)
     {
-    $users = sql_array("SELECT user value FROM user_preferences WHERE parameter = '" . escape_check($option). "' AND value='" . escape_check($value) . "'","preferences");
+    $users = ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value=?",array("s",$option,"s",$value), "preferences");
     return $users;   
     }
 
@@ -235,15 +235,19 @@ function get_config_option_users($option,$value)
 */
 function get_config_options($user_id, array &$returned_options)
     {
-    $query = sprintf('
-            SELECT parameter,
-                   `value`
-              FROM user_preferences
-             WHERE %s;
-        ',
-        is_null($user_id) ? 'user IS NULL' : 'user = \'' . escape_check($user_id) . '\''
-    );
-    $config_options = sql_query($query,"preferences");
+    $params = [];
+    if(is_null($user_id))
+        {
+        $sql = 'user IS NULL';
+        }
+    else
+        {
+        $sql = 'user = ?';
+        $params = ['i', $user_id];
+        }
+
+    $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql;
+    $config_options = ps_query($query, $params,"preferences");
 
     if(empty($config_options))
         {
@@ -872,16 +876,18 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
     {
     global $lang;
 	$fieldtypefilter="";
+    $params = [];
 	if(count($ftypes)>0)
 		{
-		$fieldtypefilter = " type in ('" . implode("','", $ftypes) . "')";
+		$fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
+        $params = ps_param_fill($ftypes, 'i');
 		}
 		
     if($rtype===false){
-    	$fields=sql_query('select * from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', "schema");
+    	$fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
     }
     else{
-    	$fields=sql_query("select * from resource_type_field where resource_type='$rtype' " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", "schema");
+    	$fields= ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where resource_type= ? " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", array_merge(['i', $rtype], $params),"schema");
     }
 ?>
   <div class="Question">
@@ -1182,7 +1188,7 @@ function get_header_image($full = false)
         }
     else 
         {
-        $header_img_src = $baseurl.'/gfx/titles/title.svg';
+        $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
         }
         
     return $header_img_src;

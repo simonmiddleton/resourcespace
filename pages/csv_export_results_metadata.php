@@ -28,7 +28,7 @@ if($submitted && $resultcount > 0)
     $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
     $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
    
-    if($offline || $resultcount > $metadata_export_offline_limit)
+    if($offline || (($resultcount > $metadata_export_offline_limit) && $offline_job_queue))
         {
         // Generate offline job 
         $job_data=array();

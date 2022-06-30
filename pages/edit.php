@@ -472,10 +472,9 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         $used=$avail-$free;
         }
         
-    # echo "free: ".$free."<br/>";
     # convert limit
     $limit=$disk_quota_limit_size_warning_noupload*1024*1024*1024;
-    # echo "no_upload: ".$limit."<br/>";
+
     # compare against size setting
     if($free<=$limit)
         {
@@ -627,6 +626,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $fielderror = false;
                                 if($field['required'] == 1
                                     && $field['hide_when_uploading'] != 1
+                                    && !checkperm('F' . $field["ref"])
                                     &&  (
                                         $field["resource_type"] == $resource["resource_type"]
                                         ||
@@ -1394,7 +1394,7 @@ hook("editbefresmetadata"); ?>
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != ""
+                        (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 
                             && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
@@ -1674,11 +1674,11 @@ if($upload_here)
     }
 
 if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
-        {
-        // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
-        // $fields and $all_selected_nodes are passed by reference and so changed by this
-        copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited);
-        }
+    {
+    // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
+    // $fields and $all_selected_nodes are passed by reference and so changed by this
+    copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited);
+    }
 
 # if this is a metadata template, set the metadata template title field at the top
 if (($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){

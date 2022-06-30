@@ -242,7 +242,7 @@ if ($saveaction != '' && enforcePostRequest(false))
 
     // Determine output format
     // prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
-    $new_ext = getval("new_ext","");
+    $new_ext = strtolower(getval("new_ext",""));
     if ($saveaction == "slideshow" || $saveaction == "preview")
         {
         $new_ext = "jpg";
@@ -446,6 +446,7 @@ if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
         array(
             'title' => $lang["systemsetup"],
             'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manage_slideshow"],

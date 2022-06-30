@@ -76,7 +76,7 @@ if ($exiftool_fullpath==false) {die ("Could not find Exiftool.");}
 
 foreach ($fieldrefs as $fieldref)
     {
-    $fieldref_info= sql_query("select exiftool_field,exiftool_filter,title,resource_type,name,type from resource_type_field where ref='$fieldref'");
+    $fieldref_info= ps_query("select exiftool_field,exiftool_filter,title,resource_type,name,type from resource_type_field where ref= ?", ['i', $fieldref]);
     if (!isset($fieldref_info[0])){die("field $fieldref doesn't exist");}
     $title=$fieldref_info[0]["title"];
     $name=$fieldref_info[0]["name"];
@@ -95,20 +95,22 @@ foreach ($fieldrefs as $fieldref)
     $join="";
     $condition = "";
     $conditionand = "";
+    $params = [];
     if ($collectionid != 0)
         {
         $join=" inner join collection_resource on collection_resource.resource=resource.ref "; 
-        $condition = "where collection_resource.collection = '$collectionid' ";
-        $conditionand = "and collection_resource.collection = '$collectionid' ";
+        $condition = "where collection_resource.collection = ?";
+        $conditionand = "and collection_resource.collection = ?";
+        $params  = ['i', $collectionid];
         }
     
     if($field_resource_type==0)
         {
-        $rd=sql_query("select ref,file_extension from resource $join $condition order by ref");
+        $rd= ps_query("select ref,file_extension from resource $join $condition order by ref", $params);
         }
     else
         {
-        $rd=sql_query("select ref,file_extension from resource $join where resource_type=$field_resource_type $conditionand order by ref");
+        $rd= ps_query("select ref,file_extension from resource $join where resource_type= ? $conditionand order by ref", array_merge(['i', $field_resource_type], $params));
         }	
     $exiftool_tags=explode(",",$exiftool_tag);
     for ($n=0;$n<count($rd);$n++)

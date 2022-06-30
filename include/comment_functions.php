@@ -126,7 +126,7 @@ function comments_submit()
  */
 function clean_comment_tree($ref)
     {
-    $all_comments = ps_query("SELECT * FROM comment WHERE ref_parent = ?", ['i', $ref]);
+    $all_comments = ps_query("SELECT " . columns_in("comment") . " FROM comment WHERE ref_parent = ?", ['i', $ref]);
     $remaining = 0;
     
     if(count($all_comments) > 0)
@@ -373,7 +373,7 @@ EOT;
             echo "</div>";
 
 
-            echo "<div class='CommentEntryInfoDetails'>" . strftime('%a',strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";
+            echo "<div class='CommentEntryInfoDetails'>" . date("D", strtotime($comment["created"])) . " " . nicedate($comment["created"], true, true, true). " ";
             echo "</div>";	// end of CommentEntryInfoDetails
             echo "</div>";	// end of CommentEntryInfoLine
             echo "</div>";	// end CommentEntryInfoContainer

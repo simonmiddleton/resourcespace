@@ -32,7 +32,7 @@ if ($filter_by_permissions != "")
 			{
 			$sql_permision_filter="(";
 			}
-		$permission = preg_replace('(\W+)','\\\\\\\$0',$permission);		// we need to pass two "\" before the escaped char for regex to take it literally (doubled here as sql_query() will convert most of them)
+		$permission = preg_replace('(\W+)','\\\\\\\$0',$permission);		// we need to pass two "\" before the escaped char for regex to take it literally (doubled here as ps_query() will convert most of them)
 		$sql_permision_filter .= "(usergroup.permissions regexp binary '^{$permission}|,{$permission},|,{$permission}\$|^{$permission}\$' OR (find_in_set('permissions',usergroup.inherit_flags) AND parentusergroup.permissions regexp binary '^{$permission}|,{$permission},|,{$permission}\$|^{$permission}\$'))";
 		}
 	$sql_permision_filter .= ")";
@@ -67,7 +67,7 @@ $groups=sql_query("
 );
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($groups);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
@@ -101,7 +101,8 @@ function addColumnHeader($orderName, $labelKey)
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+			'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["page-title_user_group_management"],

@@ -105,7 +105,7 @@ function load_plugins($plugins_dir)
                     {
                     $plugins_avail[$file][$key] = $value ;
                     }
-                $plugins_avail[$file]['config']=(sql_value("SELECT config AS value FROM plugins WHERE name='$file'",'') != '');
+                $plugins_avail[$file]['config']=(ps_value("SELECT config AS value FROM plugins WHERE name=?",array("s",$file), '') != '');
                 # If no yaml, or yaml file but no description present, 
                 # attempt to read an 'about.txt' file
                 if ($plugins_avail[$file]["desc"]=="")
@@ -211,7 +211,8 @@ include "../../include/header.php"; ?>
 $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["pluginmanager"]
@@ -414,7 +415,7 @@ if (count($inst_plugins)>0)
                }
             if (!$p['disable_group_select'])
                 {
-                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim($p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
+                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim((string) $p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
                 $p['enabled_groups'] = array($p['enabled_groups']);
                 }
             if ($p['config_url']!='')        

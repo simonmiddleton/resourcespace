@@ -1,10 +1,8 @@
 <?php
 
 // Validate that usergroup download_limit functions
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Set up group with limit
 ps_query("insert into usergroup (name, permissions) VALUES ('Limited group', 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3')");
