@@ -12,7 +12,7 @@
  */
 function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
     {
-    $text=trim($text);
+    $text=trim((string) $text);
     global $lang;
 
     if (is_array($mixedprefix)) {$prefix = $mixedprefix;}

@@ -2897,7 +2897,10 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
 
             // Sort nodes
-            if(in_array($fields[$n]['type'],$FIXED_LIST_FIELD_TYPES) && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE && trim($fields[$n]['nodes']) != "" && (bool)$fields[$n]['automatic_nodes_ordering'])
+            if(in_array($fields[$n]['type'],$FIXED_LIST_FIELD_TYPES) 
+                && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE 
+                && trim($fields[$n]['nodes']??"") != "" 
+                && (bool)$fields[$n]['automatic_nodes_ordering'])
                 { 
                 $fieldnoderefs = explode(",",$fields[$n]['nodes']);
                 $fieldnodes = get_nodes_by_refs($fieldnoderefs);
