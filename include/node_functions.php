@@ -739,6 +739,11 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
     {
     $order_by = 10;
 
+    if(!is_null($parent))
+        {
+        if ($parent == ""){$parent=NULL;}
+        else {$parent = (int) $parent;}
+        }
     $query         = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ? ORDER BY order_by ASC;";
     $parameters     = array("i",$resource_type_field);
     $nodes_counter = ps_value($query, $parameters, 0);
@@ -748,7 +753,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
         $query = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ?";
         $parameters=array("i",$resource_type_field);
 
-        if (trim($parent)=="")
+        if (is_null($parent))
             {
             $query.=" AND parent IS NULL ";
             }

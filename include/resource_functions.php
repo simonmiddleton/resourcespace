@@ -3416,7 +3416,7 @@ function copy_resource($from,$resource_type=-1)
         // Set resource defaults only to fields
         foreach($fields_data as $field_data)
             {
-            if('' != trim($field_data['value']) && !($upload_then_edit && $from < 0))
+            if('' != trim($field_data['value']??"") && !($upload_then_edit && $from < 0))
                 {
                 continue;
                 }
@@ -3970,7 +3970,7 @@ function write_metadata($path, $ref, $uniqid="")
         $write_to=array();
         foreach($metadata_all as $metadata_item)
             {
-            if(trim($metadata_item["exiftool_field"]) != "" && !in_array($metadata_item['ref'], $read_only_fields))
+            if(trim($metadata_item["exiftool_field"]??"") != "" && !in_array($metadata_item['ref'], $read_only_fields))
                 {
                 $write_to[] = $metadata_item;
                 }
@@ -3981,7 +3981,7 @@ function write_metadata($path, $ref, $uniqid="")
         for($i = 0; $i<count($write_to); $i++) # Loop through all the found fields.
 	    {
             $fieldtype = $write_to[$i]['type'];
-            $writevalue = $write_to[$i]['value'];
+            $writevalue = $write_to[$i]['value']??"";
             # Formatting and cleaning of the value to be written - depending on the RS field type.
             switch ($fieldtype)
                 {
@@ -4076,7 +4076,12 @@ function write_metadata($path, $ref, $uniqid="")
                         # Write as is, convert the data to UTF-8 if not already.
 
                         global $strip_rich_field_tags;
-                        if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$writevalue = mb_convert_encoding($writevalue, mb_detect_encoding($writevalue), 'UTF-8');}
+                        if (!$exiftool_write_omit_utf8_conversion 
+                            && (!isset($mysql_charset) 
+                                || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8")))
+                            {
+                            $writevalue = mb_convert_encoding($writevalue, mb_detect_encoding($writevalue), 'UTF-8');
+                            }
                             if ($strip_rich_field_tags)
                             {
                                 $command.= escapeshellarg("-" . $group_tag . "=" . trim(strip_tags(i18n_get_translated($writevalue,false)))) . " ";
@@ -4686,7 +4691,7 @@ function get_resource_access($resource)
 		return 2;
 		}
 
-	if ((trim($usersearchfilter)!="") && $search_filter_strict)
+	if ((trim($usersearchfilter??"")!="") && $search_filter_strict)
         {
 		# A search filter has been set. Perform filter processing to establish if the user can view this resource.
         # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
