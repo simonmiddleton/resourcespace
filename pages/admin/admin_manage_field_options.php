@@ -922,20 +922,26 @@ function ReorderNode(ref, direction, move_to)
 
     jQuery.post(post_url, post_data, function(response)
         {
-        if(direction == 'moveup' && response.sibling && response.sibling.length > 0)
+        if(direction == 'moveup') 
             {
-            node.insertBefore('#node_' + response.sibling);
-            node_children.insertBefore('#node_' + response.sibling);
-            document.getElementById('option_' + ref + '_order_by').value --;
-            document.getElementById('option_' + response.sibling + '_order_by').value ++;
+            if (response.sibling) 
+                {
+                node.insertBefore('#node_' + response.sibling);
+                node_children.insertBefore('#node_' + response.sibling);
+                document.getElementById('option_' + ref + '_order_by').value --;
+                document.getElementById('option_' + response.sibling + '_order_by').value ++;
+                }
             }
 
-        else if(direction == 'movedown' && response.sibling && response.sibling.length > 0)
+        else if(direction == 'movedown') 
             {
-            node.insertAfter('#node_' + response.sibling);
-            node_children.insertAfter('#node_' + response.sibling);
-            document.getElementById('option_' + ref + '_order_by').value ++;
-            document.getElementById('option_' + response.sibling + '_order_by').value --;
+            if (response.sibling) 
+                {
+                node.insertAfter('#node_' + response.sibling);
+                node_children.insertAfter('#node_' + response.sibling);
+                document.getElementById('option_' + ref + '_order_by').value ++;
+                document.getElementById('option_' + response.sibling + '_order_by').value --;
+                }
             }
 
         else if(response.refresh_page=true)
