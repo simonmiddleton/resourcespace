@@ -6268,7 +6268,7 @@ function can_edit_upload_share($collection,$uploadkey)
     $details = isset($share_details[0]) ? $share_details[0] : array();
     return ((isset($details["user"]) && $details["user"] == $userref)
         || 
-      (checkperm("ex") && isset($details["expires"]) && empty($details["expires"]))
+      (checkperm("ex") && array_key_exists("expires", $details) && empty($details["expires"]))
     );
     }
 
