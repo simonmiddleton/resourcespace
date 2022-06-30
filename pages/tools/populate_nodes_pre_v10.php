@@ -16,14 +16,35 @@ if(isset($argv[1]))
     $endtime = time() + ((int)$argv[1]*60);
     }
 
-// Ensure node name column is moved to mediumtext
+// Ensure 
+// - node name column is moved to mediumtext
+// - node_keyword  gets new index keyword_node
+// - resource_data gets new indexes to speed up node population
 check_db_structs();
+// Check_db_structs won't do these as no longer present
+$tables = ps_query("SHOW TABLES");
+if(in_array("resource_data",array_column($tables,"Tables_in_" . $mysql_db)))
+    {
+    $indexes = ps_query("SHOW INDEXES FROM resource_data");
+    if(!in_array("resource_type_field",array_column($indexes,"Key_name")))
+        {
+        ps_query("CREATE INDEX resource_type_field ON resource_data (resource_type_field)");
+        }
+    if(!in_array("resource_field",array_column($indexes,"Key_name")))
+        {
+        ps_query("CREATE INDEX resource_field ON resource_data (resource, resource_type_field)");
+        }
+    }
+else
+    {
+    exit("No actions required to migrate data. The resource_data table is not present");
+    }
 
 $debug_log=false; // This would slow things down too much
 $global_start_time = microtime(true);
 $tomigrate = array_diff(array_keys($field_types),array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE]));
 
-$resource_type_fields=ps_query('SELECT " . columns_in("resource_type_field") . " FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') ORDER BY `ref`',ps_param_fill($tomigrate,"i"));
+$resource_type_fields=ps_query('SELECT ' . columns_in("resource_type_field") . ' FROM `resource_type_field` WHERE `type` IN (' . ps_param_insert(count($tomigrate)) . ') ORDER BY `ref`',ps_param_fill($tomigrate,"i"));
 
 // Number of resource_data rows to migrate in each batch to avoid out of memory errors
 $chunksize = 10000;
