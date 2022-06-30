@@ -29,7 +29,7 @@ include "../../include/header.php";
 $keywords=get_grouped_related_keywords($find);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($keywords);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

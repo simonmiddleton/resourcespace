@@ -7,7 +7,7 @@
  */
 
 /* Default text and background colour */
-body,html {color:#474747;background: #f2f2f2;}
+body,html {color:#474747;background: #efefef;}
 
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
@@ -22,8 +22,8 @@ input[readonly] {
 }
 
 /* Header styling */
-#Header {background: rgba(0, 0, 0, 0.6);transform: translate3d(0, 0, 0);border: none;}
-#Header li a {color:#fff; opacity:0.7;}
+#Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
+#Header li a {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
@@ -32,6 +32,7 @@ input[readonly] {
 #Header .current {opacity:1;text-decoration: none}
 /* links in Header overflow dropdown menu */
 #HiddenLinks li a {color:#fff; opacity:0.7;}
+#Header .UploadButton a {color: #fff;}
 
 /* Colours for $header_text_title */
 #TextHeader, #TextHeader a, #TextDesc {color:#fff;}
@@ -53,7 +54,8 @@ input[readonly] {
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
 #ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
-.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active {
+.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active,
+.PoweredByPanel a:link, .PoweredByPanel a:visited, .PoweredByPanel a:hover {
     color:#fff;text-decoration:none;
 }
 
@@ -104,7 +106,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Default colours for search, dash tiles, browse bar etc */
 #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab {
-    background: rgba(0, 0, 0, 0.47);
+    background: rgba(0, 0, 0, 0.4);
     color:#FFF;
 }
 
@@ -146,7 +148,7 @@ div.autocomplete ul li {color: #000;}
 .NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownload {  background: #fff;}
-.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0.2rem;}
+.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {background: #fff; border-color: #6D6D6D;}
@@ -264,7 +266,7 @@ div.autocomplete ul li {color: #000;}
     background: #000;
 }
 #modal {
-    background-color: #f3f3f3;
+    background-color: #fff;
     box-shadow: 0 0 40px rgba(0,0,0,0.5);
     border-radius: 6px;
 }

@@ -1080,7 +1080,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             // Collection Actions
             $collection_actions_array = compile_collection_actions($collection_data, $top_actions, $resource_data);
-
             // Usual search actions
             $search_actions_array = compile_search_actions($top_actions);
 
@@ -1216,6 +1215,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 {
                 return false;
                 }
+
+            v = v.match(/^[^~]*/i)[0]; // Remove unique value identifier: ~id
+
             switch(v)
                 {
             <?php
@@ -1924,12 +1926,18 @@ function display_field($n, $field, $newtab=false,$modal=false)
         ?>
         <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
         <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo $lang["edit_copy_from_field"]?></option>
-        <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
         <?php
+        if(!$multilingual_text_fields)
+            {
+            // Prepending text doesn't work wih multilingual fields
+            ?>
+            <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
+            <?php
+            }
         }
-      if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
+      if((in_array($field['type'], $TEXT_FIELD_TYPES) && !$multilingual_text_fields) || in_array($field['type'], [FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]))
         {
-        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields only.
+        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields onl.
         ?>
         <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
         <?php
@@ -1941,7 +1949,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
         }
+      if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
         hook ("edit_all_extra_modes");
+        }
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
@@ -2059,6 +2070,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $type = 0;
         }
 
+    // The visibility status (block/none) will be sent to the server for validation purposes
+    echo "<input id='field_" . $field['ref']  . "_displayed' name='" . "field_" . $field['ref']  . "_displayed' type='hidden' value='block'>";
+
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
@@ -2087,7 +2101,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
                     }
 
                 $field_nodes[] = $selected_node;
-				natsort($field_nodes);
                 unset($node_data);
 				}
 
@@ -2202,49 +2215,51 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
 	
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
-	{
-	$found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
-	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
-	if($forsearch)
-		{
-		// Get the start/end date from the string
-		$startvalue=strpos($value,"start")!==false?substr($value,strpos($value,"start")+5,10):"";
-		$endvalue=strpos($value,"end")!==false?substr($value,strpos($value,"end")+3,10):"";
-		}
-	else
-		{
-		if($value!="" && strpos($value,",")!==false)
-			{
-			// Extract the start date from the value obtained from get_resource_field_data
-			$rangevalues = explode(",",$value);
-			$startvalue = $rangevalues[0];
-			$endvalue = $rangevalues[1];
-			}
-		elseif(strlen($value)==10 && strpos($value,"-") !==  false)
-			{
-			$startvalue = $value;
-			$endvalue = "";
-			}
-		else
-			{
-			$startvalue = "";
-			$endvalue = "";
-			}
-		}
+    {
+    $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
+    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
+    if($forsearch)
+        {
+        // Get the start/end date from the string
+        $startpos   = strpos($value,"start");
+        $endpos     = strpos($value,"end");
+        $startvalue = $startpos !== false ? substr($value,$startpos+5,($endpos ? ($endpos - ($startpos + 5)) : NULL)) : "";
+        $endvalue   = $endpos !== false ? substr($value,strpos($value,"end")+3,10) : "";
+        }
+    else
+        {
+        if($value!="" && strpos($value,",")!==false)
+            {
+            // Extract the start date from the value obtained from get_resource_field_data
+            $rangevalues = explode(",",$value);
+            $startvalue = $rangevalues[0];
+            $endvalue = $rangevalues[1];
+            }
+        elseif(strlen($value)==10 && strpos($value,"-") !==  false)
+            {
+            $startvalue = $value;
+            $endvalue = "";
+            }
+        else
+            {
+            $startvalue = "";
+            $endvalue = "";
+            }
+        }
 				
 	$ss=explode("-",$startvalue);
-	if (count($ss)>=3)
+	if (count($ss)>=1)
 		{
-		$found_start_year=$ss[0];
-		$found_start_month=$ss[1];
-		$found_start_day=$ss[2];
+		$found_start_year   = $ss[0] ?? "";
+		$found_start_month  = $ss[1] ?? "";
+		$found_start_day    = $ss[2] ?? "";
 		}
 	$se=explode("-",$endvalue);
-	if (count($se)>=3)
+	if (count($se)>=1)
 		{
-		$found_end_year=$se[0];
-		$found_end_month=$se[1];
-		$found_end_day=$se[2];
+		$found_end_year     = $se[0] ?? "";
+		$found_end_month    = $se[1] ?? "";
+		$found_end_day      = $se[2] ?? "";
 		}
         
     // If the form has been submitted (but not reset) but data was not saved get the submitted values   
@@ -2520,7 +2535,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert('Error','You have entered an invalid date');
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2530,7 +2545,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date		= new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert('Error','You have entered an invalid date')
+                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2542,7 +2557,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo $name;?>_end_year]').val();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert('Error','You have entered an invalid date');
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2552,7 +2567,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date		= new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert('Error','You have entered an invalid date')
+                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2623,7 +2638,15 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onclick="return CentralSpaceLoad(this, true);"<?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
+                { ?><a href="<?php echo htmlspecialchars($links[$i]['href']); ?>"
+                
+                <?php if (isset($links[$i]["menu"]) && $links[$i]["menu"]) { ?>
+                    onclick="ModalClose();return ModalLoad(this, true, true, 'right');"
+                <?php } else { ?>
+                    onclick="return CentralSpaceLoad(this, true);"
+                <?php } ?>
+                
+                <?php echo $anchor_attrs; ?>><?php } ?><span><?php echo $title; ?></span><?php if ($anchor) { ?></a><?php }
             if (isset($links[$i]['help']))
                 {
                 render_help_link($links[$i]['help']);
@@ -2771,10 +2794,14 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         $preview_red=$preview_green=$preview_blue=255;
         }
     ?>
-    <div class="ImageColourWrapper" style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto;"><img
-    border="0"
-    width="<?php echo $width ?>" 
-    height="<?php echo $height ?>"
+    <div class="ImageColourWrapper" 
+    style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
+    width:<?php echo $width ?>px;height:<?php echo $height ?>px;margin:<?php echo $margin ?> auto 0 auto; 
+    <?php 
+    $blurbleedstopper = hook("stopblurbleed"); 
+    if ($blurbleedstopper) { echo $blurbleedstopper; }
+    ?>">
+    <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>"
     src="<?php echo $img_url ?>" 
     alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field]))))); ?>"
     /></div>
@@ -2821,6 +2848,11 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
         case "collection":
             $defaultwidth = 75;
             $defaultheight = 75;
+        break;
+
+        case "list":
+            $defaultwidth = 40;
+            $defaultheight = 40;
         break;
 
         default:
@@ -3001,7 +3033,7 @@ function render_field_selector_question($label, $name, $ftypes, $class = "stdwid
         $parameters = ps_param_fill($ftypes, "i");
         }
 
-    $fields = ps_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
+    $fields = ps_query("SELECT " . columns_in("resource_type_field") . " from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
 
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
@@ -3456,26 +3488,51 @@ function render_edit_selected_btn()
     global $baseurl_short, $lang, $USER_SELECTION_COLLECTION, $restypes, $archive;
 
     $search = "!collection{$USER_SELECTION_COLLECTION}";
+    # Editable_only=true (so returns editable resources only)
     $editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, true);
-    $non_editable_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
+    # Editable_only=false (so returns resources whether editable or not)
+    $all_resources = do_search($search, $restypes, "resourceid", $archive, -1, "desc", false, 0, false, false, "", false, false, true, false);
 
-    if(!is_array($editable_resources) || !is_array($non_editable_resources))
+    # If there are no editable resources then don't render the edit selected button
+
+    # Setup count of editable resources
+    $editable_resources_count = 0;
+    $editable_resource_refs=array();
+    if(is_array($editable_resources))
+        {
+        $editable_resources_count = count($editable_resources);
+        $editable_resource_refs=array_column($editable_resources,"ref");
+        }
+
+    # Setup count of editable and non-editable resources
+    $all_resources_count = 0;
+    $all_resource_refs=array();
+    if(is_array($all_resources))
+        {
+        $all_resources_count = count($all_resources);
+        $all_resource_refs=array_column($all_resources,"ref");
+        }
+
+    # If both counts are zero then there cannot be any editable resources, so no edit selected button
+    if($editable_resources_count == 0 && $all_resources_count == 0)
         {
         return;
         }
 
-    $editable_resources_count = count($editable_resources);
-    $non_editable_resources_count = count($non_editable_resources);
-
-    if($editable_resources_count == 0 || $non_editable_resources_count == 0)
+    # If not all selected resources are editable then the edit selected button may be inappropriate
+    if($editable_resources_count != $all_resources_count)
         {
-        return;
-        }
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
 
-    // If not all resources are editable, don't show the batch edit button
-    if($editable_resources_count != $non_editable_resources_count)
-        {
-        return;
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) { return; }
+            }
+
+        # All non_editables have grant edit
+        # Don't return as edit button can be rendered
         }
 
     $batch_edit_url = generateURL(
@@ -3952,7 +4009,9 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status);                   
+                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    // The visibility status (block/none) will be sent to the server in the following field
+                    jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
 
                 <?php
                 // Batch edit mode
@@ -4024,54 +4083,21 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
 	$value=$field["value"];
     $title=htmlspecialchars($field["title"]);
-    # Populate field value for node based fields so it conforms to automatic ordering setting
-
-    if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
-        {
-        $treenodes = get_resource_nodes($ref, $field["ref"], true);
-        $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(", ",$treetext_arr);        
-        }
-    elseif(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
-		{
-		# Get all nodes attached to this resource and this field    
-		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);
-		
-		if((bool) $field['automatic_nodes_ordering'])
-			{
-			uasort($nodes_in_sequence,"node_name_comparator");    
-			}
-		else
-			{
-			uasort($nodes_in_sequence,"node_orderby_comparator");    
-			}
-	
-		$node_tree = get_node_tree("", $nodes_in_sequence); // get nodes as a tree in correct hierarchical order
-		$node_names = get_node_elements(array(), $node_tree, "name"); // retrieve values for a selected field in the tree 
-
-		$keyword_array=array();
-		foreach($node_names as $name)
-			{
-			$keyword_array[] = i18n_get_translated($name);
-			}
-		$value = implode(',',$keyword_array);
-		}
-
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
     if($modified_field)
         {
 		$field=$modified_field;
 	    }
-	
+
     $warningtext="";
     $dismisstext="";
     $dismisslink="";
     # Handle expiry date warning messages
 	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
-        $title = $lang["warningexpired"];
-        $warningtext = $lang["warningexpiredtext"];
-        $dismisstext = $lang["warningexpiredok"];
+        $title = htmlspecialchars($lang["warningexpired"]);
+        $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
+        $dismisstext = htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
         <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
         $extra.="<style>#RecordDownload {display:none;}</style>";
@@ -4091,7 +4117,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # title comes from field
         # value comes from field
         $warningtext = $value;
-        $dismisstext = $lang["warningdismiss"];
+        $dismisstext = htmlspecialchars($lang["warningdismiss"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 
@@ -4105,7 +4131,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
     if ($field['value_filter']!="")
         {
-        eval($field['value_filter']);
+        eval(eval_check_signed($field['value_filter']));
         }
     else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
         {
@@ -4123,11 +4149,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		$value=implode($range_separator,$rangedates);
 		}
 	
-    if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_DROP_DOWN_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))
+        if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
         {
-        $value=TidyList($value);
+        $treenodes = get_resource_nodes($ref, $field["ref"], true);
+        $treetext_arr = get_tree_strings($treenodes);
+        $value = implode(", ",$treetext_arr);        
         }
-	
+    
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
 		if (!$valueonly)
@@ -4147,8 +4175,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             {
             $value = str_replace(',', '', $value);
             }
-
-		$value_unformatted=$value; # store unformatted value for replacement also
 
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # ckeditor that have not yet been edited.
@@ -4185,8 +4211,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
             $template = str_replace('[warning]', $warningtext, $template);
-            $template = str_replace('[value_unformatted]', $value_unformatted, $template);
-            $template = str_replace('[ref]', $ref, $template);
+            $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
 
             /*Language strings
@@ -4547,7 +4572,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view;
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view,$show_theme_collection_stats;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
@@ -4629,7 +4654,7 @@ function render_featured_collections(array $ctx, array $items)
             {
             $render_ctx["tools"][] = $tool_edit;
             }
-        if($is_featured_collection)
+        if($is_featured_collection && $show_theme_collection_stats)
             {
             $render_ctx['show_resources_count'] = true;
             }
@@ -4896,10 +4921,11 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
 * @param boolean $reload       Autosave changes done on this permission
+* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
 * 
 * @return void
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false)
+function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
     {
     global $permissions,$permissions_done;
     $checked=(in_array($permission,$permissions));
@@ -4907,9 +4933,8 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
     ?>
     <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
     <tr>
-        <td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description?></td>
-        <td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
+        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
             if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
     </tr>
     <?php
@@ -5002,6 +5027,7 @@ function render_featured_collections_category_permissions(array $ctx)
 function show_upgrade_in_progress($dbstructonly=false)
     {
     global $lang;
+    $title = (isset($lang["upgrade_in_progress"])?$lang["upgrade_in_progress"]:"Upgrade in progress");
     $message="This system is currently being upgraded by another process. Delete filestore/tmp/process_locks/* if this process has stalled." . PHP_EOL;
     if(!$dbstructonly)
         {
@@ -5016,7 +5042,7 @@ function show_upgrade_in_progress($dbstructonly=false)
         }
     else
         {
-        echo "<h1>{$lang["upgrade_in_progress"]}</h1>";
+        echo "<h1>{$title}</h1>";
         echo nl2br($message);
         ?>
         <script>
@@ -5696,3 +5722,105 @@ function render_fixed_text_question($label, $text)
         <div class='clearerleft'></div>
         </div>";
     }
+
+
+/**
+ * Renders a fontawesome icon selector question
+ * Requires lib/fontawesome/resourcespace/icon_classes.php to be included in the page using the function
+ *
+ * @param  string $label
+ * @param  string $name     Input name
+ * @param  string $current  Current value
+ * 
+ * @return void
+ */
+function render_fa_icon_selector(string $label="",string $name="icon",string $current="")
+    {
+    global $lang, $font_awesome_icons;
+
+    if(trim($label) == "")
+        {
+        $label = $lang["property-icon"];
+        }
+    ?>
+    <div class="Question">
+        <label><?php echo htmlspecialchars($label) ?></label>
+        <?php $blank_icon = ($current == "" || !in_array($current, $font_awesome_icons)); ?>
+        <div id="iconpicker-question">
+            <input name="<?php echo htmlspecialchars($name) ?>" type="text" id="iconpicker-input" value="<?php echo htmlspecialchars($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : htmlspecialchars($current)?>" id="iconpicker-button-fa"></i></span>
+        </div>
+        <div id="iconpicker-container">
+            <div class="iconpicker-title">
+                <input type="text" id="iconpicker-filter" placeholder="<?php echo $lang['icon_picker_placeholder'] ?>" onkeyup="filterIcons()">
+            </div>
+            <div class="iconpicker-content">
+                <?php foreach ($font_awesome_icons as $icon_name)
+                    {
+                    ?>
+                    <div class="iconpicker-content-icon" data-icon="<?php echo htmlspecialchars(trim($icon_name)) ?>" title="<?php echo htmlspecialchars(trim($icon_name)) ?>">
+                        <i class="fa-fw <?php echo htmlspecialchars(trim($icon_name)) ?>"></i>
+                    </div>
+                    <?php
+                    } ?>
+            </div>
+        </div>
+        <div class="clearerleft"> </div>
+    </div>
+
+    <script type="text/javascript">
+
+    jQuery("#iconpicker-button").click(function()
+        {
+        jQuery("#iconpicker-container").toggle();
+        });
+
+    jQuery("#iconpicker-input").focus(function()
+        {
+        jQuery("#iconpicker-container").show();
+        });
+
+    jQuery(".iconpicker-content-icon").click(function()
+        {
+        var icon_name = jQuery(this).data("icon");
+        jQuery("#iconpicker-input").val(icon_name);
+        jQuery("#iconpicker-button i").attr("class","fa-fw " + icon_name);
+        });
+
+    jQuery(document).mouseup(function(e) 
+        {
+        var container = jQuery("#iconpicker-container");
+        var question = jQuery("#iconpicker-question");
+
+        if (!container.is(e.target) && container.has(e.target).length === 0
+            && !question.is(e.target) && question.has(e.target).length === 0) 
+            {
+            container.hide();
+            }
+        });
+
+    function filterIcons()
+        {
+        filter_text = document.getElementById("iconpicker-filter");
+        var filter_upper = filter_text.value.toLowerCase();
+
+        container = document.getElementById("iconpicker-container");
+        icon_divs = container.getElementsByClassName("iconpicker-content-icon");
+
+        for (i = 0; i < icon_divs.length; i++)
+            {
+            icon_short_name = icon_divs[i].getAttribute("data-icon");
+            if (icon_short_name.toLowerCase().indexOf(filter_upper) > -1)
+                {
+                icon_divs[i].style.display = "inline-block";
+                }
+            else
+                {
+                icon_divs[i].style.display = "none";
+                }
+            }
+        }
+
+    </script>
+    <?php
+    }
+

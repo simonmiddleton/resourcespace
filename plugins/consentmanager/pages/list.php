@@ -1,7 +1,7 @@
 <?php
 include dirname(__FILE__)."/../../../include/db.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t")) {exit ("Permission denied.");}
+include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t") && !checkperm("cm")) {exit ("Permission denied.");}
 global $baseurl;
 
 $offset=getvalescaped("offset",0,true);
@@ -12,7 +12,7 @@ $delete=getvalescaped("delete","");
 if ($delete!="" && enforcePostRequest(false))
 	{
 	# Delete consent
-	sql_query("delete from consent where ref='" . escape_check($delete) . "'");
+	ps_query("delete from consent where ref= ?", ['i', $delete]);
 	}
 
 
@@ -33,7 +33,8 @@ $url_params = array(
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+			'menu' =>  true
         ),
         array(
             'title' => $lang["manageconsents"]
@@ -48,15 +49,17 @@ $url_params = array(
  
 <?php 
 $sql="";
+$params = [];
 if ($findtext!="")
     {
-    $sql="where name   like '%" . escape_check($findtext) . "%'";
+    $sql="where name   like '%?%'";
+    $params = ['s', $findtext];
 	}
 
-$consents=sql_query("select * from consent $sql order by ref");
+$consents= ps_query("select * from consent $sql order by ref", $params);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($consents);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;

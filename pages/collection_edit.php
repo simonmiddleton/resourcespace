@@ -199,13 +199,13 @@ if(isset($error))
 
     <div class="Question">
         <label for="description"><?php echo $lang["collection_description"]?></label>
-        <textarea class="stdwidth" rows="4" name="description" id="description"><?php echo htmlspecialchars($collection["description"])?></textarea>
+        <textarea class="stdwidth" rows="4" name="description" id="description"><?php echo htmlspecialchars((string) $collection["description"])?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
 	<div class="Question">
 		<label for="keywords"><?php echo $lang["relatedkeywords"]?></label>
-		<textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo htmlspecialchars($collection["keywords"])?></textarea>
+		<textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo htmlspecialchars((string) $collection["keywords"])?></textarea>
 		<div class="clearerleft"> </div>
 	</div>
 
@@ -218,7 +218,7 @@ if(isset($error))
 	<?php 
 	if ($collection["savedsearch"]!="") 
 	{ 
-	$result_limit=sql_value("select result_limit value from collection_savedsearch where collection='$ref'","");	
+	$result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");	
 	?>
 	<div class="Question">
 		<label for="name"><?php echo $lang["smart_collection_result_limit"] ?></label>

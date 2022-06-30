@@ -77,7 +77,7 @@ else{
 		let year  = jQuery('#<?php echo $name;?>-y').val(); 
 		if (year != "" && !jQuery.isNumeric(year))
 			{
-			styledalert('Error','You have entered an invalid date');
+			styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
 			jQuery(this).val(jQuery.data(this, 'current'));
 			}
 		if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -87,7 +87,7 @@ else{
 			let date		= new Date(date_string).toISOString().split('T')[0];
 			//check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
 			if(date_string !== date){
-				styledalert('Error','You have entered an invalid date')
+				styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
 				jQuery(this).val(jQuery.data(this, 'current'))
 			}
 		}

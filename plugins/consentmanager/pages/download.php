@@ -11,16 +11,16 @@ $file_path=get_consent_file_path($ref);
 if ($resource!="")
     {
     $edit_access=get_edit_access($resource);
-    if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
+    if (!$edit_access && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without edit access
     }
 else
     {
     # Editing all consents via Manage Consents - admin only
-    if (!checkperm("a")) {exit("Access denied");} 
+    if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} 
     }
 
 // Load consent details
-$consent=sql_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref='$ref'");
+$consent=ps_query("select name,email,telephone,consent_usage,notes,expires,file from consent where ref= ?", ['i', $ref]);
 if (count($consent)==0) {exit("Consent record not found.");}
 $consent=$consent[0];
 

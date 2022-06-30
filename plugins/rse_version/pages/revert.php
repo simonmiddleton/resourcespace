@@ -148,7 +148,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         else
             {
             $errors=array();
-            update_field($resource, $field, $log["previous_value"],$errors,false); # Do not log as we are doing that below.
+            update_field($resource, $field, strip_leading_comma($log["previous_value"]),$errors,false); # Do not log as we are doing that below.
             resource_log($resource,LOG_CODE_EDITED,$field,$lang["revert_log_note"],$current,$log["previous_value"]);
             }
         redirect("pages/view.php?ref=" . $resource);

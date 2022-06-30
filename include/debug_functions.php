@@ -176,7 +176,7 @@ function get_tracked_vars(int $user)
     if($user > 0)
         {
         $vars_csv = get_sysvar("track_var_{$user}", '');
-        $vars_list = explode(',', $vars_csv);
+        $vars_list = explode(',', (string) $vars_csv);
         $vars_trimmed = array_map('trim', $vars_list);
         $vars_not_empty = array_filter($vars_trimmed);
         
@@ -256,6 +256,12 @@ function debug_track_vars(string $place, array $vars, array $ctx_sd = [])
         {
         if(!isset($vars[$tracked_var]))
             {
+            continue;
+            }
+
+        if(in_array($tracked_var, SENSITIVE_VARIABLE_NAMES))
+            {
+            log_activity('Security: tracking sensitive variables', LOG_CODE_SYSTEM, $tracked_var, null, null, null, null, null, $userref, false);
             continue;
             }
 

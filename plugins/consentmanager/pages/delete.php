@@ -6,7 +6,7 @@ include "../../../include/authenticate.php";
 $ref=getvalescaped("ref","");
 
 # Check access
-if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
+if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without admin access
 
 $url_params = array(
     'ref'        => $ref,
@@ -21,8 +21,8 @@ $redirect_url = generateURL($baseurl_short . "/plugins/consentmanager/pages/list
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
-	sql_query("delete from consent where ref='$ref'");
-	sql_query("delete from resource_consent where consent='$ref'");
+	ps_query("delete from consent where ref= ?", ['i', $ref]);
+	ps_query("delete from resource_consent where consent= ?", ['i', $ref]);
 
 	redirect($redirect_url);
 	}

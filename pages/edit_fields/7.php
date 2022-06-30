@@ -18,23 +18,29 @@ $tree_container_styling            = ($category_tree_open ? 'display: block;' : 
 
 $current_val_fieldname = "field_{$field['ref']}_currentval";
 
-if(!isset($selected_nodes))
-    {
-    $selected_nodes = array();
 
-    if(isset($searched_nodes) && is_array($searched_nodes))
-        {
-        $selected_nodes = $searched_nodes;
-        }
-    }
-
-// User set values are options selected by user - used to render what users selected before submitting the form and
-// receiving an error (e.g required field missing)
 if(isset($user_set_values[$field['ref']]) && is_array($user_set_values[$field['ref']]) && !empty($user_set_values[$field['ref']]))
     {
+    // User set values are options selected by user - used to render what users selected before submitting the form and
+    // receiving an error (e.g required field missing
     $selected_nodes = $user_set_values[$field['ref']];
     }
+elseif(isset($field_nodes))
+    {
+    $selected_nodes = $field_nodes;    
+    }
+elseif(isset($searched_nodes) && is_array($searched_nodes))
+    {
+    $selected_nodes = $searched_nodes;
+    }
+else
+    {
+    $selected_nodes = [];
+    }
 
+
+// Strip out invalid nodes
+$valid_nodes = [];
 foreach($selected_nodes as $node)
     {
     $node_data = array();
@@ -47,14 +53,18 @@ foreach($selected_nodes as $node)
         {
         continue;
         }
+    $valid_nodes [] = $node_data;
+    }
 
-    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node_data["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node_data["ref"]}\">";
+foreach($valid_nodes as $node)
+    {
+    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"{$name}\" value=\"{$node["ref"]}\">";
 
     // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node_data['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node_data['ref']}\">" 
-                             . htmlspecialchars($node_data['name']) . "</span><br /></div>";
+        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" 
+                            . htmlspecialchars($node['name']) . "</span><br /></div>";
         }
     }
 
@@ -193,7 +203,7 @@ echo $hidden_input_elements;
                             ajax           : true,
                             node_ref       : node.id,
                             field          : <?php echo $field['ref']; ?>,
-                            selected_nodes : <?php echo json_encode($selected_nodes); ?>,
+                            selected_nodes : <?php echo json_encode(array_column($valid_nodes,"ref")); ?>,
                             k : '<?php echo htmlspecialchars($k); ?>',
                             };
                     }

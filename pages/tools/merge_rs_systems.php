@@ -141,8 +141,8 @@ include_once "{$webroot}/include/db.php";
 set_time_limit(0);
 
 // Increase this DB session idle timeout to 24 hours
-sql_query('SET session wait_timeout=86400;');
-$sql_session_wait_timeout = array_column(sql_query('SHOW SESSION VARIABLES LIKE "wait_timeout"'), 'Value', 'Variable_name');
+ps_query('SET session wait_timeout=86400;');
+$sql_session_wait_timeout = array_column(ps_query('SHOW SESSION VARIABLES LIKE "wait_timeout"'), 'Value', 'Variable_name');
 logScript("Database session 'wait_timeout' variable is set to {$sql_session_wait_timeout['wait_timeout']} seconds");
 
 $get_file_handler = function($file_path, $mode)
@@ -588,12 +588,11 @@ if($export && isset($folder_path))
         $where = isset($table["sql"]["where"]) && trim($table["sql"]["where"]) != "" ? "WHERE {$table["sql"]["where"]}" : "";
         $additional_process = isset($table["additional_process"]) && is_callable($table["additional_process"]) ? $table["additional_process"] : null;
 
-        // @todo: consider limiting the results and keep paging until all data is retrieved to avoid running out of memory
-        $records_count= sql_value("SELECT COUNT(*) value FROM {$from} {$where}",0);
+        $records_count= ps_value("SELECT COUNT(*) value FROM {$from} {$where}", [], 0);
         $counter = 0;
         while($counter<=$records_count)
             {
-            $records = sql_query("SELECT {$select} FROM {$from} {$where} LIMIT {$counter},5000");
+            $records = ps_query("SELECT {$select} FROM {$from} {$where} LIMIT ?,5000", ['i', $counter]);
 
             if(empty($records))
                 {
@@ -769,7 +768,7 @@ if($import && isset($folder_path))
                 continue;
                 }
 
-            sql_query("INSERT INTO usergroup(name, request_mode) VALUES ('" . escape_check($src_ug["name"]) . "', '1')");
+            ps_query("INSERT INTO usergroup(name, request_mode) VALUES (?, '1')", ['s', $src_ug["name"]]);
             $new_ug_ref = sql_insert_id();
             log_activity(null, LOG_CODE_CREATED, null, 'usergroup', null, $new_ug_ref);
             log_activity(null, LOG_CODE_CREATED, $src_ug["name"], 'usergroup', 'name', $new_ug_ref, null, '');
@@ -999,16 +998,17 @@ if($import && isset($folder_path))
             }
 
         // New record
-        sql_query(
-            sprintf("INSERT INTO resource_type(`name`, config_options, allowed_extensions, tab_name, push_metadata, inherit_global_fields)
-                          VALUES (%s, %s, %s, %s, %s, %s);",
-            (trim($resource_type["name"]) != "" ? "'" . escape_check($resource_type["name"]) . "'" : "NULL"),
-            (trim($resource_type["config_options"]) != "" ? "'" . escape_check($resource_type["config_options"]) . "'" : "NULL"),
-            (trim($resource_type["allowed_extensions"]) != "" ? "'" . escape_check($resource_type["allowed_extensions"]) . "'" : "NULL"),
-            (trim($resource_type["tab_name"]) != "" ? "'" . escape_check($resource_type["tab_name"]) . "'" : "NULL"),
-            (trim($resource_type["push_metadata"]) != "" ? "'" . escape_check($resource_type["push_metadata"]) . "'" : "NULL"),
-            (trim($resource_type["inherit_global_fields"]) != "" ? "'" . escape_check($resource_type["inherit_global_fields"]) . "'" : "NULL")
-        ));
+        ps_query(
+            "INSERT INTO resource_type(`name`, config_options, allowed_extensions, tab_name, push_metadata, inherit_global_fields) VALUES (?, ?, ?, ?, ?, ?);",
+            [
+                's', trim($resource_type["name"]) != "" ? $resource_type["name"] : null,
+                's', trim($resource_type["config_options"]) != "" ? $resource_type["config_options"] : null,
+                's', trim($resource_type["allowed_extensions"]) != "" ? $resource_type["allowed_extensions"] : null,
+                's', trim($resource_type["tab_name"]) != "" ? $resource_type["tab_name"] : null,
+                'i', trim($resource_type["push_metadata"]) != "" ? $resource_type["push_metadata"] : null,
+                'i', trim($resource_type["inherit_global_fields"]) != "" ? $resource_type["inherit_global_fields"] : null,
+            ]
+        );
         $new_rt_ref = sql_insert_id();
 
         log_activity(null, LOG_CODE_EDITED, $resource_type["name"], 'resource_type', 'name', $new_rt_ref);
@@ -1119,7 +1119,7 @@ if($import && isset($folder_path))
         // This is merged as a new field
         if(is_null($mapped_rtf_ref))
             {
-            $db_rtf_known_columns = array_column(sql_query('DESCRIBE resource_type_field', '', -1, false), 'Field');
+            $db_rtf_known_columns = array_column(ps_query('DESCRIBE resource_type_field', '', -1, false), 'Field');
 
             db_begin_transaction(TX_SAVEPOINT);
             $new_rtf_ref = create_resource_type_field(
@@ -1155,11 +1155,15 @@ if($import && isset($folder_path))
                     $sql .= ", ";
                     }
 
-                $col_val = (trim($value) == "" ? "NULL" : "'{$value}'");
-                $sql .= "`{$column}` = {$col_val}";
+                $col_val = trim($value) == "" ? null : $value;
+                $sql .= "`{$column}` = ?";
+                $sql_params[] = 'i';
+                $sql_params[] = $col_val;
                 log_activity(null, LOG_CODE_EDITED, $col_val, 'resource_type_field', $column, $new_rtf_ref);
                 }
-            sql_query("UPDATE resource_type_field SET {$sql} WHERE ref = '{$new_rtf_ref}'");
+            $sql_params[] = 'i';
+            $sql_params[] = $new_rtf_ref;
+            ps_query("UPDATE resource_type_field SET {$sql} WHERE ref = '{$new_rtf_ref}'", $sql_params);
 
             logScript("Created new record #{$new_rtf_ref} '{$src_rtf["title"]}'");
             $resource_type_fields_spec[$src_rtf["ref"]] = array("create" => true, "ref" => $new_rtf_ref);
@@ -1222,7 +1226,7 @@ if($import && isset($folder_path))
     $new_nodes_mapping = $new_nodes_mapping ?? [];
     $nodes_not_created = $nodes_not_created ?? [];
     $src_nodes = $json_decode_file_data($get_file_handler($folder_path . DIRECTORY_SEPARATOR . "nodes_export.json", "r+b"));
-    $dest_node_refs = sql_array('SELECT ref AS `value` FROM node');
+    $dest_node_refs = ps_array('SELECT ref AS `value` FROM node',array());
     foreach($src_nodes as $src_node)
         {
         if(array_key_exists($src_node['ref'], $new_nodes_mapping) || in_array($src_node['ref'], $nodes_not_created))
@@ -1296,17 +1300,22 @@ if($import && isset($folder_path))
         )
             {
             $node_parent = $new_nodes_mapping[$src_node["parent"]];
-            $node_parent_sql = " AND parent = '" . escape_check($node_parent) . "'";
+            $node_parent_sql = ' AND parent = ?';
+            $node_parent_sql_params = ['i', $node_parent];
             }
         else
             {
             $node_parent = null;
             $node_parent_sql = '';
+            $node_parent_sql_params = [];
             }
 
 
         // Check if we can find an existing node for this metadata field (taking into account language translations as well)
-        $all_nodes_for_rtf = sql_query("SELECT ref, `name` FROM node WHERE resource_type_field = '" . escape_check($mapped_rtf_ref) . "'{$node_parent_sql}");
+        $all_nodes_for_rtf = ps_query(
+            "SELECT ref, `name` FROM node WHERE resource_type_field = ?{$node_parent_sql}",
+            array_merge(['i', $mapped_rtf_ref], $node_parent_sql_params)
+        );
         $found_matching_node_i18n = get_node_by_name($all_nodes_for_rtf, $src_node['name'], true);
         if(!empty($found_matching_node_i18n))
             {
@@ -1543,8 +1552,14 @@ if($import && isset($folder_path))
             continue;
             }
 
-        sql_query("INSERT INTO resource_node (resource, node, hit_count, new_hit_count)
-                        VALUES ('{$resources_mapping[$src_rn["resource"]]}', '{$new_nodes_mapping[$src_rn["node"]]}', '{$src_rn["hit_count"]}', '{$src_rn["new_hit_count"]}')");
+        ps_query("INSERT INTO resource_node (resource, node, hit_count, new_hit_count) VALUES (?, ?, ?, ?)",
+            [
+                'i', $resources_mapping[$src_rn["resource"]],
+                'i', $new_nodes_mapping[$src_rn["node"]],
+                'i', $src_rn["hit_count"],
+                'i', $src_rn["new_hit_count"],
+            ]
+        );
         $processed_resource_nodes[] = "{$src_rn["resource"]}_{$src_rn["node"]}";
         fwrite($progress_fh, "\$processed_resource_nodes[] = \"{$src_rn["resource"]}_{$src_rn["node"]}\";" . PHP_EOL);
         }
@@ -1632,16 +1647,18 @@ if($import && isset($folder_path))
             continue;
             }
 
-        sql_query(sprintf(
-            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (%u, %u, %u, %u, %u, '%s', %s)",
-            $resources_mapping[$src_rdms["resource"]],
-            $src_rdms["width"],
-            $src_rdms["height"],
-            $src_rdms["file_size"],
-            $src_rdms["resolution"],
-            escape_check($src_rdms["unit"]),
-            sql_null_or_val((string) $src_rdms["page_count"], !is_int_loose($src_rdms["page_count"]))
-        ));
+        ps_query(
+            "INSERT INTO resource_dimensions (resource, width, height, file_size, resolution, unit, page_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [
+                'i', $resources_mapping[$src_rdms["resource"]],
+                'i', $src_rdms["width"],
+                'i', $src_rdms["height"],
+                'i', $src_rdms["file_size"],
+                'i', $src_rdms["resolution"],
+                's', $src_rdms["unit"],
+                'i', is_int_loose($src_rdms["page_count"]) ? $src_rdms["page_count"] : null,
+            ]
+        );
 
         $processed_resource_dimensions[] = $process_rdms_value;
         fwrite($progress_fh, "\$processed_resource_dimensions[] = \"{$process_rdms_value}\";" . PHP_EOL);
@@ -1661,7 +1678,7 @@ if($import && isset($folder_path))
 
     foreach($src_resource_related_chunks as $src_resource_related_chunk)
         {
-        $insertvals = [];
+        $insertvals = $insertvals_bparams = [];
         $temp_processed_related = [];
         $temp_processed_related_log  = "";
         foreach($src_resource_related_chunk as $src_rr)
@@ -1683,14 +1700,18 @@ if($import && isset($folder_path))
                 continue;
                 }
 
-            $insertvals[] = "('{$resources_mapping[$src_rr["resource"]]}', '{$resources_mapping[$src_rr["related"]]}')";
+            $insertvals[] = "(?, ?)";
+            $insertvals_bparams = array_merge(
+                $insertvals_bparams,
+                ps_param_fill([$resources_mapping[$src_rr["resource"]], $resources_mapping[$src_rr["related"]]], 'i')
+            );
 
             $temp_processed_related["{$src_rr["resource"]}_{$src_rr["related"]}"] = true;
             $temp_processed_related_log .= "\$processed_resource_related[] = \"{$src_rr["resource"]}_{$src_rr["related"]}\";" . PHP_EOL;
             }
         if(count($insertvals) > 0)
             {
-            sql_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals));
+            ps_query("INSERT INTO resource_related (resource, related) VALUES " . implode(",",$insertvals), $insertvals_bparams);
             $processed_resource_related = array_merge($processed_resource_related,$temp_processed_related);
             fwrite($progress_fh, $temp_processed_related_log);
             }

@@ -28,7 +28,6 @@ switch ($type)
         $fetchrows = (!is_null($per_page) || !is_null($offset) ? $per_page + $offset : -1);
         $sort = getvalescaped("sort", "desc");
         // $access_override = false;
-        $starsearch = getvalescaped("starsearch", 0, true);
         // $ignore_filters = false;
         // $return_disk_usage = false;
         $recent_search_daylimit = getvalescaped("recent_search_daylimit", "");
@@ -45,7 +44,7 @@ switch ($type)
             $fetchrows,
             $sort,
             false,
-            $starsearch,
+            DEPRECATED_STARSEARCH,
             false,
             false,
             $recent_search_daylimit,

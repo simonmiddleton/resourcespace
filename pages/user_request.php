@@ -19,6 +19,13 @@ if (getval("save","")!="")
         $missingFields = array();
         if (getval("name","")=="") { $missingFields[] = $lang["yourname"]; }
         if (getval("email","")=="") { $missingFields[] = $lang["youremailaddress"]; }
+        if ($registration_group_select)
+            {
+            if (getval("usergroup", 0, true) == 0)
+                {
+                $missingFields[] = $lang["group"];
+                }
+            }
         }
 
     # Add custom fields
@@ -148,19 +155,9 @@ if (!hook("replacemain"))
     <div class="clearerleft"> </div>
     </div>
     <?php
-    if($user_registration_opt_in)
-        {
-        ?>
-        <div class="Question">
-            <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
-            <label for="login_opt_in" style="margin-top:0;"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
-            <div class="clearer"></div>
-        </div>
-        <?php
-        }
-    } /* END hook Replacemain */ ?>
+    } /* END hook Replacemain */
 
-<?php # Add custom fields 
+# Add custom fields 
 if (isset($custom_registration_fields))
 	{
 	$custom=explode(",",$custom_registration_fields);
@@ -276,12 +273,13 @@ if (isset($custom_registration_fields))
 $groups=get_registration_selectable_usergroups();
 ?>
 <div class="Question">
-<label for="usergroup"><?php echo $lang["group"]?></label>
+<label for="usergroup"><?php echo $lang["group"]?> *</label>
 <select name="usergroup" id="usergroup" class="stdwidth">
+<option value></option>
 <?php for ($n=0;$n<count($groups);$n++)
 	{
 	?>
-	<option value="<?php echo $groups[$n]["ref"] ?>"><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
+	<option value="<?php echo $groups[$n]["ref"] ?>" <?php if($groups[$n]["ref"] == getval("usergroup", 0, true)){echo " selected";} ?>><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
 	<?php
 	}
 ?>
@@ -305,6 +303,17 @@ $groups=get_registration_selectable_usergroups();
 <?php } /* END hook replaceuserrequestcomment */
 
 hook("userrequestadditional");
+
+if($user_registration_opt_in)
+    {
+    ?>
+    <div class="Question">
+        <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
+        <label for="login_opt_in" style="margin-top:0;"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
+        <div class="clearer"></div>
+    </div>
+    <?php
+    }
 
 if(!hook("replaceantispam"))
 	{

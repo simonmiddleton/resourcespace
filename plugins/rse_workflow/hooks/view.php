@@ -59,7 +59,16 @@ function HookRse_workflowViewPageevaluation()
                         ?>
                         <script type="text/javascript">
                         styledalert('<?php echo $lang["success"] ?>','<?php echo $lang["rse_workflow_saved"] . "&nbsp;" . $lang["status" . $workflowaction["statusto"]];?>');
-                        </script><?php
+                        if(jQuery("#modal").is(":visible"))
+                            {
+                            ModalClose();
+                            }
+                        else
+                            {
+                            window.setTimeout(function(){CentralSpaceLoad(baseurl_short);},1000);
+                            }
+                        </script>
+                        <?php
                         exit();
                         }
                     else
@@ -153,6 +162,14 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
                           id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
 					<input id='resource_status_checksum_<?php echo $validaction["ref"] ?>' name='resource_status_check_<?php echo $validaction["ref"] ?>' type='hidden' value='<?php echo $resource["archive"]; ?>'>
+                    <?php
+                if(isset($modal) && $modal=="true")
+                    {
+                    ?>
+                    <input type="hidden" name="modal" id="rse_workflow_modal_<?php echo $validaction["ref"] ?>" value="true" >
+                    <?php
+                    }
+                    ?>
 					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
 					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
 					<input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
@@ -181,7 +198,7 @@ function HookRse_workflowViewReplacetitleprefix($state)
 
     if ($state<=3) {return false;} # For custom states only.
 
-    $name=sql_value("select name value from archive_states where code='$state'","");
+    $name=ps_value("SELECT name value FROM archive_states WHERE code = ?",["i",$state],"");
     
     ?><span class="ResourceTitleWorkflow<?php echo $state ?>"><?php echo i18n_get_translated($name) ?>:</span>&nbsp;<?php
     return true;

@@ -4,7 +4,7 @@ include_once __DIR__ . "/../../include/migration_functions.php";
 // Migrate reports away from requiring substitutions at execution time, which was very hacky.
 // Automatically upgrade reports to use new correct syntax.
 
-$reports=sql_query("select * from report order by ref");
+$reports=ps_query("select * from report order by ref");
 foreach ($reports as $report)
     {
     $sql=$report["query"];
@@ -49,8 +49,6 @@ foreach ($reports as $report)
     #Now crystallize the view title subselect reference with the actual subselect necessary to fulfil it 
     $sql=str_replace("view_title_field_subselect", $view_title_field_subquery, $sql);
     
-    #echo $sql;
-    #echo "-----------------------------\n";
-    sql_query("update report set query='" . escape_check($sql) . "' where ref='" . escape_check($ref) . "'");
+    ps_query("update report set query=? where ref=?",array("s",$sql,"i",$ref)); // Note $sql here is the report to be inserted - it's not executed here
     }
     

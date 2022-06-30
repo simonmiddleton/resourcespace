@@ -140,7 +140,6 @@ if($publishedresources > 0 && $action == "publish" && !$saveform)
 	
 if(count($errormessages) > 0)
 	{
-	//echo "</p><div class='PageInformal'><p><br>" . htmlspecialchars($lang["falcon_link_resources_already_published"]) . "</p></div>";
 	echo "</p><div class='PageInformal'><p><br>" . implode("<br />",$errormessages) . "</p></div>"; 
 	}
 	

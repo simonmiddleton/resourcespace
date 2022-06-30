@@ -3,15 +3,10 @@
 WARNING: read what this does before even attempting to run it as it will convert data encoding to UTF-8 or potentially
          double encode
 */
-if('cli' != PHP_SAPI)
-    {
-    http_response_code(401);
-    exit('Access denied - Command line only!');
-    }
-
 $webroot = dirname(dirname(__DIR__));
 include_once "{$webroot}/include/db.php";
 include_once "{$webroot}/include/log_functions.php";
+command_line_only();
 
 
 function checkEncoding($string, $string_encoding)
@@ -104,7 +99,7 @@ if(in_array('resource', $tables))
     logScript("Searching resource table...");
     $resource_table_joins = get_resource_table_joins();
     $joined_fields = (!empty($resource_table_joins) ? ', field' : '' ) . implode(', field', $resource_table_joins);
-    $resources = sql_query("SELECT ref {$joined_fields}  FROM resource");
+    $resources = ps_query("SELECT ref {$joined_fields}  FROM resource");
     foreach($resources as $row)
         {
         foreach($row as $column => $value)
@@ -129,11 +124,12 @@ if(in_array('resource', $tables))
 
             logScript("Column '{$column}': ($current_encoding) '{$row[$column]}' ===> ({$to_encoding}) '$utf8value'");
 
-            $query = "UPDATE resource SET `{$column}` = '{$utf8value}' WHERE ref = '{$row['ref']}'";
+            $query = "UPDATE resource SET `{$column}` = ? WHERE ref = ?";
+            $params = ['s', $utf8value, 'i', $row['ref']];
 
             if(!$dry_run)
                 {
-                sql_query($query);
+                ps_query($query, $params);
                 }
 
             $query_log .= $query . PHP_EOL;
@@ -145,7 +141,7 @@ if(in_array('resource_data', $tables))
     {
     logScript("");
     logScript("Searching resource_data table...");
-    $resource_data = sql_query("SELECT resource, resource_type_field, `value` FROM resource_data");
+    $resource_data = ps_query("SELECT resource, resource_type_field, `value` FROM resource_data");
     foreach($resource_data as $row)
         {
         $current_encoding = mb_detect_encoding($row["value"], mb_detect_order(), true);
@@ -163,11 +159,12 @@ if(in_array('resource_data', $tables))
 
         logScript("($current_encoding) '{$row["value"]}' ===> ({$to_encoding}) '$utf8value'");
 
-        $query = "UPDATE resource_data SET `value` = '{$utf8value}' WHERE resource = '{$row['resource']}' AND resource_type_field = '{$row['resource_type_field']}'";
+        $query = "UPDATE resource_data SET `value` = ? WHERE resource = ? AND resource_type_field = ?";
+        $params = ['s', $utf8value, 'i', $row['resource'], 'i', $row['resource_type_field']];
 
         if(!$dry_run)
             {
-            sql_query($query);
+            ps_query($query, $params);
             }
 
         $query_log .= $query . PHP_EOL;
@@ -178,7 +175,7 @@ if(in_array('node', $tables))
     {
     logScript("");
     logScript("Searching node table...");
-    $nodes = sql_query("SELECT ref, name FROM node");
+    $nodes = ps_query("SELECT ref, name FROM node");
     foreach($nodes as $node)
         {
         $current_encoding = mb_detect_encoding($node["name"], mb_detect_order(), true);
@@ -196,11 +193,12 @@ if(in_array('node', $tables))
 
         logScript("Node #{$node['ref']}: ($current_encoding) '{$node['name']}' ===> ({$to_encoding}) '$utf8value'");
 
-        $query = "UPDATE node SET `name` = '{$utf8value}' WHERE ref = '{$node['ref']}'";
+        $query = "UPDATE node SET `name` = ? WHERE ref = ?";
+        $params = ['s', $utf8value, 'i', $node['ref']];
 
         if(!$dry_run)
             {
-            sql_query($query);
+            ps_query($query, $params);
             }
 
         $query_log .= $query . PHP_EOL;

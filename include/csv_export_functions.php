@@ -219,11 +219,16 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
 */
 function generateNodesExport(array $field, $parent = null, $send_headers = false)
     {
-    global $lang;
+    global $lang, $FIXED_LIST_FIELD_TYPES;
 
     if(0 === count($field) || !isset($field['ref']) || !isset($field['type']))
         {
         trigger_error('Field array cannot be empty. generateNodesExport() requires at least "ref" and "type" indexes!');
+        }
+
+    if(!in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
+        {
+        return false;
         }
 
     $return = '';

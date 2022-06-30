@@ -5,7 +5,7 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
 
-$scriptlastran=sql_value("select value from sysvars where name='last_tms_import'","");
+$scriptlastran=ps_value("select value from sysvars where name='last_tms_import'",array(), "");
 
 global $baseurl, $tms_link_field_mappings_saved;
 // Specify the name of this plugin and the heading to display for the page.

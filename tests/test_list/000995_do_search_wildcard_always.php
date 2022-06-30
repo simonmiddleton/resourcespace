@@ -1,6 +1,5 @@
 <?php
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 // Check $wildcard_always_applied search e.g. "cat" will always match "catch", "catalogue", "category"
 

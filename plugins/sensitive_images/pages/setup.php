@@ -12,6 +12,8 @@ $page_heading = $lang['sensitive_images'];
 $page_intro = "<p>" . $lang['sensitive_images_help'] . "</p>";
 
 $page_def[]= config_add_single_ftype_select("sensitive_images_field", $lang["sensitive_images_field"],300,false,$TEXT_FIELD_TYPES); 
+$page_def[]= config_add_single_select("sensitive_images_blur_level",$lang["sensitive_images_blur_level"],
+			array(4=>"1",5=>"2",6=>"3",7=>"4",8=>"5",9=>"6"));
 
 // Do the page generation ritual
 $upload_status = config_gen_setup_post($page_def, $plugin_name);

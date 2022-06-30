@@ -16,7 +16,7 @@ $indicesFor=array();
 if (getval("execute","")!="" && enforcePostRequest(false))
 	{
 	# Fetch all tables
-	$tables=sql_query("show tables");
+	$tables=ps_query("show tables");
 	for ($n=0;$n<count($tables);$n++)
 		{
 		$table=$tables[$n]["Tables_in_" . $mysql_db];
@@ -25,7 +25,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createTableStructure && (in_array($table,$tableFor) || count($tableFor)===0))
 		{
 			$f=fopen("../../dbstruct/table_" . $table . ".txt","w");
-			$describe=sql_query("describe $table");
+			$describe=ps_query("describe `$table`");
 			for ($m=0;$m<count($describe);$m++)
 				{
 				fputcsv($f,$describe[$m]);
@@ -37,7 +37,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createIndices && (in_array($table,$indicesFor) || count($indicesFor)===0))
 			{
 			$f=fopen("../../dbstruct/index_" . $table . ".txt","w");
-			$index=sql_query("show index from $table");
+			$index=ps_query("show index from `$table`");
 			for ($m=0;$m<count($index);$m++)
 				{
 				fputcsv($f,$index[$m]);
@@ -49,7 +49,7 @@ if (getval("execute","")!="" && enforcePostRequest(false))
 		if ($createData && (in_array($table,$dataFor) || count($dataFor)===0))
 			{
 			$f=fopen("../../dbstruct/data_" . $table . ".txt","w");
-			$index=sql_query("select * from $table");
+			$index=ps_query("select * from `$table`"); // Select * is fine here as no parameters
 			for ($m=0;$m<count($index);$m++)
 				{
 				fputcsv($f,$index[$m]);

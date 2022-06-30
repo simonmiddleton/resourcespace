@@ -56,10 +56,6 @@ HTML;
 		<li><?php echo $lang['doi_info_link']; ?></li>
 		<li><?php echo $lang['doi_info_metadata_schema']; ?></li>
 		<li><?php echo $lang['doi_info_mds_api']; ?></li>
-		<!--		<li>--><?php //echo $lang['doi_info_prefix']; ?><!--</li>-->
-		<!--		<li>--><?php //echo $lang['doi_info_testmode']; ?><!--</li>-->
-		<!--		<li>--><?php //echo $lang['doi_info_testprefix']; ?><!--</li>-->
-		<!--		<li>--><?php //echo $lang['doi_info_publisher']; ?><!--</li>-->
 	</ul>
 <?php
 

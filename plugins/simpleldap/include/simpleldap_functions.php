@@ -154,13 +154,13 @@ function simpleldap_authenticate($username,$password)
             {
             $binduserstring = $simpleldap['loginfield'] . "=" . $ldap_username . "," . $simpleldap['basedn'];
             }
-        
-        ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 2); 
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        ldap_set_option($ldapconnections[$x], LDAP_OPT_NETWORK_TIMEOUT, 2); 
+        ldap_set_option($ldapconnections[$x], LDAP_OPT_PROTOCOL_VERSION, 3);
 
         if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1)  // AD - need to set this
             {
-            ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+            ldap_set_option($ldapconnections[$x], LDAP_OPT_REFERRALS, 0);
             }
 
         $GLOBALS["use_error_exception"] = true;
@@ -229,7 +229,7 @@ function simpleldap_authenticate($username,$password)
             debug("LDAP - found group attribute - checking against configured mappings");
             $usermemberofgroups=$entries[0][$ldapgroupfield];
             
-            $deptresult = sql_query('select ldapgroup, rsgroup from simpleldap_groupmap order by priority asc');
+            $deptresult = ps_query('select ldapgroup, rsgroup from simpleldap_groupmap order by priority asc');
 
             // Go through each configured ldap->RS group mapping, adding each to the array of groups that user is a member of. Update $department with each match so we end up with the highest priority dept
             foreach ($deptresult as $thedeptresult)
@@ -255,9 +255,9 @@ function simpleldap_authenticate($username,$password)
                         {
                         // ignore numbers; this is a kludgey way to deal with the fact
                         // that some ldap servers seem to return a result count as the first value
-                        $newdept = escape_check(simpleldap_to_utf8($usermemberofgroup));
+                        $newdept = simpleldap_to_utf8($usermemberofgroup);
                         $usermemberof[]=$newdept;
-                        sql_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (\"$newdept\",NULL)");
+                        ps_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (?, NULL)", ['i', $newdept]);
                         } 
                     }
                 }

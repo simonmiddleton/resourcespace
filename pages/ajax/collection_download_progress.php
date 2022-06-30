@@ -20,7 +20,6 @@ else if ($content=="zipping"){
 	$files=scandir($usertempdir);
 	echo "Zipping ";
 		foreach ($files as $file){
-			//echo $file;
 			if (strpos($file,".zip")!==false){
 				echo formatfilesize(filesize($usertempdir."/".$file));
 			} 

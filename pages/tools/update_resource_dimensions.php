@@ -20,8 +20,9 @@ else
     }
 else
     {
-    # get all resources in the DB
-    $resources=sql_query("select ref,field".$view_title_field.",file_extension from resource where ref>0 order by ref");
+    # Get all resources in the DB
+    # $view_title_field is not user provided
+    $resources=ps_query("select ref,field".$view_title_field.",file_extension from resource where ref>0 order by ref");
 
     foreach($resources as $resource)
         {
@@ -34,4 +35,5 @@ else
             }
         }
     }
+    echo "Finished updating resource_dimensions.<br/>";
 }

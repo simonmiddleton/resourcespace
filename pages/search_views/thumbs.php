@@ -5,6 +5,7 @@ if (!hook("renderresultthumb"))
     $resolved_title_trim=0; 
     $field_height = 31;
     $resource_id_height = 21;
+    $workflow_state_height = 31;
 
     hook("thumbstextheight");
 
@@ -44,6 +45,10 @@ if (!hook("renderresultthumb"))
         { 
         $thumbs_displayed_fields_height += $resource_id_height;
         $br = '<br />';
+        };
+    if($thumbs_display_archive_state)
+        { 
+        $thumbs_displayed_fields_height += $workflow_state_height;
         }; 
 
     $class = array();
@@ -149,9 +154,9 @@ if (!hook("renderresultthumb"))
                             jQuery('#CentralSpace #ResourceShell<?php echo $ref; ?> a img').mousemove(function(event)
                                 {
                                 var x_coord             = event.pageX - jQuery(this).offset().left;
-                                var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref)); ?>;
+                                var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
                                 var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
-                                var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
+                                var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
                                 if(typeof(ss_img_<?php echo $ref; ?>) === "undefined")
                                     {
                                     ss_img_<?php echo $ref; ?> = new Array();
@@ -193,6 +198,18 @@ if (!hook("renderresultthumb"))
             } //end hook replaceicons
         if (!hook("rendertitlethumb")) {} ?> <!-- END HOOK Rendertitlethumb -->
         <?php
+
+        if($thumbs_display_archive_state)
+            {
+            $workflow_html = "<div class='ResourcePanelInfo WorkflowState'>";
+            // Add icon
+            $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
+            $workflow_html .= "<i class='" . htmlspecialchars($icon) . "'></i>&nbsp;";
+            // Add text for workflow state
+            $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (htmlspecialchars($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
+            $workflow_html .= "</div>";
+            echo $workflow_html;
+            }
 
         if($annotate_enabled)
             {
@@ -236,7 +253,7 @@ if (!hook("renderresultthumb"))
             $value=@$result[$n]['field'.$df[$x]['ref']];
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
             if ($df[$x]['value_filter']!="")
-                {eval($df[$x]['value_filter']);}
+                {eval(eval_check_signed($df[$x]['value_filter']));}
             else if (file_exists($plugin)) 
                 {include $plugin;}
 

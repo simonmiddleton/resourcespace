@@ -61,6 +61,7 @@ if(getvalescaped("quicksave",FALSE))
 						$force = !checkTileConfig($tile, $search_string["tlstyle"]);
 						}
 						delete_dash_tile($tile["ref"], true, $force);
+                        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
 					}
 				reorder_default_dash();
 				$dtiles_available = get_alluser_available_tiles();
@@ -69,8 +70,8 @@ if(getvalescaped("quicksave",FALSE))
 			else
 				{
 				#Add to the front of the pile if the user already has the tile
-				sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$tile["ref"]);
-				sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile["ref"]."',5 FROM user");
+				ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile["ref"]]);
+				ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile["ref"]."',5 FROM user");
 
 				$dtiles_available = get_alluser_available_tiles();
 				exit("positiveglow");
@@ -87,7 +88,8 @@ include "../../include/header.php";
         $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+			'menu' =>  true
         ),
         array(
             'title' => $lang["manage_dash_tiles"],

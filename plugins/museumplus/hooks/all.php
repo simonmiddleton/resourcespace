@@ -156,7 +156,7 @@ function HookMuseumplusAllAftersaveresourcedata($R)
     return false;
     }
 
-function HookMuseumplusAllAddspecialsearch($search)
+function HookMuseumplusAllAddspecialsearch($search,$select,$sql_join,$sql_filter)
     {
     if(substr($search, 0, 20) !== '!mplus_invalid_assoc') 
         {
@@ -164,7 +164,10 @@ function HookMuseumplusAllAddspecialsearch($search)
         }
 
     // @see mplus_validate_association() - this is where we decide if something is invalid
-    return 'SELECT *, museumplus_data_md5, museumplus_technical_id FROM resource WHERE ref > 0 AND museumplus_data_md5 IS NOT NULL AND museumplus_technical_id IS NULL';
+    $mplussql = new PreparedStatementQuery();
+    $mplussql->sql = "SELECT DISTINCT r.hit_count score, museumplus_data_md5, museumplus_technical_id, $select FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND r.museumplus_data_md5 IS NOT NULL AND r.museumplus_technical_id IS NULL AND " . $sql_filter->sql . " GROUP BY r.ref";
+    $mplussql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
+    return $mplussql;
     }
 
 function HookMuseumplusAllHandleuserref()
@@ -177,7 +180,7 @@ function HookMuseumplusAllHandleuserref()
         {
         global $lang, $custom_top_nav, $baseurl;
         $mplus_top_nav = [
-            'title' => $lang['museumplus_top_menu_title'],
+            'title' => '<i aria-hidden="true" class="fa fa-fw fa-unlink"></i>&nbsp;' . $lang['museumplus_top_menu_title'],
             'link' => "{$baseurl}/pages/search.php?search=%21mplus_invalid_assoc",
         ];
         $custom_top_nav[] = $mplus_top_nav;

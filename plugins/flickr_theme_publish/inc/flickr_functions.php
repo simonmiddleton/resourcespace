@@ -43,7 +43,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 
 		# Fetch some resource details.
         $title = flickr_get_title_field_value($result['ref']);
-		$description=ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$flickr_caption_field,"i",$result["ref"]), "");
+		$description = get_data_by_field($result["ref"],$flickr_caption_field);
 		
 		$field_type=ps_value("select type value from resource_type_field where ref = ?", array("i",$flickr_keywords_field), "", "schema");
 		if (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
@@ -56,7 +56,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 		    }
 		else
 		    {
-		    $keywords = ps_value("select value from resource_data where resource_type_field = ? and resource = ?", array("i",$flickr_keywords_field,"i",$result["ref"]), "");
+		    $keywords = get_data_by_field($result["ref"],$flickr_keywords_field);
 		    }
 
 		$photoid=ps_value("select flickr_photo_id value from resource where ref = ?", array("i",$result["ref"]), "");

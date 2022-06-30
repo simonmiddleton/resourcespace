@@ -5,7 +5,6 @@ include_once 'render_functions.php';
 $stored_restypes=(isset($restypes)?$restypes:'');
 $stored_search=(isset($search)?$search:'');
 $stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
-$stored_starsearch=(isset($starsearch)?$starsearch:'');
 $stored_category_tree_add_parents = $category_tree_add_parents;
 
 $ssearchhiddenfields = isset($_COOKIE['ssearchhiddenfields']) ? $_COOKIE['ssearchhiddenfields'] : "";
@@ -16,7 +15,6 @@ if ($simple_search_reset_after_search)
     $restypes    = '';
     $search      = '';
     $quicksearch = '';
-    $starsearch  = '';
     }
 else 
     {
@@ -38,7 +36,6 @@ else
 if($basic_simple_search)
     {
     $restypes    = '';
-    $starsearch  = '';
     }
 
 if ($hide_search_resource_types)
@@ -812,7 +809,7 @@ elseif($restypes=='')
                 ?>  
     
                  <?php  echo $lang["bydate"]?><br />
-    <select id="basicyear" name="basicyear" class="SearchWidthHalf">
+    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>">
               <option selected="selected" value=""><?php echo $lang["anyyear"]?></option>
               <?php
               
@@ -827,7 +824,7 @@ elseif($restypes=='')
     
             <?php if ($searchbyday) { ?><br /><?php } ?>
     
-            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight">
+            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>">
               <option selected="selected" value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($n=1;$n<=12;$n++)
@@ -837,7 +834,7 @@ elseif($restypes=='')
                     }
               ?>
     
-            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf">
+            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php echo $lang['day'];?>">
               <option selected="selected" value=""><?php echo $lang["anyday"]?></option>
               <?php
               for ($n=1;$n<=31;$n++)
@@ -945,6 +942,15 @@ elseif($restypes=='')
 
 <?php hook("searchbarbottomtoolbar"); ?>
 
+<?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
+    <div class="PoweredByPanel">
+        <a href="https://www.resourcespace.com" target="_blank">
+            <span><?php echo $lang["powered_by"]; ?></span>
+            <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php echo $lang['powered_by_resourcespace']; ?>">
+        </a>
+    </div>
+<?php } ?>
+
 </div>
 <?php
 if ($simple_search_pills_view)
@@ -970,5 +976,4 @@ hook("searchbarbottom");
 $restypes=$stored_restypes;
 $search=$stored_search;
 $quicksearch=$stored_quicksearch;
-$starsearch=$stored_starsearch;
 $category_tree_add_parents = $stored_category_tree_add_parents;

@@ -107,7 +107,6 @@
 					# registration
 					foreach ($ready_to_reg as $res_ref => $fields) {
 						$resource = get_resource_data($res_ref);
-//						echo 'saved title: ' . $resource['title'];
 						$meta = doi_construct_metadata($resource, $fields);
 						$metas[$res_ref] = $meta;
 						$titles[$res_ref] = $meta['title'];

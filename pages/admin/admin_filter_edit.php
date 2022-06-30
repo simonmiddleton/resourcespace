@@ -195,7 +195,8 @@ include "../../include/header.php";
             $links_trail = array(
                 array(
                     'title' => $lang["systemsetup"],
-                    'href'  => $baseurl_short . "pages/admin/admin_home.php"
+                    'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		            'menu' =>  true
                 ),
                 array(
                     'title' => $lang["filter_manage"],
@@ -249,7 +250,6 @@ include "../../include/header.php";
                                 $ruletext = array();
                                 foreach($ruleinfo["fields"] as $rulefield)
                                     {
-                                    //print_r($rulefield);
                                     if(isset($rulefield["values_on"]) && count($rulefield["values_on"]) > 0)
                                         {
                                         $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_on"]) . "')";

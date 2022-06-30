@@ -7,22 +7,19 @@ include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
    
 $session_hash="";
 $url = urldecode(getval("url",""));
-$redirecturl = (trim($url) != "/" && trim($url) != "") ? $url : "pages/" . $default_home_page;
 $winuser = WinauthGetUser();
 
+
+// Invalid domain
 if(count($winauth_domains) > 0 && !in_array($winuser['domain'], $winauth_domains))
     {
-    // Invalid domain
-    return false;
+    redirect(generateURL("{$baseurl_short}login.php", ['winauth_login' => 'true']));
     }
 
-if($winuser['user'] != "")
-    {
-    $username = $winuser['user'];
-    }
 
-# Allow login
-$userref = ps_value("select ref value from user where username=? and approved=1",array("s",$username),0);
+// Try to authenticate
+$username = trim($winuser['user']);
+$userref = $username === '' ? 0 : ps_value("select ref value from user where username=? and approved=1",array("s",$username),0);
 if($userref != 0)
     {
     include_once dirname(__FILE__) . '/../../../../include/login_functions.php';
@@ -50,14 +47,11 @@ if($userref != 0)
     
     $redirecturl = $baseurl_short . urldecode($url);
     $redirecturl = str_replace("winauth_login=true","",$redirecturl);
-    redirect($redirecturl);   
-    exit();
+    redirect($redirecturl);
     }
 else
     {
     $userinit = getval("winauth_login","") != ""; 
     $redirecturl = generateURL($baseurl_short. "login.php", array("url"=>$url,"winauth_login"=>"true", "error"=> ($userinit ? "winauth_nouser" : "")));    
     redirect($redirecturl);
-    exit();
-    }   
-
+    }

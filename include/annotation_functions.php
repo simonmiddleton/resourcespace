@@ -13,7 +13,7 @@ function getAnnotation($ref)
         return array();
         }
 
-    $return = ps_query("SELECT * FROM annotation WHERE ref = ?", array("i",$ref));
+    $return = ps_query("SELECT " . select_star_from("annotation") . " FROM annotation WHERE ref = ?", array("i",$ref));
 
     if(0 < count($return))
         {
@@ -90,7 +90,7 @@ function getAnnotations($resource = 0, $resource_type_field = 0, $user = 0, $pag
         $sql_where_clause = "WHERE {$sql_where_clause}";
         }
 
-        return ps_query("SELECT * FROM annotation {$sql_where_clause}",$parameters);
+        return ps_query("SELECT " . columns_in("annotation") . " FROM annotation {$sql_where_clause}",$parameters);
     }
 
 
@@ -140,7 +140,7 @@ function getResourceAnnotations($resource, $page = 0)
         $parameters=array_merge($parameters, array("i",$page));
         }
 
-    return ps_query("SELECT * FROM annotation WHERE resource = ? {$sql_page_filter}", $parameters);
+    return ps_query("SELECT " . columns_in("annotation") . " FROM annotation WHERE resource = ? {$sql_page_filter}", $parameters);
     }
 
 
@@ -253,7 +253,7 @@ function getAnnotationTags(array $annotation)
 
     $parameters=array("i", $resource_ref, "i", $annotation_ref);
     return ps_query("
-            SELECT *,
+            SELECT " . columns_in("node","n") . ",
                    (SELECT 'yes' FROM resource_node WHERE resource = ? AND node = ref) AS tag_searchable
               FROM node AS n
              WHERE ref IN (SELECT node FROM annotation_node WHERE annotation = ?);", $parameters);

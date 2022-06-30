@@ -13,7 +13,6 @@ $offset       = getvalescaped("offset", 0, true);
 $restypes     = getvalescaped("restypes", "");
 if (strpos($search,"!") !== false) { $restypes = ""; }
 $archive      = getvalescaped("archive", 0, true);
-$starsearch   = getvalescaped("starsearch", "");
 $default_sort_direction = (substr($order_by,0,5) == "field") ? "ASC" : "DESC";
 $sort         = getval("sort", $default_sort_direction);
 $ajax         = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
@@ -129,7 +128,8 @@ if($editing && !$editexternalurl)
             $links_trail = array(
                 array(
                     'title' => $lang["teamcentre"],
-                    'href'  => $baseurl_short . "pages/team/team_home.php"
+                    'href'  => $baseurl_short . "pages/team/team_home.php",
+                    'menu' =>  true
                 ),
                 array(
                     'title' => $lang["manage_external_shares"],

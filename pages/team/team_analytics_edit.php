@@ -12,7 +12,7 @@ $print=(getval("print","")!=""); # Print mode?
 if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
     {
     # Load a saved report
-    $report=sql_query("select * from user_report where ref='$ref' and user='$userref'");if (count($report)==0) {exit("Report not found.");}
+    $report=ps_query("select " . columns_in("user_report") . " from user_report where ref= ? and user= ?", ['i', $ref, 'i', $userref]);if (count($report)==0) {exit("Report not found.");}
     $report=$report[0];
     $params = unserialize($report['params']);
 
@@ -69,14 +69,20 @@ if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(g
     if ($ref=="")
         {
         # New report
-        sql_query("insert into user_report(name,user) values ('" . getvalescaped("name","") . "','$userref')");
+        ps_query("insert into user_report(name,user) values (?, ?)", ['s', getval("name",""), 'i', $userref]);
         $ref=sql_insert_id();
         }
     # Saving
     unset($_POST[$CSRF_token_identifier]);
     unset($_POST['save']);
     $params=serialize($_POST);
-    sql_query("update user_report set `name`='" . getvalescaped("name","") . "',`params`='" . escape_check($params) . "' where ref='$ref' and user='$userref'");
+    ps_query(
+        "update user_report set `name`= ?,`params`= ? where ref= ? and user= ?", 
+        ['s', getval("name",""), 
+         's', $params, 
+         'i', $ref, 
+         'i', $userref]
+    );
     }
     
 
@@ -116,7 +122,8 @@ else
     $links_trail = array(
         array(
             'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php"
+            'href'  => $baseurl_short . "pages/team/team_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["rse_analytics"],
@@ -280,7 +287,6 @@ for ($n=0;$n<count($types);$n++)
         if (($activity_type=="" || $activity_type==$types[$n]) && ($collection=="" || in_array($types[$n],$resource_activity_types)))
             {
             $graph_params="report=" . $ref . "&n=" . $n . "&activity_type=" . urlencode($types[$n]) . "&groups=" . urlencode(join(",",$groups)) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . $period . "&period_days=" . $period_days . "&collection=" . $collection  . "&resource_type=" . $resource_type . "&external=" . $external;
-            #echo $graph_params;
             
             # Show the object breakdown for certain types only.
             $show_breakdown=false;

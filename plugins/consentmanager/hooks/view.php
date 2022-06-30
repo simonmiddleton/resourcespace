@@ -6,13 +6,13 @@ function HookConsentmanagerViewCustompanels()
 	
 	if($k!=""){return false;}
 
-	$consents=sql_query("select consent.* from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource='$ref' order by ref");
+	$consents=ps_query("select consent.* from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource= ? order by ref", ['i', $ref]);
 	?>
     <div class="RecordBox">
     <div class="RecordPanel">
     <div class="Title"><?php echo $lang["consent_management"] ?></div>
 
-    <?php if ($edit_access) { 
+    <?php if ($edit_access || checkperm("cm")) { 
         $new_consent_url_params = array(
             'ref'        => 'new',
             'resource'   => $ref,
@@ -37,7 +37,7 @@ function HookConsentmanagerViewCustompanels()
 		<td><?php echo $lang["usage"] ?></a></td>
 		<td><?php echo $lang["fieldtitle-expiry_date"] ?></a></td>
 
-		<?php if ($edit_access) { ?>
+		<?php if ($edit_access || checkperm("cm")) { ?>
 		<td><div class="ListTools"><?php echo $lang["tools"] ?></div></td>
 		<?php } ?>
 		
@@ -63,7 +63,7 @@ function HookConsentmanagerViewCustompanels()
 			</td>
 			<td><?php echo ($consent["expires"]==""?$lang["no_expiry_date"]:nicedate($consent["expires"])) ?></td>
 		
-			<?php if ($edit_access) { ?>
+			<?php if ($edit_access || checkperm("cm")) { ?>
 			<td><div class="ListTools">
 			<a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/edit.php?ref=<?php echo $consent["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
 			<a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/unlink.php?ref=<?php echo $consent["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]?></a>

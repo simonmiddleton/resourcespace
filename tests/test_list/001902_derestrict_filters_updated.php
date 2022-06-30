@@ -1,11 +1,8 @@
 <?php
+command_line_only();
 
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Test derestrict filters 
-
-// Save current settings
-$saved_search_filter_nodes = $search_filter_nodes;
 $saved_edit_filter = $usereditfilter;
 $saved_user = $userref;
 $original_user_data = $userdata;
@@ -14,23 +11,29 @@ function test_derestrict_filter_text_update($user,$group,$filtertext)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    sql_query("UPDATE usergroup SET derestrict_filter='" . $filtertext . "', derestrict_filter_id=NULL WHERE ref='" . $group . "'");
+    ps_query("UPDATE usergroup SET derestrict_filter=?, derestrict_filter_id=NULL WHERE ref=?",
+        ["s",$filtertext,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
+    $userdata = [$userdata];
     }
 
 function test_derestrict_filter_id_update($user,$group,$filterid)
     {
     global $userdata,$udata_cache;
     $udata_cache = array();
-    sql_query("UPDATE usergroup SET derestrict_filter_id='" . $filterid . "' WHERE ref='" . $group . "'");
+    ps_query("UPDATE usergroup SET derestrict_filter_id=? WHERE ref=?",["i",$filterid,"i",$group]);
     $userdata = get_user($user);
     setup_user($userdata);
+    $userdata = [$userdata];
     }
 
 // Set permissions to restrict access to all resources
 $derestrictuser = new_user("derestricted");
-sql_query("INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) SELECT 'testeditgroup','s,e0,f*','','',NULL,NULL FROM usergroup WHERE ref='3';");
+ps_query(
+    "INSERT INTO usergroup (name,permissions,edit_filter,derestrict_filter,edit_filter_id,derestrict_filter_id) 
+        SELECT 'testeditgroup','s,e0,f*','','',NULL,NULL 
+        FROM usergroup WHERE ref='3';");
 $testderestrictgroup = sql_insert_id();
 user_set_usergroup($derestrictuser, $testderestrictgroup);
 
@@ -61,26 +64,9 @@ add_resource_nodes($resourced,array($apacnode, $sensitivenode));
 add_resource_nodes($resourcee,array($apacnode,$opennode));
 add_resource_nodes($resourcef,array($americasnode,$topsecretnode));
 
-// SUBTEST A: old style derestrict filter
-$search_filter_nodes = false;
+// SUBTEST A: old style derestrict filter migrated
 $userderestrictfilter = "classification=Open;region=EMEA";
 test_derestrict_filter_text_update($derestrictuser,$testderestrictgroup,$userderestrictfilter);
-
-$openaccessa = get_resource_access($resourcea) == 0;
-$openaccessb = get_resource_access($resourceb) == 0;
-$openaccessc = get_resource_access($resourcec) == 0;
-$openaccessd = get_resource_access($resourced) == 0;
-$openaccesse = get_resource_access($resourcee) == 0;
-$openaccessf = get_resource_access($resourcef) == 0;
-
-if($openaccessa || !$openaccessb || $openaccessc || $openaccessd || $openaccesse || $openaccessf)
-	{
-    echo "SUBTEST A";
-    return false;
-    }
-
-// SUBTEST B: old style derestrict filter migrated
-$search_filter_nodes = true;
 $migrateresult = migrate_filter($userderestrictfilter);
 test_derestrict_filter_id_update($derestrictuser,$testderestrictgroup,$migrateresult);
 
@@ -97,7 +83,6 @@ if($openaccessa || !$openaccessb || $openaccessc || $openaccessd || $openaccesse
     }
 
 // Reset saved settings
-$search_filter_nodes = $saved_search_filter_nodes;
 $userdata = $original_user_data;
 setup_user($original_user_data);
 

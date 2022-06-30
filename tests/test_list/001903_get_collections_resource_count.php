@@ -1,8 +1,6 @@
 <?php
-if(PHP_SAPI != 'cli')
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setting up the test
 $original_user_data = $userdata;
@@ -16,13 +14,11 @@ $add_ref_to_col_fct = function($ref, $col, $col_state)
     return $col_state;
     };
 
-
-
 // Create a general user
 $user_general = new_user("test_001903_general", 2);
 if($user_general === false)
     {
-    $user_general = sql_value("SELECT ref AS `value` FROM user WHERE username = 'test_001903_general'", 0);
+    $user_general = ps_value("SELECT ref AS `value` FROM user WHERE username = 'test_001903_general'", array(), 0);
     }
 if($user_general === 0)
     {
@@ -59,8 +55,6 @@ $col_B_state = $add_ref_to_col_fct($deleted_resources[0], $col_B, $col_B_state);
 $col_B_state = $add_ref_to_col_fct($deleted_resources[1], $col_B, $col_B_state);
 $col_C_state = $add_ref_to_col_fct($confidential_resource, $col_C, $col_C_state);
 
-
-
 ############################
 ##### TEST START POINT #####
 ############################
@@ -82,8 +76,6 @@ if($initial_admin_count[$col_A] == $admin_count[$col_A])
     {
     return $fail_fct('Test change to collection will update the count');
     }
-
-
 
 setup_user($user_general_data);
 

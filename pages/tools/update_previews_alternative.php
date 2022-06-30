@@ -8,13 +8,13 @@
 include "../../include/db.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
-$max=sql_value("select max(ref) value from resource_alt_files",0);
-$ref=getvalescaped("ref",1);
+$max=ps_value("select max(ref) value from resource_alt_files",array(), 0);
+$ref=getval("ref", 1);
 $previewbased=getvalescaped("previewbased",false);
 
-$resourceinfo=sql_query("select a.ref,a.resource,a.file_extension from resource_alt_files a join resource r on a.resource=r.ref where a.ref='$ref' and length(a.file_extension)>0");
+$resourceinfo = ps_query("SELECT a.ref, a.resource, a.file_extension FROM resource_alt_files a JOIN resource r ON a.resource = r.ref WHERE a.ref = ? AND length(a.file_extension) > 0", ["i", $ref]);
 if (count($resourceinfo)>0)
 	{
 	create_previews($resourceinfo[0]["resource"],false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false,$previewbased,$ref);

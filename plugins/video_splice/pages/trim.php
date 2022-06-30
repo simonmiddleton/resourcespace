@@ -12,7 +12,6 @@ $order_by=getvalescaped("order_by","");
 $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$starsearch=getvalescaped("starsearch","");
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
@@ -36,7 +35,6 @@ $urlparams= array(
     "order_by" => $order_by,
     "offset" => $offset,
     "restypes" => $restypes,
-    "starsearch" => $starsearch,
     "archive" => $archive,
     "default_sort_direction" => $default_sort_direction,
     "sort" => $sort,
@@ -54,10 +52,9 @@ if(!is_array($resource))
     exit();
     }
 $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
-$downloadaccess = resource_download_allowed($ref, "scr", $resource['resource_type']);
 
-// not allowed to edit, download or create new resources from this resource?
-if (!($editaccess || !checkperm("A") || checkperm('c') || checkperm('d') || $downloadaccess) && $ref>0) {exit ("Permission denied.");}
+// not allowed to edit this resource?
+if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
@@ -132,7 +129,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             Total duration: " . $ffmpeg_duration_time);
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
+        ps_query("update resource set created_by=?,archive=?,file_extension=? where ref=?",array("i",$userref,"i",get_default_archive_state(),"s",$ffmpeg_preview_extension,"i",$newref));
 
             // Unlink the target
         if (file_exists($target)) {unlink ($target);}
@@ -193,7 +190,14 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         );
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$alt_ref'");
+        ps_query("update resource set created_by= ?,archive= ?,file_extension= ? where ref= ?",
+                [
+                'i', $userref,
+                'i', get_default_archive_state(),
+                's', $ffmpeg_preview_extension,
+                'i', $alt_ref
+                ]        
+        );
 
         // Unlink the target
         if (file_exists($target)) {unlink ($target);}
@@ -223,7 +227,15 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         $file_size = @filesize_unlimited($target);
 
         // Save alternative file data.
-        sql_query("update resource_alt_files set file_name='" . escape_check($alt_filename) . "',file_extension='" . escape_check($ffmpeg_preview_extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$ref' and ref='$alt_ref'");
+        ps_query("update resource_alt_files set file_name= ?,file_extension= ?,file_size= ?,creation_date=now() where resource= ? and ref= ?",
+                [
+                's', $alt_filename,
+                's', $ffmpeg_preview_extension,
+                'i', $file_size,
+                'i', $ref,
+                'i', $alt_ref
+                ]
+        );
 
         if ($alternative_file_previews)
             {
@@ -245,44 +257,6 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
 
         // add ref to list
         $trimmed_resources_alt[] = $alt_ref;
-        }
-    else if($upload_type == 'download')
-        {
-        $randstring=md5(rand() . microtime());
-        $target = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $ffmpeg_preview_extension;
-        
-        if ($config_windows)
-            {
-            // Windows systems have a hard time with the long paths used for video generation.
-            $target_ext = strrchr($target, '.');
-            $source_ext = strrchr($video_original_file, '.');
-            $target_temp = get_temp_dir() . "/vs_t" . $alt_ref . $target_ext;
-            $target_temp = str_replace("/", "\\", $target_temp);
-            $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
-            $source_temp = str_replace("/", "\\", $source_temp);
-            copy($video_original_file, $source_temp);
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-            $output = exec($shell_exec_cmd);
-            rename($target_temp, $target);
-            unlink($source_temp);
-            }
-        else
-            {
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            $output = exec($shell_exec_cmd);
-            }
-
-            $download_url = generateURL($baseurl. "/pages/download.php", 
-            [
-                "userfile" => $ref . "_" . $randstring . "." . $ffmpeg_preview_extension,
-                "filename" => $ref . '_trim'
-            ]);
-
-            $dlurl = generateURL($baseurl . "/pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
-            $url_params["url"]=$dlurl;
-            
-            $redirect=generateURL("pages/terms.php",$url_params);
-            redirect($redirect);
         }
     }
 ?>
@@ -403,7 +377,7 @@ if(isset($resource["field".$view_title_field]))
     <form method="post"
           action="<?php echo $form_action; ?>"
           id="trimform"
-          onsubmit="if(jQuery('#uploadtype').val() == 'download'){return CentralSpacePost(this, true)}
+          onsubmit="
             return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(this, true);">
             <?php generateFormToken("trimform"); ?>
             <div class="Question" id="video_trim_tool">
@@ -481,11 +455,9 @@ if(isset($resource["field".$view_title_field]))
         </div>
         <div class="Question" id="question_uploadtype">
             <label><?php echo $lang["video-trim_upload-type"]?></label>
-            <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (this.value == 'new') {q.style.display='block';} else {q.style.display='none';}">
-            <?php if(!$disable_alternative_files && !checkperm('A')){?><option value="alt"><?php echo $lang["addalternativefile"]?></option><?php }?>
-            <?php if(checkperm('c') || checkperm('d')){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
-            <?php if($downloadaccess){?><option value="download"><?php echo $lang["download"]?></option><?php }?>
-            
+            <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
+            <option value="alt"><?php echo $lang["addalternativefile"]?></option>
+            <option value="new"><?php echo $lang["createnewresource"]?></option>
             </select>
             <div class="clearerleft"> </div>
         </div>

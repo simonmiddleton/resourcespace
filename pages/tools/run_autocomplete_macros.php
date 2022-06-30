@@ -25,7 +25,7 @@ if(array_key_exists('force', $cli_options))
 
 $force_update = (bool) getvalescaped("force", $force_update);
 
-$resources = sql_query("SELECT ref FROM resource WHERE ref > 0");
+$resources = ps_query("SELECT ref FROM resource WHERE ref > 0");
 
 for ($n = 0; $n < count($resources); $n++)
     {

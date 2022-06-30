@@ -1,4 +1,7 @@
 <?php
+command_line_only();
+
+
 // create 5 new resources
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);

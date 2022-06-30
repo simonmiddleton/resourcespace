@@ -7,15 +7,17 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 unset($additional_archive_states);$additional_archive_states=array();
 include_once '../include/rse_workflow_functions.php';
+include __DIR__ . "/../../../lib/fontawesome/resourcespace/icon_classes.php";
 
-$code=getvalescaped("code","");
-$name=getvalescaped("name","");
-$notify_group=getvalescaped("notify_group",0, true);
-$more_notes = getvalescaped('more_notes', 0, true);
-$notify_user = getvalescaped('notify_user', 0, true);
-$rse_workflow_email_from = getvalescaped('rse_workflow_email_from', '');
-$rse_workflow_bcc_admin = getvalescaped('rse_workflow_bcc_admin', 0, true);
+$code=getval("code","");
+$name=getval("name","");
+$notify_group=getval("notify_group",0, true);
+$more_notes = getval('more_notes', 0, true);
+$notify_user = getval('notify_user', 0, true);
+$rse_workflow_email_from = getval('rse_workflow_email_from', '');
+$rse_workflow_bcc_admin = getval('rse_workflow_bcc_admin', 0, true);
 $simple_search = getval('simple_search', 0, true);
+$icon = getval('icon', '');
 $errortext="";
 $saved=false;
 
@@ -33,6 +35,7 @@ if($code=="new")
     $workflowstate["rse_workflow_email_from"] = "";
     $workflowstate["rse_workflow_bcc_admin"] = 0;
     $workflowstate["simple_search_flag"] = 0;
+    $workflowstate["icon"] = WORKFLOW_DEFAULT_ICON;
     }
 else
     {   
@@ -47,7 +50,7 @@ else
     }
 
 
-if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
+if (getval("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
     {
     if ($name=="")
         {
@@ -55,8 +58,6 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
         }
     if($errortext=="")
         {
-        $simple_search_escaped = escape_check($simple_search);
-
         if($code=="new")
             {
             rse_workflow_create_state([
@@ -64,23 +65,36 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
                 'notify_group' => $notify_group,
                 'more_notes_flag' => $more_notes,
                 'notify_user_flag' => $notify_user,
-                'email_from' => $rse_workflow_email_from,
+                'email_from' => '',
                 'bcc_admin' => $rse_workflow_bcc_admin,
-                'simple_search_flag' => $simple_search_escaped,
+                'simple_search_flag' => $simple_search,
+                'icon' => $icon,
             ]);
             }
         else
             {
-            sql_query("
+            ps_query("
                 UPDATE archive_states
-                   SET name='$name',
-                       notify_group='$notify_group',
-                       more_notes_flag='$more_notes',
-                       notify_user_flag='$notify_user',
-                       email_from='$rse_workflow_email_from',
-                       bcc_admin='$rse_workflow_bcc_admin',
-                       simple_search_flag = '$simple_search_escaped'
-                 WHERE code = '$code'");
+                   SET name = ?,
+                       notify_group = ?,
+                       more_notes_flag = ?,
+                       notify_user_flag = ?,
+                       email_from = '',
+                       bcc_admin = ?,
+                       simple_search_flag = ?,
+                       icon = ?
+                 WHERE code = ?",
+                    [
+                    "s",$name,
+                    "i",$notify_group,
+                    "i",$more_notes,
+                    "i",$notify_user,
+                    "i",$rse_workflow_bcc_admin,
+                    "i",$simple_search,
+                    "s",$icon,
+                    "i",$code,
+                    ]
+                );
             }
         
         clear_query_cache("workflow");
@@ -91,9 +105,10 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false
     $workflowstate["notify_group"]=$notify_group;
     $workflowstate['more_notes_flag']=$more_notes;
     $workflowstate['notify_user_flag']=$notify_user;
-    $workflowstate["rse_workflow_email_from"]=$rse_workflow_email_from;
+    $workflowstate["rse_workflow_email_from"]='';
     $workflowstate["rse_workflow_bcc_admin"]=$rse_workflow_bcc_admin;
     $workflowstate["simple_search_flag"] = $simple_search;
+    $workflowstate["icon"] = $icon;
     }   
     
     
@@ -107,7 +122,8 @@ include '../../../include/header.php';
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["rse_workflow_manage_workflow"],
@@ -195,10 +211,16 @@ else if ($saved)
             <input id="more_notes" type="checkbox" name="more_notes" value="1" <?php echo $more_notes_checked; ?>>
             <div class="clearerleft"></div>
         </div>
-        
-        <div class="Question" id="emailfrom_question">
-            <label for="rse_workflow_email_from"><?php echo str_replace("%EMAILFROM%",$email_from,$lang['rse_workflow_email_from']); ?></label>
-            <input class="stdwidth" type="text" name="rse_workflow_email_from" id="rse_workflow_email_from" value="<?php echo htmlspecialchars($workflowstate["rse_workflow_email_from"]);  ?>" />
+
+        <div class="Question" id="notify_user_question">
+            <label for="notify_user"><?php echo $lang['rse_workflow_notify_user_label']; ?></label>
+            <?php
+                $notify_user_checked = '';
+                if($workflowstate['notify_user_flag'] == 1) {
+                    $notify_user_checked = 'checked';
+                }
+            ?>
+            <input id="notify_user" type="checkbox" name="notify_user" value="1" <?php echo $notify_user_checked; ?>>
             <div class="clearerleft"></div>
         </div>
         
@@ -212,18 +234,6 @@ else if ($saved)
                     }
             ?>
             <input id="rse_workflow_bcc_admin" type="checkbox" name="rse_workflow_bcc_admin" value="1" <?php echo $bcc_admin; ?>>
-            <div class="clearerleft"></div>
-        </div>
-
-        <div class="Question" id="notify_user_question">
-            <label for="notify_user"><?php echo $lang['rse_workflow_notify_user_label']; ?></label>
-            <?php
-                $notify_user_checked = '';
-                if($workflowstate['notify_user_flag'] == 1) {
-                    $notify_user_checked = 'checked';
-                }
-            ?>
-            <input id="notify_user" type="checkbox" name="notify_user" value="1" <?php echo $notify_user_checked; ?>>
             <div class="clearerleft"></div>
         </div>
 
@@ -247,7 +257,10 @@ else if ($saved)
             </div>
             <?php
             }
-            ?>
+
+    render_fa_icon_selector($lang["property-icon"],"icon",$workflowstate["icon"]);
+    ?>
+
     <div class="Question" id="QuestionSubmit">
         <label for="buttons"> </label>
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>

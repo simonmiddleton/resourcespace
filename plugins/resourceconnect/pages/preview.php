@@ -9,7 +9,7 @@ if ($k!="")
 	$kauth=false;
 	
 	$col=getvalescaped("col","");
-	$keys=sql_query("select access_key from external_access_keys where collection='$col' and access_key='$k'");
+	$keys=ps_query("select access_key from external_access_keys where collection=? and access_key=?",array("i",$col,"s",$k));
 	$kauth=count($keys)>0;
 	}
 
@@ -22,13 +22,11 @@ setcookie("search",$search, 0, '', '', false, true);
 
 # Assemble a URL from the existing parameters.
 $url=getvalescaped("resourceconnect_source","") . "/pages/preview.php?" . $_SERVER["QUERY_STRING"];
-#echo $url;
 
 $html=file_get_contents($url);
 
 #<!-- START GRAB -->
 #<!-- END GRAB -->
-#echo htmlspecialchars($html);
 
 $s=strpos($html, "<!-- START GRAB -->");
 $e=strpos($html, "<!-- END GRAB -->",$s);
@@ -37,11 +35,5 @@ $html=substr($html,$s,$e-$s);
 include "../../../include/header.php";
 
 echo $html;
-
-/*
-?>
-<a href="<?php echo str_replace("view.php","download.php",$url) ?>">Download test</a>
-<?php
-*/
 
 include_once "../../../include/footer.php";

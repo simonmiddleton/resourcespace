@@ -94,7 +94,6 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 				$auth = true;
 				// get the user info etc	
 				$userDetails = $objLdapAuth->getUserDetails($uname);
-				//print_r($userDetails);
 				if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  cn=" . $userDetails["cn"]) ; }
 				if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  dn=" . $userDetails["dn"]) ; }
 				
@@ -117,7 +116,6 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 					$username=$uname.$ldapauth['usersuffix'];
 					$password_hash = hash('sha256', md5('RS' . $username . $password));
 					ps_query('UPDATE user SET password = ? WHERE username = ?', ['s', $password_hash, 's', $username]);
-					//          $password=sql_value('select password value from user where username="'.$uname.$ldapauth['usersuffix'].'"',"");
 					return true;
 				}
 				elseif ($ldapauth['createusers']) 

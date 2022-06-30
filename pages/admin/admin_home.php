@@ -17,9 +17,7 @@ include ("../../include/header.php");
 		<?php } ?>
 		<li><a href="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php" onclick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-cubes"></i><br /><?php echo $lang["resource_types_manage"] ?></a></li>
 		<li><a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php" onclick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-bars"></i><br /><?php echo $lang["admin_resource_type_fields"] ?></a></li>
-        <?php if ($search_filter_nodes) { ?>
 		<li><a href="<?php echo $baseurl_short?>pages/admin/admin_filter_manage.php" onclick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-filter"></i><br /><?php echo $lang["filter_manage"] ?></a></li>
-		<?php } ?>
 		<li><a href="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onclick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang['page-title_report_management']; ?></a></li>
 		
 		<li><a href="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onclick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["page-title_size_management"] ?></a></li>
@@ -34,7 +32,7 @@ include ("../../include/header.php");
             <?php
             }
 
-        if(checkperm('a'))
+			if(checkperm('a'))
             {
             $failedjobs = job_queue_get_jobs("",STATUS_ERROR);
             $failedjobcount = count($failedjobs);
@@ -54,6 +52,9 @@ include ("../../include/header.php");
             </li>
             <?php
             }
+
+		// A place to add links to setup pages keeping them away from the more "sysadmin" type pages towards the bottom.
+		hook("customadminsetup");
 
         if('' != $mysql_bin_path && $system_download_config)
             {

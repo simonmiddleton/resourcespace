@@ -15,6 +15,7 @@ $order_by=getval("orderby","");
 $filter_by_parent=getval("filterbyparent","");
 $find=getval("find","");
 $filter_by_permissions=getval("filterbypermissions","");
+$copy_from=getval("copyfrom","");
 
 $url_params=
 	"?ref={$ref}" .
@@ -48,8 +49,13 @@ if (getval("save","")!="" && enforcePostRequest(false))
 
 	$perms = array_unique($perms);
 	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
-	sql_query("update usergroup set permissions='" . escape_check(join(",",$perms)) . "' where ref='$ref'");
+    ps_query("update usergroup set permissions=? where ref=?",["s",join(",",$perms),"i",$ref]);
 	}
+
+if ($copy_from!="")
+    {
+    copy_usergroup_permissions($copy_from,$ref);
+    }
 
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
@@ -61,7 +67,8 @@ $permissions_done=array();
     $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["page-title_user_group_management"],
@@ -80,8 +87,14 @@ renderBreadcrumbs($links_trail);
 ?>
 	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
 
-	<form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
-		<input type="hidden" name="save" value="1">		
+    <form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
+        <input type="hidden" name="save" value="1">
+        
+        <div class="BasicsBox">
+            <label><?php echo $lang["copypermissions"];?></label>
+            <input type="text" name="copyfrom">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]; ?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirmcopypermissions"]?>');">
+        </div>
         <?php
         generateFormToken("permissions");
 
@@ -96,7 +109,7 @@ renderBreadcrumbs($links_trail);
 ?>		<div class="Listview">
 			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
+					<td colspan=2 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
 				</tr>
 <?php
 DrawOption("s", $lang["searchcapability"]);
@@ -137,7 +150,7 @@ DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
-$fields=sql_query("select *,active from resource_type_field order by active desc,order_by", "schema");
+$fields=ps_query("select " . columns_in("resource_type_field") . " from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (!in_array("f*",$permissions))
@@ -156,7 +169,7 @@ foreach ($fields as $field)
 	}
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
-$fields=sql_query("select * from resource_type_field order by active desc,order_by", "schema");
+$fields=ps_query("select " . columns_in("resource_type_field") . " from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
 	{
 	if (in_array("F*",$permissions))	
@@ -180,7 +193,7 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=sql_query("select * from resource_type order by name", "schema");
+$rtypes=get_resource_types();
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
@@ -274,7 +287,17 @@ DrawOption("j*", $lang["can_see_all_theme_categories"], false, true);
 if(!in_array("j*", $permissions))
     {
     render_featured_collections_category_permissions(array("permissions" => $permissions));
+    # Add any 'loose' featured collections at top level of the tree that contain resources (so aren't in a category)
+    $loose_fcs = array_values(array_filter(get_featured_collections(0, ["access_control" => false]), function($fc) {
+        return $fc["has_resources"] > 0;
+        }));
+    foreach($loose_fcs as $loose_fc)
+        {
+        $description = $lang["can_see_featured_collection"] . i18n_get_translated($loose_fc["name"]);
+        DrawOption('j' . $loose_fc["ref"], $description, false, false);
+        }
     }
+
 DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 # ---------- end of featured collection categories
 
@@ -301,7 +324,7 @@ if (in_array("t",$permissions))
 	DrawOption("m", $lang["can_bulk-mail_users"]);
 	DrawOption("u", $lang["can_manage_users"]);
 	DrawOption("k", $lang["can_manage_keywords"]);
-	DrawOption("a", $lang["can_access_system_setup"]);
+	DrawOption("a", $lang["can_access_system_setup"],false,true);
 	}
 else
 	{

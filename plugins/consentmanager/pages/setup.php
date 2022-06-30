@@ -1,7 +1,7 @@
 <?php
 include "../../../include/db.php";
 
-include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permission denied.");}
+include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permission denied.");}
 $plugin_page_heading = 'Consent Manager';
 $plugin_name = 'consentmanager';
 if(!in_array($plugin_name, $plugins))

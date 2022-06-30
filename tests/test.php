@@ -64,7 +64,7 @@ function match_values( $arraya , $arrayb )
 $mysql_db = "rs_test_db";
 $test_user_name = "admin";
 $test_user_password = "admin123";
-$inst_plugins = sql_query('SELECT name FROM plugins WHERE inst_version>=0 order by name');
+$inst_plugins = ps_query('SELECT name FROM plugins WHERE inst_version>=0 order by name');
 
 if(array_search('nosetup',$argv)===false)
     {
@@ -81,8 +81,12 @@ foreach($savedconfigs as $savedconfig)
     $saved[$savedconfig] = $$savedconfig;
     }
     
+// Save existing $baseurl so tests will still use valid URLs
+
+$saved_url = $baseurl != "http://my.site/resourcespace" ? $baseurl : "http://localhost";
 include "../include/config.default.php";
 eval(file_get_contents("../include/config.new_installs.php"));
+$baseurl = $saved_url;
    
 foreach($saved as $key => $savedsetting)    
     {
@@ -100,12 +104,12 @@ if(array_search('nosetup',$argv)===false)
     echo "...done\n";
     # Insert a new user and run as them.
     $u = new_user($test_user_name);
-    sql_query("UPDATE `user` SET `password`='{$test_user_password }'");
+    ps_query("UPDATE `user` SET `password`=?",array("s",$test_user_password));
     }
 else
     {
     # Try to retrieve the ref of the existing user
-    $u = sql_value("SELECT `ref` AS value FROM `user` WHERE `username`='{$test_user_name}'",-1);
+    $u = ps_value("SELECT `ref` AS value FROM `user` WHERE `username`=?",array("s",$test_user_name),-1);
     if ($u==-1)
         {
         die("Could not find existing '{$test_user_name}' user");
@@ -245,6 +249,6 @@ echo "All tests complete.\n";
 if(array_search('noteardown',$argv)===false)
     {
     # Remove database
-    sql_query("drop database `$mysql_db`");
+    ps_query("drop database `$mysql_db`");
     rcRmdir($storagedir);
     }

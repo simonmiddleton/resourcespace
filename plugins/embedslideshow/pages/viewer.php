@@ -100,7 +100,7 @@ foreach ($resources as $resource)
 	global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
 	if($embedslideshow_textfield && $showtext) 
 		{ 
-		$resource_data = get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield);
+		$resource_data = i18n_get_translated(get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield));
 		if($resource_data !="") 
 			{
 			?>

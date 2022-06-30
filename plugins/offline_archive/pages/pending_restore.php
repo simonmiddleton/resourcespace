@@ -9,15 +9,15 @@ if (!checkperm('i'))
 
 // Handle removed resources
 $removeref=getvalescaped("remove",0,true);
-if($removeref > 0)	
+if($removeref > 0 && is_numeric($removeref))	
 	{
-	sql_query("update resource set pending_restore=0 where ref ='" . $removeref . "'");
+	ps_query("UPDATE resource SET pending_restore=0 WHERE ref = ?", ['i', $removeref]);
 	resource_log($removeref,"",0,$lang['offline_archive_resource_log_restore_removed'],"","");
 	$resulttext=$lang["offline_archive_resources_restore_cancel_confirmed"];
 	}
 
-$title_field="field".$view_title_field;
-$pendingrestores=sql_query("select ref, $title_field, file_size from resource where pending_restore='1'");
+$title_field = "field".$view_title_field;
+$pendingrestores=ps_query("SELECT ref, $title_field, file_size FROM resource WHERE pending_restore='1'");
 
 
 include '../../../include/header.php';
@@ -58,7 +58,7 @@ if (isset($resulttext))
 		foreach ($pendingrestores as $pendingrestore)
 			{
 			$ref=$pendingrestore['ref'];
-			$archivecode=sql_value("select value from resource_data where resource='$ref' and resource_type_field='$offline_archive_archivefield'",'');
+			$archivecode = get_data_by_field($ref,$offline_archive_archivefield);
 			echo '<tr>
 			<td onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">
 			' . $ref . '</td>

@@ -4,6 +4,13 @@ function HookFlickr_theme_publishAllRender_actions_add_collection_option($top_ac
 	{
 	global $lang, $baseurl_short, $pagename;
 
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }    
+
 	$result=get_collection_resources($collection_data['ref']);
 	$count_result=count($result);
 	
@@ -19,11 +26,12 @@ function HookFlickr_theme_publishAllRender_actions_add_collection_option($top_ac
 			urlencode($collection_data["ref"])
 		);
 		
-		// Add new option
-		$c=count($options);
-		$options[$c]['value']='flickr_publish';
-		$options[$c]['label']=$lang_string;
-		$options[$c]['data_attr']=$data_attribute;
+        // Add new option
+        $c=count($options);
+        $options[$c]['value']='flickr_publish';
+        $options[$c]['label']=$lang_string;
+        $options[$c]['data_attr']=$data_attribute;
+        $options[$c]['category']=ACTIONGROUP_ADVANCED;
 	
 		return $options;
 		}

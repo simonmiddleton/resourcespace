@@ -23,7 +23,7 @@
  * </code>
  * 
  * @param string $fieldname Name to use for the field.
- * @param string $opt_array Array of options to fill the select with
+ * @param array $opt_array Array of options to fill the select with
  * @param mixed $selected If matches value the option is marked as selected
  * @param string $groupby Column to group by
  * @return string HTML output.
@@ -122,22 +122,8 @@ function set_config_option($user_id, $param_name, $param_value)
     $param_value = config_clean($param_value);
     $param_value = escape_check($param_value);
 
-    $query = sprintf('
-            INSERT INTO user_preferences (
-                                             user,
-                                             parameter,
-                                             `value`
-                                         )
-                 VALUES (
-                            %s,     # user
-                            \'%s\', # parameter
-                            \'%s\'  # value
-                        );
-        ',
-        is_null($user_id) ? 'NULL' : '\'' . escape_check($user_id) . '\'',
-        escape_check($param_name),
-        $param_value
-    );
+    $query = "INSERT INTO user_preferences (user,parameter,`value`) VALUES (?,?,?)";
+   
     $current_param_value = null;
     if(get_config_option($user_id, $param_name, $current_param_value))
         {
@@ -145,26 +131,30 @@ function set_config_option($user_id, $param_name, $param_value)
             {
             return true;
             }
+        $params[] = 's'; $params[] = $param_value;
+        if(is_null($user_id))
+            {
+            $user_query = 'user IS NULL';
+            }
+        else    
+            {
+            $user_query = 'user = ?';
+            $params[] = 'i'; $params[] = $user_id;
+            }
 
-        $query = sprintf('
-                UPDATE user_preferences
-                   SET `value` = \'%s\'
-                 WHERE user %s
-                   AND parameter = \'%s\';
-            ',
-            $param_value,
-            is_null($user_id) ? 'IS NULL' : '= \'' . escape_check($user_id) . '\'',
-            escape_check($param_name)
-        );
+        $query = "UPDATE user_preferences SET `value` = ? WHERE ". $user_query ." AND parameter = ?";
+        $params[] = "s"; $params[] = $param_name;
 
-		if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
-			{
-			log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . escape_check($param_name) . "'", null, $current_param_value);
-			}
-
-		}
-
-    sql_query($query);
+        if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
+            {
+            log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . escape_check($param_name) . "'", null, $current_param_value);
+            }
+        }
+    else
+        {
+        $params  = ["i",$user_id,"s",$param_name,"s",$param_value,];
+        }
+    ps_query($query,$params);
 
     // Clear disk cache
     clear_query_cache("preferences");
@@ -192,17 +182,19 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
         return false;
         }
 
-    $query = sprintf('
-            SELECT `value`
-              FROM user_preferences
-             WHERE user %s
-               AND parameter = "%s";
-        ',
-        is_null($user_id) ? 'IS NULL' : '= \'' . escape_check($user_id) . '\'',
-        $name
-    );
-    $config_option = sql_value($query, null);
+    if(is_null($user_id))
+        {
+        $user_query = 'user IS NULL';
+        }
+    else    
+        {
+        $user_query = 'user = ?';
+        $params[] = 'i'; $params[] = $user_id;
+        }
 
+    $query = "SELECT `value` FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
+    $params[] = "s"; $params[] = $name;
+    $config_option = ps_value($query,$params, null);
     if(is_null($default) && isset($GLOBALS['system_wide_config_options'][$name]))
         {
         $default = $GLOBALS['system_wide_config_options'][$name];
@@ -229,7 +221,7 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 */
 function get_config_option_users($option,$value)
     {
-    $users = sql_array("SELECT user value FROM user_preferences WHERE parameter = '" . escape_check($option). "' AND value='" . escape_check($value) . "'","preferences");
+    $users = ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value=?",array("s",$option,"s",$value), "preferences");
     return $users;   
     }
 
@@ -243,15 +235,19 @@ function get_config_option_users($option,$value)
 */
 function get_config_options($user_id, array &$returned_options)
     {
-    $query = sprintf('
-            SELECT parameter,
-                   `value`
-              FROM user_preferences
-             WHERE %s;
-        ',
-        is_null($user_id) ? 'user IS NULL' : 'user = \'' . escape_check($user_id) . '\''
-    );
-    $config_options = sql_query($query,"preferences");
+    $params = [];
+    if(is_null($user_id))
+        {
+        $sql = 'user IS NULL';
+        }
+    else
+        {
+        $sql = 'user = ?';
+        $params = ['i', $user_id];
+        }
+
+    $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql;
+    $config_options = ps_query($query, $params,"preferences");
 
     if(empty($config_options))
         {
@@ -778,7 +774,14 @@ function config_add_boolean_select($config_var, $label, $choices = '', $width = 
 function config_checkbox_select($name, $label, $current, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false,$on_change_js=null, $hidden=false)
     {
     global $lang;
-    $currentvalues=explode(",",$current);
+    if(trim($current) != "")
+        {
+        $currentvalues=explode(",",$current);
+        }
+    else
+        {
+        $currentvalues = [];
+        }
 	$wrap = 0;
 	?>
 	<div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
@@ -890,16 +893,18 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
     {
     global $lang;
 	$fieldtypefilter="";
+    $params = [];
 	if(count($ftypes)>0)
 		{
-		$fieldtypefilter = " type in ('" . implode("','", $ftypes) . "')";
+		$fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
+        $params = ps_param_fill($ftypes, 'i');
 		}
 		
     if($rtype===false){
-    	$fields=sql_query('select * from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', "schema");
+    	$fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
     }
     else{
-    	$fields=sql_query("select * from resource_type_field where resource_type='$rtype' " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", "schema");
+    	$fields= ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where resource_type= ? " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", array_merge(['i', $rtype], $params),"schema");
     }
 ?>
   <div class="Question">
@@ -1206,7 +1211,7 @@ function get_header_image($full = false)
         }
     else 
         {
-        $header_img_src = $baseurl.'/gfx/titles/title.svg';
+        $header_img_src = $baseurl.'/gfx/titles/title-black.svg';
         }
         
     return $header_img_src;

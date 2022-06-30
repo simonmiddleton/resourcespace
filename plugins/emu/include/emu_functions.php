@@ -37,21 +37,36 @@ function get_emu_resources()
     {
     global $emu_irn_field, $emu_resource_types, $emu_created_by_script_field;
 
+
+    $emu_config_rtfs = array_filter(array_filter(array_map('intval', [$emu_irn_field, $emu_created_by_script_field])), 'is_int_loose');
+    $emu_config_rts = array_filter(array_filter(array_map('intval', $emu_resource_types)), 'is_int_loose');
+    if(empty($emu_config_rtfs) || empty($emu_config_rts))
+        {
+        return [];
+        }
+
+    $sql_rtf_in = ps_param_insert(count($emu_config_rtfs));
+    $sql_rt_in = ps_param_insert(count($emu_config_rts));
+
     $sql = "SELECT 
-        rd.resource AS resource,
-        rd.value AS object_irn,
-        (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '?') AS created_by_script_flag,
-        r.file_checksum
-    FROM resource_data AS rd
-        RIGHT JOIN resource AS r ON rd.resource = r.ref AND r.resource_type IN ('" . ps_param_insert(count($emu_resource_types)) . "')
-    WHERE rd.resource > 0
-        AND rd.resource_type_field = '?'
-    ORDER BY rd.resource;
-    ";
+                   rn.resource AS resource,
+                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS object_irn,
+                   max(CASE WHEN n.resource_type_field = ? THEN n.`name` ELSE NULL END) AS created_by_script_flag,
+                   r.file_checksum
+              FROM resource_node AS rn
+        INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field IN ({$sql_rtf_in})
+        INNER JOIN resource AS r ON rn.resource = r.ref AND r.resource_type IN ({$sql_rt_in})
+             WHERE r.ref > 0
+          GROUP BY rn.resource
+          ORDER BY r.ref";
+
     $sql_params = array_merge(
-        ["i",$emu_created_by_script_field],
-        ps_param_fill($emu_resource_types,"i"),
-        ["i",$emu_irn_field]
+        [
+            'i', $emu_irn_field,
+            'i', $emu_created_by_script_field,
+        ],
+        ps_param_fill($emu_config_rtfs, 'i'),
+        ps_param_fill($emu_config_rts, 'i')
     );
     $emu_resources = ps_query($sql,$sql_params);
 

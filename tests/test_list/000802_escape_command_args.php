@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $expected = "'/usr/bin/madeupcmd' -d '%Y-%m-%d %H:%M:%S' -o '/path/to/file.ext'";
 $actual = escape_command_args(

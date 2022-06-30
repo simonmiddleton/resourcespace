@@ -1,8 +1,7 @@
 <?php
 // Creates or updates the database help files, ready for manual completion by adding a note to each column.
-
-// Uncomment next line to execute.
-exit();
+include "../../include/db.php";
+command_line_only();
 
 $folder=dirname(__FILE__) . "/../../dbstruct/";
 

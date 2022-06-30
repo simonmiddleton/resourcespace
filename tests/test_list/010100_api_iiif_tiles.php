@@ -1,8 +1,6 @@
 <?php
-if (php_sapi_name()!=="cli")
-    {
-    exit("This utility is command line only.");
-    }
+command_line_only();
+
 
 include_once(__DIR__ . "/../../include/image_processing.php");
 

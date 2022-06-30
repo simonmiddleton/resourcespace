@@ -14,9 +14,15 @@ $lang['action_dates_delete_logtext']=" - Automatically actioned by action_dates 
 $lang['action_dates_restrict_logtext']=" - Automatically restricted by action_dates plugin";
 $lang['action_dates_reallydelete']="Fully delete resource when action date passed? If set to false resources will be moved to the configured resource_deletion_state and thus recoverable";
 $lang['action_dates_email_admin_days']="Email system administrators a set number of days before this date is reached. Leave this option blank for no email to be sent.";
-$lang['action_dates_email_text_restrict']="The following resources are due to be restricted within %%DAYSMIN to %%DAYSMAX days.";
-$lang['action_dates_email_text_state']="The following resources are due to change state within %%DAYSMIN to %%DAYSMAX days.";
-$lang['action_dates_email_text']="The following resources are due to be restricted and/or change state within %%DAYSMIN to %%DAYSMAX days.";
+
+$lang['action_dates_email_text_restrict']="The following resources are due to be restricted in %%DAYS days.";
+$lang['action_dates_email_text_state']="The following resources are due to change state in %%DAYS days.";
+$lang['action_dates_email_text']="The following resources are due to be restricted and/or change state in %%DAYS days.";
+
+$lang['action_dates_email_range_restrict']="The following resources are due to be restricted within %%DAYSMIN to %%DAYSMAX days.";
+$lang['action_dates_email_range_state']="The following resources are due to change state within %%DAYSMIN to %%DAYSMAX days.";
+$lang['action_dates_email_range']="The following resources are due to be restricted and/or change state within %%DAYSMIN to %%DAYSMAX days.";
+
 $lang['action_dates_email_subject_restrict']="Notification of resources due to be restricted";
 $lang['action_dates_email_subject_state']="Notification of resources due to change state";
 $lang['action_dates_email_subject']="Notification of resources due to be restricted and/or change state";

@@ -9,11 +9,11 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 
-$lang=getvalescaped("lang","en");
+$lang=getval("lang","en");
 
 header("Content-type: text/plain; charset=utf-8");
 
-$site_text=sql_query("select page,name,text from site_text where language='$lang' group by page,name");
+$site_text = ps_query("SELECT page, name, text FROM site_text WHERE language = ? GROUP BY page, name", ["s", $lang]);
 foreach ($site_text as $s)
     {
     $key=$s["page"] . "__" . $s["name"];
