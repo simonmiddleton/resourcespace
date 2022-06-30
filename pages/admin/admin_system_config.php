@@ -43,6 +43,14 @@ foreach ($fontsdir as $f)
 $page_def[] = config_add_single_select('global_font', $lang['font'], $fonts, true, 420, '', true,"jQuery('#global_font_link').attr('href','" .  $baseurl . "/css/fonts/' + this.value + '.css');");
 
 $page_def[] = config_add_file_input(
+    'custom_font',
+    $lang['systemconfig_customfont_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    420,
+    array('woff2', 'woff', 'ttf', 'otf')
+);
+
+$page_def[] = config_add_file_input(
     'linkedheaderimgsrc',
     $lang['systemconfig_linkedheaderimgsrc_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
@@ -463,7 +471,14 @@ include '../../include/header.php';
     ?>
     </div>
     <script>registerCollapsibleSections(false);</script>
-    <?php config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); ?>
+    <?php 
+    if ($custom_font != "") 
+        {
+        ?><script>document.getElementById("question_global_font").hidden = true;</script>
+    <?php
+        } 
+    config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); 
+    ?>
 </div>
 <?php
 include '../../include/footer.php';

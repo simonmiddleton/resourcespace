@@ -462,7 +462,7 @@ function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
 * @param string $form_action URL where the form should post to
 * @param int    $width       Wdidth of the input file HTML tag. Default - 420
 */
-function config_file_input($name, $label, $current, $form_action, $width = 420)
+function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array())
     {
     global $lang,$storagedir;
     
@@ -491,8 +491,24 @@ function config_file_input($name, $label, $current, $form_action, $width = 420)
             {
             ?>
             <input type="file" name="<?php echo $name; ?>" style="width:<?php echo $width; ?>px">
-            <input type="submit" name="upload_<?php echo $name; ?>" value="<?php echo $lang['upload']; ?>">
+            <input type="submit" name="upload_<?php echo $name; ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension()"';} ?> value="<?php echo $lang['upload']; ?>">
             <?php
+            if (count($valid_extensions) > 0)
+                {
+                ?>
+                <script>
+                function checkValidExtension()
+                    {
+                    let file_path = document.getElementsByName("<?php echo $name; ?>")[0].value;
+                    let ext = file_path.toLowerCase().substr(file_path.lastIndexOf(".")+1);
+                    let valid_extensions = [<?php echo '"' . implode('", "', $valid_extensions) . '"'; ?>];
+                    if (file_path != "" && valid_extensions.includes(ext)) return true;
+                    alert(<?php echo '"' . str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension']) .'"'?>);
+                    return false;
+                    }
+                </script>
+                <?php
+                }
             }
         else
             {
@@ -582,14 +598,15 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
 * Return a data structure that will be used to generate the HTML for
 * uploading a file
 *
-* @param string $name        HTML input file name attribute
-* @param string $label
-* @param string $form_action URL where the form should post to
-* @param int    $width       Width of the input file HTML tag. Default - 420
+* @param string  $name               HTML input file name attribute
+* @param string  $label              Label for field
+* @param string  $form_action        URL where the form should post to
+* @param int     $width              Width of the input file HTML tag. Default - 420
+* @param array   $valid_extensions   Optional array of file extentions that will be validated during upload, see config_process_file_input()
 */
-function config_add_file_input($config_var, $label, $form_action, $width = 420)
+function config_add_file_input($config_var, $label, $form_action, $width = 420, $valid_extensions = array())
     {   
-    return array('file_input', $config_var, $label, $form_action, $width);
+    return array('file_input', $config_var, $label, $form_action, $width, $valid_extensions);
     }
 
 
@@ -1002,6 +1019,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
             }
 
         $config_name = $page_element[1];
+        $valid_extensions = $page_element[5];
 
         // DELETE
         if(getval('delete_' . $config_name, '') !== '' && enforcePostRequest(false))
@@ -1046,9 +1064,14 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                 // without storing the full path in the database
                 $saved_filename          = sprintf('[storage_url]/%s/%s.%s', $file_location, $config_name, $uploaded_file_extension);
 
-                if(in_array($uploaded_file_extension, $banned_extensions))
+                if(in_array(strtolower($uploaded_file_extension), array_map('strtolower', $banned_extensions)) || ($uploaded_file_extension == "." || $uploaded_file_extension == "" || $uploaded_file_extension == '"'))
                     {
                     trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
+                    }
+                
+                if (count($valid_extensions) > 0 && !(in_array($uploaded_file_extension, $valid_extensions)))
+                    {
+                    trigger_error('File type not valid for this selection. Please choose from ' . implode(', ', $valid_extensions) . '.');
                     }
 
                 if(!move_uploaded_file($_FILES[$config_name]['tmp_name'], $uploaded_filename))
@@ -1096,7 +1119,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'file_input':
-                config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
+                config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
                 break;
 
             case 'boolean_select':
