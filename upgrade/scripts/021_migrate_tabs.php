@@ -19,8 +19,7 @@ $all_tab_names_data = ps_query(
             SELECT 'resource_type_field' AS entity, ref, tab_name FROM resource_type_field
        ) AS q
       WHERE tab_name IS NOT NULL
-         OR trim(tab_name) <> ''",
-    []
+        AND trim(tab_name) <> ''"
 );
 logScript('Found #' . count($all_tab_names_data) . ' tab names');
 
