@@ -236,7 +236,7 @@ function addColumnHeader($orderName, $labelKey)
 					<option value="" ><?php if($filter_by_parent != "") echo $lang["removethisfilter"]; ?></option>
 <?php	
 
-$groups=sql_query("
+$groups=ps_query("
 	select 	distinct 	
 		parentusergroup.ref as ref,
 		parentusergroup.name as name

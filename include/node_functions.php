@@ -12,7 +12,7 @@
 *
 * @return boolean|integer
 */
-function set_node($ref, $resource_type_field, $name, $parent, $order_by)
+function set_node($ref, $resource_type_field, $name, $parent = NULL, $order_by)
     {
     if(!is_null($name))
         {
@@ -22,6 +22,12 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     if (is_null($resource_type_field) || '' == $resource_type_field || is_null($name) || '' == $name)
         {
         return false;
+        }
+        
+    if(!is_null($parent))
+        {
+        if ($parent == ""){$parent=NULL;}
+        else {$parent = (int) $parent;}
         }
 
     // Prevent the creation of duplicate nodes unless type is category tree and the nodes have different parents in the tree.
@@ -63,7 +69,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         }
     if(is_null($ref) && '' == $order_by)
         {
-        $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);
+        $order_by = get_node_order_by($resource_type_field, (is_null($parent)), $parent);
         }
 
     $query = "INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES (?, ?, ?, ?)";
@@ -71,7 +77,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         (
         "i",$resource_type_field,
         "s",$name,
-        "i",(trim($parent)=="" ? NULL : $parent),
+        "i",$parent,
         "s",$order_by
         );
 
@@ -115,7 +121,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
                 (
                 "i",$resource_type_field,
                 "s",$name,
-                "i",(trim($parent)=="" ? NULL : $parent),
+                "i",$parent,
                 "s",$order_by,
                 "i",$ref
                 );
@@ -264,6 +270,13 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         return [];    
         }
+        
+    if(!is_null($parent))
+        {
+        if ($parent == ""){$parent=NULL;}
+        else {$parent = (int) $parent;}
+        }
+   
 
     $fieldinfo  = get_resource_type_field($resource_type_field);
     if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
@@ -314,7 +327,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         }
   
 
-    $parent_sql = trim($parent) == "" ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
+    $parent_sql = is_null($parent) ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
     if (strpos($parent_sql,"?")!==false) {$parameters[]="i";$parameters[]=$parent;}
     
     // Order by translated_name or order_by based on flag
