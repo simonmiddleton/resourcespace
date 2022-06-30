@@ -130,12 +130,18 @@ function sign_code($code)
 /**
 * Returns a signature for a given block of code.
 * 
-* @param  string  $code  The code to sign
+* @param   bool  $confirm   Require user to approve code changes when resigning from the server side.
+* @param   bool  $output    Display output. $confirm will override this option to provide detail if approval needed.
 * 
-* @return  string  The signature
+* @return  void
 */
-function resign_all_code($confirm=true)
+function resign_all_code($confirm = true, $output = true)
     {
+    if ($confirm)
+        {
+        $output = true;
+        }
+
     $todo=array
         (
         array("resource_type_field",    "value_filter"),
@@ -154,7 +160,7 @@ function resign_all_code($confirm=true)
         foreach ($rows as $row)
             {
             $code=$row[$column];$ref=$row["ref"];if (trim((string)$code)=="") {$code="";}
-            echo $table . " -> " . $column . " -> " . $ref;
+            if ($output) {echo $table . " -> " . $column . " -> " . $ref;}
 
             // Extract signature if already one present
             $purecode=$code;
@@ -177,7 +183,7 @@ function resign_all_code($confirm=true)
                 }
             else    
                 {
-                echo " is OK" . $code . "\n";
+                if ($output) {echo " is OK " . $code . "\n";}
                 }
             }
         }

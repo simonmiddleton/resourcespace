@@ -935,7 +935,8 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 				}
 			}
 		}
-
+    // Sign all field specific php code (macros, value filter etc.) included with the default metadata fields.
+    resign_all_code(false, false);
 
     // Copy slideshow images under filestore in order to avoid
     // overwriting them when doing svn update
