@@ -3691,8 +3691,8 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
     $setvals = array(
         "access"    => (int)$access,
         "usergroup" => (int)$group,
-        "upload"    => isset($upload) && $upload ? "1" : "0",
         );
+    if(isset($upload) && $upload){$setvals['upload'] = 1;}
     if($expires!="") 
         {
         $setvals["expires"] = $expires;
@@ -3703,7 +3703,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
         }
     if($sharepwd != "(unchanged)")
         {
-        $setvals["password_hash"] = ($sharepwd == "") ? "''" : "'" . hash('sha256', $key . $sharepwd . $scramble_key) . "'";
+        $setvals["password_hash"] = ($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key);
         }
     $setsql = ""; $params = [];
     foreach($setvals as $setkey => $setval)
