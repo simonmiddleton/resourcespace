@@ -2391,7 +2391,7 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
 
             if (is_numeric($usergroup))
                 {
-                $sql_approver_groups = " and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref = (select parent from usergroup where ref = ?)) ";
+                $sql_approver_groups = " and ((FIND_IN_SET(BINARY 'U', ug.permissions) = 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'U', pg.permissions) = 0)) or ug.ref = (select parent from usergroup where ref = ?)) ";
                 $sql_approver_groups_params = array("i", $usergroup);
                 if (isset($usergroup_approval_mappings))
                     {
@@ -2408,32 +2408,32 @@ function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = N
                 }
 
             // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup = ug.ref where find_in_set(binary 'u', ug.permissions) <> 0 and u.ref <> '' and u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . $sql_approver_groups, $sql_approver_groups_params);
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email, u.lang from usergroup ug join user u on u.usergroup = ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'u', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'u', pg.permissions) <> 0)) and u.ref <> '' and u.approved = 1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . $sql_approver_groups, $sql_approver_groups_params);
             return $notification_users_cache[$userpermissionindex];
             break;
             
             case "RESOURCE_ACCESS";
             // Notify users who can grant access to resources, get all users in groups with R permissions
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'R', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'R', pg.permissions) <> 0)) AND (FIND_IN_SET(BINARY 'Rb', ug.permissions) = 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'Rb', pg.permissions) = 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
             return $notification_users_cache[$userpermissionindex];     
             break;
             
             case "RESEARCH_ADMIN";
             // Notify research admins, get all users in groups with r permissions
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'r', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'r', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
             return $notification_users_cache[$userpermissionindex];     
             break;
                     
             case "RESOURCE_ADMIN";
             // Get all users in groups with t and e0 permissions
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 't', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 't', pg.permissions) <> 0)) AND (FIND_IN_SET(BINARY 'e0', ug.permissions) OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'e0', pg.permissions))) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");
             return $notification_users_cache[$userpermissionindex];
             break;
             
             case "SYSTEM_ADMIN";
             default;
             // Get all users in groups with a permission (default if incorrect admin type has been passed)
-            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            $notification_users_cache[$userpermissionindex] = ps_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref left join usergroup pg on ug.parent = pg.ref where (FIND_IN_SET(BINARY 'a', ug.permissions) <> 0 OR (FIND_IN_SET('permissions', ug.inherit_flags) <> 0 AND FIND_IN_SET(BINARY 'a', pg.permissions) <> 0)) AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
             return $notification_users_cache[$userpermissionindex];
             break;
         
