@@ -782,7 +782,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
         if($notify_manage_request_admin)
             {
-            send_user_notification($admin_notify_user,$admin_notify_message);
+            send_user_notification([$admin_notify_user],$admin_notify_message);
             $notification_sent = true;
             }
 
