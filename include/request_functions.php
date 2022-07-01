@@ -652,7 +652,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     // Regular Processing: autoassign using the resource type - collection request and no plugin is preventing this from running
     if(isset($collectiondata) && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
-die("Process stopped in file " . __FILE__ . " at line " . __LINE__); # TODO; handle this logic by requesting an entire collection
         $all_r_types = get_resource_types();
 
         $resources = get_collection_resources($collectiondata['ref']);
@@ -707,7 +706,7 @@ die("Process stopped in file " . __FILE__ . " at line " . __LINE__); # TODO; han
                 else
                     {
                     // No specific user allocated, get all users, adding $email_notify address if this does not belong to a system user
-                    $assigned_to_users=get_notification_users("RESOURCE_ACCESS"); 
+                    $assigned_to_users=get_notification_users("RESOURCE_ACCESS");
                     $email_notify_is_user=false;
                     foreach ($assigned_to_users as $assigned_to_user)
                         {
