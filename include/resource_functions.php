@@ -7512,6 +7512,12 @@ function get_indexed_resource_type_fields()
 */
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
     {
+
+    $fields = array_column(ps_query('DESCRIBE resource_type_field'), 'Field');
+    $valid_sorts = ['asc', 'ascending', 'desc', 'decending'];
+    if(!in_array($field_order_by,  $fields)){$field_order_by = 'ref';}
+    if(!in_array($field_sort, $valid_sorts)){$field_sort = 'asc';}
+
     $conditionsql=""; $params = [];
     if(is_array($restypes))
         {
