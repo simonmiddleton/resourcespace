@@ -986,8 +986,8 @@ function email_resource_request($ref,$details)
 
     $notify_users = [];
     $notify_emails = [];
-    # Check if alternative request email notification address is set
-    if(isset($resource_type_request_emails))
+    # Legacy: Check if alternative request email notification address is set
+    if(isset($resource_type_request_emails) && !can_use_owner_field())
         {
         if(isset($resource_type_request_emails[$resourcedata["resource_type"]]))
             {
@@ -1010,6 +1010,7 @@ function email_resource_request($ref,$details)
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
+    $notify_users = array_keys(get_notification_users_by_owner_field($notify_users, [$ref]));
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
