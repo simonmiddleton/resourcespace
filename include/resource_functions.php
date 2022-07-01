@@ -460,6 +460,7 @@ function put_resource_data($resource,$data)
 
     // Define safe columns
     $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long");
+    $safe_column_types=array("i","s","d","i","i","i","d","s","s","s");
 
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
@@ -470,7 +471,8 @@ function put_resource_data($resource,$data)
         if (!in_array($column,$safe_columns)) {return false;} // Attempted to update a column outside of the expected set
         if ($sql!="") {$sql.=",";}
         $sql.=$column . "=?";
-        $params[]="s";$params[]=$value;
+        $params[]=$safe_column_types[array_search($column,$safe_columns)]; // Fetch type to use
+        $params[]=$value;
         }
     if ($sql=="") {return false;} // Nothing to do.
     $params[]="i";$params[]=$resource;
