@@ -11,7 +11,7 @@ if (!(PHP_SAPI == 'cli'))
 	{
 	include "../../include/authenticate.php";
 	if (!checkperm("a")) {exit("Permission denied");}
-	$indexfield = getvalescaped('field', 0, true);
+	$indexfield = getval('field', 0, true);
 	}
 elseif(isset($argv[1]) && is_int_loose($argv[1]))
 	{

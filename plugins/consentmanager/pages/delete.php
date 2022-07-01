@@ -3,7 +3,7 @@ include "../../../include/db.php";
 
 include "../../../include/authenticate.php";
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref","");
 
 # Check access
 if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without admin access

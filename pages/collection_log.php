@@ -3,15 +3,15 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$offset=getvalescaped("offset", 0, true);
-$ref=getvalescaped("ref","",true);
+$offset=getval("offset", 0, true);
+$ref=getval("ref","",true);
 
 # Check access
 if (!collection_readable($ref)) {exit($lang["no_access_to_collection"]);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 # pager
-$per_page=getvalescaped("per_page_list_log",15);rs_setcookie('per_page_list_log', $per_page);
+$per_page=getval("per_page_list_log",15);rs_setcookie('per_page_list_log', $per_page);
 
 include "../include/header.php";
 $log=get_collection_log($ref, $offset+$per_page);

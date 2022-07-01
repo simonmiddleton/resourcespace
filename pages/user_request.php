@@ -136,10 +136,10 @@ include "../include/login_background.php";
 if (!hook("replacemain"))
     { /* BEGIN hook Replacemain */ 
     
-    $name = getvalescaped("name","");
+    $name = getval("name","");
     $name = is_array($name) ? "" : htmlspecialchars($name);
     
-    $email = getvalescaped("email","");
+    $email = getval("email","");
     $email = is_array($email) ? "" : htmlspecialchars($email);
     
     ?>
@@ -199,12 +199,12 @@ if (isset($custom_registration_fields))
 			
 			<?php if ($type==1) {  # Normal text box
 			?>
-			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("custom" . $n,""))?>">
+			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
 			<?php } ?>
 
 			<?php if ($type==2) { # Large text box 
 			?>
-			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getvalescaped("custom" . $n,""))?></textarea>
+			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
 			<?php } ?>
 
 			<?php if ($type==3) { # Drop down box
@@ -290,7 +290,7 @@ $groups=get_registration_selectable_usergroups();
 <?php } /* END hook Replacegroupselect */ ?>
 
 <?php if (!hook("replaceuserrequestcomment")){ 
-    $userrequestcomment = getvalescaped("userrequestcomment","");
+    $userrequestcomment = getval("userrequestcomment","");
     $userrequestcomment = is_array($userrequestcomment) ? "" : htmlspecialchars($userrequestcomment);
     
     

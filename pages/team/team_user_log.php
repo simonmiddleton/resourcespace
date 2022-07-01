@@ -9,13 +9,13 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$offset=getvalescaped("offset",0,true);
-$ref=getvalescaped("ref","",true);
+$offset=getval("offset",0,true);
+$ref=getval("ref","",true);
 $userdata=get_user($ref);
 $backurl=getval("backurl","");
 
 # pager
-$per_page=getvalescaped("per_page_list_log",15);rs_setcookie('per_page_list_log', $per_page);
+$per_page=getval("per_page_list_log",15);rs_setcookie('per_page_list_log', $per_page);
 
 include "../../include/header.php";
 $log=get_user_log($ref, $offset+$per_page);

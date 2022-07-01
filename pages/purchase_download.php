@@ -3,7 +3,7 @@ include "../include/db.php";
 
 include "../include/authenticate.php"; 
 
-$collection=getvalescaped("collection","",true);
+$collection=getval("collection","",true);
 
 # Reload collection frame to show new (empty) basket
 refresh_collection_frame($usercollection);

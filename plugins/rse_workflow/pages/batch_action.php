@@ -51,16 +51,16 @@ if(!is_null($collection) && checkperm("b"))
     }
 
 // Determine resources affected (effectively runs a search to determine if action is valid for each resource)
-$search = getvalescaped("search", "");
-$restypes = getvalescaped("restypes", "");
+$search = getval("search", "");
+$restypes = getval("restypes", "");
 if (strpos($search,"!")!==false) {$restypes="";}
-$order_by = getvalescaped("order_by", "relevance");
-$archive = getvalescaped("archive", "0");
-$per_page = getvalescaped("per_page", null, true);
-$offset = getvalescaped("offset", 0, true);
-$sort = getvalescaped("sort", "desc");
-$recent_search_daylimit = getvalescaped("recent_search_daylimit", "");
-$go = getvalescaped("go", "");
+$order_by = getval("order_by", "relevance");
+$archive = getval("archive", "0");
+$per_page = getval("per_page", null, true);
+$offset = getval("offset", 0, true);
+$sort = getval("sort", "desc");
+$recent_search_daylimit = getval("recent_search_daylimit", "");
+$go = getval("go", "");
 
 // Override if needed
 if(!is_null($collection))

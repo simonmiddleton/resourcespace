@@ -5,7 +5,7 @@ include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission d
 
 $selected_archive_states=array();
 
-$archivechoices=getvalescaped("archive",getvalescaped("saved_archive",get_default_search_states()));
+$archivechoices=getval("archive",getval("saved_archive",get_default_search_states()));
 if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
 foreach($archivechoices as $archivechoice)
     {
@@ -156,7 +156,7 @@ else
   if(getval("restypes","")=="")
 	{$restypes=get_search_default_restypes();}
   else
-		{$restypes=explode(",",getvalescaped("restypes",""));}
+		{$restypes=explode(",",getval("restypes",""));}
 
   for ($n=0;$n<count($keywords);$n++)
 	  {

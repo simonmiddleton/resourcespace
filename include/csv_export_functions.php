@@ -74,7 +74,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             $udata=get_user($resdata["created_by"]);
             if ($udata!==false)
                 {
-                $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
+                $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]??"") != "" ? $udata["fullname"] :  $udata["username"]);
                 }
 
             if ($alldata && $file_checksums)

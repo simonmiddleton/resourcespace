@@ -5,7 +5,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$userstring=getvalescaped("userstring","");
+$userstring=getval("userstring","");
 ?>
 
 <?php $user_userlists=ps_query("select * from user_userlist where user= ?", ['i', $userref]);?>

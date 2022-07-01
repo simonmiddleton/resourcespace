@@ -16,10 +16,10 @@ include "../../../include/header.php";
 
 ?><div class="BasicsBox"><?php
 // verify that the requested CollectionID is numeric.
-$collection = getvalescaped('collection','');
+$collection = getval('collection','');
 if (!is_numeric($collection)){ echo "Error: non numeric collection ID."; exit; }
 
-$doit = getvalescaped('doit',0);
+$doit = getval('doit',0);
 
 if ($doit == 0){
 	// user has not confirmed operation. So make them do that first
@@ -57,7 +57,7 @@ if ($doit == 0){
 
 
 // get parameters. For now, only rotation is supported
-$rotation = getvalescaped('rotation',0);
+$rotation = getval('rotation',0);
 if (!is_numeric($rotation) || $rotation > 360){
 	$rotation = 0; // only allow numeric values
 }

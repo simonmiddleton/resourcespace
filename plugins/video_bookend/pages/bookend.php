@@ -8,7 +8,7 @@ include_once("../../../include/db.php");
 include_once("../../../include/authenticate.php");
 include_once("../../../include/image_processing.php");
 
-$ref             = getvalescaped("ref", 0, true);
+$ref             = getval("ref", 0, true);
 $alternatives    = get_alternative_files($ref);
 $ffmpeg_fullpath = get_utility_path("ffmpeg");
 

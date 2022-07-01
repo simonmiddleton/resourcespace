@@ -3,8 +3,8 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$ref=getvalescaped("ref","",true);
-$k=getvalescaped("k","");
+$ref=getval("ref","",true);
+$k=getval("k","");
 $modal = (getval("modal", "") == "true");
 
 $filter_by_type = trim(getval("filter_by_type", ""));
@@ -26,18 +26,18 @@ if(!checkperm('v') && !$bypass_permission_check)
     }
 
 # fetch the current search (for finding simlar matches)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$search_offset=getvalescaped("search_offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$search_offset=getval("search_offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getval("archive",0,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
-$offset=getvalescaped("offset",0,true);
-$per_page=getvalescaped("per_page", $default_perpage_list,true);
+$offset=getval("offset",0,true);
+$per_page=getval("per_page", $default_perpage_list,true);
 $per_page = ($per_page == 0) ? $default_perpage_list : $per_page;
 rs_setcookie('per_page', $per_page);
 // When filtering by download records only the table output will be slightly different, showing only the following columns:

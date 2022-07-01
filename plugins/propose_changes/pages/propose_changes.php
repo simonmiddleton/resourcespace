@@ -6,17 +6,17 @@ include_once __DIR__ . '/../../../include/db.php';
 include __DIR__ . '/../../../include/authenticate.php';
 include_once __DIR__ . '/../include/propose_changes_functions.php';
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 # Fetch search details (for next/back browsing and forwarding of search params)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$archive=getvalescaped("archive",0,true);
+$archive=getval("archive",0,true);
 $modal=(getval("modal","")=="true");
 
 $errors=array(); # The results of the save operation (e.g. required field messages)
@@ -56,7 +56,7 @@ if(!$propose_changes_always_allow && $proposeallowed=="" && !$editaccess)
 
 if($editaccess)
     {
-    $view_user = getvalescaped("proposeuser",0);
+    $view_user = getval("proposeuser",0);
 
     if(getval("resetform","") != "" && enforcePostRequest(false))
         {

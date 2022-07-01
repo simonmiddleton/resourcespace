@@ -3,20 +3,20 @@ include "../include/db.php";
 include "../include/authenticate.php";
 
 
-$collection_url	= getvalescaped('collection', '', true);
-$col_order_by	= getvalescaped('col_order_by', '', true);
-$find			= getvalescaped('find', '', true);
-$offset			= getvalescaped('offset', '', true);
-$order_by		= getvalescaped('order_by', '', true);
-$ref			= getvalescaped('ref', '', true);
-$restypes		= getvalescaped('restypes', '', true);
-$search			= getvalescaped('search', '', true);
-$sort			= getvalescaped('sort', '', true);
-$user_group		= getvalescaped('usergroup', '', true);
-$backurl        = getvalescaped('backurl', '');
+$collection_url	= getval('collection', '', true);
+$col_order_by	= getval('col_order_by', '', true);
+$find			= getval('find', '', true);
+$offset			= getval('offset', '', true);
+$order_by		= getval('order_by', '', true);
+$ref			= getval('ref', '', true);
+$restypes		= getval('restypes', '', true);
+$search			= getval('search', '', true);
+$sort			= getval('sort', '', true);
+$user_group		= getval('usergroup', '', true);
+$backurl        = getval('backurl', '');
 
 // Check if editing existing external share
-$editaccess     = trim(getvalescaped("editaccess", ""));
+$editaccess     = trim(getval("editaccess", ""));
 $editing        = ($editaccess != "");
 
 $editexternalurl    = (getval("editexternalurl","")!="");
@@ -36,17 +36,17 @@ if($editing)
         error_alert($lang["error_invalid_key"],true);
         exit();        
         }
-    $expires        = getvalescaped("expires",$shareinfo["expires"]);
+    $expires        = getval("expires",$shareinfo["expires"]);
     $access         = getval("access",$shareinfo["access"], true);	
     $group          = getval("usergroup",$shareinfo["usergroup"],true);
-    $sharepwd       = getvalescaped('sharepassword', ($shareinfo["password_hash"] != "" ? "true" : ""));
+    $sharepwd       = getval('sharepassword', ($shareinfo["password_hash"] != "" ? "true" : ""));
     }
 else
     {
-    $expires        = getvalescaped("expires","");
+    $expires        = getval("expires","");
     $access         = getval("access",-1, true);	
     $group          = getval("usergroup",0,true);
-    $sharepwd       = getvalescaped('sharepassword', '');
+    $sharepwd       = getval('sharepassword', '');
     }
 
 $collection = get_collection($ref);
@@ -215,7 +215,7 @@ if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuser
 # Process deletion of access keys
 if($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
     {
-    delete_collection_access_key($ref,getvalescaped("deleteaccess",""));
+    delete_collection_access_key($ref,getval("deleteaccess",""));
     }
 
 include "../include/header.php";
@@ -396,7 +396,7 @@ include "../include/header.php";
 		# Process editing of external share
 		if ($editexternalurl)
 			{
-			$editsuccess=edit_collection_external_access($editaccess,$access,$expires,getvalescaped("usergroup",""),$sharepwd);
+			$editsuccess=edit_collection_external_access($editaccess,$access,$expires,getval("usergroup",""),$sharepwd);
 			if($editsuccess){echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";}
 			}
 		}

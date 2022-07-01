@@ -3,13 +3,13 @@ include "../include/db.php";
 
 include "../include/authenticate.php"; if (checkperm("b")){exit("Permission denied");}
 
-$offset=getvalescaped("offset",0,true);
-$find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
-$col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
-$sort=getvalescaped("sort",getvalescaped("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
+$offset=getval("offset",0,true);
+$find=getval("find",getval("saved_find",""));rs_setcookie('saved_find', $find);
+$col_order_by=getval("col_order_by",getval("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
+$sort=getval("sort",getval("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
-$per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
+$per_page=getval("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
 $collection_valid_order_bys=array("fullname","name","ref","count");
 $modified_collection_valid_order_bys=hook("modifycollectionvalidorderbys");
@@ -18,9 +18,9 @@ if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="create
 
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 
-$name=getvalescaped("name","");
+$name=getval("name","");
 
-$delete=getvalescaped("delete","");
+$delete=getval("delete","");
 if ($delete!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Delete collection
@@ -48,7 +48,7 @@ if ($delete!="" && enforcePostRequest(getval("ajax", false)))
 	refresh_collection_frame($usercollection);
 	}
 
-$remove=getvalescaped("remove","");
+$remove=getval("remove","");
 if ($remove!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Remove someone else's collection from your My Collections
@@ -67,7 +67,7 @@ if ($remove!="" && enforcePostRequest(getval("ajax", false)))
 	refresh_collection_frame();
 	}
 
-$reload=getvalescaped("reload","");
+$reload=getval("reload","");
 if ($reload!="")
 	{
 	# Refresh the collection frame (just edited a collection)

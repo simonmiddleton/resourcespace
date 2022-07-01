@@ -3,7 +3,7 @@
 include "../../../include/db.php";
 include "../../../include/authenticate.php";
 
-$ref=getvalescaped("ref",0,true);
+$ref=getval("ref",0,true);
 if($ref>0)
     {
     $access = get_resource_access($ref);

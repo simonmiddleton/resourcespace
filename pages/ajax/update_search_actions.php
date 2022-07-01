@@ -4,15 +4,15 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$order_by=getvalescaped("order_by",'');
-$sort=getvalescaped("sort","DESC");
-$search=getvalescaped("search","");
-$restypes=getvalescaped('restypes','');
-$archive=getvalescaped('archive','');
-$daylimit=getvalescaped('daylimit','');
-$offset=getvalescaped('offset','');
-$collection=getvalescaped('collection','');
-$resources_count=getvalescaped('resources_count','');
+$order_by=getval("order_by",'');
+$sort=getval("sort","DESC");
+$search=getval("search","");
+$restypes=getval('restypes','');
+$archive=getval('archive','');
+$daylimit=getval('daylimit','');
+$offset=getval('offset','');
+$collection=getval('collection','');
+$resources_count=getval('resources_count','');
 
 $collection_data=get_collection($collection);
 

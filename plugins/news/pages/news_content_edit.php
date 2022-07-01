@@ -10,9 +10,9 @@ include dirname(__FILE__)."/../../../include/db.php";
 include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
 include_once dirname(__FILE__)."/../inc/news_functions.php";
 
-$ref=getvalescaped("ref","",true);
-$offset=getvalescaped("offset",0,true);
-$findtext=getvalescaped("findtext","");
+$ref=getval("ref","",true);
+$offset=getval("offset",0,true);
+$findtext=getval("findtext","");
 
 $date=getval("date",date("Y-m-d H:i:s"));
 
@@ -28,7 +28,7 @@ if (count($parts) < 6 || !checkdate($parts[2], $parts[3], $parts[1]))
     $error[] = str_replace("%date%", $date, $lang["invalid_date_error2"]) ;
     }
 
-$title=getvalescaped("title",0);
+$title=getval("title",0);
 
 if (strlen($title) > 50)
     {
@@ -37,7 +37,7 @@ if (strlen($title) > 50)
 
 
 
-$body=getvalescaped("body",0);
+$body=getval("body",0);
 
 # get ref value from database, unless it is set to new 
 if (getval("ref","")=="new"){$createnews=true;} else {$news=get_news($ref,"",""); $createnews=false;}

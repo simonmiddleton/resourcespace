@@ -43,7 +43,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		}		
 	if (getval("other","")!="")
 		{
-		$otherperms=explode(",", getvalescaped("other",""));
+		$otherperms=explode(",", getval("other",""));
 		$perms = array_merge($perms, $otherperms);
 		}
 

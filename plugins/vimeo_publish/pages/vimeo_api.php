@@ -8,7 +8,7 @@ use Vimeo\Exceptions\VimeoUploadException;
 
 // May have come from plugin setup page to get or delete a system wide token
 $systemtoken    = getval("systemtoken","") != "" && checkperm('a');
-$ref            = getvalescaped('resource',0, true);
+$ref            = getval('resource',0, true);
 if(!$systemtoken && $ref > 0)
     {
     $access        = get_resource_access($ref);
@@ -56,13 +56,13 @@ if($systemtoken)
 
 // Try uploading resource to Vimeo
 $successfully_uploaded = false;
-if(getvalescaped('upload', '') !=  '' && enforcePostRequest(false))
+if(getval('upload', '') !=  '' && enforcePostRequest(false))
     {
     $video_id   = '';
     $file_path  = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, false, '', -1);
     $parameters = array(
-        'name'        => getvalescaped('video_title', ''),
-        'description' => getvalescaped('video_description', '')
+        'name'        => getval('video_title', ''),
+        'description' => getval('video_description', '')
     );
 
     if(vimeo_upload($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo_publish_access_token, $ref, $file_path, $vimeo_publish_vimeo_link_field, $video_id, $error)

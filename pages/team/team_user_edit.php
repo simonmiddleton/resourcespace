@@ -11,14 +11,14 @@ include "../../include/api_functions.php";
 
 $backurl=getval("backurl","");
 $modal=(getval("modal","")=="true");
-$url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getvalescaped("ref","",true) . "&backurl=" . urlencode($backurl);
+$url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getval("ref","",true) . "&backurl=" . urlencode($backurl);
 if (!checkperm("u"))
     {
     error_alert($lang["error-permissiondenied"],true);
     exit();
     }
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
 
 

@@ -3,7 +3,7 @@ include_once('../../include/db.php');
 include_once('../../include/authenticate.php');
 
 // Generic endpoint that can be used for ajax calls
-$action = getvalescaped('action','');
+$action = getval('action','');
 $return = array();
 $return['status'] = 400; // set to default 
 
@@ -16,7 +16,7 @@ switch ($action)
         $pending_items=do_search("!contributions" . $userref,"","",-2,-1,"desc",false,0,false,false,"",false,false,true);
         
         // If using '$pending_submission_prompt_review and have added to collection, only submit these resources
-        $collection_add = getvalescaped('collection_add', 0, true);
+        $collection_add = getval('collection_add', 0, true);
         $collection_resources = is_numeric($collection_add)?get_collection_resources($collection_add):array();  
   
         $submit = array();

@@ -2,7 +2,7 @@
 include_once "../include/db.php";
 
 // External share support
-$k = getvalescaped('k','');
+$k = getval('k','');
 $upload_collection = getval('upload_share_active',''); 
 if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     {  
@@ -10,15 +10,15 @@ if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     }
 include_once "../include/image_processing.php";
 # Editing resource or collection of resources (multiple)?
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 $use=$ref;
 
 # Fetch search details (for next/back browsing and forwarding of search params)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
@@ -26,11 +26,11 @@ $sort=getval("sort",$default_sort_direction);
 $modal = (getval("modal", "") == "true");
 $single=getval("single","") != "" || getval("forcesingle","") != "";
 $disablenavlinks=getval("disablenav","")=="true";
-$uploader = getvalescaped("uploader","");
-$collection = getvalescaped('collection', 0, true);
+$uploader = getval("uploader","");
+$collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
-$archive=getvalescaped("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
 
 if($camera_autorotation)
@@ -52,7 +52,7 @@ else
     $autorotate = false;
     }
     
-$collection_add = getvalescaped('collection_add', '');
+$collection_add = getval('collection_add', '');
 if($embedded_data_user_select)
   {
   $no_exif=getval("exif_option","");
@@ -70,7 +70,7 @@ $uploadparams["collection_add"] =  $collection_add;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
-$uploadparams["entercolname"] = getvalescaped("entercolname","");
+$uploadparams["entercolname"] = getval("entercolname","");
 $uploadparams["k"] = $k;
 
 # Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
@@ -322,7 +322,7 @@ else
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$metadatatemplate = !$resetform ? (getvalescaped(
+$metadatatemplate = !$resetform ? (getval(
     'metadatatemplate',
     ($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
     true
@@ -377,7 +377,7 @@ $uploadparams["resource_type"] = $resource['resource_type'];
 // Resource archive (ie user template - negative resource ID) can be default only when user actually gets to set it otherwise
 // makes no sense in using it and we should let the system decide based on configuration and permissions what it should use.
 $default_setarchivestate = ($show_status_and_access_on_upload || $resource['ref'] > 0 ? $resource['archive'] : '');
-$setarchivestate = getvalescaped('status', $default_setarchivestate, TRUE);
+$setarchivestate = getval('status', $default_setarchivestate, TRUE);
 // Validate this is permitted
 $setarchivestate = get_default_archive_state($setarchivestate);
 
@@ -1623,7 +1623,7 @@ $original_nodes=array();
 if (getval("copyfrom","")!="")
   {
   # Copy from function
-  $copyfrom=getvalescaped("copyfrom","");
+  $copyfrom=getval("copyfrom","");
   $copyfrom_access=get_resource_access($copyfrom);
 
   # Check access level

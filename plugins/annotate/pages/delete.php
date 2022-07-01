@@ -3,7 +3,7 @@ include_once "../../../include/db.php";
 include_once "../include/annotate_functions.php";
 include_once "../../../include/authenticate.php";
 
-$ref=getvalescaped("ref", 0, true);
+$ref=getval("ref", 0, true);
 if ($ref==0)
     {
     die($lang["annotate_ref_not_supplied"]);

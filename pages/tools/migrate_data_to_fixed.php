@@ -21,7 +21,7 @@ $modal          = (getval("modal","")=="true");
 $dryrun         = getval("dryrun","") != "";
 $deletedata     = getval("deletedata","")=="true";
 
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $migrate_field;

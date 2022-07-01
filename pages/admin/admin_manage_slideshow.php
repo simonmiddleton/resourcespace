@@ -10,9 +10,9 @@ include '../../include/slideshow_functions.php';
 
 $slideshow_files = get_slideshow_files_data();
 
-$ajax         = getvalescaped('ajax', '');
-$action       = getvalescaped('action', '');
-$slideshow_id = getvalescaped('slideshow_id', null, true);
+$ajax         = getval('ajax', '');
+$action       = getval('action', '');
+$slideshow_id = getval('slideshow_id', null, true);
 $manageurl = "{$baseurl}/pages/admin/admin_manage_slideshow.php";
 
 /* Re-order */

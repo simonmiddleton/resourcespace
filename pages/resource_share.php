@@ -3,25 +3,25 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$ref        = getvalescaped('ref', '', true);
-$user_group = getvalescaped('usergroup', '', true);
+$ref        = getval('ref', '', true);
+$user_group = getval('usergroup', '', true);
 
 # fetch the current search (for finding simlar matches)
-$search       = getvalescaped("search", "");
-$order_by     = getvalescaped("order_by", "relevance");
-$offset       = getvalescaped("offset", 0, true);
-$restypes     = getvalescaped("restypes", "");
+$search       = getval("search", "");
+$order_by     = getval("order_by", "relevance");
+$offset       = getval("offset", 0, true);
+$restypes     = getval("restypes", "");
 if (strpos($search,"!") !== false) { $restypes = ""; }
-$archive      = getvalescaped("archive", 0, true);
+$archive      = getval("archive", 0, true);
 $default_sort_direction = (substr($order_by,0,5) == "field") ? "ASC" : "DESC";
 $sort         = getval("sort", $default_sort_direction);
 $ajax         = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $modal        = (getval("modal", "") == "true");
-$backurl      = getvalescaped('backurl', '');
+$backurl      = getval('backurl', '');
 
 # Check if editing existing external share
-$editaccess   = getvalescaped("editaccess", "");
-$deleteaccess = getvalescaped('deleteaccess', '');
+$editaccess   = getval("editaccess", "");
+$deleteaccess = getval('deleteaccess', '');
 $editing      = ($editaccess != "" && $deleteaccess == "") ? true : false;
 
 $editexternalurl = (getval("editexternalurl","") != "");
@@ -40,17 +40,17 @@ if($editing)
         error_alert($lang["error_invalid_key"],true);
         exit();        
         }
-    $expires        = getvalescaped("expires",$shareinfo["expires"]);
+    $expires        = getval("expires",$shareinfo["expires"]);
     $access         = getval("access",$shareinfo["access"], true);	
     $group          = getval("usergroup",$shareinfo["usergroup"],true);
-    $sharepwd       = getvalescaped('sharepassword', ($shareinfo["password_hash"] != "" ? "true" : ""));
+    $sharepwd       = getval('sharepassword', ($shareinfo["password_hash"] != "" ? "true" : ""));
     }
 else
     {
-    $expires        = getvalescaped("expires","");
+    $expires        = getval("expires","");
     $access         = getval("access",-1, true);	
     $group          = getval("usergroup",0,true);
-    $sharepwd       = getvalescaped('sharepassword', '');
+    $sharepwd       = getval('sharepassword', '');
     }
 
 $minaccess=get_resource_access($ref);
@@ -71,8 +71,8 @@ if ('' != $deleteaccess && enforcePostRequest($ajax))
     }
 
 # Process deletion of custom user access
-$deleteusercustomaccess = getvalescaped('deleteusercustomaccess', '');
-$user = getvalescaped('user', '');
+$deleteusercustomaccess = getval('deleteusercustomaccess', '');
+$user = getval('user', '');
 if ($deleteusercustomaccess=='yes' && checkperm('v') && enforcePostRequest($ajax))
     {
     delete_resource_custom_user_access($ref, $user);

@@ -12,7 +12,7 @@ include "../../include/dash_functions.php";
 
 global $userref,$baseurl_short;
 /* Tile */
-$rawtile=getvalescaped("tile",null,TRUE);
+$rawtile=getval("tile",null,TRUE);
 if(isset($rawtile) && !empty($rawtile))
 	{
 	if(!is_numeric($rawtile)){exit($lang["invaliddashtile"]);}
@@ -21,7 +21,7 @@ if(isset($rawtile) && !empty($rawtile))
 	}
 
 /* User Tile */
-$user_rawtile=getvalescaped("user_tile",null,TRUE);
+$user_rawtile=getval("user_tile",null,TRUE);
 if(isset($user_rawtile) && !empty($user_rawtile))
 	{
 	if(!is_numeric($user_rawtile)){exit($lang["invaliddashtile"]);}
@@ -32,8 +32,8 @@ if(isset($user_rawtile) && !empty($user_rawtile))
 /* 
  * Reorder Tile
  */
-$index               = getvalescaped('new_index', '', true);
-$selected_user_group = getvalescaped('selected_user_group', '', true);
+$index               = getval('new_index', '', true);
+$selected_user_group = getval('selected_user_group', '', true);
 
 // Re-order user tiles
 if(!empty($index) && isset($usertile) && '' == $selected_user_group && enforcePostRequest(true))
@@ -90,7 +90,7 @@ if(!empty($index) && isset($tile) && !isset($usertile) && '' == $selected_user_g
 /* 
  * Delete Tile 
  */
-$delete=getvalescaped("delete",false);
+$delete=getval("delete",false);
 if($delete && isset($usertile) && enforcePostRequest(true))
 	{
 	if(!checkPermission_dashmanage()){exit($lang["error-permissiondenied"]);}
@@ -125,12 +125,12 @@ if (!isset($usertile) && !isset($tile))
 /* 
  * Generating Tiles 
  */
-$tile_type      = getvalescaped("tltype","");
-$tile['tlsize'] = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
-$tile_style     = getvalescaped("tlstyle","");
+$tile_type      = getval("tltype","");
+$tile['tlsize'] = ('double' === getval('tlsize', '') ? 'double' : '');
+$tile_style     = getval("tlstyle","");
 $tile_id        = (isset($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
-$tile_width     = getvalescaped("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
-$tile_height    = getvalescaped("tlheight",180,true);    
+$tile_width     = getval("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
+$tile_height    = getval("tlheight",180,true);    
 
 if(!is_numeric($tile_width) || !is_numeric($tile_height) || $tile_width <= 0 || $tile_height <= 0){exit($lang["error-missingtileheightorwidth"]);}
 include "../../include/dash_tile_generation.php";

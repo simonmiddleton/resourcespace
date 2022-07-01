@@ -61,15 +61,15 @@ function HookSimplesamlAllPreheaderoutput()
         }
 
 	// Check for exclusions
-    $k = getvalescaped('k', '');
+    $k = getval('k', '');
     if(
         $simplesaml_allow_public_shares &&
         '' != $k &&
         (
             // Hard to determine at this stage what we consider a collection/ resource ID so we
             // use the most general ones
-            check_access_key_collection(str_replace('!collection', '', getvalescaped('search', '')), $k) ||
-            check_access_key(getvalescaped('ref', ''), $k)
+            check_access_key_collection(str_replace('!collection', '', getval('search', '')), $k) ||
+            check_access_key(getval('ref', ''), $k)
         )
     )
         {

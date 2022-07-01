@@ -1,15 +1,15 @@
 <?php 
 hook ("preheaderoutput");
  
-$k=getvalescaped("k","");
+$k=getval("k","");
 if(!isset($internal_share_access))
 	{
 	// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
     $internal_share_access = internal_share_access();
 	}
 
-$logout=getvalescaped("logout","");
-$loginas=getvalescaped("loginas","");
+$logout=getval("logout","");
+$loginas=getval("loginas","");
 
 # Do not display header / footer when dynamically loading CentralSpace contents.
 $ajax=getval("ajax","");

@@ -4,12 +4,12 @@ include_once "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 
 
-$title=getvalescaped("title","");
-$thumb=getvalescaped("thumb","");
-$large_thumb=getvalescaped("large_thumb","");
-$xl_thumb=getvalescaped("xl_thumb","");
-$url=getvalescaped("url","");
-$back=getvalescaped("back","");
+$title=getval("title","");
+$thumb=getval("thumb","");
+$large_thumb=getval("large_thumb","");
+$xl_thumb=getval("xl_thumb","");
+$url=getval("url","");
+$back=getval("back","");
 
 
 /**

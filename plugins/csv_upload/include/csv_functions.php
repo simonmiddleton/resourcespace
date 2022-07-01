@@ -17,8 +17,6 @@ include_once (dirname(__FILE__)."/../../../include/definitions.php");
  */
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set_options,$max_error_count=100,$processcsv=false)
     {
-    // Ensure /r line endings (such as those created in MS Excel) are handled correctly
-    $save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
     global $NODE_MIGRATED_FIELD_TYPES, $DATE_FIELD_TYPES, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES, $userref,$username,
     $category_tree_add_parents, $mysql_verbatim_queries, $baseurl, $scramble_key, $lang,
     $search_all_workflow_states;
@@ -852,7 +850,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             csv_upload_log($logfile,$logtext);
             array_push ($messages,$logtext);
             }
-        ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
         if($processcsv && file_exists($flagpath))
             {
             unlink($flagpath);

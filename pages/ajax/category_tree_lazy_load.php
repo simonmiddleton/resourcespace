@@ -1,7 +1,7 @@
 <?php
 include '../../include/db.php';
 
-$k = getvalescaped('k','');
+$k = getval('k','');
 $upload_collection = getval('upload_share_active',''); 
 if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     {
@@ -10,9 +10,9 @@ if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
 
 // Initialise
 $ajax           = ('' != getval('ajax', '') ? true : false);
-$node_ref       = getvalescaped('node_ref', null, true);
-$field          = (int) getvalescaped('field', '', true);
-$selected_nodes = getvalescaped('selected_nodes', array());
+$node_ref       = getval('node_ref', null, true);
+$field          = (int) getval('field', '', true);
+$selected_nodes = getval('selected_nodes', array());
 $opened_nodes   = array();
 $js_tree_data   = array();
 

@@ -201,11 +201,11 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     if (getval("allfields","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.=join(", ",explode(" ",getvalescaped("allfields",""))); # prepend 'all fields' option
+        $search.=join(", ",explode(" ",getval("allfields",""))); # prepend 'all fields' option
         }
     if (getval("resourceids","")!="")
         {
-        $listsql="!list" . join(":",trim_array(split_keywords(getvalescaped("resourceids",""))));
+        $listsql="!list" . join(":",trim_array(split_keywords(getval("resourceids",""))));
         $search=$listsql . " " . $search;
         }
 
@@ -220,7 +220,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
             $name="field_" . $fields[$n]["ref"];
-            $value=getvalescaped($name,"");
+            $value=getval($name,"");
             if ($value!="")
                 {
                 $vs=split_keywords($value, false, false, false, false, true);
@@ -238,7 +238,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 {
                 # Process dropdown box
                 $name="field_" . $fields[$n]["ref"];
-                $value=getvalescaped($name,"");
+                $value=getval($name,"");
                 if ($value!=="")
                     {
                     /*
@@ -264,7 +264,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 for ($m=0;$m<count($options);$m++)
                     {
                     $name=$fields[$n]["ref"] . "_" . md5($options[$m]);
-                    $value=getvalescaped($name,"");
+                    $value=getval($name,"");
                     if ($value=="yes")
                         {
                         $c++;
@@ -301,16 +301,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             if (strpos($search, $name.":")===false) 
                 {
                 $key_year=$name."_year";
-                $value_year=getvalescaped($key_year,"");
+                $value_year=getval($key_year,"");
                 if ($value_year!="") $value=$value_year;
                 else $value="nnnn";
                 
                 $key_month=$name."_month";
-                $value_month=getvalescaped($key_month,"");
+                $value_month=getval($key_month,"");
                 if ($value_month=="") $value_month.="nn";
                 
                 $key_day=$name."_day";
-                $value_day=getvalescaped($key_day,"");
+                $value_day=getval($key_day,"");
                 if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
                 elseif ($value_month!="nn") $value.="|" . $value_month;
                 
@@ -321,7 +321,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     }
                 }
 
-            if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+            if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
                 {
                 // We have been passed the range in EDTF format, check it is in the correct format
                 $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -392,7 +392,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
    
             case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes 
             default: 
-                $value=getvalescaped('field_'.$fields[$n]["ref"],'');
+                $value=getval('field_'.$fields[$n]["ref"],'');
                 if ($value!="")
                     {
                     $valueparts=split_keywords($value, false, false, false, false, true);
@@ -449,7 +449,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         global $advanced_search_properties;
         foreach($advanced_search_properties as $advanced_search_property=>$code)
             {
-            $propval=getvalescaped($advanced_search_property,"");
+            $propval=getval($advanced_search_property,"");
             if($propval!="")
                 {$propertysearchcodes[] =$code . ":" . $propval;}
             }
@@ -2864,16 +2864,16 @@ function update_search_from_request($search)
                 if (strpos($search, $field.":")===false) 
                     {
                     $key_year=$key_part."_year";
-                    $value_year=getvalescaped($key_year,"");
+                    $value_year=getval($key_year,"");
                     if ($value_year!="") $value=$value_year;
                     else $value="nnnn";
                     
                     $key_month=$key_part."_month";
-                    $value_month=getvalescaped($key_month,"");
+                    $value_month=getval($key_month,"");
                     if ($value_month=="") $value_month.="nn";
                     
                     $key_day=$key_part."_day";
-                    $value_day=getvalescaped($key_day,"");
+                    $value_day=getval($key_day,"");
                     if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
                     elseif ($value_month!="nn") $value.="|" . $value_month;
                     $search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
@@ -2939,17 +2939,17 @@ function update_search_from_request($search)
             }
         }
 
-    $year=getvalescaped("basicyear","");
+    $year=getval("basicyear","");
     if ($year!="")
         {
         $search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicyear:" . $year;
         }
-    $month=getvalescaped("basicmonth","");
+    $month=getval("basicmonth","");
     if ($month!="")
         {
         $search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicmonth:" . $month;
         }
-    $day=getvalescaped("basicday","");
+    $day=getval("basicday","");
     if ($day!="")
         {
         $search=(($search=="")?"":join(", ",split_keywords($search,false,false,false,false,true)) . ", ") . "basicday:" . $day;
@@ -2980,8 +2980,8 @@ function get_selectedtypes()
 
 	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
 	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
-	$restypes=getvalescaped("restypes","");
-    $advanced_search_section = getvalescaped("advanced_search_section", "");
+	$restypes=getval("restypes","");
+    $advanced_search_section = getval("advanced_search_section", "");
 	
 	# If advanced_search_section is absent then load it from restypes
 	if (getval("submitted","")=="") 

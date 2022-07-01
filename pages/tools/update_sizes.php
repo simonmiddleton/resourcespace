@@ -11,7 +11,7 @@ include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission
 include "../../include/image_processing.php";
 
 $max=ps_value("select max(ref) value from resource",array(), 0);
-$ref=getvalescaped("ref",1);
+$ref=getval("ref",1);
 
 $resourceinfo= ps_query("select ref,file_extension from resource where ref= ?", ['i', $ref]);
 if (count($resourceinfo)>0)

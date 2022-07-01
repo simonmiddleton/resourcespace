@@ -114,7 +114,7 @@ function perform_login($loginuser="",$loginpass="")
         $result['ref'] = $userref;
 
         
-        $language = getvalescaped("language", "");
+        $language = getval("language", "");
 		ps_query("
             UPDATE user
                SET session=?,

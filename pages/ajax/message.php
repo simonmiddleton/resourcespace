@@ -29,14 +29,14 @@
             exit();
             }
 
-        $user            = getvalescaped('user', 0, true);
-        $seen            = getvalescaped('seen', 0, true);
-        $unseen          = getvalescaped('unseen', 0, true);
-        $allseen         = getvalescaped('allseen', 0, true);
-        $deleteselusrmsg = getvalescaped('deleteselusrmsg', "");
-        $selectedseen    = getvalescaped('selectedseen', "");
-        $selectedunseen  = getvalescaped('selectedunseen', "");
-        $getrefs         = getvalescaped('getrefs', 0, true);
+        $user            = getval('user', 0, true);
+        $seen            = getval('seen', 0, true);
+        $unseen          = getval('unseen', 0, true);
+        $allseen         = getval('allseen', 0, true);
+        $deleteselusrmsg = getval('deleteselusrmsg', "");
+        $selectedseen    = getval('selectedseen', "");
+        $selectedunseen  = getval('selectedunseen', "");
+        $getrefs         = getval('getrefs', 0, true);
 
 		if(0 < $user)
 			{

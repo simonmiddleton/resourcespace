@@ -935,7 +935,8 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 				}
 			}
 		}
-
+    // Sign all field specific php code (macros, value filter etc.) included with the default metadata fields.
+    resign_all_code(false, false);
 
     // Copy slideshow images under filestore in order to avoid
     // overwriting them when doing svn update
@@ -993,7 +994,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
         
         if($google_vision_enable)
             {
-            $google_vision_api_key= getvalescaped('google_vision_key','');
+            $google_vision_api_key= getval('google_vision_key','');
 
             // Activate and get default config
             activate_plugin("google_vision");

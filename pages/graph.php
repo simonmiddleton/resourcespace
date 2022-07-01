@@ -12,13 +12,13 @@ $graph = imagecreatetruecolor($width,$height);
 if (function_exists("imageantialias")) {imageantialias($graph,true);}
 
 # Read values
-$activity_type=getvalescaped("activity_type","Search");
-$year=getvalescaped("year",2006);
-$month=getvalescaped("month","");
+$activity_type=getval("activity_type","Search");
+$year=getval("year",2006);
+$month=getval("month","");
 
 # Group handling
-$groupselect=getvalescaped("groupselect","");
-$groups=getvalescaped("groups","");$groups=explode("_",$groups);
+$groupselect=getval("groupselect","");
+$groups=getval("groups","");$groups=explode("_",$groups);
 $params=[];
 if ($groupselect=="select")
     {

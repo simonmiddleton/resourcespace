@@ -18,12 +18,12 @@ if(!$annotate_enabled)
 
 $return   = array();
 
-$action   = getvalescaped('action', '');
-$resource = getvalescaped('resource', 0, true);
-$page     = getvalescaped('page', 0, true);
+$action   = getval('action', '');
+$resource = getval('resource', 0, true);
+$page     = getval('page', 0, true);
 
 // Get annotation data if an ID has been provided
-$annotation_id = getvalescaped('annotation_id', 0, true);
+$annotation_id = getval('annotation_id', 0, true);
 $annotation    = getval('annotation', array());
 
 debug(sprintf('[annotations][annotations.php] AJAX request: action = %s | resource = %s | annotation_id = %s', $action, $resource, $annotation_id));
@@ -133,7 +133,7 @@ if('get_allowed_fields' == $action)
 // REQUIRES: check if field is dynamic keyword list and user has bermission to add new fields
 if('check_allow_new_tags' == $action)
     {
-    $resource_type_field = getvalescaped('resource_type_field', 0, true);
+    $resource_type_field = getval('resource_type_field', 0, true);
 
     if(0 == $resource_type_field || !in_array($resource_type_field, $annotate_fields))
         {

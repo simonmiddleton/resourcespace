@@ -3,8 +3,8 @@
 include "../../include/db.php";
 
 
-$uniqid=getvalescaped("id","");
-$user=getvalescaped("user",""); // Need to get this from query string since we haven't authenticated
+$uniqid=getval("id","");
+$user=getval("user",""); // Need to get this from query string since we haven't authenticated
 $usertempdir=get_temp_dir(false,"rs_" . $user . "_" . $uniqid);
 $progress_file=$usertempdir . "/progress_file.txt";
 //$progress_file=get_temp_dir(false,$uniqid) . "/progress_file.txt";

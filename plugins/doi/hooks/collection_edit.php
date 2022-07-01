@@ -96,7 +96,7 @@
 				<?php
 
 				# fetch registration flag
-				$doi_state = getvalescaped('registerdois', '');
+				$doi_state = getval('registerdois', '');
 
 				if ($doi_state === 'yes') {
 

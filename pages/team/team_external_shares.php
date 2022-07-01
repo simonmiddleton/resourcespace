@@ -8,13 +8,13 @@ if(!checkperm('ex'))
     }
 
 $ajax              = ('true' == getval('ajax', '') ? true : false);
-$delete_access_key = getvalescaped('delete_access_key', '');
+$delete_access_key = getval('delete_access_key', '');
 
 // Process access key deletion
 if($ajax && '' != $delete_access_key && enforcePostRequest($ajax))
     {
-    $resource   = getvalescaped('resource', '');
-    $collection = getvalescaped('collection', '');
+    $resource   = getval('resource', '');
+    $collection = getval('collection', '');
     $response   = array(
         'success' => false
     );

@@ -16,7 +16,7 @@ if (getval("publish_all","")!="" || getval("publish_new","")!="" || isset($_GET[
 
 include "../../../include/header.php";
 
-$theme=getvalescaped("theme","");
+$theme=getval("theme","");
 
 $id="flickr_" . $userref . "_" .$theme;
 $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
@@ -67,12 +67,12 @@ if (getval("publish_all","")!="" || getval("publish_new","")!="")
 if (getval("publish_all","")!="" && enforcePostRequest(false))
 	{
 	# Perform sync publishing all (updating any existing)
-	sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getvalescaped("private",""));
+	sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getval("private",""));
 	}
 elseif (getval("publish_new","")!="" && enforcePostRequest(false))
 	{
 	# Perform sync publishing new only.
-	sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getvalescaped("private",""));
+	sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getval("private",""));
 	}
 else
 	{

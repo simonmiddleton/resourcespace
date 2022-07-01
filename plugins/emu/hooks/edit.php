@@ -57,7 +57,7 @@ function HookEmuAllAdditionalvalcheck($fields, $fields_item)
         {
         global $emu_data;
 
-        $emu_irn         = intval(getvalescaped("field_{$emu_irn_field}", '', true));
+        $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
         $emu_rs_mappings = unserialize(base64_decode($emu_rs_saved_mappings));
         $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($emu_irn), $emu_rs_mappings);
 
@@ -96,7 +96,7 @@ function HookEmuEditSaveextraresourcedata($list)
     {
     global $emu_irn_field;
 
-    $emu_irn = intval(getvalescaped("field_{$emu_irn_field}", '', true));
+    $emu_irn = intval(getval("field_{$emu_irn_field}", '', true));
 
     if(0 == $emu_irn)
         {
@@ -132,7 +132,7 @@ function HookEmuEditAftersaveresourcedata()
     // Update Resource with EMu data
     global $ref, $emu_irn_field, $emu_rs_saved_mappings, $emu_data, $emu_update_list;
 
-    $emu_irn         = intval(getvalescaped("field_{$emu_irn_field}", '', true));
+    $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
     $emu_rs_mappings = unserialize(base64_decode($emu_rs_saved_mappings));
 
     // Not a batch edit, make up the $list array so we can pretend it is

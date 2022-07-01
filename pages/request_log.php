@@ -3,21 +3,21 @@ include "../include/db.php";
 
 include "../include/authenticate.php";if (!checkperm("R")) {exit ("Permission denied.");}
 
-$ref=getvalescaped("ref","",true);
-$k=getvalescaped("k","");
+$ref=getval("ref","",true);
+$k=getval("k","");
 
 # fetch the current search
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getval("archive",0,true);
 $default_sort_direction="DESC";
-$per_page=getvalescaped("per_page",0,true);
+$per_page=getval("per_page",0,true);
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos",'');
+$curpos=getval("curpos",'');
 $modal=(getval("modal", "") == "true");
 
 $urlparams = get_search_params();

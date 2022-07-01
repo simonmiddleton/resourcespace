@@ -15,12 +15,12 @@ if (!function_exists("rse_workflow_get_actions")){
 if (!function_exists("rse_workflow_save_action")){
     function rse_workflow_save_action($ref="")
             {
-            if($ref==""){$ref=getvalescaped("ref","");};
-            $fromstate=getvalescaped("actionfrom","");
-            $tostate=getvalescaped("actionto","");
-            $name=getvalescaped("actionname","");
-            $text=getvalescaped("actiontext","");
-            $buttontext=getvalescaped("actionbuttontext","");
+            if($ref==""){$ref=getval("ref","");};
+            $fromstate=getval("actionfrom","");
+            $tostate=getval("actionto","");
+            $name=getval("actionname","");
+            $text=getval("actiontext","");
+            $buttontext=getval("actionbuttontext","");
             
             # Check if we are searching for actions specific to a status
             ps_query("UPDATE workflow_actions SET name = ?, text = ?, buttontext = '' statusfrom = ?, statusto = ? WHERE ref = ?",array("s",$name,"s",$text,"i",$fromstate,"i",$tostate,"i",$ref));

@@ -4,15 +4,15 @@
 include "../../include/db.php";
 include "../../include/authenticate.php";
 
-if(getvalescaped("action","")=="showcollection")
+if(getval("action","")=="showcollection")
 	{
-	show_hide_collection(getvalescaped("collection","",true), true, $userref);
+	show_hide_collection(getval("collection","",true), true, $userref);
 	exit("UNHIDDEN");
 	}
 	
-if(getvalescaped("action","")=="hidecollection")
+if(getval("action","")=="hidecollection")
 	{
-	show_hide_collection(getvalescaped("collection","",true), false, $userref);
+	show_hide_collection(getval("collection","",true), false, $userref);
 	exit("HIDDEN");
 	}
 	

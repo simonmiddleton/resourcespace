@@ -5,10 +5,10 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$find=getvalescaped("term","");
-$getrefs=(getvalescaped("getrefs","")!="")?true:false;
+$find=getval("term","");
+$getrefs=(getval("getrefs","")!="")?true:false;
 
-$getuserref=(getvalescaped("getuserref",""));
+$getuserref=(getval("getuserref",""));
 if (!empty($getuserref))
     {
     ob_clean();
@@ -19,7 +19,7 @@ if (!empty($getuserref))
 $usersgroup_subordinates = get_approver_usergroups($usergroup);
 $usersgroup_approvers = get_usergroup_approvers($usergroup);
 
-$ignoregroups=(getvalescaped("nogroups","")!="")?true:false;
+$ignoregroups=(getval("nogroups","")!="")?true:false;
 $first=true;
 ?> [ <?php
 

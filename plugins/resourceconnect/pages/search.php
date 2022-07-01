@@ -2,7 +2,7 @@
 include_once "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 
-$search=getvalescaped("search","");
+$search=getval("search","");
 
 $resourceconnect_source=getval("resourceconnect_source","");
 
@@ -16,7 +16,7 @@ redirect("pages/search.php?search=" . urlencode($search) . "&resourceconnect_sel
 exit();
 
 
-$affiliate_selected=getvalescaped("affiliate","");
+$affiliate_selected=getval("affiliate","");
 include "../../../include/header.php";
 $page_size=$resourceconnect_pagesize;
 

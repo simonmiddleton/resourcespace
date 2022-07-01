@@ -3,11 +3,11 @@ include "../include/db.php";
 include "../include/authenticate.php";
 include_once "../include/image_processing.php";
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $offset=getval("offset",0,true);
-$find=getvalescaped("find","");
-$col_order_by=getvalescaped("col_order_by","name");
-$order_by=getvalescaped("order_by","");
+$find=getval("find","");
+$col_order_by=getval("col_order_by","name");
+$order_by=getval("order_by","");
 $sort=getval("sort","ASC");
 $backto=getval("backto","");$backto=str_replace("\"","",$backto);#Prevent injection
 $done=false;

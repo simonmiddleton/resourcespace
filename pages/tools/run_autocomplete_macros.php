@@ -23,7 +23,7 @@ if(array_key_exists('force', $cli_options))
     $force_update = true;
     }
 
-$force_update = (bool) getvalescaped("force", $force_update);
+$force_update = (bool) getval("force", $force_update);
 
 $resources = ps_query("SELECT ref FROM resource WHERE ref > 0");
 

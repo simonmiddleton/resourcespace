@@ -4,7 +4,7 @@ include_once '../../../include/resource_functions.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/image_processing.php';
 
-$ref = getvalescaped("ref","", true);
+$ref = getval("ref","", true);
 
 // for_original exists when the plugin is used to create custom video formats on the fly for the original file ($video_tracks_allow_original_custom_formats)
 $for_original = filter_var(getval('for_original', false), FILTER_VALIDATE_BOOLEAN);
@@ -48,9 +48,9 @@ foreach($altfiles as $altfile)
 		
 if($generate && enforcePostRequest(false))
     {
-    $video_track_format  = getvalescaped("video_track_format","");
-    $video_subtitle_file = getvalescaped("video_subtitle_file","");
-    $video_audio_file    = getvalescaped("video_audio_file","");
+    $video_track_format  = getval("video_track_format","");
+    $video_subtitle_file = getval("video_subtitle_file","");
+    $video_audio_file    = getval("video_audio_file","");
     $savealt             = false;
     $download            = false;
 
@@ -98,7 +98,7 @@ if($generate && enforcePostRequest(false))
             $savealt=true;
             $origfilename=get_data_by_field($ref,$filename_field);
             $altname=$video_track_format;
-            $description=getvalescaped("video_track_alt_desc","");			
+            $description=getval("video_track_alt_desc","");			
 
             if($offline)
                 { 

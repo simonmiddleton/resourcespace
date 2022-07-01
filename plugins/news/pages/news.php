@@ -25,7 +25,7 @@ else
 	$debugtext="Debug: ";
 	}
 
-if (!isset($ref)){$ref=getvalescaped("ref","",true);}
+if (!isset($ref)){$ref=getval("ref","",true);}
 
 if ((getval("edit","")!="") && (checkperm("o")))
 	{
@@ -34,14 +34,14 @@ if ((getval("edit","")!="") && (checkperm("o")))
 		
 if ((getval("previous","")!=""))
 	{
-	$ref=getvalescaped("ref","",true);
+	$ref=getval("ref","",true);
 	$ref--;
 	redirect("plugins/news/pages/news.php?ref=".$ref);
 	}
 
 if ((getval("next","")!=""))
 	{
-	$ref=getvalescaped("ref","",true);
+	$ref=getval("ref","",true);
 	$ref++;
 	redirect("plugins/news/pages/news.php?ref=".$ref);
 	}

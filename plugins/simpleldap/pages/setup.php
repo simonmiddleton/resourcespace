@@ -11,25 +11,25 @@ $upload_status="";
 
 if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag","")!="" && enforcePostRequest(false))
 	{
-	$simpleldap['fallbackusergroup'] = getvalescaped('fallbackusergroup','');
-	$simpleldap['domain'] = getvalescaped('domain','');
-	$simpleldap['emailsuffix'] = getvalescaped('emailsuffix','');
-	$simpleldap['ldapserver'] = getvalescaped('ldapserver','');
-    $simpleldap['ldap_encoding'] = getvalescaped('ldap_encoding', '');
-	$simpleldap['port'] = getvalescaped('port','');
-	$simpleldap['basedn']= getvalescaped('basedn','');
-	$simpleldap['loginfield'] = getvalescaped('loginfield','');
-	$simpleldap['usersuffix'] = getvalescaped('usersuffix','');
-	$simpleldap['createusers'] = getvalescaped('createusers','');
-	$simpleldap['ldapgroupfield'] = getvalescaped('ldapgroupfield','');
-	$simpleldap['email_attribute'] = getvalescaped('email_attribute','');
-	$simpleldap['phone_attribute'] = getvalescaped('phone_attribute','');
-	$simpleldap['update_group'] = getvalescaped('update_group','');
-	$simpleldap['create_new_match_email'] = getvalescaped('create_new_match_email','');
-	$simpleldap['allow_duplicate_email'] = getvalescaped('allow_duplicate_email','');
-	$simpleldap['notification_email'] = getvalescaped('notification_email','');
-	$simpleldap['ldaptype'] = getvalescaped('ldaptype','');
-	$simpleldap['LDAPTLS_REQCERT_never'] = getvalescaped('LDAPTLS_REQCERT_never', false);
+	$simpleldap['fallbackusergroup'] = getval('fallbackusergroup','');
+	$simpleldap['domain'] = getval('domain','');
+	$simpleldap['emailsuffix'] = getval('emailsuffix','');
+	$simpleldap['ldapserver'] = getval('ldapserver','');
+    $simpleldap['ldap_encoding'] = getval('ldap_encoding', '');
+	$simpleldap['port'] = getval('port','');
+	$simpleldap['basedn']= getval('basedn','');
+	$simpleldap['loginfield'] = getval('loginfield','');
+	$simpleldap['usersuffix'] = getval('usersuffix','');
+	$simpleldap['createusers'] = getval('createusers','');
+	$simpleldap['ldapgroupfield'] = getval('ldapgroupfield','');
+	$simpleldap['email_attribute'] = getval('email_attribute','');
+	$simpleldap['phone_attribute'] = getval('phone_attribute','');
+	$simpleldap['update_group'] = getval('update_group','');
+	$simpleldap['create_new_match_email'] = getval('create_new_match_email','');
+	$simpleldap['allow_duplicate_email'] = getval('allow_duplicate_email','');
+	$simpleldap['notification_email'] = getval('notification_email','');
+	$simpleldap['ldaptype'] = getval('ldaptype','');
+	$simpleldap['LDAPTLS_REQCERT_never'] = getval('LDAPTLS_REQCERT_never', false);
 	
 	
 	

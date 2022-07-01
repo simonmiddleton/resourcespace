@@ -1242,7 +1242,7 @@ function do_search(
 
     if ($editable_only)
 		{
-        if(strlen(trim($usereditfilter)) > 0
+        if(strlen(trim($usereditfilter??"")) > 0
             && !is_numeric($usereditfilter)
             && trim($userdata[0]["edit_filter"]) != ""
             && $userdata[0]["edit_filter_id"] != -1

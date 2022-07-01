@@ -2,9 +2,9 @@
 include dirname(__FILE__) . '/../../include/db.php';
 include dirname(__FILE__) . '/../../include/authenticate.php';
 
-$resource = getvalescaped('resource', '');
-$ref = getvalescaped('ref', '');
-$type = getvalescaped('type','');
+$resource = getval('resource', '');
+$ref = getval('ref', '');
+$type = getval('type','');
 
 $resource_data = get_resource_data($resource);
 

@@ -6,7 +6,7 @@ if(!checkperm('a'))
     exit('Permission denied.');
     }
 
-$ref    = getvalescaped('ref', '');
+$ref    = getval('ref', '');
 $copied = '';
 $title  = ps_value("SELECT title AS `value` FROM resource_type_field WHERE ref = ?", array("i",$ref), '', "schema");
 
@@ -15,7 +15,7 @@ if (getval("saveform","")!="" && enforcePostRequest(false))
 	{
 	$params=array("i",getval("resource_type",""),"i",$ref);
 
-	$sync=getvalescaped("sync","");
+	$sync=getval("sync","");
 	if ($sync==1) {$sync="?";$params[]="i";$params[]=$ref;} else {$sync="null";}
 	
 	ps_query("insert into resource_type_field

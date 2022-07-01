@@ -4,7 +4,7 @@ include_once "../include/db.php";
 include "../include/authenticate.php";
 include "../include/header.php";
 
-$content=getvalescaped("content","");
+$content=getval("content","");
 if ($content!=""){$content=text($content);}else{$content="This is default content text. You can create text (including html) in Admin->Manage Content and display it here.";}
 
 $modal=getval("modal","");

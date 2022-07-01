@@ -7,15 +7,15 @@ if($annotate_enabled)
     }
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$s = getvalescaped("search","");
+$s = getval("search","");
 if (is_array($s))
     {
     redirect($baseurl . "/pages/search.php");
     }
 $s = explode(" ", $s);
 
-$k = getvalescaped("k","");
-$resetlockedfields = getvalescaped("resetlockedfields","") != "";
+$k = getval("k","");
+$resetlockedfields = getval("resetlockedfields","") != "";
 
 if (($k=="") || (!check_access_key_collection(str_replace("!collection","",$s[0]),$k))) {include "../include/authenticate.php";}
 
@@ -53,9 +53,9 @@ if($k != "" && !$internal_share_access || (isset($anonymous_login) && $username 
     $use_selection_collection = false;
     }
 
-$search = getvalescaped('search', '');
+$search = getval('search', '');
 $modal  = ('true' == getval('modal', ''));
-$collection_add=getvalescaped("collection_add",""); // Need this if redirected here from upload
+$collection_add=getval("collection_add",""); // Need this if redirected here from upload
 $initial_search_cookie = (isset($_COOKIE['search']) ? trim(strip_leading_comma($_COOKIE['search'])) : '');
 $initial_restypes_cookie = (isset($_COOKIE['restypes']) ? trim($_COOKIE['restypes']) : '');
 $initial_saved_archive_cookie = (isset($_COOKIE['saved_archive']) ? trim($_COOKIE['saved_archive']) : '');
@@ -143,7 +143,7 @@ $df=array();
 $all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fields,$thumbs_display_fields,$list_display_fields)));
 
 # get display and normalize display specific variables
-$display=getvalescaped("display",$default_display);rs_setcookie('display', $display,0,"","",false,false);
+$display=getval("display",$default_display);rs_setcookie('display', $display,0,"","",false,false);
 
 switch ($display)
     {
@@ -218,8 +218,8 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
     }
 
 $searchresourceid = "";
-if (is_numeric(trim(getvalescaped("searchresourceid","")))){
-    $searchresourceid = trim(getvalescaped("searchresourceid",""));
+if (is_numeric(trim(getval("searchresourceid","")))){
+    $searchresourceid = trim(getval("searchresourceid",""));
     $search = "!resource$searchresourceid";
 }
 
@@ -238,11 +238,11 @@ if($collectionsearch)
 hook("searchstringprocessing");
 
 # Fetch and set the values
-$offset=getvalescaped("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset,0,"","",false,false);}
+$offset=getval("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset,0,"","",false,false);}
 $offset = intval($offset); 
 if ($offset<0) {$offset=0;} 
 
-$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by,0,"","",false,false);}
+$order_by=getval("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by,0,"","",false,false);}
 if ($order_by=="")
     {
     if ($collectionsearch) // We want the default collection order to be applied
@@ -266,7 +266,7 @@ if (substr($order_by,0,5)=="field")
         }
     }
 
-$per_page=getvalescaped("per_page",$default_perpage, true); 
+$per_page=getval("per_page",$default_perpage, true); 
 $per_page= (!in_array($per_page,$results_display_array)) ? $default_perpage : $per_page;
 
 rs_setcookie('per_page', $per_page,0,"","",false,false);
@@ -299,7 +299,7 @@ if($use_selection_collection && $clear_selection_collection && !$paging_request 
     }
 
 // Construct archive string and array
-$archive_choices=getvalescaped("archive","");
+$archive_choices=getval("archive","");
 $archive_standard = $archive_choices=="";
 $selected_archive_states = array();
 if(!is_array($archive_choices)){$archive_choices=explode(",",$archive_choices);}
@@ -331,13 +331,13 @@ if($resetlockedfields)
 
 $jumpcount=0;
 
-if (getvalescaped('recentdaylimit', '', true)!="") //set for recent search, don't set cookie
+if (getval('recentdaylimit', '', true)!="") //set for recent search, don't set cookie
     {
-    $daylimit=getvalescaped('recentdaylimit', '', true);
+    $daylimit=getval('recentdaylimit', '', true);
     }
 else if($recent_search_period_select==true && strpos($search,"!")===false) //set cookie for paging
     {
-    $daylimit=getvalescaped("daylimit",""); 
+    $daylimit=getval("daylimit",""); 
     rs_setcookie('daylimit', $daylimit,0,"","",false,false);
     }
 else {$daylimit="";} // clear cookie for new search
@@ -357,7 +357,7 @@ elseif ($order_by=="collection")
     {
     $default_sort_direction="ASC";
     }
-$sort=getvalescaped("sort",$default_sort_direction);rs_setcookie('saved_sort', $sort,0,"","",false,false);
+$sort=getval("sort",$default_sort_direction);rs_setcookie('saved_sort', $sort,0,"","",false,false);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 
 ## If displaying a collection
@@ -379,12 +379,12 @@ if($use_selection_collection)
         }
     }
 
-$hiddenfields=getvalescaped("hiddenfields","");
+$hiddenfields=getval("hiddenfields","");
 
 # fetch resource types from query string and generate a resource types cookie
-if (getvalescaped("resetrestypes","")=="")
+if (getval("resetrestypes","")=="")
     {
-    $restypes=getvalescaped("restypes","");
+    $restypes=getval("restypes","");
     }
 else
     { 
@@ -409,8 +409,8 @@ if($modified_restypes){$restypes=$modified_restypes;}
 $old_search = (!array_key_exists('search', $_GET) && !array_key_exists('search', $_POST));
 if ($old_search)
     {
-    $offset=getvalescaped("saved_offset",0,true);rs_setcookie('saved_offset', $offset,0,"","",false,false);
-    $order_by=getvalescaped("saved_order_by","relevance");
+    $offset=getval("saved_offset",0,true);rs_setcookie('saved_offset', $offset,0,"","",false,false);
+    $order_by=getval("saved_order_by","relevance");
     if ($collectionsearch) // We want the default collection order to be applied
         {
         $order_by=$default_collection_sort;
@@ -420,8 +420,8 @@ if ($old_search)
         $order_by=$default_sort;
         }
     rs_setcookie('saved_order_by', $order_by,0,"","",false,false);
-    $sort=getvalescaped("saved_sort","");rs_setcookie('saved_sort', $sort,0,"","",false,false);
-    $archivechoices=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archivechoices,0,"","",false,false);
+    $sort=getval("saved_sort","");rs_setcookie('saved_sort', $sort,0,"","",false,false);
+    $archivechoices=getval("saved_archive",0);rs_setcookie('saved_archive', $archivechoices,0,"","",false,false);
     if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
     foreach($archivechoices as $archivechoice)
         {
@@ -433,7 +433,7 @@ if ($old_search)
 hook("searchparameterhandler"); 
     
 # If requested, refresh the collection frame (for redirects from saves)
-if (getvalescaped("refreshcollectionframe","")!="")
+if (getval("refreshcollectionframe","")!="")
     {
     refresh_collection_frame();
     }
@@ -468,7 +468,7 @@ $searchparams= array(
     'archive'        => $archive,
     'sort'           => $sort,
     'restypes'       => $restypes,
-    'recentdaylimit' => getvalescaped('recentdaylimit', '', true),
+    'recentdaylimit' => getval('recentdaylimit', '', true),
     'foredit'        => ($editable_only?"true":""),
     'noreload'       => "true",
     'access'         => $search_access,
@@ -532,13 +532,13 @@ if ($search_includes_resources || substr($search,0,1)==="!")
         // Save $max_results as this gets changed by do_search();
         $saved_max_results = $max_results;
         // First search for refs only to get full result count
-        $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, true, $editable_only, false, $search_access);
+        $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, true, $editable_only, false, $search_access);
         
         if(is_array($count_search))
             {
             $result_count = count($count_search);
             // Do actual search and get all data
-            $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only, false, $search_access);
+            $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
             }
         else
             {
@@ -591,10 +591,10 @@ if ($collectionsearch)
 if ($allow_reorder && $display!="list")
     {
     # Also check for the parameter and reorder as necessary.
-    $reorder=getvalescaped("reorder",false);
+    $reorder=getval("reorder",false);
     if ($reorder)
         {
-        $neworder=json_decode(getvalescaped("order",false));
+        $neworder=json_decode(getval("order",false));
         update_collection_order($neworder,$collection,$offset);
         exit("SUCCESS");
         }
@@ -1144,7 +1144,7 @@ if($responsive_ui)
         </div>
         <?php
         }
-    if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
+    if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getval('recentdaylimit', '', true)==""){?>
     <div class="InpageNavLeftBlock">
         <select style="width:auto" id="resultsdisplay" name="resultsdisplay" onchange="CentralSpaceLoad(this.value,true);">
         <?php $recent_search_period_array_count = count($recent_search_period_array);
@@ -1300,7 +1300,7 @@ if($responsive_ui)
         </div>
         <?php } 
     
-        if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
+        if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getval('recentdaylimit', '', true)==""){?>
         <div class="InpageNavLeftBlock">
         <?php 
         $recent_search_period_array_count = count($recent_search_period_array);
@@ -1680,7 +1680,7 @@ hook("endofsearchpage");
 if($search_anchors && $display != 'map')
     { ?>
     <script>
-    place     = '<?php echo getvalescaped("place", ""); ?>';
+    place     = '<?php echo getval("place", ""); ?>';
     display   = '<?php echo $display; ?>';
     highlight = '<?php echo $search_anchors_highlight; ?>';
 

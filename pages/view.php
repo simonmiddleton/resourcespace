@@ -10,7 +10,7 @@ include_once "../include/db.php";
 $ref=getval("ref",0,true);
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key($ref,$k))) {include "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key($ref,$k))) {include "../include/authenticate.php";}
 include_once "../include/image_processing.php";
 
 
@@ -21,8 +21,8 @@ $internal_share_access = internal_share_access();
 update_hitcount($ref);
 
 # fetch the current search (for finding similar matches)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
 
 # add order_by check to filter values prefixed by 'field'
 if(preg_match("/^field(.*)/", $order_by, $matches))
@@ -33,11 +33,11 @@ if(preg_match("/^field(.*)/", $order_by, $matches))
         }
     }
 
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive","");
-$per_page=getvalescaped("per_page",$default_perpage,true);
+$archive=getval("archive","");
+$per_page=getval("per_page",$default_perpage,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
@@ -45,7 +45,7 @@ $modal=(getval("modal","")=="true");
 $context=($modal?"Modal":"Root"); # Set a unique context, used for JS variable scoping so this page in a modal doesn't conflict with the same page open behind the modal.
 
 # next / previous resource browsing
-$curpos=getvalescaped("curpos","");
+$curpos=getval("curpos","");
 $go=getval("go","");
 
 if ($go!="") 
@@ -57,7 +57,7 @@ if ($go!="")
     if ($modified_result_set){
         $result=$modified_result_set;
     } else {
-        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"", getvalescaped("go",""));
+        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"", getval("go",""));
     }
     if (is_array($result))
         {

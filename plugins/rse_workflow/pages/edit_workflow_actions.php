@@ -10,7 +10,7 @@ include_once '../include/rse_workflow_functions.php';
 # Retrieve list of existing defined actions 
 $workflowactions = rse_workflow_get_actions();
 
-$filterstate=getvalescaped("filterstate","all");
+$filterstate=getval("filterstate","all");
 if ($filterstate!="all")
 	{
 	$a=count($workflowactions);
@@ -23,7 +23,7 @@ if ($filterstate!="all")
 			}
 		}	
 	}	
-$delete=getvalescaped("delete","");
+$delete=getval("delete","");
 if ($delete!="")
 	{
 	# Delete action

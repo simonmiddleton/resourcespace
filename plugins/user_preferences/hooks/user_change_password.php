@@ -11,9 +11,9 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 	global $user_preferences_change_username, $user_preferences_change_email,
 			$user_preferences_change_name, $userref, $useremail, $username, $userfullname, $lang;
 
-	$newUsername=trim(safe_file_name(getvalescaped('username', $username)));
-	$newEmail=getvalescaped('email', $useremail);
-	$newFullname=getvalescaped('fullname', $userfullname);
+	$newUsername=trim(safe_file_name(getval('username', $username)));
+	$newEmail=getval('email', $useremail);
+	$newFullname=getval('fullname', $userfullname);
 
 	# Check if a user with that username already exists
 	if ($user_preferences_change_username && $username != $newUsername)

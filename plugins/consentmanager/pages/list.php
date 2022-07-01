@@ -4,11 +4,11 @@ include dirname(__FILE__)."/../../../include/db.php";
 include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t") && !checkperm("cm")) {exit ("Permission denied.");}
 global $baseurl;
 
-$offset=getvalescaped("offset",0,true);
+$offset=getval("offset",0,true);
 if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
-$findtext=getvalescaped("findtext","");
+$findtext=getval("findtext","");
 
-$delete=getvalescaped("delete","");
+$delete=getval("delete","");
 if ($delete!="" && enforcePostRequest(false))
 	{
 	# Delete consent

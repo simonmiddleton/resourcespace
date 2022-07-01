@@ -2,7 +2,7 @@
 include "../include/db.php";
 include "../include/authenticate.php";
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 
 if ((isset($allow_resource_deletion) and !$allow_resource_deletion) or (checkperm('D') and !hook('check_single_delete'))){
 	include "../include/header.php";
@@ -12,18 +12,18 @@ if ((isset($allow_resource_deletion) and !$allow_resource_deletion) or (checkper
 $resource=get_resource_data($ref);
 
 # fetch the current search 
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive","");
+$archive=getval("archive","");
 
 $modal=(getval("modal","")=="true");
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos","");
+$curpos=getval("curpos","");
 
 $error="";
 

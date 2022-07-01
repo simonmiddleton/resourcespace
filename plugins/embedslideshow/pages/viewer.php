@@ -7,14 +7,14 @@ include "../../../include/db.php";
 include_once "../languages/en.php"; # Because this may not be included automatically, i.e. if the plugin is not available to all groups.
 
 # Get variables and check key is valid.
-$ref        = getvalescaped('ref', '');
-$key        = getvalescaped('k', '');
-$size       = getvalescaped('size', 'pre');
-$transition = (int)getvalescaped('transition', 4);
-$showtext   = getvalescaped('showtext', '0');
+$ref        = getval('ref', '');
+$key        = getval('k', '');
+$size       = getval('size', 'pre');
+$transition = (int)getval('transition', 4);
+$showtext   = getval('showtext', '0');
 
-$player_width        = getvalescaped('width', '');
-$player_height        = getvalescaped('height', '');
+$player_width        = getval('width', '');
+$player_height        = getval('height', '');
 if (!is_numeric($player_width) || !is_numeric($player_height))
     {
     exit("Height and width parameters must be numeric.");

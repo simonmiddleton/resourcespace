@@ -37,8 +37,8 @@ $messages           = array();
 // Process access key deletion
 if($delete_access_key != "" && enforcePostRequest($ajax))
     {
-    $deleteresource   = getvalescaped('delete_resource', '');
-    $deletecollection = getvalescaped('delete_collection', '');
+    $deleteresource   = getval('delete_resource', '');
+    $deletecollection = getval('delete_collection', '');
     $response   = array(
         'success' => false
     );
@@ -100,7 +100,7 @@ foreach($sharedcols as $sharedcol)
     }
 
 $expiredshares = 0;
-$per_page =getvalescaped("per_page",$default_perpage, true); 
+$per_page =getval("per_page",$default_perpage, true); 
 $per_page = (!in_array($per_page,$list_display_array)) ? $default_perpage_list : $per_page;
 $sharecount   = count($shares);
 $totalpages = ceil($sharecount/$per_page);

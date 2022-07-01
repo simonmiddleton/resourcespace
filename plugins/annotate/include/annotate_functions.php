@@ -16,7 +16,7 @@ function clear_annotate_temp($ref,$annotateid)
 function get_annotate_file_path($ref,$getfilepath,$extension)
     {
     global $username, $scramble_key, $baseurl, $annotateid;
-    $annotateid=getvalescaped("annotateid",$annotateid); //or if sent through a request
+    $annotateid=getval("annotateid",$annotateid); //or if sent through a request
     if($getfilepath)
         {
         $path = get_temp_dir(false,'') . "/annotate_" . $ref . "_" . md5($username . $annotateid . $scramble_key) . "." . $extension;

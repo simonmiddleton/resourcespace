@@ -3,9 +3,9 @@ include "../include/db.php";
 
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}
 
-$collection=getvalescaped("collection","",true);
+$collection=getval("collection","",true);
 $errors="";
 $done=false;
 
@@ -25,7 +25,7 @@ $comment="";
 if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	# Save comment
-	$comment=trim(getvalescaped("comment",""));
+	$comment=trim(getval("comment",""));
 	$saveerrors=send_collection_feedback($collection,$comment);	
 	if(is_array($saveerrors))
 		{
@@ -138,11 +138,11 @@ if ($errors!="")
 	# For external users, ask for their name/e-mail in case this has been passed to several users.
 	?>
 	<div class="Question">
-	<label for="name"><?php echo $lang["yourname"]?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars(getvalescaped("name","")) ?>">
+	<label for="name"><?php echo $lang["yourname"]?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars(getval("name","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<div class="Question">
-	<label for="email"><?php echo $lang["youremailaddress"]; if ($feedback_email_required){echo " *";}?></label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getvalescaped("email","")) ?>">
+	<label for="email"><?php echo $lang["youremailaddress"]; if ($feedback_email_required){echo " *";}?></label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php

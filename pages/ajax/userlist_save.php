@@ -5,13 +5,13 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$user=getvalescaped("userref","");
-$userstring=getvalescaped("userstring","");
-$userlistname=getvalescaped("userlistname","");
-$delete=getvalescaped("delete","");
+$user=getval("userref","");
+$userstring=getval("userstring","");
+$userlistname=getval("userlistname","");
+$delete=getval("delete","");
 
 if ($delete!=""){
-	$userlistref=getvalescaped("userlistref","",true);
+	$userlistref=getval("userlistref","",true);
 	ps_query("delete from user_userlist where ref= ?", ['i', $userlistref]);
 }
 

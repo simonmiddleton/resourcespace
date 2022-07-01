@@ -3,21 +3,21 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$ref=getvalescaped("ref","",true);
-$alt=getvalescaped("alternative","",true);
+$ref=getval("ref","",true);
+$alt=getval("alternative","",true);
 
-$search=getvalescaped("search","");
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("order_by","");
-$archive=getvalescaped("archive","",true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$offset=getval("offset",0,true);
+$order_by=getval("order_by","");
+$archive=getval("archive","",true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos","");
+$curpos=getval("curpos","");
 $go=getval("go","");
 
 $urlparams= array(
@@ -54,7 +54,7 @@ hook("pageevaluation");
 # Handle deleting a file
 if (getval("filedelete","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
-	$filedelete=explode(',',getvalescaped('filedelete',''));
+	$filedelete=explode(',',getval('filedelete',''));
 	foreach ($filedelete as $filedel){
 		if (is_numeric($filedel) && $filedel!='on'){// safety checks
 			delete_alternative_file($ref,$filedel);

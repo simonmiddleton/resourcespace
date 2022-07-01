@@ -128,7 +128,7 @@ if (!$valid && isset($anonymous_autouser_group))
     # Automatically create a users for anonymous access, and place them in a user group.
     
 	# Prepare to create the user.
-	$email=trim(getvalescaped("email","")) ;
+	$email=trim(getval("email","")) ;
 	$username="anonymous" . ps_value("select max(ref)+1 value from user", array(), 0); # Make up a username.
 	$password=make_password();
     $password_hash = rs_password_hash("RS{$username}{$password}");
@@ -349,7 +349,7 @@ $is_authenticated=true;
 
 // Checks user has opted to see the full site view rather than
 // the responsive version on a device
-if(true == getvalescaped('ui_view_full_site', false))
+if(true == getval('ui_view_full_site', false))
     {
     $responsive_ui = false;
     }

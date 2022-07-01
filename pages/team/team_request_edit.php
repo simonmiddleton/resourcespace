@@ -11,7 +11,7 @@ include "../../include/authenticate.php";
 if (!checkperm("R")) { exit ("Permission denied."); }
 include "../../include/request_functions.php";
 
-$ref = getvalescaped("ref", "", true);
+$ref = getval("ref", "", true);
 $modal=(getval("modal","")=="true");
 $backurl=getval("backurl","");
 $url=$baseurl_short."pages/team/team_request_edit.php?ref=" . $ref . "&backurl=" . urlencode($backurl);

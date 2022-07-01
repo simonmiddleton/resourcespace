@@ -7,7 +7,7 @@
 
 include "../include/db.php";
 
-$k=getvalescaped("k","");
+$k=getval("k","");
 include "../include/authenticate.php";
 include_once "../include/dash_functions.php";
 
@@ -21,19 +21,19 @@ $message =false;
 /* 
  * Process Submitted Tile 
  */
-$submitdashtile=getvalescaped("submitdashtile",FALSE);
+$submitdashtile=getval("submitdashtile",FALSE);
 if($submitdashtile && enforcePostRequest(false))
     {
-    $buildurl = getvalescaped("url","");
-    $tlsize   = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+    $buildurl = getval("url","");
+    $tlsize   = ('double' === getval('tlsize', '') ? 'double' : '');
     
     $buildurl = validate_build_url($buildurl);
 
     if ($buildurl=="")
         {
-        $new_buildurl_tltype        = getvalescaped('tltype', '');
-        $new_buildurl_tlstyle       = getvalescaped('tlstyle', '');
-        $new_buildurl_tlstylecolour = urlencode(getvalescaped('tlstylecolour', ''));
+        $new_buildurl_tltype        = getval('tltype', '');
+        $new_buildurl_tlstyle       = getval('tlstyle', '');
+        $new_buildurl_tlstylecolour = urlencode(getval('tlstylecolour', ''));
 
         # No URL provided - build a URL (standard title types).
         $buildurl = "pages/ajax/dash_tile.php?tltype={$new_buildurl_tltype}&tlsize={$tlsize}&tlstyle={$new_buildurl_tlstyle}";
@@ -43,7 +43,7 @@ if($submitdashtile && enforcePostRequest(false))
             $buildurl .= "&tlstylecolour={$new_buildurl_tlstylecolour}";
             }
 
-        $promoted_image = getvalescaped('promoted_image', '');
+        $promoted_image = getval('promoted_image', '');
         if('' != trim($promoted_image))
             {
             $buildurl .= '&promimg=' . $promoted_image;
@@ -56,8 +56,8 @@ if($submitdashtile && enforcePostRequest(false))
     - true for "all users"
     - specific_user_groups
     */
-    $tile_audience        = getvalescaped('tile_audience', '');
-    $specific_user_groups = getvalescaped('specific_user_groups', array());
+    $tile_audience        = getval('tile_audience', '');
+    $specific_user_groups = getval('specific_user_groups', array());
 
     if(checkPermission_dashadmin())
         {
@@ -78,13 +78,13 @@ if($submitdashtile && enforcePostRequest(false))
         $all_users = false;
         }
 
-    $title=getvalescaped("title","");
-    $text=getvalescaped("freetext","");
-    $default_order_by=getvalescaped("default_order_by","UNSET");
-    $reload_interval=getvalescaped("reload_interval_secs","");
-    $resource_count=getvalescaped("resource_count",FALSE);
+    $title=getval("title","");
+    $text=getval("freetext","");
+    $default_order_by=getval("default_order_by","UNSET");
+    $reload_interval=getval("reload_interval_secs","");
+    $resource_count=getval("resource_count",FALSE);
 
-    $link=str_replace("&amp;","&",getvalescaped("link",""));
+    $link=str_replace("&amp;","&",getval("link",""));
     if(strpos($link,$baseurl_short)===0) 
         {
         $length = strlen($baseurl_short);
@@ -94,7 +94,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
     #Check for update rather than new
-    $updatetile = getvalescaped("editdashtile",FALSE);
+    $updatetile = getval("editdashtile",FALSE);
     if($updatetile && is_numeric($updatetile))
         {
         $tile = get_tile($updatetile);
@@ -104,9 +104,9 @@ if($submitdashtile && enforcePostRequest(false))
         $buildstring['tltype'] = $buildstring['tltype'] ?? 'ftxt';
 
         #Change of tilestyle?
-        $tile_style     = getvalescaped('tlstyle', FALSE);
-        $promoted_image = getvalescaped('promoted_image', FALSE);
-        $tlstylecolour  = urlencode(getvalescaped('tlstylecolour', ''));
+        $tile_style     = getval('tlstyle', FALSE);
+        $promoted_image = getval('promoted_image', FALSE);
+        $tlstylecolour  = urlencode(getval('tlstylecolour', ''));
 
         if($tile_style)
             {
@@ -323,23 +323,23 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
 /* 
  * Tile Form Entry
  */
-$create=getvalescaped("create",FALSE);
-$edit=getvalescaped("edit",FALSE);
+$create=getval("create",FALSE);
+$edit=getval("edit",FALSE);
 $validpage = false;
 if($create)
     {
-    $tile_type                    = getvalescaped("tltype","");
-    $tile_style                   = getvalescaped('tlstyle', "");
-    $tile_nostyle                 = getvalescaped("nostyleoptions",FALSE);
-    $allusers                     = getvalescaped("all_users",FALSE);
-    $url                          = getvalescaped("url","");
-    $modifylink                   = getvalescaped("modifylink",FALSE);
-    $freetext                     = getvalescaped("freetext",FALSE);
-    $notitle                      = getvalescaped("notitle",FALSE);
-    $link                         = getvalescaped("link","");
-    $title                        = getvalescaped("title","");
+    $tile_type                    = getval("tltype","");
+    $tile_style                   = getval('tlstyle', "");
+    $tile_nostyle                 = getval("nostyleoptions",FALSE);
+    $allusers                     = getval("all_users",FALSE);
+    $url                          = getval("url","");
+    $modifylink                   = getval("modifylink",FALSE);
+    $freetext                     = getval("freetext",FALSE);
+    $notitle                      = getval("notitle",FALSE);
+    $link                         = getval("link","");
+    $title                        = getval("title","");
     $current_specific_user_groups = (isset($specific_user_groups) ? $specific_user_groups : array());
-    $tlsize                       = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+    $tlsize                       = ('double' === getval('tlsize', '') ? 'double' : '');
 
     // Promoted resources can be available for search tiles (srch) and feature collection tiles (fcthm)
     $promoted_resource = (getval('promoted_resource', "") == "true");
@@ -351,14 +351,14 @@ if($create)
 
     if($tile_type=="srch")
         {
-        $srch=getvalescaped("link","");
-        $order_by=getvalescaped("order_by","");
-        $sort=getvalescaped("sort","");
-        $archive=getvalescaped("archive","");
-        $daylimit=getvalescaped("daylimit","");
-        $restypes=getvalescaped("restypes","");
-        $title=getvalescaped("title","");
-        $resource_count=getvalescaped("resource_count",0,TRUE);
+        $srch=getval("link","");
+        $order_by=getval("order_by","");
+        $sort=getval("sort","");
+        $archive=getval("archive","");
+        $daylimit=getval("daylimit","");
+        $restypes=getval("restypes","");
+        $title=getval("title","");
+        $resource_count=getval("resource_count",0,TRUE);
 
         unset($tile_style);
 

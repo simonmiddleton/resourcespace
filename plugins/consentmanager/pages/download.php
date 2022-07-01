@@ -3,8 +3,8 @@ include "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 include "../include/file_functions.php";
 
-$ref=getvalescaped("ref","",true);
-$resource=getvalescaped("resource","",true);
+$ref=getval("ref","",true);
+$resource=getval("resource","",true);
 $file_path=get_consent_file_path($ref);
 
 # Check access

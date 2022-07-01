@@ -21,7 +21,7 @@ if(!checkperm('a'))
 
 if (isset($_REQUEST['activate']) && enforcePostRequest(false))
     {
-    $inst_name = trim(getvalescaped('activate',''), '#');
+    $inst_name = trim(getval('activate',''), '#');
     if ($inst_name != '' && !in_array($inst_name,$disabled_plugins))
         {
         activate_plugin($inst_name);   
@@ -31,7 +31,7 @@ if (isset($_REQUEST['activate']) && enforcePostRequest(false))
 elseif (isset($_REQUEST['deactivate']) && enforcePostRequest(false))
     { # Deactivate a plugin
     # Strip the leading hash mark added by javascript.
-    $remove_name = trim(getvalescaped('deactivate',''), "#");
+    $remove_name = trim(getval('deactivate',''), "#");
     if ($remove_name!='')
         {
         deactivate_plugin($remove_name); 
@@ -41,7 +41,7 @@ elseif (isset($_REQUEST['deactivate']) && enforcePostRequest(false))
 elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
     { # Purge a plugin's configuration (if stored in DB)
     # Strip the leading hash mark added by javascript.
-    $purge_name = trim(getvalescaped('purge',''), '#');
+    $purge_name = trim(getval('purge',''), '#');
     if ($purge_name!='')
         {
         purge_plugin_config($purge_name);

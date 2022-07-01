@@ -13,7 +13,7 @@ if (!(PHP_SAPI == 'cli')) {include_once "../../include/authenticate.php"; if (!c
 include_once '../../include/node_functions.php';
 include_once '../../include/resource_functions.php';
 
-$resource_type_field = getvalescaped("field", "");
+$resource_type_field = getval("field", "");
 
 if ($resource_type_field == "")
     {

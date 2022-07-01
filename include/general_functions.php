@@ -24,37 +24,6 @@ function getval($val,$default,$force_numeric=false)
     }
 
 /**
-* Return a value from get/post/cookie, escaped and SQL-safe
-* 
-* It should not be relied upon for XSS. Sanitising output should be done when needed by developer
-* 
-* @param string        $val
-* @param string|array  $default        The fallback value if not found
-* @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
-*                                      the function will return the default value
-* 
-* @return string|array
-*/
-function getvalescaped($val, $default, $force_numeric = false)
-    {
-    $value = getval($val, $default, $force_numeric);
-
-    if(is_array($value))
-        {
-        foreach($value as &$item)
-            {
-            $item = escape_check($item);
-            }
-        }
-    else
-        {
-        $value = escape_check($value);
-        }
-
-    return $value;
-    }
-
-/**
  * Escape a value prior to using it in SQL. Only escape a string if we need to,
  * to prevent escaping an already escaped string.
  *
@@ -4151,7 +4120,7 @@ function daily_stat($activity_type,$object_ref)
  */
 function pagename()
 	{
-	$name=safe_file_name(getvalescaped('pagename', ''));
+	$name=safe_file_name(getval('pagename', ''));
 	if (!empty($name))
 		return $name;
 	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts

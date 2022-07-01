@@ -3,7 +3,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php";
 
 # Get username.
-$username=getvalescaped("username","");
+$username=getval("username","");
 # Resolve the username and make sure the user has access.
 $users=get_users(0,$username,"u.username",true,-1,"",false,"",true); // use permissions = TRUE and exact match on username
 if (count($users)==0)

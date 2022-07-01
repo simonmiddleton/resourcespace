@@ -5,13 +5,13 @@ include_once "../../../include/authenticate.php";
 if (!checkperm("a") && !checkperm("cm")) {exit("Access denied");} # Should never arrive at this page without admin access
 
 
-$collection=trim(str_replace("!collection","",getvalescaped("collection","")));
+$collection=trim(str_replace("!collection","",getval("collection","")));
 $unlink=(getval("unlink","")!=""); # Unlink mode
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
     $resources=get_collection_resources($collection);
-    $ref=getvalescaped("ref", 0, true);
+    $ref=getval("ref", 0, true);
     if($ref <= 0)
         {
         error_alert($lang["selectconsent"], false);

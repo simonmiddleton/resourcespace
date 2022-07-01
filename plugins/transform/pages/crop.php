@@ -189,10 +189,10 @@ if ($cropwidth == 0 || $cropheight == 0)
 
 
 // Get parameters from Manage slideshow page
-$manage_slideshow_action = getvalescaped('manage_slideshow_action', '');
-$manage_slideshow_id = getvalescaped('manage_slideshow_id', '');
+$manage_slideshow_action = getval('manage_slideshow_action', '');
+$manage_slideshow_id = getval('manage_slideshow_id', '');
 
-$return_to_url = getvalescaped('return_to_url', '');
+$return_to_url = getval('return_to_url', '');
 
 $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
@@ -201,13 +201,13 @@ if ($saveaction != '' && enforcePostRequest(false))
     $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
-    $width       = getvalescaped('width',0,true);
-    $height      = getvalescaped('height',0,true);
-    $xcoord      = getvalescaped('xcoord',0,true);
-    $ycoord      = getvalescaped('ycoord',0,true);
+    $width       = getval('width',0,true);
+    $height      = getval('height',0,true);
+    $xcoord      = getval('xcoord',0,true);
+    $ycoord      = getval('ycoord',0,true);
     // Get required size
-    $new_width   = getvalescaped('new_width',0,true);
-    $new_height  = getvalescaped('new_height',0,true);
+    $new_width   = getval('new_width',0,true);
+    $new_height  = getval('new_height',0,true);
 
     if ($width == 0 && $height == 0)
         {

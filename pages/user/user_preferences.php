@@ -301,8 +301,8 @@ include "../../include/header.php";
         $response['success'] = true;
         $response['message'] = '';
 
-        $autosave_option_name  = getvalescaped('autosave_option_name', '');
-        $autosave_option_value = getvalescaped('autosave_option_value', '');
+        $autosave_option_name  = getval('autosave_option_name', '');
+        $autosave_option_value = getval('autosave_option_value', '');
 
         if($autosave_option_name == 'user_local_timezone') # If '$autosave_option_name' = 'user_local_timezone' - save to cookie
             {

@@ -11,6 +11,10 @@ if(!checkperm('q'))
     exit($lang["error-permissiondenied"]);
     }
 
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once "../include/authenticate.php";}
+
+if (!checkperm('q')){exit($lang["error-permissiondenied"]);}
+
 if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $prevent_external_requests)
 	{
 	echo "<script>window.location = '" .  $baseurl . "/login.php?error="  . (($allow_account_request)?"signin_required_request_account":"signin_required") . "'</script>";
@@ -81,27 +85,26 @@ if (getval("save","")!="" && enforcePostRequest(false))
         $error = $lang["requiredantispam"];
         }
 	else if ($k!="" || $user_is_anon || $userrequestmode==0)
-		{
-		# Request mode 0 : Simply e-mail the request.
-		if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
-			{
-			$result=false; # Required fields not completed.
-			}
-		else
-			{
-                        $tmp = hook("emailresourcerequest"); if($tmp): $result = $tmp; else:
-			$result=email_resource_request($ref,getval("request",""));
-                        endif;
-			}
-		}
+        {
+        if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
+            {
+            $result=false; # Required fields not completed.
+            }
+        else
+            {
+            $tmp = hook("emailresourcerequest"); if($tmp): $result = $tmp; else:
+            $result=email_resource_request($ref,getval("request",""));
+            endif;
+            }
+        }
 	else
-		{
-		# Request mode 1 : "Managed" mode via Manage Requests / Orders
-                $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
-		$result=managed_collection_request($ref,getval("request",""),true);
-                endif;
-		}
-	
+        {
+        # Request mode 1 : "Managed" mode via Manage Requests / Orders
+        $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
+        $result=managed_collection_request($ref,getval("request",""),true);
+        endif;
+        }
+
 	if ($result===false)
 		{
 		$error = ($error ?: $lang["requiredfields-general"]);

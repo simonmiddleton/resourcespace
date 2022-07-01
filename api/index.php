@@ -15,9 +15,9 @@ debug("API:");
 define("API_CALL", true);
 
 # Get parameters
-$user       = getvalescaped("user","");
-$sign       = getvalescaped("sign","");
-$authmode   = getvalescaped("authmode","userkey");
+$user       = getval("user","");
+$sign       = getval("sign","");
+$authmode   = getval("authmode","userkey");
 $query      = $_SERVER["QUERY_STRING"];
 $pretty = filter_var(getval('pretty', ''), FILTER_VALIDATE_BOOLEAN); # Should response be prettyfied?
 

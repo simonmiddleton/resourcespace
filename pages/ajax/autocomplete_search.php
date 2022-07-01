@@ -6,9 +6,9 @@ include "../../include/db.php";
 include "../../include/authenticate.php";
 
 $field=getval("field",""); # get field name if doing a simple search completion (to get it easily from $_GET)
-$ref=getvalescaped("fieldref","",true); #get field ref if doing simple search completion (for get_suggested_keywords())
+$ref=getval("fieldref","",true); #get field ref if doing simple search completion (for get_suggested_keywords())
 
-$search=getvalescaped("term","");
+$search=getval("term","");
 
 
 # Find last keyword user is searching for

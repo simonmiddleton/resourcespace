@@ -6,8 +6,8 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 
-$collectionid=getvalescaped("col", false);
-$numcollections=getvalescaped("num", 2, true);
+$collectionid=getval("col", false);
+$numcollections=getval("num", 2, true);
 
 if ($collectionid == false) 
     {

@@ -442,7 +442,7 @@ hook('add_search_title_links');
 
 if (!hook("replacenoresourcesfoundsearchtitle"))
     {
-    if (!is_array($result) && empty($collections) && getvalescaped("addsmartcollection","") == '')
+    if (!is_array($result) && empty($collections) && getval("addsmartcollection","") == '')
         {
         $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim"><div class="SearchBreadcrumbs"><a href="' . $search_url . '">'.$lang["noresourcesfound"].'</a></div></div>';
         }

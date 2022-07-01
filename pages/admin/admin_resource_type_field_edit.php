@@ -13,12 +13,12 @@ if (!checkperm("a"))
     exit ("Permission denied.");
     }
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 
-$find=getvalescaped("find","");
-$restypefilter=getvalescaped("restypefilter","",true);
-$field_order_by=getvalescaped("field_order_by","ref");
-$field_sort=getvalescaped("field_sort","asc");
+$find=getval("find","");
+$restypefilter=getval("restypefilter","",true);
+$field_order_by=getval("field_order_by","ref");
+$field_sort=getval("field_sort","asc");
 $newfield = getval("newfield","") != "";
 $ajax = getval('ajax', '');
 $url_params = array("ref"=>$ref,
@@ -27,7 +27,7 @@ $url_params = array("ref"=>$ref,
         "field_sort"=>$field_sort,
         "find" =>$find);
     
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl = generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params);
@@ -439,7 +439,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 	{
     global $regexp_slash_replace;
 	# Save field config
-	$sync_field = getvalescaped("sync_field",0);
+	$sync_field = getval("sync_field",0);
 	$existingfield = get_resource_type_field($ref);
 	$params=array();$syncparams=array();
 
@@ -523,7 +523,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			}
 		}
 	// add field_constraint sql
-	if (getvalescaped("field_constraint","")!=""){$sql.=",field_constraint='".getvalescaped("field_constraint",0)."'";}
+	if (getval("field_constraint","")!=""){$sql.=",field_constraint='".getval("field_constraint",0)."'";}
 
     // Add automatic nodes ordering if set (available only for fixed list fields - except category trees)
     $sql .= ", automatic_nodes_ordering = ?";
@@ -554,7 +554,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 $confirm_delete=false;	
 if (getval("delete","")!="" && enforcePostRequest($ajax))
 	{
-    $confirmdelete=getvalescaped("confirmdelete","");
+    $confirmdelete=getval("confirmdelete","");
     # Check for resources of this  type
     $affected_resources=ps_array("SELECT resource value FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE n.resource_type_field = ?",["i",$ref]);
         

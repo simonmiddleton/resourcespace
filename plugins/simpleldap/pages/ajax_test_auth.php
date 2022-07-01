@@ -4,19 +4,19 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 
 
 
-$simpleldap['domain']                = getvalescaped('domain', '');
-$simpleldap['ldapserver']            = getvalescaped('ldapserver', '');
-$simpleldap['ldapuser']              = getvalescaped('ldapuser', '');
-$simpleldap['ldappassword']          = getvalescaped('ldappassword', '');
-$userdomain                          = getvalescaped('userdomain', '');
-$simpleldap['port']                  = getvalescaped('port', '');
-$simpleldap['ldaptype']              = getvalescaped('ldaptype', 1);
-$simpleldap['basedn']                = getvalescaped('basedn', '');
-$simpleldap['loginfield']            = getvalescaped('loginfield', '');
-$simpleldap['ldapgroupfield']        = getvalescaped('ldapgroupfield', '');
-$simpleldap['email_attribute']       = getvalescaped('email_attribute', '');
-$simpleldap['phone_attribute']       = getvalescaped('phone_attribute', '');
-$simpleldap['emailsuffix']           = getvalescaped('emailsuffix','');
+$simpleldap['domain']                = getval('domain', '');
+$simpleldap['ldapserver']            = getval('ldapserver', '');
+$simpleldap['ldapuser']              = getval('ldapuser', '');
+$simpleldap['ldappassword']          = getval('ldappassword', '');
+$userdomain                          = getval('userdomain', '');
+$simpleldap['port']                  = getval('port', '');
+$simpleldap['ldaptype']              = getval('ldaptype', 1);
+$simpleldap['basedn']                = getval('basedn', '');
+$simpleldap['loginfield']            = getval('loginfield', '');
+$simpleldap['ldapgroupfield']        = getval('ldapgroupfield', '');
+$simpleldap['email_attribute']       = getval('email_attribute', '');
+$simpleldap['phone_attribute']       = getval('phone_attribute', '');
+$simpleldap['emailsuffix']           = getval('emailsuffix','');
 $simpleldap['LDAPTLS_REQCERT_never'] = getval('LDAPTLS_REQCERT_never', 0,true) != 0;
 
 $escaped_ldapuser = (function_exists('ldap_escape')) ? ldap_escape($simpleldap['ldapuser'], '', LDAP_ESCAPE_DN) : $simpleldap['ldapuser'];

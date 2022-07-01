@@ -15,15 +15,15 @@ if($download_no_session_cache_limiter)
     session_cache_limiter(false);
     }
 
-$direct = (0 < strlen(getvalescaped('direct', '')) ? true : false);
+$direct = (0 < strlen(getval('direct', '')) ? true : false);
 
 // if direct downloading without authentication is enabled, skip the authentication step entirely
 if(!($direct_download_noauth && $direct))
     {
     // External access support (authenticate only if no key provided, or if invalid access key provided)
-    $k = getvalescaped('k', '');
+    $k = getval('k', '');
 
-    if(('' == $k || !check_access_key(getvalescaped('ref', '', true), $k)) && !(getval("slideshow",0,true) > 0))
+    if(('' == $k || !check_access_key(getval('ref', '', true), $k)) && !(getval("slideshow",0,true) > 0))
         {
         include dirname(__FILE__) . '/../include/authenticate.php';
         }
@@ -33,20 +33,20 @@ if(!($direct_download_noauth && $direct))
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
 
-$ref                = getvalescaped('ref', '', true);
-$size               = getvalescaped('size', '');
-$alternative        = getvalescaped('alternative', -1, true);
-$page               = getvalescaped('page', 1);
-$iaccept            = getvalescaped('iaccept', 'off');
-$usage              = getvalescaped('usage', '-1');
-$usagecomment       = getvalescaped('usagecomment', '');
-$email              = getvalescaped('email', '');
-$ext                = getvalescaped('ext', '');
-$snapshot_frame     = getvalescaped('snapshot_frame', 0, true);
+$ref                = getval('ref', '', true);
+$size               = getval('size', '');
+$alternative        = getval('alternative', -1, true);
+$page               = getval('page', 1);
+$iaccept            = getval('iaccept', 'off');
+$usage              = getval('usage', '-1');
+$usagecomment       = getval('usagecomment', '');
+$email              = getval('email', '');
+$ext                = getval('ext', '');
+$snapshot_frame     = getval('snapshot_frame', 0, true);
 $modal              = (getval("modal","")=="true");
 $tempfile           = getval("tempfile","");
 $slideshow          = getval("slideshow",0,true);
-$userfiledownload   = getvalescaped('userfile', '');
+$userfiledownload   = getval('userfile', '');
 
 // Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
 $checktermsusage =  !in_array($size, $sizes_always_allowed)

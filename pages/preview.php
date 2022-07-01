@@ -3,7 +3,7 @@ include "../include/db.php";
 
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref","",true),$k))) {include "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref","",true),$k))) {include "../include/authenticate.php";}
 
 include_once '../include/annotation_functions.php';
 
@@ -18,14 +18,14 @@ if($thumbs != "unset" && $thumbs != "hide")
 $thumbs = "hide";
 rs_setcookie("thumbs", $thumbs, 1000,"","",false,false);
 
-$ref=getvalescaped("ref","",true);
-$search=getvalescaped("search","");
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("order_by","");
-$archive=getvalescaped("archive","",true);
-$restypes=getvalescaped("restypes","");
-$page=getvalescaped("page",1,true);
-$alternative=getvalescaped("alternative", -1, true);
+$ref=getval("ref","",true);
+$search=getval("search","");
+$offset=getval("offset",0,true);
+$order_by=getval("order_by","");
+$archive=getval("archive","",true);
+$restypes=getval("restypes","");
+$page=getval("page",1,true);
+$alternative=getval("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
 
 check_order_by_in_table_joins($order_by);

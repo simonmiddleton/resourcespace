@@ -11,7 +11,7 @@ include "../../include/authenticate.php"; if (!checkperm("r")) {exit ("Permissio
 include_once "../../include/research_functions.php";
 include_once "../../include/request_functions.php";
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 
 if (getval("submitted", "") != "" && enforcePostRequest(false))
 	{
