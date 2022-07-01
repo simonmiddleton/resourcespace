@@ -7511,9 +7511,9 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     {
 
     $fields = array_column(ps_query('DESCRIBE resource_type_field'), 'Field');
-    $valid_sorts = ['asc', 'ascending', 'desc', 'decending'];
+    $valid_sorts = ['asc', 'ascending', 'desc', 'descending'];
     if(!in_array($field_order_by,  $fields)){$field_order_by = 'ref';}
-    if(!in_array($field_sort, $valid_sorts)){$field_sort = 'asc';}
+    if(!in_array(strtolower($field_sort), $valid_sorts)){$field_sort = 'asc';}
 
     $conditionsql=""; $params = [];
     if(is_array($restypes))
@@ -7609,6 +7609,19 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                read_only,
                full_width
           FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . $field_order_by . " " . $field_sort, $params, "schema"); // TO DO - JN to ensure order by params locked to expected as per comment on r20006
+
+
+
+    // Sort by translated strings if sorting by title
+    if(strtolower($field_order_by) == "title")
+        {
+        $sortflag = strtolower($field_sort) == "asc" ? SORT_ASC : SORT_DESC;
+        foreach($allfields as $field)
+            {
+            $translations[] = i18n_get_translated($field["title"]);
+            }
+        array_multisort($translations,$sortflag,SORT_STRING,$allfields);
+        }
 
     return $allfields;
     }
