@@ -248,7 +248,7 @@ if($import_collections && isset($input_fh))
         if(!array_key_exists($collection_resource["username"], $valid_usernames))
             {
             logScript("Validating username '{$collection_resource["username"]}'");
-            $usergroup_escaped = escape_check($override_newuser_usergroup);
+            $usergroup_escaped = $override_newuser_usergroup;
 
             $user_select_sql = new PreparedStatementQuery();
             $user_select_sql->sql = "u.username = ? AND u.email = ?";

@@ -265,10 +265,6 @@ function job_queue_run_job($job, $clear_process_lock)
     {
     // Runs offline job using defined job handler
     $jobref = $job["ref"];
-    
-    // Control characters in job_data can cause decoding issues
-    //$job["job_data"] = escape_check($job["job_data"]);
-
     $job_data=json_decode($job["job_data"], true);
 
     $jobuser = $job["user"];

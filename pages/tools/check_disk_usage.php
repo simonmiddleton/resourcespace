@@ -106,8 +106,8 @@ else
 				
 				if (count($admin_notify_users)>0)
 					{
-					message_add($admin_notify_users,escape_check($body),$baseurl . "/pages/pages/team/team_home.php", 0);
-					}		
+					message_add($admin_notify_users,$body,$baseurl . "/pages/pages/team/team_home.php", 0);
+					}
 				
 				// update last sent
 				ps_query("delete from sysvars where name='last_sent_disk_quota'");
@@ -185,7 +185,7 @@ else
 				
 				if (count($admin_notify_users)>0)
 					{
-					message_add($admin_notify_users,escape_check($body),$baseurl . "/pages/pages/team/team_home.php", 0);
+					message_add($admin_notify_users,$body,$baseurl . "/pages/pages/team/team_home.php", 0);
 					}		
 				// update last sent
 				ps_query("delete from sysvars where name='last_sent_disk_quota_noupload'");

@@ -34,7 +34,7 @@ foreach($featured_collections as $collection)
             {
             $parent_sql = '= ?'; $parent_params = ['i', $parent];
             }
-        $new_fc_name = escape_check($collection[$col]);
+        $new_fc_name = $collection[$col];
 
         logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent {$parent_sql_val}");
 

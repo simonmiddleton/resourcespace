@@ -316,7 +316,7 @@ if ($search_titles)
             {
             $ref=explode(" ",$search);$ref=str_replace("!duplicates","",$ref[0]);
             $ref=explode(",",$ref);// just get the number
-            $ref=escape_check($ref[0]);
+            $ref=$ref[0];
             $filename=get_data_by_field($ref,$filename_field);
             if ($ref!="")
                 {

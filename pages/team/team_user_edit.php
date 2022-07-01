@@ -117,7 +117,7 @@ if(getval('loginas', '') != '')
     $_POST = [];
     $_POST['username'] = $user['username'];
     $_POST['password'] = $user['password'];
-    $_POST['userkey'] = md5(escape_check($user["username"]) . $scramble_key);
+    $_POST['userkey'] = md5($user["username"] . $scramble_key);
     $_POST[$CSRF_token_identifier] = generateCSRFToken($usersession, 'autologin');
 
     include '../../login.php';

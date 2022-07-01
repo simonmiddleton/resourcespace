@@ -68,7 +68,7 @@ function HookWordpress_ssoAllProvideusercredentials()
                         wordpress_sso_fail();
                         }
                     }
-                debug("wordpress_sso - Found user matching: " . escape_check($username));
+                debug("wordpress_sso - Found user matching: " . $username);
                 // Check that current request 		
                 if ($currentrequest!=$requestid || $requestid=="") // This request is either not set or does not match the last one created, was saved before redirect so go back to WordPress (step 2)
                 {

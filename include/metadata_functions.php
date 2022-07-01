@@ -95,7 +95,6 @@ function getFitsMetadataFieldValue(SimpleXMLElement $xml , $fits_field)
 * Extract FITS metadata from a file for a specific resource.
 * 
 * @uses get_resource_data()
-* @uses escape_check()
 * @uses ps_query()
 * @uses runFitsForFile()
 * @uses getFitsMetadataFieldValue()
@@ -128,7 +127,7 @@ function extractFitsMetadata($file_path, $resource)
         $resource = get_resource_data($resource);
         }
 
-    $resource_type = escape_check($resource['resource_type']);
+    $resource_type = $resource['resource_type'];
 
     // Get a list of all the fields that have a FITS field set
     $rs_fields_to_read_for = ps_query("

@@ -469,7 +469,7 @@ function get_tree_node_level($ref)
         trigger_error('Node ID should be set AND NOT NULL');
         }
 
-    $parent      = escape_check($ref);
+    $parent      = $ref;
     $depth_level = -1;
 
     do
@@ -1581,7 +1581,6 @@ function delete_all_resource_nodes($resourceid)
 /**
 * Copy resource nodes from one resource to another
 * 
-* @uses escape_check()
 * @uses ps_array()
 * @uses ps_query()
 * 
@@ -1592,8 +1591,6 @@ function delete_all_resource_nodes($resourceid)
 */
 function copy_resource_nodes($resourcefrom, $resourceto)
     {
-    $resourcefrom    = escape_check($resourcefrom);
-    $resourceto      = escape_check($resourceto);
     $omit_fields_sql = '';
     $omit_fields_sql_params = array();
 

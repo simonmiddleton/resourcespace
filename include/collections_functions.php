@@ -338,8 +338,6 @@ function get_collection_resources_with_data($ref)
         return array();
         }
 
-    $ref = escape_check($ref);
-
     $result = ps_query("
             SELECT r.*
               FROM collection_resource AS cr
@@ -862,14 +860,14 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         {
         if(isset($extraparams[$coloption]))
             {
-            $setcolumns[$coloption] = escape_check($extraparams[$coloption]);
+            $setcolumns[$coloption] = $extraparams[$coloption];
             }
         }
 
-    $setcolumns["name"]             = escape_check(mb_strcut($name, 0, 100));
+    $setcolumns["name"]             = mb_strcut($name, 0, 100);
     $setcolumns["user"]             = is_numeric($userid) ? $userid : 0;
-    $setcolumns["allow_changes"]    = escape_check($allowchanges);
-    $setcolumns["cant_delete"]      = escape_check($cant_delete);
+    $setcolumns["allow_changes"]    = $allowchanges;
+    $setcolumns["cant_delete"]      = $cant_delete;
     $setcolumns["public"]           = $public ? COLLECTION_TYPE_PUBLIC : COLLECTION_TYPE_STANDARD;
     if($ref != 0)
         {
@@ -877,7 +875,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
         }
     if(is_int_loose(trim($rs_session)))
         {
-        $setcolumns["session_id"]   = escape_check($rs_session);
+        $setcolumns["session_id"]   = $rs_session;
         }
     if($public)
         {
@@ -1622,7 +1620,6 @@ function save_collection($ref, $coldata=array())
         
         # log the removal of users / smart groups
         $was_shared_with = array();
-        $old_attached_users = array_map("escape_check",$old_attached_users);
         $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
         if (count($old_attached_groups) > 0)
             {
@@ -1891,7 +1888,7 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array
     $options_base = array();
     for($n = 0; $n < count($nodes); $n++)
         {
-        $options_base[$n] = escape_check(trim(mb_convert_case(i18n_get_translated($nodes[$n]['name']), MB_CASE_LOWER, 'UTF-8')));
+        $options_base[$n] = trim(mb_convert_case(i18n_get_translated($nodes[$n]['name']), MB_CASE_LOWER, 'UTF-8'));
         }
     
     // For each option, if it is in use, add it to the return list
@@ -2744,7 +2741,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         return $CACHE_FC_RESOURCES[$cache_id];
         }
 
-    $c_ref_escaped = escape_check($c["ref"]);
+    $c_ref_escaped = $c["ref"];
     $limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
     $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
     $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
@@ -3445,17 +3442,13 @@ function collection_log($collection,$type,$resource,$notes = "")
 	$modifiedcollognotes=hook("modifycollognotes","",array($type,$resource,$notes));
 	if ($modifiedcollognotes) {$notes=$modifiedcollognotes;}
 
-    $user = ($userref != "" ? "'" . escape_check($userref) . "'" : "NULL");
-    $collection = escape_check($collection);
-    $type = escape_check($type);
-    $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
-    $notes = escape_check(mb_strcut($notes, 0, 255));
+    $user = ($userref ?: null);
+    $resource = ($resource ?: null);
+    $notes = mb_strcut($notes, 0, 255);
 
-	ps_query("
-        INSERT INTO collection_log (date, user, collection, type, resource, notes)
-             VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"i",$type,"i",$resource,"s",$notes));
-	}
-    
+	ps_query("INSERT INTO collection_log (date, user, collection, type, resource, notes) VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"i",$type,"i",$resource,"s",$notes));
+    }
+
 /**
  * Return the log for $collection
  *
@@ -3703,7 +3696,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
         );
     if($expires!="") 
         {
-        $setvals["expires"] = "'" . escape_check($expires) . "'";
+        $setvals["expires"] = "'" . $expires . "'";
         }
     else
         {
@@ -3890,7 +3883,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	$search_collection = explode(' ', $search);
     	$search_collection = str_replace('!collection', '', $search_collection[0]);
     	$search_collection = explode(',', $search_collection); // just get the number
-    	$search_collection = escape_check($search_collection[0]);
+    	$search_collection = $search_collection[0];
     	}
 
     // Collection bar actions should always be a special search !collection[ID] (exceptions might arise but most of the 
@@ -4821,7 +4814,7 @@ function collection_download_process_data_only_types(array $result, $id, $collec
             { 
             /*greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero
             to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).*/
-            $resource_ref_escaped = escape_check($result[$n]['ref']);
+            $resource_ref_escaped = $result[$n]['ref'];
             ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?",array("i",$resource_ref_escaped));
             }
         }
@@ -5285,9 +5278,6 @@ function delete_old_collections($userref=0, $days=30)
         return 0;
         }
 
-    $userref = escape_check($userref);
-    $days = escape_check($days);
-
     $deletioncount = 0;
     $old_collections=ps_array("SELECT ref value FROM collection WHERE user = ? AND created < DATE_SUB(NOW(), INTERVAL ? DAY) AND `type` = " . COLLECTION_TYPE_STANDARD, array("i",$userref,"i",$days), 0);
     foreach($old_collections as $old_collection)
@@ -5429,7 +5419,7 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
         {
         if($returnstring)
             {
-            $fcs_list = "'" . join("', '", array_map('escape_check', $computed_fcs)) . "'";
+            $fcs_list = "'" . join("', '", $computed_fcs) . "'";
             $return = "{$prefix} {$column} IN ({$fcs_list})";
             }
         else
@@ -6319,7 +6309,7 @@ function create_upload_link($collection,$shareoptions)
         {
         if(isset($shareoptions[$option]))
             {
-            $setcolumns[$option] = escape_check($shareoptions[$option]);
+            $setcolumns[$option] = $shareoptions[$option];
             }
         }
     

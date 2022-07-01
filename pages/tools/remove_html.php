@@ -133,7 +133,7 @@ if($plain_rtf === false || !in_array($plain_rtf["type"],$TEXT_FIELD_TYPES))
 
 if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
     {
-    $html_rtf_ref = escape_check($html_field);
+    $html_rtf_ref = $html_field;
     $q = "  SELECT rn.resource,
                    group_concat(n.`name` SEPARATOR ', ') AS `value`
               FROM resource_node AS rn

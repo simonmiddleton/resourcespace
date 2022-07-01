@@ -28,7 +28,7 @@ if(!$facial_recognition)
 $convert_fullpath             = get_utility_path('im-convert');
 $python_fullpath              = get_utility_path('python');
 $faceRecognizerTrainer_path   = __DIR__ . '/../../lib/facial_recognition/faceRecognizerTrainer.py';
-$facial_recognition_tag_field = (int) escape_check($facial_recognition_tag_field);
+$facial_recognition_tag_field = (int) $facial_recognition_tag_field;
 $allow_training               = false;
 $overwrite_existing           = false;
 $no_previews_found_counter    = 0;

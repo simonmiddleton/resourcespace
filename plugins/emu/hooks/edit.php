@@ -62,7 +62,7 @@ function HookEmuAllAdditionalvalcheck($fields, $fields_item)
         $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($emu_irn), $emu_rs_mappings);
 
         // Make sure we actually do save this data, even if we return an error
-        update_field($ref, $emu_irn_field, escape_check($emu_irn));
+        update_field($ref, $emu_irn_field, $emu_irn);
 
         if(!is_array($emu_data) && 0 > $ref)
             {
@@ -152,7 +152,7 @@ function HookEmuEditAftersaveresourcedata()
                 {
                 if(0 != intval($rs_field_id) && isset($emu_data[$emu_irn][$emu_module_column]) && $emu_irn_field != $rs_field_id)
                     {
-                    update_field($resource_ref, $rs_field_id, escape_check($emu_data[$emu_irn][$emu_module_column]));
+                    update_field($resource_ref, $rs_field_id, $emu_data[$emu_irn][$emu_module_column]);
                     }
                 }
             }

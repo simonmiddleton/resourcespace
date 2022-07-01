@@ -456,8 +456,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
                 {
                 $val = str_replace('\\', $regexp_slash_replace, $val);   
                 }
-            $val = escape_check($val);
-			
+		
 			if($column == "type" && $val != $existingfield["type"] && getval("migrate_data","") != "")
 				{
 				// Need to migrate field data

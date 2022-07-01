@@ -338,8 +338,6 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
     $file_size = @filesize_unlimited($rs_alternative_path);
 
-    $resource = escape_check($resource);
-
     ps_query("UPDATE resource_alt_files SET file_size= ?, creation_date = NOW() WHERE resource = ? AND ref = ?", ['s', $file_size, 's', $resource, 's', $alternative_ref]);
 
     global $alternative_file_previews_batch;

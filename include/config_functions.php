@@ -120,7 +120,6 @@ function set_config_option($user_id, $param_name, $param_value)
 
     // Prepare the value before inserting it
     $param_value = config_clean($param_value);
-    $param_value = escape_check($param_value);
 
     $query = "INSERT INTO user_preferences (user,parameter,`value`) VALUES (?,?,?)";
    
@@ -147,7 +146,7 @@ function set_config_option($user_id, $param_name, $param_value)
 
         if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
             {
-            log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . escape_check($param_name) . "'", null, $current_param_value);
+            log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . $param_name . "'", null, $current_param_value);
             }
         }
     else

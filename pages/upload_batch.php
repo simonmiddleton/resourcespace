@@ -431,7 +431,7 @@ if ($processupload)
     $filenameonly = implode('.', $parts);
 
      // Clean the filename
-    $origuploadedfilename= escape_check($upfilename);
+    $origuploadedfilename= $upfilename;
     $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
 

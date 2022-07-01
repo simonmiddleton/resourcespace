@@ -422,7 +422,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             else if(!is_array($searched_field_nodes))
                 {
-                $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
+                $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
                 continue;
                 }
 
@@ -438,7 +438,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     // Split into an additional search element to force a join since this is a separate condition
                     $node_ref .= ', ';
                     }
-                $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
+                $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
                 }
             }
 
@@ -1228,7 +1228,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $ref=explode(" ",$search);
         $ref=str_replace("!duplicates","",$ref[0]);
         $ref=explode(",",$ref); // just get the number
-        $ref=escape_check($ref[0]);
+        $ref=$ref[0];
         if ($ref!="") 
             {
             # Find duplicates of a given resource
@@ -2922,7 +2922,7 @@ function update_search_from_request($search)
                     }
                 else if(!is_array($searched_field_nodes))
                     {
-                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
+                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
 
                     continue;
                     }
@@ -2932,7 +2932,7 @@ function update_search_from_request($search)
 
                 foreach($searched_field_nodes as $searched_node_ref)
                     {
-                    $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
+                    $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
                     }
                 }
             $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
@@ -3083,8 +3083,7 @@ function get_collections_resource_count(array $refs)
 
 /**
  * Get all search request parameters. Note that this does not escape the
- * parameters which must be sanitised using escape_check() before using in SQL
- * or e.g. htmlspecialchars() or urlencode() before rendering on page
+ * parameters which must be sanitised using e.g. htmlspecialchars() or urlencode() before rendering on page
  *
  * @return array()
  */

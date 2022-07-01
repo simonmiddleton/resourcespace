@@ -32,7 +32,7 @@ function HookSimplesamlAllPreheaderoutput()
     // If normal user is logged in and allowing standard logins do nothing and return
     if ($simplesaml_allow_standard_login && isset($_COOKIE["user"]))
         {
-        $session_hash = escape_check($_COOKIE["user"]);
+        $session_hash = $_COOKIE["user"];
 
         $user_select_sql = new PreparedStatementQuery();
         $user_select_sql->sql = "u.session = ?";
@@ -122,8 +122,7 @@ function HookSimplesamlAllProvideusercredentials()
         if(!$simplesaml_site_block && isset($anonymous_login) && trim($anonymous_login) !== '' && getval("usesso","")=="")
             {
             debug("simplesaml: checking for anonymous user");
-            $anonymous_login_escaped = escape_check($anonymous_login);
-            $anonymous_login_found   = ps_value("SELECT username AS `value` FROM user WHERE username = ?", array("s",$anonymous_login_escaped), '');
+            $anonymous_login_found   = ps_value("SELECT username AS `value` FROM user WHERE username = ?", array("s",$anonymous_login), '');
 
             // If anonymous_login is not set to a real username then use SSO to authenticate
             if($anonymous_login_found == '')

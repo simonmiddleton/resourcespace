@@ -225,7 +225,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $extension=explode(".",$filename);
             if(count($extension)>1)
                 {
-                $extension=escape_check(trim(strtolower($extension[count($extension)-1])));
+                $extension=trim(strtolower($extension[count($extension)-1]));
                 } 
             # if not, try exiftool  
             else if ($exiftool_fullpath!=false)
@@ -724,14 +724,14 @@ function extract_exif_comment($ref,$extension="")
                         }
                     debug("Exiftool: extracted field before escape check '$groupname:$tagname', value is '" . $value ."'");
                     # Store both tag data under both tagname and groupname:tagname, to support both formats when mapping fields. 
-                    $metadata[$tagname] = escape_check($value);
-                    $metadata[$groupname . ":" . $tagname] = escape_check($value);
+                    $metadata[$tagname] = $value;
+                    $metadata[$groupname . ":" . $tagname] = $value;
 
                     if(strpos($groupname,"-") !== false)
                         {
                         // Remove XMP sub namespace for XMP data if it has been entered without full qualified namespace to accommodate multiple file formats
                         $groupname = substr($groupname,0,(strpos($groupname,"-")));
-                        $metadata[$groupname . ":" . $tagname] = escape_check($value);
+                        $metadata[$groupname . ":" . $tagname] = $value;
                         }
 
                     debug("[extract_exif_comment()][ref={$ref}] Extracted field '{$groupname}:{$tagname}', value = {$value}");

@@ -3623,7 +3623,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         }
     foreach($filters as $column => $filter_value)
         {
-        $filterarr[] = escape_check(trim($column)) . "= ?";
+        $filterarr[] = trim($column) . "= ?";
         $params = array_merge($params, ['s', $filter_value]);
         }
     $sql_filter = "WHERE " . implode(" AND ", $filterarr);
@@ -4148,7 +4148,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         update_resource_type($r, $type);
 
         # file_path should only really be set to indicate a staticsync location. Otherwise, it should just be left blank.
-        if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
+        if ($ingest){$file_path="";} else {$file_path=$path;}
 
         # Store extension/data in the database
         ps_query("update resource set archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=now() where ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
@@ -4441,8 +4441,6 @@ function delete_alternative_file($resource,$ref)
 
 function get_alternative_file($resource,$ref)
 	{
-    $resource = escape_check($resource);
-    $ref = escape_check($ref);
 	# Returns the row for the requested alternative file
 	$return=ps_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource=? and ref=?",array("i",$resource,"i",$ref));
 	if (count($return)==0) {return false;} else {return $return[0];}
@@ -5222,7 +5220,6 @@ function check_use_watermark($download_key = "", $resource="")
 /**
 * Fill in any blank fields for the resource
 *
-* @uses escape_check()
 * @uses ps_value()
 * @uses ps_query()
 * @uses update_field()
@@ -6136,7 +6133,6 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 * @uses update_archive_status()
 * @uses resource_log()
 * @uses checkperm()
-* @uses escape_check()
 * @uses ps_query()
 * @uses checkperm()
 *
@@ -6212,7 +6208,6 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
 * @uses delete_resource_nodes()*
 * @uses get_resource_field_data()
 * @uses update_field()
-* @uses escape_check()
 * @uses ps_query()
 *
 * @param integer $ref - resource id being updated
@@ -6569,7 +6564,7 @@ function save_original_file_as_alternative($ref)
         $newaltname = $replace_resource_original_alt_filename;
         }
 
-    $newaref = add_alternative_file($ref, $newaltname, $newaltdescription, escape_check($origfilename), $origdata['file_extension'], $origdata['file_size']);
+    $newaref = add_alternative_file($ref, $newaltname, $newaltdescription, $origfilename, $origdata['file_extension'], $origdata['file_size']);
 
     $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
     $newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
@@ -7148,7 +7143,7 @@ function get_data_by_field($resource, $field)
     global $rt_fieldtype_cache;
 
     $return              = '';
-    $resource_type_field = escape_check($field);
+    $resource_type_field = $field;
     // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
         {
@@ -7537,7 +7532,6 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         }
     if($find!="")
         {
-        $find=escape_check($find);
         if($conditionsql != "")
             {
             $conditionsql .= " AND ( ";
@@ -7612,7 +7606,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                active,
                read_only,
                full_width
-          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . escape_check($field_order_by) . " " . escape_check($field_sort), $params, "schema");
+          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . $field_order_by . " " . $field_sort, $params, "schema"); // TO DO - JN to ensure order by params locked to expected as per comment on r20006
 
     return $allfields;
     }
@@ -8115,8 +8109,6 @@ function delete_resource_type_field($ref)
 
     $fieldinfo = get_resource_type_field($ref);
 
-    $ref = escape_check($ref);
-
     // Delete the resource type field
     ps_query("DELETE FROM resource_type_field WHERE ref=?",["i",$ref]);
 
@@ -8383,7 +8375,7 @@ function get_external_shares(array $filteropts)
       LEFT JOIN usergroup ug ON ug.ref=eak.usergroup " .
                 $conditional_sql .
      " GROUP BY access_key, collection
-       ORDER BY " . escape_check($share_order_by) . " " . $share_sort;
+       ORDER BY " . $share_order_by . " " . $share_sort;
 
     $external_shares = ps_query($external_access_keys_query, $params);
     return $external_shares;
