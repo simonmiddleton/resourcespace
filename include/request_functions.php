@@ -397,8 +397,8 @@ function email_collection_request($ref,$details,$external_email)
 
     $notify_users = [];
     $notify_emails = [];
-    # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
-    if(isset($resource_type_request_emails))
+    # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
+    if(isset($resource_type_request_emails) && !can_use_owner_field())
         {
         $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr 
                                     LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection = ?",array("i",$ref));
@@ -424,6 +424,7 @@ function email_collection_request($ref,$details,$external_email)
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
+    $notify_users = array_keys(get_notification_users_by_owner_field($notify_users, $colresources));
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
@@ -1182,14 +1183,14 @@ function can_use_owner_field()
 
 
 /**
- * Get all users to notify for requested resources "owned" by particular groups. Configurable using a metadata field 
+ * Get users to notify for requested resources "owned" by particular groups. Configurable using a metadata field 
  * ($owner_field) and a defined map ($owner_field_mappings).
  * 
  * @param array $users     List of notification users {@see get_notification_users()}. Any array structure where each 
  *                         value contains an array with at least a "ref" and "email" keys.
  * @param array $resources List of resource IDs
  * 
- * return array Returns user ID (key) and email (value)
+ * @return array Returns user ID (key) and email (value)
  * */
 function get_notification_users_by_owner_field(array $users, array $resources)
     {
@@ -1209,12 +1210,10 @@ function get_notification_users_by_owner_field(array $users, array $resources)
     foreach($resource_nodes as $resource_id => $rtf_rns)
         {
         $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
-        if($owner_field_node_id > 0)
+        $mapped_group = $owner_field_mappings[$owner_field_node_id] ?? 0;
+        if($owner_field_node_id > 0 && $mapped_group > 0)
             {
-            $group_users = array_column(
-                get_users($owner_field_mappings[$owner_field_node_id], '', 'u.username', false, -1, 1, false, 'u.ref'),
-                'ref'
-            );
+            $group_users = array_column(get_users($mapped_group, '', 'u.username', false, -1, 1, false, 'u.ref'), 'ref');
             $users_to_notify += array_intersect_key($users_map_ref_email, array_flip($group_users));
             }
         }
