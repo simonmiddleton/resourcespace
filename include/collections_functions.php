@@ -3690,33 +3690,41 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
     // Ensure these are escaped as required here
     $setvals = array(
         "access"    => (int)$access,
-        "date"      => "now()",
         "usergroup" => (int)$group,
-        "upload"    => isset($upload) && $upload ? "1" : "upload",
+        "upload"    => isset($upload) && $upload ? "1" : "0",
         );
     if($expires!="") 
         {
-        $setvals["expires"] = "'" . $expires . "'";
+        $setvals["expires"] = $expires;
         }
     else
         {
-        $setvals["expires"] = "NULL";
+        $setvals["expires"] = NULL;
         }
     if($sharepwd != "(unchanged)")
         {
         $setvals["password_hash"] = ($sharepwd == "") ? "''" : "'" . hash('sha256', $key . $sharepwd . $scramble_key) . "'";
         }
-    $setsql = "";
+    $setsql = ""; $params = [];
     foreach($setvals as $setkey => $setval)
         {
         $setsql .= $setsql == "" ? "" : ",";
-        $setsql .= $setkey . "=" . $setval ;
+        $setsql .= $setkey . "= ?";
+        $params = array_merge($params, ['s', $setval]);
         }
+    $setsql .= ', date = now()';
+    $params = array_merge($params, ['s', $key]);
+    $condition = '';
+    if(isset($collection))
+        {
+        $condition = ' AND collection = ?';
+        $params = array_merge($params, ['i', $collection]);
+        }
+
 	ps_query("UPDATE external_access_keys
                   SET " . $setsql . "
-                WHERE access_key='$key'" . 
-                      (isset($collection) ? " AND collection='" . (int)$collection . "'": "")
-                );
+                WHERE access_key= ?" . $condition
+                , $params);
     hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $shareopts));
     if(isset($collection))
         {
