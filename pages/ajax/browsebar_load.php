@@ -4,7 +4,7 @@ include '../../include/authenticate.php';
 
 // generate JSON data to populate bar
 
-$id = getvalescaped('id', '');
+$id = getval('id', '');
 
 // Use id to work out search string for link and path to data requested e.g. to get field id for node expansion
 $target_search = array();

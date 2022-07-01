@@ -11,7 +11,7 @@ include_once '../include/emu_functions.php';
 include_once '../include/emu_api.php';
 
 
-$irn = getvalescaped('irn', '', true);
+$irn = getval('irn', '', true);
 
 if('' == $irn)
     {

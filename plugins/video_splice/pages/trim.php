@@ -3,21 +3,21 @@ include "../../../include/db.php";
 include "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
 
-$ref=getvalescaped("ref","",true);
-$alt=getvalescaped("alternative","",true);
+$ref=getval("ref","",true);
+$alt=getval("alternative","",true);
 
-$search=getvalescaped("search","");
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("order_by","");
-$archive=getvalescaped("archive","",true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$offset=getval("offset",0,true);
+$order_by=getval("order_by","");
+$archive=getval("archive","",true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos","");
+$curpos=getval("curpos","");
 $go=getval("go","");
 
 $trimmed_resources_new = empty(getval("trimmed_resources_new",null))?null:explode(",", getval("trimmed_resources_new",null));
@@ -362,7 +362,7 @@ if(isset($resource["field".$view_title_field]))
         $autorotate = false;
         }
 
-    $collection_add = getvalescaped("collection_add", "");
+    $collection_add = getval("collection_add", "");
     if($embedded_data_user_select)
       {
       $no_exif=getval("exif_option","");

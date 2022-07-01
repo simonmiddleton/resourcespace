@@ -26,7 +26,7 @@ function HookDiscount_codePurchaseAdjust_item_price ($origprice,$resource,$size)
 	if (isset($purchase_pipeline_price[$resource][$size])) {$origprice=$purchase_pipeline_price[$resource][$size];}
 	
 	
-	$discount_code=trim(strtoupper(getvalescaped("discount_code","")));
+	$discount_code=trim(strtoupper(getval("discount_code","")));
 	if ($discount_code=="") {return $origprice;} # No code specified
 	
 	# Check that the discount code exists.

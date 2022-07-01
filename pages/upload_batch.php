@@ -36,7 +36,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE'])
 //  'false'     Do not add to collection
 //  'undefined' Not passed in, so replace it with the current user collection
 //  is_numeric  Use this collection  
-$collection_add = getvalescaped('collection_add', 'false');
+$collection_add = getval('collection_add', 'false');
 $external_upload = upload_share_active();
 
 if($collection_add =='false' && $external_upload)
@@ -44,7 +44,7 @@ if($collection_add =='false' && $external_upload)
     $collection_add = $external_upload;
     }
 // External share support
-$k = getvalescaped('k','');
+$k = getval('k','');
 if ($k=="" || (!check_access_key_collection($collection_add,$k)))
     {
     include "../include/authenticate.php";
@@ -104,28 +104,28 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
 include_once "../include/image_processing.php";
 
 $overquota                              = overquota();
-$resource_type                          = getvalescaped('resource_type', '');
-$collectionname                         = getvalescaped('entercolname', '');
-$search                                 = getvalescaped('search', '');
-$offset                                 = getvalescaped('offset', '', true);
-$order_by                               = getvalescaped('order_by', '');
+$resource_type                          = getval('resource_type', '');
+$collectionname                         = getval('entercolname', '');
+$search                                 = getval('search', '');
+$offset                                 = getval('offset', '', true);
+$order_by                               = getval('order_by', '');
 $no_exif_raw                            = getval('no_exif', $metadata_read_default ? '' : 'yes');
 $no_exif                                = $no_exif_raw == "yes" || $no_exif_raw =="1" ? true : false;
 $autorotate                             = getval('autorotate','') == 'true';
 // This is the archive state for searching, NOT the archive state to be set from the form POST
-$archive                                = getvalescaped('archive', '', true);
+$archive                                = getval('archive', '', true);
 
-$setarchivestate                        = getvalescaped('status', '', true);
+$setarchivestate                        = getval('status', '', true);
 // Validate this workflow state is permitted or set the default if nothing passed 
 $setarchivestate                        = get_default_archive_state($setarchivestate);
-$alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files
-$replace                                = getvalescaped('replace', ''); # Replace Resource Batch
+$alternative                            = getval('alternative', ''); # Batch upload alternative files
+$replace                                = getval('replace', ''); # Replace Resource Batch
 $batch_replace_min                      = getval("batch_replace_min",0,true); # Replace Resource Batch - minimum ID of resource to replace
 $batch_replace_max                      = getval("batch_replace_max",0,true); # Replace Resource Batch - maximum ID
 $batch_replace_col                      = getval("batch_replace_col",0,true); # Replace Resource Batch - collection to replace
 
-$replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
-$replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
+$replace_resource                       = getval('replace_resource', ''); # Option to replace existing resource file
+$replace_resource_original_alt_filename = getval('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
 $upload_here                            = (getval('upload_here', '') != '' ? true : false);
 
@@ -604,7 +604,7 @@ if ($processupload)
                     add_resource_to_collection($ref,$upload_review_col,false,"",$resource_type); 
                     }
                 
-                $relateto = getvalescaped("relateto","",true);   
+                $relateto = getval("relateto","",true);   
                 if($relateto!="" && !upload_share_active())
                     {
                     // This has been added from a related resource upload link
@@ -746,7 +746,7 @@ if ($processupload)
                 debug("batch_replace upload: replacing resources within collection " . $batch_replace_col . " only");
                 }
                 
-            $filename_field=getvalescaped("filename_field",0,true);
+            $filename_field=getval("filename_field",0,true);
             if($filename_field != 0)
                 {
                 $target_resource = ps_array(
@@ -1801,7 +1801,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     In the other upload workflows this checkbox is shown in a previous page. */
     if (!hook("replacemetadatacheckbox")) 
         {
-        if ((getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="") && $metadata_read)
+        if ((getval("upload_a_file","")!="" || getval("replace_resource","")!=""  || getval("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
                 <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if ($no_exif){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">

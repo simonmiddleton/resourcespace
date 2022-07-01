@@ -12,21 +12,21 @@ include_once '../../include/node_functions.php';
 
 
 // Initialize
-$ajax       = getvalescaped('ajax', '');
-$action     = getvalescaped('action', '');
+$ajax       = getval('ajax', '');
+$action     = getval('action', '');
 
-$field      = getvalescaped('field', '');
+$field      = getval('field', '');
 $field_data = get_field($field);
 
-$node_ref   = getvalescaped('node_ref', '');
+$node_ref   = getval('node_ref', '');
 $nodes      = array();
 
 // Array of nodes to expand immediately upon page load
 $expand_nodes = getval("expand_nodes","");
 
-$import_export_parent = getvalescaped('import_export_parent', null);
+$import_export_parent = getval('import_export_parent', null);
 
-$filter_by_name = unescape(getvalescaped('filter_by_name', ''));
+$filter_by_name = unescape(getval('filter_by_name', ''));
 
 $chosencsslink ='<link type="text/css" rel="stylesheet" href="' . $baseurl_short . 'lib/chosen/chosen.min.css"></link>';
 $chosenjslink = '<script type="text/javascript" src="' . $baseurl_short . 'lib/chosen/chosen.jquery.min.js"></script>';
@@ -174,7 +174,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 
                     if($field_data['type'] != 7) // Not a category tree
                         {
-                        $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+                        $per_page    = (int) getval('per_page_list', $default_perpage_list, true);
                         $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
                         $url_parameters['offset'] = $move_to_page_offset;
                         }
@@ -227,7 +227,7 @@ if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $fi
     }
 
 // [New Option]
-$submit_new_option = getvalescaped('submit_new_option', '');
+$submit_new_option = getval('submit_new_option', '');
 if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_new_option && enforcePostRequest($ajax))
     {
     $new_option_name     = trim(getval('new_option_name', ''));
@@ -425,8 +425,8 @@ $url         = generateURL("{$baseurl_short}pages/admin/admin_manage_field_optio
                             'filter_by_name' => $filter_by_name
                         )
                     );
-$offset      = (int) getvalescaped('offset', 0, true);
-$per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+$offset      = (int) getval('offset', 0, true);
+$per_page    = (int) getval('per_page_list', $default_perpage_list, true);
 $count_nodes = get_nodes_count($field, $filter_by_name);
 $totalpages  = ceil($count_nodes / $per_page);
 $curpage     = floor($offset / $per_page) + 1;
@@ -562,7 +562,7 @@ if($ajax)
             $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true);
             }
 
-        $node_index=getvalescaped('offset',0,true);
+        $node_index=getval('offset',0,true);
         foreach($nodes as $node)
             {
             check_node_indexed($node, $field_data['partial_index']);

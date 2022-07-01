@@ -19,9 +19,9 @@ else
 $totalpendingsize=0;
 
 // Handle create archive form post
-if (getvalescaped("create_archive","")!="" && getvalescaped("archive_name","")!="")
+if (getval("create_archive","")!="" && getval("archive_name","")!="")
 	{
-	$archive_name=getvalescaped("archive_name","") . date("Ymd", time());
+	$archive_name=getval("archive_name","") . date("Ymd", time());
 	ps_query("insert into offline_archive (archive_code, archive_date, archive_status) values (?,now(),0)", ['s', $archive_name]);
 	$resulttext=$lang['offline_archive_archive_created'] . ": " . $archive_name;	
 	}

@@ -7,7 +7,7 @@ if(!checkperm("a")){exit ("Access denied"); }
 include_once "../include/tms_link_functions.php";
 
 
-$tmsid=getvalescaped("tmsid",0,true);
+$tmsid=getval("tmsid",0,true);
 
 $conn = odbc_connect($tms_link_dsn_name, $tms_link_user,$tms_link_password);
 if(!$conn)

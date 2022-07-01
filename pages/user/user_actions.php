@@ -15,10 +15,10 @@ if($actions_account_requests && checkperm("u")){$actiontypes[]="userrequest";}
 if($actions_resource_requests && checkperm("R")){$actiontypes[]="resourcerequest";}
 $updatedactiontypes=hook("updateactiontypes",'',array($actiontypes));
 if(is_array($updatedactiontypes)){$actiontypes=$updatedactiontypes;}
-$actiontype=getvalescaped("actiontype",''); // Set to ascertain if we are filtering on type
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("actions_order_by","date");
-$sort=getvalescaped("actions_sort","DESC");
+$actiontype=getval("actiontype",''); // Set to ascertain if we are filtering on type
+$offset=getval("offset",0,true);
+$order_by=getval("actions_order_by","date");
+$sort=getval("actions_sort","DESC");
 $valid_order_bys=array("date","ref","description","type","user","usergroup");
 if (!in_array($order_by,$valid_order_bys)) {$order_by="date";$sort="DESC";} 
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";

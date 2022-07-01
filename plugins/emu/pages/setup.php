@@ -25,9 +25,9 @@ check_script_last_ran('last_emu_import', $emu_script_failure_notify_days, $emu_s
 // Save module - column - rs_field mappings
 if('' != getval('submit', '') || '' != getval('save', ''))
     {
-    $emu_module          = getvalescaped('emu_module', array());
-    $emu_column          = getvalescaped('emu_column', array());
-    $rs_field            = getvalescaped('rs_field', array());
+    $emu_module          = getval('emu_module', array());
+    $emu_column          = getval('emu_column', array());
+    $rs_field            = getval('rs_field', array());
     $emu_rs_mappings_new = array();
 
     // There should always be the same number of values in each array

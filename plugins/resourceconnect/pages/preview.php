@@ -1,14 +1,14 @@
 <?php
 include_once "../../../include/db.php";
 
-$k=getvalescaped("k","");
+$k=getval("k","");
 $kauth=true;
 if ($k!="")
 	{
 	# Check that a valid access key exists for this collection.
 	$kauth=false;
 	
-	$col=getvalescaped("col","");
+	$col=getval("col","");
 	$keys=ps_query("select access_key from external_access_keys where collection=? and access_key=?",array("i",$col,"s",$k));
 	$kauth=count($keys)>0;
 	}
@@ -17,11 +17,11 @@ if ($k=="" || !$kauth) {include "../../../include/authenticate.php";}
 
 # Wrap the remote view page with the local header/footer.
 
-$search=getvalescaped("search","");
+$search=getval("search","");
 setcookie("search",$search, 0, '', '', false, true);
 
 # Assemble a URL from the existing parameters.
-$url=getvalescaped("resourceconnect_source","") . "/pages/preview.php?" . $_SERVER["QUERY_STRING"];
+$url=getval("resourceconnect_source","") . "/pages/preview.php?" . $_SERVER["QUERY_STRING"];
 
 $html=file_get_contents($url);
 

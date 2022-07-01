@@ -26,10 +26,10 @@ if ($map_zoomslider)
     }
 
 // Fetch the resource data.
-$ref = getvalescaped('ref', 0, true);
+$ref = getval('ref', 0, true);
 
 // See if we came from the ../pages/geolocate_collection.php page.
-$geocol = getvalescaped('geocol', '', true);
+$geocol = getval('geocol', '', true);
 $resource = get_resource_data($ref);
 if ($resource == false)
     {
@@ -51,7 +51,7 @@ $valid_coords = true;
 
 if (isset($_POST['submit']) && enforcePostRequest(false))
     {
-    $s=explode(",",getvalescaped('geo-loc',''));
+    $s=explode(",",getval('geo-loc',''));
     
     $lat = isset($s[0]) ? $s[0]: "";
     $lng = isset($s[1]) ? $s[1]: "";
@@ -68,7 +68,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
     if ( count($s)==2  && $valid_coords == true) 
 		{    
-        $mapzoom=getvalescaped('map-zoom','');        
+        $mapzoom=getval('map-zoom','');        
 		if ($mapzoom>=2 && $mapzoom<=21)
 			{
     			ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom= ? where ref= ?", ['d', $s[0], 'd', $s[1], 'i', $mapzoom, 'i', $ref]);    

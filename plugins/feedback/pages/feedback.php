@@ -174,12 +174,12 @@ for ($n=0;$n<count($feedback_questions);$n++)
 		
 		<?php if ($type==1) {  # Normal text box
 		?>
-		<input type=text name="question_<?php echo $n?>" id="question_<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("question_" . $n,""))?>">
+		<input type=text name="question_<?php echo $n?>" id="question_<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("question_" . $n,""))?>">
 		<?php } ?>
 
 		<?php if ($type==2) { # Large text box 
 		?>
-		<textarea name="question_<?php echo $n?>" id="question_<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getvalescaped("question_" . $n,""))?></textarea>
+		<textarea name="question_<?php echo $n?>" id="question_<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("question_" . $n,""))?></textarea>
 		<?php } ?>
 
 		<?php if ($type==3) { # Single Select List
@@ -188,7 +188,7 @@ for ($n=0;$n<count($feedback_questions);$n++)
 		<?php foreach (explode(",",$feedback_questions[$n]["options"]) as $option)
 			{
 			?>
-			<tr><td width="1"><input type="radio" name="question_<?php echo $n?>" value="<?php echo htmlspecialchars($option);?>" <?php if ($option==getvalescaped("question_" . $n,"")) { ?>checked<?php } ?>></td><td><?php echo htmlspecialchars($option);?></td></tr>
+			<tr><td width="1"><input type="radio" name="question_<?php echo $n?>" value="<?php echo htmlspecialchars($option);?>" <?php if ($option==getval("question_" . $n,"")) { ?>checked<?php } ?>></td><td><?php echo htmlspecialchars($option);?></td></tr>
 			<?php
 			}
 		?>
@@ -201,7 +201,7 @@ for ($n=0;$n<count($feedback_questions);$n++)
 		<?php $opt=0;foreach (explode(",",$feedback_questions[$n]["options"]) as $option)
 			{
 			?>
-			<tr><td width="1"><input type="checkbox" name="question_<?php echo $n?>_<?php echo $opt?>" value="yes" <?php if (getvalescaped("question_" . $n . "_" . $opt,"")!="") { ?>checked<?php } ?>></td><td><?php echo htmlspecialchars($option);?></td></tr>
+			<tr><td width="1"><input type="checkbox" name="question_<?php echo $n?>_<?php echo $opt?>" value="yes" <?php if (getval("question_" . $n . "_" . $opt,"")!="") { ?>checked<?php } ?>></td><td><?php echo htmlspecialchars($option);?></td></tr>
 			<?php
 			$opt++;
 			}
@@ -224,7 +224,7 @@ if (!isset($userref))
 		<div class="Question" style="border-top:none;">
 		<label style="width:250px;padding-right:5px;" for="username"><?php echo $lang["feedback_your_full_name"]?></label>
 		
-		<input type=text name="username" id="username" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("username",""))?>">
+		<input type=text name="username" id="username" class="stdwidth" value="<?php echo htmlspecialchars(getval("username",""))?>">
 		<div class="clearerleft"> </div>
 		</div>
 	<?php

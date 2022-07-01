@@ -10,9 +10,9 @@ if(!hook("replace_dash_admin_permission_relocate")){
 	if(!($home_dash && checkPermission_dashmanage()))
 		{header("location: ".$baseurl_short."pages/user/user_home.php");exit;}
 	}
-if(getvalescaped("quicksave",FALSE) && enforcePostRequest(false))
+if(getval("quicksave",FALSE) && enforcePostRequest(false))
 	{
-	$tile = getvalescaped("tile","");
+	$tile = getval("tile","");
 	#If a valid tile value supplied
 	if(!empty($tile) && is_numeric($tile))
 		{
@@ -41,9 +41,9 @@ if(getvalescaped("quicksave",FALSE) && enforcePostRequest(false))
 	exit("Save Failed");
 	}
 
-if(getvalescaped("submit",FALSE) && enforcePostRequest(false))
+if(getval("submit",FALSE) && enforcePostRequest(false))
 	{
-	$tiles = getvalescaped("tiles","");
+	$tiles = getval("tiles","");
 	if(empty($tiles))
 		{
 		empty_user_dash($userref);

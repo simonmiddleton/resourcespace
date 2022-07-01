@@ -5,7 +5,7 @@ if (!$allow_password_reset) {exit("Password requests have been disabled.");} # U
 
 if (getval("save","")!="" && enforcePostRequest(false))
 	{
-	if (email_reset_link(getvalescaped("email","")) || $hide_failed_reset_text)
+	if (email_reset_link(getval("email","")) || $hide_failed_reset_text)
 		{
 		redirect("pages/done.php?text=user_password_link_sent");
 		}

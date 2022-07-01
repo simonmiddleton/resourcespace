@@ -713,7 +713,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $daterangenodes=array();
                     $newval="";
 
-                    if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+                    if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
                         {
                         // We have been passed the range in EDTF format, check it is in the correct format
                         $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -746,15 +746,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                         foreach($date_parts as $date_part)
                             {
-                            $val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                            $val = getval("field_" . $fields[$n]["ref"] . $date_part . "year","");
                             if (intval($val)<=0)
                                 {
                                 $val="";
                                 }
-                            elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
+                            elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
                                 {
                                 $val.="-" . $field;
-                                if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
+                                if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
                                     {
                                     $val.="-" . $field;
                                     }
@@ -1028,7 +1028,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         {
         # save related resources field
         ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?",["i",$ref,"i",$ref]); # remove existing related items
-        $related=explode(",",getvalescaped("related",""));
+        $related=explode(",",getval("related",""));
         # Trim whitespace from each entry
         foreach ($related as &$relatedentry)
             {
@@ -1079,8 +1079,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if($edit_contributed_by)
         {
         $created_by = $resource_data['created_by'];
-        $new_created_by = getvalescaped("created_by",0,true);
-        if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
+        $new_created_by = getval("created_by",0,true);
+        if((getval("created_by",0,true) > 0) && $new_created_by != $created_by)
             {
             # Also update created_by
             $resource_update_sql[] = "created_by= ?";
@@ -1102,10 +1102,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
 		{
 		# Also update archive status and access level
 		$oldaccess=$resource_data['access'];
-		$access=getvalescaped("access",$oldaccess,true);
+		$access=getval("access",$oldaccess,true);
 
 		$oldarchive=$resource_data['archive'];
-		$setarchivestate=getvalescaped("status",$oldarchive,true);
+		$setarchivestate=getval("status",$oldarchive,true);
 		if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
 			{
 			$setarchivestate=$oldarchive;
@@ -1176,7 +1176,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
 
     # Save any custom permissions
-    if (getvalescaped("access",0)==RESOURCE_ACCESS_CUSTOM_GROUP)
+    if (getval("access",0)==RESOURCE_ACCESS_CUSTOM_GROUP)
         {
         save_resource_custom_access($ref);
         }
@@ -1438,7 +1438,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $daterangenodes=array();
                 $newval="";
 
-                if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+                if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
                     {
                     // We have been passed the range in EDTF format, check it is in the correct format
                     $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -1471,15 +1471,15 @@ function save_resource_data_multi($collection,$editsearch = array())
 
                     foreach($date_parts as $date_part)
                         {
-                        $val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                        $val = getval("field_" . $fields[$n]["ref"] . $date_part . "year","");
                         if (intval($val)<=0)
                             {
                             $val="";
                             }
-                        elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
+                        elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
                             {
                             $val.="-" . $field;
-                            if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
+                            if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
                                 {
                                 $val.="-" . $field;
                                 }
@@ -1782,7 +1782,7 @@ function save_resource_data_multi($collection,$editsearch = array())
     // Also save related resources field
     if(getval("editthis_related","")!="")
         {
-        $related = explode(',', getvalescaped('related', ''));
+        $related = explode(',', getval('related', ''));
 
         // Make sure all submitted values are numeric
         $resources_to_relate = array();
@@ -1885,8 +1885,8 @@ function save_resource_data_multi($collection,$editsearch = array())
             {
             $ref=$list[$m];
             $created_by = ps_value("select created_by value from resource where ref=?",array("i",$ref),""); 
-            $new_created_by = getvalescaped("created_by",0,true);
-            if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
+            $new_created_by = getval("created_by",0,true);
+            if((getval("created_by",0,true) > 0) && $new_created_by != $created_by)
                 {
                 ps_query("update resource set created_by=? where ref=?",array("i",$new_created_by,"i",$ref)); 
                 $olduser=get_user($created_by,true);
@@ -1903,7 +1903,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 		for ($m=0;$m<count($list);$m++)
 			{
 			$ref=$list[$m];
-			$access=getvalescaped("access",0);
+			$access=getval("access",0);
 			$oldaccess=ps_value("select access value from resource where ref=?",array("i",$ref),"");
 			if ($access!=$oldaccess)
 				{
@@ -1927,7 +1927,7 @@ function save_resource_data_multi($collection,$editsearch = array())
         for ($m=0;$m<count($list);$m++)
             {
             $ref=$list[$m];
-            update_resource_type($ref,getvalescaped("resource_type",""));
+            update_resource_type($ref,getval("resource_type",""));
             $successfully_edited_resources[] = $ref;
             }
         }
@@ -1935,7 +1935,7 @@ function save_resource_data_multi($collection,$editsearch = array())
     # Update location?
     if (getval("editlocation","")!="")
         {
-        $location=explode(",",getvalescaped("location",""));
+        $location=explode(",",getval("location",""));
         if (count($list)>0)
             {
             if (count($location)==2)
@@ -1944,7 +1944,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $geo_long=(float)$location[1];
                 ps_query("UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",array_merge(["d",$geo_lat,"d",$geo_long],ps_param_fill($list,"i")));
                 }
-            elseif (getvalescaped("location","")=="")
+            elseif (getval("location","")=="")
                 {
                 ps_query("UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
                 }
@@ -1959,7 +1959,7 @@ function save_resource_data_multi($collection,$editsearch = array())
     # Update mapzoom?
     if (getval("editmapzoom","")!="")
         {
-        $mapzoom=getvalescaped("mapzoom","");
+        $mapzoom=getval("mapzoom","");
         if (count($list)>0)
             {
             if ($mapzoom!="")
@@ -3735,7 +3735,7 @@ function save_resource_custom_access($resource)
 	for ($n=0;$n<count($groups);$n++)
 		{
 		$usergroup=$groups[$n]["ref"];
-		$access=getvalescaped("custom_" . $usergroup,0);
+		$access=getval("custom_" . $usergroup,0);
 		ps_query("insert into resource_custom_access(resource,usergroup,access) values (?,?,?)", array("i",$resource,"i",$usergroup,"i",$access));
 		}
 	}
@@ -6343,10 +6343,10 @@ function process_edit_form($ref, $resource)
 
 	# save data
     # When auto saving, pass forward the field so only this is saved.
-    $autosave_field=getvalescaped("autosave_field","");
+    $autosave_field=getval("autosave_field","");
 
     # Upload template: Change resource type
-    $resource_type=getvalescaped("resource_type","");
+    $resource_type=getval("resource_type","");
     if ($resource_type!="" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}") && $autosave_field=="")     // only if resource type specified and user has permission for that resource type
         {
         // Check if resource type has been changed between form being loaded and submitted
@@ -6392,7 +6392,7 @@ function process_edit_form($ref, $resource)
 
     if ($upload_collection_name_required)
         {
-        if (getvalescaped("entercolname","")=="" && getval("collection_add","")=="new")
+        if (getval("entercolname","")=="" && getval("collection_add","")=="new")
               {
               if (!is_array($save_errors)){$save_errors=array();}
               $save_errors['collectionname'] = $lang["collectionname"] . ": " .$lang["requiredfield"];
@@ -6554,7 +6554,7 @@ function save_original_file_as_alternative($ref)
     global $lang, $alternative_file_previews, $alternative_file_previews_batch, $filename_field;
 
     // Values may be passed in POST or GET data from upload_batch.php
-    $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
+    $replace_resource_original_alt_filename = getval('replace_resource_original_alt_filename', ''); // alternative filename
     $filename_field_use                     = getval('filename_field', $filename_field); // GET variable - field to use for filename
 
     // Make the original into an alternative, need resource data so we can get filepath/extension
@@ -6758,7 +6758,7 @@ function get_resource_all_image_sizes($ref)
 
 function sanitize_date_field_input($date, $validate=false)
     {
-    $year   = sprintf("%04d", getvalescaped("field_" . $date . "-y",""));
+    $year   = sprintf("%04d", getval("field_" . $date . "-y",""));
     $month  = getval("field_" . $date . "-m","");
     $day    = getval("field_" . $date . "-d","");
     $hour   = getval("field_" . $date . "-h","");

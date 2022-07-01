@@ -683,7 +683,7 @@ function save_user($ref)
         $password               = trim(getval('password', ''));
         $fullname               = str_replace("\t", ' ', trim(getval('fullname', '')));
         $email                  = trim(getval('email', '')); //To be escaped on usage in DB
-        $usergroup              = trim(getvalescaped('usergroup', ''));  // escaping required until build_usergroup_dash() moved to prepared statements
+        $usergroup              = trim(getval('usergroup', ''));  // escaping required until build_usergroup_dash() moved to prepared statements
         $ip_restrict            = trim(getval('ip_restrict', ''));
         $search_filter_override = trim(getval('search_filter_override', ''));
         $search_filter_o_id     = trim(getval('search_filter_o_id', 0, true));
@@ -1154,9 +1154,9 @@ function email_user_request()
            $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$defaultlanguage;
 
     // Get posted vars sanitized:
-    $name               = strip_tags(getvalescaped('name', ''));
-    $email              = strip_tags(getvalescaped('email', ''));
-    $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
+    $name               = strip_tags(getval('name', ''));
+    $email              = strip_tags(getval('email', ''));
+    $userrequestcomment = strip_tags(getval('userrequestcomment', ''));
 
     $user_registration_opt_in_message = "";
     if($user_registration_opt_in && getval("login_opt_in", "") == "yes")

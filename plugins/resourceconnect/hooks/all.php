@@ -68,27 +68,27 @@ function HookResourceConnectAllInitialise()
     switch ($pagename)
         {
         case "contactsheet_settings":
-        ResourceConnectCollectionWarning("contactsheetintrotext",getvalescaped("ref",""));
+        ResourceConnectCollectionWarning("contactsheetintrotext",getval("ref",""));
         break;
 
         case "edit":
-        ResourceConnectCollectionWarning("edit__multiple",getvalescaped("collection",""));
+        ResourceConnectCollectionWarning("edit__multiple",getval("collection",""));
         break;
     
         case "collection_log":
-        ResourceConnectCollectionWarning("collection_log__introtext",getvalescaped("ref",""));
+        ResourceConnectCollectionWarning("collection_log__introtext",getval("ref",""));
         break;
     
         case "collection_edit_previews":
-        ResourceConnectCollectionWarning("collection_edit_previews__introtext",getvalescaped("ref",""));
+        ResourceConnectCollectionWarning("collection_edit_previews__introtext",getval("ref",""));
         break;
         
         case "search_disk_usage":
-        ResourceConnectCollectionWarning("search_disk_usage__introtext",str_replace("!collection","",getvalescaped("search","")));
+        ResourceConnectCollectionWarning("search_disk_usage__introtext",str_replace("!collection","",getval("search","")));
         break;
     
         case "collection_download":
-        ResourceConnectCollectionWarning("collection_download__introtext",getvalescaped("collection",""));
+        ResourceConnectCollectionWarning("collection_download__introtext",getval("collection",""));
         break;
         }
     

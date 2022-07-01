@@ -5,11 +5,11 @@ include "../include/authenticate.php";
 if(checkperm("b") || $system_read_only)
     {exit ("Permission denied.");}
 
-$ref=getvalescaped("ref","",true);
-$copycollectionremoveall=getvalescaped("copycollectionremoveall","");
+$ref=getval("ref","",true);
+$copycollectionremoveall=getval("copycollectionremoveall","");
 $offset=getval("offset",0,true);
-$find=getvalescaped("find","");
-$col_order_by=getvalescaped("col_order_by","name");
+$find=getval("find","");
+$col_order_by=getval("col_order_by","name");
 $sort=getval("sort","ASC");
 $modal=getval("modal","")=="true";
 $redirection_endpoint = trim(urldecode(getval("redirection_endpoint", "")));
@@ -45,7 +45,7 @@ $resources=do_search("!collection".$ref);
 $colcount=count($resources);
 
 # Collection copy functionality
-$copy=getvalescaped("copy","");
+$copy=getval("copy","");
 if ($copy!="")
 	{
 	copy_collection($copy,$ref,$copycollectionremoveall!="");

@@ -2,18 +2,18 @@
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref","",true),$k))) {include "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref","",true),$k))) {include "../include/authenticate.php";}
 
 $ref=getval("ref","");
 $size=getval("size","");
 $ext=getval("ext","");
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext)){$ext="jpg";} # Mitigate path injection
 $alternative=getval("alternative",-1);
-$search=getvalescaped("search","");
-$iaccept=getvalescaped("iaccept","off");
+$search=getval("search","");
+$iaccept=getval("iaccept","off");
 $usage=getval("usage","-1");
 $usagecomment=getval("usagecomment","");
-$email       = getvalescaped('email', '');
+$email       = getval('email', '');
 $url=getval('url','');
 
 if($url == '')

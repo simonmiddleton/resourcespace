@@ -3,7 +3,7 @@ include "../../include/db.php";
 include_once dirname(__DIR__, 2) . '/include/login_functions.php';
 
 $password_reset_mode=false;
-$resetvalues=getvalescaped("rp","");
+$resetvalues=getval("rp","");
 if($resetvalues!="")
     {
     if(substr($resetvalues,0,2) == "3D")
@@ -86,7 +86,7 @@ if(getval("save", "") != "" && enforcePostRequest(false))
         if (getval("password","")!=getval("password2","")) {$error2=true;}
     	else
 	    	{
-		    $message=change_password(getvalescaped("password",""));
+		    $message=change_password(getval("password",""));
     		if ($message===true)
 	    		{
 				if($password_reset_mode && $last_active=="" && $email!="")
@@ -148,7 +148,7 @@ else
 	<?php if (getval("expired","")!="") { ?><div class="FormError">!! <?php echo $lang["password_expired"]?> !!</div><?php } ?>
 
 	<form method="post" action="<?php echo $baseurl_short?>pages/user/user_change_password.php">
-	<input type="hidden" name="expired" value="<?php echo htmlspecialchars(getvalescaped("expired",""))?>">
+	<input type="hidden" name="expired" value="<?php echo htmlspecialchars(getval("expired",""))?>">
 	<?php
     generateFormToken("user_change_password");
 

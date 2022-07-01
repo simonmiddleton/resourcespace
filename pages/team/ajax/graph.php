@@ -7,27 +7,27 @@ include '../../../include/authenticate.php';
 include '../../../include/reporting_functions.php';
 include '../../../include/dash_functions.php';
 
-$report=getvalescaped("report","");
-$activity_type=getvalescaped("activity_type","");
-$resource_type=getvalescaped("resource_type","");
-$period=getvalescaped("period",$reporting_periods_default[1]);
+$report=getval("report","");
+$activity_type=getval("activity_type","");
+$resource_type=getval("resource_type","");
+$period=getval("period",$reporting_periods_default[1]);
 $period_init=$period;
 if ($period==0)
 	{
 	# Specific number of days specified.
-	$period=getvalescaped("period_days","");
+	$period=getval("period_days","");
 	if (!is_numeric($period) || $period<1) {$period=1;} # Invalid period specified.
 	}
 if ($period==-1)
 	{
 	# Specific date range specified.
-	$from_y = getvalescaped("from-y","");
-	$from_m = getvalescaped("from-m","");
-	$from_d = getvalescaped("from-d","");
+	$from_y = getval("from-y","");
+	$from_m = getval("from-m","");
+	$from_d = getval("from-d","");
 	
-	$to_y = getvalescaped("to-y","");
-	$to_m = getvalescaped("to-m","");
-	$to_d = getvalescaped("to-d","");
+	$to_y = getval("to-y","");
+	$to_m = getval("to-m","");
+	$to_d = getval("to-d","");
 	}
 else
 	{
@@ -42,15 +42,15 @@ else
 	$to_m = date("m");
 	$to_d = date("d");
 	}
-$groups=getvalescaped("groups","");
-$collection=getvalescaped("collection","");
-$external=getvalescaped("external","0");
-$n=getvalescaped("n","");
-$type=getvalescaped("type","");
+$groups=getval("groups","");
+$collection=getval("collection","");
+$external=getval("external","0");
+$n=getval("n","");
+$type=getval("type","");
 $from_dash=getval("from_dash","")!="";
 
 # Rendering a tile? Set "n" or the graph sequence number to the tile number, so all graph IDs are unique on the dash page.
-$tile=getvalescaped("tile","");
+$tile=getval("tile","");
 $user_tile=getval("user_tile",0,true);
 if ($tile!="")
     {
@@ -131,7 +131,7 @@ if (!$from_dash)
     
     <?php
     # Add to dash tile function
-    $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getvalescaped("period","") . "&period_days=" . getvalescaped("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&resource_type=" . $resource_type . "&from_dash=true";
+    $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getval("period","") . "&period_days=" . getval("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&resource_type=" . $resource_type . "&from_dash=true";
     ?>
     &nbsp;&nbsp;<a style="white-space:nowrap;" class="ReportAddToDash" href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?tltype=conf&tlstyle=analytics&" . $graph_params) ?>" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  $lang["report_add_to_dash"] ?></a>
     </h2>
@@ -141,7 +141,7 @@ else
     {
     # Dash 
     # Load title
-    $title= getvalescaped("tltitle",ps_value("select title value from dash_tile where ref=?",array("i",$tile), ""));
+    $title= getval("tltitle",ps_value("select title value from dash_tile where ref=?",array("i",$tile), ""));
     ?>
     <div style="padding:10px 15px">
     <h2 style="font-size:120%;margin:0;padding:0 0 8px 0;background:none;white-space: nowrap;overflow: hidden;

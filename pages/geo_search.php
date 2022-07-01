@@ -41,7 +41,7 @@ if ($map_zoomslider)
     $zoomcontrol = 'false';
     }
 
-$display = getvalescaped("display", $default_display);
+$display = getval("display", $default_display);
 if ($default_display == 'map' || $display == 'map')
     {
     $geo_search_modal_results = false;

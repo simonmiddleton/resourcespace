@@ -11,7 +11,7 @@ include "../include/header.php";
 if (!$enable_remote_apis) {exit("API not enabled.");}
 if (!checkperm("a")) {exit("Access denied");}
 
-$api_function=getvalescaped("api_function","");
+$api_function=getval("api_function","");
 
 if ($api_function!="")
     {

@@ -3,15 +3,15 @@ include_once '../include/db.php';
 include_once '../include/authenticate.php';
 include_once '../include/csv_export_functions.php';
 
-$search     = getvalescaped('search', '');
-$restypes   = getvalescaped('restypes', '');
-$order_by   = getvalescaped('order_by', '');
-$archive    = getvalescaped('archive', '');
-$sort       = getvalescaped('sort', '');
+$search     = getval('search', '');
+$restypes   = getval('restypes', '');
+$order_by   = getval('order_by', '');
+$archive    = getval('archive', '');
+$sort       = getval('sort', '');
 $offline    = getval("process_offline","") != "";
 $submitted  = getval("submit","") != "";
-$personaldata   = (getvalescaped('personaldata', '') != '');
-$allavailable    = (getvalescaped('allavailable', '') != '');
+$personaldata   = (getval('personaldata', '') != '');
+$allavailable    = (getval('allavailable', '') != '');
 
 $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, DEPRECATED_STARSEARCH, false,false,'',false,false,true);
 

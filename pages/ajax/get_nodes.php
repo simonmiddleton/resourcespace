@@ -10,10 +10,10 @@ Expected functionality:
 If we search by node ID, then if found we get its details back
 Otherwise, we get all results back based on the name we've searched for.
 */
-$node                = getvalescaped('node', 0, true);
-$resource_type_field = getvalescaped('resource_type_field', 0, true);
-$name                = trim(getvalescaped('name', ''));
-$rows                = getvalescaped('rows', 10, true);
+$node                = getval('node', 0, true);
+$resource_type_field = getval('resource_type_field', 0, true);
+$name                = trim(getval('name', ''));
+$rows                = getval('rows', 10, true);
 
 // Prevent access to fields to which user does not have access to
 if(!metadata_field_view_access($resource_type_field))

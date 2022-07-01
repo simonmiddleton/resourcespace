@@ -13,30 +13,30 @@ if(!in_array($plugin_name, $plugins))
 	
 if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false))
 	{
-	$simplesaml['simplesaml_site_block'] = getvalescaped('simplesaml_site_block','');
-	$simplesaml['simplesaml_login'] = getvalescaped('simplesaml_login','');
-	$simplesaml['simplesaml_allow_public_shares'] = getvalescaped('simplesaml_allow_public_shares','');
-	$simplesaml['simplesaml_allowedpaths'] = explode(",",getvalescaped('simplesaml_allowedpaths',''));
-	$simplesaml['simplesaml_allow_standard_login'] = getvalescaped('simplesaml_allow_standard_login','');
-	$simplesaml['simplesaml_prefer_standard_login'] = getvalescaped('simplesaml_prefer_standard_login','');
-	$simplesaml['simplesaml_sp'] = getvalescaped('simplesaml_sp','');
+	$simplesaml['simplesaml_site_block'] = getval('simplesaml_site_block','');
+	$simplesaml['simplesaml_login'] = getval('simplesaml_login','');
+	$simplesaml['simplesaml_allow_public_shares'] = getval('simplesaml_allow_public_shares','');
+	$simplesaml['simplesaml_allowedpaths'] = explode(",",getval('simplesaml_allowedpaths',''));
+	$simplesaml['simplesaml_allow_standard_login'] = getval('simplesaml_allow_standard_login','');
+	$simplesaml['simplesaml_prefer_standard_login'] = getval('simplesaml_prefer_standard_login','');
+	$simplesaml['simplesaml_sp'] = getval('simplesaml_sp','');
 	
-	$simplesaml['simplesaml_username_attribute'] = getvalescaped('simplesaml_username_attribute','');
-	$simplesaml['simplesaml_fullname_attribute'] = getvalescaped('simplesaml_fullname_attribute','');
-	$simplesaml['simplesaml_email_attribute'] = getvalescaped('simplesaml_email_attribute','');
-	$simplesaml['simplesaml_group_attribute'] = getvalescaped('simplesaml_group_attribute','');	
-	$simplesaml['simplesaml_fallback_group'] = getvalescaped('simplesaml_fallback_group','');
-	$simplesaml['simplesaml_update_group'] = getvalescaped('simplesaml_update_group','');
-	$simplesaml['simplesaml_create_new_match_email'] = getvalescaped('simplesaml_create_new_match_email','');
-	$simplesaml['simplesaml_allow_duplicate_email'] = getvalescaped('simplesaml_allow_duplicate_email','');
-	$simplesaml['simplesaml_multiple_email_notify'] = getvalescaped('simplesaml_multiple_email_notify','');
-	$simplesaml['simplesaml_fullname_separator'] = getvalescaped('simplesaml_fullname_separator','');
-	$simplesaml['simplesaml_username_separator'] = getvalescaped('simplesaml_username_separator','');
-    $simplesaml['simplesaml_custom_attributes'] = getvalescaped('simplesaml_custom_attributes', '');
-    $simplesaml['simplesaml_lib_path'] = getvalescaped('simplesaml_lib_path', '');
-    $simplesaml['simplesaml_authorisation_claim_name'] = getvalescaped('simplesaml_authorisation_claim_name', '');
-    $simplesaml['simplesaml_authorisation_claim_value'] = getvalescaped('simplesaml_authorisation_claim_value', '');
-    $simplesaml['simplesaml_rsconfig'] = getvalescaped('simplesaml_rsconfig','');
+	$simplesaml['simplesaml_username_attribute'] = getval('simplesaml_username_attribute','');
+	$simplesaml['simplesaml_fullname_attribute'] = getval('simplesaml_fullname_attribute','');
+	$simplesaml['simplesaml_email_attribute'] = getval('simplesaml_email_attribute','');
+	$simplesaml['simplesaml_group_attribute'] = getval('simplesaml_group_attribute','');	
+	$simplesaml['simplesaml_fallback_group'] = getval('simplesaml_fallback_group','');
+	$simplesaml['simplesaml_update_group'] = getval('simplesaml_update_group','');
+	$simplesaml['simplesaml_create_new_match_email'] = getval('simplesaml_create_new_match_email','');
+	$simplesaml['simplesaml_allow_duplicate_email'] = getval('simplesaml_allow_duplicate_email','');
+	$simplesaml['simplesaml_multiple_email_notify'] = getval('simplesaml_multiple_email_notify','');
+	$simplesaml['simplesaml_fullname_separator'] = getval('simplesaml_fullname_separator','');
+	$simplesaml['simplesaml_username_separator'] = getval('simplesaml_username_separator','');
+    $simplesaml['simplesaml_custom_attributes'] = getval('simplesaml_custom_attributes', '');
+    $simplesaml['simplesaml_lib_path'] = getval('simplesaml_lib_path', '');
+    $simplesaml['simplesaml_authorisation_claim_name'] = getval('simplesaml_authorisation_claim_name', '');
+    $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
+    $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig','');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];

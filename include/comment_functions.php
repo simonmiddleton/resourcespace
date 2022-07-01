@@ -9,9 +9,9 @@ function comments_submit()
     {
     global $username, $anonymous_login, $userref, $regex_email, $comments_max_characters, $lang, $email_notify, $comments_email_notification_address;
 
-    if ($username == $anonymous_login && (getvalescaped("fullname","") == "" || preg_match ("/${regex_email}/", getvalescaped("email","")) === false)) return;
+    if ($username == $anonymous_login && (getval("fullname","") == "" || preg_match ("/${regex_email}/", getval("email","")) === false)) return;
 
-    $comment_to_hide = getvalescaped("comment_to_hide",0,true);
+    $comment_to_hide = getval("comment_to_hide",0,true);
 
     if (($comment_to_hide != 0) && (checkPerm("o"))) {
         $root = find_root_comment($comment_to_hide);
@@ -29,14 +29,14 @@ function comments_submit()
         return;
     }
 
-    $comment_flag_ref = getvalescaped("comment_flag_ref",0,true);
+    $comment_flag_ref = getval("comment_flag_ref",0,true);
 
     // --- process flag request
 
     if ($comment_flag_ref != 0)
         {
-        $comment_flag_reason = getvalescaped("comment_flag_reason","");
-        $comment_flag_url = getvalescaped("comment_flag_url","");
+        $comment_flag_reason = getval("comment_flag_reason","");
+        $comment_flag_url = getval("comment_flag_url","");
 
         if ($comment_flag_reason == "" || $comment_flag_url == "") return;
 
@@ -76,8 +76,8 @@ function comments_submit()
 
     // --- process comment submission
     if (    // we don't want to insert an empty comment or an orphan
-        (getvalescaped("body","") == "") ||
-        ((getvalescaped("collection_ref","") == "") && (getvalescaped("resource_ref","") == "") && (getvalescaped("ref_parent","") == ""))
+        (getval("body","") == "") ||
+        ((getval("collection_ref","") == "") && (getval("resource_ref","") == "") && (getval("ref_parent","") == ""))
         )
         return;
 
@@ -96,12 +96,12 @@ function comments_submit()
         $sql_values = array("i", (int)$userref);
         }
 
-    $body = getvalescaped("body", "");
+    $body = getval("body", "");
     if (strlen ($body) > $comments_max_characters) $body = substr ($body, 0, $comments_max_characters);		// just in case not caught in submit form
 
-    $parent_ref =  getvalescaped("ref_parent", 0,true);
-    $collection_ref =  getvalescaped("collection_ref", 0,true);
-    $resource_ref =  getvalescaped("resource_ref", 0,true);
+    $parent_ref =  getval("ref_parent", 0,true);
+    $collection_ref =  getval("collection_ref", 0,true);
+    $resource_ref =  getval("resource_ref", 0,true);
 
     $sql_values_prepend = array(
         "i", ($parent_ref == 0 ? NULL : (int)$parent_ref),

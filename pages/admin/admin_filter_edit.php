@@ -32,8 +32,8 @@ else
     }
 
   
-$delete_filter = getvalescaped('delete_filter', '');
-$delete_filter_rule = getvalescaped('delete_filter_rule', '');
+$delete_filter = getval('delete_filter', '');
+$delete_filter_rule = getval('delete_filter_rule', '');
 $filter_rule = getval("filter_rule","");
 $filter_copy_from = getval("copy_from",0,true);
 

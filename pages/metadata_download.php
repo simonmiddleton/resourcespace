@@ -1,8 +1,8 @@
 <?php
 include '../include/db.php';
 
-$k   = getvalescaped('k', '');
-$ref = getvalescaped('ref', '', true);
+$k   = getval('k', '');
+$ref = getval('ref', '', true);
 
 // External access support (authenticate only if no key provided, or if invalid access key provided)
 if('' == $k || !check_access_key($ref, $k))
@@ -14,16 +14,16 @@ include_once '../include/pdf_functions.php';
 $resource = get_resource_data($ref);
 
 // fetch the current search (for finding similar matches)
-$search   = getvalescaped('search', '');
-$order_by = getvalescaped('order_by', 'relevance');
-$offset   = getvalescaped('offset', 0, true);
-$restypes = getvalescaped('restypes', '');
+$search   = getval('search', '');
+$order_by = getval('order_by', 'relevance');
+$offset   = getval('offset', 0, true);
+$restypes = getval('restypes', '');
 if(strpos($search, '!') !== false)
     {
     $restypes='';
     }
 
-$archive      = getvalescaped('archive', 0, true);
+$archive      = getval('archive', 0, true);
 $default_sort_direction = 'DESC';
 if(substr($order_by, 0, 5) == 'field')
     {
@@ -37,11 +37,11 @@ $download           = getval('download', '') != '';
 $download_file_type = getval('fileType_option', '');
 $language           = getval('language', 'en');
 $language           = resolve_pdf_language();
-$curpos             = getvalescaped("curpos","");
+$curpos             = getval("curpos","");
 $modal              = (getval("modal", "") == "true");
 
 $data_only          = 'true' === trim(getval('data_only', ''));
-$pdf_template       = getvalescaped('pdf_template', '');
+$pdf_template       = getval('pdf_template', '');
 
 $urlparams = array(
     'resource' => $ref,

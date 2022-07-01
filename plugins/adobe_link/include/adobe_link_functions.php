@@ -18,7 +18,7 @@ function adobe_link_check_credentials()
         return false;
         }
     
-    $ref = getvalescaped('ref', '', true);
+    $ref = getval('ref', '', true);
     $adb_link_user = $adb_link_parts[0];
     $adb_link_hash = $adb_link_parts[1];
     $keycheck = adobe_link_genkey($adb_link_user,$ref);

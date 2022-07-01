@@ -3,8 +3,8 @@ include "../../../include/db.php";
 
 
 # Get variables and check key is valid.
-$ref=getvalescaped("ref","");
-$key=getvalescaped("key","");
+$ref=getval("ref","");
+$key=getval("key","");
 if ($key!=md5($scramble_key . $ref)) {exit("Invalid key.");}
 
 # Load resource data
@@ -15,7 +15,7 @@ $use_watermark=check_use_watermark();
 
 # Work out if we're allowing download by validating the download key.
 $download=false;
-$downloadkey=getvalescaped("downloadkey","");
+$downloadkey=getval("downloadkey","");
 if ($downloadkey==md5($scramble_key . $ref . "download")) {$download=true;}
 
 ?>
@@ -72,7 +72,7 @@ while (true)
 	
 	# sets height and width to display 
 	$ratio=$resource["thumb_width"]/$resource["thumb_height"];
-	$width=getvalescaped("width",0,true);
+	$width=getval("width",0,true);
 	$height= $width > 0 ? floor($width / $ratio): 0;
 	
 	?>

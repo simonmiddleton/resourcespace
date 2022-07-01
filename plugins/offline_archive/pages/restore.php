@@ -7,8 +7,8 @@ if (!checkperm('i'))
     exit ($lang['error-permissiondenied']);
     }
 
-$resources=getvalescaped("resources","");
-$collection=getvalescaped("collection","",true);
+$resources=getval("resources","");
+$collection=getval("collection","",true);
 
 $valid=true;
 

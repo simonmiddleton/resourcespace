@@ -31,21 +31,21 @@ $allowable_fields = get_resource_type_fields('','order_by','asc','',$DATE_FIELD_
 if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(false))
     {
     // Save the plugin config
-    $action_dates_config["action_dates_deletefield"] = getvalescaped('action_dates_deletefield','',true);
-    $action_dates_config["action_dates_reallydelete"] = getvalescaped('action_dates_reallydelete','');
-    $action_dates_config["action_dates_new_state"] = getvalescaped('action_dates_new_state','');
-    $action_dates_config["action_dates_eligible_states"] = getvalescaped('action_dates_eligible_states','');
-    $action_dates_config["action_dates_email_for_state"] = getvalescaped('action_dates_email_for_state','');
-    $action_dates_config["action_dates_email_for_restrict"] = getvalescaped('action_dates_email_for_restrict','');
-    $action_dates_config["action_dates_email_admin_days"] = getvalescaped('action_dates_email_admin_days','',true);
-    $action_dates_config["action_dates_restrictfield"] = getvalescaped('action_dates_restrictfield','',true);
-    $action_dates_config["action_dates_remove_from_collection"] = getvalescaped('action_dates_remove_from_collection','');
-    $action_dates_config['action_dates_workflow_actions'] = getvalescaped('action_dates_workflow_actions',false);
-    $action_dates_config["action_dates_weekdays"] = getvalescaped('action_dates_weekdays','');
+    $action_dates_config["action_dates_deletefield"] = getval('action_dates_deletefield','',true);
+    $action_dates_config["action_dates_reallydelete"] = getval('action_dates_reallydelete','');
+    $action_dates_config["action_dates_new_state"] = getval('action_dates_new_state','');
+    $action_dates_config["action_dates_eligible_states"] = getval('action_dates_eligible_states','');
+    $action_dates_config["action_dates_email_for_state"] = getval('action_dates_email_for_state','');
+    $action_dates_config["action_dates_email_for_restrict"] = getval('action_dates_email_for_restrict','');
+    $action_dates_config["action_dates_email_admin_days"] = getval('action_dates_email_admin_days','',true);
+    $action_dates_config["action_dates_restrictfield"] = getval('action_dates_restrictfield','',true);
+    $action_dates_config["action_dates_remove_from_collection"] = getval('action_dates_remove_from_collection','');
+    $action_dates_config['action_dates_workflow_actions'] = getval('action_dates_workflow_actions',false);
+    $action_dates_config["action_dates_weekdays"] = getval('action_dates_weekdays','');
     
     // Get the extra rows fom the table
-    $action_date_extra_fields     = getvalescaped('action_dates_extra_field',array());
-    $action_date_extra_statuses   = getvalescaped('action_dates_extra_status',array());
+    $action_date_extra_fields     = getval('action_dates_extra_field',array());
+    $action_date_extra_statuses   = getval('action_dates_extra_status',array());
 
     $action_dates_extra_config = array();
     $mappingcount=0;

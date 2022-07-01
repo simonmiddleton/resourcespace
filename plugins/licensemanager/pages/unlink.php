@@ -4,8 +4,8 @@ include "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 
 
-$ref=getvalescaped("ref","");
-$resource=getvalescaped("resource","");
+$ref=getval("ref","");
+$resource=getval("resource","");
 
 # Check access
 $edit_access=get_edit_access($resource);

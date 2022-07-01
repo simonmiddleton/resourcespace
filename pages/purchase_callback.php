@@ -63,13 +63,13 @@ else
 			{
 			echo "Verified.";
 			
-			$emailconfirmation=getvalescaped("emailconfirmation","");
+			$emailconfirmation=getval("emailconfirmation","");
 
 			# Note that terms basket and collection are interchangeable in this context
 
 			# At this point the custom passthrough variable contains a user reference and collection reference separated by a space
 			# This collection is the basket which contains the resources just purchased
-			$paypalcustom_variable=getvalescaped("custom","");
+			$paypalcustom_variable=getval("custom","");
 			$paypalcustom_array=explode(" ",urldecode($paypalcustom_variable));
 			$paypalcustom_userref=$paypalcustom_array[0];
 			$paypalcustom_basket=$paypalcustom_array[1];

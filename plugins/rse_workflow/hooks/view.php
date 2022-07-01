@@ -20,7 +20,7 @@ function HookRse_workflowViewPageevaluation()
       
     foreach ($workflowactions as $workflowaction)
         {
-        if(getvalescaped("rse_workflow_action_" . $workflowaction["ref"],"")!="" && enforcePostRequest(false))
+        if(getval("rse_workflow_action_" . $workflowaction["ref"],"")!="" && enforcePostRequest(false))
             {
             // Check if resource status has already been changed between form being loaded and submitted
             $resource_status_check_name = "resource_status_check_" . $workflowaction["ref"];

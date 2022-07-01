@@ -2,7 +2,7 @@
 include "../include/db.php";
 
 
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once "../include/authenticate.php";}
 
 if (!checkperm('q')){exit($lang["error-permissiondenied"]);}
 
@@ -14,7 +14,7 @@ if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $pr
 
 include "../include/request_functions.php";
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $error = '';
 hook("addcustomrequestfields");
 
@@ -78,14 +78,14 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	else if ($k!="" || $user_is_anon || $userrequestmode==0)
         {
         # Request mode 0 : Simply e-mail the request.
-        if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getvalescaped("email","")==""))
+        if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
             {
             $result=false; # Required fields not completed.
             }
         else
             {
             $tmp = hook("emailresourcerequest"); if($tmp): $result = $tmp; else:
-            $result=email_resource_request($ref,getvalescaped("request",""));
+            $result=email_resource_request($ref,getval("request",""));
             endif;
             }
         }
@@ -93,7 +93,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
         {
         # Request mode 1 : "Managed" mode via Manage Requests / Orders
         $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
-        $result=managed_collection_request($ref,getvalescaped("request",""),true);
+        $result=managed_collection_request($ref,getval("request",""),true);
         endif;
         }
 
@@ -144,28 +144,28 @@ include "../include/header.php";
 	<div class="Question">
 	<label><?php echo $lang["fullname"]?> <sup>*</sup></label>
 	<input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
-	<input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("fullname","")) ?>">
+	<input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("fullname","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	
 	<div class="Question">
 	<label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
 	<input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-	<input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email","")) ?>">
+	<input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 
 	<div class="Question">
 	<label><?php echo $lang["contacttelephone"]?></label>
 	<input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
-	<input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("contact","")) ?>">
+	<input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php } ?>
 
 	<div class="Question">
 	<label for="request"><?php echo $lang["requestreason"]?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
-	<textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getvalescaped("request","")) ?></textarea>
+	<textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
 	<div class="clearerleft"> </div>
 	</div>
 
@@ -197,12 +197,12 @@ if (isset($custom_request_fields))
 			
 			<?php if ($type==1) {  # Normal text box
 			?>
-			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("custom" . $n,""))?>">
+			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
 			<?php } ?>
 
 			<?php if ($type==2) { # Large text box 
 			?>
-			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getvalescaped("custom" . $n,""))?></textarea>
+			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
 			<?php } ?>
 
 			<?php if ($type==3) { # Drop down box

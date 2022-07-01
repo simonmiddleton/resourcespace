@@ -15,16 +15,16 @@ if (!$plugin_active)
     }
     
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");
-$find=getvalescaped("find","");
-$callback=getvalescaped("callback","");
-$orderby = getvalescaped("orderby",-1);
+$find=getval("find","");
+$callback=getval("callback","");
+$orderby = getval("orderby",-1);
 
 if ($callback!="")
 	{
-	$ref = getvalescaped("ref", -1,true);
-	$search = getvalescaped("search", "");
-	$restypes = getvalescaped("restypes", "");
-	$archive = getvalescaped("archive", "");
+	$ref = getval("ref", -1,true);
+	$search = getval("search", "");
+	$restypes = getval("restypes", "");
+	$archive = getval("archive", "");
 
 	switch ($callback)
 		{

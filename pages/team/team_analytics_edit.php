@@ -6,7 +6,7 @@
 include '../../include/db.php';
 include '../../include/authenticate.php';
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $print=(getval("print","")!=""); # Print mode?
 
 if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
@@ -25,23 +25,23 @@ if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
 
 if (!checkperm("t")) {exit ("Permission denied.");}
 
-$offset=getvalescaped("offset",0,true);
-$findtext=getvalescaped("findtext","");
-$activity_type=getvalescaped("activity_type","");
+$offset=getval("offset",0,true);
+$findtext=getval("findtext","");
+$activity_type=getval("activity_type","");
 
-$resource_type=getvalescaped("resource_type","");
-$period=getvalescaped("period",$reporting_periods_default[1]);
+$resource_type=getval("resource_type","");
+$period=getval("period",$reporting_periods_default[1]);
 $period_init=$period;
-$period_days=getvalescaped("period_days","");
-$from_y = getvalescaped("from-y","");
-$from_m = getvalescaped("from-m","");
-$from_d = getvalescaped("from-d","");
-$to_y = getvalescaped("to-y","");
-$to_m = getvalescaped("to-m","");
-$to_d = getvalescaped("to-d","");
-$groupselect=getvalescaped("groupselect","viewall");
-$collection=getvalescaped("collection","");
-$external=getvalescaped("external","");
+$period_days=getval("period_days","");
+$from_y = getval("from-y","");
+$from_m = getval("from-m","");
+$from_d = getval("from-d","");
+$to_y = getval("to-y","");
+$to_m = getval("to-m","");
+$to_d = getval("to-d","");
+$groupselect=getval("groupselect","viewall");
+$collection=getval("collection","");
+$external=getval("external","");
 
 
 if ($groupselect=="select" && isset($_POST["groups"]) && is_array($_POST["groups"]))

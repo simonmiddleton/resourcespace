@@ -3,21 +3,21 @@ include "../include/db.php";
 
 include "../include/authenticate.php"; 
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 // Fetch resource data
 $resource=get_resource_data($ref);if ($resource===false) {exit($lang['resourcenotfound']);}
 
 // fetch the current search 
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getval("archive",0,true);
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
-$sort=getvalescaped("sort",$default_sort_direction);
+$sort=getval("sort",$default_sort_direction);
 
 $minaccess=get_resource_access($ref);
 
@@ -30,17 +30,17 @@ $errors="";
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	// Build a new list and insert
-	$users=getvalescaped("users","");
-	$message=getvalescaped("message","");
-	$access=getvalescaped("access","");
-	$add_internal_access=(getvalescaped("grant_internal_access","")!="");
+	$users=getval("users","");
+	$message=getval("message","");
+	$access=getval("access","");
+	$add_internal_access=(getval("grant_internal_access","")!="");
 	if (hook("modifyresourceaccess")){$access=hook("modifyresourceaccess");}
-	$expires=getvalescaped("expires","");
-	$group=getvalescaped("usergroup","");
-    $sharepwd = getvalescaped('sharepassword', '');
-	$list_recipients=getvalescaped("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
+	$expires=getval("expires","");
+	$group=getval("usergroup","");
+    $sharepwd = getval('sharepassword', '');
+	$list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 	
-	$use_user_email=getvalescaped("use_user_email",false);
+	$use_user_email=getval("use_user_email",false);
 	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches system name
 	
@@ -53,7 +53,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 		if($sharing_related)
 			{
 			// User has chosen to include related resources, so treat as sharing a new collection
-			$relatedshares=explode(",",getvalescaped("sharerelatedresources",""));
+			$relatedshares=explode(",",getval("sharerelatedresources",""));
 			}
 		// Create new collection
 		$allow_changes=(getval("allow_changes","")!=""?1:0);

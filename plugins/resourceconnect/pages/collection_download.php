@@ -7,15 +7,15 @@ $inside_plugin=true;
 include "../../../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../../../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../../../include/authenticate.php";}
 
-$collection=getvalescaped("collection","",true);
-$size=getvalescaped("size","");
-$submitted=getvalescaped("submitted","");
-$includetext=getvalescaped("text","false");
-$useoriginal=getvalescaped("use_original","no");
+$collection=getval("collection","",true);
+$size=getval("size","");
+$submitted=getval("submitted","");
+$includetext=getval("text","false");
+$useoriginal=getval("use_original","no");
 $collectiondata=get_collection($collection);
-$settings_id=getvalescaped("settings","");
+$settings_id=getval("settings","");
 
 $archiver_fullpath = get_utility_path("archiver");
 

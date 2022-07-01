@@ -10,8 +10,8 @@ if (!checkperm("a"))
 	}
 
 
-$restype_order_by=getvalescaped("restype_order_by","rt");
-$restype_sort=getvalescaped("restype_sort","asc");
+$restype_order_by=getval("restype_order_by","rt");
+$restype_sort=getval("restype_sort","asc");
 
 if(!in_array($restype_order_by,array("rt","name","tab_name","order_by","fieldcount"))){$restype_order_by="rt";}
 
@@ -20,7 +20,7 @@ $url=generateURL($baseurl . "/pages/admin/admin_resource_types.php",$url_params)
 
 $sql_restype_order_by=$restype_order_by=="order_by"?"CAST(order_by AS UNSIGNED)":$restype_order_by;
 
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_home.php";

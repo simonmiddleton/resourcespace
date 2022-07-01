@@ -10,8 +10,8 @@ include_once dirname(__FILE__). '/../include/csv_functions.php';
 
 // Init
 $fd                  = 'user_' . $userref . '_csv_user_batch_uploaded_data';
-$process_csv         = ('' !== getvalescaped('process_csv', '') && enforcePostRequest(false));
-$user_group_selector = getvalescaped('user_group_selector', '');
+$process_csv         = ('' !== getval('process_csv', '') && enforcePostRequest(false));
+$user_group_selector = getval('user_group_selector', '');
 
 // Uploaded file information
 $csv_dir  = get_temp_dir() . DIRECTORY_SEPARATOR . 'csv_user_import_upload' . DIRECTORY_SEPARATOR . $session_hash;

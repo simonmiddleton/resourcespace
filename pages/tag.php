@@ -7,8 +7,8 @@ if (!$speedtagging) {exit("This function is not enabled.");}
 
 if (getval("save","")!="" && enforcePostRequest(false))
     {
-    $ref=getvalescaped("ref","",true);
-    $keywords=getvalescaped("keywords","");
+    $ref=getval("ref","",true);
+    $keywords=getval("keywords","");
 
     # support resource_type based tag fields
     $resource_type=get_resource_data($ref);

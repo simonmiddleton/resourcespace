@@ -2,18 +2,18 @@
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k           = getvalescaped('k', '');
-$ref         = getvalescaped('ref', '', true);
-$col         = getvalescaped('collection', getvalescaped('col', -1, true), true);
-$size        = getvalescaped('size', '');
-$ext         = getvalescaped('ext', '');
-$alternative = getvalescaped('alternative', -1);
-$iaccept     = getvalescaped('iaccept', 'off');
+$k           = getval('k', '');
+$ref         = getval('ref', '', true);
+$col         = getval('collection', getval('col', -1, true), true);
+$size        = getval('size', '');
+$ext         = getval('ext', '');
+$alternative = getval('alternative', -1);
+$iaccept     = getval('iaccept', 'off');
 $url         = getval('url', '');
 
-$email       = getvalescaped('email', '');
-$usage       = getvalescaped("usage", '');
-$usagecomment = getvalescaped("usagecomment", '');
+$email       = getval('email', '');
+$usage       = getval("usage", '');
+$usagecomment = getval("usagecomment", '');
 
 $error = array();
 

@@ -67,14 +67,14 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
         }
     
     # Get the url parameters to pass back in to the search
-    $modal          = getvalescaped('modal', '');
-    $display        = getvalescaped('display', '');
-    $order_by       = getvalescaped('order_by', '');
-    $offset         = getvalescaped('offset', '');
-    $per_page       = getvalescaped('per_page', '');
-    $sort           = getvalescaped('sort', '');
-    $restypes       = getvalescaped('restypes', '');
-    $recentdaylimit = getvalescaped('recentdaylimit', '');
+    $modal          = getval('modal', '');
+    $display        = getval('display', '');
+    $order_by       = getval('order_by', '');
+    $offset         = getval('offset', '');
+    $per_page       = getval('per_page', '');
+    $sort           = getval('sort', '');
+    $restypes       = getval('restypes', '');
+    $recentdaylimit = getval('recentdaylimit', '');
     $editable_only  = getval('foredit','')=='true';
 
     // Construct archive string and array
@@ -104,7 +104,7 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     'archive'           => $archive,
     'sort'              => $sort,
     'restypes'          => $restypes,
-    'recentdaylimit'    => getvalescaped('recentdaylimit', '', true),
+    'recentdaylimit'    => getval('recentdaylimit', '', true),
     'foredit'           => ($editable_only?"true":"")
     );
 
@@ -136,7 +136,7 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
 function HookRefineresultsSearchSearchstringprocessing()
     {
     global $search,$k;
-    $refine=trim(getvalescaped("refine_keywords",""));
+    $refine=trim(getval("refine_keywords",""));
     if ($refine!="")
         {
         if ($k!="")

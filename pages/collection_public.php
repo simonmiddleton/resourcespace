@@ -3,24 +3,24 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$offset=getvalescaped("offset",0,true);
-$find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
-$col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
-$sort=getvalescaped("sort",getvalescaped("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
+$offset=getval("offset",0,true);
+$find=getval("find",getval("saved_find",""));rs_setcookie('saved_find', $find);
+$col_order_by=getval("col_order_by",getval("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
+$sort=getval("sort",getval("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
-$per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
+$per_page=getval("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
 $collection_valid_order_bys=array("fullname","name","ref","count","type","created");
 $modified_collection_valid_order_bys=hook("modifycollectionvalidorderbys");
 if ($modified_collection_valid_order_bys){$collection_valid_order_bys=$modified_collection_valid_order_bys;}
 if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="created";} # Check the value is one of the valid values (SQL injection filter)
 
-$override_group_restrict=getvalescaped("override_group_restrict","false");
+$override_group_restrict=getval("override_group_restrict","false");
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 # pager
 
-$add=getvalescaped("add","");
+$add=getval("add","");
 if ($add != "" && enforcePostRequest(false))
     {
     # Add someone else's collection to your My Collections

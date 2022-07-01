@@ -2,9 +2,9 @@
 include_once "../../../include/db.php";
 include_once "../include/annotate_functions.php";
 
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../../../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once "../../../include/authenticate.php";}
 
-$ref=getvalescaped("ref", 0, true);
+$ref=getval("ref", 0, true);
 if ($ref==0)
 	{
 	die($lang["annotate_ref_not_supplied"]);

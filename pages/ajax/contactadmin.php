@@ -5,8 +5,8 @@ include "../../include/authenticate.php";
 
 
 # Is this an ajax call from the view page?
-$insert=getvalescaped("insert","");
-$ref=getvalescaped("ref","",true);
+$insert=getval("insert","");
+$ref=getval("ref","",true);
 
 # Load access level
 $access=get_resource_access($ref);
@@ -24,7 +24,7 @@ $imagename=i18n_get_translated($resource["field".$view_title_field]);
 
 if (getval("send","")!="" && enforcePostRequest(false))
 	{
-	$messagetext=getvalescaped("messagetext","");	
+	$messagetext=getval("messagetext","");	
 	$templatevars['url']=$baseurl . "/?r=" . $ref;
 	$templatevars['fromusername']=($userfullname=="" ? $username : $userfullname);
 	$templatevars['resourcename']=$imagename;
@@ -76,13 +76,13 @@ if (getval("send","")!="" && enforcePostRequest(false))
 if ($insert=="")
 	{
 	# Fetch search details (for next/back browsing and forwarding of search params)
-	$search=getvalescaped("search","");
-	$order_by=getvalescaped("order_by","relevance");
-	$offset=getvalescaped("offset",0,true);
+	$search=getval("search","");
+	$order_by=getval("order_by","relevance");
+	$offset=getval("offset",0,true);
 	$default_sort_direction="DESC";
 	if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 	$sort=getval("sort",$default_sort_direction);
-	$archive=getvalescaped("archive",0,true);
+	$archive=getval("archive",0,true);
 
 	include "../../include/header.php";		
 	?>

@@ -412,8 +412,8 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
     $response['success'] = true;
     $response['message'] = '';
 
-    $autosave_option_name  = getvalescaped('autosave_option_name', '');
-    $autosave_option_value = getvalescaped('autosave_option_value', '');
+    $autosave_option_name  = getval('autosave_option_name', '');
+    $autosave_option_value = getval('autosave_option_value', '');
 
     // Search for the option name within our defined (allowed) options
     // if it is not there, error and don't allow saving it

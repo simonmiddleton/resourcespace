@@ -994,7 +994,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
         
         if($google_vision_enable)
             {
-            $google_vision_api_key= getvalescaped('google_vision_key','');
+            $google_vision_api_key= getval('google_vision_key','');
 
             // Activate and get default config
             activate_plugin("google_vision");

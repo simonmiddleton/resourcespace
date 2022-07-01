@@ -1,13 +1,13 @@
 <?php
 include dirname(__FILE__) . '/../../../include/db.php';
-$k = getvalescaped('k','');
+$k = getval('k','');
 $upload_collection = getval('upload_share_active',''); 
 if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     {
     include dirname(__FILE__) . '/../../../include/authenticate.php';
     }
-$field    = getvalescaped('field', '');
-$keyword  = getvalescaped('term', '');
+$field    = getval('field', '');
+$keyword  = getval('term', '');
 $readonly = ('' != getval('readonly', '') ? true : false);
 
 $fielddata = get_resource_type_field($field);

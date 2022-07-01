@@ -67,7 +67,7 @@ function send_research_request(array $rr_cfields)
     $templatevars['teamresearchurl']=$baseurl."/pages/team/team_research_edit.php?ref=" . $templatevars['ref'];
     $templatevars['username']=$username;
     $templatevars['userfullname']=$userfullname;
-    $templatevars['useremail']=getvalescaped("email",$useremail); # Use provided e-mail (for anonymous access) or drop back to user email.
+    $templatevars['useremail']=getval("email",$useremail); # Use provided e-mail (for anonymous access) or drop back to user email.
     $templatevars['url']=$baseurl."/pages/team/team_research_edit.php?ref=".$templatevars['ref'];
 
     $research_notify_users=get_notification_users("RESEARCH_ADMIN");

@@ -963,7 +963,7 @@ refresh_collection_frame($collection="")
     # Refresh the CollectionDiv
     global $baseurl, $headerinsert;
 
-    if (getvalescaped("ajax",false))
+    if (getval("ajax",false))
         {
         echo "<script  type=\"text/javascript\">
         CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");	
@@ -1674,7 +1674,7 @@ function save_collection($ref, $coldata=array())
             global $baseurl, $lang;
 
             $new_attached_users=array_unique($new_attached_users);
-            message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getvalescaped("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
+            message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getval("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
             }
         }
 
@@ -2422,10 +2422,10 @@ function add_smart_collection()
  	{
 	global $userref;
 
-	$search=getvalescaped("addsmartcollection","");
-	$restypes=getvalescaped("restypes","");
+	$search=getval("addsmartcollection","");
+	$restypes=getval("restypes","");
 	if($restypes=="Global"){$restypes="";}
-	$archive = getvalescaped('archive', 0, true);
+	$archive = getval('archive', 0, true);
 	
 	// more compact search strings should work with get_search_title
 	$searchstring=array();
@@ -2458,7 +2458,7 @@ function get_search_title($searchstring)
     $order_by="";
     $sort="";
     $offset="";
-    $k=getvalescaped("k","");
+    $k=getval("k","");
 
     $search_titles=true;
     $search_titles_searchcrumbs=true;
@@ -3221,7 +3221,7 @@ function send_collection_feedback($collection,$comment)
     else
         {
         # External user.
-        if ($feedback_email_required && !preg_match ("/${regex_email}/", getvalescaped("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
+        if ($feedback_email_required && !preg_match ("/${regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
         $body.=$lang["fullname"] . ": " . getval("name","") . "\n";
         $body.=$lang["email"] . ": " . getval("email","") . "\n";
         }

@@ -3,19 +3,19 @@ include "../include/db.php";
 include "../include/authenticate.php";
 
 
-$collection_url	= getvalescaped("collection","");
-$find			= getvalescaped('find', '');
-$offset 		= getvalescaped("offset",0,true);
-$order_by 		= getvalescaped("order_by","");
-$sort 			= getvalescaped("sort","");
-$search 		= getvalescaped("search","");
-$ref			= getvalescaped("ref", 0, true);
+$collection_url	= getval("collection","");
+$find			= getval('find', '');
+$offset 		= getval("offset",0,true);
+$order_by 		= getval("order_by","");
+$sort 			= getval("sort","");
+$search 		= getval("search","");
+$ref			= getval("ref", 0, true);
 
 // Share options
-$expires        = getvalescaped("expires","");
+$expires        = getval("expires","");
 $access         = getval("access",-1, true);	
 $group          = getval("usergroup",0,true);
-$sharepwd       = getvalescaped('sharepassword', '');
+$sharepwd       = getval('sharepassword', '');
 
 $collection = get_collection($ref);
 if($collection === false)
@@ -132,13 +132,13 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Email / share collection
 	# Build a new list and insert
-	$users=getvalescaped("users","");
-	$message=getvalescaped("message","");
-	$add_internal_access=(getvalescaped("grant_internal_access","")!="");
-	$feedback=getvalescaped("request_feedback","");	if ($feedback=="") {$feedback=false;} else {$feedback=true;}
-	$list_recipients=getvalescaped("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
+	$users=getval("users","");
+	$message=getval("message","");
+	$add_internal_access=(getval("grant_internal_access","")!="");
+	$feedback=getval("request_feedback","");	if ($feedback=="") {$feedback=false;} else {$feedback=true;}
+	$list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 	
-	$use_user_email=getvalescaped("use_user_email",false);
+	$use_user_email=getval("use_user_email",false);
 	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
 	

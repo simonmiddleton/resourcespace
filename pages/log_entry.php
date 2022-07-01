@@ -3,8 +3,8 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$logref=getvalescaped("ref","",true);
-$k=getvalescaped("k","");
+$logref=getval("ref","",true);
+$k=getval("k","");
 $modal = (getval("modal", "") == "true");
 
 $log_entry = get_resource_log(NULL,-1,array("r.ref" => $logref));

@@ -10,18 +10,18 @@ if (!checkperm("a"))
     }
 
 
-$find=getvalescaped("find","");
-$offset=getvalescaped("offset",0,true);
+$find=getval("find","");
+$offset=getval("offset",0,true);
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
     
     
 $restypefilter=getval("restypefilter","");
 $restypesfilter=($restypefilter != "")?array((int)$restypefilter):"";
-$field_order_by=getvalescaped("field_order_by","order_by");
-$field_sort=getvalescaped("field_sort","asc");
+$field_order_by=getval("field_order_by","order_by");
+$field_sort=getval("field_sort","asc");
 $reorder_view=getval("reorder_view",false);
 
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_home.php";
@@ -50,9 +50,9 @@ $common_rs_url_params = [
 
 if (getval("newfield","")!="" && enforcePostRequest(false))
     {
-    $newfieldname = getvalescaped("newfield","");
+    $newfieldname = getval("newfield","");
     $newfieldtype = getval("field_type",0,true);    
-    $newfieldrestype = getvalescaped("newfieldrestype",0,true);
+    $newfieldrestype = getval("newfieldrestype",0,true);
     $new = create_resource_type_field($newfieldname, $newfieldrestype, $newfieldtype, "", true);
     redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
     }

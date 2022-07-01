@@ -8,7 +8,7 @@ if (!checkperm('i'))
     }
 
 // Handle removed resources
-$removeref=getvalescaped("remove",0,true);
+$removeref=getval("remove",0,true);
 if($removeref > 0 && is_numeric($removeref))	
 	{
 	ps_query("UPDATE resource SET pending_restore=0 WHERE ref = ?", ['i', $removeref]);

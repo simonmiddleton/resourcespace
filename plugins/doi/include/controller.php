@@ -41,7 +41,7 @@
 		global $doi_perms_needed;
 
 		# External access support (authenticate only if no key provided, or if invalid access key provided)
-		$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once __DIR__ . "/../../../include/authenticate.php";}
+		$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once __DIR__ . "/../../../include/authenticate.php";}
 
 		# Check preconfigured permissions
 		for ($n = 0; $n < count($doi_perms_needed); ++$n) {

@@ -60,7 +60,7 @@ function save_proposed_changes($ref)
 
 					$newval="";
 					
-					if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+					if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
 						{
 						// We have been passed the range in EDTF format, check it is in the correct format
 						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -86,15 +86,15 @@ function save_proposed_changes($ref)
 						
 						foreach($date_parts as $date_part)
 							{	
-							$val = getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year","");
+							$val = getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year","");
 							if (intval($val)<=0) 
 								{
 								$val="";
 								}
-							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
+							elseif (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
 								{
 								$val.="-" . $field;
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
+								if (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
 									{
 									$val.="-" . $field;
 									}
@@ -115,24 +115,24 @@ function save_proposed_changes($ref)
 				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{
                     # date type, construct the value from the date/time dropdowns
-                    $val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
+                    $val=sprintf("%04d", getval("field_" . $fields[$n]["ref"] . "-y",""));
                     if ((int)$val<=0) 
                         {
                         $val="";
                         }
-                    elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-m",""))!="") 
+                    elseif (($field=getval("field_" . $fields[$n]["ref"] . "-m",""))!="") 
                         {
                         $val.="-" . $field;
-                        if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-d",""))!="") 
+                        if (($field=getval("field_" . $fields[$n]["ref"] . "-d",""))!="") 
                             {
                             $val.="-" . $field;
                             if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
                                 {
                                 $val.=" " . $field . ":";
-                                if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-i",""))!="") 
+                                if (($field=getval("field_" . $fields[$n]["ref"] . "-i",""))!="") 
                                     {
                                     $val.=$field;
-									if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-s",""))!="") 
+									if (($field=getval("field_" . $fields[$n]["ref"] . "-s",""))!="") 
 										{
 										$val.=$field;
 										} 
@@ -164,21 +164,21 @@ function save_proposed_changes($ref)
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
 					{
 					# Construct a multilingual string from the submitted translations
-					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$val=getval("field_" . $fields[$n]["ref"],"");
 					$val="~" . $language . ":" . $val;
 					reset ($languages);
 					foreach ($languages as $langkey => $langname)
 						{
 						if ($language!=$langkey)
 							{
-							$val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
+							$val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
 							}
 						}
 					}
 				else
 					{
 					# Set the value exactly as sent.
-					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$val=getval("field_" . $fields[$n]["ref"],"");
 					} 
 				# Check for regular expression match
 				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)

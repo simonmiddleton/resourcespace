@@ -119,7 +119,7 @@ HTML;
 	config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 
 	# "onclick" of test button
-	$doi_state = getvalescaped('doi_state', '');
+	$doi_state = getval('doi_state', '');
 	if ($doi_state == 'test') {
 
 		# perform Test

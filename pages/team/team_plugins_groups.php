@@ -10,7 +10,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
 
-$plugin=getvalescaped("plugin","");
+$plugin=getval("plugin","");
 
 $plugin_yaml_path = get_plugin_path($plugin) . "/" . $plugin . ".yaml";
 $py = get_plugin_yaml($plugin_yaml_path, false);  
@@ -83,7 +83,7 @@ renderBreadcrumbs($links_trail);
 <?php } ?>
 </p>
 
-<input type=hidden name="plugin" value="<?php echo getvalescaped('plugin','')?>"/>
+<input type=hidden name="plugin" value="<?php echo getval('plugin','')?>"/>
   
 <input name="save" type="submit" value="<?php echo $lang["save"] ?>">
 </form>

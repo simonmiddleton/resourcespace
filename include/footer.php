@@ -3,7 +3,7 @@ hook("before_footer_always");
 
 if(getval("loginmodal",""))
 	{
-	$login_url=$baseurl."/login.php?url=".urlencode(getvalescaped("url",""))."&api=".urlencode(getval("api",""))."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""))."&logout=".urlencode(getval("logout",true));
+	$login_url=$baseurl."/login.php?url=".urlencode(getval("url",""))."&api=".urlencode(getval("api",""))."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""))."&logout=".urlencode(getval("logout",true));
 	?><script>
 		jQuery(document).ready(function(){
 			ModalLoad('<?php echo $login_url?>',true);

@@ -12,7 +12,7 @@ if(checkperm('h') && checkperm('hdt_ug'))
     }
 
 // Get selected user group or default to all users dash tiles
-$selected_user_group = getvalescaped('selected_user_group', key($user_groups), true);
+$selected_user_group = getval('selected_user_group', key($user_groups), true);
 
 $show_usergroups_dash = ('true' == getval('show_usergroups_dash', '') ? true : false);
 if($selected_user_group == 0)
@@ -20,10 +20,10 @@ if($selected_user_group == 0)
     $show_usergroups_dash = false;
     }
 
-if(getvalescaped("quicksave",FALSE))
+if(getval("quicksave",FALSE))
 	{
-	$tile = getvalescaped("tile","");
-	$revokeallusers = getvalescaped("revokeallusers","false") != "false";
+	$tile = getval("tile","");
+	$revokeallusers = getval("revokeallusers","false") != "false";
 
 	#If a valid tile value supplied
 	if(!empty($tile) && is_numeric($tile))

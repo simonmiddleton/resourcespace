@@ -3,17 +3,17 @@ ini_set('zlib.output_compression','off'); // disable PHP output compression sinc
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
 include_once '../include/pdf_functions.php';
 ob_end_clean();
 $uniqid="";$id="";
-$collection=getvalescaped("collection","",true);  if ($k!=""){$usercollection=$collection;}
-$size=getvalescaped("size","");
-$submitted=getvalescaped("submitted","");
-$includetext=getvalescaped("text","false");
-$useoriginal=getvalescaped("use_original","no");
+$collection=getval("collection","",true);  if ($k!=""){$usercollection=$collection;}
+$size=getval("size","");
+$submitted=getval("submitted","");
+$includetext=getval("text","false");
+$useoriginal=getval("use_original","no");
 $collectiondata=get_collection($collection);
-$tardisabled=getvalescaped("tardownload","")=="off";
+$tardisabled=getval("tardownload","")=="off";
 $include_csv_file = getval('include_csv_file', '');
 
 if($k != "" || (isset($anonymous_login) && $username == $anonymous_login))
@@ -44,11 +44,11 @@ else
 		}
 	}
 	
-$settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getvalescaped("settings",""):0;
+$settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getval("settings",""):0;
 $uniqid=getval("id",uniqid("Col" . $collection));
 
-$usage = getvalescaped('usage', '-1');
-$usagecomment = getvalescaped('usagecomment', '');
+$usage = getval('usage', '-1');
+$usagecomment = getval('usagecomment', '');
 
 // set the time limit to unlimited, default 300 is not sufficient here.
 set_time_limit(0);
@@ -162,7 +162,7 @@ if ($submitted != "")
 	if($exiftool_write && !$force_exiftool_write_metadata && !$collection_download_tar)
 		{
 		$exiftool_write_option = false;
-		if('yes' == getvalescaped('write_metadata_on_download', ''))
+		if('yes' == getval('write_metadata_on_download', ''))
 			{
 			$exiftool_write_option = true;
 			}
@@ -267,7 +267,7 @@ if ($submitted != "")
 		exit();
 		}
 	
-    $id=getvalescaped("id","");
+    $id=getval("id","");
     if(!ctype_alnum($id)){exit($lang["error"]);}
 	// Get a temporary directory for this download - $id should be unique
 	$usertempdir=get_temp_dir(false,"rs_" . $userref . "_" . $id);

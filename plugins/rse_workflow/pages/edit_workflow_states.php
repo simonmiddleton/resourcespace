@@ -8,11 +8,11 @@ include_once '../include/rse_workflow_functions.php';
 
 $wfstates=rse_workflow_get_archive_states();
 
-$delete=getvalescaped("delete","",true);
+$delete=getval("delete","",true);
 $saveerror=false;
 if($delete!="" && (in_array($delete,$fixed_archive_states) || ($delete>-3 && $delete <4) || !isset($wfstates[$delete]))){$saveerror=true;$noticetext=$lang["rse_workflow_state_not_editable"];}
 
-$deletenewstate=getvalescaped("deletenewstate","",true);
+$deletenewstate=getval("deletenewstate","",true);
 if($delete!="" && ($deletenewstate=="" || $deletenewstate==$delete))
    {
 	$saveerror=true;

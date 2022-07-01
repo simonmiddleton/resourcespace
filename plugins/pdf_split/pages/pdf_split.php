@@ -3,7 +3,7 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; 
 include_once '../../../include/image_processing.php';
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref","");
 
 # Count pages in this file
 $page=0;

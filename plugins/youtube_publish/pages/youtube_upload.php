@@ -7,14 +7,14 @@ include "../include/youtube_functions.php";
 global $baseurl, $baseurl_short,$view_title_field, $youtube_publish_url_field, $youtube_publish_allow_multiple;
 
 
-$deletetokens=getvalescaped("deletetokens",false);
+$deletetokens=getval("deletetokens",false);
 if ($deletetokens)
 	{
 	ps_query("UPDATE user SET youtube_access_token = '', youtube_refresh_token = '', youtube_username = '' WHERE ref = ?", array("i", $userref));
 	}
 
-$ref=getvalescaped("resource","");
-if ($ref==""){$ref=getvalescaped("state","");}
+$ref=getval("resource","");
+if ($ref==""){$ref=getval("state","");}
 
 # Load access level
 $access=get_resource_access($ref);
@@ -26,14 +26,14 @@ if ($access!=0)
 		}
 
 # fetch the current search (for finding similar matches)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getval("archive",0,true);
 $video_status=getval("video_status",'unlisted');
-$video_category = getvalescaped("video_category",""); // This is the uploading video category. There are only certain categories that are accepted. 
+$video_category = getval("video_category",""); // This is the uploading video category. There are only certain categories that are accepted. 
 if($youtube_publish_url_field > 0)
 	{
 	$youtube_url = get_data_by_field($ref, $youtube_publish_url_field);
@@ -95,9 +95,9 @@ $youtube_username = ps_value("SELECT youtube_username AS value FROM user WHERE r
 						
 if($youtube_object && isset( $_POST['video_title'] ) && isset( $_POST['video_description'] ) ) 
 	{
-	$video_title = getvalescaped("video_title","");
+	$video_title = getval("video_title","");
 	$video_description = getval("video_description","");	
-	$video_keywords = getvalescaped("video_keywords","");
+	$video_keywords = getval("video_keywords","");
 	$filename=get_data_by_field($ref,$filename_field);
 	//Set values so that upload can be retried if for example the access token has expired and needed to be refreshed
 	

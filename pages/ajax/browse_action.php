@@ -3,7 +3,7 @@ include_once('../../include/db.php');
 include_once('../../include/authenticate.php');
 
 // Browse bar action endpoint
-$action = getvalescaped('action','');
+$action = getval('action','');
 $resource   = getval("resource",0,true);
 $return = array();
 $return['status'] = 400; // set to default 

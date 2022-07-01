@@ -8,11 +8,11 @@ if (isset($anonymous_login) && $anonymous_login == $username)
     die($lang["error-permissions-login"]);
     }
 
-$offset=getvalescaped("offset",0,true);
-$msg_order_by = getvalescaped("msg_order_by",getvalescaped("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
-$sort = getvalescaped("sort",getvalescaped("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);
+$offset=getval("offset",0,true);
+$msg_order_by = getval("msg_order_by",getval("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
+$sort = getval("sort",getval("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
-$per_page = getvalescaped("per_page_list", $default_perpage_list, true);rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", $default_perpage_list, true);rs_setcookie('per_page_list', $per_page);
 
 global $user_preferences;
 

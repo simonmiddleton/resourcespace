@@ -6,8 +6,8 @@ include_once __DIR__ . '/../../include/facial_recognition_functions.php';
 include_once __DIR__ . '/../../include/node_functions.php';
 
 $return   = array();
-$action   = getvalescaped('action', '');
-$resource = getvalescaped('resource', 0, true);
+$action   = getval('action', '');
+$resource = getval('resource', 0, true);
 
 if(
     !$facial_recognition ||

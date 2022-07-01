@@ -80,8 +80,8 @@ if ($saveform)
     if($action == "publish")
         {
 		// Get posted values when publishing individual resources as we can override
-		$template_text      = getvalescaped("template_text","");
-		$template_tags      = getvalescaped("template_tags","");
+		$template_text      = getval("template_text","");
+		$template_tags      = getval("template_tags","");
         $success = falcon_link_publish($resources,$template_text,$template_tags);
 		if($success["success"])
             {

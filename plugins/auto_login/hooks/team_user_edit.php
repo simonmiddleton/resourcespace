@@ -24,8 +24,8 @@ function HookAuto_loginTeam_user_editAftersaveuser()
 
     $error  = '';
 
-    $auto_login_enabled = getvalescaped('auto_login_enabled', 0);
-    $auto_login_ip      = getvalescaped('auto_login_ip', '');
+    $auto_login_enabled = getval('auto_login_enabled', 0);
+    $auto_login_ip      = getval('auto_login_ip', '');
 
     // No reason to continue if we don't have an IP
     // Change save value to nothing so we remain on the same page and show an error to the user

@@ -15,7 +15,7 @@ $requesteduser = getval('actasuser',0, true);
 $actasuser = $requesteduser === $userref ? $userref : $requesteduser;
 
 // Filter by a particular table and its reference
-$table = getvalescaped('table', '');
+$table = getval('table', '');
 $table_reference = getval('table_reference', 0, true);
 $tables_data = array(
     'resource_type_field' => array(
@@ -67,8 +67,8 @@ else
 // Add date restriction
 $curmonth   = date('m');
 $curyear    = date('Y');
-$logmonth   = getvalescaped("logmonth",($log_search != "" ? "" : $curmonth), true);
-$logyear    = getvalescaped("logyear",($log_search != "" ? "" : $curyear), true);
+$logmonth   = getval("logmonth",($log_search != "" ? "" : $curmonth), true);
+$logyear    = getval("logyear",($log_search != "" ? "" : $curyear), true);
 
 // Add filtering if not searching
 if($logmonth != 0 || $logyear != 0)

@@ -14,10 +14,10 @@ if (!checkperm("a"))
 # Reordering capability
 
 #  Check for the parameter and reorder as necessary.
-$reorder=getvalescaped("reorder",false);
+$reorder=getval("reorder",false);
 if ($reorder)
         {
-        $neworder=json_decode(getvalescaped("order",false));
+        $neworder=json_decode(getval("order",false));
         update_resource_type_field_order($neworder);
         exit("SUCCESS");
         }

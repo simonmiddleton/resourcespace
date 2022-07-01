@@ -2,22 +2,22 @@
 include_once dirname(__FILE__)."/../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include_once dirname(__FILE__)."/../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include_once dirname(__FILE__)."/../include/authenticate.php";}
 if (checkperm("b")){exit($lang["error-permissiondenied"]);}
 include_once dirname(__FILE__)."/../include/research_functions.php";
 
 
-$sort            = getvalescaped('sort', 'DESC');
-$search          = getvalescaped('search', '');
+$sort            = getval('sort', 'DESC');
+$search          = getval('search', '');
 $last_collection = getval('last_collection', '');
-$restypes        = getvalescaped('restypes', '');
-$archive         = getvalescaped('archive', '');
-$daylimit        = getvalescaped('daylimit', '');
-$offset          = getvalescaped('offset', '');
-$resources_count = getvalescaped('resources_count', '');
-$collection      = getvalescaped('collection', '');
-$entername       = getvalescaped('entername', '');
-$res_access      = getvalescaped('access','');
+$restypes        = getval('restypes', '');
+$archive         = getval('archive', '');
+$daylimit        = getval('daylimit', '');
+$offset          = getval('offset', '');
+$resources_count = getval('resources_count', '');
+$collection      = getval('collection', '');
+$entername       = getval('entername', '');
+$res_access      = getval('access','');
 
 /* 
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column 
@@ -27,7 +27,7 @@ for this collection we can rely on the passed order by value.
 $order_by = $default_collection_sort;
 if('!collection' === substr($search, 0, 11) && "!collection{$collection}" == $search)
     {
-    $order_by = getvalescaped('order_by', $default_collection_sort);
+    $order_by = getval('order_by', $default_collection_sort);
     }
 
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
@@ -36,8 +36,8 @@ $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_
 $internal_share_access = internal_share_access();
 
 // Remove all from collection
-$emptycollection = getvalescaped("emptycollection","",true);
-if($emptycollection!='' && getvalescaped("submitted","")=='removeall' && getval("removeall","")!="" && collection_writeable($emptycollection))
+$emptycollection = getval("emptycollection","",true);
+if($emptycollection!='' && getval("submitted","")=='removeall' && getval("removeall","")!="" && collection_writeable($emptycollection))
     {
     remove_all_resources_from_collection($emptycollection);
     }
@@ -136,10 +136,10 @@ if (($k=="" || $internal_share_access) && (($userref==$cinfo["user"]) || ($cinfo
 if ($allow_reorder)
 	{
 	# Also check for the parameter and reorder as necessary.
-	$reorder=getvalescaped("reorder",false);
+	$reorder=getval("reorder",false);
 	if ($reorder)
 		{
-		$neworder=json_decode(getvalescaped("order",false));
+		$neworder=json_decode(getval("order",false));
 		update_collection_order($neworder,$usercollection);
 		exit("SUCCESS");
 		}
@@ -464,12 +464,12 @@ else { ?>
 
 $addarray=array();
 
-$add=getvalescaped("add","");
+$add=getval("add","");
 if ($add!="")
 	{
 	$allowadd=true;
 	// If we provide a collection ID use that one instead
-	$to_collection = getvalescaped('toCollection', '');
+	$to_collection = getval('toCollection', '');
 
 	if(strpos($add,",")>0)
         {
@@ -515,7 +515,7 @@ if ($add!="")
             {
             hook("preaddtocollection");
             #add to current collection		
-            if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getvalescaped("size",""))==false)
+            if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getval("size",""))==false)
                 { ?>
                 <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
                 }
@@ -535,11 +535,11 @@ if ($add!="")
         }
     }
 
-$remove=getvalescaped("remove","");
+$remove=getval("remove","");
 if ($remove!="")
     {
     // If we provide a collection ID use that one instead
-    $from_collection = getvalescaped('fromCollection', '');
+    $from_collection = getval('fromCollection', '');
 
     if(strpos($remove,",")>0)
         {
@@ -567,7 +567,7 @@ if ($remove!="")
         }
     }
 
-$addsearch=getvalescaped("addsearch",-1);
+$addsearch=getval("addsearch",-1);
 if ($addsearch!=-1)
     {
     /*
@@ -577,7 +577,7 @@ if ($addsearch!=-1)
     */
     $default_collection_sort = 'relevance';
 
-    $order_by = getvalescaped('order_by', getvalescaped('saved_order_by', $default_collection_sort));
+    $order_by = getval('order_by', getval('saved_order_by', $default_collection_sort));
 
     if ($usercollection == -$userref || !collection_writeable($usercollection))
         { ?>
@@ -643,7 +643,7 @@ if ($addsearch!=-1)
         }
     }
 
-$removesearch=getvalescaped("removesearch","");
+$removesearch=getval("removesearch","");
 if ($removesearch!="")
 	{
     if (!collection_writeable($usercollection))
@@ -659,7 +659,7 @@ if ($removesearch!="")
         }
     }
 	
-$addsmartcollection=getvalescaped("addsmartcollection",-1);
+$addsmartcollection=getval("addsmartcollection",-1);
 if ($addsmartcollection!=-1)
     {
     # add collection which autopopulates with a saved search 
@@ -669,7 +669,7 @@ if ($addsmartcollection!=-1)
     daily_stat("Added smart collection",0);	
     }
 
-$research=getvalescaped("research","");
+$research=getval("research","");
 if ($research!="")
 	{
 	hook("preresearch");

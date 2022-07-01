@@ -13,19 +13,19 @@ if (!in_array("annotate",$plugins))
     }
 
 $ref=getval("ref",0,true);
-$size=getvalescaped("size","letter");
-$color=getvalescaped("color","yellow");
+$size=getval("size","letter");
+$color=getval("color","yellow");
 $previewpage=getval("previewpage",1,true);
-$cleartmp=getvalescaped("cleartmp","");
+$cleartmp=getval("cleartmp","");
 
 if ($cleartmp!="")
     {
-    echo getvalescaped("annotateid","");
-    clear_annotate_temp($ref,getvalescaped("annotateid",""),$previewpage);
+    echo getval("annotateid","");
+    clear_annotate_temp($ref,getval("annotateid",""),$previewpage);
     exit("cleared");
     }
 
-if(getvalescaped("preview","")!="")
+if(getval("preview","")!="")
     {
     $preview=true;
     }

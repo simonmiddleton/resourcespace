@@ -29,7 +29,7 @@ function HookWordpress_ssoAllProvideusercredentials()
             }
         else // We have got user details in the query string, check they are valid
             {
-            $requestid=getvalescaped("requestid","");
+            $requestid=getval("requestid","");
             $s=explode("|",$wordpress_user);
             debug("wordpress_sso - received response from wordpress server: " . $wordpress_user . " request ID: " . $requestid);
             if (count($s)==3 || count($s)==5)

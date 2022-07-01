@@ -104,7 +104,7 @@ if ($on_upload || (isset($ref) && $ref<0))
         # Add Resource Batch: specify default content - also ask which collection to add the resource to.
         if ($enable_add_collection_on_upload && !(isset($external_upload) && $external_upload))
             {
-            $collection_add=getvalescaped("collection_add","");
+            $collection_add=getval("collection_add","");
 
             if($upload_force_mycollection)
                 {

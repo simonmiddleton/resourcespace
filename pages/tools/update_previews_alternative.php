@@ -12,7 +12,7 @@ include_once "../../include/image_processing.php";
 
 $max=ps_value("select max(ref) value from resource_alt_files",array(), 0);
 $ref=getval("ref", 1);
-$previewbased=getvalescaped("previewbased",false);
+$previewbased=getval("previewbased",false);
 
 $resourceinfo = ps_query("SELECT a.ref, a.resource, a.file_extension FROM resource_alt_files a JOIN resource r ON a.resource = r.ref WHERE a.ref = ? AND length(a.file_extension) > 0", ["i", $ref]);
 if (count($resourceinfo)>0)

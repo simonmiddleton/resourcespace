@@ -15,7 +15,7 @@ include "../../../include/header.php";
 <div class="BasicsBox">
     <h1><?php echo $lang["share-resource"]?></h1> 
     <p><?php echo $lang["generateurlinternal"];?></p>
-    <p><input class="URLDisplay" type="text" value="<?php echo getvalescaped("url","") ?>"></p>                      
+    <p><input class="URLDisplay" type="text" value="<?php echo getval("url","") ?>"></p>                      
 </div> 
 <!-- BasicsBox -->
 <?php

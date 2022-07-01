@@ -7,17 +7,17 @@
  */
 include "../../include/db.php";
 
-include "../../include/authenticate.php";if (getvalescaped('unsubscribe', '') == '' && !checkperm("t")) {exit ("Permission denied.");}
+include "../../include/authenticate.php";if (getval('unsubscribe', '') == '' && !checkperm("t")) {exit ("Permission denied.");}
 include "../../include/reporting_functions.php";
 
 set_time_limit(0);
-$report=getvalescaped("report","");
+$report=getval("report","");
 $show_date_field = true;
 if ($report != "")
     {
     $show_date_field = report_has_date_by_id($report);
     }
-$period=getvalescaped("period",$reporting_periods_default[0]);
+$period=getval("period",$reporting_periods_default[0]);
 $period_init=$period;
 $backurl = getval('backurl', '');
 $backurl_path = parse_url($backurl, PHP_URL_PATH);
@@ -26,20 +26,20 @@ $backurl_query = parse_url($backurl, PHP_URL_QUERY);
 if ($period==0)
 	{
 	# Specific number of days specified.
-	$period=getvalescaped("period_days","");
+	$period=getval("period_days","");
 	if (!is_numeric($period) || $period<1) {$period=1;} # Invalid period specified.
 	}
 
 if ($period==-1)
 	{
 	# Specific date range specified.
-	$from_y = getvalescaped("from-y","");
-	$from_m = getvalescaped("from-m","");
-	$from_d = getvalescaped("from-d","");
+	$from_y = getval("from-y","");
+	$from_m = getval("from-m","");
+	$from_d = getval("from-d","");
 	
-	$to_y = getvalescaped("to-y","");
-	$to_m = getvalescaped("to-m","");
-	$to_d = getvalescaped("to-d","");
+	$to_y = getval("to-y","");
+	$to_m = getval("to-m","");
+	$to_d = getval("to-d","");
 	}
 else
 	{
@@ -55,8 +55,8 @@ else
 	$to_d = date("d");
 	}
 	
-$from=getvalescaped("from","");
-$to=getvalescaped("to","");
+$from=getval("from","");
+$to=getval("to","");
 $output="";
 
 $search_params = [];
@@ -110,10 +110,10 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
 		}
 	}
 
-$delete = getvalescaped('delete', '');
+$delete = getval('delete', '');
 if($delete != '')
 	{
-	if('yes' == getvalescaped('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
+	if('yes' == getval('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
 		delete_periodic_report($delete);
 		?>
@@ -148,10 +148,10 @@ if($delete != '')
 	exit();
 	}
 	
-$unsubscribe = getvalescaped('unsubscribe', '');
+$unsubscribe = getval('unsubscribe', '');
 if($unsubscribe != '')
 	{
-	if('yes' == getvalescaped('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
+	if('yes' == getval('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
 		unsubscribe_user_from_periodic_report($userref, $unsubscribe);
 		?>

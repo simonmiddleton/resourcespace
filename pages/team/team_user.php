@@ -9,22 +9,22 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
 
-$offset=getvalescaped("offset",0,true);
-$find=getvalescaped("find","");
-$order_by=getvalescaped("order_by","u.username");
-$group=getvalescaped("group",0);
+$offset=getval("offset",0,true);
+$find=getval("find","");
+$order_by=getval("order_by","u.username");
+$group=getval("group",0);
 $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
-$backurl = getvalescaped("backlink", "");
+$backurl = getval("backlink", "");
 
 # Pager
-$per_page=getvalescaped("per_page_list",$default_perpage_list);rs_setcookie('per_page_list', $per_page);
+$per_page=getval("per_page_list",$default_perpage_list);rs_setcookie('per_page_list', $per_page);
 
 
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 
 if (getval("newuser","")!="" && !hook("replace_create_user_save") && enforcePostRequest(getval("ajax", false)))
 	{
-	$new=new_user(getvalescaped("newuser",""));
+	$new=new_user(getval("newuser",""));
 	if ($new===false)
 		{
 		$error=$lang["useralreadyexists"];

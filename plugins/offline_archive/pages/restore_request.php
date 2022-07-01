@@ -3,15 +3,15 @@
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; 
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $error=false;
 # fetch the current search (for finding similar matches)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getval("archive",0,true);
 
 $default_sort="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort="ASC";}
@@ -19,7 +19,7 @@ $sort=getval("sort",$default_sort);
 
 if (getval("save","")!="")
     {
-    $details=getvalescaped("request","");
+    $details=getval("request","");
     $templatevars['username']=$username . " (" . $useremail . ")";
     $templatevars['url']=$baseurl."/?r=".$ref;
 
@@ -71,7 +71,7 @@ if (isset($userconfirmmessage))
 
     <div class="Question">
         <label for="request"><?php echo $lang["offline_archive_request_restore_reason"]?> <sup>*</sup></label>
-        <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getvalescaped("request","")) ?></textarea>
+        <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
         <div class="clearerleft"> </div>
     </div>
 

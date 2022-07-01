@@ -35,7 +35,7 @@ function youtube_publish_initialize()
             { 
             global $youtube_publish_client_id, $youtube_publish_client_secret;
           
-            $authresponse=$client->authenticate(getvalescaped("code",""));
+            $authresponse=$client->authenticate(getval("code",""));
             
             $access_token_array = json_decode($authresponse);
             

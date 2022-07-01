@@ -13,8 +13,8 @@ use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
 
 
-$collection        = getvalescaped('c', 0,true);
-$size              = getvalescaped('size', '');
+$collection        = getval('c', 0,true);
+$size              = getval('size', '');
 if(strpos($size,"x") !== false)
     {
     $size = explode("x",$size);
@@ -23,18 +23,18 @@ else
     {
     $size = strtoupper($size);
     }
-$columns           = getvalescaped('columns', 1);
-$order_by          = getvalescaped('orderby', 'relevance');
-$sort              = getvalescaped('sort', 'asc');
-$orientation       = getvalescaped('orientation', '');
-$sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
-$preview           = ('true' == getvalescaped('preview', ''));
-$previewpage       = getvalescaped('previewpage', 1, true);
-$includeheader     = getvalescaped('includeheader', '');
-$addlink           = getvalescaped('addlink', '');
-$addlogo           = getvalescaped('addlogo', '');
-$addfieldname	   = getvalescaped('addfieldname','');
-$force_watermark   = getvalescaped('force_watermark','');
+$columns           = getval('columns', 1);
+$order_by          = getval('orderby', 'relevance');
+$sort              = getval('sort', 'asc');
+$orientation       = getval('orientation', '');
+$sheetstyle        = getval('sheetstyle', 'thumbnails');
+$preview           = ('true' == getval('preview', ''));
+$previewpage       = getval('previewpage', 1, true);
+$includeheader     = getval('includeheader', '');
+$addlink           = getval('addlink', '');
+$addlogo           = getval('addlogo', '');
+$addfieldname	   = getval('addfieldname','');
+$force_watermark   = getval('force_watermark','');
 $field_value_limit = getval('field_value_limit', 0, true);
 
 if($force_watermark==='true'){
@@ -55,7 +55,7 @@ $contactsheet_header           = ('' != $includeheader ? filter_var($includehead
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
 $contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : false);
-$selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
+$selected_contact_sheet_fields = getval('selected_contact_sheet_fields', '');
 
 
 $pdf_properties = array();
@@ -79,7 +79,7 @@ if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
 	
 if($contactsheet_use_field_templates)
 	{
-	$field_template = getvalescaped('field_template', 0, true);
+	$field_template = getval('field_template', 0, true);
 	$getfields = $contactsheet_field_template[$field_template]['fields'];
 	}
 else
@@ -174,7 +174,7 @@ else
     }
 
 // Choose the image size requirements
-$img_size = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
+$img_size = ('single' == $sheetstyle ? getval('ressize', 'lpr') : 'pre');
 if($preview)
     {
     $img_size = 'col';

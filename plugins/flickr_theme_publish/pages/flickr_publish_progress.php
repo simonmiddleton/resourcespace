@@ -4,7 +4,7 @@ include "../../../include/db.php";
 
 include "../inc/flickr_functions.php";
 
-$uniqid=getvalescaped("id","");
+$uniqid=getval("id","");
 
 $progress_folder=get_temp_dir(false,$uniqid);
 $progress_file=$progress_folder . "/progress_file.txt";

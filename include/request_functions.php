@@ -60,13 +60,13 @@ function save_request($request)
     # Use the posted form to update the request
     global $applicationname,$baseurl,$lang,$request_senduserupdates,$admin_resource_access_notifications,$userref;
 
-    $status=getvalescaped("status","",true);
-    $expires=getvalescaped("expires","");
+    $status=getval("status","",true);
+    $expires=getval("expires","");
     $currentrequest=get_request($request);
     $oldstatus=$currentrequest["status"];
-    $assigned_to=getvalescaped("assigned_to","");
-    $reason=getvalescaped("reason","");
-    $reasonapproved=getvalescaped("reasonapproved","");
+    $assigned_to=getval("assigned_to","");
+    $reason=getval("reason","");
+    $reasonapproved=getval("reasonapproved","");
     $approved_declined=false;
 
     # --------------------- User Assignment ------------------------
@@ -889,8 +889,8 @@ function email_resource_request($ref,$details)
     // for anon user access use form vars
     if ($k!="" || $user_is_anon)
         {
-        $templatevars["fullname"] = getvalescaped("fullname","");
-        $useremail = getvalescaped("email","");
+        $templatevars["fullname"] = getval("fullname","");
+        $useremail = getval("email","");
         }
     else 
         {

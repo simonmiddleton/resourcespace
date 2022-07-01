@@ -11,8 +11,8 @@ include "../../include/authenticate.php";if (!checkperm("r")) {exit ("Permission
 include "../../include/research_functions.php";
 
 $offset     = getval("offset",0, true);
-$find       = getvalescaped("find","");
-$order_by   = getvalescaped("order_by","ref");
+$find       = getval("find","");
+$order_by   = getval("order_by","ref");
 $sort       = getval("sort","ASC") == "ASC" ? "ASC" :"DESC";
 $revsort    = ($sort=="ASC") ? "DESC" : "ASC";
 

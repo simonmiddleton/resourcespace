@@ -5,7 +5,7 @@ include "../include/authenticate.php";
 if ($disable_upload_preview || (checkperm("F*") && !$custompermshowfile)){exit ("Permission denied.");}
 include_once "../include/image_processing.php";
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $status="";
 $error = false;
 $resource=get_resource_data($ref);
@@ -24,13 +24,13 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     }
 
 # fetch the current search 
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive","");
-$per_page=getvalescaped("per_page",0,true);
+$archive=getval("archive","");
+$per_page=getval("per_page",0,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
@@ -40,7 +40,7 @@ $previewresourcealt=getval("previewalt",-1,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos","");
+$curpos=getval("curpos","");
 $go=getval("go","");
 
 $urlparams= array(

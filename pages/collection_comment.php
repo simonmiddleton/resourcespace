@@ -2,10 +2,10 @@
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref","",true),$k))) {include "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref","",true),$k))) {include "../include/authenticate.php";}
 
-$ref=getvalescaped("ref","",true);
-$collection=getvalescaped("collection","",true);
+$ref=getval("ref","",true);
+$collection=getval("collection","",true);
 
 # Fetch collection data
 $cinfo=get_collection($collection);
@@ -28,8 +28,8 @@ if (!collection_readable($collection)) {exit("Access denied.");}
 if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save comment
-	$comment=trim(getvalescaped("comment",""));
-	$rating=trim(getvalescaped("rating",""));
+	$comment=trim(getval("comment",""));
+	$rating=trim(getval("rating",""));
 	# Clear cache for immediate display of thumbnail change.
 	clear_query_cache("themeimage");
 	save_collection_resource_comment($ref,$collection,$comment,$rating);

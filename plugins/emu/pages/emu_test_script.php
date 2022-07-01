@@ -8,7 +8,7 @@ if(!checkperm('a'))
     }
 
 
-$script   = getvalescaped('script', 0, true);
+$script   = getval('script', 0, true);
 $ajax     = ('true' == getval('ajax', '') ? true : false);
 $run_mode = ('true' == getval('run_mode', '') ? true : false);
 

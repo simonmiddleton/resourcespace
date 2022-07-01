@@ -3,21 +3,21 @@ include_once "../include/db.php";
 
 
 # External access support (authenticate only if no key provided)
-$k=getvalescaped("k","");
-$k_shares_collection=getvalescaped("collection","");
-$k_shares_ref=getvalescaped("ref","");
-$ref=getvalescaped("ref","");
+$k=getval("k","");
+$k_shares_collection=getval("collection","");
+$k_shares_ref=getval("ref","");
+$ref=getval("ref","");
 
 # Check access key because we need to honor terms requirement at user group override level
 if ($k!="") 
 	{
 	if ($k_shares_collection != "") 
 		{
-		if (!check_access_key_collection(getvalescaped("collection","",true),$k)) {include "../include/authenticate.php";}
+		if (!check_access_key_collection(getval("collection","",true),$k)) {include "../include/authenticate.php";}
 		}
 	elseif ($k_shares_ref != "") 
 		{
-		if (!check_access_key(getvalescaped("ref",""),$k)) {include "../include/authenticate.php";}
+		if (!check_access_key(getval("ref",""),$k)) {include "../include/authenticate.php";}
 		}
 	}
 else
@@ -33,11 +33,11 @@ if(is_string($newurl))
     $url = $newurl;
     }
 
-$terms_save=getvalescaped('save', '');
+$terms_save=getval('save', '');
 $terms_url_accepted="";
 if('' != $terms_save && enforcePostRequest(false))
     {
-	$terms_iaccept=getvalescaped('iaccept', '');
+	$terms_iaccept=getval('iaccept', '');
     if('on' == $terms_iaccept)
         {
 		ps_query("UPDATE user SET accepted_terms = 1 WHERE ref = ?",array("i",$userref));

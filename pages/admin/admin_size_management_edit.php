@@ -14,7 +14,7 @@ $order_by=getval("orderby","");
 $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}" : "");
 
 # create new record from callback
-$new_size_id=getvalescaped("newsizeid","");
+$new_size_id=getval("newsizeid","");
 if ($new_size_id!="" && enforcePostRequest(false))
 	{
 	ps_query("insert into preview_size(id,name,internal,width,height) values(?,?,0,0,0)",array("s",strtolower($new_size_id),"s",$new_size_id));
@@ -24,7 +24,7 @@ if ($new_size_id!="" && enforcePostRequest(false))
 	exit;
 	}
 
-$ref = getvalescaped('ref', '');
+$ref = getval('ref', '');
 
 if (!ps_value("select ref as value from preview_size where ref=? and internal<>'1'",array("i",$ref), false) && !$internal_preview_sizes_editable)		// note that you are not allowed to edit internal sizes without $internal_preview_sizes_editable=true
 	{
@@ -44,18 +44,18 @@ if (getval("save", false) && enforcePostRequest(false))
 	{
 	$cols=array();
 
-	$name=getvalescaped("name","");
+	$name=getval("name","");
 	if ($name!="") $cols["name"]=$name;
 
-	$width=getvalescaped("width",-1,true);
+	$width=getval("width",-1,true);
 	if ($width>=0) $cols["width"]=$width;
 
-	$height=getvalescaped("height",-1,true);
+	$height=getval("height",-1,true);
 	if ($height>=0) $cols["height"]=$height;
 	
 	if($preview_quality_unique)
 		{
-		$quality=getvalescaped("quality",0,true);
+		$quality=getval("quality",0,true);
 		if($quality>0 && $quality<=100)
 			{
 			$cols["quality"]=$quality;

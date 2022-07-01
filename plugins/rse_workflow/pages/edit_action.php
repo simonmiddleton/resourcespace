@@ -7,7 +7,7 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once '../include/rse_workflow_functions.php';
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref","");
 
 if($ref==""){exit($lang["rse_workflow_action_none_specified"]);}
 # Retrieve action
