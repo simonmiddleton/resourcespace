@@ -214,7 +214,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             $adminmessage->eventdata = $eventdata;
             $adminmessage->templatevars = $templatevars;
             $adminmessage->eventdata = $eventdata;
-            send_user_notification($assigned_to,$adminmessage);
+            send_user_notification([$assigned_to],$adminmessage);
             }
 
         if ($request_senduserupdates)
