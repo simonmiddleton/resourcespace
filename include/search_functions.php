@@ -50,7 +50,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=ps_query("SELECT ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
+    $fields=ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . "))  ORDER BY order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
 
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
@@ -2527,7 +2527,7 @@ function get_fields_for_search_display($field_refs)
         }
 
     # Executes query.
-    $fields = ps_query("select ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active, value_filter from resource_type_field where ref in (" . ps_param_insert(count($field_refs)) . ")",ps_param_fill($field_refs,"i"), "schema");
+    $fields = ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where ref in (" . ps_param_insert(count($field_refs)) . ")",ps_param_fill($field_refs,"i"), "schema");
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();

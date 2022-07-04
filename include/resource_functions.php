@@ -370,7 +370,7 @@ function get_resource_data($ref,$cache=true)
     $joins=get_resource_table_joins();
     $join_fields="";foreach ($joins as $j) {$join_fields.=",field" . $j;}
 
-    $resource=ps_query("select ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " from resource where ref=?",array("i",$ref));
+    $resource=ps_query("select " . columns_in("resource") . $join_fields . " from resource where ref=?",array("i",$ref));
     if (count($resource)==0)
         {
         if ($ref>=0)
@@ -2054,7 +2054,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         return false;
         }
 
-    if (!in_array($fieldinfo['resource_type'], array(0, $resource_data['resource_type'])))
+    if ($fieldinfo["global"]==0 && !in_array($resource_data['resource_type'],ps_array("select resource_type value from resource_type_field_resource_type where resource_type_field=?",array("i",$field))))
         {
         $errors[] = "Field is not valid for this resource type";
         return false;
@@ -2639,53 +2639,7 @@ function delete_resource($ref)
 */
 function get_resource_type_field($field)
     {
-    $rtf_query="SELECT ref,
-                name,
-                title,
-                type,
-                order_by,
-                keywords_index,
-                partial_index,
-                resource_type,
-                resource_column,
-                display_field,
-                use_for_similar,
-                iptc_equiv,
-                display_template,
-                tab_name,
-                tab,
-                required,
-                smart_theme_name,
-                exiftool_field,
-                advanced_search,
-                simple_search,
-                help_text,
-                display_as_dropdown,
-                external_user_access,
-                autocomplete_macro,
-                hide_when_uploading,
-                hide_when_restricted,
-                value_filter,
-                exiftool_filter,
-                omit_when_copying,
-                tooltip_text,
-                regexp_filter,
-                sync_field,
-                display_condition,
-                onchange_macro,
-                field_constraint,
-                linked_data_field,
-                automatic_nodes_ordering,
-                fits_field,
-                personal_data,
-                include_in_csv_export,
-                browse_bar,
-                active,
-                full_width,
-                read_only" . hook('add_resource_type_field_column') . "
-           FROM resource_type_field
-          WHERE ref = ?
-    ";
+    $rtf_query="SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE ref = ?";
     $return = ps_query($rtf_query, array("i",$field), "schema");
 
     if(0 == count($return))
@@ -5253,8 +5207,10 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
           FROM resource_type_field rtf
           LEFT JOIN resource_type rt ON rt.ref = ?
           WHERE length(rtf.autocomplete_macro) > 0
-          AND (   (rtf.resource_type<>0 AND rtf.resource_type = rt.ref)
-               OR (rtf.resource_type=0  AND rt.inherit_global_fields=1)
+          AND (
+              (rtf.global=0 AND rt.ref in (select resource_type from resource_type_field_resource_type rtjoin where rtjoin.resource_type_field=rtf.ref))
+
+               OR (rtf.global=1  AND rt.inherit_global_fields=1)
               )",array("i",$resource_type),"schema");
 
     $fields_updated = array();
@@ -7565,49 +7521,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     //if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}
 
     $allfields = ps_query("
-        SELECT ref,
-               name,
-               title,
-               type,
-               order_by,
-               keywords_index,
-               partial_index,
-               resource_type,
-               resource_column,
-               display_field,
-               use_for_similar,
-               iptc_equiv,
-               display_template,
-               tab,
-               required,
-               smart_theme_name,
-               exiftool_field,
-               advanced_search,
-               simple_search,
-               help_text,
-               display_as_dropdown,
-               external_user_access,
-               autocomplete_macro,
-               hide_when_uploading,
-               hide_when_restricted,
-               value_filter,
-               exiftool_filter,
-               omit_when_copying,
-               tooltip_text,
-               regexp_filter,
-               sync_field,
-               display_condition,
-               onchange_macro,
-               field_constraint,
-               linked_data_field,
-               automatic_nodes_ordering,
-               fits_field,
-               personal_data,
-               include_in_csv_export,
-               browse_bar,
-               active,
-               read_only,
-               full_width
+        SELECT " . columns_in("resource_type_field") . "
           FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . $field_order_by . " " . $field_sort, $params, "schema"); // TO DO - JN to ensure order by params locked to expected as per comment on r20006
 
 
@@ -7996,7 +7910,7 @@ function alt_is_ffmpeg_alternative($alternative)
 * Create a new resource type field with the specified name of the required type
 *
 * @param string $name - name of new field
-* @param integer $restype - resource type - resource type that field applies to (0 = global)
+* @param integer $restype - resource type - resource type(s) that field applies to (0 = global, single value = one type, array = multiple types)
 * @param integer $type - field type - refer to include/definitions.php
 * @param string $shortname - shortname of new field
 * @param boolean $index - should new field be indexed?
@@ -8017,9 +7931,26 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 
     $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$shortname), 0, "schema");
 
-    ps_query("INSERT INTO resource_type_field (title, resource_type, type, `name`, keywords_index) VALUES (?, ?, ?, ?, ?)",
-    array("s",$name,"i",$restype,"i",$type,"s",$shortname,"i",($index ? "1" : "0")));
+    // Global type?
+    $global=0;$restypes=array();
+    if ($restype==0)
+        {
+        $global=1;
+        }
+    else
+        {
+        if (!is_array($restype)) {$restypes=array($restype);} // Single resource type passed, put it in an array
+        }
+
+    ps_query("INSERT INTO resource_type_field (title, global, type, `name`, keywords_index) VALUES (?, ?, ?, ?, ?)",
+    array("s",$name,"i",$global,"i",$type,"s",$shortname,"i",($index ? "1" : "0")));
     $new = sql_insert_id();
+
+    // Add joins
+    foreach ($restypes as $resinsert)
+        {
+        ps_query("insert into resource_type_field_resource_type (resource_type_field,resource_type) values (?, ?)", array("i",$new,"i",$resinsert));
+        }
 
     if($duplicate)
         {
