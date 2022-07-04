@@ -2745,7 +2745,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         }
 
     $field_data_sql = "
-             SELECT group_concat(n.name) AS `value`,
+             SELECT group_concat(n.name SEPARATOR ', ') AS `value`,
                     group_concat(n.ref) AS `nodes`,
                     f.ref,
                     f.ref resource_type_field,
@@ -2807,7 +2807,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         }
 
     $fields = ps_query($field_data_sql,$field_data_params);
-
+    debug("BANG " . __LINE__ . " " .$field_data_sql . "\n" . print_r($field_data_params,true));
     # Build an array of valid types and only return fields of this type. Translate field titles.
     $validtypes = ps_array('SELECT ref AS `value` FROM resource_type',[],'schema');
 
