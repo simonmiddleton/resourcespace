@@ -9,7 +9,7 @@ $createData=false;
 
 # Use the below to set which tables we will extract data for - empty array means all tables.
 #$dataFor=array("usergroup","resource_type_field","site_text","user","collection","user_collection","report","preview_size","resource_type");
-$dataFor=array("resource_type_field_resource_type");
+$dataFor=array();
 $tableFor=array();
 $indicesFor=array();
 
