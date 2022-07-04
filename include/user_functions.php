@@ -2265,7 +2265,51 @@ function resolve_user_emails($user_list)
     return $emails_key_required;
     }
 
+/**
+ * Finds all users with matching email and marks them as having an invalid email
+ *
+ * @param  string  $email
+ * @return boolean 
+ */
+function mark_email_as_invalid(string $email)
+    {
+    if($email == ""){return false;}
 
+    $users = get_user_by_email($email);
+    $matched_user=false;
+
+    foreach ($users as $user)
+        {
+        if(strtolower($email) == strtolower($user["email"]))
+            {
+            $matched_user = true;
+            ps_query("UPDATE user SET email_invalid = 1 WHERE ref = ?",["i",$user["ref"]]);
+            }
+        }
+        
+    return $matched_user;
+    }
+
+/**
+ * Checks if the email entered is marked as invalid for any users
+ * 
+ * @param  string $email
+ * @return boolean true if email is marked invalid for any users with matching email address
+ */
+function check_email_invalid(string $email)
+{
+    if($email == ""){return false;}
+    $users = get_user_by_email($email);
+    $email_invalid=false;
+
+    foreach ($users as $user)
+        {
+        # Check email is exact match 
+        if(strtolower($email) == strtolower($user["email"]) && $user["email_invalid"]==1){$email_invalid=true;}
+        }
+        
+    return $email_invalid;
+}
 
 /**
  * Creates a reset key for password reset e-mails

@@ -941,3 +941,8 @@ function api_save_tab($tab)
     http_response_code(403);
     return false;
     }
+
+function api_mark_email_as_invalid($email)
+    {
+    return mark_email_as_invalid($email);
+    }

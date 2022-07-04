@@ -218,7 +218,17 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="clearerleft"> </div></div>
 <?php hook("additionalusergroupfields"); ?>
 
-<div class="Question"><label><?php echo $lang["emailaddress"]?></label><input name="email" id="user_edit_email" type="text" class="stdwidth" value="<?php echo form_value_display($user,"email") ?>"><div class="clearerleft"> </div></div>
+<div class="Question">
+    <label><?php echo $lang["emailaddress"]?></label>
+    <input 
+        name="email" 
+        id="user_edit_email" 
+        type="text" 
+        class="stdwidth<?php if($user["email_invalid"]??false){echo " emailinvalid";}?>" 
+        value="<?php echo form_value_display($user,"email") ?>"
+        <?php if($user["email_invalid"]??false){echo "title='{$lang["emailmarkedinvalid"]}'";}?>>
+    <div class="clearerleft"> </div>
+</div>
 
 <div class="Question"><label><?php echo $lang["accountexpiresoptional"]?><br/><?php echo $lang["format"] . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 

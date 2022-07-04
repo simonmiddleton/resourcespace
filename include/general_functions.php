@@ -858,7 +858,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $valid_emails = array();
     foreach($check_emails as $check_email)
         {
-        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
+        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL) || check_email_invalid($check_email))
             {
             debug("send_mail: Invalid e-mail address - '{$check_email}'");
             continue;
@@ -1065,6 +1065,8 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
 
+    if (check_email_invalid($email)){return false;}
+    
     $from_system = false;
     if ($from=="")
         {

@@ -314,6 +314,7 @@ $lang["couldnotmatchusers"]="Could not match all the usernames, or usernames wer
 
 # Admin - User management
 $lang["comments"]="Comments";
+$lang["emailmarkedinvalid"]="Email has been marked as invalid";
 
 # Admin - Resource management
 $lang["viewuserpending"]="View user contributed resources pending review";
