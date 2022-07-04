@@ -64,7 +64,7 @@ foreach($resource_type_fields as $resource_type_field)
         `resource_data`.`resource`,
         `node`.`ref`";
     sql_query($sql);
-    echo mysqli_affected_rows($db);
+    echo sql_affected_rows();
     echo " rows inserted." . PHP_EOL;
     ob_flush();
     }
