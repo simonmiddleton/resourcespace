@@ -1317,7 +1317,7 @@ function sql_reorder_records(string $table, array $refs)
 * @param string $plugin Specifies that this table is defined in a plugin with the supplied name
 * @param bool   $return_list Set to true to return a list of column names. Note: the alias is ignored in this mode.
 * 
-* @return string
+* @return mixed
 */
 function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
     {
