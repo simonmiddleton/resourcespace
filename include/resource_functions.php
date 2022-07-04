@@ -2841,10 +2841,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                 ||
                 ($ref<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
                 ||
-                (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $fields[$n]["resource_type"]))
+                (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $rtype))
                 )
-            &&
-                in_array(ps_array("select resource_type value from resource_type_field_resource_type where resource_type_field=?",array("i",$fields[$n]["ref"])),$validtypes)
             &&
                 (!($external_access && !$fields[$n]["external_user_access"]))
         )
