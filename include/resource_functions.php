@@ -3014,7 +3014,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                     f.display_field,
                     f.use_for_similar,
                     f.display_template,
-                    f.tab_name,
+                    f.tab,
                     f.smart_theme_name,
                     f.advanced_search,
                     f.simple_search,
