@@ -140,7 +140,7 @@ if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
         INNER JOIN node AS n ON rn.node = n.ref
              WHERE n.resource_type_field = ?
           GROUP BY rn.resource";
-    $html_data = ps_query($q,array($i,$html_rtf_ref));
+    $html_data = ps_query($q, ['i',$html_rtf_ref]);
     }
 else
     {
