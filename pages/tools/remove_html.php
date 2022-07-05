@@ -32,6 +32,11 @@ DESCRIPTION
 
     After processing, the plain text value will be saved in a new metadata field to help double check the tag removal worked as expected.
 
+    DO NOT run the script where both the html field (source) and plaintext field (destination) are fixed list fields. 
+    Its current implementation wasn't designed for it. It assumes at most that you may get all the options of a fixed 
+    list and remove their html before saving in a new text field. Technically that's an n:1 type of relationship so the 
+    html field (the source) will be flattened to a CSV.
+
 OPTIONS SUMMARY
 
     -h, --help                 Display this help text and exit
@@ -63,6 +68,7 @@ foreach($options as $option_name => $option_value)
     
     if(in_array($option_name, ['d','html-entity-decode']))
         {
+        fwrite(STDOUT, "Set option: decode HTML entities" . PHP_EOL);
         $html_decode = true;
         continue;
         }
@@ -70,17 +76,20 @@ foreach($options as $option_name => $option_value)
     if(in_array($option_name, ['encoding']))
         {
         $$option_name = $option_value[0];
+        fwrite(STDOUT, "Set option: encoding - '{$encoding}'" . PHP_EOL);
         continue;
         }
 
     if(in_array($option_name, ['c','copy-all']))
         {
+        fwrite(STDOUT, "Set option: copy all data" . PHP_EOL);
         $copy_all = true;
         continue;
         }
     
     if(in_array($option_name, ['n','newlines']))
         {
+        fwrite(STDOUT, "Set option: preserve newlines (convert <br> to newlines)" . PHP_EOL);
         $preserve_newlines = true;
         continue;
         }
@@ -89,6 +98,7 @@ foreach($options as $option_name => $option_value)
         {
         $option_name = str_replace('-', '_', $option_name);
         $$option_name = $option_value;
+        fwrite(STDOUT, "Set option: $option_name" . PHP_EOL);
         continue;
         }
 
@@ -131,7 +141,8 @@ if($plain_rtf === false || !in_array($plain_rtf["type"],$TEXT_FIELD_TYPES))
     exit(1);
     }
 
-if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
+// Both fixed list fields and text fields are now using nodes underneath to store their values
+if(in_array($html_rtf['type'], array_merge($FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES)))
     {
     $html_rtf_ref = $html_field;
     $q = "  SELECT rn.resource,
@@ -142,11 +153,7 @@ if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
           GROUP BY rn.resource";
     $html_data = ps_query($q, ['i',$html_rtf_ref]);
     }
-else
-    {
-    $html_data = get_data_by_field(null, $html_field);
-    }
-$results = array_column($html_data, 'value', 'resource');
+$results = array_column($html_data ?? [], 'value', 'resource');
 
 foreach($results as $resource_ref => $html_value)
     {
