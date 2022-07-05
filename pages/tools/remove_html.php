@@ -43,8 +43,9 @@ OPTIONS SUMMARY
     -d, --html-entity-decode   Optional parameter. If specified, html encoded characters will be decoded. This will apply PHP's default_charset value, normally UTF 8.
     --html-field               Metadata field ID storing HTML content. Value must be a positive number. REQUIRED
     --plaintext-field          Metadata field ID to save the content after being processed. Value must be a positive number. REQUIRED
-    --encoding                 Optional parameter. If -d is included, an encoding value can be specified e.g. --encoding:\"ISO-8859-1\" For values available 
-                               see https://www.php.net/manual/en/function.html-entity-decode Use with caution as may cause errors if incorrect encoding is specified.
+    --encoding                 Optional parameter, single instance. If -d is included, an encoding value can be specified. For values available 
+                               see https://www.php.net/manual/en/function.html-entity-decode.
+                               Use with caution as it may cause errors if the incorrect character set is specified.
     -c, --copy-all             Optional parameter. By default this script will only output to the --plaintext-field if html was found in the --html-field. Adding -c will
                                force the script to copy the data regardless of if any change has occurred. Useful if the --plaintext-field is to replace the --html-field.
     -n, --newlines             Attempt to preserve any new lines in the html value to keep similar line spacing in the output plain text value.
@@ -52,7 +53,7 @@ OPTIONS SUMMARY
 EXAMPLES
     php remove_html.php --html-field=\"87\" --plaintext-field=\"88\"
     php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\"
-    php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\" --encoding:\"ISO-8859-1\"
+    php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\" --encoding=\"ISO-8859-1\"
 ";
 $options = getopt($cli_short_options, $cli_long_options);
 $html_decode = false;
@@ -73,10 +74,11 @@ foreach($options as $option_name => $option_value)
         continue;
         }
     
-    if(in_array($option_name, ['encoding']))
+    // Set options which accept only one value
+    if(in_array($option_name, ['encoding']) && is_string($option_value))
         {
-        $$option_name = $option_value[0];
-        fwrite(STDOUT, "Set option: encoding - '{$encoding}'" . PHP_EOL);
+        $$option_name = $option_value;
+        fwrite(STDOUT, "Set option: {$option_name} - '{$option_value}'" . PHP_EOL);
         continue;
         }
 
