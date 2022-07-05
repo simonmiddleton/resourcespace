@@ -5262,7 +5262,6 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     foreach($fields as $field)
         {
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
-        $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
         # The autocomplete macro will run if the existing value is blank, or if forced to always run
         if(count(get_resource_nodes($resource, $field['ref'], true)) == 0 || $run_autocomplete_macro)
             {
