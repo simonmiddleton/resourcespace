@@ -2691,7 +2691,7 @@ function save_filter($filter,$filter_name,$filter_condition)
             {
             return false;    
             }
-        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"i",$filter));
+        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"s",$filter_condition,"i",$filter));
         }
     else
         {
