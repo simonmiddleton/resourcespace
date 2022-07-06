@@ -353,7 +353,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
             {
             if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
             $sql .= "LOWER(username) like ?";
-            $sql_params = array_merge($sql_params, array("s", "%".$find."%"));
+            $sql_params = array_merge($sql_params, array("s", $find."%"));
             }
         }
     
