@@ -48,7 +48,7 @@ if (getval("submitted","")!="")
 
     # Construct usage
     $consent_usage="";
-    if (isset($_POST["consent_usage"])) {$consent_usage=escape_check(join(", ",$_POST["consent_usage"]));}
+    if (isset($_POST["consent_usage"])) {$consent_usage=join(", ",$_POST["consent_usage"]);}
 
     # No expiry date ticked? Insert null
     if (getval("no_expiry_date","")=="yes")

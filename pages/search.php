@@ -103,7 +103,6 @@ foreach($keywords as $keyword)
         continue;
         }
 
-    $field_shortname = escape_check($field_shortname);
     $resource_type_field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$field_shortname), 0, "schema");
 
     if(0 == $resource_type_field)

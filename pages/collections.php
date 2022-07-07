@@ -110,7 +110,7 @@ if(substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_acces
     $search_collection = explode(' ', $search);
     $search_collection = str_replace('!collection', '', $search_collection[0]);
     $search_collection = explode(',', $search_collection); // just get the number
-    $search_collection = escape_check($search_collection[0]);
+    $search_collection = $search_collection[0];
     if($search_collection==$last_collection || ($last_collection!=='' && $search_collection==$usercollection))
     	{
         ?>

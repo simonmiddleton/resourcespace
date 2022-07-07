@@ -1215,36 +1215,6 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, $rows, $offse
     return ['total' => $total, 'data' => $data];
     }
 
-
-/**
-* Query helper function for the WHERE clause to avoid repetitive checks when value might be NULL or an actual value
-* 
-* @param string  $v     Non-null value
-* @param boolean $cond  Condition to use IS NULL or to use the escaped value
-* 
-* @return string
-*/
-function sql_is_null_or_eq_val(string $v, bool $cond)
-    {
-    return ($cond ? "IS NULL" : "= '" . escape_check($v) . "'");
-    }
-
-
-/**
-* Query helper function for insert/update statements to avoid repetitive checks when value might be NULL or an actual value.
-* Helps keeping database level data as expected (ie. uses an actual NULL value when there's no data as opposed to empty strings)
-* 
-* @param string  $v     Non-null value
-* @param boolean $cond  Condition to set it to NULL or to use the escaped value
-* 
-* @return string
-*/
-function sql_null_or_val(string $v, bool $cond)
-    {
-    return ($cond ? "NULL" : "'" . escape_check($v) . "'");
-    }
-
-
 /**
 * Query helper to ensure code honours the database schema constraints on text columns.
 * IMPORTANT: please use where appropriate! In some cases, truncating may mean losing useful information (e.g contextual data),

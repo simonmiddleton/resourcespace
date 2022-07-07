@@ -36,7 +36,7 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 
 	if (is_null($value_old) && !is_null($remote_table) && !is_null($remote_column) && !is_null($remote_ref))	// only try and get the old value if not explicitly set and we have table details
 		{
-		$row = ps_query("SELECT " . columns_in($remote_table) . " FROM `{$remote_table}` WHERE `" . (is_null($ref_column_override) ? 'ref' : escape_check($ref_column_override)) . "` = ?",array("i",$remote_ref));
+		$row = ps_query("SELECT " . columns_in($remote_table) . " FROM `{$remote_table}` WHERE `" . (is_null($ref_column_override) ? 'ref' : $ref_column_override) . "` = ?",array("i",$remote_ref));
 		if (isset($row[0][$remote_column]))
 			{
 			$value_old = $row[0][$remote_column];
@@ -176,7 +176,6 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
     $when_statements  = "";
     foreach($log_codes as $log_code)
         {
-        $log_code_escaped = escape_check($log_code);
         $log_code_description = "";
 
         if(!isset($GLOBALS['lang']["log_code_{$log_code}"]))
@@ -186,16 +185,16 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                 continue;
                 }
 
-            $log_code_description = escape_check($GLOBALS['lang']["collectionlog-{$log_code}"]);
+            $log_code_description = $GLOBALS['lang']["collectionlog-{$log_code}"];
 
-            $when_statements .= " WHEN BINARY('{$log_code_escaped}') THEN '{$log_code_description}'";
+            $when_statements .= " WHEN BINARY('{$log_code}') THEN '{$log_code_description}'";
 
             continue;
             }
 
-        $log_code_description = escape_check($GLOBALS['lang']["log_code_{$log_code}"]);
+        $log_code_description = $GLOBALS['lang']["log_code_{$log_code}"];
 
-        $when_statements .= " WHEN BINARY('{$log_code_escaped}') THEN '{$log_code_description}'";
+        $when_statements .= " WHEN BINARY('{$log_code}') THEN '{$log_code_description}'";
         }
 
     $count_statement_start = "";

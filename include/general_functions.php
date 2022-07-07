@@ -24,8 +24,8 @@ function getval($val,$default,$force_numeric=false)
     }
 
 /**
- * Escape a value prior to using it in SQL. Only escape a string if we need to,
- * to prevent escaping an already escaped string.
+ * Escape a value prior to using it in SQL.
+ * IMPORTANT! NO LONGER NEEDED with prepared statements. This is only used when exporting SQL scripts.
  *
  * @param  string $text
  * @return string  
@@ -81,32 +81,6 @@ function unescape($text)
     $text=str_replace("\\r","\r",$text);
     $text=str_replace("\\","",$text);    
     return $text;
-    }
-
-/**
-* Escape each elements' value of an array to safely use any of the values in SQL statements
-* 
-* @uses escape_check()
-* 
-* @param array $unsafe_array Array of values that should be escaped
-* 
-* @return array Returns an array with its values escaped for SQLi
-*/
-function escape_check_array_values(array $unsafe_array)
-    {
-    $escape_array_element = function($value)
-        {
-        if(is_array($value))
-            {
-            return escape_check_array_values($value);
-            }
-
-        return escape_check($value);
-        };
-
-    $escaped_array = array_map($escape_array_element, $unsafe_array);
-
-    return $escaped_array;
     }
 
 
@@ -884,7 +858,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $valid_emails = array();
     foreach($check_emails as $check_email)
         {
-        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
+        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL) || check_email_invalid($check_email))
             {
             debug("send_mail: Invalid e-mail address - '{$check_email}'");
             continue;
@@ -1091,6 +1065,8 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
 
+    if (check_email_invalid($email)){return false;}
+    
     $from_system = false;
     if ($from=="")
         {
@@ -4126,7 +4102,7 @@ function pagename()
 	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
 	$urlparts=explode("/",$url);
     $url=$urlparts[count($urlparts)-1];
-    return escape_check($url);
+    return $url;
     }
 
 /**

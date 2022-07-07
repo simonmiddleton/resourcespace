@@ -30,13 +30,13 @@ function HookSimpleldapAllExternalauth($uname, $pword){
         {
         $usersuffix    = $simpleldap['usersuffix'];
         $addsuffix     = ($usersuffix=="") ? "" : (substr($usersuffix,0,1)=="." ? "" : ".") . $usersuffix;
-        $username      = escape_check($uname . $addsuffix);
+        $username      = $uname . $addsuffix;
         $password_hash = rs_password_hash("RSLDAP" . $uname . $addsuffix . $pword);
         $user          = ps_query("SELECT ref, approved, account_expires FROM user WHERE username = ?", ['s', $username]);
 		
-        $email         = escape_check($userinfo["email"]);
-        $phone         = escape_check($userinfo["phone"]);
-        $displayname   = escape_check($userinfo['displayname']);
+        $email         = $userinfo["email"];
+        $phone         = $userinfo["phone"];
+        $displayname   = $userinfo['displayname'];
 
 		debug ("LDAP - got user details email: " . $email . ", telephone: " . $phone);
 

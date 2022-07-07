@@ -39,7 +39,7 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
  */
 function i18n_get_translated($text)
     {
-    $text=trim($text);
+    $text=trim($text ?? "");
         
     global $language,$defaultlanguage;
 	$asdefaultlanguage=$defaultlanguage;

@@ -333,10 +333,10 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
             foreach($user_groups as $ug) {
                 $ugindex+=1;
                 if($ugindex < $ugcount) {
-                    $ugstring = $ugstring . escape_check($ug) . ",";
+                    $ugstring = $ugstring . $ug . ",";
                 }
                 else {
-                    $ugstring = $ugstring . escape_check($ug);
+                    $ugstring = $ugstring . $ug;
                 }
             }
 

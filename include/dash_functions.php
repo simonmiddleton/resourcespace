@@ -810,10 +810,6 @@ function reorder_usergroup_dash($usergroup)
 
 function update_usergroup_dash_tile_order($usergroup, $tile, $default_order_by)
     {
-    $usergroup = escape_check($usergroup);
-    $tile = escape_check($tile);
-    $default_order_by = escape_check($default_order_by);
-
     ps_query("UPDATE usergroup_dash_tile SET default_order_by = ? WHERE usergroup = ? AND dash_tile = ?", ['i', $default_order_by, 'i', $usergroup, 'i', $tile]);
     }
 

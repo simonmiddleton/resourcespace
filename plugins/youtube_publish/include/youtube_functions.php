@@ -105,7 +105,7 @@ function youtube_publish_initialize()
                  'mine' => 'true',
               ));
 
-        $youtube_username = escape_check($listResponse[0]['snippet']['title']);
+        $youtube_username = $listResponse[0]['snippet']['title'];
         ps_query("UPDATE user SET youtube_username = ? WHERE ref = ?", array("s", $youtube_username, "i", $userref));
         }
     catch (Google_ServiceException $e)

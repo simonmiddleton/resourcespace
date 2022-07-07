@@ -37,7 +37,7 @@ else
         }
     }
 
-if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRATION"] == 0 || $allowpartialmigration))
+if(!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRATION"] == 0 || $allowpartialmigration)
     {
     $notification_users = get_notification_users();
     $groups_sql = "SELECT ref, name,search_filter FROM usergroup WHERE ";

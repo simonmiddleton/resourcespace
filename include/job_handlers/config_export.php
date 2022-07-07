@@ -69,7 +69,7 @@ if(!isset($joberror))
             array_walk($datarows, 'alter_data',(isset($exportoptions["scramble"]) && $obfuscate) ? $exportoptions["scramble"] : array());
             
             // Get columns to insert
-            $columns = array_map("escape_check",array_keys($datarows[0]));
+            $columns = array_keys($datarows[0]);
 
             $sql = "";
             foreach($datarows as $datarow)

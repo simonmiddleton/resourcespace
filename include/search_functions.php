@@ -50,7 +50,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=ps_query("SELECT ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
+    $fields=ps_query("SELECT * FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
 
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
@@ -422,7 +422,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             else if(!is_array($searched_field_nodes))
                 {
-                $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
+                $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
                 continue;
                 }
 
@@ -438,7 +438,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     // Split into an additional search element to force a join since this is a separate condition
                     $node_ref .= ', ';
                     }
-                $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
+                $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
                 }
             }
 
@@ -1228,7 +1228,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $ref=explode(" ",$search);
         $ref=str_replace("!duplicates","",$ref[0]);
         $ref=explode(",",$ref); // just get the number
-        $ref=escape_check($ref[0]);
+        $ref=$ref[0];
         if ($ref!="") 
             {
             # Find duplicates of a given resource
@@ -2691,7 +2691,7 @@ function save_filter($filter,$filter_name,$filter_condition)
             {
             return false;    
             }
-        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"i",$filter));
+        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"s",$filter_condition,"i",$filter));
         }
     else
         {
@@ -2922,7 +2922,7 @@ function update_search_from_request($search)
                     }
                 else if(!is_array($searched_field_nodes))
                     {
-                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
+                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
 
                     continue;
                     }
@@ -2932,7 +2932,7 @@ function update_search_from_request($search)
 
                 foreach($searched_field_nodes as $searched_node_ref)
                     {
-                    $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
+                    $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
                     }
                 }
             $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
@@ -3083,8 +3083,7 @@ function get_collections_resource_count(array $refs)
 
 /**
  * Get all search request parameters. Note that this does not escape the
- * parameters which must be sanitised using escape_check() before using in SQL
- * or e.g. htmlspecialchars() or urlencode() before rendering on page
+ * parameters which must be sanitised using e.g. htmlspecialchars() or urlencode() before rendering on page
  *
  * @return array()
  */

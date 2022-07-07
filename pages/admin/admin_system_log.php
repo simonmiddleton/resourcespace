@@ -75,7 +75,8 @@ if($logmonth != 0 || $logyear != 0)
     {
     $monthstart = $logmonth == 0 ? 1 : $logmonth;
     $monthend = $logmonth == 0 ? 12 : $logmonth;
-    $datevals = " BETWEEN CAST('$logyear-$monthstart-01' AS DATE) AND LAST_DAY(CAST('$logyear-$monthend-01' AS DATE)) ";
+    $datevals = " BETWEEN CAST('$logyear-$monthstart-01' AS DATE) 
+        AND ADDTIME(LAST_DAY(CAST('$logyear-$monthend-01' AS DATE)),'23:59:59') ";
     $log_tables_where_statements['activity_log']    .= "(logged " . $datevals . ") AND ";
     $log_tables_where_statements['resource_log']    .= "(date " . $datevals . ") AND ";
     $log_tables_where_statements['collection_log']  .= "(date " . $datevals . ") AND ";

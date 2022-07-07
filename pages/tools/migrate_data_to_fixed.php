@@ -136,7 +136,7 @@ if(getval("submit","") != "")
                     {
                     if(!$dryrun)
                         {
-                        $newnode = set_node(NULL, $migrate_field, escape_check($data_value), NULL, '');
+                        $newnode = set_node(NULL, $migrate_field, $data_value, NULL, '');
                         $logtext .= " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnode . PHP_EOL;
                         $nodes_to_add[] = $newnode;
                         $newnodecounter = count($existing_nodes);

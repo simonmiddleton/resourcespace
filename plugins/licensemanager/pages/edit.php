@@ -56,7 +56,7 @@ if (getval("submitted","")!="")
 
     # Construct usage
     $license_usage="";
-    if (isset($_POST["license_usage"])) {$license_usage=escape_check(join(", ",$_POST["license_usage"]));}
+    if (isset($_POST["license_usage"])) {$license_usage=join(", ",$_POST["license_usage"]);}
     
     if ($ref=="new")
         {

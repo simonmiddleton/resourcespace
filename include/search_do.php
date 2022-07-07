@@ -5,7 +5,6 @@
 *
 * @uses debug()
 * @uses hook()
-* @uses escape_check()
 * @uses ps_value()
 * @uses ps_query()
 * @uses split_keywords()

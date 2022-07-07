@@ -9,7 +9,7 @@ command_line_only();
 $original_user_data = $userdata;
 
 $get_user_by_username = function($n) {
-    $username = escape_check($n);
+    $username = $n;
     ps_value("SELECT ref AS `value` FROM user WHERE username = ?", array("s",$username), 0);
 };
 $user_admin = new_user("test_000411_admin", 3);

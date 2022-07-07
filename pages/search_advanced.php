@@ -195,7 +195,7 @@ else
 			  {
 			  $propertycheck=explode(":",$property);
 			  $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
-			  $propertyval=isset($propertycheck[1])?escape_check($propertycheck[1]):"";
+			  $propertyval=isset($propertycheck[1])?$propertycheck[1]:"";
 			  if($propertyval!="")
 				{
 				$fieldname=$propertyfields[$propertyname];

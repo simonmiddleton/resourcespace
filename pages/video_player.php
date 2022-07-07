@@ -5,9 +5,6 @@ global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_vie
 $video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
 $video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource;
 
-$ref_escaped                               = escape_check($ref);
-$video_player_thumbs_view_alt_name_escaped = escape_check($video_player_thumbs_view_alt_name);
-
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
 $alternative = is_null($alternative) ? -1 : $alternative;
@@ -26,7 +23,7 @@ if(
               FROM resource_alt_files
              WHERE resource = ?
                AND name = ?
-        ",array("i",$ref,"s",$video_player_thumbs_view_alt_name_escaped),-1);
+        ",array("i",$ref,"s",$video_player_thumbs_view_alt_name),-1);
     }
 
 //Create array of video sources

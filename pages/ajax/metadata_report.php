@@ -202,7 +202,6 @@ else
 
         // $image should contain the original file
         $fits_xml      = runFitsForFile($image);
-        $resource_type = escape_check($resource_type);
 
         // Get a list of all the fields that have a FITS field set
         $rs_fields_to_read_for = ps_query("

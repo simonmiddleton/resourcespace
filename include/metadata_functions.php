@@ -95,7 +95,6 @@ function getFitsMetadataFieldValue(SimpleXMLElement $xml , $fits_field)
 * Extract FITS metadata from a file for a specific resource.
 * 
 * @uses get_resource_data()
-* @uses escape_check()
 * @uses ps_query()
 * @uses runFitsForFile()
 * @uses getFitsMetadataFieldValue()
@@ -128,7 +127,7 @@ function extractFitsMetadata($file_path, $resource)
         $resource = get_resource_data($resource);
         }
 
-    $resource_type = escape_check($resource['resource_type']);
+    $resource_type = $resource['resource_type'];
 
     // Get a list of all the fields that have a FITS field set
     $rs_fields_to_read_for = ps_query("
@@ -309,7 +308,7 @@ function check_view_display_condition($fields,$n,$fields_all)
 					$validvalues = explode("|",$checkvalues);
 					$validvalues = array_map("i18n_get_translated",$validvalues);
 					$validvalues = array_map("strtoupper",$validvalues);
-					$v = trim_array(explode(",",$fields_all[$cf]["value"]));
+					$v = trim_array(explode(",",$fields_all[$cf]["value"] ?? ""));
 					$v = array_map("i18n_get_translated",$v);
 					$v = array_map("strtoupper",$v);
 					foreach ($validvalues as $validvalue)

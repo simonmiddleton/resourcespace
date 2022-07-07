@@ -13,7 +13,7 @@ function HookGrant_editEditeditbeforeheader()
 		{
 		if($grant_edit_action=="delete")
 			{
-			$remove_user=escape_check(getval("remove_user","",TRUE));
+			$remove_user=getval("remove_user","",TRUE);
 			if($remove_user!="")
 				{
 				ps_query("delete from grant_edit where resource = ? and user = ?", array("i",$ref,"i",$remove_user));
@@ -32,7 +32,6 @@ function HookGrant_editEditeditbeforeheader()
 		# Build a new list and insert
 		$users=resolve_userlist_groups($users);
 		$ulist=array_unique(trim_array(explode(",",$users)));
-        $ulist = array_map("escape_check",$ulist);
 		$urefs = ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist,"s"));
 		
 		if (count($urefs)>0)

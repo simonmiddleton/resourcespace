@@ -314,6 +314,7 @@ $lang["couldnotmatchusers"]="Could not match all the usernames, or usernames wer
 
 # Admin - User management
 $lang["comments"]="Comments";
+$lang["emailmarkedinvalid"]="Email has been marked as invalid";
 
 # Admin - Resource management
 $lang["viewuserpending"]="View user contributed resources pending review";
@@ -2644,7 +2645,7 @@ $lang['userpreference_tilenavdefault']='Use a tile layout for the navigation men
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';
-$lang['systemconfig_customfont_label'] = 'Use custom font file - Caution: Some fonts may cause unexpected display issues.';
+$lang['systemconfig_customfont_label'] = 'Custom font file';
 $lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';

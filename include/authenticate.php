@@ -22,11 +22,11 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
     // Establish session hash
     if (array_key_exists("user",$_GET))
         {
-        $session_hash=escape_check($_GET["user"]);
+        $session_hash=$_GET["user"];
         }
     elseif (array_key_exists("user",$_COOKIE))
         {
-        $session_hash=escape_check($_COOKIE["user"]);
+        $session_hash=$_COOKIE["user"];
         }
     elseif (isset($anonymous_login))
         {
@@ -141,7 +141,7 @@ if (!$valid && isset($anonymous_autouser_group))
     rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
 
     // Setup the user
-    $login_session_hash = (isset($login_data['session_hash']) ? escape_check($login_data['session_hash']) : '');
+    $login_session_hash = (isset($login_data['session_hash']) ? $login_data['session_hash'] : '');
     $user_select_sql = new PreparedStatementQuery();
     $user_select_sql->sql = "u.session=?";
     $user_select_sql->parameters = ["s",$login_session_hash];
@@ -245,7 +245,7 @@ if($terms_login && 0 == $useracceptedterms && in_array($pagename, array("reload_
 
 if (isset($_SERVER["HTTP_USER_AGENT"]))
 	{
-	$last_browser=escape_check(substr($_SERVER["HTTP_USER_AGENT"],0,250));
+	$last_browser=substr($_SERVER["HTTP_USER_AGENT"],0,250);
 	}
 else
 	{ 
