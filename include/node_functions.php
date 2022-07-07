@@ -12,7 +12,7 @@
 *
 * @return boolean|integer
 */
-function set_node($ref, $resource_type_field, $name, $parent = NULL, $order_by)
+function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
     if(!is_null($name))
         {
