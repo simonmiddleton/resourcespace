@@ -74,7 +74,7 @@ foreach($test_2601_ucs as $use_case)
     {
     $GLOBALS['owner_field'] = $use_case['configs']['owner_field'];
     $GLOBALS['owner_field_mappings'] = $use_case['configs']['owner_field_mappings'];
-    if($use_case['expected'] !== can_use_request_owner_field())
+    if($use_case['expected'] !== can_use_owner_field())
         {
         echo "Use case: {$use_case['name']} - ";
         return false;
