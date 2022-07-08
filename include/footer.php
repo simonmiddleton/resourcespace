@@ -406,7 +406,18 @@ if (getval("ajax","") == "")
 			</script>
 			<?php
             } // end omit_collectiondiv_load_pages 
-        ?>    
+        else
+            {
+            ?>
+            <script>
+            jQuery(document).ready(function()
+                {
+                ModalCentre();
+                });
+            </script>
+            <?php
+           }
+        ?>
         <script type="text/javascript">
         var resizeTimer;
         myLayout=jQuery('body').layout(

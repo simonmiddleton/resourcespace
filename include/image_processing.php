@@ -868,12 +868,7 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
-                            $original_filename = '';
-                            if(isset($_REQUEST['file_name'])) {
-                                $original_filename = $_REQUEST['file_name'];
-                            } else {
-                                $original_filename = $processfile['name'];
-                            }
+                            $original_filename = $_REQUEST['file_name'];
 
                             if($merge_filename_with_title_include_extensions == 'yes') {
                                 $merged_filename = $original_filename;
@@ -1000,7 +995,7 @@ function extract_exif_comment($ref,$extension="")
             debug ("EXIF - custom option for filename field " . $filename_field . " : " . $exiffilenameoption);
             if ($exiffilenameoption!="yes") // We are not using the extracted filename as usual
                 {
-                $uploadedfilename=isset($_REQUEST['file_name'])?$_REQUEST['file_name']:$processfile['name'];
+                $uploadedfilename=$_REQUEST['file_name'];
                 
                 global $userref, $amended_filename;
                 $entered_filename=get_data_by_field(-$userref,$filename_field);
