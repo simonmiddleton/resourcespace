@@ -24,7 +24,7 @@ while (microtime(true)<($timer+1)) // Run for one second
     {
     $d=md5(microtime());
     ps_query("insert into performance_test(c,d) values (?,?)",array("i",$counter,"s",$d));
-    ps_query("select performance_test from performance_test where c=?",array("i",$counter));
+    ps_query("select c,d from performance_test where c=?",array("i",$counter));
     $counter++;
     }
 ps_query("drop table if exists performance_test");
