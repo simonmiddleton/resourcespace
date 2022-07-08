@@ -13,7 +13,6 @@ if($owner_rtf === false)
     echo 'Setting up the test: $owner_rtf - ';
     return false;
     }
-$GLOBALS['owner_field'] = $owner_rtf;
 
 // Create Options for the owner_field
 $owner_A = set_node(null, $owner_rtf, 'Test 2602: Owner - Admins', null, 10);
@@ -28,15 +27,13 @@ foreach([$owner_A, $owner_SA, $owner_Others] as $node_ref)
         }
     }
 
-// Re-use existing user groups for this test:-
+// Re-use existing standard user groups for this test:-
 // [1] => Administrators
 // [3] => Super Admin
-// [6] => Restricted User - Requests Managed
-// print_r(array_column(ps_query('SELECT ref, `name` FROM usergroup'), 'name', 'ref'));die;
 $GLOBALS['owner_field_mappings'] = [
     $owner_A => 1,
     $owner_SA => 3,
-    $owner_Others => 6,
+    // $owner_Others ===> testing a missing mapping. (shown here just for clarity)
 ];
 
 // Create users
@@ -45,14 +42,12 @@ $users_data = [
     ['test_2602_SA', 'Test 2602: User SA', 3],
     ['test_2602_Others', 'Test 2602: User Others', 6],
     ['test_2602_gen_1', 'Test 2602: User gen_1', 2],
-    ['test_2602_gen_2', 'Test 2602: User gen_2', 2],
 ];
 $users_list = [];
 foreach($users_data as $user_details)
     {
     $user_2602 = new_user($user_details[0], $user_details[2]) ?: get_user_by_username($user_details[0]);
     
-    // Save details (email most important)
     $_POST['username'] = $user_details[0];
     $_POST['email'] = "{$user_details[0]}@integration-test.resourcespace.com";
     $_POST['fullname'] = $user_details[1];
@@ -93,37 +88,85 @@ foreach($vars_suffixes as $suffix)
         }
     }
 
+$all_test_users = get_users(0, 'test_2602_%', 'u.ref');
 $build_expected_list_of_users = function(array $usernames) {
+    $result = [];
     foreach($usernames as $username)
         {
         $result[get_user_by_username($username)] = "{$username}@integration-test.resourcespace.com";
         }
+    ksort($result, SORT_NUMERIC);
     return $result;
 };
 // End of Set up
 
 
 
-
-
 $test_2602_ucs = [
     [
-        'name' => 'Notify users owned by A',
+        'name' => 'Notify users responsible for resources managed by A',
         'input' => [
-            'users' => get_users(0, 'test_2602_%'),
+            'users' => $all_test_users,
             'resources' => [$resource_owned_by_A, $resource_owned_by_none1],
         ],
         'expected' => $build_expected_list_of_users(['test_2602_A']),
     ],
+    [
+        'name' => 'Notify users responsible for resources managed by A or SA',
+        'input' => [
+            'users' => $all_test_users,
+            'resources' => [$resource_owned_by_A, $resource_owned_by_SA, $resource_owned_by_none1],
+        ],
+        'expected' => $build_expected_list_of_users(['test_2602_A', 'test_2602_SA']),
+    ],
+    [
+        'name' => 'Missing mapping for owner field option. (misconfiguration)',
+        'input' => [
+            'users' => $all_test_users,
+            'resources' => [$resource_owned_by_Others, $resource_owned_by_none1],
+        ],
+        'expected' => [],
+    ],
+    [
+        'name' => "Unmanaged resources shouldn't filter out any users",
+        'input' => [
+            'users' => $all_test_users,
+            'resources' => [$resource_owned_by_none1, $resource_owned_by_none2],
+        ],
+        'expected' => $build_expected_list_of_users(array_column($all_test_users, 'username')),
+    ],
+    [
+        'name' => 'No resources to process',
+        'input' => [
+            'users' => $all_test_users,
+            'resources' => [],
+        ],
+        'expected' => [],
+    ],
+    [
+        'name' => 'No users to filter',
+        'input' => [
+            'users' => [],
+            'resources' => [$resource_owned_by_A, $resource_owned_by_SA, $resource_owned_by_Others],
+        ],
+        'expected' => [],
+    ],
+    [
+        'name' => 'Feature misconfigured or disabled (should return the input users)',
+        'config' => ['owner_field' => 0],
+        'input' => [
+            'users' => $all_test_users,
+            'resources' => [$resource_owned_by_A, $resource_owned_by_SA, $resource_owned_by_Others],
+        ],
+        'expected' => $build_expected_list_of_users(array_column($all_test_users, 'username')),
+    ],
 ];
 foreach($test_2602_ucs as $uc)
     {
+    $GLOBALS['owner_field'] = $uc['config']['owner_field'] ?? $owner_rtf;
     $result = get_notification_users_by_owner_field($uc['input']['users'], $uc['input']['resources']);
-    // echo "<pre>";print_r($uc['input']['users']);echo "</pre>";
-    // echo "<pre>";print_r($uc['input']['resources']);echo "</pre>";
-    echo "<pre>";print_r($uc['expected']);echo "</pre>";
-    echo "<pre>";print_r($result);echo "</pre>";
-    // die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
+    ksort($result, SORT_NUMERIC);
+
     if($uc['expected'] !== $result)
         {
         echo "Use case: {$uc['name']} - ";
@@ -134,6 +177,7 @@ foreach($test_2602_ucs as $uc)
 
 
 // Tear down
-unset($test_2602_ucs, $GLOBALS['owner_field'], $GLOBALS['owner_field_mappings']);
+unset($owner_rtf, $owner_A, $owner_SA, $owner_Others, $users_data, $users_list, $user_2602, $vars_suffixes, $all_test_users);
+unset($test_2602_ucs, $GLOBALS['owner_field'], $GLOBALS['owner_field_mappings'], $build_expected_list_of_users);
 
 return true;

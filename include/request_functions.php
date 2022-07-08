@@ -1206,6 +1206,13 @@ function get_notification_users_by_owner_field(array $users, array $resources)
 
     // Determine which users should be notified based on the owner field value and its mappings
     $resource_nodes = get_resource_nodes_batch($resources, [$owner_field], true);
+
+    // All resources are unmanaged so no users should be filtered out
+    if(!empty($resources) && empty($resource_nodes))
+        {
+        return $users_map_ref_email;
+        }
+
     foreach($resource_nodes as $resource_id => $rtf_rns)
         {
         $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
