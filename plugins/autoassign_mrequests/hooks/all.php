@@ -237,8 +237,9 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
         $notify_manage_request_admin = false;
         }
 
-    // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
-    $manage_request_admin=array();  // Initialise the global array instead of attempting to unset it which does not work
+    // If we've got this far, disable features which may conflict
+    $manage_request_admin=array();
+    $GLOBALS['owner_field'] = 0;
 
     return true;
     }
