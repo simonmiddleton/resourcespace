@@ -613,6 +613,9 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             // NOTE: $fields and $all_selected_nodes are passed by reference
                             copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited, true);
                             
+                            // Autocomplete any blank fields without overwriting any existing metadata
+                            autocomplete_blank_fields($ref, false);
+
                             // Update related resources if required
                             if(in_array("related_resources",$locked_fields))
                                 {
