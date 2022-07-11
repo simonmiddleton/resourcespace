@@ -2803,7 +2803,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     ?>">
     <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>"
     src="<?php echo $img_url ?>" 
-    alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field]))))); ?>"
+    alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field] ?? ""))))); ?>"
     /></div>
     <?php
     }
