@@ -1472,7 +1472,7 @@ function postUploadActions()
     else if(rscompleted.length + processerrors.length < count)
         {
         // More to do, update collection bar
-        <?php if ($usercollection==$collection_add)
+        <?php if (isset($usercollection) && $usercollection==$collection_add)
             { 
             // Update collection div if uploading to active collection
             ?>
