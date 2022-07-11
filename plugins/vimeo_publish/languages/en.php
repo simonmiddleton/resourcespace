@@ -24,7 +24,7 @@ $lang['vimeo_publish_legal_warning']   = 'By clicking \'OK\' you certify that yo
 // Vimeo API instructions:
 $lang['vimeo_api_instructions_condition_1'] = 'You will need to register ResourceSpace as an app with Vimeo and get an OAuth client ID and Secret';
 $lang['vimeo_api_instructions_condition_2'] = 'Log on to Vimeo with any valid Vimeo account (this does not need to be related to your Vimeo account), then go to <a href="https://developer.vimeo.com/" target="_blank">https://developer.vimeo.com/</a>';
-$lang['vimeo_api_instructions_condition_3'] = 'Click on "My Apps" tile and then click on "Create a new app"';
+$lang['vimeo_api_instructions_condition_3'] = 'Click on "New App" in the top right';
 $lang['vimeo_api_instructions_condition_4'] = 'Fill in all the details.';
 $lang['vimeo_api_instructions_condition_5'] = 'For "App URL" use the Base URL (located before these instructions)';
 $lang['vimeo_api_instructions_condition_6'] = 'For "App Callback URL" use the Callback URL (located before these instructions)';
