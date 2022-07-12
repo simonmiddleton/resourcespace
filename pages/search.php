@@ -241,12 +241,21 @@ $offset=getval("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('
 $offset = intval($offset); 
 if ($offset<0) {$offset=0;} 
 
-$order_by=getval("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by,0,"","",false,false);}
+$order_by=getval("order_by","");
+if (strpos($search,"!")===false || strpos($search,"!properties")!==false) 
+    {
+    rs_setcookie('saved_order_by', $order_by,0,"","",false,false);
+    }
 if ($order_by=="")
     {
     if ($collectionsearch) // We want the default collection order to be applied
         {
         $order_by=$default_collection_sort;
+        }
+    elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties")
+        {
+        // As Added is the initial sort sequence to be used for special searches other than image properties 
+        $order_by="resourceid";
         }
     else
         {
@@ -1174,7 +1183,7 @@ if($responsive_ui)
                 }
             elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties") 
                 {
-                // As Added is the default sort sequence if viewing recently added resources 
+                // As Added is the default sort sequence for special searches other than image properties
                 $default_sort_order = 'resourceid';
                 $rel=$lang["asadded"];
                 }
