@@ -72,12 +72,7 @@ if(trim($actions_notify_states) != "")
     {
     $rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
-	$add_editable_search="";
-	if (isset($all_actions) && is_array($all_actions))
-		{
-		$add_editable_search="!list".implode(":",array_column($all_actions,"ref"));
-		}
-    $add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=".$add_editable_search."&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true&order_by=date";
+    $add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true&order_by=date";
     $search_url = $baseurl_short . "pages/search.php?search=&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
     ?>
     <li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
