@@ -1439,7 +1439,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     "WHERE geo_lat > ? AND geo_lat < ? " . 
                       "AND geo_long > ? AND geo_long < ?
                        AND " . $sql_filter->sql .
-                 "GROUP BY r.ref
+                 " GROUP BY r.ref
                   ORDER BY $order_by";
 
         $sql->parameters = array_merge($sql_join->parameters,["d",$bl[0],"d",$tr[0],"d",$bl[1],"d",$tr[1]],$sql_filter->parameters);
