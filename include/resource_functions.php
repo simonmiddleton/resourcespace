@@ -8011,7 +8011,7 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 
     if(trim($shortname) == "")
         {
-        $shortname = mb_substr(mb_strtolower(str_replace("_","",safe_file_name($name))),0,20);
+        $shortname = mb_substr(mb_strtolower(str_replace(array("_", "-"), "", safe_file_name($name))), 0, 20);
         }
 
     $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$shortname), 0, "schema");
