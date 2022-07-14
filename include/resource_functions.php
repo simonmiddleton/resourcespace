@@ -1221,7 +1221,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
     foreach(explode(';', $userresourcedefaults) as $rule)
         {
-        $rule_detail         = explode('=', $rule);
+        $rule_detail         = explode('=', trim($rule));
         $field_shortname     = $rule_detail[0];
         $field_default_value = $rule_detail[1];
 
