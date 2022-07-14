@@ -173,17 +173,24 @@ if($k == "" && $smart_rtf == 0)
 <script>
 jQuery(document).ready(function ()
     {
-    jQuery('.FeaturedSimpleTile').hover(
-    function(e)
+    if (jQuery(window).width() > 600)
         {
-        tileid = jQuery(this).attr('id').substring(19);
-        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
-        },
-    function(e)
-        {
-        tileid=jQuery(this).attr('id').substring(19);
-        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
+        jQuery('.FeaturedSimpleTile').hover(
+        function(e)
+            {
+            tileid = jQuery(this).attr('id').substring(19);
+            jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
+            },
+        function(e)
+            {
+            tileid=jQuery(this).attr('id').substring(19);
+            jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
         });
+        }
+    else
+        {
+        jQuery('.FeaturedSimpleTileActions').css('display', 'block');
+        }
 
     // Get and update display for total resource count for each of the rendered featured collections (@see render_featured_collection() for more info)
     var fcs_waiting_total = jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"]');

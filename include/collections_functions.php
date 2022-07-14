@@ -2489,16 +2489,18 @@ function get_search_title($searchstring)
  * Adds all the resources in the provided search to $collection
  *
  * @param  integer $collection
- * @param  string $search
- * @param  string $restypes
- * @param  string $archivesearch
- * @param  string $order_by
- * @param  string $sort
- * @param  string $daylimit
- * @param  int    $res_access          The ID of the resource access level
+ * @param  string  $search
+ * @param  string  $restypes
+ * @param  string  $archivesearch
+ * @param  string  $order_by
+ * @param  string  $sort
+ * @param  string  $daylimit
+ * @param  int     $res_access          The ID of the resource access level
+ * @param  boolean $editable_only       If true then only editable resources will be added
  * @return boolean
  */
-function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $res_access = "")
+function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", 
+                                $order_by = "relevance", $sort = "desc", $daylimit = "", $res_access = "",$editable_only=false)
 	{
     if((string)(int)$collection != $collection)
         {
@@ -2514,7 +2516,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         $search_all_workflow_states = false;
         }
    
-    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,false,false,$res_access);
+    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,$editable_only,false,$res_access);
 
 	if(!is_array($results) || count($results) == 0)
         {

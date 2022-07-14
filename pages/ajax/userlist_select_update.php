@@ -8,7 +8,7 @@ include "../../include/authenticate.php";
 $userstring=getval("userstring","");
 ?>
 
-<?php $user_userlists=ps_query("select * from user_userlist where user= ?", ['i', $userref]);?>
+<?php $user_userlists=ps_query("select ". columns_in('user_userlist') ." from user_userlist where user= ?", ['i', $userref]);?>
 
 <option value=""><?php echo $lang['loadasaveduserlist']?></option>
 <?php

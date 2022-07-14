@@ -1,12 +1,15 @@
 <?php
-if(!file_exists(__DIR__ . '/../lib/vimeo.php-1.2.3/autoload.php'))
+if(!file_exists(__DIR__ . '/../lib/vimeo.php/autoload.php'))
     {
     exit($lang['vimeo_publish_no_vimeoAPI_files']);
     }
-require_once(__DIR__ . '/../lib/vimeo.php-1.2.3/autoload.php');
+require_once(__DIR__ . '/../lib/vimeo.php/autoload.php');
+require_once(__DIR__ . '/../../../lib/tus/vendor/autoload.php');
 
 use Vimeo\Vimeo;
 use Vimeo\Exceptions\VimeoUploadException;
+// Use same file cache config as main TUS config
+\TusPhp\Config::set(__DIR__ . '/../../../include/tusconfig.php');
 
 function init_vimeo_api($client_id, $client_secret, $redirect_uri)
     {
@@ -145,7 +148,6 @@ function get_vimeo_user($client_id, $client_secret, $access_token, array &$vimeo
 function vimeo_upload($client_id, $client_secret, $access_token, $ref, $file_path, $rs_vimeo_link_field, &$new_video_id, &$error)
     {
     $vimeo_lib = new Vimeo($client_id, $client_secret, $access_token);
-
     try
         {
         //  Send this to the API library.

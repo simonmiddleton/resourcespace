@@ -348,7 +348,7 @@ if ($search_titles)
             }
         elseif (substr($search,0,4)=="!geo")
             {
-            $title_string = $lang["geographicsearchresults"];
+            $title_string = "";
             }
         elseif (substr($search,0,14)=="!contributions")
             {
@@ -407,7 +407,7 @@ if ($search_titles)
             {
             $title_string = $lang["locked_resource_search"];
             } 
-        if(isset($title_string))
+        if(isset($title_string) && $title_string !="")
             {
             $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a> ' . $searchcrumbs . '</div></div> ';
             }

@@ -2569,6 +2569,9 @@ $lang["tile_multi"]="Multi";
 $lang["tile_blank"]="Blank";
 $lang["tile_analytics"]="Analytics";
 $lang["tile_ftxt"]="Text only";
+$lang["tile_thmsl"]="Featured Collection";
+$lang["tile_custm"]="Custom";
+$lang["tile_pend"]="Pending";
 /* * End - User Dash Strings * */
 
 /* * Start - Plugin Category Strings * */

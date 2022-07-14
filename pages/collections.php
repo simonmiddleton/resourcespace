@@ -606,8 +606,9 @@ if ($addsearch!=-1)
                 }
             else
                 {
+                $foredit=(getval("foredit",false) == "true" ? true:false);
                 #add saved search (the items themselves rather than just the query)
-                $resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access);
+                $resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access, $foredit);
                 if (!empty($resourcesnotadded))
                     {
                     $warningtext="";
