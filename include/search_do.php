@@ -109,20 +109,20 @@ function do_search(
 
     $order = array(
         "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
-        "popularity"      => "user_rating $sort,total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
-        "rating"          => "r.rating $sort, user_rating $sort, score $sort,r.ref $sort",
-        "date"            => $order_by_date,
-        "colour"          => "has_image $sort,image_blue $sort,image_green $sort,image_red $sort {$order_by_date_sql_comma} r.ref $sort",
-        "country"         => "country $sort,r.ref $sort",
-        "title"           => "title $sort,r.ref $sort",
-        "file_path"       => "file_path $sort,r.ref $sort",
+        "popularity"      => "user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "rating"          => "r.rating $sort, user_rating $sort, score $sort, r.ref $sort",
+        "date"            => "$order_by_date, r.ref $sort",
+        "colour"          => "has_image $sort, image_blue $sort, image_green $sort, image_red $sort {$order_by_date_sql_comma} r.ref $sort",
+        "country"         => "country $sort, r.ref $sort",
+        "title"           => "title $sort, r.ref $sort",
+        "file_path"       => "file_path $sort, r.ref $sort",
         "resourceid"      => "r.ref $sort",
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
-        "extension"       => "file_extension $sort",
-        "titleandcountry" => "title $sort,country $sort",
+        "extension"       => "file_extension $sort, r.ref $sort",
+        "titleandcountry" => "title $sort, country $sort, r.ref $sort",
         "random"          => "RAND()",
-        "status"          => "archive $sort",
-        "modified"        => "modified $sort"
+        "status"          => "archive $sort, r.ref $sort",
+        "modified"        => "modified $sort, r.ref $sort"
     );
 
     // Add collection sort option only if searching a collection
