@@ -1679,9 +1679,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($propertiessql->sql != "")
             {
-            if(strpos($sql_join->sql,"JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+            if(strpos($sql_join->sql,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
                 {
-                $sql_join->sql .=" JOIN resource_dimensions rdim on r.ref=rdim.resource";
+                $sql_join->sql .=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
                 }
             if ($sql_filter->sql == "")
                 {
