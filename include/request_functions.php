@@ -397,8 +397,8 @@ function email_collection_request($ref,$details,$external_email)
 
     $notify_users = [];
     $notify_emails = [];
-    # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
-    if(isset($resource_type_request_emails))
+    # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
+    if(isset($resource_type_request_emails) && !can_use_owner_field())
         {
         $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr 
                                     LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection = ?",array("i",$ref));
@@ -424,6 +424,7 @@ function email_collection_request($ref,$details,$external_email)
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
+    $notify_users = array_keys(get_notification_users_by_owner_field($notify_users, $colresources));
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
@@ -504,6 +505,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
         add_resource_to_collection($ref,$c,true);
         $ref=$c; # Proceed as normal
+        $colresources = get_collection_resources($ref);
         }
     else
         {
@@ -645,6 +647,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
 
+    $can_use_owner_field = can_use_owner_field();
+
     // Regular Processing: autoassign using the resource type - collection request and no plugin is preventing this from running
     if(isset($collectiondata) && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
@@ -702,7 +706,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 else
                     {
                     // No specific user allocated, get all users, adding $email_notify address if this does not belong to a system user
-                    $assigned_to_users=get_notification_users("RESOURCE_ACCESS"); 
+                    $assigned_to_users=get_notification_users("RESOURCE_ACCESS");
                     $email_notify_is_user=false;
                     foreach ($assigned_to_users as $assigned_to_user)
                         {
@@ -789,8 +793,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_emails=array();
         $admin_notify_users=array();
 
-        # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
-        if(isset($resource_type_request_emails))
+        # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type
+        if(isset($resource_type_request_emails) && !$can_use_owner_field)
             {
             // Legacy support for $resource_type_request_emails
             $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection=?", array("i",$ref));
@@ -805,9 +809,12 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }
             }
 
-        if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
+        if(
+            !$notification_sent
+            && ($can_use_owner_field || !isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify)
+        )
             {
-            $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
+            $admin_notify_users = array_keys(get_notification_users_by_owner_field(get_notification_users("RESOURCE_ACCESS"), $colresources));
             $admin_notify_message->set_subject($applicationname . ": " );
             $admin_notify_message->append_subject("lang_requestcollection");
             $admin_notify_message->append_subject(" - " . $ref);
@@ -815,6 +822,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }
+
     if ($request_senduserupdates)
         {
         $user_message = new ResourceSpaceUserNotification();
@@ -978,8 +986,8 @@ function email_resource_request($ref,$details)
 
     $notify_users = [];
     $notify_emails = [];
-    # Check if alternative request email notification address is set
-    if(isset($resource_type_request_emails))
+    # Legacy: Check if alternative request email notification address is set
+    if(isset($resource_type_request_emails) && !can_use_owner_field())
         {
         if(isset($resource_type_request_emails[$resourcedata["resource_type"]]))
             {
@@ -1002,6 +1010,7 @@ function email_resource_request($ref,$details)
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
+    $notify_users = array_keys(get_notification_users_by_owner_field($notify_users, [$ref]));
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
@@ -1127,13 +1136,7 @@ function process_custom_fields_submission(array $fields, $submitted)
             // Find the selected options
             $field["selected_options"] = array_filter($field["options"], function($option) use ($field, $submitted_data)
                 {
-                $computed_value = md5("{$field["html_properties"]["id"]}_{$option}");
-                if(in_array($computed_value, $submitted_data))
-                    {
-                    return true;
-                    }
-
-                return false;
+                return in_array(md5("{$field["html_properties"]["id"]}_{$option}"), $submitted_data);
                 });
 
             $field["value"] = implode(", ", $field["selected_options"]);
@@ -1147,4 +1150,79 @@ function process_custom_fields_submission(array $fields, $submitted)
 
         return $field;
         }, gen_custom_fields_html_props(get_valid_custom_fields($fields)));
+    }
+
+
+/**
+ * Initialisation and system check if configuration is correctly enabled to use the owner field and mappings logic.
+ * 
+ * IMPORTANT: during init the globals $owner_field & $owner_field_mappings values will be updated for validation purposes
+ * 
+ * @return boolean Return true if the system is configured with a valid $owner_field and numeric $owner_field_mappings, false otherwise.
+ */
+function can_use_owner_field()
+    {
+    $GLOBALS['owner_field'] = is_int_loose($GLOBALS['owner_field']) ? (int) $GLOBALS['owner_field'] : 0;
+
+    // Filter out non numeric user group IDs
+    $GLOBALS['owner_field_mappings'] = array_filter($GLOBALS['owner_field_mappings'], 'is_int_loose');
+
+    // Filter out non numeric node IDs
+    $GLOBALS['owner_field_mappings'] = array_intersect_key(
+        $GLOBALS['owner_field_mappings'],
+        array_flip(array_filter(array_keys($GLOBALS['owner_field_mappings']), 'is_int_loose')));
+
+    return $GLOBALS['owner_field'] > 0
+        && !empty($GLOBALS['owner_field_mappings'])
+        && in_array($GLOBALS['owner_field'], array_column(
+            get_resource_type_fields('', 'ref', 'asc', '', [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS], false),
+            'ref'
+        ));
+    }
+
+
+/**
+ * Get users to notify for requested resources "owned" by particular groups. Configurable using a metadata field 
+ * ($owner_field) and a defined map ($owner_field_mappings).
+ * 
+ * @param array $users     List of notification users {@see get_notification_users()}. Any array structure where each 
+ *                         value contains an array with at least a "ref" and "email" keys.
+ * @param array $resources List of resource IDs
+ * 
+ * @return array Returns user ID (key) and email (value)
+ * */
+function get_notification_users_by_owner_field(array $users, array $resources)
+    {
+    $users_map_ref_email = array_column($users, 'email', 'ref');
+
+    if(!can_use_owner_field())
+        {
+        return $users_map_ref_email;
+        }
+
+    global $owner_field, $owner_field_mappings;
+
+    $users_to_notify = [];
+
+    // Determine which users should be notified based on the owner field value and its mappings
+    $resource_nodes = get_resource_nodes_batch($resources, [$owner_field], true);
+
+    // All resources are unmanaged so no users should be filtered out
+    if(!empty($resources) && empty($resource_nodes))
+        {
+        return $users_map_ref_email;
+        }
+
+    foreach($resource_nodes as $resource_id => $rtf_rns)
+        {
+        $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
+        $mapped_group = $owner_field_mappings[$owner_field_node_id] ?? 0;
+        if($owner_field_node_id > 0 && $mapped_group > 0)
+            {
+            $group_users = array_column(get_users($mapped_group, '', 'u.username', false, -1, 1, false, 'u.ref'), 'ref');
+            $users_to_notify += array_intersect_key($users_map_ref_email, array_flip($group_users));
+            }
+        }
+
+    return $users_to_notify;
     }

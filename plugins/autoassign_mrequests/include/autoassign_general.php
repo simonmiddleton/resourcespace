@@ -15,4 +15,3 @@ function get_mapped_user_by_field($id, $value)
     $parameters=array("i",$id, "s",$value);
     return ps_value($query, $parameters, 0);
 }
-?>

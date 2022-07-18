@@ -2155,7 +2155,12 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
         $sql_select .= ", n.`name`, n.parent, n.order_by";
         }
 
-    $resources = array_filter($resources,"is_int_loose"); // remove non-numeric values
+    $resources = array_filter($resources,"is_int_loose");
+    if(empty($resources))
+        {
+        return [];
+        }
+
     $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN (" . ps_param_insert(count($resources)) . ")";
     $query_params = ps_param_fill($resources, "i");
 
