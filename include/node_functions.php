@@ -1975,13 +1975,13 @@ function get_tree_strings($resource_nodes,$allnodes = false)
         {
         $todocount = count($resource_nodes);
         for($n=0;$n < $todocount;$n++)
-            {            
+            {    
             if(
                 in_array($resource_nodes[$n]["parent"],array_column($resource_nodes,"ref"))
                 &&
                 !in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref"))
                 &&
-                !$resource_nodes[$n]["parent"]==$resource_nodes[$n]["ref"] // Cater for potential misconfiguration where parent==self (possibly a legacy from pre-nodes tree config)
+                $resource_nodes[$n]["parent"] != $resource_nodes[$n]["ref"] // Cater for potential misconfiguration where parent==self (possibly a legacy from pre-nodes tree config)
                 )
                 {
                 // Don't add yet, add once parent has been added
@@ -2008,6 +2008,7 @@ function get_tree_strings($resource_nodes,$allnodes = false)
         $nodeparent = $resource_node["parent"];
         while($nodeparent != "" && isset($treenodes[$nodeparent]))
             {
+            if ($nodeparent == $resource_node["ref"]) { break; } // Cater for potential misconfiguration where parent==self
             $node_parts[$resource_node["ref"]][] = i18n_get_translated($treenodes[$nodeparent]["name"]);
             $nodeparent = $treenodes[$nodeparent]["parent"];
             }

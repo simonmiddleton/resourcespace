@@ -63,6 +63,7 @@ $permissions=trim_array(explode(",",$group["permissions"]));
 $permissions_done=array();	
 ?>
 <div class="BasicsBox">
+<h1><?php echo $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"]); ?></h1>
 <?php
     $links_trail = array(
     array(

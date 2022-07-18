@@ -26,7 +26,7 @@ if($find!="")
 $reports=ps_query("SELECT ref, `name`, support_non_correlated_sql FROM report {$find_sql} ORDER BY {$order_by}",$sql_params??[]);
 
 ?><div class="BasicsBox"> 
-	
+	<h1><?php echo $lang["page-title_report_management"]; ?></h1>
 	<?php
 	$links_trail = array(
 	    array(

@@ -83,6 +83,7 @@ function show_team_user_filter_search(){
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
+    <h1><?php echo $lang["manageusers"]; ?></h1>
 	<?php
 	// Breadcrumbs links
 	if (strpos($backurl, "pages/admin/admin_group_management.php") !== false)

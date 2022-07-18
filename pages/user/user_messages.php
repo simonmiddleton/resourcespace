@@ -236,13 +236,13 @@ include "../../include/header.php";
                                 {
                                 $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                                 ?>
-                                <a href="<?php echo $replyurl; ?>"><?php echo LINK_CARET ?><?php echo $lang["reply"]; ?></a>
+                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . $lang["reply"]; ?></a>
                                 <?php
                                 }
 
                             if ($messages[$n]["url"]!="")
                                 { ?>
-                                <a href="<?php echo $messages[$n]["url"]; ?>"><?php echo LINK_CARET ?><?php echo $lang["link"]; ?></a>
+                                <a href="<?php echo $messages[$n]["url"]; ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . $lang["link"]; ?></a>
                                 <?php
                                 } ?> 
                         </div>

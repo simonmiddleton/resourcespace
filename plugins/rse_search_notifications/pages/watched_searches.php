@@ -235,18 +235,16 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 							?></td>
 							<td>
 								<div class="ListTools">
-									<a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["searchbutton"]; ?></a>
+									<a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-search"></i>&nbsp;' . $lang["searchbutton"]; ?></a>
 									<?php
 										if($ws['owner']==$userref)
 											{
 											?><a
 												href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=checknow&ref=<?php echo $ws["ref"]; ?>"
-												onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-											echo $lang["checknow"]; ?></a>
+												onclick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-sync"></i>&nbsp;' . $lang["checknow"]; ?></a>
 											<?php
 											}
-									?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=disable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-										echo $lang['disable']; ?></a>
+									?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=disable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-ban"></i>&nbsp;' . $lang['disable']; ?></a>
 							<?php
 							}
 						else
@@ -261,8 +259,8 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 							<?php
 							}
 						?>
-									<a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=delete&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-										echo $lang['action-delete']; ?></a>
+									<a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=delete&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><?php
+										echo '<i class="fas fa-trash-alt"></i>&nbsp;' .  $lang['action-delete']; ?></a>
 								</div>
 					</td>
 				</tr>

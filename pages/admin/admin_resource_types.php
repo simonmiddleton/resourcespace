@@ -99,6 +99,7 @@ function addColumnHeader($orderName, $labelKey)
 ?>	
 
 <div class="BasicsBox">
+<h1><?php echo $lang["resource_types_manage"]; ?></h1>
 <?php
 	$links_trail = array(
 	    array(

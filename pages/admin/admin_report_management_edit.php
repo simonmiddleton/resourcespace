@@ -86,6 +86,7 @@ include "../../include/header.php";
       onSubmit="return CentralSpacePost(this,true);" class="FormWide">
     <?php generateFormToken("mainform"); ?>
 	<div class="BasicsBox">
+    <h1><?php echo $lang["page-title_report_management_edit"]; ?></h1>
 	<?php
 	$links_trail = array(
 	    array(

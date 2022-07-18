@@ -61,7 +61,7 @@ input[readonly] {
 
 .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
 #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
-    border-radius:4px;
+    border-radius:8px;
     overflow: hidden;
 }
 .ResourcePanel {
@@ -74,6 +74,12 @@ input[readonly] {
 .ResourcePanel:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
     z-index: 100;
+}
+.ResourcePanelInfo {
+    color: #727272;
+}
+.ResourcePanelInfo a {
+    color: #414141;
 }
 .ResourcePanel.Selected { border: 3px solid #2E99E6; }
 tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of #2e99e6 which is used for .ResourcePanel.Selected */ }
@@ -340,11 +346,12 @@ input:checked + .customFieldLabel, .keywordselected {
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
 .ReportSummary td {border:1px solid #888;color:black;}
 .ReportMetric {color:black;}
-
-.BreadcrumbsBox {color:#FFF;}
-.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }
-.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0;}
-
+.SearchBreadcrumbs > span {color: #6a6a6a;}
+.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #474747; }
+.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.47);margin: 0 1em 1em 0; padding: 6px 8px; color: white;border-radius:6px;}
+.BreadcrumbsBoxTheme.BreadcrumbsBox a,
+.BreadcrumbsBoxTheme.BreadcrumbsBox a:link,
+.BreadcrumbsBoxTheme.BreadcrumbsBox a:visited {color: white;}
 .TopInpageNav select {
     background-color: #fff;
 }

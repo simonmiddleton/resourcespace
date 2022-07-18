@@ -69,7 +69,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 	<td><?php echo htmlspecialchars($statusname[$requests[$n]["status"]])?></td>
 	<td><?php echo (strlen((string) $requests[$n]["assigned_username"])==0) ? "-" : htmlspecialchars($requests[$n]["assigned_username"])?></td>
 	<td><?php echo (strlen((string) $requests[$n]["collection"])==0) ? "-" : htmlspecialchars($collection_prefix . $requests[$n]["collection"])?></td>
-	<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["editresearch"])?></a>&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["editcollection"])?></a></div></td>
+	<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-file-signature"></i>&nbsp' . htmlspecialchars($lang["editresearch"])?></a>&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="fas fa-shopping-bag"></i>&nbsp' . htmlspecialchars($lang["editcollection"])?></a></div></td>
 	</tr>
 	<?php
 	}

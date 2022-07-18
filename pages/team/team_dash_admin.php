@@ -84,6 +84,7 @@ if(getval("quicksave",FALSE))
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
+    <h1><?php echo $lang["manage_dash_tiles"]; ?></h1>
     <?php
         $links_trail = array(
         array(

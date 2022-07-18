@@ -125,7 +125,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         };
 
     $month_part = substr($date, 5, 2);
-    $m = $wordy ? (@$lang["months"][$month_part - 1]) : $month_part;
+    $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
         return $y;

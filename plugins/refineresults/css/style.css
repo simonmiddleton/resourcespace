@@ -27,19 +27,6 @@
     .TopInpageNav {
         padding:0;
     }
-    #Responsive_ResultDisplayOptions {
-        text-align: center;
-        margin-bottom: 10px;
-        display:inline-block !important;
-    }
-    #ResponsiveResultCount {
-        width: 95px;
-        display:block;
-        box-shadow: none;
-        font-size: 1em;
-        margin-left: 6px;
-        margin-bottom: 4px;
-    }
     #SearchResultFound {
         display:none;
     }

@@ -434,7 +434,16 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             ?>   
             <div id="HeaderButtons" style="display:none;">
                 <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
-                    <span class="rbText"><?php echo $allow_password_change == false ? htmlspecialchars(($userfullname=="" ? $username : $userfullname)) : $lang["responsive_settings_menu"]; ?></span>
+                    <span class="rbText">
+                        <?php if ($allow_password_change == false)
+                            {
+                            echo htmlspecialchars((!isset($userfullname)||$userfullname==""?$username:$userfullname));
+                            }
+                        else 
+                            {
+                            echo $lang["responsive_settings_menu"];
+                            }?>
+                        </span>
                     <?php if ($user_profile_image != "")
                         {
                         ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> <?php

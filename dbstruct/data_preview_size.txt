@@ -1,4 +1,4 @@
-1,thm,175,175,0,Thumbnail,1,0,0,0
+1,thm,200,200,0,Thumbnail,1,0,0,0
 2,pre,900,480,0,Preview,1,0,1,0
 3,scr,1400,800,0,Screen,0,1,0,0
 4,lpr,2000,2000,0,"Low resolution print",0,0,0,0

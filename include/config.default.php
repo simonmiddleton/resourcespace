@@ -737,7 +737,7 @@ $recent_search_quantity=1000;
 $help_link=true;
 
 # Display Search Results link in top navigation
-$search_results_link=true;
+$search_results_link=false;
 
 # Display a 'My Collections' link in the top navigation
 # Note that permission 'b' is needed for collection_manage.php to be displayed
@@ -1615,6 +1615,9 @@ $top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
 # You can set the following line to ''  to disable chunking.
 $upload_chunk_size='5mb';
+
+# This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
+$upload_concurrent_limit=5;
 
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.

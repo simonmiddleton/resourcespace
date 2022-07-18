@@ -31,7 +31,7 @@ $sql.=" order by {$order_by}";
 $sizes=ps_query($sql,$params);
 
 ?><div class="BasicsBox"> 
-	
+	<h1><?php echo $lang["page-title_size_management"]; ?></h1>
 	<?php
     $links_trail = array(
 	    array(

@@ -23,6 +23,7 @@ include dirname(__FILE__)."/../../include/header.php";
 ?>
 
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_analytics"]; ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -32,7 +33,6 @@ $links_trail = array(
     ),
     array(
         'title' => $lang["rse_analytics"],
-        'href'  => $baseurl_short . "pages/team/team_analytics.php",
 		'help'  => 'resourceadmin/analytics'
     )
 );

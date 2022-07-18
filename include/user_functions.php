@@ -317,6 +317,9 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     {
     global $usergroup, $U_perm_strict;
 
+    $order_by_parts = explode(" ",($order_by ?? ""));
+    $order_by       = $order_by_parts[0] ?? "u.username";
+    $sort           = strtoupper(($order_by_parts[1] ?? "ASC")) == "DESC" ? "DESC" : "ASC";
     if (!in_array($order_by, array("u.created", "u.username", "approved", "u.fullname", 'g.name', 'email', 'created', 'last_active')))
         {
         $order_by = "u.username";
@@ -417,7 +420,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         $select = "u.*, g.name groupname, g.ref groupref, g.parent groupparent";
         }
 
-    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup = g.ref $sql order by $order_by";
+    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup = g.ref $sql order by $order_by $sort";
 
     # Executes query.
     if($returnsql)

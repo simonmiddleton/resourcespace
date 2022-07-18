@@ -207,6 +207,7 @@ include "../../include/header.php"; ?>
 })(jQuery);
 </script>
 <div class="BasicsBox">
+<h1><?php echo $lang["pluginmanager"]; ?></h1>
 <?php
 $links_trail = array(
     array(

@@ -50,7 +50,7 @@ if (getval("submitting","")!="" && $api_function!="")
 
 <div class="RecordBox">
 <div class="RecordPanel">
-<div class="Title"><?php echo $lang['api-test-tool']; ?></div>
+<h1><?php echo $lang['api-test-tool']; ?></h1>
 
 <p><?php echo $lang["api-help"];render_help_link("api"); ?></p>
 

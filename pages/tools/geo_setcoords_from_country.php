@@ -67,10 +67,16 @@ function update_country_coords($refs,$latlong)
     {
     if(count($latlong)==2)
         {
-        ps_query(
-            "UPDATE resource SET geo_lat= ?, geo_long= ? WHERE ref IN(". ps_param_insert(count($refs)) .")",
-            array_merge(['d', $latlong[0], 'd', $latlong[1]], ps_param_fill($refs, 'i'))
-            );
+
+        $chunks = array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE);   
+
+        foreach($chunks as $chunk)
+            {
+            ps_query(
+                "UPDATE resource SET geo_lat= ?, geo_long= ? WHERE ref IN(". ps_param_insert(count($chunk)) .")",
+                array_merge(['d', $latlong[0], 'd', $latlong[1]], ps_param_fill($chunk, 'i'))
+                );
+            }
         }
     }
 

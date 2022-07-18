@@ -1221,7 +1221,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
     foreach(explode(';', $userresourcedefaults) as $rule)
         {
-        $rule_detail         = explode('=', $rule);
+        $rule_detail         = explode('=', trim($rule));
         $field_shortname     = $rule_detail[0];
         $field_default_value = $rule_detail[1];
 
@@ -7813,7 +7813,7 @@ function get_download_filename($ref,$size,$alternative,$ext)
 
     elseif (isset($download_filename_field))
         {
-        $newfilename=get_data_by_field($ref,$download_filename_field);
+        $newfilename=safe_file_name( get_data_by_field($ref,$download_filename_field) );
         if ($newfilename)
             {
             $filename = trim(nl2br(strip_tags($newfilename)));
@@ -8011,7 +8011,7 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 
     if(trim($shortname) == "")
         {
-        $shortname = mb_substr(mb_strtolower(str_replace("_","",safe_file_name($name))),0,20);
+        $shortname = mb_substr(mb_strtolower(str_replace(array("_", "-"), "", safe_file_name($name))), 0, 20);
         }
 
     $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$shortname), 0, "schema");

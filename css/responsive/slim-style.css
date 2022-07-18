@@ -516,7 +516,7 @@ body {
     #SearchBoxPanel input, #SearchBoxPanel label, #SearchBoxPanel h2, #SearchBoxPanel .SearchItem, #SearchBoxPanel .StarRatings, #SearchBoxPanel #searchbarrt, #SearchBoxPanel p {
         display:none;
     }
-    #SearchBoxPanel #ssearchbox, #SearchBoxPanel #simplesearchbuttons, #SearchBoxPanel #searchbutton, #SearchBoxPanel #Rssearchexpand {
+    #SearchBoxPanel #ssearchbox, #SearchBoxPanel #simplesearchbuttons, #SearchBoxPanel #Rssearchexpand {
         display:inline-block!important;
     }
     /* Show Full Bar when clicked */
@@ -732,12 +732,6 @@ body {
 }
 
 /* Search Results */
- #ResponsiveResultCount {
-    display:none;
- }
- #Responsive_ResultDisplayOptions {
-    display:none;
- }
  @media(max-width:1500px) {
     .BottomInpageNavRight .TopInpageNavRight {
         position:relative;
@@ -747,40 +741,6 @@ body {
         width: 100%;
         float: none;
         text-align: center;
-    }
- }
- @media(max-width:1430px) {
-    .TopInpageNavLeft {
-        padding: 0;
-        margin: 10px 0;
-    }
-    .TopInpageNav {
-        padding:0;
-    }
-    #Responsive_ResultDisplayOptions {
-        text-align: center;
-        margin-bottom: 10px;
-        display:inline-block !important;
-    }
-    #ResponsiveResultCount {
-        width: 95px;
-        display:block;
-        box-shadow: none;
-        font-size: 1em;
-        margin-left: 6px;
-        margin-bottom: 4px;
-    }
-    #SearchResultFound {
-        display:none;
-    }
-    .TopInpageNav .InpageNavLeftBlock {
-        width: 95%;
-        display: none;
-        margin: 0 0 10px 0;
-    }
-    .TopInpageNav .InpageNavLeftBlock a, .InpageNavLeftBlock span {
-        display:inline-block;
-        float:none;
     }
  }
  @media(max-width:1200px) {
@@ -860,9 +820,6 @@ body {
     #Rssearchexpand {
         margin-right:0;
     }
-    #Responsive_ResultDisplayOptions {
-        width: 100%;
-    }
     #CentralSpaceLogin {
         margin: 0;
         width: unset;
@@ -904,16 +861,10 @@ body {
         margin-top:10px;
         text-align:center;
     }
-    #Responsive_ResultDisplayOptions {
-        margin-bottom: 12px;    
-    }
 }
 @media(min-width:1601px) {
     .InpageNavLeftBlock {
         display:inline-block!important;
-    }
-    #Responsive_ResultDisplayOptions {
-        display:none;
     }
 }
 

@@ -545,14 +545,6 @@ if (getval("ajax","") == "")
                 }
             }
 		
-		function toggleResultOptions()
-			{
-			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
-			jQuery("#ResponsiveResultCount").toggle();
-			jQuery("#SearchResultFound").hide();
-			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock.icondisplay").css('display', 'inline-block');
-			}
-		
 		/* Responsive Stylesheet inclusion based upon viewing device */
 		if(document.createStyleSheet)
 			{
@@ -702,18 +694,6 @@ if (getval("ajax","") == "")
 				}
 			});
 		jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
-		jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event)
-			{
-			if(jQuery(this).hasClass("RSelectedButton"))
-				{
-				jQuery(this).removeClass("RSelectedButton");
-				}
-			else
-				{
-				jQuery(this).addClass("RSelectedButton");
-				}
-			toggleResultOptions();
-			});
 		
 		if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device())
 			{

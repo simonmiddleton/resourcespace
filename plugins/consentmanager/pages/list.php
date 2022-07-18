@@ -29,6 +29,7 @@ $url_params = array(
 );
 ?>
 <div class="BasicsBox"> 
+<h1><?php echo $lang["manageconsents"]; ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -52,11 +53,11 @@ $sql="";
 $params = [];
 if ($findtext!="")
     {
-    $sql="where name   like '%?%'";
-    $params = ['s', $findtext];
+    $sql="where name like ?";
+    $params = ['s', "%$findtext%"];
 	}
 
-$consents= ps_query("select * from consent $sql order by ref", $params);
+$consents= ps_query("select ". columns_in('consent') ." from consent $sql order by ref", $params);
 
 # pager
 $per_page = $default_perpage_list;
