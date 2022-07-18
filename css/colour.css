@@ -61,7 +61,7 @@ input[readonly] {
 
 .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
 #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
-    border-radius:4px;
+    border-radius:8px;
     overflow: hidden;
 }
 .ResourcePanel {
@@ -348,7 +348,7 @@ input:checked + .customFieldLabel, .keywordselected {
 .ReportMetric {color:black;}
 .SearchBreadcrumbs > span {color: #6a6a6a;}
 .BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #474747; }
-.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0; padding: 6px 8px; color: white;border-radius:6px;}
+.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.47);margin: 0 1em 1em 0; padding: 6px 8px; color: white;border-radius:6px;}
 .BreadcrumbsBoxTheme.BreadcrumbsBox a,
 .BreadcrumbsBoxTheme.BreadcrumbsBox a:link,
 .BreadcrumbsBoxTheme.BreadcrumbsBox a:visited {color: white;}

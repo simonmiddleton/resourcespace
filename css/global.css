@@ -79,7 +79,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     color: #fff;
     text-decoration: none;
     cursor: pointer;
-    font-weight: normal;
+    font-weight: 600;
     box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
@@ -172,8 +172,8 @@ select::-ms-expand
     display: none;
     }
 
-#clearbutton {margin: 10px 5px 0 0;width: 122px;}
-#searchbutton{ width: 122px;margin: 10px 0 0 0;}
+#clearbutton {margin: 10px 5px 0 0;width: 122px; font-weight: 600;}
+#searchbutton{ width: 122px;margin: 10px 0 0 0; font-weight: 600;}
 /*General tags*/
 .clearer {clear:both;}
 .clearerleft {clear:left;}
@@ -460,7 +460,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .thumbs-file-extension {
     display: inline-block;
-    font-weight: 900;
+    font-weight: 600;
     background: #0000006e;
     color: white;
     border-radius: 3px;
@@ -1018,7 +1018,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     margin-right: 10px;
     margin-top: 3px;
     background-color: white;
-    padding: 3px 5px 2px 3px;
+    padding: 3px 5px 1px 3px;
     box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
     border-radius: 4px;
     }
@@ -2110,11 +2110,12 @@ a.BrowseRefresh{
 
 .UploadButton a
     {
-    border-radius:4px;    
+    border-radius:4px;
     padding:0 10px 0 10px;
     opacity:0.9 !important;
     margin-right:10px;
     border: none;
+    font-weight: 600;
     }
 
 .HelpLink {

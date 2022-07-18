@@ -31,7 +31,6 @@ if (!checkperm_user_edit($userref))	// if not an admin then force act as user as
 	$actasuser=$userref;
 	}
 
-
 // ----- Main page load -----
 if ($callback == "")
 	{
@@ -40,6 +39,13 @@ if ($callback == "")
 		include "../../include/header.php";
         render_top_page_error_style($error);
 		}
+    
+    ?>
+    <div class="BasicsBox">
+        <h1><?php echo $lang["systemconsole"] ?></h1>
+    </div>    
+    <?php
+
 	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
 	{
 		?><script>
