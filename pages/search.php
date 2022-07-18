@@ -510,7 +510,7 @@ if( isset($_REQUEST["search"]) && $_REQUEST["search"] == "" )
     }
 hook('searchaftersearchcookie');
 
-$rowstoretrieve = $per_page+$offset;
+$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page+$offset;
 
 // Do collections search first as this will determine the rows to fetch for do_search() - not for external shares
 if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard)
@@ -1467,13 +1467,13 @@ if (!hook("replacesearchheader")) # Always show search header now.
         // Loop through search results.
         for ($n = 0; $n < $result_count; $n++)
             {            
-            if(!is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
+            if(!isset($result[$n]) || !is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
                 {
                 continue;
                 }
             // Get resource data for resources returned by the current search.
             $geo = $result[$n]['ref'];
-            $geomark = get_resource_data($geo, $cache = false);
+            $geomark = get_resource_data($geo, true);
             $geomark['preview_path'] = get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
             // Get custom metadata field value.
             if (isset($marker_metadata_field))
@@ -1493,7 +1493,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 }
             }
         }
-
     # work out common keywords among the results
     if (is_array($result) && (count($result)>$suggest_threshold) && (strpos($search,"!")===false) && ($suggest_threshold!=-1))
         {
