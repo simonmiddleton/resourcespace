@@ -60,7 +60,7 @@ $camera_make = "New Camera make +";
 update_field($resource, 52, $camera_make);
 
 
-$tmpfile = write_metadata($resource_path, $resource);
+$tmpfile = write_metadata($resource_path, $resource,"",true);
 if(false === $tmpfile || !file_exists($tmpfile))
     {
     teardown_002000($tmpfile);

@@ -3917,7 +3917,7 @@ function stripMetadata($file_path)
     return true;
     }
 
-function write_metadata($path, $ref, $uniqid="")
+function write_metadata($path, $ref, $uniqid="", $suppresserrors=false)
 	{
     debug_function_call('write_metadata', func_get_args());
 	// copys the file to tmp and runs exiftool on it
@@ -3961,6 +3961,11 @@ function write_metadata($path, $ref, $uniqid="")
             {
             $command = stripMetadata(null) . ' ';
             debug("[write_metadata()][ref={$ref}] Removing existing metadata. Command: ". json_encode($command));
+            }
+
+        if($suppresserrors)
+            {
+            $command .= " -q -q ";
             }
 
         $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
@@ -4097,7 +4102,6 @@ function write_metadata($path, $ref, $uniqid="")
 
             # Add the filename to the command string.
             $command.= " " . escapeshellarg($tmpfile);
-
             # Perform the actual writing - execute the command string.
             $output = run_command($command);
         return $tmpfile;
