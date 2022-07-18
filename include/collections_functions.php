@@ -1620,7 +1620,10 @@ function save_collection($ref, $coldata=array())
         
         # log the removal of users / smart groups
         $was_shared_with = array();
-        $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
+        if (count($old_attached_users) > 0)
+            {
+            $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
+            }
         if (count($old_attached_groups) > 0)
             {
             foreach($old_attached_groups as $old_group)
