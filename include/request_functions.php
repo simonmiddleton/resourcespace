@@ -486,7 +486,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $user_mail_template="emailusercollectionrequest";
 
     if ($ref_is_resource)
-        {        
+        {
         $resourcedata=get_resource_data($ref);
         $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
 
@@ -801,11 +801,15 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $requestrestypes=array_unique($requestrestypes);
             if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
                 {
-                $admin_notify_emails[]=$resource_type_request_emails[$requestrestypes[0]];
+                $emailusers = get_user_by_email($resource_type_request_emails[$requestrestypes[0]]);
                 }  
-            foreach($admin_notify_emails as $admin_notify_email)
+            if(is_array($emailusers) && count($emailusers) > 0)
                 {
-                send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
+                send_user_notification($emailusers,$admin_notify_message);
+                }
+            else
+                {
+                send_mail($resource_type_request_emails[$requestrestypes[0]],$applicationname . ": " . $lang["requestcollection"] . " - $ref","<p>" . $admin_notify_message->get_text() . "</p>" . $admin_notify_message->url ,$email_from,$email_from,$admin_mail_template,$templatevars);
                 }
             }
 
