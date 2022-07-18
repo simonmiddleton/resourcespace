@@ -74,7 +74,7 @@ function deletestate(code)
 
 
 <div class="BasicsBox">
-
+<h1><?php echo $lang["rse_workflow_manage_states"]; ?></h1>
 <div class="clearerleft" ></div>
 
 <form style="display:none" id="form_delete_state" name="form_delete_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php">

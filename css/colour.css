@@ -346,11 +346,12 @@ input:checked + .customFieldLabel, .keywordselected {
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
 .ReportSummary td {border:1px solid #888;color:black;}
 .ReportMetric {color:black;}
-
-.BreadcrumbsBox {color:#FFF;}
-.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }
-.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0;}
-
+.SearchBreadcrumbs > span {color: #6a6a6a;}
+.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #474747; }
+.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0; padding: 6px 8px; color: white;border-radius:6px;}
+.BreadcrumbsBoxTheme.BreadcrumbsBox a,
+.BreadcrumbsBoxTheme.BreadcrumbsBox a:link,
+.BreadcrumbsBoxTheme.BreadcrumbsBox a:visited {color: white;}
 .TopInpageNav select {
     background-color: #fff;
 }

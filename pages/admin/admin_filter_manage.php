@@ -41,7 +41,7 @@ include "../../include/header.php";
     <div id="CentralSpace">
 
         <div class="BasicsBox">
-
+            <h1><?php echo $lang["filter_manage"]; ?></h1>
             <?php
             $links_trail = array(
                 array(
@@ -51,7 +51,6 @@ include "../../include/header.php";
                 ),
                 array(
                     'title' => $lang["filter_manage"],
-                    'href'  => $baseurl_short . "pages/admin/admin_filter_manage.php",
                     'help'  => 'systemadmin/search-filters'
                 )
             );

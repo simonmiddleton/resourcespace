@@ -61,6 +61,7 @@ function deleteaction(ref)
 
 
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_workflow_manage_actions"]; ?></h1>
 <?php
 $links_trail = array(
     array(

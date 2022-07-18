@@ -215,6 +215,7 @@ include "../../include/header.php";
 ?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform" class="FormWide">
     <?php generateFormToken("mainform"); ?>
     <div class="BasicsBox">
+    <h1><?php echo $lang["page-title_user_group_management_edit"]; ?></h1>
     <?php
         $links_trail = array(
             array(

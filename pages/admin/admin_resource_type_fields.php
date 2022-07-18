@@ -92,6 +92,11 @@ function addColumnHeader($orderName, $labelKey)
             'help'  => "resourceadmin/configure-metadata-field"
         )
     );
+    ?>
+
+    <div class="BasicsBox">
+    <h1><?php echo $lang["admin_resource_type_fields"]; ?></h1>
+    <?php
 
   renderBreadcrumbs($links_trail);
 
@@ -114,11 +119,6 @@ $arr_restypes[999]=$lang["resourcetype-archive_only"];
 $results=count($fields);
 
 ?>
-
-
-<div class="BasicsBox">
-
-
 
 <div class="FormError" id="PageError"
   <?php

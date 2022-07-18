@@ -465,7 +465,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     color: white;
     border-radius: 3px;
     font-size: 12px;
-    padding: 2px 4px 1px 4px;
+    padding: 3px 4px 1px 4px;
     margin: 3px;
     cursor: default;
 }
@@ -726,7 +726,7 @@ table.TableArray:not(:first-of-type) {margin-top: 5px;}
 .URLDisplay {width: 100%;font-size: 1em;}
 
 .PageIntrotext{
-    padding-top: 15px;
+    padding-top: 8px;
 }
 
 .BreadcrumbsBox .HelpLink {
@@ -1030,7 +1030,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .update_result_order_button {
     display: inline-block;
     background-color: white;
-    padding: 4px 8px;
+    padding: 4px 7px;
     vertical-align: middle;
     border-radius: 4px;
     box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
@@ -1039,7 +1039,6 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #SearchResultFound {
     padding-top: 7px;
     min-width: 90px;
-    padding-left: 10px;
 }
 
 #contactadminbox  textarea{
@@ -1845,12 +1844,8 @@ a.Enabled, a:visited.Enabled {
 /* Breadcrumbs */
 .BreadcrumbsBox {
     display: table;
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    margin: 1em 1em 0.8em 0;
-    padding: 8px 10px;
-    background: gray;
+    margin: 0 0 8px 0;
+    padding: 0 0 8px 0;
 }
 .BreadcrumbsBox > .SearchBreadcrumbs{
     margin: 0;

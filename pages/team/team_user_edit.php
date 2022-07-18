@@ -128,6 +128,8 @@ if(getval('loginas', '') != '')
 
 <div class="RecordHeader">
 
+<h1><?php echo $lang["edituser"]; ?></h1>
+
 <?php
 // Breadcrumbs links
 global $display_useredit_ref;
@@ -143,7 +145,6 @@ $links_trail = array(
     ),
     array(
         'title' => $lang["edituser"] . ($display_useredit_ref ? " " . $ref : ""),
-        'href'  => $url,
         'help' => 'systemadmin/creating-users'
     )
 );

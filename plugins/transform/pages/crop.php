@@ -437,6 +437,12 @@ else
 
 include "../../../include/header.php";
 
+?>
+
+<div class="BasicsBox">
+<h1><?php echo $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']; ?></h1>
+
+<?php
 # slider, sound, controls
 
 if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
@@ -1292,6 +1298,8 @@ renderBreadcrumbs($links_trail);
 
              
 </form>
+
+</div>
 
 <?php  
 

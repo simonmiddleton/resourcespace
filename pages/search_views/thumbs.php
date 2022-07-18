@@ -68,7 +68,7 @@ if (!hook("renderresultthumb"))
 
     <!--Resource Panel -->    
     <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
-    style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
+    style=""
     <?php hook('renderadditionalthumbattributes', '', [$result[$n]]);?>
     >
         <div class="ResourcePanelTop">

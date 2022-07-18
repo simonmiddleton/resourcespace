@@ -163,7 +163,7 @@ else if (strpos($backurl, "pages/team/team_user.php") !== false)
         )
     );
     }
-elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
+else if (strpos($backurl, "pages/team/team_user_edit.php") !== false)
     {
     // Arrived from Edit user page
     $links_trail = array(
@@ -182,10 +182,18 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
         )
     );
     }
+else
+    {
+    $links_trail = [
+        ['title' => $lang["systemsetup"], 'href' => "{$baseurl_short}pages/admin/admin_home.php"]
+    ];
+    }
 $links_trail[] = array(
-    'title' => htmlspecialchars($title),
-    'href'  => ""
+    'title' => htmlspecialchars($title)
 );
+?>
+<h1><?php echo htmlspecialchars($title); ?></h1>
+<?php
 renderBreadcrumbs($links_trail);
 ?>
     <h1>

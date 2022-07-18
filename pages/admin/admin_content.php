@@ -38,6 +38,7 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox" style="position:relative;">
+<h1><?php echo $lang["managecontent"]; ?></h1>
 <?php
 $links_trail = array(
     array(

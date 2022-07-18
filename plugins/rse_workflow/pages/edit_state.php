@@ -118,6 +118,7 @@ include '../../../include/header.php';
 ?>
 
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_workflow_edit_state"]; ?></h1> 
 <?php
 $links_trail = array(
     array(

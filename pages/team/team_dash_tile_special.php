@@ -8,6 +8,7 @@ include "../../include/dash_functions.php";
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
+<h1><?php echo $lang["specialdashtiles"]; ?></h1>
 <?php
 $links_trail = array(
     array(

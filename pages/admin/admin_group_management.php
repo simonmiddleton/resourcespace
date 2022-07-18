@@ -122,7 +122,8 @@ function addColumnHeader($orderName, $labelKey)
 <?php
 }
 
-?><div class="BasicsBox"> 
+?><div class="BasicsBox">
+<h1><?php echo $lang["page-title_user_group_management"]; ?></h1>
 <?php
 	$links_trail = array(
 	    array(

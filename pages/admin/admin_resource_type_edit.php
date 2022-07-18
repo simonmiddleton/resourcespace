@@ -151,6 +151,7 @@ include "../../include/header.php";
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 
 <div class="BasicsBox">
+<h1><?php echo htmlspecialchars(i18n_get_translated($restypedata["name"])); ?></h1>
 <?php
 $links_trail = array(
     array(

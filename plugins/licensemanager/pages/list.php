@@ -35,6 +35,7 @@ $url_params = array(
 );
 ?>
 <div class="BasicsBox"> 
+<h1><?php echo $lang["managelicenses"]; ?></h1>
 <?php
     $links_trail = array(
         array(

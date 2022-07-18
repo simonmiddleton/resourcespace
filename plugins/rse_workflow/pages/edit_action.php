@@ -129,6 +129,7 @@ if (isset($saveerror))
 ?>
 		
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_workflow_action_edit_action"]; ?></h1>
 <?php
 $links_trail = array(
     array(

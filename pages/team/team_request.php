@@ -17,7 +17,7 @@ $offset=getval("offset",0,true);
 ?>
 
 <div class="BasicsBox"> 
-
+<h1><?php echo $lang["managerequestsorders"]; ?></h1>
 <?php
 $links_trail = array(
     array(

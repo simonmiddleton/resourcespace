@@ -186,7 +186,8 @@ else
 	{
 	# Normal behaviour.
     ?>
-<div class="BasicsBox"> 
+<div class="BasicsBox">
+    <h1><?php echo $lang['viewreports']; ?></h1>
 	<?php
 	if($run_report_on_search_results)
         {
