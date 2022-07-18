@@ -83,7 +83,7 @@ if (!hook("renderresultthumb"))
                 {
                 foreach ($types as $type)
                     {
-                    if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]))
+                    if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "")
                         {
                         echo '<div class="ResourceTypeIcon fa-fw ' . htmlspecialchars($type["icon"]) . '" title="' . htmlspecialchars($type["name"]) . '"></div>';  
                         }
