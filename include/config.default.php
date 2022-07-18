@@ -737,7 +737,7 @@ $recent_search_quantity=1000;
 $help_link=true;
 
 # Display Search Results link in top navigation
-$search_results_link=true;
+$search_results_link=false;
 
 # Display a 'My Collections' link in the top navigation
 # Note that permission 'b' is needed for collection_manage.php to be displayed

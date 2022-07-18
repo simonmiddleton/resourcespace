@@ -3,7 +3,7 @@ if (!hook("renderresultthumb"))
     {
     # Establish various metrics for use in thumbnail rendering
     $resolved_title_trim=0; 
-    $field_height = 31;
+    $field_height = 24;
     $resource_id_height = 21;
     $workflow_state_height = 31;
 
@@ -12,16 +12,17 @@ if (!hook("renderresultthumb"))
     if ($display == "xlthumbs")
         {
         $resolved_title_trim = $xl_search_results_title_trim;
-        $resource_panel_height = 375;
+        $resource_panel_height = 351;
         }
     else
         {
         $resolved_title_trim = $search_results_title_trim;
-        $resource_panel_height = 228;
+        $resource_panel_height = 231;
         }
 
-    $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * count($thumbs_display_fields));
-
+    $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * (count($thumbs_display_fields))) + 2;
+    
+    # Add space for number of annotations
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
         $thumbs_displayed_fields_height += $field_height;
@@ -34,7 +35,12 @@ if (!hook("renderresultthumb"))
             {
             if(in_array($df[$i]['ref'],$thumbs_display_fields) && in_array($df[$i]['ref'],$thumbs_display_extended_fields))
                 {
-                $thumbs_displayed_fields_height += ($search_result_title_height - 18);
+                if ($df[$i]['ref'] == $thumbs_display_fields[0])
+                    {
+                    # If extending the taller first field take off more height
+                    $thumbs_displayed_fields_height -= 2;
+                    }
+                $thumbs_displayed_fields_height += ($search_result_title_height - 19);
                 }
             }
         }
@@ -69,7 +75,7 @@ if (!hook("renderresultthumb"))
             <?php
             if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "")
                 { ?>
-                <span class="thumbs-file-extension"><?php echo strtoupper(htmlspecialchars($result[$n]['file_extension'])) ?></span>
+                <div class="thumbs-file-extension"><?php echo strtoupper(htmlspecialchars($result[$n]['file_extension'])) ?></div>
                 <?php
                 }
 
@@ -178,7 +184,7 @@ if (!hook("renderresultthumb"))
                         { ?>
                         <img 
                             border=0 
-                            src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:<?php echo ($display == "xlthumbs" ? "90px" : "10px")?>;"
+                            src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:<?php echo ($display == "xlthumbs" ? "90px" : "35px")?>;"
 
                         />
                         <?php 
@@ -271,7 +277,7 @@ if (!hook("renderresultthumb"))
                 {
                 if (!hook("replaceresourcepanelinfo"))
                     { ?>
-                    <div class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']?>"
+                    <div class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''?>"
                     title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
                     >
                         <div class="extended">
@@ -306,7 +312,7 @@ if (!hook("renderresultthumb"))
                 {
                 if (!hook("replaceresourcepanelinfonormal"))
                     { ?>
-                    <div class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']?>"
+                    <div class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''?>"
                     title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value))); ?>"
                     >
                         <?php 

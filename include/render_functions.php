@@ -962,7 +962,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     ?>
     </select>
     &nbsp;
-    <a href="#" onClick="UpdateResultOrder(true);">
+    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);">
         <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
     </a>
 
@@ -2841,8 +2841,8 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
         break;
 
         case "thumbs":
-            $defaultwidth = 175;
-            $defaultheight = 175;
+            $defaultwidth = 200;
+            $defaultheight = 200;
         break;        
         
         case "collection":

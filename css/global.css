@@ -315,12 +315,12 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left;}
 #CentralSpace {text-align:left;position:relative;display: inline-block; width: 100%;}
 
-.TopInpageNav {clear: left;margin-bottom:15px;margin-right: 0;position:relative;min-height: 30px;}
+.TopInpageNav {clear: left;margin-bottom:10px;margin-right: 0;position:relative;min-height: 30px;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left; width: 90%;}
 .TopInpageNavRight{position:absolute;right:0;top:3px;width:max-content;text-align:right;}
-.InpageNavLeftBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 20px 0 0;}
+.InpageNavLeftBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 20px 5px 0;}
 .InpageNavRightBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 15px 0 0;}
 .BottomInpageNavLeft {float:left;}
 .BottomInpageNavRight{float:right;margin-right:10px;text-align:right;}
@@ -415,20 +415,22 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .PoweredByPanel img {max-width: 215px; margin-top: 8px;}
 
 /*Resource Panel layout*/
-.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 175px;float:left;position:relative; overflow: hidden;}
+.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 200px;float:left;position:relative; overflow: hidden;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
-.ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px;text-align:justify;text-overflow: ellipsis;}   
+.ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px 5px 0 5px;text-align:justify;text-overflow: ellipsis; font-size: 13px; min-height: 19px;}
+.ResourcePanelInfo.ResourcePanelTitle {font-size: 15px; min-height: 21px;}
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0;float: left;clear: left;display:inline;}
 .ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;} 
 .ResourcePanelSmallIcons {padding-left: 5px;}
-.ResourcePanelTop {height: 22px;} 
+.ResourcePanelTop {position: absolute; width: 100%;} 
+.ImageWrapper {height:200px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right; margin-bottom: 5px;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 .ImageColourWrapper {display: inline-block;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
-.ResourceTypeIcon.fa-fw {height: 16px;width:16px;float:right;margin: 3px; }
+.ResourceTypeIcon.fa-fw {height: 16px;width:16px;float:right;margin: 3px; color: white; background: #0000006e; padding: 3px 4px 2px 4px; border-radius: 3px;}
 .ResourcePanelShell a:link, .ResourcePanelShell a:visited {text-decoration:none;}
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}
@@ -457,13 +459,14 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .DESC {display: inline;padding-right: 10px;}
 
 .thumbs-file-extension {
-    font-weight: bold;
-    background: #e4e4e4;
-    color: #404040;
-    border-radius: 4px;
+    display: inline-block;
+    font-weight: 900;
+    background: #0000006e;
+    color: white;
+    border-radius: 3px;
     font-size: 12px;
-    padding: 3px;
-    margin: 1px;
+    padding: 2px 4px 1px 4px;
+    margin: 3px;
     cursor: default;
 }
 
@@ -1014,14 +1017,27 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     {
     margin-right: 10px;
     margin-top: 3px;
+    background-color: white;
+    padding: 3px 5px 2px 3px;
+    box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
+    border-radius: 4px;
     }
 
 #searchSortOrderContainer, #resultsdisplay, .InpageNavLeftBlock {
     vertical-align: top;
 }
 
+.update_result_order_button {
+    display: inline-block;
+    background-color: white;
+    padding: 4px 8px;
+    vertical-align: middle;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
+}
+
 #SearchResultFound {
-    padding-top: 3px;
+    padding-top: 7px;
     min-width: 90px;
     padding-left: 10px;
 }
@@ -1044,6 +1060,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 #ssearchbox {
     margin-top:8px;
     padding: 4px 30px 4px 6px;
+    border: none;
 }
 
 .search-icon,
@@ -1051,13 +1068,18 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .search-icon:active {
     float: left;
     position: relative;
-    color: gray;
+    color: #0299d8;
     margin-top: -31px;
-    margin-left: 220px;
+    margin-left: 221px;
     font-size: 17px;
-    background-color: unset;
+    background-color: #e8edf1;
     box-shadow: none;
     padding: 0 5px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    filter: unset;
+    -moz-filter: unset;
+    -webkit-filter: unset;
 }
 
 .CollectionsCompactToolsContainerDummy, .CollectionsCompactToolsContainer {display:inline-block;}

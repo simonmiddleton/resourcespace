@@ -958,47 +958,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
     <div class="TopInpageNav">
     <div class="TopInpageNavLeft">
 
-<?php
-if($responsive_ui)
-    {
-    ?>
-    <div class="ResponsiveResultDisplayControls">
-        <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?></a>
-        <div id="ResponsiveResultCount" style="display:none;">
-        <?php
-        if($use_selection_collection && $selection_collection_resources_count > 0)
-            {
-            echo render_selected_resources_counter(count($selection_collection_resources));
-            }
-        else if(isset($collections)) 
-            {
-            ?>
-            <span class="Selected">
-            <?php
-            echo number_format($result_count);
-            ?>
-            </span>
-            <?php
-            echo ($result_count==1) ? $lang['youfoundresult'] : $lang['youfoundresults'];
-            } 
-        else
-            {
-            ?>
-            <span class="Selected">
-            <?php
-            echo number_format($resources_count);
-            ?>
-            </span>
-            <?php
-            echo ($resources_count==1)? $lang['youfoundresource'] : $lang['youfoundresources'];
-            }
-            ?>
-        </div>
-    </div>
-    <?php
-    }
-    hook('responsiveresultoptions');
-    ?>
     <div id="SearchResultFound" class="InpageNavLeftBlock">
     <?php
     if($use_selection_collection && $selection_collection_resources_count > 0)
