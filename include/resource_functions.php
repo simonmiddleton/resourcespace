@@ -841,7 +841,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                     // Check if resource field data has been changed between form being loaded and submitted
                     $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-                    $current_cs = md5($fields[$n]['value']);
+                    $current_cs = md5((string)$fields[$n]['value']);
                     if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
@@ -2060,7 +2060,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         return false;
         }
 
-    $value = trim($value);
+    $value = trim((string)$value);
     if($value === '' && $fieldinfo['required'])
         {
         return false;
