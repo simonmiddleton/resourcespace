@@ -103,7 +103,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
     if($propertyname == 'regexp_filter')
         {
         global $regexp_slash_replace; 
-        $currentvalue = str_replace($regexp_slash_replace, '\\', $currentvalue);
+        $currentvalue = str_replace($regexp_slash_replace, '\\', (string) $currentvalue);
         }
 		
 	$alt_helptext=hook('rtfieldedithelptext', 'admin_resource_type_field_edit', array($propertyname));
@@ -113,13 +113,13 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 	
 	?>
 	<div class="Question" >
-		<label><?php echo ($propertytitle!="") ? htmlspecialchars($propertytitle) : htmlspecialchars($propertyname); ?></label>
+		<label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
 		<?php
 		if($propertyname=="resource_type")
 			{
 			global $resource_types;
 			?>
-            <select id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" class="stdwidth">
+            <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
             <option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
 
             <?php
@@ -141,8 +141,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			//natsort($field_types);
 			?>
-                <select id="field_edit_<?php echo htmlspecialchars($propertyname); ?>"
-                        name="<?php echo htmlspecialchars($propertyname); ?>"
+                <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>"
+                        name="<?php echo htmlspecialchars((string) $propertyname); ?>"
                         class="stdwidth"
                         onchange="
                              <?php if(!$newfield)
@@ -237,7 +237,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				// The linked_data_field column is is only used for date range fields at present			
 				// Used to store the raw EDTF string submitted
 				?>
-				<input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+				<input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
 				<?php
 				}
 			}
@@ -248,14 +248,14 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			
 			?>
-			  <select id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" class="stdwidth">
+			  <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
 				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
 				<?php
 				foreach($allfields as $field)
 					{
 					if($field["ref"]!=$ref && isset($resource_type_array[$field["resource_type"]])) // Don't show itself as an option to sync with
 					    {?>
-					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars($field["name"]) . " - ") . i18n_get_translated($resource_type_array[$field["resource_type"]]) . ")"?></option>
+					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]) . " - ") . i18n_get_translated($resource_type_array[$field["resource_type"]]) . ")"?></option>
 					    <?php
 					    }
 					}
@@ -272,7 +272,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                 {
                 $selected = $tab_ref === (int) $currentvalue ? 'selected' : '';
                 ?>
-                <option value="<?php echo (int) $tab_ref; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($tab_name); ?></option>
+                <option value="<?php echo (int) $tab_ref; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars((string) $tab_name); ?></option>
                 <?php
                 }
             ?>
@@ -283,24 +283,24 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			{
 			if ($propertyname=="advanced_search" && $system_date_field)
                 {
-                ?><input id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                ?><input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
                 $helptext=$lang["property-system_date_help_text"];
                 }
             else
                 {
-                ?><input id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                ?><input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
                 }
 			}
 		elseif($type==2)
 			{
 			?>
-			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
+			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
 			<?php
 			}
 		else
 			{
 			?>
-			<input id="field_edit_<?php echo htmlspecialchars($propertyname); ?>" name="<?php echo htmlspecialchars($propertyname); ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+			<input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
 			<?php
 			}
 
