@@ -39,25 +39,25 @@ foreach(array_keys($system_tabs) as $tab_ref)
     for($i = 0; $i < count($fields); ++$i)
         {
         $fields[$i]['tab'] = (int) $fields[$i]['tab'];
-
-        // Check if the field can show on this tab
-        if(
-            $tab_ref > 0
-            && $tab_ref == $fields[$i]['tab']
-            && $fields[$i]['display_field'] == 1
+        $field_can_show_on_tab = (
+            $fields[$i]['display_field'] == 1
             && $fields[$i]['value'] != ''
             && $fields[$i]['value'] != ','
             && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted']))
             && check_view_display_condition($fields, $i, $fields_all)
-        )
+        );
+
+        // Check if the field can show on this tab
+        if($tab_ref > 0 && $tab_ref == $fields[$i]['tab'] && $field_can_show_on_tab)
             {
             $tabs_fields_assoc[$tab_ref][$i] = $fields[$i]['ref'];
             $disable_tabs = false;
             }
-        // Unassigned or invalid tab links end up in the "not set" list
+        // Unassigned or invalid tab links end up on the "not set" list (IF they will be rendered)
         else if(
             !isset($tabs_fields_assoc[0][$i])
             && (0 === $fields[$i]['tab'] || !isset($system_tabs[$fields[$i]['tab']]))
+            && $field_can_show_on_tab
         )
             {
             $tabs_fields_assoc[0][$i] = $fields[$i]['ref'];
