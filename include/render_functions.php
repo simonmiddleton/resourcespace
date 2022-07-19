@@ -4112,7 +4112,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		}
 	
 	# Handle general warning messages
-	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim($value) != "") 
+	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim((string)$value) != "") 
 		{
         # title comes from field
         # value comes from field
@@ -4133,7 +4133,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         {
         eval(eval_check_signed($field['value_filter']));
         }
-    else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
+    else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos((string)$value,":")!=false)
         {
         // Show the time as well as date if entered
         $value=nicedate($value,true,true);
@@ -4144,7 +4144,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         }
 	else if ($field["type"]==FIELD_TYPE_DATE_RANGE) 
 		{
-		$rangedates = explode(",",$value);		
+		$rangedates = explode(",",(string)$value);		
 		natsort($rangedates);
 		$value=implode($range_separator,$rangedates);
 		}
