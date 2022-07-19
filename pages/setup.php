@@ -393,7 +393,7 @@ h2#dbaseconfig{  min-height: 32px;}
 <div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
-    	<img src="../gfx/titles/title.svg" id="HeaderImg" />
+    	<img src="../gfx/titles/title-black.svg" id="HeaderImg" />
     </div>
     <div id="HeaderNav1" class="HorizontalNav "><ul></ul></div>
 	<div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
