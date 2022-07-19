@@ -890,7 +890,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $rawval = getval("field_" . $fields[$n]["ref"],"");
                     // Check if resource field data has been changed between form being loaded and submitted
                     $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-                    $current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
+                    $current_cs = md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'])));
                     if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
@@ -900,7 +900,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 # Check for regular expression match
-                if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+                if (trim(strlen((string) $fields[$n]["regexp_filter"]))>=1 && strlen((string) $val)>0)
                     {
                     global $regexp_slash_replace;
                     if(preg_match("#^" . str_replace($regexp_slash_replace, '\\',$fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
@@ -957,7 +957,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             if(
                 in_array($fields[$n]['type'],$NODE_MIGRATED_FIELD_TYPES)
                 &&
-                str_replace("\r\n", "\n", $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
+                str_replace("\r\n", "\n", (string) $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
                 )
                 {
                 # This value is different from the value we have on record.
@@ -968,7 +968,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 $use_node = NULL;
-                if(trim($fields[$n]["nodes"]) != "")
+                if(trim((string) $fields[$n]["nodes"]) != "")
                     {
                     // Remove any existing node IDs for this non-fixed list field (there should only be one) unless used by other resources.
                     $current_field_nodes = array_filter(explode(",",$fields[$n]["nodes"]),"is_int_loose");

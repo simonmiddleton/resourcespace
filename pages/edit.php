@@ -2073,7 +2073,7 @@ else
                    $access=$default_customaccess;
                    $editable= (!$ea3)?false:true;
                    if ($groups[$n]["access"]!="") {$access=$groups[$n]["access"];}
-                   $perms=explode(",",$groups[$n]["permissions"]);
+                   $perms=explode(",",(string) $groups[$n]["permissions"]);
                    if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
                       <td valign=middle nowrap><?php echo htmlspecialchars($groups[$n]["name"])?>&nbsp;&nbsp;</td>

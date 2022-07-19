@@ -1787,7 +1787,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
   $name="field_" . $field["ref"];
   $value=$field["value"];
-  $value=trim($value);
+  $value=trim((string) $value);
   $use_copyfrom=true;
     if ($use != $ref && ($field["omit_when_copying"]))
         {
@@ -2127,7 +2127,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			}
 		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 			{
-			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', $field['value']))) . "'>";
+			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', (string) $field['value']))) . "'>";
 			}
 
         $is_search = false;
@@ -3707,7 +3707,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     {
     global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
-    if(trim($field['display_condition']) == "")
+    if(trim((string) $field['display_condition']) == "")
         {
         return true;  # This field does not have a display condition, so it should be displayed
         }
