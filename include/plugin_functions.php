@@ -285,7 +285,7 @@ function get_plugin_config($name){
     $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
     $configs = $configs[0] ?? [];
     $mysql_verbatim_queries = $mysql_vq;
-    if (!array_key_exists('config', $configs))
+    if (!array_key_exists('config', $configs) || is_null($configs['config_json']))
         {
         return null;
         }
