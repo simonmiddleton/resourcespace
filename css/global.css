@@ -424,7 +424,6 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelSmallIcons {padding-left: 5px;}
 .ResourcePanelTop {position: absolute; width: 100%;} 
 .ImageWrapper {height:200px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
-.ImageWrapper {height:175px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right; margin-bottom: 5px;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 .ImageColourWrapper {display: inline-block;}
