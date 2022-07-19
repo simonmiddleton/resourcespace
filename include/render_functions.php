@@ -446,7 +446,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         ?>
         <div class="Question" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
-        if (strlen($field["tooltip_text"])>=1)
+        if (strlen((string) $field["tooltip_text"])>=1)
             {
             echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
             }
