@@ -90,7 +90,7 @@ function addColumnHeader($orderName, $labelKey)
 		$arrow = '';
 
 	?><td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo $orderName ?>&restype_sort=<?php echo ($restype_sort=="asc") ? 'desc' : 'asc';
-			?>&find=<?php echo urlencode($find)?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this);"><?php
+			?>&find=<?php echo urlencode((string)$find)?>&backurl=<?php echo urlencode((string)$url) ?>" onClick="return CentralSpaceLoad(this);"><?php
 			echo $lang[$labelKey] . $arrow ?></a></td>
 	
       <?php
