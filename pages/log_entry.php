@@ -189,9 +189,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                             }
 
                         echo "<tr><td width='50%'>";
-                        echo htmlspecialchars($name);
+                        echo htmlspecialchars((string) $name);
                         echo "</td><td width='50%'>";
-                        echo $cleanval ? htmlspecialchars($value) : $value;
+                        echo $cleanval ? htmlspecialchars((string) $value) : $value;
                         echo "</td></tr>";
                         }
                     }
