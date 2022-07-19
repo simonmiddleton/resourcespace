@@ -2283,7 +2283,7 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
-
+    $text = (string) $text;
     /*
     this function requires that needle array does not contain any of the following characters: "(" ")"
     */
