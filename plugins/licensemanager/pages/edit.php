@@ -248,7 +248,7 @@ foreach ($license_usage_mediums as $medium)
       for ($n=1;$n<=31;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr($license["expires"],8,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+        ?><option <?php if ($n==substr((string) $license["expires"],8,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
         }
       ?>
     </select>
@@ -258,7 +258,7 @@ foreach ($license_usage_mediums as $medium)
       for ($n=1;$n<=12;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr($license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]?></option><?php
+        ?><option <?php if ($n==substr((string) $license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]?></option><?php
         }
       ?>
     </select>
@@ -268,7 +268,7 @@ foreach ($license_usage_mediums as $medium)
       $y=date("Y")+30;
       for ($n=$minyear;$n<=$y;$n++)
         {
-        ?><option <?php if ($n==substr($license["expires"],0,4)) { ?>selected<?php } ?>><?php echo $n?></option><?php
+        ?><option <?php if ($n==substr((string) $license["expires"],0,4)) { ?>selected<?php } ?>><?php echo $n?></option><?php
         }
       ?>
     </select>
