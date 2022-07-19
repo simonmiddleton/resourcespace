@@ -3061,7 +3061,7 @@ function form_value_display($row,$name,$default="")
     {
     if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
-    return htmlspecialchars(getval($name,$default));
+    return htmlspecialchars((string) getval($name,$default));
     }
 
 /**
