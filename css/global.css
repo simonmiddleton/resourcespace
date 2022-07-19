@@ -429,7 +429,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ImageColourWrapper {display: inline-block;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
-.ResourceTypeIcon.fa-fw {height: 16px;width:16px;float:right;margin: 3px; color: white; background: #0000006e; padding: 3px 4px 2px 4px; border-radius: 3px;}
+.ResourceTypeIcon.fa-fw {height: 16px;float:right;margin: 3px; background: #ffffffcc; padding: 3px 4px 2px 4px; border-radius: 3px;}
 .ResourcePanelShell a:link, .ResourcePanelShell a:visited {text-decoration:none;}
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}
@@ -460,8 +460,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .thumbs-file-extension {
     display: inline-block;
     font-weight: 600;
-    background: #0000006e;
-    color: white;
+    background: #ffffffcc;
     border-radius: 3px;
     font-size: 12px;
     padding: 3px 4px 1px 4px;
