@@ -1163,7 +1163,7 @@ if($import && isset($folder_path))
                 }
             $sql_params[] = 'i';
             $sql_params[] = $new_rtf_ref;
-            ps_query("UPDATE resource_type_field SET {$sql} WHERE ref = '{$new_rtf_ref}'", $sql_params);
+            ps_query("UPDATE resource_type_field SET {$sql} WHERE ref = ?", $sql_params);
 
             logScript("Created new record #{$new_rtf_ref} '{$src_rtf["title"]}'");
             $resource_type_fields_spec[$src_rtf["ref"]] = array("create" => true, "ref" => $new_rtf_ref);
