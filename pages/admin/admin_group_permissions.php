@@ -59,7 +59,7 @@ if ($copy_from!="")
 
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
-$permissions=trim_array(explode(",",$group["permissions"]));
+$permissions=trim_array(explode(",",(string)$group["permissions"]));
 $permissions_done=array();	
 ?>
 <div class="BasicsBox">
