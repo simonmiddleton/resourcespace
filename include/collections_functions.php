@@ -2746,7 +2746,6 @@ function get_featured_collection_resources(array $c, array $ctx)
         return $CACHE_FC_RESOURCES[$cache_id];
         }
 
-    $c_ref_escaped = $c["ref"];
     $limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
     $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
     $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
@@ -2772,7 +2771,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         }
 
     // Access control
-    $rca_where = '';
+    $rca_where = ''; $rca_where_params = array();
     $rca_joins = array();$rca_join_params = array();
     $fc_permissions_where = '';$fc_permissions_where_params = [];
     $union="";$unionparams=[];
@@ -2785,10 +2784,8 @@ function get_featured_collection_resources(array $c, array $ctx)
         $rca_joins[] = 'LEFT JOIN resource_custom_access AS rca_ug ON r.ref = rca_ug.resource AND rca_ug.usergroup = ?';
         $rca_join_params [] = "i"; $rca_join_params [] = $usergroup;
 
-        $rca_where = sprintf(
-            'AND (r.access < %1$s OR (r.access IN (%1$s, %2$s) AND ((rca_ug.access IS NOT NULL AND rca_ug.access < %1$s) OR (rca_u.access IS NOT NULL AND rca_u.access < %1$s))))',
-            RESOURCE_ACCESS_CONFIDENTIAL,
-            RESOURCE_ACCESS_CUSTOM_GROUP);
+        $rca_where = 'AND (r.access < ? OR (r.access IN (?, ?) AND ((rca_ug.access IS NOT NULL AND rca_ug.access < ?) OR (rca_u.access IS NOT NULL AND rca_u.access < ?))))';
+        $rca_where_params = array("i", RESOURCE_ACCESS_CONFIDENTIAL, "i", RESOURCE_ACCESS_CONFIDENTIAL, "i", RESOURCE_ACCESS_CUSTOM_GROUP, "i", RESOURCE_ACCESS_CONFIDENTIAL, "i", RESOURCE_ACCESS_CONFIDENTIAL);
 
         $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
         if(is_array($fcf_sql))
@@ -2812,7 +2809,7 @@ function get_featured_collection_resources(array $c, array $ctx)
                 implode(" ", $rca_joins),
                 $rca_where);
 
-            $unionparams = array_merge($rca_join_params,["i",$c["bg_img_resource_ref"]]);
+            $unionparams = array_merge($rca_join_params, ["i",$c["bg_img_resource_ref"]], $rca_where_params);
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
         else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($limit))
@@ -2836,9 +2833,9 @@ function get_featured_collection_resources(array $c, array $ctx)
             ),
             $rca_joins
         ),
-        "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.`type` = " . COLLECTION_TYPE_FEATURED,
+        "where" => "WHERE c.ref = ? AND c.`type` = ?",
     );
-    $subquery_params = $rca_join_params;
+    $subquery_params = array_merge($rca_join_params, array("i", $c["ref"], "i", COLLECTION_TYPE_FEATURED));
 
     if(is_featured_collection_category($c))
         {
