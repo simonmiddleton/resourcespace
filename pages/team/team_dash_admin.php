@@ -71,7 +71,7 @@ if(getval("quicksave",FALSE))
 				{
 				#Add to the front of the pile if the user already has the tile
 				ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile["ref"]]);
-				ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile["ref"]."',5 FROM user");
+				ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".(int)$tile["ref"]."',5 FROM user");
 
 				$dtiles_available = get_alluser_available_tiles();
 				exit("positiveglow");
