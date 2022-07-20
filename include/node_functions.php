@@ -480,7 +480,7 @@ function get_tree_node_level($ref)
 
         $depth_level++;
         }
-    while('' != trim($parent) && $parent!=0);
+    while('' != trim((string) $parent) && $parent!=0);
 
     return $depth_level;
     }
@@ -933,7 +933,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // Add a way of inserting new records after the last node of each level
     if($last_node)
         {
-        if(trim($parent)=="")
+        if(trim((string) $parent)=="")
             {
             $parent = 0;
             }
