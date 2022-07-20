@@ -900,7 +900,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 # Check for regular expression match
-                if (trim(strlen((string) $fields[$n]["regexp_filter"]))>=1 && strlen((string) $val)>0)
+                if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen((string) $val)>0)
                     {
                     global $regexp_slash_replace;
                     if(preg_match("#^" . str_replace($regexp_slash_replace, '\\',$fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
@@ -1704,7 +1704,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         }
 
                     # Check for regular expression match
-                    if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+                    if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
                         {
                         global $regexp_slash_replace;
                         if(preg_match("#^" . str_replace($regexp_slash_replace, '\\',$fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)

@@ -181,7 +181,7 @@ function save_proposed_changes($ref)
 					$val=getval("field_" . $fields[$n]["ref"],"");
 					} 
 				# Check for regular expression match
-				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 					{
                     global $regexp_slash_replace;
 					if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
@@ -214,7 +214,7 @@ function save_proposed_changes($ref)
 				}
 					
 				# Check for regular expression match
-				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 						{
                         global $regexp_slash_replace;
 						if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
