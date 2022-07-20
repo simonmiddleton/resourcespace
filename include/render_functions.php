@@ -4122,7 +4122,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 
         # If there is no display template then prepare the full markup here
-        if (trim($field["display_template"]) == "") 
+        if (trim((string) $field["display_template"]) == "") 
             {
             $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
             <p>".nl2br(htmlspecialchars(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
