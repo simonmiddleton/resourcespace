@@ -236,13 +236,13 @@ include "../../include/header.php";
 	            </div>
 	        </td>
 		<?php if (!hook("replacefullnamerow")){?>
-		<td><?php echo htmlspecialchars($users[$n]["fullname"])?></td>
+		<td><?php echo htmlspecialchars((string)$users[$n]["fullname"])?></td>
 		<?php } ?>
 		<?php if (!hook("replacegroupnamerow")){?>
 		<td><?php echo $users[$n]["groupname"]?></td>
 		<?php } ?>
 		<?php if (!hook("replaceemailrow")){?>
-		<td><?php echo htmlentities($users[$n]["email"])?></td>
+		<td><?php echo htmlentities((string)$users[$n]["email"])?></td>
 		<?php } ?>
 		<td><?php echo nicedate($users[$n]["created"]) ?></td>
 		<td><?php echo $approval_state_text[$users[$n]["approved"]] ?></td>
