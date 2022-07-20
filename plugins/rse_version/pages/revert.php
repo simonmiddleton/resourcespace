@@ -127,7 +127,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                 $truncated_value = NULL;
                 if(
                     $resource_field_data_index !== false
-                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
+                    && trim((string) $resource_field_data[$resource_field_data_index]["value"]) != ""
                     )
                     {
                     $new_joined_field_value = $resource_field_data[$resource_field_data_index]["value"];
