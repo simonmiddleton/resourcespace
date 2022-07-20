@@ -71,7 +71,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 			}
         	}
         
-        if (!isset($system_login) && strlen(trim($userdata[0]["last_active"]))>0)
+        if (!isset($system_login) && strlen(trim((string)$userdata[0]["last_active"]))>0)
         	{
 	        if ($userdata[0]["idle_seconds"]>($session_length*60))
 	        	{
