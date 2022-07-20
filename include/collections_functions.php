@@ -419,7 +419,7 @@ function add_resource_to_collection(
             {
             $branch_category_ids = array_column(
                 // determine the branch from the parent because the keys for the collection in question will be done below
-                get_featured_collection_category_branch_by_leaf($collection_data['parent'], []),
+                get_featured_collection_category_branch_by_leaf((int)$collection_data['parent'], []),
                 'ref'
             );
             foreach($branch_category_ids as $fc_category_id)
