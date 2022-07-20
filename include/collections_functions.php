@@ -2798,13 +2798,13 @@ function get_featured_collection_resources(array $c, array $ctx)
             }
         }
 
-    if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]) && isset($c["bg_img_resource_ref"]))
+    if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]))
         {
         if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"])
             {
             return array();
             }
-        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] && isset($c["bg_img_resource_ref"]))
             {
             $limit = 1;
             $union = sprintf("
