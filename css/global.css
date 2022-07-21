@@ -2149,6 +2149,9 @@ a.BrowseRefresh{
 
 .userselect {
     z-index:500;
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .FullWidth { width: 100%; }
