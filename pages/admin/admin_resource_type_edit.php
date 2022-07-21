@@ -251,7 +251,7 @@ else
     
     <div class="Question">
 	<label><?php echo $lang["property-name"]?></label>
-	<input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($restypedata["name"])?>" />
+	<input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string)$restypedata["name"])?>" />
 	<div class="clearerleft"> </div>
     </div>
 
@@ -261,7 +261,7 @@ else
     
     <div class="Question">
 	<label><?php echo $lang["property-allowed_extensions"]?></label>
-	<input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo htmlspecialchars($restypedata["allowed_extensions"])?>" />
+	<input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string)$restypedata["allowed_extensions"])?>" />
 	
 	<div class="FormHelp" style="padding:0;clear:left;" >
 	    <div class="FormHelpInner"><?php echo $lang["information-allowed_extensions"] ?>
@@ -273,7 +273,7 @@ else
     <?php if (!$execution_lockout) { ?>
     <div class="Question">
 	<label><?php echo $lang["property-override_config_options"] ?></label>
-	<textarea name="config_options" class="stdwidth" rows=5 cols=50><?php echo htmlspecialchars($restypedata["config_options"])?></textarea>
+	<textarea name="config_options" class="stdwidth" rows=5 cols=50><?php echo htmlspecialchars((string)$restypedata["config_options"])?></textarea>
 	<div class="FormHelp" style="padding:0;clear:left;" >
 	    <div class="FormHelpInner"><?php echo $lang["information-resource_type_config_override"] ?>
 	    </div>
