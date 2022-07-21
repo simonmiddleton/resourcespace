@@ -281,11 +281,7 @@ if($editing && !$editexternalurl)
                     # Process editing of external share
                     if ($editexternalurl && $access > -1 && enforcePostRequest(false))
                         {
-                        $editsuccess = edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
-                        if($editsuccess)
-                            {
-                            echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";
-                            }
+                        edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
                         }
                     }
                     ?>
