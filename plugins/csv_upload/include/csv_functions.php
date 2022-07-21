@@ -875,7 +875,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     
     sprintf("Completed in %01.2f seconds.\n", microtime(true) - $processing_start_time);
 
-    ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
     if($processcsv && file_exists($flagpath))
         {
         unlink($flagpath);
@@ -890,8 +889,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
 function csv_upload_get_info($filename, &$messages)
     {
-    $save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");
-
     global $lang;
 
     $file=fopen($filename,'r');
@@ -901,8 +898,7 @@ function csv_upload_get_info($filename, &$messages)
         {
         array_push($messages, $lang["csv_upload_error_no_header"]);
         fclose($file);
-        ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
-        return false;		
+        return false;
         }
 
     // Create array to hold sample data to show to user
