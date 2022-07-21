@@ -1618,7 +1618,7 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 		foreach ($options as $optionvalue=>$optiontext)
 			{
 			?>
-			<option value="<?php echo escape_quoted_data(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+			<option value="<?php echo escape_quoted_data(trim((string)$optionvalue))?>" <?php if (trim((string)$optionvalue)==trim((string)$current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim((string)$optiontext))?></option>
 			<?php
 			}
 		?>
