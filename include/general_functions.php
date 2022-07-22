@@ -1886,7 +1886,7 @@ function filesize_unlimited($path)
  */
 function strip_leading_comma($val)
     {
-    return preg_replace('/^\,/','',$val);
+    return preg_replace('/^\,/', '', (string) $val);
     }
 
 
