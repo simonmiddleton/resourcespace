@@ -30,3 +30,4 @@ csrf_token,varchar(255),Not currently used
 search_filter_o_id,int(11),Search filter ID - overrides any filter set at usergroup level
 profile_image,text,The path to an optional image of the user, uploaded via the My Profile page.
 profile_text,varchar(500),The user's profile text, entered via the My Profile page.
+email_invalid,int(1),Sets that the e-mail is invalid and not to be used - is set externally via the API call mark_email_as_invalid() e.g. from a script processing bounced e-mails.
