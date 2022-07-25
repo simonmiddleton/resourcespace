@@ -168,6 +168,9 @@ if ($search_titles)
 
         $collection_trail = array();
         $branch_trail = array();
+
+        global $enable_themes, $enable_theme_breadcrumbs;
+
         if(
             $enable_themes && $enable_theme_breadcrumbs
             && isset($collectiondata) && $collectiondata !== false
