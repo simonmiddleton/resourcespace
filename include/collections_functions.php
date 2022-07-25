@@ -2877,7 +2877,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         $fcrescount = count($fcresources);
         if($fcrescount > 0)
             {
-            $subquery["where"] = "WHERE r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
+            $subquery["where"] .= " AND r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
             $subquery_params = array_merge($subquery_params,ps_param_fill($fcresources,"i"));
             }
         }
