@@ -1270,3 +1270,26 @@ function config_register_core_field_refs(string $source, array $refs)
 
     return;
     }
+
+/**
+ * Run PHP code on array of variables. Used for modifying $GLOBALS.
+ *
+ * @param  array   $variables   Array of variables to apply override on.
+ * @param  string  $code        Signed string containing the PHP code to run.
+ * 
+ * @return void
+ */
+function override_rs_variables_by_eval(array $variables, string $code)
+    {
+    $temp_variables = $variables;
+
+    extract($temp_variables, EXTR_REFS | EXTR_SKIP);
+    eval(eval_check_signed($code));
+
+    foreach($temp_variables as $temp_variable_name => $temp_variable_val)
+        {
+        $GLOBALS[$temp_variable_name] = $temp_variable_val;
+        }
+
+    return;
+    }
