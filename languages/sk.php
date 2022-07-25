@@ -2788,9 +2788,6 @@ $lang["userresources_status_change"]="Zdroje, ktorými ste prispeli, boli zmenen
 
 $lang["collection_description"] = "Popis";
 
-# Updates to workflow
-$lang["userresources_status_change"]="Zdroje, ktorými ste prispeli, boli zmenené do stavu:";
-
 # Batch replace updates
 $lang["replacebatchlocalfolder"]        = "Načítavať súbory z lokálneho priečinka servera? (vytvorí sa tak offline úloha)";
 $lang["replacebatch_resource_min"]      = "Najnižšie ID zdroja, ktorý sa má nahradiť (ignorovaný, ak je zadaná zbierka)";

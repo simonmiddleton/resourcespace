@@ -3024,9 +3024,6 @@ $lang["userresources_status_change"]    = "Resources that you have contributed h
 
 $lang["collection_description"]         = "Description";
 
-# Updates to workflow
-$lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";
-
 # Batch replace updates
 $lang["replacebatchlocalfolder"]        = "Retrieve files from local folder on server? (this will create an offline job)";
 $lang["replacebatch_resource_min"]      = "Lowest resource ID to replace (ignored if a collection is specified)";
