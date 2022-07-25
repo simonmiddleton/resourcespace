@@ -696,7 +696,7 @@ if($browse_on && checkperm("s") === true)
     render_browse_bar();
     }
         
-echo '<div id="UICenter" class="ui-layout-center ' . $uicenterclass . '">';
+echo '<div id="UICenter" role="main" class="ui-layout-center ' . $uicenterclass . '">';
 
 hook('afteruicenter');
 
