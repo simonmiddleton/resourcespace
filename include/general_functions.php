@@ -3678,6 +3678,13 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 			}
 		}	
 
+    // Support a global, non-plugin format of hook function that can be defined in config overrides.
+    $function= "GlobalHook" . ucfirst((string) $name);	
+    if (function_exists($function)) 
+        {			
+        $function_list[]=$function;
+        }
+
 	# add the function list to cache
 	$hook_cache[$hook_cache_index] = $function_list;
 
