@@ -4723,11 +4723,11 @@ function get_resource_access($resource)
         }
 
 	// Check for a derestrict filter, this allows exceptions for users without the 'g' permission who normally have restricted accesss to all available resources)
-	if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim($userderestrictfilter) != "")
+	if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim((string) $userderestrictfilter) != "")
 		{
-        if( strlen(trim($userderestrictfilter)) > 0
+        if( strlen(trim((string) $userderestrictfilter)) > 0
             && !is_numeric($userderestrictfilter)
-            && trim($userdata[0]["derestrict_filter"]) != ""
+            && trim((string) $userdata[0]["derestrict_filter"]) != ""
             && $userdata[0]["derestrict_filter_id"] != -1
         )
             {
