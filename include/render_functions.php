@@ -4103,7 +4103,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         $extra.="<style>#RecordDownload {display:none;}</style>";
 
         # If there is no display template then prepare the full markup here
-        if (trim($field["display_template"]) == "") 
+        if (trim((string) $field["display_template"]) == "") 
             {
             $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
             <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>
