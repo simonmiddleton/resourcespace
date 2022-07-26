@@ -606,7 +606,7 @@ function compile_search_actions($top_actions)
             
             $data_attribute = array(
                 'url'  => generateURL($baseurl_short . "pages/dash_tile.php", $urlparams, $extraparams),
-                'link' => str_replace($baseurl,'',$url)
+                'link' => str_replace($baseurl, '', (string) $url)
             );
 
             if(substr($search, 0, 11) == '!collection')
@@ -633,9 +633,9 @@ function compile_search_actions($top_actions)
                     data-url="%spages/collections.php?addsmartcollection=%s&restypes=%s&archive=%s"
                 ',
                 $baseurl_short,
-                urlencode($search),
-                urlencode($restypes),
-                urlencode($archive)
+                urlencode((string) $search),
+                urlencode((string) $restypes),
+                urlencode((string) $archive)
             );
 
             $options[$o]['value']='save_search_smart_collection';
@@ -653,12 +653,12 @@ function compile_search_actions($top_actions)
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s"
                     ',
                     $baseurl_short,
-                    urlencode($search),
-                    urlencode($restypes),
-                    urlencode($order_by),
-                    urlencode($sort),
-                    urlencode($archive),
-                    urlencode($daylimit)
+                    urlencode((string) $search),
+                    urlencode((string) $restypes),
+                    urlencode((string) $order_by),
+                    urlencode((string) $sort),
+                    urlencode((string) $archive),
+                    urlencode((string) $daylimit)
                 );
 
                 $options[$o]['value']='save_search_items_to_collection';
@@ -676,14 +676,14 @@ function compile_search_actions($top_actions)
                         data-url="%spages/search_disk_usage.php?search=%s&restypes=%s&offset=%s&order_by=%s&sort=%s&archive=%s&daylimit=%s&k=%s"
                     ',
                     $baseurl_short,
-                    urlencode($search),
-                    urlencode($restypes),
-                    urlencode($offset),
-                    urlencode($order_by),
-                    urlencode($sort),
-                    urlencode($archive),
-                    urlencode($daylimit),
-                    urlencode($k)
+                    urlencode((string) $search),
+                    urlencode((string) $restypes),
+                    urlencode((string) $offset),
+                    urlencode((string) $order_by),
+                    urlencode((string) $sort),
+                    urlencode((string) $archive),
+                    urlencode((string) $daylimit),
+                    urlencode((string) $k)
                 );
 
                 $options[$o]['value']='search_items_disk_usage';
@@ -715,11 +715,11 @@ function compile_search_actions($top_actions)
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
         $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s',
             $baseurl_short,
-            urlencode($search),
-            urlencode($restypes),
-            urlencode($order_by),
-            urlencode($archive),
-            urlencode($sort)
+            urlencode((string) $search),
+            urlencode((string) $restypes),
+            urlencode((string) $order_by),
+            urlencode((string) $archive),
+            urlencode((string) $sort)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
