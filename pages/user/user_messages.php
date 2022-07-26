@@ -202,7 +202,7 @@ include "../../include/header.php";
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)
                 {
                 $fullmessage = strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border"));
-                $fullmessage = escape_quoted_data($fullmessage);
+                $fullmessage = htmlentities(escape_quoted_data($fullmessage));
                 $message = strip_tags_and_attributes($messages[$n]["message"]);
                 $message = nl2br($message);
                 $url_encoded = urlencode($messages[$n]["url"]);
