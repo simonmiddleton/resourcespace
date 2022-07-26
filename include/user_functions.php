@@ -455,7 +455,7 @@ function get_users_with_permission($permission)
     $groups = ps_query("SELECT ref,permissions FROM usergroup");
     $matched = array();
     for ($n = 0;$n<count($groups);$n++) {
-        $perms = trim_array(explode(",",$groups[$n]["permissions"]));
+        $perms = trim_array(explode(",", (string) $groups[$n]["permissions"]));
         if (in_array($permission,$perms)) {$matched[] = $groups[$n]["ref"];}
     }
     # Executes query.
