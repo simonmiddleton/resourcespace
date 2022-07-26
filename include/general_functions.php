@@ -254,7 +254,7 @@ function trim_array($array,$trimchars='')
  */
 function tidylist($list)
     {
-    $list=trim($list);
+    $list=trim((string) $list);
     if (strpos($list,",")===false) {return $list;}
     $list=explode(",",$list);
     if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
