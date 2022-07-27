@@ -539,7 +539,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 		{
 		$syncsql.=" where ref=? or sync_field=?";
         $syncparams[]="i";$syncparams[]=$sync_field;
-        $syncparams[]="i";$syncparams[]=$sync_field;
+        $syncparams[]="i";$syncparams[]=$ref;
 
 		ps_query($syncsql,$syncparams);
 		}
