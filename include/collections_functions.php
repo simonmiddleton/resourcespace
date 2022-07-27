@@ -4824,8 +4824,8 @@ function collection_download_process_data_only_types(array $result, $id, $collec
             { 
             /*greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero
             to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).*/
-            $resource_ref_escaped = $result[$n]['ref'];
-            ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?",array("i",$resource_ref_escaped));
+            $resource_ref = $result[$n]['ref'];
+            ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?",array("i",$resource_ref));
             }
         }
     }
