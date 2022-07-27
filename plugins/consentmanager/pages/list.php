@@ -57,7 +57,7 @@ if ($findtext!="")
     $params = ['s', "%$findtext%"];
 	}
 
-$consents= ps_query("select ". columns_in('consent') ." from consent $sql order by ref", $params);
+$consents= ps_query("select ". columns_in('consent', null, 'consentmanager') ." from consent $sql order by ref", $params);
 
 # pager
 $per_page = $default_perpage_list;
