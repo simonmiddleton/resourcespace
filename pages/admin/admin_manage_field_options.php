@@ -678,7 +678,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
     <?php
     foreach($all_nodes as $node)
         {
-        ?><option value="<?php echo htmlspecialchars($node['ref'])?>" id="master_node_<?php echo htmlspecialchars($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
+        ?><option value="<?php echo escape_quoted_data($node['ref'])?>" id="master_node_<?php echo escape_quoted_data($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
         }
     ?>
     </select>
