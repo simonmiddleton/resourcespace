@@ -446,6 +446,12 @@ foreach ($system_wide_config_options as $key => $value)
     $GLOBALS[$key] = $value;
     }
 
+# Get user ref for use in header.php when loading profile image.
+if (!isset($userref))
+    {
+    $userref = $userdata[0]['ref'];
+    }
+
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
