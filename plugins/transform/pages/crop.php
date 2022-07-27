@@ -125,7 +125,7 @@ else
 $previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
 if(!file_exists($previewsourcepath))
     {
-    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,trim($resource["file_path"]) != "");
+    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
     }
 
 // Get the actions that have been requested
