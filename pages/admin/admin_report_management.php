@@ -13,9 +13,10 @@ include "../../include/header.php";
 
 $find=getval("find","");
 $order_by=getval("orderby","name");
-if (!in_array(strtolower($order_by),["ref","name","support_non_correlated_sql"]))
+$order_by_list = ["ref","ref desc","name","name desc","support_non_correlated_sql","support_non_correlated_sql desc"];
+if (!in_array(strtolower($order_by),$order_by_list))
     {
-    $order_by="name";
+    $order_by[0]="name";
     }
 
 $url_params = array("find" => $find, "orderby" => $order_by);
@@ -104,7 +105,7 @@ function addColumnHeader($orderName, $labelKey)
 <?php
         foreach ($reports as $report)
             {
-            $support_non_correlated_sql = ($report['support_non_correlated_sql'] === '1');
+            $support_non_correlated_sql = ($report['support_non_correlated_sql'] === 1);
             $edit_url_extra = array();
             $edit_url_extra = ($find == "" ? $edit_url_extra : array_merge($edit_url_extra, array("find" => $find)));
             $edit_url_extra = ($order_by == "name" ? $edit_url_extra : array_merge($edit_url_extra, array("orderby" => $order_by)));
