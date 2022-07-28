@@ -1579,7 +1579,7 @@ function save_collection($ref, $coldata=array())
 	index_collection($ref);
 
     # If 'users' is specified (i.e. access is private) then rebuild users list
-	if (isset($coldata["users"]))
+	if (isset($coldata["users"]) && $coldata["users"] != "")
         {
         $old_attached_users=ps_array("SELECT user value FROM user_collection WHERE collection=?",array("i",$ref));
         $new_attached_users=array();
