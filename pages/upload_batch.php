@@ -736,8 +736,18 @@ if ($processupload)
                 {
                 $conditions = array();
                 $batch_replace_min = max((int)($batch_replace_min),$fstemplate_alt_threshold);
-                $firstref = max($fstemplate_alt_threshold, $batch_replace_min);                                
-                $replace_resources = ps_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",array("i",$batch_replace_min,"i",$batch_replace_max,"i",$batch_replace_max),0);
+                $firstref = max($fstemplate_alt_threshold, $batch_replace_min);
+
+                $sql = "SELECT ref value FROM resource WHERE ref >= ? ";
+                $sql_params = array("i",$batch_replace_min);
+                if ($batch_replace_max > 0)
+                    {
+                    $sql .= " AND ref <= ?";
+                    $sql_params = array_merge($sql_params,"i",$batch_replace_max);
+                    }
+                $sql .= " ORDER BY ref ASC";
+
+                $replace_resources = ps_array($sql,$sql_params,0);
                 debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
                 }
             else
