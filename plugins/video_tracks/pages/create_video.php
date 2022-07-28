@@ -246,6 +246,11 @@ if($generate && enforcePostRequest(false))
                 else
                     {
                     // Exported file
+                    $web_root = dirname(__DIR__,3);
+                    if(strpos($targetfile, $web_root) !== false)
+                        {
+                        $targetfile = str_replace([$web_root, '\\'], [$baseurl, '/'], $targetfile);
+                        }
                     $message.="<br/>" . $targetfile;
                     }
                 }
