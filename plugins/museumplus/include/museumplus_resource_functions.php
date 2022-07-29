@@ -119,7 +119,7 @@ function mplus_resource_update_association(array $resources, array $md5s)
 
     // Update resources with the new computed MD5s
     $sql_strings = array_intersect_key($qvals, array_flip($valid_refs));
-    $q = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES ". implode(',', $sql_strings) ."
+    $q = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES (". implode('),(', $sql_strings) .")
                    ON DUPLICATE KEY UPDATE museumplus_data_md5 = VALUES(museumplus_data_md5), museumplus_technical_id = VALUES(museumplus_technical_id)";
     ps_query($q, $params);
 
