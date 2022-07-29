@@ -51,7 +51,7 @@ if($remove!=='' || $all)
         foreach($remove as $column)
             {
             echo "Dropping column $column...";
-            $wait=ps_query("ALTER TABLE resource DROP COLUMN field" . $column);
+            $wait=ps_query("ALTER TABLE resource DROP COLUMN field" . (int)$column);
             echo "done!<br/>";
             flush();
             }

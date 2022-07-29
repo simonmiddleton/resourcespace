@@ -22,7 +22,7 @@ for($i=count($tiles)-1;$i>=0;$i--)
     //Delete Existing of this instance
     ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile["tile"]]);
 	//Add TO all Users
-	$result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile["tile"]."',5 FROM user");
+	$result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref, ?,5 FROM user", ['i', $tile['tile']]);
     }
 echo "Done Rebuilding Dash.";
 
