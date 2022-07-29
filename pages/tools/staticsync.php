@@ -873,7 +873,7 @@ function ProcessFolder($folder)
                         $params = [];
                         if(isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))
                             {
-                            $sql .= ", archive='" . $staticsync_revive_state . "'"; 
+                            $sql .= ", archive= ?"; 
                             $params[] = 'i'; $params[] = $staticsync_revive_state;
                             }    
                         $params[] = 'i'; $params[] = $rref;
