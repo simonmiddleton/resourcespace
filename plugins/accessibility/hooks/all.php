@@ -32,10 +32,8 @@ function HookAccessibilityAllAdditionalheaderjs() {
 
 function HookAccessibilityAllThumbstextheight() {
 	// Required for the larger 18px font size
-	global $field_height, $resource_panel_icons_height, $resource_id_height, $resource_type_icon_height;
+	global $field_height, $resource_id_height;
 	
-	$field_height = 35;
-	$resource_panel_icons_height = 35;
+	$field_height = 26;
 	$resource_id_height = 25;
-	$resource_type_icon_height = 26;
 }
