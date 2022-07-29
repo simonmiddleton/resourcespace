@@ -13,7 +13,7 @@ function getAnnotation($ref)
         return array();
         }
 
-    $return = ps_query("SELECT " . select_star_from("annotation") . " FROM annotation WHERE ref = ?", array("i",$ref));
+    $return = ps_query("SELECT " . columns_in("annotation") . " FROM annotation WHERE ref = ?", array("i",$ref));
 
     if(0 < count($return))
         {
