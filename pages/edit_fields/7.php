@@ -204,7 +204,7 @@ echo $hidden_input_elements;
                             node_ref       : node.id,
                             field          : <?php echo $field['ref']; ?>,
                             selected_nodes : <?php echo json_encode(array_column($valid_nodes,"ref")); ?>,
-                            k : '<?php echo htmlspecialchars($k); ?>',
+                            k : '<?php echo htmlspecialchars((string)$k); ?>'
                             };
                     }
             },
