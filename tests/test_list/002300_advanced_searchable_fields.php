@@ -132,8 +132,8 @@ return true;
 
 function make_field($fieldname, $resourcetype, $fieldtype, $advanced) {
     $ref = create_resource_type_field($fieldname, $resourcetype, $fieldtype);
-    $sql = "update resource_type_field set advanced_search=?, keywords_index=? where ref=".$ref; 
-    ps_query($sql,array("i",$advanced,"i",$advanced));
+    $sql = "update resource_type_field set advanced_search=?, keywords_index=? where ref=?"; 
+    ps_query($sql,array("i",$advanced,"i",$advanced,"i",$ref));
     return $ref;
 }
 
