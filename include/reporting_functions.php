@@ -325,22 +325,8 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
         {
         if(!empty($user_groups))
             {
-
-            // Manually implode usergroups to allow an escape_check()
-            $ugstring="";
-            $ugindex=0;
-            $ugcount=count($user_groups);
-            foreach($user_groups as $ug) {
-                $ugindex+=1;
-                if($ugindex < $ugcount) {
-                    $ugstring = $ugstring . $ug . ",";
-                }
-                else {
-                    $ugstring = $ugstring . $ug;
-                }
-            }
-
-            ps_query("UPDATE report_periodic_emails SET user_groups = '" . $ugstring . "' WHERE ref = ?",array("i",$ref));
+            $ugstring=implode(",",$user_groups);
+            ps_query("UPDATE report_periodic_emails SET user_groups = ? WHERE ref = ?",array("s",$ugstring, "i",$ref));
             }
         }
 
