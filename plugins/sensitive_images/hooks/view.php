@@ -11,7 +11,7 @@ function HookSensitive_imagesViewReplacepreviewlink()
         $image_preview_zoom=false;
         ?>
         <style>
-        #previewimage {filter: blur(<?php echo $sensitive_images_blur_preview; ?>px);}
+        #previewimage {filter: blur(<?php echo (int)$sensitive_images_blur_preview; ?>px);}
 
         #previewimagewrapper::before 
                 {
