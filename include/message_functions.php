@@ -495,7 +495,7 @@ function message_send_unread_emails()
         $allusers = get_users(0,"","u.ref",false,-1,1,false,"u.ref, u.username, u.last_active");
         foreach($allusers as $user)
             {
-            if(!in_array($user["ref"],$digestusers) && strtotime($user["last_active"]) < date(time() - $inactive_message_auto_digest_period *  60 * 60 *24))
+            if(!in_array($user["ref"],$digestusers) && strtotime((string)$user["last_active"]) < date(time() - $inactive_message_auto_digest_period *  60 * 60 *24))
                 {
                 debug("message_send_unread_emails: Processing unread messages for inactive user: " . $user["username"]);
                 $digestusers[] = $user["ref"];
