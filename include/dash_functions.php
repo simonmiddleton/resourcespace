@@ -90,7 +90,7 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
     if($all_users==1 && empty($specific_user_groups))
         {
         ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile]);
-        $result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile."',5 FROM user");
+        $result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,?,5 FROM user", ['i', $tile]);
         }
     
     hook('after_create_dash_tile', '', array($tile));
