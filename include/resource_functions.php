@@ -3580,7 +3580,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             'i', $usage,
             's', $purchase_size,
             'i', $purchase_price,
-            'i', ((isset($k) && !$internal_share_access) ? mb_strcut($k, 0, 50): null),
+            's', ((isset($k) && !$internal_share_access) ? mb_strcut($k, 0, 50): null),
             's', $fromvalue
             ]
         );
