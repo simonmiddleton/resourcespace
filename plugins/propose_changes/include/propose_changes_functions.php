@@ -261,7 +261,7 @@ function save_proposed_changes($ref)
                     }
                 }
 
-            if (str_replace("\r\n", "\n", $field_value) !== str_replace("\r\n", "\n", unescape($val)))
+            if (str_replace("\r\n", "\n", $field_value??"") !== str_replace("\r\n", "\n", unescape($val)))
                     {
                     if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                         {
