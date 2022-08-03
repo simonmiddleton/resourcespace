@@ -357,7 +357,7 @@ function propose_changes_display_field($n, $field)
     $edit_autosave=false;
     $name="field_" . $field["ref"];
     $value=$field["value"];
-    $value=trim($value);
+    $value=trim($value??"");
     $proposed_value="";            
     # is there a proposed value set for this field?
     foreach($proposed_changes as $proposed_change)
@@ -400,7 +400,7 @@ function propose_changes_display_field($n, $field)
 
     // ------------------------------
     // Show existing value so can edit
-    $value=preg_replace("/^,/","",$field["value"]);
+    $value=preg_replace("/^,/","",$field["value"]??"");
     $realvalue = $value; // Store this in case it gets changed by view processing
     if ($value!="")
             {
