@@ -100,6 +100,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
     # ----------------------------- PROCESSING FOR "e" (edit) and "m" (multi edit) METADATA ROWS ---------------------------------------------
 
     $current=get_data_by_field($resource,$field);
+    if(is_array($current)){$current = array_values($current)[0];}
     $diff=log_diff($current,$log["previous_value"]);
 
     # Process submit
