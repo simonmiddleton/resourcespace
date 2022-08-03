@@ -1005,7 +1005,7 @@ jQuery(document).ready(function () {
         onBeforeUpload: (files) => {
             res_type_field = document.getElementById("resourcetype");
             res_type = "";
-            if (typeof(res_type_field) != 'undefined' && res_type_field != null)
+            if (typeof(res_type_field) !== 'undefined' && res_type_field != null)
                 {
                     res_type = res_type_field.value;
                 }
