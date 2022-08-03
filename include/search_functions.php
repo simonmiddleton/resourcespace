@@ -129,7 +129,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     #
     # This is used to take the advanced search form and assemble it into a search query.
     
-    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and;
+    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and,$resource_field_verbatim_keyword_regex;
     $search="";
     if (getval("basicyear","")!="")
         {
@@ -223,7 +223,19 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $value=getval($name,"");
             if ($value!="")
                 {
-                $vs=split_keywords($value, false, false, false, false, true);
+                if(isset($resource_field_verbatim_keyword_regex[$fields[$n]["ref"]]) 
+                    && preg_match(
+                        $resource_field_verbatim_keyword_regex[$fields[$n]["ref"]],
+                        str_replace('*', '', $value)
+                        ))
+                    {
+                    // Keyword matches verbatim regex, do not split
+                    $vs=[$value];
+                    }
+                else
+                    {
+                    $vs=split_keywords($value, false, false, false, false, true);
+                    }
                 for ($m=0;$m<count($vs);$m++)
                     {
                     if ($search!="") {$search.=", ";}
@@ -395,7 +407,19 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $value=getval('field_'.$fields[$n]["ref"],'');
                 if ($value!="")
                     {
-                    $valueparts=split_keywords($value, false, false, false, false, true);
+                    if(isset($resource_field_verbatim_keyword_regex[$fields[$n]["ref"]]) 
+                        && preg_match(
+                            $resource_field_verbatim_keyword_regex[$fields[$n]["ref"]],
+                            str_replace('*', '', $value)
+                            ))
+                        {
+                        // Keyword matches verbatim regex, do not split
+                        $valueparts=[$value];
+                        }
+                    else
+                        {
+                        $valueparts=split_keywords($value, false, false, false, false, true);
+                        }
                     foreach($valueparts as $valuepart)
                         {
                         if ($search!="") {$search.=", ";}
