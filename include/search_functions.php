@@ -2175,7 +2175,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         {
         # Create a new keyword.
         debug("resolve_keyword: Creating new keyword for " . $keyword);
-        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,?,10)",array("s",$keyword,"s",soundex($keyword)));
+        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
         $return=sql_insert_id();
         }
     
