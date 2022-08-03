@@ -154,7 +154,7 @@ if($upload_then_edit && $resource_type_force_selection && getval('posting', '') 
 // This will be the resource type used for the upload, but may be changed later when extension is known
 // Resource types that can't be added to collections must be avoided for edit then upload mode to display the edit page for metadata entry.
 $all_resource_types = get_resource_types();
-if($resource_type == "")
+if($resource_type == "" && !$resource_type_force_selection)
 	{
 	foreach($all_resource_types as $restype)
 		{
@@ -1003,6 +1003,27 @@ jQuery(document).ready(function () {
             },
 
         onBeforeUpload: (files) => {
+            res_type_field = document.getElementById("resourcetype");
+            res_type = "";
+            if (typeof(res_type_field) != 'undefined' && res_type_field != null)
+                {
+                    res_type = res_type_field.value;
+                }
+
+            <?php
+            if ($resource_type_force_selection && $upload_then_edit && $replace_resource == "" && $replace == "" && $alternative == "")
+                {
+                // Only check resource type is set on upload with $resource_type_force_selection true and upload then edit mode.
+                ?>
+                if (res_type == "")
+                    {
+                    styledalert("<?php echo $lang["error"]?>", "<?php echo $lang["requiredfield_resource_type"]?>", 450);
+                    return false;
+                    }
+                <?php
+                }
+            ?>
+
             processafter = []; // Array of alternative files to process after primary files
             // Check if a new collection is required
             if(newcol == '' || newcol == 0)
@@ -1310,6 +1331,12 @@ function processFile(file, forcepost)
     if(typeof newcol !== 'undefined' && newcol != '' && newcol != 0)
         {
         postdata['collection_add'] = newcol;
+        }
+
+    // EXTRA DATA: New resource type information
+    if(res_type != "")
+        {
+        postdata['resource_type'] = res_type;
         }
     
     // EXTRA DATA: no_exif whilst avoiding overwriting it if the element does not exist
@@ -1753,7 +1780,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <h2 class="CollapsibleSectionHead collapsed" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
+    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php
