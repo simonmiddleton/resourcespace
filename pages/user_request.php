@@ -83,6 +83,11 @@ if (getval("save","")!="")
         {
         $error=$lang["requiredantispam"];
         }
+    # Check the email is valid
+    elseif (filter_var($user_email, FILTER_VALIDATE_EMAIL) === false)
+        {
+        $error=$lang["error_invalid_email"];
+        }
     # Check that the e-mail address doesn't already exist in the system
     elseif (user_email_exists($user_email) && $account_email_exists_note)
         {
