@@ -109,8 +109,8 @@ foreach ($resources as $resource)
 			}		
 		} ?>
 	<script type="text/javascript">
-	embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):8; ?>;
-	embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):8; ?>;
+	embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):0; ?>;
+	embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):0; ?>;
 	</script>
 	<?php
 	$page++;
