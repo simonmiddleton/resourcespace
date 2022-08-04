@@ -957,7 +957,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             if(
                 in_array($fields[$n]['type'],$NODE_MIGRATED_FIELD_TYPES)
                 &&
-                str_replace("\r\n", "\n", (string) $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
+                str_replace("\r\n", "\n", trim((string)$fields[$n]['value'])) !== str_replace("\r\n", "\n", unescape(trim((string)$val)))
                 )
                 {
                 # This value is different from the value we have on record.
