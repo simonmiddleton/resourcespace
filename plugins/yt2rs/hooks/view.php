@@ -62,7 +62,7 @@ function Hookyt2rsViewreplacedownloadoptions()
 	$youtube_url = get_data_by_field($ref, $yt2rs_field_id);
 	if ($youtube_url !== "" && isValidURL($youtube_url))
 		{ ?>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
 				<tr >
 					<td>File Information</td>
 					<td>File Size </td>
