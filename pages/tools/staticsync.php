@@ -1121,7 +1121,7 @@ if (!$staticsync_ingest)
         if ($fp!="" && !file_exists($fp))
             {
 			// Additional check - make sure the archive state hasn't changed since the start of the script
-			$cas= ps_value("SELECT archive value FROM resource where ref=' ?",['i', $rf['ref']],0);
+			$cas = ps_value("SELECT archive value FROM resource where ref = ?",['i', $rf['ref']], 0);
 			if(isset($staticsync_ignore_deletion_states) && !in_array($cas,$staticsync_ignore_deletion_states))
 				{
 				if(!isset($rf["alternative"]))
