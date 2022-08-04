@@ -838,7 +838,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     
     # Fetch any welcome message for this user group
     $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
-    if (trim($welcome)!="") {$welcome.="\n\n";}
+    if (trim((string)$welcome)!="") {$welcome.="\n\n";}
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
     $templatevars['username'] = $username;
@@ -893,7 +893,7 @@ function email_reset_link($email,$newuser=false)
         // Fetch any welcome message for this user group
         $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', array("i",$details['usergroup']), '');
 
-        if(trim($welcome) != '')
+        if(trim((string)$welcome) != '')
             {
             $welcome .= "\n\n";
             }
