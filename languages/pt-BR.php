@@ -475,7 +475,7 @@ $lang["collectioncommentsinfo"]="Adicione um comentário para o conteúdo desta 
 $lang["comment"]="Comentário";
 $lang["warningexpired"]="Conteúdo Vencido";
 $lang["warningexpiredtext"]="Aviso! Este conteúdo excedeu o prazo de validade. Você deve clicar no link abaixo para habilitar a função de download.";
-$lang["warningexpiredok"]="&gt; Habilitar download do conteúdo";
+$lang["warningexpiredok"]="Habilitar download do conteúdo";
 $lang["userrequestcomment"]="Comentário";
 $lang["addresourcebatchbrowser"]="Adicionar Conteúdo em Lote - No Navegador";
 

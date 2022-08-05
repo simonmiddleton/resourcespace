@@ -465,7 +465,7 @@ $lang["userrequestcomment"]="Commento";
 
 $lang["warningexpired"]="Risorsa scaduta";
 $lang["warningexpiredtext"]="Attenzione! Questa risorsa ha superato la data di scadenza. Clicca il link sotto per poterla scaricare.";
-$lang["warningexpiredok"]="&gt; Attiva scaricamento della risorsa";
+$lang["warningexpiredok"]="Attiva scaricamento della risorsa";
 $lang["userrequestcomment"]="Commento";
 $lang["addresourcebatchbrowser"]="Aggiungi risorse batch - Nel Browser (raccomandato)";
 $lang["replaceresourcebatch"]="Sostituisci risorse batch";
