@@ -233,7 +233,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 
 <div class="Question"><label><?php echo $lang["accountexpiresoptional"]?><br/><?php echo $lang["format"] . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
 
 <?php
 if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
