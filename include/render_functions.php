@@ -4097,7 +4097,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		{
         $title = htmlspecialchars($lang["warningexpired"]);
         $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
-        $dismisstext = htmlspecialchars($lang["warningexpiredok"]);
+        $dismisstext = LINK_CARET . htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
         <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
         $extra.="<style>#RecordDownload {display:none;}</style>";
@@ -4117,7 +4117,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # title comes from field
         # value comes from field
         $warningtext = $value;
-        $dismisstext = htmlspecialchars($lang["warningdismiss"]);
+        $dismisstext = LINK_CARET . htmlspecialchars($lang["warningdismiss"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 

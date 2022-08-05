@@ -606,7 +606,7 @@ $lang["collectioncommentsinfo"]="Legg en kommentar til dette lysbordet for denne
 $lang["comment"]="Kommentar";
 $lang["warningexpired"]="Filen har gått ut på dato";
 $lang["warningexpiredtext"]="Advarsel! Denne filen har gått ut på dato. Du må klikke på lenken nedenfor for å slå på filnedlasting.";
-$lang["warningexpiredok"]="&gt; Slå på filnedlasting";
+$lang["warningexpiredok"]="Slå på filnedlasting";
 $lang["userrequestcomment"]="Kommentar";
 $lang["addresourcebatchbrowser"]="Batch-opplasting - i nettleseren";
 

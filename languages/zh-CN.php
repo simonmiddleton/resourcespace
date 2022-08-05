@@ -504,7 +504,7 @@ $lang["collectioncommentsinfo"]="在收藏夹中加入你的反馈. 你的反馈
 $lang["comment"]="反馈";
 $lang["warningexpired"]="资源已过期";
 $lang["warningexpiredtext"]="警告! 这个资源已过了有效期限. 请单击以下的链接以启动下载功能.";
-$lang["warningexpiredok"]="&gt; 容许资源下载";
+$lang["warningexpiredok"]="容许资源下载";
 $lang["userrequestcomment"]="反馈";
 $lang["addresourcebatchbrowser"]="增加收藏夹批次 - 使用";
 

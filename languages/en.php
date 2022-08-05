@@ -1069,8 +1069,8 @@ $lang["collectioncommentsinfo"]="Add a comment to this collection for this resou
 $lang["comment"]="Comment";
 $lang["warningexpired"]="Resource expired";
 $lang["warningexpiredtext"]="Warning! This resource has exceeded the expiry date. You must click the link below to enable the download functionality.";
-$lang["warningexpiredok"]="&gt; Enable resource download";
-$lang["warningdismiss"] = "&gt; Dismiss this warning";
+$lang["warningexpiredok"]="Enable resource download";
+$lang["warningdismiss"] = "Dismiss this warning";
 $lang["userrequestcomment"]="Comment";
 $lang["addresourcebatchbrowser"]="Upload resources";
 

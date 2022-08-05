@@ -469,7 +469,7 @@ $lang["collectioncommentsinfo"]="Tambahkan komentar untuk koleksi ini pada aset 
 $lang["comment"]="Komentar";
 $lang["warningexpired"]="Aset telah Kadaluwarsa";
 $lang["warningexpiredtext"]="Perhatian! Aset ini telah melewati tanggal kadaluwarsa. Anda harus menuju ke link dibawah ini untuk mengembalikan kemampuan download.";
-$lang["warningexpiredok"]="&gt; Mengembalikan kemampuan download aset";
+$lang["warningexpiredok"]="Mengembalikan kemampuan download aset";
 $lang["userrequestcomment"]="Komentar";
 $lang["addresourcebatchbrowser"]="Tambahkan Kumpulan Aset - Pada Browser";
 
