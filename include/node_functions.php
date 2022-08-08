@@ -23,7 +23,8 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         {
         return false;
         }
-        
+    
+    // Blank parent fixup to NULL; non-blank parent fixup to integer
     if(!is_null($parent))
         {
         if ($parent == ""){$parent=NULL;}
@@ -67,9 +68,11 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
                 }
             }
         }
+    
+    // If creating new node establish order_by if necessary
     if(is_null($ref) && '' == $order_by)
         {
-        $order_by = get_node_order_by($resource_type_field, (is_null($parent)), $parent);
+        $order_by = get_node_order_by($resource_type_field, ($resource_type_field_data['type'] == FIELD_TYPE_CATEGORY_TREE), $parent);
         }
 
     $query = "INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES (?, ?, ?, ?)";
@@ -739,11 +742,13 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
     {
     $order_by = 10;
 
+    // Blank parent fixup to NULL; non-blank parent fixup to integer
     if(!is_null($parent))
         {
         if ($parent == ""){$parent=NULL;}
         else {$parent = (int) $parent;}
         }
+        
     $query         = "SELECT COUNT(*) AS value FROM node WHERE resource_type_field = ? ORDER BY order_by ASC;";
     $parameters     = array("i",$resource_type_field);
     $nodes_counter = ps_value($query, $parameters, 0);
