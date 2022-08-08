@@ -22,7 +22,7 @@ if($py['disable_group_select'])
     }
 
 # Fetch current access level
-$access=ps_value("select enabled_groups value from plugins where name= ?",['s', $plugin],"");
+$access = (string) ps_value("select enabled_groups value from plugins where name= ?",['s', $plugin],"");
 
 # Fetch user groups
 $groups=get_usergroups();
