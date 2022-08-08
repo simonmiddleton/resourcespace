@@ -1890,7 +1890,7 @@ function check_access_key($resources,$key)
         if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
             {
             # Apply config override options
-            $config_options=trim($userinfo[0]["config_options"]);
+            $config_options=trim($userinfo[0]["config_options"]??"");
 
             // We need to get all globals as we don't know what may be referenced here
             override_rs_variables_by_eval($GLOBALS, $config_options);
@@ -3186,7 +3186,7 @@ function emulate_user($user, $usergroup="")
         if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
             {
             # Apply config override options
-            $config_options=trim($userinfo[0]["config_options"]);
+            $config_options=trim($userinfo[0]["config_options"]??"");
 
             // We need to get all globals as we don't know what may be referenced here
             override_rs_variables_by_eval($GLOBALS, $config_options);
