@@ -1375,6 +1375,18 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $nodes_to_remove = $ui_deselected_node_values;
                     }
 
+                if($fields[$n]["required"] == 1 && count($nodes_to_add) == 0)
+                    {
+                    // Required field and no value now set, revert to existing and add to array of failed edits
+                    if(!isset($errors[$fields[$n]["ref"]]))
+                        {
+                        $errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;
+                        }
+                    $errors[$fields[$n]["ref"]] .=  implode(",", $list);
+                    $nodes_to_remove = array();
+                    continue;
+                    }
+
                 $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
                 $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
 
@@ -1718,6 +1730,19 @@ function save_resource_data_multi($collection,$editsearch = array())
 
                     if ($val !== $existing || $value_changed)
                         {
+                        if($fields[$n]["required"] && strip_leading_comma($val)=="")
+                            {
+                            // Required field and no value now set, revert to existing and add to array of failed edits
+                            if(!isset($errors[$fields[$n]["ref"]]))
+                                {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
+                            $errors[$fields[$n]["ref"]] .=  $ref;
+                            if($m<count($list)-1)
+                                {
+                                $errors[$fields[$n]["ref"]] .= ",";
+                                }
+                            continue;
+                            }
+
                         // This value is different from the value we have on record.
                         // Write this edit to the log.
                         resource_log($ref,LOG_CODE_MULTI_EDITED,$fields[$n]["ref"],"",$existing,$val);
