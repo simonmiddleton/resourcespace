@@ -1139,7 +1139,6 @@ jQuery(document).ready(function () {
         if(uploadProgress >= count)
             {
             console.debug("Processing uploaded resources");
-            CentralSpaceShowProcessing();
             pageScrolltop(scrolltopElementCentral);
             }
         });
@@ -1246,7 +1245,7 @@ function processFile(file, forcepost)
         };
     
     forceprocess = typeof forcepost != "undefined";
-
+ 
     <?php
     // == EXTRA DATA SECTION - Add any extra data to send after upload required here ==
 
@@ -1269,22 +1268,7 @@ function processFile(file, forcepost)
                 console.debug("Added " + file.name + " to process after array");
                 if(processafter.length == count)
                     {
-                    if(newcol > 0)
-                        {
-                        api('do_search', {'search' : '!collection' + newcol}, function(response){
-                            if(response.length > 0)
-                                {
-                                response.forEach(function(resource){  
-                                    {
-                                    resource_filename = resource['field<?php echo htmlspecialchars($filename_field)?>']
-                                    resource_ids_for_alternatives[resource['ref']] = resource_filename.substr(0, resource_filename.lastIndexOf('.' + resource['file_extension']));;
-                                    }
-                                })
-                                }
-                            //No non alt files uploaded so we can now process the alt files.
-                            jQuery('#CentralSpace').trigger("ProcessedMain");
-                        });
-                        }              
+                    jQuery('#CentralSpace').trigger('ProcessedMain');
                     }
                 return false;
                 }
@@ -1304,7 +1288,7 @@ function processFile(file, forcepost)
                     processerrors.push(filename);
                     jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
-                    return postUploadActions(); 
+                    return false; 
                     }
                 }
             }
@@ -1487,6 +1471,11 @@ jQuery('#CentralSpace').on("ProcessedMain",function(){
             processFile(file,true);
             }
         });
+    if(upRedirBlock == true)
+        {
+        console.log('failed to upload ' + count + ' resources');
+        postUploadActions();
+        }
     });
 
 function base64encode(str) {
@@ -1502,8 +1491,8 @@ function postUploadActions()
         {
         // Trigger event to begin processing the alternative files
         console.debug("Processed primary files, triggering upload of alternatives");
-        jQuery('#CentralSpace').trigger("ProcessedMain");
         process_alts=false;
+        jQuery('#CentralSpace').trigger("ProcessedMain");
         return;
         }
     else if(rscompleted.length + processerrors.length < count)
@@ -1536,11 +1525,7 @@ function postUploadActions()
             }, 2000);
         return;
         }
-    
-    rscompleted = [];
-    processerrors = [];
-
-    CentralSpaceHideProcessing();
+    CentralSpaceShowProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
@@ -1663,6 +1648,9 @@ function postUploadActions()
                 }
             });
         }
+    CentralSpaceHideProcessing();
+    rscompleted = [];
+    processerrors = [];
     }
 </script>
 <div class="BasicsBox" >
