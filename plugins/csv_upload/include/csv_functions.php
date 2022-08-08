@@ -573,8 +573,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             if(!in_array($field_type, $NODE_MIGRATED_FIELD_TYPES) && !in_array($field_type,array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS))) 
                     {
                     // Replace curly quotes with standard quotes and use split_keywords() to get separate entries
-                    $cell_value_array = str_getcsv($cell_value);
-                    $cell_value_array = array_map('trim', $cell_value_array); // remove whitespace from array values
+                    $cell_value_array = array_map('trim', array_map('strval', str_getcsv($cell_value)));
                     }
                 elseif(trim($cell_value) != "")
                     {
