@@ -11,7 +11,7 @@ function getDefaultOutputFormat($inputFormat = null)
 	if (!empty($format_chooser_default_output_format))
 		return $format_chooser_default_output_format;
 
-	$inputFormat = strtoupper($inputFormat);
+	$inputFormat = strtoupper((string) $inputFormat);
 
 	# Use resource format by default if none given
 	if (empty($inputFormat) || !in_array($inputFormat, $format_chooser_output_formats))
