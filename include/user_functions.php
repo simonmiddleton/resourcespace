@@ -723,7 +723,7 @@ function save_user($ref)
             }
         else   
             {
-            $expires = "'" . date("Y-m-d",strtotime($expires)) . "'";
+            $expires =  date("Y-m-d",strtotime($expires));
             }
 
         $passsql = '';
