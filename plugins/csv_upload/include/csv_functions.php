@@ -753,7 +753,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         $nodes_to_add = array_diff($daterangenodes, $current_field_nodes);
                         $nodes_to_remove = array_diff($current_field_nodes,$daterangenodes);
 						}
-                    elseif (in_array($field_type,$NODE_FIELDS))
+                        elseif (in_array($field_type,array_diff($NODE_FIELDS, $NODE_MIGRATED_FIELD_TYPES)))
                         {
 
                         // Get currently selected nodes for this field 
