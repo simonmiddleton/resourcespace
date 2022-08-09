@@ -482,8 +482,8 @@ function get_users_with_permission($permission)
  * @return array Matching user records
  */
 function get_user_by_email($email)
-{
-    $r = ps_query("SELECT u.*, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
+    {
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -493,7 +493,7 @@ function get_user_by_email($email)
     }
 
     return $return;
-}
+    }
 
 /**
  * Retrieve user ID by username
