@@ -606,6 +606,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // Initialise array to store new checksums that client needs after autosave, without which subsequent edits will fail
     $new_checksums = array();
 
+    // Start main field loop
     for ($n=0;$n<count($fields);$n++)
         {
         if(!(
@@ -953,7 +954,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 continue;
                 }
 
-            // If all good so far, then save the data
+            // Save changed data for fields migrated to nodes
             if(
                 in_array($fields[$n]['type'],$NODE_MIGRATED_FIELD_TYPES)
                 &&
@@ -967,57 +968,97 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $expiry_field_edited=true;
                     }
 
-                $use_node = NULL;
+                $node_for_val = NULL;
+                # If new node name is non-blank then get the node id for it on this field
+                if($val != '')
+                    {
+                    $node_for_val = get_node_id($val, $fields[$n]["ref"]);
+                    if (!$node_for_val) 
+                        {
+                        $node_for_val=NULL;
+                        }
+                    }
+
+                # If a node was found for the new value, then it must already be linked to a resource
+
+                # Process the existing node if present
                 if(trim((string) $fields[$n]["nodes"]) != "")
                     {
-                    // Remove any existing node IDs for this non-fixed list field (there should only be one) unless used by other resources.
+                    # There is an existing node (should only be one) for this non-fixed list field
                     $current_field_nodes = array_filter(explode(",",$fields[$n]["nodes"]),"is_int_loose");
 
+                    # The current field nodes array can have zero or one element
                     foreach($current_field_nodes as $current_field_node)
                         {
                         $inuse = get_nodes_use_count([$current_field_node]);
                         $inusecount = $inuse[$current_field_node] ?? 0;
-                        if ($current_field_node > 0 && $inusecount == 1)
-                            {
-                            // Reuse same node
-                            $use_node = $current_field_node;
-                            }
-                        else
-                            {
-                            // Remove node from resource and create new node
-                            $nodes_to_remove[] = $current_field_node;
-                            $nodes_check_delete[] = $current_field_node;
+                        # The current field node should never be zero
+                        if ($current_field_node > 0) 
+                            { 
+                            # We are about to make an update to the resource node
+                            if ($inusecount == 1)
+                                {
+                                # Current node used by only one resource
+                                # If non-blank then 
+                                if($val != '') 
+                                    {
+                                    # If new node is already known then remove current node as its no longer needed and add the known node
+                                    if($node_for_val) 
+                                        {
+                                        $nodes_to_remove[] = $current_field_node;
+                                        $nodes_check_delete[] = $current_field_node;
+                                        $nodes_to_add[] = $node_for_val;
+                                        } 
+                                    else 
+                                        {
+                                        # New node is not known so reuse the current node by updating it with the new name in set_node()
+                                        # No need to update the corresponding resource node
+                                        $use_node = $current_field_node;
+                                        $changed_node = set_node($use_node, $fields[$n]["ref"], $val, null, null);
+                                        }
+                                    }
+                                else 
+                                    {
+                                    # Remove the current node because its being emptied
+                                    $nodes_to_remove[] = $current_field_node;
+                                    $nodes_check_delete[] = $current_field_node;
+                                    }
+                                }
+                            else
+                                {
+                                # Current node used by more than one resource so it cannot be deleted; it will just be removed from resource node
+                                $nodes_to_remove[] = $current_field_node;
+                                $nodes_check_delete[] = $current_field_node;
+                                # Process the new node name
+                                if ($node_for_val) {
+                                    # Node is known, use it to update resource_node
+                                    $nodes_to_add[] = $node_for_val;
+                                } else {
+                                    # Node is not known, so create a new node and add it to resource_node
+                                    $added_node = set_node(null, $fields[$n]["ref"], $val, null, null);
+                                    $nodes_to_add[] = $added_node;
+                                }
+                                }
                             }
                         }
-                    }
+                    # If this is a 'joined' field we need to add it to the resource column
+                    $joins=get_resource_table_joins();
+                    if (in_array($fields[$n]["ref"],$joins))
+                        {
+                        update_resource_field_column($ref,$fields[$n]["ref"],$val);
+                        }
 
-                # Add new node unlesss empty string
-                if($val == '')
-                    {
-                    // Remove and delete node
-                    $nodes_to_remove[] = $current_field_node;
-                    $nodes_check_delete[] = $current_field_node;
                     }
-                else
-                    {
-                    $newnode = set_node($use_node, $fields[$n]["ref"], $val, null, null);
-                    $nodes_to_add[] = ((int)$use_node > 0) ? $use_node : $newnode;
-                    }
+                } # End of save changed data for fields migrated to nodes
 
-                # If this is a 'joined' field we need to add it to the resource column
-                $joins=get_resource_table_joins();
-                if (in_array($fields[$n]["ref"],$joins))
-                    {
-                    update_resource_field_column($ref,$fields[$n]["ref"],$val);
-                    }
-                }
             # Add any onchange code
             if($fields[$n]["onchange_macro"]!="")
                 {
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
 			} # End of if "allowed to edit field conditions"
-		} # End of for $fields
+
+		} # End main field loop
 
     // When editing a resource, prevent applying the change to the resource if there are any errors
     if(count($errors) > 0 && $ref > 0)
