@@ -5759,7 +5759,7 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
         <label><?php echo htmlspecialchars($label) ?></label>
         <?php $blank_icon = ($current == "" || !in_array($current, $font_awesome_icons)); ?>
         <div id="iconpicker-question">
-            <input name="<?php echo htmlspecialchars($name) ?>" type="text" id="iconpicker-input" value="<?php echo htmlspecialchars($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : htmlspecialchars($current)?>" id="iconpicker-button-fa"></i></span>
+            <input name="<?php echo escape_quoted_data($name) ?>" type="text" id="iconpicker-input" value="<?php echo escape_quoted_data($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : escape_quoted_data($current)?>" id="iconpicker-button-fa"></i></span>
         </div>
         <div id="iconpicker-container">
             <div class="iconpicker-title">
@@ -5769,8 +5769,8 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
                 <?php foreach ($font_awesome_icons as $icon_name)
                     {
                     ?>
-                    <div class="iconpicker-content-icon" data-icon="<?php echo htmlspecialchars(trim($icon_name)) ?>" title="<?php echo htmlspecialchars(trim($icon_name)) ?>">
-                        <i class="fa-fw <?php echo htmlspecialchars(trim($icon_name)) ?>"></i>
+                    <div class="iconpicker-content-icon" data-icon="<?php echo escape_quoted_data(trim($icon_name)) ?>" title="<?php echo escape_quoted_data(trim($icon_name)) ?>">
+                        <i class="fa-fw <?php echo escape_quoted_data(trim($icon_name)) ?>"></i>
                     </div>
                     <?php
                     } ?>
