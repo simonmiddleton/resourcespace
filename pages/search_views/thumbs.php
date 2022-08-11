@@ -210,7 +210,7 @@ if (!hook("renderresultthumb"))
             $workflow_html = "<div class='ResourcePanelInfo WorkflowState'>";
             // Add icon
             $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
-            $workflow_html .= "<i class='" . htmlspecialchars($icon) . "'></i>&nbsp;";
+            $workflow_html .= "<i class='" . escape_quoted_data($icon) . "'></i>&nbsp;";
             // Add text for workflow state
             $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (htmlspecialchars($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
             $workflow_html .= "</div>";
