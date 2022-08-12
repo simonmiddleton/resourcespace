@@ -1,4 +1,7 @@
-<?php global $k;?>
+<?php 
+global $k;
+$k= $k??"";
+?>
 <script type="text/javascript">
 
 jQuery(document).ready(function() {
