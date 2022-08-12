@@ -444,7 +444,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelTools a  {margin-left: 3px;margin-right:2px; text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelTools a  {margin-left: 3px;margin-right:2px; text-decoration:none; font-size: 16px;}
 .CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
 .ListTools a    {float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
