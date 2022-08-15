@@ -54,7 +54,7 @@ function mplus_resource_mark_validation_failed(array $resources)
     if(empty($valid_refs)) { return; }
 
     // Update resources with the new computed MD5s
-    $query = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES ". implode(',', $qvals) ."
+    $query = "INSERT INTO resource (ref, museumplus_data_md5, museumplus_technical_id) VALUES " . implode(',', $qvals) ."
                        ON DUPLICATE KEY UPDATE museumplus_data_md5 = VALUES(museumplus_data_md5), museumplus_technical_id = VALUES(museumplus_technical_id)";
     ps_query($query, $params);
 
@@ -80,11 +80,12 @@ function mplus_resource_update_association(array $resources, array $md5s)
         return;
         }
 
-    $qvals = [];
+    $qvals  = [];
+    $params = [];
     foreach($resources as $ref => $mplus_technical_id)
         {
         // Sanitise input
-        if((string)(int) $ref !== (string) $ref)
+        if(!is_int_loose($ref))
             {
             continue;
             }
@@ -92,24 +93,31 @@ function mplus_resource_update_association(array $resources, array $md5s)
         $md5 = (isset($md5s[$ref]) ? $md5s[$ref] : '');
 
         // Prepare SQL query values        
-        $qvals[$ref] = '?, ';
+        $addvals = ['?'];
+        $params[] = 'i';
+        $params[] = $ref;
         if($md5 == '')
             {
-            $qvals[$ref] .= 'NULL, ';
+            $addvals[] = 'NULL';
             }
-            else
+        else
             {
-            $qvals[$ref] .= '?, '; $params[] = 's'; $params[] = $md5;
+            $addvals[] = '?';
+            $params[] = 's';
+            $params[] = $md5;
             }
 
         if($mplus_technical_id == '')
             {
-            $qvals[$ref] .= 'NULL, ';
+            $addvals[] = 'NULL';
             }
-            else
+        else
             {
-            $qvals[$ref] .= '?, '; $params[] = 'i'; $params[] = $mplus_technical_id;
+            $addvals[] = '?';
+            $params[] = 'i';
+            $params[] = $mplus_technical_id;
             }
+        $qvals[$ref] = implode(',',$addvals);
         }
     if(empty($qvals)) { return; }
 
@@ -285,7 +293,7 @@ function mplus_resource_get_association_data(array $filters)
     return ps_array('SELECT r.ref AS `value`
                         FROM resource AS r
                     LEFT JOIN resource_node AS rn ON r.ref = rn.resource
-                    LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = \'%s\'
+                    LEFT JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = ?
                     WHERE r.archive = 0
                         '. 'AND (' . PHP_EOL . implode(PHP_EOL . 'OR ', $per_module_cfg_filters) . PHP_EOL . ')' .' # Filters specific to each module configuration (e.g applicable resource types)
                         '.  implode(PHP_EOL, $additional_filters) .' # Additional filters
