@@ -1709,6 +1709,8 @@ function is_field_displayed($field)
 
     # Conditions under which the field is not displayed
     return !(
+        ($field['active']==0)
+        ||
         # Field is an archive only field
         (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
         # Field does not have individual write access allowed; and does not have edit access allowed on upload
