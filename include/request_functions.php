@@ -813,16 +813,29 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }
             }
 
-        if(
-            !$notification_sent
-            && ($can_use_owner_field || !isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify)
-        )
+        if(!$notification_sent && $can_use_owner_field)
             {
             $admin_notify_users = array_keys(get_notification_users_by_owner_field(get_notification_users("RESOURCE_ACCESS"), $colresources));
             $admin_notify_message->set_subject($applicationname . ": " );
             $admin_notify_message->append_subject("lang_requestcollection");
             $admin_notify_message->append_subject(" - " . $ref);
             $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
+            send_user_notification($admin_notify_users,$admin_notify_message);
+            $notification_sent = true;
+            }
+
+        if(!$notification_sent)
+            {
+            $default_notify_users = get_notification_users("RESOURCE_ACCESS"); 
+            // Exclude any users who will already have an action appearing
+            $action_users = get_config_option_users("actions_resource_requests",true);
+            $admin_notify_users = array_diff(array_column($default_notify_users,"ref"),$action_users);
+  
+            $admin_notify_message->set_subject($applicationname . ": " );
+            $admin_notify_message->append_subject("lang_requestcollection");
+            $admin_notify_message->append_subject(" - " . $ref);
+            $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
+            $admin_notify_message->user_preference = "user_pref_resource_access_notifications";
             send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }
