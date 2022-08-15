@@ -4520,7 +4520,10 @@ function get_alternative_file($resource,$ref)
 function save_alternative_file($resource,$ref)
 	{
 	# Saves the 'alternative file' edit form back to the database
-	ps_query("update resource_alt_files set name=?,description=?,alt_type=? where resource=? and ref=?",
+    $name           = getval("name","");
+    $description    = getval("description","");
+    $alt_type       = getval("alt_type","");
+    ps_query("UPDATE resource_alt_files SET name = ?,description = ?,alt_type = ? WHERE resource = ? AND ref = ?",
     array("s",$name,"s",$description,"s",$alt_type,"i",$resource,"i",$ref));
     }
 
