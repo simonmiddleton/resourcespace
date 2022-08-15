@@ -103,7 +103,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 
 .AlternativeFileImage, .AlternativeFileText {
     float: left;
-    max-width: 150px;
+    word-break: break-word; 
     }
 
 .RecordPanel:not(.RecordPanelLarge) .DownloadFileSizePicker > #size {
