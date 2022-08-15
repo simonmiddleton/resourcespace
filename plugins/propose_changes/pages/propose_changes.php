@@ -300,6 +300,8 @@ function propose_changes_is_field_displayed($field)
     {
     global $ref, $resource, $editaccess;
     return !(
+        ($field['active']==0)
+        ||
         # Field is an archive only field
         ($resource["archive"]==0 && $field["resource_type"]==999)
         # User has no read access
