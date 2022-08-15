@@ -1296,13 +1296,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         global $userref,$ignore_collection_access;
 
         $colcustperm = $sql_join;
-        $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
              
         # Special case if a key has been provided.
         if($k != '')
             {
             $sql_filter->sql = 'r.ref > 0';
+            $sql_filter->parameters = [];
             }
 
         # Extract the collection number
