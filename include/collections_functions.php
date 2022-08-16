@@ -2306,7 +2306,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
                 }
             else
                 {
-                $sql .= '?, ';
+                $sql = '?, ';
                 $params[] = 's'; $params[] = $expires;
                 }
             if(!($sharepwd != "" && $sharepwd != "(unchanged)"))
@@ -2315,7 +2315,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
                 }
             else
                 {
-                $sql = '?';
+                $sql .= '?';
                 $params[] = 's'; $params[] = hash("sha256", $k . $sharepwd . $scramble_key);
                 }
             ps_query("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, {$sql})",
@@ -2356,7 +2356,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
             }
         else
             {
-            $sql = '?';
+            $sql .= '?';
             $params[] = 's'; $params[] = hash("sha256", $k . $sharepwd . $scramble_key);
             }
         // add for FC category. No resource. This is a dummy record so we can have a way to edit the external share done 
