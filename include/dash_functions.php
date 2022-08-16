@@ -767,7 +767,7 @@ function add_usergroup_dash_tile($usergroup, $tile, $default_order_by)
         $reorder          = false;
         }
 
-    $existing = ps_query("ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $usergroup, 'i', $tile]);
+    $existing = ps_query("SELECT ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $usergroup, 'i', $tile]);
     if(!$existing)
         {
         $result = ps_query("INSERT INTO usergroup_dash_tile (usergroup, dash_tile, default_order_by) VALUES (?, ?, ?)", ['i', $usergroup, 'i', $tile, 'i', $default_order_by]);
