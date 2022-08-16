@@ -3123,7 +3123,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
 
     // Construct an array of the selected tree nodes across all resource ids
-    $selected_treenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true);
+    $selected_treenodes = get_resource_nodes_batch($resourceids, array_column($tree_fields,"ref"), true, SORT_ASC);
 
     foreach($tree_fields as $tree_field)
         {
@@ -3146,7 +3146,6 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                     {
                     $treetext_arr[]=$tree_field_options[$selected_resource_treenode["ref"]];
                     }
-                sort($treetext_arr);
                 // Quoting each element is required for csv export
                 $valstring = $csvexport ? ("\"" . implode("\",\"",$treetext_arr) . "\"") : implode(",",$treetext_arr);
                 }
