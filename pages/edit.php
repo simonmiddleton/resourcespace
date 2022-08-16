@@ -997,13 +997,6 @@ if (getval("refreshcollectionframe","")!="")
     refresh_collection_frame();
     }
 
-# If after save requested redirect to view
-if (getval("aftersave","")!="")
-    {
-    $urlparams += ["modal" => "true"];
-    redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
-    }
-
 include "../include/header.php";
 ?>
 <script>
@@ -1020,7 +1013,6 @@ jQuery(document).ready(function()
      {?>
         jQuery(document).bind('keydown',function (e)
         {
-          // Keycode 115 is F4, 83 is "s", 19 is Pause/Break
           if (!(e.which == 115 && (e.ctrlKey || e.metaKey)) && !(e.which == 83 && (e.ctrlKey || e.metaKey)) && !(e.which == 19) )
           {
             return true;
@@ -2464,36 +2456,19 @@ hook('aftereditcollapsiblesection');
 
 <script>
 // Helper script to assist with AJAX - when 'save' and 'reset' buttons are pressed, add a hidden value so the 'save'/'resetform' values are passed forward just as if those buttons had been clicked. jQuery doesn't do this for us.
-<?php 
-if($edit_autosave) {
-?>
-    jQuery(".editsave").click(function(){
-                jQuery("#mainform").append(
-                    jQuery("<input type='hidden'>").attr( { 
-                        name: "aftersave", 
-                        value: "true" }));}
-                );
-<?php    
-}
-else
-{
-?>
-    jQuery(".editsave").click(function(){
+ jQuery(".editsave").click(function(){
                 jQuery("#mainform").append(
                     jQuery("<input type='hidden'>").attr( { 
                         name: "save", 
                         value: "true" }));}
                 );
-<?php    
-}
-?>
-    jQuery(".resetform").click(function(){
+  jQuery(".resetform").click(function(){
                 jQuery("#mainform").append(
                     jQuery("<input type='hidden'>").attr( { 
                         name: "resetform", 
                         value: "true" }));}
                 );
-    jQuery("#copyfromsubmit").click(function(){
+   jQuery("#copyfromsubmit").click(function(){
                 jQuery("#mainform").append(
                     jQuery("<input type='hidden'>").attr( { 
                         name: "copyfromsubmit", 
