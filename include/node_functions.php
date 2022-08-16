@@ -1584,7 +1584,7 @@ function delete_all_resource_nodes($resourceid)
 
 
 /**
-* Copy resource nodes from one resource to another
+* Copy resource nodes from one resource to another. Only applies for active metadata fields.
 * 
 * @uses ps_array()
 * @uses ps_query()
@@ -1606,7 +1606,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
         $omitfields      = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", array(), "schema");
         if (count($omitfields) > 0)
             {
-            $omit_fields_sql = "AND n.resource_type_field NOT IN (" . ps_param_insert(count($omitfields)) . ")";
+            $omit_fields_sql = " AND n.resource_type_field NOT IN (" . ps_param_insert(count($omitfields)) . ") ";
             $omit_fields_sql_params = ps_param_fill($omitfields, "i");
             }
         else
@@ -1629,7 +1629,9 @@ function copy_resource_nodes($resourcefrom, $resourceto)
              SELECT ?, node, 0, 0
                FROM resource_node AS rnold
           LEFT JOIN node AS n ON n.ref = rnold.node
+          LEFT JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
               WHERE resource = ?
+              AND rtf.active = 1
                 {$omit_fields_sql}
                  ON DUPLICATE KEY UPDATE hit_count = rnold.new_hit_count;
     ", array_merge(array("i", $resourceto, "i", $resourcefrom), $omit_fields_sql_params));
