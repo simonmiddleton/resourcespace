@@ -1997,7 +1997,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
     $emails=$emails_keys['emails'];
     $key_required=$emails_keys['key_required'];
-    $internal_user_ids = $emails_keys['refs'];
+    $internal_user_ids = $emails_keys['refs'] ?? array();
 
     # Add the collection(s) to the user's My Collections page
     $urefs = ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
