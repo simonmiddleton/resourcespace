@@ -296,8 +296,8 @@ function delete_access_key_multiple()
         var access_key_id = deleteAccessKeys[i].id;
         var access_key = access_key_id.substr(11);
         var table_row_cols = jQuery("#"+access_key_id).children();
-        var collection = table_row_cols[2].textContent;
-        var resource = table_row_cols[3].textContent;
+        var collection = table_row_cols[1].textContent;
+        var resource = table_row_cols[2].textContent;
         if (collection!="-") {
             countCollectionKeys += 1;
         }
