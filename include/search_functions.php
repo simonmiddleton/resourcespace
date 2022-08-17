@@ -2866,7 +2866,7 @@ function copy_filter($filter)
 */ 
 function update_search_from_request($search)
     {
-    global $config_separators;
+    global $config_separators,$resource_field_verbatim_keyword_regex;
     reset ($_POST);reset($_GET);
 
     foreach (array_merge($_GET, $_POST) as $key=>$value)
@@ -2923,7 +2923,16 @@ function update_search_from_request($search)
             else
                 {
                 # Standard field
-                $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                if(isset($resource_field_verbatim_keyword_regex[substr($key,6)]) 
+                    && preg_match($resource_field_verbatim_keyword_regex[substr($key,6)],str_replace('*', '', $value)))
+                    {
+                    $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                    }
+                else
+                    {
+                    $values=[$value];
+                    }
+
                 foreach ($values as $value)
                     {
                     # Standard field
