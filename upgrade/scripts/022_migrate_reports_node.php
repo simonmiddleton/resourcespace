@@ -73,7 +73,7 @@ function t022_perform_migration($rep, $code_to_migrate) {
 
     foreach($code_to_migrate as $key => $code)
         {
-        $position=strpos($rep["query"], $code["fingerprint"]);
+        $position=strpos((string) $rep["query"], (string) $code["fingerprint"]);
         if ($position > 0 || $position === 0) {
             echo ">> MIGRATING REPORT={$rep['ref']} CATEGORY={$code['category']} FINGERPRINT={$key}<br><br>";
             $new_query=str_replace($code["fingerprint"], $code["replacement"] ,$rep["query"]);
