@@ -212,7 +212,8 @@ foreach($fields_tab_names as $tab_ref => $tabname)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
-        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] || $resource['resource_type'] == $metadata_template_resource_type)
+        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] 
+                                               || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
             {
             if($displaycondition && $tab_ref == $fields[$i]['tab'])
                 {
