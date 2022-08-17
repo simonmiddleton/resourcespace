@@ -2000,7 +2000,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     $internal_user_ids = $emails_keys['refs'];
 
     # Add the collection(s) to the user's My Collections page
-    $urefs=ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
+    $urefs = ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
     if (count($urefs)>0)
         {
         # Delete any existing collection entries
@@ -2026,7 +2026,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 
                 #log this
-                collection_log($reflist[$nx1],LOG_CODE_COLLECTION_SHARED_COLLECTION,0, ps_value ("select username as value from user where ref = ?",array($urefs[$nx2]), ""));
+                collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $urefs[$nx2]), ""));
                 }
             }
         }
