@@ -88,11 +88,15 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
     
     $url = "{$baseurl_short}pages/collections_featured.php";
     $fc_categories = get_featured_collection_categories(0, []);
+    if($pagename !== 'dash_tile_preview')
+        {
 	?>
-    <div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" 
-        tile="<?php echo escape_quoted_data($tile["ref"])?>" 
-        id="<?php echo str_replace("contents_","",escape_quoted_data($tile_id));?>" >
-		<div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
+        <div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" 
+            tile="<?php echo escape_quoted_data($tile["ref"])?>" 
+            id="<?php echo str_replace("contents_","",escape_quoted_data($tile_id));?>" >
+            <div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
+    <?php 
+        }?>
 				<span class="theme-icon"></span>
 				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php"><h2><?php echo $lang["themes"]?></h2></a>
 				<p>
@@ -122,8 +126,13 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 					}
 					?>
 				</p>
-		</div>
-	</div>
+    <?php
+        if($pagename !== 'dash_tile_preview')
+        {?>
+            </div>
+        </div>
+    <?php
+        }?>
 	<script>
 	 jQuery("a#<?php echo str_replace("contents_","",$tile_id);?>").replaceWith(jQuery(".featuredcollectionselector"));
 	</script>
