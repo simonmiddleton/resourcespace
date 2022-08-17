@@ -5176,6 +5176,10 @@ function render_table($tabledata)
                 }
             else
                 {
+                if(isset($tabledata["params"]["search_go"]))
+                    {
+                    $tabledata["params"]["search_go"] = "";
+                    }
                 $perpageurl = generateURL($pageroptions["url"],$tabledata["params"], array("per_page"=>$ldnum));
                 $pplinks[] = "<a onclick='return " . ($modal ? "Modal" : "CentralSpace") . "Load(this, true);' href='" . 
                 $perpageurl . "'>" . $lpp_name . "</a>";
