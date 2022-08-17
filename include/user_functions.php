@@ -2219,10 +2219,11 @@ function resolve_user_emails($user_list)
     foreach($user_list as $user)
         {
         $email_details    = ps_query("SELECT ref, email, approved, account_expires FROM user WHERE username = ?", array("s", $user));
-        if(isset($email_details[0]) && (time() < strtotime($email_details[0]['account_expires']??""))) 
-          {
-          continue;
-          }
+        if(isset($email_details[0]) && (time() > strtotime($email_details[0]['account_expires']??""))) 
+            {
+            debug('Email collection: ' . __FUNCTION__ . '() Username ' . $user . ' skipped as their user account has expired.');
+            continue;
+            }
 
         // Not a recognised user, if @ sign present, assume e-mail address specified
         if(0 === count($email_details))
