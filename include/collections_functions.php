@@ -1579,16 +1579,18 @@ function save_collection($ref, $coldata=array())
 	index_collection($ref);
 
     # If 'users' is specified (i.e. access is private) then rebuild users list
-	if (isset($coldata["users"]) && $coldata["users"] != "")
+    if (isset($coldata["users"]))
         {
         $old_attached_users=ps_array("SELECT user value FROM user_collection WHERE collection=?",array("i",$ref));
         $new_attached_users=array();
-        $collection_owner=ps_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
-        if($collection_owner=='')
-            {
-            $collection_owner=ps_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
-            }
-        
+        $collection_owner=ps_value(
+            "SELECT u.ref value FROM collection c LEFT JOIN user u ON c.user=u.ref WHERE c.ref=?",
+            array("i",$ref),
+            "");
+        $collection_owner=get_user($collection_owner);
+
+        $old_attached_users[]=$collection_owner["ref"]; # Collection Owner is implied as attached already
+
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
         if ($attach_user_smart_groups)
@@ -1674,7 +1676,13 @@ function save_collection($ref, $coldata=array())
             global $baseurl, $lang;
 
             $new_attached_users=array_unique($new_attached_users);
-            message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getval("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
+            $message_text = str_replace(
+                    array('%user%', '%colname%'),
+                    array($collection_owner["fullname"]??$collection_owner["username"],getval("name","")),
+                    $lang['collectionprivate_attachedusermessage']
+            );
+            $message_url = $baseurl . "/?c=" . $ref;
+            message_add($new_attached_users,$message_text,$message_url);
             }
         }
 
