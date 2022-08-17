@@ -18,6 +18,13 @@ $rse_workflow_email_from = getval('rse_workflow_email_from', '');
 $rse_workflow_bcc_admin = getval('rse_workflow_bcc_admin', 0, true);
 $simple_search = getval('simple_search', 0, true);
 $icon = getval('icon', '');
+
+// Check valid icon
+if(!in_array($icon,$font_awesome_icons))
+    {
+    $icon = WORKFLOW_DEFAULT_ICON;
+    }
+
 $errortext="";
 $saved=false;
 
