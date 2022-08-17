@@ -1600,7 +1600,7 @@ function save_collection($ref, $coldata=array())
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
-        $urefs=ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
+        $urefs = ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
         if (count($urefs)>0)
             {
             $params = [];
@@ -2219,6 +2219,10 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
             $emailsubject = $notifymessage->get_subject();
             send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            }
+        else
+            {
+            $template = ($themeshare) ? "emailtheme" : "emailcollection";
             }
         $viewlinktext=$origviewlinktext;
         }
