@@ -4169,8 +4169,36 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $title="";
             }
 
-		# Value formatting
-		$value=i18n_get_translated($value);
+    # Value formatting
+    # Optimised to use the value as is if there are no "~" characters present in the value
+    if(strpos($value,"~") !== false) 
+        {
+        # The field value may be a list of comma separated language encoded values, so process the nodes
+        $field_nodes_in_value=explode(",",$field["nodes"]);
+        if(count($field_nodes_in_value) == 1)  
+            {
+            # Translate the single value
+		    $value=i18n_get_translated($value);
+            }
+        else if(count($field_nodes_in_value) > 1)
+            {
+            # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
+            $node_names_in_value=array();
+            $field_nodes_all=get_nodes($field['ref']);
+            foreach($field_nodes_in_value as $field_node_in_value)
+                {
+                foreach($field_nodes_all as $field_node)
+                    {
+                    if($field_node_in_value == $field_node["ref"])
+                        {
+                        $node_names_in_value[]=i18n_get_translated($field_node["name"]);
+                        break;
+                        }
+                    }
+                }
+            $value=implode(", ",$node_names_in_value);
+            }
+        } 
 		
         // Don't display the comma for radio buttons:
         if($field['type'] == FIELD_TYPE_RADIO_BUTTONS)
