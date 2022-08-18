@@ -885,7 +885,9 @@ function send_user_message($users,$text)
  */
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
-    global $userref, $lang, $plugins, $header_colour_style_override, $admin_resource_access_notifications;
+    global $userref, $lang, $plugins, $header_colour_style_override, $admin_resource_access_notifications,
+    $user_account_auto_creation;
+
     // Need to global $applicationname as it is used inside the lang files
     global $applicationname;
     $userlanguages = []; // This stores the users in their relevant language key element
@@ -932,7 +934,8 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                     get_config_option($userdetails['ref'],'actions_account_requests', $actions_set,true);
                     get_config_option($userdetails['ref'],'actions_approve_hide_groups', $skipgroups,"");                    
                     $new_user_group = $notifymessage->eventdata["extra"]["usergroup"] ?? 0;
-                    if($actions_set && !in_array($new_user_group,explode(",",$skipgroups)))
+                    // Skip if user has actions set and account has been created
+                    if($actions_set && $user_account_auto_creation && !in_array($new_user_group,explode(",",$skipgroups)))
                         {
                         debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
                         continue 2;
