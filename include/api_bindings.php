@@ -944,5 +944,10 @@ function api_save_tab($tab)
 
 function api_mark_email_as_invalid($email)
     {
+    if(!checkperm('a'))
+        {
+        return false;
+        }
+        
     return mark_email_as_invalid($email);
     }
