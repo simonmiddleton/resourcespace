@@ -196,6 +196,7 @@ $tabledata = array(
     "defaulturl"=>$baseurl . "/pages/log.php",
     "params"=>array_merge($url_params, $filter_url_params),
     "pager"=>array("current"=>$curpage,"total"=>$totalpages, "per_page"=>$per_page, "break" =>false),
+    "modal" => $modal,
     "data"=>array()
     );
 
