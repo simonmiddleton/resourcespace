@@ -6185,7 +6185,7 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
     if(in_array("resource_type",$locked_fields) && $resource["resource_type"] != $lastresource["resource_type"])
         {
         $resource["resource_type"] = $lastresource["resource_type"];
-        if ($save && !checkperm("XU" . $lastresource["resource_type"]))
+        if (!checkperm("XU" . $lastresource["resource_type"]))
             {
             update_resource_type($resource["ref"],$lastresource["resource_type"]);
             }
