@@ -32,5 +32,12 @@ $page_def[] = config_add_single_ftype_select("annotate_resource_type_field", $la
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
+if(empty($annotate_resource_type_field) || $annotate_resource_type_field == 0)
+    {
+    ?>
+    <div class="PageInformal"><?php echo $lang['annotate_metadatafield_error']?></div>
+    <script>jQuery(document).ready(function(){jQuery('#annotate_resource_type_field').addClass('highlighted');});</script>
+    <?php
+    }
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
 include '../../../include/footer.php';
