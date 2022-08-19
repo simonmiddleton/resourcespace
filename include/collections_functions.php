@@ -221,28 +221,9 @@ function get_collection($ref, $usecache = false)
         return $GLOBALS['get_collection_cache'][$ref];
         }
 
-    $columns = "c.ref,
-        c.type,
-        c.name,
-        c.parent,
-        c.user,
-        c.keywords,
-        c.public,
-        c.created,
-        c.allow_changes,
-        c.cant_delete,
-        c.home_page_publish,
-        c.home_page_text,
-        c.home_page_image,
-        c.savedsearch,
-        c.session_id,
-        c.description,
-        c.thumbnail_selection_method,
-        c.bg_img_resource_ref,
-        u.fullname,
-        u.username";
+    $columns = ", u.fullname, u.username";
         
-    $return = ps_query("SELECT " . $columns . " FROM collection c LEFT OUTER JOIN user u ON u.ref = c.user WHERE c.ref = ?",array("i",$ref));
+    $return = ps_query("SELECT ". columns_in('collection', 'c') . $columns ." FROM collection c LEFT OUTER JOIN user u ON u.ref = c.user WHERE c.ref = ?",array("i",$ref));
 
     if (count($return)==0)
         {
