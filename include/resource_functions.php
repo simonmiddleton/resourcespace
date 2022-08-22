@@ -7569,8 +7569,8 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
             {
             $conditionsql .= " WHERE ( ";
             }
-        $conditionsql.=" name LIKE '%?%' OR title LIKE '%?%' OR tab_name LIKE '%?%' OR exiftool_field LIKE '%?%' OR help_text LIKE '%?%' OR ref LIKE '%?%' OR tooltip_text LIKE '%?%' OR display_template LIKE '%?%')";
-        $params = array_merge($params, ['s', $find, 's', $find, 's', $find, 's', $find, 's', $find, 's', $find, 's', $find, 's', $find]);
+        $conditionsql.=" name LIKE ? OR title LIKE ? OR tab_name LIKE ? OR exiftool_field LIKE ? OR help_text LIKE ? OR ref LIKE ? OR tooltip_text LIKE ? OR display_template LIKE ?)";
+        $params = array_merge($params, ['s', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%"]);
         }
 
     $newfieldtypes = array_filter($fieldtypes,function($v){return (string)(int)$v == $v;});
