@@ -78,7 +78,7 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
         echo "</td></tr>";
         return true;
         }
-    elseif($column == "revert_enabled")
+    elseif($column == "revert_enabled" && $value > 0)
         {
         // Show revert link
         ?>
