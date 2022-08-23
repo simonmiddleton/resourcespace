@@ -690,7 +690,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             {
                             // Redirect to upload_review_mode in order to finish editing remaining resources that errored, include submit to generate required error message
                             ?>
-                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"submitted"=>"true","save"=>"true")); ?>',true);</script>
+                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"showextraerrors"=>json_encode($auto_errors))); ?>',true);</script>
                             <?php
                             exit();
                             }
@@ -995,6 +995,22 @@ if (getval("exif","")!="")
 if (getval("refreshcollectionframe","")!="")
     {
     refresh_collection_frame();
+    }
+
+
+// Manually set any errors that ned to be shown e.g. after saving with locked values
+$showextraerrors = getval("showextraerrors","");
+if ($showextraerrors != "")
+    {
+    $save_errors=json_decode($showextraerrors,true);
+    if(is_array($save_errors))
+        {
+        $show_error = true;
+        }
+    else
+        {
+        $save_errors = [];
+        }
     }
 
 include "../include/header.php";
@@ -2484,25 +2500,28 @@ hook('aftereditcollapsiblesection');
 
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
-  {
-  foreach ($save_errors as &$save_error) 
     {
-    $save_error=htmlspecialchars($save_error);
-    }
-  ?>
-  <script>
-  preventautoscroll = true;
-  // Find the first field that triggered the error:
-  var error_fields;
-  error_fields = document.getElementsByClassName('FieldSaveError');
-  if(error_fields.length > 0)
-    {
-    error_fields[0].scrollIntoView();
-    }
+    foreach ($save_errors as &$save_error) 
+        {
+        if(is_string($save_error))
+            {
+            $save_error=htmlspecialchars($save_error);
+            }
+        }
+    ?>
+    <script>
+    preventautoscroll = true;
+    // Find the first field that triggered the error:
+    var error_fields;
+    error_fields = document.getElementsByClassName('FieldSaveError');
+    if(error_fields.length > 0)
+        {
+        error_fields[0].scrollIntoView();
+        }
     styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
-  </script>
-  <?php
-  }
+    </script>
+    <?php
+    }
 
 hook("autolivejs");
 ?>
