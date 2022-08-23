@@ -101,7 +101,7 @@ foreach($sharedcols as $sharedcol)
 
 $expiredshares = 0;
 $per_page =getval("per_page",$default_perpage, true); 
-$per_page = (!in_array($per_page,$list_display_array)) ? $default_perpage_list : $per_page;
+$per_page = (!in_array($per_page,array_merge($list_display_array,[99999]))) ? $default_perpage_list : $per_page;
 $sharecount   = count($shares);
 $totalpages = ceil($sharecount/$per_page);
 $offset     = getval("offset",0,true);
