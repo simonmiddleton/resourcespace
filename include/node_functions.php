@@ -1598,21 +1598,41 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     {
     $omit_fields_sql = '';
     $omit_fields_sql_params = array();
+    $omitfields = array();
 
     // When copying normal resources from one to another, check for fields that should be excluded
     // NOTE: this does not apply to user template resources (negative ID resource)
     if($resourcefrom > 0)
         {
-        $omitfields      = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", array(), "schema");
-        if (count($omitfields) > 0)
+        $omitfields = ps_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", array(), "schema");
+        }
+
+    // Exclude fields which user cannot edit "F?" or cannot see "f-?". With config, users permissions maybe overridden for different resource types.
+    global $userpermissions;
+
+    $no_permission_fields = array();
+    foreach ($userpermissions as $permission_to_check)
+        {
+        if (substr($permission_to_check, 0, 2) == "f-")
             {
-            $omit_fields_sql = " AND n.resource_type_field NOT IN (" . ps_param_insert(count($omitfields)) . ") ";
-            $omit_fields_sql_params = ps_param_fill($omitfields, "i");
+            $no_permission_fields[] = substr($permission_to_check, 2);
             }
-        else
+        else if (substr($permission_to_check, 0, 1) == "F")
             {
-            $omit_fields_sql = "";
+            $no_permission_fields[] = substr($permission_to_check, 1);
             }
+        }
+    
+    $omitfields = array_merge($omitfields, array_unique($no_permission_fields));
+
+    if (count($omitfields) > 0)
+        {
+        $omit_fields_sql = " AND n.resource_type_field NOT IN (" . ps_param_insert(count($omitfields)) . ") ";
+        $omit_fields_sql_params = ps_param_fill($omitfields, "i");
+        }
+    else
+        {
+        $omit_fields_sql = "";
         }
 
     // This is for logging after the insert statement
