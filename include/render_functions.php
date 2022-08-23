@@ -1816,6 +1816,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
     else
         {
         $selected_nodes = $all_selected_nodes;
+        $submitted_val = getval("field_" . $field['ref'],"");
+        if(!empty($save_errors) && $submitted_val != "")
+            {
+            // Set to the value that was submitted 
+            $value = $submitted_val;
+            }
         }
     
   $displaycondition=true;
@@ -3774,11 +3780,15 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $validvalues = explode("|",$checkvalues);
                 $validvalues = array_map("i18n_get_translated",$validvalues);
                 $scriptconditions[$condref]['valid'] = array();
-                $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
 
-                if(count($ui_selected_node_values) > 0)
+                // Use submitted values if field was shown and user has edit access to it
+                if(getval("field_" . $fields[$n]['ref'] . "_displayed","") == "block" && metadata_field_edit_access($fields[$n]['ref']))
                     {
                     $v = $ui_selected_node_values;
+                    }
+                else
+                    {
+                    $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
                     }
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
