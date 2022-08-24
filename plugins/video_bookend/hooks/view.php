@@ -7,7 +7,15 @@ function HookVideo_bookendViewAfterresourceactions()
     $original_file_path=get_resource_path($ref,true,"",false,$resource['file_extension']);
     if(file_exists($original_file_path))
         {
-        $original_file_mime_type = mime_content_type($original_file_path);
+        if (function_exists('mime_content_type'))
+            {
+            $original_file_mime_type = mime_content_type($original_file_path);
+            }
+        else
+            {
+            $original_file_mime_type = get_mime_type($original_file_path);
+            }
+            
         if ($access==0 && $resource['has_image']==1 && substr($original_file_mime_type,0,6)=="video/")
             {
             ?>
