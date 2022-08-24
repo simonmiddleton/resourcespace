@@ -168,11 +168,9 @@ else
 			</td>
 			<td>wf<?php echo $workflowaction["ref"]; ?>
 			</td>
-			<td>
-			<div class="ListTools">
-			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"] ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]  ?>,true);"><?php echo LINK_CARET . $lang["action-delete"]?> </a><br>
-			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
-			</div>
+			<td class="ListTools">
+			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"] ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]  ?>,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?> </a>
 			</td>
 		</tr>
 		<?php	

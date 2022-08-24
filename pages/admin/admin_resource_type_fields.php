@@ -252,15 +252,15 @@ for ($n=0;$n<count($fields);$n++)
             if($field_order_by=="order_by" && $allow_reorder)
                 {
                 ?>      
-                <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?><?php echo $lang['action-move-down'] ?></a>
-                <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET ?><?php echo $lang['action-move-up'] ?></a>
+                <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><i class="fas fa-arrow-down"></i>&nbsp;<?php echo $lang['action-move-down'] ?></a>
+                <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><i class="fas fa-arrow-up"></i>&nbsp;<?php echo $lang['action-move-up'] ?></a>
                 <?php
                 }
                 ?>
             
             
-                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
-                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><i class="fas fa-copy"></i>&nbsp;<?php echo $lang["copy"] ?></a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;&nbsp;<?php echo $lang["action-edit"]?> </a>
                 <a href="<?php echo generateURL(
                     "{$baseurl}/pages/admin/admin_system_log.php",
                     [
@@ -268,7 +268,7 @@ for ($n=0;$n<count($fields);$n++)
                         'table_reference' => $fields[$n]['ref'],
                     ],
                     $common_rs_url_params
-                ); ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo htmlspecialchars($lang["log"]); ?></a>
+                ); ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-history"></i>&nbsp;<?php echo htmlspecialchars($lang["log"]); ?></a>
             </div>
         </td>
     </tr>

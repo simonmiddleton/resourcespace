@@ -248,7 +248,7 @@ for($n=0;$n<$sharecount;$n++)
                 }
 
             $tableshare["tools"][] = array(
-                "icon"=>"fa fa-pencil",
+                "icon"=>"fas fa-edit",
                 "text"=>$lang["action-edit"],
                 "url"=>$editlink,
                 "modal"=>false,

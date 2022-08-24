@@ -249,14 +249,14 @@ include "../../include/header.php";
 		<td><?php echo nicedate($users[$n]["last_active"],true,true,true) ?></td>
 		<?php hook("additional_user_column");?>
 		<td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
-		<a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["log"]?></a>
+		<a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-history"></i>&nbsp;<?php echo $lang["log"]?></a>
 		&nbsp;
-		<a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+		<a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
         <?php
         if($userref != $users[$n]["ref"])
             {
             // Add message link
-            echo '<a href="' . $baseurl_short . 'pages/user/user_message.php?msgto=' . $users[$n]["ref"] . '"  onClick="return CentralSpaceLoad(this,true);">' .  LINK_CARET . $lang["message"] . '</a>';
+            echo '<a href="' . $baseurl_short . 'pages/user/user_message.php?msgto=' . $users[$n]["ref"] . '"  onClick="return CentralSpaceLoad(this,true);">' .  '<i class="fas fa-envelope"></i>&nbsp;' . $lang["message"] . '</a>';
             }       
 		hook("usertool")?>
 		</div><?php } ?>
