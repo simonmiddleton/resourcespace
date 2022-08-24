@@ -4551,7 +4551,7 @@ function user_rating_save($userref,$ref,$rating)
 	}
 
 	# Save to the database
-	ps_query("update resource set user_rating=?,user_rating_total=?,user_rating_count=? where ref='$ref'",array("d",$average,"i",$total,"i",$count));
+	ps_query("UPDATE resource SET user_rating = ?, user_rating_total = ?, user_rating_count = ? WHERE ref = ?", array("d", $average, "i", $total, "i", $count, "i", $ref));
 	}
 
 /**
