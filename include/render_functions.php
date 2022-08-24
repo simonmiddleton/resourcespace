@@ -2079,7 +2079,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         }
 
     // The visibility status (block/none) will be sent to the server for validation purposes
-    echo "<input id='field_" . $field['ref']  . "_displayed' name='" . "field_" . $field['ref']  . "_displayed' type='hidden' value='block'>";
+    echo "<input id='field_" . (int) $field['ref']  . "_displayed' name='" . "field_" . (int) $field['ref']  . "_displayed' type='hidden' value='block'>";
 
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
