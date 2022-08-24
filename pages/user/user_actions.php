@@ -232,7 +232,7 @@ actionsreload=false;
 jQuery('#CentralSpace').on('ModalClosed',function(e,url){
 	if(ajaxinprogress!=true && typeof(actionsreload)!=="undefined" && actionsreload==true && window.location.href.indexOf('/pages/user/user_actions.php')!=-1){
 			actionsreload=false;
-			CentralSpaceLoad('<?php echo $url; ?>',false);
+			CentralSpaceLoad(window.location.href,false);
 		}
 	});		
 </script>
