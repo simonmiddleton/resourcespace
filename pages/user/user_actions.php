@@ -215,8 +215,8 @@ else
 					<div class="ListTools">
 					  <?php
 					  if($actionaddlink!=""){echo $actionaddlink;}
-					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-pencil" title="<?php echo $lang["action-edit"]; ?>"></a><?php }
-					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-expand" title="<?php echo $lang["view"]; ?>"></a><?php }?>
+					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo $lang["action-edit"]; ?>"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a><?php }
+					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo $lang["view"]; ?>"><i class="fas fa-expand"></i>&nbsp;<?php echo $lang["view"]; ?></a><?php }?>
 					</div>
 				</td>
 			</tr>

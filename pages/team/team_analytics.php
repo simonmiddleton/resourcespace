@@ -83,8 +83,8 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
 	<td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
 	<td>
 	<div class="ListTools">
-		<a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><?php   echo LINK_CARET .$lang["action-edit"]?> </a>
-		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><?php echo LINK_CARET . $lang["action-delete"]?></a>
+		<a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
 		</div>
 	</td>
 	</tr>

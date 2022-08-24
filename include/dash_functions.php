@@ -1472,7 +1472,7 @@ function build_dash_tile_list($dtiles_available)
                   </a>
               </td>
               <td><?php echo $tile["resource_count"]? $lang["yes"]: $lang["no"];?></td>
-              <td>
+              <td class="ListTools">
                   <?php
                   if  (	
                           $tile["allow_delete"]
@@ -1484,7 +1484,7 @@ function build_dash_tile_list($dtiles_available)
                           )
                       )
                       { ?>
-                      <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>" ><?php echo $lang["action-edit"];?></a>
+                      <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>" ><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"];?></a>
                       <?php
                       }
                   ?>

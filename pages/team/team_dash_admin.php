@@ -131,7 +131,7 @@ render_dropdown_question(
 ?>
     <form class="Listview">
 	<input type="hidden" name="submit" value="true" />
-	<table class="ListviewStyle">
+	<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 		<thead>
 			<tr class="ListviewTitleStyle">
 				<td><?php echo $lang["dashtileshow"];?></td>

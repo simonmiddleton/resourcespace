@@ -5304,7 +5304,7 @@ function render_table($tabledata)
                                 {
                                 echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
                                 }
-                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><i class='" . htmlspecialchars($toolitem["icon"]) . "'></i>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
                             }
                         echo "</div>";
                         }

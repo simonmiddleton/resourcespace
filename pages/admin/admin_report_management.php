@@ -122,18 +122,18 @@ function addColumnHeader($orderName, $labelKey)
                 </td>
                 <td><?php echo ($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>
                 <td>
-                    <div class="ListView" align="right">
+                    <div class="ListView ListTools" align="right">
                         <?php
                         if(!$support_non_correlated_sql)
                             {
-                            echo LINK_CARET; ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["action-view"]; ?></a>
+                            ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-table"></i>&nbsp;<?php echo $lang["action-view"]; ?></a>
                             <?php
                             }
 
                         if(db_use_multiple_connection_modes() || !$execution_lockout)
                             {
-                            echo LINK_CARET; ?><a href="<?php echo $edit_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["action-edit"]; ?></a>
-                            <?php echo LINK_CARET; ?><a  href="javascript:copyReport('<?php echo $report["ref"]; ?>')"><?php echo $lang["copy"]; ?></a>
+                            ?><a href="<?php echo $edit_url; ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
+                            <a href="javascript:copyReport('<?php echo $report["ref"]; ?>')"><i class="fas fa-copy"></i>&nbsp;<?php echo $lang["copy"]; ?></a>
                             <?php
                             }
                             ?>
