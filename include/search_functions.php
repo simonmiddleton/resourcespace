@@ -50,7 +50,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=ps_query("SELECT * FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
+    $fields=ps_query("SELECT " . columns_in('resource_type_field') . " FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
 
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
