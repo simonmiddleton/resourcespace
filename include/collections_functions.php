@@ -993,27 +993,19 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     elseif (substr($search,0,16)=="collectiontitle:")
         {
         # A-Z specific title search
-        $newsearch="";
-        for ($n=0;$n<count($keywords);$n++)
-            {
-            if (substr($keywords[$n],0,16)=="collectiontitle:")
-                {
-                $newsearch.=" ".substr($keywords[$n],16);    // wildcard * - %
-                }
-            }
-
+        $newsearch = implode(' ', array_diff($keywords, ['collectiontitle']));
         $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
         $sql = "AND c.name LIKE ?";
         $sql_params[] = "s";$sql_params[] = $newsearch;
         }
-    if (strlen($search)>1 || is_numeric($search))
+    else if (strlen($search)>1 || is_numeric($search))
         {
         $keyrefs=array();
         $keyunions = array();
         $unionselect = "SELECT kunion.collection";
         for ($n=0;$n<count($keywords);$n++)
             {
-            if (substr($keywords[$n],0,16)!="collectiontitle:")
+            if (substr($keywords[$n],0,15)!="collectiontitle")
                 {
                 if (substr($keywords[$n],0,16)=="collectionowner:")
                     {
