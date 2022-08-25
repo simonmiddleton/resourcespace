@@ -2820,7 +2820,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         ),
         "where" => "WHERE c.ref = ? AND c.`type` = ?",
     );
-    $subquery_params = array_merge($rca_join_params, array("i", $c["ref"], "i", COLLECTION_TYPE_FEATURED));
+    $subquery_params = array_merge($rca_join_params, array("i", $c["ref"], "i", COLLECTION_TYPE_FEATURED), $rca_where_params);
 
     if(is_featured_collection_category($c))
         {
@@ -2848,7 +2848,7 @@ function get_featured_collection_resources(array $c, array $ctx)
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
                     $fcresources = array_merge($fcresources,$subfcimages);
-                    }
+                    } 
                 continue;
                 }
      
@@ -2863,14 +2863,14 @@ function get_featured_collection_resources(array $c, array $ctx)
         if($fcrescount > 0)
             {
             $subquery["where"] = " AND r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
-            $subquery_params = ps_param_fill($fcresources,"i");
+            $subquery_params = array_merge($rca_join_params,ps_param_fill($fcresources,"i"), $rca_where_params);
             }
         }
 
     $subquery["join"] = implode(" ", $subquery["join"]);
     $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
     $subquery_params = array_merge($subquery_params,$fc_permissions_where_params);
-
+    
     $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
         $union,
