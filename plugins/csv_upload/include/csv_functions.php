@@ -118,7 +118,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 }
             }
         }
-    array_push ($messages,"Processing " . count($csv_set_options["fieldmapping"]) . " metadata columns");
+    array_push($messages,
+        "{$lang['csv_upload_process']} " . ($processcsv ? $lang['csv_upload_step5'] : $lang['csv_upload_step4']),
+        str_replace('%count', count($csv_set_options["fieldmapping"]), $lang['csv_upload_processing_x_meta_columns'])
+    );
 
     $field_nodes = array();
     $node_trans_arr = array();

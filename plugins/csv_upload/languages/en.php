@@ -61,6 +61,7 @@ $lang["csv_upload_process_offline"]             = "Process CSV file offline? Thi
 $lang["csv_upload_oj_created"]                  = "CSV upload job created with job ID # %%JOBREF%%. <br/>You will receive a ResourceSpace system message once the job has completed";
 $lang["csv_upload_oj_complete"]                 = "CSV upload job complete. Click the link to view the full log file";
 $lang["csv_upload_oj_failed"]                   = "CSV upload job failed";
+$lang["csv_upload_processing_x_meta_columns"]   = "Processing %count metadata columns";
 $lang["csv_upload_processing_complete"]         = "Processing completed at %%TIME%% (%%HOURS%% hours, %%MINUTES%% minutes, %%SECONDS%% seconds";
 $lang["csv_upload_error_in_progress"]           = "Processing aborted - this CSV file is already being processed";
 $lang["csv_upload_error_file_missing"]          = "Error - CSV file missing: %%FILE%%";
