@@ -57,10 +57,10 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
         $valid = true;
         setup_user($userdata[0]);
 
-        if ($password_expiry>0 && !checkperm("p") && $allow_password_change && in_array($pagename, array("user_change_password","index","collections")) === false && strlen(trim($userdata[0]["password_last_change"]))>0 && getval("modal","")=="")
+        if ($password_expiry>0 && !checkperm("p") && $allow_password_change && in_array($pagename, array("user_change_password","index","collections")) === false && strlen(trim((string) $userdata[0]["password_last_change"]))>0 && getval("modal","")=="")
         	{
         	# Redirect the user to the password change page if their password has expired.
-	        $last_password_change=time()-strtotime($userdata[0]["password_last_change"]);
+	        $last_password_change=time()-strtotime((string) $userdata[0]["password_last_change"]);
 		if ($last_password_change>($password_expiry*60*60*24))
 			{
 			?>
