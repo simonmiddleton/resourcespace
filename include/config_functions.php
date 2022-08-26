@@ -1068,7 +1068,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
                     }
                 
-                if (count($valid_extensions) > 0 && !(in_array($uploaded_file_extension, $valid_extensions)))
+                if (count($valid_extensions) > 0 && !check_valid_file_extension($_FILES[$config_name], $valid_extensions))
                     {
                     trigger_error('File type not valid for this selection. Please choose from ' . implode(', ', $valid_extensions) . '.');
                     }
