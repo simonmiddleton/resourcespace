@@ -29,7 +29,6 @@ $meta = meta_get_map();
 
 $restypearr = get_resource_types();
 $resource_types = array();
-// Sort into array with ids as keys
 foreach($restypearr as $restype)
     {
     $resource_types[$restype["ref"]] = $restype;
@@ -38,9 +37,32 @@ foreach($restypearr as $restype)
 $logfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
 $logurl = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
 $csv_set_options["log_file"] = $logfile;
+$csv_process_steps = [
+    'validate' => ['max_error_count' => 100, 'processcsv' => false],
+    'process'  => ['max_error_count' => 0,   'processcsv' => true],
+];
+foreach($csv_process_steps as $step_info)
+    {
+    $step_txt = $step_info['processcsv'] ? $GLOBALS['lang']['csv_upload_step5'] : $GLOBALS['lang']['csv_upload_step4'];
 
-csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options,0,true);
+    if(csv_upload_process($csvfile, $meta, $resource_types, $messages, $csv_set_options, $step_info['max_error_count'], $step_info['processcsv']))
+        {
+        if($step_info['processcsv'])
+            {
+            job_queue_update($jobref, $job_data, STATUS_COMPLETE);
+            message_add(
+                $job["user"],
+                $job["success_text"] . (isset($csv_set_options["csv_filename"]) ? ": {$csv_set_options["csv_filename"]}" : ""),
+                $logurl
+            );
+            break;
+            }
 
-// Send a message to the user
-job_queue_update($jobref, $job_data, STATUS_COMPLETE);
-message_add($job["user"], $job["success_text"] . (isset($csv_set_options["csv_filename"]) ? (": " . $csv_set_options["csv_filename"]) : ""), $logurl);
+        continue;
+        }
+
+    // Failure will always stop the entire process regardless of the step (validation/ processing)
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
+    message_add($job["user"], "{$job["failure_text"]}: $step_txt", $logurl);
+    break;
+    }

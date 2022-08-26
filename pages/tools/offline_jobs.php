@@ -18,7 +18,7 @@ $jobs = array();
 $max_jobs = 10;
 
 $help_text = "NAME
-    offline_jobs.php - 
+    offline_jobs.php - Process offline jobs
 
 SYNOPSIS
     php /path/to/pages/tools/tools/offline_jobs.php [OPTIONS...]
