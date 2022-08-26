@@ -869,7 +869,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
     $sql = "INSERT INTO collection
             (" . implode(",",$insert_columns) . ", created)
             VALUES
-            (". ps_param_insert(count($setcolumns)) .",NOW())";
+            (". ps_param_insert(count($insert_values)) .",NOW())";
     
     ps_query($sql, ps_param_fill($insert_values, 's'));
 
