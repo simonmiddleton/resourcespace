@@ -4816,11 +4816,12 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
         }
         else{$sql = "";}
 	# Update the expiration and acccess
-	ps_query("update external_access_keys set {$sql} access= ?, expires= ?,date=now(),usergroup= ? where access_key='$key'",
+	ps_query("update external_access_keys set {$sql} access= ?, expires= ?,date=now(),usergroup= ? where access_key= ?",
         array_merge($params, [
         'i', $access,
         's', (($expires=="")?null: $expires),
         'i', $group,
+        's', $key
         ])
     );
     hook('edit_resource_external_access','',array($key,$access,$expires,$group));
