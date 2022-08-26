@@ -1441,10 +1441,16 @@ function save_resource_data_multi($collection,$editsearch = array())
                             {
                             update_resource_field_column($ref,$fields[$n]["ref"],$new_nodes_val);
                             }
-						}
+                        }
+
+                    // Add any onchange code
+                    if($fields[$n]["onchange_macro"]!="")
+                        {
+                        eval(eval_check_signed($fields[$n]["onchange_macro"]));
+                        }
                     }
                 } // End of fixed list field section
-			elseif($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
+            elseif($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
                 {
                 # date range type
                 # each value will be a node so we end up with a pair of nodes to represent the start and end dates
