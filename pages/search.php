@@ -1,6 +1,5 @@
 <?php
 include_once "../include/db.php";
-
 if($annotate_enabled)
     {
     include_once '../include/annotation_functions.php';
@@ -537,24 +536,16 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        // Save $max_results as this gets changed by do_search();
-        $saved_max_results = $max_results;
-        // First search for refs only to get full result count
-        $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, true, $editable_only, false, $search_access);
-        
-        if(is_array($count_search))
-            {
-            $result_count = count($count_search);
-            // Do actual search and get all data
-            $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        if(is_array($result))
+            {            
+            $result_count = count($result);
+            $results = array_slice($result,$offset,$resourcestoretrieve,true);
             }
         else
             {
             $result_count = 0;
-            $result = $count_search;
             }
-      
-        $max_results = $saved_max_results;
         }
     }
 else
