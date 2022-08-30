@@ -743,7 +743,7 @@ if ($processupload)
                 if ($batch_replace_max > 0)
                     {
                     $sql .= " AND ref <= ?";
-                    $sql_params = array_merge($sql_params,"i",$batch_replace_max);
+                    $sql_params = array_merge($sql_params,["i",$batch_replace_max]);
                     }
                 $sql .= " ORDER BY ref ASC";
 
