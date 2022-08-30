@@ -2223,13 +2223,20 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
             $results[$noderow["resource"]][$noderow["resource_type_field"]] = array();
             }
 
-        $results[$noderow["resource"]][$noderow["resource_type_field"]][] = array(
-            "ref"                   => $noderow["ref"],
-            "resource_type_field"   => $noderow["resource_type_field"],
-            "name"                  => $noderow["name"],
-            "parent"                => $noderow["parent"],
-            "order_by"              => $noderow["order_by"],
-            );
+        if($detailed)
+            {
+            $results[$noderow["resource"]][$noderow["resource_type_field"]][] = array(
+                "ref"                   => $noderow["ref"],
+                "resource_type_field"   => $noderow["resource_type_field"],
+                "name"                  => $noderow["name"],
+                "parent"                => $noderow["parent"],
+                "order_by"              => $noderow["order_by"],
+                );
+            }
+        else
+            {
+            $results[$noderow["resource"]][$noderow["resource_type_field"]][] = $noderow["ref"];
+            }
         }
 
     return $results;
@@ -2390,14 +2397,17 @@ function check_delete_nodes($nodes)
         {
         $nodeinfo = [];
         get_node($node,$nodeinfo);
-        $fieldinfo  = get_resource_type_field($nodeinfo["resource_type_field"]);
-        debug("check_delete_nodes: checking node " . $node . " - (" . $nodeinfo["name"] . ")");
-        if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
+        if(isset($nodeinfo["resource_type_field"]))
             {
-            if(!isset($count[$node]) ||  $count[$node] == 0)
+            $fieldinfo  = get_resource_type_field($nodeinfo["resource_type_field"]);
+            debug("check_delete_nodes: checking node " . $node . " - (" . $nodeinfo["name"] . ")");
+            if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
                 {
-                debug("Deleting unused node #" . $node. " - (" . $nodeinfo["name"] . ")");
-                delete_node($node);
+                if(!isset($count[$node]) ||  $count[$node] == 0)
+                    {
+                    debug("Deleting unused node #" . $node. " - (" . $nodeinfo["name"] . ")");
+                    delete_node($node);
+                    }
                 }
             }
         }
