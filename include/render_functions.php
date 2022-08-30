@@ -4193,20 +4193,11 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         else if(count($field_nodes_in_value) > 1)
             {
             # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
-            $node_names_in_value=array();
-            $field_nodes_all=get_nodes($field['ref']);
-            foreach($field_nodes_in_value as $field_node_in_value)
-                {
-                foreach($field_nodes_all as $field_node)
-                    {
-                    if($field_node_in_value == $field_node["ref"])
-                        {
-                        $node_names_in_value[]=i18n_get_translated($field_node["name"]);
-                        break;
-                        }
-                    }
-                }
-            $value=implode(", ",$node_names_in_value);
+            $field_nodes_all = get_nodes($field['ref']);
+            $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
+            # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
+            $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
+            $value = implode(', ', $node_names_in_value);
             }
         } 
 		
