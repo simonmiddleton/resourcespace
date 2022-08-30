@@ -165,7 +165,8 @@ else
     }
 
 # Calculate pager vars.
-$results    =   count($log);
+$results    =   $log["total"];
+$log        =   $log["data"];
 $totalpages =   ceil($results/$per_page);
 $curpage    =   floor($offset/$per_page)+1;
 $url        =  generateURL(

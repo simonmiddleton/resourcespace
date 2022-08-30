@@ -20,7 +20,7 @@ if($set_value != $test_value)
     }
 
 // SUBTEST B - Check action has been logged correctly
-$reslog = get_resource_log($resourcea);
+$reslog = get_resource_log($resourcea)['data'];
 $logok = false;  
 foreach($reslog as $logentry)
     {
@@ -62,7 +62,7 @@ if(!in_array($check_value,$test_value))
     }
 
 // SUBTEST D - Check action has been logged correctly
-$reslog = get_resource_log($resourcea);
+$reslog = get_resource_log($resourcea)['data'];
 $logok = false;  
 foreach($reslog as $logentry)
     {

@@ -7,7 +7,7 @@ $logref=getval("ref","",true);
 $k=getval("k","");
 $modal = (getval("modal", "") == "true");
 
-$log_entry = get_resource_log(NULL,-1,array("r.ref" => $logref));
+$log_entry = get_resource_log(NULL,1,array("r.ref" => $logref))['data'];
 if(!is_array($log_entry) || count($log_entry)==0)
     {
     exit($lang['error_invalid_input']);    

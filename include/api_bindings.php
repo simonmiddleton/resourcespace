@@ -219,7 +219,7 @@ function api_copy_resource($from,$resource_type=-1)
 
 function api_get_resource_log($resource, $fetchrows=-1)
     {
-    return get_resource_log($resource, $fetchrows);
+    return get_resource_log($resource, $fetchrows)["data"];
     }
     
 function api_update_resource_type($resource,$type)
