@@ -226,8 +226,12 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
         id="user_edit_email" 
         type="text" 
         class="stdwidth<?php if($user["email_invalid"]??false){echo " emailinvalid";}?>" 
-        value="<?php echo form_value_display($user,"email") ?>"
-        <?php if($user["email_invalid"]??false){echo "title='{$lang["emailmarkedinvalid"]}'";}?>>
+        value="<?php echo htmlspecialchars(form_value_display($user,"email")) ?>"
+        <?php if($user["email_invalid"]??false)
+            {
+            echo "title='" . htmlspecialchars($lang["emailmarkedinvalid"]) . "'";
+            }
+        ?>>
     <div class="clearerleft"> </div>
 </div>
 
