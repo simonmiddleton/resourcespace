@@ -535,7 +535,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .Question .indent {
     float:left;
-    width: 700px;
+    width: 600px;
 }
 
 .FormWide .Question label{width: 20%}
