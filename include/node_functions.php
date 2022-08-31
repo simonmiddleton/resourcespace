@@ -1383,7 +1383,7 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
         
         foreach ($field_nodes_arr as $key => $value)
             {
-            resource_log($resourceid,"e",$key,"","","," . implode(",",$value));
+            resource_log($resourceid,"e",$key,"","",implode(NODE_NAME_STRING_SEPARATOR,$value));
             }
         }
 
