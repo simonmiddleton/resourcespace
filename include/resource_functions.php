@@ -8739,12 +8739,8 @@ function allow_in_browser($path)
 
 * @return boolean
 */
-function update_resource_field_column($resource,$field,$value)
+function update_resource_field_column(int $resource,int $field, string $value)
     {
-    if(!is_int_loose($resource) || !is_int_loose($field))
-        {
-        return false;
-        }
     $sql = "UPDATE resource SET `field" . $field . "` = ? WHERE ref = ?";
     $params = ["s",truncate_join_field_value($value),"i",$resource];
     ps_query($sql,$params);

@@ -449,12 +449,13 @@ function do_search(
                             if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
                                 {
                                 // Find where the searched value is between the range values
-                                $sql_join->sql .=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field='" . $datefield . "' AND drn" . $c . "s.name >= ? JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field='" . $datefield . "' AND DATE(drn" . $c . "e.name) <= ?";
-                                array_push($sql_join->parameters,"s",$val,"s",$val);
+                                $sql_join->sql .=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field = ? AND drn" . $c . "s.name >= ? JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field = ? AND DATE(drn" . $c . "e.name) <= ?";
+                                array_push($sql_join->parameters,"i",$datefield,"i",$datefield,"s",$val,"s",$val);
                                 }
                             else
                                 {
-                                $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field='" . $datefield . "'";
+                                $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field = ?";
+                                array_push($sql_join->parameters,"i",$datefield);
                                 
                                 $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "dn" . $c . ".name like ?";
                                 array_push($sql_filter->parameters,"s",$val . "%");
@@ -470,8 +471,9 @@ function do_search(
                             if(!isset($datefieldjoin))
                                 {
                                 // We only want to join once to the date_field
-                                $sql_join->sql .=" JOIN resource_node rdnf" . $c . " ON rdnf" . $c . ".resource=r.ref JOIN node rdn" . $c . " ON rdnf" . $c  . ".node=rdn" . $c . ".ref AND rdn" . $c . ".resource_type_field='" . $date_field . "'";
+                                $sql_join->sql .=" JOIN resource_node rdnf" . $c . " ON rdnf" . $c . ".resource=r.ref JOIN node rdn" . $c . " ON rdnf" . $c  . ".node=rdn" . $c . ".ref AND rdn" . $c . ".resource_type_field = ?";
                                 $datefieldjoin = $c;
+                                array_push($sql_join->parameters,"i",$date_field);
                                 }
 
                             if('basicday' == $kw[0])
@@ -499,7 +501,6 @@ function do_search(
                                 {
                                 $sql_filter->sql.=" AND ";
                                 }
-                            //$sql_filter->sql.="r.field$date_field >= '" . $keystring . "' ";
                             $sql_filter->sql.= ($sql_filter->sql !="" ? " AND " : "") . "rdfn" . $c . ".name >= ? ";
                             array_push($sql_filter->parameters,"s",$keystring);
 
@@ -523,7 +524,6 @@ function do_search(
                             {
                             $c++;
                             $rangefield=$datefieldinfo[0]["ref"];
-                            $daterange=false;
                             $rangestring=substr($keystring,5);
                             if (strpos($rangestring,"start")!==FALSE )
                                 {
@@ -688,7 +688,7 @@ function do_search(
 
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . $wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
+                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . (int)$wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
