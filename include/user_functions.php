@@ -634,39 +634,15 @@ function get_user($ref)
         }
     else
         {
-        $user_columns  = columns_in("user","u");
-
-        $udata_cache[$ref] = ps_query(
-            "SELECT 
-                {$user_columns},
-                if(find_in_set('permissions',g.inherit_flags)>0 
-                        AND pg.permissions IS NOT NULL,
-                    pg.permissions,
-                    g.permissions) permissions, 
-                g.parent, 
-                g.search_filter, 
-                g.edit_filter, 
-                g.ip_restrict ip_restrict_group, 
-                g.name groupname,
-                (select count(*) from collection where ref=u.current_collection) as current_collection_valid,
-                g.resource_defaults,
-                if(find_in_set('config_options',g.inherit_flags)>0 
-                        AND pg.config_options IS NOT NULL,
-                    pg.config_options,
-                    g.config_options) config_options,
-                g.request_mode,
-                g.derestrict_filter,
-                g.search_filter_id,
-                g.download_limit,
-                g.download_log_days,
-                g.edit_filter_id,
-                g.derestrict_filter_id
-            FROM user u 
-                LEFT JOIN usergroup g ON u.usergroup = g.ref 
-                LEFT JOIN usergroup pg ON g.parent = pg.ref 
-            WHERE u.ref = ?",
-            array("i", $ref)
-        );
+        $udata_cache[$ref] = ps_query("SELECT u.ref, u.username, u.password, u.fullname, u.email, u.usergroup, u.last_active, u.logged_in, u.last_browser, u.last_ip, 
+            u.current_collection, u.accepted_terms, u.account_expires, u.comments, u.session, u.password_last_change, u.login_tries, 
+            u.login_last_try, u.approved, u.lang, u.created, u.hidden_collections, u.password_reset_hash, u.origin, u.unique_hash, u.csrf_token,
+            u.profile_image, u.profile_text, if(find_in_set('permissions', g.inherit_flags) > 0 AND pg.permissions IS NOT NULL, pg.permissions, g.permissions) permissions, 
+            g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, 
+            (select count(*) from collection where ref = u.current_collection) as current_collection_valid, u.search_filter_o_id, g.resource_defaults, 
+            if(find_in_set('config_options',g.inherit_flags) > 0 AND pg.config_options IS NOT NULL, pg.config_options, g.config_options) config_options, g.request_mode, 
+            g.derestrict_filter, g.search_filter_id, g.download_limit, g.download_log_days, g.edit_filter_id, g.derestrict_filter_id FROM user u LEFT JOIN usergroup g 
+            ON u.usergroup = g.ref LEFT JOIN usergroup pg ON g.parent = pg.ref WHERE u.ref = ?", array("i", $ref));
         }
     
     # Return a user's credentials.
