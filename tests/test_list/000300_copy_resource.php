@@ -15,7 +15,7 @@ if (get_resource_data($new)===false) {return false;}
 if (get_data_by_field($new,8)!="Test title"){return false;}
 
 # Was the title field change logged?
-$resource_log = get_resource_log($new,-1,["r.type" => "e"]);
+$resource_log = get_resource_log($new,-1,["r.type" => "e"])['data'];
 $change_logged=false;
 foreach($resource_log as $log)
     {

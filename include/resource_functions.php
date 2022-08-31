@@ -3640,10 +3640,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         }
 
     $extrafields = hook('get_resource_log_extra_fields');
-    if(!$extrafields)
-        {
-        $extrafields = '';
-        }
+    $extrafields = is_a($extrafields,PreparedStatementQuery::class) ? $extrafields : new PreparedStatementQuery();
 
     // Create filter SQL
     $filterarr = array(); $params = [];
@@ -3659,8 +3656,8 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         }
     $sql_filter = "WHERE " . implode(" AND ", $filterarr);
 
-    $log = ps_query(
-                "SELECT r.ref,
+    $sql_query = new PreparedStatementQuery(
+        "SELECT r.ref,
                         r.resource,
                         r.date,
                         u.username,
@@ -3675,7 +3672,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
                         r.purchase_size,
                         ps.name AS size,
                         r.access_key,
-                        ekeys_u.fullname AS shared_by {$extrafields}
+                        ekeys_u.fullname AS shared_by {$extrafields->sql}
                    FROM resource_log AS r
         LEFT OUTER JOIN user AS u ON u.ref = r.user
         LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
@@ -3685,18 +3682,19 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
                         {$sql_filter}
                GROUP BY r.ref
-               ORDER BY r.ref DESC", $params,
-        false,
-        $fetchrows);
+               ORDER BY r.ref DESC",
+        array_merge($extrafields->parameters, $params));
 
-    for($n = 0; $n < count($log); $n++)
+    $log = sql_limit_with_total_count($sql_query,$fetchrows,0);
+
+    for($n = 0; $n < count($log['data']); $n++)
         {
-        if($fetchrows != -1 && $log[$n] == 0)
+        if($fetchrows != -1 && $log['data'][$n] == 0)
             {
             continue;
             }
 
-        $log[$n]['title'] = lang_or_i18n_get_translated($log[$n]['title'], 'fieldtitle-');
+        $log['data'][$n]['title'] = lang_or_i18n_get_translated($log['data'][$n]['title'], 'fieldtitle-');
         }
 
     return $log;
