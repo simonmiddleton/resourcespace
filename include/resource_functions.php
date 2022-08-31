@@ -862,7 +862,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     # Construct a multilingual string from the submitted translations
                     $val = getval("field_" . $fields[$n]["ref"],"");
-                    $rawval = getval("field_" . $fields[$n]["ref"],"");
+                    $rawval = $val;
                     $val="~" . $language . ":" . $val;
                     reset ($languages);
                     foreach ($languages as $langkey => $langname)
@@ -958,7 +958,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             if(
                 in_array($fields[$n]['type'],$NODE_MIGRATED_FIELD_TYPES)
                 &&
-                str_replace("\r\n", "\n", trim((string)$fields[$n]['value'])) !== str_replace("\r\n", "\n", unescape(trim((string)$val)))
+                str_replace("\r\n", "\n", trim((string)$fields[$n]['value'])) !== str_replace("\r\n", "\n", trim((string)$val))
                 )
                 {
                 # This value is different from the value we have on record.
