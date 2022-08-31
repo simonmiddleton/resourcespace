@@ -424,7 +424,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     {
                     if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
                         {
-                        debug("[sql_query] returning cached data (source: {$cache_file})");
+                        debug("[ps_query] returning cached data (source: {$cache_file})");
                         db_clear_connection_mode();
                         return $cachedata["results"];
                         }
