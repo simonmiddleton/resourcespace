@@ -3578,10 +3578,14 @@ function copy_resource($from,$resource_type=-1)
         $fields_to_set_resource_defaults = array();
         $fields_data                     = get_resource_field_data($from, false, false);
 
-        // Set resource defaults only to fields
+        // Set resource defaults only for fields user hasn't set
+        // $from data may have not been copied to new resource by copy_resource_nodes() if user has no edit access to field
         foreach($fields_data as $field_data)
             {
-            if('' != trim($field_data['value']??"") && !($upload_then_edit && $from < 0))
+            if(metadata_field_edit_access($field_data['ref'])
+                && metadata_field_view_access($field_data['ref']) 
+                && trim((string)$field_data['value']) != "" // Field has a value 
+                && !($upload_then_edit && $from < 0))
                 {
                 continue;
                 }
