@@ -366,10 +366,11 @@ function get_user_downloads($userref,$user_dl_days)
 * @param array   $nodes_added       Array of node IDs that have been added
 * @param array   $nodes_removed     Array of node IDs that have been removed
 * @param string  $lognote           Optional note to add to log entry
+* @param array   $nodes_renamed     Optional array of old node names with node id as key e.g. [345 => 'oldname',678 => "pastname"]
 * 
 * @return boolean                   Success/failure
 */
-function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "")
+function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "",$nodes_renamed = [])
     {
     if((string)(int)$resource !== (string)$resource)
         {
@@ -390,16 +391,24 @@ function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "")
         if(get_node($node, $nodedata))
             {
             $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+            debug(print_r($nodefieldchanges,true));
+            }
+        }
+    foreach ($nodes_renamed as $nodeid=>$oldname)
+        {
+        $nodedata = array();
+        if(get_node($nodeid, $nodedata))
+            {
+            $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $oldname;
+            $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
             }
         }
     foreach ($nodefieldchanges as $key => $value)
         {
         // Log changes to each field separately
-        // Prefix with a comma so that log_diff() can log each node change correctly
-        $fromvalue  = isset($value[0]) ? "," . implode(",",$value[0]) : "";
-        $tovalue    = isset($value[1]) ? "," . implode(",",$value[1]) : "";
+        $fromvalue  = isset($value[0]) ? implode(NODE_NAME_STRING_SEPARATOR,$value[0]) : "";
+        $tovalue    = isset($value[1]) ? implode(NODE_NAME_STRING_SEPARATOR,$value[1]) : "";
         resource_log($resource,LOG_CODE_EDITED,$key,$lognote,$fromvalue,$tovalue);
-        return true;
         }
 
     // Nothing to log

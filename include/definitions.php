@@ -223,6 +223,7 @@ define('ICON_CUBE', '<i class="fas fa-cube" aria-hidden="true"></i>&nbsp;');
 define ('NODE_TOKEN_PREFIX','@@');
 define ('NODE_TOKEN_OR','|');
 define ('NODE_TOKEN_NOT','!');
+define ('NODE_NAME_STRING_SEPARATOR','@@|@@');
 
 // Simple Search pills' delimiter
 define ('TAG_EDITOR_DELIMITER', '~');

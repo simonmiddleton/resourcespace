@@ -18,9 +18,9 @@ if(is_valid_revert_state_request())
 $ref=getval("ref","");
 
 # Load log entry
-$log=ps_query("SELECT resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` from resource_log 
-        left outer join resource_type_field rtf on resource_log.resource_type_field=rtf.ref 
-        where resource_log.ref=?",array("i",$ref));
+$log=ps_query("SELECT resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` FROM resource_log 
+        LEFT OUTER JOIN resource_type_field rtf ON resource_log.resource_type_field=rtf.ref 
+        WHERE resource_log.ref=?",array("i",$ref));
 if (count($log)==0) 
     {
     exit($lang["rse_version_log_not_found"]);
@@ -46,69 +46,63 @@ $node_strings_not_found=array();
 
 $b_fixed_field=in_array($log['resource_type_field_type'],$FIXED_LIST_FIELD_TYPES);
 
-// resolve node changes
-if($b_fixed_field)
-    {
-    $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
-    $nodes_available=array();
-    foreach(get_nodes($log['resource_type_field'], null, $is_cat_tree) as $available_node)
-        {
-        $nodes_available[$available_node['ref']]=$available_node['name'];
-        }
-
-    // all to be added
-    preg_match_all('/^\s*\-\s*(.*?)$/m',$log['diff'],$matches);
-    if(isset($matches[1][0]))
-        {
-        foreach ($matches[1] as $match)
-            {
-            $match=trim($match);
-            $found_key=array_search($match,$nodes_available);
-            if($found_key===false)
-                {
-                $node_strings_not_found[]=$match;
-                }
-            else
-                {
-                $nodes_to_add[]=$found_key;
-                }
-            }
-        }
-
-    // all to be removed
-    preg_match_all('/^\s*\+\s*(.*?)$/m',$log['diff'],$matches);
-    if(isset($matches[1][0]))
-        {
-        foreach ($matches[1] as $match)
-            {
-            $match=trim($match);
-            $found_key=array_search($match,$nodes_available);
-            if($found_key===false)
-                {
-                $node_strings_not_found[]=$match;
-                }
-            else
-                {
-                $nodes_to_remove[]=$found_key;
-                }
-            }
-        }
-    }
-
 if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
     {
     # ----------------------------- PROCESSING FOR "e" (edit) and "m" (multi edit) METADATA ROWS ---------------------------------------------
 
-    $current=get_data_by_field($resource,$field);
-    if(is_array($current) && count($current) > 0)
+    // resolve node changes
+    if($b_fixed_field)
         {
-        $current = array_values($current);
+        $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
+        $nodes_available=array();
+        foreach(get_nodes($log['resource_type_field'], null, $is_cat_tree) as $available_node)
+            {
+            $nodes_available[$available_node['ref']]=$available_node['name'];
+            }
+
+        // all to be added
+        preg_match_all('/^\s*\-\s*(.*?)$/m',$log['diff'],$matches);
+        if(isset($matches[1][0]))
+            {
+            foreach ($matches[1] as $match)
+                {
+                $match=trim($match);
+                $found_key=array_search($match,$nodes_available);
+                if($found_key===false)
+                    {
+                    $node_strings_not_found[]=$match;
+                    }
+                else
+                    {
+                    $nodes_to_add[]=$found_key;
+                    }
+                }
+            }
+
+        // all to be removed
+        preg_match_all('/^\s*\+\s*(.*?)$/m',$log['diff'],$matches);
+        if(isset($matches[1][0]))
+            {
+            foreach ($matches[1] as $match)
+                {
+                $match=trim($match);
+                $found_key=array_search($match,$nodes_available);
+                if($found_key===false)
+                    {
+                    $node_strings_not_found[]=$match;
+                    }
+                else
+                    {
+                    $nodes_to_remove[]=$found_key;
+                    }
+                }
+            }
         }
     else
         {
-        $current = '';
+        $current=get_data_by_field($resource,$field);
+        $diff=log_diff($current,$log["previous_value"]);
         }
-    $diff=log_diff($current,$log["previous_value"]);
 
     # Process submit
     if (getval("revert_action","")=="revert" && enforcePostRequest(false))
@@ -157,9 +151,16 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
             {
             $errors=array();
             update_field($resource, $field, strip_leading_comma($log["previous_value"]),$errors,false); # Do not log as we are doing that below.
-            resource_log($resource,LOG_CODE_EDITED,$field,$lang["revert_log_note"],$current,$log["previous_value"]);
+            if(count($errors) == 0)
+                {
+                resource_log($resource,LOG_CODE_EDITED,$field,$lang["revert_log_note"],$current,$log["previous_value"]);
+                redirect(generateURL("pages/view.php",["ref"=>$resource]));
+                }
+            else
+                {
+                $onload_message = array("title" => $lang["error"],"text" => implode("<br/>",$errors));
+                }
             }
-        redirect("pages/view.php?ref=" . $resource);
         }
     }
 elseif($type==LOG_CODE_UPLOADED)
