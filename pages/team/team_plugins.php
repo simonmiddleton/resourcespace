@@ -436,7 +436,7 @@ if (count($inst_plugins)>0)
                // Correct path to support plugins that are located in filestore/plugins
                if(substr($p['config_url'],0,8)=="/plugins")
                 {
-                $plugin_config_url = str_replace("/plugins/" . $p['name'], get_plugin_path($p['name'],true), $p['config_url']);
+                $plugin_config_url = str_replace("/plugins/" . $p['name'], (string)get_plugin_path($p['name'],true), $p['config_url']);
                 }
                else
                 {$plugin_config_url = $baseurl . $p['config_url'];}
