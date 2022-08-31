@@ -1148,7 +1148,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             $blockrestypesor = "";$blockrestypesorparams =[];
             if ($edit_access_for_contributor)
                 {
-                $blockrestypesor .= " created_by='" . $userref . "'";
+                $blockrestypesor .= " created_by = ?";
                 $blockrestypesorparams = ["i",$userref];
                 }
             if ($editable_filter->sql != "")
@@ -1378,8 +1378,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
                     }
                 }   
-            }   
-        //$searchsql = new PreparedStatementQuery();
+            }
 
         $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $colcustfilter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$colcustfilter->parameters);
@@ -1899,7 +1898,7 @@ function get_default_search_states()
 /**
 * Get the required search filter sql for the given filter for use in do_search()
 *  
-* @return object PreparedStatementQuery
+* @return PreparedStatementQuery
 */
 function get_filter_sql($filterid)
     {

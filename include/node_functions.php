@@ -2365,6 +2365,13 @@ function remove_invalid_node_keyword_mappings()
     clear_query_cache('schema');
     }
 
+/**
+ * Get a count of how many resources are using the specified nodes
+ * 
+ * @param array $nodes      Array of node refs
+ * 
+ * @return array            Array of node ref as keys and number of resources using them as the values
+ */
 function get_nodes_use_count(array $nodes)
     {
     $nodes = array_filter($nodes, 'is_int_loose');
