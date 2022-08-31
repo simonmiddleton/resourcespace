@@ -391,7 +391,6 @@ function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "",$n
         if(get_node($node, $nodedata))
             {
             $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
-            debug(print_r($nodefieldchanges,true));
             }
         }
     foreach ($nodes_renamed as $nodeid=>$oldname)

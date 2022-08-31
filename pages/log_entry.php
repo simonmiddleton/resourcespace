@@ -181,6 +181,7 @@ if(!checkperm('v') && !$bypass_permission_check)
                             case "purchase_size":  // Already converted to 'size'
                             case "title": // Used to store resource_type_field name
                             case "revert_enabled": 
+                            case "previous_value": 
                                 continue 2;
                             break;
                                 

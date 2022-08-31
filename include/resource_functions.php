@@ -1470,8 +1470,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // If this is a 'joined' field it still needs to add it to the resource column
                     if(in_array($fields[$n]['ref'], $joins))
                         {
-                        $resource_update_sql[] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                        $resource_update_params[]="s";$resource_update_params[]=$new_nodes_val;
+                        $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
+                        $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
                         }
                     }
                 }
@@ -1594,8 +1594,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // If this is a 'joined' field it still needs to add it to the resource column
                     if(in_array($fields[$n]['ref'], $joins))
                         {
-                        $resource_update_sql[] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                        $resource_update_params[]="s";$resource_update_params[]=$new_nodes_val;
+                        $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
+                        $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
                         }
                     // $val = $newval;
                     }
@@ -1649,12 +1649,12 @@ function save_resource_data_multi($collection,$editsearch = array())
                 }
 
             $origval = $val;
-            $use_node = NULL;
             # Loop through all the resources and save.
             for ($m=0;$m<count($list);$m++)
                 {
                 $ref            = $list[$m];
                 $value_changed  = false;
+                $use_node = NULL;
 
                 // Reset nodes to add/remove as may differ for each resource
                 $nodes_to_add       = [];
@@ -1821,11 +1821,13 @@ function save_resource_data_multi($collection,$editsearch = array())
                         if ($current_field_node > 0 && $inusecount == 1 && is_null($use_node))
                             {
                             // Node can be reused or deleted
+                            debug("Found node only in use by resource #" . $ref . ", node # " . $current_field_node);
                             $use_node = $current_field_node;
                             }
                         else
                             {
                             // Remove node from resource and create a new node
+                            debug("Removing node from resource #" . $ref . ", node # " . $current_field_node);
                             $nodes_to_remove[] = $current_field_node;
                             $nodes_check_delete[] = $current_field_node;
                             }
@@ -1846,6 +1848,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         $findnode = get_node_id($val,$fields[$n]["ref"]);
                         if($findnode === false)
                             {
+                            debug("No existing  node found for value : '" . $val . "'");
                             // No existing node, rename/create node
                             $newnode = set_node($use_node, $fields[$n]["ref"], $val, null, null);
                             if($newnode == $use_node)
@@ -1894,8 +1897,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // If this is a 'joined' field it still needs to add it to the resource column
                     if(in_array($fields[$n]['ref'], $joins))
                         {
-                        $resource_update_sql[] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                        $resource_update_params[]="s";$resource_update_params[] = truncate_join_field_value($val);
+                        $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
+                        $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = truncate_join_field_value($val);
                         }
 
                     $newval=$val;
@@ -1926,11 +1929,11 @@ function save_resource_data_multi($collection,$editsearch = array())
     // Updates for individual reesources
     foreach($resource_nodes_add as $resource=>$addnodes)
         {
-        add_resource_nodes($resource,$addnodes);
+        add_resource_nodes($resource,$addnodes,false,false);
         }
     foreach($resource_nodes_remove as $resource=>$delnodes)
         {
-        delete_resource_nodes($resource,$delnodes);
+        delete_resource_nodes($resource,$delnodes,false);
         }
     if(count($nodes_check_delete)>0)
         {
@@ -1942,7 +1945,7 @@ function save_resource_data_multi($collection,$editsearch = array())
     foreach($resource_update_sql_arr as $resource=>$resource_update_sql)
         {
         $sql = "UPDATE resource SET " . implode(",",$resource_update_sql) . " WHERE ref=?";
-        $sqlparams = array_merge($resource_update_params,["i",$resource]);
+        $sqlparams = array_merge($resource_update_params[$resource],["i",$resource]);
         ps_query($sql,$sqlparams);
         }
 
@@ -4954,11 +4957,12 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
         }
         else{$sql = "";}
 	# Update the expiration and acccess
-	ps_query("update external_access_keys set {$sql} access= ?, expires= ?,date=now(),usergroup= ? where access_key='$key'",
+	ps_query("UPDATE external_access_keys SET {$sql} access= ?, expires= ?,date=NOW(),usergroup= ? WHERE access_key = ?",
         array_merge($params, [
         'i', $access,
         's', (($expires=="")?null: $expires),
         'i', $group,
+        's',$key,
         ])
     );
     hook('edit_resource_external_access','',array($key,$access,$expires,$group));

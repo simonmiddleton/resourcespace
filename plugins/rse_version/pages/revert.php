@@ -18,7 +18,7 @@ if(is_valid_revert_state_request())
 $ref=getval("ref","");
 
 # Load log entry
-$log=ps_query("SELECT resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` FROM resource_log 
+$log=ps_query("SELECT " . columns_in("resource_log") . ", rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` FROM resource_log 
         LEFT OUTER JOIN resource_type_field rtf ON resource_log.resource_type_field=rtf.ref 
         WHERE resource_log.ref=?",array("i",$ref));
 if (count($log)==0) 
