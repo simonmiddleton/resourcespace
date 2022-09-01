@@ -2251,7 +2251,10 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             $endvalue = "";
             }
         }
-				
+
+    $startvalue = trim($startvalue);
+    $endvalue = trim($endvalue);
+
 	$ss=explode("-",$startvalue);
 	if (count($ss)>=1)
 		{
@@ -2535,9 +2538,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             });
             //Check the value of the date after the change
             jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
-                let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
-                let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
-                let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                let day   = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_day]').val().trim();
+                let month = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_month]').val().trim();
+                let year  = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_year]').val().trim(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
                     styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
@@ -2557,9 +2560,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             })
             //Same again but for the end of the date range
             jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
-                let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
-                let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
-                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val();
+                let day   = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_day]').val().trim();
+                let month = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_month]').val().trim();
+                let year  = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_year]').val().trim();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
                     styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);

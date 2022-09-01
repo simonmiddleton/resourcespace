@@ -71,29 +71,15 @@ $DATE_FIELD_TYPES = array(
 
 /*
 From version 10, ResourceSpace converted all non-fixed list types (e.g text & date fields) to use nodes. Resources 
-with values in these field types, will always have one node associated. The field may have multiple nodes in order to 
-handle changes to a resource value.
+with values in these field types, will always have only one node associated. The field may have multiple nodes in order
+to handle changes to a resource value.
 
 Note: date ranges were already using nodes so they've been excluded from having this behaviour. In addition, for date ranges,
-you could have 2 nodes associated (the from/to dates).
+a resource will have up to 2 nodes associated (the start and/or end dates).
 */
 define('NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES', array_merge($TEXT_FIELD_TYPES, array_diff($DATE_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE])));
 
-// Array of fields that do not have fixed value options but data is still stored using node/resource_node rather than resource_data. 
-// This is now the default for new fields and will include all fields once node development is complete.
-$NODE_MIGRATED_FIELD_TYPES = array(
-    FIELD_TYPE_DATE_RANGE,
-    FIELD_TYPE_DATE_AND_OPTIONAL_TIME,
-    FIELD_TYPE_EXPIRY_DATE,
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
-    FIELD_TYPE_TEXT_BOX_MULTI_LINE,
-    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
-    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
-    FIELD_TYPE_WARNING_MESSAGE,
-);
-
-$NODE_FIELDS=array_merge($FIXED_LIST_FIELD_TYPES,$NODE_MIGRATED_FIELD_TYPES);
+$NODE_FIELDS = array_merge($FIXED_LIST_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE], NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES);
 
 // ------------------------- LOG_CODE_ -------------------------
 

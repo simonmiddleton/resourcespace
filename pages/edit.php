@@ -1133,7 +1133,7 @@ jQuery(document).ready(function()
             return false;
             }
 
-        jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
+        jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus' + field).show();
         
         formdata = jQuery('#mainform').serialize();
@@ -1145,7 +1145,7 @@ jQuery(document).ready(function()
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saved"]); ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     if (typeof(saveresult['checksums']) !== undefined)
                         {

@@ -554,13 +554,14 @@ function update_hitcount($ref)
 
 function save_resource_data($ref,$multi,$autosave_field="")
     {
+    debug_function_call("save_resource_data", func_get_args());
     # Save all submitted data for resource $ref.
     # Also re-index all keywords from indexable fields.
     global $lang, $multilingual_text_fields,
            $languages, $language, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
-           $userref, $NODE_MIGRATED_FIELD_TYPES;
+           $userref;
 
     hook("befsaveresourcedata", "", array($ref));
     // Ability to avoid editing conflicts by checking checksums.
@@ -770,6 +771,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 {
                                 $val.="-00-00";
                                 }
+
                             $newval.= ($newval!=""?$range_separator:"") . $val;
                             if($val!=="")
                                 {
@@ -777,7 +779,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 }
                             }
                         }
-
                         natsort($daterangenodes);
 
                         // Get currently selected nodes for this field
@@ -956,10 +957,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
             // If all good so far, then save the data
             if(
-                in_array($fields[$n]['type'],$NODE_MIGRATED_FIELD_TYPES)
-                &&
-                str_replace("\r\n", "\n", trim((string)$fields[$n]['value'])) !== str_replace("\r\n", "\n", trim((string)$val))
-                )
+                in_array($fields[$n]['type'], NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES)
+                && str_replace("\r\n", "\n", trim((string) $fields[$n]['value'])) !== str_replace("\r\n", "\n", trim((string) $val))
+            )
                 {
                 # This value is different from the value we have on record.
                 # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
@@ -2201,7 +2201,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true, $nodevalues=false)
     {
-    global $category_tree_add_parents, $userref, $NODE_MIGRATED_FIELD_TYPES, $lang;
+    global $category_tree_add_parents, $userref, $FIXED_LIST_FIELD_TYPES, $lang;
 
     $resource_data = get_resource_data($resource);
     if ($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -2238,7 +2238,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         return false;
         }
 
-    if (!in_array($fieldinfo['type'], $NODE_MIGRATED_FIELD_TYPES))
+    if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
         {
         // Standard node fields
         // Set up arrays of node ids to add/remove and all new nodes.
