@@ -161,7 +161,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
             if(count($nodetranslations) < 2)
                 {
-                $currentoptions[]=mb_strtolower(trim($field_node['name'])); # Not a translatable field
+                $currentoptions[]=trim($field_node['name']); # Not a translatable field
                 $node_trans_arr[$fieldid][$field_node["ref"]][] = trim($field_node['name']);
                 }
             else
@@ -171,14 +171,14 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     if (substr($nodetranslations[$n],2,1)!=":" && substr($nodetranslations[$n],5,1)!=":" && substr($nodetranslations[$n],0,1)!=":")
                         {
                         # Not a translated string, return as-is
-                        $currentoptions[]=mb_strtolower(trim($field_node['name']));
+                        $currentoptions[]=trim($field_node['name']);
                         $node_trans_arr[$fieldid][$field_node["ref"]][] = trim($field_node['name']);
                         }
                     else
                         {
                         # Support both 2 character and 5 character language codes (for example en, en-US)
                         $p=strpos($nodetranslations[$n],':');                        
-                        $currentoptions[]=mb_strtolower(trim(substr($nodetranslations[$n],$p+1)));
+                        $currentoptions[]=trim(substr($nodetranslations[$n],$p+1));
                         $node_trans_arr[$fieldid][$field_node["ref"]][] = trim(substr($nodetranslations[$n],$p+1));
                         }
                     }
@@ -532,7 +532,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 foreach($node_options as $noderef => $nodestring)
                     {
                     $node_trans_arr[$fieldid][$noderef] = array($nodestring);
-                    $currentoptions[] = mb_strtolower($nodestring);
+                    $currentoptions[] = $nodestring;
                     }
 
                 }
@@ -602,7 +602,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 if (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
                     {
                     // Check nodes are valid for this field, remove quotes 
-                    if('' != $cell_value_item && !in_array(mb_strtolower($cell_value_item), $currentoptions))
+                    if('' != $cell_value_item && !in_array($cell_value_item, $currentoptions))
                         {
                         switch ($field_type)
                             {
