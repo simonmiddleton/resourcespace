@@ -14,8 +14,9 @@ if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 $per_page=getval("per_page_list_log",15);rs_setcookie('per_page_list_log', $per_page);
 
 include "../include/header.php";
-$log=get_collection_log($ref, $offset+$per_page);
-$results=count($log);
+$log     = get_collection_log($ref, $offset+$per_page);
+$results = $log["total"];
+$log     = $log["data"];
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
 

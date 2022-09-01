@@ -3444,10 +3444,10 @@ function collection_log($collection,$type,$resource,$notes = "")
  * @return array
  */
 function get_collection_log($collection, $fetchrows = -1)
-	{
+    {
     debug_function_call("get_collection_log", func_get_args());
 
-	global $view_title_field;
+    global $view_title_field;
 
     $extra_fields = hook("collection_log_extra_fields");
     if(!$extra_fields)
@@ -3455,8 +3455,8 @@ function get_collection_log($collection, $fetchrows = -1)
         $extra_fields = "";
         }
 
-	return ps_query("
-                 SELECT c.ref,
+    $log_query = new PreparedStatementQuery(
+        "SELECT c.ref,
                         c.date,
                         u.username,
                         u.fullname,
@@ -3469,9 +3469,15 @@ function get_collection_log($collection, $fetchrows = -1)
         LEFT OUTER JOIN user AS u ON u.ref = c.user
         LEFT OUTER JOIN resource AS r ON r.ref = c.resource
                   WHERE collection = ?
-               ORDER BY c.ref DESC", array("i",$collection), false, $fetchrows);
-	}
-        
+               ORDER BY c.ref DESC",
+        array("i",$collection)
+    );
+
+    $log = sql_limit_with_total_count($log_query,$fetchrows,NULL);
+
+    return $log;
+    }
+
 /**
  * Returns the maximum access (the most permissive) that the current user has to the resources in $collection.
  *
