@@ -251,9 +251,9 @@ if ($order_by=="")
         {
         $order_by=$default_collection_sort;
         }
-    elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties")
+    elseif (substr($search,0,14)=="!contributions")
         {
-        // As Added is the initial sort sequence to be used for special searches other than image properties 
+        // As Added is the initial sort sequence to be used for contribution searches 
         $order_by="resourceid";
         }
     else
