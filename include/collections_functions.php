@@ -2876,7 +2876,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         $union,
         sql_limit(null, $limit)
     );
-    //die("SQL: " . $sql . "\nParameters:\n" .print_r(array_merge($subquery_params,$unionparams),true));
+
     $fc_resources = ps_array($sql,array_merge($subquery_params,$unionparams),"themeimage");
     $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
     return $fc_resources;
