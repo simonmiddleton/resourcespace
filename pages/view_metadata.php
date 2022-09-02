@@ -13,13 +13,13 @@ $system_tabs = get_tab_name_options();
 $tabs_fields_assoc = [];
 
 $configured_resource_type_tabs = [];
-if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
+if(isset($related_type_show_with_data) && !empty($related_type_show_with_data) && ($related_type_upload_link || count(get_related_resources($ref)) > 0))
     {
     $configured_resource_type_tabs = ps_array(
-           "SELECT DISTINCT t.ref AS `value`
-              FROM resource_type AS rt
+        "SELECT DISTINCT t.ref AS `value`
+            FROM resource_type AS rt
         INNER JOIN tab AS t ON t.ref = rt.tab
-             WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
+            WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
         array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
         'schema'
     );
