@@ -227,7 +227,11 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
         type="text" 
         class="stdwidth<?php if($user["email_invalid"]??false){echo " emailinvalid";}?>" 
         value="<?php echo form_value_display($user,"email") ?>"
-        <?php if($user["email_invalid"]??false){echo "title='{$lang["emailmarkedinvalid"]}'";}?>>
+        <?php if($user["email_invalid"]??false)
+            {
+            echo "title='" . escape_quoted_data($lang["emailmarkedinvalid"]) . "'";
+            }
+        ?>>
     <div class="clearerleft"> </div>
 </div>
 
