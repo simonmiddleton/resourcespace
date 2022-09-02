@@ -1340,7 +1340,7 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
     // Work through all enabled plugins and add any extended columns also (plugins can extend core tables in addition to defining their own)
     foreach ($plugins as $plugin)
         {
-        $plugin_file=dirname(__FILE__) . "/../plugins/" . $plugin . "/dbstruct/table_" . safe_file_name($table) . ".txt";
+        $plugin_file=get_plugin_path($plugin) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
         if (file_exists($plugin_file))
             {
             $structure=explode("\n",trim(file_get_contents($plugin_file)));

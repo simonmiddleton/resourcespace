@@ -1425,6 +1425,9 @@ function get_plugin_path($plugin,$url=false)
     # Supports plugins being in the filestore folder (for user uploaded plugins)
     global $baseurl_short,$storagedir,$storageurl;
     
+    # Sanitise $plugin
+    $plugin=safe_file_name($plugin);
+    
     # Standard location    
     $pluginpath=dirname(__FILE__) . "/../plugins/" . $plugin;
     if (file_exists($pluginpath)) {return ($url?$baseurl_short . "plugins/" . $plugin:$pluginpath);}
