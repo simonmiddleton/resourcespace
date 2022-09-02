@@ -634,7 +634,7 @@ var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'
 ?>
 </script>
 <div class="BasicsBox">
-<h1><?php echo $lang["admin_resource_type_field"] . ": " . i18n_get_translated($fielddata["title"]); ?></h1>
+<h1><?php echo $lang["admin_resource_type_field"] . ": " . htmlspecialchars(i18n_get_translated($fielddata["title"])); ?></h1>
 <?php
     $links_trail = array(
         array(

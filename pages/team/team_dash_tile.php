@@ -25,7 +25,7 @@ if($show_usergroups_dash)
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . $user_groups[$selected_user_group] : $lang["manage_all_dash"]; ?></h1>
+<h1><?php echo $show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . htmlspecialchars($user_groups[$selected_user_group]) : $lang["manage_all_dash"]; ?></h1>
 <?php
 $links_trail = array(
     array(
