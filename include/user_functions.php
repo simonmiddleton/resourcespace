@@ -2584,13 +2584,13 @@ function check_share_password($key,$password,$cookie)
     if($password != "")
         {
         $hashcheck = hash('sha256', $key . $password . $scramble_key);
-        $valid = $hashcheck == $sharehash;
+        $valid = $hashcheck === $sharehash;
         debug("checking share access password for key: " . $key);
         }
     else
         {
         $hashcheck = hash('sha256',  date("Ymd") . $key . $sharehash . $scramble_key);
-        $valid = $hashcheck == $cookie;
+        $valid = $hashcheck === $cookie;
         debug("checking share access cookie for key: " . $key);    
         }
     

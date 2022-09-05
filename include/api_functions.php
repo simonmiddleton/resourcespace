@@ -51,12 +51,12 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey")
 
     # Calculate the expected signature and check it matches
     $expected=hash("sha256",$userkey . $querystring);
-    if ($expected==$sign)
+    if ($expected === $sign)
 	{
 	return true;
 	}
     # Also try matching against the username - allows remote API use without knowing the user ID, e.g. in the event of managing multiple systems each with a common username but different ID.
-    if (hash("sha256",get_api_key($username) . $querystring)==$sign)
+    if (hash("sha256",get_api_key($username) . $querystring) === $sign)
 	{
 	return true;
 	} 

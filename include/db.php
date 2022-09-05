@@ -131,7 +131,7 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
             $sign=substr($r,-32); # Last 32 characters is a signature
             $r=substr($r,0,strlen($r)-33);
 
-            if ($sign == md5($remote_config_key . $r))
+            if ($sign === md5($remote_config_key . $r))
                 {
                 $remote_config = $r;
                 set_sysvar($remote_config_sysvar, $remote_config);
