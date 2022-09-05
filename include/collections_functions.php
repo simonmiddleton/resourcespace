@@ -6202,7 +6202,8 @@ function can_reorder_featured_collections()
 function cleanup_anonymous_collections(int $limit = 100)
     {
     global $anonymous_login;
-    
+
+    $sql_limit = "";
     $params = [];
     if($limit != 0)
         {
@@ -6219,7 +6220,7 @@ function cleanup_anonymous_collections(int $limit = 100)
         $user = get_user_by_username($anonymous_user);
         if(is_int_loose($user))
             {
-            ps_query("DELETE FROM collection WHERE user ='" . $user . "' AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit, array_merge(['i', $user], $params));
+            ps_query("DELETE FROM collection WHERE user = ? AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit, array_merge(['i', $user], $params));
             }
         }
     }
