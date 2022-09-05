@@ -22,7 +22,6 @@ if (file_exists(dirname(dirname(__FILE__)) . '/vendor/autoload.php')) {
     }
 }
 
-
 # Load ResourceSpace configuration if not already loaded so that all SP and IdP details can be set in ResourceSpace config
 $rsconfigloaded = getenv('SIMPLESAMLPHP_RESOURCESPACE_CONFIG_LOADED');
 
