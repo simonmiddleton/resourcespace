@@ -19,6 +19,8 @@ $exiftool_write                = true;
 $force_exiftool_write_metadata = true;
 $exiftool_write_option         = true;
 $exiftool_remove_existing      = true;
+$saved_exiftool_global_options = $exiftool_global_options;
+$exiftool_global_options       = " -q -q ";
 
 // Change "Credit" and "Camera make / model" fields to be read-only
 ps_query("UPDATE resource_type_field SET `read_only` = 1 WHERE ref IN (10, 52)");
@@ -60,7 +62,7 @@ $camera_make = "New Camera make +";
 update_field($resource, 52, $camera_make);
 
 
-$tmpfile = write_metadata($resource_path, $resource,"",true);
+$tmpfile = write_metadata($resource_path, $resource);
 if(false === $tmpfile || !file_exists($tmpfile))
     {
     teardown_002000($tmpfile);
@@ -106,9 +108,8 @@ if(
     return false;
     }
 
-
-
 // Teardown
 teardown_002000($tmpfile);
+$exiftool_global_options = $saved_exiftool_global_options;
 
 return true;
