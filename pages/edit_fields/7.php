@@ -64,7 +64,7 @@ foreach($valid_nodes as $node)
     if(!(isset($treeonly) && true == $treeonly))
         {
         $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" 
-                            . htmlspecialchars($node['name']) . "</span><br /></div>";
+                            . escape_quoted_data($node['name']) . "</span><br /></div>";
         }
     }
 
