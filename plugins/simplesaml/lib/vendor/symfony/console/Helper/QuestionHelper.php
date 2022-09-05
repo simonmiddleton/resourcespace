@@ -207,7 +207,7 @@ class QuestionHelper extends Helper
     {
         $messages = [];
 
-        $maxWidth = max(array_map('self::strlen', array_keys($choices = $question->getChoices())));
+        $maxWidth = max(array_map([__CLASS__, 'strlen'], array_keys($choices = $question->getChoices())));
 
         foreach ($choices as $key => $value) {
             $padding = str_repeat(' ', $maxWidth - self::strlen($key));
@@ -485,11 +485,11 @@ class QuestionHelper extends Helper
         }
 
         if (\function_exists('stream_isatty')) {
-            return self::$stdinIsInteractive = stream_isatty(fopen('php://stdin', 'r'));
+            return self::$stdinIsInteractive = @stream_isatty(fopen('php://stdin', 'r'));
         }
 
         if (\function_exists('posix_isatty')) {
-            return self::$stdinIsInteractive = posix_isatty(fopen('php://stdin', 'r'));
+            return self::$stdinIsInteractive = @posix_isatty(fopen('php://stdin', 'r'));
         }
 
         if (!\function_exists('exec')) {
