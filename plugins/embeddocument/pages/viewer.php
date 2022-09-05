@@ -16,7 +16,7 @@ $use_watermark=check_use_watermark();
 # Work out if we're allowing download by validating the download key.
 $download=false;
 $downloadkey=getval("downloadkey","");
-if ($downloadkey==md5($scramble_key . $ref . "download")) {$download=true;}
+if ($downloadkey === md5($scramble_key . $ref . "download")) {$download=true;}
 
 ?>
 <html>

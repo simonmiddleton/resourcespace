@@ -14,7 +14,7 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
     $key=end($s);
     }
 
-    if ($key!=substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
+    if ($key !== substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
 
     global $resourceconnect_user; # Which user to use for remote access?
     $user_select_sql = new PreparedStatementQuery();
