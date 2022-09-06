@@ -1420,8 +1420,7 @@ function do_search(
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
 
-
-   $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
+    $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
     if ($special_results!==false)
         {
         return $special_results;
@@ -1462,7 +1461,7 @@ function do_search(
 
     # Compile final SQL
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . ($fetchrows > -1 ? " LIMIT " . $fetchrows : "") . $sql_suffix;
+    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
     $results_sql->parameters = array_merge($t->parameters,$t2->parameters,$sql->parameters);
 
     # Debug
@@ -1480,8 +1479,14 @@ function do_search(
             {
             return $results_sql;
             }
-        $result=ps_query($results_sql->sql,$results_sql->parameters,false,$fetchrows,true,2,true,array('ref'));
+        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,"ORDER BY " . $order_by);
+        $resultcount = $result["total"]  ?? 0;
+        if ($resultcount>0 & count($result["data"]) > 0)
+            {
+            $result = array_map(function($val){return(["ref"=>$val["ref"]]);}, $result["data"]);
+            }
         $mysql_verbatim_queries=$mysql_vq;
+        return $result;
         }
     else
         {
@@ -1490,14 +1495,18 @@ function do_search(
             {
             return $results_sql;
             }
-        $result=ps_query($results_sql->sql,$results_sql->parameters,false,$fetchrows);
+        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,"ORDER BY " . $order_by);
         }
-
-    debug("Search found " . count($result) . " results");
-    if (count($result)>0)
+    $resultcount = $result["total"]  ?? 0;
+    if ($resultcount>0 & count($result["data"]) > 0)
         {
+        $result = array_pad($result["data"],$resultcount,0);
         hook("beforereturnresults","",array($result, $archive));
         return $result;
+        }
+    else
+        {
+        $result =[];
         }
 
     hook('zero_search_results');

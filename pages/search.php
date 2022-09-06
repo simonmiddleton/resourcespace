@@ -1,5 +1,6 @@
 <?php
 include_once "../include/db.php";
+
 if($annotate_enabled)
     {
     include_once '../include/annotation_functions.php';
@@ -536,16 +537,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
-        if(is_array($result))
-            {            
-            $result_count = count($result);
-            $results = array_slice($result,$offset,$resourcestoretrieve,true);
-            }
-        else
-            {
-            $result_count = 0;
-            }
+        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
         }
     }
 else
@@ -557,7 +549,7 @@ else
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$result_count = $result_count ?? (is_array($result) ? count($result) : 0);
+$result_count = is_array($result) ? count($result) : 0;
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
