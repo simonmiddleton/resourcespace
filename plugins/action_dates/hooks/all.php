@@ -18,6 +18,9 @@ function HookAction_datesCronCron()
 
     $validfieldtypes = [FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE];
 
+    # Save the resource_deletion_state because it can be manipulated during primary action processing
+    $saved_resource_deletion_state = $resource_deletion_state;
+
     $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
     if(PHP_SAPI == "cli")
         {
@@ -389,6 +392,9 @@ function HookAction_datesCronCron()
             }
         }
 
+    # Restore the resource_deletion_state which may have been manipulated during primary action processing
+    $resource_deletion_state = $saved_resource_deletion_state;
+        
     # Perform additional actions if configured
     foreach($action_dates_extra_config as $action_dates_extra_config_setting)
         {
