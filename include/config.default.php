@@ -1464,7 +1464,7 @@ $index_collection_creator = true;
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
 # 'Space' is included by default and does not need to be specified below.
 # Note: leave non breaking space in
-$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?", '’', '“', ' ');
+$config_separators=array("/","_",".",";","-","(",")","'","\"","\\", "?", '’', '“', ' ');
 
 
 # Resource field verbatim keyword regex
