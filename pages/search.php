@@ -892,11 +892,15 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                         "<?php echo $lang['action_continue_editing'] ?>": function() { 
                                                 jQuery(this).dialog('close');
                                                 <?php 
-                                                if ($collection_add!="")
-                                                    {?>
-                                                    window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection_add ?>';
-                                                    <?php
-                                                    }?>
+                                                if (is_int_loose($collection_add))
+                                                    {
+                                                    echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
+                                                    }
+                                                else
+                                                    {
+                                                    echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!contributions" . $userref . "&archive=-2&order_by=date&sort=desc';";
+                                                    }
+                                                ?>
                                                 }
                                             }
                                 });
