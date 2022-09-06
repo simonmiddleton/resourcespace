@@ -404,8 +404,8 @@ function db_rollback_transaction($name)
 function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
-    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang, $prepared_statement_cache;
+    $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$prepared_statement_cache;
 	
     // Check cache for this query
     $cache_write=false;
@@ -529,7 +529,8 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             catch (Exception $e)
                 {
                 $error = $e->getMessage();
-                echo $error . "\n" . $db_connection_mode;
+                errorhandler("N/A", $error, "(database)", "N/A");
+                exit();
                 }
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 
@@ -568,9 +569,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     $result[] = array_map("copy_value", $args);
                     }
                 $prepared_statement_cache[$sql]->free_result();
-                }
-            // Clear buffered results
-            $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
+                }               
             }
         }
     else    
@@ -1168,8 +1167,8 @@ function CheckDBStruct($path,$verbose=false)
 */
 function sql_limit($offset, $rows)
     {
-    $offset_true = !is_null($offset) && is_int($offset) && $offset > 0;
-    $rows_true   = !is_null($rows) && is_int($rows) && $rows > 0;
+    $offset_true = !is_null($offset) && is_int_loose($offset) && $offset > 0;
+    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows > 0;
 
     $limit = ($offset_true || $rows_true ? 'LIMIT ' : '');
 
@@ -1198,20 +1197,42 @@ function sql_limit($offset, $rows)
  * 
  * IMPORTANT: the input query MUST have a deterministic order so it can help with performance and not have an undefined behaviour
  * 
- * @param PreparedStatementQuery $query  SQL query
- * @param null|int               $rows   Specifies the maximum number of rows to return. Usually set by a global 
- *                                       configuration option (e.g $default_perpage, $default_perpage_list).
- * @param null|int               $offset Specifies the offset of the first row to return. Use NULL to not offset.
+ * @param PreparedStatementQuery $query         SQL query
+ * @param null|int               $rows          Specifies the maximum number of rows to return. Usually set by a global 
+ *                                              configuration option (e.g $default_perpage, $default_perpage_list).
+ * @param null|int               $offset        Specifies the offset of the first row to return. Use NULL to not offset.
+ * @param bool                   $cachecount    Use previously cached count if available?
+ * @param string                 $order_by      If passed then this will be removed from the query when obtaining the count for speed
  * 
  * @return array Returns a:
  *               - total: int - count of total found records (before paging)
  *               - data: array - paged result set 
  */
-function sql_limit_with_total_count(PreparedStatementQuery $query, $rows, $offset)
+function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false,string $order_by="")
     {
+    global $scramble_key;
+    $serialised_query=$query->sql . ":" . serialize($query->parameters); // Serialised query needed to differentiate between different queries.
+    $cache_id = md5($serialised_query) . "_" . md5($scramble_key . $serialised_query);
+    $cache_location=get_query_cache_location();
+    $cache_file=$cache_location . "/query_count_" . $cache_id . ".json"; // Scrambled path to cache
+    
     $limit = sql_limit($offset, $rows);
     $data = ps_query("{$query->sql} {$limit}", $query->parameters);
-    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$query->sql}) AS count_select", $query->parameters, 0);
+       
+    if($cachecount && file_exists($cache_file))
+        {
+        $total = max(intval(file_get_contents($cache_file)),count($data));
+        }
+    else
+        {
+        if($order_by != "" && strpos($query->sql,$order_by) !== false)
+            {
+            $query->sql = str_replace($order_by,"",$query->sql);
+            }
+        $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$query->sql}) AS count_select", $query->parameters, 0);
+        }
+    file_put_contents($cache_file, $total);
+
     return ['total' => $total, 'data' => $data];
     }
 
