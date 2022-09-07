@@ -44,14 +44,15 @@ $nodes_to_add=array();
 $nodes_to_remove=array();
 $node_strings_not_found=array();
 
-$b_fixed_field=in_array($log['resource_type_field_type'],$FIXED_LIST_FIELD_TYPES);
+// FIELD_TYPE_DATE_RANGE is a special type holding up to 2 nodes per resource (star/end dates). See definitions.php for more info.
+$is_fixed_field = in_array($log['resource_type_field_type'], array_merge($FIXED_LIST_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE]));
 
 if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
     {
     # ----------------------------- PROCESSING FOR "e" (edit) and "m" (multi edit) METADATA ROWS ---------------------------------------------
 
     // resolve node changes
-    if($b_fixed_field)
+    if($is_fixed_field)
         {
         $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
         $nodes_available=array();
@@ -107,7 +108,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
     # Process submit
     if (getval("revert_action","")=="revert" && enforcePostRequest(false))
         {
-        if($b_fixed_field)
+        if($is_fixed_field)
             {
             if(count($nodes_to_remove)>0)
                 {
@@ -239,7 +240,7 @@ include "../../../include/header.php";
 <?php
 generateFormToken("form");
 if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
-    if ($b_fixed_field)
+    if ($is_fixed_field)
         {
         if(count($nodes_to_add)>0)
             {
