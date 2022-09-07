@@ -32,14 +32,20 @@ DESCRIPTION
 
     After processing, the plain text value will be saved in a new metadata field to help double check the tag removal worked as expected.
 
+    DO NOT run the script where both the html field (source) and plaintext field (destination) are fixed list fields. 
+    Its current implementation wasn't designed for it. It assumes at most that you may get all the options of a fixed 
+    list and remove their html before saving in a new text field. Technically that's an n:1 type of relationship so the 
+    html field (the source) will be flattened to a CSV.
+
 OPTIONS SUMMARY
 
     -h, --help                 Display this help text and exit
     -d, --html-entity-decode   Optional parameter. If specified, html encoded characters will be decoded. This will apply PHP's default_charset value, normally UTF 8.
     --html-field               Metadata field ID storing HTML content. Value must be a positive number. REQUIRED
     --plaintext-field          Metadata field ID to save the content after being processed. Value must be a positive number. REQUIRED
-    --encoding                 Optional parameter. If -d is included, an encoding value can be specified e.g. --encoding:\"ISO-8859-1\" For values available 
-                               see https://www.php.net/manual/en/function.html-entity-decode Use with caution as may cause errors if incorrect encoding is specified.
+    --encoding                 Optional parameter, single instance. If -d is included, an encoding value can be specified. For values available 
+                               see https://www.php.net/manual/en/function.html-entity-decode.
+                               Use with caution as it may cause errors if the incorrect character set is specified.
     -c, --copy-all             Optional parameter. By default this script will only output to the --plaintext-field if html was found in the --html-field. Adding -c will
                                force the script to copy the data regardless of if any change has occurred. Useful if the --plaintext-field is to replace the --html-field.
     -n, --newlines             Attempt to preserve any new lines in the html value to keep similar line spacing in the output plain text value.
@@ -47,7 +53,7 @@ OPTIONS SUMMARY
 EXAMPLES
     php remove_html.php --html-field=\"87\" --plaintext-field=\"88\"
     php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\"
-    php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\" --encoding:\"ISO-8859-1\"
+    php remove_html.php -d --html-field=\"87\" --plaintext-field=\"88\" --encoding=\"ISO-8859-1\"
 ";
 $options = getopt($cli_short_options, $cli_long_options);
 $html_decode = false;
@@ -63,24 +69,29 @@ foreach($options as $option_name => $option_value)
     
     if(in_array($option_name, ['d','html-entity-decode']))
         {
+        fwrite(STDOUT, "Set option: decode HTML entities" . PHP_EOL);
         $html_decode = true;
         continue;
         }
     
-    if(in_array($option_name, ['encoding']))
+    // Set options which accept only one value
+    if(in_array($option_name, ['encoding']) && is_string($option_value))
         {
-        $$option_name = $option_value[0];
+        $$option_name = $option_value;
+        fwrite(STDOUT, "Set option: {$option_name} - '{$option_value}'" . PHP_EOL);
         continue;
         }
 
     if(in_array($option_name, ['c','copy-all']))
         {
+        fwrite(STDOUT, "Set option: copy all data" . PHP_EOL);
         $copy_all = true;
         continue;
         }
     
     if(in_array($option_name, ['n','newlines']))
         {
+        fwrite(STDOUT, "Set option: preserve newlines (convert <br> to newlines)" . PHP_EOL);
         $preserve_newlines = true;
         continue;
         }
@@ -89,6 +100,7 @@ foreach($options as $option_name => $option_value)
         {
         $option_name = str_replace('-', '_', $option_name);
         $$option_name = $option_value;
+        fwrite(STDOUT, "Set option: $option_name" . PHP_EOL);
         continue;
         }
 
@@ -131,22 +143,19 @@ if($plain_rtf === false || !in_array($plain_rtf["type"],$TEXT_FIELD_TYPES))
     exit(1);
     }
 
-if(in_array($html_rtf['type'], $FIXED_LIST_FIELD_TYPES))
+// Both fixed list fields and text fields are now using nodes underneath to store their values
+if(in_array($html_rtf['type'], array_merge($FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES)))
     {
-    $html_rtf_ref = escape_check($html_field);
+    $html_rtf_ref = $html_field;
     $q = "  SELECT rn.resource,
                    group_concat(n.`name` SEPARATOR ', ') AS `value`
               FROM resource_node AS rn
         INNER JOIN node AS n ON rn.node = n.ref
-             WHERE n.resource_type_field = '{$html_rtf_ref}'
+             WHERE n.resource_type_field = ?
           GROUP BY rn.resource";
-    $html_data = sql_query($q);
+    $html_data = ps_query($q, ['i',$html_rtf_ref]);
     }
-else
-    {
-    $html_data = get_data_by_field(null, $html_field);
-    }
-$results = array_column($html_data, 'value', 'resource');
+$results = array_column($html_data ?? [], 'value', 'resource');
 
 foreach($results as $resource_ref => $html_value)
     {

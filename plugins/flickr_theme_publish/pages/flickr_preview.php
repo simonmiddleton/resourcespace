@@ -1,21 +1,23 @@
 <?php
 // grabs preview image to show while publishing
 include "../../../include/db.php";
-
 include "../../../include/authenticate.php";
 
-$ref=getvalescaped("ref","");
-if($ref!=''){
+$ref=getval("ref",0,true);
+if($ref>0)
+    {
+    $access = get_resource_access($ref);
+    if($access != 0)
+        {
+        exit($lang['error-permissiondenied']);
+        }
 	$path=get_resource_path($ref,false,"thm",false);
 	
-	$title=sql_value("select value from resource_data where resource_type_field=$view_title_field and resource=$ref","");
-	$title=i18n_get_translated($title);
-	
-	$description=sql_value("select value from resource_data where resource_type_field=$flickr_caption_field and resource=$ref","");
-	$keywords=sql_value("select value from resource_data where resource_type_field=$flickr_keywords_field and resource=$ref","");
-	$photoid=sql_value("select flickr_photo_id value from resource where ref=$ref","");
-	
+	$title          = get_data_by_field($ref,$view_title_field);
+    $title          = i18n_get_translated($title);	
+	$description    = get_data_by_field($ref,$flickr_caption_field);
+	$keywords       = get_data_by_field($ref,$flickr_keywords_field);
+	$photoid        = ps_value("SELECT flickr_photo_id value FROM resource WHERE ref = ?", array("i",$ref), "");
 	$results=array($path,$title,$description,$keywords,$photoid);
 	echo json_encode($results);
-}
-?>
+    }

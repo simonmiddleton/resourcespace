@@ -1,37 +1,23 @@
 <?php 
 
-function HookAnnotateDatabase_pruneDbprune(){
-    sql_query("delete from resource_keyword where annotation_ref > 0 and annotation_ref not in (select note_id from annotate_notes)");
-    echo sql_affected_rows() . " orphaned annotation resource-keyword relationships deleted.<br/><br/>";
-}
-
-function HookAnnotateAllAfterreindexresource($ref){
-    // make sure annotation indexing isn't lost when doing a reindex.
-    $ref_escaped = escape_check($ref);
-    $notes=sql_query("select * from annotate_notes where ref='$ref_escaped'");
-    global $pagename;
-
-    foreach($notes as $note){
-        #Add annotation to keywords
-        $keywordtext = substr(strstr($note['note'],": "),2); # don't add the username to the keywords
-
-        add_keyword_mappings($ref,i18n_get_indexable($keywordtext),-1,false,false,"annotation_ref",$note['note_id']);
+function HookAnnotateAllInitialise()
+    {
+    global $annotate_resource_type_field;
+    config_register_core_fieldvars("Annotate plugin",['annotate_resource_type_field']);
     }
-}
 
-function HookAnnotateAllModifyselect(){
-return (" ,r.annotation_count ");
+function HookAnnotateAllModifyselect()
+    {
+    return (" ,r.annotation_count ");
+    }
 
-}
-
-function HookAnnotateAllRemoveannotations(){
+function HookAnnotateAllRemoveannotations()
+    {
     global $ref;
 
-    $ref_escaped = escape_check($ref);
-    sql_query("delete from annotate_notes where ref='$ref_escaped'");
-    sql_query("update resource set annotation_count=0 where ref='$ref_escaped'");   
-    sql_query("delete from resource_keyword where resource='$ref_escaped' and annotation_ref>0");;
-}
+    ps_query("DELETE FROM annotate_notes WHERE ref = ?",["i",$ref]);
+    ps_query("UPDATE resource SET annotation_count=0 WHERE ref = ?",["i",$ref]);
+    }
 
 function HookAnnotateAllRender_actions_add_collection_option($top_actions, array $options, $collection_data, array $urlparams){
     global $lang,$pagename,$annotate_pdf_output,$annotate_pdf_output_only_annotated,$baseurl,$collection,$count_result;
@@ -122,3 +108,15 @@ function HookAnnotateAllExport_add_tables()
     {
     return array("annotate_notes"=>array());
     }
+
+function HookAnnotateAllEdithidefield($field)
+    {
+    global $annotate_resource_type_field;
+    if(isset($field["ref"]) && $field["ref"] == $annotate_resource_type_field)
+        {
+        return true;
+        }
+    return false;
+    }
+
+

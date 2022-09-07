@@ -50,8 +50,7 @@ function save_proposed_changes($ref)
                         $new_nodes[] = $node['ref'];
                         }
                     }
-                }
-				
+                }				
 		else
 				{
 				if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
@@ -61,7 +60,7 @@ function save_proposed_changes($ref)
 
 					$newval="";
 					
-					if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+					if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
 						{
 						// We have been passed the range in EDTF format, check it is in the correct format
 						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -87,15 +86,15 @@ function save_proposed_changes($ref)
 						
 						foreach($date_parts as $date_part)
 							{	
-							$val = getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year","");
+							$val = getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year","");
 							if (intval($val)<=0) 
 								{
 								$val="";
 								}
-							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
+							elseif (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
 								{
 								$val.="-" . $field;
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
+								if (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
 									{
 									$val.="-" . $field;
 									}
@@ -116,24 +115,24 @@ function save_proposed_changes($ref)
 				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{
                     # date type, construct the value from the date/time dropdowns
-                    $val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
+                    $val=sprintf("%04d", getval("field_" . $fields[$n]["ref"] . "-y",""));
                     if ((int)$val<=0) 
                         {
                         $val="";
                         }
-                    elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-m",""))!="") 
+                    elseif (($field=getval("field_" . $fields[$n]["ref"] . "-m",""))!="") 
                         {
                         $val.="-" . $field;
-                        if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-d",""))!="") 
+                        if (($field=getval("field_" . $fields[$n]["ref"] . "-d",""))!="") 
                             {
                             $val.="-" . $field;
                             if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
                                 {
                                 $val.=" " . $field . ":";
-                                if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-i",""))!="") 
+                                if (($field=getval("field_" . $fields[$n]["ref"] . "-i",""))!="") 
                                     {
                                     $val.=$field;
-									if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-s",""))!="") 
+									if (($field=getval("field_" . $fields[$n]["ref"] . "-s",""))!="") 
 										{
 										$val.=$field;
 										} 
@@ -165,29 +164,30 @@ function save_proposed_changes($ref)
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
 					{
 					# Construct a multilingual string from the submitted translations
-					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$val=getval("field_" . $fields[$n]["ref"],"");
 					$val="~" . $language . ":" . $val;
 					reset ($languages);
 					foreach ($languages as $langkey => $langname)
 						{
 						if ($language!=$langkey)
 							{
-							$val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
+							$val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
 							}
 						}
 					}
 				else
 					{
 					# Set the value exactly as sent.
-					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$val=getval("field_" . $fields[$n]["ref"],"");
 					} 
 				# Check for regular expression match
-				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 					{
-					if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
+                    global $regexp_slash_replace;
+					if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
 						{
 						global $lang;
-						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
+						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
 						if (getval("autosave","")!="")
 							{
 							exit();
@@ -214,12 +214,13 @@ function save_proposed_changes($ref)
 				}
 					
 				# Check for regular expression match
-				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 						{
-						if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
+                        global $regexp_slash_replace;
+						if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
 								{
 								global $lang;
-								debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
+								debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
 								if (getval("autosave","")!="")
 										{
 										exit();
@@ -255,11 +256,12 @@ function save_proposed_changes($ref)
 
                 if(0 < count($new_nodes))
                     {
+                    natsort($new_nodes);
                     $val = implode(', ', $new_nodes);
                     }
                 }
 
-            if (str_replace("\r\n", "\n", $field_value) !== str_replace("\r\n", "\n", unescape($val)))
+            if (str_replace("\r\n", "\n", $field_value??"") !== str_replace("\r\n", "\n", unescape($val)))
                     {
                     if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                         {
@@ -271,7 +273,9 @@ function save_proposed_changes($ref)
                         }
                     # This value is different from the value we have on record. 
                     # Add this to the proposed changes table for the user
-                    sql_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value, date) VALUES('{$ref}','{$userref}', '{$fields[$n]['ref']}', '" . escape_check($val) . "',now())");
+                    $parameters=array("i",$ref, "i",$userref, "i",$fields[$n]['ref'], "s",$val);
+                    ps_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value, date) 
+                                VALUES( ?, ?, ?, ?, now() )", $parameters);
                     }            
             
             }
@@ -282,32 +286,35 @@ function save_proposed_changes($ref)
 function get_proposed_changes($ref, $userid)
     {
     //Get all the changes proposed by a user
-    $query = sprintf('
-                SELECT d.value,
-                       d.resource_type_field,
-                       d.date,
-                       f.*,
-                       f.required AS frequired,
-                       f.ref AS fref
+    $query = "SELECT d.value,
+                     d.resource_type_field,
+                     d.date,
+                     f.*,
+                     f.required AS frequired,
+                     f.ref AS fref
                   FROM resource_type_field AS f
              LEFT JOIN (
                             SELECT *
                               FROM propose_changes_data
-                             WHERE resource = "%1$s"
-                               AND user = "%2$s"
-                       ) AS d ON d.resource_type_field = f.ref AND d.resource = "%1$s"
+                             WHERE resource = ?
+                               AND user = ?
+                       ) AS d ON d.resource_type_field = f.ref AND d.resource = ?
              GROUP BY f.ref
-             ORDER BY f.resource_type, f.order_by, f.ref;
-        ',
-        escape_check($ref),
-        escape_check($userid)
-    );
-    $changes = sql_query($query);
+             ORDER BY f.resource_type, f.order_by, f.ref;";
+    $parameters=array("i",$ref, "i",$userid, "i",$ref);
+    $changes = ps_query($query, $parameters);
 
     return $changes;
     }
         
 function delete_proposed_changes($ref, $userid="")
 	{
-    sql_query("DELETE FROM propose_changes_data WHERE resource = '" . escape_check($ref)  . "'" . ($userid!="" ? "AND user='" . escape_check($userid) . "'":""));
+    $query = "DELETE FROM propose_changes_data WHERE resource = ?";
+    $parameters=array("i",$ref);
+    if ($userid!="")
+        {
+        $query.=" AND user=?";
+        $parameters=array_merge($parameters,array("i",$userid));
+        }
+    ps_query($query, $parameters);
     }

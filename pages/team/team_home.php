@@ -74,9 +74,9 @@ include "../../include/header.php";
 				
 	<?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?>
         <?php
-        $condition = "";
-        if (checkperm("Rb")) {$condition = "and assigned_to='" . $userref . "'";} # Only show pending for this user?
-        $pending = sql_value("select count(*) value from request where status = 0 $condition",0);
+        $condition = "";$params=array();
+        if (checkperm("Rb")) {$condition = "and assigned_to=?";$params[]="i";$params[]=$userref;} # Only show pending for this user?
+        $pending = ps_value("select count(*) value from request where status = 0 $condition",$params,0);
         if ($pending>0)
 		  {
 		  ?>
@@ -89,7 +89,7 @@ include "../../include/header.php";
 
     <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]?><br>
     <?php
-        $unassigned = sql_value("select count(*) value from research_request where status = 0",0);
+        $unassigned = ps_value("select count(*) value from research_request where status = 0",array(), 0);
         if ($unassigned > 0)
             {
             ?>&nbsp;<span class="Pill"><?php echo $unassigned ?></span><?php
@@ -117,7 +117,7 @@ include "../../include/header.php";
     )
         {
         ?>
-        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-th"></i><br /><?php echo $lang['manage_dash_tiles']; ?></a></li>
+        <li><a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-grip"></i><br /><?php echo $lang['manage_dash_tiles']; ?></a></li>
         <?php
         }
 
@@ -135,8 +135,10 @@ include "../../include/header.php";
     <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]?></a></li>
 
    	<?php hook("customteamfunction")?>
-
+	
 	<?php
+	# Get failed job count
+	$pending = count(job_queue_get_jobs("",STATUS_ERROR, 0));
 	# Include a link to the System Setup area for those with the appropriate permissions.
 	if (checkperm("a")) { ?>
 
@@ -154,7 +156,9 @@ include "../../include/header.php";
 	  <?php
 	  }
 	?>
-	><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a></li>
+	><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a>
+	<br><span class="Pill <?php echo ($pending == 0)? 'DisplayNone' : '' ?>"><?php echo $pending;?></span>
+	</li>
 	<?php hook("customteamfunctionadmin")?>
 	<?php } ?>
 

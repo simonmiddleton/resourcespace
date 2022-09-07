@@ -5,7 +5,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
     $mandatory_columns = array('username', 'email');
     $optional_columns  = array('password', 'fullname', 'account_expires', 'comments', 'ip_restrict', 'lang');
-    $possible_columns = sql_query("describe user");
+    $possible_columns = ps_query("describe user", array());
     $possible_columns = array_column($possible_columns,"Field");
 
     $default_columns_values = array(
@@ -40,6 +40,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
         $header_check_valid = false;
         }
 
+    // Validation of column headers in csv - only allow those matching table column names.
     $unknown_columns = array_diff($headers, $possible_columns);
     foreach($unknown_columns as $column_header)
         {
@@ -74,7 +75,8 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
             continue;
             }
 
-        $sql_update_col_val_pair = "`usergroup` = '" . escape_check($user_group_id) . "'";
+        $sql_update_col_val_pair = "`usergroup` = ?";
+        $parameters = array("i",$user_group_id);
         $cell_count = -1;
         $user_creation_data = array();
 
@@ -100,8 +102,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
             if('username' === $header || 'email' === $header)
                 {
-                $escaped_cell_value = escape_check($cell_value);
-                $check = sql_value("SELECT count(*) AS value FROM user WHERE `{$header}` = '{$escaped_cell_value}'", 0);
+                $check = ps_value("SELECT count(*) AS value FROM user WHERE `{$header}` = ?", array("s",$cell_value), 0);
                 if(0 < $check)
                     {
                     array_push($messages, ucfirst($header). ' "' . $cell_value . '" exists already in ResourceSpace');
@@ -133,10 +134,11 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
             foreach ($user_creation_data as $key => $value) 
             {
-                $sql_update_col_val_pair .= ", `" . escape_check($key) . "` = ";
+                $sql_update_col_val_pair .= ", `" . $key . "` = ";
                 if($value === '' && array_key_exists($key, $default_columns_values))
                     {
-                    $sql_update_col_val_pair .= "'" . escape_check($default_columns_values[$key]) . "'";
+                    $sql_update_col_val_pair .= "?";
+                    $parameters = array_merge($parameters, array("s",$default_columns_values[$key]));
                     }
                 elseif($key === 'password' && $value != '')
                     {
@@ -148,7 +150,8 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
                     }
                 else
                     {
-                    $sql_update_col_val_pair .= "'" . escape_check($value) . "'";
+                    $sql_update_col_val_pair .= "?";
+                    $parameters = array_merge($parameters, array("s",$value));
                     }
             }
 
@@ -160,8 +163,9 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
                 }
 
             // Update record
-            $sql_query = "UPDATE `user` SET {$sql_update_col_val_pair} WHERE `ref` = '{$new_user_id}'";
-            sql_query($sql_query);
+            $update_query = "UPDATE `user` SET {$sql_update_col_val_pair} WHERE `ref` = ?";
+            $parameters = array_merge($parameters, array("i",$new_user_id));
+            ps_query($update_query, $parameters);
             if($reset_password_email_required === true){email_reset_link($user_creation_data['email'],true);}
             }
         } /* end of reading each line found */

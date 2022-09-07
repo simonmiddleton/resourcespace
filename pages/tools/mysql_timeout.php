@@ -1,11 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Command line execution only');
-    }
-
 include "../../include/db.php";
+command_line_only();
 
 
 # Fetch a list of MySQL processes and kill any that exceed the timeout limit.
@@ -25,9 +20,6 @@ for ($s=0;$s<60;$s+=10) # Do this once every 10 seconds for a minute, then this 
 	
 	# Fetch process list
 	$list=explode("\n",run_command($mysql_command . " processlist"));
-	
-	#echo "<pre>";
-	#print_r($list);
 	
 	for ($n=3;$n<count($list)-2;$n++)
 		{

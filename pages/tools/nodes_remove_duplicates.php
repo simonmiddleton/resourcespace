@@ -13,7 +13,7 @@ if (!(PHP_SAPI == 'cli')) {include_once "../../include/authenticate.php"; if (!c
 include_once '../../include/node_functions.php';
 include_once '../../include/resource_functions.php';
 
-$resource_type_field = getvalescaped("field", "");
+$resource_type_field = getval("field", "");
 
 if ($resource_type_field == "")
     {
@@ -58,7 +58,7 @@ if (count($duplicate_node_values) == 0)
 # If a duplicate node is found, before we remove it check for resources using it and update them to use the instance of the duplicate node being retained.
 foreach ($duplicate_node_values as $duplicate_node_id => $duplicate_value)
     {
-    $resource_ids = sql_query('select resource as `ref` from resource_node where node = ' . escape_check($duplicate_node_id) .';');
+    $resource_ids = ps_query('select resource as `ref` from resource_node where node = ?;', ['i', $duplicate_node_id]);
     $block_duplicate_node_deletion = false;
     $replacement_node_id = array_search($duplicate_value,$filtered_node_values);
     foreach ($resource_ids as $resource)

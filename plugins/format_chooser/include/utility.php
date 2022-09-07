@@ -11,7 +11,7 @@ function getDefaultOutputFormat($inputFormat = null)
 	if (!empty($format_chooser_default_output_format))
 		return $format_chooser_default_output_format;
 
-	$inputFormat = strtoupper($inputFormat);
+	$inputFormat = strtoupper((string) $inputFormat);
 
 	# Use resource format by default if none given
 	if (empty($inputFormat) || !in_array($inputFormat, $format_chooser_output_formats))
@@ -101,7 +101,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	
     // Handle alpha/ matte channels
     $target_extension = pathinfo($target, PATHINFO_EXTENSION);
-    if(!in_array($target_extension, $preview_no_flatten_extensions))
+    if(!in_array(strtolower($target_extension), $preview_no_flatten_extensions))
         {
         $transform_actions['background'] = 'white';
         }
@@ -159,8 +159,8 @@ function sendFile($filename, string $download_filename)
         [
             'userfile' => pathinfo($filename, PATHINFO_BASENAME),
             'filename' => strip_extension($download_filename, false),
-            'k'        => getval('k', ''),
-            'ref'      => getval('ref', '')
+			'k'        => getval('k', ''),
+			'ref'      => getval('ref', '')
         ]
     );
     redirect($user_download_url);

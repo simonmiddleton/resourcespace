@@ -3,8 +3,8 @@ include "../../../include/db.php";
 
 include "../../../include/authenticate.php";
 
-$ref      = getvalescaped('ref', '');
-$resource = getvalescaped('resource', '');
+$ref      = getval('ref', '');
+$resource = getval('resource', '');
 
 # Set default values for the creation of a new record
 $new_record = true;
@@ -19,7 +19,7 @@ $usage_data = array(
 # Fetch usage data
 if (trim($ref) != '')
     {
-    $usage_data = sql_query("SELECT * FROM resource_usage WHERE ref = '$ref'");
+    $usage_data = ps_query("SELECT * FROM resource_usage WHERE ref = ?", array("i",$ref));
 
     if(count($usage_data) == 0)
         {
@@ -34,25 +34,27 @@ if (trim($ref) != '')
 
 if(getval('submitted', '') != '' && enforcePostRequest(false))
     {
-    $usage_location = getvalescaped('usage_location', '');
-    $usage_medium   = getvalescaped('usage_medium', '');
-    $description    = getvalescaped('description', '');
+    $usage_location = getval('usage_location', '');
+    $usage_medium   = getval('usage_medium', '');
+    $description    = getval('description', '');
 
     # Construct usage date
-    $usage_date = getvalescaped('usage_date_year', '') . '-' . getvalescaped('usage_date_month', '') . '-' . getvalescaped('usage_date_day', '-');
+    $usage_date = getval('usage_date_year', '') . '-' . getval('usage_date_month', '') . '-' . getval('usage_date_day', '-');
 
     # Construct usage medium
     $usage_medium = '';
     if(isset($_POST['usage_medium']))
         {
-        $usage_medium = escape_check(join(', ', $_POST['usage_medium']));
+        $usage_medium = join(', ', $_POST['usage_medium']);
         }
 
     $resource_data = get_resource_data($resource);
     if($new_record && $resource_data !== false && resource_download_allowed($resource, "", $resource_data["resource_type"]))
         {
         # New record 
-        sql_query("INSERT INTO resource_usage(resource, usage_location, usage_medium, description, usage_date) VALUES ('$resource', '$usage_location', '$usage_medium', '$description', '$usage_date')");
+        $parameters=array("i",$resource, "s",$usage_location, "s",$usage_medium, "s",$description, "s",$usage_date);
+        ps_query("INSERT INTO resource_usage (resource, usage_location, usage_medium, description, usage_date) 
+                    VALUES (?, ?, ?, ?, ?)", $parameters);
 
         $ref = sql_insert_id();
 
@@ -61,7 +63,8 @@ if(getval('submitted', '') != '' && enforcePostRequest(false))
     else if(!$new_record && get_edit_access($resource))
         {
         # Existing record   
-        sql_query("UPDATE resource_usage SET usage_location = '$usage_location', usage_medium = '$usage_medium', description = '$description', usage_date = '$usage_date' WHERE ref = '$ref' AND resource = '$resource'");
+        $parameters=array("s",$usage_location, "s",$usage_medium, "s",$description, "s",$usage_date, "i",$ref, "i",$resource);
+        ps_query("UPDATE resource_usage SET usage_location = ?, usage_medium = ?, description = ?, usage_date = ? WHERE ref = ? AND resource = ?", $parameters);
         
         resource_log($resource, '', '', $lang['edit_usage'] . ' ' . $ref);
         }

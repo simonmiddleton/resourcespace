@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SAML2;
 
 /**
@@ -23,6 +25,16 @@ class Constants
      * Unspecified authentication context.
      */
     const AC_UNSPECIFIED = 'urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified';
+
+    /**
+     * Subject identifier attribute
+     */
+    const ATTR_SUBJECT_ID = 'urn:oasis:names:tc:SAML:attribute:subject-id';
+
+    /**
+     * Pairwise identifier attribute
+     */
+    const ATTR_PAIRWISE_ID = 'urn:oasis:names:tc:SAML:attribute:pairwise-id';
 
     /**
      * The URN for the HTTP-POST binding.
@@ -139,6 +151,16 @@ class Constants
     const EPTI_URN_MACE = 'urn:mace:dir:attribute-def:eduPersonTargetedID';
 
     const EPTI_URN_OID = 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10';
+
+    /**
+     * LogoutRequest Reason - user wishes to terminate the session
+     */
+    public const LOGOUT_REASON_USER = 'urn:oasis:names:tc:SAML:2.0:logout:user';
+
+    /**
+     * LogoutRequest Reason - admin wishes to terminate the session
+     */
+    public const LOGOUT_REASON_ADMIN = 'urn:oasis:names:tc:SAML:2.0:logout:admin';
 
     /**
      * The interpretation of the attribute name is left to individual implementations.
@@ -422,7 +444,12 @@ class Constants
     const STATUS_UNSUPPORTED_BINDING = 'urn:oasis:names:tc:SAML:2.0:status:UnsupportedBinding';
 
     /**
-     * The name of the EntityAttribute used to indicate the subject-id needs of a Service Provider.
+     * The maximum size for any entityid as per specification
      */
-    const SUBJECT_ID_REQ = 'urn:oasis:names:tc:SAML:profiles:subject-id:req';
+    public const ENTITYID_MAX_LENGTH = 1024;
+
+    /**
+     * The maximum size for any entityid as per SAML2INT-specification
+     */
+    public const SAML2INT_ENTITYID_MAX_LENGTH = 256;
 }

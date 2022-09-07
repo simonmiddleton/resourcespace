@@ -1,15 +1,15 @@
 <?php
 include_once "../../../include/db.php";
 
-$k=getvalescaped("k","");
+$k=getval("k","");
 $kauth=true;
 if ($k!="")
 	{
 	# Check that a valid access key exists for this collection.
 	$kauth=false;
 	
-	$col=getvalescaped("col","");
-	$keys=sql_query("select access_key from external_access_keys where collection='$col' and access_key='$k'");
+	$col=getval("col","");
+	$keys=ps_query("select access_key from external_access_keys where collection=? and access_key=?",array("i",$col,"s",$k));
 	$kauth=count($keys)>0;
 	}
 
@@ -18,10 +18,10 @@ if ($k=="" || !$kauth) {include "../../../include/authenticate.php";}
 
 # Wrap the remote view page with the local header/footer.
 
-$url=getvalescaped("url","");
+$url=getval("url","");
 $url = str_replace(" ", "%20", $url);
 
-$search=getvalescaped("search","");
+$search=getval("search","");
 setcookie("search",$search, 0, '', '', false, true);
 
 if ($url=="")
@@ -29,7 +29,7 @@ if ($url=="")
 	# Special case. Allow this page to function just like the normal view.php page, supporting parameters being passed directly, so that the links on the page still work.
 	
 	# Assemble a URL from the existing parameters.
-	$url=getvalescaped("resourceconnect_source","") . "/pages/view.php?" . $_SERVER["QUERY_STRING"];
+	$url=getval("resourceconnect_source","") . "/pages/view.php?" . $_SERVER["QUERY_STRING"];
 	}
 
 $html=file_get_contents($url);

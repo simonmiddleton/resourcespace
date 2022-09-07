@@ -48,7 +48,6 @@ $lang['no_resources_found']="no resources found";
 $lang['batch_transforming_collection']="Batch transforming collection %col"; # %col will be replaced with the collection id
 $lang['not-transformed']="was not transformed: Access Denied.";
 $lang['error-unable-to-rename']="Error: unable to rename transformed file for resource %res."; # %res will be replaced with the resource id
-$lang['success']="SUCCESS!";
 $lang['error-transform-failed']="Error: Transform of resource %res failed."; # %res will be replaced with the resource id
 $lang['transform_summary']="Summary";
 $lang['resources_in_collection-1']="1 resource in collection.";
@@ -82,6 +81,5 @@ $lang['cropper_use_srgb'] = "Use sRGB";
 $lang['transform-recrop']           = "Re-crop image";
 $lang['transform_update_preview']   = "Update preview";
 $lang['transform_preset_sizes']     = "Select from predefined target size";
-$lang['success']="SUCCESS!";
 $lang['error_crop_invalid'] = "Please select a region of the image";
 

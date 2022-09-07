@@ -136,7 +136,7 @@ $lang["information-if_you_enable_indexing_below_and_the_field_already_contains_d
 $lang["property-index_this_field"]="Index this field";
 $lang["information-enable_partial_indexing"]="Partial keyword indexing (prefix+infix indexing) should be used sparingly as it will significantly increase the index size. See the Knowledge Base for details.";
 $lang["property-enable_partial_indexing"]="Enable partial indexing";
-$lang["information-shorthand_name"]="Important: Shorthand name must be set for the field to be appear on the search bar, in Advanced search or to be used in search/edit filters. It must contain only lowercase alphabetical characters and/or numbers - no spaces or symbols.";
+$lang["information-shorthand_name"]="Important: Shorthand name must be set for the field to appear on the search bar, in Advanced search or to be used in search/edit filters. It must contain only lowercase alphabetical characters and/or numbers - no spaces or symbols.";
 $lang["property-shorthand_name"]="Shorthand name";
 $lang["property-display_field"]="Display field";
 $lang['property-field_full_width'] = "Display full width on view page";
@@ -177,7 +177,7 @@ $lang["property-display_condition"]="Display condition";
 $lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
 $lang["property-onchange_macro"]="On change macro";
 $lang["information-onchange_macro"]="On change macro: code to be executed when field value is changed. CAUTION ADVISED";
-$lang["information-derestrict_filter"]="Derestrict filter. Only effective when used in conjunction with removing the g permission so that all resources are restricted unless metadata condition is met";
+$lang["information-derestrict_filter"]="Derestrict filter. Only effective when used in conjunction with removing the g permission so that all resources are restricted unless the metadata condition is met";
 $lang["information-push_metadata"]="If set, the metadata for this resource will be displayed on the resource view page for any related resources. For example, you may relate several photos to a person resource. If this property is set on the person resource, then the person metadata will appear on all related photo resource records, avoiding duplication of data in the system.";
 
 $lang["property-query"]="Query";
@@ -253,6 +253,8 @@ $lang['list'] = 'List';
 $lang["listtitle"]="List view";
 $lang["perpage"]="per page";
 $lang["perpage_option"]="? per page";
+$lang["powered_by"]="Powered by";
+$lang["powered_by_resourcespace"]="Powered by ResourceSpace";
 
 $lang["on"]="On";
 $lang["off"]="Off";
@@ -312,6 +314,7 @@ $lang["couldnotmatchusers"]="Could not match all the usernames, or usernames wer
 
 # Admin - User management
 $lang["comments"]="Comments";
+$lang["emailmarkedinvalid"]="Email has been marked as invalid";
 
 # Admin - Resource management
 $lang["viewuserpending"]="View user contributed resources pending review";
@@ -343,6 +346,13 @@ $lang["smtpport"]="SMTP Port";
 $lang["smtpauth"]="Use Authentication for SMTP Server";
 $lang["smtpusername"]="SMTP Username";
 $lang["smtppassword"]="SMTP Password";
+
+
+# Admin - Tabs management
+$lang['system_tabs'] = "Tabs";
+$lang['manage_tabs_instructions'] = "Use this section to manage tabs. These can be selected for metadata fields and resource types.";
+$lang['tabs_create_new'] = "Create tab called...";
+$lang['tabs_migration_log_note'] = "Migrated to system tab: %s";
 
 
 $lang["connect"]="Connect";
@@ -422,6 +432,7 @@ $lang["couldnotmatchallusernames"]="Could not match all the usernames";
 $lang["emailcollectionmessage"]="has e-mailed you a collection of resources from $applicationname which has been added to your 'my collections' page."; # suffixed to user name e.g. "Fred has e-mailed you a collection..."
 $lang['collectionprivate_attachedusermessage']="%user% has added you to their collection '%colname%'.";
 $lang["nomessage"]="No message";
+$lang["nomessages"]="No messages";
 $lang["emailcollectionmessageexternal"]="has e-mailed you a collection of resources from $applicationname."; # suffixed to user name e.g. "Fred has e-mailed you a collection..."
 $lang["clicklinkviewcollection"]="Use the link below to view the collection.";
 $lang["zippedcollectiontextfile"]="Include text file with resource/collection data.";
@@ -659,6 +670,7 @@ $lang["log_code_v"]="Viewed";
 $lang["log_code_x"]="Deleted";
 $lang["log_code_+"] = "Enabled";
 $lang["log_code_-"] = "Disabled";
+$lang["log_code_Xl"]= "Failed Login Attempt";
 
 $lang['user_created_by']='Created by';
 $lang['user_autocreated']='Automatically created';
@@ -727,6 +739,7 @@ $lang['account_request_label'] = 'Account request';
 $lang['account_request_confirmation_email_to_requester'] = 'Your request for a new user account has been received. Someone will be in contact soon. Thank you!';
 $lang["accountdoesnotexist"]="This user account does not exist.<br /> If you arrived at this page because of a link in the user messages area, please note that another admin might have already handled an account request and removed this account.";
 $lang["accountdisabled"]="Your account has been disabled. Please contact the resources team.";
+$lang["accountorpasswordexpired"]="Account / password has expired.";
 
 # Research request
 $lang["nameofproject"]="Name of project";
@@ -813,7 +826,7 @@ $lang["key"]="Key:"; # e.g. explanation of icons on search page
 $lang["default"]="Default";
 $lang["languageselection"]="Language";
 $lang["language"]="Language";
-$lang["changeyourpassword"]="Password";
+$lang["changeyourpassword"]="Change password";
 $lang["yourpassword"]="Your password";
 $lang["currentpassword"]="Current password";
 $lang["newpassword"]="New password";
@@ -905,6 +918,7 @@ $lang["edit_selected"] = "Edit selected";
 $lang["clear_selected"] = "Clear selected";
 $lang["counting_resources"] = "counting resources...";
 $lang["not_allowed"] = "Not allowed";
+$lang["no_results_found"] = "No results found";
 
 # Pager
 $lang["next"]="Next";
@@ -1055,8 +1069,8 @@ $lang["collectioncommentsinfo"]="Add a comment to this collection for this resou
 $lang["comment"]="Comment";
 $lang["warningexpired"]="Resource expired";
 $lang["warningexpiredtext"]="Warning! This resource has exceeded the expiry date. You must click the link below to enable the download functionality.";
-$lang["warningexpiredok"]="&gt; Enable resource download";
-$lang["warningdismiss"] = "&gt; Dismiss this warning";
+$lang["warningexpiredok"]="Enable resource download";
+$lang["warningdismiss"] = "Dismiss this warning";
 $lang["userrequestcomment"]="Comment";
 $lang["addresourcebatchbrowser"]="Upload resources";
 
@@ -1083,6 +1097,7 @@ $lang["contactsheetintrotext"]="Please select the configuration options you'd li
 $lang["size"]="Size";
 $lang["orientation"]="Orientation";
 $lang["requiredfield"]="This is a required field";
+$lang["requiredfield_resource_type"]="Resource type: This is a required field";
 $lang["requiredfields"]="Please review the form and try again. The following fields were not completed:";
 $lang["requiredfields-general"]="Please complete all required fields";
 $lang["requiredantispam"]="The anti-spam code has not been entered correctly, please try again";
@@ -1405,7 +1420,7 @@ $lang["addnewcontent"]="New content (page, name)";
 $lang["hitcount"]="Hit count";
 $lang["downloads"]="Downloads";
 
-$lang["addremove"]="Add/remove";
+$lang["addremove"]="+/-";
 $lang["list_file_extension"]="Extension";
 
 ##  Translations for standard log entries
@@ -1435,7 +1450,10 @@ $lang["requestsenttext"]="Your resource request has been submitted for approval 
 $lang["requestupdated"]="Your resource request has been updated ";
 $lang["requestassignedtouser"]="Your resource request has been assigned to % for approval.";
 $lang["requestapprovedmail"]="Your request has been approved. Click the link below to view and download the requested resources.";
+$lang["requestapprovedmail_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view and download the requested resources.<br/><br/><a href='[url]'>[url]</a>";
+
 $lang["requestdeclinedmail"]="Sorry, your request for the resources in the collection below has been declined.";
+$lang["requestdeclined_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view the requested resources.<br/><br/><a href='[url]'>[url]</a>";
 
 $lang["resourceexpirymail"]="The following resources have expired:";
 $lang['resource_expiry_x_days'] = "A resource that you have previously downloaded expires in %X day(s)"; # %X should be replaced (it's a placeholder)
@@ -1472,7 +1490,6 @@ $lang['plugins-activate'] = 'Activate';
 $lang['plugins-purge'] = 'Purge&nbsp;configuration';
 $lang['plugins-headertext'] = 'Plugins extend the functionality of ResourceSpace.';
 $lang['plugins-legacyinst'] = 'Activated via config.php';
-$lang['plugins-download'] = 'Download&nbsp;configuration';
 $lang['plugins-upload-title'] = 'Get configuration from file';
 $lang['plugins-upload'] = 'Upload configuration';
 $lang['plugins-getrsc'] = 'File to use:';
@@ -1633,6 +1650,7 @@ $lang["metadatatobewritten"]="Metadata which will be written";
 $lang["embeddedvalue"]="Embedded value";
 $lang["exiftooltag"]="Exiftool tag";
 $lang["error"]="Error";
+$lang['success']="Success";
 $lang["exiftoolnotfound"]="Could not find Exiftool";
 $lang["existing_tags"]="Existing Exiftool tags";
 $lang["new_tags"]="New Exiftool tags (which will be added upon download)";
@@ -1799,7 +1817,7 @@ $lang["writeaccess_sql_log"]="Write access to SQL log:";
 $lang["writeaccess_debug_log"]="Write access to debug log:";
 $lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
-$lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable; remove 'Indexes' from Apache 'Options' list.";
+$lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable. Please remove 'Indexes' from Apache 'Options' list or disable the 'autoindex' module from Apache.";
 $lang["php_extension_not_enabled"]="PHP extension %%EXTENSION%% is not enabled";
 $lang["execution_failed"]="Unexpected output when executing %command command. Output was '%output'.";  # %command and %output will be replaced, e.g. Execution failed; unexpected output when executing convert command. Output was '[stdout]'.
 $lang["exif_extension"]="EXIF extension";
@@ -1849,6 +1867,8 @@ $lang["ensure_file_extension_match"]="Ensure file and extension match";
 # Permissions Manager
 $lang["permissionsmanager"]="Permissions manager";
 $lang["backtogroupmanagement"]="Back to group management";
+$lang["copypermissions"]="Copy the permissions from user group with ID";
+$lang["confirmcopypermissions"]="This will overwrite all the permissions currently defined for this user group. Are you sure?";
 $lang["searching_and_access"]="Searching / access";
 $lang["metadatafields"]="Metadata fields";
 $lang["resource_creation_and_management"]="Resource creation / management";
@@ -1856,35 +1876,36 @@ $lang["themes_and_collections"]="Collections";
 $lang["administration"]="Administration";
 $lang["other"]="Other";
 $lang["custompermissions"]="Custom permissions";
-$lang["searchcapability"]="Search capability";
+$lang["searchcapability"]="Search";
 $lang["access_to_restricted_and_confidential_resources"]="Can download restricted resources and view confidential resources<br>(normally admin only)";
-$lang["restrict_access_to_all_available_resources"]="Restrict access to all available resources. Checking this <strong>removes</strong> the 'g' permission";
+$lang["restrict_access_to_all_available_resources"]="Restrict access to all available resources";
 $lang["restrict_access_to_workflow_state"] = "Restrict access to resources in workflow %workflow_state_name"; # %workflow_state_name is placeholder
 $lang["can_make_resource_requests"]="Can make resource requests";
 $lang["show_watermarked_previews_and_thumbnails"]="Show watermarked previews/thumbnails";
 $lang["can_see_all_fields"]="Can see all fields";
 $lang["can_see_field"]="Can see field";
-$lang["can_edit_all_fields"]="Can edit all fields<br>(for editable resources). Checking this <strong>removes</strong> the 'F*' permission";
+$lang["can_edit_all_fields"]="Can edit all fields<br>(for editable resources)";
 $lang["can_edit_field"]="Can edit field";
-$lang["can_see_resource_type"]="Can see resource type '%TYPE'. Unchecking this <strong>adds</strong> the 'T%REF' permission";
+$lang["can_see_resource_type"]="Can see resource type '%TYPE'";
 $lang["restricted_access_only_to_resource_type"]="Restricted access only to resource type";
 $lang["restricted_upload_for_resource_of_type"]="Restricted upload for resource of type";
 $lang["deny_edit_resource_type"]="Deny edit access to resource of type";
-$lang["deny_edit_all_resource_types"]="Deny edit access to all resource types except those specified by XE- permissions below";
+$lang["deny_edit_all_resource_types"]="Deny edit access to all resource types except those specified by XE- permissions";
 $lang["can_edit_resource_type"]="Can edit resources of type %%RESOURCETYPE%%. Ignored if XE permission is not present";
 $lang["edit_access_to_workflow_state"]="Edit access to workflow state";
-$lang["edit_access_to_access"]="Edit access to Access state '%STATE'. Unchecking this <strong>adds</strong> the 'ea%REF' permission";
+$lang["edit_access_to_access"]="Edit access to access state '%STATE'";
 $lang["can_create_resources_and_upload_files-admins"]="Can create resources / upload files<br>(admin users; resources go to 'Active' state)";
 $lang["can_create_resources_and_upload_files-general_users"]="Can create resources / upload files<br>(normal users; resources go to 'Pending Submission' state via My Contributions)";
-$lang["can_delete_resources"]="Can delete resources <br>(to which the user has write access).Unchecking this <strong>adds</strong> the 'D' permission";
+$lang["can_delete_resources"]="Can delete resources<br>(to which the user has write access)";
 $lang["can_manage_archive_resources"]="Can manage archive resources";
 $lang["can_manage_alternative_files"]="Can manage alternative files";
 $lang["can_tag_resources_using_speed_tagging"]="Can tag resources using 'Speed Tagging'<br>(if enabled in the configuration)";
-$lang["enable_bottom_collection_bar"]="Enable bottom collection bar ('Lightbox'). Unchecking this <strong>adds</strong> the 'b' permission";
+$lang["enable_bottom_collection_bar"]="Enable bottom collection bar ('Lightbox')";
 $lang["can_publish_collections_as_themes"]="Can publish collections as featured collections";
 $lang["can_see_all_theme_categories"]="Can see all featured collection categories";
 $lang["can_see_theme_category"]="Can see featured collection category";
 $lang["can_see_theme_sub_category"]="Can see featured collection subcategory";
+$lang["can_see_featured_collection"]="Can see featured collection ";
 $lang["display_only_resources_within_accessible_themes"]="When searching, display only resources that exist within featured collections to which the user has access";
 $lang["can_access_team_centre"]="Can access the admin area";
 $lang["can_manage_research_requests"]="Can manage research requests";
@@ -1894,7 +1915,7 @@ $lang["can_bulk-mail_users"]="Can bulk-mail users";
 $lang["can_manage_users"]="Can manage users";
 $lang["can_manage_keywords"]="Can manage keywords";
 $lang["can_access_system_setup"]="Can access the System Setup area";
-$lang["can_change_own_password"]="Can change own account password. Unchecking this <strong>adds</strong> the 'p' permission";
+$lang["can_change_own_password"]="Can change own account password";
 $lang["can_manage_users"]="Can manage users";
 $lang["can_manage_users_in_children_groups"]="Can manage users in children groups to the user's group only";
 $lang["can_email_resources_to_own_and_children_and_parent_groups"]="Can only message and share resources with other users in child, parent and own groups";
@@ -1912,7 +1933,7 @@ $lang['geographicsearchresults'] = 'Geographic search results';
 $lang['geographicsearchmissing'] = 'Geographic search criteria missing';
 $lang['geographicsearch_help'] = 'Drag to select a search area';
 $lang['search_results_overlimit'] =  "Too many resources found. Please refine your search to enable this view";
-$lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server. Please check your \$geo_tile_servers configuration setting";
+$lang["error-geotile-server-error"] = "Unable to retrieve tiles from your tile server.";
 
 $lang["purge"]="Purge";
 $lang["purgeuserstitle"]="Purge users";
@@ -2318,6 +2339,7 @@ $lang["admin_resource_type_field_reorder_information_tab_order"]="Reordering is 
 $lang["admin_resource_type_field_reorder_mode"]="Show in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_mode_all"]="Show all fields in display order to enable reordering of fields using drag and drop";
 $lang["admin_resource_type_field_reorder_select_restype"]="Select 'All' for Resource Type in order to enable reordering ";
+$lang["admin_resource_type_field_reorder_select_enable_reordering"]="Select 'Show in display order' to enable reordering";
 $lang["admin_resource_type_fields"]="Metadata fields";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Do you want to migrate existing data?";
 $lang["admin_resource_type_field_cannot_migrate_data_prompt"] = "Resource data cannot be migrated from a fixed list field to a text field. Do you want to continue?";
@@ -2422,7 +2444,7 @@ $lang["local_tz"] = "Local time zone";
 $lang["research_request__introtext"]="Our professional researchers are here to assist you in finding the very best resources for your projects. Complete this form as thoroughly as possible so we're able to meet your criteria accurately. <br /><br />A member of the research team will be assigned to your request. We'll keep in contact via email throughout the process, and once we've completed the research you'll receive an email with a link to all the resources that we recommend.  ";
 $lang["resource_email__introtext"]="Quickly share this resource with other users by email. A link is automatically sent out. You can also include any message as part of the email.";
 $lang["resource_request__introtext"]="Your request is almost complete. Please include the reason for your request so we can respond efficiently.";
-$lang["search_advanced__introtext"]="<strong>Search Tip</strong><br />Any section that you leave blank, or unticked will include ALL those terms in the search. For example, if you leave all the country boxes empty, the search will return results from all those countries. If you select only 'Africa' then the results will ONLY contain resources from 'Africa'. ";
+$lang["search_advanced__introtext"]="<strong>Search Tip</strong><br />Any section that you leave blank, or unticked will include ALL those terms in the search. For example, if you leave all the country boxes empty, the search will return results from all those countries. If you select only 'Algeria' then the results will ONLY contain resources from 'Algeria'. ";
 $lang["tag__introtext"]="Help to improve search results by tagging resources. Say what you see, separated by spaces or commas... for example: dog, house, ball, birthday cake. Enter the full name of anyone visible in the photo and the location the photo was taken if known.";
 $lang["team_archive__introtext"]="To edit individual archive resources, simply search for the resource, and click edit in the 'Resource Tool' panel on the resource screen. All resources that are ready to be archived are listed Resources Pending list. From this list it is possible to add further information and transfer the resource record into the archive. ";
 $lang["team_content__introtext"]="";
@@ -2548,6 +2570,9 @@ $lang["tile_multi"]="Multi";
 $lang["tile_blank"]="Blank";
 $lang["tile_analytics"]="Analytics";
 $lang["tile_ftxt"]="Text only";
+$lang["tile_thmsl"]="Featured Collection";
+$lang["tile_custm"]="Custom";
+$lang["tile_pend"]="Pending";
 /* * End - User Dash Strings * */
 
 /* * Start - Plugin Category Strings * */
@@ -2624,6 +2649,8 @@ $lang['userpreference_tilenavdefault']='Use a tile layout for the navigation men
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';
+$lang['systemconfig_customfont_label'] = 'Custom font file';
+$lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
@@ -2677,6 +2704,7 @@ $lang['systemconfig_show_collection_name'] = "Show collection name and descripti
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
 $lang['error_generic'] = 'Sorry, there has been an error. If this error persists please contact your system administrator';
+$lang['error_generic_misconfiguration'] = "Please contact your system administrator and ask them to resolve the issues found on the 'Installation check' page.";
 $lang['error_invalid_input'] = 'Invalid request received. If you believe this is a legitimate request please contact your system administrator';
 $lang['error_no_metadata'] = 'No metadata was found for this resource type.';
 $lang["maximise"]="Maximise";
@@ -2902,6 +2930,7 @@ $lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resource
 $lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";
 $lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: %%RESOURCES%%";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+$lang["error_fail_save"] = "Unable to save";
 
 
 $lang['image_quality_100'] = "Maximum";
@@ -2918,7 +2947,7 @@ $lang["iiif_disabled"] = "IIIF is not configured";
 $lang["property-personal_data"]="May contain personal data";
 $lang["api-test-tool"]="API test tool";
 $lang["api-function"]="API function";
-$lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. Be careful - any commands you enter will be executed using your live data.';
+$lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. <strong>Be careful - any commands you enter will be executed using your live data.</strong>';
 $lang["api-view-documentation"]="View documentation";
 $lang["api-php-code"]="PHP code";
 $lang["api-php-help"]="Paste the below into the remote system to call the entered API function with the provided parameters.";
@@ -2996,9 +3025,6 @@ $lang["userresources_status_change"]    = "Resources that you have contributed h
 
 $lang["collection_description"]         = "Description";
 
-# Updates to workflow
-$lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";
-
 # Batch replace updates
 $lang["replacebatchlocalfolder"]        = "Retrieve files from local folder on server? (this will create an offline job)";
 $lang["replacebatch_resource_min"]      = "Lowest resource ID to replace (ignored if a collection is specified)";
@@ -3034,6 +3060,7 @@ $lang["date_format_error"]                  = "Error: %row% '%date%' in [%field%
 # %row% row number if in csv or similar, %date% field data, %field% field name
 $lang["invalid_date_error"]                 = "Error: %row% '%date%' in [%field%] is not a valid date";
 $lang["invalid_date_error2"]                = "Error: invalid date value: '%date%'. Please use format: 'yyyy-mm-dd hh:mm:ss' (time is optional)";
+$lang["invalid_date_generic"]               = "You have entered an invalid date";
 $lang["error_server_missing_module"]        = "The server is missing the required software: %%MODULE%%. Please contact your system administrator";
 $lang["error_check_config"]                 = "Please check config option %%CONFIG_OPTION%%";
 $lang["useaspreviewimage"]                  = "Use as preview image";
@@ -3041,6 +3068,7 @@ $lang["filechecksum"]                       = "File checksum";
 $lang["system_notification"]                = "%%APPLICATION_NAME%% - system notification";
 $lang["system_notification_email"]          = "[img_headerlogo]<br />\n[message]<br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["error_edit_filter_invalid"]          = "The edit filter is not correctly configured for this user group. Please contact your administrator";
+$lang["error_search_filter_invalid"]        = "The search filter is not correctly configured for this user group. Please contact your administrator";
 $lang["action_lock"]                        = "Lock";
 $lang["action_unlock"]                      = "Unlock";
 $lang["status_locked"]                      = "Locked";
@@ -3146,3 +3174,6 @@ $lang["upload_start"]                       = "Start upload";
 $lang["status_processing"]                  = "Processing";
 $lang["upload_process_successful"]          = "Continue";
 $lang["upload_view_log"]                    = "View log";
+
+$lang["code_sign_required"]                 = "Inline code signing";
+$lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";

@@ -6,7 +6,7 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 	
 	$meta=array();
 	
-	foreach (sql_query("SELECT ref, upper(title) AS `name`, `type`, title as `nicename`, resource_type, required FROM resource_type_field WHERE name IS NOT NULL AND `name` <> '' AND (resource_type IN (SELECT ref FROM resource_type) OR resource_type = 0)", "schema") as $field)
+	foreach (ps_query("SELECT ref, upper(title) AS `name`, `type`, title AS `nicename`, resource_type, required FROM resource_type_field WHERE name IS NOT NULL AND `name` <> '' AND (resource_type IN (SELECT ref FROM resource_type) OR resource_type = 0)", [], "schema") as $field)
 	{
 		# Get translated - support i18n - upload columns must be in user's local language.
 		$field['name']=trim(i18n_get_translated($field['name']));
@@ -24,18 +24,14 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 			{
 			for ($i=0; $i<count($meta[$field['resource_type']][$field['name']]['options']); $i++) 
 				{
-				//echo "ref: " . $meta[$field['resource_type']][$field['name']]['remote_ref'] . "<br>";
-				//echo "name: " . $meta[$field['resource_type']][$field['name']]['nicename'] . "<br>";
-				//echo "type " . $meta[$field['resource_type']][$field['name']]['type'] . "<br>";
 				if(isset($meta[$field['resource_type']][$field['name']]['options'][$i]))
 					{
-					//echo "options: " . $meta[$field['resource_type']][$field['name']]['options'][$i] . "<br>";
 					$meta[$field['resource_type']][$field['name']]['options'][$i]=trim ($meta[$field['resource_type']][$field['name']]['options'][$i]);
 					}
 				}
 			}
 	}
-	$columns=sql_query("select upper(column_name) as name, column_name as nicename from information_schema.columns where table_name='resource' and table_schema='{$mysql_db}'");
+	$columns=ps_query("SELECT upper(column_name) AS name, column_name AS nicename FROM information_schema.columns WHERE table_name = 'resource' AND table_schema = ?", ['s', $mysql_db]);
 
 	foreach (array_keys($meta) as $resource_type)
 	{

@@ -1,14 +1,12 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setup test specific user
 $user_general = new_user("test_001402_general", 2);
 if($user_general === false)
     {
-    $user_general = sql_value("SELECT ref AS `value` FROM user WHERE username = 'test_001402_general'", 0);
+    $user_general = ps_value("SELECT ref AS `value` FROM user WHERE username = 'test_001402_general'", array(), 0);
     }
 if($user_general === 0)
     {
@@ -23,8 +21,6 @@ $resource_list[] = create_resource(1, 0);
 $resource_list[] = create_resource(1, 0);
 $resource_list[] = create_resource(1, 0);
 $resource_list[] = create_resource(1, 0);
-
-// print_r($resource_list);
 
 // Ensure creation was successful
 foreach ($resource_list as $resource_entry)
@@ -96,8 +92,8 @@ catch(Exception $e)
     }
 
 // Ensure that the resulting order is as expected
-$resource_order_sql = "select resource value from collection_resource WHERE collection='".escape_check($collection_ref)."' ORDER BY sortorder";
-$resource_order = sql_array($resource_order_sql);
+$resource_order_sql = "select resource value from collection_resource WHERE collection=? ORDER BY sortorder";
+$resource_order = ps_array($resource_order_sql,array("i",$collection_ref));
 
 $expected_order=array($resource_list[3],$resource_list[0],$resource_list[2],$resource_list[1]);
 if ($resource_order != $expected_order)

@@ -64,7 +64,7 @@ foreach($nodes_in_sequence as $node)
         continue;
         }
 
-    $i18n_node_name = addslashes(i18n_get_translated($node['name']));
+    $i18n_node_name = htmlentities(i18n_get_translated($node['name']),ENT_QUOTES);
 
     $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
     }

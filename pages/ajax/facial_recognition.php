@@ -6,8 +6,8 @@ include_once __DIR__ . '/../../include/facial_recognition_functions.php';
 include_once __DIR__ . '/../../include/node_functions.php';
 
 $return   = array();
-$action   = getvalescaped('action', '');
-$resource = getvalescaped('resource', 0, true);
+$action   = getval('action', '');
+$resource = getval('resource', 0, true);
 
 if(
     !$facial_recognition ||
@@ -47,7 +47,7 @@ if('prepare_selected_area' == $action)
         true,
         'pre',
         true,
-        sql_value("SELECT preview_extension AS `value` FROM resource WHERE ref = '{$resource}'", 'jpg'));
+        ps_value("SELECT preview_extension AS `value` FROM resource WHERE ref = ?", ['i', $resource], 'jpg'));
     $prepared_image_path = get_resource_path(
         $resource,
         true,
@@ -91,6 +91,7 @@ if('predict_label' == $action)
     // system error
     else if(false === $prediction && (!file_exists($model_file_path) || !file_exists($prepared_image_path)))
         {
+        $prediction = [];
         $prediction[0] = -1;
         }
 

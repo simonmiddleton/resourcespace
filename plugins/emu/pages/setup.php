@@ -25,9 +25,9 @@ check_script_last_ran('last_emu_import', $emu_script_failure_notify_days, $emu_s
 // Save module - column - rs_field mappings
 if('' != getval('submit', '') || '' != getval('save', ''))
     {
-    $emu_module          = getvalescaped('emu_module', array());
-    $emu_column          = getvalescaped('emu_column', array());
-    $rs_field            = getvalescaped('rs_field', array());
+    $emu_module          = getval('emu_module', array());
+    $emu_column          = getval('emu_column', array());
+    $rs_field            = getval('rs_field', array());
     $emu_rs_mappings_new = array();
 
     // There should always be the same number of values in each array
@@ -90,7 +90,6 @@ $page_def[] = config_add_single_select('emu_script_mode',
 $page_def[] = config_add_boolean_select('emu_enable_script', $lang['emu_enable_script']);
 $page_def[] = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
-$page_def[] = config_add_text_input('emu_email_notify', $lang['emu_email_notify']);
 $page_def[] = config_add_text_input('emu_script_failure_notify_days', $lang['emu_script_failure_notify_days']);
 $page_def[] = config_add_text_input('emu_log_directory', $lang['emu_log_directory']);
 $page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lang['emu_created_by_script_field']);

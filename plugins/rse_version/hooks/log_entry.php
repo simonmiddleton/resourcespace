@@ -3,7 +3,10 @@
 function HookRse_versionLog_entryGet_resource_log_extra_fields()
     {
     # Extend get_resource_log so that the state of the previous value is fetched also.
-    return ",((r.previous_value is not null and (r.type='e' or r.type='m' or r.type='N')) or (r.previous_file_alt_ref is not null and r.type='u')) revert_enabled";
+    return new PreparedStatementQuery(
+        ",((r.previous_value IS NOT NULL AND (r.type='e' OR r.type='m' OR r.type='N')) 
+            OR (r.previous_file_alt_ref IS NOT NULL AND r.type='u')) revert_enabled"
+        );
     }
 
 
@@ -18,7 +21,10 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
         $image="";
        
         # Attempt to find the image. For the latest upload, this is the current file.
-        $latest=sql_query("select previous_file_alt_ref from resource_log where resource='$resource' and type='u' and ref>'" . $logentry["ref"] . "' order by ref limit 1");
+        $parameters=array("i",$resource, "i",$logentry["ref"]);
+        $latest=ps_query("SELECT previous_file_alt_ref from resource_log 
+                where resource=? and type='u' and ref>? 
+                order by ref limit 1", $parameters);
 
         if (count($latest)==0)
             {
@@ -75,14 +81,18 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
         echo "</td></tr>";
         return true;
         }
-    elseif($column == "revert_enabled")
+    elseif($column == "revert_enabled" && $value > 0)
         {
-        // Show revert link
-        ?>
-        <td><?php echo $lang["actions"]; ?></td>
-        <td><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>
-        <?php
-        return true;
+        $field_info = get_resource_type_field($logentry["field"]);
+        if((bool)$field_info["required"] === false || trim($logentry["previous_value"]) != "")
+            {
+            // Show revert link
+            ?>
+            <td><?php echo $lang["actions"]; ?></td>
+            <td><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>
+            <?php
+            return true;
+            }
         }
     return false;
     }

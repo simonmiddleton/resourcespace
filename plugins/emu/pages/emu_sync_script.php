@@ -114,7 +114,7 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     $search_terms = new IMuTerms();
     if(!check_config_changed())
         {
-        $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
+        $script_last_ran = ps_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"',[], '');
 
         if('' != $script_last_ran)
             {
@@ -243,7 +243,7 @@ if(0 < $rs_emu_resources_count)
             }
         else
             {
-            sql_query("UPDATE resource SET archive = '2' WHERE ref = '{$rs_emu_resource['resource']}'");
+            ps_query("UPDATE resource SET archive = '2' WHERE ref = ?",["i",$rs_emu_resource['resource']]);
             }
         }
     }
@@ -505,5 +505,5 @@ fclose($emu_log_file);
 
 clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
 
-sql_query('DELETE FROM sysvars WHERE name = "last_emu_import"');
-sql_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())');
+ps_query('DELETE FROM sysvars WHERE name = "last_emu_import"',[]);
+ps_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())',[]);

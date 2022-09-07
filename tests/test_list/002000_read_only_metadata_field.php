@@ -1,10 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
-// @todo use the dirname level argument once PHP 7.0 is supported
 $webroot = dirname(dirname(__DIR__));
 include_once("{$webroot}/include/image_processing.php");
 
@@ -15,7 +11,6 @@ if(get_utility_path("exiftool") === false)
     return true;
     }
 
-
 // Set up
 $exiftool_write                = true;
 $force_exiftool_write_metadata = true;
@@ -23,7 +18,7 @@ $exiftool_write_option         = true;
 $exiftool_remove_existing      = true;
 
 // Change "Credit" and "Camera make / model" fields to be read-only
-sql_query("UPDATE resource_type_field SET `read_only` = 1 WHERE ref IN (10, 52)");
+ps_query("UPDATE resource_type_field SET `read_only` = 1 WHERE ref IN (10, 52)");
 
 function teardown_002000($tmpfile)
     {
@@ -32,7 +27,7 @@ function teardown_002000($tmpfile)
         unlink($tmpfile);
         }
 
-    sql_query("UPDATE resource_type_field SET `read_only` = 0 WHERE ref IN (10, 52)");
+    ps_query("UPDATE resource_type_field SET `read_only` = 0 WHERE ref IN (10, 52)");
 
     return;
     }
@@ -60,7 +55,6 @@ $credit = "Unit test #002000";
 update_field($resource, 10, $credit);
 $camera_make = "New Camera make +";
 update_field($resource, 52, $camera_make);
-
 
 $tmpfile = write_metadata($resource_path, $resource);
 if(false === $tmpfile || !file_exists($tmpfile))
@@ -107,8 +101,6 @@ if(
     teardown_002000($tmpfile);
     return false;
     }
-
-
 
 // Teardown
 teardown_002000($tmpfile);

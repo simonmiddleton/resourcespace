@@ -1,10 +1,7 @@
 <?php
 include "../../include/db.php";
+command_line_only();
 
-if (php_sapi_name() != "cli")
-    {
-    exit("Permission denied");
-    }
 
 
 // This script moves resources from old locations to new locations if settings are changed after initial setup
@@ -98,7 +95,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
 
 set_time_limit(0);
 
-$resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER BY ref DESC");
+$resources=ps_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER BY ref DESC");
 $migratedfiles = 0;
 $totalresources = count($resources);
 for ($n=0;$n<$totalresources;$n++)

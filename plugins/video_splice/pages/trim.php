@@ -3,22 +3,21 @@ include "../../../include/db.php";
 include "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
 
-$ref=getvalescaped("ref","",true);
-$alt=getvalescaped("alternative","",true);
+$ref=getval("ref","",true);
+$alt=getval("alternative","",true);
 
-$search=getvalescaped("search","");
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("order_by","");
-$archive=getvalescaped("archive","",true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$offset=getval("offset",0,true);
+$order_by=getval("order_by","");
+$archive=getval("archive","",true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$starsearch=getvalescaped("starsearch","");
 $modal = (getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos","");
+$curpos=getval("curpos","");
 $go=getval("go","");
 
 $trimmed_resources_new = empty(getval("trimmed_resources_new",null))?null:explode(",", getval("trimmed_resources_new",null));
@@ -36,7 +35,6 @@ $urlparams= array(
     "order_by" => $order_by,
     "offset" => $offset,
     "restypes" => $restypes,
-    "starsearch" => $starsearch,
     "archive" => $archive,
     "default_sort_direction" => $default_sort_direction,
     "sort" => $sort,
@@ -48,11 +46,15 @@ global $lang, $context, $display, $video_preview_original;
 
 // fetch resource data.
 $resource=get_resource_data($ref);
-
+if(!is_array($resource))
+    {
+    error_alert($lang['error-pageload'],false);
+    exit();
+    }
 $editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
 
 // not allowed to edit this resource?
-if (!($editaccess || checkperm("A")) && $ref>0) {exit ("Permission denied.");}
+if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
@@ -79,6 +81,10 @@ $video_original_file = get_resource_path(
 );
 
 $preview_duration = get_video_duration($video_preview_file);
+if($preview_duration == 0)
+    {
+    $preview_duration = get_video_duration(get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension));
+    }
 $original_duration = get_video_duration($video_original_file);
 
 $preview_cap = $original_duration;
@@ -127,7 +133,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             Total duration: " . $ffmpeg_duration_time);
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$newref'");
+        ps_query("update resource set created_by=?,archive=?,file_extension=? where ref=?",array("i",$userref,"i",get_default_archive_state(),"s",$ffmpeg_preview_extension,"i",$newref));
 
             // Unlink the target
         if (file_exists($target)) {unlink ($target);}
@@ -188,7 +194,14 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         );
 
         // Set created_by, archive and extension
-        sql_query("update resource set created_by='$userref',archive=" . get_default_archive_state() . ",file_extension='" . $ffmpeg_preview_extension . "' where ref='$alt_ref'");
+        ps_query("update resource set created_by= ?,archive= ?,file_extension= ? where ref= ?",
+                [
+                'i', $userref,
+                'i', get_default_archive_state(),
+                's', $ffmpeg_preview_extension,
+                'i', $alt_ref
+                ]        
+        );
 
         // Unlink the target
         if (file_exists($target)) {unlink ($target);}
@@ -218,7 +231,15 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         $file_size = @filesize_unlimited($target);
 
         // Save alternative file data.
-        sql_query("update resource_alt_files set file_name='" . escape_check($alt_filename) . "',file_extension='" . escape_check($ffmpeg_preview_extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$ref' and ref='$alt_ref'");
+        ps_query("update resource_alt_files set file_name= ?,file_extension= ?,file_size= ?,creation_date=now() where resource= ? and ref= ?",
+                [
+                's', $alt_filename,
+                's', $ffmpeg_preview_extension,
+                'i', $file_size,
+                'i', $ref,
+                'i', $alt_ref
+                ]
+        );
 
         if ($alternative_file_previews)
             {
@@ -345,7 +366,7 @@ if(isset($resource["field".$view_title_field]))
         $autorotate = false;
         }
 
-    $collection_add = getvalescaped("collection_add", "");
+    $collection_add = getval("collection_add", "");
     if($embedded_data_user_select)
       {
       $no_exif=getval("exif_option","");

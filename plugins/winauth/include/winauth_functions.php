@@ -2,6 +2,9 @@
 
 function WinauthGetUser()
     {
+    $domain = '';
+    $user = '';
+
     if (isset($_SERVER["AUTH_USER"]) && $_SERVER["AUTH_USER"] != "")
         {
         if(strpos($_SERVER["AUTH_USER"], "\\") !== false)
@@ -33,7 +36,6 @@ function WinauthAuthenticate()
             redirect($redirecturl);
             exit();
             }
-        return false;
         }
     $url = urldecode(getval("url",""));
     

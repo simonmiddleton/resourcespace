@@ -158,7 +158,7 @@ if($action == "add_resource")
 
 if($action == "add_multiple_resources")
     {
-    $resource_list=json_decode(getvalescaped("resource_list",false));
+    $resource_list=json_decode(getval("resource_list",false));
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
     $addtype = getval("addtype", "");
@@ -223,7 +223,7 @@ if($action == "remove_resource")
 
 if($action == "remove_multiple_resources")
     {
-    $resource_list=json_decode(getvalescaped("resource_list",false));
+    $resource_list=json_decode(getval("resource_list",false));
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
 

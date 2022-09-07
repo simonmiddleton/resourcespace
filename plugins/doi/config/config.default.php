@@ -19,7 +19,7 @@
 		Administration
 		--------------
 		a      Can access administration tree
-		t      Can see the team centre home
+		t      Can see the Admin home
 		r      Can manage research requests
 		R      Can manage resource requests / orders
 		o      Can manage content

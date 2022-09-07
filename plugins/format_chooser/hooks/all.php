@@ -28,7 +28,7 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
     if(!in_array(strtoupper($original_ext),$format_chooser_input_formats))
         {return false;}
     
-    $profile = getvalescaped('profile' , null);
+    $profile = getval('profile' , null);
 	if (!empty($profile))
         {
         $url_qs['profile'] = $profile;
@@ -53,7 +53,7 @@ function HookFormat_chooserAllReplaceuseoriginal()
 	if (is_ecommerce_user()) { return false; }
 
 	$disabled = '';
-	$submitted = getvalescaped('submitted', null);
+	$submitted = getval('submitted', null);
 	if (!empty($submitted))
 		$disabled = ' disabled="disabled"';
 
@@ -159,7 +159,7 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
 		return false;
 		}
 
-	$profile = getProfileFileName(getvalescaped('profile', null));
+	$profile = getProfileFileName(getval('profile', null));
 	if ($profile === null && $fileExists)
 		{
 		# Just serve the original file
@@ -190,7 +190,7 @@ function HookFormat_chooserAllCollection_download_modify_job($job_data=array())
 	// Disable for e-commerce
 	if (is_ecommerce_user()) { return false; }
 
-    $ext = getvalescaped("ext","");
+    $ext = getval("ext","");
     if(trim($ext) != "")
         {
         // Add requested extension to offline job data

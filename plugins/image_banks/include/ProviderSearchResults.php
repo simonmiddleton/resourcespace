@@ -18,7 +18,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return  void
     */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value) : void
         {
         if(!($value instanceof \ImageBanks\ProviderResult))
             {
@@ -45,7 +45,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return \ImageBanks\ProviderResult
     */
-    public function offsetGet($offset)
+    public function offsetGet($offset) : mixed
         {
         return isset($this->results[$offset]) ? $this->results[$offset] : null;
         }
@@ -58,7 +58,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return boolean
     */
-    public function offsetExists($offset)
+    public function offsetExists($offset) : bool
         {
         return isset($this->results[$offset]);
         }
@@ -71,7 +71,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return void
     */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset) : void
         {
         unset($this->results[$offset]);
 
@@ -83,7 +83,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return \ImageBanks\ProviderResult
     */
-    public function current()
+    public function current() : object
         {
         return $this->results[$this->position];
         }
@@ -93,7 +93,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return integer
     */
-    public function key()
+    public function key() : int
         {
         return $this->position;
         }
@@ -103,7 +103,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return void
     */ 
-    public function next()
+    public function next() : void
         {
         ++$this->position;
 
@@ -115,7 +115,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return void
     */ 
-    public function rewind()
+    public function rewind() : void
         {
         $this->position = 0;
 
@@ -127,7 +127,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return boolean
     */ 
-    public function valid()
+    public function valid() : bool
         {
         return isset($this->results[$this->position]);
         }
@@ -137,7 +137,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return integer Returns the number of ProviderResult elements
     */
-    public function count()
+    public function count() : int
         {
         return count($this->results);
         }
@@ -147,7 +147,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return void
     */
-    public function setError($message)
+    public function setError($message) : void
         {
         $this->error = $message;
 
@@ -159,7 +159,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return string
     */
-    public function getError()
+    public function getError() : string
         {
         return $this->error;
         }
@@ -169,7 +169,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return void
     */
-    public function setWarning($message)
+    public function setWarning($message) : void
         {
         $this->warning = $message;
 
@@ -181,7 +181,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     * 
     * @return string
     */
-    public function getWarning()
+    public function getWarning() : string
         {
         return $this->warning;
         }

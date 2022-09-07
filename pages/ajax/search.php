@@ -2,7 +2,7 @@
 include_once '../../include/db.php';
 include_once '../../include/authenticate.php';
 
-$ajax = filter_var(getvalescaped('ajax', false), FILTER_VALIDATE_BOOLEAN);
+$ajax = filter_var(getval('ajax', false), FILTER_VALIDATE_BOOLEAN);
 if(!$ajax)
     {
     header('HTTP/1.1 400 Bad Request');
@@ -13,7 +13,7 @@ if(!$ajax)
 /* Variables that should be available for any cases below, otherwise 
    they should be put in that use case only */
 $return        = array();
-$search_string = getvalescaped('search_string', '');
+$search_string = getval('search_string', '');
 
 
 // Generate search tags based on a search string

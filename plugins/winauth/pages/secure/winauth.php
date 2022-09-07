@@ -7,22 +7,19 @@ include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
    
 $session_hash="";
 $url = urldecode(getval("url",""));
-$redirecturl = (trim($url) != "/" && trim($url) != "") ? $url : "pages/" . $default_home_page;
 $winuser = WinauthGetUser();
 
+
+// Invalid domain
 if(count($winauth_domains) > 0 && !in_array($winuser['domain'], $winauth_domains))
     {
-    // Invalid domain
-    return false;
+    redirect(generateURL("{$baseurl_short}login.php", ['winauth_login' => 'true']));
     }
 
-if($winuser['user'] != "")
-    {
-    $username = $winuser['user'];
-    }
 
-# Allow login
-$userref = sql_value("select ref value from user where username='" . escape_check($username) . "' and approved=1",0);
+// Try to authenticate
+$username = trim($winuser['user']);
+$userref = $username === '' ? 0 : ps_value("select ref value from user where username=? and approved=1",array("s",$username),0);
 if($userref != 0)
     {
     include_once dirname(__FILE__) . '/../../../../include/login_functions.php';
@@ -32,7 +29,8 @@ if($userref != 0)
     $session_hash = generate_session_hash('sha256', md5("RS" . $username . "WINAUTH"));
     
     # Update the user record.
-    sql_query("update user set session='" . escape_check($session_hash) . "', last_active = NOW() where ref='$userref'"); 
+    $parameters=array("s",$session_hash, "i",$userref);
+    ps_query("update user set session=?, last_active = NOW() where ref=?",$parameters); 
 
     # Log this
     daily_stat("User session",$userref);
@@ -40,7 +38,7 @@ if($userref != 0)
     log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","ref",$userref,null,'',$userref);
 
     # Blank the IP address lockout counter for this IP
-    sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");
+    ps_query("delete from ip_lockout where ip=?",array("s",$ip));
     
     set_login_cookies($userref, $session_hash, "", $user_preferences, "/");
     
@@ -49,14 +47,11 @@ if($userref != 0)
     
     $redirecturl = $baseurl_short . urldecode($url);
     $redirecturl = str_replace("winauth_login=true","",$redirecturl);
-    redirect($redirecturl);   
-    exit();
+    redirect($redirecturl);
     }
 else
     {
     $userinit = getval("winauth_login","") != ""; 
     $redirecturl = generateURL($baseurl_short. "login.php", array("url"=>$url,"winauth_login"=>"true", "error"=> ($userinit ? "winauth_nouser" : "")));    
     redirect($redirecturl);
-    exit();
-    }   
-
+    }

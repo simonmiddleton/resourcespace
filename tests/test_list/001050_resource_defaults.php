@@ -1,8 +1,6 @@
 <?php
-if('cli' !== php_sapi_name())
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $saved_userref      = $userref;
 $saved_usergroup    = $usergroup;
@@ -26,7 +24,10 @@ $groupref = save_usergroup(0,$setoptions);
 
 // Add a new usergroup with defaults set
 $defuser        = new_user("DeeFawlts",$groupref);
-$defuserdata    = validate_user("u.ref='$defuser'");
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref=?";
+$user_select_sql->parameters = ["i", $defuser];
+$defuserdata = validate_user($user_select_sql);
 setup_user($defuserdata[0]);
 
 // Create  a resource, defaults should be set

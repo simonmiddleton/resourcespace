@@ -7,7 +7,7 @@
  */
 
 /* Default text and background colour */
-body,html {color:#474747;background: #f2f2f2;}
+body,html {color:#474747;background: #efefef;}
 
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
@@ -22,8 +22,8 @@ input[readonly] {
 }
 
 /* Header styling */
-#Header {background: rgba(0, 0, 0, 0.6);transform: translate3d(0, 0, 0);border: none;}
-#Header li a {color:#fff; opacity:0.7;}
+#Header {background: #fff;transform: translate3d(0, 0, 0);border: none;}
+#Header li a {color:#000; opacity:0.7;}
 #Header .SearchResultsDisabled,
 #Header .SearchResultsDisabled:hover,
 .DisabledLink,
@@ -32,6 +32,7 @@ input[readonly] {
 #Header .current {opacity:1;text-decoration: none}
 /* links in Header overflow dropdown menu */
 #HiddenLinks li a {color:#fff; opacity:0.7;}
+#Header .UploadButton a {color: #fff;}
 
 /* Colours for $header_text_title */
 #TextHeader, #TextHeader a, #TextDesc {color:#fff;}
@@ -53,13 +54,14 @@ input[readonly] {
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
 #ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
-.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active {
+.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active,
+.PoweredByPanel a:link, .PoweredByPanel a:visited, .PoweredByPanel a:hover {
     color:#fff;text-decoration:none;
 }
 
-.RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
+.RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
 #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
-    border-radius:4px;
+    border-radius:8px;
     overflow: hidden;
 }
 .ResourcePanel {
@@ -73,8 +75,16 @@ input[readonly] {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
     z-index: 100;
 }
+.ResourcePanelInfo {
+    color: #727272;
+}
+.ResourcePanelInfo a {
+    color: #414141;
+}
 .ResourcePanel.Selected { border: 3px solid #2E99E6; }
 tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of #2e99e6 which is used for .ResourcePanel.Selected */ }
+
+.ResourcePanelIcons a.fa-minus-circle { color: #e91d1d }
 
 #SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
 
@@ -104,7 +114,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Default colours for search, dash tiles, browse bar etc */
 #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab {
-    background: rgba(0, 0, 0, 0.47);
+    background: rgba(0, 0, 0, 0.4);
     color:#FFF;
 }
 
@@ -146,7 +156,7 @@ div.autocomplete ul li {color: #000;}
 .NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownload {  background: #fff;}
-.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0.2rem;}
+.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {background: #fff; border-color: #6D6D6D;}
@@ -177,6 +187,8 @@ div.autocomplete ul li {color: #000;}
 .Listview {background-color: white;border-radius:6px;}
 .highlight {color: #000;background-color: #ff0;}
 .Tab a {padding: 8px 1rem;background: rgba(255, 255, 255, 0.4);}
+.TabBar { background-color: #ededed; }
+#BasicsBoxTabs > .TabBar { background-color: #f2f2f2;} /* On Edit page w/ $tabs_on_edit  */
 .StyledTabbedPanel {background: #fff;}
 .TabSelected {border-left: #bbbbbb;}
 .TabSelected a {background: #ffffff; color: #666666; border-bottom: 1px solid #ffffff; }
@@ -191,7 +203,7 @@ div.autocomplete ul li {color: #000;}
 #InfoBoxCollectionInner h2 {color:black;}
 #InfoBoxCollectionInner p {color:black;}
 .ListviewBoxedTitleStyle td {background-color:#fff;}
-.NewFlag { background-color: #fff; color: #737373; }
+.NewFlag { background-color: #fff; color: #737373; text-shadow: none;}
 
 /* Mouseover effect on list views */
 .ListviewStyle tr:hover td {background-color: #EEE;} 
@@ -336,11 +348,12 @@ input:checked + .customFieldLabel, .keywordselected {
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
 .ReportSummary td {border:1px solid #888;color:black;}
 .ReportMetric {color:black;}
-
-.BreadcrumbsBox {color:#FFF;}
-.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }
-.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.65);margin: 0 1em 1em 0;}
-
+.SearchBreadcrumbs > span {color: #6a6a6a;}
+.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #474747; }
+.BreadcrumbsBoxTheme {background-color: rgba(0, 0, 0, 0.47);margin: 0 1em 1em 0; padding: 6px 8px; color: white;border-radius:6px;}
+.BreadcrumbsBoxTheme.BreadcrumbsBox a,
+.BreadcrumbsBoxTheme.BreadcrumbsBox a:link,
+.BreadcrumbsBoxTheme.BreadcrumbsBox a:visited {color: white;}
 .TopInpageNav select {
     background-color: #fff;
 }

@@ -7,9 +7,9 @@ include __DIR__ . "/../lib/phpFlickr.php";
 
 include "../../../include/header.php";
 
-$theme=getvalescaped("theme","");
-$private=getvalescaped("permission","");
-$publish_type=getvalescaped("publish_type","");
+$theme=getval("theme","");
+$private=getval("permission","");
+$publish_type=getval("publish_type","");
 $id="flickr_".$theme;
 $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 
@@ -39,12 +39,12 @@ if(getval("start_publish","")!="")
     if($publish_type=="all")
         {
         # Perform sync publishing all (updating any existing)
-        sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getvalescaped("private",""));
+        sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getval("private",""));
         }
     elseif($publish_type=="new")
         {
         # Perform sync publishing new only.
-        sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getvalescaped("private",""));
+        sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getval("private",""));
         }
     }
 ?>

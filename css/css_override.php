@@ -131,3 +131,17 @@ if ((isset($button_colour_override) && $button_colour_override != ''))
     }
     <?php
     }
+
+// Apply user uploaded custom font
+if (isset($custom_font) && $custom_font != '')
+    {
+    $custom_font_url = str_replace('[storage_url]', $storageurl, $custom_font);
+    ?>
+    @font-face {
+    font-family: "custom_font";
+    src: url("<?php echo $custom_font_url; ?>");
+    }
+    h1,h2,h3,h4,h5,h6,.Title {font-family: custom_font, Arial, Helvetica, sans-serif;}
+    .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,.ui-widget, body, input, textarea, select, button {font-family: custom_font, Arial, Helvetica, sans-serif;}
+    <?php
+    }

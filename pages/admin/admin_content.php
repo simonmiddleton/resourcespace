@@ -10,13 +10,13 @@ include "../../include/db.php";
 include "../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
 
-$offset=getvalescaped("offset",0,true);
+$offset=getval("offset",0,true);
 if (array_key_exists("findpage",$_POST) ||array_key_exists("findname",$_POST) || array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
-$findpage=getvalescaped("findpage","");
-$findname=getvalescaped("findname","");
-$findtext=getvalescaped("findtext","");
-$page=getvalescaped("page","");
-$name=getvalescaped("name","");
+$findpage=getval("findpage","");
+$findname=getval("findname","");
+$findtext=getval("findtext","");
+$page=getval("page","");
+$name=getval("name","");
 
 $extended=false;
 if ($findpage!="" || $findname!="" || $findtext!="")
@@ -38,11 +38,13 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox" style="position:relative;">
+<h1><?php echo $lang["managecontent"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["managecontent"],
@@ -56,7 +58,7 @@ echo empty($int_text)?"":"<p>".$int_text."</p>";
 $text=get_all_site_text($findpage, $findname,$findtext);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($text);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
@@ -112,7 +114,7 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 	
 	<td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(htmlspecialchars($text[$n]["text"]),100), $findtext, true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
 	
-	<td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a></div></td>
+	<td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a></div></td>
 	</tr>
 	<?php
 	}

@@ -3,7 +3,7 @@ include "../include/db.php";
 
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref","",true),$k))) {include "../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref","",true),$k))) {include "../include/authenticate.php";}
 
 $backto=getval("backto","");
 $col_order_by=getval("col_order_by","");
@@ -20,14 +20,14 @@ $skip=false;
 $allow_reorder=false;
 
 # Fetch and set the values
-$search=getvalescaped("search","");
+$search=getval("search","");
 if (strpos($search,"!")===false) {rs_setcookie('search', $search);} # store the search in a cookie if not a special search
-$offset=getvalescaped("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
+$offset=getval("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
-$order_by=getvalescaped("order_by",$default_sort);if (strpos($search,"!")===false) {rs_setcookie('saved_order_by', $order_by);}
+$order_by=getval("order_by",$default_sort);if (strpos($search,"!")===false) {rs_setcookie('saved_order_by', $order_by);}
 if ($order_by=="") {$order_by=$default_sort;}
-$per_page=getvalescaped("per_page",$default_perpage);rs_setcookie('per_page', $per_page);
-$archive=getvalescaped("archive",0);if (strpos($search,"!")===false) {rs_setcookie('saved_archive', $archive);}
+$per_page=getval("per_page",$default_perpage);rs_setcookie('per_page', $per_page);
+$archive=getval("archive",0);if (strpos($search,"!")===false) {rs_setcookie('saved_archive', $archive);}
 $jumpcount=0;
 
 # Most sorts such as popularity, date, and ID should be descending by default,
@@ -46,7 +46,7 @@ if ($allow_reorder)
 	{
 	
 	# Also check for the parameter and reorder as necessary.
-	$reorder=getvalescaped("reorder","");
+	$reorder=getval("reorder","");
 	if ($reorder!="")
 		{
 		$r=explode("-",$reorder);
@@ -57,12 +57,12 @@ if ($allow_reorder)
 $border=true;
 
 $search='!collection'.$colref;
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("order_by","relevance");
-$archive=getvalescaped("archive","",true);
-$restypes=getvalescaped("restypes","");
-$page=getvalescaped("page",1);
-$alternative=getvalescaped("alternative",-1);
+$offset=getval("offset",0,true);
+$order_by=getval("order_by","relevance");
+$archive=getval("archive","",true);
+$restypes=getval("restypes","");
+$page=getval("page",1);
+$alternative=getval("alternative",-1);
 if (strpos($search,"!")!==false) {$restypes="";}
 
 $default_sort_direction="DESC";

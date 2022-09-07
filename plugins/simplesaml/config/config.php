@@ -1,6 +1,6 @@
 <?php
-$simplesaml_version = "1.18.5";
-$simplesaml_check_phpversion = "7.1";
+$simplesaml_version = "1.19.3";
+$simplesaml_check_phpversion = "8.0";
 $simplesaml_site_block=false;
 $simplesaml_login=true;
 $simplesaml_allow_public_shares=true;
@@ -56,6 +56,7 @@ $simplesaml_config_defaults["admin.protectmetadata"] = false;
 $simplesaml_config_defaults["enable.saml20-idp"] = true;
 $simplesaml_config_defaults["datadir"] = $storagedir . "/simplesamldata";
 $simplesaml_config_defaults["timezone"] = null;
+$simplesaml_config_defaults["session.cookie.secure"] = true;
 
 
 

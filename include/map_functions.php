@@ -424,7 +424,7 @@ function leaflet_map_zoom($map_zoom)
     global $resource;
 
     // If no zoom level is set or is non-numeric, define as 0 to enable automatic zoom assignment below.
-    $zoom = trim($map_zoom);
+    $zoom = trim((string) $map_zoom);
     if (!is_int_loose($zoom))
         {
         $zoom = 2;

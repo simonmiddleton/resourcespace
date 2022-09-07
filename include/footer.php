@@ -3,7 +3,7 @@ hook("before_footer_always");
 
 if(getval("loginmodal",""))
 	{
-	$login_url=$baseurl."/login.php?url=".urlencode(getvalescaped("url",""))."&api=".urlencode(getval("api",""))."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""))."&logout=".urlencode(getval("logout",true));
+	$login_url=$baseurl."/login.php?url=".urlencode(getval("url",""))."&api=".urlencode(getval("api",""))."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""))."&logout=".urlencode(getval("logout",true));
 	?><script>
 		jQuery(document).ready(function(){
 			ModalLoad('<?php echo $login_url?>',true);
@@ -406,7 +406,18 @@ if (getval("ajax","") == "")
 			</script>
 			<?php
             } // end omit_collectiondiv_load_pages 
-        ?>    
+        else
+            {
+            ?>
+            <script>
+            jQuery(document).ready(function()
+                {
+                ModalCentre();
+                });
+            </script>
+            <?php
+           }
+        ?>
         <script type="text/javascript">
         var resizeTimer;
         myLayout=jQuery('body').layout(
@@ -533,14 +544,6 @@ if (getval("ajax","") == "")
                 search_show = true;
                 }
             }
-		
-		function toggleResultOptions()
-			{
-			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
-			jQuery("#ResponsiveResultCount").toggle();
-			jQuery("#SearchResultFound").hide();
-			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock.icondisplay").css('display', 'inline-block');
-			}
 		
 		/* Responsive Stylesheet inclusion based upon viewing device */
 		if(document.createStyleSheet)
@@ -691,18 +694,6 @@ if (getval("ajax","") == "")
 				}
 			});
 		jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
-		jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event)
-			{
-			if(jQuery(this).hasClass("RSelectedButton"))
-				{
-				jQuery(this).removeClass("RSelectedButton");
-				}
-			else
-				{
-				jQuery(this).addClass("RSelectedButton");
-				}
-			toggleResultOptions();
-			});
 		
 		if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device())
 			{

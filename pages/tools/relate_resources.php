@@ -1,13 +1,7 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Command line execution only');
-    }
-
 $_SERVER["HTTP_HOST"] = $argv[2];
-
 require dirname(__FILE__) . "/../../include/db.php";
+command_line_only();
 
 set_time_limit(0);
 
@@ -39,7 +33,7 @@ foreach($rlist as $k => $v)
         continue;
         }
 
-    if(sql_value("SELECT count(ref) AS `value` FROM resource WHERE ref = '" . escape_check($v) . "'", 0) != 1)
+    if(ps_value("SELECT count(ref) AS `value` FROM resource WHERE ref = ?",array("i",$v), 0) != 1)
         {
         unset($rlist[$k]);
         }
@@ -52,24 +46,22 @@ for($n = 0; $n < count($rlist); $n++)
         // Don't relate a resource to itself
         if($rlist[$n] != $rlist[$m])
             {
-            $rlist_n_escaped = escape_check($rlist[$n]);
-            $rlist_m_escaped = escape_check($rlist[$m]);
+            $resource_n = intval($rlist[$n]);
+            $resource_m = intval($rlist[$m]);
 
-            $sql = "
-                SELECT count(1) AS `value`
-                  FROM resource_related
-                 WHERE resource = '{$rlist_n_escaped}'
-                   AND related = '{$rlist_m_escaped}'
-                 LIMIT 1";
+            $sql = "SELECT count(1) AS `value`
+                    FROM resource_related
+                    WHERE resource = ?
+                    AND related = ?
+                    LIMIT 1";
 
-            if(sql_value($sql, 0) != 1)
+            if(ps_value($sql,array("i",$resource_n, "i",$resource_m), 0) != 1)
                 {
-                sql_query("
-                    INSERT INTO resource_related (resource, related)
-                         VALUES ('{$rlist_n_escaped}','{$rlist_m_escaped}')");
+                ps_query("INSERT INTO resource_related (resource, related)
+                          VALUES (?,?)",array("i",$resource_n, "i",$resource_m));
                 }
             }
         }
     }
 
-echo "Completed Relating Resources";
+echo "Completed Relating Resources\n";

@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 $newfield = create_resource_type_field("New title",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE,"newtitle",false);
 

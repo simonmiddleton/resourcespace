@@ -74,7 +74,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             $udata=get_user($resdata["created_by"]);
             if ($udata!==false)
                 {
-                $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
+                $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]??"") != "" ? $udata["fullname"] :  $udata["username"]);
                 }
 
             if ($alldata && $file_checksums)
@@ -219,11 +219,16 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
 */
 function generateNodesExport(array $field, $parent = null, $send_headers = false)
     {
-    global $lang;
+    global $lang, $FIXED_LIST_FIELD_TYPES;
 
     if(0 === count($field) || !isset($field['ref']) || !isset($field['type']))
         {
         trigger_error('Field array cannot be empty. generateNodesExport() requires at least "ref" and "type" indexes!');
+        }
+
+    if(!in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
+        {
+        return false;
         }
 
     $return = '';

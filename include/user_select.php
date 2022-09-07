@@ -48,7 +48,7 @@ else
                 <input type="text" readonly="readonly" class="stdwidth" name="<?php echo $autocomplete_user_scope; ?>users" id="<?php echo $autocomplete_user_scope; ?>users" value="<?php
                     if(isset($single_user_select_field_value))
                         {
-                        $found_single_user_select_field_value=sql_value("select username as value from user where ref='{$single_user_select_field_value}'",'');
+                        $found_single_user_select_field_value=ps_value("select username as value from user where ref=?",array("s",$single_user_select_field_value),'');
                         echo $found_single_user_select_field_value;
                         }
 

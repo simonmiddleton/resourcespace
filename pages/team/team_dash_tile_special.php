@@ -8,11 +8,13 @@ include "../../include/dash_functions.php";
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
+<h1><?php echo $lang["specialdashtiles"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["specialdashtiles"],

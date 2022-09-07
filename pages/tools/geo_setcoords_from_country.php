@@ -5,7 +5,7 @@ $coords=build_coords();
 $codes=build_codes();
 
 # Find country field
-$country_field=sql_query("select ref,type from resource_type_field where name='country'", "schema");
+$country_field=ps_query("select ref,type from resource_type_field where name='country'", array(), "schema");
 if (count($country_field) == 0 || $country_field[0]["ref"] == "") 
 	{
     if('cli' == PHP_SAPI)
@@ -18,30 +18,17 @@ else
     $country_ref = $country_field[0]["ref"];
     $country_type = $country_field[0]["type"];
     # Build array of resource+country combinations where the resource has missing latitude or longitude coordinates
-    if (in_array($country_type, $FIXED_LIST_FIELD_TYPES))
-        {
-        # Build array for country metadata which is node based
-        $resource_countries=sql_query("select distinct rn.resource, upper(n.name) name from resource_node rn "
-                                    ."join node n on n.ref=rn.node "
-                                    ."join resource r on r.ref=rn.resource "
-                                    ."where n.resource_type_field='$country_ref' "
-                                    ."  and (r.geo_lat is null or r.geo_lat is null)");
-        }
-    else 
-        {
-        # Build array for country metadata which is text based
-        $resource_countries=sql_query("select distinct rd.resource, upper(trim(rd.value)) name from resource_data rd "
-									."join resource r on r.ref=rd.resource "
-									."where rd.resource_type_field='$country_ref' "
-									."  and (r.geo_lat is null or r.geo_lat is null)");
-        }
+ 
+    # Build array for country metadata which is node based
+    $resource_countries=ps_query("SELECT DISTINCT rn.resource, UPPER(n.name) name
+                                             FROM resource_node rn 
+                                             JOIN node n ON n.ref=rn.node
+                                             JOIN resource r ON r.ref=rn.resource
+                                            WHERE n.resource_type_field = ? 
+                                              AND (r.geo_lat IS NULL OR r.geo_lat IS NULL)",
+                                 ['i', $country_ref]);       
 
-    # Convert two dimension results array to single dimension for sorting 
-    $rc_array=array();
-    foreach($resource_countries as $resource_country) 
-        {
-        $rc_array[$resource_country["resource"]]=$resource_country["name"];
-        }
+    $rc_array=array_column($resource_countries,"name","resource");
 
     # Sort the resource countries into country (value) sequence and then apply the latlong coordinates on change
     asort($rc_array);
@@ -77,13 +64,21 @@ else
     }
         
 function update_country_coords($refs,$latlong) 
-{
-if(count($latlong)==2)
     {
-    sql_query("UPDATE resource SET geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
-    "WHERE ref IN('" . join("','",$refs) . "')");
+    if(count($latlong)==2)
+        {
+
+        $chunks = array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE);   
+
+        foreach($chunks as $chunk)
+            {
+            ps_query(
+                "UPDATE resource SET geo_lat= ?, geo_long= ? WHERE ref IN(". ps_param_insert(count($chunk)) .")",
+                array_merge(['d', $latlong[0], 'd', $latlong[1]], ps_param_fill($chunk, 'i'))
+                );
+            }
+        }
     }
-}
 
 function fetch_country_coords($country_name,$codes,$coords)
 {

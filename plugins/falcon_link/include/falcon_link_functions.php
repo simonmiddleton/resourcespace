@@ -146,7 +146,7 @@ function falcon_link_publish($resources,$template_text,$template_tags)
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json;charset=utf-8"));
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS,$falcon_post_params);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0 );
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 1 );
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2 );
         
@@ -236,7 +236,7 @@ function falcon_link_archive($resources)
         curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json;charset=utf-8"));
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS,$falcon_post_params);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0 );
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 1 );
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2 );
         

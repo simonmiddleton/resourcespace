@@ -16,7 +16,7 @@ function clear_annotate_temp($ref,$annotateid)
 function get_annotate_file_path($ref,$getfilepath,$extension)
     {
     global $username, $scramble_key, $baseurl, $annotateid;
-    $annotateid=getvalescaped("annotateid",$annotateid); //or if sent through a request
+    $annotateid=getval("annotateid",$annotateid); //or if sent through a request
     if($getfilepath)
         {
         $path = get_temp_dir(false,'') . "/annotate_" . $ref . "_" . md5($username . $annotateid . $scramble_key) . "." . $extension;
@@ -105,6 +105,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		}
 		$resources=$resources_modified;
 	}
+	$size = mb_strtolower($size);
 	if (count($resources)==0){echo "nothing"; exit();}
 	if ($size == "a4") {$width=210/25.4;$height=297/25.4;} // convert to inches
 	if ($size == "a3") {$width=297/25.4;$height=420/25.4;}
@@ -180,7 +181,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 			unset($notes);
 			if ($resources[$n]['annotation_count']!=0)
 				{
-				$notes=sql_query("select * from annotate_notes where ref='$ref' and page='$page'");
+				$notes=ps_query("select ref,top_pos,left_pos,width,height,preview_width,preview_height,note,note_id,user,page from annotate_notes where ref=? and page=?",array("i",$ref,"i",$page));
 				$notepages=1; // Normally notes will all fit on one page, but may not
 				foreach ($notes as $note)
 					{

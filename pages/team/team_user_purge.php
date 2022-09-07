@@ -15,9 +15,9 @@ if ($months!="")
 	if (!is_numeric($months) || $months<0) {$error=$lang["pleaseenteravalidnumber"];}
 	else
 		{
-		$condition="(created IS NULL OR created<date_sub(now(), interval '" . escape_check($months) . "' month)) AND 
-						  (last_active IS NULL OR last_active<date_sub(now(), interval $months month))";
-		$count=sql_value("SELECT count(*) value FROM user WHERE $condition",0);
+		$condition="(created IS NULL OR created<date_sub(now(), interval {$months} month)) AND 
+						  (last_active IS NULL OR last_active<date_sub(now(), interval {$months} month))";
+		$count=ps_value("SELECT count(*) value FROM user WHERE $condition", [], 0);
 		}
 	}
 	
@@ -25,11 +25,11 @@ if (isset($condition) && getval("purge2","")!="" && enforcePostRequest(false))
 	{
     if($user_purge_disable)
         {
-        sql_query("UPDATE user SET approved=2 WHERE $condition AND approved=1");    
+        ps_query("UPDATE user SET approved=2 WHERE $condition AND approved=1");    
         }
     else
         {
-        sql_query("DELETE FROM user WHERE $condition");
+        ps_query("DELETE FROM user WHERE $condition");
         }
 	redirect("pages/team/team_user.php");
 	}
@@ -44,7 +44,8 @@ include "../../include/header.php";
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["manageusers"],
@@ -77,7 +78,7 @@ if(isset($count) && $count==0)
 <input type="hidden" name="months" value="<?php echo $months ?>">
 <input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo $lang["purgeusers"]?>&nbsp;&nbsp;" />
 </p>
-<?php $users=sql_query("select * from user where $condition"); ?>
+<?php $users=ps_query("select " . columns_in("user") . " from user where $condition"); ?>
 <table class="InfoTable">
 	<tr>
 		<td><strong><?php echo $lang["username"] ?></strong></td>

@@ -131,13 +131,8 @@ function ajax_unauthorized()
 * 
 * @return array  Returns a message
 */
-function ajax_build_message($msg)
+function ajax_build_message(string $msg)
     {
-    if(!is_string($msg))
-        {
-        trigger_error("\$msg variable must be string type!");
-        }
-
     $msg = trim($msg);
     if($msg == "")
         {

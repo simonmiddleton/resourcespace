@@ -1,12 +1,15 @@
 <?php
-if(!file_exists(__DIR__ . '/../lib/vimeo.php-1.2.3/autoload.php'))
+if(!file_exists(__DIR__ . '/../lib/vimeo.php/autoload.php'))
     {
     exit($lang['vimeo_publish_no_vimeoAPI_files']);
     }
-require_once(__DIR__ . '/../lib/vimeo.php-1.2.3/autoload.php');
+require_once(__DIR__ . '/../lib/vimeo.php/autoload.php');
+require_once(__DIR__ . '/../../../lib/tus/vendor/autoload.php');
 
 use Vimeo\Vimeo;
 use Vimeo\Exceptions\VimeoUploadException;
+// Use same file cache config as main TUS config
+\TusPhp\Config::set(__DIR__ . '/../../../include/tusconfig.php');
 
 function init_vimeo_api($client_id, $client_secret, $redirect_uri)
     {
@@ -33,7 +36,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
     
     if($vimeo_publish_allow_user_accounts)
         {
-        $vimeo_details = sql_query("SELECT vimeo_access_token, vimeo_state FROM user WHERE `ref` = '{$userref}'");
+        $vimeo_details = ps_query("SELECT vimeo_access_token, vimeo_state FROM user WHERE `ref` = ?", array("i", $userref));
         $access_token  = isset($vimeo_details[0]['vimeo_access_token']) ? $vimeo_details[0]['vimeo_access_token'] : '';
         $state         = isset($vimeo_details[0]['vimeo_state']) ? $vimeo_details[0]['vimeo_state'] : '';
         }
@@ -56,7 +59,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
 
         if($vimeo_publish_allow_user_accounts)
             {
-            sql_query("UPDATE `user` SET `vimeo_state` = '{$state}' WHERE `ref` = '{$userref}'");
+            ps_query("UPDATE `user` SET `vimeo_state` = ? WHERE `ref` = ?", array("s", $state, "i", $userref));
             }
         else
             {
@@ -87,7 +90,7 @@ function get_access_token($client_id, $client_secret, $redirect_uri)
         $access_token = $token['body']['access_token'];
         if($vimeo_publish_allow_user_accounts)
             {
-            sql_query("UPDATE `user` SET `vimeo_access_token` = '{$access_token}' WHERE `ref` = '{$userref}'");
+            ps_query("UPDATE `user` SET `vimeo_access_token` = ? WHERE `ref` = ?", array("s", $access_token, "i", $userref));
             }
         elseif(checkperm('a'))
             {
@@ -107,7 +110,7 @@ function delete_vimeo_token($user_ref=0)
     global $userref, $vimeo_publish_allow_user_accounts;
     if($userref == $user_ref)
         {
-        sql_query("UPDATE user SET vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = '{$user_ref}'");
+        ps_query("UPDATE user SET vimeo_access_token = NULL, vimeo_state = NULL WHERE ref = ?", array("i", $user_ref));
         }
     elseif($user_ref==0 && checkperm('a'))
         {
@@ -145,7 +148,6 @@ function get_vimeo_user($client_id, $client_secret, $access_token, array &$vimeo
 function vimeo_upload($client_id, $client_secret, $access_token, $ref, $file_path, $rs_vimeo_link_field, &$new_video_id, &$error)
     {
     $vimeo_lib = new Vimeo($client_id, $client_secret, $access_token);
-
     try
         {
         //  Send this to the API library.

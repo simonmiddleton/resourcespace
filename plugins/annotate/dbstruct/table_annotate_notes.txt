@@ -9,3 +9,4 @@ note,text,YES,,,
 note_id,int(11),NO,PRI,,auto_increment
 user,int(11),YES,,,
 page,int(5),YES,,,
+node,int(11),NO,,0,

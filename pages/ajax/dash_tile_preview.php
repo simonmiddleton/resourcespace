@@ -11,8 +11,8 @@ include "../../include/dash_functions.php";
 
 global $userref,$baseurl_short;
 
-$tile_type=getvalescaped("tltype","");
-$tile_style=getvalescaped("tlstyle","");
+$tile_type=getval("tltype","");
+$tile_style=getval("tlstyle","");
 $promoted_image = getval('promimg', '');
 
 $tile                   = array();
@@ -21,7 +21,7 @@ $tile['link']           = getval('tllink', '');
 $tile['txt']            = getval('tltxt', '');
 $tile['title']          = getval('tltitle', '');
 $tile['resource_count'] = getval('tlrcount', '');
-$tile['tlsize']         = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+$tile['tlsize']         = ('double' === getval('tlsize', '') ? 'double' : '');
 
 // Simulate URL so we can preview based on requested params
 $tile['url'] = generateURL(
@@ -34,8 +34,8 @@ $tile['url'] = generateURL(
     ]
 );
 $tile_id="previewdashtile";
-$tile_width = getvalescaped("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
-$tile_height = getvalescaped("tlheight",180,true); 
+$tile_width = getval("tlwidth",($tile['tlsize']==='double' ? 515 : 250),true);
+$tile_height = getval("tlheight",180,true); 
 if(!is_numeric($tile_width) || !is_numeric($tile_height) || $tile_width <= 0 || $tile_height <= 0){exit($lang["error-missingtileheightorwidth"]);}
 include "../../include/dash_tile_generation.php";
 tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_height);

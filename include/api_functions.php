@@ -51,12 +51,12 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey")
 
     # Calculate the expected signature and check it matches
     $expected=hash("sha256",$userkey . $querystring);
-    if ($expected==$sign)
+    if ($expected === $sign)
 	{
 	return true;
 	}
     # Also try matching against the username - allows remote API use without knowing the user ID, e.g. in the event of managing multiple systems each with a common username but different ID.
-    if (hash("sha256",get_api_key($username) . $querystring)==$sign)
+    if (hash("sha256",get_api_key($username) . $querystring) === $sign)
 	{
 	return true;
 	} 
@@ -144,7 +144,7 @@ function execute_api_call($query,$pretty=false)
         else
             {
              // Set as empty
-            debug ("API: " . $param_name . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
+            debug ("API: {$param_name} -  setting empty value");
             $setparams[$n] = "";    
             }
         $n++;
@@ -394,7 +394,7 @@ function get_session_api_key($user)
     {
     global $scramble_key;
     $private_key = get_api_key($user);
-    $usersession = sql_value("SELECT session value FROM user where ref ='" . $user . "'", "");
+    $usersession = ps_value("SELECT session value FROM user where ref = ?", array("i",$user), "");
     return hash_hmac("sha256", "{$usersession}{$private_key}", $scramble_key);
     }
 

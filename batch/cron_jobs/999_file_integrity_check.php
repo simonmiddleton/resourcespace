@@ -11,7 +11,7 @@ if (is_process_lock("file_integrity_check"))
 set_process_lock("file_integrity_check");
 
 // Get resources and checksums to validate
-$resources      = sql_query("SELECT ref, archive, file_extension, file_checksum, last_verified, integrity_fail FROM resource WHERE ref>0 AND (datediff(now(),last_verified)>1 OR last_verified IS NULL) " . ((count($file_integrity_ignore_states) > 0) ? " AND archive NOT IN ('" . implode("','",$file_integrity_ignore_states) . "')" : "") . " ORDER BY last_verified ASC");
+$resources      = ps_query("SELECT ref, archive, file_extension, file_checksum, last_verified, integrity_fail FROM resource WHERE ref > 0 AND (datediff(now(), last_verified) > 1 OR last_verified IS NULL) " . ((count($file_integrity_ignore_states) > 0) ? " AND archive NOT IN (" . ps_param_insert(count($file_integrity_ignore_states)) . ")" : "") . " ORDER BY last_verified ASC", ps_param_fill($file_integrity_ignore_states, "i"));
 $checkfailed    = array();
 $validtime      = true;
 
@@ -61,7 +61,7 @@ foreach($resources as $resource)
                 $checksum = get_checksum($path);
                 if(trim($resource['file_checksum']) != '' && $checksum == $resource['file_checksum'])
                     {
-                    sql_query("UPDATE resource SET integrity_fail=0, last_verified=now() WHERE ref='" . $resource['ref'] . "'");
+                    ps_query("UPDATE resource SET integrity_fail = 0, last_verified = now() WHERE ref = ?", array("i", $resource['ref']));
                     }
                 elseif(!in_array($resource["ref"],$file_integrity_ignore_states))
                     {
@@ -76,7 +76,7 @@ foreach($resources as $resource)
             else
                 {
                 // No checksum functionality but file is present - just ensure file updated                
-                sql_query("UPDATE resource SET integrity_fail = 0, last_verified=now() WHERE ref='" . $resource['ref'] . "'");
+                ps_query("UPDATE resource SET integrity_fail = 0, last_verified = now() WHERE ref = ?", array("i", $resource['ref']));
                 }
             }
         else
@@ -96,7 +96,7 @@ foreach($resources as $resource)
     
 if(count($checkfailed) > 0)
     {
-    sql_query("UPDATE resource SET integrity_fail = 1 WHERE ref in('" . implode("','",$checkfailed) . "')");
+    ps_query("UPDATE resource SET integrity_fail = 1 WHERE ref in (" . ps_param_insert(count($checkfailed)) . ")", ps_param_fill($checkfailed, "i"));
 
     $last_integrity_check_notify = get_sysvar('last_integrity_check_notify', '1970-01-01');
 

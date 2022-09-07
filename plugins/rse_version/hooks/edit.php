@@ -1,11 +1,14 @@
 <?php
 
-function HookRse_versionEditEdit_all_extra_modes()
+function HookRse_versionEditEdit_all_extra_modes($field)
     {
-    global $lang;
-    ?>
-    <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
-    <?php
+    global $lang, $FIXED_LIST_FIELD_TYPES;
+    if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        ?>
+        <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
+        <?php
+        }
     }
     
     #edit_all_mode_js
@@ -57,20 +60,24 @@ function HookRse_versionEditEdit_all_after_findreplace($field,$n)
     }
     
     
-function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field)
+function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field,$existing)
     {
     # Process the batch revert action - hooks in to the save operation (save_resource_data_multi())
-    				
+
     # Remove text/option(s) mode?
     if (getval("modeselect_" . $field["ref"],"")=="Revert")
-            {
-            $revert_date=getvalescaped("revert_" . $field["ref"],"");
-            
-            # Find the value of this field as of this date and time in the resource log.
-            $value=sql_value("select previous_value value from resource_log where resource='$ref' and resource_type_field='" . $field["ref"] . "' and (type='e' or type='m') and date>'$revert_date' and previous_value is not null order by date limit 1",-1);
-           
-            if ($value!=-1) {return $value;}
-            }
+        {
+        $revert_date=getval("revert_" . $field["ref"],"");
+        
+        # Find the value of this field as of this date and time in the resource log.
+        $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);
+        $value=ps_value("SELECT previous_value value from resource_log 
+            where resource=? and resource_type_field=? 
+            and (type='e' or type='m') and date>? and previous_value is not null order by date limit 1",$parameters,-1);
+        if ($value!=-1) {return $value;}
+        // No log entries for this field, don't change
+        return $existing;
+        }
     return false;
     }
 
@@ -158,19 +165,12 @@ function HookRse_versionEditSave_resource_data_multi_set_archive_state($resource
         return $old_archive;
         }
 
-    $archive_status_at_date = sql_value(sprintf("
-              SELECT previous_value as `value`
+    $parameters=array("i",$resource_ref, "s",$revert_status_to_date);
+    $archive_status_at_date = ps_value("SELECT previous_value as `value`
                 FROM resource_log
-               WHERE resource = '%s'
-                 AND `type` = 's'
-                 AND previous_value IS NOT NULL
-                 AND `date` >= '%s'
+               WHERE resource = ? AND `type` = 's' AND previous_value IS NOT NULL AND `date` >= ?
             ORDER BY ref ASC
-            LIMIT 1;
-        ",
-        escape_check($resource_ref),
-        escape_check($revert_status_to_date)
-    ), null);
+            LIMIT 1;",$parameters,NULL);
 
     if(!is_null($archive_status_at_date) && trim($archive_status_at_date) !== "" && is_numeric($archive_status_at_date))
         {

@@ -6,34 +6,7 @@ include "../../../include/authenticate.php";
 # Check access
 if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page without admin access
 
-function rrmdir($dir)
-    { 
-    global $homeanim_folder,$storagedir;
-    $slideshow_dir = substr($homeanim_folder,strrpos($homeanim_folder,"/")+1);
-    // Recursively remove a folder. Slideshow and system folders are retained.
-    if (is_dir($dir))
-        { 
-        $objects = scandir($dir);
-        foreach ($objects as $object)
-            { 
-            if ($object != "." && $object != "..")
-                { 
-                if (is_dir($dir. "/" .$object) && !is_link($dir."/".$object))
-                    {
-                    rrmdir($dir. "/" .$object);
-                    }
-                else
-                    {
-                    unlink($dir. "/" .$object); 
-                    }
-                } 
-            }
-        if ($dir != $storagedir . "/system" && $dir != $storagedir . "/system/".$slideshow_dir)
-            {
-            debug("system_reset: remove directory " . $dir);
-            }
-        }
-    }
+
 
 if (getval("submitted","")!="")
 	{
@@ -46,24 +19,22 @@ if (getval("submitted","")!="")
         {
         if ($folder!="." && $folder!="..")
             {
-            rrmdir($storagedir . "/" . $folder);
+            // Recursively delete, ignoring storagedir and slideshow folders.
+            $slideshow_dir = substr($homeanim_folder,strrpos($homeanim_folder,"/")+1);
+            rcRmdir($storagedir . "/" . $folder,array($storagedir . "/system", $storagedir . "/system/" . $slideshow_dir));
             }
         }
 
-    // It's unlikely we have permission to drop the whole DB so we drop the tables one by one. Omit user so a default user can be created.
-    $tables=sql_query("show tables");
+    // It's unlikely we have permission to drop the whole DB so we drop the tables one by one. Omit user and usergroup table so user is still logged in.
+    $tables=ps_query("show tables");
     foreach ($tables as $table)
         {
         $table=(array_values($table)[0]); # Get table name
-        if ($table!="user")
+        if ($table!="user" && $table!="usergroup")
             {
-            sql_query("drop table " . $table,false,-1,false);
+            ps_query("drop table " . $table,array(),false,-1,false);
             }
         }
-    
-    // Create a default user 
-    sql_query("delete from user",false,-1,false);
-    sql_query("insert into user (username,password,usergroup) values ('admin','admin',3);",false,-1,false);
 
     // Back to login screen
     sleep (5); // Wait for any background DB creation to finish.

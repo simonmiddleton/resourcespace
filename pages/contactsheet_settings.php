@@ -3,11 +3,11 @@ include '../include/db.php';
 include '../include/authenticate.php'; 
 include_once '../include/pdf_functions.php';
 
-$collection        	= getvalescaped('ref', '', true);
+$collection        	= getval('ref', '', true);
 $collectiondata    	= get_collection($collection);
-$ajax              	= ('true' == getvalescaped('ajax', '') ? true : false);
-$sheetstyle        	= getvalescaped('sheetstyle', 'thumbnails');
-$field_value_limit 	= getvalescaped('field_value_limit', 0);
+$ajax              	= ('true' == getval('ajax', '') ? true : false);
+$sheetstyle        	= getval('sheetstyle', 'thumbnails');
+$field_value_limit 	= getval('field_value_limit', 0);
 $filename_uid      	= generateUserFilenameUID($userref);
 $error				= getval("error","");
 
@@ -20,7 +20,7 @@ $templates = get_pdf_templates("contact_sheet");
 
 if($contactsheet_use_field_templates)
 	{
-	$field_template = getvalescaped('field_template', 0, true);
+	$field_template = getval('field_template', 0, true);
 	$sheetstyle_fields = $contactsheet_field_template[$field_template]['fields'];
 	}
 else
@@ -152,7 +152,7 @@ if(!collection_readable($collection))
 
                         updateAvailableContactSheetFields('thumbnails');
                 		}
-                	jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');	
+                    jQuery().rsContactSheet('revert','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');  
                 		">
                     <?php
                     foreach($templates as $template)
@@ -479,7 +479,6 @@ if($contactsheet_sorting)
             </div>
 
             <div class="QuestionSubmit">
-
                 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" />
             </div>
         </div> <!-- end of small BasicBox -->
@@ -502,6 +501,9 @@ if($contact_sheet_previews == true)
     }
     ?>
 </div>
-<script type="text/javascript">jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');</script>
+<script>
+    jQuery().setContactSheetCSRFTokenIdentifier('<?php echo $GLOBALS['CSRF_token_identifier']; ?>');
+    jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');
+</script>
 <?php
 include '../include/footer.php';

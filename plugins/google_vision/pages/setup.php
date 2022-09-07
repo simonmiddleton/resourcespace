@@ -17,10 +17,12 @@ $page_def[]= config_add_single_ftype_select("google_vision_label_field", $lang["
 $page_def[]= config_add_single_ftype_select("google_vision_landmarks_field", $lang["google_vision_landmarks_field"],300,false,$TEXT_FIELD_TYPES); 
 $page_def[]= config_add_single_ftype_select("google_vision_text_field", $lang["google_vision_text_field"],300,false,$TEXT_FIELD_TYPES); 
 
+$page_def[]= config_add_single_ftype_select("google_vision_logo_field", $lang["google_vision_logo_field"],300,false,$FIXED_LIST_FIELD_TYPES); 
+
 
 $page_def[] = config_add_multi_rtype_select("google_vision_restypes", $lang["google_vision_restypes"]);
 
-$page_def[] = config_add_multi_select("google_vision_features", $lang["google_vision_features"], array("LABEL_DETECTION","LANDMARK_DETECTION","TEXT_DETECTION"), false);
+$page_def[] = config_add_multi_select("google_vision_features", $lang["google_vision_features"], array("LABEL_DETECTION","LANDMARK_DETECTION","TEXT_DETECTION", "LOGO_DETECTION"), false);
 
 $page_def[] = config_add_boolean_select("google_vision_autotitle", $lang["google_vision_autotitle"],'',300);
 

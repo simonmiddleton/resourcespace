@@ -4,6 +4,5 @@ name,varchar(200),Name of text string
 text,text,The text itself
 ref,int(11),
 language,varchar(10),Language code of text e.g. 'en', 'no','jp'
-ignore_me,int(11),Not used
 specific_to_group,int(11),Id of usergroup to use text for
 custom,int(11),Custom text (not a core text string)?

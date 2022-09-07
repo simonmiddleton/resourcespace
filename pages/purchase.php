@@ -45,6 +45,10 @@ if (getval("submit","")=="")
 		?><tr><?php
 		$sizes=get_image_sizes($resource["ref"]);
 		$title=get_data_by_field($resource["ref"],$view_title_field);
+        if(trim($title)=="")
+            {
+            $title = $lang["resourceid"] . "&nbsp;" . $resource["ref"];
+            }
 		?><td><?php echo $title?></td><td>
 		<?php
 		if (count($sizes)==0)

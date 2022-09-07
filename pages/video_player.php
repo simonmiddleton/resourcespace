@@ -5,9 +5,6 @@ global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_vie
 $video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
 $video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource;
 
-$ref_escaped                               = escape_check($ref);
-$video_player_thumbs_view_alt_name_escaped = escape_check($video_player_thumbs_view_alt_name);
-
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
 $alternative = is_null($alternative) ? -1 : $alternative;
@@ -21,13 +18,12 @@ if(
     {
     $use_video_alts = true;
 
-    $alternative = sql_value("
+    $alternative = ps_value("
             SELECT ref AS `value`
               FROM resource_alt_files
-             WHERE resource = '{$ref_escaped}'
-               AND name = '{$video_player_thumbs_view_alt_name_escaped}'
-        ",
-        -1);
+             WHERE resource = ?
+               AND name = ?
+        ",array("i",$ref,"s",$video_player_thumbs_view_alt_name),-1);
     }
 
 //Create array of video sources
@@ -122,7 +118,8 @@ if(isset($videojs_resolution_selection))
 			$video_preview_sources[0]["label"]=isset($videojs_resolution_selection[$s]['label'])?$videojs_resolution_selection[$s]['label']:"";
 			}
 		else{
-			$alt_data=sql_query("select * from resource_alt_files where resource='" . escape_check($ref) . "' and name='{$videojs_resolution_selection[$s]['name']}'");
+			$alt_data=ps_query("select " . columns_in("resource_alt_files") . " from resource_alt_files where resource=? and name=?",
+		array("i",$ref,"s",$videojs_resolution_selection[$s]['name']));
 			if(!empty($alt_data))
 				{
 				$alt_data = $alt_data[0];

@@ -9,7 +9,7 @@ include "../include/db.php";
 include "../include/authenticate.php";
 include "../include/request_functions.php";
 
-$offset=getvalescaped("offset",0,true);
+$offset=getval("offset",0,true);
 
 include "../include/header.php";
 ?>

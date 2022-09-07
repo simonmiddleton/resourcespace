@@ -10,8 +10,8 @@ if(!function_exists("get_api_key"))
 include(dirname(__FILE__)."/rssfeed.php");
 
 # Get parameters
-$user=base64_decode(getvalescaped("user",""));
-$sign=getvalescaped("sign","");
+$user=base64_decode(getval("user",""));
+$sign=getval("sign","");
 
 # Remove the sign and authmode parameters as these would not have been present when signed on the client.
 $strip_params = array("sign","authmode");
@@ -32,45 +32,43 @@ if (!check_api_key($user,$query,$sign))
 	
 function xmlentities($text)
 	{
-	return htmlentities($text);
+	return htmlentities($text, ENT_XML1);
 	}
 
 # Log them in.
 setup_user(get_user(get_user_by_username($user)));
 	
-$search=getvalescaped("search","");
-$starsearch=getvalescaped("starsearch","");
-
+$search=getval("search","");
 
 # Append extra search parameters
-$country=getvalescaped("country","");
+$country=getval("country","");
 if ($country!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "country:" . $country;}
-$year=getvalescaped("year","");
+$year=getval("year","");
 if ($year!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "year:" . $year;}
-$month=getvalescaped("month","");
+$month=getval("month","");
 if ($month!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "month:" . $month;}
-$day=getvalescaped("day","");
+$day=getval("day","");
 if ($day!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "day:" . $day;}
 
 
 if (strpos($search,"!")===false) {setcookie("search",$search,0,'','',false,true);} # store the search in a cookie if not a special search
-$offset=getvalescaped("offset",0,true);if (strpos($search,"!")===false) {setcookie("saved_offset",$offset,0,'','',false,true);}
+$offset=getval("offset",0,true);if (strpos($search,"!")===false) {setcookie("saved_offset",$offset,0,'','',false,true);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 ######## CAMILLO
-#$order_by=getvalescaped("order_by","relevance");if (strpos($search,"!")===false) {setcookie("saved_order_by",$order_by);}
-$order_by=getvalescaped("order_by","date");if (strpos($search,"!")===false) {setcookie("saved_order_by",$order_by,0,'','',false,true);}
+#$order_by=getval("order_by","relevance");if (strpos($search,"!")===false) {setcookie("saved_order_by",$order_by);}
+$order_by=getval("order_by","date");if (strpos($search,"!")===false) {setcookie("saved_order_by",$order_by,0,'','',false,true);}
 ######## CAMILLO
 
-$display=getvalescaped("display","thumbs");setcookie("display",$display,0,'','',false,true);
-$per_page=getvalescaped("per_page",12);setcookie("per_page",$per_page,0,'','',false,true);
-$archive=getvalescaped("archive",0);if (strpos($search,"!")===false) {setcookie("saved_archive",$archive,0,'','',false,true);}
+$display=getval("display","thumbs");setcookie("display",$display,0,'','',false,true);
+$per_page=getval("per_page",12);setcookie("per_page",$per_page,0,'','',false,true);
+$archive=getval("archive",0);if (strpos($search,"!")===false) {setcookie("saved_archive",$archive,0,'','',false,true);}
 $jumpcount=0;
 
 # fetch resource types from query string and generate a resource types cookie
 if (getval("resetrestypes","")=="")
 	{
-	$restypes=getvalescaped("restypes","");
+	$restypes=getval("restypes","");
 	}
 else
 	{
@@ -88,25 +86,21 @@ else
 # If returning to an old search, restore the page/order by
 if (!array_key_exists("search",$_GET))
 	{
-	$offset=getvalescaped("saved_offset",0);setcookie("saved_offset",$offset,0,'','',false,true);
-	$order_by=getvalescaped("saved_order_by","relevance");setcookie("saved_order_by",$order_by,0,'','',false,true);
-	$archive=getvalescaped("saved_archive",0);setcookie("saved_archive",$archive,0,'','',false,true);
+	$offset=getval("saved_offset",0);setcookie("saved_offset",$offset,0,'','',false,true);
+	$order_by=getval("saved_order_by","relevance");setcookie("saved_order_by",$order_by,0,'','',false,true);
+	$archive=getval("saved_archive",0);setcookie("saved_archive",$archive,0,'','',false,true);
 	}
 
 $refs = array();
-#echo "search=$search";
 
 # Special query? Ignore restypes
 if (strpos($search,"!")!==false) {$restypes = "";}
 
-# Story only? Display as list
-#if ($restypes=="2") {$display = "list";}
-
-$result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, $starsearch);
+$result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, DEPRECATED_STARSEARCH);
 
 
 # Create a title for the feed
-$searchstring = "search=$search&restypes=$restypes&archive=$archive&starsearch=$starsearch";
+$searchstring = "search=$search&restypes=$restypes&archive=$archive";
 if (substr($search,0,11)=="!collection"){$collection=substr($search,11);$collection=explode(" ",$collection);$collection=$collection[0];$collectiondata=get_collection($collection);}
 $feed_title = xmlentities($applicationname ." - " .get_search_title($searchstring));
 
@@ -154,10 +148,6 @@ for ($n=0;$n<count($result);$n++)
 	$title=xmlentities(i18n_get_translated($result[$n]["field".$view_title_field]));
 	$creation_date=$result[$n]["creation_date"];
 	
-	//echo $time = time();//date("r");
-	
-	// 2007-12-12 23:32:43
-	// 0123456789012345678
     $year = (int)substr($creation_date, 0, 4);
     $month = (int)substr($creation_date, 5, 2);
     $day = (int)substr($creation_date, 8, 2);
@@ -190,7 +180,7 @@ for ($n=0;$n<count($result);$n++)
 						{
 						$plugin="../../value_filter_" . $df[$x]['name'] . ".php";
 						if ($df[$x]['value_filter']!=""){
-							eval($df[$x]['value_filter']);
+							eval(eval_check_signed($df[$x]['value_filter']));
 						}
 						else if (file_exists($plugin)) {include $plugin;}
 						else if ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 

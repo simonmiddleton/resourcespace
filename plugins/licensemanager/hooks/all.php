@@ -11,9 +11,9 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
     // Add the options to link a license and unlink the license
     global $search,$lang,$k,$baseurl_short;
 
-    if($k != '' || !checkperm("a"))
+    if($k != '' || !(checkperm("a") || checkperm("lm")))
         {
-        return false;
+        return array();
         }
     
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()

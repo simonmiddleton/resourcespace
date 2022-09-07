@@ -3,11 +3,11 @@ include "../include/db.php";
 
 include "../include/authenticate.php";
 
-$logref=getvalescaped("ref","",true);
-$k=getvalescaped("k","");
+$logref=getval("ref","",true);
+$k=getval("k","");
 $modal = (getval("modal", "") == "true");
 
-$log_entry = get_resource_log(NULL,-1,array("r.ref" => $logref));
+$log_entry = get_resource_log(NULL,1,array("r.ref" => $logref))['data'];
 if(!is_array($log_entry) || count($log_entry)==0)
     {
     exit($lang['error_invalid_input']);    
@@ -180,6 +180,8 @@ if(!checkperm('v') && !$bypass_permission_check)
                             case "ref":
                             case "purchase_size":  // Already converted to 'size'
                             case "title": // Used to store resource_type_field name
+                            case "revert_enabled": 
+                            case "previous_value": 
                                 continue 2;
                             break;
                                 
@@ -189,9 +191,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                             }
 
                         echo "<tr><td width='50%'>";
-                        echo htmlspecialchars($name);
+                        echo htmlspecialchars((string) $name);
                         echo "</td><td width='50%'>";
-                        echo $cleanval ? htmlspecialchars($value) : $value;
+                        echo $cleanval ? htmlspecialchars((string) $value) : $value;
                         echo "</td></tr>";
                         }
                     }

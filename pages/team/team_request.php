@@ -13,16 +13,17 @@ include "../../include/authenticate.php";if (!checkperm("R")) {exit ("Permission
 include "../../include/request_functions.php";
 include "../../include/header.php";
 
-$offset=getvalescaped("offset",0,true);
+$offset=getval("offset",0,true);
 ?>
 
 <div class="BasicsBox"> 
-
+<h1><?php echo $lang["managerequestsorders"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["managerequestsorders"],
@@ -81,7 +82,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 	<td><?php echo $lang["resourcerequesttype" . $requests[$n]["request_mode"]] ?></td>
 	<td><?php echo $requests[$n]["assigned_to_username"] ?></td>
 	<td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]] ?></td>
-	<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return <?php echo ($modal_default?"Modal":"CentralSpace") ?>Load(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a></a></div></td>
+	<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return <?php echo ($modal_default?"Modal":"CentralSpace") ?>Load(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a></a></div></td>
 <?php endif; ?>
 	</tr>
 	<?php

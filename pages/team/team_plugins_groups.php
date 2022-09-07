@@ -10,7 +10,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
 
-$plugin=getvalescaped("plugin","");
+$plugin=getval("plugin","");
 
 $plugin_yaml_path = get_plugin_path($plugin) . "/" . $plugin . ".yaml";
 $py = get_plugin_yaml($plugin_yaml_path, false);  
@@ -22,7 +22,7 @@ if($py['disable_group_select'])
     }
 
 # Fetch current access level
-$access=sql_value("select enabled_groups value from plugins where name='$plugin'","");
+$access = (string) ps_value("select enabled_groups value from plugins where name= ?",['s', $plugin],"");
 
 # Fetch user groups
 $groups=get_usergroups();
@@ -44,7 +44,7 @@ if (getval("save", "") != "" && enforcePostRequest(false))
 		}
 	# Update database
 	log_activity(null,LOG_CODE_EDITED,$access,'plugins','enabled_groups',$plugin,'name');
-	sql_query("update plugins set enabled_groups='$access' where name='$plugin'","");
+	ps_query("update plugins set enabled_groups= ? where name= ?", ['s', $access, 's', $plugin],"");
 	clear_query_cache("plugins");
 	redirect("pages/team/team_plugins.php");
 	}
@@ -53,11 +53,13 @@ include "../../include/header.php";
 $s=explode(",",$access);
 ?>
 <div class="BasicsBox">
+<h1><?php echo $lang["groupaccess"] . ': ' . htmlspecialchars($plugin); ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["pluginmanager"],
@@ -82,7 +84,7 @@ renderBreadcrumbs($links_trail);
 <?php } ?>
 </p>
 
-<input type=hidden name="plugin" value="<?php echo getvalescaped('plugin','')?>"/>
+<input type=hidden name="plugin" value="<?php echo getval('plugin','')?>"/>
   
 <input name="save" type="submit" value="<?php echo $lang["save"] ?>">
 </form>

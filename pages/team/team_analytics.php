@@ -7,15 +7,15 @@ include '../../include/authenticate.php';
 
 global $baseurl;
 
-$offset=getvalescaped("offset",0,true);
+$offset=getval("offset",0,true);
 if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when posting
-$findtext=getvalescaped("findtext","");
+$findtext=getval("findtext","");
 
-$delete=getvalescaped("delete","");
+$delete=getval("delete","");
 if ($delete != "" && enforcePostRequest(false))
 	{
 	# Delete report
-	sql_query("delete from user_report where ref='$delete' and user='$userref'");
+	ps_query("delete from user_report where ref= ? and user= ?", ['i', $delete, 'i', $userref]);
 	}
 
 include dirname(__FILE__)."/../../include/header.php";
@@ -23,15 +23,16 @@ include dirname(__FILE__)."/../../include/header.php";
 ?>
 
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_analytics"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["rse_analytics"],
-        'href'  => $baseurl_short . "pages/team/team_analytics.php",
 		'help'  => 'resourceadmin/analytics'
     )
 );
@@ -39,11 +40,16 @@ $links_trail = array(
 renderBreadcrumbs($links_trail);
 
 $search_sql="";
-if ($findtext!="") {$search_sql="and name like '%" . $findtext . "%'";}
-$reports=sql_query("select * from user_report where user='$userref' $search_sql order by ref");
+$params = ['i', $userref];
+if ($findtext!="") 
+    {
+    $search_sql="and name like CONCAT('%', ? ,'%')";
+    $params[] = 's'; $params[] = $findtext;
+    }
+$reports=ps_query("select " . columns_in("user_report") . " from user_report where user= ? $search_sql order by ref", $params);
 
 # pager
-$per_page=15;
+$per_page = $default_perpage_list;
 $results=count($reports);
 $totalpages=ceil($results/$per_page);
 $curpage=floor($offset/$per_page)+1;
@@ -77,8 +83,8 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
 	<td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
 	<td>
 	<div class="ListTools">
-		<a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><?php   echo LINK_CARET .$lang["action-edit"]?> </a>
-		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><?php echo LINK_CARET . $lang["action-delete"]?></a>
+		<a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
 		</div>
 	</td>
 	</tr>

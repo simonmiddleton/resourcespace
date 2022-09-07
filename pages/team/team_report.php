@@ -7,12 +7,17 @@
  */
 include "../../include/db.php";
 
-include "../../include/authenticate.php";if (getvalescaped('unsubscribe', '') == '' && !checkperm("t")) {exit ("Permission denied.");}
+include "../../include/authenticate.php";if (getval('unsubscribe', '') == '' && !checkperm("t")) {exit ("Permission denied.");}
 include "../../include/reporting_functions.php";
 
 set_time_limit(0);
-$report=getvalescaped("report","");
-$period=getvalescaped("period",$reporting_periods_default[0]);
+$report=getval("report","");
+$show_date_field = true;
+if ($report != "")
+    {
+    $show_date_field = report_has_date_by_id($report);
+    }
+$period=getval("period",$reporting_periods_default[0]);
 $period_init=$period;
 $backurl = getval('backurl', '');
 $backurl_path = parse_url($backurl, PHP_URL_PATH);
@@ -21,20 +26,20 @@ $backurl_query = parse_url($backurl, PHP_URL_QUERY);
 if ($period==0)
 	{
 	# Specific number of days specified.
-	$period=getvalescaped("period_days","");
+	$period=getval("period_days","");
 	if (!is_numeric($period) || $period<1) {$period=1;} # Invalid period specified.
 	}
 
 if ($period==-1)
 	{
 	# Specific date range specified.
-	$from_y = getvalescaped("from-y","");
-	$from_m = getvalescaped("from-m","");
-	$from_d = getvalescaped("from-d","");
+	$from_y = getval("from-y","");
+	$from_m = getval("from-m","");
+	$from_d = getval("from-d","");
 	
-	$to_y = getvalescaped("to-y","");
-	$to_m = getvalescaped("to-m","");
-	$to_d = getvalescaped("to-d","");
+	$to_y = getval("to-y","");
+	$to_m = getval("to-m","");
+	$to_d = getval("to-d","");
 	}
 else
 	{
@@ -50,8 +55,8 @@ else
 	$to_d = date("d");
 	}
 	
-$from=getvalescaped("from","");
-$to=getvalescaped("to","");
+$from=getval("from","");
+$to=getval("to","");
 $output="";
 
 $search_params = [];
@@ -105,10 +110,10 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
 		}
 	}
 
-$delete = getvalescaped('delete', '');
+$delete = getval('delete', '');
 if($delete != '')
 	{
-	if('yes' == getvalescaped('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
+	if('yes' == getval('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
 		delete_periodic_report($delete);
 		?>
@@ -143,10 +148,10 @@ if($delete != '')
 	exit();
 	}
 	
-$unsubscribe = getvalescaped('unsubscribe', '');
+$unsubscribe = getval('unsubscribe', '');
 if($unsubscribe != '')
 	{
-	if('yes' == getvalescaped('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
+	if('yes' == getval('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
 		unsubscribe_user_from_periodic_report($userref, $unsubscribe);
 		?>
@@ -181,7 +186,8 @@ else
 	{
 	# Normal behaviour.
     ?>
-<div class="BasicsBox"> 
+<div class="BasicsBox">
+    <h1><?php echo $lang['viewreports']; ?></h1>
 	<?php
 	if($run_report_on_search_results)
         {
@@ -198,7 +204,8 @@ else
 	    $links_trail = array(
 	        array(
 	            'title' => $lang["systemsetup"],
-	        	'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        	'href'  => $baseurl_short . "pages/admin/admin_home.php",
+				'menu' =>  true
 	        ),
 	        array(
 	            'title' => $lang["page-title_report_management"],
@@ -211,7 +218,8 @@ else
 		$links_trail = array(
 	        array(
 	            'title' => $lang["teamcentre"],
-                'href'  => $baseurl_short . "pages/team/team_home.php"
+                'href'  => $baseurl_short . "pages/team/team_home.php",
+				'menu' =>  true
 	        )
 		);
 		}
@@ -225,7 +233,7 @@ else
     {
     // Filter out reports not valid for the context you're in:
     // - if running report on search results, then drop the ones that don't have support for non-correlated SQL
-    // - if viewing reports normally (from team centre), then remove the ones that support search results
+    // - if viewing reports normally (from Admin), then remove the ones that support search results
     if($run_report_on_search_results != $report_opt['support_non_correlated_sql'])
         {
         continue;
@@ -240,15 +248,32 @@ else
     <?php generateFormToken("team_report"); ?>
     <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
 <div class="Question">
+    <script>
+    function show_hide_date()
+        {
+        reports = document.getElementById('report');
+        selected_report = reports.options[reports.selectedIndex];
+        show_date = selected_report.dataset.contains_date;
+        if (show_date == 0)
+            {
+            document.getElementById('date_period').style.display='none';
+            }
+        else
+            {
+            document.getElementById('date_period').style.display='block';
+            }
+        }
+    </script>
 <label for="report"><?php echo $lang["viewreport"]?></label>
-<select id="report" name="report" class="stdwidth">
+<select id="report" name="report" class="stdwidth" onchange="show_hide_date();">
     <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
 <?php
 foreach($report_options as $report_opt)
     {
     echo sprintf(
-        '<option value="%s"%s>%s</option>',
+        '<option value="%s" data-contains_date=%d %s>%s</option>',
         $report_opt['ref'],
+        ($report_opt['contains_date'] == true ? 1 : 0),
         ($report_opt['ref'] == $report ? ' selected' : ''),
         htmlspecialchars($report_opt['name']));
     }
@@ -259,6 +284,14 @@ foreach($report_options as $report_opt)
 
 <?php include "../../include/date_range_selector.php" ?>
 
+<?php if (!$show_date_field)
+    {
+    ?>
+    <script>
+        document.getElementById('date_period').style.display='none';
+    </script>
+    <?php
+    } ?>
 
 <!-- E-mail Me function -->
 <div id="EmailMe" <?php if ($period_init==-1) { ?>style="display:none;"<?php } ?>>

@@ -8,21 +8,16 @@ if(!checkperm('u'))
     }
 include_once dirname(__FILE__). '/../include/csv_functions.php';
 
-
-
 // Init
 $fd                  = 'user_' . $userref . '_csv_user_batch_uploaded_data';
-$process_csv         = ('' !== getvalescaped('process_csv', '') && enforcePostRequest(false));
-$user_group_selector = getvalescaped('user_group_selector', '');
-
+$process_csv         = ('' !== getval('process_csv', '') && enforcePostRequest(false));
+$user_group_selector = getval('user_group_selector', '');
 
 // Uploaded file information
 $csv_dir  = get_temp_dir() . DIRECTORY_SEPARATOR . 'csv_user_import_upload' . DIRECTORY_SEPARATOR . $session_hash;
 $csv_file = $csv_dir . DIRECTORY_SEPARATOR  . 'csv_user_import.csv';
 
 $messages = array();
-
-
 
 include '../../../include/header.php';
 ?>
@@ -97,57 +92,71 @@ else if($process_csv && file_exists($csv_file))
 // Validate submitted file
 else
     {
-    ?>
-    <p><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a></p>
-    <p><b><?php echo $_FILES[$fd]['name']; ?></b></p>
-
-    <?php
-    $validated = csv_user_import_process($_FILES[$fd]['tmp_name'], $user_group_selector, $messages, false);
-    ?>
-
-    <textarea rows="20" cols="100">
-    <?php 
-    foreach($messages as $message)
+    if(check_valid_file_extension($_FILES[$fd],array("csv")))
         {
-        echo $message . PHP_EOL;
-        }
-    ?>
-    </textarea>
+        ?>
+        <p><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a></p>
+        <p><b><?php echo htmlspecialchars($_FILES[$fd]['name']); ?></b></p>
 
-    <?php
-    if($validated)
-        {
-        // We have a valid CSV, save it to a temporary location if not already created
-        if(!file_exists($csv_dir))
+        <?php
+        $validated = csv_user_import_process($_FILES[$fd]['tmp_name'], $user_group_selector, $messages, false);
+        ?>
+
+        <textarea rows="20" cols="100">
+        <?php 
+        foreach($messages as $message)
             {
-            mkdir($csv_dir, 0777, true);
+            echo $message . PHP_EOL;
             }
+        ?>
+        </textarea>
 
-        if(move_uploaded_file($_FILES[$fd]['tmp_name'], $csv_file))
+        <?php
+        if($validated)
             {
-            ?>
-            <form method="post" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
-                <?php generateFormToken("csv_user_import"); ?>
-                <input type="hidden" id="process_csv"  name="process_csv" value="1">
-                <input type="hidden" id="user_group_selector"  name="user_group_selector" value="<?php echo $user_group_selector; ?>">
-                <input type="submit" name="process_csv" onClick="return CentralSpacePost(this, true);" value="Process CSV">
-            </form>
-            <?php
+            // We have a valid CSV, save it to a temporary location if not already created
+            if(!file_exists($csv_dir))
+                {
+                mkdir($csv_dir, 0777, true);
+                }
+
+            if(move_uploaded_file($_FILES[$fd]['tmp_name'], $csv_file))
+                {
+                ?>
+                <form method="post" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
+                    <?php generateFormToken("csv_user_import"); ?>
+                    <input type="hidden" id="process_csv"  name="process_csv" value="1">
+                    <input type="hidden" id="user_group_selector"  name="user_group_selector" value="<?php echo $user_group_selector; ?>">
+                    <input type="submit" name="process_csv" onClick="return CentralSpacePost(this, true);" value="Process CSV">
+                </form>
+                <?php
+                }
+            else
+                {
+                ?>
+                <h2><?php echo $lang['csv_user_import_move_upload_file_failure']; ?></h2>
+                <?php
+                }
             }
         else
             {
             ?>
-            <h2><?php echo $lang['csv_user_import_move_upload_file_failure']; ?></h2>
+            <h2><?php echo $lang['csv_user_import_error_found']; ?></h2>
             <?php
             }
         }
     else
         {
         ?>
-        <h2><?php echo $lang['csv_user_import_error_found']; ?></h2>
+        <p>
+            <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
+        </p>
+        <p>
+            <b><?php echo str_replace("%EXTENSIONS",".csv",$lang["invalidextension_mustbe-extensions"]); ?></b>
+        </p>
         <?php
         }
-    }
+    }    
     ?>
 </div> <!-- end of BasicBox -->
 <?php

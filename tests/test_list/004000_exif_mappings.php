@@ -1,8 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 include_once __DIR__ . '/../../include/image_processing.php';
 include_once __DIR__ . '/../../include/resource_functions.php';
@@ -22,7 +20,7 @@ $xmp_data = "Oranges";
 
 // Create a new field with exif prioritising XMP
 $exif_field = create_resource_type_field("Exif test",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"exiftest");
-sql_query("UPDATE resource_type_field SET exiftool_field='" . $iptc_name ."," . $xmp_name . "' WHERE ref='" . $exif_field . "'");
+ps_query("UPDATE resource_type_field SET exiftool_field=? WHERE ref=?",array("s",$iptc_name ."," . $xmp_name,"i",$exif_field));
 
 // Create a test resource
 $exifresource = create_resource(1,0);
@@ -59,7 +57,7 @@ if($resdata != $xmp_data)
     }
 
 // Test C. Check that mapping the IPTC keyword data only works
-sql_query("UPDATE resource_type_field SET exiftool_field='" . $iptc_name . "' WHERE ref='" . $exif_field . "'");
+ps_query("UPDATE resource_type_field SET exiftool_field=? WHERE ref=?",array("s",$iptc_name,"i",$exif_field));
 // Extract metadata again and check that the IPTC data has been discovered
 extract_exif_comment($exifresource,"jpg");
 $resdata = get_data_by_field($exifresource,$exif_field);

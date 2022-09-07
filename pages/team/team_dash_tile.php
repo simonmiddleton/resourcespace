@@ -14,22 +14,24 @@ if(!(
 
 include "../../include/dash_functions.php";
 
-$show_usergroups_dash = ('true' == getvalescaped('show_usergroups_dash', '') ? true : false);
+$show_usergroups_dash = ('true' == getval('show_usergroups_dash', '') ? true : false);
 if($show_usergroups_dash)
     {
     $user_groups         = get_usergroups(false, '', true);
     // Get selected user group or default to first user group found
-    $selected_user_group = getvalescaped('selected_user_group', key($user_groups), true);
+    $selected_user_group = getval('selected_user_group', key($user_groups), true);
     }
 
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
+<h1><?php echo $show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . htmlspecialchars($user_groups[$selected_user_group]) : $lang["manage_all_dash"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . $user_groups[$selected_user_group] : $lang["manage_all_dash"],

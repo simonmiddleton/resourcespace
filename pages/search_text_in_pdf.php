@@ -2,8 +2,8 @@
 include_once '../include/db.php';
 include_once '../include/resource_functions.php';
 
-$k   = getvalescaped('k', '');
-$ref = getvalescaped('ref', 0, true);
+$k   = getval('k', '');
+$ref = getval('ref', 0, true);
 
 if($k == '' || !check_access_key($ref, $k))
     {

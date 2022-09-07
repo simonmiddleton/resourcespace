@@ -43,15 +43,17 @@ if(isset($simplesamlconfig["config"]))
         }
     }
 
+$saml_live_sp_name = get_saml_sp_name();
+
 // Get SP certificate config
 $curcertpath    = "";
 $curkeypath     = "";
 $curidp         = "";
-if(isset($simplesamlconfig['authsources']["resourcespace-sp"]))
+if(isset($simplesamlconfig['authsources'][$saml_live_sp_name]))
     {
-    $curcertpath    = isset($simplesamlconfig['authsources']["resourcespace-sp"]["certificate"]) ? $simplesamlconfig['authsources']["resourcespace-sp"]["certificate"] : "";
-    $curkeypath     = isset($simplesamlconfig['authsources']["resourcespace-sp"]["privatekey"]) ? $simplesamlconfig['authsources']["resourcespace-sp"]["privatekey"] : "";
-    $curidp         = $simplesamlconfig['authsources']["resourcespace-sp"]["idp"];
+    $curcertpath    = isset($simplesamlconfig['authsources'][$saml_live_sp_name]["certificate"]) ? $simplesamlconfig['authsources'][$saml_live_sp_name]["certificate"] : "";
+    $curkeypath     = isset($simplesamlconfig['authsources'][$saml_live_sp_name]["privatekey"]) ? $simplesamlconfig['authsources'][$saml_live_sp_name]["privatekey"] : "";
+    $curidp         = $simplesamlconfig['authsources'][$saml_live_sp_name]["idp"];
     }
 $certpath   = getval("cert_path",$curcertpath);
 $keypath    = getval("key_path",$curkeypath);
@@ -165,7 +167,7 @@ if(getval('sp_submit', '') !== '' && enforcePostRequest(false))
     $spauthsourcestext = "\$simplesamlconfig['authsources'] = 
         [
         'admin' => ['core:AdminPassword'],
-        'resourcespace-sp' => [
+        '{$saml_live_sp_name}' => [
         'saml:SP',
         'privatekey' => '" . htmlspecialchars($keypath) . "',
         'certificate' => '" . htmlspecialchars($certpath) . "',

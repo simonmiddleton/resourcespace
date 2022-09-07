@@ -42,7 +42,7 @@ $lang["allcollectionssearchbar"]="Todas las colecciones";
 $lang["geographicsearch"]="Búsqueda Geográfica";
 
 
-# Team Centre ;
+# Admin ;
 $lang["manageresources"]="Gestionar materiales";
 $lang["overquota"]="Se ha excedido el espacio en disco; no se pueden añadir materiales.";
 $lang["managearchiveresources"]="Gestionar archivo de materiales";
@@ -69,7 +69,7 @@ $lang["searchcontenteg"]="(Pàgina, nombre o texto)";
 $lang["copyresource"]="Copiar material";
 $lang["resourceidnotfound"]="No se encontró material con este ID"; 
 $lang["inclusive"]="(Incluido)";
-# Team Centre - Bulk E-mails ;
+# Admin - Bulk E-mails ;
 $lang["emailrecipients"]="Destinatario(s) del correo electrónico";
 $lang["emailsubject"]="Asunto del correo electrónico";
 $lang["emailtext"]="Texto del correo electrónico";
@@ -77,9 +77,9 @@ $lang["send"]="Enviar";
 $lang["emailsent"]="El correo electrónico ha sido enviado";
 $lang["mustspecifyoneuser"]="Debes especificar un usuario como mínimo";
 $lang["couldnotmatchusers"]="No se han encontrado los nombres de usuarios; o los nombres de usuario estaban duplicados";
-# Team Centre - User management ;
+# Admin - User management ;
 $lang["comments"]="Comentarios";
-# Team Centre - Resource management ;
+# Admin - Resource management ;
 $lang["viewuserpending"]="Ver materiales introducidos por el usuario pendientes de revisar";
 $lang["searcharchivedresources"]="Buscar materiales archivados";
 $lang["viewresourcespendingarchive"]="Ver archivo de materiales pendientes";
@@ -456,7 +456,7 @@ $lang["collectioncommentsinfo"]="Agregar a la colección comentarios de este mat
 $lang["comment"]="Comentario";
 $lang["warningexpired"]="Material caducado";
 $lang["warningexpiredtext"]="¡Atención! Este material ha excedido la fecha de caducidad. Deberás clicar el siguiente enlace para habilitar la función de descarga.";
-$lang["warningexpiredok"]="&gt; Habilitar descarga de material";
+$lang["warningexpiredok"]="Habilitar descarga de material";
 $lang["userrequestcomment"]="Comentario";
 $lang["addresourcebatchbrowser"]="Adjuntar lote de materiales - Buscar (recomendado)";
 $lang["replaceresourcebatch"]="Reemplazar lote de materiales";

@@ -63,10 +63,6 @@ $mysql_bin_path = '/usr/bin';
 $mysql_log_transactions = false;
 # $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
 
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared = false;
-
 # Enable establishing secure connections using SSL
 # Requires setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
 $use_mysqli_ssl = false;
@@ -217,6 +213,9 @@ $collection_bar_foreground_override='';
 # Used for changing colour of default blue buttons
 $button_colour_override='';
 
+# Used by system settings page when setting a custom system font 
+$custom_font='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
@@ -309,11 +308,11 @@ $home_dash = true;
 # Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank', 'analytics');
+$tile_styles['conf']  = array('blank', 'analytics','thmsl','custm','pend');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 # All user permissions for the dash are revoked and the dash admin can manage a single dash for all users. 
-# Only those with admin privileges can modify the dash and this must be done from the Team Centre > Manage all user dash tiles (One dash for all)
+# Only those with admin privileges can modify the dash and this must be done from the Admin > Manage all user dash tiles (One dash for all)
 $managed_home_dash = false;
 
 # Options to show/hide the tiles on the home page
@@ -670,6 +669,9 @@ $resourceid_simple_search=false;
 # Enable date option on simple search bar
 $simple_search_date=true;
 
+# Show "Powered by ResourceSpace" on simple search bar when default $linkedheaderimgsrc not used
+$show_powered_by_logo=true;
+
 # Enable sorting resources in other ways:
 $colour_sort=true;
 $popularity_sort=true;
@@ -697,7 +699,7 @@ $use_recent_as_home=false;
 $theme_images=true;
 $theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
 $theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
-$show_theme_collection_stats=false; # Show count of themes and resources in theme category
+$show_theme_collection_stats=false; # Show count of themes and resources in category. $themes_simple_view=false only.
 
 # Theme direct jump mode
 # If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
@@ -735,7 +737,7 @@ $recent_search_quantity=1000;
 $help_link=true;
 
 # Display Search Results link in top navigation
-$search_results_link=true;
+$search_results_link=false;
 
 # Display a 'My Collections' link in the top navigation
 # Note that permission 'b' is needed for collection_manage.php to be displayed
@@ -777,12 +779,6 @@ $default_perpage=48;
 $list_display_array=array(15,30,60);
 # How many results per page? (default)
 $default_perpage_list=15;
-
-
-# Group based upload folders? (separate local upload folders for each group)
-$groupuploadfolders=false;
-# Username based upload folders? (separate local upload folders for each user based on username)
-$useruploadfolders=false;
 
 # Enable order by rating? (require rating field updating to rating column)
 $orderbyrating=false;
@@ -1233,8 +1229,12 @@ $show_extension_in_search=false;
 # Should the category tree field (if one exists) default to being open instead of closed?
 $category_tree_open=false;
 
-# Should searches using the category tree use AND for hierarchical keys?
+# Should parent nodes also be selected when selecting a child node?
 $category_tree_search_use_and=false;
+
+# If set to true any resources returned will need to contain all of the category tree nodes selected
+# If false then a returned resource could contain one or more of the selected nodes
+$category_tree_search_use_and_logic=false;
 
 # Force selection of parent nodes when selecting a sub node? 
 # If set to false then each node should be unique to avoid possible corruption when exporting/importing data
@@ -1341,7 +1341,7 @@ $enable_public_collections=true;
 
 # Allow user group to be selected as part of user registration?
 # User groups available for user selection must be specified using the 'Allow registration selection' option on each user group
-# in System Setup.
+# under Admin -> System -> User groups.
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
@@ -1359,11 +1359,6 @@ $registration_group_select=false;
 # 	2: Large text box
 #   3: Drop down box (set options using $custom_request_options["Field Name"]=array("Option 1","Option 2","Option 3");
 #   4: HTML block, e.g. help text paragraph (set HTML usign $custom_request_html="<b>Some HTML</b>";
-
-
-# Send an e-mail to the address set at $email_notify above when user contributed
-# resources are submitted (status changes from "User Contributed - Pending Submission" to "User Contributed - Pending Review").
-$notify_user_contributed_submitted=true;
 
 # When requesting feedback, allow the user to select resources (e.g. pick preferred photos from a photo shoot).
 $feedback_resource_select=false;
@@ -1383,7 +1378,7 @@ $log_resource_views=false;
 
 # A list of file extentions of file types that cannot be uploaded for security reasons.
 # For example; uploading a PHP file may allow arbirtary execution of code, depending on server security settings.
-$banned_extensions=array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash', 'phtml', 'phps', 'phar');
+$banned_extensions=array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash', 'phtml', 'phps', 'phar', 'py', 'jar');
 
 #Set a default access value for the upload page. This will override the default resource template value.
 #Change the value of this option to the access id number
@@ -1424,6 +1419,7 @@ $mime_type_by_extension = array(
     'avi'  => 'video/msvideo',
     'mp3'  => 'audio/mpeg',
     'wav'  => 'audio/x-wav',
+    'weba' => 'audio/webm',    
     'jpg'  => 'image/jpeg',
     'jpeg' => 'image/jpeg',
     'gif'  => 'image/gif',
@@ -1468,7 +1464,7 @@ $index_collection_creator = true;
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
 # 'Space' is included by default and does not need to be specified below.
 # Note: leave non breaking space in
-$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?", '’', '“', ' ');
+$config_separators=array("/","_",".",";","-","(",")","'","\"","\\", "?", '’', '“', ' ');
 
 
 # Resource field verbatim keyword regex
@@ -1486,6 +1482,17 @@ $global_permissions="";
 # Useful for temporarily disabling permissions globally, e.g. to make the system readonly during maintenance.
 # Suggested setting for a 'read only' mode: $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q";
 $global_permissions_mask="";
+
+# Define user groups who can manage users and requests in other user groups only. An alternative to setting a parent with U permission. 
+# Useful if parent user group is set for permissions inheritance but requests / users are to be managed by a different user group.
+# Config. consists of array in which the key is the user group to manage users and user requests (equivalent of U permission) and 
+# the value is an array of subordinate groups to be managed. Approvers (array key in config) must be unique but its possible to have
+# the same user group managed by multiple user groups.
+/*
+$usergroup_approval_mappings = array(
+    18 => array(19,20)
+    );
+*/
 
 # User account application - auto creation
 # By default this is switched off and applications for new user accounts will be sent as e-mails
@@ -1603,11 +1610,14 @@ $top_nav_upload=true;
 $top_nav_upload_user=false;
 $top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 
-# Configure the maximum upload file size; this directly translates into plupload's max_file_size if set
-# $upload_max_file_size = '50M';
+# Configure the maximum upload file size; this directly translates into upload's max_file_size if set
+# $upload_max_file_size = 50mb;
 
 # You can set the following line to ''  to disable chunking.
 $upload_chunk_size='5mb';
+
+# This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
+$upload_concurrent_limit=5;
 
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
@@ -1682,7 +1692,8 @@ $ffmpeg_audio_extensions = array(
     'aac',
     'ra',
     'rm',
-    'gsm'
+    'gsm',
+    'weba',
     );
 	
 # The audio settings for mp3 previews
@@ -1706,9 +1717,7 @@ $default_display="thumbs";
 $alternative_file_previews=true;
 $alternative_file_previews_batch=true;
 
-
-# Permission to show the replace file, preview image only and alternative files options on the resource edit page.
-# Overrides required permission of F*
+# Permission to show the upload preview image link on the resource view page. Overrides required permission of F*
 $custompermshowfile=false;
 
 # enable support for storing an alternative type for each alternate file
@@ -2128,22 +2137,14 @@ $enable_thumbnail_creation_on_upload = true;
     // Show map search results in a modal?
     $geo_search_modal_results = false;
 
-    // Enable geolocating multiple resources on a map that are part of a collection?
-    $geo_locate_collection = true;
-
-    // Geolocate collection preview image size.
-    $geolocate_image_size = 'pre'; // Use 'thm' or 'pre' for thumbnail and preview image size, respectively.
-
 # Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
-    // OpenLayers default center and zoom for the map view when selecting a new location, as a world view.
+    // Default center and zoom for the map view when selecting a new location, as a world view.
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
-    $geolocation_default_bounds = '-3.058839178216e-9,2690583.3951564,2';
-
-    // OpenLayers basemap layers to make available, the first is the default.
-    // $geo_layers = 'osm'; // To enable Google layers, use: $geo_layers = 'osm, gmap, gsat, gphy';
+    // The tools available on https://epsg.io/3857 can be used to get the coordinates of a location on the map or try an internet search for EPSG:3857.
+    $geolocation_default_bounds = '-450061.222543,7152059.862587,2';
 
     // Cache geo tile images on the ResourceSpace server? Also prevents clients needing to see any license key
-    // Note that server caching is bypassed if $leaflet_maps_enable=true and $geo_leaflet_maps_sources = true;
+    // Note that server caching is bypassed if $geo_leaflet_maps_sources = true;
     // Since the client then fetches tiles directly from the source
     $geo_tile_caching = true;
 
@@ -2154,26 +2155,8 @@ $enable_thumbnail_creation_on_upload = true;
     // User agent string to use when server requests tiles from sources
     $geo_tile_user_agent = "ResourceSpace";
 
-    // Optional path to OpenLayers tile cache directory. Defaults to ResourceSpace temp directory if not set
+    // Optional path to tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
-
-    // Only high level tiles are included by default. If you require higher resolution tiles you need permitted access
-    // to a full tile server, or you can set up your own. See https://wiki.openstreetmap.org/wiki/Tile_servers for more
-    // information. If no servers are available, then your zoom ability will be limited.
-    // After 9.6 any defined will be merged with the defined $geo_leaflet_sources (see below) if $leaflet_maps_enable=true
-    $geo_tile_servers = array();
-    // $geo_tile_servers[] = 'a.tile.sometileserver.org';
-    // $geo_tile_servers[] = 'b.tile.sometileserver.org';
-    // $geo_tile_servers[] = 'c.tile.sometileserver.org';
-
-    // $geo_tile_servers['OpenStreetMap'] = array();
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'] = array();
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'a.tile.openstreetmap.org';
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'b.tile.openstreetmap.org';
-    // $geo_tile_servers['OpenStreetMap']['Mapnik'][] = 'c.tile.openstreetmap.org';
-
-    // Add OpenLayers configuration options to this variable to overwrite all other options.
-    $geo_override_options = "";
 
     // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
     $geo_search_restrict = array(
@@ -2185,14 +2168,10 @@ $enable_thumbnail_creation_on_upload = true;
     // Map height in pixels on the Resource View page.
     $view_mapheight = 350;
 
-    // Map height in pixels on the Geographic/Map Search page.
-    $mapsearch_mapheight = 625;
-
     // Map height in pixels on the Resource Edit page.
     $mapedit_mapheight = 625;
 
-    // New settings for leaflet maps
-    $leaflet_maps_enable = false;
+    // Settings for leaflet maps
 
     // $geo_leaflet_maps_sources: Use the standard tile sources provided by leaflet maps?
     // If this is enabled please refer to /include/map_basemaps to see the available config options that enable specific defined map providers
@@ -2379,6 +2358,9 @@ $camera_autorotation = false;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
 
+// Default for upload rotation. Will be overridden by user preference.
+$camera_autorotation_checked = true;
+
 # if gnash_dump (gnash w/o gui) is compiled, previews are possible:
 # Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
 # Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
@@ -2485,11 +2467,8 @@ $show_searchitemsdiskusage=true;
 # This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
 $search_sql_double_pass_mode=true;
 
-# Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
+# Use the new tab ordering system. This will sort the tabs by the order by value set in Admin -> System -> Metadata fields.
 $use_order_by_tab_view=false;
-
-# Allows for themes with a taller header than standard to still be fully visible in System Setup. 
-$admin_header_height=120;
 
 # Display link to request log on view page
 $display_request_log_link=false;
@@ -2520,7 +2499,7 @@ $download_filename_id_only = false;
 # Required: $download_filename_id_only = true;
 $download_id_only_with_size = false;
 
-# Index the 'contributed by' field?
+# Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;
 
 # Use CKEditor for site content?
@@ -2563,12 +2542,6 @@ $do_not_add_to_new_collection_default=false;  # will set "do not add to a collec
 $no_metadata_read_default=false; // If set to true and $metadata_read is false then metadata will be imported by default
 $removenever=false; # Remove 'never' option for resource request access expiration and sets default expiry date to 7 days
 $hide_resource_share_link=false; // Configurable option to hide the "Share" link on the resource view page.
-
-# Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
-$user_resources_approved_email=false; 
-
-# Set to true to move the Search button before the Clear button
-$swap_clear_and_search_buttons=false;
 
 # Option to have default date left blank, instead of current date.
 $blank_date_upload_template=false;
@@ -2922,13 +2895,17 @@ $fstemplate_alt_scramblekey="";
 $responsive_ui = true;
 
 # Default action settings
-$actions_enable=false;
+$actions_enable = true;
 # If $actions_enable is false, option to enable actions only for users with certain permissions, To enable actions based on users having more than one permission, separate with a comma.
 $actions_permissions=array("a","t","R","u","e0");
 $actions_resource_requests=true;
 $actions_account_requests=true;
-$actions_resource_review=true;
-$actions_notify_states="-1";
+
+// $actions_notify_states . If unset then default values are set based on permissions
+// - Standard users with permission 'e-2' and 'd' will include -2 so they see their 'Pending submission' resources as actions
+// - Users with the e-1 permission will include -1 so they see 'Pending review' resources as actions
+$actions_notify_states="";
+
 $actions_resource_types_hide="";  // Resource types to exclude from notifications
 $actions_approve_hide_groups=""; // Groups to exclude from notifications
 
@@ -2944,12 +2921,9 @@ $daterange_edtf_support=false;
 $resource_type_extension_mapping_default = 1;
 $resource_type_extension_mapping         = array(
     2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl', 'ott' , 'rtf' , 'txt' , 'xml'),
-    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv'),
-    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
+    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv', 'webm'),
+    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg', 'weba'),
 );
-
-// Show a "View in browser" link on the view page if the user can download the original size for these extensions. 
-$view_in_browser_extensions=array("pdf","mp3","svg");
 
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
@@ -3099,15 +3073,10 @@ $CORS_whitelist = array();
 
 
 /* Font selection */
-$global_font="WorkSans";
+$global_font="Montserrat";
 
 // Sort tabs alphabetically
 $sort_tabs = true;
-
-// Replace the preview of a PDF document with pdfjs viewer if user has full access to the resource. This allows the user 
-// to see the original file, having the ability to also search within the document.
-// IMPORTANT: enable this per resource type as this is only going to work for PDF files to which user has full access
-$use_pdfjs_viewer = false;
 
 // Ask users to opt-in registering to access the system. This can address requirements data protection laws (e.g. GDPR) may have
 $user_registration_opt_in = true;
@@ -3161,13 +3130,6 @@ $ghostscript_extensions = array('ps', 'pdf');
 // Generate only the internal preview sizes and show only the original file for download for any of the 
 // extensions found in a merge of $non_image_types, $ffmpeg_supported_extensions, $unoconv_extensions and $ghostscript_extensions list
 $non_image_types_generate_preview_only = true;
-
-// Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
-// Once enabled the filters will gradually be updated as users search.
-// NOTE - from v9.3 onwards, enabling this will also update edit and derestrict filters to use the same filters
-// To update all the search filters immediately run upgrade/scripts/005_migrate_search_filters.php
-// To update edit and derestrict filters run upgrade/scripts/009_migrate_edit_derestrict_filters.php
-$search_filter_nodes = true;
 
 // Browse bar 
 // Enable/Disable browse bar - in system config
@@ -3324,3 +3286,36 @@ $preview_keep_alpha_extensions = array("gif","png","tif","svg");
 
 // Array of sizes that will always be permitted through download.php and won't require terms/usage to be entered - needed when hide_real_filepath=true;
 $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
+
+// String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
+$regexp_slash_replace = 'SLASH';
+
+/*
+Metadata field designated to hold information which the system can use to determine the user group responsible for that 
+resource.
+Allowed field types are fixed list fields with only a single current value (i.e. radio buttons or drop down list).
+To disable it, set to 0 (zero).
+*/
+$owner_field = 0;
+
+/*
+Map the available field options (from the $owner_field) to ResourceSpace user groups.
+The mappings' keys will hold node IDs and the values user group IDs.
+Example:
+$owner_field_mappings = [
+    278 => 3, # Option 1 -> Super Admin
+    280 => 1, # Option 2 -> Administrators
+];
+*/
+$owner_field_mappings = [];
+
+// Optional - $valid_upload_paths
+// Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
+// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
+// $valid_upload_paths = [];
+
+// Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
+$thumbs_display_archive_state = false;
+
+// Cache the count of search results to improve performance
+$cache_search_count = true;

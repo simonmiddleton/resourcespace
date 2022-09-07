@@ -16,7 +16,7 @@ if (getval("publish_all","")!="" || getval("publish_new","")!="" || isset($_GET[
 
 include "../../../include/header.php";
 
-$theme=getvalescaped("theme","");
+$theme=getval("theme","");
 
 $id="flickr_" . $userref . "_" .$theme;
 $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
@@ -46,14 +46,14 @@ if(!metadata_field_view_access($flickr_title_field))
 # Handle clear photo IDs
 if (getval("clear_photoid","")!="")
 	{
-	sql_query("update resource set flickr_photo_id=null where ref in (select resource from collection_resource where collection='$theme')");
+	ps_query("update resource set flickr_photo_id = null where ref in (select resource from collection_resource where collection = ?)", array("i",$theme));
 	
 	}
 
 # Handle log out
 if (getval("logout","")!="")
 	{
-	sql_query("update user set flickr_token='',flickr_token_secret='' where ref='$userref'");
+	ps_query("update user set flickr_token = '', flickr_token_secret = '' where ref = ?", array("i",$userref));
 	}
 
 if (getval("publish_all","")!="" || getval("publish_new","")!="")
@@ -67,20 +67,20 @@ if (getval("publish_all","")!="" || getval("publish_new","")!="")
 if (getval("publish_all","")!="" && enforcePostRequest(false))
 	{
 	# Perform sync publishing all (updating any existing)
-	sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getvalescaped("private",""));
+	sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getval("private",""));
 	}
 elseif (getval("publish_new","")!="" && enforcePostRequest(false))
 	{
 	# Perform sync publishing new only.
-	sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getvalescaped("private",""));
+	sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getval("private",""));
 	}
 else
 	{
 	# Display option for sync
-	$unpublished=sql_value("select count(*) value from resource join collection_resource on resource.ref=collection_resource.resource where collection_resource.collection='" . $theme . "' and flickr_photo_id is null",		0);
+	$unpublished=ps_value("select count(*) value from resource join collection_resource on resource.ref = collection_resource.resource where collection_resource.collection = ? and flickr_photo_id is null", array("i",$theme), 0);
 	
 	# Count for all resources in selection
-	$all=sql_value("select count(*) value from resource join collection_resource on resource.ref=collection_resource.resource where collection_resource.collection='" . $theme . "'",0);
+	$all=ps_value("select count(*) value from resource join collection_resource on resource.ref = collection_resource.resource where collection_resource.collection = ?", array("i",$theme), 0);
 
 	
 	?>

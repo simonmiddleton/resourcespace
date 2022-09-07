@@ -4,33 +4,41 @@ include_once "../../../include/render_functions.php";
 include_once "../../lightbox_preview/include/utility.php";
 include_once "../config/config.php";
 
-$search=getvalescaped("search","");
-$sign=getvalescaped("sign","");
-$offset=getvalescaped("offset",0,true);
-$pagesize=getvalescaped("pagesize",$resourceconnect_pagesize);
-$affiliatename=getvalescaped("affiliatename","");
+$search=getval("search","");
+$sign=getval("sign","");
+$offset=getval("offset",0,true);
+$pagesize=getval("pagesize",$resourceconnect_pagesize);
+$affiliatename=getval("affiliatename","");
 
-$per_page=getvalescaped("per_page","");if (is_numeric($per_page)) {$pagesize=$per_page;} # Manual setting of page size.
-$sort=getvalescaped("sort","");
-$order_by=getvalescaped("order_by","");
+$per_page=getval("per_page","");if (is_numeric($per_page)) {$pagesize=$per_page;} # Manual setting of page size.
+$sort=getval("sort","");
+$order_by=getval("order_by","");
 
 $original_user=getval("user","");
 
 # Authenticate as 'resourceconnect' user.
 global $resourceconnect_user; # Which user to use for remote access?
 if ($resourceconnect_user == "" || !isset($resourceconnect_user))
-{
-echo $lang["resourceconnect_user_not_configured"];
-exit();
-}
-$userdata=validate_user("u.ref='$resourceconnect_user'");
-setup_user($userdata[0]);
+    {
+    echo $lang["resourceconnect_user_not_configured"];
+    exit();
+    }
 
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref = ?";
+$user_select_sql->parameters = ["i",$resourceconnect_user];
+$user_data = validate_user($user_select_sql);
+if(!is_array($user_data) || !isset($user_data[0]))
+    {
+    echo $lang["resourceconnect_user_not_configured"];
+    exit();
+    }
+setup_user($user_data[0]);
 
 $restypes="";
 # Resolve resource types
 $resource_types=get_resource_types("", false);
-$rtx=explode(",",getvalescaped("restypes",""));
+$rtx=explode(",",getval("restypes",""));
 foreach ($rtx as $rt)
     {
     # Locate the resource type name in the local list.  

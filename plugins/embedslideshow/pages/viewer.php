@@ -7,14 +7,14 @@ include "../../../include/db.php";
 include_once "../languages/en.php"; # Because this may not be included automatically, i.e. if the plugin is not available to all groups.
 
 # Get variables and check key is valid.
-$ref        = getvalescaped('ref', '');
-$key        = getvalescaped('k', '');
-$size       = getvalescaped('size', 'pre');
-$transition = (int)getvalescaped('transition', 4);
-$showtext   = getvalescaped('showtext', '0');
+$ref        = getval('ref', '');
+$key        = getval('k', '');
+$size       = getval('size', 'pre');
+$transition = (int)getval('transition', 4);
+$showtext   = getval('showtext', '0');
 
-$player_width        = getvalescaped('width', '');
-$player_height        = getvalescaped('height', '');
+$player_width        = getval('width', '');
+$player_height        = getval('height', '');
 if (!is_numeric($player_width) || !is_numeric($player_height))
     {
     exit("Height and width parameters must be numeric.");
@@ -100,7 +100,7 @@ foreach ($resources as $resource)
 	global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
 	if($embedslideshow_textfield && $showtext) 
 		{ 
-		$resource_data = get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield);
+		$resource_data = i18n_get_translated(get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield));
 		if($resource_data !="") 
 			{
 			?>
@@ -109,8 +109,8 @@ foreach ($resources as $resource)
 			}		
 		} ?>
 	<script type="text/javascript">
-	embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):8; ?>;
-	embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):8; ?>;
+	embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):0; ?>;
+	embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):0; ?>;
 	</script>
 	<?php
 	$page++;

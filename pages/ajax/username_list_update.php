@@ -5,7 +5,7 @@ include "../../include/db.php";
 
 include "../../include/authenticate.php";
 
-$userstring=getvalescaped("userstring","");
+$userstring=getval("userstring","");
 $userstring=resolve_userlist_groups($userstring);
 $userstring=array_unique(trim_array(explode(",",$userstring)));
 sort($userstring);

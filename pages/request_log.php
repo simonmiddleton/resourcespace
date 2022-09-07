@@ -3,22 +3,21 @@ include "../include/db.php";
 
 include "../include/authenticate.php";if (!checkperm("R")) {exit ("Permission denied.");}
 
-$ref=getvalescaped("ref","",true);
-$k=getvalescaped("k","");
+$ref=getval("ref","",true);
+$k=getval("k","");
 
 # fetch the current search
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
-$starsearch=getvalescaped("starsearch","");
+$archive=getval("archive",0,true);
 $default_sort_direction="DESC";
-$per_page=getvalescaped("per_page",0,true);
+$per_page=getval("per_page",0,true);
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-$curpos=getvalescaped("curpos",'');
+$curpos=getval("curpos",'');
 $modal=(getval("modal", "") == "true");
 
 $urlparams = get_search_params();
@@ -36,7 +35,7 @@ if ($go!="")
 	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
 	
 	# Re-run the search and locate the next and previous records.
-	$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch);
+	$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH);
 	if (is_array($result))
 		{
         # Locate this resource
@@ -123,7 +122,9 @@ if ($k=="" && !$modal) { ?>
 
 <?php
 #$log=get_resource_log($ref);
-$log=sql_query("select rq.created date, rq.ref ref, u.fullname username, rq.comments, rq.status status, rq.reason reason, rq.reasonapproved reasonapproved from request rq left outer join user u on u.ref=rq.user left outer join collection_resource cr on cr.collection=rq.collection where cr.resource='$ref';");
+$log=ps_query("SELECT rq.created date, rq.ref ref, u.fullname username, rq.comments, rq.status status, rq.reason reason, rq.reasonapproved reasonapproved 
+        FROM request rq left outer join user u on u.ref=rq.user left outer join collection_resource cr on cr.collection=rq.collection 
+        WHERE cr.resource=?",array("i",$ref));
 
 for ($n=0;$n<count($log);$n++)
 	{

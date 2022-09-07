@@ -10,8 +10,8 @@ include "../../include/db.php";
 include "../../include/authenticate.php"; if (!checkperm("k")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
 
-$keyword=strtolower(getvalescaped("keyword",""));
-$related=strtolower(getvalescaped("related",""));
+$keyword=strtolower(getval("keyword",""));
+$related=strtolower(getval("related",""));
 
 if (getval("save","")!="" && enforcePostRequest(false))
 	{

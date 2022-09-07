@@ -29,14 +29,14 @@
             exit();
             }
 
-        $user            = getvalescaped('user', 0, true);
-        $seen            = getvalescaped('seen', 0, true);
-        $unseen          = getvalescaped('unseen', 0, true);
-        $allseen         = getvalescaped('allseen', 0, true);
-        $deleteselusrmsg = getvalescaped('deleteselusrmsg', "");
-        $selectedseen    = getvalescaped('selectedseen', "");
-        $selectedunseen  = getvalescaped('selectedunseen', "");
-        $getrefs         = getvalescaped('getrefs', 0, true);
+        $user            = getval('user', 0, true);
+        $seen            = getval('seen', 0, true);
+        $unseen          = getval('unseen', 0, true);
+        $allseen         = getval('allseen', 0, true);
+        $deleteselusrmsg = getval('deleteselusrmsg', "");
+        $selectedseen    = getval('selectedseen', "");
+        $selectedunseen  = getval('selectedunseen', "");
+        $getrefs         = getval('getrefs', 0, true);
 
 		if(0 < $user)
 			{
@@ -123,11 +123,16 @@
             }
         if($offline_job_queue)
 			{
-            $failedjobs = job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref));
-            $failedjobcount = count($failedjobs);
-            if($failedjobcount>0)
+            $userfailedjobs = count(job_queue_get_jobs("",STATUS_ERROR, (checkperm('a') ? 0 : $userref)));
+			$allfailedjobs  = count(job_queue_get_jobs("",STATUS_ERROR));
+			$jobcounts 		= [];
+
+			if($userfailedjobs > 0){$jobcounts['user'] = $userfailedjobs;}
+			if($allfailedjobs > 0){$jobcounts['all'] = $allfailedjobs;}
+
+			if(!empty($jobcounts))
 				{
-                $extramessage['failedjobcount'] = $failedjobcount;
+                $extramessage['failedjobcount'] = $jobcounts;
                 $extramessages = true;
 				}
             }
@@ -190,8 +195,9 @@
                         }
                     if (typeof(messages[messages.length - 1]['failedjobcount']) !== 'undefined') 
                         {
-                        failedjobcount=parseInt(messages[messagecount]['failedjobcount']);
-                        totalcount=totalcount+failedjobcount;
+                        userfailedjobcount = parseInt(messages[messagecount]['failedjobcount']['user']);
+						totalcount         = totalcount + userfailedjobcount;
+						failedjobcount 	   = parseInt(messages[messagecount]['failedjobcount']['all']);
                         }
                     jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
                     if (activeSeconds > 0 || message_poll_first_run)
@@ -251,7 +257,13 @@
                         }
                     if (failedjobcount>0)
                         {
-                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();;
+                        jQuery('span.FailedJobCountPill').html(failedjobcount).fadeIn();
+						let teampill = jQuery('#TeamMessages');
+						if(teampill.attr('data-value') != undefined)
+							{
+							failedjobcount = failedjobcount + teampill.attr('data-value');
+							}
+						teampill.html(failedjobcount).fadeIn();
                         }
                     else
                         {
@@ -368,9 +380,9 @@
 			}
 		if (typeof owner==="undefined" || owner=='')
 			{
-			owner = '<?php echo htmlspecialchars($applicationname, ENT_QUOTES); ?>';
+			owner = '<?php echo escape_quoted_data($applicationname); ?>';
 			}
-		jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(message) + "</div><br />" + url);
+		jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(message) + "</div>" + url);
 		jQuery("#modal_dialog").addClass('message_dialog');
 		jQuery("#modal_dialog").dialog({
 			title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,

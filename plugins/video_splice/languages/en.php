@@ -3,7 +3,7 @@
 $lang["action-trim"] = "Trim";
 $lang["video-trim"] = "Video Trim";
 $lang["video-trim-warning"] = "Trim Warning";
-$lang["video-trim-warning-text"] = "Your start or end trim point/s proceeds the video preview length.<br><br>The preview provided will not fully represent the final outcome, please consider increasing your video preview length and recreating preview files should you wish to preview the timmed outcome.";
+$lang["video-trim-warning-text"] = "Your start or end trim point/s proceeds the video preview length.<br><br>The preview provided will not fully represent the final outcome, please consider increasing your video preview length and recreating preview files should you wish to preview the trimmed outcome.";
 $lang["video-trim_upload-type"] = "Upload Type";
 $lang["video-trim_new-response"] = "New resource(s) created: Resource ID(s) [ %links] you can continue to make additional trims below.";
 $lang["video-trim_alt-response"] = "Alternative file(s) created for resource %ref: Alternative ID(s) [ %links] you can continue to make additional trims below.";

@@ -80,8 +80,8 @@ if ($saveform)
     if($action == "publish")
         {
 		// Get posted values when publishing individual resources as we can override
-		$template_text      = getvalescaped("template_text","");
-		$template_tags      = getvalescaped("template_tags","");
+		$template_text      = getval("template_text","");
+		$template_tags      = getval("template_tags","");
         $success = falcon_link_publish($resources,$template_text,$template_tags);
 		if($success["success"])
             {
@@ -140,7 +140,6 @@ if($publishedresources > 0 && $action == "publish" && !$saveform)
 	
 if(count($errormessages) > 0)
 	{
-	//echo "</p><div class='PageInformal'><p><br>" . htmlspecialchars($lang["falcon_link_resources_already_published"]) . "</p></div>";
 	echo "</p><div class='PageInformal'><p><br>" . implode("<br />",$errormessages) . "</p></div>"; 
 	}
 	

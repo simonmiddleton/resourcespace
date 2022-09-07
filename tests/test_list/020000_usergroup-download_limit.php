@@ -1,15 +1,13 @@
 <?php
 
 // Validate that usergroup download_limit functions
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Set up group with limit
-sql_query("insert into usergroup (name, permissions) VALUES ('Limited group', 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3')");
+ps_query("insert into usergroup (name, permissions) VALUES ('Limited group', 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3')");
 $groupref = sql_insert_id();
-sql_query("UPDATE usergroup set download_limit='3', download_log_days='10' WHERE ref ='$groupref'");
+ps_query("UPDATE usergroup set download_limit='3', download_log_days='10' WHERE ref ='$groupref'");
 
 // Create a user
 $limiteduser=new_user("limiteduser",$groupref);
@@ -53,7 +51,7 @@ if(resource_download_allowed($resourced,"",1,-1))
     }
 
 // Move the downloads to 11 days ago so downloads should now be allowed
-sql_query("UPDATE resource_log SET date = DATE_SUB(date, INTERVAL 11 DAY) WHERE type='" . LOG_CODE_DOWNLOADED . "'");
+ps_query("UPDATE resource_log SET date = DATE_SUB(date, INTERVAL 11 DAY) WHERE type=?",array("s",LOG_CODE_DOWNLOADED));
 
 // Call resource_download_allowed() once again - should now return true
 if(!resource_download_allowed($resourced,"",1,-1))

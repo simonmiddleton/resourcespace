@@ -3,10 +3,10 @@
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if ($k!=""){die();} 
+$k=getval("k","");if ($k!=""){die();} 
 include("../include/authenticate.php");
 
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 $collections=get_resource_collections($ref);
 
 if (count($collections)!=0){

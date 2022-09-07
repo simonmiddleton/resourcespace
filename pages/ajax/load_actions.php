@@ -2,9 +2,9 @@
 include '../../include/db.php';
 include '../../include/authenticate.php';
 
-$forpage=getvalescaped('page', '');
-$type=getvalescaped('actiontype', '');
-$ref=getvalescaped('ref', '',true);
+$forpage=getval('page', '');
+$type=getval('actiontype', '');
+$ref=getval('ref', '',true);
 
 switch ($type)
     {
@@ -19,23 +19,22 @@ switch ($type)
         break;
 
     case "search":
-        $search = getvalescaped("search", "");
-        $restypes = getvalescaped("restypes", "");
-        $order_by = getvalescaped("order_by", "relevance");
-        $archive = getvalescaped("archive", "0");
-        $per_page = getvalescaped("per_page", null, true);
-        $offset = getvalescaped("offset", null, true);
+        $search = getval("search", "");
+        $restypes = getval("restypes", "");
+        $order_by = getval("order_by", "relevance");
+        $archive = getval("archive", "0");
+        $per_page = getval("per_page", null, true);
+        $offset = getval("offset", null, true);
         $fetchrows = (!is_null($per_page) || !is_null($offset) ? $per_page + $offset : -1);
-        $sort = getvalescaped("sort", "desc");
+        $sort = getval("sort", "desc");
         // $access_override = false;
-        $starsearch = getvalescaped("starsearch", 0, true);
         // $ignore_filters = false;
         // $return_disk_usage = false;
-        $recent_search_daylimit = getvalescaped("recent_search_daylimit", "");
-        $go = getvalescaped("go", "");
+        $recent_search_daylimit = getval("recent_search_daylimit", "");
+        $go = getval("go", "");
         // $stats_logging = true;
         // $return_refs_only = false;
-        $editable_only = getvalescaped("foredit","")=="true";
+        $editable_only = getval("foredit","")=="true";
 
         $result = do_search(
             $search,
@@ -45,7 +44,7 @@ switch ($type)
             $fetchrows,
             $sort,
             false,
-            $starsearch,
+            DEPRECATED_STARSEARCH,
             false,
             false,
             $recent_search_daylimit,

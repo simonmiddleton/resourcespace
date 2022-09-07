@@ -161,7 +161,7 @@ include "../include/header.php";
 	<?php
 
         ?>
-        <h1><?php echo $page_header; render_help_link("user/share-upload-link");?></h1>
+        <h1><?php echo $page_header; render_help_link("user/sharing-upload");?></h1>
         <?php
         if(count($messages) > 0)
             {

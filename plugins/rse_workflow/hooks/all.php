@@ -4,13 +4,12 @@ function HookRse_workflowAllInitialise()
 	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
 	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
-     global $pagename, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
+     global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates, $workflowicons;
     
     # Update $archive_states and associated $lang variables with entries from database
     $searchstates = array();
     $wfstates=rse_workflow_get_archive_states();
     
-	global $lang;
 	foreach($wfstates as $wfstateref=>$wfstate)
 		{
 		if (!$wfstate['fixed'])
@@ -27,6 +26,10 @@ function HookRse_workflowAllInitialise()
             $searchstates[] = $wfstateref;
             }
         $lang["status" . $wfstateref] =  i18n_get_translated($wfstate["name"]);
+        if(isset($wfstate['icon']) && trim($wfstate['icon']) != "")
+            {
+            $workflowicons[$wfstateref] = trim($wfstate['icon']);
+            }
 		}
     natsort($additional_archive_states);		 
     }
@@ -50,8 +53,8 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     
     if(getval('more_workflow_action_' . $workflowaction,'') != '')
         {
-            $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
-            $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
+        $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
+        $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
         }
         
     if(count($resource) > 200)
@@ -64,44 +67,11 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$resource);;
         }
     
+  
+    
     $maillinkurl = (($use_phpmailer) ? "<a href=\"$linkurl\">$linkurl</a>" : $linkurl); // Convert to anchor link if using html mails
       
-    /***** NOTIFY GROUP SUPPORT *****/
-    if(isset($wfstates[$archive]['notify_group']) && $wfstates[$archive]['notify_group'] != '')
-        {   
-        $archive_notify = sql_query("
-            SELECT ref, email
-              FROM user
-             WHERE approved = 1
-               AND usergroup = '" . escape_check($wfstates[$archive]['notify_group']) . "'
-        ");
-
-        // Send notifications to members of usergroup
-        foreach($archive_notify as $archive_notify_user)
-            {
-            debug("processing notification for notify user " . $archive_notify_user['ref']);
-            get_config_option($archive_notify_user['ref'],'user_pref_resource_notifications', $send_message);          
-            if($send_message==false)
-                {
-                continue;
-                }
-                
-            // Does this user want an email or notification?
-            get_config_option($archive_notify_user['ref'],'email_user_notifications', $send_email); 
-            if($send_email && filter_var($archive_notify_user["email"], FILTER_VALIDATE_EMAIL))
-                {
-                debug("sending email notification to user " . $archive_notify_user['ref']);
-                send_mail($archive_notify_user["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl);
-                }
-            else
-                {
-                global $userref;
-                debug("sending system notification to user " . $archive_notify_user['ref']);
-                message_add($archive_notify_user['ref'],$message,$linkurl);
-                }
-            }
-        }
-    /***** END OF NOTIFY GROUP SUPPORT *****/
+    /***** NOTIFY GROUP SUPPORT IS NOW HANDLED BY ACTIONS *****/    
 
     /*****NOTIFY CONTRIBUTOR*****/
     if(isset($wfstates[$archive]['notify_user_flag']) && $wfstates[$archive]['notify_user_flag'] == 1)
@@ -112,42 +82,40 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             $resdata = get_resource_data($resourceref);
             if(isset($resdata['created_by']) && is_numeric($resdata['created_by']))
                 {
-                $contuser = sql_query('SELECT ref, email FROM user WHERE ref = ' . $resdata['created_by'] . ';', '');
-                if(count($contuser) == 0)
+                $contuser = get_user($resdata['created_by']);
+                if(!$contuser)
                     {
                     // No contributor listed
-                    debug("No contributor listed for resource " . $resourceref);
+                    debug("No valid contributor listed for resource " . $resourceref);
                     continue;
                     }
                     
-                if(!isset($cntrb_arr[$contuser[0]["ref"]]))
+                if(!isset($cntrb_arr[$contuser["ref"]]))
                     {
                     // This contributor needs to be added to the array of users to notify
-                    $cntrb_arr[$contuser[0]["ref"]] = array();
-                    $cntrb_arr[$contuser[0]["ref"]]["resources"] = array();
-                    $cntrb_arr[$contuser[0]["ref"]]["email"] = $contuser[0]["email"];
+                    $cntrb_arr[$contuser["ref"]] = array();
+                    $cntrb_arr[$contuser["ref"]]["resources"] = array();
+                    $cntrb_arr[$contuser["ref"]]["email"] = $contuser["email"];
+                    $cntrb_arr[$contuser["ref"]]["username"] = $contuser["username"];
                     }
-                $cntrb_arr[$contuser[0]["ref"]]["resources"][] = $resourceref;
+                $cntrb_arr[$contuser["ref"]]["resources"][] = $resourceref;
                 }
             }
         // Construct messages for each user    
         foreach($cntrb_arr as $cntrb_user => $cntrb_detail)
             {
             debug("processing notification for contributing user " . $cntrb_user);
-            // Does this user want to receive any notifications?
-            get_config_option($cntrb_user,'user_pref_resource_notifications', $send_message);          
-            if($send_message==false)
-                {
-                continue;
-                }
-            
-            $message = $lang["userresources_status_change"] . $lang["status" . $archive];
+            $message = new ResourceSpaceUserNotification;
+            $message->set_subject($applicationname . ": ");
+            $message->append_subject("lang_status" . $archive);
+            $message->set_text("lang_userresources_status_change");
+            $message->append_text("lang_status" . $archive);
             if(getval('more_workflow_action_' . $workflowaction,'') != '')
                 {
-                    $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
-                    $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
+                $message->append_text("<br/><br/>");
+                $message->append_text("lang_rse_workflow_more_notes_title");
+                $message->append_text("<br/>" . getval('more_workflow_action_' . $workflowaction, ''));
                 }
-        
             if(count($cntrb_detail["resources"]) > 200)
                 {
                 // Too many resources to link to directly
@@ -157,46 +125,18 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
                 {
                 $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$cntrb_detail["resources"]);
                 }
-            
-            $maillinkurl = (($use_phpmailer) ? "<br /><br /><a href=\"$linkurl\">$linkurl</a>" : "\n\n" . $linkurl); // Convert to anchor link if using html mails
-              
+            $message->url = $linkurl;
+            send_user_notification([$cntrb_user],$message);
 
-            // Does this user want an email or system message?
-            get_config_option($cntrb_user,'email_user_notifications', $send_email);
-            if($send_email && filter_var($cntrb_detail["email"], FILTER_VALIDATE_EMAIL))
+            if($wfstates[$archive]["rse_workflow_bcc_admin"]==1)
                 {
-                debug("sending email notification to contributing user " . $cntrb_user);
-                send_mail($cntrb_detail["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl, $rse_workflow_from,$rse_workflow_from);
-                if($wfstates[$archive]["rse_workflow_bcc_admin"]==1)
-                    {
-                    $bccadmin_users = get_notification_users("SYSTEM_ADMIN");
-                    foreach($bccadmin_users as $bccadmin_user)
-                        {
-                        debug("processing bcc notification for contributing user " . $bccadmin_user["ref"]);
-                        // Does this admin user want to receive any notifications?
-                        get_config_option($bccadmin_user["ref"],'user_pref_resource_notifications', $send_message);          
-                        if($send_message==false)
-                            {
-                            continue;
-                            }
-                        
-                        // Does this admin user want an email or system message?
-                        get_config_option($bccadmin_user["ref"],'email_user_notifications', $send_email); 
-                        if($send_email && filter_var($bccadmin_user["email"], FILTER_VALIDATE_EMAIL)) 
-                            {
-                            send_mail($bccadmin_user["email"], $applicationname . ': ' . $lang['status' . $archive], $message . $maillinkurl, $rse_workflow_from,$rse_workflow_from);
-                            }
-                        else
-                            {
-                            message_add($bccadmin_user['ref'],$message,$linkurl);
-                            }
-                        }
-                    }					
-                }
-            else
-                {
-                debug("sending system notification to contributing user " . $cntrb_user);
-                message_add($cntrb_user,$message,$linkurl);
+                debug("processing bcc notifications");
+                $bccmessage = clone($message);
+                $bccmessage->set_text("lang_user");                
+                $bccmessage->append_text(": " . $cntrb_detail["username"] . " (#" . $cntrb_user . ")<br/>");
+                $bccmessage->append_text_multi($message->get_text(true));
+                $bccadmin_users = get_notification_users("SYSTEM_ADMIN");
+                send_user_notification($bccadmin_users,$bccmessage);
                 }
             }
         }
@@ -235,4 +175,32 @@ function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_
         break;
     <?php
     return;
+    }
+
+
+function HookRse_workflowAllAfter_setup_user()
+    {
+    // Replaces notify group messaging - now replaced by actions
+    global $userref, $usergroup;
+    
+    get_config_option($userref,'user_pref_resource_notifications', $addwfactions);		  
+    if($addwfactions==false)
+        {
+        // No notifications were sent so actions shouldn't appear either
+        return false;
+        }
+
+    $extra_notify_states = [];
+    $wfstates=rse_workflow_get_archive_states();
+    foreach($wfstates as $wfstateref=>$wfstate)
+        {
+        if(isset($wfstate['notify_group']) &&  (int)$wfstate['notify_group'] == $usergroup && !checkperm("z" . $wfstateref))
+            {
+            $extra_notify_states[] = $wfstateref;
+            }
+        }
+    if(count($extra_notify_states) > 0)
+        {
+        $GLOBALS['actions_notify_states'] .= "," . implode(",",$extra_notify_states);
+        }
     }

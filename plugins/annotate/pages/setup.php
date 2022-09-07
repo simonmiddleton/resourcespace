@@ -27,9 +27,17 @@ $page_def[] = config_add_boolean_select('annotate_show_author', $lang['annotate_
 $page_def[] = config_add_boolean_select('annotate_pdf_output', $lang["annotate_pdf_output"]);
 $page_def[] = config_add_boolean_select('annotate_pdf_output_only_annotated', $lang["annotate_pdf_output_only_annotated"]);
 $page_def[] = config_add_multi_group_select('annotate_admin_edit_access', $lang["annotate_admin_edit_access"]);
+$page_def[] = config_add_single_ftype_select("annotate_resource_type_field", $lang["admin_resource_type_field"],300,false,[FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]); 
 
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
+if(empty($annotate_resource_type_field) || $annotate_resource_type_field == 0)
+    {
+    ?>
+    <div class="PageInformal"><?php echo $lang['annotate_metadatafield_error']?></div>
+    <script>jQuery(document).ready(function(){jQuery('#annotate_resource_type_field').addClass('highlighted');});</script>
+    <?php
+    }
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
 include '../../../include/footer.php';

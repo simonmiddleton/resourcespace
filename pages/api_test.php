@@ -5,12 +5,13 @@ include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";
 include_once "../include/login_functions.php";
+include_once "../include/dash_functions.php";
 include "../include/header.php";
 
 if (!$enable_remote_apis) {exit("API not enabled.");}
 if (!checkperm("a")) {exit("Access denied");}
 
-$api_function=getvalescaped("api_function","");
+$api_function=getval("api_function","");
 
 if ($api_function!="")
     {
@@ -49,7 +50,7 @@ if (getval("submitting","")!="" && $api_function!="")
 
 <div class="RecordBox">
 <div class="RecordPanel">
-<div class="Title"><?php echo $lang['api-test-tool']; ?></div>
+<h1><?php echo $lang['api-test-tool']; ?></h1>
 
 <p><?php echo $lang["api-help"];render_help_link("api"); ?></p>
 

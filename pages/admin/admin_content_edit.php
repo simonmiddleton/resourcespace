@@ -10,17 +10,17 @@ include "../../include/db.php";
 include "../../include/authenticate.php"; if (!checkperm("o")) {exit ("Permission denied.");}
 include "../../include/research_functions.php";
 
-$offset        = getvalescaped('offset', 0);
-$page          = getvalescaped('page', '');
-$name          = getvalescaped('name', '');
-$findpage      = getvalescaped('findpage', '');
-$findname      = getvalescaped('findname', '');
-$findtext      = getvalescaped('findtext', '');
-$newhelp       = getvalescaped('newhelp', '');
-$editlanguage  = getvalescaped('editlanguage', $language);
-$editgroup     = getvalescaped('editgroup', '');
-$save          = getvalescaped('save', '');
-$text          = getvalescaped('text', '');
+$offset        = getval('offset', 0);
+$page          = getval('page', '');
+$name          = getval('name', '');
+$findpage      = getval('findpage', '');
+$findname      = getval('findname', '');
+$findtext      = getval('findtext', '');
+$newhelp       = getval('newhelp', '');
+$editlanguage  = getval('editlanguage', $language);
+$editgroup     = getval('editgroup', '');
+$save          = getval('save', '');
+$text          = getval('text', '');
 
 // Validate HTML
 $html_validation = validate_html($text);
@@ -82,12 +82,13 @@ $language=$languagesaved;
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-
+<h1><?php echo $lang["editcontent"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["managecontent"],

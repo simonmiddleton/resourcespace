@@ -103,6 +103,38 @@ Here's an example of a possible configuration for both the Kalmar Federation and
 				'outputDir' 	=> 'metadata/metarefresh-ukaccess/',
 				'outputFormat' => 'serialize',
 			],
+			'edugain' => [
+				'cron'          => ['daily'],
+				'sources'       => [
+					[
+						'src' => 'https://metadata.surfconext.nl/edugain-downstream.xml',
+						'certificates' => [
+							'SURFconext-metadata-signer.pem',
+						],
+					],
+				],
+				'attributewhitelist' => [
+					[
+						'#EntityAttributes#' => [
+							'#urn:oasis:names:tc:SAML:attribute:assurance-certification#'
+							 => ['#https://refeds.org/sirtfi#'],
+							'#http://macedir.org/entity-category-support#'
+							 => ['#http://refeds.org/category/research-and-scholarship#'],
+						],
+					],
+					[
+						'#RegistrationInfo#' => [
+							'#registrationAuthority#'
+							=> '#http://www.surfconext.nl/#',
+						],
+						'#EntityAttributes#' => [
+							'#urn:oasis:names:tc:SAML:attribute:assurance-certification#'
+							=> ['#https://refeds.org/sirtfi#'],
+						],
+					],
+				],
+			],
+                    ],
 		]
 	];
 
@@ -170,9 +202,15 @@ Each metadata source has the following options:
 :   This is an array which will be combined with the metadata fetched to
     generate the final metadata array.
 
+`regex-template`
+:   This is an array of arrays that allows metadata elements to be added or changed for al entities matching a regular
+    expression. The key of each element is a regular expression that will be matched against all entity IDs in metadata.
+    If the regular expression matches, the value array will be combined with the metadata fetched to generate the final
+    metadata array.
+
 `types`
-:	Same as the option with the same name at the metadata set level. This option has precedence when both are specified,
-	allowing a more fine grained configuration for every metadata source.
+:   Same as the option with the same name at the metadata set level. This option has precedence when both are specified,
+    allowing a more fine grained configuration for every metadata source.
 
 `whitelist`
 :   This is an array that allows for selectively refreshing a list of identity providers. Only data from identity
@@ -182,6 +220,18 @@ Each metadata source has the following options:
 `blacklist`
 :   This is an array that allows for selectively skipping a list of identity providers.  Only data from identity
     providers that do not appear in the blacklist are processed and written to disk.
+
+`attributewhitelist`
+:   This is a multilevel array for selectively refreshing a list of identity providers based on specific attributes
+    patterns in their metadata. Only data from identity providers that match at least one element of the top-level array
+    will be processed and written to disk.   
+    Matching of such a top-level element, itself being a (multi-level) array, means that at each level (recursively) the
+    key and value match with the identity provider's metadata. Scalar keys and values are matched using PCRE.   
+    A typical use-case is to accept only identity providers from eduGAIN that match a combination of specific
+    EntityAttributes, such as the https://refeds.org/sirtfi assurance-certification *and*
+    http://refeds.org/category/research-and-scholarship entity-category.   
+    Another example is filtering identity providers from a specific federation, by filtering on specific values of the
+    registrationAuthority inside the RegistrationInfo.
 
 
 After you have configured the metadata sources, you need to give the

@@ -12,21 +12,21 @@ include_once '../../include/node_functions.php';
 
 
 // Initialize
-$ajax       = getvalescaped('ajax', '');
-$action     = getvalescaped('action', '');
+$ajax       = getval('ajax', '');
+$action     = getval('action', '');
 
-$field      = getvalescaped('field', '');
+$field      = getval('field', '');
 $field_data = get_field($field);
 
-$node_ref   = getvalescaped('node_ref', '');
+$node_ref   = getval('node_ref', '');
 $nodes      = array();
 
 // Array of nodes to expand immediately upon page load
 $expand_nodes = getval("expand_nodes","");
 
-$import_export_parent = getvalescaped('import_export_parent', null);
+$import_export_parent = getval('import_export_parent', null);
 
-$filter_by_name = unescape(getvalescaped('filter_by_name', ''));
+$filter_by_name = unescape(getval('filter_by_name', ''));
 
 $chosencsslink ='<link type="text/css" rel="stylesheet" href="' . $baseurl_short . 'lib/chosen/chosen.min.css"></link>';
 $chosenjslink = '<script type="text/javascript" src="' . $baseurl_short . 'lib/chosen/chosen.jquery.min.js"></script>';
@@ -43,24 +43,45 @@ $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?fiel
 // Process form requests
 if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     {
-    $option_name     = trim(getvalescaped('option_name', ''));
-    $option_parent   = getvalescaped('option_parent', '');
-    $option_new_index = getvalescaped('node_order_by', '', true);
+    $option_name     = trim(getval('option_name', ''));
+    $option_parent   = trim(getval('option_parent', ''));
+    $option_new_index = getval('node_order_by', '', true);
     if ($option_new_index != "")
         {
         $option_new_index -= 1;
         }
-    $node_action     = getvalescaped('node_action', '');
+    $node_action     = getval('node_action', '');
     // [Save Option]
     if('save' === $node_action && enforcePostRequest($ajax))
         {
         $response['refresh_page'] = false;
         $node_ref_data            = array();
 
-        if(trim($option_parent) != '' || (get_node($node_ref, $node_ref_data) && $node_ref_data['parent'] != $option_parent))
-            {
-            $response['refresh_page'] = true;
+        // If node baing saved has a parent and the parent changes then we need to reload
+        $existing_parent="";
+        if (get_node($node_ref, $node_ref_data)) { 
+            $existing_parent=$node_ref_data["parent"]; 
+        }
+
+        if ($option_parent != '') { // Incoming parent is populated
+            if ($option_parent == $existing_parent) {
+                // Parent unchanged; no need to refresh
             }
+            else {
+                // Parent being changed; refresh
+                $response['refresh_page'] = true;
+            }
+        }
+        else { // Incoming parent is blank
+            if ($option_parent == $existing_parent) {
+                // No parent being established; no need to refresh
+            }
+            else {
+                // Parent being removed; refresh
+                $response['refresh_page'] = true;
+            }
+
+        }
 
         // Option order_by is not being sent because that can be asynchronously changed and we might not know about it,
         // thus this will be checked upon saving the data. If order_by is null / empty string, then we will use the current value
@@ -153,7 +174,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 
                     if($field_data['type'] != 7) // Not a category tree
                         {
-                        $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+                        $per_page    = (int) getval('per_page_list', $default_perpage_list, true);
                         $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
                         $url_parameters['offset'] = $move_to_page_offset;
                         }
@@ -206,11 +227,11 @@ if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $fi
     }
 
 // [New Option]
-$submit_new_option = getvalescaped('submit_new_option', '');
+$submit_new_option = getval('submit_new_option', '');
 if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_new_option && enforcePostRequest($ajax))
     {
     $new_option_name     = trim(getval('new_option_name', ''));
-    $new_option_parent   = getvalescaped('new_option_parent', '');
+    $new_option_parent   = getval('new_option_parent', '');
     $new_option_order_by = get_node_order_by($field, 7 == $field_data['type'], $new_option_parent);
     $new_node_index      = $new_option_order_by/10;
 
@@ -404,8 +425,8 @@ $url         = generateURL("{$baseurl_short}pages/admin/admin_manage_field_optio
                             'filter_by_name' => $filter_by_name
                         )
                     );
-$offset      = (int) getvalescaped('offset', 0, true);
-$per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+$offset      = (int) getval('offset', 0, true);
+$per_page    = (int) getval('per_page_list', $default_perpage_list, true);
 $count_nodes = get_nodes_count($field, $filter_by_name);
 $totalpages  = ceil($count_nodes / $per_page);
 $curpage     = floor($offset / $per_page) + 1;
@@ -447,7 +468,8 @@ if($ajax)
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		    'menu' =>  true
         ),
         array(
             'title' => $lang["admin_resource_type_fields"],
@@ -540,7 +562,7 @@ if($ajax)
             $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true);
             }
 
-        $node_index=getvalescaped('offset',0,true);
+        $node_index=getval('offset',0,true);
         foreach($nodes as $node)
             {
             check_node_indexed($node, $field_data['partial_index']);
@@ -649,6 +671,18 @@ if($ajax)
 $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
+    $all_nodes = get_nodes($field, NULL, TRUE, NULL, NULL, '', TRUE);
+
+    ?>
+    <select id="node_master_list" class="DisplayNone">
+    <?php
+    foreach($all_nodes as $node)
+        {
+        ?><option value="<?php echo escape_quoted_data($node['ref'])?>" id="master_node_<?php echo escape_quoted_data($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
+        }
+    ?>
+    </select>
+    <?php
     $nodes_counter = count($tree_nodes);
     $i             = 0;
     $node_index    = 0;
@@ -681,6 +715,46 @@ if($field_data['type'] == 7 && !$tree_nodes)
 ?>
 </div><!-- end of BasicBox -->
 <script>
+
+jQuery(document).on('focus', '[id*="_parent_select_chosen"]', function(){  
+    fill_select(jQuery(this).parent().find('select'));
+});
+
+
+jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){load_parent(jQuery(ele))});
+
+function fill_select(node_element)
+    {
+    let total_nodes = node_element.find('option').length
+    //Skip the select if there are already options in the list, should be 2 by default 'Select Parent' and the parent node.
+    if(total_nodes > 2){return;}
+    if(total_nodes == 2){node_element.children().last().remove()}
+
+    //Get the node master list that was genereated on page load
+    let node_list = jQuery('#node_master_list').clone();
+    node_list.children().appendTo(node_element);
+
+    //Find and select the parent node from the dropdown list
+    node_element.find('[value="'+ node_element.attr('parent_node') +'"]').attr('selected', true)
+
+    //Get node ref from element id
+    let id_parts = node_element.attr('id').split('_');
+    //Hide the node in its own dropdown
+    node_element.find('option[value="'+id_parts[2]+'"]').hide();
+    node_element.trigger('chosen:updated');
+    }
+
+function load_parent(node_element)
+    {
+    //Don't need to add the parent if the node already has options
+    if(node_element.find('option').length != 1){return;}
+    let parent = node_element.attr('parent_node');
+    if(parent != '')
+        {
+        jQuery('#master_node_' + node_element.attr('parent_node')).clone().attr('selected', true).appendTo(node_element);
+        }
+    }
+
 function AddNode(parent)
     {
     var new_node_children     = jQuery('#new_node_' + parent + '_children');
@@ -716,7 +790,6 @@ function AddNode(parent)
             if(new_node_parent_children.length == 0)
                 {
                 node_parent_children.append(response);
-
                 // Mark node as parent on the UI
                 jQuery('#node_' + new_option_parent_val).data('toggleNodeMode', 'ex');
                 jQuery('#node_' + new_option_parent_val + '_toggle_button').attr('src', '<?php echo $baseurl_short; ?>gfx/interface/node_ex.gif');
@@ -737,6 +810,14 @@ function AddNode(parent)
                     ?>
 
                 new_node_parent_children.before(response);
+                }
+            if(new_option_parent_val == 0)
+                {
+                jQuery('#CentralSpace .BasicsBox table').find('select').each(function(i, ele){load_parent(jQuery(ele))});
+                }
+            else
+                {
+                jQuery('#node_' + new_option_parent_val + '_children').find('select').each(function(i, ele){load_parent(jQuery(ele))});
                 }
 
             initial_new_option_name = new_option_name.val();
@@ -841,20 +922,26 @@ function ReorderNode(ref, direction, move_to)
 
     jQuery.post(post_url, post_data, function(response)
         {
-        if(direction == 'moveup' && response.sibling && response.sibling.length > 0)
+        if(direction == 'moveup') 
             {
-            node.insertBefore('#node_' + response.sibling);
-            node_children.insertBefore('#node_' + response.sibling);
-            document.getElementById('option_' + ref + '_order_by').value --;
-            document.getElementById('option_' + response.sibling + '_order_by').value ++;
+            if (response.sibling) 
+                {
+                node.insertBefore('#node_' + response.sibling);
+                node_children.insertBefore('#node_' + response.sibling);
+                document.getElementById('option_' + ref + '_order_by').value --;
+                document.getElementById('option_' + response.sibling + '_order_by').value ++;
+                }
             }
 
-        else if(direction == 'movedown' && response.sibling && response.sibling.length > 0)
+        else if(direction == 'movedown') 
             {
-            node.insertAfter('#node_' + response.sibling);
-            node_children.insertAfter('#node_' + response.sibling);
-            document.getElementById('option_' + ref + '_order_by').value ++;
-            document.getElementById('option_' + response.sibling + '_order_by').value --;
+            if (response.sibling) 
+                {
+                node.insertAfter('#node_' + response.sibling);
+                node_children.insertAfter('#node_' + response.sibling);
+                document.getElementById('option_' + ref + '_order_by').value ++;
+                document.getElementById('option_' + response.sibling + '_order_by').value --;
+                }
             }
 
         else if(response.refresh_page=true)
@@ -906,6 +993,7 @@ function ToggleTreeNode(ref, field_ref)
         if(typeof response !== 'undefined')
             {
             node_children.html(response);
+            node_children.find('select').each(function(i,ele){load_parent(jQuery(ele))});
             jQuery('.node_parent_chosen_selector').chosen({});
 
             jQuery(table_node).data('toggleNodeMode', 'ex');

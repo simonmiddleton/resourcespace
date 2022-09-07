@@ -115,8 +115,6 @@ else
             }               
         echo "}},\n";
         }
-    // Add in the high level tiles included with RS
-    echo "{ groupName: \"ResourceSpace\", expanded: true, layers: {\"OSM\" : rs_default}},\n";
 
     echo "];\n";
 }

@@ -5,8 +5,8 @@ include "../include/authenticate.php";
 if (!checkperm("s"))
     {exit ("Permission denied.");}
 
-$resource_type=getvalescaped("resource_type","",true);
-$context=getvalescaped("context","");
+$resource_type=getval("resource_type","",true);
+$context=getval("context","");
 
 # Loop through all the submitted keywords, build a search string
 $search=array();

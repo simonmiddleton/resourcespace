@@ -5,31 +5,29 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
+
 include "../../include/db.php";
-
 include "../../include/authenticate.php"; 
-
 if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
+    {
+    exit ("Permission denied.");
+    }
 
+$ref=getval("ref","",true);
 
-$ref=getvalescaped("ref","",true);
-
-$find=getvalescaped("find","");
-$restypefilter=getvalescaped("restypefilter","",true);
-$field_order_by=getvalescaped("field_order_by","ref");
-$field_sort=getvalescaped("field_sort","asc");
+$find=getval("find","");
+$restypefilter=getval("restypefilter","",true);
+$field_order_by=getval("field_order_by","ref");
+$field_sort=getval("field_sort","asc");
 $newfield = getval("newfield","") != "";
 $ajax = getval('ajax', '');
 $url_params = array("ref"=>$ref,
-		    "restypefilter"=>$restypefilter,
-		    "$field_order_by"=>$field_order_by,
-		    "field_sort"=>$field_sort,
-		    "find" =>$find);
-		
-$backurl=getvalescaped("backurl","");
+        "restypefilter"=>$restypefilter,
+        "$field_order_by"=>$field_order_by,
+        "field_sort"=>$field_sort,
+        "find" =>$find);
+    
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl = generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params);
@@ -70,7 +68,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 	global $lang;
  	
 	$addconstraint=true;
-	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0, "schema");
+	$constraint=ps_value("select field_constraint value from resource_type_field where ref=?",array("i",$ref),0, "schema");
 	?>
 		<div class="clearerleft"></div>
 	</div> <!-- end question -->
@@ -101,6 +99,12 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			return;
 			}
 		}
+
+    if($propertyname == 'regexp_filter')
+        {
+        global $regexp_slash_replace; 
+        $currentvalue = str_replace($regexp_slash_replace, '\\', (string) $currentvalue);
+        }
 		
 	$alt_helptext=hook('rtfieldedithelptext', 'admin_resource_type_field_edit', array($propertyname));
 	if($alt_helptext!==false){
@@ -109,13 +113,13 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 	
 	?>
 	<div class="Question" >
-		<label><?php echo ($propertytitle!="")?$propertytitle:$propertyname ?></label>
+		<label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
 		<?php
 		if($propertyname=="resource_type")
 			{
 			global $resource_types;
 			?>
-            <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+            <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
             <option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
 
             <?php
@@ -137,8 +141,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			//natsort($field_types);
 			?>
-                <select id="<?php echo $propertyname ?>"
-                        name="<?php echo $propertyname ?>"
+                <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>"
+                        name="<?php echo htmlspecialchars((string) $propertyname); ?>"
                         class="stdwidth"
                         onchange="
                              <?php if(!$newfield)
@@ -166,7 +170,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                                         {
                                             this.form.submit(); 
                                         } else {
-                                            jQuery('#type').val(current_type);
+                                            jQuery('#field_edit_type').val(current_type);
                                         }
                                 }
 								else
@@ -233,7 +237,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				// The linked_data_field column is is only used for date range fields at present			
 				// Used to store the raw EDTF string submitted
 				?>
-				<input name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+				<input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
 				<?php
 				}
 			}
@@ -244,14 +248,14 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			
 			?>
-			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+			  <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
 				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
 				<?php
 				foreach($allfields as $field)
 					{
 					if($field["ref"]!=$ref && isset($resource_type_array[$field["resource_type"]])) // Don't show itself as an option to sync with
 					    {?>
-					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars($field["name"]) . " - ") . i18n_get_translated($resource_type_array[$field["resource_type"]]) . ")"?></option>
+					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]) . " - ") . i18n_get_translated($resource_type_array[$field["resource_type"]]) . ")"?></option>
 					    <?php
 					    }
 					}
@@ -259,28 +263,44 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				</select>
 			<?php
 			}
+        else if($propertyname === 'tab')
+            {
+            ?>
+            <select class="stdwidth" name="<?php echo escape_quoted_data($propertyname); ?>">
+            <?php
+            foreach(get_tab_name_options() as $tab_ref => $tab_name)
+                {
+                $selected = $tab_ref === (int) $currentvalue ? 'selected' : '';
+                ?>
+                <option value="<?php echo (int) $tab_ref; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars((string) $tab_name); ?></option>
+                <?php
+                }
+            ?>
+            </select>
+            <?php
+            }
 		elseif($type==1)
 			{
 			if ($propertyname=="advanced_search" && $system_date_field)
                 {
-                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                ?><input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
                 $helptext=$lang["property-system_date_help_text"];
                 }
             else
                 {
-                ?><input name="<?php echo $propertyname ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                ?><input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
                 }
 			}
 		elseif($type==2)
 			{
 			?>
-			<textarea class="stdwidth" rows="5" id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
+			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
 			<?php
 			}
 		else
 			{
 			?>
-			<input name="<?php echo $propertyname ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+			<input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
 			<?php
 			}
 
@@ -350,10 +370,10 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 
 // example field :-
 // "name of table column"=>array(
-// <language string for the friendly name of this property>,
-// <lang string for the help text explaining what this property means>,
-// <value to denote the field type(0=text,1=boolean,2=text area),
-// < boolean value to indicate whether this is a field that is synchronised? 0=No 1=Yes > 
+// 0: <language string for the friendly name of this property>,
+// 1: <lang string for the help text explaining what this property means>,
+// 2: <value to denote the field type(0=text,1=boolean,2=text area),
+// 3: < boolean value to indicate whether this is a field that is synchronised? 0=No 1=Yes > 
 // )
 // IMPORTANT - Make sure advanced field properties are listed after the 'partial_index' so that these will be hidden from users by default
 
@@ -381,7 +401,7 @@ $fieldcolumns = array(
     'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
     'help_text'                => array($lang['property-help_text'],'',2,1),
     'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
-    'tab_name'                 => array($lang['property-tab_name'],'',0,0),
+    'tab'                      => array($lang['property-tab_name'], '', 0, 0),
     'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
     'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),					
     'display_template'         => array($lang['property-display_template'],'',2,1),
@@ -396,7 +416,7 @@ $fieldcolumns = array(
     'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
     'sync_field'               => array($lang['property-sync_with_field'],'',0,0),
     'onchange_macro'           => array($lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1),
-    'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1)	
+    'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
 );
 
 # Remove some items if $execution_lockout is set to prevent code execution
@@ -417,10 +437,12 @@ $type_change = false;
 
 if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false))
 	{
+    global $regexp_slash_replace;
 	# Save field config
-	$sync_field = getvalescaped("sync_field",0);
+	$sync_field = getval("sync_field",0);
 	$existingfield = get_resource_type_field($ref);
-	
+	$params=array();$syncparams=array();
+
 	foreach ($fieldcolumns as $column=>$column_detail)		
 		{
 		if ($column_detail[2]==1)
@@ -429,8 +451,12 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			}		
 		else
 			{
-			$val=escape_check(trim(getval($column,"")));			
-			
+			$val=trim(getval($column,""));
+            if($column == 'regexp_filter')
+                {
+                $val = str_replace('\\', $regexp_slash_replace, $val);   
+                }
+		
 			if($column == "type" && $val != $existingfield["type"] && getval("migrate_data","") != "")
 				{
 				// Need to migrate field data
@@ -442,7 +468,12 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
                 {
                 $val="field" . $ref;
                 }
-			}
+
+            if($column === 'tab' && $val == 0)
+                {
+                $val = ''; # set to blank so the code will convert to SQL NULL later
+                }
+            }
 		if (isset($sql))
 			{
 			$sql.=",";
@@ -452,7 +483,18 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			$sql="update resource_type_field set ";
 			}		
 		
-		$sql.="{$column}=" . (($val=="")?"NULL":"'{$val}'");
+		$sql.="{$column}=";
+        if ($val=="")
+            {
+            $sql.="NULL";
+            }
+        else    
+            {
+            $sql.="?";
+            $params[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+            $params[]=$val;
+            }
+
 		log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
 
 		// Add SQL to update synced fields if field is marked as a sync field
@@ -466,25 +508,40 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 				{
 				$syncsql="update resource_type_field set ";
 				}
-			$syncsql.="{$column}=" . (($val=="")?"NULL":"'{$val}'");
+			$syncsql.="{$column}=";
+            if ($val=="")
+                {
+                $syncsql.="NULL";
+                }
+            else    
+                {
+                $syncsql.="?";
+                $syncparams[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+                $syncparams[]=$val;
+                }
 			}
 		}
 	// add field_constraint sql
-	if (getvalescaped("field_constraint","")!=""){$sql.=",field_constraint='".getvalescaped("field_constraint",0)."'";}
+	if (getval("field_constraint","")!=""){$sql.=",field_constraint='".getval("field_constraint",0)."'";}
 
     // Add automatic nodes ordering if set (available only for fixed list fields - except category trees)
-    $sql .= ", automatic_nodes_ordering = '" . (1 == getval('automatic_nodes_ordering', 0, true) ? 1 : 0) . "'";
+    $sql .= ", automatic_nodes_ordering = ?";
+    $params[]="i";$params[]= (1 == getval('automatic_nodes_ordering', 0, true) ? 1 : 0);
 
-    $sql .= " WHERE ref = '{$ref}'";
+    $sql .= " WHERE ref = ?";
+    $params[]="i";$params[]=$ref;
 
-	sql_query($sql);
+	ps_query($sql,$params);
 	clear_query_cache("schema");
 	clear_query_cache("featured_collections");
 
 	if($sync_field!="" && $sync_field>0)
 		{
-		$syncsql.=" where ref='$sync_field' or sync_field='$ref'";
-		sql_query($syncsql);
+		$syncsql.=" where ref=? or sync_field=?";
+        $syncparams[]="i";$syncparams[]=$sync_field;
+        $syncparams[]="i";$syncparams[]=$ref;
+
+		ps_query($syncsql,$syncparams);
 		}
 	
 	hook('afterresourcetypefieldeditsave');
@@ -496,17 +553,10 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 $confirm_delete=false;	
 if (getval("delete","")!="" && enforcePostRequest($ajax))
 	{
-    $confirmdelete=getvalescaped("confirmdelete","");
+    $confirmdelete=getval("confirmdelete","");
     # Check for resources of this  type
-    $affected_resources=sql_array("select distinct resource value from
-                                (
-                                select resource from resource_data where resource>0 and resource_type_field='$ref'
-                                UNION
-                                select resource from resource_node where resource>0 and node in (select ref from node where resource_type_field='$ref')
-                                ) all_resources
-                                
-                                ",0);
-    
+    $affected_resources=ps_array("SELECT resource value FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE n.resource_type_field = ?",["i",$ref]);
+        
     $affected_resources_count=count($affected_resources);
     if($affected_resources_count==0 || $confirmdelete!="")
         {    
@@ -556,7 +606,7 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	
 # Fetch  data
 $allfields=get_resource_type_fields();
-$resource_types=sql_query("select ref, name from resource_type order by order_by,ref", "schema");
+$resource_types=get_resource_types();
 foreach($resource_types as $resource_type)
 	{
 	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];
@@ -584,11 +634,13 @@ var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'
 ?>
 </script>
 <div class="BasicsBox">
+<h1><?php echo $lang["admin_resource_type_field"] . ": " . htmlspecialchars(i18n_get_translated($fielddata["title"])); ?></h1>
 <?php
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["admin_resource_type_fields"],
@@ -657,15 +709,15 @@ else
     <input name="migrate_data" id="migrate_data" type="hidden" value="">
 
 	<?php if ($fielddata["active"]==0) { ?>
-    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
+    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#field_edit_delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
 	<?php } ?>
 	
     </div>
     <?php
     }?>
 
-<input type="hidden" name="save" id="save" value="yes"/>
-<input type="hidden" name="delete" id="delete" value=""/>
+<input type="hidden" name="save" id="field_edit_save" value="yes"/>
+<input type="hidden" name="delete" id="field_edit_delete" value=""/>
 </form>
 
 

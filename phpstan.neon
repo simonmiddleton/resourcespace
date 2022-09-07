@@ -1,0 +1,15 @@
+parameters:
+    level: 0
+    paths:
+        - api
+        - batch
+        - css
+        - include
+        - languages
+        - pages
+        - plugins
+        - tests
+        - upgrade
+    excludePaths:
+        analyse:
+            - plugins/*/lib/*

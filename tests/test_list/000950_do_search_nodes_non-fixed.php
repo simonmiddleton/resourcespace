@@ -1,7 +1,5 @@
 <?php
-
-
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
+command_line_only();
 
 // -------------- Both old resource_keyword and node_keyword lookups ------------
 
@@ -103,7 +101,7 @@ $results=do_search('"mice blind"');  // this would typically return a suggestion
 if(is_array($results)) return false;
 
 // Test node searches after truncating resource_keyword
-sql_query("truncate resource_keyword");
+ps_query("truncate resource_keyword");
 
 // search for 'capybara' which will produce 1 result (via resource_node->node_keyword)
 $results=do_search('giraffe');

@@ -7,6 +7,37 @@
 
 
 /**
+ * Simple class to use when required to obtain/build SQL (sub) statements from various functions.
+ * 
+ * @internal
+ */
+final class PreparedStatementQuery {
+    /**
+     * @var string $sql SQL prepared (sub) statement with placeholders in place
+     */
+    public $sql;
+
+    /**
+     * @var array $parameters Bind parameters
+     */
+    public $parameters;
+
+    /**
+     * Create a new PreparedStatementQuery
+     * 
+     * @param string $sql        SQL prepared (sub) statement with placeholders in place
+     * @param array  $parameters Bind parameters
+     */
+    public function __construct(string $sql = '', array $parameters = [])
+        {
+        $this->sql = $sql;
+        $this->parameters = $parameters;
+        }
+}
+
+
+
+/**
  * Centralised error handler. Display friendly error messages.
  *
  * @param  integer $errno
@@ -35,11 +66,11 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         }
     else if (substr(PHP_SAPI, 0, 3) == 'cli')
         {
-        echo $error_note;
-        if ($show_error_messages) 
-            {
-            echo $error_info;
-            }
+        // Always show errors when running on the command line.
+        echo "\n\n\n" . $error_note;
+        echo $error_info . "\n\n";
+        // Dump additional trace information to help with diagnosis.
+        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         echo PHP_EOL;
         }
     else
@@ -244,27 +275,27 @@ function sql_connect()
         # Group concat limit increased to support option based metadata with more realistic limit for option entries
         # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
-        sql_query("SET SESSION group_concat_max_len = 32767", false, -1, false, 0); 
+        ps_query("SET SESSION group_concat_max_len = 32767", [], false, -1, false, 0); 
 
         if ($mysql_force_strict_mode)    
             {
             db_set_connection_mode($db_connection_mode);
-            sql_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", false, -1, false, 0);
+            ps_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", [], false, -1, false, 0);
             continue;
             }
 
         db_set_connection_mode($db_connection_mode);
-        $mysql_version = sql_query('SELECT LEFT(VERSION(), 3) AS ver');
+        $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
         if(version_compare($mysql_version[0]['ver'], '5.6', '>')) 
             {
             db_set_connection_mode($db_connection_mode);
-            $sql_mode_current = sql_query('select @@SESSION.sql_mode');
+            $sql_mode_current = ps_query('select @@SESSION.sql_mode');
             $sql_mode_string = implode(" ", $sql_mode_current[0]);
             $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
             $sql_mode_string_new = implode (",", $sql_mode_array_new);
 
             db_set_connection_mode($db_connection_mode);
-            sql_query("SET SESSION sql_mode = '$sql_mode_string_new'", false, -1, false, 0);
+            ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], false, -1, false, 0);
             }
         }
 
@@ -300,44 +331,6 @@ function db_begin_transaction($name)
     return false;
 	}
 
-
-/**
- * Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
- *  Useful for re-indexing fields etc.
- * 
- * Example usage:
- * sql_query_prepared('INSERT INTO `my_table`(`colint`,`colstring`) VALUES (?,?)',array('is',10,'Ten');
- * Where first array parameter indicates types of bind data:
- * i=integer
- * s=string
- *
- * @param  string $sql
- * @param  array $bind_data
- * @return void
- */
-function sql_query_prepared($sql,$bind_data)
-    {
-    global $prepared_statement_cache,$db;
-    if(!isset($prepared_statement_cache[$sql]))
-        {
-        if(!isset($prepared_statement_cache))
-            {
-            $prepared_statement_cache=array();
-            }
-        $prepared_statement_cache[$sql]=$db["read_write"]->prepare($sql);
-        if($prepared_statement_cache[$sql]===false)
-            {
-            die('Bad prepared SQL statement:' . $sql);
-            }
-        }
-    $bind_data_processed = array();
-    foreach($bind_data as $key => $value)
-        {
-        $bind_data_processed[$key] = &$bind_data[$key];
-        }
-    call_user_func_array(array($prepared_statement_cache[$sql], 'bind_param'), $bind_data_processed);
-    mysqli_stmt_execute($prepared_statement_cache[$sql]);
-    }
 
 /**
 * Tell the database to commit the current transaction.
@@ -396,32 +389,32 @@ function db_rollback_transaction($name)
 	}        
 
 /**
- * Execute a query and return the results as an array.
+ * Execute a prepared statement and return the results as an array.
  * 
- * Database functions are wrapped in this way so supporting a database server other than MySQL is easier.
- *
- * @param  mixed $sql						The SQL to execute
- * @param  mixed $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
- * @param  mixed $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
- * @param  mixed $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
- * @param  mixed $logthis					Only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
- * @param  mixed $reconnect
+ * @param  string $sql						The SQL to execute
+ * @param  string $parameters				An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d","This is the second parameter which is a double")
+ * @param  string $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
+ * @param  integer $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
+ * @param  boolean $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
+ * @param  integer $logthis					No longer used
+ * @param  boolean $reconnect
  * @param  mixed $fetch_specific_columns
  * @return array
  */
-function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
+function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
-    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang;
+    $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$prepared_statement_cache;
 	
     // Check cache for this query
     $cache_write=false;
+    $serialised_query=$sql . ":" . serialize($parameters); // Serialised query needed to differentiate between different queries.
     if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
         {
         $cache_write=true;
         $cache_location=get_query_cache_location();
-        $cache_file=$cache_location . "/" . $cache . "_" . md5($sql) . "_" . md5($scramble_key . $sql) . ".json"; // Scrambled path to cache
+        $cache_file=$cache_location . "/" . $cache . "_" . md5($serialised_query) . "_" . md5($scramble_key . $serialised_query) . ".json"; // Scrambled path to cache
         if (file_exists($cache_file))
             {
             $cachedata=json_decode(file_get_contents($cache_file),true);
@@ -431,7 +424,7 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
                     {
                     if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
                         {
-                        debug("[sql_query] returning cached data (source: {$cache_file})");
+                        debug("[ps_query] returning cached data (source: {$cache_file})");
                         db_clear_connection_mode();
                         return $cachedata["results"];
                         }
@@ -459,51 +452,12 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     if (($debug_log || $debug_log_override) && !$suppress_sql_log)
         {
-        debug("SQL: " . $sql);
+        debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }
-
-    if($mysql_log_transactions && !($logthis==0))
-        {	
-        $requirelog = true;
-
-        if($logthis==2)
-            {
-            // Ignore any SELECTs if the decision to log has not been indicated by function call, 	
-            if(strtoupper(substr(trim($sql), 0, 6)) == "SELECT")
-                {
-                $requirelog = false;
-                }
-            }
-
-        if($logthis==1 || $requirelog)
-            {
-            # Log this to a transaction log file so it can be replayed after restoring database backup
-            $mysql_log_dir = dirname($mysql_log_location);
-            $GLOBALS["use_error_exception"] = true;
-            try
-                {
-                if (!is_dir($mysql_log_dir))
-                    {
-                    mkdir($mysql_log_dir, 0333, true);
-                    }
-                if(!file_exists($mysql_log_location))
-                    {
-                    $mlf=fopen($mysql_log_location,"wb");
-                    fwrite($mlf,"USE " . $mysql_db . ";\r\n");
-                    // Set the permissions if we can to prevent browser access (will not work on Windows)
-                    chmod($mysql_log_location,0333);
-                    }
-                $mlf=fopen($mysql_log_location,"ab");
-                fwrite($mlf,"/* " . date("Y-m-d H:i:s") . " */ " .  $sql . ";\n"); // Append the ';' so the file can be used to replay the changes
-                fclose ($mlf);
-                }
-            catch(Exception $e)
-                {
-                debug("ERROR: Invalid \$mysql_log_location specified in config file: " . $mysql_log_location);
-                $mysql_log_transactions = false;
-                }
-            unset($GLOBALS["use_error_exception"]);
-            }
+    if(trim($sql) == "")
+        {
+        debug("Error - empty SQL query passed");
+        return [];
         }
 
     // Establish DB connection required for this query. Note that developers can force the use of read-only mode if
@@ -518,15 +472,134 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
         {
         $db_connection_mode = 'read_only';
         $db_connection = $db['read_only'];
-
-        // In case it needs to retry and developer has forced a read-only
-        $logthis = 2;
-
         db_clear_connection_mode();
         }
 
-    $result = mysqli_query($db_connection, $sql);
-    
+    if (count($parameters)>0)
+        {
+        // Execute prepared statement
+        if(!isset($prepared_statement_cache[$sql]))
+            {
+            if(!isset($prepared_statement_cache))
+                {
+                $prepared_statement_cache=array();
+                }
+            try
+                {
+                $prepared_statement_cache[$sql]=$db_connection->prepare($sql);
+                }   
+            catch (Exception $e)
+                {
+                $prepared_statement_cache[$sql]=false;
+                }
+            if($prepared_statement_cache[$sql]===false)
+                {
+                if ($dbstruct)
+                    {
+                    // Clear out the cache for this query before running check_db_structs()
+                    unset($prepared_statement_cache[$sql]); 
+                    db_clear_connection_mode();
+                    check_db_structs();
+                    db_set_connection_mode($db_connection_mode);
+                    # Try again (no dbstruct this time to prevent an endless loop)
+                    return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
+                    }
+                $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters) . " - " . $db_connection->error;
+                errorhandler("N/A", $error, "(database)", "N/A");
+                exit();
+                }
+            }
+        $params_array = array();
+        $types="";
+        for($n=0;$n<count($parameters);$n+=2)
+            {
+            $types.=$parameters[$n];
+            if (!array_key_exists($n+1,$parameters)) {trigger_error("Count of \$parameters array must be even (ensure types specified) for query: $sql" . print_r($parameters,true));}
+            $params_array[] = $parameters[$n+1];
+            }
+        if (!(isset($error) && $error!=""))
+            {
+            mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
+            $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                mysqli_stmt_execute($prepared_statement_cache[$sql]);
+                }
+            catch (Exception $e)
+                {
+                $error = $e->getMessage();
+                errorhandler("N/A", $error, "(database)", "N/A");
+                exit();
+                }
+            $GLOBALS["use_error_exception"] = $use_error_exception_cache;
+
+            $error = $error ?? mysqli_stmt_error($prepared_statement_cache[$sql]);
+            }
+        if ($error=="")
+            {
+            // Results section
+
+            // Buffering of result set
+            $prepared_statement_cache[$sql]->store_result();
+
+            // Fetch result set
+            $metadata=$prepared_statement_cache[$sql]->result_metadata();
+            if ($metadata===false)
+                {
+                // Did not return a result set, execution of an update/insert etc.
+                $result=true;
+                } 
+            else
+                {
+                // Bind results -> standard associative array
+                $fields = $metadata->fetch_fields();
+                $args = array();
+                foreach($fields AS $field)
+                    {
+                    $key = str_replace(' ', '_', $field->name);
+                    $args[$key] = &$field->name;
+                    }
+                call_user_func_array(array($prepared_statement_cache[$sql], "bind_result"), array_values($args));
+                $result = array();
+                $count=0;
+                while($prepared_statement_cache[$sql]->fetch() && ($fetchrows==-1 || $count<$fetchrows)) // Return requested no. of rows
+                    {
+                    $count++;
+                    $result[] = array_map("copy_value", $args);
+                    }
+                $prepared_statement_cache[$sql]->free_result();
+                }               
+            }
+        }
+    else    
+        {
+        $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            // No parameters, this cannot be executed as a prepared statement. Execute in the standard way.
+            $result = $result_set = mysqli_query($db_connection, $sql);
+            }
+        catch (Throwable $e)
+            {
+            $error = $e->getMessage();
+            }
+        $GLOBALS["use_error_exception"] = $use_error_exception_cache;
+        $return_row_count = 0;
+        $error = $error ?? mysqli_error($db_connection);
+        if ($error=="" && $result_set instanceof mysqli_result)
+            {
+            $result = [];
+            while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result_set))
+                {
+                $return_row_count++;
+                $result[]=$result_row;
+                }
+            mysqli_free_result($result_set);
+            }
+        }
+
     if ($config_show_performance_footer){
     	# Stats
    		# Log performance data		
@@ -546,92 +619,55 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 		$querytime += $time_total;
 	}
 	
-	$error = mysqli_error($db_connection);
-	
-	$return_rows=array();
+    $return_rows=array();
     if ($error!="")
         {
         if ($error=="Server shutdown in progress")
-        	{
-			echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
-        	}
+            {
+            echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
+            }
         elseif (substr($error,0,15)=="Too many tables")
-        	{
-			echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
-        	}
+            {
+            echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
+            }
         elseif (strpos($error,"has gone away")!==false && $reconnect)
-			{
-			# SQL server connection has timed out or been killed. Try to reconnect and run query again.
-			sql_connect();
+            {
+            // SQL server connection has timed out or been killed. Try to reconnect and run query again.
+            // Unset the cache for this no longer valid
+            unset($prepared_statement_cache[$sql]);
+            sql_connect();
             db_set_connection_mode($db_connection_mode);
-			return sql_query($sql,$cache,$fetchrows,$dbstruct,$logthis,false);
-			}
+            return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
+            }
         else
-        	{
-        	# Check that all database tables and columns exist using the files in the 'dbstruct' folder.
-        	if ($dbstruct) # should we do this?
-        		{
+            {
+            # Check that all database tables and columns exist using the files in the 'dbstruct' folder.
+            if ($dbstruct) # should we do this?
+                {
                 db_clear_connection_mode();
-				check_db_structs();
+                check_db_structs();
                 db_set_connection_mode($db_connection_mode);
 
-        		# Try again (no dbstruct this time to prevent an endless loop)
-        		return sql_query($sql,$cache,$fetchrows,false,$reconnect);
-        		}
+                # Try again (no dbstruct this time to prevent an endless loop)
+                return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
+                }
 
-	        errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
-	        }
+            errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
+            }
 
         exit();
         }
-    elseif ($result===true)
+    elseif ($result === true)
         {
-		return $return_rows;		// no result set, (query was insert, update etc.) - simply return empty array.
+		return array();		// no result set, (query was insert, update etc.) - simply return empty array.
         }
-	
-	$return_row_count=0;	
-	while(($fetchrows == -1 || $return_row_count < $fetchrows) && $result_row = mysqli_fetch_assoc($result))
-		{
-		if ($mysql_verbatim_queries)		// no need to do clean up on every cell
-			{
-			if($fetch_specific_columns===false)
-                {
-                $return_rows[$return_row_count]=$result_row;		// simply dump the entire row into the return results set
-                }
-            else
-                {
-                foreach($fetch_specific_columns as $fetch_specific_column)
-                    {
-                    $return_rows[$return_row_count][$fetch_specific_column]=$result_row[$fetch_specific_column];        // dump the specific column into the results set
-                    }
-                }
-			}
-		else
-			{
-            if($fetch_specific_columns===false)     // for all columns
-                {
-                foreach ($result_row as $name => $value)
-                    {
-                    $return_rows[$return_row_count][$name] = str_replace("\\", "", stripslashes($value));        // iterate through each cell cleaning up
-                    }
-                }
-            else
-                {
-                foreach($fetch_specific_columns as $fetch_specific_column)      // for specific columns
-                    {
-                    $return_rows[$return_row_count][$fetch_specific_column]=str_replace("\\", "", stripslashes($result_row[$fetch_specific_column]));       // iterate through each cell cleaning up
-                    }
-                }
-            }
-		$return_row_count++;
-		}
 
     if($cache_write)
         {
         $cachedata = array();
         $cachedata["query"] = $sql;
         $cachedata["time"] = time();
-        $cachedata["results"] = $return_rows;
+        $cachedata["results"] = $result;
 
         $GLOBALS["use_error_exception"] = true;
         try
@@ -657,76 +693,83 @@ function sql_query($sql,$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $rec
 
     if($fetchrows == -1)
         {
-        mysqli_free_result($result);
-        return $return_rows;
+        return $result;
         }
-	
+
+    /*
+    COMMENTED - this should no longer be needed; it was added for search results however in that situation a separate count() query
+    should be executed first.
+
 	# If we haven't returned all the rows ($fetchrows isn't -1) then we need to fill the array so the count
 	# is still correct (even though these rows won't be shown).
-	
-	$query_returned_row_count = mysqli_num_rows($result);
-
-    mysqli_free_result($result);
-	
-    if($return_row_count < $query_returned_row_count)
+    if(count($result) < $query_returned_row_count)
         {
         // array_pad has a hardcoded limit of 1,692,439 elements. If we need to pad the results more than that, we do it in
         // 1,000,000 elements batches.
-        while(count($return_rows) < $query_returned_row_count)
+        while(count($result) < $query_returned_row_count)
             {
-            $padding_required = $query_returned_row_count - count($return_rows);
+            $padding_required = $query_returned_row_count - count($result);
             $pad_by = ($padding_required > 1000000 ? 1000000 : $query_returned_row_count);
-            $return_rows = array_pad($return_rows, $pad_by, 0);
+            $result = array_pad($result, $pad_by, 0);
             }
-        }
+       }
+    */
 
-    return $return_rows;        
+    return $result;        
     }
-	
 
+/**
+* Copy value as value (flatten / no references)
+*/
+function copy_value($v) {
+    return $v;
+}
 /**
 * Return a single value from a database query, or the default if no rows
 * 
 * NOTE: The value returned must have the column name aliased to 'value'
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
-* @param string $query    SQL query
-* @param mixed  $default  Default value
+* @param string $query      SQL query
+* @param array  $parameters SQL parameters with types, as for ps_query()
+* @param mixed  $default    Default value to return if no rows returned
+* @param string $cache      Cache category (optional)
 * 
 * @return string
 */
-function sql_value($query, $default, $cache="")
+function ps_value($query, $parameters, $default, $cache="")
     {
     db_set_connection_mode("read_only");
-    $result = sql_query($query, $cache, -1, true, 0, true, false);
+    $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
 
     if(count($result) == 0)
         {
         return $default;
         }
 
-        return $result[0]["value"];
+    return $result[0]["value"];
     }
 
-
 /**
-* Like sql_value() but returns an array of all values found
+* Like ps_value() but returns an array of all values found
 * 
 * NOTE: The value returned must have the column name aliased to 'value'
 * 
-* @uses sql_query()
+* @uses ps_query()
 * 
-* @param string $query SQL query
+* @param string $query      SQL query
+* @param array  $parameters SQL parameters with types, as for ps_query()
+* @param string  $cache      Cache category (optional)
 * 
 * @return array
 */
-function sql_array($query,$cache="")
+function ps_array($query,$parameters=array(),$cache="")
 	{
 	$return = array();
 
     db_set_connection_mode("read_only");
-    $result = sql_query($query, $cache, -1, true, 0, true, false);
+    $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
 
     for($n = 0; $n < count($result); $n++)
     	{
@@ -735,6 +778,7 @@ function sql_array($query,$cache="")
 
     return $return;
 	}
+
 
 /**
  * Return the ID of the previously inserted row.
@@ -849,7 +893,7 @@ function CheckDBStruct($path,$verbose=false)
 	
     # Tables first.
     # Load existing tables list
-    $ts=sql_query("show tables",false,-1,false);
+    $ts=ps_query("show tables",[],false,-1,false);
     $tables=array();
     for ($n=0;$n<count($ts);$n++)
         {
@@ -870,10 +914,46 @@ function CheckDBStruct($path,$verbose=false)
                 $f=fopen($path . "/" . $file,"r");
                 $hasPrimaryKey = false;
                 $pk_sql = "PRIMARY KEY (";
+                $n=0;
                 while (($col = fgetcsv($f,5000)) !== false)
                     {
                     if ($sql.="") {$sql.=", ";}
                     $sql.=$col[0] . " " . str_replace("§",",",$col[1]);
+
+                    if (strtolower(substr($col[1],0,3))=="int"
+                        || strtolower(substr($col[1],0,6))=="bigint"
+                        || strtolower(substr($col[1],0,7))=="tinyint"
+                        || strtolower(substr($col[1],0,8))=="smallint"
+                    )
+                        {
+                        # Integer
+                        $column_types[$n]="i";
+                        }
+                    else if (strtolower(substr($col[1],0,5))=="float"
+                        || strtolower(substr($col[1],0,7))=="decimal"
+                        || strtolower(substr($col[1],0,6))=="double"
+                    )
+                        {
+                        # Double
+                        $column_types[$n]="d";
+                        }
+                    else if (strtolower(substr($col[1],0,8))=="tinyblob"
+                        || strtolower(substr($col[1],0,4))=="blob"
+                        || strtolower(substr($col[1],0,10))=="mediumblob"
+                        || strtolower(substr($col[1],0,8))=="longblob"
+                    )
+                        {
+                        # Blob
+                        $column_types[$n]="b";
+                        }
+                    else
+                        {
+                        # String
+                        $column_types[$n]="s";
+                        }
+
+                    $n++;
+
                     if ($col[4]!="") {$sql.=" default " . $col[4];}
                     if ($col[3]=="PRI")
                         {
@@ -896,23 +976,45 @@ function CheckDBStruct($path,$verbose=false)
                 # Verbose mode, used for better output from the test script.
                 if ($verbose) {echo "$table ";ob_flush();}
 
-                sql_query("create table $table ($sql)",false,-1,false);
+                ps_query("create table $table ($sql)",[],false,-1,false);
 
                 # Add initial data
                 $data=str_replace("table_","data_",$file);
                 if (file_exists($path . "/" . $data))
                     {
+                    
                     $f=fopen($path . "/" . $data,"r");
                     while (($row = fgetcsv($f,5000)) !== false)
                         {
-                        # Escape values
+                        $sql_params = [];
                         for ($n=0;$n<count($row);$n++)
                             {
-                            $row[$n]=escape_check($row[$n]);
-                            $row[$n]="'" . $row[$n] . "'";
-                            if ($row[$n]=="''") {$row[$n]="null";}
+                            // Get type from table file
+                            $sql_params[]=$column_types[$n];
+                            // dbstruct/data_*.txt files normally have nothing if the column value was null when using
+                            // the pages/tools/dbstruct_create.php script.
+                            if($row[$n] === '')
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            // Legacy? I couldn't find any dbstruct/data_*.txt file containing '' for a column value
+                            else if($row[$n] == "''")
+                                {
+                                $sql_params[] = NULL;
+                                }
+                            else
+                                {
+                                $sql_params[] = $row[$n];
+                                }
                             }
-                        sql_query("insert into $table values (" . join (",",$row) . ")",false,-1,false);
+
+                        ps_query(
+                            "insert into `$table` values (" . ps_param_insert(count($row)) . ")",
+                            $sql_params,
+                            false,
+                            -1,
+                            false
+                        );
                         }
                     }
                 }
@@ -921,7 +1023,7 @@ function CheckDBStruct($path,$verbose=false)
                 # Table already exists, so check all columns exist
 
                 # Load existing table definition
-                $existing=sql_query("describe $table",false,-1,false);
+                $existing=ps_query("describe $table",[],false,-1,false);
 
                 ##########
                 # Copy needed resource_data into resource for search displays
@@ -943,7 +1045,7 @@ function CheckDBStruct($path,$verbose=false)
                             # Add this column.
                             $sql="alter table $table add column ";
                             $sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
-                            sql_query($sql,false,-1,false);
+                            ps_query($sql,[],false,-1,false);
                             }
                         }
                     }
@@ -968,12 +1070,13 @@ function CheckDBStruct($path,$verbose=false)
                                     # Check the column is of the correct type
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$basecoltype,$matchbase);
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$existingcoltype,$matchexisting);
+
                                     // Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
                                     // - If column is of same type but smaller number, update
                                     // - If target column is of type text, update
                                     // - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
+                                    // - If target column is of type mediumtext and currently is text, update
                                     // - If target column is of type longtext and currently is text
-
                                     if(
                                         (count($matchbase) == 3 && count($matchexisting) == 3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
                                         || (stripos($basecoltype, "text") !== false && stripos($existingcoltype, "text") === false)
@@ -983,24 +1086,25 @@ function CheckDBStruct($path,$verbose=false)
                                         && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT")
                                         )
                                         || (strtoupper(substr($basecoltype, 0, 7)) == "VARCHAR" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
+                                        || (strtoupper(substr($basecoltype, 0, 10)) == "MEDIUMTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
                                         || (strtoupper(substr($basecoltype, 0, 8)) == "LONGTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
                                         )
                                         {
                                         debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
                                         // Update the column type
-                                        sql_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);
+                                        ps_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);
                                         }
                                     }
                                 }
                             if (!$found)
                                 {
                                 # Add this column.
-                                $sql="alter table $table add column ";
+                                $sql="alter table `$table` add column ";
                                 $sql.=$col[0] . " " . str_replace("§",",",$col[1]); # Allow commas to be entered using '§', necessary for a type such as decimal(2,10)
                                 if ($col[4]!="") {$sql.=" default " . $col[4];}
                                 if ($col[3]=="PRI") {$sql.=" primary key";}
                                 if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
-                                sql_query($sql,false,-1,false);
+                                ps_query($sql,[],false,-1,false);
                                 }	
                             }
                         }
@@ -1009,7 +1113,7 @@ function CheckDBStruct($path,$verbose=false)
 
             # Check all indices exist
             # Load existing indexes
-            $existing=sql_query("show index from $table",false,-1,false);
+            $existing=ps_query("show index from $table",[],false,-1,false);
 
             $file=str_replace("table_","index_",$file);
             if (file_exists($path . "/" . $file))
@@ -1044,7 +1148,7 @@ function CheckDBStruct($path,$verbose=false)
                             }
 
                         $sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
-                        sql_query($sql,false,-1,false);
+                        ps_query($sql,[],false,-1,false);
                         $done[]=$col[2];
                         }
                     }
@@ -1063,8 +1167,8 @@ function CheckDBStruct($path,$verbose=false)
 */
 function sql_limit($offset, $rows)
     {
-    $offset_true = !is_null($offset) && is_int($offset) && $offset > 0;
-    $rows_true   = !is_null($rows) && is_int($rows) && $rows > 0;
+    $offset_true = !is_null($offset) && is_int_loose($offset) && $offset > 0;
+    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows > 0;
 
     $limit = ($offset_true || $rows_true ? 'LIMIT ' : '');
 
@@ -1089,33 +1193,31 @@ function sql_limit($offset, $rows)
 
 
 /**
-* Query helper function for the WHERE clause to avoid repetitive checks when value might be NULL or an actual value
-* 
-* @param string  $v     Non-null value
-* @param boolean $cond  Condition to use IS NULL or to use the escaped value
-* 
-* @return string
-*/
-function sql_is_null_or_eq_val(string $v, bool $cond)
+ * Utility function to obtain the total found rows while paginating the results.
+ * 
+ * IMPORTANT: the input query MUST have a deterministic order so it can help with performance and not have an undefined behaviour
+ * 
+ * @param PreparedStatementQuery $query         SQL query
+ * @param null|int               $rows          Specifies the maximum number of rows to return. Usually set by a global 
+ *                                              configuration option (e.g $default_perpage, $default_perpage_list).
+ * @param null|int               $offset        Specifies the offset of the first row to return. Use NULL to not offset.
+ * @param bool                   $cachecount    Use previously cached count if available?
+ * @param PreparedStatementQuery $query         Optional separate query to obtain count, usually without ORDER BY
+ * 
+ * @return array Returns a:
+ *               - total: int - count of total found records (before paging)
+ *               - data: array - paged result set 
+ */
+function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, $countquery = "")
     {
-    return ($cond ? "IS NULL" : "= '" . escape_check($v) . "'");
+    global $cache_search_count;
+    $limit = sql_limit($offset, $rows);
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);    
+    $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
+    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
+    $total = max($total,count($data));
+    return ['total' => $total, 'data' => $data];
     }
-
-
-/**
-* Query helper function for insert/update statements to avoid repetitive checks when value might be NULL or an actual value.
-* Helps keeping database level data as expected (ie. uses an actual NULL value when there's no data as opposed to empty strings)
-* 
-* @param string  $v     Non-null value
-* @param boolean $cond  Condition to set it to NULL or to use the escaped value
-* 
-* @return string
-*/
-function sql_null_or_val(string $v, bool $cond)
-    {
-    return ($cond ? "NULL" : "'" . escape_check($v) . "'");
-    }
-
 
 /**
 * Query helper to ensure code honours the database schema constraints on text columns.
@@ -1135,4 +1237,125 @@ function sql_truncate_text_val(string $v, int $len)
         }
 
     return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
+    }
+
+/**
+* When constructing prepared statements and using e.g. ref in (some list of values), assists in outputting the correct number of parameters. 
+* 
+* @param integer $count How many parameters to insert, e.g. 3 returns "?,?,?"
+* 
+* @return string
+*/
+function ps_param_insert($count)
+    {
+    return join(",",array_fill(0,$count,"?"));
+    }
+
+/**
+* When constructing prepared statements and using e.g. ref in (some list of values), assists in preparing the parameter array. 
+* 
+* @param array $array The input array, to prepare for output. Will return this array but with type entry inserted before each value.
+* @param integer $type The column type as per ps_query
+* 
+* @return array
+*/
+function ps_param_fill($array,$type)
+    {
+    $parameters=array();
+    foreach ($array as $a)
+        {
+        $parameters[]=$type;$parameters[]=$a;
+        }
+    return $parameters;
+    }
+
+
+/**
+ * Re-order rows in the table
+ * 
+ * @param string $table Table name. MUST have an "order_by" column.
+ * @param array  $refs  List of record IDs in the new desired order
+ * 
+ * @return void
+ */
+function sql_reorder_records(string $table, array $refs)
+    {
+    if(!in_array($table, ['collection', 'tab']))
+        {
+        return;
+        }
+
+    $refs = array_values(array_filter($refs, 'is_int_loose'));
+    $order_by = 0;
+
+    $refs_chunked = array_filter(count($refs) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE ? [$refs] : array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE));
+    foreach($refs_chunked as $refs)
+        {
+        $cases_params = [];
+        $cases = '';
+
+        foreach($refs as $ref)
+            {
+            $order_by += 10;
+            $cases .= ' WHEN ? THEN ?';
+            $cases_params = array_merge($cases_params, ['i', $ref, 'i', $order_by]);
+            }
+
+        $sql = sprintf('UPDATE %s SET order_by = (CASE ref %s END) WHERE ref IN (%s)',
+             $table,
+             $cases,
+             ps_param_insert(count($refs))
+         );
+        ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
+        }
+
+    return;
+    }
+
+
+/**
+* Returns a comma separated list of table columns from the given table. Optionally, will use an alias instead of the table name to prefix the columns. For inclusion in SQL to replace "select *" which is not supported when using prepared statements.
+* 
+* @param string $table The source table
+* @param string $alias Optionally, a different alias to use
+* @param string $plugin Specifies that this table is defined in a plugin with the supplied name
+* @param bool   $return_list Set to true to return a list of column names. Note: the alias is ignored in this mode.
+* 
+* @return string
+*/
+function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
+    {
+    global $plugins;
+    if (is_null($alias)) {$alias=$table;}
+
+    // Locate the table definition file
+    $table_file= "/dbstruct/table_" . safe_file_name($table) . ".txt";
+    if (!is_null($plugin))
+        {
+        $table_file="plugins/" . safe_file_name($plugin) . "/" . $table_file;
+        }
+    $table_file=dirname(__FILE__) . "/../" . $table_file; // Locate relative to this file.
+
+    // Fetch structure and return column names as a list.
+    $structure=explode("\n",trim(file_get_contents($table_file)));
+    $columns=array();
+    foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
+
+    // Work through all enabled plugins and add any extended columns also (plugins can extend core tables in addition to defining their own)
+    foreach ($plugins as $plugin)
+        {
+        $plugin_file=get_plugin_path($plugin) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
+        if (file_exists($plugin_file))
+            {
+            $structure=explode("\n",trim(file_get_contents($plugin_file)));
+            foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
+            }
+        }
+
+    if($return_list)
+        {
+        return $columns;
+        }
+
+    return "`" . $alias . "`.`" . join("`, `" . $alias . "`.`",$columns) . "`";
     }

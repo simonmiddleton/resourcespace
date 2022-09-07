@@ -18,9 +18,9 @@
 	function HookDoiViewAfterresourceactions() {
 
 		# fetch registration step
-		$doi_state = getvalescaped('doi_state', 'anchor');
+		$doi_state = getval('doi_state', 'anchor');
 
-		$summary = getvalescaped('doi_sum', '');
+		$summary = getval('doi_sum', '');
 
 		if ($summary) {
 			$summary = str_replace('\'', '"', $summary);
@@ -56,8 +56,8 @@
 				}
 				if ($doi_state == 'submit') {
 
-					$meta['doi'] = trim(htmlspecialchars_decode(getvalescaped('doi_doi', '')));
-					$meta['url'] = trim(htmlspecialchars_decode(getvalescaped('doi_url', '')));
+					$meta['doi'] = trim(htmlspecialchars_decode(getval('doi_doi', '')));
+					$meta['url'] = trim(htmlspecialchars_decode(getval('doi_url', '')));
 					$meta['xml'] = trim(htmlspecialchars_decode(getval('doi_xml', '')));
 
 					$reconstructed_meta = NULL;
@@ -148,7 +148,7 @@
 	 */
 	function HookDoiViewCustompanels() {
 
-		$doi_state = getvalescaped('doi_state', 'anchor');
+		$doi_state = getval('doi_state', 'anchor');
 
 		global $resource;
 
@@ -223,8 +223,6 @@ HTML;
 							          style="width: 100%; resize: none;"
 							          readonly><?php echo $url; ?></textarea>
 							<br>
-<!--							<a href="#" onclick="doiShowHideXml();"-->
-<!--							   id="doiShowHideXml">--><?php //echo '&gt; ' . $lang['doi_show_meta']; ?><!--</a><br>-->
 							<div id="divDoiXml" style="display: block">
 								<br>
 								<label for="editDoiXml">XML</label>

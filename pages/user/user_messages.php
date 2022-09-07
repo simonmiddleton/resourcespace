@@ -8,11 +8,11 @@ if (isset($anonymous_login) && $anonymous_login == $username)
     die($lang["error-permissions-login"]);
     }
 
-$offset=getvalescaped("offset",0,true);
-$msg_order_by = getvalescaped("msg_order_by",getvalescaped("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
-$sort = getvalescaped("sort",getvalescaped("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);
+$offset=getval("offset",0,true);
+$msg_order_by = getval("msg_order_by",getval("saved_msg_order_by", "created"));rs_setcookie('saved_msg_order_by', $msg_order_by);
+$sort = getval("sort",getval("saved_msg_sort", "DESC"));rs_setcookie('saved_msg_sort', $sort);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
-$per_page = getvalescaped("per_page_list", $default_perpage_list, true);rs_setcookie('per_page_list', $per_page);
+$per_page = getval("per_page_list", $default_perpage_list, true);rs_setcookie('per_page_list', $per_page);
 
 global $user_preferences;
 
@@ -201,10 +201,10 @@ include "../../include/header.php";
             <?php
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)
                 {
-                $fullmessage = escape_check(strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border")));
-                $fullmessage = htmlspecialchars($fullmessage,ENT_QUOTES);
+                $fullmessage = strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border"));
+                $fullmessage = htmlentities(escape_quoted_data($fullmessage));
                 $message = strip_tags_and_attributes($messages[$n]["message"]);
-                $message = nl2br($message,ENT_QUOTES);
+                $message = nl2br($message);
                 $url_encoded = urlencode($messages[$n]["url"]);
                 $unread_css = ($messages[$n]["seen"] == 0 ? " MessageUnread" : "");
                 $userbyname = get_user_by_username($messages[$n]["owner"]);
@@ -236,13 +236,13 @@ include "../../include/header.php";
                                 {
                                 $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                                 ?>
-                                <a href="<?php echo $replyurl; ?>"><?php echo LINK_CARET ?><?php echo $lang["reply"]; ?></a>
+                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . $lang["reply"]; ?></a>
                                 <?php
                                 }
 
                             if ($messages[$n]["url"]!="")
                                 { ?>
-                                <a href="<?php echo $messages[$n]["url"]; ?>"><?php echo LINK_CARET ?><?php echo $lang["link"]; ?></a>
+                                <a href="<?php echo $messages[$n]["url"]; ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . $lang["link"]; ?></a>
                                 <?php
                                 } ?> 
                         </div>

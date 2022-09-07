@@ -10,17 +10,18 @@ if (!checkperm("a"))
     }
 
 
-$find=getvalescaped("find","");
-$offset=getvalescaped("offset",0,true);
+$find=getval("find","");
+$offset=getval("offset",0,true);
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
     
     
 $restypefilter=getval("restypefilter","");
 $restypesfilter=($restypefilter != "")?array((int)$restypefilter):"";
-$field_order_by=getvalescaped("field_order_by","order_by");
-$field_sort=getvalescaped("field_sort","asc");
+$field_order_by=getval("field_order_by","order_by");
+$field_sort=getval("field_sort","asc");
+$reorder_view=getval("reorder_view",false);
 
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_home.php";
@@ -28,7 +29,7 @@ if($backurl=="")
 
 $allow_reorder=false;
 // Allow sorting if we are ordering metadata fields for all resource types (ie Resource type == "All" and $restypefilter=="")
-if($restypefilter=="")
+if($restypefilter=="" && $reorder_view)
     {
     $allow_reorder=true;
     }
@@ -49,9 +50,9 @@ $common_rs_url_params = [
 
 if (getval("newfield","")!="" && enforcePostRequest(false))
     {
-    $newfieldname = getvalescaped("newfield","");
+    $newfieldname = getval("newfield","");
     $newfieldtype = getval("field_type",0,true);    
-    $newfieldrestype = getvalescaped("newfieldrestype",0,true);
+    $newfieldrestype = getval("newfieldrestype",0,true);
     $new = create_resource_type_field($newfieldname, $newfieldrestype, $newfieldtype, "", true);
     redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
     }
@@ -83,13 +84,19 @@ function addColumnHeader($orderName, $labelKey)
     $links_trail = array(
         array(
             'title' => $lang["systemsetup"],
-            'href'  => $baseurl_short . "pages/admin/admin_home.php"
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["admin_resource_type_fields"],
             'help'  => "resourceadmin/configure-metadata-field"
         )
     );
+    ?>
+
+    <div class="BasicsBox">
+    <h1><?php echo $lang["admin_resource_type_fields"]; ?></h1>
+    <?php
 
   renderBreadcrumbs($links_trail);
 
@@ -100,7 +107,7 @@ function addColumnHeader($orderName, $labelKey)
     }
  
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
-$resource_types=sql_query("select ref, name from resource_type order by order_by,ref", "schema");
+$resource_types=get_resource_types();
 $arr_restypes=array();
 foreach($resource_types as $resource_type)
     {
@@ -113,11 +120,6 @@ $results=count($fields);
 
 ?>
 
-
-<div class="BasicsBox">
-
-
-
 <div class="FormError" id="PageError"
   <?php
   if (!isset($error_text)) { ?> style="display:none;"> <?php }
@@ -125,12 +127,46 @@ $results=count($fields);
 </div>
 
 <?php
- if($allow_reorder)
-    {  ?>
-<p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
-<a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("restypefilter" => (($use_order_by_tab_view) ? "" : $restypefilter),"field_order_by" => "order_by","fieldsort"=>"asc")); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php if($use_order_by_tab_view){echo $lang["admin_resource_type_field_reorder_mode_all"];}else{echo $lang["admin_resource_type_field_reorder_mode"];}?></a></p>  
-<?php
-    } ?>
+if($allow_reorder  )
+    {
+    ?>
+    <p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
+    <?php
+    }
+else if ($restypefilter=="")
+    {
+    ?>
+    <a href="<?php 
+    echo generateURL(
+        $baseurl . "/pages/admin/admin_resource_type_fields.php",
+        $url_params,
+        array(
+            "restypefilter" => (($use_order_by_tab_view) ? "" : $restypefilter),
+            "field_order_by" => "order_by",
+            "fieldsort"=>"asc",
+            "reorder_view"=>"true"
+        )
+    ); 
+    ?>" 
+    onClick="return CentralSpaceLoad(this,true);">
+    <?php echo LINK_CARET ?>
+    <?php if($use_order_by_tab_view)
+        {
+        echo $lang["admin_resource_type_field_reorder_mode_all"];
+        }
+    else
+        {
+        echo $lang["admin_resource_type_field_reorder_mode"];
+        }?></a>
+    <?php
+    }
+else
+    {
+    ?>
+    <p><?php echo  $lang["admin_resource_type_field_reorder_select_restype"] ?></p>   
+    <?php
+    }
+?>
 
 <form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params); ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm"); ?>       
@@ -163,6 +199,7 @@ $results=count($fields);
 <table id="resource_type_field_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <?php  
+$system_tabs = get_tab_name_options();
 
 addColumnHeader('ref', 'property-reference');
 addColumnHeader('title', 'property-title');
@@ -205,7 +242,7 @@ for ($n=0;$n<count($fields);$n++)
         </td>
     <?php if (!hook('replacetabnamecolumn')) {
         ?><td>
-            <?php echo str_highlight(i18n_get_translated($fields[$n]["tab_name"]),$find,STR_HIGHLIGHT_SIMPLE);?>
+            <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', $find, STR_HIGHLIGHT_SIMPLE); ?>
         </td><?php
     }?>
         <td>
@@ -215,15 +252,15 @@ for ($n=0;$n<count($fields);$n++)
             if($field_order_by=="order_by" && $allow_reorder)
                 {
                 ?>      
-                <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?><?php echo $lang['action-move-down'] ?></a>
-                <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET ?><?php echo $lang['action-move-up'] ?></a>
+                <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><i class="fas fa-arrow-down"></i>&nbsp;<?php echo $lang['action-move-down'] ?></a>
+                <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><i class="fas fa-arrow-up"></i>&nbsp;<?php echo $lang['action-move-up'] ?></a>
                 <?php
                 }
                 ?>
             
             
-                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
-                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><i class="fas fa-copy"></i>&nbsp;<?php echo $lang["copy"] ?></a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;&nbsp;<?php echo $lang["action-edit"]?> </a>
                 <a href="<?php echo generateURL(
                     "{$baseurl}/pages/admin/admin_system_log.php",
                     [
@@ -231,7 +268,7 @@ for ($n=0;$n<count($fields);$n++)
                         'table_reference' => $fields[$n]['ref'],
                     ],
                     $common_rs_url_params
-                ); ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo htmlspecialchars($lang["log"]); ?></a>
+                ); ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-history"></i>&nbsp;<?php echo htmlspecialchars($lang["log"]); ?></a>
             </div>
         </td>
     </tr>
@@ -268,7 +305,7 @@ for ($n=0;$n<count($fields);$n++)
              <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>""/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
 
-            <div class="Inline"><select name="field_type" class="medwidth">
+            <div class="Inline"><select name="field_type" id="new_field_type_select" class="medwidth">
          
             <?php
             foreach($field_types as $field_type=>$field_type_description)
@@ -393,8 +430,13 @@ function enableFieldsort(){
              
             }).disableSelection();
     }
-    
-enableFieldsort();
+
+<?php
+if ($allow_reorder)
+    {
+    ?> enableFieldsort(); <?php
+    }
+?>
 
 jQuery(".moveuplink").click(function() {
     if (jQuery(this).prop('disabled')) {

@@ -5,8 +5,8 @@ include "../include/authenticate.php";
 if (checkperm("b"))
     {exit("Permission denied");}
 
-$offset=getvalescaped("offset",0,true);
-$per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
+$offset=getval("offset",0,true);
+$per_page=getval("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
 include "../include/header.php";
 
@@ -61,7 +61,9 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 			$colref=$collections[$n]["ref"];
 			
 			// Check for external shares
-			$extshares=sql_query("select access, expires from external_access_keys where collection='$colref' and (expires is null or expires>now()) group by collection");
+			$extshares=ps_query("SELECT access, expires 
+								   FROM external_access_keys 
+								  WHERE collection=? and (expires is null or expires>now()) group by collection", array("i",$colref));
 			
 			if(count($extshares)!=0)
 				{			
@@ -77,7 +79,10 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 				}
 				
 			// Check for attached users
-			$colusers=sql_query("select u.fullname, u.username from user_collection uc left join user u on u.ref=uc.user and user<>'$userref' where uc.collection='$colref'");
+			$colusers=ps_query("SELECT u.fullname, u.username 
+						          FROM user_collection uc LEFT JOIN user u on u.ref=uc.user and user<>? 
+								 WHERE uc.collection=?",array("i",$userref, "i",$colref));
+			
 			if(count($colusers)!=0)
 				{
 				echo "<tr>";

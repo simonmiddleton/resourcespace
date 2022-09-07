@@ -1,14 +1,9 @@
 <?php
+command_line_only();
 
 /**
  * purpose: tests for str_highlight() function
  */
-
-
-if('cli' !== php_sapi_name())
-    {
-    exit('This utility is command line only.');
-    }
 
 
     $haystack = 'Sometimes the text can (contain) <a href="test">HTML</a> entities and can break the highlighting feature';

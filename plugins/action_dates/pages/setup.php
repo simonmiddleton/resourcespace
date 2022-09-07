@@ -10,8 +10,8 @@ global $resource_deletion_state;
 
 $plugin_name = 'action_dates';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
-	
+    {plugin_activate_for_setup($plugin_name);}
+
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'action_dates';
 $plugin_page_heading = $lang['action_dates_configuration'];
@@ -27,29 +27,29 @@ foreach(get_editable_states($userref) as $archive_state)
         }
     }
 
-
 $allowable_fields = get_resource_type_fields('','order_by','asc','',$DATE_FIELD_TYPES);
 if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(false))
     {
     // Save the plugin config
-    $action_dates_config["action_dates_deletefield"] = getvalescaped('action_dates_deletefield','',true);
-    $action_dates_config["action_dates_reallydelete"] = getvalescaped('action_dates_reallydelete','');
-    $action_dates_config["action_dates_new_state"] = getvalescaped('action_dates_new_state','');
-    $action_dates_config["action_dates_eligible_states"] = getvalescaped('action_dates_eligible_states','');
-    $action_dates_config["action_dates_email_for_state"] = getvalescaped('action_dates_email_for_state','');
-    $action_dates_config["action_dates_email_for_restrict"] = getvalescaped('action_dates_email_for_restrict','');
-    $action_dates_config["action_dates_email_admin_days"] = getvalescaped('action_dates_email_admin_days','',true);
-    $action_dates_config["action_dates_restrictfield"] = getvalescaped('action_dates_restrictfield','',true);
-    $action_dates_config["action_dates_remove_from_collection"] = getvalescaped('action_dates_remove_from_collection','');
-    $action_dates_config['action_dates_workflow_actions'] = getvalescaped('action_dates_workflow_actions',false);
+    $action_dates_config["action_dates_deletefield"] = getval('action_dates_deletefield','',true);
+    $action_dates_config["action_dates_reallydelete"] = getval('action_dates_reallydelete','');
+    $action_dates_config["action_dates_new_state"] = getval('action_dates_new_state','');
+    $action_dates_config["action_dates_eligible_states"] = getval('action_dates_eligible_states','');
+    $action_dates_config["action_dates_email_for_state"] = getval('action_dates_email_for_state','');
+    $action_dates_config["action_dates_email_for_restrict"] = getval('action_dates_email_for_restrict','');
+    $action_dates_config["action_dates_email_admin_days"] = getval('action_dates_email_admin_days','',true);
+    $action_dates_config["action_dates_restrictfield"] = getval('action_dates_restrictfield','',true);
+    $action_dates_config["action_dates_remove_from_collection"] = getval('action_dates_remove_from_collection','');
+    $action_dates_config['action_dates_workflow_actions'] = getval('action_dates_workflow_actions',false);
+    $action_dates_config["action_dates_weekdays"] = getval('action_dates_weekdays','');
     
     // Get the extra rows fom the table
-    $action_date_extra_fields     = getvalescaped('action_dates_extra_field',array());
-    $action_date_extra_statuses   = getvalescaped('action_dates_extra_status',array());
-    	
-    $action_dates_extra_config = array();	
+    $action_date_extra_fields     = getval('action_dates_extra_field',array());
+    $action_date_extra_statuses   = getval('action_dates_extra_status',array());
+
+    $action_dates_extra_config = array();
     $mappingcount=0;
-    
+
     // Store the extra config in a new array
     for ($i=0; $i < count($action_date_extra_fields); $i++)
         {
@@ -59,13 +59,13 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
             $action_dates_extra_config[$mappingcount]["field"] = (int)$action_date_extra_fields[$i];
             $action_dates_extra_config[$mappingcount]["status"] = (int)$action_date_extra_statuses[$i];
             $mappingcount++;
-            }			
-        }    
+            }
+        }
     $action_dates_config["action_dates_extra_config"] = $action_dates_extra_config;
-
     set_plugin_config("action_dates",$action_dates_config);
+    // Refresh config
+    include_plugin_config("action_dates","",json_encode($action_dates_config));
     }
-   
 
 if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
 
@@ -75,7 +75,7 @@ $page_def[] = config_add_single_ftype_select('action_dates_deletefield',$lang['a
 $page_def[] = config_add_boolean_select('action_dates_reallydelete',$lang['action_dates_reallydelete']);
 $page_def[] = config_add_single_select('action_dates_new_state', $lang['action_dates_new_state'], $editable_states);
 $page_def[] = config_add_multi_archive_select("action_dates_eligible_states", $lang["action_dates_eligible_states"], $editable_states_less_deleted);
-$page_def[] = config_add_single_ftype_select('action_dates_restrictfield',$lang['action_dates_restrict'],420);
+$page_def[] = config_add_single_ftype_select('action_dates_restrictfield',$lang['action_dates_restrict'],420, false, $DATE_FIELD_TYPES);
 $page_def[] = config_add_boolean_select('action_dates_remove_from_collection',$lang['action_dates_remove_from_collection']);
 $page_def[] = config_add_text_input('action_dates_email_admin_days',$lang['action_dates_email_admin_days']);
 $page_def[] = config_add_boolean_select('action_dates_email_for_state', $lang['action_dates_email_for_state']);
@@ -115,8 +115,8 @@ foreach($action_dates_extra_config as $action_dates_extra_config)
                     }
                 $page_def_extra .=  ">" . $allowable_field['title'] . "</option>\n";
                 }
-    
-        $page_def_extra .= "         
+
+        $page_def_extra .= "
         </select>
         </td>
         <td>
@@ -156,7 +156,7 @@ jQuery(document).ready(function() {
         action_dates_new_state = jQuery('#action_dates_new_state').val();
         jQuery('#action_dates_new_state').prop('disabled', false);
         jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
-        jQuery('#archivestate'+action_dates_new_state).hide();
+        jQuery('#action_dates_eligible_states > #archivestate'+action_dates_new_state).hide();
     }
 
     jQuery('#action_dates_reallydelete').on('change', function() {
@@ -172,7 +172,7 @@ jQuery(document).ready(function() {
             // New state is relevant
             action_dates_new_state = jQuery('#action_dates_new_state').val();
             jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
-            jQuery('#archivestate'+action_dates_new_state).hide();
+            jQuery('#action_dates_eligible_states > #archivestate'+action_dates_new_state).hide();
             jQuery('#action_dates_new_state').prop('disabled', false).focus();
         }
 
@@ -184,7 +184,7 @@ jQuery(document).ready(function() {
         jQuery('#action_dates_eligible_states').children().show();
         // The new state is not eligible
         jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
-        jQuery('#archivestate'+action_dates_new_state).hide();
+        jQuery('#action_dates_eligible_states> #archivestate'+action_dates_new_state).hide();
     });
 });
 
@@ -221,7 +221,9 @@ foreach ($page_def as $def)
     }
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+
+// Note that config_gen_setup_post() is not used as it cannot process $action_dates_extra_config array
+//$upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, true, $plugin_page_heading);
 

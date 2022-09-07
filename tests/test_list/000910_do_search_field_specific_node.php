@@ -1,6 +1,6 @@
 <?php
+command_line_only();
 
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // -Check search for field specific node e.g. 'country:france'
 

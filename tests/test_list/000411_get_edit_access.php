@@ -2,17 +2,15 @@
 /*
 IMPORTANT: User edit filters are tested in 001901_edit_filters_updated
 */
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
+
 
 // Setup test
 $original_user_data = $userdata;
 
 $get_user_by_username = function($n) {
-    $username = escape_check($n);
-    sql_value("SELECT ref AS `value` FROM user WHERE username = '$username'", 0);
+    $username = $n;
+    ps_value("SELECT ref AS `value` FROM user WHERE username = ?", array("s",$username), 0);
 };
 $user_admin = new_user("test_000411_admin", 3);
 if($user_admin === false)

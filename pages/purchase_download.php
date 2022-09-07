@@ -3,7 +3,7 @@ include "../include/db.php";
 
 include "../include/authenticate.php"; 
 
-$collection=getvalescaped("collection","",true);
+$collection=getval("collection","",true);
 
 # Reload collection frame to show new (empty) basket
 refresh_collection_frame($usercollection);
@@ -53,6 +53,10 @@ else
 		<?php
 		$size=$resource["purchase_size"];
 		$title=get_data_by_field($resource["ref"],$view_title_field);
+        if(trim($title)=="")
+            {
+            $title = $lang["resourceid"] . "&nbsp;" . $resource["ref"];
+            }
 		?>
 		<td><h2><?php echo i18n_get_translated($title) ?></h2></td>
 		<td class="DownloadButton">

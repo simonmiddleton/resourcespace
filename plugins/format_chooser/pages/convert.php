@@ -3,15 +3,15 @@
 include '../../../include/db.php';
 include_once dirname(__FILE__) . "/../include/utility.php";
 
-$k=getvalescaped("k","");
-$ref = getvalescaped('ref', 0, true);
-$size = getvalescaped('size', '');
-$page = getvalescaped('page', 1, true);
-$alternative = getvalescaped('alt', -1, true);
+$k=getval("k","");
+$ref = getval('ref', 0, true);
+$size = getval('size', '');
+$page = getval('page', 1, true);
+$alternative = getval('alt', -1, true);
 
 $resource = get_resource_data($ref);
-$width = getvalescaped('width', 0, true);
-$height = getvalescaped('height', 0, true);
+$width = getval('width', 0, true);
+$height = getval('height', 0, true);
 
 if('' == $k || !check_access_key($ref, $k)) //Check if available through external share
     {
@@ -36,8 +36,8 @@ if ($width == 0 && $height == 0)
 	$height = (int)$format['height'];
 	}
 
-$ext = getvalescaped('ext', getDefaultOutputFormat());
-$profile = getProfileFileName(getvalescaped('profile', null));
+$ext = getval('ext', getDefaultOutputFormat());
+$profile = getProfileFileName(getval('profile', null));
 
 $target = sprintf('%s/%s_%s.%s',
     get_temp_dir(false, 'format_chooser'),

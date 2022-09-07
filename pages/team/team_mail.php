@@ -13,7 +13,7 @@ $message_type = intval(getval("message_type",MESSAGE_ENUM_NOTIFICATION_TYPE_EMAI
 
 if (getval("send","")!="" && enforcePostRequest(false))
 	{
-	$result=bulk_mail(getvalescaped("users",""),getvalescaped("subject",""),getvalescaped("text",""),getval("html","")=="yes",$message_type,getval("url",""));
+	$result=bulk_mail(getval("users",""),getval("subject",""),getval("text",""),getval("html","")=="yes",$message_type,getval("url",""));
 	if ($result=="")
 		{
 		switch($message_type)
@@ -65,7 +65,8 @@ switch($message_type){
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $title,

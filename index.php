@@ -4,14 +4,14 @@ include "include/db.php";
 if (getval("rp","")!="")
 	{
 	# quick redirect to reset password
-	$rp=getvalescaped("rp","");
+	$rp=getval("rp","");
 	$topurl="pages/user/user_change_password.php?rp=" . $rp;
         redirect($topurl);
 	}
         
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k = getvalescaped('k', '');
-if('' == $k || (!check_access_key_collection(getvalescaped('c', ''), $k) && !check_access_key(getvalescaped('r', ''), $k)))
+$k = getval('k', '');
+if('' == $k || (!check_access_key_collection(getval('c', ''), $k) && !check_access_key(getval('r', ''), $k)))
     {
     include 'include/authenticate.php';
     }
@@ -58,28 +58,28 @@ if($c != "")
 if (getval("r","")!="")
 	{
 	# quick redirect to a resource (from e-mails)
-	$r=getvalescaped("r","");
+	$r=getval("r","");
 	$topurl="pages/view.php?ref=" . $r . "&k=" . $k;
 	}
 
 if (getval("u","")!="")
 	{
 	# quick redirect to a user (from e-mails)
-	$u=getvalescaped("u","");
+	$u=getval("u","");
 	$topurl="pages/team/team_user_edit.php?ref=" . $u;
 	}
 	
 if (getval("q","")!="")
 	{
 	# quick redirect to a request (from e-mails)
-	$q=getvalescaped("q","");
+	$q=getval("q","");
 	$topurl="pages/team/team_request_edit.php?ref=" . $q;
 	}
 
 if (getval('ur', '') != '')
 	{
 	# quick redirect to periodic report unsubscriptions.
-	$ur = getvalescaped('ur', '');
+	$ur = getval('ur', '');
 
 	$topurl = 'pages/team/team_report.php?unsubscribe=' . $ur;
 	}
@@ -87,7 +87,7 @@ if (getval('ur', '') != '')
 if(getval('dr', '') != '')
 	{
 	# quick redirect to periodic report deletion.
-	$dr = getvalescaped('dr', '');
+	$dr = getval('dr', '');
 
 	$topurl = 'pages/team/team_report.php?delete=' . $dr;
     }

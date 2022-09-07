@@ -40,7 +40,7 @@ $lang["gotoadvancedsearch"]=" انتقل إلى بحث متقدم ";
 $lang["viewnewmaterial"]=" عرض المواد الجديدة ";
 $lang["researchrequestservice"]=" بحث طلب الخدمة ";
 
-# Team Centre
+# Admin
 $lang["manageresources"]=" إدارة الموارد ";
 $lang["overquota"]=" أكثر من مساحة القرص الحصص ، لا يمكن إضافة الموارد ";
 $lang["managearchiveresources"]=" إدارة الموارد الأرشيف ";
@@ -71,7 +71,7 @@ $lang["resourceidnotfound"]=" معرف مورد لم يتم العثور على 
 $lang["inclusive"]=" (ضمنا) ";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]=" البريد الإلكتروني للمتلقي";
 $lang["emailsubject"]=" البريد الإلكتروني للموضوع ";
 $lang["emailtext"]=" نص البريد الالكتروني ";
@@ -80,10 +80,10 @@ $lang["emailsent"]=" البريد الإلكتروني تم إرسالها. ";
 $lang["mustspecifyoneuser"]=" يجب تحديد مستخدم واحد على الأقل ";
 $lang["couldnotmatchusers"]=" قد لا تتطابق مع جميع المستخدمين ، أو أسماء مكررة ";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]=" تعليقات ";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]=" رأي المستخدم ساهمت بموارد بانتظار مراجعة ";
 $lang["viewuserpendingsubmission"]=" رأي المستخدم ساهمت بموارد ريثما يتم تقديم ";
 $lang["searcharchivedresources"]=" البحث المحفوظ الموارد ";

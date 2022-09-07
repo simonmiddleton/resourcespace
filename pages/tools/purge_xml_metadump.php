@@ -5,19 +5,16 @@
 #
 # delete all XML metadump files in filestore
 #
-
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Access denied - Command line only!');
-    }
-
 include "../../include/db.php";
-
 include "../../include/image_processing.php";
+command_line_only();
 
-$sql="";
-if (getval("ref","")!="") {$sql="where r.ref='" . getvalescaped("ref","",true) . "'";}
+$sql=""; $params = [];
+if (getval("ref","")!="") 
+    {
+    $sql="where r.ref= ?";
+    $params[] = 'i'; $params[] = getval('ref', '',true);
+    }
 
 set_time_limit(60*60*5);
 echo "\nRemoving XML metadata dump files...</strong>\n\n";
@@ -25,7 +22,7 @@ echo "\nRemoving XML metadata dump files...</strong>\n\n";
 $start = getval('start','0');
 if (!is_numeric($start)){ $start = 0; }
 
-$resources=sql_query("select r.ref,u.username,u.fullname from resource r left outer join user u on r.created_by=u.ref $sql order by ref");
+$resources=ps_query("select r.ref,u.username,u.fullname from resource r left outer join user u on r.created_by=u.ref $sql order by ref", $params);
 for ($n=$start;$n<count($resources);$n++)
 	{
 	$ref=$resources[$n]["ref"];

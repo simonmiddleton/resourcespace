@@ -40,7 +40,7 @@ $lang["gotoadvancedsearch"]="Uitgebreid zoeken";
 $lang["viewnewmaterial"]="Toon nieuw materiaal";
 $lang["researchrequestservice"]="Onderzoekaanvraag service";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Beheer materialen";
 $lang["overquota"]="Geen diskruimte meer beschikbaar, kan materialen niet toevoegen";
 $lang["managearchiveresources"]="Beheer archief materialen";
@@ -69,7 +69,7 @@ $lang["resourceidnotfound"]="Het materiaal ID werd niet gevonden";
 $lang["inclusive"]="(inclusief)";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="E-mail ontvanger(s)";
 $lang["emailsubject"]="E-mail onderwerp";
 $lang["emailtext"]="E-mail tekst";
@@ -78,10 +78,10 @@ $lang["emailsent"]="E-mail is verzonden";
 $lang["mustspecifyoneuser"]="U moet ten minste een ontvanger toevoegen";
 $lang["couldnotmatchusers"]="Kan niet alle namen vinden of er zijn gebruikersnamen dubbel.";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Opmerkingen";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Vertoon toevoegingen van gebruikers die op goedkeuring wachten";
 $lang["searcharchivedresources"]="Doorzoek gearchiveerd materiaal";
 $lang["viewresourcespendingarchive"]="Vertoon materialen die gearchiveerd dienen te worden";
@@ -463,7 +463,7 @@ $lang["collectioncommentsinfo"]="Voeg een opmerking toe aan dit materiaal, deze 
 $lang["comment"]="Opmerking";
 $lang["warningexpired"]="Materiaal verlopen";
 $lang["warningexpiredtext"]="Waarschuwing! Dit materiaal is verlopen. U moet op onderstaand link klikken om de download functionaliteit de activeren.";
-$lang["warningexpiredok"]="&gt; Materiaal downloaden activeren";
+$lang["warningexpiredok"]="Materiaal downloaden activeren";
 $lang["userrequestcomment"]="Opmerking";
 $lang["addresourcebatchbrowser"]="Voeg materiaal toe (bulk) - In Browser (aanbevolen)";
 $lang["replaceresourcebatch"]="Vervang materialen (bulk)";

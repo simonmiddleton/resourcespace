@@ -232,7 +232,7 @@ $lang["gotoadvancedsearch"]="zur erweiterten Suche";
 $lang["viewnewmaterial"]="neue Einträge anzeigen";
 $lang["researchrequestservice"]="Suchanfrage";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Ressourcen";
 $lang["overquota"]="Speicherplatz erschöpft; es können keine weiteren Ressourcen hinzugefügt werden";
 $lang["managearchiveresources"]="Archivierte Ressourcen verwalten";
@@ -266,7 +266,7 @@ $lang["pluginmanager"]="Plugin Manager";
 $lang["users"]="Benutzer";
 
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="E-Mail Empfänger";
 $lang["emailsubject"]="E-Mail Betreff";
 $lang["emailtext"]="E-Mail Text";
@@ -276,10 +276,10 @@ $lang["emailsent"]="E-Mail wurde gesendet.";
 $lang["mustspecifyoneuser"]="Sie müssen mindestens einen Benutzer auswählen";
 $lang["couldnotmatchusers"]="Keine passende Benutzer gefunden (oder Benutzer mehrfach angegeben)";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Kommentare";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Durch Benutzer zur Freischaltung eingereichte Ressourcen anzeigen";
 $lang["userpending"]="Durch Benutzer zur Freischaltung eingereichte Ressourcen";
 $lang["viewuserpendingsubmission"]="Durch Benutzer hochgeladene Ressourcen anzeigen";
@@ -854,7 +854,7 @@ $lang["collectioncommentsinfo"]="Add a comment to this collection for this resou
 $lang["comment"]="Kommentar";
 $lang["warningexpired"]="Ressource abgelaufen";
 $lang["warningexpiredtext"]="Warnung! Diese Ressource hat das Ablaufdatum überschritten. Klicken Sie den untenstehenden Link um die Download-Funktion wieder zu aktivieren..";
-$lang["warningexpiredok"]="&gt; Ressourcen-Download aktivieren";
+$lang["warningexpiredok"]="Ressourcen-Download aktivieren";
 $lang["userrequestcomment"]="Kommentar";
 $lang["addresourcebatchbrowser"]="Ressourcen hinzufügen - Im Browser";
 
@@ -1210,7 +1210,6 @@ $lang["requestassignedtouser"]="Ihre Ressourcenanfrage wurde % zur Überprüfung
  $lang['plugins-purge'] = 'Konfiguration bereinigen';
  $lang['plugins-headertext'] = 'Plugins erweitern die Funktionalität von ResourceSpace.';
  $lang['plugins-legacyinst'] = 'Aktiviert durch die Datei config.php';
-$lang['plugins-download'] = 'Konfiguration&nbsp;herunterladen';
 $lang['plugins-upload-title'] = 'Konfiguration aus Datei laden';
 $lang['plugins-upload'] = 'Konfiguration hochladen';
 $lang['plugins-getrsc'] = 'Datei:';

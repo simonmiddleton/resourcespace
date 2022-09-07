@@ -4,8 +4,8 @@ include "../../../include/db.php";
 include "../../../include/authenticate.php"; if (!checkperm("r")) {exit ("Permission denied.");}
 
 
-$ref      = getvalescaped('ref', '');
-$resource = getvalescaped('resource', '');
+$ref      = getval('ref', '');
+$resource = getval('resource', '');
 
 # Check access
 $edit_access = get_edit_access($resource);
@@ -17,7 +17,8 @@ if(!$edit_access)
 
 if(getval('submitted', '') != '' && enforcePostRequest(false))
     {
-    sql_query("DELETE FROM resource_usage WHERE ref = '$ref' AND resource = '$resource'");
+    $parameters=array("i",$ref, "i",$resource);
+    ps_query("DELETE FROM resource_usage WHERE ref = ? AND resource = ?", $parameters);
     
     resource_log($resource, '', '', $lang['delete_usage'] . ' ' . $ref);
     

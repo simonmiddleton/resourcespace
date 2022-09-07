@@ -21,12 +21,12 @@ if ($on_upload || (isset($ref) && $ref<0))
         {
         ?>
         <div id="question_resourcetype" class="Question">
-            <label for="resourcetype"><?php echo "{$lang["resourcetype"]}"; ?></label>
+            <label for="resourcetype"><?php echo "{$lang["resourcetype"]}" . " <sup>*</sup>"; ?></label>
             <select id="resourcetype"
                     class="stdwidth"
                     name="resource_type"
-                    onchange="CentralSpacePost(document.getElementById('UploadForm'), true);">
-                <option value='' selected><?php echo $lang["select"]; ?></option>
+                    >
+                <option value='' <?php ($resource_type == "") ? "selected" : ""?>><?php echo $lang["select"]; ?></option>
             <?php
             $types                = get_resource_types();
             $shown_resource_types = array();
@@ -104,7 +104,7 @@ if ($on_upload || (isset($ref) && $ref<0))
         # Add Resource Batch: specify default content - also ask which collection to add the resource to.
         if ($enable_add_collection_on_upload && !(isset($external_upload) && $external_upload))
             {
-            $collection_add=getvalescaped("collection_add","");
+            $collection_add=getval("collection_add","");
 
             if($upload_force_mycollection)
                 {
@@ -369,10 +369,10 @@ if($on_upload)
     </script>
     <?php
     }
-    else if ($edit_upload_options_at_top)
+else if ($edit_upload_options_at_top)
     {
-        ?>
-        </div> <!-- End of Upload options -->
-        <?php
+    ?>
+    <!-- End of Upload options -->
+    <?php
     }
 endif; # hook replaceuploadoptions

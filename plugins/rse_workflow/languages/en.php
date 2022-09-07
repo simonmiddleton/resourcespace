@@ -7,7 +7,7 @@
 
 $lang['rse_workflow_configuration']="Workflow configuration";
 $lang['rse_workflow_summary'] = "<div>This plugin allows you to create additional archive (workflow) states, as well as defining actions to describe the movement between states.   <br><br></div>";
-$lang['rse_workflow_introduction']="To amend workflow states and actions, use the 'Manage workflow actions' and 'Manage Workflow states' from Team Centre. Click %%HERE to go to Team Centre";
+$lang['rse_workflow_introduction']="To amend workflow states and actions, use the 'Manage workflow actions' and 'Manage Workflow states' from Admin. Click %%HERE to go to Admin";
 $lang['rse_workflow_user_info'] = "These actions will change the workflow status of this resource and may trigger actions for other users.";
 $lang['rse_workflow_actions_heading']="Workflow actions";
 $lang['rse_workflow_manage_workflow']="Workflow";
@@ -53,11 +53,11 @@ $lang["rse_workflow_state_notify_group"]="When resources enter this state, notif
 $lang["rse_workflow_state_notify_message"]="There are new resources in the workflow state: ";
 
 // For more notes functionality:
-$lang['rse_workflow_more_notes_label'] = 'More notes when changing workflow?';
+$lang['rse_workflow_more_notes_label'] = 'Allow addition of extra notes when changing workflow?';
 $lang['rse_workflow_notify_user_label'] = 'Should contributor be notified?';
 $lang['rse_workflow_simple_search_label'] = "Include workflow state in default searches (certain special searches may ignore this)";
 $lang['rse_workflow_link_open'] = 'More';
 $lang['rse_workflow_link_close'] = 'Close';
 $lang['rse_workflow_more_notes_title'] = 'Notes:';
 $lang['rse_workflow_email_from'] = 'Email address to send notification from (will use %EMAILFROM% if blank):';
-$lang['rse_workflow_bcc_admin'] = 'Check to BCC the system admin email address (%ADMINEMAIL%) if the contributor is notified';
+$lang['rse_workflow_bcc_admin'] = 'Notify system administrators when the contributor is notified';

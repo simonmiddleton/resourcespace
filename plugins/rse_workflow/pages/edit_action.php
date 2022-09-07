@@ -7,7 +7,7 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once '../include/rse_workflow_functions.php';
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref","");
 
 if($ref==""){exit($lang["rse_workflow_action_none_specified"]);}
 # Retrieve action
@@ -25,17 +25,14 @@ else
 	$workflowaction=$workflowaction[0];
 	}
 
-//print_r($workflowaction);
-
-if (getvalescaped("submitted","")!="" && enforcePostRequest(false))
+if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
-	$saveerror=false;
-	$ref=getvalescaped("ref","");
-	$tostate=getvalescaped("actionto","");
-	$name=getvalescaped("actionname","");
-	$text=getvalescaped("actiontext","");
-	$buttontext=getvalescaped("buttontext","");
-	
+	$saveerror  = false;
+	$ref        = getval("ref","");
+	$tostate    = getval("actionto",999,true);
+	$name       = getval("actionname","");
+	$text       = getval("actiontext","");
+	$buttontext = getval("buttontext","");	
 	
 	# construct a list of from states from the ticked boxes
 	$fromstatesstring="";
@@ -63,11 +60,27 @@ if (getvalescaped("submitted","")!="" && enforcePostRequest(false))
 		{
 		if($ref=="new")
 			{
-			sql_query("insert into workflow_actions (name,text,buttontext,statusfrom,statusto) values('" . escape_check($name) . "','" . escape_check($text) . "','" . escape_check($buttontext). "','" . $fromstatesstring . "','" . $tostate . "')");
+			ps_query("INSERT INTO workflow_actions (name,text,buttontext,statusfrom,statusto) VALUES (?,?,?,?,?)",
+                [
+                "s",$name,
+                "s",$text,
+                "s",$buttontext,
+                "s",$fromstatesstring,
+                "i",$tostate
+                ]);
 			}
 		else
 			{
-			sql_query("update workflow_actions set name='$name', text='$text', buttontext='$buttontext', statusfrom='$fromstatesstring', statusto='$tostate' where ref='$ref'");
+			ps_query("UPDATE workflow_actions SET name = ?, text = ?, buttontext = ?, statusfrom = ?, statusto = ? where ref = ?",
+                [
+                "s",$name,
+                "s",$text,
+                "s",$buttontext,
+                "s",$fromstatesstring,
+                "i",$tostate,
+                "i",$ref
+                ]
+                );
 			}
 		}
 	$workflowaction["statusfrom"]=$fromstatesstring;
@@ -116,19 +129,21 @@ if (isset($saveerror))
 ?>
 		
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_workflow_action_edit_action"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php"
+        'href'  => $baseurl_short . "pages/team/team_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["rse_workflow_manage_workflow"],
         'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow.php"
     ),
     array(
-        'title' => $lang["rse_workflow_manage_states"],
-        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow_states.php"
+        'title' => $lang["rse_workflow_manage_actions"],
+        'href'  => $baseurl_short . "plugins/rse_workflow/pages/edit_workflow_actions.php"
     ),
     array(
         'title' => $lang["rse_workflow_action_edit_action"]
@@ -192,7 +207,7 @@ renderBreadcrumbs($links_trail);
 		}
 	foreach ($additional_archive_states as $additional_archive_state)
 		{?>
-		<option value="<?php echo $additional_archive_state ?>" <?php if ($additional_archive_state==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $additional_archive_state] ?></option>';<?php
+		<option value="<?php echo (int)$additional_archive_state ?>" <?php if ($additional_archive_state==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $additional_archive_state] ?></option>';<?php
 		}	
 	?>
 	</select>

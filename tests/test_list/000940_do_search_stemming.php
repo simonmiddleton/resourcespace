@@ -1,6 +1,6 @@
 <?php
+command_line_only();
 
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Check stemming search e.g.  'fox' should return 'foxes', 'dance' should return 'dancing'
 $stemming=true;

@@ -32,8 +32,8 @@ else
     }
 
   
-$delete_filter = getvalescaped('delete_filter', '');
-$delete_filter_rule = getvalescaped('delete_filter_rule', '');
+$delete_filter = getval('delete_filter', '');
+$delete_filter_rule = getval('delete_filter_rule', '');
 $filter_rule = getval("filter_rule","");
 $filter_copy_from = getval("copy_from",0,true);
 
@@ -190,12 +190,13 @@ include "../../include/header.php";
 <div id="CentralSpaceContainer">
     <div id="CentralSpace">
         <div class="BasicsBox">
-        
+            <h1><?php echo $filterid == 0 ? $lang["filter_new"] : $lang["filter_edit"]; ?></h1>
             <?php
             $links_trail = array(
                 array(
                     'title' => $lang["systemsetup"],
-                    'href'  => $baseurl_short . "pages/admin/admin_home.php"
+                    'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		            'menu' =>  true
                 ),
                 array(
                     'title' => $lang["filter_manage"],
@@ -249,7 +250,6 @@ include "../../include/header.php";
                                 $ruletext = array();
                                 foreach($ruleinfo["fields"] as $rulefield)
                                     {
-                                    //print_r($rulefield);
                                     if(isset($rulefield["values_on"]) && count($rulefield["values_on"]) > 0)
                                         {
                                         $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_on"]) . "')";

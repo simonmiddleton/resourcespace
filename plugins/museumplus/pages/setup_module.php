@@ -100,11 +100,12 @@ $form_action = generateURL(
         'id' => $id,
     )
 );
-$rtfs = sql_query('SELECT * FROM resource_type_field ORDER BY title, name', 'schema');
+$rtfs = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', [],'schema');
 
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
+<h1><?php echo $lang['museumplus_module_setup']; ?></h1>
 <?php
 renderBreadcrumbs($breadcrumbs);
 if(isset($error))

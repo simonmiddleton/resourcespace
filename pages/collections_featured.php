@@ -80,7 +80,10 @@ $rendering_options = array(
 
 $featured_collections = ($smart_rtf == 0 ? get_featured_collections($parent, array()) : array());
 usort($featured_collections, "order_featured_collections");
-render_featured_collections($rendering_options, $featured_collections);
+render_featured_collections(
+    array_merge($rendering_options, ["reorder" => can_reorder_featured_collections()]),
+    $featured_collections
+);
 
 $smart_fcs_list = array();
 if($parent == 0 && $smart_rtf == 0)
@@ -104,7 +107,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
     {
     // Smart fields. If a category tree, then a parent could be passed once user requests a lower level than root of the tree
     $resource_type_field = get_resource_type_field($smart_rtf);
-    if($resource_type_field !== false)
+    if($resource_type_field !== false && in_array($resource_type_field["type"],$FIXED_LIST_FIELD_TYPES))
         {
         // We go one level at a time so we don't need it to search recursively even if this is a FIELD_TYPE_CATEGORY_TREE
         $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent, $resource_type_field);
@@ -170,17 +173,24 @@ if($k == "" && $smart_rtf == 0)
 <script>
 jQuery(document).ready(function ()
     {
-    jQuery('.FeaturedSimpleTile').hover(
-    function(e)
+    if (jQuery(window).width() > 600)
         {
-        tileid = jQuery(this).attr('id').substring(19);
-        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
-        },
-    function(e)
-        {
-        tileid=jQuery(this).attr('id').substring(19);
-        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
+        jQuery('.FeaturedSimpleTile').hover(
+        function(e)
+            {
+            tileid = jQuery(this).attr('id').substring(19);
+            jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
+            },
+        function(e)
+            {
+            tileid=jQuery(this).attr('id').substring(19);
+            jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
         });
+        }
+    else
+        {
+        jQuery('.FeaturedSimpleTileActions').css('display', 'block');
+        }
 
     // Get and update display for total resource count for each of the rendered featured collections (@see render_featured_collection() for more info)
     var fcs_waiting_total = jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"]');
@@ -203,6 +213,36 @@ jQuery(document).ready(function ()
             });
         }
     });
+
+
+// Re-order capability
+jQuery(function() {
+    // Disable for touch screens
+    if(is_touch_device())
+        {
+        return false;
+        }
+
+    jQuery('.BasicsBox.FeaturedSimpleLinks').sortable({
+        items: '.SortableItem',
+        update: function(event, ui)
+            {
+            let html_ids_new_order = jQuery('.BasicsBox.FeaturedSimpleLinks').sortable('toArray');
+            let fcs_new_order = html_ids_new_order.map(id => jQuery('#' + id).data('fc-ref'));
+            console.debug('fcs_new_order=%o', fcs_new_order);
+            <?php
+            if($descthemesorder)
+                {
+                ?>
+                fcs_new_order = fcs_new_order.reverse();
+                console.debug('fcs_new_order_reversed=%o', fcs_new_order);
+                <?php
+                }
+                ?>
+            api('reorder_featured_collections', {'refs': fcs_new_order});
+            }
+    });
+});
 </script>
 <?php
 if($themes_show_background_image && !$full_width)

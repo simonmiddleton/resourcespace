@@ -173,7 +173,6 @@ class ldapAuth
 				
 				$info = ldap_get_entries($this->ldapconn, $search);
 				
-				//print_r ($info);
 				// set the rdn
 				$this->ldaprdn = $info[0]["dn"];
 				
@@ -205,10 +204,8 @@ class ldapAuth
 		//$filter = "(cn=".$this->userName.")";
 		$filter="(objectclass=*)";
 		$retArr = array("sn", "givenname", "mail","cn");
-		//echo $this->ldaprdn;
 		$res = ldap_search($this->ldapconn,$this->ldaprdn,$filter,$retArr);
 		$info = ldap_get_entries($this->ldapconn, $res);
-		//print_r( $info );
 		$retVar = array();
 		
 		// build the return values
@@ -230,15 +227,11 @@ class ldapAuth
 	*/
 	function checkGroup($groupId)
 	{
-		//echo $this->ldapconfig['basedn'];		
 		$found = false;
-		
-	
 		$dn = "cn=groups," . $this->ldapconfig['basedn'];
 		$gid = "(gidnumber=" . $groupId . ")";
 		$res = ldap_search($this->ldapconn,$dn,$gid,array("memberuid"));
 		$info = ldap_get_entries($this->ldapconn, $res); 
-		//print_r($info);
 		$x =  count($info[0]['memberuid']) - 1;
 		for ($l = 0; $l < $x; $l++)
 		{
@@ -355,8 +348,6 @@ class ldapAuth
 		// we check each part of the returned array to find the member field identify as the array might not be in order!
 		// This also helps prevent it bombing if it can't find the member field identifier, ie it's been overridden wrongly.
 		if ($this->ldap_debug) { error_log(  __METHOD__ . " " . __LINE__ . " Searching for user  " . $this->$userField ); }
-		//echo "<pre>";
-		//print_r($info);
 		
 		foreach ($info as $level1) 
 		{
@@ -439,7 +430,6 @@ class ldapAuth
 		}
 		
 		error_log(  __FILE__ . " " . __METHOD__ . " " . __LINE__ ." - ldap_search ( ". $dn . "," . $filter . ")");
-		//print_r($this->ldapconfig);
 		
 		if (!($sr = ldap_search($this->ldapconn, $dn, $filter,$attributes)))
 		{

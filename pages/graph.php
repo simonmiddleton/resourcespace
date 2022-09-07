@@ -12,24 +12,32 @@ $graph = imagecreatetruecolor($width,$height);
 if (function_exists("imageantialias")) {imageantialias($graph,true);}
 
 # Read values
-$activity_type=getvalescaped("activity_type","Search");
-$year=getvalescaped("year",2006);
-$month=getvalescaped("month","");
+$activity_type=getval("activity_type","Search");
+$year=getval("year",2006);
+$month=getval("month","");
 
 # Group handling
-$groupselect=getvalescaped("groupselect","");
-$groups=getvalescaped("groups","");$groups=explode("_",$groups);
-if ($groupselect=="select") {$sql="and usergroup in (" . join(",",$groups) . ")";} else {$sql="";}
+$groupselect=getval("groupselect","");
+$groups=getval("groups","");$groups=explode("_",$groups);
+$params=[];
+if ($groupselect=="select")
+    {
+    $params = ps_param_fill($groups, 'i');
+    $sql="and usergroup in (". ps_param_insert(count($groups)) .")";
+    }
+else
+{$sql="";}
 
 # Monthly graph? Add month filter
 if ($month!="")
 	{
-	$sql.=" and month='$month'";
+	$sql.=" and month= ?";
+    $params[] = 'i'; $params[] = $month;
 	}
 
 
 # Fetch results
-$results=sql_query("select year,month,day,sum(count) c from daily_stat where activity_type='$activity_type' and year='$year' $sql group by year,month,day;");
+$results=ps_query("select year,month,day,sum(count) c from daily_stat where activity_type= ? and year= ? $sql group by year,month,day;", array_merge(['s', $activity_type, 'i', $year], $params));
 
 $days=array();
 $max=-1;

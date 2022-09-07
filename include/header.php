@@ -1,15 +1,15 @@
 <?php 
 hook ("preheaderoutput");
  
-$k=getvalescaped("k","");
+$k=getval("k","");
 if(!isset($internal_share_access))
 	{
 	// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
     $internal_share_access = internal_share_access();
 	}
 
-$logout=getvalescaped("logout","");
-$loginas=getvalescaped("loginas","");
+$logout=getval("logout","");
+$loginas=getval("loginas","");
 
 # Do not display header / footer when dynamically loading CentralSpace contents.
 $ajax=getval("ajax","");
@@ -53,7 +53,7 @@ $noauth_page = ($pagename == "login");
     }
 ?>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php hook('extra_meta'); ?>
 
 <title><?php echo htmlspecialchars($applicationname)?></title>
@@ -200,6 +200,7 @@ if (!hook("replacetrashbin", "", array("js" => true)))
 ?>
 oktext="<?php echo $lang["ok"] ?>";
 var scrolltopElementCentral='.ui-layout-center';
+var scrolltopElementContainer='.ui-layout-container';
 var scrolltopElementCollection='.ui-layout-south';
 var scrolltopElementModal='#modal'
 collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
@@ -256,80 +257,75 @@ $extrafooterhtml="";
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <!-- Load specified font CSS -->
-<link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
+<?php
+if (!isset($custom_font) || $custom_font == '')
+    {
+    ?><link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" /><?php
+    }
+?>
 
 <?php
 if(!$disable_geocoding)
     {
-    if($leaflet_maps_enable)
-        {
-        // Geocoding & leaflet maps
-        // Load Leaflet and plugin files.
-        ?>
-        <!--Leaflet.js v1.7.1 files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.min.js"></script>
+    // Geocoding & leaflet maps
+    // Load Leaflet and plugin files.
+    ?>
+    <!--Leaflet.js v1.7.1 files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.min.js"></script>
 
-        <?php 
-        if($geo_leaflet_maps_sources)
-            {?>
-            <!--Leaflet Providers v1.10.2 plugin files-->
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
-            <?php
-            }
-        else
-            {
-            header_add_map_providers();
-            }?>
-
-        <!--Leaflet PouchDBCached v1.0.0 plugin file with PouchDB v7.1.1 file-->
-        <?php if ($map_default_cache || $map_layer_cache)
-            { ?>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script> <?php
-            } ?>
-
-        <!--Leaflet MarkerCluster v1.4.1 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.css"/>
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.Default.css"/>
-
-        <!--Leaflet ColorMarkers v1.0.0 plugin file-->
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.js"></script>
-
-        <!--Leaflet NavBar v1.0.1 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
-            
-        <!--Leaflet Omnivore v0.3.1 plugin file-->
-        <?php if ($map_kml)
-            { ?>
-            <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script> <?php
-            } ?>
-
-        <!--Leaflet EasyPrint v2.1.9 plugin file-->
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
-
-        <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
-
-        <!--Leaflet Zoomslider v0.7.1 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
-
-        <!--Leaflet Shades v1.0.2 plugin files-->
-        <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
-        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
-
+    <?php 
+    if($geo_leaflet_maps_sources)
+        {?>
+        <!--Leaflet Providers v1.10.2 plugin files-->
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-providers-1.10.2/leaflet-providers.js"></script>
         <?php
         }
     else
         {
-        // Legacy OpenLayers code
-        ?>
-        <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
-        <?php
-        }
+        header_add_map_providers();
+        }?>
+
+    <!--Leaflet PouchDBCached v1.0.0 plugin file with PouchDB v7.1.1 file-->
+    <?php if ($map_default_cache || $map_layer_cache)
+        { ?>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/pouchdb-7.1.1/pouchdb-7.1.1.min.js"></script>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-PouchDBCached-1.0.0/L.TileLayer.PouchDBCached.min.js"></script> <?php
+        } ?>
+
+    <!--Leaflet MarkerCluster v1.4.1 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/MarkerCluster.Default.css"/>
+
+    <!--Leaflet ColorMarkers v1.0.0 plugin file-->
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-colormarkers-1.0.0/js/leaflet-color-markers.js"></script>
+
+    <!--Leaflet NavBar v1.0.1 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
+        
+    <!--Leaflet Omnivore v0.3.1 plugin file-->
+    <?php if ($map_kml)
+        { ?>
+        <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script> <?php
+        } ?>
+
+    <!--Leaflet EasyPrint v2.1.9 plugin file-->
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
+
+    <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
+
+    <!--Leaflet Zoomslider v0.7.1 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.min.js"></script>
+
+    <!--Leaflet Shades v1.0.2 plugin files-->
+    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
+
+    <?php
     }
 echo get_plugin_css();
 // after loading these tags we change the class on them so a new set can be added before they are removed (preventing flickering of overridden theme)
@@ -417,12 +413,12 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             $header_img_src = get_header_image();
             if($header_link && ($k=="" || $internal_share_access))
                 {?>
-                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" ></img></a>
+                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></a>
                 <?php
                 }
             else
                 {?>
-                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
+                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></div>
                 <?php
                 }
             }
@@ -438,7 +434,16 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             ?>   
             <div id="HeaderButtons" style="display:none;">
                 <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
-                    <span class="rbText"><?php echo $allow_password_change == false ? htmlspecialchars(($userfullname=="" ? $username : $userfullname)) : $lang["responsive_settings_menu"]; ?></span>
+                    <span class="rbText">
+                        <?php if ($allow_password_change == false)
+                            {
+                            echo htmlspecialchars((!isset($userfullname)||$userfullname==""?$username:$userfullname));
+                            }
+                        else 
+                            {
+                            echo $lang["responsive_settings_menu"];
+                            }?>
+                        </span>
                     <?php if ($user_profile_image != "")
                         {
                         ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> <?php
@@ -559,20 +564,22 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
-                    <?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                    <?php 
+                        if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
-                            $pending=sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0);
-                            if ($pending>0)
-                                {
-                                ?><span class="Pill"><?php echo $pending ?></span><?php
-                                }
+                            $pending=ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",array(),0);
+                            ?><span id="TeamMessages" class="Pill" <?php echo $pending>0?'data-value="'.$pending.'"':'style="display:none"'?>><?php echo $pending>0?$pending:'' ?></span><?php
+                            }
+                        else
+                            {
+                            ?><span id="TeamMessages" class="Pill" style="display:none"></span><?php
                             }
                         ?>
-                    </li><?php
+                    </a></li><?php
                     } ?>
-                <!-- End of team centre link -->
+                <!-- End of Admin link -->
                 
                 <?php hook("addtoplinks"); ?>
                 
@@ -689,7 +696,7 @@ if($browse_on && checkperm("s") === true)
     render_browse_bar();
     }
         
-echo '<div id="UICenter" class="ui-layout-center ' . $uicenterclass . '">';
+echo '<div id="UICenter" role="main" class="ui-layout-center ' . $uicenterclass . '">';
 
 hook('afteruicenter');
 
@@ -728,10 +735,11 @@ $port   = (isset($parsed_url['port']) ? ":{$parsed_url['port']}" : "");
 
 $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUEST_URI"]);
 
-if($leaflet_maps_enable)
+if(!$disable_geocoding) 
     {
     get_geolibraries();
     }
+
 ?>
 <script>
  
@@ -760,9 +768,7 @@ window.onresize=function()
 </script>
 <?php
 // Non-ajax specific hook 
-hook("start_centralspace");
-
-	
+hook("start_centralspace");	
 
 if ($k!="" && !$internal_share_access) { ?>
 <style>
@@ -778,4 +784,3 @@ if ($ajax) {
     <?php
     hook("afterheaderajax");
 }
-?>

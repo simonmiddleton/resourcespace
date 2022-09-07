@@ -9,8 +9,8 @@ enforcePostRequest(false);
 
 $save=(getval("save","0")==1);
 $svg=getval("svg","");
-$filename=getvalescaped("filename","");
-$filetype=strtolower(getvalescaped("filetype",""));
+$filename=getval("filename","");
+$filetype=strtolower(getval("filetype",""));
 
 if (in_array($filetype,$stencilvg_rsvg_supported_output_formats))
     {

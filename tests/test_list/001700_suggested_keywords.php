@@ -1,8 +1,8 @@
 <?php
 
 // Check that get_Suggested keywords does not return data from fields that user does not have access to
+command_line_only();
 
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 clear_query_cache("schema");
 
 $resourcea=create_resource(1,0);

@@ -4,7 +4,7 @@
 * 
 * IMPORTANT: only one field can be setup for the annotation side and it also MUST be a dynamic keywords list
 * 
-* @uses sql_value()
+* @uses ps_value()
 * 
 * @return boolean
 */
@@ -23,11 +23,11 @@ function initFacialRecognition()
         return false;
         }
 
-    $facial_recognition_rtf_type = sql_value(
+    $facial_recognition_rtf_type = ps_value(
         "SELECT `type` AS `value`
            FROM resource_type_field
-          WHERE ref = '" . escape_check($facial_recognition_tag_field) . "'
-        ",
+          WHERE ref = ?
+        ",array("i",$facial_recognition_tag_field),
         null, "schema");
 
     if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST != $facial_recognition_rtf_type)

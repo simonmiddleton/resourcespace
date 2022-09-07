@@ -6,7 +6,6 @@ if('cli' != PHP_SAPI)
     }
 
 include __DIR__ . '/../../include/db.php';
-include_once __DIR__ . '/../../include/resource_functions.php';
 
 ob_end_clean();
 restore_error_handler();
@@ -29,7 +28,7 @@ if(!$facial_recognition)
 $convert_fullpath             = get_utility_path('im-convert');
 $python_fullpath              = get_utility_path('python');
 $faceRecognizerTrainer_path   = __DIR__ . '/../../lib/facial_recognition/faceRecognizerTrainer.py';
-$facial_recognition_tag_field = (int) escape_check($facial_recognition_tag_field);
+$facial_recognition_tag_field = (int) $facial_recognition_tag_field;
 $allow_training               = false;
 $overwrite_existing           = false;
 $no_previews_found_counter    = 0;
@@ -69,7 +68,7 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
     }
 
 // Step 1: Preparing the data
-$annotations = sql_query(
+$annotations = ps_query(
        "SELECT a.resource,
                a.x,
                a.y,
@@ -80,8 +79,9 @@ $annotations = sql_query(
           FROM annotation_node AS an
     INNER JOIN annotation AS a ON a.ref = an.annotation
     INNER JOIN node AS n ON n.ref = an.node AND n.resource_type_field = a.resource_type_field
-         WHERE a.resource_type_field = '{$facial_recognition_tag_field}'
-      ORDER BY n.ref ASC"
+         WHERE a.resource_type_field = ?
+      ORDER BY n.ref ASC",
+    ['i', $facial_recognition_tag_field]
 );
 
 foreach($annotations as $annotation)

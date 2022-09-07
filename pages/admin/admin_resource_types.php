@@ -10,8 +10,8 @@ if (!checkperm("a"))
 	}
 
 
-$restype_order_by=getvalescaped("restype_order_by","rt");
-$restype_sort=getvalescaped("restype_sort","asc");
+$restype_order_by=getval("restype_order_by","rt");
+$restype_sort=getval("restype_sort","asc");
 
 if(!in_array($restype_order_by,array("rt","name","tab_name","order_by","fieldcount"))){$restype_order_by="rt";}
 
@@ -20,21 +20,22 @@ $url=generateURL($baseurl . "/pages/admin/admin_resource_types.php",$url_params)
 
 $sql_restype_order_by=$restype_order_by=="order_by"?"CAST(order_by AS UNSIGNED)":$restype_order_by;
 
-$backurl=getvalescaped("backurl","");
+$backurl=getval("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_home.php";
     }
     
-if (getval("newtype","")!="" && enforcePostRequest(false))
+$newtype=getval("newtype","");
+if ($newtype!="" && enforcePostRequest(false))
 	{
-	sql_query("insert into resource_type (name) values ('" . getvalescaped("newtype","") . "')");
+	ps_query("insert into resource_type (name) values (?) ",array("s",$newtype));
 	$new=sql_insert_id();
 	clear_query_cache("schema");
 	redirect($baseurl_short."pages/admin/admin_resource_type_edit.php?ref=" . $new);
 	}
 
-$resource_types=sql_query ("
+$resource_types=ps_query ("
 	select * from 
 		(
 		select if(rt is null, rt.ref, rt) rt,
@@ -89,7 +90,7 @@ function addColumnHeader($orderName, $labelKey)
 		$arrow = '';
 
 	?><td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo $orderName ?>&restype_sort=<?php echo ($restype_sort=="asc") ? 'desc' : 'asc';
-			?>&find=<?php echo urlencode($find)?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this);"><?php
+			?>&find=<?php echo urlencode((string)$find)?>&backurl=<?php echo urlencode((string)$url) ?>" onClick="return CentralSpaceLoad(this);"><?php
 			echo $lang[$labelKey] . $arrow ?></a></td>
 	
       <?php
@@ -98,11 +99,13 @@ function addColumnHeader($orderName, $labelKey)
 ?>	
 
 <div class="BasicsBox">
+<h1><?php echo $lang["resource_types_manage"]; ?></h1>
 <?php
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+			'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["resource_types_manage"],
@@ -214,11 +217,11 @@ for ($n=0;$n<count($resource_types);$n++)
 				if(!in_array($resource_types[$n]["rt"],array(0,999)))
 				  {
 				  ?>
-				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
+				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
 				  <?php
 				  }
 				  ?>
-				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["rt"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["metadatafields"]?> </a>
+				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["rt"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
 				
 			</div>
 		</td>

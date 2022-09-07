@@ -7,6 +7,7 @@ include_once __DIR__ . '/../image_processing.php';
 # $job_data["createPreviews"]
 # $job_data["archive"] -> optional based on $upload_then_process_holding_state
 
+global $baseurl, $offline_job_delete_completed,$baseurl_short;
 $resource=get_resource_data($job_data["r"]);
 $status=false;
 
@@ -20,8 +21,6 @@ if($resource!==false)
 		update_archive_status($job_data["resource"], $job_data["archive"]);
 		}
 	}
-
-global $baseurl, $offline_job_delete_completed;
 
 $url = isset($job_data['r']) ? $baseurl_short . "?r=" . $job_data['r']: '';
 

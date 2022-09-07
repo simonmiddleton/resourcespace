@@ -1,11 +1,7 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
-// @todo use the dirname level argument once PHP 7.0 is supported
-$webroot = dirname(dirname(__DIR__));
+$webroot = dirname(__DIR__, 2);
 include_once("{$webroot}/include/request_functions.php");
 
 
@@ -94,10 +90,6 @@ if(!isset($html_props[0]["html_properties"]) || !is_array($html_props[0]["html_p
     }
 
 // Tear down
-unset($missing_id_prop);
-unset($missing_title_prop);
-unset($missing_type_prop);
-unset($missing_required_prop);
-unset($fields);
+unset($missing_id_prop, $missing_title_prop, $missing_type_prop, $missing_required_prop, $fields);
 
 return true;

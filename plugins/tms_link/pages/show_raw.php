@@ -7,7 +7,7 @@ if(!checkperm("a")){exit ("Access denied"); }
 include_once "../include/tms_link_functions.php";
 
 
-$tmsid=getvalescaped("tmsid",0,true);
+$tmsid=getval("tmsid",0,true);
 
 $conn = odbc_connect($tms_link_dsn_name, $tms_link_user,$tms_link_password);
 if(!$conn)
@@ -62,10 +62,16 @@ if($tmsid != 0)
         for($r = 1; $r <= $resultcount; $r++)
             {
             $tmsdata = odbc_fetch_array($tmsresultset, $r);
-
-            foreach($tmsdata as $name=>$value)
+            if(is_array($tmsdata))
                 {
-                echo $name . " : " . $value . "<br />";
+                foreach($tmsdata as $name=>$value)
+                    {
+                    echo $name . " : " . $value . "<br />";
+                    }
+                }
+            else
+                {
+                echo "No data returned";
                 }
             }
         }

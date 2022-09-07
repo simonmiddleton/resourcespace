@@ -44,7 +44,7 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 		{
 		switch($tile_style)
 			{
-			case "thmbs":	$promoted_image=getvalescaped("promimg",false);
+			case "thmbs":	$promoted_image=getval("promimg",false);
 							tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_image);
 							exit;
 			case "multi":	tile_search_multi($tile,$tile_id,$tile_width,$tile_height);
@@ -60,11 +60,11 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
         switch($tile_style)
             {
             case 'thmbs':
-                tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, getvalescaped('promimg', 0));
+                tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, getval('promimg', 0));
                 break;
 
             case 'multi':
-                tile_featured_collection_multi($tile, $tile_id, $tile_width, $tile_height, getvalescaped('promimg', 0));
+                tile_featured_collection_multi($tile, $tile_id, $tile_width, $tile_height, getval('promimg', 0));
                 break;
 
             case 'blank':
@@ -88,9 +88,15 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
     
     $url = "{$baseurl_short}pages/collections_featured.php";
     $fc_categories = get_featured_collection_categories(0, []);
+    if($pagename !== 'dash_tile_preview')
+        {
 	?>
-	<div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" tile="<?php echo $tile["ref"]?>" id="<?php echo str_replace("contents_","",$tile_id);?>" >
-		<div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
+        <div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" 
+            tile="<?php echo escape_quoted_data($tile["ref"])?>" 
+            id="<?php echo str_replace("contents_","",escape_quoted_data($tile_id));?>" >
+            <div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
+    <?php 
+        }?>
 				<span class="theme-icon"></span>
 				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php"><h2><?php echo $lang["themes"]?></h2></a>
 				<p>
@@ -120,8 +126,13 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 					}
 					?>
 				</p>
-		</div>
-	</div>
+    <?php
+        if($pagename !== 'dash_tile_preview')
+        {?>
+            </div>
+        </div>
+    <?php
+        }?>
 	<script>
 	 jQuery("a#<?php echo str_replace("contents_","",$tile_id);?>").replaceWith(jQuery(".featuredcollectionselector"));
 	</script>

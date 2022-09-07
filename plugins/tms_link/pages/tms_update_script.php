@@ -20,7 +20,7 @@ if(!in_array("tms_link",$plugins))
 if($tms_link_email_notify!=""){$email_notify=$tms_link_email_notify;}
 
 // Check when this script was last run - do it now in case of permanent process locks
-$scriptlastran=sql_value("select value from sysvars where name='last_tms_import'","");
+$scriptlastran=ps_value("select value from sysvars where name='last_tms_import'", array(), "");
 
 $tms_link_script_failure_notify_seconds=intval($tms_link_script_failure_notify_days)*60*60*24;
 
@@ -172,7 +172,7 @@ foreach(tms_link_get_modules_mappings() as $module)
         $tmsresults = $tmsresults[$module['module_name']];
 
         // Go through this set of resources and update db/show data/do something else
-        for($ri = $tmspointer; $ri < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $ri) < $tms_link_test_count) && $ri < $tmscount; $ri++)
+        for($ri = $tmspointer; $ri < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $ri) < $tms_link_test_count) && $ri < $current_tms_count; $ri++)
             {
             $tms_data_found = false;
 
@@ -361,5 +361,5 @@ if($tms_log)
     }
 
 clear_process_lock("tms_link");
-sql_query("delete from sysvars where name='last_tms_import'");
-sql_query("insert into sysvars values('last_tms_import', now())");
+ps_query("delete from sysvars where name='last_tms_import'");
+ps_query("insert into sysvars values('last_tms_import', now())");

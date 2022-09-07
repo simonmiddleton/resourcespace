@@ -2,7 +2,7 @@
 include "../include/db.php";
 
 $ref=getval("ref","",true);
-$k=getvalescaped("k","");if ($k=="" || !check_access_key_collection($ref,$k)) {include "../include/authenticate.php";}
+$k=getval("k","");if ($k=="" || !check_access_key_collection($ref,$k)) {include "../include/authenticate.php";}
 
 if (!checkperm('q')){exit("<br /><br /><strong>".$lang["error-permissiondenied"]."</strong>");}
 
@@ -35,20 +35,20 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	if ($k!="" || $userrequestmode==0)
 		{
-		if ($k!="" && (getval("fullname","")=="" || getvalescaped("email","")==""))
+		if ($k!="" && (getval("fullname","")=="" || getval("email","")==""))
 			{
 			$result=false; # Required fields not completed.
 			}
 		else
 			{
 			# Request mode 0 : Simply e-mail the request.
-			$result=email_collection_request($ref,getvalescaped("request",""),getvalescaped("email",""));
+			$result=email_collection_request($ref,getval("request",""),getval("email",""));
 			}
 		}
 	else
 		{
 		# Request mode 1 : "Managed" mode via Manage Requests / Orders
-		$result=managed_collection_request($ref,getvalescaped("request",""));
+		$result=managed_collection_request($ref,getval("request",""));
 		}
 	if ($result===false)
 		{
@@ -68,7 +68,7 @@ include "../include/header.php";
 
 <div class="BasicsBox">
   <?php 
-  $backlink=getvalescaped("backlink","");
+  $backlink=getval("backlink","");
   if($backlink!="")
 	{
 	?><p>
@@ -154,12 +154,12 @@ if (isset($custom_request_fields))
 			
 			<?php if ($type==1) {  # Normal text box
 			?>
-			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("custom" . $n,""))?>">
+			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
 			<?php } ?>
 
 			<?php if ($type==2) { # Large text box 
 			?>
-			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getvalescaped("custom" . $n,""))?></textarea>
+			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
 			<?php } ?>
 
 			<?php if ($type==3) { # Drop down box

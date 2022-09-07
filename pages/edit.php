@@ -2,7 +2,7 @@
 include_once "../include/db.php";
 
 // External share support
-$k = getvalescaped('k','');
+$k = getval('k','');
 $upload_collection = getval('upload_share_active',''); 
 if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     {  
@@ -10,15 +10,15 @@ if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
     }
 include_once "../include/image_processing.php";
 # Editing resource or collection of resources (multiple)?
-$ref=getvalescaped("ref","",true);
+$ref=getval("ref","",true);
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 $use=$ref;
 
 # Fetch search details (for next/back browsing and forwarding of search params)
-$search=getvalescaped("search","");
-$order_by=getvalescaped("order_by","relevance");
-$offset=getvalescaped("offset",0,true);
-$restypes=getvalescaped("restypes","");
+$search=getval("search","");
+$order_by=getval("order_by","relevance");
+$offset=getval("offset",0,true);
+$restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
@@ -26,11 +26,11 @@ $sort=getval("sort",$default_sort_direction);
 $modal = (getval("modal", "") == "true");
 $single=getval("single","") != "" || getval("forcesingle","") != "";
 $disablenavlinks=getval("disablenav","")=="true";
-$uploader = getvalescaped("uploader","");
-$collection = getvalescaped('collection', 0, true);
+$uploader = getval("uploader","");
+$collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
-$archive=getvalescaped("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
 
 if($camera_autorotation)
@@ -40,7 +40,7 @@ if($camera_autorotation)
 
     if($autorotate == "")
         {
-        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : false);
+        $autorotate = (isset($autorotation_preference) ? $autorotation_preference : $camera_autorotation_checked);
         }
     else
         {
@@ -52,7 +52,7 @@ else
     $autorotate = false;
     }
     
-$collection_add = getvalescaped('collection_add', '');
+$collection_add = getval('collection_add', '');
 if($embedded_data_user_select)
   {
   $no_exif=getval("exif_option","");
@@ -70,7 +70,7 @@ $uploadparams["collection_add"] =  $collection_add;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
-$uploadparams["entercolname"] = getvalescaped("entercolname","");
+$uploadparams["entercolname"] = getval("entercolname","");
 $uploadparams["k"] = $k;
 
 # Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
@@ -267,17 +267,46 @@ if($editsearch)
     $multiple = true;
     $edit_autosave = false; # Do not allow auto saving for batch editing.
 
-    // Check all resources are editable
+    # Check all resources are editable
+    
+    # Editable_only=false (so returns resources whether editable or not)
     $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
+    if (!is_array($searchitems)){$searchitems = array();}
+    $all_resources_count = count($searchitems);
+    $all_resource_refs=array_column($searchitems,"ref");
+
+    # Editable_only=true (so returns editable resources only)
     $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
     if (!is_array($edititems)){$edititems = array();}
-    $items       = array_column($edititems,"ref");
-    if(count($searchitems) != count($edititems) || count($items) == 0)
+    $editable_resources_count = count($edititems);
+    $editable_resource_refs=array_column($edititems,"ref");
+
+    # If not all resources are editable then the batch edit may not be approprate
+    if($editable_resources_count != $all_resources_count)
         {
-        $error = $lang['error-editpermissiondenied'];
-        error_alert($error);
-        exit();
+        # Counts differ meaning there are non-editable resources
+        $non_editable_resource_refs=array_diff($all_resource_refs,$editable_resource_refs);
+
+        # Is grant edit present for all non-editables?
+        foreach($non_editable_resource_refs as $non_editable_ref) 
+            {
+            if ( !hook('customediteaccess','',array($non_editable_ref)) ) 
+                {
+                $error = $lang['error-editpermissiondenied'];
+                error_alert($error);
+                exit();
+                }
+            }
+
+        # All non_editables have grant edit
+        # Don't exit as batch edit is OK
         }
+
+    # The $items array is used later, so must be updated with all items
+    $items = $all_resource_refs;
+
+    # Establish a list of resource types which will be involved in this edit
+    $items_resource_types = array_unique(array_column($items,"resource_type"));
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
@@ -293,7 +322,7 @@ else
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$metadatatemplate = !$resetform ? (getvalescaped(
+$metadatatemplate = !$resetform ? (getval(
     'metadatatemplate',
     ($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
     true
@@ -348,7 +377,7 @@ $uploadparams["resource_type"] = $resource['resource_type'];
 // Resource archive (ie user template - negative resource ID) can be default only when user actually gets to set it otherwise
 // makes no sense in using it and we should let the system decide based on configuration and permissions what it should use.
 $default_setarchivestate = ($show_status_and_access_on_upload || $resource['ref'] > 0 ? $resource['archive'] : '');
-$setarchivestate = getvalescaped('status', $default_setarchivestate, TRUE);
+$setarchivestate = getval('status', $default_setarchivestate, TRUE);
 // Validate this is permitted
 $setarchivestate = get_default_archive_state($setarchivestate);
 
@@ -395,7 +424,7 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 if (getval("regen","")!="" && enforcePostRequest($ajax))
     {
     hook('edit_recreate_previews_extra', '', array($ref));
-    sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
+    ps_query("update resource set preview_attempts=0 WHERE ref= ?" , ['i', $ref]);
     create_previews($ref,false,$resource["file_extension"]);
     }
 
@@ -443,10 +472,9 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         $used=$avail-$free;
         }
         
-    # echo "free: ".$free."<br/>";
     # convert limit
     $limit=$disk_quota_limit_size_warning_noupload*1024*1024*1024;
-    # echo "no_upload: ".$limit."<br/>";
+
     # compare against size setting
     if($free<=$limit)
         {
@@ -455,7 +483,17 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         redirect($explain);
         }
     }
-  
+
+// Check if upload should be disabled because the filestore location is indexed and browseable
+if($ref < 0)
+    {
+    $cfb = check_filestore_browseability();
+    if(!$cfb['index_disabled'])
+        {
+        exit(error_alert($lang['error_generic_misconfiguration'], true, 200)); 
+        }
+    }
+
 $urlparams= array(
 	'ref'				=> $ref,
     'search'			=> $search,
@@ -575,6 +613,9 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             // NOTE: $fields and $all_selected_nodes are passed by reference
                             copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited, true);
                             
+                            // Autocomplete any blank fields without overwriting any existing metadata
+                            autocomplete_blank_fields($ref, false);
+
                             // Update related resources if required
                             if(in_array("related_resources",$locked_fields))
                                 {
@@ -588,6 +629,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $fielderror = false;
                                 if($field['required'] == 1
                                     && $field['hide_when_uploading'] != 1
+                                    && !checkperm('F' . $field["ref"])
                                     &&  (
                                         $field["resource_type"] == $resource["resource_type"]
                                         ||
@@ -617,9 +659,10 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     }
                                     
                                 # Also check for regular expression match
-                                if (trim(strlen($field["regexp_filter"]))>=1)
+                                if (strlen(trim((string)$field["regexp_filter"]))>=1)
                                     {
-                                    if(preg_match("#^" . $field["regexp_filter"] . "$#",$field["value"],$matches) <= 0)
+                                    global $regexp_slash_replace;
+                                    if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $field["regexp_filter"]) . "$#", (string) $field["value"], $matches) <= 0)
                                         {
                                         $fielderror = true;
                                         }
@@ -647,7 +690,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             {
                             // Redirect to upload_review_mode in order to finish editing remaining resources that errored, include submit to generate required error message
                             ?>
-                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"submitted"=>"true","save"=>"true")); ?>',true);</script>
+                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"showextraerrors"=>json_encode($auto_errors))); ?>',true);</script>
                             <?php
                             exit();
                             }
@@ -721,7 +764,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 {
                                 if($uploadparams["entercolname"] == "")
                                     {
-                                    $uploadparams["entercolname"] = "Upload " . date("YmdHis");
+                                    $uploadparams["entercolname"] = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis');
                                     $hidden_collection = true;
                                     }
                                 $collection_add = create_collection($userref,$uploadparams["entercolname"]);
@@ -891,20 +934,20 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    switch($tweak)
       {
       case "rotateclock":
-         tweak_preview_images($ref,270,0,$resource["preview_extension"]);
+         tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
          break;
       case "rotateanti":
-         tweak_preview_images($ref,90,0,$resource["preview_extension"]);
+         tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
          break;
       case "gammaplus":
-         tweak_preview_images($ref,0,1.3,$resource["preview_extension"]);
+         tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
          break;
       case "gammaminus":
-         tweak_preview_images($ref,0,0.7,$resource["preview_extension"]);
+         tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
 		delete_previews($resource);
-        sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
+        ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
@@ -931,7 +974,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             }
         else
             {
-            sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");
+            ps_query("update resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
             $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         break;
@@ -952,6 +995,22 @@ if (getval("exif","")!="")
 if (getval("refreshcollectionframe","")!="")
     {
     refresh_collection_frame();
+    }
+
+
+// Manually set any errors that ned to be shown e.g. after saving with locked values
+$showextraerrors = getval("showextraerrors","");
+if ($showextraerrors != "")
+    {
+    $save_errors=json_decode($showextraerrors,true);
+    if(is_array($save_errors))
+        {
+        $show_error = true;
+        }
+    else
+        {
+        $save_errors = [];
+        }
     }
 
 include "../include/header.php";
@@ -1074,7 +1133,7 @@ jQuery(document).ready(function()
             return false;
             }
 
-        jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
+        jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus' + field).show();
         
         formdata = jQuery('#mainform').serialize();
@@ -1086,7 +1145,7 @@ jQuery(document).ready(function()
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saved"]); ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
@@ -1338,15 +1397,26 @@ hook("editbefresmetadata"); ?>
             
             for($n = 0; $n < count($types); $n++)
                 {
-                $allowed_extensions = trim($types[$n]['allowed_extensions']) != "" ? explode(",",strtolower($types[$n]['allowed_extensions'])): array();
-                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+                if(trim((string) $types[$n]['allowed_extensions']) != "")
+                    {
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    }
+                else
+                    {
+                    array();
+                    }
+                // skip showing a resource type that we do not to have permission to change to 
+                // (unless it is currently set to that). Applies to upload only
                 if((0 > $ref || $upload_review_mode)
                     && 
                         (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
-                        (trim($resource["file_extension"]) != "" && count($allowed_extensions) > 0 && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                        (trim((string) $resource["file_extension"]) != ""
+                            && isset($allowed_extensions)
+                            && count($allowed_extensions) > 0 
+                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
@@ -1425,7 +1495,7 @@ hook("editbefresmetadata"); ?>
     } # end hook("replaceedittype")
 
 # For new users check that they have access to the default resource type, setting from the available types if they don't to ensure metadata fields load correctly.
-if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && $selected_type != 0)
+if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && isset($selected_type))
     {
     $resource_type = $selected_type;
     update_resource_type($ref,intval($resource_type));
@@ -1572,7 +1642,7 @@ $original_nodes=array();
 if (getval("copyfrom","")!="")
   {
   # Copy from function
-  $copyfrom=getvalescaped("copyfrom","");
+  $copyfrom=getval("copyfrom","");
   $copyfrom_access=get_resource_access($copyfrom);
 
   # Check access level
@@ -1600,6 +1670,21 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
+
+# Only include fields whose resource type is global or is present in the resource(s) being edited
+if ($multiple) 
+    {
+    $fields_to_include = array();
+    foreach ($fields as $field_candidate) 
+        {
+        if( ($field_candidate["resource_type"] == 0) || (in_array($field_candidate["resource_type"],$items_resource_types) ) ) 
+            {
+            $fields_to_include[]=$field_candidate;
+            }
+        }    
+    $fields=$fields_to_include;
+    }
+
 $all_selected_nodes = get_resource_nodes($use);
 
 if($upload_here)
@@ -1608,11 +1693,11 @@ if($upload_here)
     }
 
 if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
-        {
-        // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
-        // $fields and $all_selected_nodes are passed by reference and so changed by this
-        copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited);
-        }
+    {
+    // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
+    // $fields and $all_selected_nodes are passed by reference and so changed by this
+    copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited);
+    }
 
 # if this is a metadata template, set the metadata template title field at the top
 if (($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
@@ -1691,112 +1776,136 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
-$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
+# Check code signing flag and display warning if present
+if (get_sysvar("code_sign_required")=="YES")
+    {
+    ?><div class="Question"><div class="FormError"><?php echo $lang["code_sign_required_warning"]; ?></div></div><?php
+    }
+
+
+$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-"). (int) $ref;
 $modalTrueFalse = ($modal ? "true" : "false");
 
 if($tabs_on_edit)
-    {  
-    $tab_names = tab_names($fields);
-
-    // if config option set do case-sensitive alphabetical sort
-    if ($sort_tabs)
     {
-        sort($tab_names);
-    }
+    // -----------------------  Tab calculation -----------------
+    $system_tabs = get_tab_name_options();
+    $tabs_fields_assoc = [];
 
-    // create new array of fields, maintaining field order, and the tab order as defined above
-    $fields_tab_ordered = array();
-
-    // append fields that do not have a tab name and that will be displayed in the default tab
-    $fields_tab_ordered = search_array_by_keyvalue($fields,"tab_name", "", $fields_tab_ordered);
-
-    foreach($tab_names as $tab_name)
+    // Clean the tabs by removing the ones that would end up being empty
+    foreach(array_keys($system_tabs) as $tab_ref)
         {
-        // get relevant fields from $fields using tab name
-        $fields_tab_ordered = ($tab_name != "") ? search_array_by_keyvalue($fields,"tab_name", $tab_name, $fields_tab_ordered) : $fields_tab_ordered;
-        }
-
-    // update $fields array with re-ordered fields array, ready to display   
-    $fields = $fields_tab_ordered;   
-
-    #  -----------------------------  Draw tabs ---------------------------
-  $tabname="";
-  $tabcount=0;
-  if (count($fields)>0)
-    { 
-    $extra="";
-    $tabname=null;
-    $tabcount=0;
-    $tabtophtml="";
-
-    $fields_count = count($fields);
-    for ($n=0;$n<$fields_count;$n++)
-        {   
-        # If field is displayable then render its tab name when the tab name changes
-        if (is_field_displayed($fields[$n]))
+        foreach($fields as $field_idx => $field_data)
             {
-            if ( $fields[$n]["tab_name"] !== $tabname )
-                {
-                $newtabname = $fields[$n]["tab_name"] != "" ? $fields[$n]["tab_name"] : $lang["default"];
+            // Ensure tab IDs are always numbers. Fields unassigned will end up on the "Default" list (ref #1)
+            $fields[$field_idx]['tab'] = $field_data['tab'] = (int) $field_data['tab'] ?: 1;
 
-                if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
-                $tabtophtml.="<div id=\"".($modal ? "Modal" : "")."tabswitch" . $tabcount . "-".$ref."\" class=\"Tab";
-                if($tabcount==0){$tabtophtml.=" TabSelected ";}
-                $tabtophtml.="\"><a href=\"#\" onclick=\"SelectMetaTab(".$ref.",".$tabcount.",".$modalTrueFalse.");return false;\">" .  htmlspecialchars(i18n_get_translated($newtabname)) . "</a></div>";
-                ++$tabcount;
-                $tabname=$fields[$n]["tab_name"];
+            if(!is_field_displayed($field_data))
+                {
+                continue;
+                }
+
+            // Check tab assignment
+            if($tab_ref > 0 && $tab_ref === $field_data['tab'])
+                {
+                $tabs_fields_assoc[$tab_ref][$field_idx] = $field_data['ref'];
+                }
+            // Fields with invalid tab IDs will end up on the "Default" list (ref #1)
+            else if(!isset($tabs_fields_assoc[1][$field_idx]) && !isset($system_tabs[$field_data['tab']]))
+                {
+                // Override the fields' tab value in order for it to be rendered on the correct tab
+                $fields[$field_idx]['tab'] = 1;
+                $tabs_fields_assoc[1][$field_idx] = $field_data['ref'];
                 }
             }
         }
+    $tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
 
-    if ($tabcount>1)
+    // Sort fields based on the order of the tabs they belong to. Maintain the overall order of the fields.
+    $fields_tab_ordered = [];
+    foreach($tabs_fields_assoc as $fields_idx_ref)
         {
-        echo $tabtophtml;
-        echo "</div><!-- end of TabBar -->";
+        $subset_fields_data = array_intersect_key($fields, $fields_idx_ref);
+        $fields_tab_ordered = array_merge($fields_tab_ordered, $subset_fields_data);
+        }
+    $fields = $fields_tab_ordered;
+    // -----------------------  END: Tab calculation -----------------
+
+    #  -----------------------------  Draw tabs ---------------------------
+    $tabcount = 0;
+    $tabtophtml = '';
+    foreach($tab_names as $tab_name)
+        {
+        if($tabcount === 0)
+            {
+            $tabtophtml .= '<div id="BasicsBoxTabs" class="BasicsBox"><div class="TabBar">';
+            }
+        $tabtophtml .= sprintf(
+            '<div id="%stabswitch%s-%s" class="Tab %s">',
+            $modal ? 'Modal' : '',
+            $tabcount,
+            $ref,
+            $tabcount === 0 ? 'TabSelected' : ''
+        );
+        $tabtophtml .= sprintf(
+            '<a href="#" onclick="SelectMetaTab(%s, %s, %s); return false;">%s</a></div>',
+            $ref,
+            $tabcount,
+            $modalTrueFalse,
+            htmlspecialchars($tab_name)
+        );
+        ++$tabcount;
         }
 
-    }
-
-    if ($tabcount>1)
+    // Tabs on edit configuration will always show at least the Default (ref #1) tab.
+    if($tabcount > 0)
         {
+        $StyledTabbedPanel_class = $tabcount > 0 ? ' StyledTabbedPanel': '';
+
+        echo $tabtophtml;
         ?>
-        <div id="tabbedpanelfirst" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
-        <div class="clearerleft"> </div>
-        <div class="TabPanelInner">
+        </div><!-- end of TabBar -->
+        <div id="tabbedpanelfirst" class="TabbedPanel<?php echo $tabModalityClass . $StyledTabbedPanel_class; ?>">
+            <div class="clearerleft"></div>
+            <div class="TabPanelInner">
         <?php
         }
     }
 
     #  -----------------------------  Draw fields ---------------------------
-    $tabname=null;
-    $tabcount=0; 
-    $fields_count = count($fields);   
-    for ($n=0;$n<$fields_count;$n++)
+    $tabcount = 0;
+    $last_tab_drawn = 0;
+    foreach($fields as $n => $field)
         {
-        # Should this field be displayed?
-        if (is_field_displayed($fields[$n]))
+        if(!(is_field_displayed($field) && !in_array($field['resource_type'], $hide_resource_types)))
             {
-            if(in_array($fields[$n]['resource_type'], $hide_resource_types)) { continue; }
-            $newtab=false;  
-            # Draw new tab panel?
-            if ($tabs_on_edit && ($fields[$n]["tab_name"]!==$tabname))
-                {
-                # Also display the custom formatted data $extra at the bottom of this tab panel.
-                ?><div class="clearerleft"> </div>
-                <?php if(isset($extra)){echo $extra;} ?>
-                </div><!-- end of TabPanelInner --></div>
-                <!-- end of TabbedPanel --><div class="TabbedPanel <?php echo $tabModalityClass?> StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div class="TabPanelInner"><?php  
-                ++$tabcount;
-                $extra="";
-                $newtab=true;
-                $tabname=$fields[$n]["tab_name"];
-                }
-            
-            node_field_options_override($fields[$n]);
-            display_field($n, $fields[$n], $newtab, $modal);
+            continue;
             }
-        }
 
+        // Draw a new tab panel?
+        $newtab = $tabs_on_edit && $field['tab'] !== $last_tab_drawn;  
+        if($newtab)
+            {
+            $new_TabbedPanel_id = sprintf('%stab%s-%s', $modal ? 'Modal' : '', $tabcount, (int) $ref);
+            ?>
+            <div class="clearerleft"></div>
+            <?php
+            // Display the custom formatted data (ie customer template) $extra at the bottom of this tab panel.
+            if(isset($extra)) { echo $extra; }
+            ?>
+                </div><!-- end of TabPanelInner -->
+            </div><!-- end of TabbedPanel -->
+            <div id="<?php echo $new_TabbedPanel_id; ?>" class="TabbedPanel <?php echo $tabModalityClass; ?> StyledTabbedPanel" style="display:none;">
+                <div class="TabPanelInner">
+            <?php
+            ++$tabcount;
+            $extra = '';
+            $last_tab_drawn = $field['tab'];
+            }
+
+        node_field_options_override($field);
+        display_field($n, $field, $newtab, $modal);
+        }
 
     if ($tabs_on_edit && $tabcount>0)
         {
@@ -1980,7 +2089,7 @@ else
                    $access=$default_customaccess;
                    $editable= (!$ea3)?false:true;
                    if ($groups[$n]["access"]!="") {$access=$groups[$n]["access"];}
-                   $perms=explode(",",$groups[$n]["permissions"]);
+                   $perms=explode(",",(string) $groups[$n]["permissions"]);
                    if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
                       <td valign=middle nowrap><?php echo htmlspecialchars($groups[$n]["name"])?>&nbsp;&nbsp;</td>
@@ -2025,18 +2134,22 @@ else
            </label><?php
 
         # Autosave display
-          if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
+        if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
 
-          <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
-          if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
-          
-          $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
-          $related = get_related_resources($relatedref);
+        <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
+        if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
+        
+        if (!$editsearch)
+            {
+            $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+            $related = get_related_resources($relatedref);
 
-          echo ((getval("resetform","")!="")?"":join(", ", $related))?></textarea>
+            echo ((getval("resetform","")!="")?"":join(", ", $related));
+            }
+        ?></textarea>
 
-          <div class="clearerleft"> </div>
-          </div><?php
+        <div class="clearerleft"> </div>
+        </div><?php
        } 
     }
     
@@ -2060,27 +2173,18 @@ else
 
     if($ref > 0 && !$upload_review_mode && $delete_resource_custom_access)
     {
-       $query = sprintf('
-          SELECT rca.user AS user_ref,
-          IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
-          FROM resource_custom_access AS rca
-          INNER JOIN user AS u ON rca.user = u.ref
-          WHERE resource = "%s";
-          ',
-          $ref
-          );
-       $rca_users = sql_query($query);
+       $query ='SELECT rca.user AS user_ref,
+                IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
+                FROM resource_custom_access AS rca
+                INNER JOIN user AS u ON rca.user = u.ref
+                WHERE resource = ?';
+       $rca_users = ps_query($query, ['i', $ref]);
        
-       $group_query = sprintf('
-          SELECT rca.usergroup AS usergroup_ref,
-          u.name AS name
-          FROM resource_custom_access AS rca
-          INNER JOIN usergroup AS u ON rca.usergroup = u.ref
-          WHERE resource = "%s";
-          ',
-          $ref
-          );
-       $rca_usergroups = sql_query($group_query);
+       $group_query =  'SELECT rca.usergroup AS usergroup_ref, u.name AS name
+                        FROM resource_custom_access AS rca
+                        INNER JOIN usergroup AS u ON rca.usergroup = u.ref
+                        WHERE resource = ?';
+       $rca_usergroups = ps_query($group_query, ['i', $ref]);
 
        ?>
     </div> <!-- end of previous collapsible section -->
@@ -2268,12 +2372,12 @@ if (!$external_upload && !$edit_upload_options_at_top)
     ?></div><?php
     }
 
-if(!hook('replacesubmitbuttons'))
-    {
-    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
-    }
+hook('appendcustomfields');
 
-hook('aftereditcollapsiblesection');
+if ($edit_upload_options_at_top)
+    {
+    ?></div><?php
+    }
 ?>
 </div><!-- end of BasicsBoxLeft -->
 <?php
@@ -2283,16 +2387,7 @@ if ($ref>0 && !$multiple)
     <?php
     global $custompermshowfile;
         hook('custompermshowfile');
-        if(     (
-                (!$is_template && !checkperm('F*'))
-                    ||
-                $custompermshowfile
-                    ||
-                $external_upload
-                )
-            &&
-                !hook('replaceeditpreview')
-            )
+        if(!$is_template && !hook('replaceeditpreview'))
             { ?>
             <div class="Question QuestionStickyRight" id="question_file">
             <div class="FloatingPreviewContainer">
@@ -2344,7 +2439,7 @@ if ($ref>0 && !$multiple)
                 <?php 
                 }
 
-            if ($allow_metadata_revert)
+            if ($allow_metadata_revert && !checkperm('F*'))
                 {?>
                 <br />
                 <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
@@ -2357,7 +2452,21 @@ if ($ref>0 && !$multiple)
     <?php }
     ?>
 </div><!-- end of BasicsBoxRight-->
-<?php } ?>
+<?php }
+else
+    {
+    ?><div class="BasicsBoxRight"></div><?php
+    }
+
+if(!hook('replacesubmitbuttons'))
+    {
+    SaveAndClearButtons("NoPaddingSaveClear QuestionSticky",true,true);
+    }
+
+hook('aftereditcollapsiblesection');
+
+?>
+
 </div><!-- end of BasicsBox -->
 </form>
 
@@ -2391,22 +2500,28 @@ if ($ref>0 && !$multiple)
 
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
-  {
-  $error_datetime = date('Y-m-d H:i:s');
-  ?>
-  <script>
-  preventautoscroll = true;
-  // Find the first field that triggered the error:
-  var error_fields;
-  error_fields = document.getElementsByClassName('FieldSaveError');
-  if(error_fields.length > 0)
     {
-    error_fields[0].scrollIntoView();
-    }
+    foreach ($save_errors as &$save_error) 
+        {
+        if(is_string($save_error))
+            {
+            $save_error=htmlspecialchars($save_error);
+            }
+        }
+    ?>
+    <script>
+    preventautoscroll = true;
+    // Find the first field that triggered the error:
+    var error_fields;
+    error_fields = document.getElementsByClassName('FieldSaveError');
+    if(error_fields.length > 0)
+        {
+        error_fields[0].scrollIntoView();
+        }
     styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
-  </script>
-  <?php
-  }
+    </script>
+    <?php
+    }
 
 hook("autolivejs");
 ?>

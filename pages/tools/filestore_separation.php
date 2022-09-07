@@ -34,7 +34,6 @@ function reverse_filestore_location($path,$size,$url=false, $ffmpeg_alt=false){
 	echo "Path trim:$path_trim<br/>";
 	if($originals_separate_storage){
 		if($originals_separate_storage_ffmpegalts_as_previews && $ffmpeg_alt){
-			//echo 'found original alt<br/>';
 			// we have to consider the fact that this may be in either location
 			if(strpos($path_trim, '/original')===0){
 				$path_trim=substr($path_trim, 9);
@@ -101,7 +100,7 @@ function filestore_relocate($from,$to){
 
 if($refs==''){
 	# start with a list of all resources
-	$refs=sql_array("select ref value from resource where ref>0 order by ref");
+	$refs=ps_array("select ref value from resource where ref>0 order by ref");
 }
 else{
 	$refs=explode(",",$refs);

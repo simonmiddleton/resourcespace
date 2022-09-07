@@ -5,7 +5,7 @@ include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission d
 
 $selected_archive_states=array();
 
-$archivechoices=getvalescaped("archive",getvalescaped("saved_archive",get_default_search_states()));
+$archivechoices=getval("archive",getval("saved_archive",get_default_search_states()));
 if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
 foreach($archivechoices as $archivechoice)
     {
@@ -14,9 +14,6 @@ foreach($archivechoices as $archivechoice)
 
 $archive=implode(",",$selected_archive_states);
 $archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
-
-$starsearch=getvalescaped("starsearch","");	
-rs_setcookie('starsearch', $starsearch,0,"","",false,false);
 
 # Selectedtypes is a list of (resource type) checkboxes which are checked
 # Selectedtypes can also contain Global and Media which are virtual checkboxes which are always considered to be checked
@@ -68,7 +65,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Only show the results (this will appear in an iframe)
         if (substr($restypes,0,11)!="Collections")
             {
-            $result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch, false, false, "", false, true, false, false, false, $access);
+            $result=do_search($search,$restypes,"relevance",$archive,-1,"",false,DEPRECATED_STARSEARCH, false, false, "", false,true, false, false, false, $access);
             }
         else 
             {
@@ -145,7 +142,7 @@ $values=array();
 	
 if (getval("resetform","")!="")
   { 
-  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$starsearch="";
+  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";
   $restypes=get_search_default_restypes();
   $selected_archive_states=array(0);
   rs_setcookie("search","",0,"","",false,false);
@@ -159,7 +156,7 @@ else
   if(getval("restypes","")=="")
 	{$restypes=get_search_default_restypes();}
   else
-		{$restypes=explode(",",getvalescaped("restypes",""));}
+		{$restypes=explode(",",getval("restypes",""));}
 
   for ($n=0;$n<count($keywords);$n++)
 	  {
@@ -198,7 +195,7 @@ else
 			  {
 			  $propertycheck=explode(":",$property);
 			  $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
-			  $propertyval=isset($propertycheck[1])?escape_check($propertycheck[1]):"";
+			  $propertyval=isset($propertycheck[1])?$propertycheck[1]:"";
 			  if($propertyval!="")
 				{
 				$fieldname=$propertyfields[$propertyname];
@@ -437,15 +434,35 @@ if($search_includes_resources && !hook("advsearchrestypes") && !$hide_search_res
  <label><?php echo $lang["search-mode"]?></label><?php
  
  $wrap=0;
+
+ $checked=false;
+ if(!empty($selectedtypes[0]) && in_array("Global",$selectedtypes))
+ 	{
+	$checked=true;
+	}
+elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
+	{
+	$checked=true;
+	}
  ?><table><tr>
- <td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if (in_array("Global",$restypes)) { ?>checked<?php }?>></td><td valign=middle><?php echo $lang["resources-all-types"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
+ <td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo $lang["resources-all-types"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
  $hiddentypes=Array();
  for ($n=0;$n<count($types);$n++)
-	 {
-		 if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
-	 $wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
-	 ?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if (in_array("Global",$restypes) || in_array($types[$n]["ref"],$restypes)) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php	
-	 }
+	{
+	if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
+	$wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
+	$checked=false;	
+	if(!empty($selectedtypes[0]) && (in_array("Global",$selectedtypes) || in_array($types[$n]["ref"],$selectedtypes)))
+		{
+		$checked=true;
+		}
+	elseif((in_array("Global",$restypes) || in_array($types[$n]["ref"],$restypes)) && empty($selectedtypes[0]))
+		{
+		$checked=true;
+		}
+
+	?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php	
+	}
  ?>
  <?php if ($search_includes_themes)
 	 {

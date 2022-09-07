@@ -33,3 +33,5 @@ $lang["propose_changes_allow_open"]="Always allow users with open access to a re
 $lang["propose_changes_no_changes_to_review"] = '<h1 style="text-align: center;">There are no proposed changes to review.</h1>';
 $lang["actions_type_proposed_change"] = "Proposed edit";
 $lang["actions_propose_changes"] = "Show me user proposed changes in  my actions list";
+$lang["propose_changes_emailreviewed"] = "[img_headerlogo]<br />Your proposed changes have been reviewed.<br/>[changesummary]<br/>Click below to review the changes<br/><a href='[url]'>[url]</a>";
+$lang["propose_changes_emailproposedchanges"] = "[img_headerlogo]<br />Proposed changes have been submitted.<br/>[changesummary]<br/>Click below to review the changes<br/><a href='[url]'>[url]</a>";

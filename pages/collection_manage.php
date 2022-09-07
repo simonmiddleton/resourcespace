@@ -5,15 +5,15 @@ include "../include/authenticate.php";
 if (checkperm("b"))
     {exit("Permission denied");}
 
-$k=getvalescaped("k","");
-$offset=getvalescaped("offset",0,true);
-$find=getvalescaped("find",getvalescaped("saved_find",""));rs_setcookie('saved_find', $find);
-$col_order_by=getvalescaped("col_order_by",getvalescaped("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
-$sort=getvalescaped("sort",getvalescaped("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
+$k=getval("k","");
+$offset=getval("offset",0,true);
+$find=getval("find",getval("saved_find",""));rs_setcookie('saved_find', $find);
+$col_order_by=getval("col_order_by",getval("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
+$sort=getval("sort",getval("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
 if (!in_array(mb_strtoupper($sort), array('ASC','DESC'))) {$sort = "ASC";}
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
-$per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
+$per_page=getval("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 
 $collection_valid_order_bys=array("fullname","name","ref","count","type");
 $modified_collection_valid_order_bys=hook("modifycollectionvalidorderbys");
@@ -22,7 +22,7 @@ if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="create
 
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 
-$name = getvalescaped('name', '');
+$name = getval('name', '');
 if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     {
     // Create new collection
@@ -55,9 +55,9 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     }
 
 $delete_collections = array();
-if (getvalescaped("delete","") != "")
+if (getval("delete","") != "")
     {
-	$delete_cols = explode(',', getvalescaped("delete",""));
+	$delete_cols = explode(',', getval("delete",""));
 	foreach($delete_cols as $col_ref)
 	    {
 	    $delete_collections[] = $col_ref;	
@@ -105,12 +105,12 @@ foreach ($delete_collections as $delete)
 			unset($delete_collections[$id_col_deleted]);
 	    	}
 
-	    if(getvalescaped('ajax', '') !== '' && getvalescaped('dropdown_actions', '') !== '' && count($delete_collections) == 0)
+	    if(getval('ajax', '') !== '' && getval('dropdown_actions', '') !== '' && count($delete_collections) == 0)
 	        {
 	    	$response = array(
 		    	'success'                => 'Yes',
 		    	'redirect_to_collection' => $usercollection,
-		    	'k'                      => getvalescaped('k', ''),
+		    	'k'                      => getval('k', ''),
 		    	'nc'                     => time()
 		    );
 		
@@ -121,13 +121,13 @@ foreach ($delete_collections as $delete)
 	}
 refresh_collection_frame($usercollection);
 
-$removeall=getvalescaped("removeall","");
+$removeall=getval("removeall","");
 if ($removeall!="" && enforcePostRequest(false)){
 	remove_all_resources_from_collection($removeall);
 	refresh_collection_frame($usercollection);
 }
 
-$remove=getvalescaped("remove","");
+$remove=getval("remove","");
 if ($remove!="" && enforcePostRequest(false))
 	{
 	# Remove someone else's collection from your My Collections
@@ -146,7 +146,7 @@ if ($remove!="" && enforcePostRequest(false))
 	refresh_collection_frame();
 	}
 
-$add=getvalescaped("add","");
+$add=getval("add","");
 if ($add!="" && enforcePostRequest(false))
 	{
 	# Add someone else's collection to your My Collections
@@ -158,15 +158,15 @@ if ($add!="" && enforcePostRequest(false))
 	daily_stat("Add public collection",$userref);
 	}
 
-$reload=getvalescaped("reload","");
+$reload=getval("reload","");
 if ($reload!="")
 	{
 	# Refresh the collection frame (just edited a collection)
 	refresh_collection_frame();
 	}
 
-$purge=getvalescaped("purge","");
-$deleteall=getvalescaped("deleteall","");
+$purge=getval("purge","");
+$deleteall=getval("deleteall","");
 if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
 	
 	if ($purge!=""){$deletecollection=$purge;}
@@ -206,7 +206,7 @@ if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
 	refresh_collection_frame($usercollection);
 }
 
-$deleteempty=getvalescaped("deleteempty","");
+$deleteempty=getval("deleteempty","");
 if ($deleteempty!="" && enforcePostRequest(false)) {
 		
 	$collections=get_user_collections($userref);
@@ -245,7 +245,7 @@ if ($deleteempty!="" && enforcePostRequest(false)) {
 
 hook('customcollectionmanage');
 
-$removeall=getvalescaped("removeall","");
+$removeall=getval("removeall","");
 if($removeall != "" && enforcePostRequest(false))
     {
     remove_all_resources_from_collection($removeall);

@@ -1,21 +1,24 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    exit('This utility is command line only.');
-    }
+command_line_only();
 
 $resource_portrait = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_portrait', 1000, 2000)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 2000)",["i",$resource_portrait]);
+
+// Set default join and filter
+$sql_join = new PreparedStatementQuery();
+$sql_filter = new PreparedStatementQuery();
+$sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
+
 $search = search_special(
     "!propertiesorientation:portrait",
-    "",
+    $sql_join,
     48,
     "",
     "",
     "score DESC, user_rating DESC, total_hit_count DESC , field12 DESC,  r.ref DESC",
     "relevance",
     "r.ref, r.resource_type, r.archive, r.access, r.hit_count total_hit_count",
-    "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0",
+    $sql_filter,
     array(0),
     false,
     false,
@@ -27,19 +30,25 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_portrait, arr
     return false;
     }
 
-
 $resource_landscape = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_landscape', 3000, 1500)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 3000, 1500)",["i",$resource_landscape]);
+
+// Reset 
+$sql_join = new PreparedStatementQuery();
+$sql_filter = new PreparedStatementQuery();
+$sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
+
+
 $search = search_special(
     "!propertiesorientation:landscape",
-    "",
+    $sql_join,
     48,
     "",
     "",
     "score DESC, user_rating DESC, total_hit_count DESC , field12 DESC,  r.ref DESC",
     "relevance",
     "r.ref, r.resource_type, r.archive, r.access, r.hit_count total_hit_count",
-    "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0",
+    $sql_filter,
     array(0),
     false,
     false,
@@ -51,19 +60,23 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_landscape, ar
     return false;
     }
 
-
 $resource_square = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_square', 1000, 1000)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (?, 1000, 1000)",["i",$resource_square]);
+// Reset 
+$sql_join = new PreparedStatementQuery();
+$sql_filter = new PreparedStatementQuery();
+$sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
+
 $search = search_special(
     "!propertiesorientation:square",
-    "",
+    $sql_join,
     48,
     "",
     "",
     "score DESC, user_rating DESC, total_hit_count DESC , field12 DESC,  r.ref DESC",
     "relevance",
     "r.ref, r.resource_type, r.archive, r.access, r.hit_count total_hit_count",
-    "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0",
+    $sql_filter,
     array(0),
     false,
     false,
@@ -77,17 +90,22 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_square, array
 
 
 $resource_height_null = create_resource(1, 0);
-sql_query("INSERT INTO resource_dimensions(resource, width, height) VALUES ('$resource_height_null', 1000, NULL)");
+ps_query("INSERT INTO resource_dimensions(resource, width, height) VALUES (? , 1000, NULL)",array("i",$resource_height_null));
+// Reset 
+$sql_join = new PreparedStatementQuery();
+$sql_filter = new PreparedStatementQuery();
+$sql_filter->sql = "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0";
+
 $search = search_special(
     "!propertiesorientation:landscape",
-    "",
+    $sql_join,
     48,
     "",
     "",
     "score DESC, user_rating DESC, total_hit_count DESC , field12 DESC,  r.ref DESC",
     "relevance",
     "r.ref, r.resource_type, r.archive, r.access, r.hit_count total_hit_count",
-    "resource_type IN ('1','2','3','4') AND archive IN (0) AND r.ref>0",
+    $sql_filter,
     array(0),
     false,
     false,
@@ -98,8 +116,6 @@ if(!(is_array($search) && count($search) > 0 && in_array($resource_height_null, 
     echo "Invalid dimensions - ";
     return false;
     }
-
-
 
 // Tear down
 delete_resource($resource_portrait);

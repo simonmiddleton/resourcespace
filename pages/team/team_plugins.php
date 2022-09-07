@@ -21,7 +21,7 @@ if(!checkperm('a'))
 
 if (isset($_REQUEST['activate']) && enforcePostRequest(false))
     {
-    $inst_name = trim(getvalescaped('activate',''), '#');
+    $inst_name = trim(getval('activate',''), '#');
     if ($inst_name != '' && !in_array($inst_name,$disabled_plugins))
         {
         activate_plugin($inst_name);   
@@ -31,7 +31,7 @@ if (isset($_REQUEST['activate']) && enforcePostRequest(false))
 elseif (isset($_REQUEST['deactivate']) && enforcePostRequest(false))
     { # Deactivate a plugin
     # Strip the leading hash mark added by javascript.
-    $remove_name = trim(getvalescaped('deactivate',''), "#");
+    $remove_name = trim(getval('deactivate',''), "#");
     if ($remove_name!='')
         {
         deactivate_plugin($remove_name); 
@@ -41,14 +41,14 @@ elseif (isset($_REQUEST['deactivate']) && enforcePostRequest(false))
 elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
     { # Purge a plugin's configuration (if stored in DB)
     # Strip the leading hash mark added by javascript.
-    $purge_name = trim(getvalescaped('purge',''), '#');
+    $purge_name = trim(getval('purge',''), '#');
     if ($purge_name!='')
         {
         purge_plugin_config($purge_name);
         }
     }
 
-$inst_plugins = sql_query('SELECT name, config_url, descrip, author, ' .
+$inst_plugins = ps_query('SELECT name, config_url, descrip, author, ' .
     'inst_version, update_url, info_url, enabled_groups, disable_group_select, title, icon ' .
     'FROM plugins WHERE inst_version>=0 order by name');
 /**
@@ -96,7 +96,7 @@ function load_plugins($plugins_dir)
         if (is_dir($plugins_dir.$file)&&$file[0]!='.')
             {
             #Check if the plugin is already activated.
-            $status = sql_query('SELECT inst_version, config FROM plugins WHERE name="'.$file.'"');
+            $status = ps_query('SELECT inst_version, config FROM plugins WHERE name=?',array("s",$file));
             if ((count($status)==0) || ($status[0]['inst_version']==null))
                 {
                 # Look for a <pluginname>.yaml file.
@@ -105,7 +105,7 @@ function load_plugins($plugins_dir)
                     {
                     $plugins_avail[$file][$key] = $value ;
                     }
-                $plugins_avail[$file]['config']=(sql_value("SELECT config AS value FROM plugins WHERE name='$file'",'') != '');
+                $plugins_avail[$file]['config']=(ps_value("SELECT config AS value FROM plugins WHERE name=?",array("s",$file), '') != '');
                 # If no yaml, or yaml file but no description present, 
                 # attempt to read an 'about.txt' file
                 if ($plugins_avail[$file]["desc"]=="")
@@ -207,11 +207,13 @@ include "../../include/header.php"; ?>
 })(jQuery);
 </script>
 <div class="BasicsBox">
+<h1><?php echo $lang["pluginmanager"]; ?></h1>
 <?php
 $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
-        'href'  => $baseurl_short . "pages/admin/admin_home.php"
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+		'menu' =>  true
     ),
     array(
         'title' => $lang["pluginmanager"]
@@ -293,6 +295,18 @@ if($searching)
             $activate_or_deactivate_class = "nowrap";
             $activate_or_deactivate_href  = "";
             }
+
+        switch ($activate_or_deactivate_label)
+            {
+            case $lang['plugins-activate']:
+                $activate_or_deactivate_icon = "fas fa-check";
+                break;
+            case $lang["plugins-deactivate"]:
+                $activate_or_deactivate_icon = "fa fa-times";
+                break;
+            default:
+                $activate_or_deactivate_icon = "fas fa-check";
+            }
         ?>
             <tr>
                 <td><?php echo '<i class="plugin-icon ' . htmlspecialchars($plugin["icon"]) . '"></i>'; ?></td>
@@ -306,20 +320,20 @@ if($searching)
                     <?php
                     if(!in_array($plugin["name"],$disabled_plugins) || isset($plugin["inst_version"]))
                         {?>
-                        <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo LINK_CARET . $activate_or_deactivate_label; ?></a>
+                        <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo '<i class="' . $activate_or_deactivate_icon . '"></i>&nbsp;' . $activate_or_deactivate_label; ?></a>
                         <?php
                         }
                     elseif(in_array($plugin["name"],$disabled_plugins))
                         {
-                        echo ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . LINK_CARET . "&nbsp;" . strip_tags_and_attributes($lang['plugins-disabled-plugin-message'],array("a"),array("href","target")) . "</a>");
+                        echo ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . '<i class="' . $activate_or_deactivate_icon . '"></i>' . "&nbsp;" . strip_tags_and_attributes($lang['plugins-disabled-plugin-message'],array("a"),array("href","target")) . "</a>");
                         }
                 if ($plugin['info_url']!='')
                    {
-                   echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
+                   echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . $lang['plugins-moreinfo'].'</a> ';
                    }
                 if (!$plugin['disable_group_select'])
                     {
-                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((isset($plugin['enabled_groups']) && trim($plugin['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '') . '</a> ';
+                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '"><i class="fas fa-users"></i>&nbsp;' . $lang['groupaccess'] . ((isset($plugin['enabled_groups']) && trim($plugin['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '') . '</a> ';
                     $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
                     }
                 if ($plugin['config_url']!='')        
@@ -331,11 +345,7 @@ if($searching)
                     }
                    else
                     {$pluginlugin_config_url = $baseurl . $plugin['config_url'];}
-                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $pluginlugin_config_url . '">' . LINK_CARET .$lang['options'].'</a> ';        
-                   if (sql_value("SELECT config_json as value from plugins where name='".$plugin['name']."'",'')!='' && function_exists('json_decode'))
-                         {
-                         echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$plugin['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
-                         }
+                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $pluginlugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . $lang['options'].'</a> ';        
                    }
                 ?>
                     </div><!-- End of ListTools -->
@@ -406,19 +416,19 @@ if (count($inst_plugins)>0)
             echo '<td><div class="ListTools">';
             if (isset($p['legacy_inst']))
                {
-               echo '<a class="nowrap" href="#">' . LINK_CARET . $lang['plugins-legacyinst'].'</a> '; # TODO: Update this link to point to a help page on the wiki
+               echo '<a class="nowrap" href="#"><i class="fas fa-check"></i>&nbsp;' . $lang['plugins-legacyinst'].'</a> '; # TODO: Update this link to point to a help page on the wiki
                }
             else
                {
-               echo '<a href="#'.$p['name'].'" class="p-deactivate">' .  LINK_CARET . $lang['plugins-deactivate'].'</a> ';
+               echo '<a href="#'.$p['name'].'" class="p-deactivate"><i class="fas fa-times"></i>&nbsp;' . $lang['plugins-deactivate'].'</a> ';
                }
             if ($p['info_url']!='')
                {
-               echo '<a class="nowrap" href="'.$p['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
+               echo '<a class="nowrap" href="'.$p['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . $lang['plugins-moreinfo'].'</a> ';
                }
             if (!$p['disable_group_select'])
                 {
-                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim($p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
+                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '"><i class="fas fa-users"></i>&nbsp;' . $lang['groupaccess'] . ((trim((string) $p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
                 $p['enabled_groups'] = array($p['enabled_groups']);
                 }
             if ($p['config_url']!='')        
@@ -426,15 +436,11 @@ if (count($inst_plugins)>0)
                // Correct path to support plugins that are located in filestore/plugins
                if(substr($p['config_url'],0,8)=="/plugins")
                 {
-                $plugin_config_url = str_replace("/plugins/" . $p['name'], get_plugin_path($p['name'],true), $p['config_url']);
+                $plugin_config_url = str_replace("/plugins/" . $p['name'], (string)get_plugin_path($p['name'],true), $p['config_url']);
                 }
                else
                 {$plugin_config_url = $baseurl . $p['config_url'];}
-               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '">' . LINK_CARET .$lang['options'].'</a> ';        
-               if (sql_value("SELECT config_json as value from plugins where name='".$p['name']."'",'')!='' && function_exists('json_decode'))
-                     {
-                     echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$p['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
-                     }
+               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .$lang['options'].'</a> ';        
                }
             echo '</div></td></tr>';
             } 
@@ -484,21 +490,21 @@ if (count($plugins_avail)>0)
       
         if(!in_array($p["name"],$disabled_plugins) || isset($p["inst_version"]))
             {
-            $plugin_row .= '<a href="#'.$p['name'].'" class="p-activate">' . LINK_CARET .$lang['plugins-activate'].'</a> ';
+            $plugin_row .= '<a href="#'.$p['name'].'" class="p-activate"><i class="fa fa-check"></i>&nbsp;' . $lang['plugins-activate'].'</a> ';
             }
         elseif(in_array($p["name"],$disabled_plugins))
             {
-            $plugin_row .=  ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . LINK_CARET . "&nbsp;" . $lang['plugins-disabled-plugin-message'] . "</a>");
+            $plugin_row .=  ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . '<i class="fas fa-ban"></i>&nbsp;' . "&nbsp;" . $lang['plugins-disabled-plugin-message'] . "</a>");
             }
                         
      
       if ($p['info_url']!='')
          {
-         $plugin_row .= '<a class="nowrap" href="'.$p['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
+         $plugin_row .= '<a class="nowrap" href="'.$p['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;'  . $lang['plugins-moreinfo'].'</a> ';
          }
       if ($p['config'])
          {
-         $plugin_row .= '<a href="#'.$p['name'].'" class="p-purge">' .  LINK_CARET . $lang['plugins-purge'].'</a> ';
+         $plugin_row .= '<a href="#'.$p['name'].'" class="p-purge"><i class="fa fa-trash"></i>&nbsp;' . $lang['plugins-purge'].'</a> ';
          }
       $plugin_row .= '</div></td></tr>';  
       if(isset($p["category"]))

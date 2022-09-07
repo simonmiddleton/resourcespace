@@ -9,7 +9,7 @@ function HookSimplesamlTeam_user_editAdditionaluserfields()
         }
     else
         {
-        $custom_attributes = sql_value("SELECT simplesaml_custom_attributes as `value` FROM user WHERE ref = '{$user['ref']}'", '');
+        $custom_attributes = ps_value("SELECT simplesaml_custom_attributes as `value` FROM user WHERE ref = ?", array("i",$user['ref']), '');
         }
 
     if('' == $custom_attributes)

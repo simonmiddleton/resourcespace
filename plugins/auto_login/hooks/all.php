@@ -7,7 +7,7 @@ function HookAuto_loginAllProvideusercredentials()
 	if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET))
 		return false;
 
-	$results=sql_query('select username, auto_login_ip from user where auto_login_enabled=1 and auto_login_ip is not null');
+	$results=ps_query('select username, auto_login_ip from user where auto_login_enabled=1 and auto_login_ip is not null');
 	$ip=get_ip();
 	foreach ($results as $result)
 		{
@@ -16,7 +16,9 @@ function HookAuto_loginAllProvideusercredentials()
 			$username=$result['username'];
 			$hashsql='';
 			$session_hash='';
-			$user_select_sql="and u.username='$username'";
+			$user_select_sql = new PreparedStatementQuery();
+			$user_select_sql->sql = "and u.username = ?";
+			$user_select_sql->parameters = array("s", $username);
 			return true;
 			}
 		}
@@ -36,7 +38,7 @@ function HookAuto_loginAllIprestrict()
 
 function HookAuto_loginAllInitialise()
 	{
-	sql_query('select auto_login_enabled, auto_login_ip from user limit 1');
+	ps_query('select auto_login_enabled, auto_login_ip from user limit 1');
 	return true;
 	}
 

@@ -25,3 +25,7 @@ $lang["usage"]="Usage";
 $lang["telephone"]="Telephone";
 $lang["notes"]="Notes";
 $lang["confirmdeleteconsentfile"]="Are you sure you wish to DELETE this file? This cannot be undone.";
+
+$lang['consent_manager_mediums']='Consent usage mediums';
+
+$lang["consent_manager_access"]="Manage consent data (where not already enabled via 'a')";

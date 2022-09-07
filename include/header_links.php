@@ -85,7 +85,7 @@
             <?php if ((checkperm("d") && $mycontributions_userlink)||($mycontributions_link && checkperm("c"))) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/contribute.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo $lang["mycontributions"]?>
+                        <?php echo CONTRIBUTIONS_ICON . $lang["mycontributions"]?>
                     </a>
                 </li>
             <?php } ?>

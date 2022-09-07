@@ -198,7 +198,7 @@ $lang["gotoadvancedsearch"]="Mene kehittyneempään hakuun";
 $lang["viewnewmaterial"]="Katso uutta materiaalia";
 $lang["researchrequestservice"]="Tutkimuspyyntöhaku";
 
-# Team Centre
+# Admin
 $lang["manageresources"]="Hallitse resursseja";
 $lang["overquota"]="Levytila täynnä; ei voi lisätä resursseja";
 $lang["managearchiveresources"]="Hallitse arkistoresursseja";
@@ -231,7 +231,7 @@ $lang["pluginssetup"]="Hallitse lisäosia";
 $lang["pluginmanager"]="Lisäosien hallinta";
 $lang["users"]="käyttäjiä";
 
-# Team Centre - Bulk E-mails
+# Admin - Bulk E-mails
 $lang["emailrecipients"]="Sähköpostin vastaanottajat";
 $lang["emailsubject"]="Sähköpostin aihe";
 $lang["emailtext"]="Sähköpostin teksti";
@@ -241,10 +241,10 @@ $lang["emailsent"]="Sähköposti on lähetetty.";
 $lang["mustspecifyoneuser"]="Sinun täytyy lisätä ainakin yksi käyttäjä";
 $lang["couldnotmatchusers"]="Kaikkia käyttäjänimiä ei löydy, tai käyttäjänimiä on kahteen kertaan";
 
-# Team Centre - User management
+# Admin - User management
 $lang["comments"]="Kommentit";
 
-# Team Centre - Resource management
+# Admin - Resource management
 $lang["viewuserpending"]="Näytä arviointia odottavat käyttäjien tuottamat resurssit";
 $lang["userpending"]="Arviointia odottavat käyttäjien tuottamat resurssit";
 $lang["viewuserpendingsubmission"]="Näytä käyttäjien tuottamat lähetystä odottavat resurssit";
@@ -784,7 +784,7 @@ $lang["collectioncommentsinfo"]="Lisää kommentti tähän kokoelmaan tälle res
 $lang["comment"]="Kommentti";
 $lang["warningexpired"]="Resurssi vanhentunut";
 $lang["warningexpiredtext"]="Varoitus! Resurssin voimassaolo on päättynyt. Napsauta linkkiä alla salliaksesi lataustoiminnon.";
-$lang["warningexpiredok"]="&gt; Salli resurssien lataaminen";
+$lang["warningexpiredok"]="Salli resurssien lataaminen";
 $lang["userrequestcomment"]="Kommentti";
 $lang["addresourcebatchbrowser"]="Lisää resurssijoukko - selaimessa";
 $lang["replaceresourcebatch"]="Korvaa joukko resursseja";
@@ -1129,7 +1129,6 @@ $lang['plugins-activate'] = 'Aktivoi';
 $lang['plugins-purge'] = 'Poista&nbsp;asetukset';
 $lang['plugins-headertext'] = 'Lisäosat laajentavat ResourceSpacen toiminnallisuutta.';
 $lang['plugins-legacyinst'] = 'Aktivoitu config.php-tiedostossa';
-$lang['plugins-download'] = 'Lataa&nbsp;asetukset';
 $lang['plugins-upload-title'] = 'Hanki asetukset tiedostosta';
 $lang['plugins-upload'] = 'Lataa asetukset';
 $lang['plugins-getrsc'] = 'Käytettävä tiedosto:';

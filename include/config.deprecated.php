@@ -10,7 +10,7 @@
 
  # Show an error when someone tries to request an account with an email already in the system.
 # Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
-$account_email_exists_note=true;
+$account_email_exists_note=false;
 
  # "U" permission allows management of users in the current group as well as children groups. TO test stricter adherence to the idea of "children only", set this to true. 
 $U_perm_strict=false;
@@ -57,8 +57,6 @@ $basket_stores_size=true;
 
 // Default browse bar width;
 $browse_default_width = 295;
-
-$camera_autorotation_checked = true;
 
 # Option to force single branch selection in category tree selection 
 $cat_tree_singlebranch=false;
@@ -370,9 +368,6 @@ $mysql_verbatim_queries = false;
 # Normalize keywords when indexing and searching? Having this set to true means that various character encodings of e.g. diacritics will be standardised when indexing and searching. Requires internationalization functions (PHP versions >5.3). For example, there are several different ways of encoding "é" (e acute) and this will ensure that a standard form of "é" will always be used.
 $normalize_keywords=true;
 
-
-$notify_user_contributed_unsubmitted=false;
-
 # Allow sorting by resource_type on thumbnail views
 $order_by_resource_type=true;
 
@@ -511,9 +506,6 @@ $show_edit_all_link = true;
 // Show required field legend on upload
 $show_required_field_label = true;
 
-# Option to display an upload log in the browser on the upload page (note that this is not stored or saved)
-$show_upload_log=true;
-
 # Show the link to 'user contributed assets' on the My Contributions page
 # Allows non-admin users to see the assets they have contributed
 $show_user_contributed_resources=true;
@@ -532,8 +524,8 @@ $store_uploadedrefs=false;
 # Suppress SQL information in the debug log?
 $suppress_sql_log = false;
 
-# display an alert icon next to the team centre link 
-# and the relevant team centre item when there are requests that need managing
+# display an alert icon next to the Admin link 
+# and the relevant Admin item when there are requests that need managing
 # only affects users with permissions to do this.
 $team_centre_alert_icon = true;
 

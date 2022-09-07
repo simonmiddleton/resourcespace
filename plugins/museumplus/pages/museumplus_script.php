@@ -54,7 +54,7 @@ if($mplus_last_log_truncate !== false)
     $date_diff = $mplus_today_date->diff(DateTime::createFromFormat('Y-m-d', $mplus_last_log_truncate));
     if($date_diff->days > $museumplus_truncate_log_interval)
         {
-        sql_query('TRUNCATE museumplus_log');
+        ps_query('TRUNCATE museumplus_log');
         set_sysvar(MPLUS_LAST_LOG_TRUNCATE, date('Y-m-d'));
         logScript('[museumplus] Truncate museumplus_log table', $mplus_log_file);
         }

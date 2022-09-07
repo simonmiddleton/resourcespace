@@ -46,7 +46,7 @@ abstract class Provider
     * 
     * @param  array $globals The globals variable - $GLOBALS
     * 
-    * @return array Returns the $GLOBALS array back with any config vars required by a provider
+    * @return void  
     */
     public final function registerConfigurationNeeds(array $globals)
         {
@@ -60,10 +60,10 @@ abstract class Provider
                 continue;
                 }
 
-            $globals[$config] = $value;
+            $GLOBALS[$config] = $value;
             }
 
-        return $globals;
+        return ;
         }
 
     /**

@@ -10,15 +10,15 @@ if(!$actions_on){exit("access denied");}
 $modal=getval("modal","")=="true";
 
 $actiontypes=array();
-if($actions_resource_review){$actiontypes[]="resourcereview";}
+$actiontypes[]="resourcereview";
 if($actions_account_requests && checkperm("u")){$actiontypes[]="userrequest";}
 if($actions_resource_requests && checkperm("R")){$actiontypes[]="resourcerequest";}
 $updatedactiontypes=hook("updateactiontypes",'',array($actiontypes));
 if(is_array($updatedactiontypes)){$actiontypes=$updatedactiontypes;}
-$actiontype=getvalescaped("actiontype",''); // Set to ascertain if we are filtering on type
-$offset=getvalescaped("offset",0,true);
-$order_by=getvalescaped("actions_order_by","date");
-$sort=getvalescaped("actions_sort","DESC");
+$actiontype=getval("actiontype",''); // Set to ascertain if we are filtering on type
+$offset=getval("offset",0,true);
+$order_by=getval("actions_order_by","date");
+$sort=getval("actions_sort","DESC");
 $valid_order_bys=array("date","ref","description","type","user","usergroup");
 if (!in_array($order_by,$valid_order_bys)) {$order_by="date";$sort="DESC";} 
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
@@ -60,18 +60,26 @@ if ($user_preferences)
 	{?>
 	<li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a></li>
 	<?php 
-	} 
-if ($actions_resource_review)
-	{
-	$rtypes=get_resource_types();
+	}
+// Make sure all states are unchecked if they had the deprecated option $actions_resource_review set to false.
+// Also forcibly set it to true so they can still change preferences;
+if(isset($actions_resource_review) && !$actions_resource_review)
+    {
+    $actions_notify_states = "";
+    }
+
+if(trim($actions_notify_states) != "")
+    {
+    $rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
-	$add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true&order_by=date";
-	$search_url = $baseurl_short . "pages/search.php?search=&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
-	?>
-	<li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
-	<li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_view_editable_as_resultset']?></a></li>
-	<?php 
-	}?>
+    $add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true&order_by=date";
+    $search_url = $baseurl_short . "pages/search.php?search=&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
+    ?>
+    <li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
+    <li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_view_editable_as_resultset']?></a></li>
+    <?php
+    }?>
+
 </ul>
 </div><!-- End of VerticalNav -->
 </div><!-- End of BasicsBox -->
@@ -207,8 +215,8 @@ else
 					<div class="ListTools">
 					  <?php
 					  if($actionaddlink!=""){echo $actionaddlink;}
-					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-pencil" title="<?php echo $lang["action-edit"]; ?>"></a><?php }
-					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-expand" title="<?php echo $lang["view"]; ?>"></a><?php }?>
+					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo $lang["action-edit"]; ?>"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a><?php }
+					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo $lang["view"]; ?>"><i class="fas fa-expand"></i>&nbsp;<?php echo $lang["view"]; ?></a><?php }?>
 					</div>
 				</td>
 			</tr>
@@ -224,7 +232,7 @@ actionsreload=false;
 jQuery('#CentralSpace').on('ModalClosed',function(e,url){
 	if(ajaxinprogress!=true && typeof(actionsreload)!=="undefined" && actionsreload==true && window.location.href.indexOf('/pages/user/user_actions.php')!=-1){
 			actionsreload=false;
-			CentralSpaceLoad('<?php echo $url; ?>',false);
+			CentralSpaceLoad(window.location.href,false);
 		}
 	});		
 </script>

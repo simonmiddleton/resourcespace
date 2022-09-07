@@ -43,6 +43,14 @@ foreach ($fontsdir as $f)
 $page_def[] = config_add_single_select('global_font', $lang['font'], $fonts, true, 420, '', true,"jQuery('#global_font_link').attr('href','" .  $baseurl . "/css/fonts/' + this.value + '.css');");
 
 $page_def[] = config_add_file_input(
+    'custom_font',
+    $lang['systemconfig_customfont_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    420,
+    array('woff2', 'woff', 'ttf', 'otf')
+);
+
+$page_def[] = config_add_file_input(
     'linkedheaderimgsrc',
     $lang['systemconfig_linkedheaderimgsrc_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
@@ -241,7 +249,6 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions'] . '</h3><div id="SystemConfigActionsSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('actions_enable', $lang['actions-enable'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests_default'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review_default'], $enable_disable_options, 300, '', true);
 $page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests_default'], $enable_disable_options, 300, '', true);
 	
 $page_def[] = config_add_html('</div>');
@@ -405,8 +412,8 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
     $response['success'] = true;
     $response['message'] = '';
 
-    $autosave_option_name  = getvalescaped('autosave_option_name', '');
-    $autosave_option_value = getvalescaped('autosave_option_value', '');
+    $autosave_option_name  = getval('autosave_option_name', '');
+    $autosave_option_value = getval('autosave_option_value', '');
 
     // Search for the option name within our defined (allowed) options
     // if it is not there, error and don't allow saving it
@@ -431,16 +438,30 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
 
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
-$GLOBALS = $system_wide_config_options;
+
+# $lang is not a config option! 
+unset($system_wide_config_options['lang']);
+foreach ($system_wide_config_options as $key => $value)
+    {
+    $GLOBALS[$key] = $value;
+    }
+
+# Get user ref for use in header.php when loading profile image.
+if (!isset($userref))
+    {
+    $userref = $userdata[0]['ref'];
+    }
 
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
+    <h1><?php echo $lang["systemconfig"]; ?></h1>
     <?php
 	$links_trail = array(
 	    array(
 	        'title' => $lang["systemsetup"],
 	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
 	    ),
 	    array(
 	        'title' => $lang["systemconfig"],
@@ -457,7 +478,14 @@ include '../../include/header.php';
     ?>
     </div>
     <script>registerCollapsibleSections(false);</script>
-    <?php config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); ?>
+    <?php 
+    if ($custom_font != "") 
+        {
+        ?><script>document.getElementById("question_global_font").hidden = true;</script>
+    <?php
+        } 
+    config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); 
+    ?>
 </div>
 <?php
 include '../../include/footer.php';

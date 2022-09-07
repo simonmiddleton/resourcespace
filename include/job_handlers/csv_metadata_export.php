@@ -18,7 +18,10 @@ foreach($job_data as $arg => $value)
     }
 
 // Set up the user who requested the metadata download as it needs to be processed with their access
-$user_data = validate_user("u.ref = '{$job['user']}'", true);
+$user_select_sql = new PreparedStatementQuery();
+$user_select_sql->sql = "u.ref = ?";
+$user_select_sql->parameters = ["i",$job['user']];
+$user_data = validate_user($user_select_sql, true);
 
 if(count($user_data) > 0)
     {

@@ -2,7 +2,7 @@
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Started migrating featured collections permissions from the old format to the new one (e.g j[ID], -j[ID]) ...");
 
-$all_ugs = sql_query("SELECT ref, `name`, permissions FROM usergroup");
+$all_ugs = ps_query("SELECT ref, `name`, permissions FROM usergroup");
 foreach($all_ugs as $ug)
     {
     logScript("Analysing user group #{$ug["ref"]} '{$ug["name"]}'");
@@ -45,19 +45,16 @@ foreach($all_ugs as $ug)
             continue;
             }
 
-        $found_fc_categ_refs = sql_array(
-            sprintf(
-                  "SELECT DISTINCT c.ref AS `value`
+        $found_fc_categ_refs = ps_array(
+               "SELECT DISTINCT c.ref AS `value`
                      FROM collection AS c
                 LEFT JOIN collection AS cc ON c.ref = cc.parent
                     WHERE c.public = 1
-                      AND c.`type`= %s
-                      AND c.`name` = '%s'
+                      AND c.`type`= ?
+                      AND c.`name` = ?
                  GROUP BY c.ref
                    HAVING count(DISTINCT cc.ref) > 0",
-                COLLECTION_TYPE_FEATURED,
-                escape_check($find_fc_by_name)
-            )
+                ['i', COLLECTION_TYPE_FEATURED, 's' ,$find_fc_by_name]
         );
 
         $fc_categ_ref = null;
@@ -96,10 +93,7 @@ foreach($all_ugs as $ug)
         {
         $permissions_str = join(",", $permissions);
         logScript("New format permissions: " . $permissions_str);
-        sql_query(
-            sprintf("UPDATE usergroup SET permissions = '%s' WHERE ref = '%s'",
-            escape_check($permissions_str),
-            escape_check($ug["ref"])));
+        ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ['s', $permissions_str, 'i', $ug["ref"]]);
         }
     }
 

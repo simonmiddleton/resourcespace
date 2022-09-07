@@ -60,7 +60,6 @@ if($submitted)
 
 // Get list of fields to allow selection of field containing file name to folder path
 $allfields=get_resource_type_fields();
-//print_r($allfields);
 
 include "../include/header.php";
 

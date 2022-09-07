@@ -8,11 +8,11 @@
  */
 function simplesaml_get_lib_path()
     {
-    global $simplesaml_lib_path;
+    global $simplesaml_lib_path, $simplesaml_rsconfig;
 
     $lib_path = dirname(__FILE__) . '/../lib';
 
-    if('' == $simplesaml_lib_path)
+    if('' == $simplesaml_lib_path || $simplesaml_rsconfig)
         {
         return $lib_path;
         }
@@ -49,6 +49,7 @@ function simplesaml_authenticate()
         {
         require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
         $spname = get_saml_sp_name();
+        debug("simplesaml: Using SP name '{$spname}'");
         $as = new SimpleSAML\Auth\Simple($spname);
         }
     $as->requireAuth();
@@ -187,7 +188,7 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
         $emailmessage .= $lang["simplesaml_usercreated"] . ": <a href=\"" . $messageurl . "\">" . $username . "</a><br />";   
         }
     
-    $notify_users = sql_query("SELECT ref, email FROM user WHERE email='" . escape_check($simplesaml_multiple_email_notify) . "'");				
+    $notify_users = ps_query("SELECT ref, email FROM user WHERE email=?",array("s",$simplesaml_multiple_email_notify));				
     $message_users=array();
     foreach($notify_users as $notify_user)
         {
@@ -236,7 +237,7 @@ function simplesaml_config_check()
         {
         if(get_sysvar("SAML_UPGRADE_REQUIRED",0) != 1)
             {
-            system_notification($lang['simplesaml_authorisation_version_error'], "https://www.resourcespace.com/knowledge-base/plugins/simplesaml#upgrade");
+            system_notification($lang['simplesaml_authorisation_version_error'], "https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate");
             // Set flag so this is not sent multiple times
             set_sysvar("SAML_UPGRADE_REQUIRED",1);
             }
@@ -330,6 +331,7 @@ function simplesaml_generate_keypair($dn)
  */
 function get_saml_sp_name()
     {
-    global $simplesaml_rsconfig, $simplesaml_sp;
-    return $simplesaml_rsconfig ?  "resourcespace-sp" : $simplesaml_sp;
+    $default_sp_name = 'default-sp';
+    $sp_name = $GLOBALS['simplesaml_sp'] ?? $default_sp_name;
+    return $sp_name !== $default_sp_name ? $sp_name : 'resourcespace-sp';
     }

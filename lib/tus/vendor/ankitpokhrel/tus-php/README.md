@@ -4,8 +4,8 @@
     <a href="https://packagist.org/packages/ankitpokhrel/tus-php">
         <img alt="PHP Version" src="https://img.shields.io/badge/php-7.2.5%2B-brightgreen.svg?style=flat-square" />
     </a>
-    <a href="https://travis-ci.org/ankitpokhrel/tus-php">
-        <img alt="Build Status" src="https://img.shields.io/travis/ankitpokhrel/tus-php/master.svg?style=flat-square" />
+    <a href="https://github.com/ankitpokhrel/tus-php/actions/workflows/ci.yml?query=branch%3Amain+is%3Acompleted">
+        <img alt="Build Status" src="https://img.shields.io/github/workflow/status/ankitpokhrel/tus-php/CI?style=flat-square" />
     </a>
     <a href="https://scrutinizer-ci.com/g/ankitpokhrel/tus-php">
         <img alt="Code Coverage" src="https://img.shields.io/scrutinizer/coverage/g/ankitpokhrel/tus-php.svg?style=flat-square" />
@@ -16,7 +16,7 @@
     <a href="https://packagist.org/packages/ankitpokhrel/tus-php">
         <img alt="Downloads" src="https://img.shields.io/packagist/dm/ankitpokhrel/tus-php.svg?style=flat-square" />
     </a>
-    <a href="https://github.com/ankitpokhrel/tus-php/blob/master/LICENSE">
+    <a href="https://github.com/ankitpokhrel/tus-php/blob/main/LICENSE">
         <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" />
     </a>
 </p>
@@ -26,8 +26,12 @@
 </p>
 
 <p align="center">
-    <img alt="TusPHP Demo" src="https://github.com/ankitpokhrel/tus-php/blob/master/example/demo.gif" /><br/><br/>
+    <img alt="TusPHP Demo" src="https://github.com/ankitpokhrel/tus-php/blob/main/example/demo.gif" /><br/><br/>
     <a href="https://medium.com/@ankitpokhrel/resumable-file-upload-in-php-handle-large-file-uploads-in-an-elegant-way-e6c6dfdeaedb">Medium Article</a>&nbsp;⚡&nbsp;<a href="https://github.com/ankitpokhrel/tus-php/wiki/Laravel-&-Lumen-Integration">Laravel & Lumen Integration</a>&nbsp;⚡&nbsp;<a href="https://github.com/ankitpokhrel/tus-php/wiki/Symfony-Integration">Symfony Integration</a>&nbsp;⚡&nbsp;<a href="https://github.com/ankitpokhrel/tus-php/wiki/CakePHP-Integration">CakePHP Integration</a>&nbsp;⚡&nbsp;<a href="https://github.com/ankitpokhrel/tus-php/wiki/WordPress-Integration">WordPress Integration</a>
+</p>
+
+<p align="center">
+    <a href="https://opencollective.com/tus-php#backers" target="_blank" align="center"><img src="https://opencollective.com/tus-php/backers.svg"></a>
 </p>
 
 **tus** is a HTTP based protocol for resumable file uploads. Resumable means you can carry on where you left off without
@@ -468,7 +472,7 @@ If you are not using [make](https://www.gnu.org/software/make/manual/make.html#O
 1. Install [PHPUnit](https://phpunit.de/) and [composer](https://getcomposer.org/) if you haven't already.
 2. Install dependencies
      ```shell
-     $ make deps
+     $ make vendor
      
      # or
      

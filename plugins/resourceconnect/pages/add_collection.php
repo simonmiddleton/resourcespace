@@ -4,12 +4,12 @@ include_once "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 
 
-$title=getvalescaped("title","");
-$thumb=getvalescaped("thumb","");
-$large_thumb=getvalescaped("large_thumb","");
-$xl_thumb=getvalescaped("xl_thumb","");
-$url=getvalescaped("url","");
-$back=getvalescaped("back","");
+$title=getval("title","");
+$thumb=getval("thumb","");
+$large_thumb=getval("large_thumb","");
+$xl_thumb=getval("xl_thumb","");
+$url=getval("url","");
+$back=getval("back","");
 
 
 /**
@@ -37,7 +37,7 @@ if (preg_match($pattern_ref, $url) == 1 && preg_match($pattern_source, $url) == 
     preg_match($pattern_source, $url, $matches_source);
     $source = $matches_source[0];
 
-    $entry_exists = sql_value("SELECT count(ref) as value FROM resourceconnect_collection_resources WHERE collection = '$usercollection' AND instr(url, '$ref') AND LOCATE('$source', url,0) = 0", 0);
+    $entry_exists = ps_value("SELECT count(ref) as value FROM resourceconnect_collection_resources WHERE collection = ? AND instr(url, ?) AND LOCATE(?, url,0) = 0", array("i",$usercollection,"i",$ref,"s",$source), 0);
     } else 
     {
     /* url does not match patterns to allow comparison, so set entry_exists var to 0 */
@@ -48,7 +48,17 @@ if (preg_match($pattern_ref, $url) == 1 && preg_match($pattern_source, $url) == 
 if ($entry_exists == 0)
     {
     # Add to collection
-    sql_query("INSERT INTO resourceconnect_collection_resources (collection,thumb,large_thumb,xl_thumb,url,title) VALUES ('$usercollection','$thumb','$large_thumb','$xl_thumb','$url','$title')");
+    $params = [
+        'i', $usercollection,
+        's', $thumb,
+        's', $large_thumb,
+        's', $xl_thumb,
+        's', $url,
+        's', $title
+    ];
+    
+    if(isset($ref)){$params[]='i'; $params[]=explode('=', $ref)[1];}
+    ps_query("INSERT INTO resourceconnect_collection_resources (collection,thumb,large_thumb,xl_thumb,url,title".((isset($ref))?',source_ref':'').") VALUES (". ps_param_insert(count($params)/2) .")", $params);
     }
 
 redirect("pages/collections.php?nc=" . time());

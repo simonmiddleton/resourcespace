@@ -7,6 +7,7 @@ include_once "../include/api_functions.php";
 include_once "../include/ajax_functions.php";
 include_once "../include/api_bindings.php";
 include_once "../include/login_functions.php";
+include_once "../include/dash_functions.php";
 
 if (!$enable_remote_apis) {http_response_code(403);exit("API not enabled.");}
 
@@ -14,29 +15,31 @@ debug("API:");
 define("API_CALL", true);
 
 # Get parameters
-$user       = getvalescaped("user","");
-$sign       = getvalescaped("sign","");
-$authmode   = getvalescaped("authmode","userkey");
+$user       = getval("user","");
+$sign       = getval("sign","");
+$authmode   = getval("authmode","userkey");
 $query      = $_SERVER["QUERY_STRING"];
 $pretty = filter_var(getval('pretty', ''), FILTER_VALIDATE_BOOLEAN); # Should response be prettyfied?
-
-// Parse query string and remove optional params (signature will be incorrect otherwise). For example, pretty JSON is just
-// how the client wants the response back, doesn't need to to be part of the signing key process.
-parse_str($query, $query_params);
-unset($query_params['pretty']);
-$query = http_build_query($query_params);
 
 # Support POST request where 'query' is POSTed and is the full query string.
 if (getval("query","")!="") {$query=getval("query","");}
 
-# Remove the sign and authmode parameters if passed as these would not have been present when signed on the client.
-$strip_params = array("sign","authmode");
-parse_str($query,$params);
-foreach($strip_params as $strip_param)
+# Remove the pretty, sign and authmode parameters if passed as these would not have been present when signed on the client.
+# For example, pretty JSON is just how the client wants the response back, doesn't need to to be part of the signing key process.
+parse_str($query, $query_params);
+if (isset($query_params['sign']))
     {
-    unset($params[$strip_param]);
+    $query = str_ireplace("sign=" . $query_params['sign'], "!|!|", $query);
     }
-$query = http_build_query($params);
+if (isset($query_params['authmode']))
+    {
+    $query = str_ireplace("authmode=" . $query_params['authmode'], "!|!|", $query);
+    }
+if (isset($query_params['pretty']))
+    {
+    $query = str_ireplace("pretty=" . $query_params['pretty'], "!|!|", $query);
+    }
+$query = str_replace("&!|!|", "", ltrim($query, "!|!|&")); # remove joining &
 
 $validauthmodes = array("userkey", "native", "sessionkey");
 $function = getval("function","");

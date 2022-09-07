@@ -1,6 +1,6 @@
 <?php
+command_line_only();
 
-if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 // Check basic date search (based on searchbar)
 // Save current setings

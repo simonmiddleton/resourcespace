@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SAML2\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException implements Throwable
+use InvalidArgumentException as BuiltinInvalidArgumentException;
+
+class InvalidArgumentException extends BuiltinInvalidArgumentException implements Throwable
 {
     /**
      * @param string $expected description of expected type
@@ -10,7 +14,7 @@ class InvalidArgumentException extends \InvalidArgumentException implements Thro
      *
      * @return \SAML2\Exception\InvalidArgumentException
      */
-    public static function invalidType($expected, $parameter)
+    public static function invalidType(string $expected, $parameter) : InvalidArgumentException
     {
         $message = sprintf(
             'Invalid Argument type: "%s" expected, "%s" given',

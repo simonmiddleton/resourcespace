@@ -14,7 +14,7 @@ include "../../include/authenticate.php"; if (!checkperm("c")) {exit ("Permissio
 if (getval("from","")!="" && enforcePostRequest(false))
 	{
 	# Copy data
-	$to=copy_resource(getvalescaped("from",""));
+	$to=copy_resource(getval("from",""));
 	if ($to===false) {$error=true;} else
 		{
 		redirect($baseurl_short."pages/edit.php?ref=" . $to);

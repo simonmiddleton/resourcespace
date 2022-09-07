@@ -37,8 +37,8 @@ $messages           = array();
 // Process access key deletion
 if($delete_access_key != "" && enforcePostRequest($ajax))
     {
-    $deleteresource   = getvalescaped('delete_resource', '');
-    $deletecollection = getvalescaped('delete_collection', '');
+    $deleteresource   = getval('delete_resource', '');
+    $deletecollection = getval('delete_collection', '');
     $response   = array(
         'success' => false
     );
@@ -98,12 +98,10 @@ foreach($sharedcols as $sharedcol)
         $allsharedcols[$sharedcol] = i18n_get_translated($coldetails["name"]);
         }
     }
-    
 
-//echo "<pre>" . print_r($shares) . "</pre>";
 $expiredshares = 0;
-$per_page =getvalescaped("per_page",$default_perpage, true); 
-$per_page = (!in_array($per_page,$list_display_array)) ? $default_perpage_list : $per_page;
+$per_page =getval("per_page",$default_perpage, true); 
+$per_page = (!in_array($per_page,array_merge($list_display_array,[99999]))) ? $default_perpage_list : $per_page;
 $sharecount   = count($shares);
 $totalpages = ceil($sharecount/$per_page);
 $offset     = getval("offset",0,true);
@@ -250,7 +248,7 @@ for($n=0;$n<$sharecount;$n++)
                 }
 
             $tableshare["tools"][] = array(
-                "icon"=>"fa fa-pencil",
+                "icon"=>"fas fa-edit",
                 "text"=>$lang["action-edit"],
                 "url"=>$editlink,
                 "modal"=>false,
@@ -298,8 +296,17 @@ function delete_access_key_multiple()
         var access_key_id = deleteAccessKeys[i].id;
         var access_key = access_key_id.substr(11);
         var table_row_cols = jQuery("#"+access_key_id).children();
-        var collection = table_row_cols[2].textContent;
-        var resource = table_row_cols[3].textContent;
+        var alert_row_col_adjust = 0;
+        <?php
+        if (isset($tableshare["alerticon"]))
+            {
+        ?>
+            alert_row_col_adjust = 1;
+        <?php
+            }
+        ?>
+        var collection = table_row_cols[alert_row_col_adjust + 1].textContent;
+        var resource = table_row_cols[alert_row_col_adjust + 2].textContent;
         if (collection!="-") {
             countCollectionKeys += 1;
         }

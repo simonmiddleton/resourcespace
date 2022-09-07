@@ -5,21 +5,50 @@
 	$watched_searches_url = $baseurl . '/plugins/rse_search_notifications/pages/watched_searches.php';
 
 	function search_notifications_get(&$results, $user="",$enabled_only=true,$search="",$orderby=1,$orderbydirection="DESC")
-		{
-		$results=sql_query(
-			"SELECT search_saved.*,u.username FROM search_saved JOIN `user` u ON search_saved.owner=u.ref " .
-			($user=="" ? "" : " WHERE `owner`='{$user}'") .
-			($enabled_only ? ($user=="" ? " WHERE `enabled`=1" : " AND `enabled`=1" ) : "") .
-			($search=="" ? "" : " AND (title LIKE '%{$search}%' OR u.username LIKE '%{$search}%')") .
-			" ORDER BY '{$orderby}' '{$orderbydirection}'"
-		);
-		return count($results) > 0;
-		}
+        {
+        $query = "";
+        $parameters = array();
+        if ($user != "")
+            {
+            $query .= "WHERE `owner` = ?";
+            $parameters = array_merge($parameters, array("i", $user));
+            }
+        if ($enabled_only)
+            {
+            if ($user == "")
+                {
+                $query .= "WHERE enabled = 1";
+                }
+            else
+                {
+                $query .= " AND enabled = 1";
+                }
+            }
+        if ($search != "")
+            {
+            $query .= " AND (title LIKE ? OR u.username LIKE ?)";
+            $parameters = array_merge($parameters, array("s", '%' . $search . '%', "s", '%' . $search . '%'));
+            }
+
+        if (!is_numeric($orderby))
+            {
+            $orderby = 1;
+            }
+
+        if (!in_array(strtoupper($orderbydirection), array("ASC", "DESC")))
+            {
+            $orderbydirection = "DESC";
+            }
+
+        $results=ps_query("SELECT s.ref, s.created, s.`owner`, s.title, s.search, s.restypes, s.archive, s.enabled, s.`checksum`, s.checksum_when, s.checksum_matches, s.checksum_data, s.checksum_data_previous, u.username FROM search_saved s JOIN `user` u ON s.`owner` = u.ref " 
+		    . $query . " ORDER BY '{$orderby}' '{$orderbydirection}'", $parameters);
+        return count($results) > 0;
+        }
 
 	function search_notification_add($search,$restypes,$archive)
 		{
 		global $userref;
-		if (sql_value("SELECT COUNT(*) AS value FROM search_saved WHERE owner='{$userref}' AND search='" . escape_check($search) . "' AND restypes='" . escape_check($restypes) . "'  ",0)!=0)
+		if (ps_value("SELECT COUNT(*) AS value FROM search_saved WHERE owner = ? AND search = ? AND restypes = ?", array("i", $userref, "s", $search, "s", $restypes), 0) != 0)
 			{
 			return;		// we do not want dupes or empty searches
 			}
@@ -27,9 +56,8 @@
 			{
 			$archive=0;
 			}
-		$restypes_names = sql_value("SELECT GROUP_CONCAT(name SEPARATOR ', ') AS value FROM resource_type WHERE ref IN('" .
-		implode("','",explode(",",$restypes))
-		. "')","");
+		$restypes_names = ps_value("SELECT GROUP_CONCAT(name SEPARATOR ', ') AS value FROM resource_type WHERE ref IN (" .
+		ps_param_insert(count(explode(",", $restypes))) . ")", ps_param_fill(explode(",", $restypes), "i"), "");
 
         // Because search can contain direct node IDs searches like @@257
         // We resolve them back into node names
@@ -54,19 +82,12 @@
             }
         $rebuilt_search = str_replace('"', '', $rebuilt_search);
 
-        $title = '"' . escape_check($rebuilt_search) . '"';
-        $title .= ($restypes_names == "") ? "" : " (" . escape_check(i18n_get_translated($restypes_names)) . ")";
+        $title = '"' . $rebuilt_search . '"';
+        $title .= ($restypes_names == "") ? "" : " (" . i18n_get_translated($restypes_names) . ")";
         $title = mb_strcut($title,0,500);
 
-		sql_query("INSERT INTO search_saved(created,owner,title,search,restypes,archive,enabled) VALUES (
-			NOW(),
-			'" . $userref . "',
-			'" . $title . "',
-			'" . escape_check($search) . "',
-			'" . escape_check($restypes) . "',
-			'" . escape_check($archive) . "',
-			1
-		)");
+		ps_query("INSERT INTO search_saved(created,owner,title,search,restypes,archive,enabled) VALUES (
+			NOW(), ?, ?, ?, ? ,?, 1)", array("i", $userref, "s", $title, "s", $search, "s", $restypes, "s", $archive));
 		search_notification_process($userref,sql_insert_id());
 		}
 
@@ -74,12 +95,12 @@
 		{
 		if ($force)
 			{
-			sql_query("DELETE FROM search_saved WHERE ref='{$ref}'");
+			ps_query("DELETE FROM search_saved WHERE ref = ?", array("i", $ref));
 			}
 		else
 			{
 			global $userref;
-			sql_query("DELETE FROM search_saved WHERE ref='{$ref}' AND owner='{$userref}'");
+			ps_query("DELETE FROM search_saved WHERE ref = ? AND owner = ?", array("i", $ref, "i", $userref));
 			}
 		}
 
@@ -87,12 +108,12 @@
 		{
 		if ($force)
 			{
-			sql_query("UPDATE search_saved SET enabled=1 WHERE ref='{$ref}'");
+			ps_query("UPDATE search_saved SET enabled = 1 WHERE ref = ?", array("i", $ref));
 			}
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=1 WHERE ref='{$ref}' AND owner='{$userref}'");
+			ps_query("UPDATE search_saved SET enabled = 1 WHERE ref = ? AND owner = ?", array("i", $ref, "i", $userref));
 			}
 		}
 
@@ -100,12 +121,12 @@
 		{
 		if ($force)
 			{
-			sql_query("UPDATE search_saved SET enabled=0 WHERE ref='{$ref}'");
+			ps_query("UPDATE search_saved SET enabled = 0 WHERE ref = ?", array("i", $ref));
 			}
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=0 WHERE ref='{$ref}' AND owner='{$userref}'");
+			ps_query("UPDATE search_saved SET enabled = 0 WHERE ref = ? AND owner = ?", array("i", $ref, "i", $userref));
 			}
 		}
 
@@ -113,12 +134,12 @@
 		{
 		if ($force)
 			{
-			sql_query("UPDATE search_saved SET enabled=1");
+			ps_query("UPDATE search_saved SET enabled = 1", array());
 			}
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=1 WHERE owner='{$userref}'");
+			ps_query("UPDATE search_saved SET enabled = 1 WHERE owner = ?", array("i", $userref));
 			}
 		}
 
@@ -126,12 +147,12 @@
 		{
 		if ($force)
 			{
-			sql_query("UPDATE search_saved SET enabled=0");
+			ps_query("UPDATE search_saved SET enabled = 0", array());
 			}
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=0 WHERE owner='{$userref}'");
+			ps_query("UPDATE search_saved SET enabled = 0 WHERE owner = ?", array("i", $userref));
 			}
 		}
 
@@ -139,12 +160,21 @@
 		{
 
 		global $lang,$baseurl,$search_notification_max_thumbnails;
+        
+        $sql_and = "";
+        $parameters = array();
+        if ($owner != -1)
+            {
+            $sql_and = " AND owner = ?";
+            $parameters = array("i", $owner);
+            }
+        if ($search_saved != -1)
+            {
+            $sql_and .= " AND ref = ?";
+            $parameters = array_merge($parameters, array("i", $search_saved));
+            }
 
-		$saved_searches=sql_query("SELECT * FROM search_saved WHERE enabled=1" .
-			($owner==-1 ? "" : " AND owner='{$owner}'") .
-			($search_saved==-1 ? "" : " AND ref='{$search_saved}'") .
-			" ORDER BY owner"
-		);
+        $saved_searches = ps_query("SELECT * FROM search_saved WHERE enabled = 1" . $sql_and . " ORDER BY owner", $parameters);
 
 		foreach ($saved_searches as $search)
 			{
@@ -184,7 +214,7 @@
 				($resources_added_count > 0 && $resources_subtracted_count > 0 ? " {$lang['and']} " : "") .
 				($resources_subtracted_count == 1 ? "{$resources_subtracted_count} {$lang['search_notifications_resource_no_longer_matches']}" : "") .
 				($resources_subtracted_count > 1 ? "{$resources_subtracted_count} {$lang['search_notifications_resources_no_longer_match']}" : "") .
-				" {$lang['search_notifications_for_watch_search']} " . escape_check($search['title']) . "<br />";
+				" {$lang['search_notifications_for_watch_search']} " . $search['title'] . "<br />";
 
 				$added_to_message_count = 0;
 
@@ -207,22 +237,48 @@
 						}
 					}
 
+				$search['checksum_data_previous'] = $search['checksum_data'];
+				$search['checksum_data'] = implode(',', $resources_found);				
+
 				message_add(
 					$search['owner'],
 					$message,
-					search_notification_make_url($search['search'],$search['restypes'],$search['archive'])
+					search_notification_make_url($search)
 				);
 
 				}
 
 			// finally update with the new checksum, timestamp and resources
-			sql_query("UPDATE search_saved SET checksum='{$checksum}',checksum_matches='{$checksum_matches}',checksum_when=NOW(),checksum_data='" . escape_check($checksum_data) . "' WHERE ref='{$search['ref']}'");
+			ps_query("UPDATE search_saved SET checksum = ?,checksum_matches = ?, checksum_when = NOW(), checksum_data_previous = checksum_data, checksum_data = ? WHERE ref = ?", ['s', $checksum, 's', $checksum_matches, 's', $checksum_data, 'i', $search['ref']]);
 
 			}		// end for each saved search
 		}
 
-	function search_notification_make_url($search,$restypes,$archive)
+	function search_notification_make_url($watched_search)
 		{
-		global $baseurl;
-		return $baseurl . "/pages/search.php?search=" . urlencode($search) . "&restypes=" . urlencode($restypes) . "&archive=" . $archive;
+		global $baseurl, $only_show_changes;
+
+		$url = $baseurl . "/pages/search.php?restypes=" . urlencode($watched_search['restypes']) . "&archive=" . $watched_search['archive'] . "&search=";
+	
+		if($only_show_changes)
+			{
+			$current = explode(',',$watched_search['checksum_data']);
+			$previous = explode(',',$watched_search['checksum_data_previous']);
+
+			$additions = array_diff($current, $previous);
+			$removals = array_diff($previous, $current);
+
+			$changes = array_merge($additions, $removals);
+			if(count($changes) > 0)
+				{
+				$url .= urlencode('!list' . implode(':', $changes));
+				}
+			}
+		else
+			{
+			$url .= urlencode($watched_search['search']);
+			}
+
+		return $url;
+
 		}

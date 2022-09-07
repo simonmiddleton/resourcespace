@@ -85,7 +85,7 @@ $h = $sizes[1];
     } ?>
 <div>
 		<td>
-            <img id="toAnnotate" onload="annotate(<?php echo $ref?>,'<?php echo $k?>','<?php echo $w?>','<?php echo $h?>',<?php echo getvalescaped("annotate_toggle",true)?>,<?php echo getvalescaped('page', 1); ?>);" src="<?php echo $url?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+            <img id="toAnnotate" onload="annotate(<?php echo $ref?>,'<?php echo $k?>','<?php echo $w?>','<?php echo $h?>',<?php echo getval("annotate_toggle",true)?>,<?php echo getval('page', 1); ?>);" src="<?php echo $url?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
         </td>
     <?php
     if($nextpage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>

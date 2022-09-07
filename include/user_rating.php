@@ -16,7 +16,7 @@ if ($rating_count=="") {$rating_count=0;}
 // for 'remove rating' tool, determine if user has a rating for this resource
 if ($user_rating_remove && $user_rating_only_once) {
 	$ratings=array();
-	$ratings=sql_query("select user,rating from user_rating where ref='$ref'");
+	$ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
 	$current="";
 	for ($n=0;$n<count($ratings);$n++) {
 		if ($ratings[$n]['user']==$userref) {

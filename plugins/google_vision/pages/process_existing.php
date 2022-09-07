@@ -35,14 +35,16 @@ if($cli_options !== false)
 
 if(empty($collections))
     {
-    $sql_gv_restypes = join("','", $google_vision_restypes);
-    $resources = sql_array("
-        SELECT ref AS `value`
+    $gv_query = "SELECT ref AS `value`
           FROM resource
          WHERE (google_vision_processed IS NULL OR google_vision_processed = 0)
            AND ref > 0
            AND has_image = 1
-           AND resource_type IN ('{$sql_gv_restypes}')");
+           AND resource_type IN (" . ps_param_insert(count($google_vision_restypes)) . ") ";
+
+    $parameters = ps_param_fill($google_vision_restypes,"i");
+
+    $resources = ps_array($gv_query, $parameters);
     }
 else
     {

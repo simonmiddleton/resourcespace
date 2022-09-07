@@ -2,9 +2,9 @@
 include_once "../../../include/db.php";
 include_once "../include/annotate_functions.php";
 
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../../../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once "../../../include/authenticate.php";}
 
-$ref=getvalescaped("ref", 0, true);
+$ref=getval("ref", 0, true);
 if ($ref==0)
 	{
 	die($lang["annotate_ref_not_supplied"]);
@@ -17,21 +17,30 @@ if (!in_array("annotate",$plugins))
 	exit($lang["error-plugin-not-activated"]);
 	}
 
-$preview_width=getvalescaped("pw", 0, true);
-$preview_height=getvalescaped("ph", 0, true);
-$page = getvalescaped("page", 1, true);
+$preview_width  = getval("pw", 0, true);
+$preview_height = getval("ph", 0, true);
+$page           = getval("page", 1, true);
 
 // Get notes based on page:
 $sql_and = '';
-
+$sql_params[] = 'i'; $sql_params[] = $ref;
 if($page >= 1)
 	{
-	$sql_and = ' AND page = ' . $page;
+	$sql_and = ' AND page = ?';
+    $sql_params[] = 'i'; $sql_params[] = $page;
 	}
-
-$notes=sql_query("select * from annotate_notes where ref='$ref'" . $sql_and);
-sql_query("update resource set annotation_count=".count($notes)." where ref=$ref");
+$notes=ps_query("SELECT ref, top_pos, left_pos, width, height, preview_width, preview_height, note_id, user, `page`, node FROM annotate_notes WHERE ref= ?" . $sql_and, $sql_params);
+$notecount = count($notes);
+ps_query("UPDATE resource SET annotation_count= ? WHERE ref= ?", ['i', $notecount, 'i', $ref]);
 // check if display size is different from original preview size, and if so, modify coordinates
+
+
+for($i=0;$i<$notecount;$i++)
+    {
+    $annotate_node =[];
+    get_node($notes[$i]["node"],$annotate_node);
+    $notes[$i]["note"] = $annotate_node["name"];
+    }
 
 $json="[";
 $notes_array=array();

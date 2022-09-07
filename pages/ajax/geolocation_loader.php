@@ -1,8 +1,8 @@
 <?php
 include "../../include/db.php";
 
-$ref = getvalescaped("ref", "", true);
-$k = getvalescaped("k", "");
+$ref = getval("ref", "", true);
+$k = getval("k", "");
 if (($k == "") || (!check_access_key($ref, $k)))
     {
     include "../../include/authenticate.php";

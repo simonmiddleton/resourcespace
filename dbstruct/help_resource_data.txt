@@ -1,4 +1,0 @@
-Stores free text metadata for a resource.
-resource,int(11),
-resource_type_field,int(11),
-value,MEDIUMTEXT,

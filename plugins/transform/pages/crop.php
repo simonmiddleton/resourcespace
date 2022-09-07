@@ -95,6 +95,10 @@ $imversion = get_imagemagick_version();
 $orig_ext = $resource["file_extension"];
 hook('transformcropbeforegetsize');
 $originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+
+$usesize    = "scr";
+$useext     = "jpg";
+
 if(file_exists($originalpath))
     {
     // For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
@@ -111,8 +115,6 @@ if(file_exists($originalpath))
         $origsizes  = getimagesize($originalpath);        
         $origwidth  = $origsizes[0];
         $origheight = $origsizes[1];
-        $usesize    = "scr";
-        $useext     = "jpg";
         }
     }
 else
@@ -123,7 +125,7 @@ else
 $previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
 if(!file_exists($previewsourcepath))
     {
-    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,trim($resource["file_path"]) != "");
+    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
     }
 
 // Get the actions that have been requested
@@ -187,10 +189,10 @@ if ($cropwidth == 0 || $cropheight == 0)
 
 
 // Get parameters from Manage slideshow page
-$manage_slideshow_action = getvalescaped('manage_slideshow_action', '');
-$manage_slideshow_id = getvalescaped('manage_slideshow_id', '');
+$manage_slideshow_action = getval('manage_slideshow_action', '');
+$manage_slideshow_id = getval('manage_slideshow_id', '');
 
-$return_to_url = getvalescaped('return_to_url', '');
+$return_to_url = getval('return_to_url', '');
 
 $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
@@ -199,13 +201,13 @@ if ($saveaction != '' && enforcePostRequest(false))
     $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
-    $width       = getvalescaped('width',0,true);
-    $height      = getvalescaped('height',0,true);
-    $xcoord      = getvalescaped('xcoord',0,true);
-    $ycoord      = getvalescaped('ycoord',0,true);
+    $width       = getval('width',0,true);
+    $height      = getval('height',0,true);
+    $xcoord      = getval('xcoord',0,true);
+    $ycoord      = getval('ycoord',0,true);
     // Get required size
-    $new_width   = getvalescaped('new_width',0,true);
-    $new_height  = getvalescaped('new_height',0,true);
+    $new_width   = getval('new_width',0,true);
+    $new_height  = getval('new_height',0,true);
 
     if ($width == 0 && $height == 0)
         {
@@ -240,7 +242,7 @@ if ($saveaction != '' && enforcePostRequest(false))
 
     // Determine output format
     // prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
-    $new_ext = getval("new_ext","");
+    $new_ext = strtolower(getval("new_ext",""));
     if ($saveaction == "slideshow" || $saveaction == "preview")
         {
         $new_ext = "jpg";
@@ -353,7 +355,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             if(file_exists(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg') &&
                 !is_writable(dirname(__FILE__) . '/../../../' . $homeanim_folder . '/' . $sequence . '.jpg'))
                 {
-                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder)), $lang['error-file-permissions']);
+                error_alert(str_replace("%PATH%",realpath(dirname(__FILE__) . '/../../../' . $homeanim_folder), $lang['error-file-permissions']));
                 exit();
                 }
             rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
@@ -369,14 +371,18 @@ if ($saveaction != '' && enforcePostRequest(false))
             $dlfile = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $new_ext;
             rename($newpath,$dlfile);
             
-            $dlparams = array(
+            $download_url = generateURL($baseurl_short . "pages/download.php", 
+            [
                 "userfile" => $ref . "_" . $randstring . "." . $new_ext,
-                "filename" => strip_extension($filename)
-                );
+                "filename" => strip_extension($filename) 
+            ]);
 
-            $dlurl = generateURL($baseurl_short . "pages/download.php", $dlparams);
+            $dlurl = generateURL($baseurl_short . "pages/download_progress.php", ['url' => $download_url, 'ref' => $ref]);
+            if ($download_usage)
+                {
+                $dlurl = generateURL("pages/download_usage.php",["url" => $dlurl]);
+                }
             $url_params["url"]=$dlurl;
-            
             $redirect_to_terms_url=generateURL("pages/terms.php",$url_params);
             redirect($redirect_to_terms_url);
             exit();
@@ -431,6 +437,12 @@ else
 
 include "../../../include/header.php";
 
+?>
+
+<div class="BasicsBox">
+<h1><?php echo $saveaction == "original" ? $lang['imagetoolstransformoriginal'] : $lang['imagetoolstransform']; ?></h1>
+
+<?php
 # slider, sound, controls
 
 if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
@@ -440,6 +452,7 @@ if (strpos($return_to_url, "pages/admin/admin_manage_slideshow.php") !== false)
         array(
             'title' => $lang["systemsetup"],
             'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manage_slideshow"],
@@ -891,14 +904,12 @@ renderBreadcrumbs($links_trail);
             jQuery(document).ready(function ()
                 {
                 jQuery('input[type=radio][name=saveaction]').change(function()
-                    {                
+                    {        
                     jQuery('.imagetools_save_action').hide();
                     if(this.value=='alternative')
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_alternative_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -906,8 +917,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_download_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -917,6 +926,7 @@ renderBreadcrumbs($links_trail);
                         jQuery('#imagetools_slideshow_actions').show();
                         jQuery('#new_width').val('<?php echo (int)$sswidth; ?>');
                         jQuery('#new_height').val('<?php echo (int)$ssheight; ?>');
+                        jQuery('#size_preset_select').val('');
                         if(typeof jcrop_active == 'undefined' || !jcrop_active)
                             {
                             CropManager.attachCropper();
@@ -928,8 +938,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_original_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -937,8 +945,6 @@ renderBreadcrumbs($links_trail);
                         {
                         slideshow_edit=false;
                         jQuery('#imagetools_preview_actions').show();
-                        jQuery('#new_width').val('');
-                        jQuery('#new_height').val('');
                         evaluate_values();
                         cropper_always=false;
                         }
@@ -1292,6 +1298,8 @@ renderBreadcrumbs($links_trail);
 
              
 </form>
+
+</div>
 
 <?php  
 

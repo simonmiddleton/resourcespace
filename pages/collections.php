@@ -2,32 +2,22 @@
 include_once dirname(__FILE__)."/../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include_once dirname(__FILE__)."/../include/authenticate.php";}
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include_once dirname(__FILE__)."/../include/authenticate.php";}
 if (checkperm("b")){exit($lang["error-permissiondenied"]);}
 include_once dirname(__FILE__)."/../include/research_functions.php";
 
 
-$sort            = getvalescaped('sort', 'DESC');
-$search          = getvalescaped('search', '');
+$sort            = getval('sort', 'DESC');
+$search          = getval('search', '');
 $last_collection = getval('last_collection', '');
-$restypes        = getvalescaped('restypes', '');
-$archive         = getvalescaped('archive', '');
-$daylimit        = getvalescaped('daylimit', '');
-$offset          = getvalescaped('offset', '');
-$resources_count = getvalescaped('resources_count', '');
-$collection      = getvalescaped('collection', '');
-$entername       = getvalescaped('entername', '');
-$res_access      = getvalescaped('access','');
-
-# if search is not a special search (ie. !recent), use starsearchvalue.
-if ($search !="" && strpos($search,"!")!==false)
-	{
-	$starsearch = "";
-	}
-else
-	{
-	$starsearch = getvalescaped("starsearch","");	
-    }
+$restypes        = getval('restypes', '');
+$archive         = getval('archive', '');
+$daylimit        = getval('daylimit', '');
+$offset          = getval('offset', '');
+$resources_count = getval('resources_count', '');
+$collection      = getval('collection', '');
+$entername       = getval('entername', '');
+$res_access      = getval('access','');
 
 /* 
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column 
@@ -37,7 +27,7 @@ for this collection we can rely on the passed order by value.
 $order_by = $default_collection_sort;
 if('!collection' === substr($search, 0, 11) && "!collection{$collection}" == $search)
     {
-    $order_by = getvalescaped('order_by', $default_collection_sort);
+    $order_by = getval('order_by', $default_collection_sort);
     }
 
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
@@ -46,8 +36,8 @@ $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_
 $internal_share_access = internal_share_access();
 
 // Remove all from collection
-$emptycollection = getvalescaped("emptycollection","",true);
-if($emptycollection!='' && getvalescaped("submitted","")=='removeall' && getval("removeall","")!="" && collection_writeable($emptycollection))
+$emptycollection = getval("emptycollection","",true);
+if($emptycollection!='' && getval("submitted","")=='removeall' && getval("removeall","")!="" && collection_writeable($emptycollection))
     {
     remove_all_resources_from_collection($emptycollection);
     }
@@ -92,8 +82,8 @@ if ($collection!="" && $collection!="undefined")
 		}
 	elseif((!isset($usercollection) || $collection!=$usercollection) && $collection!='false')
 		{
-                $validcollection=sql_value("select ref value from collection where ref='$collection'",0);
-                # Switch the existing collection
+		$validcollection=ps_value("select ref value from collection where ref=?",array("i",$collection), 0);
+		# Switch the existing collection
 		if ($k=="" || $internal_share_access) {set_user_collection($userref,$collection);}
 		$usercollection=$collection;
 		}
@@ -120,7 +110,7 @@ if(substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_acces
     $search_collection = explode(' ', $search);
     $search_collection = str_replace('!collection', '', $search_collection[0]);
     $search_collection = explode(',', $search_collection); // just get the number
-    $search_collection = escape_check($search_collection[0]);
+    $search_collection = $search_collection[0];
     if($search_collection==$last_collection || ($last_collection!=='' && $search_collection==$usercollection))
     	{
         ?>
@@ -146,10 +136,10 @@ if (($k=="" || $internal_share_access) && (($userref==$cinfo["user"]) || ($cinfo
 if ($allow_reorder)
 	{
 	# Also check for the parameter and reorder as necessary.
-	$reorder=getvalescaped("reorder",false);
+	$reorder=getval("reorder",false);
 	if ($reorder)
 		{
-		$neworder=json_decode(getvalescaped("order",false));
+		$neworder=json_decode(getval("order",false));
 		update_collection_order($neworder,$usercollection);
 		exit("SUCCESS");
 		}
@@ -474,12 +464,12 @@ else { ?>
 
 $addarray=array();
 
-$add=getvalescaped("add","");
+$add=getval("add","");
 if ($add!="")
 	{
 	$allowadd=true;
 	// If we provide a collection ID use that one instead
-	$to_collection = getvalescaped('toCollection', '');
+	$to_collection = getval('toCollection', '');
 
 	if(strpos($add,",")>0)
         {
@@ -519,69 +509,67 @@ if ($add!="")
             }
         }
 
-	if($allowadd)
-		{
-		foreach ($addarray as $add)
-			{
-			hook("preaddtocollection");
-			#add to current collection		
-			if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getvalescaped("size",""))==false)
-				{ ?>
-				<script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
-				}
-			else
-				{		
-				# Log this	
-				daily_stat("Add resource to collection",$add);
-			
-				# Update resource/keyword kit count
-				if ((strpos($search,"!")===false) && ($search!="")) {update_resource_keyword_hitcount($add,$search);}
-				hook("postaddtocollection");
-				}
-			}
-		# Show warning?
-		if (isset($collection_share_warning) && $collection_share_warning)
-			{
-			?><script language="Javascript">alert("<?php echo $lang["sharedcollectionaddwarning"]?>");</script><?php
-			}
-		}
-	}
+    if($allowadd)
+        {
+        foreach ($addarray as $add)
+            {
+            hook("preaddtocollection");
+            #add to current collection		
+            if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getval("size",""))==false)
+                { ?>
+                <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+                }
+            else
+                {		
+                # Log this	
+                daily_stat("Add resource to collection",$add);
+                hook("postaddtocollection");
+                }
+            }
+            
+        # Show warning?
+        if (isset($collection_share_warning) && $collection_share_warning)
+            {
+            ?><script language="Javascript">alert("<?php echo $lang["sharedcollectionaddwarning"]?>");</script><?php
+            }
+        }
+    }
 
-$remove=getvalescaped("remove","");
+$remove=getval("remove","");
 if ($remove!="")
-	{
-	// If we provide a collection ID use that one instead
-	$from_collection = getvalescaped('fromCollection', '');
+    {
+    // If we provide a collection ID use that one instead
+    $from_collection = getval('fromCollection', '');
 
-	if(strpos($remove,",")>0)
-		{
-		$removearray=explode(",",$remove);
-		}
-	else
-		{
-		$removearray[0]=$remove;
-		unset($remove);
-		}	
-	foreach ($removearray as $remove)
-		{
-		hook("preremovefromcollection");
-		#remove from current collection
-		if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
-			{
-			?><script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
-			}
-		else
-			{
-			# Log this	
-			daily_stat("Removed resource from collection",$remove);		
-			hook("postremovefromcollection");
-			}
-		}
-	}
-	
-$addsearch=getvalescaped("addsearch",-1);
+    if(strpos($remove,",")>0)
+        {
+        $removearray=explode(",",$remove);
+        }
+    else
+        {
+        $removearray[0]=$remove;
+        unset($remove);
+        }	
+    foreach ($removearray as $remove)
+        {
+        hook("preremovefromcollection");
+        #remove from current collection
+        if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
+            {
+            ?><script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+            }
+        else
+            {
+            # Log this	
+            daily_stat("Removed resource from collection",$remove);
+            hook("postremovefromcollection");
+            }
+        }
+    }
+
+$addsearch=getval("addsearch",-1);
 if ($addsearch!=-1)
-	{
+    {
     /*
     When adding search default collection sort should be relevance to address multiple types of searches. If collection
     is used then it will error if user did a simple search and not a !collection search since there is no collection
@@ -589,7 +577,7 @@ if ($addsearch!=-1)
     */
     $default_collection_sort = 'relevance';
 
-    $order_by = getvalescaped('order_by', getvalescaped('saved_order_by', $default_collection_sort));
+    $order_by = getval('order_by', getval('saved_order_by', $default_collection_sort));
 
     if ($usercollection == -$userref || !collection_writeable($usercollection))
         { ?>
@@ -599,63 +587,64 @@ if ($addsearch!=-1)
         {
         hook("preaddsearch");
         $externalkeys=get_collection_external_access($usercollection);
-		if(checkperm("noex") && count($externalkeys)>0)
-			{
-			// If collection has been shared externally users with this permission can't add resources			
+        if(checkperm("noex") && count($externalkeys)>0)
+            {
+            // If collection has been shared externally users with this permission can't add resources
             ?>
             <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
             <?php
-			}
-		else
-			{		
-			if (getval("mode","")=="")
-				{
-				#add saved search
-				add_saved_search($usercollection);
+            }
+        else
+            {		
+            if (getval("mode","")=="")
+                {
+                #add saved search
+                add_saved_search($usercollection);
 
-				# Log this
-				daily_stat("Add saved search to collection",0);
-				}
-			else
-				{
-				#add saved search (the items themselves rather than just the query)
-				$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch, $res_access);
-				if (!empty($resourcesnotadded))
-					{
-					$warningtext="";
-					if(isset($resourcesnotadded["blockedtypes"]))
-						{
-						// There are resource types blocked due to $collection_block_restypes
-						$warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
-						//$restypes=get_resource_types(implode(",",$collection_block_restypes));
-						$blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
-						foreach($blocked_types as $blocked_type)
-							{
-							if($warningtext==""){$warningtext.="<ul>";}
-							$warningtext.= "<li>" . $blocked_type["name"] . "</li>";
-							}
-						$warningtext.="</ul>";
-						unset($resourcesnotadded["blockedtypes"]);
-						}
-				
-					if (!empty($resourcesnotadded))	
-						{
-						// There are resources blocked from being added due to archive state
-						if($warningtext==""){$warningtext.="<br /><br />";}
-						$warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
-						}
-			
-					?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
-					}
-				# Log this
-				daily_stat("Add saved search items to collection",0);
-				}
-			hook("postaddsearch");
-			}
-		}
-	}
+                # Log this
+                daily_stat("Add saved search to collection",0);
+                }
+            else
+                {
+                $foredit=(getval("foredit",false) == "true" ? true:false);
+                #add saved search (the items themselves rather than just the query)
+                $resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $res_access, $foredit);
+                if (!empty($resourcesnotadded))
+                    {
+                    $warningtext="";
+                    if(isset($resourcesnotadded["blockedtypes"]))
+                        {
+                        // There are resource types blocked due to $collection_block_restypes
+                        $warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
+                        //$restypes=get_resource_types(implode(",",$collection_block_restypes));
+                        $blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
+                        foreach($blocked_types as $blocked_type)
+                            {
+                            if($warningtext==""){$warningtext.="<ul>";}
+                            $warningtext.= "<li>" . $blocked_type["name"] . "</li>";
+                            }
+                        $warningtext.="</ul>";
+                        unset($resourcesnotadded["blockedtypes"]);
+                        }
+                
+                    if (!empty($resourcesnotadded))
+                        {
+                        // There are resources blocked from being added due to archive state
+                        if($warningtext==""){$warningtext.="<br /><br />";}
+                        $warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
+                        }
 
-$removesearch=getvalescaped("removesearch","");
+                    ?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
+                    }
+                # Log this
+                daily_stat("Add saved search items to collection",0);
+                }
+            hook("postaddsearch");
+            }
+        }
+    }
+
+$removesearch=getval("removesearch","");
 if ($removesearch!="")
 	{
     if (!collection_writeable($usercollection))
@@ -669,20 +658,19 @@ if ($removesearch!="")
         remove_saved_search($usercollection,$removesearch);
         hook("postremovesearch");
         }
-	}
+    }
 	
-$addsmartcollection=getvalescaped("addsmartcollection",-1);
+$addsmartcollection=getval("addsmartcollection",-1);
 if ($addsmartcollection!=-1)
-	{
-	
-	# add collection which autopopulates with a saved search 
-	add_smart_collection();
-		
-	# Log this
-	daily_stat("Added smart collection",0);	
-	}
-	
-$research=getvalescaped("research","");
+    {
+    # add collection which autopopulates with a saved search 
+    add_smart_collection();
+        
+    # Log this
+    daily_stat("Added smart collection",0);	
+    }
+
+$research=getval("research","");
 if ($research!="")
 	{
 	hook("preresearch");
@@ -861,7 +849,7 @@ else if ($basket)
 				$title_field=$metadata_template_title_field;
 				}	
 			}	
-		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
+		$field_type=ps_value("select type value from resource_type_field where ref=?",array("i",$title_field),"", "schema");
 		if($field_type==8){
 			$title=str_replace("&nbsp;"," ",$title);
 		}
@@ -1133,7 +1121,7 @@ else
 
 	<?php 
 	# Loop through saved searches
-	if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $internal_share_access))
+	if (is_null($cinfo['savedsearch']) && ($k=='' || $internal_share_access))
 		{ // don't include saved search item in result if this is a smart collection  
 
 		# Setting the save search icon
@@ -1226,7 +1214,7 @@ else
 				$title_field=$metadata_template_title_field;
 				}	
 			}	
-		$field_type=sql_value("select type value from resource_type_field where ref=$title_field","", "schema");
+		$field_type=ps_value("select type value from resource_type_field where ref=?",array("i",$title_field), "", "schema");
 		if($field_type==8){
 			$title=str_replace("&nbsp;"," ",$title);
 		}

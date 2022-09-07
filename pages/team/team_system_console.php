@@ -31,7 +31,6 @@ if (!checkperm_user_edit($userref))	// if not an admin then force act as user as
 	$actasuser=$userref;
 	}
 
-
 // ----- Main page load -----
 if ($callback == "")
 	{
@@ -40,6 +39,13 @@ if ($callback == "")
 		include "../../include/header.php";
         render_top_page_error_style($error);
 		}
+    
+    ?>
+    <div class="BasicsBox">
+        <h1><?php echo $lang["systemconsole"] ?></h1>
+    </div>    
+    <?php
+
 	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
 	{
 		?><script>
@@ -73,7 +79,7 @@ if ($callback == "")
 				jQuery('.reload<?php echo $section; ?>class').css('text-decoration', 'none');
 			}
 		</script>
-		<h2 onclick="SystemConsole<?php echo $section; ?>Load(-1); return false;" class="CollapsibleSectionHead collapsed expanded"><?php echo $lang["systemconsole" . $section]; ?></h2>
+		<h2 onclick="SystemConsole<?php echo $section; ?>Load(-1); return false;" class="CollapsibleSectionHead collapsed"><?php echo $lang["systemconsole" . $section]; ?></h2>
 		<div class="collapsiblesection">
 			<?php foreach (array(0,1,5,10,30,60) as $secs)
 				{
@@ -106,7 +112,7 @@ if ($callback == "")
 
 // ----- Callbacks -----
 
-$sortby = getvalescaped("sortby","");
+$sortby = getval("sortby","");
 $sortasc = true;
 $sorted = false;
 
@@ -151,8 +157,8 @@ switch ($callback)
 			unset ($debug_log_override);
 			}
 
-		$debug_user = sql_value("SELECT value FROM sysvars WHERE name='debug_override_user'", "");
-		$debug_expires = sql_value("SELECT value FROM sysvars WHERE name='debug_override_expires'", "");
+		$debug_user = ps_value("SELECT value FROM sysvars WHERE name='debug_override_user'", [], "");
+		$debug_expires = ps_value("SELECT value FROM sysvars WHERE name='debug_override_expires'", [], "");
 
 		if ($debug_expires != "")
 			{
@@ -335,23 +341,32 @@ switch ($callback)
 		$order_by = "";
 		if ($sortby)
 			{
-			if ($sortasc)
-				{
-				$order_by = " ORDER BY `{$sortby}` ASC";
-				}
-			else
-				{
-				$order_by = " ORDER BY `{$sortby}` DESC";
-				}
+            //Checking if the sort by is a valid column from the table;
+            $fields = ps_query('DESCRIBE INFORMATION_SCHEMA.PROCESSLIST');
+            foreach($fields as $field)
+                {
+                if(strtolower($sortby) == strtolower($field['Field']))
+                    {
+                    if ($sortasc)
+                        {
+                        $order_by = " ORDER BY `{$sortby}` ASC";
+                        }
+                    else
+                        {
+                        $order_by = " ORDER BY `{$sortby}` DESC";
+                        }
+                    break;
+                    }
+                }
 			}
 
 		if ($filter == "")
 			{
-			$results = sql_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
+			$results = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by); // select * is fine here as no parameters
 			}
 		else
 			{
-			$result_rows = sql_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by);
+			$result_rows = ps_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST" . $order_by); // select * is fine here as no parameters
 
 			foreach ($result_rows as $row)
 				{

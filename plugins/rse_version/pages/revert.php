@@ -15,10 +15,12 @@ if(is_valid_revert_state_request())
     exit();
     }
 
-$ref=getvalescaped("ref","");
+$ref=getval("ref","");
 
 # Load log entry
-$log=sql_query("select resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` from resource_log left outer join resource_type_field rtf on resource_log.resource_type_field=rtf.ref where resource_log.ref='$ref'");
+$log=ps_query("SELECT " . columns_in("resource_log") . ", rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` FROM resource_log 
+        LEFT OUTER JOIN resource_type_field rtf ON resource_log.resource_type_field=rtf.ref 
+        WHERE resource_log.ref=?",array("i",$ref));
 if (count($log)==0) 
     {
     exit($lang["rse_version_log_not_found"]);
@@ -44,64 +46,66 @@ $node_strings_not_found=array();
 
 $b_fixed_field=in_array($log['resource_type_field_type'],$FIXED_LIST_FIELD_TYPES);
 
-// resolve node changes
-if($b_fixed_field)
-    {
-    $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
-    $nodes_available=array();
-    foreach(get_nodes($log['resource_type_field'], null, $is_cat_tree) as $available_node)
-        {
-        $nodes_available[$available_node['ref']]=$available_node['name'];
-        }
-
-    // all to be added
-    preg_match_all('/^\s*\-\s*(.*?)$/m',$log['diff'],$matches);
-    if(isset($matches[1][0]))
-        {
-        foreach ($matches[1] as $match)
-            {
-            $match=trim($match);
-            $found_key=array_search($match,$nodes_available);
-            if($found_key===false)
-                {
-                $node_strings_not_found[]=$match;
-                }
-            else
-                {
-                $nodes_to_add[]=$found_key;
-                }
-            }
-        }
-
-    // all to be removed
-    preg_match_all('/^\s*\+\s*(.*?)$/m',$log['diff'],$matches);
-    if(isset($matches[1][0]))
-        {
-        foreach ($matches[1] as $match)
-            {
-            $match=trim($match);
-            $found_key=array_search($match,$nodes_available);
-            if($found_key===false)
-                {
-                $node_strings_not_found[]=$match;
-                }
-            else
-                {
-                $nodes_to_remove[]=$found_key;
-                }
-            }
-        }
-    }
-
 if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
     {
     # ----------------------------- PROCESSING FOR "e" (edit) and "m" (multi edit) METADATA ROWS ---------------------------------------------
 
-    $current=get_data_by_field($resource,$field);
-    $diff=log_diff($current,$log["previous_value"]);
+    // resolve node changes
+    if($b_fixed_field)
+        {
+        $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
+        $nodes_available=array();
+        foreach(get_nodes($log['resource_type_field'], null, $is_cat_tree) as $available_node)
+            {
+            $nodes_available[$available_node['ref']]=$available_node['name'];
+            }
+
+        // all to be added
+        preg_match_all('/^\s*\-\s*(.*?)$/m',$log['diff'],$matches);
+        if(isset($matches[1][0]))
+            {
+            foreach ($matches[1] as $match)
+                {
+                $match=trim($match);
+                $found_key=array_search($match,$nodes_available);
+                if($found_key===false)
+                    {
+                    $node_strings_not_found[]=$match;
+                    }
+                else
+                    {
+                    $nodes_to_add[]=$found_key;
+                    }
+                }
+            }
+
+        // all to be removed
+        preg_match_all('/^\s*\+\s*(.*?)$/m',$log['diff'],$matches);
+        if(isset($matches[1][0]))
+            {
+            foreach ($matches[1] as $match)
+                {
+                $match=trim($match);
+                $found_key=array_search($match,$nodes_available);
+                if($found_key===false)
+                    {
+                    $node_strings_not_found[]=$match;
+                    }
+                else
+                    {
+                    $nodes_to_remove[]=$found_key;
+                    }
+                }
+            }
+        }
+    else
+        {
+        $current=get_data_by_field($resource,$field);
+        $diff=log_diff($current,$log["previous_value"]);
+        }
 
     # Process submit
-    if (getval("action","")=="revert" && enforcePostRequest(false))
+    if (getval("revert_action","")=="revert" && enforcePostRequest(false))
         {
         if($b_fixed_field)
             {
@@ -122,31 +126,41 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                 $resource_field_data       = get_resource_field_data($resource);
                 $resource_field_data_index = array_search($field, array_column($resource_field_data, 'ref'));
 
-                $truncated_value = "NULL";
+                $truncated_value = NULL;
                 if(
                     $resource_field_data_index !== false
-                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
-                )
+                    && trim((string) $resource_field_data[$resource_field_data_index]["value"]) != ""
+                    )
                     {
                     $new_joined_field_value = $resource_field_data[$resource_field_data_index]["value"];
                     $truncated_value = truncate_join_field_value($new_joined_field_value);
-                    $truncated_value = "'" . escape_check($truncated_value) . "'";
                     }
-
-                // $truncated_value is escaped and between single quotes above. This is done so if we don't have a
-                // value we can set field to NULL (not string NULL)
-                sql_query("UPDATE resource SET field{$field} = {$truncated_value} WHERE ref = '{$resource}'");
+ 
+                if (is_null($truncated_value)) 
+                    {
+                    ps_query("UPDATE resource SET field{$field} = NULL WHERE ref = ?",array("i",$resource));
+                    }
+                else
+                    {
+                    ps_query("UPDATE resource SET field{$field} = ? WHERE ref = ?",array("s",$truncated_value, "i",$resource));
+                    }
                 }
-
             log_node_changes($resource,$nodes_to_add,$nodes_to_remove,$lang["revert_log_note"]);
             }
         else
             {
             $errors=array();
-            update_field($resource, $field, $log["previous_value"],$errors,false); # Do not log as we are doing that below.
-            resource_log($resource,LOG_CODE_EDITED,$field,$lang["revert_log_note"],$current,$log["previous_value"]);
+            update_field($resource, $field, strip_leading_comma($log["previous_value"]),$errors,false); # Do not log as we are doing that below.
+            if(count($errors) == 0)
+                {
+                resource_log($resource,LOG_CODE_EDITED,$field,$lang["revert_log_note"],$current,$log["previous_value"]);
+                redirect(generateURL("pages/view.php",["ref"=>$resource]));
+                }
+            else
+                {
+                $onload_message = array("title" => $lang["error"],"text" => implode("<br/>",$errors));
+                }
             }
-        redirect("pages/view.php?ref=" . $resource);
         }
     }
 elseif($type==LOG_CODE_UPLOADED)
@@ -154,12 +168,12 @@ elseif($type==LOG_CODE_UPLOADED)
     # ----------------------------- PROCESSING FOR "u" IMAGE UPLOAD ROWS ---------------------------------------------
     
     # Process submit
-    if (getval("action","")=="revert" && enforcePostRequest(false))
+    if (getval("revert_action","")=="revert" && enforcePostRequest(false))
         {
         # Perform the reversion. First this reversion itself needs to be logged and therefore 'revertable'.
         
         # Find file extension of current resource.
-        $old_extension=sql_value("select file_extension value from resource where ref='$resource'","");
+        $old_extension=ps_value("select file_extension value from resource where ref=?",array("i",$resource),"");
         
         # Ceate a new alternative file based on the current resource
         $alt_file=add_alternative_file($resource,'','','',$old_extension,0,'');
@@ -187,18 +201,20 @@ elseif($type==LOG_CODE_UPLOADED)
             
         # Update log so this has a pointer.
         $log_ref=resource_log($resource,LOG_CODE_UPLOADED,0,$lang["revert_log_note"]);
-        sql_query("update resource_log set previous_file_alt_ref='$alt_file' where ref='$log_ref'");
+        $parameters=array("i",$alt_file, "i",$log_ref);
+        ps_query("update resource_log set previous_file_alt_ref=? where ref=?",$parameters);
     
         # Now perform the revert, copy and recreate previews.
         $revert_alt_ref=$log["previous_file_alt_ref"];
-        $revert_ext=sql_value("select file_extension value from resource_alt_files where ref='$revert_alt_ref'","");
+        $revert_ext=ps_value("select file_extension value from resource_alt_files where ref=?",array("i",$revert_alt_ref),"");
         
         $revert_path=get_resource_path($resource, true, '', true, $revert_ext, -1, 1, false, "", $revert_alt_ref);
         $current_path=get_resource_path($resource,true, '', true, $revert_ext);
         if (file_exists($revert_path))
             {
             copy($revert_path,$current_path);
-            sql_query("update resource set file_extension='" . escape_check($revert_ext) . "' where ref='$resource'");
+            $parameters=array("i",$revert_ext, "i",$resource);
+            ps_query("update resource set file_extension=? where ref=?",$parameters);
             create_previews($resource,false,$revert_ext);
             }
         else
@@ -217,9 +233,9 @@ include "../../../include/header.php";
 <h1><?php echo $lang["revert"]?></h1>
 <p><?php echo $lang['revertingclicktoproceed'];?></p>
 
-<form method=post name="form" id="form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="CentralSpacePost(this,true);return false;">
+<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="return CentralSpacePost(this,true);">
 <input type="hidden" name="ref" value="<?php echo $ref ?>">
-<input type="hidden" name="action" value="revert">
+<input type="hidden" name="revert_action" value="revert">
 <?php
 generateFormToken("form");
 if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)

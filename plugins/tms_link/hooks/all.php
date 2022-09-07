@@ -99,7 +99,7 @@ function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
                 {
                 debug("tms_link: updating field '{$field}' with data from column '{$tms_rs_mapping['tms_column']}' for resource id #{$resource}");
 
-                update_field($resource, $tms_rs_mapping['rs_field'], escape_check($tmsdata[$module_name][$tms_rs_mapping['tms_column']]));
+                update_field($resource, $tms_rs_mapping['rs_field'], $tmsdata[$module_name][$tms_rs_mapping['tms_column']]);
                 }
             }
         }

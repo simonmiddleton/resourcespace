@@ -28,7 +28,7 @@ class RedisStore extends AbstractCache
      *
      * @return RedisClient
      */
-    public function getRedis() : RedisClient
+    public function getRedis(): RedisClient
     {
         return $this->redis;
     }
@@ -45,7 +45,9 @@ class RedisStore extends AbstractCache
         }
 
         $contents = $this->redis->get($key);
-        $contents = json_decode($contents, true);
+        if (null !== $contents) {
+            $contents = json_decode($contents, true);
+        }
 
         if ($withExpired) {
             return $contents;
@@ -81,7 +83,7 @@ class RedisStore extends AbstractCache
     /**
      * {@inheritDoc}
      */
-    public function delete(string $key) : bool
+    public function delete(string $key): bool
     {
         $prefix = $this->getPrefix();
 
@@ -95,7 +97,7 @@ class RedisStore extends AbstractCache
     /**
      * {@inheritDoc}
      */
-    public function keys() : array
+    public function keys(): array
     {
         return $this->redis->keys($this->getPrefix() . '*');
     }

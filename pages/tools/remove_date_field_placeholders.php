@@ -3,7 +3,7 @@ include "../../include/db.php";
 include_once "../../include/authenticate.php";
 if(!checkperm("a")){exit("Access denied");}
 
-$datedata = sql_query("SELECT rd.resource, rd.resource_type_field, rd.value FROM resource_data rd LEFT JOIN resource_type_field rtf ON rd.resource_type_field=rtf.ref WHERE rtf.type IN (" . implode(",",$DATE_FIELD_TYPES) . ")");
+$datedata = ps_query("SELECT n.ref, n.name, n.resource_type_field FROM node n LEFT JOIN resource_type_field rtf ON n.resource_type_field=rtf.ref WHERE rtf.type IN (". ps_param_insert(count($DATE_FIELD_TYPES)) .")", ps_param_fill($DATE_FIELD_TYPES, 'i'));
 $datefields = get_resource_type_fields("","ref","asc","",$DATE_FIELD_TYPES);
 $datefieldarr = array();
 foreach($datefields as $datefield)
@@ -16,7 +16,6 @@ foreach($datefields as $datefield)
 
 $update = getval("update","") == "true";
 
-
 // Process each data row
 $toupdate   = 0;
 $count      = 0;
@@ -25,14 +24,14 @@ foreach($datedata as $date_row)
     {
     $removedates = array("year","month","day"," hh:mm","hh","mm");
     $subdates = array("0000","00","00","","00","00");
-    $newval = str_replace($removedates,$subdates,$date_row["value"]);
-    $log .= "Resource : " . $date_row["resource"] . ", field '" . (isset($datefieldarr[$date_row["resource_type_field"]]) ?  $datefieldarr[$date_row["resource_type_field"]] : "") . "' (" . $date_row["resource_type_field"] . "). Convert from '" . $date_row["value"] . "' to '" . $newval . "'";
-    if($newval != $date_row["value"])
+    $newval = str_replace($removedates,$subdates,$date_row["name"]);
+    $log .= "Node : " . $date_row["ref"] . ", field '" . (isset($datefieldarr[$date_row["resource_type_field"]]) ?  $datefieldarr[$date_row["resource_type_field"]] : "") . "' (" . $date_row["resource_type_field"] . "). Convert from '" . $date_row["name"] . "' to '" . $newval . "'";
+    if($newval != $date_row["name"])
         {
         $toupdate++;
         if($update)
             {
-            sql_query("UPDATE resource_data SET value='" . escape_check($newval) . "' WHERE resource='" . $date_row["resource"] . "' AND resource_type_field='" . $date_row["resource_type_field"] . "'");
+            ps_query("UPDATE node SET name = ? WHERE ref= ? ", ['s', $newval, 'i', $date_row["ref"]]);
             $log .= " - UPDATED";
             $count++;
             }
@@ -60,12 +59,12 @@ if($toupdate > 0)
     }
 else
     {
-    echo "No resources to update<br/>";
+    echo "No nodes to update<br/>";
     }
 
 if($update)
     {
-    echo $count . " resources updated<br/>";
+    echo $count . " nodes updated<br/>";
     }
 
 echo "</div>";
