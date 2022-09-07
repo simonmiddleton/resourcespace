@@ -3316,3 +3316,6 @@ $owner_field_mappings = [];
 
 // Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
 $thumbs_display_archive_state = false;
+
+// Cache the count of search results to improve performance
+$cache_search_count = true;
