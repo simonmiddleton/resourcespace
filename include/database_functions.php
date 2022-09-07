@@ -1202,20 +1202,37 @@ function sql_limit($offset, $rows)
  *                                              configuration option (e.g $default_perpage, $default_perpage_list).
  * @param null|int               $offset        Specifies the offset of the first row to return. Use NULL to not offset.
  * @param bool                   $cachecount    Use previously cached count if available?
- * @param PreparedStatementQuery $query         Optional separate query to obtain count, usually without ORDER BY
+ * @param string                 $order_by      If passed then this will be removed from the query when obtaining the count for speed
  * 
  * @return array Returns a:
  *               - total: int - count of total found records (before paging)
  *               - data: array - paged result set 
  */
-function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, $countquery = "")
+function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false,string $order_by="")
     {
     global $scramble_key;
+    $serialised_query=$query->sql . ":" . serialize($query->parameters); // Serialised query needed to differentiate between different queries.
+    $cache_id = md5($serialised_query) . "_" . md5($scramble_key . $serialised_query);
+    $cache_location=get_query_cache_location();
+    $cache_file=$cache_location . "/query_count_" . $cache_id . ".json"; // Scrambled path to cache
+    
     $limit = sql_limit($offset, $rows);
-    $data = ps_query("{$query->sql} {$limit}", $query->parameters);    
-    $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
-    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, $cachecount ? "searchcount" : "");
-    $total = max($total,count($data));
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);
+       
+    if($cachecount && file_exists($cache_file))
+        {
+        $total = max(intval(file_get_contents($cache_file)),count($data));
+        }
+    else
+        {
+        if($order_by != "" && strpos($query->sql,$order_by) !== false)
+            {
+            $query->sql = str_replace($order_by,"",$query->sql);
+            }
+        $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$query->sql}) AS count_select", $query->parameters, 0);
+        }
+    file_put_contents($cache_file, $total);
+
     return ['total' => $total, 'data' => $data];
     }
 
