@@ -84,6 +84,8 @@ input[readonly] {
 .ResourcePanel.Selected { border: 3px solid #2E99E6; }
 tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of #2e99e6 which is used for .ResourcePanel.Selected */ }
 
+.ResourcePanelIcons a.fa-minus-circle { color: #e91d1d }
+
 #SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
 
 /* Collection Bar */
