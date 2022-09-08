@@ -95,18 +95,20 @@ if ($enable_related_resources)
 								<td><h3><?php echo $restypename; ?></h3></td>		
 								<td><div class="ListTools"></div></td>                                    
 							</tr>
-							<?php 
+							<?php
 								foreach($relatedresources as $relatedresource)
 									{
+                                    $related_resource_ref = (int) $relatedresource['ref'];
+
 									if($relatedresource['resource_type'] == $rtype)
 										{
-										$relatedtitle = $relatedresource['field' . $view_title_field];
-										echo "<tr id=\"relatedresource" . $relatedresource["ref"] . "\" class=\"RelatedResourceRow\">";
-										echo "<td class=\"link\"><a href=\"" . $baseurl_short . "pages/view.php?ref=" . $relatedresource["ref"] . "\"  onClick=\"return ModalLoad(this,true);\" >" . htmlspecialchars($relatedtitle) . "</a></td>";                                    
+										$relatedtitle = (string) $relatedresource["field{$view_title_field}"];
+										echo "<tr id=\"relatedresource{$related_resource_ref}\" class=\"RelatedResourceRow\">";
+										echo "<td class=\"link\"><a href=\"{$baseurl_short}pages/view.php?ref={$related_resource_ref}\"  onClick=\"return ModalLoad(this,true);\" >" . htmlspecialchars($relatedtitle) . "</a></td>";
 										echo "<td>";
 										if($edit_access)
 											{
-											echo "<div class=\"ListTools\" ><a href=\"#\" onClick=\"if(confirm('" . $lang["related_resource_confirm_delete"] . "')){relateresources(" . $ref . "," . $relatedresource["ref"] . ",'remove');}return false;\" >" . LINK_CARET . $lang["action-remove"] . "</a></div>";
+											echo "<div class=\"ListTools\" ><a href=\"#\" onClick=\"if(confirm('" . escape_quoted_data($lang["related_resource_confirm_delete"]) . "')){relateresources(" . (int) $ref . ", $related_resource_ref,'remove');}return false;\" >" . LINK_CARET . htmlspecialchars($lang["action-remove"]) . "</a></div>";
 											}
 										echo "</td>";	
 										echo "</tr>";	
