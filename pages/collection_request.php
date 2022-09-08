@@ -111,8 +111,8 @@ if ($collection_request_min_access == 0)
   
 	<form method="post" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_request.php">  
 	<?php generateFormToken("collection_request"); ?>
-    <input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
-	<input type=hidden name="k" value="<?php echo htmlspecialchars($k) ?>">
+    <input type=hidden name=ref value="<?php echo escape_quoted_data($ref) ?>">
+	<input type=hidden name="k" value="<?php echo escape_quoted_data($k) ?>">
 	
 	<div class="Question">
 	<label><?php echo $lang["collectionname"]?></label>
@@ -128,20 +128,20 @@ if ($collection_request_min_access == 0)
 	<div class="Question">
 	<label><?php echo $lang["fullname"]?> <sup>*</sup></label>
 	<input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
-	<input name="fullname" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("fullname","")) ?>">
+	<input name="fullname" class="stdwidth" type="text" value="<?php echo escape_quoted_data(getval("fullname","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	
 	<div class="Question">
 	<label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
 	<input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-	<input name="email" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+	<input name="email" class="stdwidth" type="text" value="<?php echo escape_quoted_data(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 
 	<div class="Question">
 	<label><?php echo $lang["contacttelephone"]?></label>
-	<input name="contact" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
+	<input name="contact" class="stdwidth" type="text" value="<?php echo escape_quoted_data(getval("contact","")) ?>">
 	<input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
 	<div class="clearerleft"> </div>
 	</div>
@@ -182,7 +182,7 @@ if (isset($custom_request_fields))
 			
 			<?php if ($type==1) {  # Normal text box
 			?>
-			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
+			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo escape_quoted_data(getval("custom" . $n,""))?>">
 			<?php } ?>
 
 			<?php if ($type==2) { # Large text box 
