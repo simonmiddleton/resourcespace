@@ -1197,18 +1197,18 @@ function sql_limit($offset, $rows)
  * 
  * IMPORTANT: the input query MUST have a deterministic order so it can help with performance and not have an undefined behaviour
  * 
- * @param PreparedStatementQuery $query         SQL query
- * @param null|int               $rows          Specifies the maximum number of rows to return. Usually set by a global 
- *                                              configuration option (e.g $default_perpage, $default_perpage_list).
- * @param null|int               $offset        Specifies the offset of the first row to return. Use NULL to not offset.
- * @param bool                   $cachecount    Use previously cached count if available?
- * @param PreparedStatementQuery $query         Optional separate query to obtain count, usually without ORDER BY
+ * @param PreparedStatementQuery        $query          SQL query
+ * @param null|int                      $rows           Specifies the maximum number of rows to return. Usually set by a global 
+ *                                                      configuration option (e.g $default_perpage, $default_perpage_list).
+ * @param null|int                      $offset         Specifies the offset of the first row to return. Use NULL to not offset.
+ * @param bool                          $cachecount     Use previously cached count if available?
+ * @param null|PreparedStatementQuery   $countquery     Optional separate query to obtain count, usually without ORDER BY
  * 
  * @return array Returns a:
  *               - total: int - count of total found records (before paging)
  *               - data: array - paged result set 
  */
-function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, $countquery = "")
+function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, ?PreparedStatementQuery $countquery = NULL)
     {
     global $cache_search_count;
     $limit = sql_limit($offset, $rows);
