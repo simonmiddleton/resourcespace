@@ -28,9 +28,9 @@ if ($enable_related_resources)
 				continue;
 				}
 
-			// Show only related resource types that match the tab name:
-			$resource_type_tab_name = ps_value('SELECT tab_name AS value FROM resource_type WHERE ref = ?',array("i",$rtype), '', "schema");
-			if($tabname !== $resource_type_tab_name)
+			// Show only related resource types that match this tab:
+			$resource_type_tab_ref = ps_value('SELECT tab AS value FROM resource_type WHERE ref = ?', ['i', $rtype], '', 'schema');
+			if($tab_ref !== $resource_type_tab_ref)
 				{
 				continue;
 				}
