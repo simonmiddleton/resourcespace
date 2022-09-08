@@ -131,7 +131,13 @@ function setup_user(array $userdata)
     $useracceptedterms = $userdata['accepted_terms'];
 	
 	# Create userpermissions array for checkperm() function
-	$userpermissions=array_diff(array_merge(explode(",",trim($global_permissions)),explode(",",trim($userdata["permissions"]))),explode(",",trim($global_permissions_mask))); 
+	$userpermissions=array_diff(
+        array_merge(
+            explode(",",trim($global_permissions??"")),
+            explode(",",trim($userdata["permissions"]??""))
+        ),
+        explode(",",trim($global_permissions_mask??""))
+    ); 
 	$userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
 	
 	$actions_on=$actions_enable;
