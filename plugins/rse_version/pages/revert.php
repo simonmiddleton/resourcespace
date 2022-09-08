@@ -147,6 +147,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                     }
                 }
             log_node_changes($resource,$nodes_to_add,$nodes_to_remove,$lang["revert_log_note"]);
+            redirect(generateURL('pages/view.php', ['ref' => $resource]));
             }
         else
             {
