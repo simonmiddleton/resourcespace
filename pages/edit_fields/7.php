@@ -58,13 +58,12 @@ foreach($selected_nodes as $node)
 
 foreach($valid_nodes as $node)
     {
-    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"" . htmlspecialchars($name) . "\" value=\"{$node["ref"]}\">";
+    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"" . escape_quoted_data($name) . "\" value=\"{$node["ref"]}\">";
 
     // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" 
-                            . escape_quoted_data($node['name']) . "</span><br /></div>";
+        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . htmlspecialchars($node['name']) . "</span><br /></div>";
         }
     }
 
