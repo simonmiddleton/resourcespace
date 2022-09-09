@@ -4323,7 +4323,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         if ($ingest){$file_path="";} else {$file_path=$path;}
 
         # Store extension/data in the database
-        ps_query("update resource set archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=now() where ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
+        ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW() WHERE ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
 
         # Store original filename in field, if set
         if (!$ingest)
@@ -4353,15 +4353,38 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
                 {
                 $destination=get_resource_path($r,true,"",true,$extension);
-                $result=rename($syncdir . "/" . $path,$destination);
+                $result=copy($syncdir . "/" . $path,$destination); // Copy instead of rename so that permissions of filestore will be used
                 if ($result===false)
                     {
-                    # The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
+                    # The copy failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
+                    # If the file is still being copied then $staticsync_file_minimum_age can be set to prevent this error from occurring
                     # Delete the resouce just created and return false.
+                    debug("ERROR: Staticsync failed to copy file from: " .  $syncdir . "/" . $path);
                     delete_resource($r);
                     return false;
                     }
-                chmod($destination,0777);
+                $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
+                $GLOBALS["use_error_exception"] = true;
+                try
+                    {
+                    unlink($syncdir . "/" . $path);
+                    try
+                        {
+                        chmod($destination,0777);
+                        }
+                    catch (Exception $e)
+                        {
+                        // Not fatal, just log
+                        debug(" - ERROR: Staticsync failed to set permissions on ingested file: " .  $destination . PHP_EOL . " - Error message: " . $e->getMessage() . PHP_EOL);
+                        }                  
+                    }
+                catch (Exception $e)
+                    {
+                    echo " - ERROR: failed to delete file from source. Please check correct permissions on: " .  $syncdir . "/" . $path . PHP_EOL . " - Error message: "  . $e->getMessage() . PHP_EOL;
+                    return false;
+                    }
+               
+                $GLOBALS["use_error_exception"] = $use_error_exception_cache;
                 }
             }
         }
