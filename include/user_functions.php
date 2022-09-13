@@ -971,8 +971,8 @@ function email_reset_link($email,$newuser=false)
  */
 function auto_create_user_account($hash="")
     {
-    global $applicationname, $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash,$defaultlanguage;
+    global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $account_request_send_confirmation_email_to_requester, $applicationname;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -987,7 +987,7 @@ function auto_create_user_account($hash="")
 
     if ($registration_group_select)
         {
-        $usergroup=getval("usergroup","",true);
+        $usergroup=getval("usergroup",0,true);
         # Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
         if (ps_value("SELECT allow_registration_selection value FROM usergroup WHERE ref = ?",["i",$usergroup],0)!=1)
             {
@@ -1162,12 +1162,24 @@ function auto_create_user_account($hash="")
             }
         $message->append_text("lang_userrequestnotification3");
         $message->append_text("<br/><br/>" . $templatevars['linktouser']);
-        $message->user_preference = "user_pref_user_management_notifications";
+        $message->user_preference =  [
+            "user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true],
+            "actions_account_requests"=>["requiredvalue"=>false,"default"=>true],
+            ];
         $message->url = $url;
         $message->template = "account_request";
         $message->templatevars = $templatevars;
         $message->eventdata = $eventdata;
         send_user_notification($approval_notify_users,$message);
+        }
+
+    // Send a confirmation e-mail to requester
+    if($account_request_send_confirmation_email_to_requester)
+        {
+        send_mail(
+            $email,
+            "{$applicationname}: {$lang['account_request_label']}",
+            $lang['account_request_confirmation_email_to_requester']);
         }
 
     return true;
@@ -1183,8 +1195,8 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
-           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$defaultlanguage;
+    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_note,
+           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$user_account_auto_creation;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getval('name', ''));
@@ -1218,7 +1230,7 @@ function email_user_request()
         $message->append_text($customContents . "<br/><br/>");
         }
     $message->append_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
-    $message->user_preference = "user_pref_user_management_notifications";
+    $message->user_preference = ["user_pref_user_management_notifications",["requiredvalue"=>true,"default"=>true]];
     $message->url = $baseurl . "/pages/team/team_user.php";
     send_user_notification($approval_notify_users,$message);
 

@@ -9,7 +9,7 @@ class ResourceSpaceUserNotification
     {   
     /**
      * @var array $message_parts 
-     * Array of message text components and optional find/repalce arrays for language strings
+     * Array of message text components and optional find/replace arrays for language strings
      */
     private $message_parts = [];
 
@@ -35,7 +35,12 @@ class ResourceSpaceUserNotification
     public $templatevars;
 
      /**
-     * @var string $user_preference  Optional user preference to check for when sending notification e.g. user_pref_resource_access_notifications, user_pref_system_management_notifications,     user_pref_user_management_notifications,     user_pref_resource_notifications
+     * @var array $user_preference  Optional array of (boolean only) user preferences, with required and default values to check for when sending notification e.g.
+     * ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]]
+     * or
+     * ["user_pref_system_management_notifications" => true]
+     * 
+     * All preferences must be set to the required values for the notification to be sent
      * 
      */
     public $user_preference;
@@ -109,7 +114,7 @@ class ResourceSpaceUserNotification
         // Loop in reverse order so that the parts get ordered correctly at start
         for($n=count($textarr);$n--;$n>=0)
             {
-            array_unshift($this->message_parts,$textarr[0], $textarr[1], $textarr[2]);
+            array_unshift($this->message_parts,$textarr[$n]);
             }
         }
 
@@ -885,8 +890,7 @@ function send_user_message($users,$text)
  */
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
-    global $userref, $lang, $plugins, $header_colour_style_override, $admin_resource_access_notifications,
-    $user_account_auto_creation;
+    global $userref, $lang, $plugins, $header_colour_style_override;
 
     // Need to global $applicationname as it is used inside the lang files
     global $applicationname;
@@ -912,50 +916,33 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             {
             continue;
             }
-        $preference = $notifymessage->user_preference;
-        if($preference != "")
+        
+        $send_message=true;
+        // Check if preferences should prevent the notification from being sent
+        if(isset($notifymessage->user_preference) && is_array($notifymessage->user_preference))
             {
-            $default = null;
-            switch ($preference)
+            foreach($notifymessage->user_preference as $preference=>$vals)
                 {
-                // Don't send if an action will also be created
-                case "user_pref_resource_access_notifications";     
-                get_config_option($userdetails['ref'],'actions_resource_requests', $actions_set,true);
-                    if($actions_set)
-                        { 
-                        debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
-                        continue 2;
-                        }
-                    // Need to ensure this won't get the default global setting for the requesting user
-                    $default = $admin_resource_access_notifications;
-                    break;
-
-                case "user_pref_user_management_notifications";
-                    get_config_option($userdetails['ref'],'actions_account_requests', $actions_set,true);
-                    get_config_option($userdetails['ref'],'actions_approve_hide_groups', $skipgroups,"");                    
-                    $new_user_group = $notifymessage->eventdata["extra"]["usergroup"] ?? 0;
-                    // Skip if user has actions set and account has been created
-                    if($actions_set && $user_account_auto_creation && !in_array($new_user_group,explode(",",$skipgroups)))
+                if($preference != "")
+                    {
+                    $requiredvalue  = (bool)$vals["requiredvalue"];
+                    $default        = (bool)$vals["default"];
+                    get_config_option($userdetails['ref'],$preference, $check_pref,$default);
+                    debug(" - Required preference: " . $preference . " = " . ($requiredvalue ? "TRUE" : "FALSE"));
+                    debug(" - User preference value: " . $preference . " = " . ($check_pref ? "TRUE" : "FALSE"));
+                    if($check_pref != $requiredvalue)
                         {
-                        debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
-                        continue 2;
+                        debug("Skipping notification to user #" . $userdetails['ref']);
+                        $send_message=false;                        
                         }
-                    break;
-
-                default;
-                    break;
+                    }
                 }
-            
-            get_config_option($userdetails['ref'],$preference, $send_message,$default);
-
-            if($send_message==false)
-                {
-                debug("Skipping notification to user #" . $userdetails['ref'] . " based on " . $notifymessage->user_preference . " : " . print_r($send_message,true));
-                continue;
-                }
-            debug("Sending notification to user #" . $userdetails["ref"]);
             }
-
+        if($send_message==false)
+            {
+            continue;
+            }
+        debug("Sending notification to user #" . $userdetails["ref"]);
         get_config_option($userdetails['ref'],'email_user_notifications', $send_email);
         if(!isset($userlanguages[$userdetails['lang']]))
             {

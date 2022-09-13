@@ -42,7 +42,7 @@ function skip_mail($imap,$current_message,$note,$mail=false)
         $message->set_text($note);
         $message->set_subject($applicationname." - ");
         $message->append_subject("lang_checkmail_mail_skipped");
-        $message->user_preference = "user_pref_system_management_notifications";
+        $message->user_preference = ["user_pref_system_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
         $message->url =  $baseurl . "/plugins/checkmail/pages/setup.php";
         send_user_notification($adminusers,$message);
         }

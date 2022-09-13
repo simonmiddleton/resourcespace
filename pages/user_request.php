@@ -103,7 +103,7 @@ if (getval("save","")!="")
         # E-mail is unique
 
         if ($user_account_auto_creation)
-            {	
+            {
             # Automatically create a new user account
             $success=auto_create_user_account(md5($usercode . $spamtime));
             if($success!==true && !$account_email_exists_note)
