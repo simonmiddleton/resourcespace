@@ -2862,8 +2862,31 @@ function get_featured_collection_resources(array $c, array $ctx)
         $fcrescount = count($fcresources);
         if($fcrescount > 0)
             {
-            $subquery["where"] = " WHERE r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
-            $subquery_params = array_merge($rca_join_params,ps_param_fill($fcresources,"i"), $rca_where_params);
+            $chunks = [$fcresources];
+            // Large numbers of query parameters can cause errors so chunking may be required for larger collections.
+            if($fcrescount > 20000)
+                {
+                $chunks = array_chunk($fcresources, 20000);
+                }              
+            $fc_resources = [];  
+            $subquery["join"] = implode(" ", $subquery["join"]);
+            foreach($chunks as $fcresources)
+                {
+                $subquery["where"] = " WHERE r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
+                $subquery_params = array_merge($rca_join_params,ps_param_fill($fcresources,"i"), $rca_where_params);
+                $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
+                $subquery_params = array_merge($subquery_params,$fc_permissions_where_params);
+                
+                $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+                    implode(" ", $subquery),
+                    $union,
+                    sql_limit(null, $limit)
+                );
+            
+                $fc_resources = array_merge($fc_resources, ps_array($sql,array_merge($subquery_params,$unionparams),"themeimage"));
+                }
+                $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
+                return $fc_resources;
             }
         }
 
