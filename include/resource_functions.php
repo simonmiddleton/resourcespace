@@ -4947,12 +4947,12 @@ function get_resource_access($resource)
         if(is_int_loose($userderestrictfilter) && $userderestrictfilter > 0)
             {
             $matchedfilter = filter_check($userderestrictfilter, get_resource_nodes($ref));
-            }
-        if($matchedfilter)
-            {
-            $access=0;
-            $customgroupaccess = true;
-            }
+            if($matchedfilter)
+                {
+                $access=0;
+                $customgroupaccess = true;
+                }
+            }        
         }
 
 	return (int) $access;
