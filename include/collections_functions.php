@@ -3496,7 +3496,7 @@ function get_collection_log($collection, $fetchrows = -1)
         array("i",$collection)
     );
 
-    $log = sql_limit_with_total_count($log_query,$fetchrows,NULL);
+    $log = sql_limit_with_total_count($log_query,$fetchrows,0,false,NULL);
 
     return $log;
     }
