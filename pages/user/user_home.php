@@ -81,7 +81,7 @@ $introtext=text("introtext");
             
 		if($home_dash && checkPermission_dashmanage())
 			{ ?>
-			<li><a id='user_dash_edit_link'href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php"	onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-grip"></i><br /><?php echo $lang["manage_own_dash"];?></a></li>
+			<li><a id='user_dash_edit_link'href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php"	onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-grip"></i><br /><?php echo $lang["dash"];?></a></li>
 			<?php
 			}
 		if($user_preferences)
