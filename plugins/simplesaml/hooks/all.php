@@ -289,7 +289,7 @@ function HookSimplesamlAllProvideusercredentials()
                 }
 
             // Update hash if not logged on in last day
-            $lastactive = strtotime($currentuser[0]["last_active"]);
+            $lastactive = strtotime((string)$currentuser[0]["last_active"]);
             if($lastactive < date(time() - (60*60*24)))
                 {
                 $update_hash = true;
