@@ -1084,13 +1084,13 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     &nbsp;|&nbsp;<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
                     if($resources_count > $search_map_max_results)
                         {
-                        echo "return false;";
+                        echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
                         }
                     else
                         {
                         echo "return " . ($modal ? 'Modal' : 'CentralSpace') . "Load(this);";
                         }
-                    ?>"><?php echo $resources_count > $search_map_max_results ? $lang['search_results_overlimit'] : $lang['maptitle'] ?></a><?php
+                    ?>"><?php echo $lang['maptitle'] ?></a><?php
                     }
                 }
             }
