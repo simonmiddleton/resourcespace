@@ -331,7 +331,7 @@ function simplesaml_generate_keypair($dn)
  */
 function get_saml_sp_name()
     {
-    $default_sp_name = 'default-sp';
+    $default_sp_name = 'resourcespace-sp';
     $sp_name = $GLOBALS['simplesaml_sp'] ?? $default_sp_name;
     return $sp_name !== $default_sp_name ? $sp_name : 'resourcespace-sp';
     }
