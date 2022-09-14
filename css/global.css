@@ -185,6 +185,7 @@ select::-ms-expand
 .pageline{border-bottom: 1px solid #d7d7d7;  margin-right:10px;margin-left:5px;}
 .DisplayNone { display: none !important; }
 .AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
+.PointerEventsNone { pointer-events: none; }
 
 /* General Form tags */
 .checkoption {vertical-align: top;display: inline-block;width: 195px;margin: 2px; *display:inline;*zoom: 1;}
