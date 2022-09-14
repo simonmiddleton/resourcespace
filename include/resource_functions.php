@@ -7609,7 +7609,7 @@ function purchase_set_size($collection,$resource,$size,$price)
  */
 function payment_set_complete($collection)
     {
-    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$lang,$currency_symbol;
+    global $applicationname,$baseurl,$userref,$username,$admin_resource_access_notifications,$userfullname,$lang,$currency_symbol;
     // Mark items in the collection as paid so they can be downloaded.
     ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
 
@@ -7652,7 +7652,7 @@ function payment_set_complete($collection)
         {
         $notifymessage->append_text($summarypart);
         }
-    $notifymessage->user_preference = "user_pref_resource_access_notifications";
+    $notifymessage->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
     $notifymessage->set_subject("lang_purchase_complete_email_admin");
     $notifymessage->url = $baseurl . "/?c=" . $collection;
     send_user_notification($notify_users,$notifymessage);

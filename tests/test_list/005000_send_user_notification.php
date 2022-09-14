@@ -28,7 +28,7 @@ $message->set_text($text);
 // Append plain text
 $message->append_text(" : appended text");
 
-$message->user_preference = "user_pref_system_management_notifications";
+$message->user_preference =  ["user_pref_system_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
 $message->url = $msgurl;
 
 $result = send_user_notification([$notifyuser],$message);

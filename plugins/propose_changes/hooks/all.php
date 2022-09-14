@@ -5,12 +5,7 @@ function HookPropose_changesAllAddtoactions()
 	global $actions_propose_changes;
 	if($actions_propose_changes)
 		{
-        $alleditable_query = new PreparedStatementQuery();  
-    
-        # TODO Adjust return from do_search() after it is ported to return an object
-        # FROM: $alleditable_query->sql=do_search(
-        # TO: $alleditable_query=do_search(
-		$alleditable_query->sql=do_search("","","",0,-1,"",false,0,false,false,"",false,true, true, true,true);
+        $alleditable_query=do_search("","","",0,-1,"",false,0,false,false,"",false,true, true, true,true);
         
         $alleditable_changes_query= new PreparedStatementQuery();  
         

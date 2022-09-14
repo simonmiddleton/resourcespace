@@ -266,7 +266,7 @@ function save_proposed_changes($ref)
                     if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                         {
                         # Check that date hasn't only changed by adding seconds value
-                        if (trim($field_value).":00" == trim($val))
+                        if (trim((string) $field_value).":00" == trim($val))
                             {
                             continue;    
                             }
