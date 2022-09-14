@@ -1430,7 +1430,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                   ORDER BY $order_by";
 
         $sql->parameters = array_merge($sql_join->parameters,["d",$bl[0],"d",$tr[0],"d",$bl[1],"d",$tr[1]],$sql_filter->parameters);
-        $sql = $sql_prefix . $sql->sql . $sql_suffix;
+        $sql->sql = $sql_prefix . $sql->sql . $sql_suffix;
         }
 
     # Similar to a colour by key
