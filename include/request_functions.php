@@ -114,7 +114,7 @@ function save_request($request)
         $approvemessage->set_subject($applicationname . ": ");
         $approvemessage->append_subject("lang_requestcollection");
         $approvemessage->append_subject(" - ");;
-        $approvemessage->append_subject("lang_resourcerequeststatus2");
+        $approvemessage->append_subject("lang_resourcerequeststatus1");
         $approvemessage->set_text("lang_requestapprovedmail");
         $approvemessage->append_text("<br/><br/>");
         $approvemessage->append_text("lang_approvalreason");
@@ -144,7 +144,7 @@ function save_request($request)
         message_remove_related(MANAGED_REQUEST,$request);
         }
 
-    if ($oldstatus!=$status && $status==2)  
+    elseif ($oldstatus!=$status && $status==2)  
         {
         # --------------- DECLINED -------------
         # Send declined e-mail
@@ -781,7 +781,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->append_text("lang_username");
         $admin_notify_message->append_text(": " . $username . "<br/>");
         $admin_notify_message->append_text_multi($message->get_text(true));
-        $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true],["default"=>$admin_resource_access_notifications]];
+        $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
         $admin_notify_message->url = $templatevars['requesturl'];
         $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
         if($notify_manage_request_admin)
@@ -835,7 +835,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $admin_notify_message->append_subject("lang_requestcollection");
             $admin_notify_message->append_subject(" - " . $ref);
             $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
-            $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true],["default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
+            $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
             send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }
