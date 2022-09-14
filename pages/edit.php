@@ -306,7 +306,7 @@ if($editsearch)
     $items = $all_resource_refs;
 
     # Establish a list of resource types which will be involved in this edit
-    $items_resource_types = array_unique(array_column($items,"resource_type"));
+    $items_resource_types = array_unique(array_column($edititems,"resource_type"));
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
