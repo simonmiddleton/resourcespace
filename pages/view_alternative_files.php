@@ -58,9 +58,10 @@ if ($alt_access)
                 }
             }
 
-        $css_no_pointer_events_class = ($alt_pre != '' && $alternative_file_previews_mouseover ? ' PointerEventsNone' : '');
+        $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
+        $css_PointerEventsNone = $enable_alt_file_preview_mouseover ? ' PointerEventsNone' : '';
         ?>
-		<tr class="DownloadDBlend <?php echo $css_no_pointer_events_class; ?>" <?php if ($alt_pre!="" && $alternative_file_previews_mouseover)
+		<tr class="DownloadDBlend" <?php if ($enable_alt_file_preview_mouseover)
             {
             ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_height=jQuery('#previewimage').height();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').height(orig_height);" 
 			  onMouseOut="jQuery('#previewimage').attr('src',orig_preview).attr('height',orig_height);"<?php
@@ -72,7 +73,7 @@ if ($alt_access)
             if ($alt_thm!="")
                 {
                 ?>
-                <div class="AlternativeFileImage" ><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a></div><?php
+                <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>" ><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a></div><?php
                 }
             }
         ?>
