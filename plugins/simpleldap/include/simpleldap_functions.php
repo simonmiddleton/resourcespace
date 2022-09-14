@@ -189,8 +189,7 @@ function simpleldap_authenticate($username,$password)
 
     $result = ldap_search($ldapconnections, $dn, $filter, $attributes);
 	foreach ($result as $value) 
-        { 
-        debug("LDAP - search returned value " . $value);
+        {
         debug("LDAP - found " . ldap_count_entries($ds,$value) . " entries");
         if(ldap_count_entries($ds,$value)>0)
             { 
