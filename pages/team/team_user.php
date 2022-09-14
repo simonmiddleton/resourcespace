@@ -6,7 +6,6 @@
  * @Subpackage Pages_Team
  */
 include "../../include/db.php";
-
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
 
 $offset=getval("offset",0,true);
@@ -216,7 +215,7 @@ include "../../include/header.php";
         parse_str($url_parse['query'], $url_qs);
         }
 
-    for ($n=$offset;(($n<count($users)) && ($n<($offset+$per_page)));$n++)
+    for($n = 0; ($n < count($users) && $n < ($offset + $per_page)); $n++)
         {
         $team_user_edit_params = array(
             'ref' => $users[$n]["ref"],
@@ -328,9 +327,4 @@ for ($n=0;$n<count($active);$n++) {if($n>0) {echo", ";}echo "<b><a href='" . $ba
 ?>
 </div><div class="clearerleft"> </div></div></div>	
 <?php } // end hook("replaceusersonline")
-?>
-
-
-<?php
 include "../../include/footer.php";
-?>
