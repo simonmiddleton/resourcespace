@@ -1230,7 +1230,7 @@ function email_user_request()
         $message->append_text($customContents . "<br/><br/>");
         }
     $message->append_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
-    $message->user_preference = ["user_pref_user_management_notifications",["requiredvalue"=>true,"default"=>true]];
+    $message->user_preference = ["user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
     $message->url = $baseurl . "/pages/team/team_user.php";
     send_user_notification($approval_notify_users,$message);
 
