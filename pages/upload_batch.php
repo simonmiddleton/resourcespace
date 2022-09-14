@@ -1696,7 +1696,7 @@ if ($alternative!="")
         }
     if ($alternative_file_resource_title)
         { 
-        echo "<h2>" . htmlspecialchars($resource['field'.$view_title_field]) . "</h2><br/>";
+        echo "<h2>" . htmlspecialchars((string) $resource['field'.$view_title_field]) . "</h2><br/>";
         }
     }
 
