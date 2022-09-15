@@ -4869,8 +4869,7 @@ function get_resource_access($resource)
             $groupspecific=$resourcedata['group_access'];
             }
         }
-
-	if (isset($userspecific) && $userspecific != false)
+	if (isset($userspecific) && $userspecific !== false)
 		{
 		$customuseraccess=true;
 		return (int) $userspecific;
