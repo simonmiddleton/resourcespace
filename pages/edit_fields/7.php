@@ -63,7 +63,7 @@ foreach($valid_nodes as $node)
     // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . htmlspecialchars($node['name']) . "</span><br /></div>";
+        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . htmlspecialchars(i18n_get_translated($node['name'])) . "</span><br /></div>";
         }
     }
 
