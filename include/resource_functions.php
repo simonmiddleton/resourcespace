@@ -4870,7 +4870,7 @@ function get_resource_access($resource)
             }
         }
 
-	if (isset($userspecific) && $userspecific!="")
+	if (isset($userspecific) && $userspecific != false)
 		{
 		$customuseraccess=true;
 		return (int) $userspecific;
