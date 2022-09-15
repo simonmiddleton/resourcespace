@@ -4855,16 +4855,16 @@ function get_resource_access($resource)
             $groupspecific=$resourcedata['group_access'];
             }
         }
-	if (isset($userspecific) && $userspecific !== false)
-		{
-		$customuseraccess=true;
-		return (int) $userspecific;
-		}
-	if (isset($groupspecific) && $groupspecific!="")
-		{
-		$customgroupaccess=true;
-		return (int) $groupspecific;
-		}
+    if (isset($userspecific) && $userspecific !== false)
+        {
+        $customuseraccess=true;
+        return (int) $userspecific;
+        }        
+    if (isset($groupspecific) && $groupspecific !== "")
+        {
+        $customgroupaccess=true;
+        return (int) $groupspecific;
+        }
 
 	if (checkperm('T'.$resource_type))
 		{
