@@ -19,6 +19,11 @@ include '../../../include/header.php';
 		'menu' =>  true
         ),
         array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
+        ),
+        array(
             'title' => $lang["rse_workflow_manage_workflow"]
         )
     );
