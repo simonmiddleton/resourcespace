@@ -1215,7 +1215,8 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     $data = ps_query("{$query->sql} {$limit}", $query->parameters);    
     $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
     $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
-    $total = max($total,count($data));
+    $datacount = count($data);
+    $total = $datacount < $rows ? $datacount : max($total,$datacount);
     return ['total' => $total, 'data' => $data];
     }
 
