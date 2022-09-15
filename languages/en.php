@@ -1453,7 +1453,7 @@ $lang["requestapprovedmail"]="Your request has been approved. Click the link bel
 $lang["requestapprovedmail_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view and download the requested resources.<br/><br/><a href='[url]'>[url]</a>";
 
 $lang["requestdeclinedmail"]="Sorry, your request for the resources in the collection below has been declined.";
-$lang["requestdeclined_email"]="[img_headerlogo]<br/><br/>[message]<br/>[expires]<br/><br/>Click the link below to view the requested resources.<br/><br/><a href='[url]'>[url]</a>";
+$lang["requestdeclined_email"]="[img_headerlogo]<br/><br/>[message]<br/><br/>Click the link below to view the requested resources.<br/><br/><a href='[url]'>[url]</a>";
 
 $lang["resourceexpirymail"]="The following resources have expired:";
 $lang['resource_expiry_x_days'] = "A resource that you have previously downloaded expires in %X day(s)"; # %X should be replaced (it's a placeholder)

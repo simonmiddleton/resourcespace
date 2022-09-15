@@ -1060,7 +1060,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="", $files=array())
     {
     # Include footer
-    global $email_footer, $storagedir, $mime_type_by_extension, $email_from;
+    global $header_colour_style_override, $mime_type_by_extension, $email_from;
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
@@ -1161,8 +1161,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     }         
                 else if($placeholder == 'img_headerlogo')
                     {
+                    // Add header image to email if not using template
                     $img_url = get_header_image(true);
-                    $setvalues[$placeholder]  = '<img src="' . $img_url . '"/>';
+                    $img_div_style = "max-height:50px;padding: 5px;";
+                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
+                    $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
                     }
                 else if ($placeholder=="embed_thumbnail")
                     {                    
