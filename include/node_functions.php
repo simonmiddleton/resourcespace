@@ -1981,6 +1981,135 @@ function get_node_tree($parentId = "", array $nodes = array())
 	}
 
 /**
+ * This function returns an array of category tree nodes in the hierarchical sequence defined in manage options
+ * 
+ * @param integer $resource  - the resource against which to check for selected nodes - optional 
+ * @param array   $treefield - the category tree field to be processed 
+ * @param array   $allnodes  - is true if all nodes in the structure are returned, false if only selected nodes are returned
+ * 
+ * @return array  $flatnodes - the array of nodes returned in correct hierarchical order
+ * 
+ */
+function get_cattree_nodes_ordered($resource=null, $treefield, $allnodes=false) {
+
+    $nodeentries = ps_query("SELECT n.ref, n.resource_type_field, n.name, coalesce(n.parent, 0) parent, n.order_by, rn.resource 
+                            FROM node n
+                            LEFT OUTER JOIN resource_node rn on rn.resource = ? and rn.node = n.ref  
+                            WHERE n.resource_type_field=? order by n.parent, n.order_by",array("i",(int)$resource, "i",(int)$treefield));
+
+    # Category trees have no container root, so create one to carry all top level category tree nodes which don't have a parent
+    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null);                                               
+
+    $nodeswithpointers = array(0 => &$rootnode);
+
+    foreach($nodeentries as $nodeentry) {
+        $ref = $nodeentry['ref'];
+        $resource_type_field = $nodeentry['resource_type_field'];
+        $name = $nodeentry['name'];
+        $parent = $nodeentry['parent'];
+        $order_by = $nodeentry['order_by'];
+        $resource = $nodeentry['resource'];
+        # Establish a pointer so that this node will be a child of its parent node
+        $nodeswithpointers[$ref] = &$nodeswithpointers[$parent]['children'][];
+        # Create this node 
+        $nodeswithpointers[$ref] = cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource);
+    }
+
+    # Flatten the tree starting at the root                                                          
+    $flatnodes = cattree_node_flatten($rootnode);
+
+    $returned_nodes=array();
+    foreach($flatnodes as $flatnode) {
+        If ($allnodes || $flatnode['resource']!='') {
+            $returned_nodes[$flatnode['ref']]=$flatnode;
+        }
+    }
+    return $returned_nodes;
+}
+
+/**
+ * This function returns an array of category tree node strings in the hierarchical sequence defined in manage options
+ * The returned strings are i18 translated
+ * 
+ * @param array  $nodesordered      - the array of nodes in correct hierarchical order 
+ * @param array  $strings_are_paths - governs the format of the name returned 
+ *                 True (default) strings are paths to nodes; False strings are the individual node names
+ * 
+ * @return array $strings         - the returned array of node paths or node names
+ * 
+ */
+function get_cattree_node_strings($nodesordered, $strings_are_paths=true) {
+    # If names are not to be returned as paths, just return the individual node names 
+    if (!$strings_are_paths) {
+        $strings_as_names=array();
+        foreach ($nodesordered as $node)
+            {
+            $strings_as_names[]=i18n_get_translated($node["name"]);
+            }
+        return $strings_as_names; 
+    }
+    # Build a string consisting of a comma separated list of individual nodes and paths of consecutive child nodes
+    $strings_as_paths=array();
+    # Establish a list of parents referenced by the nodes
+    $parents_referenced=array_column($nodesordered,'name','parent');
+    # Establish a list of referenced parents which are in the list
+    $parents_listed=array_intersect_key($nodesordered,$parents_referenced);
+
+    # Processing is driven by each leaf node (ie. nodes with no selected children)
+    foreach ($nodesordered as $node){
+        if(!array_key_exists($node['ref'],$parents_listed)) {
+            # This selected node is effectively a leaf node because it has no selected children 
+            # This leaf node is the first entry in the leafpath
+            $leafpath=array(i18n_get_translated($node["name"]));
+            $parenttofind=$node['parent'];
+            # Append consecutive selected ancestors to the leafpath
+            while (isset($parenttofind)) {
+                if($parenttofind==0) { # Ignore root node
+                    $parenttofind=null;
+                    continue; 
+                } 
+                # If current node's parent is listed then append it to the leafpath
+                if (array_key_exists($parenttofind, $parents_listed)) {
+                    $leafpath[]=i18n_get_translated($parents_listed[$parenttofind]['name']);
+                    $parenttofind=$parents_listed[$parenttofind]['parent'];
+                }
+                else {
+                    # Current node's parent is not listed so this leafpath is complete
+                    $parenttofind=null;
+                }
+            }
+            $leafpathstring=implode("/",array_reverse($leafpath));
+            $strings_as_paths[]=$leafpathstring;
+        }
+    }
+    return $strings_as_paths;
+}
+
+# Helper function for building node entries for ordering
+function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource) {
+    return array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name, 
+                'parent' => $parent, 'order_by' => $order_by, 'resource' => $resource, 'children' => array());
+  };
+  
+# Helper function which adds child nodes after each flattened parent node
+function cattree_node_flatten($node) {
+  static $flatten_count=0;
+  # Build node being flattened                                            
+  $flat_element = array('ref' => (string) $node['ref'],
+                        'resource_type_field' => (string) $node['resource_type_field'],
+                        'name' => (string) $node['name'],
+                        'parent' => (string) $node['parent'],
+                        'order_by' => (string) $node['order_by'],
+                        'resource' => (string) $node['resource']);
+  # Append children after flattened node                                                                
+  $cumulative_entries = array($flat_element);
+  foreach($node['children'] as $child) {
+    $cumulative_entries = array_merge($cumulative_entries, cattree_node_flatten($child));
+  }
+  return $cumulative_entries;
+}
+
+/**
  * This function returns an array of strings that represent the full paths to each tree node passed
  * 
  * @param array $resource_nodes - node tree to parse 

@@ -4162,11 +4162,11 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		}
 	
         if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
-        {
-        $treenodes = get_resource_nodes($ref, $field["ref"], true);
-        $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(", ",$treetext_arr);        
-        }
+            {
+            $treenodes = get_cattree_nodes_ordered($ref, $field["ref"], false); # True means get all nodes; False means get selected nodes
+            $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
+            $value = implode(", ",$treenodenames);        
+            }
     
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
