@@ -4818,7 +4818,7 @@ function render_featured_collection(array $ctx, array $fc)
             
     $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
-    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
+    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime((string)$fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
         {
         $html_contents_h2 .= sprintf(' <div class="NewFlag">%s</div>', htmlspecialchars($lang['newflag']));
         }

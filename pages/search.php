@@ -1300,7 +1300,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 <?php echo i18n_get_collection_name($collectiondata); ?>
                 </h1>
             <?php
-            if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim($collectiondata['description']) != "")
+            if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim((string)$collectiondata['description']) != "")
                 {
                 echo "<p>" . nl2br(htmlspecialchars(i18n_get_translated($collectiondata['description']))) . "</p>";
                 }
