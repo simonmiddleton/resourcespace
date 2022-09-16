@@ -5872,7 +5872,7 @@ function allow_collection_share(array $c)
             || checkperm ("g") 
             || collection_min_access($c["ref"]) <= RESOURCE_ACCESS_RESTRICTED
             || $restricted_share)
-        && !in_array($c['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION])
+        && !in_array($c['type'],[COLLECTION_TYPE_REQUEST])
     )
         {
         return true;
