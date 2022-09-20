@@ -1070,30 +1070,32 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             }
             
         }
-        // set page number
-        if (isset($pagecount) && $alternative!=-1){
-            ps_query("UPDATE resource_alt_files SET page_count=? where ref=?",array("i",$pagecount, "i",$alternative));
+        // set page number and record filesize
+        $filesize = filesize_unlimited($file);
+        if (isset($pagecount) && $alternative != -1)
+            {
+            ps_query("UPDATE resource_alt_files SET page_count = ?, file_size = ? where ref = ?", array("i", $pagecount, "i", $filesize, "i", $alternative));
             }
-        else if (isset($pagecount)){
-
+        else if (isset($pagecount))
+            {
             $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = ?";
-            $query = ps_value($sql,array("i",$ref),0);
+            $query = ps_value($sql, array("i", $ref), 0);
 
             if($query == 0)
                 {
-                ps_query("INSERT INTO resource_dimensions (resource, page_count) VALUES (?, ?)",array("i",$ref,"i",$pagecount));
+                ps_query("INSERT INTO resource_dimensions (resource, page_count, file_size) VALUES (?, ?, ?)", array("i", $ref, "i", $pagecount, "i", $filesize));
                 }
             else
                 {
-                ps_query("UPDATE resource_dimensions SET page_count = ? WHERE resource = ?",array("i",$pagecount,"i",$ref));
-                }            
+                ps_query("UPDATE resource_dimensions SET page_count = ?, file_size = ? WHERE resource = ?", array("i", $pagecount, "i", $filesize, "i", $ref));
+                }
             }
-    }
+        }
     else
         {
         # Not a PDF file, so single extraction only.
-            create_previews_using_im($ref,false,$extension,$previewonly,false,$alternative,$ingested, $onlysizes);
-            }
+        create_previews_using_im($ref, false, $extension, $previewonly, false, $alternative, $ingested, $onlysizes);
+        }
     }
 
 $non_image_types = config_merge_non_image_types();
