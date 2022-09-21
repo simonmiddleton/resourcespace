@@ -103,7 +103,7 @@ function get_checksum($path, $forcefull = false)
     if ($file_checksums_50k && !$forcefull)
         {
         # Fetch the string used to generate the unique ID
-        $use=filesize_unlimited($path) . "_" . file_get_contents($path,null,null,0,50000);
+        $use=filesize_unlimited($path) . "_" . file_get_contents($path,false,null,0,50000);
         $checksum=md5($use);
         }
     else
