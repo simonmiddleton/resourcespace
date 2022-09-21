@@ -4,17 +4,23 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
     {
     global $baseurl, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset, $download_usage;
 
-    $showterms=false;
     $additional_params = array();
 
-    $resource_value_to_test=trim( get_data_by_field($resource['ref'],$conditional_terms_field) );
+    $conditional_terms_fields_idx = array_search($conditional_terms_field, array_column($fields, 'ref'));
+    $conditional_terms_field_info = $conditional_terms_fields_idx !== false ? $fields[$conditional_terms_fields_idx] : [];
 
-    if( $conditional_terms_value==$resource_value_to_test )
+    $conditional_terms_resource_field_values = get_data_by_field($resource['ref'], $conditional_terms_field, false);
+    if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
         {
-        $showterms=true;
+        // Conditions on a category tree value should always use the full path notation (e.g A/A.1/A.1.2)
+        $resource_values_to_test = get_cattree_node_strings($conditional_terms_resource_field_values, true);
+        }
+    else
+        {
+        $resource_values_to_test = array_column($conditional_terms_resource_field_values, 'name');
         }
 
-    if(!$showterms)
+    if(!in_array($conditional_terms_value, $resource_values_to_test))
         {
         return false;
         }

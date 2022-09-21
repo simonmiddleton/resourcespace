@@ -155,8 +155,8 @@ if (!is_array($results) || count($results)==0 || $results[0]["resource_type"] !=
     }
 
 // Test F - $staticsync_mapped_category_tree
-$treedata = get_data_by_field($resid,$sync_tree_field);
-if(!is_array($treedata) || count($treedata) != 1 || !in_array("test_folder/featured",$treedata))
+$treedata = get_data_by_field($resid, $sync_tree_field, false);
+if(!is_array($treedata) || count($treedata) != 2 || "test_folder/featured" !== implode('/', array_column($treedata, 'name')))
     {
     echo "Test F failed: \$staticsync_mapped_category_tree failed - ";
     return false;

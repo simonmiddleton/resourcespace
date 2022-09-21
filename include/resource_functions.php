@@ -7316,32 +7316,54 @@ function get_field_options($ref,$nodeinfo = false)
 * @param integer        $resource Resource ID. Use NULL to retrieve all resources
 *                                 records for the specified field
 * @param integer|string $field    Resource type field ID. Can also be a shortname.
+* @param bool           $flatten  Should a fixed list field value be flatten to a simple string? Set to FALSE to get the list of nodes
 *
-* @return string|array
+* @return string|array|Generator  Generator is returned for the old behaviour of returning field data for all resources
+*                                 (for performance). Shouldn't be an issue as long as it's used in foreach loops
 */
-function get_data_by_field($resource, $field)
+function get_data_by_field($resource, $field, bool $flatten = true)
     {
-    global $rt_fieldtype_cache;
+    global $get_data_by_field_fct_field_cache;
 
-    $return              = '';
-    $resource_type_field = $field;
-    // Update cache
-    if(!isset($rt_fieldtype_cache[$field]))
-        {
-        $rt_fieldtype_cache[$field] = ps_value("SELECT type AS `value` FROM resource_type_field WHERE ref = ? OR name = ?", ["i",$resource_type_field,"i",$resource_type_field],null, "schema");
-        }
-    $resnodes = get_resource_nodes($resource, $resource_type_field, TRUE);
+    $fetch_all_resources = is_null($resource);
 
-    if($rt_fieldtype_cache[$field] == FIELD_TYPE_CATEGORY_TREE)
+    if(!isset($get_data_by_field_fct_field_cache[$field]))
         {
-        $return = get_tree_strings($resnodes,false);
-        }
-    else
-        {
-        $return = implode(', ', array_column($resnodes, 'name'));
+        $rtf_info = ps_query(
+            'SELECT ref, type FROM resource_type_field WHERE ref = ? OR name = ?',
+            ['i',$field, 'i',$field],
+            'schema'
+        );
+
+        if(empty($rtf_info))
+            {
+            return $fetch_all_resources ? [] : '';
+            }
+
+        $get_data_by_field_fct_field_cache[$field] = $rtf_info[0];
         }
 
-    return $return;
+    $rtf_ref = $get_data_by_field_fct_field_cache[$field]['ref'];
+    $rtf_type = $get_data_by_field_fct_field_cache[$field]['type'];
+
+    if(!$fetch_all_resources && $rtf_type == FIELD_TYPE_CATEGORY_TREE)
+        {
+        $tree_nodes = get_cattree_nodes_ordered($rtf_ref, $resource, false);
+        $tree_nodes_strings = get_cattree_node_strings($tree_nodes, false);
+        return $flatten ? implode(', ', $tree_nodes_strings) : $tree_nodes;
+        }
+    else if(!$fetch_all_resources)
+        {
+        $resource_data_for_field = get_resource_nodes($resource, $rtf_ref, true);
+        return $flatten ? implode(', ', array_column($resource_data_for_field, 'name')) : $resource_data_for_field;
+        }
+    // Old behaviour from when we had resource_data (before r19945) - return the metadata field values for all resources
+    else if($fetch_all_resources && in_array($rtf_type, NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES))
+        {
+        return get_resources_nodes_by_rtf($rtf_ref);
+        }
+
+    return '';
     }
 
 function get_all_image_sizes($internal=false,$restricted=false)

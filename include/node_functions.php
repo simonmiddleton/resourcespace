@@ -1506,6 +1506,40 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
     return ps_array($query, $params);
     }
 
+
+/**
+ * Get all resource nodes associated for a specific resource type field.
+ * 
+ * @param integer $ref Resource type field ID
+ * 
+ * @return Generator
+ */
+function get_resources_nodes_by_rtf(int $ref)
+    {
+    $offset = null;
+    do
+        {
+        $rows = 1000;
+        $sql_limit = sql_limit($offset, $rows);
+        $offset += $rows;
+
+        $data = ps_query(
+               "SELECT rn.`resource`, rn.node, n.resource_type_field, n.`name` AS `value`
+                  FROM resource_node AS rn
+            INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = ?
+            INNER JOIN resource AS r ON rn.resource = r.ref
+            $sql_limit",
+            ['i', $ref]
+        );
+        foreach($data as $page_data)
+            {
+            yield $page_data;
+            }
+        }
+    while (!empty($data) && count($data) === $rows);
+    }
+
+
 /**
 * Delete nodes in array from resource
 *
