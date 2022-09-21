@@ -2995,7 +2995,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         {
         $addfield= $tree_field;
 
-        $treenodes = get_cattree_nodes_ordered($ref, $tree_field["ref"], false); # True means get all nodes; False means get selected nodes
+        $treenodes = get_cattree_nodes_ordered($tree_field["ref"], $ref, false); # True means get all nodes; False means get selected nodes
         $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
 
         // Quoting each element is required for csv export
@@ -3232,7 +3232,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
         // Now for each resource, build an array consisting of all of the paths for the selected nodes
         foreach($getresources as $getresource)
             {
-            $treenodes = get_cattree_nodes_ordered($getresource["ref"], $tree_field["ref"], false); # True means get all nodes; False means get selected nodes
+            $treenodes = get_cattree_nodes_ordered($tree_field["ref"], $getresource["ref"], false); # True means get all nodes; False means get selected nodes
             $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
 
             $valstring = $csvexport ? ("\"" . implode("\",\"",$treenodenames) . "\"") : implode(",",$treenodenames);

@@ -4163,7 +4163,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
         if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
             {
-            $treenodes = get_cattree_nodes_ordered($ref, $field["ref"], false); # True means get all nodes; False means get selected nodes
+            $treenodes = get_cattree_nodes_ordered($field["ref"], $ref, false); # True means get all nodes; False means get selected nodes
             $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
             $value = implode(", ",$treenodenames);        
             }

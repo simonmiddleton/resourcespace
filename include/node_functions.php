@@ -1983,14 +1983,14 @@ function get_node_tree($parentId = "", array $nodes = array())
 /**
  * This function returns an array of category tree nodes in the hierarchical sequence defined in manage options
  * 
- * @param integer $resource  - the resource against which to check for selected nodes - optional 
  * @param array   $treefield - the category tree field to be processed 
+ * @param integer $resource  - the resource against which to check for selected nodes - optional 
  * @param array   $allnodes  - is true if all nodes in the structure are returned, false if only selected nodes are returned
  * 
  * @return array  $flatnodes - the array of nodes returned in correct hierarchical order
  * 
  */
-function get_cattree_nodes_ordered($resource=null, $treefield, $allnodes=false) {
+function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) {
 
     $nodeentries = ps_query("SELECT n.ref, n.resource_type_field, n.name, coalesce(n.parent, 0) parent, n.order_by, rn.resource 
                             FROM node n
