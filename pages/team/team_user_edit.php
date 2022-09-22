@@ -417,8 +417,8 @@ hook("usertool")?>
 
 <?php 
 if ($user["approved"]==1 && !hook("loginasuser"))
-    { 
-    if (($user['account_expires'] == "" || strtotime($user['account_expires']) > time()) && ($password_expiry == 0 || ($password_expiry > 0 && strtotime($user['password_last_change']) != "" && (time()-strtotime($user['password_last_change'])) < $password_expiry*60*60*24)))
+    {
+    if (trim((string)$user["origin"]) != "" || (($user['account_expires'] == "" || strtotime($user['account_expires']) > time()) && ($password_expiry == 0 || ($password_expiry > 0 && strtotime($user['password_last_change']) != "" && (time()-strtotime($user['password_last_change'])) < $password_expiry*60*60*24))))
         {
         ?>
         <div class="Question"><label><?php echo $lang["login"]?></label>
