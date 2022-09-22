@@ -36,7 +36,7 @@ foreach($featured_collections as $collection)
             }
         $new_fc_name = $collection[$col];
 
-        logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent {$parent_sql_val}");
+        logScript("Processing collection #{$collection["ref"]} - column {$col} = '{$collection[$col]}' and parent {$parent_sql}");
 
         $fc_ref = ps_value(
             "SELECT ref AS `value` FROM collection WHERE `name` = ? AND public = 1 AND `type` = ? AND parent " . $parent_sql,

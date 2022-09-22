@@ -9,7 +9,7 @@ if(!isset($sysvars["EDIT_FILTER_MIGRATION"]) || $sysvars["EDIT_FILTER_MIGRATION"
         {
         foreach(array("edit_filter","derestrict_filter") as $filtertype)
             {
-            $filtertext = trim($group[$filtertype]);
+            $filtertext = trim((string) $group[$filtertype]);
             if($filtertext == "")
                 {
                 continue;
@@ -37,5 +37,4 @@ if(!isset($sysvars["EDIT_FILTER_MIGRATION"]) || $sysvars["EDIT_FILTER_MIGRATION"
             }
         }
     set_sysvar("EDIT_FILTER_MIGRATION",1);
-    }
-    
+    }    
