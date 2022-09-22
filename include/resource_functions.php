@@ -5048,7 +5048,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         else
             {
             # Return the restricted access setting for this resource type.
-            return (ps_value("select allow_restricted value from preview_size where id=?",array("i",$size),0)==1);
+            return (ps_value("select allow_restricted value from preview_size where id = ?", array("s", $size), 0) == 1);
             }
         }
 
