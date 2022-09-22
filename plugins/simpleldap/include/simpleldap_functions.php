@@ -256,7 +256,7 @@ function simpleldap_authenticate($username,$password)
                         // that some ldap servers seem to return a result count as the first value
                         $newdept = simpleldap_to_utf8($usermemberofgroup);
                         $usermemberof[]=$newdept;
-                        ps_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (?, NULL)", ['i', $newdept]);
+                        ps_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (?, NULL)", ['s', $newdept]);
                         } 
                     }
                 }
