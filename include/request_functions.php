@@ -130,6 +130,10 @@ function save_request($request)
             $approvemessage->append_text(" " . nicedate($expires) . "\n");
             $templatevars["expires"] = "<br/><br/>" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";;
             }
+        else
+            {
+            $templatevars["expires"] = '';  
+            }
         $approvemessage->template = "requestapprovedmail_email";
         $approvemessage->templatevars = $templatevars;
         send_user_notification([$currentrequest["user"]],$approvemessage);
