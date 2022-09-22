@@ -71,20 +71,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         if($csv_set_options["csv_update_col"] && $csv_set_options["csv_update_col_id"] > 0)
             {
             $replaceresources = do_search("!collection" . (int)$csv_set_options["csv_update_col_id"],'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
-            }
-        else
-            {
-            // Limit resources to replace to those that user can edit
-            $replaceresources = do_search('','','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
+            if(!is_array($replaceresources))
+                {
+                array_push ($messages,"Error: No editable resources found");
+                return false;
+                }
+    
+            $replaceresources = array_column($replaceresources,"ref");
             }
             
-        if(!is_array($replaceresources))
-            {
-            array_push ($messages,"Error: No editable resources found");
-            return false;
-            }
-
-        $replaceresources = array_column($replaceresources,"ref");
         }
 
 	# ----- start of header row checks -----
@@ -314,19 +309,31 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         // Find existing or create new resources to be updated
         if($csv_set_options["update_existing"])
             {
+            $editable=false;
             if($csv_set_options["id_column_match"] == 0)
                 {
                 // Matching on resource ID
                 $id_column = isset($csv_set_options["id_column"]) ? $csv_set_options["id_column"] : "";
                 $resource_id = isset($line[$id_column]) ? $line[$id_column] : "";
-                if(!in_array($resource_id,$replaceresources))
+                // Check if ok to edit this resource
+                if(isset($replaceresources))
+                    {
+                    if(in_array($resource_id,$replaceresources))
+                        {
+                        $editable=true;
+                        }
+                    }
+                else
+                    {
+                    $editable = get_edit_access($resource_id);
+                    }
+                if(!$editable)
                     {
                     $logtext = "Error: Invalid resource id: '" . $resource_id . "' specified in line " .$line_count;
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
-                    
-                                $error_count++;
-                                continue;
+                    $error_count++;
+                    continue;
                     }
                 $resourcerefs = array((int) $resource_id);
                 }
@@ -362,8 +369,17 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     $error_count++;
                     continue;
                     }
+                
+                if(isset($replaceresources))
+                    {
+                    $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
+                    }
+                else
+                    {
+                    // No collection specified, search has only returned editable resources 
+                    $validmatches = array_column($allmatches,"ref");
+                    }
 
-                $validmatches = array_values(array_intersect(array_column($allmatches,"ref"),$replaceresources));
                 if(count($validmatches) == 0)
                     {
                     $logtext = "Error: No matching resources found matching the identifier " . $match_val . " specified in line " . $line_count;
