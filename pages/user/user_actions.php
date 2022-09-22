@@ -199,7 +199,7 @@ else
 		  $viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
 		  ?>
 			<tr>
-				<td><?php echo nicedate($all_actions[$n]["date"],true); ?></td>
+				<td><?php echo nicedate($all_actions[$n]["date"], true, true, true); ?></td>
 				<?php if ($messages_actions_fullname)
 						{
 						echo "<td>" . strip_tags_and_attributes(tidy_trim(TidyList($all_actions[$n]["user"]),$list_search_results_title_trim)) . "</td>";	
