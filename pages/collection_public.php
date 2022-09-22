@@ -193,7 +193,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
         <?php 
         if (!$collection_public_hide_owner) 
             { ?>
-            <td class="fullname"><?php echo highlightkeywords(htmlspecialchars($collections[$n]["fullname"]),$find)?></td>
+            <td class="fullname"><?php echo highlightkeywords(htmlspecialchars((string) $collections[$n]["fullname"]),$find)?></td>
             <?php 
             } ?>
         <td class="ref"><?php echo highlightkeywords($collections[$n]["ref"],$find)?></td>
