@@ -3456,7 +3456,7 @@ function collection_log($collection,$type,$resource,$notes = "")
     $resource = ($resource ?: null);
     $notes = mb_strcut($notes, 0, 255);
 
-	ps_query("INSERT INTO collection_log (date, user, collection, type, resource, notes) VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"i",$type,"i",$resource,"s",$notes));
+	ps_query("INSERT INTO collection_log (date, user, collection, type, resource, notes) VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"s",$type,"i",$resource,"s",$notes));
     }
 
 /**
