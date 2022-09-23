@@ -221,8 +221,8 @@ if(isset($error))
 	$result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");	
 	?>
 	<div class="Question">
-		<label for="name"><?php echo $lang["smart_collection_result_limit"] ?></label>
-		<input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo htmlspecialchars($result_limit) ?>" />
+		<label for="name"><?php echo htmlspecialchars($lang["smart_collection_result_limit"]); ?></label>
+		<input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo escape_quoted_data((string) $result_limit); ?>" />
 		<div class="clearerleft"> </div>
 	</div>
 	<?php 
