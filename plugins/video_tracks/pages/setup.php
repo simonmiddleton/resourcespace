@@ -18,6 +18,9 @@ $errorfields=array();
 // Save column/field mappings here as we can't do it using standard plugin functions
 if (getval("submit","")!="" || getval("save","")!="" && !$execution_lockout)
 	{
+
+        print_r($_REQUEST);
+
 	// Decode the mappings variable so we can amend it
     if (!array_key_exists('video_tracks_index',$_REQUEST) || !array_key_exists('video_tracks_command',$_REQUEST) || !array_key_exists('video_tracks_extension',$_REQUEST))
         {
@@ -28,12 +31,16 @@ if (getval("submit","")!="" || getval("save","")!="" && !$execution_lockout)
 	$video_tracks_extension = $_REQUEST['video_tracks_extension'];
 
 	// Store in a new array
+
+    print_r($video_tracks_index);
 	for ($i=0; $i < count($video_tracks_index); $i++)
 		{
 		if ($video_tracks_index[$i] <> '')
 			{			
+                debug("BANG 1");
 			if ($video_tracks_command[$i]!="-1")
 				{
+                    debug("BANG 1 " . $video_tracks_command[$i]);
 				$video_tracks_output_formats_new[$video_tracks_index[$i]]["command"]=$video_tracks_command[$i];
 				$video_tracks_output_formats_new[$video_tracks_index[$i]]["extension"]=$video_tracks_extension[$i];
 				}	

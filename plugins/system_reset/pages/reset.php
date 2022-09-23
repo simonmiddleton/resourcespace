@@ -36,6 +36,9 @@ if (getval("submitted","")!="")
             }
         }
 
+    // Recreate tables
+    check_db_structs();
+    set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL, SYSTEM_UPGRADE_LEVEL);
     // Back to login screen
     sleep (5); // Wait for any background DB creation to finish.
     redirect("/login.php");
