@@ -2908,7 +2908,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $restype_params = [];
     if(!$multi)
         {
-        $restypesql = "AND f.resource_type = 0 OR f.resource_type = 999 OR f.resource_type = ?";
+        $restypesql = "AND (f.resource_type = 0 OR f.resource_type = 999 OR f.resource_type = ?)";
         $restype_params[] = "i";$restype_params[] = $rtype;
         }
 
