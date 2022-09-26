@@ -459,7 +459,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .DESC {display: inline;padding-right: 10px;}
 
 .thumbs-file-extension {
-    display: inline-block;
     font-weight: 600;
     background: #ffffffcc;
     border-radius: 3px;
@@ -467,6 +466,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     padding: 3px 4px 1px 4px;
     margin: 3px;
     cursor: default;
+    float: left;
 }
 
 /*Resource Panel layout*/
