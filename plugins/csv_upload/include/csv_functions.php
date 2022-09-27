@@ -134,15 +134,14 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
     if ($field_type == FIELD_TYPE_CATEGORY_TREE)
         {
-        $field_nodes = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
+        $field_nodes = get_nodes($fieldid,'',true);
         $allfields[$fieldid]["nodes"] = $field_nodes;
         $allfields[$fieldid]["node_options"] = get_tree_strings($field_nodes, true);
-
         }
-    elseif (in_array($field_type,$NODE_FIELDS))
+    elseif (in_array($field_type,$FIXED_LIST_FIELD_TYPES))
         {
         // Get all current field options, including translations
-        $field_nodes = get_nodes($fieldid,'', (FIELD_TYPE_CATEGORY_TREE == $field_type));
+        $field_nodes = get_nodes($fieldid,'',false);
         $allfields[$fieldid]["nodes"] = $field_nodes;
         $allfields[$fieldid]["node_options"] = array_column($field_nodes, 'name', 'ref');
 
@@ -179,17 +178,14 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     }
                 }
             }
-            $allfields[$fieldid]["current_options"] =  $currentoptions;  
-
+        $allfields[$fieldid]["current_options"] =  $currentoptions;
         }
     elseif ($allfields[$fieldid]['type']==FIELD_TYPE_DATE_RANGE)
         {
         $field_nodes   = get_nodes($fieldid);
         $allfields[$fieldid]["nodes"] = $field_nodes;
         $allfields[$fieldid]["node_options"] = array_column($field_nodes, 'name', 'ref');
-
         }
-
     }
 
     while ((($line=fgetcsv($file))!==false) && ($error_count<$max_error_count || $max_error_count==0))
@@ -552,7 +548,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     }
 
                 }
-            elseif (in_array($field_type,$NODE_FIELDS))
+            elseif (in_array($field_type,$FIXED_LIST_FIELD_TYPES))
                 {
                 // Get all current field options, including translations
                 
@@ -620,78 +616,75 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     // Check nodes are valid for this field, remove quotes 
                     if('' != $cell_value_item && !in_array($cell_value_item, $currentoptions))
                         {
-                        switch ($field_type)
+                        if($field_type == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
                             {
-                            case (FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) :
-                                # add option
-                                if(checkperm("bdk" . $fieldid))
-                                    {
-                                    $error_count++;
-                                    $logtext = "No permission to add option " . $cell_value_item . " to field: " . $field_name;
-                                    csv_upload_log($logfile,$logtext);
-                                    array_push ($messages,$logtext);
-                                    continue 2;
-                                    }
-                                // Update the field with the new option
-                                if($processcsv)
-                                    {
-                                    $new_node = set_node(null, $fieldid, $cell_value_item, null, null);
-                                    }
-                                else 
-                                    {
-                                    $lastref = ps_value("SELECT MAX(ref) value FROM node", [], 0);
-                                    $new_node  = isset($new_node) ? $new_node + 1 : $lastref + 1;
-                                    $logtext = ($processcsv ? "Added" : "Add") . " new field option to field " . $field_name .  " as node " . $new_node . ", value:'" . $cell_value_item . "'";
-                                    csv_upload_log($logfile,$logtext);
-                                //    array_push ($messages,$logtext);
-                                    }
-                                
-                                $node_trans_arr[$fieldid][$new_node] = array($cell_value_item);
-                                $node_options[$new_node] = $cell_value_item;
-                            break;
-
-                            case (FIELD_TYPE_DATE_RANGE):
-
-                                if(strpos($cell_value,",") !== false)
-                                    {
-                                    $rangedates = explode(",",$cell_value_item);
-                                    }
-                                else
-                                    {    
-                                    $rangedates = explode("/",$cell_value_item);
-                                    }
-
-                                # valid date if empty string returned
-                                $valid_start_date = isset($rangedates[0]) ? check_date_format($rangedates[0]) : "";
-                                $valid_end_date = isset($rangedates[1]) ? check_date_format($rangedates[1]) : "";
-
-                                if($valid_start_date != "" || $valid_end_date != "")
-                                    {
-                                    # raise error - invalid date format
-                                    $error_count++;
-                                    $logtext = "";
-                                    $valid_start_date != "" ? $logtext = $logtext . " - [Start Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_start_date) : $logtext;
-                                    $valid_end_date != "" ? $logtext = $logtext . " - [End Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_end_date) : $logtext;
-                                    csv_upload_log($logfile,$logtext);
-                                    array_push ($messages,$logtext);
-                                    continue 3;
-                                    }
-                            break;
-
-                            default:
-                                # field doesn't allow options to be added so raise error
+                            # add option
+                            if(checkperm("bdk" . $fieldid))
+                                {
                                 $error_count++;
-                                $logtext = " Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
+                                $logtext = "No permission to add option " . $cell_value_item . " to field: " . $field_name;
                                 csv_upload_log($logfile,$logtext);
                                 array_push ($messages,$logtext);
                                 continue 2;
+                                }
+                            // Update the field with the new option
+                            if($processcsv)
+                                {
+                                $new_node = set_node(null, $fieldid, $cell_value_item, null, null);
+                                }
+                            else 
+                                {
+                                $lastref = ps_value("SELECT MAX(ref) value FROM node", [], 0);
+                                $new_node  = isset($new_node) ? $new_node + 1 : $lastref + 1;
+                                $logtext = ($processcsv ? "Added" : "Add") . " new field option to field " . $field_name .  " as node " . $new_node . ", value:'" . $cell_value_item . "'";
+                                csv_upload_log($logfile,$logtext);
+                                array_push ($messages,$logtext);
+                                }
+                            
+                            $node_trans_arr[$fieldid][$new_node] = array($cell_value_item);
+                            $node_options[$new_node] = $cell_value_item;
+                            }
+                        else
+                            {
+                            # field doesn't allow options to be added so raise error
+                            $error_count++;
+                            $logtext = " Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
+                            csv_upload_log($logfile,$logtext);
+                            continue 2;
                             }
                         }
                     }
-                # validate date field excluding date range field  - $DATE_FIELD_TYPES global var in definitions.php
+                elseif($field_type == FIELD_TYPE_DATE_RANGE)
+                    {
+                    if(strpos($cell_value,",") !== false)
+                        {
+                        $rangedates = explode(",",$cell_value_item);
+                        }
+                    else
+                        {    
+                        $rangedates = explode("/",$cell_value_item);
+                        }
+
+                    # valid date if empty string returned
+                    $valid_start_date = isset($rangedates[0]) ? check_date_format($rangedates[0]) : "";
+                    $valid_end_date = isset($rangedates[1]) ? check_date_format($rangedates[1]) : "";
+
+                    if($valid_start_date != "" || $valid_end_date != "")
+                        {
+                        # raise error - invalid date format
+                        $error_count++;
+                        $logtext = "";
+                        $valid_start_date != "" ? $logtext = $logtext . " - [Start Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_start_date) : $logtext;
+                        $valid_end_date != "" ? $logtext = $logtext . " - [End Date] " . str_replace(array("%row%", "%field%"), array($line_count,  $field_name), $valid_end_date) : $logtext;
+                        csv_upload_log($logfile,$logtext);
+                        array_push ($messages,$logtext);
+                        continue 3;
+                        }
+                    }
                 elseif(in_array($field_type, $DATE_FIELD_TYPES) and $field_type != FIELD_TYPE_DATE_RANGE)
                     {
-                    # valid date if empty string returned
+                    // Validate date field excluding date range field  - $DATE_FIELD_TYPES global var in definitions.php
+                    // This is a valid date if empty string returned
                     $valid_date = check_date_format($cell_value_item);
                     if ($valid_date != "")
                         {
