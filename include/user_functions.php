@@ -2699,7 +2699,7 @@ function checkPermission_dashadmin()
     
 
 /**
- * Does the current user have the dash enabled?
+ * Can the user manage their own dash tiles. 
  *
  * @return boolean
  */

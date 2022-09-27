@@ -279,7 +279,7 @@ if(in_array('h', $permissions))
 	}
 else
 	{
-	DrawOption('dta', $lang['manage_all_dash'], false, false);
+	DrawOption('dta', $lang['manage_all_dash_perm'], false, false);
 	}
 DrawOption("dtu",$lang["manage_own_dash"],true,false);
 
