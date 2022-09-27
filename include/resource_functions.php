@@ -8014,17 +8014,17 @@ function get_download_filename($ref,$size,$alternative,$ext)
 
     elseif (isset($download_filename_field))
         {
-        $newfilename=safe_file_name( get_data_by_field($ref,$download_filename_field) );
+        $newfilename=safe_file_name(strip_extension(get_data_by_field($ref,$download_filename_field), true));
         if ($newfilename)
             {
             $filename = trim(nl2br(strip_tags($newfilename)));
             if($size != "" && !$download_filenames_without_size)
                 {
-                $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '-' . $size . '.' . $ext;
+                $filename = mb_basename(substr($filename, 0, 200)) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                $filename = strip_extension(mb_basename(substr($filename, 0, 200)),true) . '.' . $ext;
+                $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
                 }
             }
         }
