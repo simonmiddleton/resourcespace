@@ -330,7 +330,7 @@ function simplesaml_generate_keypair($dn)
  */
 function get_saml_sp_name()
     {
-    global $simplesaml_sp, $safe_sp;
+    global $simplesaml_sp, $safe_sp, $simplesaml_rsconfig;
     if($safe_sp != "")
         {
         return $safe_sp;
@@ -338,19 +338,26 @@ function get_saml_sp_name()
 
     $default_sp_name = "resourcespace-sp";
     $safe_sp = "";
-    // Ensure that defined SP is valid
-    $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
-    $GLOBALS["use_error_exception"] = true;
-    try {
-        $as = new SimpleSAML\Auth\Simple($simplesaml_sp);
-        $as->getAuthSource();
-        }
-    catch(exception $e)
+    if(!$simplesaml_rsconfig || (isset($simplesamlconfig["authsources"]) && is_array($simplesamlconfig["authsources"])))
         {
-        // Invalid SP name, use default
+        // If SAML has been configured we need to ensure that defined SP is valid
+        $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
+        $GLOBALS["use_error_exception"] = true;
+        try {
+            $as = new SimpleSAML\Auth\Simple($simplesaml_sp);
+            $as->getAuthSource();
+            }
+        catch(exception $e)
+            {
+            // Invalid SP name, use default
+            $simplesaml_sp = $default_sp_name;
+            }
+        $GLOBALS["use_error_exception"] = $use_error_exception_cache;
+        }
+    else
+        {
         $simplesaml_sp = $default_sp_name;
         }
-    $GLOBALS["use_error_exception"] = $use_error_exception_cache;
     $safe_sp = $simplesaml_sp;
     return $safe_sp;
     }
