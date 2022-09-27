@@ -3,7 +3,10 @@ include "../include/db.php";
 
 include "../include/authenticate.php"; if (!checkperm("n")) {exit("Permission denied");}
 
-if (!$speedtagging) {exit("This function is not enabled.");}
+if(!($speedtagging && false !== get_resource_type_field($speedtaggingfield)))
+    {
+    exit(htmlspecialchars($lang['function_not_enabled']));
+    }
 
 if (getval("save","")!="" && enforcePostRequest(false))
     {

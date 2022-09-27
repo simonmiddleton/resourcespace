@@ -919,6 +919,7 @@ $lang["clear_selected"] = "Clear selected";
 $lang["counting_resources"] = "counting resources...";
 $lang["not_allowed"] = "Not allowed";
 $lang["no_results_found"] = "No results found";
+$lang["function_not_enabled"] = "This function is not enabled.";
 
 # Pager
 $lang["next"]="Next";
