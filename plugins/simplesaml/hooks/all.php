@@ -478,6 +478,21 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
 
+        // Include in redirect any resource or collection parameter if present so we load to that page rather than home.
+        $extra_params = "";
+        $url_params = explode('?', getval("url",""));
+        parse_str(str_replace('&amp;', '&', ($url_params[1] ?? "")), $url_params);
+        
+        if (isset($url_params['c']))
+            {
+            $extra_params = "&c=" . $url_params['c'];
+            }
+            
+        if (isset($url_params['r']))
+            {
+            $extra_params = "&r=" . $url_params['r'];
+            }
+
 		// Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
 		global $baseurl, $lang, $simplesaml_login;
 		
@@ -487,7 +502,7 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
         ?>
-		<a href="<?php echo $baseurl; ?>/?usesso=true"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a><br/>
+		<a href="<?php echo $baseurl; ?>/?usesso=true<?php echo $extra_params; ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a><br/>
 		<?php
         }
 
