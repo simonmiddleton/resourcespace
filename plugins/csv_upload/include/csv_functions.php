@@ -638,7 +638,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 $new_node  = isset($new_node) ? $new_node + 1 : $lastref + 1;
                                 $logtext = ($processcsv ? "Added" : "Add") . " new field option to field " . $field_name .  " as node " . $new_node . ", value:'" . $cell_value_item . "'";
                                 csv_upload_log($logfile,$logtext);
-                                array_push ($messages,$logtext);
                                 }
                             
                             $node_trans_arr[$fieldid][$new_node] = array($cell_value_item);
