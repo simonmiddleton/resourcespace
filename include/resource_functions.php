@@ -7331,7 +7331,7 @@ function get_data_by_field($resource, $field, bool $flatten = true)
         {
         $rtf_info = ps_query(
             'SELECT ref, type FROM resource_type_field WHERE ref = ? OR name = ?',
-            ['i',$field, 'i',$field],
+            ['i',$field, 's',$field],
             'schema'
         );
 
