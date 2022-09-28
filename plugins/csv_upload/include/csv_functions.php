@@ -17,8 +17,8 @@ include_once (dirname(__FILE__)."/../../../include/definitions.php");
  */
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set_options,$max_error_count=100,$processcsv=false)
     {
-    global $DATE_FIELD_TYPES, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES, $userref,$username, $category_tree_add_parents,
-    $mysql_verbatim_queries, $baseurl, $scramble_key, $lang, $search_all_workflow_states;
+    global $DATE_FIELD_TYPES, $FIXED_LIST_FIELD_TYPES, $userref,$username, $category_tree_add_parents,
+    $mysql_verbatim_queries, $lang, $search_all_workflow_states;
     
     // Ensure that the searchs are across all states
     $search_all_workflow_states_cache = $search_all_workflow_states;
@@ -99,7 +99,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     foreach($restypefields as $field)
         {
         $allfields[$field["ref"]] = $field;
-        $allfields[$field["ref"]]["options"] =  in_array($field["type"],$NODE_FIELDS) ? get_field_options($field["ref"],true) : array();
+        $allfields[$field["ref"]]["options"] =  in_array($field["type"],$FIXED_LIST_FIELD_TYPES) ? get_field_options($field["ref"],true) : array();
         $allfields[$field["ref"]]["resource_types"] = array();
         foreach($resource_types as $resource_type => $resource_type_info)
             {
