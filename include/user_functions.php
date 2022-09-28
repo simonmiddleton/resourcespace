@@ -1211,8 +1211,8 @@ function email_user_request()
         {
         $user_registration_opt_in_message .= $lang["user_registration_opt_in_message"];
         }
-    
-    $approval_notify_users = get_notification_users("USER_ADMIN");
+    $requestedgroup = getval("usergroup",0,true);
+    $approval_notify_users = get_notification_users("USER_ADMIN",$requestedgroup !=0 ? $requestedgroup : NULL);
     $message = new ResourceSpaceUserNotification;
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
@@ -2446,7 +2446,10 @@ function get_rs_session_id($create=false)
  *      USER_ADMIN
  *      RESOURCE_ADMIN
  *
- * @param  string $userpermission
+ * @param   string  $userpermission
+ * @param   int     $usergroup          Optional id of usergroup to find notification users for e.g. the parent group of new user
+ *                                      or as defined in $usergroup_approval_mappings
+ * 
  * @return array
  */
 function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = NULL)
