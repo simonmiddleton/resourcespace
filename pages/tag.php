@@ -27,6 +27,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
     }
 
 $resources = do_search("!empty" . $speedtaggingfield . " !hasimage",'','relevance','',500);
+$resources = array_slice($resources,0,500,true);
 
 $ref = 0;
 if(is_array($resources) && count($resources) > 0)
