@@ -705,6 +705,12 @@ hook("processusercommand");
 
 $searches=get_saved_searches($usercollection);
 
+# When loading the collection bar from a collection just saved, then use the "collection" order established during that save 
+if ($addsearch!=-1)
+    {
+    $default_collection_sort = 'collection';
+    }
+
 $result  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "ASC", false, 0, false, false, '', false, true,false);
 $count_result = count($result);
 
