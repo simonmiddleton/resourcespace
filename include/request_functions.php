@@ -693,7 +693,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $collections[$collection_type] = create_collection($userref, $collectiondata['name'] . ' : ' . $all_r_types[$r_type_index]["name"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
             foreach ($collection_resources as $collection_resource_id)
                 {
-                add_resource_to_collection($collection_resource_id, $collections[$collection_type]);
+                // Add collection resources of the given type to the resource type specific collection 
+                // The col_access_control parameter is true meaning that adding to the collection is permitted for this call
+                add_resource_to_collection($collection_resource_id, $collections[$collection_type], false, "", "", true);
                 }
             }
         if(isset($collections) && count($collections) > 0)
