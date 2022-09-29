@@ -622,6 +622,10 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     $return_rows=array();
     if ($error!="")
         {
+        static $retries = [];
+        $error_retry_idx = md5($error);
+        $retries[$error_retry_idx] ??= 0;
+
         if ($error=="Server shutdown in progress")
             {
             echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
@@ -638,6 +642,17 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             sql_connect();
             db_set_connection_mode($db_connection_mode);
             return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
+            }
+        else if(
+            (
+                strpos($error, 'Deadlock found when trying to get lock') !== false
+                || strpos($error, 'Lock wait timeout exceeded') !== false
+            )
+            && $retries[$error_retry_idx] <= SYSTEM_DATABASE_MAX_RETRIES
+        )
+            {
+            ++$retries[$error_retry_idx];
+            return ps_query($sql, $parameters, $cache, $fetchrows, $dbstruct, $logthis, $reconnect, $fetch_specific_columns);
             }
         else
             {
