@@ -23,12 +23,12 @@ update_field($resource_a, $rtf_text, 'test value for a text field (test #412)', 
 add_resource_nodes($resource_a, [$dd_opt_a]);
 
 $resource_b = create_resource(1, 0);
-add_resource_nodes($resource_b, [$dd_opt_b, $ct_opt_a, $ct_opt_a_a1, $ct_opt_a_a1_a11]);
+add_resource_nodes($resource_b, [$dd_opt_b, $ct_opt_a, $ct_opt_a_a1, $ct_opt_a_a1_a11, $ct_opt_b]);
 
 $resource_c = create_resource(1, 0);
 add_resource_nodes($resource_c, [$dd_opt_b, $ct_opt_b]);
 
-$t412_get_node_name = function(int $ref)
+$t412_get_node = function(int $ref)
     {
     $node = [];
     get_node($ref, $node);
@@ -56,26 +56,34 @@ $use_cases = [
         'name' => 'Get dropdown field data for resource A',
         'resource' => $resource_a,
         'rtf' => $rtf_dropdown,
-        'expected' => $t412_get_node_name($dd_opt_a)['name'],
+        'expected' => $t412_get_node($dd_opt_a)['name'],
     ],
     [
         'name' => 'Get category tree field data for resource B',
         'resource' => $resource_b,
         'rtf' => $rtf_cat_tree,
-        'expected' => implode(', ', [$t412_get_node_name($ct_opt_a)['name'], $t412_get_node_name($ct_opt_a_a1)['name'], $t412_get_node_name($ct_opt_a_a1_a11)['name']]),
+        'expected' => implode(
+            ', ',
+            get_tree_strings([
+                $t412_get_node($ct_opt_b),
+                $t412_get_node($ct_opt_a),
+                $t412_get_node($ct_opt_a_a1),
+                $t412_get_node($ct_opt_a_a1_a11),
+            ], false)),
+
     ],
     [
         'name' => 'Get category tree field data for resource C',
         'resource' => $resource_c,
         'rtf' => $rtf_cat_tree,
-        'expected' => implode(', ', [$t412_get_node_name($ct_opt_b)['name']]),
+        'expected' => implode(', ', [$t412_get_node($ct_opt_b)['name']]),
     ],
     [
         'name' => 'Get category tree field data (raw) for resource C',
         'resource' => $resource_c,
         'rtf' => $rtf_cat_tree,
         'flatten' => false,
-        'expected' => get_cattree_nodes_ordered($rtf_cat_tree, $resource_c, false),
+        'expected' => [$t412_get_node($ct_opt_b)],
     ],
     [
         'name' => 'Get dropdown field data (raw) for resource C',
@@ -118,7 +126,7 @@ foreach($use_cases as $use_case)
 unset(
     $rtf_text, $rtf_dropdown, $rtf_cat_tree, $dd_opt_a, $dd_opt_b, $ct_opt_a, $ct_opt_b, $ct_opt_a_a1, $ct_opt_a_a2, $ct_opt_a_a1_a11,
     $resource_a, $resource_b, $resource_c,
-    $update_errors, $t412_get_node_name, $use_cases, $result
+    $update_errors, $t412_get_node, $use_cases, $result
 );
 
 return true;

@@ -12,8 +12,7 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
     $conditional_terms_resource_field_values = get_data_by_field($resource['ref'], $conditional_terms_field, false);
     if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
         {
-        // Conditions on a category tree value should always use the full path notation (e.g A/A.1/A.1.2)
-        $resource_values_to_test = get_cattree_node_strings($conditional_terms_resource_field_values, true);
+        $resource_values_to_test = get_tree_strings($conditional_terms_resource_field_values, false);
         }
     else
         {

@@ -7348,9 +7348,8 @@ function get_data_by_field($resource, $field, bool $flatten = true)
 
     if(!$fetch_all_resources && $rtf_type == FIELD_TYPE_CATEGORY_TREE)
         {
-        $tree_nodes = get_cattree_nodes_ordered($rtf_ref, $resource, false);
-        $tree_nodes_strings = get_cattree_node_strings($tree_nodes, false);
-        return $flatten ? implode(', ', $tree_nodes_strings) : $tree_nodes;
+        $tree_nodes = get_resource_nodes($resource, $rtf_ref, true);
+        return $flatten ? implode(', ', get_tree_strings($tree_nodes, false)) : $tree_nodes;
         }
     else if(!$fetch_all_resources)
         {
