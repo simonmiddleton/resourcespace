@@ -31,7 +31,7 @@
 * @param boolean     $returnsql               Returns the query as a PreparedStatementQuery instance
 * @param integer     $access                  Search for resources with this access
 *
-* @return null|string|array
+* @return null|string|array|PreparedStatementQuery
 */
 function do_search(
     $search,
