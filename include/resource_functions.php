@@ -223,7 +223,12 @@ function get_resource_path(
                 }
             catch (Exception $e)
                 {
-                debug("get_resource_path - mkdir(): " . $e->getMessage());
+                $returned_error = $e->getMessage();
+                debug("get_resource_path - mkdir(): " . $returned_error);
+                if (substr($returned_error, strpos($returned_error, 'mkdir(): ') + 9) != 'File exists')
+                    {
+                    trigger_error($returned_error, E_USER_WARNING);
+                    }
                 }
             unset($GLOBALS["use_error_exception"]);
             chmod($storagedir . $path_suffix . $folder, 0777);
