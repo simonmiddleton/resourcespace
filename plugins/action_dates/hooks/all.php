@@ -159,6 +159,10 @@ function HookAction_datesCronCron()
             $sql .= "WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params = array_merge($sql_params,["i",$action_dates_deletefield]);
 
+            // Filter results to only ones that should have access to the field
+            $sql .= "((r.resource_type in (select ref from resource_type where inherit_global_fields = 1) and exists (select * from resource_type_field where resource_type = 0 and ref = ?)) OR r.resource_type = (select resource_type from resource_type_field where ref = ?))";
+            $sql_params = array_merge($sql_params, ['i', $action_dates_deletefield,'i', $action_dates_deletefield]);
+
             $candidate_resources = ps_query($sql,$sql_params);
 
             # NOT FULL DELETION - Resolve the target archive state to which candidate resources are to be moved
@@ -416,12 +420,16 @@ function HookAction_datesCronCron()
             WHERE r.ref > 0 
                 AND n.resource_type_field = ?
                 AND r.archive<> ? 
-                AND r.archive<> ?";
+                AND r.archive<> ?
+                AND ((r.resource_type in (select ref from resource_type where inherit_global_fields = 1) and exists (select * from resource_type_field where resource_type = 0 and ref = ?)) OR r.resource_type = (select resource_type from resource_type_field where ref = ?))    
+                ";
             
             $sql_params=array(
                 "i",$field,
                 "i",$resource_deletion_state,
-                "i",$newstatus
+                "i",$newstatus,
+                "i",$field,
+                "i",$field
             );
             $additional_resources=ps_query($sql,$sql_params);
 

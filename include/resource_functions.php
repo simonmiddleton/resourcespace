@@ -3978,6 +3978,9 @@ function update_resource_type($ref,$type)
 */
 function get_exiftool_fields($resource_type)
     {
+
+    $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
+
     return ps_query("
            SELECT f.ref,
                   f.type,
@@ -3989,7 +3992,7 @@ function get_exiftool_fields($resource_type)
              FROM resource_type_field AS f
         LEFT JOIN node AS n ON f.ref = n.resource_type_field
             WHERE length(exiftool_field) > 0
-              AND (resource_type = ? OR resource_type = '0')
+              AND (resource_type = ? ". ($include_globals == 1 ?" OR resource_type = '0'":"") .")
          GROUP BY f.ref
          ORDER BY exiftool_field", array("i",$resource_type),"schema");
     }
