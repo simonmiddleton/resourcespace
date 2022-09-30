@@ -214,10 +214,19 @@ function get_resource_path(
             }
 
         $folder.="/";
-        if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate)
+        if (!(file_exists($storagedir . $path_suffix . $folder)) && $generate)
             {
-            @mkdir($storagedir . $path_suffix . $folder,0777,true);
-            chmod($storagedir . $path_suffix . $folder,0777);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                mkdir($storagedir . $path_suffix . $folder, 0777, true);
+                }
+            catch (Exception $e)
+                {
+                debug("get_resource_path - mkdir(): " . $e->getMessage());
+                }
+            unset($GLOBALS["use_error_exception"]);
+            chmod($storagedir . $path_suffix . $folder, 0777);
             }
         }
 
