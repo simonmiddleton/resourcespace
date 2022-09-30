@@ -1563,9 +1563,13 @@ function delete_resource_nodes(int $resourceid,$nodes=array(),$logthis=true)
         return;
         }
 
-    ps_query('DELETE FROM resource_node WHERE resource = ? AND node IN (' . ps_param_insert($nodes_count) . ')',
-        array_merge(['i', $resourceid], ps_param_fill($nodes, 'i'))
-    );
+    $chunks = array_chunk($nodes,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach($chunks as $chunk)
+        {
+        ps_query('DELETE FROM resource_node WHERE resource = ? AND node IN (' . ps_param_insert(count($chunk)) . ')',
+            array_merge(['i', $resourceid], ps_param_fill($nodes, 'i'))
+        );
+        }
 
     if($logthis)
         {

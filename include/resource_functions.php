@@ -2451,7 +2451,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 # Work out what nodes need to be added/removed/kept
                 $nodes_to_add       = array_unique($nodes_to_add);
-                $nodes_to_remove    = array_unique($nodes_to_remove);
+                $nodes_to_remove    = array_intersect(array_unique($nodes_to_remove),$current_field_noderefs);
                 $added_nodes        = array_diff($nodes_to_add,$current_field_noderefs);
                 $removed_nodes      = array_intersect($nodes_to_remove,$current_field_noderefs);
                 $keep_nodes         = array_diff($current_field_noderefs,$removed_nodes);
