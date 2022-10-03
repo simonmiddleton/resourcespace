@@ -330,7 +330,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
-                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br/><br/>';
                               
                     if(strpos($message_text,$url) === false)
                         {
@@ -962,7 +962,6 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             }
         }
     $url = $notifymessage->url ?? NULL;
-
     $headerimghtml = "";
     if(!isset($notifymessage->template))
         {
@@ -970,7 +969,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         $img_url = get_header_image(true);
         $img_div_style = "max-height:50px;padding: 5px;";
         $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br/><br/>';
         }
 
     foreach($userlanguages as $userlanguage=>$notifications)
