@@ -2,12 +2,16 @@
 
 function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=false)
     {
-    global $baseurl, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset, $download_usage;
+    global $baseurl, $lang, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset, $download_usage;
 
     $additional_params = array();
 
     $conditional_terms_resource_field_values = get_data_by_field($resource['ref'], $conditional_terms_field, false);
     $conditional_terms_field_info = get_resource_type_field($conditional_terms_field);
+    if($conditional_terms_field_info === false)
+        {
+        trigger_error($lang['conditional_terms_plugin_misconfigured']);
+        }
 
     if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
         {
