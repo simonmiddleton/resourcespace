@@ -6,10 +6,9 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
 
     $additional_params = array();
 
-    $conditional_terms_fields_idx = array_search($conditional_terms_field, array_column($fields, 'ref'));
-    $conditional_terms_field_info = $conditional_terms_fields_idx !== false ? $fields[$conditional_terms_fields_idx] : [];
-
     $conditional_terms_resource_field_values = get_data_by_field($resource['ref'], $conditional_terms_field, false);
+    $conditional_terms_field_info = get_resource_type_field($conditional_terms_field);
+
     if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
         {
         $resource_values_to_test = get_tree_strings($conditional_terms_resource_field_values, false);
