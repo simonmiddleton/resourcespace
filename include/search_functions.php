@@ -1309,7 +1309,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
             # include collections of requested resources
             $request_collections = array();
-            if (checkperm("R"))
+            if (checkperm("R") || checkperm("Rb"))
                 {
                 include_once('request_functions.php');
                 $request_collections = array_column(get_requests(), 'collection');
