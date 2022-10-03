@@ -1567,7 +1567,7 @@ function delete_resource_nodes(int $resourceid,$nodes=array(),$logthis=true)
     foreach($chunks as $chunk)
         {
         ps_query('DELETE FROM resource_node WHERE resource = ? AND node IN (' . ps_param_insert(count($chunk)) . ')',
-            array_merge(['i', $resourceid], ps_param_fill($nodes, 'i'))
+            array_merge(['i', $resourceid], ps_param_fill($chunk, 'i'))
         );
         }
 
