@@ -1040,27 +1040,30 @@ function do_search(
                         } // End of if keyword not excluded (not in $noadd array)
                     } // End of each keyword in quoted string
 
-                if($omit)# Exclude matching resources from query (omit feature)
+                if(trim($fixedunioncondition->sql) != "")
                     {
-                    if ($sql_filter->sql != "")
+                    if($omit)# Exclude matching resources from query (omit feature)
                         {
-                        $sql_filter->sql .= " AND ";
+                        if ($sql_filter->sql != "")
+                            {
+                            $sql_filter->sql .= " AND ";
+                            }
+
+                        $sql_filter->sql .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+
+
+                        $sql_filter->parameters = array_merge($sql_filter->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
                         }
-
-                    $sql_filter->sql .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-
-
-                    $sql_filter->parameters = array_merge($sql_filter->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
-                    }
-                elseif (is_a($fixedunion,"PreparedStatementQuery"))
-                    {
-                    $addunion = new PreparedStatementQuery();
-                    $addunion->sql = $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . " GROUP BY resource ";
-                    $addunion->parameters = array_merge($fixedunion->parameters,$fixedunioncondition->parameters);
-                    $sql_keyword_union[] = $addunion;
-                    $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
-                    $sql_keyword_union_or[]=FALSE;
-                    $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                    elseif (is_a($fixedunion,"PreparedStatementQuery"))
+                        {
+                        $addunion = new PreparedStatementQuery();
+                        $addunion->sql = $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . " GROUP BY resource ";
+                        $addunion->parameters = array_merge($fixedunion->parameters,$fixedunioncondition->parameters);
+                        $sql_keyword_union[] = $addunion;
+                        $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
+                        $sql_keyword_union_or[]=FALSE;
+                        $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                        }
                     }
                 $c++;
                 }
