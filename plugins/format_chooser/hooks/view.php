@@ -207,10 +207,16 @@ function HookFormat_chooserViewReplacedownloadoptions()
 				<?php
 				foreach ($sizes as $n => $size)
 					{
-					if ($size['width'] == $closestSize)
-						$size = $originalSize;
+                    # Calculate new dimensions based on original file's dimensions and configured width and height
+                    $size_image_dimensions = calculate_image_dimensions($origpath, $size['width'], $size['height']);
+                    if ($size['width'] == $closestSize) {
+						$size = $originalSize; }
+                    # Apply newly calculated width and height dimensions to the sizeInfo array
+                    $size_to_output=$size;
+                    $size_to_output['width']=$size_image_dimensions['new_width'];
+                    $size_to_output['height']=$size_image_dimensions['new_height'];
                     echo $n ?>: {
-                    'info': '<?php echo get_size_info($size, $originalSize) ?>',
+                    'info': '<?php echo get_size_info($size_to_output, $originalSize) ?>',
                     'id': '<?php echo $size['id'] ?>',
                     'restricted': '<?php echo in_array($sizes[$n]["id"],$restrictedsizes) ? "1" : "0" ?>'
 				},

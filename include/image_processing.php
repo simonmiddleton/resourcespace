@@ -3272,24 +3272,47 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
         {
         // Landscape
         $return['landscape'] = true;
+        if(!$enlarge_image && $target_width > $source_width)
+            {
+            $ratio = 1;
+            }
+        else
+            {
+            $ratio = $target_width / $source_width;
+            }
 
-        $ratio = $target_width / $source_width;
+        $return['new_width']  = floor($source_width * $ratio);
+        $return['new_height'] = floor($source_height * $ratio);
+        // If result is larger and unable to enlarge then fix the height and compute the width
+        if (!$enlarge_image && ($return['new_height'] > $target_height)) {
+            $return['new_height'] = $target_height;
+            $ratio = $target_height / $source_height;
+            $return['new_width']  = floor($source_width * $ratio);
+            }
         }
     else
         {
-        // Portrait
+        // Portrait or square
         $return['portrait'] = true;
+        if(!$enlarge_image && $target_height > $source_height)
+            {
+            $ratio = 1;
+            }
+        else
+            {
+            $ratio = $target_height / $source_height;
+            }
 
-        $ratio = $target_height / $source_height;
+        $return['new_width']  = floor($source_width * $ratio);
+        $return['new_height'] = floor($source_height * $ratio);
+        // If result is larger and unable to enlarge then fix the width and compute the height
+        if (!$enlarge_image && ($return['new_width'] > $target_width)) {
+            $return['new_width'] = $target_width;
+            $ratio = $target_width / $source_width;
+            $return['new_height']  = floor($source_height * $ratio);
+            }
         }
 
-    if(!$enlarge_image && $target_width > $source_width)
-        {
-        $ratio = 1;
-        }
-
-    $return['new_width']  = floor($source_width * $ratio);
-    $return['new_height'] = floor($source_height * $ratio);
     $return['x_offset']   = ceil(($target_height - $return['new_height']) / 2);
     $return['y_offset']   = ceil(($target_width - $return['new_width']) / 2);
 
