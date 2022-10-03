@@ -1358,9 +1358,14 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
     foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
 
     // Work through all enabled plugins and add any extended columns also (plugins can extend core tables in addition to defining their own)
-    foreach ($plugins as $plugin)
+
+    foreach ($plugins as $plugin_entry)
         {
-        $plugin_file=get_plugin_path($plugin) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
+        if ($plugin_entry === $plugin)
+            {
+            continue; // The plugin dbstruct has already been processed; don't process it again
+            }
+        $plugin_file=get_plugin_path($plugin_entry) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
         if (file_exists($plugin_file))
             {
             $structure=explode("\n",trim(file_get_contents($plugin_file)));
