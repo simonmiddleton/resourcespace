@@ -2337,7 +2337,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
             }
         if(!($sharepwd != "" && $sharepwd != "(unchanged)"))
             {
-            $sql = 'NULL';
+            $sql .= 'NULL';
             }
         else
             {
