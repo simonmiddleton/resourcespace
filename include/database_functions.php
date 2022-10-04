@@ -529,8 +529,6 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             catch (Exception $e)
                 {
                 $error = $e->getMessage();
-                errorhandler("N/A", $error, "(database)", "N/A");
-                exit();
                 }
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 
