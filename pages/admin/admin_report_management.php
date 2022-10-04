@@ -105,7 +105,7 @@ function addColumnHeader($orderName, $labelKey)
 <?php
         foreach ($reports as $report)
             {
-            $support_non_correlated_sql = ($report['support_non_correlated_sql'] === 1);
+            $support_non_correlated_sql = ((bool)$report['support_non_correlated_sql'] === true);
             $edit_url_extra = array();
             $edit_url_extra = ($find == "" ? $edit_url_extra : array_merge($edit_url_extra, array("find" => $find)));
             $edit_url_extra = ($order_by == "name" ? $edit_url_extra : array_merge($edit_url_extra, array("orderby" => $order_by)));
