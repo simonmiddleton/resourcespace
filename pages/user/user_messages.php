@@ -201,9 +201,13 @@ include "../../include/header.php";
             <?php
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)
                 {
-                $fullmessage = strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border"));
-                $fullmessage = htmlentities(escape_quoted_data($fullmessage));
-                $message = strip_tags_and_attributes($messages[$n]["message"]);
+                $message = $messages[$n]["message"]; 
+                // Full message is retrieved via api to avoid long messages killing the page
+                if(mb_strlen($message) > 100)
+                    {
+                    $message = mb_strcut($messages[$n]["message"],0,70) . "...";
+                    }
+                $message = strip_tags_and_attributes($message); 
                 $message = nl2br($message);
                 $url_encoded = urlencode($messages[$n]["url"]);
                 $unread_css = ($messages[$n]["seen"] == 0 ? " MessageUnread" : "");
@@ -215,9 +219,9 @@ include "../../include/header.php";
                     }
                 ?>
                 <tr>
-                    <td><input type="checkbox" class="message-checkbox" data-message="<?php echo $messages[$n]['ref'];?>" id="message-checkbox-<?php echo $messages[$n]['ref'];?>"></td>
+                    <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true); ?></td>
-                    <td class="<?php echo $unread_css; ?>"><?php echo $messages[$n]["owner"]; ?></td>
+                    <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars($messages[$n]["owner"]); ?></td>
                     <?php if ($messages_actions_fullname) { ?>
                         <td class="SingleLine<?php echo $unread_css; ?>"><?php echo strip_tags_and_attributes($user['fullname']); ?></td>
                     <?php } ?>
@@ -225,7 +229,7 @@ include "../../include/header.php";
                         <td class="<?php echo $unread_css; ?>"><?php echo $user['groupname']; ?></td>
                     <?php } ?>
                     <td class="<?php echo $unread_css; ?>">
-                        <a href="#Header" onclick="message_modal('<?php echo $fullmessage; ?>','<?php echo $url_encoded; ?>',<?php echo $messages[$n]["ref"]; ?>,'<?php echo $messages[$n]["owner"] ?>');"><?php echo $message; ?></a>
+                        <a href="#Header" onclick="show_message(<?php echo (int)$messages[$n]['ref'] ?>)"><?php echo $message; ?></a>
                     </td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["expires"]); ?></td>
                     <td class="<?php echo $unread_css; ?>"><?php echo ($messages[$n]["seen"]==0 ? '<i class="fas fa-envelope"></i>' : '<i class="far fa-envelope-open"></i>'); ?></td>
@@ -236,13 +240,13 @@ include "../../include/header.php";
                                 {
                                 $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                                 ?>
-                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . $lang["reply"]; ?></a>
+                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . htmlspecialchars($lang["reply"]); ?></a>
                                 <?php
                                 }
 
                             if ($messages[$n]["url"]!="")
                                 { ?>
-                                <a href="<?php echo $messages[$n]["url"]; ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . $lang["link"]; ?></a>
+                                <a href="<?php echo $url_encoded; ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . htmlspecialchars($lang["link"]); ?></a>
                                 <?php
                                 } ?> 
                         </div>
@@ -364,6 +368,22 @@ include "../../include/header.php";
                 }
             }
         display_message_actions(selected_messages.length > 0);
+        }
+
+    function show_message(ref)
+        {
+        // Show full message in modal
+        api("get_user_message",{'ref': ref},function(response)
+            {
+            console.debug(response);
+            if(response.length != false)
+                {
+                msgtext   = response['message'];
+                msgurl    = response['url'];
+                msgowner  = response['msgowner'];
+                message_modal(msgtext,msgurl,ref,msgowner);
+                }
+            });
         }
  
 </script>

@@ -951,3 +951,8 @@ function api_mark_email_as_invalid($email)
         
     return mark_email_as_invalid($email);
     }
+
+function api_get_user_message($ref)
+    {
+    return get_user_message($ref);
+    }

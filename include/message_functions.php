@@ -1043,3 +1043,28 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         }
     return $results;
     }
+
+/**
+ * Gets the user message for the given ref
+ * 
+ * @param  int  $ref            Message ID
+ * @param  bool $checkaccess    Check if user can see the given message?
+ * 
+ * @return array|bool  Array with two elements: 'message' => message text,'url'=> message URL and 'owner' => message owner
+ *                     False if user has no access or the requested message doesn't exist,
+ */
+function get_user_message(int $ref, bool $checkaccess=true)
+	{
+    global $userref;
+    if($checkaccess)
+        {
+        $validmessages = ps_array("SELECT ref value FROM user_message WHERE user = ?",["i",$userref]);
+        if(!in_array($ref,$validmessages))
+            {
+            return false;
+            }
+        }
+    $message = ps_query("SELECT message, url, owner FROM message WHERE ref = ?",["i",$ref]);
+    
+    return $message ? ["message"=>$message[0]["message"],"url"=>$message[0]["url"],"owner"=>$message[0]["owner"]] : false;    
+    }
