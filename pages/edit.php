@@ -307,6 +307,7 @@ if($editsearch)
 
     # Establish a list of resource types which will be involved in this edit
     $items_resource_types = array_unique(array_column($edititems,"resource_type"));
+    if(in_array('2',(array_column($edititems,'archive')))){$items_resource_types[]=999;}
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
