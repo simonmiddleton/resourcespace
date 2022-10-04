@@ -343,6 +343,12 @@ foreach($plugins as $plugin)
 // Load user config options
 process_config_options($userref);
 
+// Once system wide/user preferences and user group config overrides have loaded, any config based dependencies should be checked and loaded.
+if(!$disable_geocoding)
+    {
+    include_once __DIR__ . '/map_functions.php';
+    }
+
 hook('handleuserref','',array($userref));
 
 $is_authenticated=true;
