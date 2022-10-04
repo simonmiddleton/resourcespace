@@ -104,7 +104,6 @@ function save_request($request)
         {
         # --------------- APPROVED -------------
         # Send approval e-mail
-        // $reasonapproved=str_replace(array("\\r","\\n"),"\n",$reasonapproved);$reasonapproved=str_replace("<br/><br/>","\n",$reasonapproved); # Fix line breaks.
         $approved_declined = true;
         $reasonapproved = unescape($reasonapproved);
         $colurl = $baseurl . "/?c=" . $currentrequest["collection"];
@@ -116,7 +115,7 @@ function save_request($request)
         $approvemessage->append_subject(" - ");;
         $approvemessage->append_subject("lang_resourcerequeststatus1");
         $approvemessage->set_text("lang_requestapprovedmail");
-        $approvemessage->append_text("<br/><br/>");
+        $approvemessage->append_text("<br /><br />");
         $approvemessage->append_text("lang_approvalreason");
         $approvemessage->append_text(": " . $reasonapproved);
         $approvemessage->url = $colurl;
@@ -125,10 +124,10 @@ function save_request($request)
         if ($expires!="")
             {
             # Add expiry time to message.
-            $approvemessage->append_text("<br/><br/>");
+            $approvemessage->append_text("<br /><br />");
             $approvemessage->append_text("lang_requestapprovedexpires");
             $approvemessage->append_text(" " . nicedate($expires) . "\n");
-            $templatevars["expires"] = "<br/><br/>" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";;
+            $templatevars["expires"] = "<br /><br />" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";;
             }
         else
             {
@@ -161,7 +160,7 @@ function save_request($request)
         $declinemessage->append_subject(" - ");;
         $declinemessage->append_subject("lang_resourcerequeststatus2");
         $declinemessage->set_text("lang_requestdeclinedmail");
-        $declinemessage->append_text("<br/><br/>");
+        $declinemessage->append_text("<br /><br />");
         $declinemessage->append_text("lang_declinereason");
         $declinemessage->append_text(": " . $reason);
         $declinemessage->url = $colurl;
@@ -339,14 +338,14 @@ function email_collection_request($ref,$details,$external_email)
             $setting=trim($_POST[str_replace("_label","",$key)]);
             if ($setting!="")
                 {
-                $message->append_text($value . ": " . $_POST[str_replace("_label","",$key)] . "<br/><br/>");
+                $message->append_text($value . ": " . $_POST[str_replace("_label","",$key)] . "<br /><br />");
                 }
             }
         }
     if (trim($details)!="")
         {
         $message->append_text("lang_requestreason");
-        $message->append_text(": " . newlines($details) . "<br/><br/>");
+        $message->append_text(": " . newlines($details) . "<br /><br />");
         }
 
     # Add custom fields
@@ -367,7 +366,7 @@ function email_collection_request($ref,$details,$external_email)
                 return false; # Required field was not set.
                 }            
             $message->append_text("i18n_" . $custom[$n]);
-            $message->append_text(": " . getval("custom" . $n,"") . "<br/><br/>");
+            $message->append_text(": " . getval("custom" . $n,"") . "<br /><br />");
             }
         }
         
@@ -386,11 +385,11 @@ function email_collection_request($ref,$details,$external_email)
     $notification_message->append_subject("lang_requestcollection");
     $notification_message->append_subject(" - "  . $ref);
     $introtext[] = ["lang_user_made_request"];
-    $introtext[] = ["<br/><br/>"];
+    $introtext[] = ["<br /><br />"];
     $introtext[] = ["lang_username"];
     $introtext[] = [": "];
     $introtext[] = [$username];
-    $introtext[] = ["<br/>"];
+    $introtext[] = ["<br />"];
     $notification_message->prepend_text_multi($introtext);
     $notification_message->append_text("lang_viewcollection");
     $notification_message->append_text(":");
@@ -442,7 +441,7 @@ function email_collection_request($ref,$details,$external_email)
         $userconfirmmessage = clone($message);
         $userconfirmmessage->set_subject($applicationname . ": ");
         $userconfirmmessage->append_subject(" - "  . $ref);
-        $userconfirmmessage->prepend_text("<br/><br/>");
+        $userconfirmmessage->prepend_text("<br /><br />");
         $userconfirmmessage->prepend_text("lang_requestsenttext");
         $userconfirmmessage->url = $templatevars['url'];
         $userconfirmmessage->template = "emailusercollectionrequest";
@@ -563,7 +562,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             if ($setting!="")
                 {
                 $message->append_text($value . ": " . $setting . "\n");
-                $templatevars["extra"] .= $value . ": " . $setting . "<br/><br/>";
+                $templatevars["extra"] .= $value . ": " . $setting . "<br /><br />";
                 }
             }
         }
@@ -590,7 +589,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 {
                 return false; # Required field was not set.
                 }            
-            $message->append_text("<br/>");
+            $message->append_text("<br />");
             $message->append_text("i18n_" . $custom[$n]);
             $message->append_text(": " . getval("custom" . $n,""));
             }
@@ -598,7 +597,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
     $assignedmessage = new ResourceSpaceUserNotification();
     $assignedmessage->set_text("lang_requestassignedtoyoumail");
-    $assignedmessage->append_text("<br/><br/>");
+    $assignedmessage->append_text("<br /><br />");
     $assignedmessage->set_subject($applicationname . ": ");
     $assignedmessage->append_subject("lang_requestassignedtoyou");
     // Add core message text (reason, custom fields etc.)
@@ -783,9 +782,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->set_subject($applicationname . ": " );
         $admin_notify_message->append_subject("lang_requestassignedtoyou");
         $admin_notify_message->set_text("lang_requestassignedtoyoumail");
-        $admin_notify_message->append_text("<br/><br/>");
+        $admin_notify_message->append_text("<br /><br />");
         $admin_notify_message->append_text("lang_username");
-        $admin_notify_message->append_text(": " . $username . "<br/>");
+        $admin_notify_message->append_text(": " . $username . "<br />");
         $admin_notify_message->append_text_multi($message->get_text(true));
         $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
         $admin_notify_message->url = $templatevars['requesturl'];
@@ -853,9 +852,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $user_message->append_subject("lang_requestsent");
         $user_message->append_subject(" - " . $ref);
         $user_message->set_text("lang_requestsenttext");
-        $user_message->append_text("<br/><br/>");
+        $user_message->append_text("<br /><br />");
         $user_message->append_text_multi($message->get_text(true));
-        $user_message->append_text("<br/><br/>");
+        $user_message->append_text("<br /><br />");
         $user_message->append_text("lang_clicktoviewresource");
         $user_message->url = $baseurl . "/?c=" . $ref;
         // Note no user_preference set so that message will always send
@@ -890,7 +889,7 @@ function email_resource_request($ref,$details)
         $download_limit_check = get_user_downloads($userref,$user_dl_days);
         if($download_limit_check >= $user_dl_limit)
             {
-            $detailstext->prepend_text("<br/>");
+            $detailstext->prepend_text("<br />");
             $detailstext->prepend_text("lang_download_limit_request_text",["%%DOWNLOADED%%","%%LIMIT%%"],[$download_limit_check,$user_dl_limit]);
             }
         }
@@ -929,7 +928,7 @@ function email_resource_request($ref,$details)
         $templatevars["fullname"]= isset($userdata["fullname"]) ? $userdata["fullname"] : ""; 
         }
 
-    $htmlbreak="<br/><br/>";
+    $htmlbreak="<br /><br />";
 
     $list="";
     reset ($_POST);
@@ -949,7 +948,7 @@ function email_resource_request($ref,$details)
     $adddetails="";
     if ($templatevars['details']!="")
         {
-        $adddetails=$lang["requestreason"] . ": " . newlines($templatevars['details'])."<br/>";
+        $adddetails=$lang["requestreason"] . ": " . newlines($templatevars['details'])."<br />";
         }
     elseif ($resource_request_reason_required)
         {
@@ -971,29 +970,29 @@ function email_resource_request($ref,$details)
                 # Required field was not set.
                 return false;
                 }
-            $c.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "<br/>";
+            $c.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "<br />";
             }
         }
     $templatevars["requestreason"]=$lang["requestreason"] . ": " . $templatevars['details']. $c ."";
     if(isset($username))
         {
         $message->append_text("lang_username");
-        $message->append_text(": " . $username . " (" . $useremail . ")<br/>");
+        $message->append_text(": " . $username . " (" . $useremail . ")<br />");
         }
     if(!empty($templatevars["formfullname"]))
         {
         $message->append_text("lang_fullname");
-        $message->append_text(": " . $templatevars["formfullname"] . "<br/>");
+        $message->append_text(": " . $templatevars["formfullname"] . "<br />");
         }
     if(!empty($templatevars["formemail"]))
         {
         $message->append_text("lang_email");
-        $message->append_text(": " . $templatevars["formemail"] ."<br/>");
+        $message->append_text(": " . $templatevars["formemail"] ."<br />");
         }
     if(!empty($templatevars["formtelephone"]))
         {
         $message->append_text("lang_contacttelephone");
-        $message->append_text(": " . $templatevars["formtelephone"] . "<br/>");
+        $message->append_text(": " . $templatevars["formtelephone"] . "<br />");
         }
 
     $notification_message = clone($message);
@@ -1003,7 +1002,7 @@ function email_resource_request($ref,$details)
     $notification_message->prepend_text($htmlbreak);
     $notification_message->prepend_text("lang_user_made_request");
     $notification_message->append_text($adddetails . $c); 
-    $notification_message->append_text("<br/>");
+    $notification_message->append_text("<br />");
     $notification_message->append_text("lang_clicktoviewresource");
     $notification_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
     $notification_message->url = $templatevars['url'];
@@ -1047,7 +1046,7 @@ function email_resource_request($ref,$details)
         $userconfirmmessage = clone($message);
         $userconfirmmessage->set_subject($applicationname . ": ");
         $userconfirmmessage->append_subject(" - "  . $ref);
-        $userconfirmmessage->prepend_text("<br/><br/>");
+        $userconfirmmessage->prepend_text("<br /><br />");
         $userconfirmmessage->prepend_text("lang_requestsenttext");
         $userconfirmmessage->append_text($adddetails . $c); 
         $key_str=($k!="") ? "&k=" . $k : "";
@@ -1062,7 +1061,7 @@ function email_resource_request($ref,$details)
             $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");
             if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL))
                 {
-                $userconfirmmessage->append_text("<br/><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
+                $userconfirmmessage->append_text("<br /><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
                 send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,$email_notify);
                 }  
             }

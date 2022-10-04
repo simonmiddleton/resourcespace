@@ -150,7 +150,7 @@ class ResourceSpaceUserNotification
      * Note that if not returning raw data the correct $lang must be set by  before this is called
       * @param  bool    $unresolved       Return the raw message parts to use in another message object. False by default
      *
-     * @return void
+     * @return string|array
      */
     public function get_text($unresolved=false)
         {
@@ -330,12 +330,12 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
-                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br/><br/>';
+                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                               
                     if(strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
-                        $message_text = $message_text . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+                        $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                         }
 					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
 					}
@@ -969,7 +969,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         $img_url = get_header_image(true);
         $img_div_style = "max-height:50px;padding: 5px;";
         $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br/><br/>';
+        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
         }
 
     foreach($userlanguages as $userlanguage=>$notifications)
@@ -1024,7 +1024,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             if(strpos($messagetext,$url) === false)
                 {
                 // Add the URL to the message if not already present
-                $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+                $messagetext = $messagetext . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                 }
             send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
 
