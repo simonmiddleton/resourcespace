@@ -3864,7 +3864,7 @@ function get_resource_custom_access($resource)
         {
         // Restrict to this group and children groups only.
         global $usergroup, $usergroupparent;
-        $sql = "WHERE g.parent = '{$usergroup}' OR g.ref = '{$usergroup}' OR g.ref = '{$usergroupparent}'";
+        $sql = "WHERE g.parent = ? OR g.ref = ? OR g.ref = ?'";
         $params = ['i', $usergroup, 'i', $usergroup, 'i', $usergroupparent];
         }
 
