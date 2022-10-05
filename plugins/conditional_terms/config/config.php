@@ -1,4 +1,5 @@
 <?php
+include dirname(__DIR__) . '/include/conditional_terms_functions.php';
 $conditional_terms_field=0;
 $conditional_terms_value="";
 

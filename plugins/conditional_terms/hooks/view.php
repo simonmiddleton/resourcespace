@@ -10,7 +10,7 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
     $conditional_terms_field_info = get_resource_type_field($conditional_terms_field);
     if($conditional_terms_field_info === false)
         {
-        trigger_error($lang['conditional_terms_plugin_misconfigured']);
+        return false;
         }
 
     if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
