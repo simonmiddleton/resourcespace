@@ -1165,7 +1165,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-                    $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><div><br /><br/>';
+                    $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                     }
                 else if ($placeholder=="embed_thumbnail")
                     {                    
