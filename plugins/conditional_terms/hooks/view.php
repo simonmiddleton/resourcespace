@@ -15,7 +15,7 @@ function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=fal
 
     if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
         {
-        $resource_values_to_test = get_tree_strings($conditional_terms_resource_field_values, false);
+        $resource_values_to_test = get_node_strings($conditional_terms_resource_field_values, false);
         }
     else
         {

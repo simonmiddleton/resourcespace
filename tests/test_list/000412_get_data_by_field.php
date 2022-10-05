@@ -64,7 +64,7 @@ $use_cases = [
         'rtf' => $rtf_cat_tree,
         'expected' => implode(
             ', ',
-            get_tree_strings([
+            get_node_strings([
                 $t412_get_node($ct_opt_b),
                 $t412_get_node($ct_opt_a),
                 $t412_get_node($ct_opt_a_a1),

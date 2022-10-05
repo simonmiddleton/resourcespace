@@ -136,7 +136,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         {
         $field_nodes = get_nodes($fieldid,'',true);
         $allfields[$fieldid]["nodes"] = $field_nodes;
-        $allfields[$fieldid]["node_options"] = get_tree_strings($field_nodes, true);
+        $allfields[$fieldid]["node_options"] = get_node_strings($field_nodes, true);
         }
     elseif (in_array($field_type,$FIXED_LIST_FIELD_TYPES))
         {

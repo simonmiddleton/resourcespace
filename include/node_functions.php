@@ -2156,7 +2156,7 @@ function cattree_node_flatten($node) {
  * @return array $nodestrings - array of strings for all nodes passed in correct hierarchical order
  * 
  */
-function get_tree_strings($resource_nodes,$allnodes = false)
+function get_node_strings($resource_nodes,$allnodes = false)
     {
     global $category_tree_add_parents;
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed

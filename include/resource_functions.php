@@ -2278,16 +2278,21 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             }
 
         // Get currently selected nodes for this field
-        $current_field_nodes = get_resource_nodes($resource, $field, true);
-        $current_field_noderefs = array_column($current_field_nodes,"ref");
+        $current_field_nodes = array(); 
+        $current_field_noderefs = array();
+
         // Build 'existing' value
         if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE)
             {
-            $treetext_arr = get_tree_strings($current_field_nodes);
-            $existing = implode(",",$treetext_arr);
+            $treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
+            $current_field_noderefs = array_column($treenodes,"ref");
+            $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
+            $existing = implode(",",$treenodenames);        
             }
         else
             {
+            $current_field_nodes = get_resource_nodes($resource, $field, true);
+            $current_field_noderefs = array_column($current_field_nodes,"ref");
             foreach($current_field_noderefs as $current_field_node)
                 {
                 $existingnodes[] = $node_options[$current_field_node];
@@ -2459,7 +2464,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
                 if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
                     &&
-                    (count($added_nodes) + count($current_field_nodes) - count($removed_nodes)) > 1)
+                    (count($added_nodes) + count($current_field_noderefs) - count($removed_nodes)) > 1)
                     {
                     // Only a single value allowed
                     return false;
@@ -2486,9 +2491,9 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 db_end_transaction("update_field_{$field}");
                 if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE)
                     {
-                    $all_new_nodes_full = get_nodes_by_refs($all_new_nodes);
-                    $treetext_arr       = get_tree_strings($all_new_nodes_full);
-                    $value              = implode(",",$treetext_arr);
+                    $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
+                    $treenodenames = get_cattree_node_strings($all_treenodes, true); # True means names are paths to nodes; False means names are node names
+                    $value = implode(",",$treenodenames);        
                     }
                 else
                     {
@@ -7298,7 +7303,7 @@ function get_field_options($ref,$nodeinfo = false)
         $fieldinfo = get_resource_type_field($ref);
         if($fieldinfo["type"] == FIELD_TYPE_CATEGORY_TREE)
             {
-            $node_options = get_tree_strings($options, true);
+            $node_options = get_node_strings($options, true);
             for ($m=0;$m<count($options);$m++)
                 {
                 $options[$m]["path"] = isset($node_options[$options[$m]["ref"]]) ? $node_options[$options[$m]["ref"]] : "";
@@ -7366,7 +7371,7 @@ function get_data_by_field($resource, $field, bool $flatten = true)
     if(!$fetch_all_resources && $rtf_type == FIELD_TYPE_CATEGORY_TREE)
         {
         $tree_nodes = get_resource_nodes($resource, $rtf_ref, true);
-        return $flatten ? implode(', ', get_tree_strings($tree_nodes, false)) : $tree_nodes;
+        return $flatten ? implode(', ', get_node_strings($tree_nodes, false)) : $tree_nodes;
         }
     else if(!$fetch_all_resources)
         {
