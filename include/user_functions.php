@@ -2446,9 +2446,9 @@ function get_rs_session_id($create=false)
  *      USER_ADMIN
  *      RESOURCE_ADMIN
  *
- * @param   string  $userpermission
- * @param   int     $usergroup          Optional id of usergroup to find notification users for e.g. the parent group of new user
- *                                      or as defined in $usergroup_approval_mappings
+ * @param   string      $userpermission     Permission string
+ * @param   int|null    $usergroup          Optional id of usergroup to find notification users for e.g. the parent group of 
+ *                                          new user or as defined in $usergroup_approval_mappings
  * 
  * @return array
  */
