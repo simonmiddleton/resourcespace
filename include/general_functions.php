@@ -1165,7 +1165,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-                    $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+                    $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><div><br /><br/>';
                     }
                 else if ($placeholder=="embed_thumbnail")
                     {                    
@@ -1303,7 +1303,18 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     if (is_html($body))
         {
         $mail->IsHTML(true);
-        $body = nl2br($body);
+        
+        // Standardise line breaks
+        $body = str_replace(["\r\n","\r","\n","<br/>","<br>"],"<br />",$body);
+
+        // Remove any sequences of three or more line breaks with doubles   
+        while(strpos($body,"<br /><br /><br />") !== false)
+            {
+            $body = str_replace("<br /><br /><br />","<br /><br />",$body);
+            }
+
+        // Also remove any unnecessary line breaks that were already formatted by HTML paragraphs
+        $body = str_replace(["</p><br /><br />","</p><br />"],"</p>",$body);
         }      
     else {$mail->IsHTML(false);}
 
