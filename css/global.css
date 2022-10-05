@@ -836,10 +836,14 @@ div.autocomplete ul li {
 .uppy-StatusBar-actionBtn,
 .uppy-Dashboard-browse,
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
-.uppy-DashboardContent-back,
-.uppy-DashboardContent-addMore {
-    background-color: #1988d7 !important;
+.uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
+.uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
+.uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
+    background-color: #1988d7;
     color: #fff;
+}
+.uppy-Dashboard-browse:focus, .uppy-Dashboard-browse:hover {
+    border: 1px solid transparent;
 }
 .uppy-DashboardContent-back:hover,
 .uppy-DashboardContent-addMore:hover {

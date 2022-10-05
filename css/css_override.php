@@ -126,7 +126,13 @@ if ((isset($button_colour_override) && $button_colour_override != ''))
     input[type=submit],
     input[type=button],
     .RecordPanel .RecordDownloadSpace .DownloadDBlend a,
-    .UploadButton a {
+    .UploadButton a,
+    .uppy-StatusBar-actionBtn,
+    .uppy-Dashboard-browse,
+    .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
+    .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
+    .uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
+    .uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
         background-color: <?php echo $button_colour_override; ?>;
     }
     <?php
