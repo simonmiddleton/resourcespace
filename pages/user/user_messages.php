@@ -246,7 +246,7 @@ include "../../include/header.php";
 
                             if ($messages[$n]["url"]!="")
                                 { ?>
-                                <a href="<?php echo $url_encoded; ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . htmlspecialchars($lang["link"]); ?></a>
+                                <a href="<?php echo escape_quoted_data($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . htmlspecialchars($lang["link"]); ?></a>
                                 <?php
                                 } ?> 
                         </div>
