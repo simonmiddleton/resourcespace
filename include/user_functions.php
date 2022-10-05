@@ -464,6 +464,9 @@ function get_users_with_permission($permission)
         $perms = trim_array(explode(",", (string) $groups[$n]["permissions"]));
         if (in_array($permission,$perms)) {$matched[] = $groups[$n]["ref"];}
     }
+    if (count($matched)<1) {
+        return array();
+    }
     # Executes query.
     $r = ps_query("SELECT u.*, g.name groupname, g.ref groupref, g.parent groupparent FROM user u
                    LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref 
