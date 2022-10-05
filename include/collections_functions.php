@@ -56,7 +56,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
             }
         }
 
-    $validtypes = [COLLECTION_TYPE_STANDARD,COLLECTION_TYPE_PUBLIC];
+    $validtypes = [COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_REQUEST];
     if($themes_in_my_collections)
         {
         $validtypes[] = COLLECTION_TYPE_FEATURED;
