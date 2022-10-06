@@ -368,11 +368,11 @@ $select_table_url = generateURL(
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo htmlspecialchars($record['table']); ?></td>
+                        <td><?php echo htmlspecialchars((string) $record['table']); ?></td>
                         <?php
                         }
                         ?>
-                    <td><?php echo htmlspecialchars($record['column']); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['column']); ?></td>
                     <?php
                     if($table != '' && $table_reference == 0 && array_key_exists($record['table'], $tables_data))
                         {
@@ -390,7 +390,7 @@ $select_table_url = generateURL(
                         }
                     else if($table == '' || $table_reference == 0)
                         {
-                        $ref = htmlspecialchars($record['table_reference']);
+                        $ref = htmlspecialchars((string) $record['table_reference']);
                         
                         switch ($record['column'])
                             {
