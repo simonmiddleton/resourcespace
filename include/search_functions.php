@@ -208,9 +208,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         $listsql="!list" . join(":",trim_array(split_keywords(getval("resourceids",""))));
         $search=$listsql . " " . $search;
         }
-
-    // Disabled as was killing search
-    //$tmp = hook("richeditsearchquery", "", array($search, $fields, $n)); if($tmp) $search .= $tmp;
     
     for ($n=0;$n<count($fields);$n++)
         {

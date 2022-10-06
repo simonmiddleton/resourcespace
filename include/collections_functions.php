@@ -982,59 +982,91 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
     $order_by = (in_array($order_by, $valid_order_bys) ? $order_by : "name");
 
-    # Keywords searching?
-    $keywords=split_keywords($search);
+    if (strpos($search,"collectiontitle:") !== false)
+        {
+        // This includes a specific title search from the advanced search page.
+        // Force quotes around any collectiontitle: search to support old behaviour        
+        $searchstart = mb_substr($search,0,strpos($search,"collectiontitle:"));
+        $searchend = mb_substr($search,strpos($search,"collectiontitle:")+16);
+        if(strpos($searchend,":") != false)
+            {
+            // Remove any other parts of the search with xxxxx: prefix that relate to other search aspects
+            $searchend=explode(":",$searchend)[0];
+            $searchparts=explode(" ",$searchend);
+            if(count($searchparts) > 1)
+                {
+                array_pop($searchparts);
+                }
+            $searchend = implode(" ",$searchparts);
+            if(substr($searchend,-1,1) == ",")
+                {
+                $searchend = substr($searchend,0,-1);
+                }
+            }
+        $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+        }
+
+    $keywords=split_keywords($search,false,false,false,false,true);
     if (strlen($search)==1 && !is_numeric($search)) 
         {
         # A-Z search
         $sql = "AND c.name LIKE ?";
         $sql_params[] = "s";$sql_params[] = $search . "%";
         }
-    elseif (substr($search,0,16)=="collectiontitle:")
-        {
-        # A-Z specific title search
-        $newsearch = implode(' ', array_diff($keywords, ['collectiontitle']));
-        $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
-        $sql = "AND c.name LIKE ?";
-        $sql_params[] = "s";$sql_params[] = $newsearch;
-        }
-    else if (strlen($search)>1 || is_numeric($search))
+    if (strlen($search)>1 || is_numeric($search))
         {
         $keyrefs=array();
         $keyunions = array();
         $unionselect = "SELECT kunion.collection";
         for ($n=0;$n<count($keywords);$n++)
             {
-            if (substr($keywords[$n],0,15)!="collectiontitle")
+            if(substr($keywords[$n],0,1)=="\"" && substr($keywords[$n],-1,1)=="\"")
                 {
-                if (substr($keywords[$n],0,16)=="collectionowner:")
+                $keywords[$n] = substr($keywords[$n],1,-1);
+                }
+
+            if (substr($keywords[$n],0,16)=="collectiontitle:")
+                {
+                $newsearch = explode(":",$keywords[$n])[1];
+                $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
+                $sql = "AND c.name LIKE ?";
+                $sql_params[] = "s";$sql_params[] = $newsearch;
+                }
+            elseif (substr($keywords[$n],0,16)=="collectionowner:")
+                {
+                $keywords[$n]=substr($keywords[$n],16);
+                $keyref=$keywords[$n];
+                $sql.=" AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
+                $sql_params[] = "i";$sql_params[] = $keyref;
+                $sql_params[] = "i";$sql_params[] = $keyref;
+                }
+            elseif (substr($keywords[$n],0,19)=="collectionownerref:")
+                {
+                $keywords[$n]=substr($keywords[$n],19);
+                $keyref=$keywords[$n];
+                $sql.=" AND (c.user=?)";
+                $sql_params[] = "i";$sql_params[] = $keyref;
+                }
+            elseif (substr($keywords[$n],0,10)=="basicyear:" || substr($keywords[$n],0,11)=="basicmonth:")
+                {
+                $dateparts=explode(":",$keywords[$n]);
+                $yearpart = $dateparts[0] == "basicyear" ? $dateparts[1] :  "____";
+                $monthpart = $dateparts[0] == "basicmonth" ?  $dateparts[1] : "__";
+                $sql .= " AND c.created LIKE ?";
+                $sql_params[] = "s";$sql_params[] = $yearpart . "-" . $monthpart . "%";
+                }
+            else
+                {
+                if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
+                # Support field specific matching - discard the field identifier as not appropriate for collection searches.
+                if (strpos($keywords[$n],":")!==false)
                     {
-                    $keywords[$n]=substr($keywords[$n],16);
-                    $keyref=$keywords[$n];
-                    $sql.=" AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
-                    $sql_params[] = "i";$sql_params[] = $keyref;
-                    $sql_params[] = "i";$sql_params[] = $keyref;
+                    $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
                     }
-                elseif (substr($keywords[$n],0,19)=="collectionownerref:")
+                $keyref=resolve_keyword($keywords[$n],false);
+                if ($keyref!==false)
                     {
-                    $keywords[$n]=substr($keywords[$n],19);
-                    $keyref=$keywords[$n];
-                    $sql.=" AND (c.user=?)";
-                    $sql_params[] = "i";$sql_params[] = $keyref;
-                    }
-                else
-                    {
-                    if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
-                    # Support field specific matching - discard the field identifier as not appropriate for collection searches.
-                    if (strpos($keywords[$n],":")!==false)
-                        {
-                        $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
-                        }
-                    $keyref=resolve_keyword($keywords[$n],false);
-                    if ($keyref!==false)
-                        {
-                        $keyrefs[]=$keyref;
-                        }
+                    $keyrefs[]=$keyref;
                     }
                 }
             }
