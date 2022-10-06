@@ -221,7 +221,7 @@ include "../../include/header.php";
                 <tr>
                     <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true); ?></td>
-                    <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars($messages[$n]["owner"]); ?></td>
+                    <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars((string)$messages[$n]["owner"]); ?></td>
                     <?php if ($messages_actions_fullname) { ?>
                         <td class="SingleLine<?php echo $unread_css; ?>"><?php echo strip_tags_and_attributes($user['fullname']); ?></td>
                     <?php } ?>
