@@ -2422,7 +2422,7 @@ function get_colour_key($image)
         {
         for ($x=0;$x<$depth;$x++)
             {
-            $rgb = imagecolorat($image, round($x*($width/$depth)), round($y*($height/$depth)));
+            $rgb = imagecolorat($image, floor($x*($width/$depth)), floor($y*($height/$depth)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
