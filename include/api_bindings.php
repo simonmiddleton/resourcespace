@@ -119,7 +119,9 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
-        $tmp_dld_fpath = temp_local_download_remote_file($url);
+        // Generate unique hash to use so that other uploads with the same name won't conflict
+        $upload_key = uniqid();
+        $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
         if($tmp_dld_fpath === false)
             {
             return "FAILED: Resource #{$ref} was created, but the file was not uploaded. Enable debug log and try again to identify why uploading it failed.";
@@ -134,7 +136,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
             }   
         else 
             {
-            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
+            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath,$upload_key);
             if ($return===false) {return false;}
             } 
         }
@@ -410,7 +412,10 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
-    $tmp_dld_fpath = temp_local_download_remote_file($url);
+    // Generate unique hash to use so that other uploads with the same name won't conflict
+    $upload_key = uniqid();
+    $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
+
     if($tmp_dld_fpath === false)
         {
         return "FAILED: The file for resource #{$ref} was not uploaded. Enable debug log and try again to identify why uploading it failed.";
@@ -424,7 +429,7 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
         }   
     else 
         {
-        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath,$upload_key);
         if ($return===false) {return false;}
         } 
 

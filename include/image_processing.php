@@ -3319,7 +3319,21 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
     return $return;
     }
 
-function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
+
+/**
+ * [Description for upload_file_by_url]
+ *
+ * @param int $ref                  Resource ID
+ * @param bool $no_exif=false       Don't extract exif data - true to disable extraction
+ * @param bool $revert=false        Delete all data and re-extract embedded data
+ * @param bool $autorotate=false    Autorotate images - alters embedded orientation data in uploaded file
+ * @param string $url=""            File URL
+ * @param string $key=""            Optional key to distinguish betweeen simultaneous requests from same user with same filename
+ * 
+ * @return [type]
+ * 
+ */
+function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool $autorotate=false,string $url="", string $key="")
     {
     debug("upload_file_by_url(ref = $ref, no_exif = $no_exif,revert = $revert, autorotate = $autorotate, url = $url)");
 
@@ -3335,13 +3349,16 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
         return false;
         }
 
-    $file_path = temp_local_download_remote_file($url);
+    $file_path = temp_local_download_remote_file($url,$key);
     if($file_path === false)
         {
         return false;
         }
  
-    return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);   # Process as a normal upload...
+    $upload_result = upload_file($ref,$no_exif,$revert,$autorotate,$file_path);   # Process as a normal upload...
+    remove_empty_temp_directory($file_path);
+    
+    return $upload_result;
     }
 
 /**

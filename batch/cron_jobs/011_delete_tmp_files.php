@@ -28,6 +28,7 @@ $folderstoscan = array();
 $folderstoscan[] = get_temp_dir(false);
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "plupload";
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "querycache";
+$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "remote_files";
 
 $modified_folderstoscan = hook("add_folders_to_delete_from_temp", "", array($folderstoscan));
 if(is_array($modified_folderstoscan) && !empty($modified_folderstoscan))

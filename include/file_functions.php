@@ -118,10 +118,11 @@ function get_checksum($path, $forcefull = false)
  * Download remote file to the temp filestore location.
  * 
  * @param string $url Source URL
+ * @param string $key Optional key to use - to prevent conflicts when simultaneous calls use same file name 
  * 
  * @return string|bool Returns the new temp filestore location or false otherwise.
  */
-function temp_local_download_remote_file(string $url)
+function temp_local_download_remote_file(string $url, string $key = "")
     {
     $userref = $GLOBALS['userref'] ?? 0;
     if($userref === 0)
@@ -167,11 +168,13 @@ function temp_local_download_remote_file(string $url)
             }
         }
     // Get temp location
-    $tmp_uniq_path_id = sprintf('remote_files/%s_%s', $userref, generateUserFilenameUID($userref));
-    $tmp_file_path = sprintf('%s/%s',
-        get_temp_dir(false, $tmp_uniq_path_id),
-        $filename);
-
+    $tmp_uniq_path_id = $userref . "_" . $key . generateUserFilenameUID($userref);
+    $tmp_dir = get_temp_dir(false) . "/remote_files/" . $tmp_uniq_path_id;
+    if(!is_dir($tmp_dir))
+        {
+        mkdir($tmp_dir,0777,true);
+        }
+    $tmp_file_path = $tmp_dir. "/" . $filename;
     if($tmp_file_path == $url)
         {
         // Already downloaded earlier by API call 
@@ -219,6 +222,20 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
     return false;
     }
 
-
-
-
+/**
+ * Remove empty folder from path to file. Helpful to remove a temp directory once the file it was created to hold no longer exists.
+ * This function should be called only once the directory to be removed is empty.
+ *
+ * @param   string   $path_to_file   Full path to file in filestore.
+ * 
+ * @return void
+ */
+function remove_empty_temp_directory(string $path_to_file = "")
+    {
+    if ($path_to_file != "" && !file_exists($path_to_file))
+        {
+        $tmp_path_parts = pathinfo($path_to_file);
+        $path_to_folder = str_replace(DIRECTORY_SEPARATOR . $tmp_path_parts['basename'], '', $path_to_file);
+        rmdir($path_to_folder);
+        }
+    }
