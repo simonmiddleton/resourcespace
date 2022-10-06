@@ -889,6 +889,7 @@ function api_reorder_featured_collections($refs)
     if(can_reorder_featured_collections())
         {
         sql_reorder_records('collection', $refs);
+        log_activity('via API - reorder_featured_collections', LOG_CODE_REORDERED, implode(', ', $refs), 'collection');
         return true;
         }
 
