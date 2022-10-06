@@ -1709,7 +1709,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $count_sql = clone($sql);
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-            $result=sql_limit_with_total_count($sql,$fetchrows,0,true,$count_sql);
+            $result=sql_limit_with_total_count($sql,$fetchrows,0,false,$count_sql);
             $resultcount = $result["total"]  ?? 0;
             if ($resultcount>0 && count($result["data"]) > 0)
                 { 
