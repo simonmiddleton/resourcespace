@@ -1038,19 +1038,20 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     }
                 }
             }
+
         for($n=0;$n<count($keyrefs);$n++)
             {
-            $select_extra .= ", k.key" . $keyrefs[$n];
-            $unionselect .= ", BIT_OR(key" . $keyrefs[$n] . "_found) AS key" . $keyrefs[$n];
+            $select_extra .= ", k.key" . $n;
+            $unionselect .= ", BIT_OR(key" . $n . "_found) AS key" .$n;
             $unionsql = "SELECT collection ";
             for($l=0;$l<count($keyrefs);$l++)
                 {
-                $unionsql .= $keyrefs[$l] == $keyrefs[$n] ? ",TRUE" : ",FALSE";
-                $unionsql .= " AS key" . $keyrefs[$l] . "_found";
+                $unionsql .= $l == $n ? ",TRUE" : ",FALSE";
+                $unionsql .= " AS key" . $l . "_found";
                 }
             $unionsql .= " FROM collection_keyword WHERE keyword=" . $keyrefs[$n];
             $keyunions[] = $unionsql;
-            $sql .= " AND key" .  $keyrefs[$n];
+            $sql .= " AND key" .  $n;
             }
         if(count($keyunions)> 0)
             {
