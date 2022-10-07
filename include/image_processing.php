@@ -1121,7 +1121,7 @@ function extract_exif_comment($ref,$extension="")
 
 
     // Autocomplete any blank fields without overwriting any existing metadata
-    autocomplete_blank_fields($ref, true);
+    autocomplete_blank_fields($ref, false);
     }
 
 function iptc_return_utf8($text)
