@@ -7730,10 +7730,30 @@ function get_indexed_resource_type_fields()
 */
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
     {
+    if ($field_order_by != "ref")
+        {
+        // Default order by is not being used so check order by columns supplied are valid for the table
+        $fields = array_column(ps_query('DESCRIBE resource_type_field'), 'Field');
+        $order_by_cols = explode(',', $field_order_by);
+        $valid_order_by_cols = array();
+        foreach ($order_by_cols as $col)
+            {
+            if (in_array(trim($col),  $fields))
+                {
+                $valid_order_by_cols[] = trim($col);
+                }
+            }
+        if (count($valid_order_by_cols) == 0)
+            {
+            $field_order_by = "ref";
+            }
+        else
+            {
+            $field_order_by = implode(', ', $valid_order_by_cols);
+            }
+        }
 
-    $fields = array_column(ps_query('DESCRIBE resource_type_field'), 'Field');
     $valid_sorts = ['asc', 'ascending', 'desc', 'descending'];
-    if(!in_array($field_order_by,  $fields)){$field_order_by = 'ref';}
     if(!in_array(strtolower($field_sort), $valid_sorts)){$field_sort = 'asc';}
 
     $conditionsql=""; $params = [];
