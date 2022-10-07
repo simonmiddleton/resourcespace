@@ -873,7 +873,7 @@ function send_user_message($users,$text)
  * Send system notifications to specified users, checking the user preferences first if specified
  *
  * @param  array  $users            Array of user IDs or array of user details from get_users()
- * @param  object $notifymessage    An instance of a ResourceSpaceUserNotification object holding message properties
+ * @param  ResourceSpaceUserNotification $notifymessage    An instance of a ResourceSpaceUserNotification object holding message properties
  * @param  bool   $forcemail        Force system to send email instead of notification?
  * 
  * @return array  Array containing resulting messages - can be used for testing when emails are not being sent
@@ -1017,7 +1017,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 {
                 $results["messages"][] = ["user"=>$notifyuser,"message"=>$messagetext,"url"=>$url];
                 }
-            message_add($notifications["message_users"],$messagetext,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
+            message_add($notifications["message_users"],$messagetext, (string) $url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
             }
         if (count($notifications["emails"])>0)
             {
