@@ -37,7 +37,7 @@ if (preg_match($pattern_ref, $url) == 1 && preg_match($pattern_source, $url) == 
     preg_match($pattern_source, $url, $matches_source);
     $source = $matches_source[0];
 
-    $entry_exists = ps_value("SELECT count(ref) as value FROM resourceconnect_collection_resources WHERE collection = ? AND instr(url, ?) AND LOCATE(?, url,0) = 0", array("i",$usercollection,"i",$ref,"s",$source), 0);
+    $entry_exists = ps_value("SELECT count(ref) as value FROM resourceconnect_collection_resources WHERE collection = ? AND instr(url, ?) AND LOCATE(?, url,0) = 0", array("i",$usercollection,"s",$ref,"s",$source), 0);
     } else 
     {
     /* url does not match patterns to allow comparison, so set entry_exists var to 0 */
