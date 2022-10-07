@@ -1019,7 +1019,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $newnode = set_node($use_node, $fields[$n]["ref"], $val, null, null);
                     if((int)$newnode != (int)$use_node)
                         {
+                        // Node already exists, remove current node and replace
                         $nodes_to_add[] = $newnode;
+                        $nodes_to_remove[] = $use_node;
+                        $nodes_check_delete[]=$use_node;
                         }
                     // Add to array for logging
                     $oldnodenames[$use_node] = $fields[$n]['value'];
