@@ -2967,7 +2967,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
         
         # Create profile image - cropped to square from centre.
-        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize '400x400' -thumbnail 200x200^^ -gravity center -extent '200x200'" . " " . escapeshellarg($profile_image_path);
+        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize 400x400 -thumbnail 200x200^^ -gravity center -extent 200x200" . " " . escapeshellarg($profile_image_path);
         $output = run_command($command);
 
         # Store reference to user image.
