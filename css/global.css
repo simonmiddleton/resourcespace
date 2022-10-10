@@ -1579,6 +1579,11 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     float: right;
     margin-top: 5px;
 }
+#login_box .UserRequestSubmit {
+    display: block;
+    text-align: right;
+    float: none;
+}
 #login_box .QuestionSubmit label {
     display: none;
 }
