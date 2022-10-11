@@ -85,7 +85,7 @@ if($preview_duration == 0)
     {
     $preview_duration = get_video_duration(get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension));
     }
-$original_duration = get_video_duration($video_original_file);
+$original_duration = intval(get_video_duration($video_original_file));
 
 $preview_cap = $original_duration;
 if(!$video_preview_original && ($preview_duration < $original_duration))
