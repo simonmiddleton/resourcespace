@@ -1507,7 +1507,13 @@ function do_search(
     $resultcount = $result["total"]  ?? 0;
     if ($resultcount>0 & count($result["data"]) > 0)
         {
-        $result = array_pad($result["data"],$resultcount,0);
+        $result = $result['data'];
+        $diff = count($result) - $resultcount;
+        while($diff > 0)
+            {
+            $result = array_merge($result, array_fill(0,($diff<1000000?$diff:1000000),0));
+            $diff-=1000000;
+            }
         hook("beforereturnresults","",array($result, $archive));
         return $result;
         }
