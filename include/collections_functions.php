@@ -2504,7 +2504,7 @@ function get_search_title($searchstring)
             }
         $search_title.=" [".implode(', ',$typenames)."]";
         }
-    $title=str_replace(">","",strip_tags($search_title));
+        $title=str_replace(">","",strip_tags(htmlspecialchars_decode($search_title)));
     return $title;
     }
 
