@@ -1182,7 +1182,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     global $allow_smart_collections, $smart_collections_async;
     global $config_search_for_number,$userref;
-    
+
+    // Don't cache special searches by default as often used for special purposes 
+    // e.g. collection count to determine edit accesss
+    $b_cache_count = false;
+
     if(!is_a($sql_join,"PreparedStatementQuery") && trim($sql_join == ""))
         {
         $sql_join = new PreparedStatementQuery();
@@ -1561,6 +1565,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $fieldref=intval(trim(substr($search,8)));
         $sql_join->sql .=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ?";
         array_push($sql_join->parameters,"i",$fieldref);
+
+        // Cache this as it is a very slow query
+        $b_cache_count = true;
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
@@ -1706,7 +1713,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $count_sql = clone($sql);
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-            $result=sql_limit_with_total_count($sql,$fetchrows,0,false,$count_sql);
+            $result=sql_limit_with_total_count($sql,$fetchrows,0,$b_cache_count,$count_sql);
             $resultcount = $result["total"]  ?? 0;
             if ($resultcount>0 && count($result["data"]) > 0)
                 { 
