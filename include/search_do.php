@@ -1508,7 +1508,7 @@ function do_search(
     if ($resultcount>0 & count($result["data"]) > 0)
         {
         $result = $result['data'];
-        $diff = count($result) - $resultcount;
+        $diff = $resultcount - count($result);
         while($diff > 0)
             {
             $result = array_merge($result, array_fill(0,($diff<1000000?$diff:1000000),0));
