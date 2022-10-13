@@ -2036,7 +2036,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
                             WHERE n.resource_type_field=? order by n.parent, n.order_by",array("i",(int)$resource, "i",(int)$treefield));
 
     # Category trees have no container root, so create one to carry all top level category tree nodes which don't have a parent
-    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null);                                               
+    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array());                                               
 
     $nodeswithpointers = array(0 => &$rootnode);
 
@@ -2047,10 +2047,23 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
         $parent = $nodeentry['parent'];
         $order_by = $nodeentry['order_by'];
         $resource = $nodeentry['resource'];
+
+        # Save the current node prior to establishing the pointer which can null the current node
+        $savednode=null;
+        if (isset($nodeswithpointers[$ref])) {
+            $savednode = $nodeswithpointers[$ref];
+        }
+        
         # Establish a pointer so that this node will be a child of its parent node
+        #  This means that the current node entry will be "added" to the children of the parent entry
         $nodeswithpointers[$ref] = &$nodeswithpointers[$parent]['children'][];
-        # Create this node 
-        $nodeswithpointers[$ref] = cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource);
+        
+        # Create an entry for the current node with any existing children at this point 
+        $existingchildren = array();
+        if ($savednode && isset($savednode['children'])) {
+            $existingchildren = $savednode['children'];
+        }   
+        $nodeswithpointers[$ref] = cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $existingchildren);
     }
 
     # Flatten the tree starting at the root                                                          
@@ -2123,28 +2136,46 @@ function get_cattree_node_strings($nodesordered, $strings_are_paths=true) {
     return $strings_as_paths;
 }
 
-# Helper function for building node entries for ordering
-function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource) {
+/**
+* Helper function for building node entry arrays for ordering
+* 
+* @param int    $ref                    Node id
+* @param int    $resource_type_field    Category tree field id
+* @param string $name                   Node name
+* @param int    $parent                 Parent node id
+* @param int    $order_by               Node order by
+* @param int    $resource               Resource id
+* @param array  $children               Array of child node ids
+* 
+* @return array
+*/
+function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children) {
     return array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name, 
-                'parent' => $parent, 'order_by' => $order_by, 'resource' => $resource, 'children' => array());
-  };
+                'parent' => $parent, 'order_by' => $order_by, 'resource' => $resource, 'children' => $children);
+};
   
-# Helper function which adds child nodes after each flattened parent node
+
+/**
+* Helper function which adds child nodes after each flattened parent node
+* 
+* @param array  $node   Array of nodes each with a child node array
+* 
+* @return array         Array of nodes with child nodes flattened out after their respective parents
+*/
 function cattree_node_flatten($node) {
-  static $flatten_count=0;
-  # Build node being flattened                                            
-  $flat_element = array('ref' => (string) $node['ref'],
+    # Build node being flattened                                            
+    $flat_element = array('ref' => (string) $node['ref'],
                         'resource_type_field' => (string) $node['resource_type_field'],
                         'name' => (string) $node['name'],
                         'parent' => (string) $node['parent'],
                         'order_by' => (string) $node['order_by'],
                         'resource' => (string) $node['resource']);
-  # Append children after flattened node                                                                
-  $cumulative_entries = array($flat_element);
-  foreach($node['children'] as $child) {
-    $cumulative_entries = array_merge($cumulative_entries, cattree_node_flatten($child));
-  }
-  return $cumulative_entries;
+    # Append children after flattened node                                                                
+    $cumulative_entries = array($flat_element);
+    foreach($node['children'] as $child) {
+        $cumulative_entries = array_merge($cumulative_entries, cattree_node_flatten($child));
+    }
+    return $cumulative_entries;
 }
 
 /**
