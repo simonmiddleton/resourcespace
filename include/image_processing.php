@@ -1544,8 +1544,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         elseif (is_array($onlysizes) && count($onlysizes) > 0 )
             {
             $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            $sizes=" WHERE id IN (". ps_param_insert(count($sizefilter)) .")";
-            $params = ps_param_fill($sizefilter, 's');
+            if (count($sizefilter) > 0)
+                {
+                $sizes = " WHERE id IN (" . ps_param_insert(count($sizefilter)) . ")";
+                $params = ps_param_fill($sizefilter, 's');
+                }
             $all_sizes= false;
             }
         
