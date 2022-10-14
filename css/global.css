@@ -823,11 +823,6 @@ div.autocomplete ul li {
     padding:0px;
     }
 
-.plupload_container {min-height:450px;}
-.plupload_droptext {font-size:20px;line-height:400px;}
-.plupload_wrapper, .plupload_header_title {font-family: inherit;}
-.plupload_header {display:none;}
-.plupload_content {top:0 !important;}
 .ui-widget-content {border:3px dashed #ccc;border-radius:10px;}
 
 #uploader .uppy-size--md .uppy-DashboardContent-addMore {

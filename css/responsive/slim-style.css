@@ -1042,20 +1042,6 @@ body {
     }
 }
 
-/* PL Upload */
-@media(max-width:440px) {
-    .plupload_filelist_footer {
-        height:auto;
-    }
-    .plupload_file_size, .plupload_file_status, .plupload_progress {
-        float:none;
-    }
-    .pluploadform {
-        margin-bottom: 20px;
-    }
-}
-
-
 /* Collection Bar */
 .rotate {
     -webkit-transform: rotate(90deg);

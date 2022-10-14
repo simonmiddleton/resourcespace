@@ -376,34 +376,6 @@ input:checked + .customFieldLabel, .keywordselected {
 .BrowseBarText {color: #fff;}
 .BrowseBarItem.ui-droppable-hover a .BrowseBarLink{border: 2px solid #FFF;}
 
-/* Upload buttons */
-a.ui-button.plupload_button {
-    background-color: #2e99e6;
-    color: white;
-    border-radius: 4px;
-    font-size: 1.2em;
-    border: none;
-    padding: 6px 14px;
-}
-a.ui-button.plupload_button:hover {
-    border: none;
-    opacity: 0.8;
-}
-a.ui-button.plupload_button.ui-button-disabled {
-    background-color: white;
-    color: gray;
-}
-.plupload_button .ui-icon.ui-icon-circle-plus,
-.plupload_button .ui-icon.ui-icon-circle-arrow-e,
-.plupload_button .ui-icon.ui-icon-circle-close {
-    background-image: url("smoothness/images/ui-icons_ffffff_256x240.png");
-}
-.plupload_button .ui-button-disabled .ui-icon.ui-icon-circle-plus,
-.plupload_button .ui-button-disabled .ui-icon.ui-icon.ui-icon-circle-arrow-e,
-.plupload_button .ui-button-disabled .ui-icon.ui-icon-circle-close {
-    background-image: url("smoothness/images/ui-icons_777777_256x240.png");
-}
-
 /* Firefox on macOS optgroup background styling fix */
 @supports (-moz-osx-font-smoothing: auto) {
     #CollectionDiv select optgroup {
