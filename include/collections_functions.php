@@ -1589,13 +1589,17 @@ function save_collection($ref, $coldata=array())
         {
         $old_attached_users=ps_array("SELECT user value FROM user_collection WHERE collection=?",array("i",$ref));
         $new_attached_users=array();
-        $collection_owner=ps_value(
+        $collection_owner_ref=ps_value(
             "SELECT u.ref value FROM collection c LEFT JOIN user u ON c.user=u.ref WHERE c.ref=?",
             array("i",$ref),
             "");
-        $collection_owner=get_user($collection_owner);
-
-        $old_attached_users[]=$collection_owner["ref"]; # Collection Owner is implied as attached already
+        global $userref;
+        $collection_owner=get_user(($collection_owner_ref == ''?$userref:$collection_owner_ref));
+        
+        if($collection_owner_ref != "")
+            {
+            $old_attached_users[]=$collection_owner["ref"]; # Collection Owner is implied as attached already
+            }
 
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
