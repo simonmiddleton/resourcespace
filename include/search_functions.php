@@ -1509,13 +1509,15 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         global $open_access_for_contributor;
         if($open_access_for_contributor && $userref == $cuser)
             {
-            $sql_filter->sql ="archive IN (" . implode(",",$archive) . ")";
+            $sql_filter->sql = "archive IN (" . ps_param_insert(count($archive)) . ")";
+            $sql_filter->parameters = ps_param_fill($archive, "i");
             $sql_join->sql = " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
+            $sql_join->parameters = array();
             }
 
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE created_by = ? AND r.ref > 0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
-        $sql->parameters = array_merge($sql_join->parameters,["i",$cuser],$sql_filter->parameters);
+        $sql->parameters = array_merge($sql_join->parameters, ["i", $cuser], $sql_filter->parameters);
         }
     elseif ($search=="!images") 
         {
