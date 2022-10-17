@@ -85,8 +85,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         return false;
         }
 
-    $resource_data=get_resource_data($ref);    
-    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
+    $resource_data=get_resource_data($ref);
+
+    if (!is_array($resource_data))
+        {
+        # No valid resource found.
+        return false;
+        }
+
+    if(isset($resource_data["lock_user"]) && $resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         return false;
         }
@@ -3346,8 +3353,15 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
         }
 
     global $userref;
-    $resource_data=get_resource_data($ref);    
-    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
+    $resource_data=get_resource_data($ref);
+
+    if (!is_array($resource_data))
+        {
+        # No valid resource found.
+        return false;
+        }
+
+    if(isset($resource_data["lock_user"]) && $resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         return false;
         }
