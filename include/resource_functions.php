@@ -6671,17 +6671,28 @@ function get_last_resource_edit_array($resources = array())
     	return false;
         }
 
-    $lastmodified  = ps_query("SELECT r.ref, r.modified FROM resource r WHERE r.ref IN (" . ps_param_insert(count($resources)) . ") ORDER BY r.modified DESC",ps_param_fill($resources,"i"));
-    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e'",array("i",$lastmodified[0]["ref"]));
+    $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach($chunks as $chunk);
+        {
+        $rows  = ps_query(
+            "SELECT r.ref, r.modified 
+                FROM resource r 
+            WHERE r.ref IN (" . ps_param_insert(count($chunk)) . ") 
+            ORDER BY r.modified DESC",
+            ps_param_fill($chunk,"i")
+        );
+        if (!isset($lastmodified) || $rows[0]["modified"]>$lastmodified["modified"]){$lastmodified=$rows[0];}
+        }
+    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e'",array("i",$lastmodified["ref"]));
     if(count($lastuserdetails) == 0)
         {
         return false;
         }
 
-    $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
+    $timestamp = max($lastuserdetails[0]["date"],$lastmodified["modified"]);
 
     $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
-    return array("ref" => $lastmodified[0]["ref"],"time" => $timestamp, "user" => $lastusername);
+    return array("ref" => $lastmodified["ref"],"time" => $timestamp, "user" => $lastusername);
     }
 
 /**

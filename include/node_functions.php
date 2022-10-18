@@ -1602,10 +1602,14 @@ function delete_resource_nodes_multi($resources=array(),$nodes=array())
     {
     if(!is_array($nodes))
         {$nodes=array($nodes);}
-        
-    $sql = "DELETE FROM resource_node WHERE resource in (" . ps_param_insert(count($resources)) . ") AND node in (" . ps_param_insert(count($nodes)) . ")";
-    $params = array_merge(ps_param_fill($resources, "i"), ps_param_fill($nodes, "i"));
-    ps_query($sql, $params);
+    
+    $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach($chunks as $chunk)
+        {
+        $sql = "DELETE FROM resource_node WHERE resource in (" . ps_param_insert(count($chunk)) . ") AND node in (" . ps_param_insert(count($nodes)) . ")";
+        $params = array_merge(ps_param_fill($chunk, "i"), ps_param_fill($nodes, "i"));
+        ps_query($sql, $params);
+        }
     }
 
 
@@ -2386,29 +2390,36 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
         return [];
         }
 
-    $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN (" . ps_param_insert(count($resources)) . ")";
-    $query_params = ps_param_fill($resources, "i");
-
-    if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
+    $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    $noderows = [];
+    foreach($chunks as $chunk)
         {
-        $fields = array_filter($resource_type_fields,"is_int_loose");
-        $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
-        $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
+        $query = "SELECT {$sql_select} FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE rn.resource IN (" . ps_param_insert(count($chunk)) . ")";
+        $query_params = ps_param_fill($chunk, "i");
+
+        if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
+            {
+            $fields = array_filter($resource_type_fields,"is_int_loose");
+            $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
+            $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
+            }
+
+        if(!is_null($node_sort))
+            {
+            if($node_sort == SORT_ASC)
+                {
+                $query .= " ORDER BY n.ref ASC";
+                }
+            if($node_sort == SORT_DESC)
+                {
+                $query .= " ORDER BY n.ref DESC";
+                }
+            }
+
+        $newnoderows = ps_query($query, $query_params);
+        $noderows = array_merge($noderows,$newnoderows);
         }
 
-    if(!is_null($node_sort))
-        {
-        if($node_sort == SORT_ASC)
-            {
-            $query .= " ORDER BY n.ref ASC";
-            }
-        if($node_sort == SORT_DESC)
-            {
-            $query .= " ORDER BY n.ref DESC";
-            }
-        }
-
-    $noderows = ps_query($query, $query_params);
     $results = array();
     foreach($noderows as $noderow)
         {
