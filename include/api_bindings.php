@@ -626,7 +626,7 @@ function api_add_resource_nodes($resource,$nodestring)
         {return false;}        
     $resourcearr = explode(",",$resources);
     $nodes = explode(",",$nodestring);
-    return add_resource_nodes_multi($resourcearr,$nodes);
+    return add_resource_nodes_multi($resourcearr,$nodes,false,true);
     }
     
 function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0)
