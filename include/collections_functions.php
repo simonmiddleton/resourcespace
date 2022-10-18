@@ -2560,7 +2560,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                     $sql .= '?, ';
                     $params[] = 's'; $params[] = $keys[$n]["expires"];
                     }
-                if($keys[$n]["usergroup"]=""){$sql .= 'NULL';}
+                if($keys[$n]["usergroup"]==''){$sql .= 'NULL';}
                 else
                     {
                     $sql .= '?';
