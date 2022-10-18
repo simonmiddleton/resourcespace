@@ -3331,16 +3331,16 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
 
 
 /**
- * [Description for upload_file_by_url]
+ * Upload file from a URL and add it to a resource.
  *
- * @param int $ref                  Resource ID
- * @param bool $no_exif=false       Don't extract exif data - true to disable extraction
- * @param bool $revert=false        Delete all data and re-extract embedded data
- * @param bool $autorotate=false    Autorotate images - alters embedded orientation data in uploaded file
- * @param string $url=""            File URL
- * @param string $key=""            Optional key to distinguish betweeen simultaneous requests from same user with same filename
+ * @param  int      $ref                  Resource ID
+ * @param  bool     $no_exif=false        Don't extract exif data - true to disable extraction
+ * @param  bool     $revert=false         Delete all data and re-extract embedded data
+ * @param  bool     $autorotate=false     Autorotate images - alters embedded orientation data in uploaded file
+ * @param  string   $url=""               File URL
+ * @param  string   $key=""               Optional key to distinguish betweeen simultaneous requests from same user with same filename
  * 
- * @return [type]
+ * @return  bool
  * 
  */
 function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool $autorotate=false,string $url="", string $key="")
