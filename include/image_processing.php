@@ -2508,10 +2508,10 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     
     # Save all images
     if ($tweak_all_images){
-        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where id<> ?", ['i', $top]);
+        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id <> ?", ['s', $top]);
     }
     else {
-        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where (internal=1 or allow_preview=1) and id<> ?", ['i', $top]);
+        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
     }
     for ($n=0;$n<count($ps);$n++)
         {
