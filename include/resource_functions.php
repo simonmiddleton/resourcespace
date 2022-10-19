@@ -2813,6 +2813,8 @@ function delete_resource($ref)
     );
     ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
 	hook("afterdeleteresource");
+    
+    clear_query_cache("stats");
 
 	return true;
 	}
@@ -4641,6 +4643,7 @@ function delete_alternative_file($resource,$ref)
 
 	# Update disk usage
 	update_disk_usage($resource);
+    clear_query_cache("stats");
 
     return true;
 	}
@@ -5613,6 +5616,7 @@ function update_disk_usage($resource)
 			}
 		}
 	ps_query("update resource set disk_usage=?,disk_usage_last_updated=now(),file_size=? where ref=?",array("i",$total,"i",$rsize,"i",$resource));
+
 	return true;
 	}
 
@@ -5646,6 +5650,7 @@ function update_disk_usage_cron()
         update_disk_usage($resource);
         }
 
+    clear_query_cache("stats");
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
     }
 
@@ -5657,7 +5662,7 @@ function update_disk_usage_cron()
 function get_total_disk_usage()
     {
     global $fstemplate_alt_threshold;
-    return ps_value("select ifnull(sum(disk_usage),0) value from resource where ref>?",array("i",$fstemplate_alt_threshold), 0);
+    return ps_value("select ifnull(sum(disk_usage),0) value from resource where ref>?",array("i",$fstemplate_alt_threshold), 0,"stats");
     }
 
 function overquota()
