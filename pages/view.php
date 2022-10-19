@@ -616,6 +616,10 @@ if(!hook('replaceviewtitle'))
     } //end hook replaceresourceistrancoding ?>
 
 <?php hook('renderbeforeresourceview', '', array('resource' => $resource));
+
+# Keep track of need for openseadragon library
+$image_preview_zoom_lib_required = false;
+
 if (in_array($resource["file_extension"], config_merge_non_image_types()) && $non_image_types_generate_preview_only)
     {
     $download_multisize=false;
@@ -816,6 +820,7 @@ if($image_preview_zoom)
         $hide_real_filepath = $orig_hrfp;
 
         // Generate the custom tile source object for OpenSeadragon
+        $image_preview_zoom_lib_required = true;
         ?>
         <script>
         var openseadragon_custom_tile_source = {
@@ -852,6 +857,7 @@ if($image_preview_zoom)
                 $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
 
                 // Generate the custom tile source object for OpenSeadragon
+                $image_preview_zoom_lib_required = true;
                 ?>
                 <script>
                 var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
@@ -1007,6 +1013,7 @@ if($image_preview_zoom)
 			
             if($image_preview_zoom)
                 {
+                $image_preview_zoom_lib_required = true;
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -2400,7 +2407,7 @@ if($annotate_enabled)
     <?php
 	}
 
-if($image_preview_zoom)
+if($image_preview_zoom_lib_required)
     {
     ?>
     <script src="<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/openseadragon.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
