@@ -2601,7 +2601,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                 else
                     {
                     $sql .= '?';
-                    $params[] = 's'; $params[] = $keys[$n]["usergroup"];
+                    $params[] = 'i'; $params[] = $keys[$n]["usergroup"];
                     }
                 # Insert a new access key entry for this resource/collection.
                 ps_query("insert into external_access_keys(resource,access_key,user,collection,date,access,password_hash,expires,usergroup) values (?, ?, ?, ?,now(), ?, ?, {$sql})",
