@@ -6516,7 +6516,7 @@ function upload_share_setup(string $key,$shareopts = array())
     {
     debug_function_call("upload_share_setup",func_get_args());
     global $baseurl, $pagename, $upload_share_active, $upload_then_edit;
-    global $upload_link_workflow_state, $override_status_default;
+    global $upload_link_workflow_state, $override_status_default,$usergroup;
 
     $rqdopts = array("collection", "usergroup", "user");
     foreach($rqdopts as $rqdopt)
