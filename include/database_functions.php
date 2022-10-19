@@ -417,7 +417,17 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         $cache_file=$cache_location . "/" . $cache . "_" . md5($serialised_query) . "_" . md5($scramble_key . $serialised_query) . ".json"; // Scrambled path to cache
         if (file_exists($cache_file))
             {
-            $cachedata=json_decode(file_get_contents($cache_file),true);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                $cachedata = json_decode(file_get_contents($cache_file), true);
+                }
+            catch (Exception $e)
+                {
+                $cachedata = null;
+                debug("ps_query(): " . $e->getMessage());
+                }
+            unset($GLOBALS["use_error_exception"]);
             if (!is_null($cachedata)) // JSON decode success
                 {
                 if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
