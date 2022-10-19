@@ -27,7 +27,7 @@ $editing      = ($editaccess != "" && $deleteaccess == "") ? true : false;
 $editexternalurl = (getval("editexternalurl","") != "");
 $generateurl  = getval("generateurl","") != "";
 
-$share_user = getval("share_user", "");
+$share_user = getval("share_user", 0);
 
 // Share options
 if($editing)
