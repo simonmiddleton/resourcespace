@@ -148,7 +148,7 @@ function simplesaml_getauthdata($value)
         $as = new SimpleSAML\Auth\Simple($spname);
         }
 	$as->requireAuth();
-	$authdata = $as->getAuthData($value);
+	$authdata = $as->getAuthData($value)->getValue();
 	return $authdata;
 	}
 
