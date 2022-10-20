@@ -827,6 +827,13 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 $value = truncate_join_field_value(strip_leading_comma($resdata));
                                 ps_query("UPDATE resource SET field{$fieldid} = ? WHERE ref = ?", ['s', $value, 'i', $resource_id]);
                             }
+
+                        # Add any onchange code
+                        if($field_def["onchange_macro"]!="")
+                            {
+                            $macro_resource_id=$resource_id;
+                            eval(eval_check_signed($field_def["onchange_macro"]));
+                            }
                         }
                     }
                 elseif($cell_value != "")
