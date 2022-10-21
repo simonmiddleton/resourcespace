@@ -73,7 +73,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		$headline = $lang['collection_download_original'];
         if ($direct_link_previews && $downloadthissize)
             {
-            $headline = make_download_preview_link($ref, $sizes[$n]);
+            $headline = make_download_preview_link($ref, $sizes[$n], $headline);
             }
         if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))
             {
