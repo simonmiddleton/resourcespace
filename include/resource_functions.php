@@ -1024,6 +1024,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             # Add any onchange code
             if($fields[$n]["onchange_macro"]!="")
                 {
+                $macro_resource_id=$ref;
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
 			} # End of if "allowed to edit field conditions"
@@ -1909,6 +1910,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // Add any onchange code
                     if($fields[$n]["onchange_macro"]!="")
                         {
+                        $macro_resource_id=$ref;
                         eval(eval_check_signed($fields[$n]["onchange_macro"]));
                         }
 
@@ -2522,6 +2524,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
+        $macro_resource_id=$resource;
         eval(eval_check_signed($fieldinfo["onchange_macro"]));
         }
 
