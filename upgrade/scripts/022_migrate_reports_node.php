@@ -54,28 +54,20 @@ where resource_type_field.type=6 and node.name>=date('[from-y]-[from-m]-[from-d]
 
 $reports=ps_query("select ref,name,query from report");
 
-foreach($code_to_migrate as $inx =>$code)
-    {
-    echo "FINGERPRINT={$inx}  DATA=".json_encode($code['fingerprint'])."<br>";
-    }
-
-echo "<br>";
-
 foreach($reports as $report)
     {
-    echo "CANDIDATE REPORT={$report['ref']} - {$report['name']}<br>";
     t022_perform_migration($report, $code_to_migrate);
     }
 
-echo "<br>REPORT MIGRATIONS DONE<br>";    
 
+    
 function t022_perform_migration($rep, $code_to_migrate) {
 
     foreach($code_to_migrate as $key => $code)
         {
         $position=strpos((string) $rep["query"], (string) $code["fingerprint"]);
         if ($position > 0 || $position === 0) {
-            echo ">> MIGRATING REPORT={$rep['ref']} CATEGORY={$code['category']} FINGERPRINT={$key}<br><br>";
+            echo "Migrating report {$rep['ref']}<br><br>";
             $new_query=str_replace($code["fingerprint"], $code["replacement"] ,$rep["query"]);
             ps_query("UPDATE report SET query=? WHERE ref=?",array("s",$new_query, "i",$rep['ref']));
         }
