@@ -9,7 +9,11 @@ if (PHP_SAPI != 'cli')
 include(dirname(__FILE__) . "/../include/db.php");
 include_once(dirname(__FILE__) . "/../include/image_processing.php");
 
+# Prevent this script from creating offline jobs for tasks such as extracting text.
+# Offline jobs shouldn't be created here as they require a valid user ref to be processed.
+# This is running offline anyway so no need to create more jobs. 
 $offline_job_queue=false;
+
 $ignoremaxsize=false;
 $noimage=false;
 if ($argc >= 2)
