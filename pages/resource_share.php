@@ -32,7 +32,7 @@ $share_user = getval("share_user", 0);
 // Share options
 if($editing)
     {
-    $shareinfo      = get_external_shares(array("share_resource"=>$ref, "access_key"=>$editaccess, "share_user"=>$share_user));
+    $shareinfo      = get_external_shares(array("share_resource"=>$ref, "access_key"=>$editaccess, "share_user"=>(int)$share_user));
     if(isset($shareinfo[0]))
         {
         $shareinfo  = $shareinfo[0];
