@@ -230,7 +230,7 @@ function update_tab(el, ref, action)
     let el_obj = jQuery(el);
     let record = el_obj.parents('tr');
     let tools = el_obj.parents('div.ListTools');
-    let tools_edit_save_cancel = tools.find('a span.fa-edit, a span.fa-floppy-disk, a span.fa-xmark').parents('a');
+    let tools_edit_save_cancel = tools.find('a i.fa-edit, a i.fa-floppy-disk, a i.fa-xmark').parents('a');
 
     let record_name_inline_edit = record.find('input[name="tab_name_inline_edit_' + ref + '"');
     let record_name_translated = record_name_inline_edit.siblings().first();
