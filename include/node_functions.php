@@ -388,7 +388,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         WHERE resource_type_field = ?
         " . $filter_by_name . "
         AND " . $parent_sql . "
-        ORDER BY " . $order_by . " ASC
+        ORDER BY " . $order_by . ", ref ASC
         " . $limit;
 
     $nodes = ps_query($query,$parameters,"schema");
