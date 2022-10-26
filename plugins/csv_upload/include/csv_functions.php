@@ -500,7 +500,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 }
             }
 
-        // Now process the actual data
+        // Now process the actual data, looping through each column field
 		foreach ($headers as $column_id => $field_name)	
 			{
             // Skip columns already processed as special columns e.g. resource type, id etc.
@@ -845,7 +845,11 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 } // End of foreach resourcerefs
             }
             ob_flush();
-            }	// end of cell loop
+            }	// end of loop through column fields
+
+        // Autocomplete follows principal resource update
+        autocomplete_blank_fields($resource_id, false);  // false means only autocomplete blank fields
+
         }  // end of loop through lines
 
     fclose($file);
