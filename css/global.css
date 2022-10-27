@@ -478,9 +478,11 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ListTitle {font-weight: bold;}
 .Listview .IconStar {width:11px;height:12px;padding: 0;display: block;float:left;}
 .ListViewBulkActions {margin-bottom: 15px;}
-.ListViewBulkActions a {margin-right: 5px; margin-left: 5px; text-decoration: none;}
 .ListViewBulkActions i {padding-right: 8px;}
-.ListViewBulkActions .DisabledLink:hover {color: #474747;}
+.ListViewBulkActions .DisabledLink:hover {color: #666666;}
+.ListViewBulkActions span {cursor: pointer; margin-right: 5px; margin-left: 5px; color: #666666}
+.ListViewBulkActions span .DisabledLink {cursor: default;}
+.ListViewBulkActions span:hover {color: #2E99E6;}
 
 /*Search Panel layout*/
 .SearchSpace {padding: 15px;width: auto;}

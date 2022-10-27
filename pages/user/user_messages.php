@@ -128,15 +128,15 @@ include "../../include/header.php";
     </div>
 
     <div class="ListViewBulkActions">
-        <a id="messages-delete-selected" class="DisabledLink">
+        <span id="messages-delete-selected" class="DisabledLink">
             <i class="fas fa-trash-alt"></i><?php echo $lang["action-delete"]; ?>
-        </a>
-        <a id="messages-mark-selected-read" class="DisabledLink">
+                </span>
+        <span id="messages-mark-selected-read" class="DisabledLink">
             <i class="fas fa-envelope-open"></i><?php echo $lang["mymessages_markread"]; ?>
-        </a>
-        <a id="messages-mark-selected-unread" class="DisabledLink">
+                </span>
+        <span id="messages-mark-selected-unread" class="DisabledLink">
             <i class="fas fa-envelope"></i><?php echo $lang["mymessages_markunread"]; ?>
-        </a>
+                </span>
     </div>
 
     <div class="Listview" id="user_messages">
@@ -336,23 +336,38 @@ include "../../include/header.php";
         jQuery("#messages-select-all").prop("checked", select_all_checkbox);
         tick_selected_messages();
         });
- 
+      
     function display_message_actions(show)
         {
         if (show == true)
             {
-            jQuery(".ListViewBulkActions a").attr("href", "<?php echo $baseurl_short; ?>pages/user/user_messages.php");
-            jQuery(".ListViewBulkActions a").removeClass("DisabledLink");
- 
-            jQuery("#messages-delete-selected").attr("onclick", "jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?deleteselusrmsg=" + JSON.stringify(selected_messages) + "',function() { message_poll(); return CentralSpaceLoad(this,true);});");
-            jQuery("#messages-mark-selected-read").attr("onclick", "jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?selectedseen="  + JSON.stringify(selected_messages) + "',function() { message_poll(); return CentralSpaceLoad(this,true);});");
-            jQuery("#messages-mark-selected-unread").attr("onclick", "jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?selectedunseen="  + JSON.stringify(selected_messages) + "',function() { message_poll(); return CentralSpaceLoad(this,true);});");
-            }
+            jQuery(".ListViewBulkActions span").removeClass("DisabledLink"); 
+            jQuery('.ListViewBulkActions').children().click(function(e){
+                
+                if ((jQuery(e.target).index()==0)){
+                    jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?deleteselusrmsg='  + JSON.stringify(selected_messages), 
+                        function() {message_poll();CentralSpaceLoad('',true);});
+                } else if ((jQuery(e.target).index()==1)) {
+                    jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?selectedseen='  + JSON.stringify(selected_messages), 
+                        function() {message_poll();CentralSpaceLoad('',true);
+                    });
+                } else if ((jQuery(e.target).index()==2)) {
+                    jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?selectedunseen='  + JSON.stringify(selected_messages), 
+                        function() {
+                        message_poll();CentralSpaceLoad('',true);
+                    });
+                } 
+                jQuery('.message-checkbox').prop('checked', false);
+                selected_messages = [];
+                select_all_checkbox = false;
+                display_message_actions(false);
+                window.history.pushState('/pages/user/user_messages.php', 'user_messages.php', '<?php echo $baseurl?>/pages/user/user_messages.php');
+                e.stopImmediatePropagation(); 
+            });  
+           }
         else
             {
-            jQuery(".ListViewBulkActions a").removeAttr("href");
-            jQuery(".ListViewBulkActions a").addClass("DisabledLink");
-            jQuery(".ListViewBulkActions a").removeAttr("onclick");
+           jQuery(".ListViewBulkActions span").addClass("DisabledLink");
             }
         }
  
