@@ -6932,7 +6932,7 @@ function get_resource_all_image_sizes($ref)
             {
             $size_id = trim($size_data["id"]) === "" ? "original" : $size_data["id"];
 
-            if(in_array($size_id, array_column($all_image_sizes, 'size_code')))
+            if(array_key_exists("{$size_id}_{$size_data["extension"]}", $all_image_sizes))
                 {
                 continue;
                 }
