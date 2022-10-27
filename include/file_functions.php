@@ -130,6 +130,12 @@ function temp_local_download_remote_file(string $url, string $key = "")
         return false;
         }
 
+    if ($key != "" && preg_match('/\W+/', $key) !== 0)
+        {
+        // Block potential path traversal - allow only word characters.
+        return false;
+        }
+
     $url = trim($url);
     $url_original = $url;
     // Remove query string from URL

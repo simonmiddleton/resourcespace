@@ -120,7 +120,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     if ($url!="")
         {
         // Generate unique hash to use so that other uploads with the same name won't conflict
-        $upload_key = uniqid();
+        $upload_key = uniqid($ref . "_");
         $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
         if($tmp_dld_fpath === false)
             {
@@ -413,7 +413,7 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
     // Generate unique hash to use so that other uploads with the same name won't conflict
-    $upload_key = uniqid();
+    $upload_key = uniqid((int)$ref . "_");
     $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
 
     if($tmp_dld_fpath === false)
