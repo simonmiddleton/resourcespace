@@ -20,9 +20,9 @@ class ResourceSpaceUserNotification
     private $subject = [];   
 
     /**
-     * @var array $url
+     * @var string $url
      */
-    public $url;
+    public $url = "";
 
     /**
      * @var array $template
@@ -1021,7 +1021,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             }
         if (count($notifications["emails"])>0)
             {
-            if(strpos($messagetext,$url) === false)
+            if(!empty($url) && strpos($messagetext,$url) === false)
                 {
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
