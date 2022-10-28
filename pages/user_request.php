@@ -89,7 +89,7 @@ if (getval("save","")!="")
         $error=$lang["error_invalid_email"];
         }
     # Check that the e-mail address doesn't already exist in the system
-    elseif (user_email_exists($user_email) && $account_email_exists_note)
+    elseif (($user_email_exists = user_email_exists($user_email)) && $account_email_exists_note)
         {
         # E-mail already exists
         $error=$lang["accountemailalreadyexists"];$error_extra="<br/><a href=\"".$baseurl_short."pages/user_password.php?email=" . urlencode($user_email) . "\">" . $lang["forgottenpassword"] . "</a>";
@@ -109,11 +109,13 @@ if (getval("save","")!="")
             if($success!==true && !$account_email_exists_note)
                 {
                 // send an email about the user request
+                $account_email_exists_notify = true; // Email to admins to explain account with existing email was requested.
                 $success=email_user_request();
                 }
             }
         else
             {
+            $account_email_exists_notify = $user_email_exists;
             $success=email_user_request();
             }
 			

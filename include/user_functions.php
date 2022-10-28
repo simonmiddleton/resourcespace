@@ -1198,7 +1198,7 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_note,
+    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify,
            $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$user_account_auto_creation;
 
     // Get posted vars sanitized:
@@ -1217,7 +1217,7 @@ function email_user_request()
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
     $message->append_subject(" - " . $name);
-    $message->set_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
+    $message->set_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
     $message->append_text("<br/><br/>");
     $message->append_text("lang_name");
     $message->append_text(": " . $name . "<br/><br/>");
@@ -1232,7 +1232,7 @@ function email_user_request()
         {
         $message->append_text($customContents . "<br/><br/>");
         }
-    $message->append_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
+    $message->append_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
     $message->user_preference = ["user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
     $message->url = $baseurl . "/pages/team/team_user.php";
     send_user_notification($approval_notify_users,$message);
