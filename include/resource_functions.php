@@ -8083,7 +8083,7 @@ function get_download_filename($ref,$size,$alternative,$ext)
 
     elseif (isset($download_filename_field))
         {
-        $newfilename=safe_file_name(strip_extension(get_data_by_field($ref,$download_filename_field), true));
+        $newfilename = get_data_by_field($ref, $download_filename_field);
         if ($newfilename)
             {
             $filename = trim(nl2br(strip_tags($newfilename)));
