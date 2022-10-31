@@ -808,8 +808,16 @@ function do_search(
                                 $related = array_merge($related, $wildcards);
                                 if (count($related) > 0)
                                     {
-                                    $relatedsql->sql = " OR nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
+                                    $relatedsql->sql = " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
                                     $relatedsql->parameters = ps_param_fill($related,"i");
+
+                                    if ($field_short_name_specified && isset($fieldinfo['ref']))
+                                        {
+                                        $relatedsql->sql .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE resource_type_field = ? )";
+                                        $relatedsql->parameters[] = "i";
+                                        $relatedsql->parameters[] = $fieldinfo['ref'];
+                                        }
+                                    $relatedsql->sql .= ")";
                                     }
 
                                 # Form join
