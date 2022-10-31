@@ -1975,6 +1975,13 @@ function save_resource_data_multi($collection,$editsearch = array())
             resource_log($resource,$log_sql["type"],$log_sql["field"],$log_sql["notes"],$log_sql["from"],$log_sql["to"]);
             }
         }
+    
+    // Autocomplete follows principal resource update
+    foreach ($list as $resource_id) 
+        {
+        autocomplete_blank_fields($resource_id, false);  // false means only autocomplete blank fields
+        }
+    
     db_end_transaction("save_resource_data_multi");
 
     // Also save related resources field
