@@ -91,7 +91,7 @@ if('' != $userfiledownload)
     $rqstname       = getval("filename","");
     if($rqstname!="")
         {
-        $filename   = safe_file_name($rqstname) . "." . $ext;
+        $filename   = $rqstname . "." . $ext;
         }
     hook('modifydownloadpath');
     }
