@@ -95,10 +95,14 @@ function HookResourceconnectViewResourceactions_anonymous()
 	if ($resource["has_image"]==1)
 		{ 
 		$url.="&thumb=" . urlencode(get_resource_path($ref,false,"col",false,"jpg"));
+		$url.="&large_thumb=" . urlencode(get_resource_path($ref,false,"thm",false,"jpg"));
+		$url.="&xl_thumb=" . urlencode(get_resource_path($ref,false,"pre",false,"jpg"));
 		}	
 	else
 		{
 		$url.="&thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true));
+		$url.="&large_thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false));
+		$url.="&xl_thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false));
 		}
 
 	?>	
