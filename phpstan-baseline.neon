@@ -1,0 +1,881 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Result of function check_api_key \\(void\\) is used\\.$#"
+			count: 1
+			path: api/index.php
+
+		-
+			message: "#^Result of function execute_api_call \\(void\\) is used\\.$#"
+			count: 1
+			path: api/index.php
+
+		-
+			message: "#^Result of function ajax_send_response \\(void\\) is used\\.$#"
+			count: 1
+			path: include/ajax_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$position_prefix$#"
+			count: 1
+			path: include/api_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$collection$#"
+			count: 4
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$search_title$#"
+			count: 1
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_collection$#"
+			count: 2
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_group$#"
+			count: 1
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_type$#"
+			count: 2
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_user$#"
+			count: 4
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$upload$#"
+			count: 2
+			path: include/collections_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$user$#"
+			count: 1
+			path: include/collections_functions.php
+
+		-
+			message: "#^Result of function comments_tags_to_links \\(void\\) is used\\.$#"
+			count: 1
+			path: include/comment_functions.php
+
+		-
+			message: "#^Function generateResourcesMetadataCSV\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: include/csv_export_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$build_url_param$#"
+			count: 1
+			path: include/dash_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$error$#"
+			count: 1
+			path: include/database_functions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: include/footer.php
+
+		-
+			message: "#^Function show_pagetime\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: include/general_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$attachments$#"
+			count: 1
+			path: include/general_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$confirm_page_change$#"
+			count: 2
+			path: include/general_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$images$#"
+			count: 1
+			path: include/general_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$lang$#"
+			count: 1
+			path: include/general_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$result$#"
+			count: 1
+			path: include/general_functions.php
+
+		-
+			message: "#^Result of function render_trash \\(void\\) is used\\.$#"
+			count: 1
+			path: include/header.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'C' \\(\"C\", \"C\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'O' \\(\"O\", \"O\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 3 duplicate keys with value 'E' \\(\"E\", \"E\", \"E\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 3 duplicate keys with value 'N' \\(\"N\", \"N\", \"N\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 3 duplicate keys with value 'R' \\(\"R\", \"R\", \"R\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 3 duplicate keys with value 'Y' \\(\"Y\", \"Y\", \"Y\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 4 duplicate keys with value 'G' \\(\"G\", \"G\", \"G\", \"G\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 4 duplicate keys with value 'P' \\(\"P\", \"P\", \"P\", \"P\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Array has 5 duplicate keys with value 'B' \\(\"B\", \"B\", \"B\", \"B\", \"B\"\\)\\.$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Undefined variable\\: \\$original_extension$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Undefined variable\\: \\$processfile$#"
+			count: 1
+			path: include/image_processing.php
+
+		-
+			message: "#^Undefined variable\\: \\$where_activity_log_statement$#"
+			count: 1
+			path: include/log_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$where_collection_log_statement$#"
+			count: 1
+			path: include/log_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$where_resource_log_statement$#"
+			count: 1
+			path: include/log_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$limit$#"
+			count: 2
+			path: include/message_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$msgfind$#"
+			count: 2
+			path: include/message_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$sort_desc$#"
+			count: 1
+			path: include/message_functions.php
+
+		-
+			message: "#^Function update_fieldx\\(\\) should return array but return statement is missing\\.$#"
+			count: 1
+			path: include/metadata_functions.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'sub' \\('sub', 'sub'\\)\\.$#"
+			count: 1
+			path: include/mime_types.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'wmz' \\('wmz', 'wmz'\\)\\.$#"
+			count: 1
+			path: include/mime_types.php
+
+		-
+			message: "#^Instantiated class Spipu\\\\Html2Pdf\\\\Html2Pdf not found\\.$#"
+			count: 1
+			path: include/pdf_functions.php
+
+		-
+			message: "#^Function deactivate_plugin\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: include/plugin_functions.php
+
+		-
+			message: "#^Result of function render_featured_collection_category_selector \\(void\\) is used\\.$#"
+			count: 1
+			path: include/render_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$default_perpage_list$#"
+			count: 1
+			path: include/render_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$editexpiration$#"
+			count: 1
+			path: include/render_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$password$#"
+			count: 1
+			path: include/render_functions.php
+
+		-
+			message: "#^Function save_request\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: include/request_functions.php
+
+		-
+			message: "#^Call to static method compare\\(\\) on an unknown class Diff\\.$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Call to static method toString\\(\\) on an unknown class Diff\\.$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Function resource_download_allowed\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$access_key$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$allow_resource_deletion$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$anonymous_login$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$ignore_permissions$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$lastmodified$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_collection$#"
+			count: 3
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_group$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_order_by$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_resource$#"
+			count: 2
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_sort$#"
+			count: 1
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_type$#"
+			count: 2
+			path: include/resource_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$share_user$#"
+			count: 4
+			path: include/resource_functions.php
+
+		-
+			message: "#^Function GetStem not found\\.$#"
+			count: 1
+			path: include/search_do.php
+
+		-
+			message: "#^Undefined variable\\: \\$floatval$#"
+			count: 2
+			path: include/search_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$search_includes_themes$#"
+			count: 1
+			path: include/search_functions.php
+
+		-
+			message: "#^Result of function log_activity \\(void\\) is used\\.$#"
+			count: 1
+			path: include/tab_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$lang$#"
+			count: 2
+			path: include/user_functions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/admin/admin_content_edit.php
+
+		-
+			message: "#^Result of function check_site_text_custom \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/admin/admin_content_edit.php
+
+		-
+			message: "#^Result of function validate_html \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/admin/admin_content_edit.php
+
+		-
+			message: "#^Result of function render_table \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/admin/tabs.php
+
+		-
+			message: "#^Result of function render_clear_selected_btn \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/ajax/collections.php
+
+		-
+			message: "#^Result of function render_edit_selected_btn \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/ajax/collections.php
+
+		-
+			message: "#^Caught class Html2Pdf_exception not found\\.$#"
+			count: 1
+			path: pages/ajax/contactsheet.php
+
+		-
+			message: "#^Caught class Spipu\\\\Html2Pdf\\\\Exception\\\\Html2PdfException not found\\.$#"
+			count: 1
+			path: pages/ajax/contactsheet.php
+
+		-
+			message: "#^Instantiated class Spipu\\\\Html2Pdf\\\\Exception\\\\ExceptionFormatter not found\\.$#"
+			count: 1
+			path: pages/ajax/contactsheet.php
+
+		-
+			message: "#^Instantiated class Spipu\\\\Html2Pdf\\\\Html2Pdf not found\\.$#"
+			count: 1
+			path: pages/ajax/contactsheet.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/ajax/userlist_select_update.php
+
+		-
+			message: "#^Result of function execute_api_call \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/api_test.php
+
+		-
+			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
+			count: 3
+			path: pages/check.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/collection_download.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 2
+			path: pages/collection_edit.php
+
+		-
+			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/collection_email.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 4
+			path: pages/collection_email.php
+
+		-
+			message: "#^Result of function send_collection_feedback \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/collection_feedback.php
+
+		-
+			message: "#^Result of function email_collection_request \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/collection_request.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 4
+			path: pages/collection_set_category.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 2
+			path: pages/collection_share.php
+
+		-
+			message: "#^Result of function get_saved_searches \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/collections.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/collections_featured.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/dbtest.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/edit.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/edit_fields/4.php
+
+		-
+			message: "#^Result of function get_section_list \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/help.php
+
+		-
+			message: "#^Result of function purge_expired_shares \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/manage_external_shares.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'sortable' \\(\"sortable\", \"sortable\"\\)\\.$#"
+			count: 1
+			path: pages/manage_jobs.php
+
+		-
+			message: "#^Instantiated class HTML2PDF not found\\.$#"
+			count: 1
+			path: pages/metadata_download.php
+
+		-
+			message: "#^Result of function remove_from_collection_link \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/preview.php
+
+		-
+			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/resource_email.php
+
+		-
+			message: "#^Result of function email_resource_request \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/resource_request.php
+
+		-
+			message: "#^Result of function render_upload_here_button \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/search.php
+
+		-
+			message: "#^Result of function remove_from_collection_link \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/search_views/resource_tools.php
+
+		-
+			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
+			count: 3
+			path: pages/setup.php
+
+		-
+			message: "#^Undefined variable\\: \\$lang$#"
+			count: 1
+			path: pages/setup.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/team/team_analytics.php
+
+		-
+			message: "#^Function getvalescaped not found\\.$#"
+			count: 2
+			path: pages/test_access_key.php
+
+		-
+			message: "#^Result of function validate_html \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/tools/check_html.php
+
+		-
+			message: "#^Result of function validate_html \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/tools/check_text.php
+
+		-
+			message: "#^Function sql_array not found\\.$#"
+			count: 1
+			path: pages/tools/fix_bad_update_archive_status.php
+
+		-
+			message: "#^Function sql_query not found\\.$#"
+			count: 1
+			path: pages/tools/fix_bad_update_archive_status.php
+
+		-
+			message: "#^Function sql_query not found\\.$#"
+			count: 4
+			path: pages/tools/fixutf8.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/tools/staticsync.php
+
+		-
+			message: "#^Undefined variable\\: \\$altfile$#"
+			count: 1
+			path: pages/tools/staticsync.php
+
+		-
+			message: "#^Undefined variable\\: \\$altpath$#"
+			count: 1
+			path: pages/tools/staticsync.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/tools/update_paths.php
+
+		-
+			message: "#^Function update_preview invoked with 1 parameter, 3 required\\.$#"
+			count: 2
+			path: pages/tools/update_previews.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: pages/tools/update_sizes.php
+
+		-
+			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
+			count: 1
+			path: pages/upload_batch.php
+
+		-
+			message: "#^Instantiated class TusPhp\\\\Tus\\\\Server not found\\.$#"
+			count: 1
+			path: pages/upload_batch.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/upload_batch.php
+
+		-
+			message: "#^Result of function remove_from_collection_link \\(void\\) is used\\.$#"
+			count: 1
+			path: pages/view.php
+
+		-
+			message: "#^Undefined variable\\: \\$original_download_name$#"
+			count: 1
+			path: plugins/adobe_link/hooks/view.php
+
+		-
+			message: "#^Undefined variable\\: \\$mtparams$#"
+			count: 1
+			path: plugins/annotate/hooks/view.php
+
+		-
+			message: "#^Call to function unset\\(\\) contains undefined variable \\$notes\\.$#"
+			count: 1
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Call to method GetX\\(\\) on an unknown class MYPDF\\.$#"
+			count: 2
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Call to method GetY\\(\\) on an unknown class MYPDF\\.$#"
+			count: 3
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Call to method MultiCell\\(\\) on an unknown class MYPDF\\.$#"
+			count: 2
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Call to method SetXY\\(\\) on an unknown class MYPDF\\.$#"
+			count: 1
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Call to method getPage\\(\\) on an unknown class MYPDF\\.$#"
+			count: 3
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Call to method setPage\\(\\) on an unknown class MYPDF\\.$#"
+			count: 2
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^Instantiated class MYPDF not found\\.$#"
+			count: 1
+			path: plugins/annotate/include/annotate_functions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/consentmanager/pages/list.php
+
+		-
+			message: "#^Result of function display_video_subtitles \\(void\\) is used\\.$#"
+			count: 1
+			path: plugins/embedvideo/hooks/view.php
+
+		-
+			message: "#^Undefined variable\\: \\$emu_form_post_id$#"
+			count: 1
+			path: plugins/emu/hooks/edit.php
+
+		-
+			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"
+			count: 1
+			path: plugins/emu/include/emu_api.php
+
+		-
+			message: "#^Undefined variable\\: \\$date$#"
+			count: 1
+			path: plugins/feedback/include/feedback_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$user$#"
+			count: 1
+			path: plugins/feedback/include/feedback_functions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/feedback/pages/setup.php
+
+		-
+			message: "#^Undefined variable\\: \\$resource$#"
+			count: 1
+			path: plugins/flickr_theme_publish/inc/flickr_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$alternative_file_previews_mouseover$#"
+			count: 1
+			path: plugins/format_chooser/hooks/view.php
+
+		-
+			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$configs\\.$#"
+			count: 1
+			path: plugins/image_banks/include/AbstractProvider.php
+
+		-
+			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$download_endpoint\\.$#"
+			count: 1
+			path: plugins/image_banks/include/AbstractProvider.php
+
+		-
+			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$id\\.$#"
+			count: 1
+			path: plugins/image_banks/include/AbstractProvider.php
+
+		-
+			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$name\\.$#"
+			count: 2
+			path: plugins/image_banks/include/AbstractProvider.php
+
+		-
+			message: "#^Undefined variable\\: \\$imagemagick_path$#"
+			count: 2
+			path: plugins/image_text/hooks/collection_download.php
+
+		-
+			message: "#^Undefined variable\\: \\$imagemagick_path$#"
+			count: 2
+			path: plugins/image_text/hooks/download.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/licensemanager/pages/list.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/lightbox_preview/hooks/view.php
+
+		-
+			message: "#^Function mplus_generate_connection_data not found\\.$#"
+			count: 1
+			path: plugins/museumplus/pages/museumplus_object_details.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 1
+			path: plugins/museumplus/pages/setup.php
+
+		-
+			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
+			count: 1
+			path: plugins/museumplus/pages/setup_module.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/news/pages/news.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/news/pages/news_edit.php
+
+		-
+			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
+			count: 1
+			path: plugins/offline_archive/pages/restore_request.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/resourceconnect/pages/collection_download.php
+
+		-
+			message: "#^Function each not found\\.$#"
+			count: 1
+			path: plugins/rss2/pages/rssfeed.php
+
+		-
+			message: "#^Result of function check_api_key \\(void\\) is used\\.$#"
+			count: 1
+			path: plugins/rss2/pages/rssfilter.php
+
+		-
+			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
+			count: 1
+			path: plugins/simplesaml/include/simplesaml_functions.php
+
+		-
+			message: "#^Result of function generateFormToken \\(void\\) is used\\.$#"
+			count: 1
+			path: plugins/transform/pages/crop.php
+
+		-
+			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
+			count: 1
+			path: plugins/vimeo_publish/include/vimeo_publish_functions.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
+
+		-
+			message: "#^Function add_settings_field not found\\.$#"
+			count: 2
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
+
+		-
+			message: "#^Function register_setting not found\\.$#"
+			count: 2
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
+
+		-
+			message: "#^Function add_action not found\\.$#"
+			count: 1
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
+
+		-
+			message: "#^Function get_option not found\\.$#"
+			count: 2
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
+
+		-
+			message: "#^Function is_admin not found\\.$#"
+			count: 1
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
+
+		-
+			message: "#^Function wp_get_current_user not found\\.$#"
+			count: 1
+			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
+
+		-
+			message: "#^Caught class Google_ServiceException not found\\.$#"
+			count: 6
+			path: plugins/youtube_publish/include/youtube_functions.php
+
+		-
+			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
+			count: 1
+			path: plugins/yt2rs/hooks/view.php
+
+		-
+			message: "#^Function reorder_collections not found\\.$#"
+			count: 1
+			path: upgrade/scripts/018_fc_star_name_to_orderby.php
+
+		-
+			message: "#^Result of function log_activity \\(void\\) is used\\.$#"
+			count: 2
+			path: upgrade/scripts/021_migrate_tabs.php
