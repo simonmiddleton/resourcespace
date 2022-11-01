@@ -221,11 +221,6 @@ parameters:
 			path: include/mime_types.php
 
 		-
-			message: "#^Instantiated class Spipu\\\\Html2Pdf\\\\Html2Pdf not found\\.$#"
-			count: 1
-			path: include/pdf_functions.php
-
-		-
 			message: "#^Function deactivate_plugin\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: include/plugin_functions.php
@@ -387,21 +382,6 @@ parameters:
 
 		-
 			message: "#^Caught class Html2Pdf_exception not found\\.$#"
-			count: 1
-			path: pages/ajax/contactsheet.php
-
-		-
-			message: "#^Caught class Spipu\\\\Html2Pdf\\\\Exception\\\\Html2PdfException not found\\.$#"
-			count: 1
-			path: pages/ajax/contactsheet.php
-
-		-
-			message: "#^Instantiated class Spipu\\\\Html2Pdf\\\\Exception\\\\ExceptionFormatter not found\\.$#"
-			count: 1
-			path: pages/ajax/contactsheet.php
-
-		-
-			message: "#^Instantiated class Spipu\\\\Html2Pdf\\\\Html2Pdf not found\\.$#"
 			count: 1
 			path: pages/ajax/contactsheet.php
 

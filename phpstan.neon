@@ -13,6 +13,10 @@ parameters:
         - plugins
         - tests
         - upgrade
+
+    scanDirectories:
+      - lib/html2pdf/
+
     excludePaths:
         analyse:
             - plugins/*/lib/*
