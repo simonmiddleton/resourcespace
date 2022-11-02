@@ -332,7 +332,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
                     $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                               
-                    if(strpos($message_text,$url) === false)
+                    if($url !== '' && strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
                         $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
