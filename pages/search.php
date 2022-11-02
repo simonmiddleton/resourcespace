@@ -513,7 +513,10 @@ hook('searchaftersearchcookie');
 $rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page+$offset;
 
 // Do collections search first as this will determine the rows to fetch for do_search() - not for external shares
-if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard)
+if(($k=="" || $internal_share_access) 
+    && strpos($search,"!")===false
+    && ($archive_standard || in_array(0,$selected_archive_states))
+    )
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
     if(is_array($collections))
@@ -1438,7 +1441,10 @@ if (!hook("replacesearchheader")) # Always show search header now.
         <?php
         }
         # Include public collections and themes in the main search, if configured.      
-        if (isset($collections)&& strpos($search,"!")===false && $archive_standard && !hook('replacesearchpublic','',array($search,$collections)))
+        if (isset($collections) 
+            && strpos($search,"!")===false 
+            && ($archive_standard || in_array(0,$selected_archive_states))
+            && !hook('replacesearchpublic','',array($search,$collections)))
             {
             include "../include/search_public.php";
             }
