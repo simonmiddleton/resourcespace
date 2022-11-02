@@ -5508,6 +5508,13 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
                     log_node_changes($resource,$autonodes,array(),$lang["autocomplete_log_note"]);
                     $fields_updated[$field['ref']] = implode(",",$autonodes);
                     }
+
+                # If this is a 'joined' field we need to add it to the resource column
+                $joins = get_resource_table_joins();
+                if (in_array($field['ref'], $joins))
+                    {
+                    update_resource_field_column($resource, $field['ref'], $value);
+                    }
                 }
             else
                 {
