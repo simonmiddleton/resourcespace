@@ -762,7 +762,7 @@ function api_get_resource_collections($ref)
     return $ref_collections;
     }
 
-function api_update_related_resource($ref,$related,$add=true)
+function api_update_related_resource($ref,$related,$add=true) 
     {
     global $enable_related_resources;
     if(!$enable_related_resources)
@@ -770,7 +770,10 @@ function api_update_related_resource($ref,$related,$add=true)
         return false;
         }
     $related = explode(",",$related);
-    return update_related_resource($ref,$related,$add);
+    $addboolean = null;
+    if ($add==="true") { $addboolean=true; }
+    elseif ($add==="false") { $addboolean=false; }
+    return update_related_resource($ref,$related,$addboolean);
     }
 
 function api_get_collections_resource_count(string $refs)
