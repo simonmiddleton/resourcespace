@@ -2,7 +2,9 @@
 include dirname(__FILE__)."/../../../include/db.php";
 
 include dirname(__FILE__)."/../../../include/authenticate.php";
-if (!checkperm("a") && !checkperm("lm")) {exit ("Permission denied.");}
+
+$is_admin = checkperm("a");
+if (!$is_admin && !checkperm("lm")) {exit ("Permission denied.");}
 global $baseurl;
 
 
@@ -39,9 +41,9 @@ $url_params = array(
 <?php
     $links_trail = array(
         array(
-            'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php",
-			'menu' =>  true
+            'title' => !$is_admin ? htmlspecialchars($lang["home"]) : htmlspecialchars($lang["teamcentre"]),
+            'href'  => $baseurl_short . (!$is_admin ? "pages/home.php" : "pages/team/team_home.php"),
+            'menu'  => !$is_admin ? false : true
         ),
         array(
             'title' => $lang["managelicenses"]
