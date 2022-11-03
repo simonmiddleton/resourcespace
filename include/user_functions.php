@@ -3407,7 +3407,7 @@ function get_users_by_permission(array $permissions)
         # Translates group names in the newly created array.
         $r[$n]["groupname"] = lang_or_i18n_get_translated($r[$n]["groupname"], "usergroup-");
        
-        $return[] = array_filter($r[$n],function($k){return in_array($k,["ref","username","fullname","email","groupname","usergroup","approved","comments","simplesaml_custom_attributes","origin","profile_image","profile_text","last_ip","account_expires","created"]);},ARRAY_FILTER_USE_KEY);
+        $return[] = array_filter($r[$n],function($k){return in_array($k,["ref","username","fullname","email","groupname","usergroup","approved","comments","simplesaml_custom_attributes","origin","profile_image","profile_text","last_ip","account_expires","created","last_active"]);},ARRAY_FILTER_USE_KEY);
         }
 
     return $return;
