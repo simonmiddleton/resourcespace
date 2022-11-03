@@ -2610,9 +2610,6 @@ $download_no_session_cache_limiter=false;
 # Option to show only existing shares that have been shared by the user when sharing resources (not collections)
 $resource_share_filter_collections=false;
 
-# Set the following to false to disable permission checking before showing edit_all link in collection bar and on Manage my collections page, useful as this can be a performance hit if there are many resources in collections
-$edit_all_checkperms=false;
-
 # Option to turn off email sharing.
 $email_sharing=true;
 
