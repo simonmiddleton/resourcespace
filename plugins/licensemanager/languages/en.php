@@ -32,4 +32,4 @@ $lang["confirmdeletelicensefile"]="Are you sure you wish to DELETE this file? Th
 
 $lang['license_manager_mediums']='License usage mediums';
 
-$lang["license_manager_access"]="Manage license data (where not already enabled via 'a')";
+$lang["license_manager_access"]="Manage license data (where not already enabled via \"Can access the System Setup area\" permission)";
