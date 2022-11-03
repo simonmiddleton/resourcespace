@@ -598,11 +598,11 @@ function compile_search_actions($top_actions)
     $omit_edit_all = false;
 
     #This is to stop duplicate "Edit all resources" caused on a collection search
-    if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
+    if(isset($search) && substr($search, 0, 11) == '!collection')
         { 
         $omit_edit_all = true;
         }
-                   
+
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
         if($top_actions && $allow_save_search && $usercollection != $collection)
