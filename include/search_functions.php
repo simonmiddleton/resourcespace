@@ -2937,7 +2937,7 @@ function update_search_from_request($search)
         // Nodes can be searched directly when displayed on simple search bar
         // Note: intially they come grouped by field as we need to know whether if
         // there is a OR case involved (ie. @@101@@102)
-        else if('' != $value && substr($key, 0, 14) == 'nodes_searched')
+        else if('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
             {
             $node_ref = '';
 
