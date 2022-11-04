@@ -2508,7 +2508,17 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     }
                 else
                     {
-                    $value = implode(",",$newvalues);
+                    $node_names=[];
+                    foreach($nodes_to_add as $ref)
+                        {
+                            
+                            $returned_node = [];
+                        if(get_node($ref,$returned_node))
+                            {
+                            $node_names[] = $returned_node["name"];
+                            }
+                        }
+                    $value = implode(",",$node_names);
                     }
                 }
             }
