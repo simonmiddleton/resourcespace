@@ -8,11 +8,18 @@ function HookApi_webhooksEditExtra_edit_buttons()
     foreach ($api_webhooks_urls as $url)
         {
         ?>
-        <input  name="save"
-        id="edit_save_button"
+        <input  name="savex"
         class="editsave APIWebhooksEditButton"
         type="submit"
         value="&nbsp;&nbsp;&#8634;&nbsp;<?php echo $url["buttontext"]; ?>&nbsp;&nbsp;" />
         <?php
         }
+    }
+
+
+function HookApi_webhooksEditRedirectaftersave()
+    {
+    // Process the saved form and access the remote script.
+    echo "XXX" . getval("savex","");
+    return true;
     }

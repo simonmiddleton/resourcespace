@@ -4457,6 +4457,8 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             <?php
             }
 
+        hook("extra_edit_buttons");
+        
         # Duplicate navigation
        if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
             {
