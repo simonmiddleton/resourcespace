@@ -194,7 +194,7 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=get_resource_types();
+$rtypes=ps_query("SELECT * FROM resource_type ORDER BY `ref`",[], "schema");
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
