@@ -179,6 +179,7 @@ function do_search(
 
     $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
+    $searchidmatch = false;
     // Used to check if ok to skip keyword due to a match with resource type/resource ID
     if(is_int_loose($search))
         {
