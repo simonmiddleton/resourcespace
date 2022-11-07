@@ -109,7 +109,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
 
     // create new resource
-    if ($upload_type == "new")
+    if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c")))
         {
         // create a new resource.
         $newref=copy_resource($ref);
@@ -126,7 +126,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             -1,
             false
         );
-
+        update_archive_status($newref,get_default_archive_state(0));
         update_field($newref,$videosplice_description_field, "Trimmed video created from resource " . $ref . ":
             Start time from original: " . $ffmpeg_start_time . "
             End time from original: " . $ffmpeg_end_time . "
@@ -170,7 +170,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // add ref to list
         $trimmed_resources_new[] = $newref;
         }
-    elseif ($upload_type == "alt")
+    elseif ($upload_type == "alt" && !checkperm("A"))
         {
         // Upload an alternative file
         $resource_data = get_resource_data($ref);
@@ -460,8 +460,8 @@ if(isset($resource["field".$view_title_field]))
         <div class="Question" id="question_uploadtype">
             <label><?php echo $lang["video-trim_upload-type"]?></label>
             <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
-            <option value="alt"><?php echo $lang["addalternativefile"]?></option>
-            <option value="new"><?php echo $lang["createnewresource"]?></option>
+            <?php if(!checkperm("A")){?><option value="alt"><?php echo $lang["addalternativefile"]?></option><?php }?>
+            <?php if(get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
             </select>
             <div class="clearerleft"> </div>
         </div>
