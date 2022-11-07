@@ -2310,9 +2310,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             $existing = implode(",",$existingnodes);
             }
+
         if($nodevalues)
             {
-            // An array of node IDs has been passed, we can use these directly
+            // List of node IDs has been passed in comma separated form, use them directly
             $sent_nodes = explode(",",$value);
             if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST]) && count($sent_nodes) > 1)
                 {
@@ -2359,7 +2360,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             }
         else
             {
-            // Not node IDs - value has been passed as normal string value
+            // Not a list of node IDs; value has been passed as normal string value
             if($fieldinfo['type'] == FIELD_TYPE_DATE_RANGE)
                 {
                 // If this is a date range field we need to add values to the field options
@@ -2462,66 +2463,67 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     $nodes_to_remove[] = $fieldnode["ref"];
                     }
                 }
+             
+            } // End of $nodevalues test
 
-            if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
+        // Now carry out the node additions and removals
+        if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
+            {
+            # Work out what nodes need to be added/removed/kept
+            $nodes_to_add       = array_unique($nodes_to_add);
+            $nodes_to_remove    = array_intersect(array_unique($nodes_to_remove),$current_field_noderefs);
+            $added_nodes        = array_diff($nodes_to_add,$current_field_noderefs);
+            $removed_nodes      = array_intersect($nodes_to_remove,$current_field_noderefs);
+            $keep_nodes         = array_diff($current_field_noderefs,$removed_nodes);
+            $all_new_nodes      = array_merge($added_nodes,$keep_nodes);
+
+            if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
+                &&
+                (count($added_nodes) + count($current_field_noderefs) - count($removed_nodes)) > 1)
                 {
-                # Work out what nodes need to be added/removed/kept
-                $nodes_to_add       = array_unique($nodes_to_add);
-                $nodes_to_remove    = array_intersect(array_unique($nodes_to_remove),$current_field_noderefs);
-                $added_nodes        = array_diff($nodes_to_add,$current_field_noderefs);
-                $removed_nodes      = array_intersect($nodes_to_remove,$current_field_noderefs);
-                $keep_nodes         = array_diff($current_field_noderefs,$removed_nodes);
-                $all_new_nodes      = array_merge($added_nodes,$keep_nodes);
+                // Only a single value allowed
+                return false;
+                }
 
-                if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
-                    &&
-                    (count($added_nodes) + count($current_field_noderefs) - count($removed_nodes)) > 1)
-                    {
-                    // Only a single value allowed
-                    return false;
-                    }
+            // Update resource_node table and log
+            db_begin_transaction("update_field_{$field}");
+            if(count($nodes_to_remove)>0)
+                {
+                delete_resource_nodes($resource,$nodes_to_remove,false);
+                }
+            if(count($nodes_to_add)>0)
+                {
+                add_resource_nodes($resource,$nodes_to_add, false,false);
+                }
 
+            // Update log
+            if($log && (count($nodes_to_add)>0 || count($nodes_to_remove)>0))
+                {
+                log_node_changes($resource,$added_nodes,$removed_nodes);
+                }
 
-                // Update resource_node table and log
-                db_begin_transaction("update_field_{$field}");
-                if(count($nodes_to_remove)>0)
+            db_end_transaction("update_field_{$field}");
+            if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE)
+                {
+                $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
+                $treenodenames = get_cattree_node_strings($all_treenodes, true); # True means names are paths to nodes; False means names are node names
+                $value = implode(",",$treenodenames);        
+                }
+            else
+                {
+                $node_names=[];
+                foreach($nodes_to_add as $ref)
                     {
-                    delete_resource_nodes($resource,$nodes_to_remove,false);
-                    }
-                if(count($nodes_to_add)>0)
-                    {
-                    add_resource_nodes($resource,$nodes_to_add, false,false);
-                    }
-
-                // Update log
-                if($log && (count($nodes_to_add)>0 || count($nodes_to_remove)>0))
-                    {
-                    log_node_changes($resource,$added_nodes,$removed_nodes);
-                    }
-
-                db_end_transaction("update_field_{$field}");
-                if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE)
-                    {
-                    $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
-                    $treenodenames = get_cattree_node_strings($all_treenodes, true); # True means names are paths to nodes; False means names are node names
-                    $value = implode(",",$treenodenames);        
-                    }
-                else
-                    {
-                    $node_names=[];
-                    foreach($nodes_to_add as $ref)
+                    $returned_node = [];
+                    if(get_node($ref,$returned_node))
                         {
-                            
-                            $returned_node = [];
-                        if(get_node($ref,$returned_node))
-                            {
-                            $node_names[] = $returned_node["name"];
-                            }
+                        $node_names[] = $returned_node["name"];
                         }
-                    $value = implode(",",$node_names);
                     }
+                $value = implode(",",$node_names);
                 }
             }
+
         }
     else
         {
