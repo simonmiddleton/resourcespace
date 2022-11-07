@@ -2316,7 +2316,7 @@ function extract_mean_colour($image,$ref)
         {
         for ($x=0;$x<20;$x++)
             {
-            $rgb = imagecolorat($image, round($x*($width/20)), round($y*($height/20)));
+            $rgb = imagecolorat($image, floor($x*($width/20)), floor($y*($height/20)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
