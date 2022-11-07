@@ -561,14 +561,14 @@ if ($processupload)
                 }
             elseif(!$upload_then_edit)
                 {
-                $ref=copy_resource(0-$userref); # Copy from user template   
+                $ref=copy_resource(0-$userref,-1,$lang["createdfromwebuploader"]); # Copy from user template
                 }
 
             // copy_resource() returns false if user doesn't have a resource template
             // Usually, this happens when a user had from the first time upload_then_edit mode on
             if($upload_then_edit || false === $ref)
                 {
-                $ref = create_resource($resource_type, $setarchivestate);
+                $ref = create_resource($resource_type, $setarchivestate,-1,$lang["createdfromwebuploader"]);
                 }
 
             # Check that $ref is not false - possible return value with create_resource()
@@ -906,7 +906,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
     if($ref === false)
         {
         // If user doesn't have a resource template (usually this happens when a user had from the first time upload_then_edit mode on), create resource using default values.
-        $ref = create_resource($resource_type, $setarchivestate);
+        $ref = create_resource($resource_type, $setarchivestate,-1,$lang["createdfromwebuploadertemplate"]);
         }   
         
 	// Add to collection?

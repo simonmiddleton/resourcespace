@@ -287,7 +287,12 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         // Add as default resource type
         // Note: when processing multimedia files, the system will try and detect what resource type it should be based
         // on the extension of the file and update it using update_resource_type()
-        $new_resource_ref = create_resource($resource_type_extension_mapping_default, 0, $userref);
+        $new_resource_ref = create_resource(
+            $resource_type_extension_mapping_default,
+            0,
+            $userref,
+            $lang["emu_createdfromemu"]
+        );
 
         if(!$new_resource_ref)
             {

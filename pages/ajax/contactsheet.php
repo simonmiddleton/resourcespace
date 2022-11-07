@@ -387,7 +387,7 @@ if ($preview && isset($imagemagick_path))
 // Create a resource based on this PDF file or download it?
 if($contact_sheet_resource && enforcePostRequest(getval("ajax", false)))
     {
-    $new_resource = create_resource($contact_sheet_resource_type, 0);
+    $new_resource = create_resource($contact_sheet_resource_type, 0,-1,$lang["createdfromcontactsheet"]);
 
     update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy));
     update_field($new_resource, $filename_field, "{$new_resource}.pdf");
