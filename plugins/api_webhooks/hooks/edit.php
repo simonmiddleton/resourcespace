@@ -15,7 +15,7 @@ function HookApi_webhooksEditExtra_edit_buttons()
         <input  name="savex"
         class="editsave APIWebhooksEditButton"
         type="submit"
-        value="&nbsp;&nbsp;&#8634;&nbsp;<?php echo $url["buttontext"]; ?>&nbsp;&nbsp;"
+        value="&nbsp;&nbsp;&#8634;&nbsp;<?php echo i18n_get_translated($url["buttontext"]); ?>&nbsp;&nbsp;"
         onclick="document.getElementById('api_webhooks_submitted_button').value=<?php echo $counter ?>"
         />
         <?php
