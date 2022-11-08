@@ -194,6 +194,8 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
+# All resource types need to be visible so get_resource_types() is unsuitable
+# If the user can edit their own permissions they can access any resource type by editing the special permissons anyway
 $rtypes=ps_query("SELECT * FROM resource_type ORDER BY `ref`",[], "schema");
 foreach ($rtypes as $rtype)
 	{
