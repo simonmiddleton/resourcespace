@@ -6071,6 +6071,11 @@ function update_related_resource($ref,$related,$add=true)
         $related = array((int)$related);
         }
 
+    if (count($related) == 0)
+        {
+        return false;
+        }
+
     // Check edit access
     $access = get_edit_access($ref);
     if(!$access)
@@ -6085,7 +6090,6 @@ function update_related_resource($ref,$related,$add=true)
             return false;
             }
         }
-
 
     // This params array can be used for both SELECT and DELETE
 	$relatedparams = array_merge(["i",$ref],ps_param_fill($related,"i"),ps_param_fill($related,"i"),["i",$ref]);
