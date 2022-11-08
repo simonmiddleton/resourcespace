@@ -61,11 +61,23 @@ if ($alt_access)
         $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
         $css_PointerEventsNone = $enable_alt_file_preview_mouseover ? ' PointerEventsNone' : '';
         ?>
-		<tr class="DownloadDBlend" <?php if ($enable_alt_file_preview_mouseover)
-            {
-            ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_height=jQuery('#previewimage').height();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').height(orig_height);" 
-			  onMouseOut="jQuery('#previewimage').attr('src',orig_preview).attr('height',orig_height);"<?php
-            } ?>>
+		<tr class="DownloadDBlend" id="alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>">
+        <?php if ($enable_alt_file_preview_mouseover)
+            { ?>
+            <script>
+            jQuery(document).ready(function() {
+                jQuery("#alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>").mouseover(function() {
+                    orig_preview=jQuery('#previewimage').attr('src');
+                    orig_height=jQuery('#previewimage').height();
+                    jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');
+                    jQuery('#previewimage').height(orig_height); 
+                }).mouseout(function() {
+                    jQuery('#previewimage').attr('src',orig_preview).attr('height',orig_height);
+                });
+            });
+            </script>
+        <?php
+            } ?>
 		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>>
 		<?php
         if(!hook("renderaltthumb"))
