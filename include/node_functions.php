@@ -154,7 +154,11 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         }
     else
         {
-        log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
+        global $FIXED_LIST_FIELD_TYPES;
+        if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
+            }
 
         // Handle node indexing for new nodes
         if($resource_type_field_data["keywords_index"] == 1)
