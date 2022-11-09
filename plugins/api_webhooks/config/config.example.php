@@ -1,5 +1,6 @@
 <?php
 
+// Copy to config.php in this folder, or the main ResourceSpace config.php file.
 
 $api_webhooks_urls=[
     [

@@ -4,7 +4,7 @@ function HookApi_webhooksEditExtra_edit_buttons()
     {
     // Add configured buttons as appropriate.
     global $api_webhooks_urls;
-
+    if (!isset($api_webhooks_urls)) {return false;}
     ?>
     <input type="hidden" name="api_webhooks_submitted_button" id="api_webhooks_submitted_button" value="" />
     <?php
@@ -28,6 +28,7 @@ function HookApi_webhooksEditRedirectaftersave()
     {
     // Process the saved form and access the remote script.
     global $api_webhooks_urls,$ref;
+    if (!isset($api_webhooks_urls)) {return false;}
 
     // Fetch appropriate button
     $button_index=getval("api_webhooks_submitted_button","");if ($button_index==="") {return false;} // No button pressed? Redirect to view page as normal.
@@ -59,6 +60,9 @@ function HookApi_webhooksEditRedirectaftersave()
 
 function HookApi_webhooksEditUploadreviewabortnext()
     {
+    global $api_webhooks_urls;
+    if (!isset($api_webhooks_urls)) {return false;}
+
     // Don't move to the next resource when an API button has been pressed.
     $button_index=getval("api_webhooks_submitted_button","");
     if ($button_index!=="") {return true;}
