@@ -5,6 +5,7 @@ function HookApi_webhooksEditExtra_edit_buttons()
     // Add configured buttons as appropriate.
     global $api_webhooks_urls;
     if (!isset($api_webhooks_urls)) {return false;}
+    if (getval("collection","")!="") {return false;} // Not for batch edit
     ?>
     <input type="hidden" name="api_webhooks_submitted_button" id="api_webhooks_submitted_button" value="" />
     <?php
