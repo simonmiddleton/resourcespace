@@ -174,14 +174,10 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
-    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
-    
-    # check that $resource param is a positive integer and valid for int type db field
-    $options_resource = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
-    if (!filter_var($resource, FILTER_VALIDATE_INT, $options_resource))
-        {
-        return false;
-        }
+    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit, $userref;
+
+    // This user's template or real resources only
+    if ($resource<1 && $resource!=0-$userref) {return false;}
 
     $resourcedata=get_resource_data($resource,true);
     if (!$resourcedata)

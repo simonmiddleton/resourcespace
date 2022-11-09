@@ -731,7 +731,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             exit();
                             }
                         }
-                    else
+                    elseif (!hook('uploadreviewabortnext'))
                         {
                         // Redirect to next resource
                         ?>
@@ -782,12 +782,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     else
                         {
                         // Default
-                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     }
                 }
@@ -1237,7 +1237,6 @@ else
         # The script doesn't allow editing of empty collections, no need to handle that case here.
         echo text("multiple");
         ?> </p> <?php
-        if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
         } 
    elseif ($ref>0)
       {
@@ -1272,8 +1271,6 @@ else
             
             </div><!-- end of RecordHeader -->
             <?php
-            if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
-
             }
             
         if (!$upload_review_mode)
@@ -1356,11 +1353,6 @@ else
         <h1><?php echo $titleh1 ?></h1>
         <p><?php echo $lang["intro-batch_edit"];render_help_link("user/uploading");?></p>
         <?php
-        }
-    # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
-    if ($edit_show_save_clear_buttons_at_top)
-        {
-        SaveAndClearButtons("NoPaddingSaveClear");
         }
     }
 
