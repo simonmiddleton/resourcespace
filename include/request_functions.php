@@ -281,7 +281,8 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
  */
 function email_collection_request($ref,$details,$external_email)
     {
-    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
+    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,
+    $resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
@@ -324,10 +325,13 @@ function email_collection_request($ref,$details,$external_email)
 
     $templatevars["requesturl"]=$baseurl."/?c=".$ref;
 
-    $templatevars['username']=$username . " (" . $useremail . ")";
-    $userdata=get_user($userref);
-    if($userdata===false){return false;} # Unable to get user credentials
-    $templatevars["fullname"]=$userdata["fullname"];
+    if (isset($userref))
+        {
+        $templatevars['username']=$username . " (" . $useremail . ")";
+        $userdata=get_user($userref);
+        if($userdata===false){return false;} # Unable to get user credentials
+        $templatevars["fullname"]=$userdata["fullname"];
+        }
 
     reset ($_POST);
     foreach ($_POST as $key=>$value)
@@ -386,10 +390,13 @@ function email_collection_request($ref,$details,$external_email)
     $notification_message->append_subject(" - "  . $ref);
     $introtext[] = ["lang_user_made_request"];
     $introtext[] = ["<br /><br />"];
-    $introtext[] = ["lang_username"];
-    $introtext[] = [": "];
-    $introtext[] = [$username];
-    $introtext[] = ["<br />"];
+    if (isset($username))
+        {
+        $introtext[] = ["lang_username"];
+        $introtext[] = [": "];
+        $introtext[] = [$username];
+        $introtext[] = ["<br /><br />"];
+        }
     $notification_message->prepend_text_multi($introtext);
     $notification_message->append_text("lang_viewcollection");
     $notification_message->append_text(":");
@@ -434,18 +441,19 @@ function email_collection_request($ref,$details,$external_email)
         send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailcollectionrequest",$templatevars);
         }
 
+    $userconfirmmessage = clone($message);
+    $userconfirmmessage->set_subject($applicationname . ": ");
+    $userconfirmmessage->append_subject(" - "  . $ref);
+    $userconfirmmessage->prepend_text("<br /><br />");
+    $userconfirmmessage->prepend_text("lang_requestsenttext");
+    $userconfirmmessage->url = $templatevars['url'];
+    $userconfirmmessage->template = "emailusercollectionrequest";
+    $userconfirmmessage->templatevars = $templatevars;
+
     # $userref and $useremail will be that of the internal requestor
     # - We need to send the $userconfirmmessage to the internal requestor saying that their request has been submitted
     if (isset($userref) && $request_senduserupdates)
         {
-        $userconfirmmessage = clone($message);
-        $userconfirmmessage->set_subject($applicationname . ": ");
-        $userconfirmmessage->append_subject(" - "  . $ref);
-        $userconfirmmessage->prepend_text("<br /><br />");
-        $userconfirmmessage->prepend_text("lang_requestsenttext");
-        $userconfirmmessage->url = $templatevars['url'];
-        $userconfirmmessage->template = "emailusercollectionrequest";
-        $userconfirmmessage->templatevars = $templatevars;
         send_user_notification([$userref],$userconfirmmessage);
         }
 
