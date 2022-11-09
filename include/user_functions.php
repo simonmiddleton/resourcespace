@@ -3358,7 +3358,7 @@ function get_users_by_permission(array $permissions)
     global $U_perm_strict, $usergroup;
     if(!(checkperm("a") || checkperm("u")))
         {
-        return false;
+        return [];
         }
 
     $groupsql_filter = "";
