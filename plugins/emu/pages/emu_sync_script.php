@@ -18,7 +18,7 @@ set_time_limit($cron_job_time_limit);
 define('EMU_SCRIPT_SYNC_LOCK', 'emu_sync_mode_lock');
 
 $test_skip_multiple    = 0;
-$emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_rs_mappings       = plugin_decode_complex_configs($emu_rs_saved_mappings);
 $emu_script_start_time = microtime(true);
 $emu_records_limit     = 100;
 $emu_records_data      = array();

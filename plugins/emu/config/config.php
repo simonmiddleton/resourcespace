@@ -49,7 +49,7 @@ $emu_rs_saved_mappings['epublic']['ObjTitle'] = 20;
 $emu_rs_saved_mappings['epublic']['ObjName'] = 17;
 $emu_rs_saved_mappings['emultimedia']['ChaAspectRatio'] = 32;
 */
-$emu_rs_saved_mappings = base64_encode(serialize(array()));
+$emu_rs_saved_mappings = plugin_encode_complex_configs([]);
 
 // Modifying plugin configs requires bypassing the check for "modifiedTimeStamp" and forces 
 // ResourceSpace to get all records again so that newly added columns will be updated
