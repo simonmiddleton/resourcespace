@@ -91,7 +91,7 @@ set_process_lock('emu_import');
 $emu_script_start_time = microtime(true);
 $emu_resources         = get_emu_resources();
 $count_emu_resources   = count($emu_resources);
-$emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_rs_mappings       = plugin_decode_complex_configs($emu_rs_saved_mappings);
 $emu_pointer           = 0;
 
 

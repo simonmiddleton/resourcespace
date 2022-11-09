@@ -15,7 +15,7 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$emu_rs_mappings               = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_rs_mappings               = plugin_decode_complex_configs($emu_rs_saved_mappings);
 $emu_script_last_ran           = '';
 $emu_config_modified_timestamp = time();
 
@@ -59,7 +59,7 @@ if('' != getval('submit', '') || '' != getval('save', ''))
         }
 
     $emu_rs_mappings       = $emu_rs_mappings_new;
-    $emu_rs_saved_mappings = base64_encode(serialize($emu_rs_mappings_new));
+    $emu_rs_saved_mappings = plugin_encode_complex_configs($emu_rs_mappings_new);
     }
 
 // Add test script functionality
