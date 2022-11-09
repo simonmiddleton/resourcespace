@@ -5,14 +5,17 @@ command_line_only();
 $saved_edit_filter = $usereditfilter;
 $saved_user = $userref;
 
+// Create unique permission string
+$testperm = "perm" . uniqid();
+
 // Create new groups
-$setoptions = array("permissions" => "perm1202,u,U,t,s","permadmin", "name" => "1202adminrestricted");
+$setoptions = array("permissions" => $testperm . ",u,U,t,s","permadmin", "name" => "1202adminrestricted");
 $parentgroupa = save_usergroup(0, $setoptions);
 
-$setoptions = array("permissions" => "perm1202,u,t,s","permadmin", "name" => "1202adminunrestricted");
+$setoptions = array("permissions" => $testperm . ",u,t,s","permadmin", "name" => "1202adminunrestricted");
 $parentgroupb = save_usergroup(0, $setoptions);
 
-$setoptions = array("permissions" => "perm1202,s", "name" => "1202child", "parent"=>$parentgroupa);
+$setoptions = array("permissions" => $testperm . ",s", "name" => "1202child", "parent"=>$parentgroupa);
 $childgroupa = save_usergroup(0, $setoptions);
 
 // Create users
@@ -46,33 +49,33 @@ save_user($childa);
 // Clear cache
 $udata_cache = [];
 
-// Test A Get all users with 'perm1202', current and child groups
+// Test A Get all users with $testperm permission, current and child groups
 $U_perm_strict = false;
 $adminadata = get_user($admina);
 setup_user($adminadata);
-$result = get_users_by_permission(["perm1202"]);
+$result = get_users_by_permission([$testperm]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),array($admina, $childa)))
 	{
     echo "ERROR - SUBTEST A\n";
     return false;
     }
 
-// Test B Get all users with 'perm1202', strictly limited to child groups
+// Test B Get all users with $testperm permission, strictly limited to child groups
 $U_perm_strict = true;
 $adminadata = get_user($admina);
 setup_user($adminadata);
-$result = get_users_by_permission(["perm1202"]);
+$result = get_users_by_permission([$testperm]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),[$childa]))
 	{
     echo "ERROR - SUBTEST B\n";
     return false;
     }
 
-// Test C Get all users with 'perm1202', no restriction
+// Test C Get all users with $testperm permission, no restriction
 $U_perm_strict = false;
 $adminbdata = get_user($adminb);
 setup_user($adminbdata);
-$result = get_users_by_permission(["perm1202"]);
+$result = get_users_by_permission([$testperm]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina, $adminb, $childa]))
 	{
     echo "ERROR - SUBTEST C\n";
@@ -80,17 +83,17 @@ if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina, $ad
     }
 
 // Test D Get all users with a set of permissions, no restriction
-$result = get_users_by_permission(["perm1202","u","U","t","s"]);
+$result = get_users_by_permission([$testperm,"u","U","t","s"]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina]))
 	{
     echo "ERROR - SUBTEST D\n";
     return false;
     }
 
-// Test E Get all users with 'perm1202' as standard user (no results)
+// Test E Get all users with $testperm as standard user (no results)
 $childadata = get_user($childa);
 setup_user($childadata);
-$result = get_users_by_permission(["perm1202"]);
+$result = get_users_by_permission([$testperm]);
 if(!empty($result))
 	{
     echo "ERROR - SUBTEST E\n";
