@@ -782,12 +782,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     else
                         {
                         // Default
-                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     }
                 }
