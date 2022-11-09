@@ -45,7 +45,8 @@ function HookApi_webhooksEditRedirectaftersave()
             )
         );
     $context  = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
+    $result = file_get_contents($url, false, $context);    global $api_webhooks_urls;
+
 
     // Handle any errors.
     if (strpos($http_response_header[0],"200 OK")===false)
@@ -66,4 +67,10 @@ function HookApi_webhooksEditUploadreviewabortnext()
     // Don't move to the next resource when an API button has been pressed.
     $button_index=getval("api_webhooks_submitted_button","");
     if ($button_index!=="") {return true;}
+    }
+
+
+function HookApi_webhooksEditRedirectaftersavetemplate()
+    {
+    return HookApi_webhooksEditRedirectaftersave();
     }
