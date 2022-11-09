@@ -1854,9 +1854,6 @@ $dynamic_keyword_suggest_contains=false;
 # Option to show resource ID in the thumbnail, next to the action icons.
 $display_resource_id_in_thumbnail=false;
 
-# Show "Save" and "Clear" buttons at the top of the resource edit form as well as at the bottom
-$edit_show_save_clear_buttons_at_top=false;
-
 # Allow empty collections to be shared?
 $collection_allow_empty_share=false;
 

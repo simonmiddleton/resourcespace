@@ -12,11 +12,11 @@ function HookApi_webhooksEditExtra_edit_buttons()
     foreach ($api_webhooks_urls as $url)
         {
         ?>
-        <input  name="savex"
+        <input  name="save"
         class="editsave APIWebhooksEditButton"
         type="submit"
         value="&nbsp;&nbsp;&#8634;&nbsp;<?php echo i18n_get_translated($url["buttontext"]); ?>&nbsp;&nbsp;"
-        onclick="document.getElementById('api_webhooks_submitted_button').value=<?php echo $counter ?>"
+        onclick="document.getElementById('api_webhooks_submitted_button').value=<?php echo $counter ?>;"
         />
         <?php
         $counter++;
@@ -30,7 +30,7 @@ function HookApi_webhooksEditRedirectaftersave()
     global $api_webhooks_urls,$ref;
 
     // Fetch appropriate button
-    $button_index=getval("api_webhooks_submitted_button","");if ($button_index=="") {return false;} // No button pressed? Redirect to view page as normal.
+    $button_index=getval("api_webhooks_submitted_button","");if ($button_index==="") {return false;} // No button pressed? Redirect to view page as normal.
     $button=$api_webhooks_urls[$button_index];
     
     // Perform API call.
@@ -55,4 +55,11 @@ function HookApi_webhooksEditRedirectaftersave()
         }
 
     return true;
+    }
+
+function HookApi_webhooksEditUploadreviewabortnext()
+    {
+    // Don't move to the next resource when an API button has been pressed.
+    $button_index=getval("api_webhooks_submitted_button","");
+    if ($button_index!=="") {return true;}
     }
