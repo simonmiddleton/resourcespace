@@ -28,7 +28,7 @@ function HookApi_webhooksEditExtra_edit_buttons()
 function HookApi_webhooksEditRedirectaftersave()
     {
     // Process the saved form and access the remote script.
-    global $api_webhooks_urls,$ref,$resource,$fields;
+    global $api_webhooks_urls,$ref;
     if (!isset($api_webhooks_urls)) {return false;}
 
     // Fetch appropriate button
@@ -57,8 +57,9 @@ function HookApi_webhooksEditRedirectaftersave()
         <?php
         }
 
-    $resource=get_resource_data($ref,false);
-    $fields=get_resource_field_data($ref);
+    // Clear posted values so user's changes don't overwrite the data coming back in.
+    $_POST = array();
+
     return true;
     }
 
