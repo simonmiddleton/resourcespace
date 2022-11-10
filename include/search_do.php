@@ -496,31 +496,7 @@ function do_search(
                                 $c++;
                                 }
                             }
-                        elseif ($kw[0]=="startdate")
-                            {
-                            if ($sql_filter->sql != "")
-                                {
-                                $sql_filter->sql.=" AND ";
-                                }
-                            $sql_filter->sql.= ($sql_filter->sql !="" ? " AND " : "") . "rdfn" . $c . ".name >= ? ";
-                            array_push($sql_filter->parameters,"s",$keystring);
-
-                            $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?";
-                            array_push($sql_join->parameters,"s",$datefield);
-                            }
-                        elseif ($kw[0]=="enddate")
-                            {
-                            if ($sql_filter->sql!="")
-                                {
-                                $sql_filter->sql.=" AND ";
-                                }
-                            $sql_filter->sql.= ($sql_filter->sql != "" ? " AND " : "") . "rdfn" . $c . ".value <= ? ";
-                            array_push($sql_filter->parameters,"s",$keystring . " 23:59:59");
-
-                            $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?";
-                            array_push($sql_join->parameters,"s",$datefield);
-                            }
-                            # Additional date range filtering
+                        # Additional date range filtering
                         elseif (count($datefieldinfo) && substr($keystring,0,5)=="range")
                             {
                             $c++;
