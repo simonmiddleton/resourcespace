@@ -1561,6 +1561,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         }
                     }
                 }
+
             for ($m=0;$m<count($list);$m++)
                 {
                 $ref            = $list[$m];
@@ -1586,17 +1587,19 @@ function save_resource_data_multi($collection,$editsearch = array())
                     $log_nodes_new = [];
 
                     // Build new value:
-                    foreach($new_nodes as $new_node)
+                    if (count($new_nodes) > 0)
                         {
-                        $new_nodes_val .= ",{$node_options[$new_node]}";
-                        $log_nodes_new[] = $node_options[$new_node];
+                        $date_range_node_values_to_add = array_column(get_nodes_by_refs($new_nodes), 'name');
+                        $new_nodes_val = ',' . implode(',', $date_range_node_values_to_add);
+                        $log_nodes_new = $date_range_node_values_to_add;
                         }
 
                     // Build existing value:
-                    foreach($current_field_nodes as $current_field_node)
+                    if (count($current_field_nodes) > 0)
                         {
-                        $existing_nodes_value .= ",{$node_options[$current_field_node]}";
-                        $log_nodes_old[] = $node_options[$current_field_node];
+                        $date_range_node_values_to_remove = array_column(get_nodes_by_refs($current_field_nodes), 'name');
+                        $existing_nodes_value = ',' . implode(',', $date_range_node_values_to_remove);
+                        $log_nodes_old = $date_range_node_values_to_remove;
                         }
 
                     $resource_log_updates[$ref][] = [
@@ -1617,6 +1620,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // $val = $newval;
                     }
                 }
+            $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
+            $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
             }
         else
             {
