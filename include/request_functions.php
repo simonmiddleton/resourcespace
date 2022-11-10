@@ -597,7 +597,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 {
                 return false; # Required field was not set.
                 }            
-            $message->append_text("<br />");
+            $message->append_text("<br />\n");
             $message->append_text("i18n_" . $custom[$n]);
             $message->append_text(": " . getval("custom" . $n,""));
             }
@@ -792,7 +792,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->set_text("lang_requestassignedtoyoumail");
         $admin_notify_message->append_text("<br /><br />");
         $admin_notify_message->append_text("lang_username");
-        $admin_notify_message->append_text(": " . $username . "<br />");
+        $admin_notify_message->append_text(": " . $username . "<br />\n");
         $admin_notify_message->append_text_multi($message->get_text(true));
         $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
         $admin_notify_message->url = $templatevars['requesturl'];
