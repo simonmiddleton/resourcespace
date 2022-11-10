@@ -7,3 +7,4 @@ icon    : fa fa-comment
 config_url: /plugins/annotate/pages/setup.php
 default_priority: 999
 category: Collaboration
+info_url: https://www.resourcespace.com/knowledge-base/plugins/annotate

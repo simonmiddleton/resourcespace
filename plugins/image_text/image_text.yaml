@@ -6,3 +6,4 @@ desc    : Enables field data to be added to image at download
 icon    : fa fa-comment-dots
 config_url: /plugins/image_text/pages/setup.php
 category: Asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/image_text

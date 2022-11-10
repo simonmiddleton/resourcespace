@@ -7,3 +7,4 @@ icon    : fa fa-calendar-alt
 config_url: /plugins/action_dates/pages/setup.php
 category: Workflow and access
 disable_group_select: 1
+info_url: https://www.resourcespace.com/knowledge-base/plugins/actiondates

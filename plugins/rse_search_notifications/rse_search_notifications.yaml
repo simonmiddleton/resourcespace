@@ -7,3 +7,4 @@ version: 1.0
 default_priority: 100
 config_url: /plugins/rse_search_notifications/pages/setup.php
 category: user interface
+info_url: https://www.resourcespace.com/knowledge-base/plugins/search-notifications

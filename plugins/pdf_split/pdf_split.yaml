@@ -5,3 +5,4 @@ version: 1.0
 desc: Allows PDF files to be split to multiple pages
 icon: fa fa-file-pdf
 category: Asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/pdf-split

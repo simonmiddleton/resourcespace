@@ -7,3 +7,4 @@ icon: fa fa-envelope-open-text
 config_url: /plugins/checkmail/pages/setup.php
 category: system
 disable_group_select: 1
+info_url: https://www.resourcespace.com/knowledge-base/plugins/checkmail

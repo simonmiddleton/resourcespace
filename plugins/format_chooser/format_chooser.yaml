@@ -6,3 +6,4 @@ desc    : Allows you to choose different formats when downloading files which ar
 icon    : fa fa-file-image
 config_url: /plugins/format_chooser/pages/setup.php
 category: Asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/format-chooser

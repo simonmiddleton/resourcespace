@@ -6,3 +6,4 @@ desc: Publishes selected resources within selected themes to Flickr.
 icon: fa fa-flickr
 config_url: /plugins/flickr_theme_publish/pages/setup.php
 category: content sharing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/flickr-publishing

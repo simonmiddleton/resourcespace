@@ -8,3 +8,4 @@ default_priority: 100
 category: asset processing,system,user interface
 disable_group_select: 1
 config_url: /plugins/rse_version/pages/setup.php
+info_url: https://www.resourcespace.com/knowledge-base/user/version-control

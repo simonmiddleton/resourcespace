@@ -6,3 +6,4 @@ desc    : Offers additional user preferences
 icon    : fa fa-cog
 config_url: /plugins/user_preferences/pages/setup.php
 category: User interface
+info_url: https://www.resourcespace.com/knowledge-base/user/preferences

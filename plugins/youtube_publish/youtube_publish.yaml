@@ -6,3 +6,4 @@ desc: Publishes video resource to configured YouTube account.
 icon: fa fa-youtube
 config_url: /plugins/youtube_publish/pages/setup.php
 category: content sharing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/youtube-publish

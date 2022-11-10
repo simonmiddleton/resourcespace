@@ -7,3 +7,4 @@ desc    : Enables the relocation of achived files to an offline location
 config_url: /plugins/offline_archive/pages/setup.php
 disable_group_select: 1
 category: Asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/offline_archive

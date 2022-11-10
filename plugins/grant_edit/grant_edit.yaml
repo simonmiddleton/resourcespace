@@ -7,3 +7,4 @@ icon    : fa fa-user-edit
 config_url: /plugins/grant_edit/pages/setup.php
 category: Workflow and access
 disable_group_select: 1
+info_url: https://www.resourcespace.com/knowledge-base/plugins/grant_edit

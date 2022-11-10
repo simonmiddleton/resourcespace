@@ -6,3 +6,4 @@ desc: Provides a function to generate HTML for embeddable document previews on r
 icon: fa fa-file
 config_url: /plugins/embeddocument/pages/setup.php
 category: content sharing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/embed-document

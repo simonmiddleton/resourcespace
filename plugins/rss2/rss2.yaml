@@ -6,3 +6,4 @@ desc    : Enables the authenticated generation of RSS feeds of new content, incl
 icon    : fa fa-rss
 config_url: /plugins/rss2/pages/setup.php
 category: content sharing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/rss-feed
