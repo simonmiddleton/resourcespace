@@ -33,7 +33,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
-    global $storagedir, $syncdir, $batch_replace_local_folder;
+    global $storagedir, $syncdir, $batch_replace_local_folder, $valid_upload_paths, $tempdir;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -61,6 +61,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $valid_upload_paths[] = $storagedir;
         $valid_upload_paths[] = $syncdir;    
         $valid_upload_paths[] = $batch_replace_local_folder;
+        if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
  
         foreach($valid_upload_paths as $valid_upload_path)
             {
