@@ -903,7 +903,7 @@ function do_search(
                                                          WHERE rn[union_index].node IN
                                                                (SELECT node
                                                                   FROM `node_keyword` nk[union_index]
-                                                                 WHERE (nk[union_index].keyword = ? " . $relatedsql->sql .  $union_restriction_clause->sql . ")" .
+                                                                 WHERE ((nk[union_index].keyword = ? " . $relatedsql->sql .") ".  $union_restriction_clause->sql . ")" .
                                                                  ($alternative_keywords_sql->sql != "" ? ($alternative_keywords_sql->sql . $union_restriction_clause->sql) : "" ) .
                                                     ") GROUP BY resource " .
                                                        ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "") ;
