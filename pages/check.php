@@ -6,6 +6,12 @@ include "../include/header.php";
 
 <div class="BasicsBox"> 
     <h1><?php echo $lang["installationcheck"];render_help_link("systemadmin/install_overview");?></h1>
+    <?php
+    renderBreadcrumbs([
+        ['title' => $lang["systemsetup"], 'href'  => $baseurl_short . "pages/admin/admin_home.php", 'menu' => true],
+        ['title' => $lang["installationcheck"]]
+    ]);
+    ?>
     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">
         <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . $lang["repeatinstallationcheck"]?>
     </a>
