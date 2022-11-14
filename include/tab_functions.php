@@ -121,14 +121,13 @@ function create_tab(array $tab)
     $name = trim($tab['name'] ?? '');
     if($name !== '' && acl_can_manage_tabs())
         {
-        ps_query('
-            INSERT INTO tab (`name`, order_by)
+        ps_query('INSERT INTO tab (`name`, order_by)
                      VALUES (
                         ?,
                         (
                             SELECT * FROM (
                                 (SELECT ifnull(tab.order_by, 0) + 10 FROM tab ORDER BY ref DESC LIMIT 1)
-                                UNION SELECT 10
+                                UNION (SELECT 10)
                             ) AS nob
                             LIMIT 1
                         ))',
