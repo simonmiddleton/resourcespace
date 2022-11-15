@@ -1044,7 +1044,7 @@ function reorder_user_dash($user)
         {
         return;	
         }
-    $order_by=10 * count($user_tiles);
+    $order_by = (10 * count($user_tiles)) + 10; # Begin ordering at 10 for first position, not 0.
     
     $sql="UPDATE user_dash_tile SET order_by = (CASE ";
     $params = [];
