@@ -5045,7 +5045,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 
 	$access=get_resource_access($resource);
 
-    if (checkperm('T' . $resource_type . "_" . $size))
+    if(resource_has_access_denied_by_RT_size($resource_type, $size))
         {
         return false;
         }
@@ -8868,4 +8868,18 @@ function update_resource_field_column(int $resource,int $field, string $value)
     $params = ["s",truncate_join_field_value($value),"i",$resource];
     ps_query($sql,$params);
     return true;
+    }
+
+/**
+ * Check if resource has access denied by its type and for a size.
+ * 
+ * @param int $resource_type Resource type ref
+ * @param string $size Preview size ID (not ref).
+ * 
+ * @return bool
+ */
+function resource_has_access_denied_by_RT_size(int $resource_type, string $size): bool
+    {
+    $Trt = 'T' . $resource_type;
+    return checkperm($Trt) || checkperm("{$Trt}_{$size}");
     }
