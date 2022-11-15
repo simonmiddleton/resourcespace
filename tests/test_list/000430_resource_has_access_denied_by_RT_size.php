@@ -5,7 +5,7 @@ command_line_only();
 // --- Set up
 $original_user_data = $userdata;
 $original_userpermissions = $userpermissions;
-$modify_user_permissions = function(string $perm) {
+$give_user_permission = function(string $perm) {
     return function() use ($perm) { $GLOBALS['userpermissions'][] = $perm; };
 };
 // --- End of Set up
@@ -20,19 +20,19 @@ $use_cases = [
     ],
     [
         'name' => 'Permission "T?" denies access (overall)',
-        'setup' => $modify_user_permissions('T1'),
+        'setup' => $give_user_permission('T1'),
         'input' => ['resource_type' => 1, 'size' => 'scr'],
         'expected' => true,
     ],
     [
         'name' => 'Permission "T?_?" deny access to original size ',
-        'setup' => $modify_user_permissions('T1_'),
+        'setup' => $give_user_permission('T1_'),
         'input' => ['resource_type' => 1, 'size' => ''],
         'expected' => true,
     ],
     [
         'name' => 'Permission "T?_?" deny access to specific size ',
-        'setup' => $modify_user_permissions('T1_scr'),
+        'setup' => $give_user_permission('T1_scr'),
         'input' => ['resource_type' => 1, 'size' => 'scr'],
         'expected' => true,
     ],
