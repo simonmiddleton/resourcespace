@@ -298,8 +298,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		</script>
 		<?php
 		}
-		global $access,$alt_types_organize,$alternative_file_previews,$userrequestmode,$alt_files_visible_when_restricted;
-	# Alternative files listing
+global $access,$alt_types_organize,$alternative_file_previews,$alternative_file_previews_mouseover,$userrequestmode,$alt_files_visible_when_restricted;
+# Alternative files listing
 $alt_access=hook("altfilesaccess");
 if ($access==0 || $alt_files_visible_when_restricted) $alt_access=true; # open access (not restricted)
 if ($alt_access) 
@@ -353,8 +353,25 @@ if ($alt_access)
                 $alt_pre = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, $use_watermark, $altfiles[$n]['creation_date'], $altfiles[$n]['ref']);
                 }
             }
+        $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
 		?>
-		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && isset($alternative_file_previews_mouseover) && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_width=jQuery('#previewimage').width();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').width(orig_width);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
+		<tr class="DownloadDBlend" id="alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>">
+        <?php if ($alternative_file_previews_mouseover) 
+            { ?>
+            <script>
+            jQuery(document).ready(function() {
+                jQuery("#alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>").mouseover(function() {
+                    orig_preview=jQuery('#previewimage').attr('src');
+                    orig_width=jQuery('#previewimage').width();
+                    jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');
+                    jQuery('#previewimage').width(orig_width);
+                }).mouseout(function() { 
+                    jQuery('#previewimage').attr('src',orig_preview);
+                });
+            });
+            </script>
+        <?php 
+            } ?>
 		<td class="DownloadFileName AlternativeFile">
 		<?php if ($alt_thm!="") { 
         $qs = [
