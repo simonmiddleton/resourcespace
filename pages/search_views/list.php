@@ -52,7 +52,7 @@ if (!hook("replacelistitem"))
                     $thm_url = $result[$n]['thm_url'];
                     } # Option to override thumbnail image in results
 
-                if($result[$n]['has_image'] == 1)
+                if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col'))
                     {
                     render_resource_image($result[$n],$thm_url,"list");
                     }
