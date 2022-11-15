@@ -1612,12 +1612,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     case "fmin":
                         // Need to convert MB value to bytes
                         $propertiessql->sql .= $sql_filter_properties_and . " r.file_size >= ?";
-                        array_push($propertiessql->parameters,"i",$floatval($propertyval) * 1024 * 1024);
+                        array_push($propertiessql->parameters,"i",floatval($propertyval) * 1024 * 1024);
                     break;
                     case "fmax":
                         // Need to convert MB value to bytes
                         $propertiessql->sql .= $sql_filter_properties_and . " r.file_size <= ?";
-                        array_push($propertiessql->parameters,"i",$floatval($propertyval) * 1024 * 1024);
+                        array_push($propertiessql->parameters,"i",floatval($propertyval) * 1024 * 1024);
                     break;
                     case "fext":
                         $propertyval=str_replace("*","%",$propertyval);
