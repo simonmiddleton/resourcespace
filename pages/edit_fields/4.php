@@ -71,7 +71,7 @@ else{
 		jQuery.data(this, 'current', jQuery(this).val());
 	});
 	//Check the value of the date after the change
-	jQuery('[id^=<?php echo $name;?>]').on('change', function(){
+	jQuery('[id^=<?php echo $name . '-';?>]').on('change', function(){
 		let day   = jQuery('#<?php echo $name;?>-d').val();
 		let month = jQuery('#<?php echo $name;?>-m').val();
 		let year  = jQuery('#<?php echo $name;?>-y').val(); 
