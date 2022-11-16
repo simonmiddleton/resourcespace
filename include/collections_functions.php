@@ -2254,6 +2254,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         $notifymessage->append_text($internalmessage);
         $notifymessage->append_text("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
         $notifymessage->append_text($viewlinktext);
+        $notifymessage->url= $baseurl . "/?c=" . $colrefs;
         send_user_notification($internal_user_ids,$notifymessage);
         }
 
@@ -2261,8 +2262,8 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     # Return an empty string (all OK).
     return "";
     }
-
-
+    
+    
 
 /**
  * Generate an external access key to allow external people to view the resources in this collection.
