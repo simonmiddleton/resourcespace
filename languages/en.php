@@ -2583,7 +2583,7 @@ $lang["plugin_category_api"]="API";
 $lang["plugin_category_advanced"]="Advanced";
 $lang["plugin_category_design"]="Design";
 $lang["plugin_category_ecommerce"]="Ecommerce";
-$lang["plugin_category_sharing"]="Content Sharing";
+$lang["plugin_integrations"]="Integrations";
 /* * End - Plugin Category Strings * */
 
 /* System Down page strings */

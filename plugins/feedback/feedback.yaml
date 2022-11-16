@@ -1,6 +1,6 @@
 name: feedback
 title: Feedback
-author: Dan Huby
+author: Montala Limited
 version: 1.0
 desc: Adds a general user feedback function with configurable questions.
 icon: fa fa-comments

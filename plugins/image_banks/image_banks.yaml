@@ -7,5 +7,5 @@ icon: fa fa-camera
 info_url: http://www.resourcespace.com/knowledge-base/user/plugin-image-banks
 config_url: /plugins/image_banks/pages/setup.php
 default_priority: 100
-category: Content Sharing
+category: Integrations
 disable_group_select: 0
