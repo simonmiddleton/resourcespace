@@ -60,6 +60,12 @@ if ($alt_access)
 
         $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
         $css_PointerEventsNone = $enable_alt_file_preview_mouseover ? ' PointerEventsNone' : '';
+        $rowspan = 1;
+        if(in_array($altfiles[$n]["file_extension"],$alternative_file_view_in_browser) && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"]))
+            {
+            $rowspan = 2;
+            }
+
         ?>
 		<tr class="DownloadDBlend" id="alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>">
         <?php if ($enable_alt_file_preview_mouseover)
@@ -78,7 +84,7 @@ if ($alt_access)
             </script>
         <?php
             } ?>
-		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>>
+		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo (string) $rowspan;?>">
 		<?php
         if(!hook("renderaltthumb"))
             {
@@ -87,14 +93,14 @@ if ($alt_access)
                 ?>
                 <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>" ><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a></div><?php
                 }
-            }
+            }        
         ?>
 		<div class="AlternativeFileText"><h2><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
 		<p><?php echo htmlspecialchars($altfiles[$n]["description"])?></p>
         <div>
 		</td>
         <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
-		<td class="DownloadFileSize"><?php echo formatfilesize($altfiles[$n]["file_size"])?></td>
+		<td class="DownloadFileSize" rowspan="<?php echo (string) $rowspan;?>"><?php echo formatfilesize($altfiles[$n]["file_size"])?></td>
 		
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 		?>
@@ -146,8 +152,31 @@ if ($alt_access)
 		else
 		    {
 		    ?><td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]?></td><?php
-		    } ?>
-		</tr>
+		    } 
+        ?>
+        </tr>
+        <?php    
+        if($rowspan === 2)
+            {
+            ?>
+            <tr class="DownloadDBlend">
+            <?php
+            $preview_url = generateURL($baseurl . "/pages/download.php", ["ref" => $ref, "ext" => $altfiles[$n]["file_extension"], "alternative" => $altfiles[$n]["ref"], "noattach" => "true"]);
+            
+            if($terms_download)
+                {
+                $preview_url = generateURL($baseurl . "/pages/terms.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref']]);
+                }
+            elseif($download_usage)
+                {
+                $preview_url = generateURL($baseurl . "/pages/download_usage.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref']]);
+                }
+            ?>
+            <td colspan="2" class="DownloadButton"><a href="<?php echo $preview_url;?>" target="_blank"><?php echo htmlspecialchars($lang["view_in_browser"]);?></a></td>
+            </tr>
+            <?php
+            }    
+        ?>
 		<?php	
 		}
         hook("morealtdownload");
