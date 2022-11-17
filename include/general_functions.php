@@ -437,9 +437,9 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
         # If searching, also search overridden text in site_text and return that also.
         if ($findtext!="" || $findpage!="" || $findname!="")
             {
-            if ($findtext!="") {$search="text like ?"; $search_param = array("s", '%' . $findtext . '%');}
-            if ($findpage!="") {$search="page like ?"; $search_param = array("s", '%' . $findpage . '%');}
-            if ($findname!="") {$search="name like ?"; $search_param = array("s", '%' . $findname . '%');}
+            if ($findtext!="") {$search="text LIKE ? AND language = ?"; $search_param = array("s", '%' . $findtext . '%', "s", $language);}
+            if ($findpage!="") {$search="page LIKE ? AND language = ?"; $search_param = array("s", '%' . $findpage . '%', "s", $language);}
+            if ($findname!="") {$search="name LIKE ? AND language = ?"; $search_param = array("s", '%' . $findname . '%', "s", $language);}
 
             $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where $search", $search_param);
 
@@ -615,7 +615,7 @@ function save_site_text($page,$name,$language,$group)
             return true;
             }
         }
-    if (trim($custom)=="")
+        if (is_null($custom) || trim($custom)=="")
         {
         $custom=0;
         }
