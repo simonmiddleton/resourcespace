@@ -2254,7 +2254,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         $notifymessage->append_text($internalmessage);
         $notifymessage->append_text("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
         $notifymessage->append_text($viewlinktext);
-        $notifymessage->url= $baseurl . "/?c=" . $colrefs;
+        $notifymessage->url = $url; 
         send_user_notification($internal_user_ids,$notifymessage);
         }
 
