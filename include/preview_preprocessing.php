@@ -1101,7 +1101,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 $non_image_types = config_merge_non_image_types();
 
 # If a file has been created, generate previews just as if a JPG was uploaded.
-if (isset($newfile))
+if (isset($newfile) && file_exists($newfile))
     {
     if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types()))
         {
