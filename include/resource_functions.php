@@ -7196,7 +7196,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
-    if (file_exists($path2) && !checkperm("T" . $resource_type . "_"))
+    if(!resource_has_access_denied_by_RT_size($resource_type, '') && file_exists($path2))
     {
         $returnline=array();
         $returnline["name"]=lang_or_i18n_get_translated($lastname, "imagesize-");
@@ -7247,9 +7247,9 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
     for ($n=0;$n<count($sizes);$n++)
         {
         $path=get_resource_path($ref,true,$sizes[$n]["id"],false,"jpg");
-
         $file_exists = file_exists($path);
-        if (($file_exists || (!$onlyifexists)) && !checkperm("T" . $resource_type . "_" . $sizes[$n]["id"]))
+
+        if(($file_exists || !$onlyifexists) && !resource_has_access_denied_by_RT_size($resource_type, $sizes[$n]['id']))
             {
             if (($sizes[$n]["internal"]==0) || ($internal))
                 {
