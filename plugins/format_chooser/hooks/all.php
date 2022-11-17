@@ -2,7 +2,7 @@
 
 include_once dirname(__FILE__) . "/../include/utility.php";
 
-function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alternative = -1)
+function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alternative = -1, $usage = -1, $usagecomment = "")
 	{
 	global $baseurl_short,$imagemagick_preserve_profiles, $format_chooser_input_formats, $format_chooser_output_formats, $k;
 
@@ -20,6 +20,8 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
         'ext' => $ext,
         'page' => $page,
         'alt' => $alternative,
+        'usage' => $usage,
+        'usagecomment' => $usagecomment,
     ];
     $resource_data = get_resource_data($ref);
 
@@ -39,7 +41,7 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 		if (file_exists($path) && (!$imagemagick_preserve_profiles || in_array($size,array("hpr","lpr")))) // We can use the existing previews unless we need to preserve the colour profiles (these are likely to have been removed from scr size and below) 
 		return false;
 		}
-
+    
     return generateURL($baseurl_short . 'plugins/format_chooser/pages/convert.php', $url_qs);
 	}
 
