@@ -2385,16 +2385,17 @@ if ($ref>0 && !$multiple)
             <div class="Question QuestionStickyRight" id="question_file">
             <div class="FloatingPreviewContainer">
             <?php
-            if ($resource["has_image"]==1)
+            $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
+            if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
                 <?php // check for watermarked version and show it if it exists
                 if (checkperm("w"))
                     {
-                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
+                    $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                     if (file_exists($wmpath))
                         { ?>
-                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
                         <?php 
                         }
                     } ?>
