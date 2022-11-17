@@ -2,13 +2,10 @@
 
 function HookRse_versionEditEdit_all_extra_modes($field)
     {
-    global $lang, $FIXED_LIST_FIELD_TYPES;
-    if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-        {
-        ?>
-        <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
-        <?php
-        }
+    global $lang;
+    ?>
+    <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
+    <?php
     }
     
     #edit_all_mode_js

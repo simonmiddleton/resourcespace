@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Config\Definition\BooleanNode;
+
 /**
 * Set node - Used for both creating and saving a node in the database.
 * Use NULL for ref if you just want to insert a new record.
@@ -1501,6 +1503,10 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
             $query .= " ORDER BY n.ref DESC";
             }
         }
+    else
+        {
+        $query .= " ORDER BY n.resource_type_field, n.order_by ASC";
+        }
 
     if($detailed)
         {
@@ -1789,27 +1795,56 @@ function copy_resource_type_field_nodes($from, $to)
 /**
  * Get all the parent nodes of the given node, all the way back to the top of the node tree.
  *
- * @param  integer $noderef The child node ID
+ * @param  integer  $noderef    The child node ID * 
+ * @param  bool     $detailed   Return all node data? false by default 
+ * 
  * @return array Array of the parent node IDs
  */
-function get_parent_nodes($noderef)
+function get_parent_nodes(int $noderef,bool $detailed = false)
     {
-    $parent_nodes=array();
-    $topnode=false;
-    do
+
+    // Get all parents. Query varies according to MySQL cte support
+    $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
+    if(false && version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
         {
-        $node=ps_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref=?", array("i",$noderef), "schema");
-        if(empty($node[0]["parent"]))
-            {
-            $topnode=true;
-            }
-        else
-            {
-            $parent_nodes[$node[0]["parent"]]=$node[0]["name"];
-            $noderef=$node[0]["parent"];
-            }
+        $colsa = $detailed ? columns_in("node") : "ref, name";
+        $colsb = $detailed ? columns_in("node","n") : "n.ref, n.name";
+        $parent_nodes = ps_query("
+            WITH RECURSIVE cte($colsa,level) AS
+                    (
+                    SELECT  $colsa,
+                            1 AS level
+                    FROM  node
+                    WHERE  ref= ?
+                UNION ALL
+                    SELECT  $colsb,
+                            level+1 AS LEVEL
+                    FROM  node n
+                INNER JOIN  cte
+                        ON  n.ref = cte.parent
+                    )
+            SELECT $colsa,
+                level
+            FROM cte
+        ORDER BY level DESC;",
+        ['i', $noderef]);
         }
-    while (!$topnode);
+    else
+        {
+        $colsa = $detailed ? columns_in("node","N2") : "ref, name";
+        $parent_nodes = ps_query("
+        SELECT  $colsa
+        FROM  (SELECT @r AS p_ref,
+                (SELECT @r := parent FROM node WHERE ref = p_ref) AS parent,
+                @l := @l + 1 AS lvl
+        FROM  (SELECT @r := ?, @l := 0) vars,
+                node c
+        WHERE  @r <> 0) N1
+        JOIN  node N2
+            ON  N1.p_ref = N2.ref
+        ORDER BY  N1.lvl DESC",
+            ['i', $noderef]);
+        }
     return $parent_nodes;
     }
 
@@ -1972,7 +2007,6 @@ function node_orderby_comparator($n1, $n2)
     return $n1["order_by"] - $n2["order_by"];
     }
 
-	
 /**
  * 
  * This function returns an array containing list of values for a selected field, identified by $field_label, in the multidimensional array $nodes
@@ -2661,3 +2695,75 @@ if (count($nodes)>0)
     ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
     }
 }
+
+
+/**
+ * Get all the nodes for the given field, with either the node ref or name as index
+ *
+ * @param  integer  $field      The resource_type_field id
+ * @param  bool     $namekey    Use fullpath to the leaf node as key?
+ * @param  bool     $detailed   Get full node information? Just returns IDs and names|paths by default
+ * @param  bool     $translated Return translated names?
+ * 
+ * @return array    Array containing node data 
+ */
+function get_field_node_strings_ordered(int $field,bool $namekey=false,bool $detailed=false,bool $translated=false)
+    {
+    global $NODE_STRINGS_ORDERED;
+    if(isset($NODE_STRINGS_ORDERED[$field . "_" . (int)$namekey . (int)$detailed . (int)$translated]))
+        {
+        return $NODE_STRINGS_ORDERED[$field . "_" . (int)$namekey . (int)$detailed . (int)$translated];
+        }    
+    $treenodes = get_nodes($field,NULL,TRUE);
+
+    // Set up array to store ordered nodes and keep track of ethsoe that have been processed
+    $orderednodes = [];
+    $parents_processed = [];
+
+    // Add parents first, get_nodes should have returned them according to order_by
+    $orderednodes = array_values(array_filter($treenodes,function($node){return (int)$node["parent"] ==  0;}));
+    for($n=0;$n < count($orderednodes);$n++)
+        {
+        $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
+        $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"];
+        }
+    while(count($treenodes) > 0)
+        {
+        // Loop to find children
+        for($n=0;$n < count($orderednodes);$n++)
+            {
+            if(!in_array($orderednodes[$n]["ref"],$parents_processed))
+                {
+                // Add the children of this node with the full path added
+                $children = array_filter($treenodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
+                // Set order
+                uasort($children,"node_orderby_comparator");
+                $children = array_values($children);
+                // print_r($children);
+                for($c=0;$c < count($children);$c++)
+                    {
+                    $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
+                    $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  $children[$c]["translated_name"];
+                    array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
+                    $pos = array_search($children[$c]["ref"],array_column($treenodes,"ref"));
+                    unset($treenodes[$pos]);
+                    $treenodes = array_values($treenodes);
+                    }
+                $parents_processed[] = $orderednodes[$n]["ref"];
+                }
+            else
+                {
+                $pos = array_search($orderednodes[$n]["ref"],array_column($treenodes,"ref"));
+                unset($treenodes[$pos]);
+                }
+            }
+        $treenodes = array_values($treenodes);
+        }
+
+    $key_column = $namekey ? ($translated ? "translated_path" : "path")  : "ref";
+    $val_column = $namekey ? "ref" : ($translated ? "translated_path" : "path");
+    $sortednodes = $detailed ? array_combine(array_column($orderednodes,$key_column),$orderednodes) :  array_column($orderednodes,$val_column,$key_column);
+    $NODE_STRINGS_ORDERED[$field . "_" . (int)$namekey . (int)$detailed . (int)$translated] = $sortednodes;
+    return $sortednodes;
+    }
+

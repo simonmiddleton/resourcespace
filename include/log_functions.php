@@ -363,34 +363,53 @@ function get_user_downloads($userref,$user_dl_days)
 * Add detail of node changes to resource log
 * 
 * @param integer $resource          Resource ID
-* @param array   $nodes_added       Array of node IDs that have been added
-* @param array   $nodes_removed     Array of node IDs that have been removed
+* @param array   $nodes_new         Array of new node IDs
+* @param array   $nodes_current     Array of old node IDs
 * @param string  $lognote           Optional note to add to log entry
 * @param array   $nodes_renamed     Optional array of old node names with node id as key e.g. [345 => 'oldname',678 => "pastname"]
 * 
 * @return boolean                   Success/failure
 */
-function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "",$nodes_renamed = [])
+function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nodes_renamed = [])
     {
     if((string)(int)$resource !== (string)$resource)
         {
         return false;
         }
+    // Find treefields - required so that old value will be logged with full path
+    $treefields = array_column(get_resource_type_fields("","ref","asc","",[FIELD_TYPE_CATEGORY_TREE]),"ref");
     $nodefieldchanges = array();
-    foreach ($nodes_removed as $node)
+    foreach ($nodes_current as $node)
         {
         $nodedata = array();
         if(get_node($node, $nodedata))
             {
-            $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+            if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+                {
+                $parents = get_node_strings(get_parent_nodes($nodedata["ref"],true));
+                //print_r(get_node_strings($parents));
+                $nodefieldchanges[$nodedata["resource_type_field"]][0][] = reset($parents);
+                }
+            else
+                {
+                $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+                }
             }
         }
-    foreach ($nodes_added as $node)
+    foreach ($nodes_new as $node)
         {
         $nodedata = array();
         if(get_node($node, $nodedata))
             {
-            $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+            if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+                {
+                $parents = get_node_strings(get_parent_nodes($nodedata["ref"],true));
+                $nodefieldchanges[$nodedata["resource_type_field"]][1][] = reset($parents);
+                }
+            else
+                {
+                $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+                }
             }
         }
     foreach ($nodes_renamed as $nodeid=>$oldname)
@@ -402,6 +421,7 @@ function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "",$n
             $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
             }
         }
+
     foreach ($nodefieldchanges as $key => $value)
         {
         // Log changes to each field separately

@@ -3,7 +3,6 @@ command_line_only();
 
 
 $resourcea=create_resource(1,0);
-
 // Create a standard text field
 $field_title = 'Text field ABC';
 $text_field_abc = create_resource_type_field($field_title, 1, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, 'textfieldabc', false);
@@ -51,6 +50,13 @@ $set_values = ["Apple","Fruit"];
 $log_value = "+ Fruit\n+ Apple";
 $set_value = implode(",",$set_values);
 $check_value = "Fruit/Apple";
+
+
+############ TODO remove
+$debug_log=true;
+$debug_extended_info=true;
+
+
 update_field($resourcea,$tree_field_abc,$set_value,$update_errors);
 
 // SUBTEST C - Check value is saved
