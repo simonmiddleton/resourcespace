@@ -78,6 +78,12 @@ error_reporting($config_error_reporting);
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
 #
+if($system_download_config_force_obfuscation)
+    {
+    // If this has been set in config.php it cannot be overridden
+    define("SYSTEM_DOWNLOAD_CONFIG_FORCE_OBFUSCATION",true);
+    }
+
 debug('[db.php] Remote config support...');
 debug('[db.php] isset($remote_config_url) = ' . json_encode(isset($remote_config_url)));
 debug('[db.php] isset($_SERVER["HTTP_HOST"]) = ' . json_encode(isset($_SERVER["HTTP_HOST"])));
