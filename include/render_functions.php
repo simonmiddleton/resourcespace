@@ -1718,7 +1718,7 @@ function is_field_displayed($field)
         ($field['active']==0)
         ||
         # Field is an archive only field
-        (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
+        (isset($resource["archive"]) && $resource["archive"]==0)
         # Field does not have individual write access allowed; and does not have edit access allowed on upload
         || (checkperm("F*") && !checkperm("F-" . $field["ref"]) && !($ref < 0 && checkperm("P" . $field["ref"])))
         # Field has write access denied directly

@@ -116,7 +116,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 		<label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
 		<?php
 		if($propertyname=="resource_type")
-			{
+			{ echo "TO DO";
+                /*
 			global $resource_types;
 			?>
             <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
@@ -133,6 +134,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
             <option value="999"<?php if ($currentvalue == "999") { echo " selected"; } ?>><?php echo $lang["resourcetype-archive_only"]; ?></option>
             </select>
 			<?php
+            */
 			}
 		elseif($propertyname=="type")
 			{
@@ -253,9 +255,9 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				<?php
 				foreach($allfields as $field)
 					{
-					if($field["ref"]!=$ref && isset($resource_type_array[$field["resource_type"]])) // Don't show itself as an option to sync with
+					if($field["ref"]!=$ref) // Don't show itself as an option to sync with
 					    {?>
-					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]) . " - ") . i18n_get_translated($resource_type_array[$field["resource_type"]]) . ")"?></option>
+					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]) )?></option>
 					    <?php
 					    }
 					}
@@ -380,7 +382,6 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 $fieldcolumns = array(
     'active'                   => array($lang['property-field_active'],'',1,1),
     'title'                    => array($lang['property-title'],'',0,1),
-    'resource_type'            => array($lang['property-resource_type'],'',0,0),
     'type'                     => array($lang['property-field_type'],'',0,1),
     'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
     'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
@@ -612,7 +613,6 @@ foreach($resource_types as $resource_type)
 	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];
 	}
 $resource_type_array[0]=$lang["resourcetype-global_field"];
-$resource_type_array[999]=$lang["resourcetype-archive_only"];
 $fielddata=get_resource_type_field($ref);
 
 include "../../include/header.php";

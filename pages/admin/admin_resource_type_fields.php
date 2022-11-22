@@ -203,7 +203,6 @@ $system_tabs = get_tab_name_options();
 
 addColumnHeader('ref', 'property-reference');
 addColumnHeader('title', 'property-title');
-addColumnHeader('resource_type', 'property-resource_type');
 if (!hook('replacenamecolumnheader'))
     addColumnHeader('name', 'property-shorthand_name');
 addColumnHeader('type', 'property-field_type');
@@ -229,9 +228,7 @@ for ($n=0;$n<count($fields);$n++)
                   <a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params, array("ref"=>$fields[$n]["ref"],"backurl"=>$url)); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),$find,STR_HIGHLIGHT_SIMPLE);?></span></a>
             </div>
         </td>
-        <td>        
-            <?php if(isset($arr_restypes[$fields[$n]["resource_type"]])){echo i18n_get_translated($arr_restypes[$fields[$n]["resource_type"]]);} else {echo $fields[$n]["resource_type"];}?>
-        </td>
+
     <?php if (!hook('replacenamecolumn')) {
         ?><td>
             <?php echo str_highlight($fields[$n]["name"],$find,STR_HIGHLIGHT_SIMPLE);?>
