@@ -83,7 +83,7 @@ $jumpcount=1;
 <?php
 for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 	{
-	$url=$baseurl_short . "pages/admin/admin_content_edit.php?page=" . urlencode($text[$n]["page"]) . "&name=" . urlencode($text[$n]["name"]) . "&editlanguage=" . urlencode($text[$n]["language"]) . "&editgroup=" . urlencode($text[$n]["group"]) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset);
+	$url=$baseurl_short . "pages/admin/admin_content_edit.php?page=" . urlencode($text[$n]["page"]) . "&name=" . urlencode($text[$n]["name"]) . "&editlanguage=" . urlencode($text[$n]["language"]) . "&editgroup=" . (is_null($text[$n]["group"]) ? "" : urlencode($text[$n]["group"])) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset);
 	?>
 	<tr>
 	<td><div class="ListTitle"><a href="<?php echo $url ?>"><?php echo highlightkeywords(($text[$n]["page"]==""||$text[$n]["page"]=="all"?$lang["all"]:$text[$n]["page"]),$findpage,true);?></a></div></td>
