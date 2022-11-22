@@ -165,6 +165,11 @@ if($use_mp3_player)
         {
         $mp3path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, 'mp3');
         }
+
+    if(resource_has_access_denied_by_RT_size($resource['resource_type'], ''))
+        {
+        $use_mp3_player = false;
+        }
     }
 
 # Load access level
@@ -676,7 +681,7 @@ elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"
 	<div id="previewimagewrapper">
 	<?php 
 	$thumb_path=get_resource_path($ref,true,"pre",false,"jpg");
-	if(file_exists($thumb_path))
+	if(file_exists($thumb_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre'))
 		{$thumb_url=get_resource_path($ref,false,"pre",false,"jpg"); }
 	else
 		{$thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);}
