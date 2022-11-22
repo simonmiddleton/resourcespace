@@ -99,7 +99,7 @@ if($submitdashtile && enforcePostRequest(false))
         {
         $tile = get_tile($updatetile);
         $buildstring = explode('?',$tile["url"]);
-        parse_str(str_replace("&amp;","&",($build_url_parts[1]??"")),$buildstring);
+        parse_str(str_replace("&amp;","&",($buildstring[1]??"")),$buildstring);
 
         $buildstring['tltype'] = $buildstring['tltype'] ?? 'ftxt';
 

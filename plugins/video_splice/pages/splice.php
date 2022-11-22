@@ -9,7 +9,7 @@ include_once "../include/splice_functions.php";
 $notification = "";
 $videos = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC", false, 0, false, false, '', false, true, true);
 $videos_data = do_search("!collection" . $usercollection, '', 'collection', 0, -1, "ASC");
-$splice_order = explode(",", getval("splice_order", null));
+$splice_order = explode(",", getval("splice_order", ""));
 $video_splice_video = getval("video_splice_video", null);
 $video_splice_resolution = getval("video_splice_resolution", null);
 $video_splice_frame_rate = getval("video_splice_frame_rate", null);

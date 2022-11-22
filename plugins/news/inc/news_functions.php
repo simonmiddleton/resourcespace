@@ -20,12 +20,12 @@ function get_news($ref="",$recent="",$findtext="")
 		$findtextarray=explode(" ",$findtext);
 		if ($ref!=""){$sql.=" and (";}
 		for ($n=0;$n<count($findtextarray);$n++){
-		  $sql.=' body like "%?%"'; $params[] = 's'; $params[] = $findtextarray[$n];
+		  $sql.=' body like ?'; $params[] = 's'; $params[] = '%'.$findtextarray[$n].'%';
 		  if ($n+1!=count($findtextarray)){$sql.=" and ";}
 		}
 		$sql.=") or (";
 		for ($n=0;$n<count($findtextarray);$n++){
-		  $sql.=' title like "%?%"'; $params[] = 's'; $params[] = $findtextarray[$n];
+		  $sql.=' title like ?'; $params[] = 's'; $params[] = '%'.$findtextarray[$n].'%';
 		  if ($n+1!=count($findtextarray)){$sql.=" and ";}
 		}
 		if ($ref!=""){$sql.=")";}

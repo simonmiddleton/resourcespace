@@ -18,7 +18,7 @@ if('' == $irn)
     exit($lang['emu_no_resource']);
     }
 
-$emu_rs_mappings = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
 $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($irn), $emu_rs_mappings);
 
 include '../../../include/header.php';

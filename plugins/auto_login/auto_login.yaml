@@ -6,3 +6,4 @@ desc    : [Advanced] Automatic login via IP pattern. Set up via user edit page i
 icon    : fa fa-shield-alt
 category: authentication
 disable_group_select: 1
+info_url: https://www.resourcespace.com/knowledge-base/plugins/auto_login

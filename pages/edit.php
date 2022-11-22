@@ -306,7 +306,8 @@ if($editsearch)
     $items = $all_resource_refs;
 
     # Establish a list of resource types which will be involved in this edit
-    $items_resource_types = array_unique(array_column($items,"resource_type"));
+    $items_resource_types = array_unique(array_column($edititems,"resource_type"));
+    if(in_array('2',(array_column($edititems,'archive')))){$items_resource_types[]=999;}
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
@@ -613,6 +614,9 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             // NOTE: $fields and $all_selected_nodes are passed by reference
                             copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited, true);
                             
+                            // Autocomplete any blank fields without overwriting any existing metadata
+                            autocomplete_blank_fields($ref, false);
+
                             // Update related resources if required
                             if(in_array("related_resources",$locked_fields))
                                 {
@@ -656,10 +660,10 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     }
                                     
                                 # Also check for regular expression match
-                                if (trim(strlen($field["regexp_filter"]))>=1)
+                                if (strlen(trim((string)$field["regexp_filter"]))>=1)
                                     {
                                     global $regexp_slash_replace;
-                                    if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $field["regexp_filter"]) . "$#",$field["value"],$matches) <= 0)
+                                    if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $field["regexp_filter"]) . "$#", (string) $field["value"], $matches) <= 0)
                                         {
                                         $fielderror = true;
                                         }
@@ -687,7 +691,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             {
                             // Redirect to upload_review_mode in order to finish editing remaining resources that errored, include submit to generate required error message
                             ?>
-                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"submitted"=>"true","save"=>"true")); ?>',true);</script>
+                            <script>CentralSpaceLoad('<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("upload_review_mode"=>"true","lastedited"=>$lastedited,"showextraerrors"=>json_encode($auto_errors))); ?>',true);</script>
                             <?php
                             exit();
                             }
@@ -727,7 +731,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             exit();
                             }
                         }
-                    else
+                    elseif (!hook('uploadreviewabortnext'))
                         {
                         // Redirect to next resource
                         ?>
@@ -778,12 +782,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     else
                         {
                         // Default
-                        redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     }
                 }
@@ -994,6 +998,22 @@ if (getval("refreshcollectionframe","")!="")
     refresh_collection_frame();
     }
 
+
+// Manually set any errors that ned to be shown e.g. after saving with locked values
+$showextraerrors = getval("showextraerrors","");
+if ($showextraerrors != "")
+    {
+    $save_errors=json_decode($showextraerrors,true);
+    if(is_array($save_errors))
+        {
+        $show_error = true;
+        }
+    else
+        {
+        $save_errors = [];
+        }
+    }
+
 include "../include/header.php";
 ?>
 <script>
@@ -1114,7 +1134,7 @@ jQuery(document).ready(function()
             return false;
             }
 
-        jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
+        jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus' + field).show();
         
         formdata = jQuery('#mainform').serialize();
@@ -1126,7 +1146,7 @@ jQuery(document).ready(function()
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saved"]); ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
@@ -1217,7 +1237,6 @@ else
         # The script doesn't allow editing of empty collections, no need to handle that case here.
         echo text("multiple");
         ?> </p> <?php
-        if ($edit_show_save_clear_buttons_at_top) {SaveAndClearButtons("NoPaddingSaveClear");}
         } 
    elseif ($ref>0)
       {
@@ -1252,8 +1271,6 @@ else
             
             </div><!-- end of RecordHeader -->
             <?php
-            if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
-
             }
             
         if (!$upload_review_mode)
@@ -1336,11 +1353,6 @@ else
         <h1><?php echo $titleh1 ?></h1>
         <p><?php echo $lang["intro-batch_edit"];render_help_link("user/uploading");?></p>
         <?php
-        }
-    # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
-    if ($edit_show_save_clear_buttons_at_top)
-        {
-        SaveAndClearButtons("NoPaddingSaveClear");
         }
     }
 
@@ -1476,7 +1488,7 @@ hook("editbefresmetadata"); ?>
     } # end hook("replaceedittype")
 
 # For new users check that they have access to the default resource type, setting from the available types if they don't to ensure metadata fields load correctly.
-if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && $selected_type != 0)
+if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$shown_resource_types) && isset($selected_type))
     {
     $resource_type = $selected_type;
     update_resource_type($ref,intval($resource_type));
@@ -2069,8 +2081,8 @@ else
                  {
                    $access=$default_customaccess;
                    $editable= (!$ea3)?false:true;
-                   if ($groups[$n]["access"]!="") {$access=$groups[$n]["access"];}
-                   $perms=explode(",",$groups[$n]["permissions"]);
+                   if ($groups[$n]["access"]!=='') {$access=$groups[$n]["access"];}
+                   $perms=explode(",",(string) $groups[$n]["permissions"]);
                    if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
                       <td valign=middle nowrap><?php echo htmlspecialchars($groups[$n]["name"])?>&nbsp;&nbsp;</td>
@@ -2481,25 +2493,28 @@ hook('aftereditcollapsiblesection');
 
 <?php
 if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook('replacesaveerror'))
-  {
-  foreach ($save_errors as &$save_error) 
     {
-    $save_error=htmlspecialchars($save_error);
-    }
-  ?>
-  <script>
-  preventautoscroll = true;
-  // Find the first field that triggered the error:
-  var error_fields;
-  error_fields = document.getElementsByClassName('FieldSaveError');
-  if(error_fields.length > 0)
-    {
-    error_fields[0].scrollIntoView();
-    }
+    foreach ($save_errors as &$save_error) 
+        {
+        if(is_string($save_error))
+            {
+            $save_error=htmlspecialchars($save_error);
+            }
+        }
+    ?>
+    <script>
+    preventautoscroll = true;
+    // Find the first field that triggered the error:
+    var error_fields;
+    error_fields = document.getElementsByClassName('FieldSaveError');
+    if(error_fields.length > 0)
+        {
+        error_fields[0].scrollIntoView();
+        }
     styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
-  </script>
-  <?php
-  }
+    </script>
+    <?php
+    }
 
 hook("autolivejs");
 ?>

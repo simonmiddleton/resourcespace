@@ -151,7 +151,7 @@ if (!hook("replacelistitem"))
         ?>
 
         <td <?php hook("listviewcolumnstyle");?>>
-            <?php echo strtoupper(htmlspecialchars($result[$n]["file_extension"])); ?>
+            <?php echo strtoupper(htmlspecialchars((string) $result[$n]["file_extension"])); ?>
         </td>
 
         <?php

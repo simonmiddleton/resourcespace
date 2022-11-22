@@ -60,7 +60,10 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
         // ArrayAdapter works in memory, we don't care about stampede protection
         if (\INF === $beta || !$item->isHit()) {
             $save = true;
-            $this->save($item->set($callback($item, $save)));
+            $item->set($callback($item, $save));
+            if ($save) {
+                $this->save($item);
+            }
         }
 
         return $item->get();
@@ -124,14 +127,14 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
         $value = $item["\0*\0value"];
         $expiry = $item["\0*\0expiry"];
 
-        if (0 === $expiry) {
-            $expiry = \PHP_INT_MAX;
-        }
+        if (null !== $expiry) {
+            if (!$expiry) {
+                $expiry = \PHP_INT_MAX;
+            } elseif ($expiry <= microtime(true)) {
+                $this->deleteItem($key);
 
-        if (null !== $expiry && $expiry <= microtime(true)) {
-            $this->deleteItem($key);
-
-            return true;
+                return true;
+            }
         }
         if ($this->storeSerialized && null === $value = $this->freeze($value, $key)) {
             return false;

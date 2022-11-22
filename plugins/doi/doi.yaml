@@ -4,6 +4,6 @@ author: Jonathan Schlue, Frank Kuehnlenz
 version: 0.4
 desc: Generates DOIs for immutable objects before registering them at DataCite for persistent citation.
 icon: fa fa-file-code
-info_url: https://www.cms.hu-berlin.de/de/dl/multimedia/bereiche/medienrepositorium/faq/administration/doi
-category: content sharing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/digital-object-identifier
+category: Integrations
 config_url: /plugins/doi/pages/setup.php

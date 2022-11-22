@@ -285,7 +285,7 @@ function get_plugin_config($name){
     $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
     $configs = $configs[0] ?? [];
     $mysql_verbatim_queries = $mysql_vq;
-    if (!array_key_exists('config', $configs))
+    if (!array_key_exists('config', $configs) || is_null($configs['config_json']))
         {
         return null;
         }
@@ -492,6 +492,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     global $lang,$baseurl_short;
 ?>
     <div class="BasicsBox">
+    <h1><?php echo htmlspecialchars($plugin_page_heading); ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -1423,6 +1424,9 @@ function get_plugin_path($plugin,$url=false)
     # For the given plugin shortname, return the path on disk
     # Supports plugins being in the filestore folder (for user uploaded plugins)
     global $baseurl_short,$storagedir,$storageurl;
+    
+    # Sanitise $plugin
+    $plugin=safe_file_name($plugin);
     
     # Standard location    
     $pluginpath=dirname(__FILE__) . "/../plugins/" . $plugin;

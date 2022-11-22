@@ -73,7 +73,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		$headline = $lang['collection_download_original'];
         if ($direct_link_previews && $downloadthissize)
             {
-            $headline = make_download_preview_link($ref, $sizes[$n]);
+            $headline = make_download_preview_link($ref, $sizes[$n], $headline);
             }
         if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))
             {
@@ -207,10 +207,16 @@ function HookFormat_chooserViewReplacedownloadoptions()
 				<?php
 				foreach ($sizes as $n => $size)
 					{
-					if ($size['width'] == $closestSize)
-						$size = $originalSize;
+                    # Calculate new dimensions based on original file's dimensions and configured width and height
+                    $size_image_dimensions = calculate_image_dimensions($origpath, $size['width'], $size['height']);
+                    if ($size['width'] == $closestSize) {
+						$size = $originalSize; }
+                    # Apply newly calculated width and height dimensions to the sizeInfo array
+                    $size_to_output=$size;
+                    $size_to_output['width']=$size_image_dimensions['new_width'];
+                    $size_to_output['height']=$size_image_dimensions['new_height'];
                     echo $n ?>: {
-                    'info': '<?php echo get_size_info($size, $originalSize) ?>',
+                    'info': '<?php echo get_size_info($size_to_output, $originalSize) ?>',
                     'id': '<?php echo $size['id'] ?>',
                     'restricted': '<?php echo in_array($sizes[$n]["id"],$restrictedsizes) ? "1" : "0" ?>'
 				},
@@ -292,8 +298,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		</script>
 		<?php
 		}
-		global $access,$alt_types_organize,$alternative_file_previews,$userrequestmode,$alt_files_visible_when_restricted;
-	# Alternative files listing
+global $access,$alt_types_organize,$alternative_file_previews,$alternative_file_previews_mouseover,$userrequestmode,$alt_files_visible_when_restricted;
+# Alternative files listing
 $alt_access=hook("altfilesaccess");
 if ($access==0 || $alt_files_visible_when_restricted) $alt_access=true; # open access (not restricted)
 if ($alt_access) 
@@ -347,8 +353,25 @@ if ($alt_access)
                 $alt_pre = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, $use_watermark, $altfiles[$n]['creation_date'], $altfiles[$n]['ref']);
                 }
             }
+        $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
 		?>
-		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && isset($alternative_file_previews_mouseover) && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_width=jQuery('#previewimage').width();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').width(orig_width);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
+		<tr class="DownloadDBlend" id="alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>">
+        <?php if ($alternative_file_previews_mouseover) 
+            { ?>
+            <script>
+            jQuery(document).ready(function() {
+                jQuery("#alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>").mouseover(function() {
+                    orig_preview=jQuery('#previewimage').attr('src');
+                    orig_width=jQuery('#previewimage').width();
+                    jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');
+                    jQuery('#previewimage').width(orig_width);
+                }).mouseout(function() { 
+                    jQuery('#previewimage').attr('src',orig_preview);
+                });
+            });
+            </script>
+        <?php 
+            } ?>
 		<td class="DownloadFileName AlternativeFile">
 		<?php if ($alt_thm!="") { 
         $qs = [

@@ -3,7 +3,10 @@ include "../include/db.php";
 
 include "../include/authenticate.php"; if (!checkperm("n")) {exit("Permission denied");}
 
-if (!$speedtagging) {exit("This function is not enabled.");}
+if(!($speedtagging && false !== get_resource_type_field($speedtaggingfield)))
+    {
+    exit(htmlspecialchars($lang['function_not_enabled']));
+    }
 
 if (getval("save","")!="" && enforcePostRequest(false))
     {
@@ -24,6 +27,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
     }
 
 $resources = do_search("!empty" . $speedtaggingfield . " !hasimage",'','relevance','',500);
+$resources = array_slice($resources,0,500,true);
 
 $ref = 0;
 if(is_array($resources) && count($resources) > 0)

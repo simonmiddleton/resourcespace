@@ -2,19 +2,27 @@
 
 function HookConditional_termsViewDownloadlink($baseparams, $view_in_browser=false)
     {
-    global $baseurl, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset, $download_usage;
+    global $baseurl, $lang, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset, $download_usage;
 
-    $showterms=false;
     $additional_params = array();
 
-    $resource_value_to_test=trim( get_data_by_field($resource['ref'],$conditional_terms_field) );
-
-    if( $conditional_terms_value==$resource_value_to_test )
+    $conditional_terms_resource_field_values = get_data_by_field($resource['ref'], $conditional_terms_field, false);
+    $conditional_terms_field_info = get_resource_type_field($conditional_terms_field);
+    if($conditional_terms_field_info === false)
         {
-        $showterms=true;
+        return false;
         }
 
-    if(!$showterms)
+    if($conditional_terms_field_info['type'] === FIELD_TYPE_CATEGORY_TREE)
+        {
+        $resource_values_to_test = get_node_strings($conditional_terms_resource_field_values, false);
+        }
+    else
+        {
+        $resource_values_to_test = array_column($conditional_terms_resource_field_values, 'name');
+        }
+
+    if(!in_array($conditional_terms_value, $resource_values_to_test))
         {
         return false;
         }

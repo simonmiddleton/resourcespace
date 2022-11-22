@@ -1,5 +1,5 @@
 <?php
-include '../../../include/db.php';
+include __DIR__ . '/../../../include/db.php';
 
 if('cli' != PHP_SAPI)
     {

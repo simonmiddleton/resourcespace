@@ -4,7 +4,6 @@
  * 
  * @package ResourceSpace
  * @subpackage Pages_Team
- * @author Dan Huby
  */
 include "../../include/db.php";
 
@@ -22,7 +21,7 @@ if($py['disable_group_select'])
     }
 
 # Fetch current access level
-$access=ps_value("select enabled_groups value from plugins where name= ?",['s', $plugin],"");
+$access = (string) ps_value("select enabled_groups value from plugins where name= ?",['s', $plugin],"");
 
 # Fetch user groups
 $groups=get_usergroups();
@@ -53,6 +52,7 @@ include "../../include/header.php";
 $s=explode(",",$access);
 ?>
 <div class="BasicsBox">
+<h1><?php echo $lang["groupaccess"] . ': ' . htmlspecialchars($plugin); ?></h1>
 <?php
 $links_trail = array(
     array(

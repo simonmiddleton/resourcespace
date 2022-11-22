@@ -1,8 +1,9 @@
 name: embeddocument
 title: Embed Document
-author: Dan Huby
+author: Montala Limited
 version: 1.01
 desc: Provides a function to generate HTML for embeddable document previews on remote sites.
 icon: fa fa-file
 config_url: /plugins/embeddocument/pages/setup.php
-category: content sharing
+category: Integrations
+info_url: https://www.resourcespace.com/knowledge-base/plugins/embed-document

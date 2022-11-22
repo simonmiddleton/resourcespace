@@ -165,7 +165,8 @@ else
     }
 
 # Calculate pager vars.
-$results    =   count($log);
+$results    =   $log["total"];
+$log        =   $log["data"];
 $totalpages =   ceil($results/$per_page);
 $curpage    =   floor($offset/$per_page)+1;
 $url        =  generateURL(
@@ -196,6 +197,7 @@ $tabledata = array(
     "defaulturl"=>$baseurl . "/pages/log.php",
     "params"=>array_merge($url_params, $filter_url_params),
     "pager"=>array("current"=>$curpage,"total"=>$totalpages, "per_page"=>$per_page, "break" =>false),
+    "modal" => $modal,
     "data"=>array()
     );
 

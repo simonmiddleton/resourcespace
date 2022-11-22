@@ -38,6 +38,7 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox" style="position:relative;">
+<h1><?php echo $lang["managecontent"]; ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -113,7 +114,7 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 	
 	<td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(htmlspecialchars($text[$n]["text"]),100), $findtext, true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
 	
-	<td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a></div></td>
+	<td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a></div></td>
 	</tr>
 	<?php
 	}

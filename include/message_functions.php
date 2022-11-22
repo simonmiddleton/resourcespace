@@ -9,7 +9,7 @@ class ResourceSpaceUserNotification
     {   
     /**
      * @var array $message_parts 
-     * Array of message text components and optional find/repalce arrays for language strings
+     * Array of message text components and optional find/replace arrays for language strings
      */
     private $message_parts = [];
 
@@ -20,9 +20,9 @@ class ResourceSpaceUserNotification
     private $subject = [];   
 
     /**
-     * @var array $url
+     * @var string $url
      */
-    public $url;
+    public $url = "";
 
     /**
      * @var array $template
@@ -35,7 +35,12 @@ class ResourceSpaceUserNotification
     public $templatevars;
 
      /**
-     * @var string $user_preference  Optional user preference to check for when sending notification e.g. user_pref_resource_access_notifications, user_pref_system_management_notifications,     user_pref_user_management_notifications,     user_pref_resource_notifications
+     * @var array $user_preference  Optional array of (boolean only) user preferences, with required and default values to check for when sending notification e.g.
+     * ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]]
+     * or
+     * ["user_pref_system_management_notifications" => true]
+     * 
+     * All preferences must be set to the required values for the notification to be sent
      * 
      */
     public $user_preference;
@@ -109,7 +114,7 @@ class ResourceSpaceUserNotification
         // Loop in reverse order so that the parts get ordered correctly at start
         for($n=count($textarr);$n--;$n>=0)
             {
-            array_unshift($this->message_parts,$textarr[0], $textarr[1], $textarr[2]);
+            array_unshift($this->message_parts,$textarr[$n]);
             }
         }
 
@@ -145,7 +150,7 @@ class ResourceSpaceUserNotification
      * Note that if not returning raw data the correct $lang must be set by  before this is called
       * @param  bool    $unresolved       Return the raw message parts to use in another message object. False by default
      *
-     * @return void
+     * @return string|array
      */
     public function get_text($unresolved=false)
         {
@@ -325,12 +330,12 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
-                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+                    $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                               
-                    if(strpos($message_text,$url) === false)
+                    if($url !== '' && strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
-                        $message_text = $message_text . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+                        $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                         }
 					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
 					}
@@ -495,7 +500,7 @@ function message_send_unread_emails()
         $allusers = get_users(0,"","u.ref",false,-1,1,false,"u.ref, u.username, u.last_active");
         foreach($allusers as $user)
             {
-            if(!in_array($user["ref"],$digestusers) && strtotime($user["last_active"]) < date(time() - $inactive_message_auto_digest_period *  60 * 60 *24))
+            if(!in_array($user["ref"],$digestusers) && strtotime((string)$user["last_active"]) < date(time() - $inactive_message_auto_digest_period *  60 * 60 *24))
                 {
                 debug("message_send_unread_emails: Processing unread messages for inactive user: " . $user["username"]);
                 $digestusers[] = $user["ref"];
@@ -868,7 +873,7 @@ function send_user_message($users,$text)
  * Send system notifications to specified users, checking the user preferences first if specified
  *
  * @param  array  $users            Array of user IDs or array of user details from get_users()
- * @param  object $notifymessage    An instance of a ResourceSpaceUserNotification object holding message properties
+ * @param  ResourceSpaceUserNotification $notifymessage    An instance of a ResourceSpaceUserNotification object holding message properties
  * @param  bool   $forcemail        Force system to send email instead of notification?
  * 
  * @return array  Array containing resulting messages - can be used for testing when emails are not being sent
@@ -885,7 +890,8 @@ function send_user_message($users,$text)
  */
 function send_user_notification($users=[],$notifymessage, $forcemail=false)
     {
-    global $userref, $lang, $plugins, $header_colour_style_override, $admin_resource_access_notifications;
+    global $userref, $lang, $plugins, $header_colour_style_override;
+
     // Need to global $applicationname as it is used inside the lang files
     global $applicationname;
     $userlanguages = []; // This stores the users in their relevant language key element
@@ -910,49 +916,33 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             {
             continue;
             }
-        $preference = $notifymessage->user_preference;
-        if($preference != "")
+        
+        $send_message=true;
+        // Check if preferences should prevent the notification from being sent
+        if(isset($notifymessage->user_preference) && is_array($notifymessage->user_preference))
             {
-            $default = null;
-            switch ($preference)
+            foreach($notifymessage->user_preference as $preference=>$vals)
                 {
-                // Don't send if an action will also be created
-                case "user_pref_resource_access_notifications";     
-                get_config_option($userdetails['ref'],'actions_resource_requests', $actions_set,true);
-                    if($actions_set)
-                        { 
-                        debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
-                        continue 2;
-                        }
-                    // Need to ensure this won't get the default global setting for the requesting user
-                    $default = $admin_resource_access_notifications;
-                    break;
-
-                case "user_pref_user_management_notifications";
-                    get_config_option($userdetails['ref'],'actions_account_requests', $actions_set,true);
-                    get_config_option($userdetails['ref'],'actions_approve_hide_groups', $skipgroups,"");                    
-                    $new_user_group = $notifymessage->eventdata["extra"]["usergroup"] ?? 0;
-                    if($actions_set && !in_array($new_user_group,explode(",",$skipgroups)))
+                if($preference != "")
+                    {
+                    $requiredvalue  = (bool)$vals["requiredvalue"];
+                    $default        = (bool)$vals["default"];
+                    get_config_option($userdetails['ref'],$preference, $check_pref,$default);
+                    debug(" - Required preference: " . $preference . " = " . ($requiredvalue ? "TRUE" : "FALSE"));
+                    debug(" - User preference value: " . $preference . " = " . ($check_pref ? "TRUE" : "FALSE"));
+                    if($check_pref != $requiredvalue)
                         {
-                        debug("Skipping notification to user #" . $userdetails['ref'] . " as user has actions enabled");
-                        continue 2;
+                        debug("Skipping notification to user #" . $userdetails['ref']);
+                        $send_message=false;                        
                         }
-                    break;
-
-                default;
-                    break;
+                    }
                 }
-            
-            get_config_option($userdetails['ref'],$preference, $send_message,$default);
-
-            if($send_message==false)
-                {
-                debug("Skipping notification to user #" . $userdetails['ref'] . " based on " . $notifymessage->user_preference . " : " . print_r($send_message,true));
-                continue;
-                }
-            debug("Sending notification to user #" . $userdetails["ref"]);
             }
-
+        if($send_message==false)
+            {
+            continue;
+            }
+        debug("Sending notification to user #" . $userdetails["ref"]);
         get_config_option($userdetails['ref'],'email_user_notifications', $send_email);
         if(!isset($userlanguages[$userdetails['lang']]))
             {
@@ -972,7 +962,6 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             }
         }
     $url = $notifymessage->url ?? NULL;
-
     $headerimghtml = "";
     if(!isset($notifymessage->template))
         {
@@ -980,7 +969,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         $img_url = get_header_image(true);
         $img_div_style = "max-height:50px;padding: 5px;";
         $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /><br/><br/>';
+        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
         }
 
     foreach($userlanguages as $userlanguage=>$notifications)
@@ -1028,14 +1017,14 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 {
                 $results["messages"][] = ["user"=>$notifyuser,"message"=>$messagetext,"url"=>$url];
                 }
-            message_add($notifications["message_users"],$messagetext,$url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
+            message_add($notifications["message_users"],$messagetext, (string) $url,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,$activitytype,$relatedactivity);
             }
         if (count($notifications["emails"])>0)
             {
-            if(strpos($messagetext,$url) === false)
+            if(!empty($url) && !is_null($url) && strpos($messagetext,$url) === false)
                 {
                 // Add the URL to the message if not already present
-                $messagetext = $messagetext . "<br/><br/><a href='" . $url . "'>" . $url . "</a>";
+                $messagetext = $messagetext . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                 }
             send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
 
@@ -1053,4 +1042,29 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
         $lang = $saved_lang;
         }
     return $results;
+    }
+
+/**
+ * Gets the user message for the given ref
+ * 
+ * @param  int  $ref            Message ID
+ * @param  bool $checkaccess    Check if user can see the given message?
+ * 
+ * @return array|bool  Array with two elements: 'message' => message text,'url'=> message URL and 'owner' => message owner
+ *                     False if user has no access or the requested message doesn't exist,
+ */
+function get_user_message(int $ref, bool $checkaccess=true)
+	{
+    global $userref;
+    if($checkaccess)
+        {
+        $validmessages = ps_array("SELECT ref value FROM user_message WHERE user = ?",["i",$userref]);
+        if(!in_array($ref,$validmessages))
+            {
+            return false;
+            }
+        }
+    $message = ps_query("SELECT message, url, owner FROM message WHERE ref = ?",["i",$ref]);
+    
+    return $message ? ["message"=>$message[0]["message"],"url"=>$message[0]["url"],"owner"=>$message[0]["owner"]] : false;    
     }

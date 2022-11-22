@@ -737,7 +737,7 @@ $recent_search_quantity=1000;
 $help_link=true;
 
 # Display Search Results link in top navigation
-$search_results_link=true;
+$search_results_link=false;
 
 # Display a 'My Collections' link in the top navigation
 # Note that permission 'b' is needed for collection_manage.php to be displayed
@@ -1464,7 +1464,7 @@ $index_collection_creator = true;
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
 # 'Space' is included by default and does not need to be specified below.
 # Note: leave non breaking space in
-$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?", '’', '“', ' ');
+$config_separators=array("/","_",".",";","-","(",")","'","\"","\\", "?", '’', '“', ' ');
 
 
 # Resource field verbatim keyword regex
@@ -1616,6 +1616,9 @@ $top_nav_upload_type="batch"; # The upload type. Options are batch, ftp, local
 # You can set the following line to ''  to disable chunking.
 $upload_chunk_size='5mb';
 
+# This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
+$upload_concurrent_limit=5;
+
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
 # 
@@ -1725,6 +1728,9 @@ $custompermshowfile=false;
 $alt_types=array("");
 # organize View page display according to alt_type
 $alt_types_organize=false;
+
+# Allow for alternative files to be natively displayed in the browser
+$alternative_file_view_in_browser = ['pdf', 'mp3'];
 
 # Display col-size image of resource on alternative file management page
 $alternative_file_resource_preview=true;
@@ -1850,9 +1856,6 @@ $dynamic_keyword_suggest_contains=false;
 
 # Option to show resource ID in the thumbnail, next to the action icons.
 $display_resource_id_in_thumbnail=false;
-
-# Show "Save" and "Clear" buttons at the top of the resource edit form as well as at the bottom
-$edit_show_save_clear_buttons_at_top=false;
 
 # Allow empty collections to be shared?
 $collection_allow_empty_share=false;
@@ -2607,9 +2610,6 @@ $download_no_session_cache_limiter=false;
 # Option to show only existing shares that have been shared by the user when sharing resources (not collections)
 $resource_share_filter_collections=false;
 
-# Set the following to false to disable permission checking before showing edit_all link in collection bar and on Manage my collections page, useful as this can be a performance hit if there are many resources in collections
-$edit_all_checkperms=false;
-
 # Option to turn off email sharing.
 $email_sharing=true;
 
@@ -3287,10 +3287,32 @@ $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot','videojs');
 // String to act as a placeholder for back slashes for the regexp filter field in the metadata field setup as they cannot be inserted into the database
 $regexp_slash_replace = 'SLASH';
 
+/*
+Metadata field designated to hold information which the system can use to determine the user group responsible for that 
+resource.
+Allowed field types are fixed list fields with only a single current value (i.e. radio buttons or drop down list).
+To disable it, set to 0 (zero).
+*/
+$owner_field = 0;
+
+/*
+Map the available field options (from the $owner_field) to ResourceSpace user groups.
+The mappings' keys will hold node IDs and the values user group IDs.
+Example:
+$owner_field_mappings = [
+    278 => 3, # Option 1 -> Super Admin
+    280 => 1, # Option 2 -> Administrators
+];
+*/
+$owner_field_mappings = [];
+
 // Optional - $valid_upload_paths
 // Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
-// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
+// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder, $tempdir - these don't need to be added to the array
 // $valid_upload_paths = [];
 
 // Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode
 $thumbs_display_archive_state = false;
+
+// Cache the count of search results to improve performance
+$cache_search_count = true;

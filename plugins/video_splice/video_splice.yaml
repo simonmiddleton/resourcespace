@@ -6,3 +6,4 @@ desc: Adds video trimming and splicing capability
 icon: fa fa-cut
 config_url: /plugins/video_splice/pages/setup.php
 category: Asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/video-splice

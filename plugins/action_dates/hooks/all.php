@@ -18,6 +18,9 @@ function HookAction_datesCronCron()
 
     $validfieldtypes = [FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE];
 
+    # Save the resource_deletion_state because it can be manipulated during primary action processing
+    $saved_resource_deletion_state = $resource_deletion_state;
+
     $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
     if(PHP_SAPI == "cli")
         {
@@ -155,6 +158,10 @@ function HookAction_datesCronCron()
 
             $sql .= "WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params = array_merge($sql_params,["i",$action_dates_deletefield]);
+
+            // Filter results to only ones that should have access to the field
+            $sql .= " AND ((r.resource_type in (select ref from resource_type where inherit_global_fields = 1) and exists (select * from resource_type_field where resource_type = 0 and ref = ?)) OR r.resource_type = (select resource_type from resource_type_field where ref = ?))";
+            $sql_params = array_merge($sql_params, ['i', $action_dates_deletefield,'i', $action_dates_deletefield]);
 
             $candidate_resources = ps_query($sql,$sql_params);
 
@@ -389,6 +396,9 @@ function HookAction_datesCronCron()
             }
         }
 
+    # Restore the resource_deletion_state which may have been manipulated during primary action processing
+    $resource_deletion_state = $saved_resource_deletion_state;
+        
     # Perform additional actions if configured
     foreach($action_dates_extra_config as $action_dates_extra_config_setting)
         {
@@ -410,12 +420,16 @@ function HookAction_datesCronCron()
             WHERE r.ref > 0 
                 AND n.resource_type_field = ?
                 AND r.archive<> ? 
-                AND r.archive<> ?";
+                AND r.archive<> ?
+                AND ((r.resource_type in (select ref from resource_type where inherit_global_fields = 1) and exists (select * from resource_type_field where resource_type = 0 and ref = ?)) OR r.resource_type = (select resource_type from resource_type_field where ref = ?))    
+                ";
             
             $sql_params=array(
                 "i",$field,
                 "i",$resource_deletion_state,
-                "i",$newstatus
+                "i",$newstatus,
+                "i",$field,
+                "i",$field
             );
             $additional_resources=ps_query($sql,$sql_params);
 

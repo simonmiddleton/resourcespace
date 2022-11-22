@@ -31,7 +31,6 @@ $params = [];
 set_time_limit(0);
 echo "<pre>" . PHP_EOL;
 $time_start = microtime(true);
-$time_start = microtime(true);
 
 // Reindex nodes, by field to minimise chance of memory issues
 $allfields = get_resource_type_fields();

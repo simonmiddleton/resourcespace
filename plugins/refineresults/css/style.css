@@ -2,54 +2,19 @@
 
 #refine_results_button {
     background-color: white;
-    padding: 5px;
-    border-radius: 5px;
+    padding: 5px 8px 4px 5px;
+    border-radius: 4px;
     color: black;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px 1px rgba(0,0,0,0.1);
     font-size:0.875rem;
     width: fit-content;
+    margin: 3px 20px 3px 0;
 }
 
-@media(max-width:1600px) {
-    .BottomInpageNavRight .TopInpageNavRight {
-        position:relative;
-    }
-    .BottomInpageNavRight {
-        clear:left;
-        width: 100%;
-        float: none;
-        text-align: center;
-    }
-    .TopInpageNavLeft {
-        padding: 0;
-        margin: 10px 0;
-    }
-    .TopInpageNav {
-        padding:0;
-    }
-    #Responsive_ResultDisplayOptions {
-        text-align: center;
-        margin-bottom: 10px;
-        display:inline-block !important;
-    }
-    #ResponsiveResultCount {
-        width: 95px;
-        display:block;
-        box-shadow: none;
-        font-size: 1em;
-        margin-left: 6px;
-        margin-bottom: 4px;
-    }
-    #SearchResultFound {
-        display:none;
-    }
-    .TopInpageNav .InpageNavLeftBlock {
-        width: 95%;
-        display: none;
-        margin: 0 0 10px 0;
-    }
-    .TopInpageNav .InpageNavLeftBlock a, .InpageNavLeftBlock span {
-        display:inline-block;
-        float:none;
-    }
- }
+#refine_results_button a:hover {
+    text-decoration: none;
+}
+
+#refine_results_button .fa {
+    padding-right: 3px;
+}

@@ -89,7 +89,7 @@ function save_request($request)
             $assignedmessage->set_subject($applicationname . ": " );
             $assignedmessage->append_subject("lang_requestassignedtoyou");
             $assignedmessage->set_text("lang_requestassignedtoyoumail");
-            $assignedmessage->user_preference = "user_pref_resource_access_notifications";
+            $assignedmessage->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
             $assignedmessage->url = $baseurl . "/?q=" . $request;
             $assignedmessage->eventdata = ["type"  => MANAGED_REQUEST,"ref"   => $request];
             send_user_notification([$assigned_to],$assignedmessage);
@@ -104,7 +104,6 @@ function save_request($request)
         {
         # --------------- APPROVED -------------
         # Send approval e-mail
-        // $reasonapproved=str_replace(array("\\r","\\n"),"\n",$reasonapproved);$reasonapproved=str_replace("<br/><br/>","\n",$reasonapproved); # Fix line breaks.
         $approved_declined = true;
         $reasonapproved = unescape($reasonapproved);
         $colurl = $baseurl . "/?c=" . $currentrequest["collection"];
@@ -114,9 +113,9 @@ function save_request($request)
         $approvemessage->set_subject($applicationname . ": ");
         $approvemessage->append_subject("lang_requestcollection");
         $approvemessage->append_subject(" - ");;
-        $approvemessage->append_subject("lang_resourcerequeststatus2");
+        $approvemessage->append_subject("lang_resourcerequeststatus1");
         $approvemessage->set_text("lang_requestapprovedmail");
-        $approvemessage->append_text("<br/><br/>");
+        $approvemessage->append_text("<br /><br />");
         $approvemessage->append_text("lang_approvalreason");
         $approvemessage->append_text(": " . $reasonapproved);
         $approvemessage->url = $colurl;
@@ -125,10 +124,14 @@ function save_request($request)
         if ($expires!="")
             {
             # Add expiry time to message.
-            $approvemessage->append_text("<br/><br/>");
+            $approvemessage->append_text("<br /><br />");
             $approvemessage->append_text("lang_requestapprovedexpires");
             $approvemessage->append_text(" " . nicedate($expires) . "\n");
-            $templatevars["expires"] = "<br/><br/>" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";;
+            $templatevars["expires"] = "<br /><br />" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";;
+            }
+        else
+            {
+            $templatevars["expires"] = '';  
             }
         $approvemessage->template = "requestapprovedmail_email";
         $approvemessage->templatevars = $templatevars;
@@ -144,7 +147,7 @@ function save_request($request)
         message_remove_related(MANAGED_REQUEST,$request);
         }
 
-    if ($oldstatus!=$status && $status==2)  
+    elseif ($oldstatus!=$status && $status==2)  
         {
         # --------------- DECLINED -------------
         # Send declined e-mail
@@ -157,7 +160,7 @@ function save_request($request)
         $declinemessage->append_subject(" - ");;
         $declinemessage->append_subject("lang_resourcerequeststatus2");
         $declinemessage->set_text("lang_requestdeclinedmail");
-        $declinemessage->append_text("<br/><br/>");
+        $declinemessage->append_text("<br /><br />");
         $declinemessage->append_text("lang_declinereason");
         $declinemessage->append_text(": " . $reason);
         $declinemessage->url = $colurl;
@@ -278,7 +281,8 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
  */
 function email_collection_request($ref,$details,$external_email)
     {
-    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify;
+    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,
+    $resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
@@ -321,10 +325,13 @@ function email_collection_request($ref,$details,$external_email)
 
     $templatevars["requesturl"]=$baseurl."/?c=".$ref;
 
-    $templatevars['username']=$username . " (" . $useremail . ")";
-    $userdata=get_user($userref);
-    if($userdata===false){return false;} # Unable to get user credentials
-    $templatevars["fullname"]=$userdata["fullname"];
+    if (isset($userref))
+        {
+        $templatevars['username']=$username . " (" . $useremail . ")";
+        $userdata=get_user($userref);
+        if($userdata===false){return false;} # Unable to get user credentials
+        $templatevars["fullname"]=$userdata["fullname"];
+        }
 
     reset ($_POST);
     foreach ($_POST as $key=>$value)
@@ -335,14 +342,14 @@ function email_collection_request($ref,$details,$external_email)
             $setting=trim($_POST[str_replace("_label","",$key)]);
             if ($setting!="")
                 {
-                $message->append_text($value . ": " . $_POST[str_replace("_label","",$key)] . "<br/><br/>");
+                $message->append_text($value . ": " . $_POST[str_replace("_label","",$key)] . "<br /><br />");
                 }
             }
         }
     if (trim($details)!="")
         {
         $message->append_text("lang_requestreason");
-        $message->append_text(": " . newlines($details) . "<br/><br/>");
+        $message->append_text(": " . newlines($details) . "<br /><br />");
         }
 
     # Add custom fields
@@ -363,7 +370,7 @@ function email_collection_request($ref,$details,$external_email)
                 return false; # Required field was not set.
                 }            
             $message->append_text("i18n_" . $custom[$n]);
-            $message->append_text(": " . getval("custom" . $n,"") . "<br/><br/>");
+            $message->append_text(": " . getval("custom" . $n,"") . "<br /><br />");
             }
         }
         
@@ -382,23 +389,26 @@ function email_collection_request($ref,$details,$external_email)
     $notification_message->append_subject("lang_requestcollection");
     $notification_message->append_subject(" - "  . $ref);
     $introtext[] = ["lang_user_made_request"];
-    $introtext[] = ["<br/><br/>"];
-    $introtext[] = ["lang_username"];
-    $introtext[] = [": "];
-    $introtext[] = [$username];
+    $introtext[] = ["<br /><br />"];
+    if (isset($username))
+        {
+        $introtext[] = ["lang_username"];
+        $introtext[] = [": "];
+        $introtext[] = [$username];
+        $introtext[] = ["<br /><br />"];
+        }
     $notification_message->prepend_text_multi($introtext);
-    $notification_message->append_text("<br/>");
     $notification_message->append_text("lang_viewcollection");
-    $notification_message->append_text(":<br/>");
+    $notification_message->append_text(":");
     $notification_message->url = $templatevars['requesturl'];
-    $notification_message->user_preference = "user_pref_resource_access_notifications";
+    $notification_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
     $notification_message->template = "emailcollectionrequest";
     $notification_message->templatevars = $templatevars;
 
     $notify_users = [];
     $notify_emails = [];
-    # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
-    if(isset($resource_type_request_emails))
+    # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
+    if(isset($resource_type_request_emails) && !can_use_owner_field())
         {
         $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr 
                                     LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection = ?",array("i",$ref));
@@ -424,24 +434,26 @@ function email_collection_request($ref,$details,$external_email)
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
+    $notify_users = array_keys(get_notification_users_by_owner_field($notify_users, $colresources));
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
         send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailcollectionrequest",$templatevars);
         }
 
+    $userconfirmmessage = clone($message);
+    $userconfirmmessage->set_subject($applicationname . ": ");
+    $userconfirmmessage->append_subject(" - "  . $ref);
+    $userconfirmmessage->prepend_text("<br /><br />");
+    $userconfirmmessage->prepend_text("lang_requestsenttext");
+    $userconfirmmessage->url = $templatevars['url'];
+    $userconfirmmessage->template = "emailusercollectionrequest";
+    $userconfirmmessage->templatevars = $templatevars;
+
     # $userref and $useremail will be that of the internal requestor
     # - We need to send the $userconfirmmessage to the internal requestor saying that their request has been submitted
     if (isset($userref) && $request_senduserupdates)
         {
-        $userconfirmmessage = clone($message);
-        $userconfirmmessage->set_subject($applicationname . ": ");
-        $userconfirmmessage->append_subject(" - "  . $ref);
-        $userconfirmmessage->prepend_text("<br/><br/>");
-        $userconfirmmessage->prepend_text("lang_requestsenttext");
-        $userconfirmmessage->url = $templatevars['url'];
-        $notification_message->template = "emailusercollectionrequest";
-        $notification_message->templatevars = $templatevars;
         send_user_notification([$userref],$userconfirmmessage);
         }
 
@@ -485,7 +497,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $user_mail_template="emailusercollectionrequest";
 
     if ($ref_is_resource)
-        {        
+        {
         $resourcedata=get_resource_data($ref);
         $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
 
@@ -504,6 +516,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
         add_resource_to_collection($ref,$c,true);
         $ref=$c; # Proceed as normal
+        $colresources = get_collection_resources($ref);
         }
     else
         {
@@ -557,7 +570,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             if ($setting!="")
                 {
                 $message->append_text($value . ": " . $setting . "\n");
-                $templatevars["extra"] .= $value . ": " . $setting . "<br/><br/>";
+                $templatevars["extra"] .= $value . ": " . $setting . "<br /><br />";
                 }
             }
         }
@@ -584,7 +597,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 {
                 return false; # Required field was not set.
                 }            
-            $message->append_text("<br/>");
+            $message->append_text("<br />\n");
             $message->append_text("i18n_" . $custom[$n]);
             $message->append_text(": " . getval("custom" . $n,""));
             }
@@ -592,7 +605,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
     $assignedmessage = new ResourceSpaceUserNotification();
     $assignedmessage->set_text("lang_requestassignedtoyoumail");
-    $assignedmessage->append_text("<br/><br/>");
+    $assignedmessage->append_text("<br /><br />");
     $assignedmessage->set_subject($applicationname . ": ");
     $assignedmessage->append_subject("lang_requestassignedtoyou");
     // Add core message text (reason, custom fields etc.)
@@ -645,6 +658,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
 
+    $can_use_owner_field = can_use_owner_field();
+
     // Regular Processing: autoassign using the resource type - collection request and no plugin is preventing this from running
     if(isset($collectiondata) && !is_null($manage_request_admin) && is_array($manage_request_admin) && !empty($manage_request_admin))
         {
@@ -685,7 +700,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $collections[$collection_type] = create_collection($userref, $collectiondata['name'] . ' : ' . $all_r_types[$r_type_index]["name"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
             foreach ($collection_resources as $collection_resource_id)
                 {
-                add_resource_to_collection($collection_resource_id, $collections[$collection_type]);
+                // Add collection resources of the given type to the resource type specific collection 
+                // The col_access_control parameter is true meaning that adding to the collection is permitted for this call
+                add_resource_to_collection($collection_resource_id, $collections[$collection_type], false, "", "", true);
                 }
             }
         if(isset($collections) && count($collections) > 0)
@@ -702,7 +719,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 else
                     {
                     // No specific user allocated, get all users, adding $email_notify address if this does not belong to a system user
-                    $assigned_to_users=get_notification_users("RESOURCE_ACCESS"); 
+                    $assigned_to_users=get_notification_users("RESOURCE_ACCESS");
                     $email_notify_is_user=false;
                     foreach ($assigned_to_users as $assigned_to_user)
                         {
@@ -730,7 +747,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 ps_query($request_query, $parameters);
                 $request = sql_insert_id();
 
-                $assignedmessage->user_preference = "user_pref_resource_access_notifications";
+                $assignedmessage->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
                 $assignedmessage->url = $baseurl . "/?q=" . $request;
                 $assignedmessage->eventdata = ["type"  => MANAGED_REQUEST,"ref"   => $request];
                 send_user_notification($assigned_to_users,$assignedmessage);
@@ -773,11 +790,11 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_message->set_subject($applicationname . ": " );
         $admin_notify_message->append_subject("lang_requestassignedtoyou");
         $admin_notify_message->set_text("lang_requestassignedtoyoumail");
-        $admin_notify_message->append_text("<br/><br/>");
+        $admin_notify_message->append_text("<br /><br />");
         $admin_notify_message->append_text("lang_username");
-        $admin_notify_message->append_text(": " . $username . "<br/>");
+        $admin_notify_message->append_text(": " . $username . "<br />\n");
         $admin_notify_message->append_text_multi($message->get_text(true));
-        $admin_notify_message->user_preference = "user_pref_resource_access_notifications";
+        $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
         $admin_notify_message->url = $templatevars['requesturl'];
         $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
         if($notify_manage_request_admin)
@@ -789,32 +806,53 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $admin_notify_emails=array();
         $admin_notify_users=array();
 
-        # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
-        if(isset($resource_type_request_emails))
+        # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type
+        if(isset($resource_type_request_emails) && !$can_use_owner_field)
             {
             // Legacy support for $resource_type_request_emails
             $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection=?", array("i",$ref));
             $requestrestypes=array_unique($requestrestypes);
             if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
                 {
-                $admin_notify_emails[]=$resource_type_request_emails[$requestrestypes[0]];
+                $emailusers = get_user_by_email($resource_type_request_emails[$requestrestypes[0]]);
                 }  
-            foreach($admin_notify_emails as $admin_notify_email)
+            if(is_array($emailusers) && count($emailusers) > 0)
                 {
-                send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$admin_notify_message,$email_from,$email_from,$admin_mail_template,$templatevars);
+                send_user_notification($emailusers,$admin_notify_message);
+                }
+            else
+                {
+                send_mail($resource_type_request_emails[$requestrestypes[0]],$applicationname . ": " . $lang["requestcollection"] . " - $ref","<p>" . $admin_notify_message->get_text() . "</p>" . $admin_notify_message->url ,$email_from,$email_from,$admin_mail_template,$templatevars);
                 }
             }
 
-        if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
+        if(!$notification_sent && $can_use_owner_field)
             {
-            $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
+            $admin_notify_users = array_keys(get_notification_users_by_owner_field(get_notification_users("RESOURCE_ACCESS"), $colresources));
             $admin_notify_message->set_subject($applicationname . ": " );
             $admin_notify_message->append_subject("lang_requestcollection");
             $admin_notify_message->append_subject(" - " . $ref);
             $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
             send_user_notification($admin_notify_users,$admin_notify_message);
+            $notification_sent = true;
+            }
+
+        if(!$notification_sent)
+            {
+            $default_notify_users = get_notification_users("RESOURCE_ACCESS"); 
+            // Exclude any users who will already have an action appearing
+            $action_users = get_config_option_users("actions_resource_requests",true);
+            $admin_notify_users = array_diff(array_column($default_notify_users,"ref"),$action_users);
+  
+            $admin_notify_message->set_subject($applicationname . ": " );
+            $admin_notify_message->append_subject("lang_requestcollection");
+            $admin_notify_message->append_subject(" - " . $ref);
+            $admin_notify_message->eventdata = ["type" => MANAGED_REQUEST,"ref" => $request];
+            $admin_notify_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
+            send_user_notification($admin_notify_users,$admin_notify_message);
             }
         }
+
     if ($request_senduserupdates)
         {
         $user_message = new ResourceSpaceUserNotification();
@@ -822,9 +860,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $user_message->append_subject("lang_requestsent");
         $user_message->append_subject(" - " . $ref);
         $user_message->set_text("lang_requestsenttext");
-        $user_message->append_text("<br/><br/>");
+        $user_message->append_text("<br /><br />");
         $user_message->append_text_multi($message->get_text(true));
-        $user_message->append_text("<br/><br/>");
+        $user_message->append_text("<br /><br />");
         $user_message->append_text("lang_clicktoviewresource");
         $user_message->url = $baseurl . "/?c=" . $ref;
         // Note no user_preference set so that message will always send
@@ -848,7 +886,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
  */
 function email_resource_request($ref,$details)
     {
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $user_dl_limit, $user_dl_days, $k, $user_is_anon,$resource_type_request_emails_and_email_notify;    
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $user_dl_limit, $user_dl_days, $k, $user_is_anon,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
 
     $message = new ResourceSpaceUserNotification;
     $detailstext = new ResourceSpaceUserNotification;
@@ -859,7 +897,7 @@ function email_resource_request($ref,$details)
         $download_limit_check = get_user_downloads($userref,$user_dl_days);
         if($download_limit_check >= $user_dl_limit)
             {
-            $detailstext->prepend_text("<br/>");
+            $detailstext->prepend_text("<br />");
             $detailstext->prepend_text("lang_download_limit_request_text",["%%DOWNLOADED%%","%%LIMIT%%"],[$download_limit_check,$user_dl_limit]);
             }
         }
@@ -898,7 +936,7 @@ function email_resource_request($ref,$details)
         $templatevars["fullname"]= isset($userdata["fullname"]) ? $userdata["fullname"] : ""; 
         }
 
-    $htmlbreak="<br/><br/>";
+    $htmlbreak="<br /><br />";
 
     $list="";
     reset ($_POST);
@@ -918,7 +956,7 @@ function email_resource_request($ref,$details)
     $adddetails="";
     if ($templatevars['details']!="")
         {
-        $adddetails=$lang["requestreason"] . ": " . newlines($templatevars['details'])."<br/>";
+        $adddetails=$lang["requestreason"] . ": " . newlines($templatevars['details'])."<br />";
         }
     elseif ($resource_request_reason_required)
         {
@@ -940,29 +978,29 @@ function email_resource_request($ref,$details)
                 # Required field was not set.
                 return false;
                 }
-            $c.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "<br/>";
+            $c.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "<br />";
             }
         }
     $templatevars["requestreason"]=$lang["requestreason"] . ": " . $templatevars['details']. $c ."";
     if(isset($username))
         {
         $message->append_text("lang_username");
-        $message->append_text(": " . $username . " (" . $useremail . ")<br/>");
+        $message->append_text(": " . $username . " (" . $useremail . ")<br />");
         }
     if(!empty($templatevars["formfullname"]))
         {
         $message->append_text("lang_fullname");
-        $message->append_text(": " . $templatevars["formfullname"] . "<br/>");
+        $message->append_text(": " . $templatevars["formfullname"] . "<br />");
         }
     if(!empty($templatevars["formemail"]))
         {
         $message->append_text("lang_email");
-        $message->append_text(": " . $templatevars["formemail"] ."<br/>");
+        $message->append_text(": " . $templatevars["formemail"] ."<br />");
         }
     if(!empty($templatevars["formtelephone"]))
         {
         $message->append_text("lang_contacttelephone");
-        $message->append_text(": " . $templatevars["formtelephone"] . "<br/>");
+        $message->append_text(": " . $templatevars["formtelephone"] . "<br />");
         }
 
     $notification_message = clone($message);
@@ -972,14 +1010,15 @@ function email_resource_request($ref,$details)
     $notification_message->prepend_text($htmlbreak);
     $notification_message->prepend_text("lang_user_made_request");
     $notification_message->append_text($adddetails . $c); 
-    $notification_message->append_text("<br/>");
+    $notification_message->append_text("<br />");
     $notification_message->append_text("lang_clicktoviewresource");
+    $notification_message->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
     $notification_message->url = $templatevars['url'];
 
     $notify_users = [];
     $notify_emails = [];
-    # Check if alternative request email notification address is set
-    if(isset($resource_type_request_emails))
+    # Legacy: Check if alternative request email notification address is set
+    if(isset($resource_type_request_emails) && !can_use_owner_field())
         {
         if(isset($resource_type_request_emails[$resourcedata["resource_type"]]))
             {
@@ -1002,6 +1041,8 @@ function email_resource_request($ref,$details)
         $admin_notify_users=get_notification_users("RESOURCE_ACCESS");
         $notify_users = array_merge($notify_users,$admin_notify_users);
         }
+    $notify_users = array_keys(get_notification_users_by_owner_field($notify_users, [$ref]));
+
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
@@ -1013,7 +1054,7 @@ function email_resource_request($ref,$details)
         $userconfirmmessage = clone($message);
         $userconfirmmessage->set_subject($applicationname . ": ");
         $userconfirmmessage->append_subject(" - "  . $ref);
-        $userconfirmmessage->prepend_text("<br/><br/>");
+        $userconfirmmessage->prepend_text("<br /><br />");
         $userconfirmmessage->prepend_text("lang_requestsenttext");
         $userconfirmmessage->append_text($adddetails . $c); 
         $key_str=($k!="") ? "&k=" . $k : "";
@@ -1028,7 +1069,7 @@ function email_resource_request($ref,$details)
             $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");
             if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL))
                 {
-                $userconfirmmessage->append_text("<br/><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
+                $userconfirmmessage->append_text("<br /><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
                 send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,$email_notify);
                 }  
             }
@@ -1127,13 +1168,7 @@ function process_custom_fields_submission(array $fields, $submitted)
             // Find the selected options
             $field["selected_options"] = array_filter($field["options"], function($option) use ($field, $submitted_data)
                 {
-                $computed_value = md5("{$field["html_properties"]["id"]}_{$option}");
-                if(in_array($computed_value, $submitted_data))
-                    {
-                    return true;
-                    }
-
-                return false;
+                return in_array(md5("{$field["html_properties"]["id"]}_{$option}"), $submitted_data);
                 });
 
             $field["value"] = implode(", ", $field["selected_options"]);
@@ -1147,4 +1182,79 @@ function process_custom_fields_submission(array $fields, $submitted)
 
         return $field;
         }, gen_custom_fields_html_props(get_valid_custom_fields($fields)));
+    }
+
+
+/**
+ * Initialisation and system check if configuration is correctly enabled to use the owner field and mappings logic.
+ * 
+ * IMPORTANT: during init the globals $owner_field & $owner_field_mappings values will be updated for validation purposes
+ * 
+ * @return boolean Return true if the system is configured with a valid $owner_field and numeric $owner_field_mappings, false otherwise.
+ */
+function can_use_owner_field()
+    {
+    $GLOBALS['owner_field'] = is_int_loose($GLOBALS['owner_field']) ? (int) $GLOBALS['owner_field'] : 0;
+
+    // Filter out non numeric user group IDs
+    $GLOBALS['owner_field_mappings'] = array_filter($GLOBALS['owner_field_mappings'], 'is_int_loose');
+
+    // Filter out non numeric node IDs
+    $GLOBALS['owner_field_mappings'] = array_intersect_key(
+        $GLOBALS['owner_field_mappings'],
+        array_flip(array_filter(array_keys($GLOBALS['owner_field_mappings']), 'is_int_loose')));
+
+    return $GLOBALS['owner_field'] > 0
+        && !empty($GLOBALS['owner_field_mappings'])
+        && in_array($GLOBALS['owner_field'], array_column(
+            get_resource_type_fields('', 'ref', 'asc', '', [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS], false),
+            'ref'
+        ));
+    }
+
+
+/**
+ * Get users to notify for requested resources "owned" by particular groups. Configurable using a metadata field 
+ * ($owner_field) and a defined map ($owner_field_mappings).
+ * 
+ * @param array $users     List of notification users {@see get_notification_users()}. Any array structure where each 
+ *                         value contains an array with at least a "ref" and "email" keys.
+ * @param array $resources List of resource IDs
+ * 
+ * @return array Returns user ID (key) and email (value)
+ * */
+function get_notification_users_by_owner_field(array $users, array $resources)
+    {
+    $users_map_ref_email = array_column($users, 'email', 'ref');
+
+    if(!can_use_owner_field())
+        {
+        return $users_map_ref_email;
+        }
+
+    global $owner_field, $owner_field_mappings;
+
+    $users_to_notify = [];
+
+    // Determine which users should be notified based on the owner field value and its mappings
+    $resource_nodes = get_resource_nodes_batch($resources, [$owner_field], true);
+
+    // All resources are unmanaged so no users should be filtered out
+    if(!empty($resources) && empty($resource_nodes))
+        {
+        return $users_map_ref_email;
+        }
+
+    foreach($resource_nodes as $resource_id => $rtf_rns)
+        {
+        $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
+        $mapped_group = $owner_field_mappings[$owner_field_node_id] ?? 0;
+        if($owner_field_node_id > 0 && $mapped_group > 0)
+            {
+            $group_users = array_column(get_users($mapped_group, '', 'u.username', false, -1, 1, false, 'u.ref'), 'ref');
+            $users_to_notify += array_intersect_key($users_map_ref_email, array_flip($group_users));
+            }
+        }
+
+    return $users_to_notify;
     }

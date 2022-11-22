@@ -105,6 +105,7 @@ $rtfs = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', [],'s
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
+<h1><?php echo $lang['museumplus_module_setup']; ?></h1>
 <?php
 renderBreadcrumbs($breadcrumbs);
 if(isset($error))

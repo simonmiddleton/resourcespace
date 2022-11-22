@@ -1,8 +1,9 @@
 name: embedvideo
 title: Embed Video
-author: Dan Huby
+author: Montala Limited
 version: 1.1
 desc: Provides a function to generate HTML for embeddable video on remote sites.
 icon: fa fa-video
 config_url: /plugins/embedvideo/pages/setup.php
-category: content sharing
+category: Integrations
+info_url: https://www.resourcespace.com/knowledge-base/plugins/embed-video

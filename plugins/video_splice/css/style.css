@@ -99,6 +99,15 @@
 	opacity: 0;
 }
 
+/* Ensure slider works on Firefox */
+@-moz-document url-prefix() {					
+	input[type=range]::-moz-range-thumb {
+		height: 30px;
+		width: 30px;
+		pointer-events: auto;
+	}
+}
+
 input[type=range]::-webkit-slider-thumb {
 	pointer-events: all;
 	width: 30px;

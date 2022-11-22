@@ -860,7 +860,7 @@ $lang["collectioncommentsinfo"]="Skriv en kommentar till materialet. Kommentaren
 $lang["comment"]="Kommentar";
 $lang["warningexpired"]="Materialets utgångsdatum har passerats";
 $lang["warningexpiredtext"]="Varning! Materialets utgångsdatum har passerats. Du måste klicka på länken nedan för att aktivera hämtning av material.";
-$lang["warningexpiredok"]="&gt; Aktivera hämtning av material";
+$lang["warningexpiredok"]="Aktivera hämtning av material";
 $lang["userrequestcomment"]="Meddelande";
 $lang["addresourcebatchbrowser"]="Lägg till material i grupp – i webbläsare";
 

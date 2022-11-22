@@ -1008,7 +1008,7 @@ $lang["collectioncommentsinfo"]="Pridajte do tejto kolekcie komentár pre tento 
 $lang["comment"]="Komentár";
 $lang["warningexpired"]="Platnosť zdroja vypršala";
 $lang["warningexpiredtext"]="Upozornenie! Platnosť zdroja vypršala. Pre obnovenie funkcie sťahovania kliknite na nasledujúci odkaz.";
-$lang["warningexpiredok"]="&gt; Povoliť sťahovanie";
+$lang["warningexpiredok"]="Povoliť sťahovanie";
 $lang["userrequestcomment"]="Komentár";
 $lang["addresourcebatchbrowser"]="Nahrať zdroje znalostí";
 $lang["addresourcebatchbrowserjava"]="Pridanie zdroje v dávke - použitím webového prehľiadača a Java (staršie)";
@@ -2787,9 +2787,6 @@ $lang['browse_by_workflow_state']       = "Pracovný postup";
 $lang["userresources_status_change"]="Zdroje, ktorými ste prispeli, boli zmenené do stavu:";
 
 $lang["collection_description"] = "Popis";
-
-# Updates to workflow
-$lang["userresources_status_change"]="Zdroje, ktorými ste prispeli, boli zmenené do stavu:";
 
 # Batch replace updates
 $lang["replacebatchlocalfolder"]        = "Načítavať súbory z lokálneho priečinka servera? (vytvorí sa tak offline úloha)";

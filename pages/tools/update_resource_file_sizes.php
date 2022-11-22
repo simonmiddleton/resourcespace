@@ -14,7 +14,7 @@ include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission
 set_time_limit(0);
 
 # get all resources in the DB
-$resources=ps_query("select ref,field".$view_title_field.",file_extension from resource where ref>0 order by ref DESC");
+$resources=ps_query("select ref,field".(int)$view_title_field.",file_extension from resource where ref>0 order by ref DESC");
 
 //loop:
 foreach($resources as $resource){

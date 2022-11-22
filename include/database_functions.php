@@ -404,8 +404,8 @@ function db_rollback_transaction($name)
 function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $mysql_verbatim_queries, $mysql_log_transactions, $storagedir, $scramble_key, $query_cache_expires_minutes,
-    $query_cache_already_completed_this_time,$mysql_db,$mysql_log_location, $lang, $prepared_statement_cache;
+    $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $query_cache_already_completed_this_time,$prepared_statement_cache;
 	
     // Check cache for this query
     $cache_write=false;
@@ -417,14 +417,24 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         $cache_file=$cache_location . "/" . $cache . "_" . md5($serialised_query) . "_" . md5($scramble_key . $serialised_query) . ".json"; // Scrambled path to cache
         if (file_exists($cache_file))
             {
-            $cachedata=json_decode(file_get_contents($cache_file),true);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                $cachedata = json_decode(file_get_contents($cache_file), true);
+                }
+            catch (Exception $e)
+                {
+                $cachedata = null;
+                debug("ps_query(): " . $e->getMessage());
+                }
+            unset($GLOBALS["use_error_exception"]);
             if (!is_null($cachedata)) // JSON decode success
                 {
                 if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
                     {
                     if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
                         {
-                        debug("[sql_query] returning cached data (source: {$cache_file})");
+                        debug("[ps_query] returning cached data (source: {$cache_file})");
                         db_clear_connection_mode();
                         return $cachedata["results"];
                         }
@@ -529,7 +539,6 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             catch (Exception $e)
                 {
                 $error = $e->getMessage();
-                echo $error . "\n" . $db_connection_mode;
                 }
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 
@@ -568,9 +577,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     $result[] = array_map("copy_value", $args);
                     }
                 $prepared_statement_cache[$sql]->free_result();
-                }
-            // Clear buffered results
-            $query_returned_row_count=mysqli_stmt_num_rows($prepared_statement_cache[$sql]);
+                }               
             }
         }
     else    
@@ -623,6 +630,10 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     $return_rows=array();
     if ($error!="")
         {
+        static $retries = [];
+        $error_retry_idx = md5($error);
+        $retries[$error_retry_idx] ??= 0;
+
         if ($error=="Server shutdown in progress")
             {
             echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
@@ -639,6 +650,17 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             sql_connect();
             db_set_connection_mode($db_connection_mode);
             return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
+            }
+        else if(
+            (
+                strpos($error, 'Deadlock found when trying to get lock') !== false
+                || strpos($error, 'Lock wait timeout exceeded') !== false
+            )
+            && $retries[$error_retry_idx] <= SYSTEM_DATABASE_MAX_RETRIES
+        )
+            {
+            ++$retries[$error_retry_idx];
+            return ps_query($sql, $parameters, $cache, $fetchrows, $dbstruct, $logthis, $reconnect, $fetch_specific_columns);
             }
         else
             {
@@ -1168,8 +1190,8 @@ function CheckDBStruct($path,$verbose=false)
 */
 function sql_limit($offset, $rows)
     {
-    $offset_true = !is_null($offset) && is_int($offset) && $offset > 0;
-    $rows_true   = !is_null($rows) && is_int($rows) && $rows > 0;
+    $offset_true = !is_null($offset) && is_int_loose($offset) && $offset > 0;
+    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows > 0;
 
     $limit = ($offset_true || $rows_true ? 'LIMIT ' : '');
 
@@ -1198,20 +1220,26 @@ function sql_limit($offset, $rows)
  * 
  * IMPORTANT: the input query MUST have a deterministic order so it can help with performance and not have an undefined behaviour
  * 
- * @param PreparedStatementQuery $query  SQL query
- * @param null|int               $rows   Specifies the maximum number of rows to return. Usually set by a global 
- *                                       configuration option (e.g $default_perpage, $default_perpage_list).
- * @param null|int               $offset Specifies the offset of the first row to return. Use NULL to not offset.
+ * @param PreparedStatementQuery        $query          SQL query
+ * @param null|int                      $rows           Specifies the maximum number of rows to return. Usually set by a global 
+ *                                                      configuration option (e.g $default_perpage, $default_perpage_list).
+ * @param null|int                      $offset         Specifies the offset of the first row to return. Use NULL to not offset.
+ * @param bool                          $cachecount     Use previously cached count if available?
+ * @param null|PreparedStatementQuery   $countquery     Optional separate query to obtain count, usually without ORDER BY
  * 
  * @return array Returns a:
  *               - total: int - count of total found records (before paging)
  *               - data: array - paged result set 
  */
-function sql_limit_with_total_count(PreparedStatementQuery $query, $rows, $offset)
+function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, ?PreparedStatementQuery $countquery = NULL)
     {
+    global $cache_search_count;
     $limit = sql_limit($offset, $rows);
-    $data = ps_query("{$query->sql} {$limit}", $query->parameters);
-    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$query->sql}) AS count_select", $query->parameters, 0);
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);    
+    $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
+    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
+    $datacount = count($data);
+    $total = ($rows == -1) ? $datacount : ($datacount < $rows ? $datacount : max($total,$datacount));
     return ['total' => $total, 'data' => $data];
     }
 
@@ -1338,9 +1366,14 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
     foreach ($structure as $column) {$columns[]=explode(",",$column)[0];}
 
     // Work through all enabled plugins and add any extended columns also (plugins can extend core tables in addition to defining their own)
-    foreach ($plugins as $plugin)
+
+    foreach ($plugins as $plugin_entry)
         {
-        $plugin_file=dirname(__FILE__) . "/../plugins/" . $plugin . "/dbstruct/table_" . safe_file_name($table) . ".txt";
+        if ($plugin_entry === $plugin)
+            {
+            continue; // The plugin dbstruct has already been processed; don't process it again
+            }
+        $plugin_file=get_plugin_path($plugin_entry) . "/dbstruct/table_" . safe_file_name($table) . ".txt";
         if (file_exists($plugin_file))
             {
             $structure=explode("\n",trim(file_get_contents($plugin_file)));

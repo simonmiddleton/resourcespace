@@ -1,0 +1,7 @@
+name: api_webhooks
+title: API Webhooks
+author: Montala Limited
+version: 1.0
+desc: Adds support for configurable action buttons that call remote scripts.
+icon: fa fa-plug
+category: Integrations

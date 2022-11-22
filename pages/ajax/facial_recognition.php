@@ -91,6 +91,7 @@ if('predict_label' == $action)
     // system error
     else if(false === $prediction && (!file_exists($model_file_path) || !file_exists($prepared_image_path)))
         {
+        $prediction = [];
         $prediction[0] = -1;
         }
 

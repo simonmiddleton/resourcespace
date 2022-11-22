@@ -446,7 +446,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         ?>
         <div class="Question" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
-        if (strlen($field["tooltip_text"])>=1)
+        if (strlen((string) $field["tooltip_text"])>=1)
             {
             echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
             }
@@ -458,7 +458,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"]) >= 1){ echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?><br/>
+        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?><br/>
         
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
@@ -962,7 +962,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     ?>
     </select>
     &nbsp;
-    <a href="#" onClick="UpdateResultOrder(true);">
+    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);">
         <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
     </a>
 
@@ -1548,7 +1548,13 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
 	<div id="question_<?php echo $input; ?>" class="<?php echo implode(" ", $div_class); ?>" >
 		<label><?php echo $label; ?></label>
 		<?php
-		echo "<input name=\"" . $input . "\" id=\"" . $input . "_input\" type=\"" . ($numeric ? "number" : "text") . "\" value=\"" . htmlspecialchars($current) . "\"" . $extra . "/>\n";
+        printf('<input name="%s" id="%s_input" type="%s" value="%s"%s/>',
+            escape_quoted_data($input),
+            escape_quoted_data($input),
+            $numeric ? "number" : "text",
+            escape_quoted_data((string) $current),
+            $extra
+        );
 			
 		echo $additionaltext;
 		?>
@@ -1618,7 +1624,7 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 		foreach ($options as $optionvalue=>$optiontext)
 			{
 			?>
-			<option value="<?php echo escape_quoted_data(trim($optionvalue))?>" <?php if (trim($optionvalue)==trim($current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($optiontext))?></option>
+			<option value="<?php echo escape_quoted_data(trim((string)$optionvalue))?>" <?php if (trim((string)$optionvalue)==trim((string)$current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim((string)$optiontext))?></option>
 			<?php
 			}
 		?>
@@ -1709,6 +1715,8 @@ function is_field_displayed($field)
 
     # Conditions under which the field is not displayed
     return !(
+        ($field['active']==0)
+        ||
         # Field is an archive only field
         (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
         # Field does not have individual write access allowed; and does not have edit access allowed on upload
@@ -1787,7 +1795,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
   $name="field_" . $field["ref"];
   $value=$field["value"];
-  $value=trim($value);
+  $value=trim((string) $value);
   $use_copyfrom=true;
     if ($use != $ref && ($field["omit_when_copying"]))
         {
@@ -1814,6 +1822,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
     else
         {
         $selected_nodes = $all_selected_nodes;
+        $submitted_val = getval("field_" . $field['ref'],"");
+        if(!empty($save_errors) && $submitted_val != "")
+            {
+            // Set to the value that was submitted 
+            $value = $submitted_val;
+            }
         }
     
   $displaycondition=true;
@@ -1949,10 +1963,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
         }
-      if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-        {
-        hook ("edit_all_extra_modes");
-        }
+        hook ("edit_all_extra_modes","",[$field]);
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
@@ -2071,7 +2082,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         }
 
     // The visibility status (block/none) will be sent to the server for validation purposes
-    echo "<input id='field_" . $field['ref']  . "_displayed' name='" . "field_" . $field['ref']  . "_displayed' type='hidden' value='block'>";
+    echo "<input id='field_" . (int) $field['ref']  . "_displayed' name='" . "field_" . (int) $field['ref']  . "_displayed' type='hidden' value='block'>";
 
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
@@ -2106,8 +2117,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
 			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 				{
-				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
-				echo "<input id='field_" . $field['ref']  . "_currentval' name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
+				echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
+				echo "<input id='field_" . (int) $field['ref']  . "_currentval' name='" . "field_" . (int) $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
 				}
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
@@ -2123,11 +2134,11 @@ function display_field($n, $field, $newtab=false,$modal=false)
 				}
 			natsort($field_nodes);
 			
-			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
+			echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
 		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 			{
-			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', $field['value']))) . "'>";
+			echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', (string) $field['value']))) . "'>";
 			}
 
         $is_search = false;
@@ -2246,7 +2257,10 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             $endvalue = "";
             }
         }
-				
+
+    $startvalue = trim($startvalue);
+    $endvalue = trim($endvalue);
+
 	$ss=explode("-",$startvalue);
 	if (count($ss)>=1)
 		{
@@ -2530,9 +2544,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             });
             //Check the value of the date after the change
             jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
-                let day   = jQuery('[name=<?php echo $name;?>_start_day]').val();
-                let month = jQuery('[name=<?php echo $name;?>_start_month]').val();
-                let year  = jQuery('[name=<?php echo $name;?>_start_year]').val(); 
+                let day   = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_day]').val().trim();
+                let month = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_month]').val().trim();
+                let year  = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_year]').val().trim(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
                     styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
@@ -2552,9 +2566,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             })
             //Same again but for the end of the date range
             jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
-                let day   = jQuery('[name=<?php echo $name;?>_end_day]').val();
-                let month = jQuery('[name=<?php echo $name;?>_end_month]').val();
-                let year  = jQuery('[name=<?php echo $name;?>_end_year]').val();
+                let day   = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_day]').val().trim();
+                let month = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_month]').val().trim();
+                let year  = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_year]').val().trim();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
                     styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
@@ -2803,7 +2817,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     ?>">
     <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>"
     src="<?php echo $img_url ?>" 
-    alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field]))))); ?>"
+    alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field] ?? ""))))); ?>"
     /></div>
     <?php
     }
@@ -2841,8 +2855,8 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
         break;
 
         case "thumbs":
-            $defaultwidth = 175;
-            $defaultheight = 175;
+            $defaultwidth = 200;
+            $defaultheight = 200;
         break;        
         
         case "collection":
@@ -3707,7 +3721,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     {
     global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
-    if(trim($field['display_condition']) == "")
+    if(trim((string) $field['display_condition']) == "")
         {
         return true;  # This field does not have a display condition, so it should be displayed
         }
@@ -3772,11 +3786,15 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $validvalues = explode("|",$checkvalues);
                 $validvalues = array_map("i18n_get_translated",$validvalues);
                 $scriptconditions[$condref]['valid'] = array();
-                $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
 
-                if(count($ui_selected_node_values) > 0)
+                // Use submitted values if field was shown and user has edit access to it
+                if(getval("field_" . $fields[$n]['ref'] . "_displayed","") == "block" && metadata_field_edit_access($fields[$n]['ref']))
                     {
                     $v = $ui_selected_node_values;
+                    }
+                else
+                    {
+                    $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
                     }
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
@@ -4097,13 +4115,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		{
         $title = htmlspecialchars($lang["warningexpired"]);
         $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
-        $dismisstext = htmlspecialchars($lang["warningexpiredok"]);
+        $dismisstext = LINK_CARET . htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
         <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
         $extra.="<style>#RecordDownload {display:none;}</style>";
 
         # If there is no display template then prepare the full markup here
-        if (trim($field["display_template"]) == "") 
+        if (trim((string) $field["display_template"]) == "") 
             {
             $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
             <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>
@@ -4112,17 +4130,17 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		}
 	
 	# Handle general warning messages
-	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim($value) != "") 
+	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim((string)$value) != "") 
 		{
         # title comes from field
         # value comes from field
         $warningtext = $value;
-        $dismisstext = htmlspecialchars($lang["warningdismiss"]);
+        $dismisstext = LINK_CARET . htmlspecialchars($lang["warningdismiss"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
         <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
 
         # If there is no display template then prepare the full markup here
-        if (trim($field["display_template"]) == "") 
+        if (trim((string) $field["display_template"]) == "") 
             {
             $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
             <p>".nl2br(htmlspecialchars(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
@@ -4133,7 +4151,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         {
         eval(eval_check_signed($field['value_filter']));
         }
-    else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false)
+    else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos((string)$value,":")!=false)
         {
         // Show the time as well as date if entered
         $value=nicedate($value,true,true);
@@ -4144,17 +4162,17 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         }
 	else if ($field["type"]==FIELD_TYPE_DATE_RANGE) 
 		{
-		$rangedates = explode(",",$value);		
+		$rangedates = explode(",",(string)$value);		
 		natsort($rangedates);
 		$value=implode($range_separator,$rangedates);
 		}
 	
         if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
-        {
-        $treenodes = get_resource_nodes($ref, $field["ref"], true);
-        $treetext_arr = get_tree_strings($treenodes);
-        $value = implode(", ",$treetext_arr);        
-        }
+            {
+            $treenodes = get_cattree_nodes_ordered($field["ref"], $ref, false); # True means get all nodes; False means get selected nodes
+            $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
+            $value = implode(", ",$treenodenames);        
+            }
     
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
@@ -4167,8 +4185,27 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $title="";
             }
 
-		# Value formatting
-		$value=i18n_get_translated($value);
+    # Value formatting
+    # Optimised to use the value as is if there are no "~" characters present in the value
+    if(strpos($value,"~") !== false) 
+        {
+        # The field value may be a list of comma separated language encoded values, so process the nodes
+        $field_nodes_in_value=explode(",",$field["nodes"]);
+        if(count($field_nodes_in_value) == 1)  
+            {
+            # Translate the single value
+		    $value=i18n_get_translated($value);
+            }
+        else if(count($field_nodes_in_value) > 1)
+            {
+            # Multiple nodes in value; Get all nodes for the field and translate each one which is in the metadata
+            $field_nodes_all = get_nodes($field['ref']);
+            $names_i18n_in_value = extract_node_options($field_nodes_all, true, true);
+            # Convert the field nodes in value as an array keyed by the names to allow an intersect by key operation 
+            $node_names_in_value = array_intersect_key($names_i18n_in_value, array_flip($field_nodes_in_value));
+            $value = implode(', ', $node_names_in_value);
+            }
+        } 
 		
         // Don't display the comma for radio buttons:
         if($field['type'] == FIELD_TYPE_RADIO_BUTTONS)
@@ -4195,7 +4232,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # Final stages of rendering
 
         # Include display template when necessary
-		if (!$valueonly && trim($field["display_template"])!="")
+		if (!$valueonly && trim($field["display_template"] ?? "")!="")
 			{
 			# Highlight keywords
 			$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
@@ -4420,6 +4457,8 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             <?php
             }
 
+        hook("extra_edit_buttons");
+        
         # Duplicate navigation
        if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
             {
@@ -4787,7 +4826,7 @@ function render_featured_collection(array $ctx, array $fc)
             
     $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
-    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime($fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
+    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime((string)$fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
         {
         $html_contents_h2 .= sprintf(' <div class="NewFlag">%s</div>', htmlspecialchars($lang['newflag']));
         }
@@ -5174,6 +5213,10 @@ function render_table($tabledata)
                 }
             else
                 {
+                if(isset($tabledata["params"]["search_go"]))
+                    {
+                    $tabledata["params"]["search_go"] = "";
+                    }
                 $perpageurl = generateURL($pageroptions["url"],$tabledata["params"], array("per_page"=>$ldnum));
                 $pplinks[] = "<a onclick='return " . ($modal ? "Modal" : "CentralSpace") . "Load(this, true);' href='" . 
                 $perpageurl . "'>" . $lpp_name . "</a>";
@@ -5260,7 +5303,7 @@ function render_table($tabledata)
                                 {
                                 echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
                                 }
-                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><span class='" . htmlspecialchars($toolitem["icon"]) . "'></span>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
+                            echo "' title='" . htmlspecialchars($toolitem["text"]) . "'><i class='" . htmlspecialchars($toolitem["icon"]) . "'></i>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
                             }
                         echo "</div>";
                         }
@@ -5759,7 +5802,7 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
         <label><?php echo htmlspecialchars($label) ?></label>
         <?php $blank_icon = ($current == "" || !in_array($current, $font_awesome_icons)); ?>
         <div id="iconpicker-question">
-            <input name="<?php echo htmlspecialchars($name) ?>" type="text" id="iconpicker-input" value="<?php echo htmlspecialchars($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : htmlspecialchars($current)?>" id="iconpicker-button-fa"></i></span>
+            <input name="<?php echo escape_quoted_data($name) ?>" type="text" id="iconpicker-input" value="<?php echo escape_quoted_data($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : escape_quoted_data($current)?>" id="iconpicker-button-fa"></i></span>
         </div>
         <div id="iconpicker-container">
             <div class="iconpicker-title">
@@ -5769,8 +5812,8 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
                 <?php foreach ($font_awesome_icons as $icon_name)
                     {
                     ?>
-                    <div class="iconpicker-content-icon" data-icon="<?php echo htmlspecialchars(trim($icon_name)) ?>" title="<?php echo htmlspecialchars(trim($icon_name)) ?>">
-                        <i class="fa-fw <?php echo htmlspecialchars(trim($icon_name)) ?>"></i>
+                    <div class="iconpicker-content-icon" data-icon="<?php echo escape_quoted_data(trim($icon_name)) ?>" title="<?php echo escape_quoted_data(trim($icon_name)) ?>">
+                        <i class="fa-fw <?php echo escape_quoted_data(trim($icon_name)) ?>"></i>
                     </div>
                     <?php
                     } ?>

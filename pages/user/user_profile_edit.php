@@ -80,7 +80,7 @@ function checkFileType(image_supplied)
 
   <div class="Question">
   <label><?php echo $lang["profile_bio"] ?></label>
-  <textarea name="profile_bio" class="stdwidth" rows=7 cols=50><?php echo htmlspecialchars($profile_text) ?></textarea>
+  <textarea name="profile_bio" class="stdwidth" rows=7 cols=50><?php echo htmlspecialchars((string) $profile_text); ?></textarea>
   <div class="clearerleft"> </div>
   </div>
 

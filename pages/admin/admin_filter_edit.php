@@ -190,7 +190,7 @@ include "../../include/header.php";
 <div id="CentralSpaceContainer">
     <div id="CentralSpace">
         <div class="BasicsBox">
-        
+            <h1><?php echo $filterid == 0 ? $lang["filter_new"] : $lang["filter_edit"]; ?></h1>
             <?php
             $links_trail = array(
                 array(

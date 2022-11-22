@@ -43,7 +43,7 @@ function HookWordpress_ssoAllProvideusercredentials()
                 $today = date("Ymd");
                 $currentrequest = ps_value("SELECT wp_authrequest AS value FROM user WHERE username = ?", array("s", $username), "");
 
-                if ($requesthash!=md5($baseurl . $wordpress_sso_secret . $username . $today . $requestid)) // Invalid hash. Failed authentication and came from WordPress so no point redirecting.
+                if ($requesthash !== md5($baseurl . $wordpress_sso_secret . $username . $today . $requestid)) // Invalid hash. Failed authentication and came from WordPress so no point redirecting.
                     {
                     wordpress_sso_fail();
                     }
@@ -104,7 +104,7 @@ function HookWordpress_ssoAllProvideusercredentials()
             debug("wordpress_sso - wordpress_sso cookie has username");
             $hash=$s[1];	
             $today = date("Ymd");
-            if ($hash!=md5($baseurl . $wordpress_sso_secret . $username . $today))
+            if ($hash !== md5($baseurl . $wordpress_sso_secret . $username . $today))
                 {		
                 // Invalid hash. Redirect to Wordpress to reauthenticate.
                 debug("wordpress_sso - wordpress_sso cookie has invalid hash");

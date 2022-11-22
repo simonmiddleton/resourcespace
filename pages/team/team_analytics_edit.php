@@ -118,6 +118,7 @@ else
 ?>
 
 <div class="BasicsBox">
+    <h1><?php echo $ref != "" ? $lang["edit_report"] : $lang["new_report"]; ?></h1>
     <?php
     $links_trail = array(
         array(

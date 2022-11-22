@@ -6,3 +6,4 @@ desc: Image recognition capability. Passes uploaded images to the Google Cloud V
 icon: fa fa-tags
 config_url: /plugins/google_vision/pages/setup.php
 category: asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/google-vision

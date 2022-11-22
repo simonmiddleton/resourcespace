@@ -50,7 +50,14 @@ if (getval("submitting","")!="" && $api_function!="")
 
 <div class="RecordBox">
 <div class="RecordPanel">
-<div class="Title"><?php echo $lang['api-test-tool']; ?></div>
+<h1><?php echo $lang['api-test-tool']; ?></h1>
+
+<?php
+renderBreadcrumbs([
+    ['title' => $lang["systemsetup"], 'href'  => $baseurl_short . "pages/admin/admin_home.php", 'menu' => true],
+    ['title' => $lang['api-test-tool']]
+]);
+?>
 
 <p><?php echo $lang["api-help"];render_help_link("api"); ?></p>
 

@@ -42,7 +42,7 @@ foreach(get_workflow_states() as $workflow_state)
     
     $icon = $workflowicons[$workflow_state] ?? (WORKFLOW_DEFAULT_ICONS[$workflow_state] ?? WORKFLOW_DEFAULT_ICON);   
     ?>
-    <li><a href="<?php echo $ws_a_href; ?>" onClick="return CentralSpaceLoad(this, true);"><i class="fa-fw <?php echo $icon ?>"></i>&nbsp;<?php echo htmlspecialchars($ws_a_text); ?></a></li>
+    <li><a href="<?php echo $ws_a_href; ?>" onClick="return CentralSpaceLoad(this, true);"><i class="fa-fw <?php echo escape_quoted_data($icon); ?>"></i>&nbsp;<?php echo htmlspecialchars($ws_a_text); ?></a></li>
     <?php
     }
 

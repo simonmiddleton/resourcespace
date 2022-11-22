@@ -5,5 +5,5 @@ version : 1.0
 desc    : [Advanced] Add support for different audio and subtitle options for video resources
 icon    : fa fa-film
 config_url: /plugins/video_tracks/pages/setup.php
-info_url: /plugins/video_tracks/pages/about.html
+info_url: https://www.resourcespace.com/knowledge-base/plugins/video-tracks
 category: asset processing

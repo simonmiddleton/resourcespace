@@ -181,7 +181,7 @@ function save_proposed_changes($ref)
 					$val=getval("field_" . $fields[$n]["ref"],"");
 					} 
 				# Check for regular expression match
-				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 					{
                     global $regexp_slash_replace;
 					if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
@@ -214,7 +214,7 @@ function save_proposed_changes($ref)
 				}
 					
 				# Check for regular expression match
-				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
 						{
                         global $regexp_slash_replace;
 						if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
@@ -261,12 +261,12 @@ function save_proposed_changes($ref)
                     }
                 }
 
-            if (str_replace("\r\n", "\n", $field_value) !== str_replace("\r\n", "\n", unescape($val)))
+            if (str_replace("\r\n", "\n", $field_value??"") !== str_replace("\r\n", "\n", unescape($val)))
                     {
                     if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                         {
                         # Check that date hasn't only changed by adding seconds value
-                        if (trim($field_value).":00" == trim($val))
+                        if (trim((string) $field_value).":00" == trim($val))
                             {
                             continue;    
                             }

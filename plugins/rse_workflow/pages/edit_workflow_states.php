@@ -74,7 +74,7 @@ function deletestate(code)
 
 
 <div class="BasicsBox">
-
+<h1><?php echo $lang["rse_workflow_manage_states"]; ?></h1>
 <div class="clearerleft" ></div>
 
 <form style="display:none" id="form_delete_state" name="form_delete_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php">
@@ -103,9 +103,9 @@ function deletestate(code)
 <?php
 $links_trail = array(
     array(
-	    'title' => $lang["teamcentre"],
-	    'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+        'menu' =>  true
     ),
     array(
         'title' => $lang["rse_workflow_manage_workflow"],
@@ -141,12 +141,12 @@ foreach ($wfstates as $wfstate=>$wfstateinfo)
 		</td>
 		<td><?php echo $wfstate; ?>
 		</td>					
-		<td>
-		<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_state.php?code=<?php echo $wfstate ?>" onclick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET . $lang["action-edit"]?> </a>
+		<td class="ListTools">
+		<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_state.php?code=<?php echo $wfstate ?>" onclick="return CentralSpaceLoad(this,true);" ><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
 		<?php
 		if(!in_array($wfstate,$fixed_archive_states))
 			{?>
-			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_states.php?delete=<?php echo $wfstate ?>" class="deletestate" onClick="deletestate(<?php echo $wfstate ?>);"><?php echo LINK_CARET . $lang["action-delete"]?> </a>
+			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_states.php?delete=<?php echo $wfstate ?>" class="deletestate" onClick="deletestate(<?php echo $wfstate ?>);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?> </a>
 			<?php
 			}
 			?>

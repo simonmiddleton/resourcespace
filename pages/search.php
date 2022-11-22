@@ -241,12 +241,21 @@ $offset=getval("offset",0,true);if (strpos($search,"!")===false) {rs_setcookie('
 $offset = intval($offset); 
 if ($offset<0) {$offset=0;} 
 
-$order_by=getval("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by,0,"","",false,false);}
+$order_by=getval("order_by","");
+if (strpos($search,"!")===false || strpos($search,"!properties")!==false) 
+    {
+    rs_setcookie('saved_order_by', $order_by,0,"","",false,false);
+    }
 if ($order_by=="")
     {
     if ($collectionsearch) // We want the default collection order to be applied
         {
         $order_by=$default_collection_sort;
+        }
+    elseif (substr($search,0,14)=="!contributions")
+        {
+        // As Added is the initial sort sequence to be used for contribution searches 
+        $order_by="resourceid";
         }
     else
         {
@@ -501,10 +510,13 @@ if( isset($_REQUEST["search"]) && $_REQUEST["search"] == "" )
     }
 hook('searchaftersearchcookie');
 
-$rowstoretrieve = $per_page+$offset;
+$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page+$offset;
 
 // Do collections search first as this will determine the rows to fetch for do_search() - not for external shares
-if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard)
+if(($k=="" || $internal_share_access) 
+    && strpos($search,"!")===false
+    && ($archive_standard || in_array(0,$selected_archive_states))
+    )
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
     if(is_array($collections))
@@ -528,24 +540,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        // Save $max_results as this gets changed by do_search();
-        $saved_max_results = $max_results;
-        // First search for refs only to get full result count
-        $count_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, true, $editable_only, false, $search_access);
-        
-        if(is_array($count_search))
-            {
-            $result_count = count($count_search);
-            // Do actual search and get all data
-            $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
-            }
-        else
-            {
-            $result_count = 0;
-            $result = $count_search;
-            }
-      
-        $max_results = $saved_max_results;
+        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
         }
     }
 else
@@ -557,7 +552,7 @@ else
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$result_count = $result_count ?? (is_array($result) ? count($result) : 0);
+$result_count = is_array($result) ? count($result) : 0;
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
@@ -892,11 +887,15 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                         "<?php echo $lang['action_continue_editing'] ?>": function() { 
                                                 jQuery(this).dialog('close');
                                                 <?php 
-                                                if ($collection_add!="")
-                                                    {?>
-                                                    window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection_add ?>';
-                                                    <?php
-                                                    }?>
+                                                if (is_int_loose($collection_add))
+                                                    {
+                                                    echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
+                                                    }
+                                                else
+                                                    {
+                                                    echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!contributions" . $userref . "&archive=-2&order_by=date&sort=desc';";
+                                                    }
+                                                ?>
                                                 }
                                             }
                                 });
@@ -949,47 +948,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
     <div class="TopInpageNav">
     <div class="TopInpageNavLeft">
 
-<?php
-if($responsive_ui)
-    {
-    ?>
-    <div class="ResponsiveResultDisplayControls">
-        <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?></a>
-        <div id="ResponsiveResultCount" style="display:none;">
-        <?php
-        if($use_selection_collection && $selection_collection_resources_count > 0)
-            {
-            echo render_selected_resources_counter(count($selection_collection_resources));
-            }
-        else if(isset($collections)) 
-            {
-            ?>
-            <span class="Selected">
-            <?php
-            echo number_format($result_count);
-            ?>
-            </span>
-            <?php
-            echo ($result_count==1) ? $lang['youfoundresult'] : $lang['youfoundresults'];
-            } 
-        else
-            {
-            ?>
-            <span class="Selected">
-            <?php
-            echo number_format($resources_count);
-            ?>
-            </span>
-            <?php
-            echo ($resources_count==1)? $lang['youfoundresource'] : $lang['youfoundresources'];
-            }
-            ?>
-        </div>
-    </div>
-    <?php
-    }
-    hook('responsiveresultoptions');
-    ?>
     <div id="SearchResultFound" class="InpageNavLeftBlock">
     <?php
     if($use_selection_collection && $selection_collection_resources_count > 0)
@@ -1129,13 +1087,13 @@ if($responsive_ui)
                     &nbsp;|&nbsp;<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
                     if($resources_count > $search_map_max_results)
                         {
-                        echo "return false;";
+                        echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
                         }
                     else
                         {
                         echo "return " . ($modal ? 'Modal' : 'CentralSpace') . "Load(this);";
                         }
-                    ?>"><?php echo $resources_count > $search_map_max_results ? $lang['search_results_overlimit'] : $lang['maptitle'] ?></a><?php
+                    ?>"><?php echo $lang['maptitle'] ?></a><?php
                     }
                 }
             }
@@ -1174,7 +1132,7 @@ if($responsive_ui)
                 }
             elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties") 
                 {
-                // As Added is the default sort sequence if viewing recently added resources 
+                // As Added is the default sort sequence for special searches other than image properties
                 $default_sort_order = 'resourceid';
                 $rel=$lang["asadded"];
                 }
@@ -1345,7 +1303,7 @@ if($responsive_ui)
                 <?php echo i18n_get_collection_name($collectiondata); ?>
                 </h1>
             <?php
-            if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim($collectiondata['description']) != "")
+            if((isset($collectiondata) && array_key_exists("description",$collectiondata)) && trim((string)$collectiondata['description']) != "")
                 {
                 echo "<p>" . nl2br(htmlspecialchars(i18n_get_translated($collectiondata['description']))) . "</p>";
                 }
@@ -1483,7 +1441,10 @@ if($responsive_ui)
         <?php
         }
         # Include public collections and themes in the main search, if configured.      
-        if (isset($collections)&& strpos($search,"!")===false && $archive_standard && !hook('replacesearchpublic','',array($search,$collections)))
+        if (isset($collections) 
+            && strpos($search,"!")===false 
+            && ($archive_standard || in_array(0,$selected_archive_states))
+            && !hook('replacesearchpublic','',array($search,$collections)))
             {
             include "../include/search_public.php";
             }
@@ -1499,13 +1460,13 @@ if($responsive_ui)
         // Loop through search results.
         for ($n = 0; $n < $result_count; $n++)
             {            
-            if(!is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
+            if(!isset($result[$n]) || !is_array($result[$n]) || ($search_map_max_results > 0 && $n > $search_map_max_results))
                 {
                 continue;
                 }
             // Get resource data for resources returned by the current search.
             $geo = $result[$n]['ref'];
-            $geomark = get_resource_data($geo, $cache = false);
+            $geomark = get_resource_data($geo, true);
             $geomark['preview_path'] = get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
             // Get custom metadata field value.
             if (isset($marker_metadata_field))
@@ -1525,7 +1486,6 @@ if($responsive_ui)
                 }
             }
         }
-
     # work out common keywords among the results
     if (is_array($result) && (count($result)>$suggest_threshold) && (strpos($search,"!")===false) && ($suggest_threshold!=-1))
         {

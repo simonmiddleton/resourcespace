@@ -20,7 +20,7 @@ if($set_value != $test_value)
     }
 
 // SUBTEST B - Check action has been logged correctly
-$reslog = get_resource_log($resourcea);
+$reslog = get_resource_log($resourcea)['data'];
 $logok = false;  
 foreach($reslog as $logentry)
     {
@@ -54,7 +54,7 @@ $check_value = "Fruit/Apple";
 update_field($resourcea,$tree_field_abc,$set_value,$update_errors);
 
 // SUBTEST C - Check value is saved
-$test_value = get_tree_strings(get_resource_nodes($resourcea,$tree_field_abc,true));
+$test_value = get_node_strings(get_resource_nodes($resourcea,$tree_field_abc,true));
 if(!in_array($check_value,$test_value))
     {
     echo "SUBTEST C";
@@ -62,7 +62,7 @@ if(!in_array($check_value,$test_value))
     }
 
 // SUBTEST D - Check action has been logged correctly
-$reslog = get_resource_log($resourcea);
+$reslog = get_resource_log($resourcea)['data'];
 $logok = false;  
 foreach($reslog as $logentry)
     {

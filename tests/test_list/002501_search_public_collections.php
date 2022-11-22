@@ -169,6 +169,29 @@ foreach($spc_result as $spc)
     }
 
 
+// Search for public collections using the "collectiontitle:" special search
+unset($CACHE_FC_ACCESS_CONTROL, $CACHE_FC_PERMS_FILTER_SQL);
+$spc_result = search_public_collections('collectiontitle:user level', $order_by, $sort, true, $include_resources, false);
+if(!in_array($public_col, array_column($spc_result, 'ref')))
+    {
+    echo 'Search public collections with "collectiontitle:" - ';
+    return false;
+    }
+
+
+// Search for public collections using the "collectiontitle:" special search and wildcards
+unset($CACHE_FC_ACCESS_CONTROL, $CACHE_FC_PERMS_FILTER_SQL);
+$spc_result = search_public_collections('collectiontitle:*ser * collection*', $order_by, $sort, true, $include_resources, false);
+$found_col_refs = array_intersect(array_column($spc_result, 'ref'), [$public_col, $public_col_genuser]);
+sort($found_col_refs, SORT_NUMERIC);
+if([$public_col, $public_col_genuser] !== $found_col_refs)
+    {
+    echo 'Search public collections with "collectiontitle:" and wildcards - ';
+    return false;
+    }
+
+
+
 // Tear down
 $public_collections_confine_group = $original_public_collections_confine_group;
 

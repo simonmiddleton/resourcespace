@@ -187,30 +187,52 @@ function HookSimplesamlAllProvideusercredentials()
 
 		$attributes = simplesaml_getattributes();
 
-        if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
-		    {
-		    $username_attributes=explode(",",$simplesaml_username_attribute);
-		    $username ="";
-		    foreach ($username_attributes as $username_attribute)
+        // Construct username        
+        $username = "";
+        if(strlen($simplesaml_username_attribute) > 0)
+            {
+            $username_attributes=explode(",",$simplesaml_username_attribute);
+            $username_parts = [];
+            foreach ($username_attributes as $username_attribute)
                 {
-                if($username!=""){$username.=$simplesaml_username_separator;}
-                $username.=  $attributes[$username_attribute][0];
+                if(isset($attributes[$username_attribute][0]))
+                    {
+                    if(is_object($attributes[$username_attribute][0]))
+                        {
+                        $username_parts[] = $attributes[$username_attribute][0]->getValue();
+                        }
+                    elseif(is_string($attributes[$username_attribute][0]))
+                        {
+                        $username_parts[] = $attributes[$username_attribute][0];
+                        }
+                    }
                 }
-		    $username= $username . $simplesaml_username_suffix;
-		    }
-		else
-		    {
-            if(!isset($attributes[$simplesaml_username_attribute][0]) )
+            if(count($username_parts)>0)
                 {
-                $samlusername = simplesaml_getauthdata("saml:sp:NameID");
-                debug("simplesaml: username attribute not found. Setting to default user id " . $samlusername);
-                $username= $samlusername . $simplesaml_username_suffix;
+                $username = implode($simplesaml_username_separator,$username_parts);
                 }
-            else
-                {
-                $username=$attributes[$simplesaml_username_attribute][0] . $simplesaml_username_suffix;
-                }
-		    }
+            }
+        if($username == '')
+            {
+            debug("simplesaml: WARNING: no username found, attempting to use NameID");
+            // Attempt to fall back to NameID, truncated as necessary
+            $username = simplesaml_getauthdata("saml:sp:NameID");
+            }
+
+        if($username == '')
+            {
+            // no username, can't continue
+            debug("simplesaml: WARNING: no username found, aborting");
+            return false;
+            }
+
+        // truncate if necessary
+        if(strlen($username) > 50)
+            {
+            $username = mb_substr($username,0,15) . "_" . md5($username);
+            }
+
+        $username= $username . $simplesaml_username_suffix;
 
         // If local authorisation based on assertion/ claim is needed, check now and make sure we don't process any further!
         if(
@@ -289,7 +311,7 @@ function HookSimplesamlAllProvideusercredentials()
                 }
 
             // Update hash if not logged on in last day
-            $lastactive = strtotime($currentuser[0]["last_active"]);
+            $lastactive = strtotime((string)$currentuser[0]["last_active"]);
             if($lastactive < date(time() - (60*60*24)))
                 {
                 $update_hash = true;
@@ -478,17 +500,32 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
 
-		// Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
-		global $baseurl, $lang, $simplesaml_login;
-		
-		// Don't show link to use SSO to login if this has been disabled
+        // Include in redirect any resource or collection parameter if present so we load to that page rather than home.
+        $parameters = array('usesso' => 'true');
+        $url_params = explode('?', getval("url",""));
+        parse_str(str_replace('&amp;', '&', ($url_params[1] ?? "")), $url_params);
+
+        if (isset($url_params['c']))
+            {
+            $parameters['c'] = $url_params['c'];
+            }
+            
+        if (isset($url_params['r']))
+            {
+            $parameters['r'] = $url_params['r'];
+            }
+
+        // Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
+        global $baseurl, $lang, $simplesaml_login;
+
+        // Don't show link to use SSO to login if this has been disabled
         if(!$simplesaml_login)
             {
             return false;
             }
         ?>
-		<a href="<?php echo $baseurl; ?>/?usesso=true"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo $lang['simplesaml_use_sso']; ?></a><br/>
-		<?php
+        <a href="<?php echo generateURL($baseurl, $parameters); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo htmlspecialchars($lang['simplesaml_use_sso']); ?></a><br/>
+        <?php
         }
 
 function HookSimplesamlLoginPostlogout()

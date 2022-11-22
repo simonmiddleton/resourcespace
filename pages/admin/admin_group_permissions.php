@@ -59,10 +59,11 @@ if ($copy_from!="")
 
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
-$permissions=trim_array(explode(",",$group["permissions"]));
+$permissions=trim_array(explode(",",(string)$group["permissions"]));
 $permissions_done=array();	
 ?>
 <div class="BasicsBox">
+<h1><?php echo $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"]); ?></h1>
 <?php
     $links_trail = array(
     array(
@@ -193,7 +194,7 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=get_resource_types();
+$rtypes=get_resource_types("",true,true);
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
@@ -278,7 +279,7 @@ if(in_array('h', $permissions))
 	}
 else
 	{
-	DrawOption('dta', $lang['manage_all_dash'], false, false);
+	DrawOption('dta', $lang['manage_all_dash_perm'], false, false);
 	}
 DrawOption("dtu",$lang["manage_own_dash"],true,false);
 

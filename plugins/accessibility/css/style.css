@@ -24,13 +24,6 @@ html, body {
     color: #737373;
 }
 
-/* Text color change for all elements which do not inherit from body: */
-.plupload_filelist_header,
-.plupload_filelist_footer,
-.plupload_file_status span {
-    color: #000;
-}
-
 /* Darker link colour */
 a:link, a:visited {color: #000;}
 a:active, a:hover {color: #2d2d2d;}

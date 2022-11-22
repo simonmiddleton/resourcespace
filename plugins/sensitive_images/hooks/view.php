@@ -11,7 +11,7 @@ function HookSensitive_imagesViewReplacepreviewlink()
         $image_preview_zoom=false;
         ?>
         <style>
-        #previewimage {filter: blur(<?php echo $sensitive_images_blur_preview; ?>px);}
+        #previewimage {filter: blur(<?php echo (int)$sensitive_images_blur_preview; ?>px);}
 
         #previewimagewrapper::before 
                 {
@@ -23,7 +23,9 @@ function HookSensitive_imagesViewReplacepreviewlink()
                 transform: translate( -50%, -50% );
                 color: white;
                 font-size: 30px !important;
+                font-weight: bold;
                 text-align: center;
+                text-shadow: 0px 1px 4px #000000a6;
                 }
         </style>
         <?php

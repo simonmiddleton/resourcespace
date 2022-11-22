@@ -50,7 +50,10 @@ group by k.ref order by Searches desc
 ",0
 3,"Resource download summary","
 select r.ref 'Resource ID',
-(SELECT `value` FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Title', 
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) AS 'Title', 
 count(*) Downloads 
 from resource_log rl
 join resource r on rl.resource=r.ref
@@ -60,13 +63,10 @@ group by r.ref order by 'Downloads' desc
 ",0
 4,"Resource views","
 select r.ref 'Resource ID',
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = r.ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Title',sum(count) Views from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Resource view'
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Title',sum(count) Views from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Resource view'
 
 # --- date ranges
 # Make sure date is greater than FROM date
@@ -93,13 +93,10 @@ group by r.ref order by Views desc;
 ",0
 5,"Resources sent via e-mail","
 select r.ref 'Resource ID',
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = r.ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Title',sum(count) Sent from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='E-mailed resource'
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Title',sum(count) Sent from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='E-mailed resource'
 
 # --- date ranges
 # Make sure date is greater than FROM date
@@ -126,13 +123,10 @@ group by r.ref order by Sent desc;
 ",0
 6,"Resources added to collection","
 select r.ref 'Resource ID',
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = r.ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Title',sum(count) Added from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Add resource to collection'
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Title',sum(count) Added from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Add resource to collection'
 
 # --- date ranges
 # Make sure date is greater than FROM date
@@ -164,14 +158,10 @@ rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Created By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = r.ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Resource Title'
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Resource Title'
 
 from
 resource_log rl
@@ -186,13 +176,10 @@ order by rl.date
 ",0
 8,"Resources with zero downloads","
 select ref 'Resource ID',
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Title' from resource where ref > 0 and ref not in 
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = resource.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Title' from resource where ref > 0 and ref not in 
 
 (
 select object_ref from daily_stat
@@ -224,13 +211,10 @@ ref>0
 ",0
 9,"Resources with zero views","
 select ref 'Resource ID',
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Title' from resource where ref not in 
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = resource.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Title' from resource where ref not in 
 
 (
 SELECT object_ref FROM daily_stat d
@@ -285,14 +269,10 @@ rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Downloaded By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = r.ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Resource Title',
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Resource Title',
 rt.name 'Resource Type'
 
 from
@@ -320,7 +300,12 @@ from user u join usergroup g on u.usergroup=g.ref
 order by username;
 ",0
 13,"Expired Resources","
-select distinct resource.ref 'Resource ID',resource.field8 'Resource Title',resource_data.value 'Expires' from resource join resource_data on resource.ref=resource_data.resource join resource_type_field on resource_data.resource_type_field=resource_type_field.ref where resource_type_field.type=6 and value>=date('[from-y]-[from-m]-[from-d]') and value<=adddate(date('[to-y]-[to-m]-[to-d]'),1) and length(value)>0 and resource.ref>0 order by resource.ref;
+select distinct resource.ref 'Resource ID',resource.field8 'Resource Title',node.name 'Expires' 
+from resource 
+join resource_node on resource.ref=resource_node.resource 
+join node on node.ref=resource_node.node 
+join resource_type_field on node.resource_type_field=resource_type_field.ref 
+where resource_type_field.type=6 and node.name>=date('[from-y]-[from-m]-[from-d]') and node.name<=adddate(date('[to-y]-[to-m]-[to-d]'),1) and length(node.name)>0 and resource.ref>0 order by resource.ref;
 ",0
 14,"Resources created - with thumbnails","
 select
@@ -329,14 +314,10 @@ rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Created By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-
-        (
-            SELECT rd.value 
-              FROM resource_data AS rd 
-             WHERE rd.resource = r.ref 
-               AND rd.resource_type_field = [title_field]
-             LIMIT 1
-         ) 'Resource Title'
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Resource Title'
 
 from
 resource_log rl
@@ -354,7 +335,6 @@ order by rl.date;
 select 
 (select count(*) from resource) as 'Total resources',
 (select count(*) from keyword) 'Total keywords',
-(select count(*) from resource_keyword) as 'Resource keyword relationships',
 (select count(*) from node) as 'Total nodes (field options)',
 (select count(*) from resource_node) as 'Resource - node (field option) relationships',
 (select count(*) from collection) as 'Total collections',
@@ -435,7 +415,10 @@ ORDER BY ref DESC;",0
                 concat(u.username,' (',u.fullname,' )') AS 'Downloaded By User',
                 g.name AS 'User Group',
                 r.ref AS 'Resource ID',
-                (SELECT rd.value FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Resource Title',
+                ( SELECT n.name 
+                FROM resource_node rn, node n 
+                WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+                LIMIT 1 ) AS 'Resource Title',
                 rt.name AS 'Resource Type'
 
            FROM resource_log rl
@@ -450,7 +433,10 @@ LEFT OUTER JOIN resource_type rt ON r.resource_type = rt.ref
        ORDER BY rl.date;",1
 23,"Resource download summary (search results)","
   SELECT r.ref AS 'Resource ID',
-         (SELECT `value` FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Title', 
+( SELECT n.name 
+FROM resource_node rn, node n 
+WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) AS 'Title', 
          count(*) AS 'Downloads' 
     FROM resource_log rl
     JOIN resource r on rl.resource = r.ref
@@ -465,7 +451,10 @@ ORDER BY 'Downloads' DESC;",1
                 concat(u.username,' (',u.fullname,' )') AS 'Created By User',
                 g.name AS 'User Group',
                 r.ref AS 'Resource ID',
-                (SELECT rd.value FROM resource_data AS rd WHERE rd.resource = r.ref AND rd.resource_type_field = [title_field] LIMIT 1) AS 'Resource Title'
+                ( SELECT n.name 
+                FROM resource_node rn, node n 
+                WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
+                LIMIT 1 ) AS 'Resource Title'
 
            FROM resource_log AS rl
            JOIN resource AS r ON r.ref = rl.resource

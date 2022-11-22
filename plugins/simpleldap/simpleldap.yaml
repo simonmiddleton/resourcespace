@@ -7,3 +7,4 @@ icon    : fa fa-key
 config_url: /plugins/simpleldap/pages/setup.php
 category: authentication
 disable_group_select: 1
+info_url: https://www.resourcespace.com/knowledge-base/plugins/simpleldap

@@ -48,7 +48,7 @@ if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag",""
 			{
 			ps_query("replace into simpleldap_groupmap (ldapgroup,rsgroup,priority) values (?, ?, ?)", 
                 [
-                'i', $ldapgroups[$i],
+                's', $ldapgroups[$i],
                 'i', $rsgroups[$i],
                 'i', (($priority[$i]!="")? $priority[$i] : NULL)
                 ]    

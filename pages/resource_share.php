@@ -27,10 +27,12 @@ $editing      = ($editaccess != "" && $deleteaccess == "") ? true : false;
 $editexternalurl = (getval("editexternalurl","") != "");
 $generateurl  = getval("generateurl","") != "";
 
+$share_user = getval("share_user", 0);
+
 // Share options
 if($editing)
     {
-    $shareinfo      = get_external_shares(array("share_resource"=>$ref, "access_key"=>$editaccess));
+    $shareinfo      = get_external_shares(array("share_resource"=>$ref, "access_key"=>$editaccess, "share_user"=>(int)$share_user));
     if(isset($shareinfo[0]))
         {
         $shareinfo  = $shareinfo[0];
@@ -281,11 +283,7 @@ if($editing && !$editexternalurl)
                     # Process editing of external share
                     if ($editexternalurl && $access > -1 && enforcePostRequest(false))
                         {
-                        $editsuccess = edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
-                        if($editsuccess)
-                            {
-                            echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";
-                            }
+                        edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
                         }
                     }
                     ?>
@@ -377,6 +375,7 @@ if($editing && !$editexternalurl)
                                         array(
                                             "ref"               => $key["collection"],
                                             "editaccess"        => $key["access_key"],
+                                            "share_user"        => $key["users"]
                                         ));
                                     
                                     $viewlink = generateurl($baseurl . "/", array("c"=> $key["collection"]));
@@ -391,6 +390,7 @@ if($editing && !$editexternalurl)
                                         array(
                                             "ref"               => $ref,
                                             "editaccess"        => $key["access_key"],
+                                            "share_user"        => $key["users"]
                                         ));
                                     ?>
                                     <a href="#" onClick="return resourceShareDeleteShare('<?php echo $key["access_key"] ?>');"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>      

@@ -25,6 +25,7 @@ $lang["annotatedebug"]="Debug:";
 $lang["toggle"]="Toggle";
 $lang["annotate_public_view"] = "Are annotations publicly visible e.g. when sharing collections?";
 $lang["annotate_show_author"] = "Display annotation author when viewing previews?";
+$lang["annotate_metadatafield_error"] = "A metadata field is required to store the annotations";
 
 $lang["annotate_font"]="Font:";
 $lang["annotate_pdf_output"]="PDF Output Option (experimental)";

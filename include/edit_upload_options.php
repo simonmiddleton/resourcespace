@@ -21,12 +21,12 @@ if ($on_upload || (isset($ref) && $ref<0))
         {
         ?>
         <div id="question_resourcetype" class="Question">
-            <label for="resourcetype"><?php echo "{$lang["resourcetype"]}"; ?></label>
+            <label for="resourcetype"><?php echo "{$lang["resourcetype"]}" . " <sup>*</sup>"; ?></label>
             <select id="resourcetype"
                     class="stdwidth"
                     name="resource_type"
-                    onchange="CentralSpacePost(document.getElementById('UploadForm'), true);">
-                <option value='' selected><?php echo $lang["select"]; ?></option>
+                    >
+                <option value='' <?php ($resource_type == "") ? "selected" : ""?>><?php echo $lang["select"]; ?></option>
             <?php
             $types                = get_resource_types();
             $shown_resource_types = array();

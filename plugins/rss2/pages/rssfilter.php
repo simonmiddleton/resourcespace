@@ -32,7 +32,7 @@ if (!check_api_key($user,$query,$sign))
 	
 function xmlentities($text)
 	{
-	return htmlspecialchars(htmlentities($text));
+	return htmlentities($text, ENT_XML1);
 	}
 
 # Log them in.

@@ -246,9 +246,10 @@ if($generate && enforcePostRequest(false))
                 else
                     {
                     // Exported file
-                    if(!strpos($targetfile, $baseurl) && strpos($targetfile, '/var/www') !== false && strpos($targetfile, 'filestore') !== false)
+                    $web_root = dirname(__DIR__,3);
+                    if(strpos($targetfile, $web_root) !== false)
                         {
-                        $targetfile = $baseurl . '/filestore' . explode('filestore', $targetfile)[1];
+                        $targetfile = str_replace([$web_root, '\\'], [$baseurl, '/'], $targetfile);
                         }
                     $message.="<br/>" . $targetfile;
                     }

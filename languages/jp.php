@@ -472,7 +472,7 @@ $lang["collectioncommentsinfo"]="このリソースのために本コレクシ�
 $lang["comment"]="コメント";
 $lang["warningexpired"]="リソースは期限切れ";
 $lang["warningexpiredtext"]="警告!このリソースは有効期限を超えています。ダウンロード昨日を有効にするには以下のリンクをクリックしてください。";
-$lang["warningexpiredok"]="&gt; リソースのダウンロード有効化";
+$lang["warningexpiredok"]="リソースのダウンロード有効化";
 $lang["userrequestcomment"]="コメント";
 $lang["addresourcebatchbrowser"]="バッチでリソース追加 - ブラウザより";
 

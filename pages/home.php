@@ -253,7 +253,7 @@ if (!hook("replaceslideshow"))
 	hook('homepanelcontainerstart');
 	if($home_themeheaders && $enable_themes)
 		{
-		if($home_dash && checkPermission_dashuser())
+		if($home_dash)
         	{
 			$title="themeselector";
 			$all_users=1;
@@ -302,7 +302,7 @@ if (!hook("replaceslideshow"))
 			{
 			if (!hook("panelperm")) 
 				{ 
-				if($home_dash && checkPermission_dashuser())
+				if($home_dash)
 					{
 					# Check Tile tile exists in dash already
 					$title=i18n_get_translated($custom_home_panels[$n]["title"]);
@@ -348,7 +348,7 @@ if (!hook("replaceslideshow"))
 		/* ------------ Collections promoted to the home page ------------------- */
 		foreach ($home_collections as $home_collection)
 			{
-			if($home_dash && checkPermission_dashuser())
+			if($home_dash)
 				{
 				# Check Tile tile exists in dash already
 				if(empty($home_collection["home_page_text"]))
@@ -463,7 +463,7 @@ if (!hook("replaceslideshow"))
         render_upgrade_available_tile($userref);
 		get_user_dash($userref);	
 		}
-	else if($home_dash && !checkPermission_dashmanage() && checkPermission_dashuser())
+	else if($home_dash && !checkPermission_dashmanage())
 		{
 		get_managed_dash();
 		}

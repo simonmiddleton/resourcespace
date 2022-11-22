@@ -13,13 +13,13 @@ $system_tabs = get_tab_name_options();
 $tabs_fields_assoc = [];
 
 $configured_resource_type_tabs = [];
-if(isset($related_type_show_with_data) && !empty($related_type_show_with_data))
+if(isset($related_type_show_with_data) && !empty($related_type_show_with_data) && ($related_type_upload_link || count(get_related_resources($ref)) > 0))
     {
     $configured_resource_type_tabs = ps_array(
-           "SELECT DISTINCT t.ref AS `value`
-              FROM resource_type AS rt
+        "SELECT DISTINCT t.ref AS `value`
+            FROM resource_type AS rt
         INNER JOIN tab AS t ON t.ref = rt.tab
-             WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
+            WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
         array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
         'schema'
     );
@@ -39,25 +39,25 @@ foreach(array_keys($system_tabs) as $tab_ref)
     for($i = 0; $i < count($fields); ++$i)
         {
         $fields[$i]['tab'] = (int) $fields[$i]['tab'];
-
-        // Check if the field can show on this tab
-        if(
-            $tab_ref > 0
-            && $tab_ref == $fields[$i]['tab']
-            && $fields[$i]['display_field'] == 1
+        $field_can_show_on_tab = (
+            $fields[$i]['display_field'] == 1
             && $fields[$i]['value'] != ''
             && $fields[$i]['value'] != ','
             && ($access == 0 || ($access == 1 && !$fields[$i]['hide_when_restricted']))
             && check_view_display_condition($fields, $i, $fields_all)
-        )
+        );
+
+        // Check if the field can show on this tab
+        if($tab_ref > 0 && $tab_ref == $fields[$i]['tab'] && $field_can_show_on_tab)
             {
             $tabs_fields_assoc[$tab_ref][$i] = $fields[$i]['ref'];
             $disable_tabs = false;
             }
-        // Unassigned or invalid tab links end up in the "not set" list
+        // Unassigned or invalid tab links end up on the "not set" list (IF they will be rendered)
         else if(
             !isset($tabs_fields_assoc[0][$i])
             && (0 === $fields[$i]['tab'] || !isset($system_tabs[$fields[$i]['tab']]))
+            && $field_can_show_on_tab
         )
             {
             $tabs_fields_assoc[0][$i] = $fields[$i]['ref'];
@@ -212,7 +212,8 @@ foreach($fields_tab_names as $tab_ref => $tabname)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
-        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] || $resource['resource_type'] == $metadata_template_resource_type)
+        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] 
+                                               || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
             {
             if($displaycondition && $tab_ref == $fields[$i]['tab'])
                 {

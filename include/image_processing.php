@@ -33,7 +33,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
-    global $storagedir, $syncdir, $batch_replace_local_folder;
+    global $storagedir, $syncdir, $batch_replace_local_folder, $valid_upload_paths, $tempdir;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -61,6 +61,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $valid_upload_paths[] = $storagedir;
         $valid_upload_paths[] = $syncdir;    
         $valid_upload_paths[] = $batch_replace_local_folder;
+        if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
  
         foreach($valid_upload_paths as $valid_upload_path)
             {
@@ -85,8 +86,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         return false;
         }
 
-    $resource_data=get_resource_data($ref);    
-    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
+    $resource_data=get_resource_data($ref);
+
+    if (!is_array($resource_data))
+        {
+        # No valid resource found.
+        return false;
+        }
+
+    if(isset($resource_data["lock_user"]) && $resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         return false;
         }
@@ -868,12 +876,7 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
-                            $original_filename = '';
-                            if(isset($_REQUEST['file_name'])) {
-                                $original_filename = $_REQUEST['file_name'];
-                            } else {
-                                $original_filename = $processfile['name'];
-                            }
+                            $original_filename = $_REQUEST['file_name'];
 
                             if($merge_filename_with_title_include_extensions == 'yes') {
                                 $merged_filename = $original_filename;
@@ -1000,7 +1003,7 @@ function extract_exif_comment($ref,$extension="")
             debug ("EXIF - custom option for filename field " . $filename_field . " : " . $exiffilenameoption);
             if ($exiffilenameoption!="yes") // We are not using the extracted filename as usual
                 {
-                $uploadedfilename=isset($_REQUEST['file_name'])?$_REQUEST['file_name']:$processfile['name'];
+                $uploadedfilename=$_REQUEST['file_name'];
                 
                 global $userref, $amended_filename;
                 $entered_filename=get_data_by_field(-$userref,$filename_field);
@@ -1126,7 +1129,7 @@ function extract_exif_comment($ref,$extension="")
 
 
     // Autocomplete any blank fields without overwriting any existing metadata
-    autocomplete_blank_fields($ref, true);
+    autocomplete_blank_fields($ref, false);
     }
 
 function iptc_return_utf8($text)
@@ -1549,8 +1552,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         elseif (is_array($onlysizes) && count($onlysizes) > 0 )
             {
             $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            $sizes=" WHERE id IN (". ps_param_insert(count($sizefilter)) .")";
-            $params = ps_param_fill($sizefilter, 's');
+            if (count($sizefilter) > 0)
+                {
+                $sizes = " WHERE id IN (" . ps_param_insert(count($sizefilter)) . ")";
+                $params = ps_param_fill($sizefilter, 's');
+                }
             $all_sizes= false;
             }
         
@@ -2311,7 +2317,7 @@ function extract_mean_colour($image,$ref)
         {
         for ($x=0;$x<20;$x++)
             {
-            $rgb = imagecolorat($image, round($x*($width/20)), round($y*($height/20)));
+            $rgb = imagecolorat($image, floor($x*($width/20)), floor($y*($height/20)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2427,7 +2433,7 @@ function get_colour_key($image)
         {
         for ($x=0;$x<$depth;$x++)
             {
-            $rgb = imagecolorat($image, round($x*($width/$depth)), round($y*($height/$depth)));
+            $rgb = imagecolorat($image, floor($x*($width/$depth)), floor($y*($height/$depth)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;
@@ -2503,10 +2509,10 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     
     # Save all images
     if ($tweak_all_images){
-        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where id<> ?", ['i', $top]);
+        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id <> ?", ['s', $top]);
     }
     else {
-        $ps=ps_query("select " . columns_in("preview_size") . " from preview_size where (internal=1 or allow_preview=1) and id<> ?", ['i', $top]);
+        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
     }
     for ($n=0;$n<count($ps);$n++)
         {
@@ -3277,31 +3283,68 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
         {
         // Landscape
         $return['landscape'] = true;
+        if(!$enlarge_image && $target_width > $source_width)
+            {
+            $ratio = 1;
+            }
+        else
+            {
+            $ratio = $target_width / $source_width;
+            }
 
-        $ratio = $target_width / $source_width;
+        $return['new_width']  = floor($source_width * $ratio);
+        $return['new_height'] = floor($source_height * $ratio);
+        // If result is larger and unable to enlarge then fix the height and compute the width
+        if (!$enlarge_image && ($return['new_height'] > $target_height)) {
+            $return['new_height'] = $target_height;
+            $ratio = $target_height / $source_height;
+            $return['new_width']  = floor($source_width * $ratio);
+            }
         }
     else
         {
-        // Portrait
+        // Portrait or square
         $return['portrait'] = true;
+        if(!$enlarge_image && $target_height > $source_height)
+            {
+            $ratio = 1;
+            }
+        else
+            {
+            $ratio = $target_height / $source_height;
+            }
 
-        $ratio = $target_height / $source_height;
+        $return['new_width']  = floor($source_width * $ratio);
+        $return['new_height'] = floor($source_height * $ratio);
+        // If result is larger and unable to enlarge then fix the width and compute the height
+        if (!$enlarge_image && ($return['new_width'] > $target_width)) {
+            $return['new_width'] = $target_width;
+            $ratio = $target_width / $source_width;
+            $return['new_height']  = floor($source_height * $ratio);
+            }
         }
 
-    if(!$enlarge_image && $target_width > $source_width)
-        {
-        $ratio = 1;
-        }
-
-    $return['new_width']  = floor($source_width * $ratio);
-    $return['new_height'] = floor($source_height * $ratio);
     $return['x_offset']   = ceil(($target_height - $return['new_height']) / 2);
     $return['y_offset']   = ceil(($target_width - $return['new_width']) / 2);
 
     return $return;
     }
 
-function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
+
+/**
+ * Upload file from a URL and add it to a resource.
+ *
+ * @param  int      $ref                  Resource ID
+ * @param  bool     $no_exif=false        Don't extract exif data - true to disable extraction
+ * @param  bool     $revert=false         Delete all data and re-extract embedded data
+ * @param  bool     $autorotate=false     Autorotate images - alters embedded orientation data in uploaded file
+ * @param  string   $url=""               File URL
+ * @param  string   $key=""               Optional key to distinguish betweeen simultaneous requests from same user with same filename
+ * 
+ * @return  bool
+ * 
+ */
+function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool $autorotate=false,string $url="", string $key="")
     {
     debug("upload_file_by_url(ref = $ref, no_exif = $no_exif,revert = $revert, autorotate = $autorotate, url = $url)");
 
@@ -3311,19 +3354,29 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
         }
 
     global $userref;
-    $resource_data=get_resource_data($ref);    
-    if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
+    $resource_data=get_resource_data($ref);
+
+    if (!is_array($resource_data))
+        {
+        # No valid resource found.
+        return false;
+        }
+
+    if(isset($resource_data["lock_user"]) && $resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
         {
         return false;
         }
 
-    $file_path = temp_local_download_remote_file($url);
+    $file_path = temp_local_download_remote_file($url,$key);
     if($file_path === false)
         {
         return false;
         }
  
-    return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);   # Process as a normal upload...
+    $upload_result = upload_file($ref,$no_exif,$revert,$autorotate,$file_path);   # Process as a normal upload...
+    remove_empty_temp_directory($file_path);
+    
+    return $upload_result;
     }
 
 /**

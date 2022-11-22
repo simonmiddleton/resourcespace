@@ -90,7 +90,7 @@ function addColumnHeader($orderName, $labelKey)
 		$arrow = '';
 
 	?><td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo $orderName ?>&restype_sort=<?php echo ($restype_sort=="asc") ? 'desc' : 'asc';
-			?>&find=<?php echo urlencode($find)?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this);"><?php
+			?>&find=<?php echo urlencode((string)$find)?>&backurl=<?php echo urlencode((string)$url) ?>" onClick="return CentralSpaceLoad(this);"><?php
 			echo $lang[$labelKey] . $arrow ?></a></td>
 	
       <?php
@@ -99,6 +99,7 @@ function addColumnHeader($orderName, $labelKey)
 ?>	
 
 <div class="BasicsBox">
+<h1><?php echo $lang["resource_types_manage"]; ?></h1>
 <?php
 	$links_trail = array(
 	    array(
@@ -216,11 +217,11 @@ for ($n=0;$n<count($resource_types);$n++)
 				if(!in_array($resource_types[$n]["rt"],array(0,999)))
 				  {
 				  ?>
-				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
+				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
 				  <?php
 				  }
 				  ?>
-				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["rt"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["metadatafields"]?> </a>
+				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["rt"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
 				
 			</div>
 		</td>

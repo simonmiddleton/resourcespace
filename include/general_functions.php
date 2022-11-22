@@ -125,7 +125,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         };
 
     $month_part = substr($date, 5, 2);
-    $m = $wordy ? (@$lang["months"][$month_part - 1]) : $month_part;
+    $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
         return $y;
@@ -254,7 +254,7 @@ function trim_array($array,$trimchars='')
  */
 function tidylist($list)
     {
-    $list=trim($list);
+    $list=trim((string) $list);
     if (strpos($list,",")===false) {return $list;}
     $list=explode(",",$list);
     if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
@@ -437,9 +437,23 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
         # If searching, also search overridden text in site_text and return that also.
         if ($findtext!="" || $findpage!="" || $findname!="")
             {
-            if ($findtext!="") {$search="text like ?"; $search_param = array("s", '%' . $findtext . '%');}
-            if ($findpage!="") {$search="page like ?"; $search_param = array("s", '%' . $findpage . '%');}
-            if ($findname!="") {$search="name like ?"; $search_param = array("s", '%' . $findname . '%');}
+            if ($findtext!="")
+                {
+                $search="text LIKE ? HAVING language = ? OR language = ? ORDER BY (CASE WHEN language = ? THEN 3 WHEN language = ? THEN 2 ELSE 1 END)";
+                $search_param = array("s", '%' . $findtext . '%', "s", $language, "s", $defaultlanguage, "s", $language, "s", $defaultlanguage);
+                }
+
+            if ($findpage!="")
+                {
+                $search="page LIKE ? HAVING language = ? OR language = ? ORDER BY (CASE WHEN language = ? THEN 2 ELSE 1 END)";
+                $search_param = array("s", '%' . $findpage . '%', "s", $language, "s", $defaultlanguage, "s", $language);
+                }
+
+            if ($findname!="")
+                {
+                $search="name LIKE ? HAVING language = ? OR language = ? ORDER BY (CASE WHEN language = ? THEN 2 ELSE 1 END)";
+                $search_param = array("s", '%' . $findname . '%', "s", $language, "s", $defaultlanguage, "s", $language);
+                }
 
             $site_text = ps_query ("select `page`, `name`, `text`, ref, `language`, specific_to_group, custom from site_text where $search", $search_param);
 
@@ -615,7 +629,7 @@ function save_site_text($page,$name,$language,$group)
             return true;
             }
         }
-    if (trim($custom)=="")
+        if (is_null($custom) || trim($custom)=="")
         {
         $custom=0;
         }
@@ -858,7 +872,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     $valid_emails = array();
     foreach($check_emails as $check_email)
         {
-        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
+        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL) || check_email_invalid($check_email))
             {
             debug("send_mail: Invalid e-mail address - '{$check_email}'");
             continue;
@@ -1060,11 +1074,13 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="", $files=array())
     {
     # Include footer
-    global $email_footer, $storagedir, $mime_type_by_extension, $email_from;
+    global $header_colour_style_override, $mime_type_by_extension, $email_from;
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
 
+    if (check_email_invalid($email)){return false;}
+    
     $from_system = false;
     if ($from=="")
         {
@@ -1159,8 +1175,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     }         
                 else if($placeholder == 'img_headerlogo')
                     {
+                    // Add header image to email if not using template
                     $img_url = get_header_image(true);
-                    $setvalues[$placeholder]  = '<img src="' . $img_url . '"/>';
+                    $img_div_style = "max-height:50px;padding: 5px;";
+                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
+                    $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                     }
                 else if ($placeholder=="embed_thumbnail")
                     {                    
@@ -1298,7 +1317,18 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     if (is_html($body))
         {
         $mail->IsHTML(true);
-        $body = nl2br($body);
+        
+        // Standardise line breaks
+        $body = str_replace(["\r\n","\r","\n","<br/>","<br>"],"<br />",$body);
+
+        // Remove any sequences of three or more line breaks with doubles   
+        while(strpos($body,"<br /><br /><br />") !== false)
+            {
+            $body = str_replace("<br /><br /><br />","<br /><br />",$body);
+            }
+
+        // Also remove any unnecessary line breaks that were already formatted by HTML paragraphs
+        $body = str_replace(["</p><br /><br />","</p><br />"],"</p>",$body);
         }      
     else {$mail->IsHTML(false);}
 
@@ -1884,7 +1914,7 @@ function filesize_unlimited($path)
  */
 function strip_leading_comma($val)
     {
-    return preg_replace('/^\,/','',$val);
+    return preg_replace('/^\,/', '', (string) $val);
     }
 
 
@@ -3059,7 +3089,7 @@ function form_value_display($row,$name,$default="")
     {
     if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
-    return htmlspecialchars(getval($name,$default));
+    return htmlspecialchars((string) getval($name,$default));
     }
 
 /**
@@ -3675,6 +3705,13 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				}
 			}
 		}	
+
+    // Support a global, non-plugin format of hook function that can be defined in config overrides.
+    $function= "GlobalHook" . ucfirst((string) $name);	
+    if (function_exists($function)) 
+        {			
+        $function_list[]=$function;
+        }
 
 	# add the function list to cache
 	$hook_cache[$hook_cache_index] = $function_list;

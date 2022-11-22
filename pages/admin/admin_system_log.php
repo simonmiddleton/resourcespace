@@ -75,8 +75,8 @@ if($logmonth != 0 || $logyear != 0)
     {
     $monthstart = $logmonth == 0 ? 1 : $logmonth;
     $monthend = $logmonth == 0 ? 12 : $logmonth;
-    $datevals = " BETWEEN CAST('$logyear-$monthstart-01' AS DATE) 
-        AND ADDTIME(LAST_DAY(CAST('$logyear-$monthend-01' AS DATE)),'23:59:59') ";
+    $datevals = " BETWEEN CAST('$logyear-$monthstart-01' AS DATETIME) 
+        AND CAST( CONCAT( LAST_DAY('$logyear-$monthend-01'),' 23:59:59') AS DATETIME) ";
     $log_tables_where_statements['activity_log']    .= "(logged " . $datevals . ") AND ";
     $log_tables_where_statements['resource_log']    .= "(date " . $datevals . ") AND ";
     $log_tables_where_statements['collection_log']  .= "(date " . $datevals . ") AND ";
@@ -163,7 +163,7 @@ else if (strpos($backurl, "pages/team/team_user.php") !== false)
         )
     );
     }
-elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
+else if (strpos($backurl, "pages/team/team_user_edit.php") !== false)
     {
     // Arrived from Edit user page
     $links_trail = array(
@@ -182,10 +182,18 @@ elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
         )
     );
     }
+else
+    {
+    $links_trail = [
+        ['title' => $lang["systemsetup"], 'href' => "{$baseurl_short}pages/admin/admin_home.php"]
+    ];
+    }
 $links_trail[] = array(
-    'title' => htmlspecialchars($title),
-    'href'  => ""
+    'title' => htmlspecialchars($title)
 );
+?>
+<h1><?php echo htmlspecialchars($title); ?></h1>
+<?php
 renderBreadcrumbs($links_trail);
 ?>
     <h1>
@@ -360,11 +368,11 @@ $select_table_url = generateURL(
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo htmlspecialchars($record['table']); ?></td>
+                        <td><?php echo htmlspecialchars((string) $record['table']); ?></td>
                         <?php
                         }
                         ?>
-                    <td><?php echo htmlspecialchars($record['column']); ?></td>
+                    <td><?php echo htmlspecialchars((string) $record['column']); ?></td>
                     <?php
                     if($table != '' && $table_reference == 0 && array_key_exists($record['table'], $tables_data))
                         {
@@ -382,7 +390,7 @@ $select_table_url = generateURL(
                         }
                     else if($table == '' || $table_reference == 0)
                         {
-                        $ref = htmlspecialchars($record['table_reference']);
+                        $ref = htmlspecialchars((string) $record['table_reference']);
                         
                         switch ($record['column'])
                             {

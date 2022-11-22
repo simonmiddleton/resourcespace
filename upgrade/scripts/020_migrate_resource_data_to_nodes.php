@@ -74,6 +74,7 @@ foreach($resource_type_fields as $resource_type_field)
             db_begin_transaction("populate_nodes_from_data");
             foreach($rowbatches[$n] as $rowdata)
                 {
+                $rowdata["value"] = (string) $rowdata["value"];
                 if(trim($rowdata["value"]) != "")
                     {
                     if(isset($allfieldnodes[md5($rowdata["value"]) . md5('!'. $rowdata["value"])]))

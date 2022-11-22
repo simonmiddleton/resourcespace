@@ -62,19 +62,18 @@ function simplesaml_authenticate()
  * @return array
  */
 function simplesaml_getattributes()
-	{
-	global $as;
-	if(!isset($as))
-		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+    {
+    global $as;
+    if(!isset($as))
+        {
+        require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
         $spname = get_saml_sp_name();
-		$as = new SimpleSAML\Auth\Simple($spname);
-		}
-	$as->requireAuth();
-	$attributes = $as->getAttributes();
-	return $attributes;
-	}
-	
+        $as = new SimpleSAML\Auth\Simple($spname);
+        }
+    $as->requireAuth();
+    $attributes = $as->getAttributes();
+    return $attributes;
+    }	
 
 /**
  * Sign out of SAML SP
@@ -147,9 +146,9 @@ function simplesaml_getauthdata($value)
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');       
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
-		}
+        }
 	$as->requireAuth();
-	$authdata = $as->getAuthData($value);
+	$authdata = $as->getAuthData($value)->getValue();
 	return $authdata;
 	}
 
@@ -331,7 +330,34 @@ function simplesaml_generate_keypair($dn)
  */
 function get_saml_sp_name()
     {
-    $default_sp_name = 'default-sp';
-    $sp_name = $GLOBALS['simplesaml_sp'] ?? $default_sp_name;
-    return $sp_name !== $default_sp_name ? $sp_name : 'resourcespace-sp';
+    global $simplesaml_sp, $safe_sp, $simplesaml_rsconfig;
+    if($safe_sp != "")
+        {
+        return $safe_sp;
+        }
+
+    $default_sp_name = "resourcespace-sp";
+    $safe_sp = "";
+    if(!$simplesaml_rsconfig || (isset($simplesamlconfig["authsources"]) && is_array($simplesamlconfig["authsources"])))
+        {
+        // If SAML has been configured we need to ensure that defined SP is valid
+        $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
+        $GLOBALS["use_error_exception"] = true;
+        try {
+            $as = new SimpleSAML\Auth\Simple($simplesaml_sp);
+            $as->getAuthSource();
+            }
+        catch(exception $e)
+            {
+            // Invalid SP name, use default
+            $simplesaml_sp = $default_sp_name;
+            }
+        $GLOBALS["use_error_exception"] = $use_error_exception_cache;
+        }
+    else
+        {
+        $simplesaml_sp = $default_sp_name;
+        }
+    $safe_sp = $simplesaml_sp;
+    return $safe_sp;
     }

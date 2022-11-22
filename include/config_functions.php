@@ -1068,7 +1068,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
                     }
                 
-                if (count($valid_extensions) > 0 && !(in_array($uploaded_file_extension, $valid_extensions)))
+                if (count($valid_extensions) > 0 && !check_valid_file_extension($_FILES[$config_name], $valid_extensions))
                     {
                     trigger_error('File type not valid for this selection. Please choose from ' . implode(', ', $valid_extensions) . '.');
                     }
@@ -1266,6 +1266,29 @@ function config_register_core_field_refs(string $source, array $refs)
             {
             $core_field_refs[$source][] = $ref;
             }
+        }
+
+    return;
+    }
+
+/**
+ * Run PHP code on array of variables. Used for modifying $GLOBALS.
+ *
+ * @param  array   $variables   Array of variables to apply override on.
+ * @param  string  $code        Signed string containing the PHP code to run.
+ * 
+ * @return void
+ */
+function override_rs_variables_by_eval(array $variables, string $code)
+    {
+    $temp_variables = $variables;
+
+    extract($temp_variables, EXTR_REFS | EXTR_SKIP);
+    eval(eval_check_signed($code));
+
+    foreach($temp_variables as $temp_variable_name => $temp_variable_val)
+        {
+        $GLOBALS[$temp_variable_name] = $temp_variable_val;
         }
 
     return;

@@ -129,7 +129,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     #
     # This is used to take the advanced search form and assemble it into a search query.
     
-    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and;
+    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and,$resource_field_verbatim_keyword_regex;
     $search="";
     if (getval("basicyear","")!="")
         {
@@ -208,9 +208,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         $listsql="!list" . join(":",trim_array(split_keywords(getval("resourceids",""))));
         $search=$listsql . " " . $search;
         }
-
-    // Disabled as was killing search
-    //$tmp = hook("richeditsearchquery", "", array($search, $fields, $n)); if($tmp) $search .= $tmp;
     
     for ($n=0;$n<count($fields);$n++)
         {
@@ -223,7 +220,19 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $value=getval($name,"");
             if ($value!="")
                 {
-                $vs=split_keywords($value, false, false, false, false, true);
+                if(isset($resource_field_verbatim_keyword_regex[$fields[$n]["ref"]]) 
+                    && preg_match(
+                        $resource_field_verbatim_keyword_regex[$fields[$n]["ref"]],
+                        str_replace('*', '', $value)
+                        ))
+                    {
+                    // Keyword matches verbatim regex, do not split
+                    $vs=[$value];
+                    }
+                else
+                    {
+                    $vs=split_keywords($value, false, false, false, false, true);
+                    }
                 for ($m=0;$m<count($vs);$m++)
                     {
                     if ($search!="") {$search.=", ";}
@@ -395,7 +404,19 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $value=getval('field_'.$fields[$n]["ref"],'');
                 if ($value!="")
                     {
-                    $valueparts=split_keywords($value, false, false, false, false, true);
+                    if(isset($resource_field_verbatim_keyword_regex[$fields[$n]["ref"]]) 
+                        && preg_match(
+                            $resource_field_verbatim_keyword_regex[$fields[$n]["ref"]],
+                            str_replace('*', '', $value)
+                            ))
+                        {
+                        // Keyword matches verbatim regex, do not split
+                        $valueparts=[$value];
+                        }
+                    else
+                        {
+                        $valueparts=split_keywords($value, false, false, false, false, true);
+                        }
                     foreach($valueparts as $valuepart)
                         {
                         if ($search!="") {$search.=", ";}
@@ -577,11 +598,11 @@ function compile_search_actions($top_actions)
     $omit_edit_all = false;
 
     #This is to stop duplicate "Edit all resources" caused on a collection search
-    if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
+    if(isset($search) && substr($search, 0, 11) == '!collection')
         { 
         $omit_edit_all = true;
         }
-                   
+
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
         if($top_actions && $allow_save_search && $usercollection != $collection)
@@ -606,7 +627,7 @@ function compile_search_actions($top_actions)
             
             $data_attribute = array(
                 'url'  => generateURL($baseurl_short . "pages/dash_tile.php", $urlparams, $extraparams),
-                'link' => str_replace($baseurl,'',$url)
+                'link' => str_replace($baseurl, '', (string) $url)
             );
 
             if(substr($search, 0, 11) == '!collection')
@@ -633,9 +654,9 @@ function compile_search_actions($top_actions)
                     data-url="%spages/collections.php?addsmartcollection=%s&restypes=%s&archive=%s"
                 ',
                 $baseurl_short,
-                urlencode($search),
-                urlencode($restypes),
-                urlencode($archive)
+                urlencode((string) $search),
+                urlencode((string) $restypes),
+                urlencode((string) $archive)
             );
 
             $options[$o]['value']='save_search_smart_collection';
@@ -653,12 +674,12 @@ function compile_search_actions($top_actions)
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s"
                     ',
                     $baseurl_short,
-                    urlencode($search),
-                    urlencode($restypes),
-                    urlencode($order_by),
-                    urlencode($sort),
-                    urlencode($archive),
-                    urlencode($daylimit)
+                    urlencode((string) $search),
+                    urlencode((string) $restypes),
+                    urlencode((string) $order_by),
+                    urlencode((string) $sort),
+                    urlencode((string) $archive),
+                    urlencode((string) $daylimit)
                 );
 
                 $options[$o]['value']='save_search_items_to_collection';
@@ -676,14 +697,14 @@ function compile_search_actions($top_actions)
                         data-url="%spages/search_disk_usage.php?search=%s&restypes=%s&offset=%s&order_by=%s&sort=%s&archive=%s&daylimit=%s&k=%s"
                     ',
                     $baseurl_short,
-                    urlencode($search),
-                    urlencode($restypes),
-                    urlencode($offset),
-                    urlencode($order_by),
-                    urlencode($sort),
-                    urlencode($archive),
-                    urlencode($daylimit),
-                    urlencode($k)
+                    urlencode((string) $search),
+                    urlencode((string) $restypes),
+                    urlencode((string) $offset),
+                    urlencode((string) $order_by),
+                    urlencode((string) $sort),
+                    urlencode((string) $archive),
+                    urlencode((string) $daylimit),
+                    urlencode((string) $k)
                 );
 
                 $options[$o]['value']='search_items_disk_usage';
@@ -715,11 +736,11 @@ function compile_search_actions($top_actions)
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
         $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s',
             $baseurl_short,
-            urlencode($search),
-            urlencode($restypes),
-            urlencode($order_by),
-            urlencode($archive),
-            urlencode($sort)
+            urlencode((string) $search),
+            urlencode((string) $restypes),
+            urlencode((string) $order_by),
+            urlencode((string) $archive),
+            urlencode((string) $sort)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
@@ -1124,7 +1145,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             $blockrestypesor = "";$blockrestypesorparams =[];
             if ($edit_access_for_contributor)
                 {
-                $blockrestypesor .= " created_by='" . $userref . "'";
+                $blockrestypesor .= " created_by = ?";
                 $blockrestypesorparams = ["i",$userref];
                 }
             if ($editable_filter->sql != "")
@@ -1161,7 +1182,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     global $allow_smart_collections, $smart_collections_async;
     global $config_search_for_number,$userref;
-    
+
+    // Don't cache special searches by default as often used for special purposes 
+    // e.g. collection count to determine edit accesss
+    $b_cache_count = false;
+
     if(!is_a($sql_join,"PreparedStatementQuery") && trim($sql_join == ""))
         {
         $sql_join = new PreparedStatementQuery();
@@ -1209,7 +1234,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $order_by=str_replace("r.rating","rating",$order_by);
         $sql->sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
    
     // View Resources With No Downloads
@@ -1218,7 +1242,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if ($orig_order=="relevance") {$order_by="ref DESC";}
         $sql->sql = $sql_prefix . "SELECT r.hit_count score, $select FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql :ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     
     // Duplicate Resources (based on file_checksum)
@@ -1239,17 +1262,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                                       AND file_checksum = (SELECT file_checksum FROM resource WHERE ref=$ref AND (file_checksum <> '' AND file_checksum IS NOT NULL) ) 
                     ORDER BY file_checksum, ref";   
                 $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters); 
-                if($returnsql) {return $sql;}
-                $results=ps_query($sql->sql,$sql->parameters,false,$fetchrows);
-                $count=count($results);
-                if ($count>1) 
-                    {
-                    return $results;
-                    }
-                else 
-                    {
-                    return array();
-                    }
                 }
             else
                 {
@@ -1262,7 +1274,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             # Find all duplicate resources
             $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-            return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
             }
         }
     
@@ -1272,13 +1283,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         global $userref,$ignore_collection_access;
 
         $colcustperm = $sql_join;
-        $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
              
         # Special case if a key has been provided.
         if($k != '')
             {
             $sql_filter->sql = 'r.ref > 0';
+            $sql_filter->parameters = [];
             }
 
         # Extract the collection number
@@ -1354,8 +1365,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
                     }
                 }   
-            }   
-        //$searchsql = new PreparedStatementQuery();
+            }
 
         $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $colcustfilter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$colcustfilter->parameters);
@@ -1364,26 +1374,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if($collectionsearchsql)
             {
             $sql=$collectionsearchsql;
-            }    
-
-        if($returnsql)
-            {
-            return $sql;
             }
-        
-        if($return_refs_only)
-            {
-            // note that we actually include archive and created_by columns too as often used to work out permission to edit collection
-            $result = ps_query($sql->sql,$sql->parameters,false,$fetchrows,true,2,true,array('ref','resource_type','archive','created_by','access'));
-            }
-        else
-            {
-            $result = ps_query($sql->sql,$sql->parameters,false,$fetchrows);
-            }
-
-        hook('beforereturnresults', '', array($result, $archive));
-
-        return $result;
         }
 
     # View Related - Pushed Metadata (for the view page)
@@ -1398,8 +1389,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         SELECT DISTINCT r.hit_count score, rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.resource=r.ref AND t.related= ?) " . $sql_join->sql . "  WHERE 1=1 AND " . $sql_filter->sql . " GROUP BY r.ref 
         ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge(["i",$resource],$sql_join->parameters,$sql_filter->parameters,["i",$resource],$sql_join->parameters,$sql_filter->parameters);
-
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
 
     # View Related
@@ -1421,7 +1410,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         UNION
         SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related = ?) " . $sql_join->sql  . " WHERE " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_self->parameters, ["i", $resource], $sql_join->parameters, $sql_filter->parameters, ["i", $resource], $sql_join->parameters, $sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
 
     # Geographic search
@@ -1439,12 +1427,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     "WHERE geo_lat > ? AND geo_lat < ? " . 
                       "AND geo_long > ? AND geo_long < ?
                        AND " . $sql_filter->sql .
-                 "GROUP BY r.ref
+                 " GROUP BY r.ref
                   ORDER BY $order_by";
 
         $sql->parameters = array_merge($sql_join->parameters,["d",$bl[0],"d",$tr[0],"d",$bl[1],"d",$tr[1]],$sql_filter->parameters);
-        $searchsql = $sql_prefix . $sql->sql . $sql_suffix;
-        return $returnsql ? $searchsql : ps_query($searchsql,$sql->parameters,false,$fetchrows);
+        $sql->sql = $sql_prefix . $sql->sql . $sql_suffix;
         }
 
     # Similar to a colour by key
@@ -1455,7 +1442,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql = new PreparedStatementQuery();
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=1 AND LEFT(colour_key,4) = ? AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,["s",$colourkey],$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
 
     # Colour search
@@ -1473,7 +1459,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         $sql->parameters = array_merge($sql_join->parameters,["s",$colour . "%","s","_" . $colour . "%"],$sql_filter->parameters);
         $searchsql = $sql_prefix . $sql->sql . $sql_suffix;
-        return $returnsql ? $searchsql : ps_query($searchsql,$sql->parameters,false,$fetchrows);
+        $sql = $searchsql;
         }
 
     # Similar to a colour
@@ -1483,27 +1469,24 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $searchsql = new PreparedStatementQuery();
         $searchsql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=1 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY (abs(image_red - ?)+abs(image_green - ?)+abs(image_blue - ?)) ASC LIMIT 500" . $sql_suffix;
         $searchsql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters,["i",$rgb[0],"i",$rgb[1],"i",$rgb[2]]);
-        return $returnsql ? $searchsql : ps_query($searchsql,$sql->parameters,false,$fetchrows);
+        $sql = $searchsql;
         }
     elseif (substr($search,0,10)=="!nopreview")
         {
         $sql = new PreparedStatementQuery();
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=0 AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (($config_search_for_number && is_numeric($search)) || substr($search,0,9)=="!resource")
         {
         $searchref = preg_replace("/[^0-9]/","",$search);
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE r.ref = ? AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,["i",$searchref],$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (substr($search,0,15)=="!archivepending")
         {
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE r.archive=1 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (substr($search,0,12)=="!userpending")
         {
@@ -1514,7 +1497,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE r.archive=-1 
         AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }        
     elseif (substr($search,0,14)=="!contributions")
         {
@@ -1527,28 +1509,27 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         global $open_access_for_contributor;
         if($open_access_for_contributor && $userref == $cuser)
             {
-            $sql_filter->sql ="archive IN (" . implode(",",$archive) . ")";
+            $sql_filter->sql = "archive IN (" . ps_param_insert(count($archive)) . ")";
+            $sql_filter->parameters = ps_param_fill($archive, "i");
             $sql_join->sql = " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
+            $sql_join->parameters = array();
             }
 
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE created_by = ? AND r.ref > 0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
-        $sql->parameters = array_merge($sql_join->parameters,["i",$cuser],$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
+        $sql->parameters = array_merge($sql_join->parameters, ["i", $cuser], $sql_filter->parameters);
         }
     elseif ($search=="!images") 
         {
         // Search for resources with images
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=1 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (substr($search,0,7)=="!unused")
         {
         // Search for resources not used in any collections
         $sql->sql = $sql_prefix . "SELECT DISTINCT $select FROM resource r " . $sql_join->sql . " WHERE r.ref>0 AND r.ref NOT IN (SELECT c.resource FROM collection_resource c) AND " . $sql_filter->sql . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (substr($search,0,5)=="!list")
         {
@@ -1579,7 +1560,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . $listsql->sql  . " AND " . $sql_filter->sql . " ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$listsql->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (substr($search,0,8)=="!hasdata") 
         {
@@ -1587,9 +1567,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $fieldref=intval(trim(substr($search,8)));
         $sql_join->sql .=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ?";
         array_push($sql_join->parameters,"i",$fieldref);
+
+        // Cache this as it is a very slow query
+        $b_cache_count = true;
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif (substr($search,0,11)=="!properties")
         {
@@ -1630,12 +1612,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     case "fmin":
                         // Need to convert MB value to bytes
                         $propertiessql->sql .= $sql_filter_properties_and . " r.file_size >= ?";
-                        array_push($propertiessql->parameters,"i",$floatval($propertyval) * 1024 * 1024);
+                        array_push($propertiessql->parameters,"i",floatval($propertyval) * 1024 * 1024);
                     break;
                     case "fmax":
                         // Need to convert MB value to bytes
                         $propertiessql->sql .= $sql_filter_properties_and . " r.file_size <= ?";
-                        array_push($propertiessql->parameters,"i",$floatval($propertyval) * 1024 * 1024);
+                        array_push($propertiessql->parameters,"i",floatval($propertyval) * 1024 * 1024);
                     break;
                     case "fext":
                         $propertyval=str_replace("*","%",$propertyval);
@@ -1679,9 +1661,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($propertiessql->sql != "")
             {
-            if(strpos($sql_join->sql,"JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
+            if(strpos($sql_join->sql,"LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource") === false)
                 {
-                $sql_join->sql .=" JOIN resource_dimensions rdim on r.ref=rdim.resource";
+                $sql_join->sql .=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
                 }
             if ($sql_filter->sql == "")
                 {
@@ -1696,35 +1678,71 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE r.ref > 0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     elseif ($search=="!integrityfail") 
         {
         // Search for resources where the file integrity has been marked as problematic or the file is missing
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE integrity_fail=1 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
     
     # Search for locked resources 
-    if ($search=="!locked") 
+    elseif ($search=="!locked") 
         {
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
-        return $returnsql ? $sql : ps_query($sql->sql,$sql->parameters,false,$fetchrows);
         }
 
     # Within this hook implementation, set the value of the global $sql variable:
     # Since there will only be one special search executed at a time, only one of the
     # hook implementations will set the value. So, you know that the value set
     # will always be the correct one (unless two plugins use the same !<type> value).
-    $hooksql = hook("addspecialsearch", "", array($search, $select, $sql_join , $sql_filter));   
+    $hooksql = hook("addspecialsearch", "", array($search, $select, $sql_join , $sql_filter, $sql));   
     if(is_a($hooksql,'PreparedStatementQuery'))
         {
         debug("Addspecialsearch hook returned useful results.");
         $hooksql->sql = $sql_prefix . $hooksql->sql . $sql_suffix;
-        
-        return $returnsql ? $hooksql : ps_query($hooksql->sql,$hooksql->parameters,false,$fetchrows);
+        $sql = $hooksql;
+        }
+
+    if($sql->sql != "")
+        {
+        if($returnsql)
+            {
+            return $sql;
+            }
+        else
+            {
+            $count_sql = clone($sql);
+            $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
+            $result=sql_limit_with_total_count($sql,$fetchrows,0,$b_cache_count,$count_sql);
+            $resultcount = $result["total"]  ?? 0;
+            if ($resultcount>0 && count($result["data"]) > 0)
+                { 
+                if($return_refs_only)
+                    {
+                    // This needs to include archive and created_by columns too as often used to work out permission to edit collection
+                    $result["data"] = array_map(function($val)
+                        {
+                        return([
+                            "ref"           =>$val["ref"],
+                            "resource_type" =>$val["resource_type"],
+                            "archive"       =>$val["archive"],
+                            "created_by"    =>$val["created_by"],
+                            "access"        =>$val["access"],
+                                ]);
+                            }, $result["data"]
+                        );
+                    }
+                $return = array_pad($result["data"],$resultcount,0);              
+                }
+            else
+                {
+                $return =[];
+                }
+            }
+        hook('beforereturnresults', '', array($result, $archive));
+        return $return;
         }
 
      # Arrived here? There were no special searches. Return false.
@@ -1793,12 +1811,13 @@ function rebuild_specific_field_search_from_node(array $node)
 
 
 function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="DESC",$access_override=false,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
-   {
-   # Search capability.
-   # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
-   $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,DEPRECATED_STARSEARCH,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
-   if(is_string($getsizes)){$getsizes=explode(",",$getsizes);}
-   if(is_array($results) && is_array($getsizes) && count($getsizes)>0)
+    {
+    # Search capability.
+    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
+    $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,DEPRECATED_STARSEARCH,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
+    if(is_string($getsizes)){$getsizes=explode(",",$getsizes);}
+    $getsizes = array_map('trim', $getsizes);
+    if(is_array($results) && is_array($getsizes) && count($getsizes)>0)
         {
         $resultcount=count($results);
         for($n=0;$n<$resultcount;$n++)
@@ -1828,8 +1847,8 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
 
             }
         }
-   return $results;
-   }
+    return $results;
+    }
 
 
 function get_upload_here_selected_nodes($search, array $nodes)
@@ -1874,7 +1893,7 @@ function get_default_search_states()
 /**
 * Get the required search filter sql for the given filter for use in do_search()
 *  
-* @return object PreparedStatementQuery
+* @return PreparedStatementQuery
 */
 function get_filter_sql($filterid)
     {
@@ -2174,7 +2193,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         {
         # Create a new keyword.
         debug("resolve_keyword: Creating new keyword for " . $keyword);
-        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,?,10)",array("s",$keyword,"s",soundex($keyword)));
+        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
         $return=sql_insert_id();
         }
     
@@ -2283,7 +2302,7 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
  */
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
-
+    $text = (string) $text;
     /*
     this function requires that needle array does not contain any of the following characters: "(" ")"
     */
@@ -2691,7 +2710,7 @@ function save_filter($filter,$filter_name,$filter_condition)
             {
             return false;    
             }
-        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"i",$filter));
+        ps_query("UPDATE filter SET name=?, filter_condition=? WHERE ref = ?",array("s",$filter_name,"s",$filter_condition,"i",$filter));
         }
     else
         {
@@ -2841,7 +2860,7 @@ function copy_filter($filter)
 */ 
 function update_search_from_request($search)
     {
-    global $config_separators;
+    global $config_separators,$resource_field_verbatim_keyword_regex;
     reset ($_POST);reset($_GET);
 
     foreach (array_merge($_GET, $_POST) as $key=>$value)
@@ -2898,7 +2917,16 @@ function update_search_from_request($search)
             else
                 {
                 # Standard field
-                $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                if(isset($resource_field_verbatim_keyword_regex[substr($key,6)]) 
+                    && preg_match($resource_field_verbatim_keyword_regex[substr($key,6)],str_replace('*', '', $value)))
+                    {
+                    $values =  explode(' ', mb_strtolower(trim_spaces(str_replace($config_separators, ' ', $value)), 'UTF-8'));
+                    }
+                else
+                    {
+                    $values=[$value];
+                    }
+
                 foreach ($values as $value)
                     {
                     # Standard field
@@ -2909,7 +2937,7 @@ function update_search_from_request($search)
         // Nodes can be searched directly when displayed on simple search bar
         // Note: intially they come grouped by field as we need to know whether if
         // there is a OR case involved (ie. @@101@@102)
-        else if('' != $value && substr($key, 0, 14) == 'nodes_searched')
+        else if('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
             {
             $node_ref = '';
 

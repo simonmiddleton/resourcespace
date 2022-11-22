@@ -1,7 +1,10 @@
 <?php
 include dirname(__FILE__)."/../../../include/db.php";
 
-include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("t") && !checkperm("cm")) {exit ("Permission denied.");}
+include dirname(__FILE__)."/../../../include/authenticate.php";
+
+$is_admin = checkperm("t");
+if (!$is_admin && !checkperm("cm")) {exit ("Permission denied.");}
 global $baseurl;
 
 $offset=getval("offset",0,true);
@@ -29,12 +32,13 @@ $url_params = array(
 );
 ?>
 <div class="BasicsBox"> 
+<h1><?php echo $lang["manageconsents"]; ?></h1>
 <?php
     $links_trail = array(
         array(
-            'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php",
-			'menu' =>  true
+            'title' => !$is_admin ? htmlspecialchars($lang["home"]) : htmlspecialchars($lang["teamcentre"]),
+            'href'  => $baseurl_short . (!$is_admin ? "pages/home.php" : "pages/team/team_home.php"),
+			'menu'  => !$is_admin ? false : true
         ),
         array(
             'title' => $lang["manageconsents"]
@@ -52,11 +56,11 @@ $sql="";
 $params = [];
 if ($findtext!="")
     {
-    $sql="where name   like '%?%'";
-    $params = ['s', $findtext];
+    $sql="where name like ?";
+    $params = ['s', "%$findtext%"];
 	}
 
-$consents= ps_query("select * from consent $sql order by ref", $params);
+$consents= ps_query("select ". columns_in('consent', null, 'consentmanager') ." from consent $sql order by ref", $params);
 
 # pager
 $per_page = $default_perpage_list;
@@ -104,8 +108,8 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
 			<td><?php echo ($consent["expires"]==""?$lang["no_expiry_date"]:nicedate($consent["expires"])) ?></td>
 		
 			<td><div class="ListTools">
-			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
-			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
+			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
 			</div></td>
 	</tr>
 	<?php

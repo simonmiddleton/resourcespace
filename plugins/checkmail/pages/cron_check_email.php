@@ -40,7 +40,7 @@ if (is_process_lock("checkmail"))
     $message = new ResourceSpaceUserNotification;        
     $message->set_text("Your IMAP account will not be checked until this is cleared (which automatically happens in ".(round($time_remaining/60))." minutes). An error may have caused this. Run the process manually with the -c switch to clear the lock and check for any errors.");
     $message->set_subject($applicationname."- Checkmail blocked by process lock");
-    $message->user_preference = "user_pref_system_management_notifications";
+    $message->user_preference = ["user_pref_system_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
     $message->url =  $baseurl . "/plugins/checkmail/pages/setup.php";
     send_user_notification($adminusers,$message);
     exit("Process lock is in place. Deferring\r\n");

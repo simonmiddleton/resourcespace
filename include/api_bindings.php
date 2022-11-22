@@ -65,7 +65,7 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
-    $getsizes = array_map('trim', $getsizes);
+
     $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
     
     if (!is_array($results))
@@ -119,7 +119,9 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
         {
-        $tmp_dld_fpath = temp_local_download_remote_file($url);
+        // Generate unique hash to use so that other uploads with the same name won't conflict
+        $upload_key = uniqid($ref . "_");
+        $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
         if($tmp_dld_fpath === false)
             {
             return "FAILED: Resource #{$ref} was created, but the file was not uploaded. Enable debug log and try again to identify why uploading it failed.";
@@ -134,7 +136,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
             }   
         else 
             {
-            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
+            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath,$upload_key);
             if ($return===false) {return false;}
             } 
         }
@@ -172,14 +174,10 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
-    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
-    
-    # check that $resource param is a positive integer and valid for int type db field
-    $options_resource = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
-    if (!filter_var($resource, FILTER_VALIDATE_INT, $options_resource))
-        {
-        return false;
-        }
+    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit, $userref;
+
+    // This user's template or real resources only
+    if ($resource<1 && $resource!=0-$userref) {return false;}
 
     $resourcedata=get_resource_data($resource,true);
     if (!$resourcedata)
@@ -219,7 +217,7 @@ function api_copy_resource($from,$resource_type=-1)
 
 function api_get_resource_log($resource, $fetchrows=-1)
     {
-    return get_resource_log($resource, $fetchrows);
+    return get_resource_log($resource, $fetchrows)["data"];
     }
     
 function api_update_resource_type($resource,$type)
@@ -410,7 +408,10 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
-    $tmp_dld_fpath = temp_local_download_remote_file($url);
+    // Generate unique hash to use so that other uploads with the same name won't conflict
+    $upload_key = uniqid((int)$ref . "_");
+    $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
+
     if($tmp_dld_fpath === false)
         {
         return "FAILED: The file for resource #{$ref} was not uploaded. Enable debug log and try again to identify why uploading it failed.";
@@ -424,7 +425,7 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
         }   
     else 
         {
-        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath);
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$tmp_dld_fpath,$upload_key);
         if ($return===false) {return false;}
         } 
 
@@ -621,7 +622,7 @@ function api_add_resource_nodes($resource,$nodestring)
         {return false;}        
     $resourcearr = explode(",",$resources);
     $nodes = explode(",",$nodestring);
-    return add_resource_nodes_multi($resourcearr,$nodes);
+    return add_resource_nodes_multi($resourcearr,$nodes,false,true);
     }
     
 function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0)
@@ -757,7 +758,7 @@ function api_get_resource_collections($ref)
     return $ref_collections;
     }
 
-function api_update_related_resource($ref,$related,$add=true)
+function api_update_related_resource($ref,$related,$add=true) 
     {
     global $enable_related_resources;
     if(!$enable_related_resources)
@@ -765,7 +766,10 @@ function api_update_related_resource($ref,$related,$add=true)
         return false;
         }
     $related = explode(",",$related);
-    return update_related_resource($ref,$related,$add);
+    $addboolean = null;
+    if ($add==="true") { $addboolean=true; }
+    elseif ($add==="false") { $addboolean=false; }
+    return update_related_resource($ref,$related,$addboolean);
     }
 
 function api_get_collections_resource_count(string $refs)
@@ -889,6 +893,7 @@ function api_reorder_featured_collections($refs)
     if(can_reorder_featured_collections())
         {
         sql_reorder_records('collection', $refs);
+        log_activity('via API - reorder_featured_collections', LOG_CODE_REORDERED, implode(', ', $refs), 'collection');
         return true;
         }
 
@@ -940,4 +945,19 @@ function api_save_tab($tab)
 
     http_response_code(403);
     return false;
+    }
+
+function api_mark_email_as_invalid($email)
+    {
+    if(!checkperm('a'))
+        {
+        return false;
+        }
+        
+    return mark_email_as_invalid($email);
+    }
+
+function api_get_user_message($ref)
+    {
+    return get_user_message($ref);
     }

@@ -31,7 +31,7 @@
 * @param boolean     $returnsql               Returns the query as a PreparedStatementQuery instance
 * @param integer     $access                  Search for resources with this access
 *
-* @return null|string|array
+* @return null|string|array|PreparedStatementQuery
 */
 function do_search(
     $search,
@@ -109,20 +109,20 @@ function do_search(
 
     $order = array(
         "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
-        "popularity"      => "user_rating $sort,total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
-        "rating"          => "r.rating $sort, user_rating $sort, score $sort,r.ref $sort",
-        "date"            => $order_by_date,
-        "colour"          => "has_image $sort,image_blue $sort,image_green $sort,image_red $sort {$order_by_date_sql_comma} r.ref $sort",
-        "country"         => "country $sort,r.ref $sort",
-        "title"           => "title $sort,r.ref $sort",
-        "file_path"       => "file_path $sort,r.ref $sort",
+        "popularity"      => "user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "rating"          => "r.rating $sort, user_rating $sort, score $sort, r.ref $sort",
+        "date"            => "$order_by_date, r.ref $sort",
+        "colour"          => "has_image $sort, image_blue $sort, image_green $sort, image_red $sort {$order_by_date_sql_comma} r.ref $sort",
+        "country"         => "country $sort, r.ref $sort",
+        "title"           => "title $sort, r.ref $sort",
+        "file_path"       => "file_path $sort, r.ref $sort",
         "resourceid"      => "r.ref $sort",
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
-        "extension"       => "file_extension $sort",
-        "titleandcountry" => "title $sort,country $sort",
+        "extension"       => "file_extension $sort, r.ref $sort",
+        "titleandcountry" => "title $sort, country $sort, r.ref $sort",
         "random"          => "RAND()",
-        "status"          => "archive $sort",
-        "modified"        => "modified $sort"
+        "status"          => "archive $sort, r.ref $sort",
+        "modified"        => "modified $sort, r.ref $sort"
     );
 
     // Add collection sort option only if searching a collection
@@ -179,6 +179,7 @@ function do_search(
 
     $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
+    $searchidmatch = false;
     // Used to check if ok to skip keyword due to a match with resource type/resource ID
     if(is_int_loose($search))
         {
@@ -449,12 +450,13 @@ function do_search(
                             if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
                                 {
                                 // Find where the searched value is between the range values
-                                $sql_join->sql .=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field='" . $datefield . "' AND drn" . $c . "s.name >= ? JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field='" . $datefield . "' AND DATE(drn" . $c . "e.name) <= ?";
-                                array_push($sql_join->parameters,"s",$val,"s",$val);
+                                $sql_join->sql .=" JOIN resource_node drrn" . $c . "s ON drrn" . $c . "s.resource=r.ref JOIN node drn" . $c . "s ON drn" . $c . "s.ref=drrn" . $c . "s.node AND drn" . $c . "s.resource_type_field = ? AND drn" . $c . "s.name >= ? JOIN resource_node drrn" . $c . "e ON drrn" . $c . "e.resource=r.ref JOIN node drn" . $c . "e ON drn" . $c . "e.ref=drrn" . $c . "e.node AND drn" . $c . "e.resource_type_field = ? AND DATE(drn" . $c . "e.name) <= ?";
+                                array_push($sql_join->parameters,"i",$datefield,"i",$datefield,"s",$val,"s",$val);
                                 }
                             else
                                 {
-                                $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field='" . $datefield . "'";
+                                $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field = ?";
+                                array_push($sql_join->parameters,"i",$datefield);
                                 
                                 $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "dn" . $c . ".name like ?";
                                 array_push($sql_filter->parameters,"s",$val . "%");
@@ -470,8 +472,9 @@ function do_search(
                             if(!isset($datefieldjoin))
                                 {
                                 // We only want to join once to the date_field
-                                $sql_join->sql .=" JOIN resource_node rdnf" . $c . " ON rdnf" . $c . ".resource=r.ref JOIN node rdn" . $c . " ON rdnf" . $c  . ".node=rdn" . $c . ".ref AND rdn" . $c . ".resource_type_field='" . $date_field . "'";
+                                $sql_join->sql .=" JOIN resource_node rdnf" . $c . " ON rdnf" . $c . ".resource=r.ref JOIN node rdn" . $c . " ON rdnf" . $c  . ".node=rdn" . $c . ".ref AND rdn" . $c . ".resource_type_field = ?";
                                 $datefieldjoin = $c;
+                                array_push($sql_join->parameters,"i",$date_field);
                                 }
 
                             if('basicday' == $kw[0])
@@ -493,37 +496,11 @@ function do_search(
                                 $c++;
                                 }
                             }
-                        elseif ($kw[0]=="startdate")
-                            {
-                            if ($sql_filter->sql != "")
-                                {
-                                $sql_filter->sql.=" AND ";
-                                }
-                            //$sql_filter->sql.="r.field$date_field >= '" . $keystring . "' ";
-                            $sql_filter->sql.= ($sql_filter->sql !="" ? " AND " : "") . "rdfn" . $c . ".name >= ? ";
-                            array_push($sql_filter->parameters,"s",$keystring);
-
-                            $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?";
-                            array_push($sql_join->parameters,"s",$datefield);
-                            }
-                        elseif ($kw[0]=="enddate")
-                            {
-                            if ($sql_filter->sql!="")
-                                {
-                                $sql_filter->sql.=" AND ";
-                                }
-                            $sql_filter->sql.= ($sql_filter->sql != "" ? " AND " : "") . "rdfn" . $c . ".value <= ? ";
-                            array_push($sql_filter->parameters,"s",$keystring . " 23:59:59");
-
-                            $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?";
-                            array_push($sql_join->parameters,"s",$datefield);
-                            }
-                            # Additional date range filtering
+                        # Additional date range filtering
                         elseif (count($datefieldinfo) && substr($keystring,0,5)=="range")
                             {
                             $c++;
                             $rangefield=$datefieldinfo[0]["ref"];
-                            $daterange=false;
                             $rangestring=substr($keystring,5);
                             if (strpos($rangestring,"start")!==FALSE )
                                 {
@@ -688,7 +665,7 @@ function do_search(
 
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . $wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
+                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . (int)$wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
@@ -808,8 +785,16 @@ function do_search(
                                 $related = array_merge($related, $wildcards);
                                 if (count($related) > 0)
                                     {
-                                    $relatedsql->sql = " OR nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
+                                    $relatedsql->sql = " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
                                     $relatedsql->parameters = ps_param_fill($related,"i");
+
+                                    if ($field_short_name_specified && isset($fieldinfo['ref']))
+                                        {
+                                        $relatedsql->sql .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE resource_type_field = ? )";
+                                        $relatedsql->parameters[] = "i";
+                                        $relatedsql->parameters[] = $fieldinfo['ref'];
+                                        }
+                                    $relatedsql->sql .= ")";
                                     }
 
                                 # Form join
@@ -918,7 +903,7 @@ function do_search(
                                                          WHERE rn[union_index].node IN
                                                                (SELECT node
                                                                   FROM `node_keyword` nk[union_index]
-                                                                 WHERE (nk[union_index].keyword = ? " . $relatedsql->sql .  $union_restriction_clause->sql . ")" .
+                                                                 WHERE ((nk[union_index].keyword = ? " . $relatedsql->sql .") ".  $union_restriction_clause->sql . ")" .
                                                                  ($alternative_keywords_sql->sql != "" ? ($alternative_keywords_sql->sql . $union_restriction_clause->sql) : "" ) .
                                                     ") GROUP BY resource " .
                                                        ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "") ;
@@ -1040,27 +1025,30 @@ function do_search(
                         } // End of if keyword not excluded (not in $noadd array)
                     } // End of each keyword in quoted string
 
-                if($omit)# Exclude matching resources from query (omit feature)
+                if(trim($fixedunioncondition->sql) != "")
                     {
-                    if ($sql_filter->sql != "")
+                    if($omit)# Exclude matching resources from query (omit feature)
                         {
-                        $sql_filter->sql .= " AND ";
+                        if ($sql_filter->sql != "")
+                            {
+                            $sql_filter->sql .= " AND ";
+                            }
+
+                        $sql_filter->sql .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+
+
+                        $sql_filter->parameters = array_merge($sql_filter->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
                         }
-
-                    $sql_filter->sql .= str_replace("[bit_or_condition]",""," r.ref NOT IN (SELECT resource FROM (" . $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
-
-
-                    $sql_filter->parameters = array_merge($sql_filter->parameters,$fixedunion->parameters,$fixedunioncondition->parameters);
-                    }
-                elseif (is_a($fixedunion,"PreparedStatementQuery"))
-                    {
-                    $addunion = new PreparedStatementQuery();
-                    $addunion->sql = $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . " GROUP BY resource ";
-                    $addunion->parameters = array_merge($fixedunion->parameters,$fixedunioncondition->parameters);
-                    $sql_keyword_union[] = $addunion;
-                    $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
-                    $sql_keyword_union_or[]=FALSE;
-                    $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                    elseif (is_a($fixedunion,"PreparedStatementQuery"))
+                        {
+                        $addunion = new PreparedStatementQuery();
+                        $addunion->sql = $fixedunion->sql . " WHERE " . $fixedunioncondition->sql . " GROUP BY resource ";
+                        $addunion->parameters = array_merge($fixedunion->parameters,$fixedunioncondition->parameters);
+                        $sql_keyword_union[] = $addunion;
+                        $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
+                        $sql_keyword_union_or[]=FALSE;
+                        $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                        }
                     }
                 $c++;
                 }
@@ -1420,8 +1408,7 @@ function do_search(
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
 
-
-   $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
+    $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
     if ($special_results!==false)
         {
         return $special_results;
@@ -1462,7 +1449,7 @@ function do_search(
 
     # Compile final SQL
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . ($fetchrows > -1 ? " LIMIT " . $fetchrows : "") . $sql_suffix;
+    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
     $results_sql->parameters = array_merge($t->parameters,$t2->parameters,$sql->parameters);
 
     # Debug
@@ -1480,8 +1467,16 @@ function do_search(
             {
             return $results_sql;
             }
-        $result=ps_query($results_sql->sql,$results_sql->parameters,false,$fetchrows,true,2,true,array('ref'));
+        $count_sql = clone($results_sql);
+        $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
+        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,$count_sql);
+        $resultcount = $result["total"]  ?? 0;
+        if ($resultcount>0 & count($result["data"]) > 0)
+            {
+            $result = array_map(function($val){return(["ref"=>$val["ref"]]);}, $result["data"]);
+            }
         $mysql_verbatim_queries=$mysql_vq;
+        return $result;
         }
     else
         {
@@ -1490,14 +1485,26 @@ function do_search(
             {
             return $results_sql;
             }
-        $result=ps_query($results_sql->sql,$results_sql->parameters,false,$fetchrows);
+        $count_sql = clone($results_sql);
+        $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
+        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,$count_sql);
         }
-
-    debug("Search found " . count($result) . " results");
-    if (count($result)>0)
+    $resultcount = $result["total"]  ?? 0;
+    if ($resultcount>0 & count($result["data"]) > 0)
         {
+        $result = $result['data'];
+        $diff = $resultcount - count($result);
+        while($diff > 0)
+            {
+            $result = array_merge($result, array_fill(0,($diff<1000000?$diff:1000000),0));
+            $diff-=1000000;
+            }
         hook("beforereturnresults","",array($result, $archive));
         return $result;
+        }
+    else
+        {
+        $result =[];
         }
 
     hook('zero_search_results');

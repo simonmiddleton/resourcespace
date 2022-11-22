@@ -14,7 +14,7 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
     $key=end($s);
     }
 
-    if ($key!=substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
+    if ($key !== substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
 
     global $resourceconnect_user; # Which user to use for remote access?
     $user_select_sql = new PreparedStatementQuery();
@@ -142,7 +142,7 @@ function HookResourceConnectAllGenerate_collection_access_key($collection,$k,$us
     $c=ps_value("select count(*) value from collection_resource where collection=?",array("i",$collection), 0);
     if ($c>0) {return false;} # Contains resources, key already present
     
-    $sql="insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,?,?,?,?,?,now(),?)";
+    $sql="insert into external_access_keys(resource,access_key,collection,user,request_feedback,email,date,access,expires) values (-1,?,?,?,?,?,now(),?,";
     $params=array("s",$k,"i",$collection,"i",$userref,"i",$feedback,"s",$email,"i",$access);
 
     if ($expires=="") 

@@ -129,12 +129,13 @@ if (isset($saveerror))
 ?>
 		
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_workflow_action_edit_action"]; ?></h1>
 <?php
 $links_trail = array(
     array(
-        'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+        'menu' =>  true
     ),
     array(
         'title' => $lang["rse_workflow_manage_workflow"],

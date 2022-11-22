@@ -154,7 +154,7 @@ if($upload_then_edit && $resource_type_force_selection && getval('posting', '') 
 // This will be the resource type used for the upload, but may be changed later when extension is known
 // Resource types that can't be added to collections must be avoided for edit then upload mode to display the edit page for metadata entry.
 $all_resource_types = get_resource_types();
-if($resource_type == "")
+if($resource_type == "" && !$resource_type_force_selection)
 	{
 	foreach($all_resource_types as $restype)
 		{
@@ -649,17 +649,17 @@ if ($processupload)
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
                         $resource_detail = ps_query ("
-                            SELECT r.ref, r.file_extension, n.value
+                            SELECT r.ref, r.file_extension, n.name
                               FROM resource r
                          LEFT JOIN resource_node rn ON rn.resource=r.ref 
-                         LEFT JOIN node n ON N.ref=rn.node 
+                         LEFT JOIN node n ON n.ref=rn.node 
                              WHERE n.resource_type_field = ? AND r.ref= ?",
                                 ["i",$view_title_field,"i",$ref]);
 
                         $new_auto_generated_title = str_replace(
                             array('%title', '%resource', '%extension'),
                             array(
-                                $resource_detail[0]['value'],
+                                $resource_detail[0]['name'],
                                 $resource_detail[0]['ref'],
                                 $resource_detail[0]['file_extension']
                             ),
@@ -736,8 +736,18 @@ if ($processupload)
                 {
                 $conditions = array();
                 $batch_replace_min = max((int)($batch_replace_min),$fstemplate_alt_threshold);
-                $firstref = max($fstemplate_alt_threshold, $batch_replace_min);                                
-                $replace_resources = ps_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",array("i",$batch_replace_min,"i",$batch_replace_max,"i",$batch_replace_max),0);
+                $firstref = max($fstemplate_alt_threshold, $batch_replace_min);
+
+                $sql = "SELECT ref value FROM resource WHERE ref >= ? ";
+                $sql_params = array("i",$batch_replace_min);
+                if ($batch_replace_max > 0)
+                    {
+                    $sql .= " AND ref <= ?";
+                    $sql_params = array_merge($sql_params,["i",$batch_replace_max]);
+                    }
+                $sql .= " ORDER BY ref ASC";
+
+                $replace_resources = ps_array($sql,$sql_params,0);
                 debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
                 }
             else
@@ -993,6 +1003,27 @@ jQuery(document).ready(function () {
             },
 
         onBeforeUpload: (files) => {
+            res_type_field = document.getElementById("resourcetype");
+            res_type = "";
+            if (typeof(res_type_field) !== 'undefined' && res_type_field != null)
+                {
+                    res_type = res_type_field.value;
+                }
+
+            <?php
+            if ($resource_type_force_selection && $upload_then_edit && $replace_resource == "" && $replace == "" && $alternative == "")
+                {
+                // Only check resource type is set on upload with $resource_type_force_selection true and upload then edit mode.
+                ?>
+                if (res_type == "")
+                    {
+                    styledalert("<?php echo $lang["error"]?>", "<?php echo $lang["requiredfield_resource_type"]?>", 450);
+                    return false;
+                    }
+                <?php
+                }
+            ?>
+
             processafter = []; // Array of alternative files to process after primary files
             // Check if a new collection is required
             if(newcol == '' || newcol == 0)
@@ -1092,7 +1123,7 @@ jQuery(document).ready(function () {
         retryDelays: [0, 1000, 3000, 5000],
         withCredentials: true,
         overridePatchMethod: true,
-        limit: <?php echo ($cachestore == "apcu") ? "5" : "2"; ?>,
+        limit: <?php echo $upload_concurrent_limit; ?>,
         removeFingerprintOnSuccess: true,
         <?php
         if(trim($upload_chunk_size) != "")
@@ -1108,7 +1139,6 @@ jQuery(document).ready(function () {
         if(uploadProgress >= count)
             {
             console.debug("Processing uploaded resources");
-            CentralSpaceShowProcessing();
             pageScrolltop(scrolltopElementCentral);
             }
         });
@@ -1215,7 +1245,7 @@ function processFile(file, forcepost)
         };
     
     forceprocess = typeof forcepost != "undefined";
-
+ 
     <?php
     // == EXTRA DATA SECTION - Add any extra data to send after upload required here ==
 
@@ -1238,22 +1268,7 @@ function processFile(file, forcepost)
                 console.debug("Added " + file.name + " to process after array");
                 if(processafter.length == count)
                     {
-                    if(newcol > 0)
-                        {
-                        api('do_search', {'search' : '!collection' + newcol}, function(response){
-                            if(response.length > 0)
-                                {
-                                response.forEach(function(resource){  
-                                    {
-                                    resource_filename = resource['field<?php echo htmlspecialchars($filename_field)?>']
-                                    resource_ids_for_alternatives[resource['ref']] = resource_filename.substr(0, resource_filename.lastIndexOf('.' + resource['file_extension']));;
-                                    }
-                                })
-                                }
-                            //No non alt files uploaded so we can now process the alt files.
-                            jQuery('#CentralSpace').trigger("ProcessedMain");
-                        });
-                        }              
+                    jQuery('#CentralSpace').trigger('ProcessedMain');
                     }
                 return false;
                 }
@@ -1273,7 +1288,7 @@ function processFile(file, forcepost)
                     processerrors.push(filename);
                     jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
-                    return postUploadActions(); 
+                    return false; 
                     }
                 }
             }
@@ -1300,6 +1315,12 @@ function processFile(file, forcepost)
     if(typeof newcol !== 'undefined' && newcol != '' && newcol != 0)
         {
         postdata['collection_add'] = newcol;
+        }
+
+    // EXTRA DATA: New resource type information
+    if(res_type != "")
+        {
+        postdata['resource_type'] = res_type;
         }
     
     // EXTRA DATA: no_exif whilst avoiding overwriting it if the element does not exist
@@ -1450,6 +1471,11 @@ jQuery('#CentralSpace').on("ProcessedMain",function(){
             processFile(file,true);
             }
         });
+    if(upRedirBlock == true)
+        {
+        console.log('failed to upload ' + count + ' resources');
+        postUploadActions();
+        }
     });
 
 function base64encode(str) {
@@ -1465,14 +1491,14 @@ function postUploadActions()
         {
         // Trigger event to begin processing the alternative files
         console.debug("Processed primary files, triggering upload of alternatives");
-        jQuery('#CentralSpace').trigger("ProcessedMain");
         process_alts=false;
+        jQuery('#CentralSpace').trigger("ProcessedMain");
         return;
         }
     else if(rscompleted.length + processerrors.length < count)
         {
         // More to do, update collection bar
-        <?php if ($usercollection==$collection_add)
+        <?php if (isset($usercollection) && $usercollection==$collection_add)
             { 
             // Update collection div if uploading to active collection
             ?>
@@ -1499,11 +1525,7 @@ function postUploadActions()
             }, 2000);
         return;
         }
-    
-    rscompleted = [];
-    processerrors = [];
-
-    CentralSpaceHideProcessing();
+    CentralSpaceShowProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
@@ -1626,6 +1648,9 @@ function postUploadActions()
                 }
             });
         }
+    CentralSpaceHideProcessing();
+    rscompleted = [];
+    processerrors = [];
     }
 </script>
 <div class="BasicsBox" >
@@ -1671,7 +1696,7 @@ if ($alternative!="")
         }
     if ($alternative_file_resource_title)
         { 
-        echo "<h2>" . htmlspecialchars($resource['field'.$view_title_field]) . "</h2><br/>";
+        echo "<h2>" . htmlspecialchars((string) $resource['field'.$view_title_field]) . "</h2><br/>";
         }
     }
 
@@ -1743,7 +1768,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <h2 class="CollapsibleSectionHead collapsed" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
+    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php

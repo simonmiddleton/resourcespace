@@ -1,8 +1,6 @@
 <?php
 command_line_only();
 
-
-// @todo use the dirname level argument once PHP 7.0 is supported
 $webroot = dirname(dirname(__DIR__));
 include_once("{$webroot}/include/image_processing.php");
 
@@ -12,7 +10,6 @@ if(get_utility_path("exiftool") === false)
     echo 'ExifTool not installed - ';
     return true;
     }
-
 
 // Set up
 $exiftool_write                = true;
@@ -59,7 +56,6 @@ update_field($resource, 10, $credit);
 $camera_make = "New Camera make +";
 update_field($resource, 52, $camera_make);
 
-
 $tmpfile = write_metadata($resource_path, $resource);
 if(false === $tmpfile || !file_exists($tmpfile))
     {
@@ -105,8 +101,6 @@ if(
     teardown_002000($tmpfile);
     return false;
     }
-
-
 
 // Teardown
 teardown_002000($tmpfile);

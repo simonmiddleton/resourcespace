@@ -215,6 +215,7 @@ include "../../include/header.php";
 ?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform" class="FormWide">
     <?php generateFormToken("mainform"); ?>
     <div class="BasicsBox">
+    <h1><?php echo $lang["page-title_user_group_management_edit"]; ?></h1>
     <?php
         $links_trail = array(
             array(
@@ -352,13 +353,13 @@ include "../../include/header.php";
         </div>
         <div class="Question">
             <label for="download_limit"><?php echo $lang["group_download_limit_title"]; ?></label>
-            <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars($record['download_limit']); ?>">
+            <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars((string)$record['download_limit']); ?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label for="download_log_days"><?php echo $lang["group_download_limit_period"]; ?></label>
-            <input name="download_log_days" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars($record['download_log_days']); ?>">
+            <input name="download_log_days" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars((string)$record['download_log_days']); ?>">
             <div class="clearerleft"></div>
         </div>
 

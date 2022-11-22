@@ -1,6 +1,15 @@
 <?php
 include "../include/db.php";
+$k = getval("k", "");
+if($k=="" || !check_access_key(getval("ref", ""), $k))
+    {
+    include_once "../include/authenticate.php";
+    }
 
+if(!checkperm('q'))
+    {
+    exit($lang["error-permissiondenied"]);
+    }
 
 $k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once "../include/authenticate.php";}
 
@@ -77,7 +86,6 @@ if (getval("save","")!="" && enforcePostRequest(false))
         }
 	else if ($k!="" || $user_is_anon || $userrequestmode==0)
         {
-        # Request mode 0 : Simply e-mail the request.
         if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
             {
             $result=false; # Required fields not completed.
@@ -114,7 +122,6 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	}
 include "../include/header.php";
 ?>
-
 <div class="BasicsBox">
 	<p>
 		<a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo urlencode($k); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?></a>
@@ -238,7 +245,6 @@ if($use_antispam)
 
 hook("resource_request_form_bottom");
 ?>
-
 	<div class="QuestionSubmit">
 	<label for="buttons"> </label>			
 	<input name="save" value="true" type="hidden" />
@@ -246,9 +252,6 @@ hook("resource_request_form_bottom");
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
 	</div>
 	</form>
-	
 </div>
-
 <?php
 include "../include/footer.php";
-?>

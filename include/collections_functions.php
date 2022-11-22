@@ -56,7 +56,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
             }
         }
 
-    $validtypes = [COLLECTION_TYPE_STANDARD,COLLECTION_TYPE_PUBLIC];
+    $validtypes = [COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_REQUEST];
     if($themes_in_my_collections)
         {
         $validtypes[] = COLLECTION_TYPE_FEATURED;
@@ -221,28 +221,9 @@ function get_collection($ref, $usecache = false)
         return $GLOBALS['get_collection_cache'][$ref];
         }
 
-    $columns = "c.ref,
-        c.type,
-        c.name,
-        c.parent,
-        c.user,
-        c.keywords,
-        c.public,
-        c.created,
-        c.allow_changes,
-        c.cant_delete,
-        c.home_page_publish,
-        c.home_page_text,
-        c.home_page_image,
-        c.savedsearch,
-        c.session_id,
-        c.description,
-        c.thumbnail_selection_method,
-        c.bg_img_resource_ref,
-        u.fullname,
-        u.username";
+    $columns = ", u.fullname, u.username";
         
-    $return = ps_query("SELECT " . $columns . " FROM collection c LEFT OUTER JOIN user u ON u.ref = c.user WHERE c.ref = ?",array("i",$ref));
+    $return = ps_query("SELECT ". columns_in('collection', 'c') . $columns ." FROM collection c LEFT OUTER JOIN user u ON u.ref = c.user WHERE c.ref = ?",array("i",$ref));
 
     if (count($return)==0)
         {
@@ -419,7 +400,7 @@ function add_resource_to_collection(
             {
             $branch_category_ids = array_column(
                 // determine the branch from the parent because the keys for the collection in question will be done below
-                get_featured_collection_category_branch_by_leaf($collection_data['parent'], []),
+                get_featured_collection_category_branch_by_leaf((int)$collection_data['parent'], []),
                 'ref'
             );
             foreach($branch_category_ids as $fc_category_id)
@@ -888,7 +869,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
     $sql = "INSERT INTO collection
             (" . implode(",",$insert_columns) . ", created)
             VALUES
-            (". ps_param_insert(count($setcolumns)) .",NOW())";
+            (". ps_param_insert(count($insert_values)) .",NOW())";
     
     ps_query($sql, ps_param_fill($insert_values, 's'));
 
@@ -1001,29 +982,36 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
     $order_by = (in_array($order_by, $valid_order_bys) ? $order_by : "name");
 
-    # Keywords searching?
-    $keywords=split_keywords($search);
+    if (strpos($search,"collectiontitle:") !== false)
+        {
+        // This includes a specific title search from the advanced search page.
+        // Force quotes around any collectiontitle: search to support old behaviour        
+        $searchstart = mb_substr($search,0,strpos($search,"collectiontitle:"));
+        $searchend = mb_substr($search,strpos($search,"collectiontitle:")+16);
+        if(strpos($searchend,":") != false)
+            {
+            // Remove any other parts of the search with xxxxx: prefix that relate to other search aspects
+            $searchend=explode(":",$searchend)[0];
+            $searchparts=explode(" ",$searchend);
+            if(count($searchparts) > 1)
+                {
+                array_pop($searchparts);
+                }
+            $searchend = implode(" ",$searchparts);
+            if(substr($searchend,-1,1) == ",")
+                {
+                $searchend = substr($searchend,0,-1);
+                }
+            }
+        $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+        }
+
+    $keywords=split_keywords($search,false,false,false,false,true);
     if (strlen($search)==1 && !is_numeric($search)) 
         {
         # A-Z search
         $sql = "AND c.name LIKE ?";
         $sql_params[] = "s";$sql_params[] = $search . "%";
-        }
-    elseif (substr($search,0,16)=="collectiontitle:")
-        {
-        # A-Z specific title search
-        $newsearch="";
-        for ($n=0;$n<count($keywords);$n++)
-            {
-            if (substr($keywords[$n],0,16)=="collectiontitle:")
-                {
-                $newsearch.=" ".substr($keywords[$n],16);    // wildcard * - %
-                }
-            }
-
-        $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
-        $sql = "AND c.name LIKE ?";
-        $sql_params[] = "s";$sql_params[] = $newsearch;
         }
     if (strlen($search)>1 || is_numeric($search))
         {
@@ -1032,52 +1020,70 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         $unionselect = "SELECT kunion.collection";
         for ($n=0;$n<count($keywords);$n++)
             {
-            if (substr($keywords[$n],0,16)!="collectiontitle:")
+            if(substr($keywords[$n],0,1)=="\"" && substr($keywords[$n],-1,1)=="\"")
                 {
-                if (substr($keywords[$n],0,16)=="collectionowner:")
+                $keywords[$n] = substr($keywords[$n],1,-1);
+                }
+
+            if (substr($keywords[$n],0,16)=="collectiontitle:")
+                {
+                $newsearch = explode(":",$keywords[$n])[1];
+                $newsearch = strpos($newsearch,'*')===false ? '%' . trim($newsearch) . '%' : str_replace('*', '%', trim($newsearch));
+                $sql = "AND c.name LIKE ?";
+                $sql_params[] = "s";$sql_params[] = $newsearch;
+                }
+            elseif (substr($keywords[$n],0,16)=="collectionowner:")
+                {
+                $keywords[$n]=substr($keywords[$n],16);
+                $keyref=$keywords[$n];
+                $sql.=" AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
+                $sql_params[] = "i";$sql_params[] = $keyref;
+                $sql_params[] = "i";$sql_params[] = $keyref;
+                }
+            elseif (substr($keywords[$n],0,19)=="collectionownerref:")
+                {
+                $keywords[$n]=substr($keywords[$n],19);
+                $keyref=$keywords[$n];
+                $sql.=" AND (c.user=?)";
+                $sql_params[] = "i";$sql_params[] = $keyref;
+                }
+            elseif (substr($keywords[$n],0,10)=="basicyear:" || substr($keywords[$n],0,11)=="basicmonth:")
+                {
+                $dateparts=explode(":",$keywords[$n]);
+                $yearpart = $dateparts[0] == "basicyear" ? $dateparts[1] :  "____";
+                $monthpart = $dateparts[0] == "basicmonth" ?  $dateparts[1] : "__";
+                $sql .= " AND c.created LIKE ?";
+                $sql_params[] = "s";$sql_params[] = $yearpart . "-" . $monthpart . "%";
+                }
+            else
+                {
+                if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
+                # Support field specific matching - discard the field identifier as not appropriate for collection searches.
+                if (strpos($keywords[$n],":")!==false)
                     {
-                    $keywords[$n]=substr($keywords[$n],16);
-                    $keyref=$keywords[$n];
-                    $sql.=" AND (u.username RLIKE ? OR u.fullname RLIKE ?)";
-                    $sql_params[] = "i";$sql_params[] = $keyref;
-                    $sql_params[] = "i";$sql_params[] = $keyref;
+                    $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
                     }
-                elseif (substr($keywords[$n],0,19)=="collectionownerref:")
+                $keyref=resolve_keyword($keywords[$n],false);
+                if ($keyref!==false)
                     {
-                    $keywords[$n]=substr($keywords[$n],19);
-                    $keyref=$keywords[$n];
-                    $sql.=" AND (c.user=?)";
-                    $sql_params[] = "i";$sql_params[] = $keyref;
-                    }
-                else
-                    {
-                    if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
-                    # Support field specific matching - discard the field identifier as not appropriate for collection searches.
-                    if (strpos($keywords[$n],":")!==false)
-                        {
-                        $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
-                        }
-                    $keyref=resolve_keyword($keywords[$n],false);
-                    if ($keyref!==false)
-                        {
-                        $keyrefs[]=$keyref;
-                        }
+                    $keyrefs[]=$keyref;
                     }
                 }
             }
+
         for($n=0;$n<count($keyrefs);$n++)
             {
-            $select_extra .= ", k.key" . $keyrefs[$n];
-            $unionselect .= ", BIT_OR(key" . $keyrefs[$n] . "_found) AS key" . $keyrefs[$n];
+            $select_extra .= ", k.key" . $n;
+            $unionselect .= ", BIT_OR(key" . $n . "_found) AS key" .$n;
             $unionsql = "SELECT collection ";
             for($l=0;$l<count($keyrefs);$l++)
                 {
-                $unionsql .= $keyrefs[$l] == $keyrefs[$n] ? ",TRUE" : ",FALSE";
-                $unionsql .= " AS key" . $keyrefs[$l] . "_found";
+                $unionsql .= $l == $n ? ",TRUE" : ",FALSE";
+                $unionsql .= " AS key" . $l . "_found";
                 }
             $unionsql .= " FROM collection_keyword WHERE keyword=" . $keyrefs[$n];
             $keyunions[] = $unionsql;
-            $sql .= " AND key" .  $keyrefs[$n];
+            $sql .= " AND key" .  $n;
             }
         if(count($keyunions)> 0)
             {
@@ -1579,16 +1585,22 @@ function save_collection($ref, $coldata=array())
 	index_collection($ref);
 
     # If 'users' is specified (i.e. access is private) then rebuild users list
-	if (isset($coldata["users"]))
+    if (isset($coldata["users"]))
         {
         $old_attached_users=ps_array("SELECT user value FROM user_collection WHERE collection=?",array("i",$ref));
         $new_attached_users=array();
-        $collection_owner=ps_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
-        if($collection_owner=='')
-            {
-            $collection_owner=ps_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=?",array("i",$ref),"");
-            }
+        $collection_owner_ref=ps_value(
+            "SELECT u.ref value FROM collection c LEFT JOIN user u ON c.user=u.ref WHERE c.ref=?",
+            array("i",$ref),
+            "");
+        global $userref;
+        $collection_owner=get_user(($collection_owner_ref == ''?$userref:$collection_owner_ref));
         
+        if($collection_owner_ref != "")
+            {
+            $old_attached_users[]=$collection_owner["ref"]; # Collection Owner is implied as attached already
+            }
+
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
         if ($attach_user_smart_groups)
@@ -1600,7 +1612,7 @@ function save_collection($ref, $coldata=array())
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
-        $urefs=ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
+        $urefs = ps_array("select ref value from user where username in (" . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
         if (count($urefs)>0)
             {
             $params = [];
@@ -1620,7 +1632,10 @@ function save_collection($ref, $coldata=array())
         
         # log the removal of users / smart groups
         $was_shared_with = array();
-        $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
+        if (count($old_attached_users) > 0)
+            {
+            $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
+            }
         if (count($old_attached_groups) > 0)
             {
             foreach($old_attached_groups as $old_group)
@@ -1671,7 +1686,13 @@ function save_collection($ref, $coldata=array())
             global $baseurl, $lang;
 
             $new_attached_users=array_unique($new_attached_users);
-            message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getval("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
+            $message_text = str_replace(
+                    array('%user%', '%colname%'),
+                    array($collection_owner["fullname"]??$collection_owner["username"],getval("name","")),
+                    $lang['collectionprivate_attachedusermessage']
+            );
+            $message_url = $baseurl . "/?c=" . $ref;
+            message_add($new_attached_users,$message_text,$message_url);
             }
         }
 
@@ -1736,7 +1757,9 @@ function save_collection($ref, $coldata=array())
             array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent_is_bp)
         );
         usort($fcs_after_update, 'order_featured_collections');
-        sql_reorder_records('collection', array_column($fcs_after_update, 'ref'));
+        $new_fc_level_order = array_column($fcs_after_update, 'ref');
+        sql_reorder_records('collection', $new_fc_level_order);
+        log_activity("via save_collection({$ref})", LOG_CODE_REORDERED, implode(', ', $new_fc_level_order), 'collection');
         }
 
     // When a collection is now saved as a Featured Collection (must have resources) under an existing branch, apply all 
@@ -1994,10 +2017,10 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
     $emails=$emails_keys['emails'];
     $key_required=$emails_keys['key_required'];
-    $internal_user_ids = $emails_keys['refs'];
+    $internal_user_ids = $emails_keys['refs'] ?? array();
 
     # Add the collection(s) to the user's My Collections page
-    $urefs=ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")",ps_param_fill($ulist,"i"));
+    $urefs = ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
     if (count($urefs)>0)
         {
         # Delete any existing collection entries
@@ -2023,7 +2046,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 
                 #log this
-                collection_log($reflist[$nx1],LOG_CODE_COLLECTION_SHARED_COLLECTION,0, ps_value ("select username as value from user where ref = ?",array($urefs[$nx2]), ""));
+                collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $urefs[$nx2]), ""));
                 }
             }
         }
@@ -2217,6 +2240,10 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
             $emailsubject = $notifymessage->get_subject();
             send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
             }
+        else
+            {
+            $template = ($themeshare) ? "emailtheme" : "emailcollection";
+            }
         $viewlinktext=$origviewlinktext;
         }
 
@@ -2227,6 +2254,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         $notifymessage->append_text($internalmessage);
         $notifymessage->append_text("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
         $notifymessage->append_text($viewlinktext);
+        $notifymessage->url = $url; 
         send_user_notification($internal_user_ids,$notifymessage);
         }
 
@@ -2234,8 +2262,8 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     # Return an empty string (all OK).
     return "";
     }
-
-
+    
+    
 
 /**
  * Generate an external access key to allow external people to view the resources in this collection.
@@ -2303,7 +2331,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
                 }
             else
                 {
-                $sql .= '?, ';
+                $sql = '?, ';
                 $params[] = 's'; $params[] = $expires;
                 }
             if(!($sharepwd != "" && $sharepwd != "(unchanged)"))
@@ -2312,7 +2340,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
                 }
             else
                 {
-                $sql = '?';
+                $sql .= '?';
                 $params[] = 's'; $params[] = hash("sha256", $k . $sharepwd . $scramble_key);
                 }
             ps_query("INSERT INTO external_access_keys(resource, access_key, collection, `user`, usergroup, request_feedback, email, `date`, access, expires, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, {$sql})",
@@ -2349,11 +2377,11 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
             }
         if(!($sharepwd != "" && $sharepwd != "(unchanged)"))
             {
-            $sql = 'NULL';
+            $sql .= 'NULL';
             }
         else
             {
-            $sql = '?';
+            $sql .= '?';
             $params[] = 's'; $params[] = hash("sha256", $k . $sharepwd . $scramble_key);
             }
         // add for FC category. No resource. This is a dummy record so we can have a way to edit the external share done 
@@ -2481,7 +2509,7 @@ function get_search_title($searchstring)
             }
         $search_title.=" [".implode(', ',$typenames)."]";
         }
-    $title=str_replace(">","",strip_tags($search_title));
+        $title=str_replace(">","",strip_tags(htmlspecialchars_decode($search_title)));
     return $title;
     }
 
@@ -2489,16 +2517,18 @@ function get_search_title($searchstring)
  * Adds all the resources in the provided search to $collection
  *
  * @param  integer $collection
- * @param  string $search
- * @param  string $restypes
- * @param  string $archivesearch
- * @param  string $order_by
- * @param  string $sort
- * @param  string $daylimit
- * @param  int    $res_access          The ID of the resource access level
+ * @param  string  $search
+ * @param  string  $restypes
+ * @param  string  $archivesearch
+ * @param  string  $order_by
+ * @param  string  $sort
+ * @param  string  $daylimit
+ * @param  int     $res_access          The ID of the resource access level
+ * @param  boolean $editable_only       If true then only editable resources will be added
  * @return boolean
  */
-function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $res_access = "")
+function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", 
+                                $order_by = "relevance", $sort = "desc", $daylimit = "", $res_access = "",$editable_only=false)
 	{
     if((string)(int)$collection != $collection)
         {
@@ -2514,7 +2544,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         $search_all_workflow_states = false;
         }
    
-    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,false,false,$res_access);
+    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,$editable_only,false,$res_access);
 
 	if(!is_array($results) || count($results) == 0)
         {
@@ -2568,11 +2598,11 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                     $sql .= '?, ';
                     $params[] = 's'; $params[] = $keys[$n]["expires"];
                     }
-                if($keys[$n]["usergroup"]=""){$sql .= 'NULL';}
+                if($keys[$n]["usergroup"]==''){$sql .= 'NULL';}
                 else
                     {
                     $sql .= '?';
-                    $params[] = 's'; $params[] = $keys[$n]["usergroup"];
+                    $params[] = 'i'; $params[] = $keys[$n]["usergroup"];
                     }
                 # Insert a new access key entry for this resource/collection.
                 ps_query("insert into external_access_keys(resource,access_key,user,collection,date,access,password_hash,expires,usergroup) values (?, ?, ?, ?,now(), ?, ?, {$sql})",
@@ -2741,7 +2771,6 @@ function get_featured_collection_resources(array $c, array $ctx)
         return $CACHE_FC_RESOURCES[$cache_id];
         }
 
-    $c_ref_escaped = $c["ref"];
     $limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
     $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
     $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
@@ -2767,7 +2796,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         }
 
     // Access control
-    $rca_where = '';
+    $rca_where = ''; $rca_where_params = array();
     $rca_joins = array();$rca_join_params = array();
     $fc_permissions_where = '';$fc_permissions_where_params = [];
     $union="";$unionparams=[];
@@ -2780,10 +2809,8 @@ function get_featured_collection_resources(array $c, array $ctx)
         $rca_joins[] = 'LEFT JOIN resource_custom_access AS rca_ug ON r.ref = rca_ug.resource AND rca_ug.usergroup = ?';
         $rca_join_params [] = "i"; $rca_join_params [] = $usergroup;
 
-        $rca_where = sprintf(
-            'AND (r.access < %1$s OR (r.access IN (%1$s, %2$s) AND ((rca_ug.access IS NOT NULL AND rca_ug.access < %1$s) OR (rca_u.access IS NOT NULL AND rca_u.access < %1$s))))',
-            RESOURCE_ACCESS_CONFIDENTIAL,
-            RESOURCE_ACCESS_CUSTOM_GROUP);
+        $rca_where = 'AND (r.access < ? OR (r.access IN (?, ?) AND ((rca_ug.access IS NOT NULL AND rca_ug.access < ?) OR (rca_u.access IS NOT NULL AND rca_u.access < ?))))';
+        $rca_where_params = array("i", RESOURCE_ACCESS_CONFIDENTIAL, "i", RESOURCE_ACCESS_CONFIDENTIAL, "i", RESOURCE_ACCESS_CUSTOM_GROUP, "i", RESOURCE_ACCESS_CONFIDENTIAL, "i", RESOURCE_ACCESS_CONFIDENTIAL);
 
         $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
         if(is_array($fcf_sql))
@@ -2793,13 +2820,13 @@ function get_featured_collection_resources(array $c, array $ctx)
             }
         }
 
-    if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]) && isset($c["bg_img_resource_ref"]))
+    if($use_thumbnail_selection_method && isset($c["thumbnail_selection_method"]))
         {
         if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"])
             {
             return array();
             }
-        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+        else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"] && isset($c["bg_img_resource_ref"]))
             {
             $limit = 1;
             $union = sprintf("
@@ -2807,7 +2834,7 @@ function get_featured_collection_resources(array $c, array $ctx)
                 implode(" ", $rca_joins),
                 $rca_where);
 
-            $unionparams = array_merge($rca_join_params,["i",$c["bg_img_resource_ref"]]);
+            $unionparams = array_merge($rca_join_params, ["i",$c["bg_img_resource_ref"]], $rca_where_params);
             }
         // For most_popular_image & most_popular_images we change the limit only if it hasn't been provided by the context.
         else if($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"] && is_null($limit))
@@ -2831,9 +2858,9 @@ function get_featured_collection_resources(array $c, array $ctx)
             ),
             $rca_joins
         ),
-        "where" => "WHERE c.ref = '{$c_ref_escaped}' AND c.`type` = " . COLLECTION_TYPE_FEATURED,
+        "where" => "WHERE c.ref = ? AND c.`type` = ?",
     );
-    $subquery_params = $rca_join_params;
+    $subquery_params = array_merge($rca_join_params, array("i", $c["ref"], "i", COLLECTION_TYPE_FEATURED), $rca_where_params);
 
     if(is_featured_collection_category($c))
         {
@@ -2861,7 +2888,7 @@ function get_featured_collection_resources(array $c, array $ctx)
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
                     $fcresources = array_merge($fcresources,$subfcimages);
-                    }
+                    } 
                 continue;
                 }
      
@@ -2875,15 +2902,38 @@ function get_featured_collection_resources(array $c, array $ctx)
         $fcrescount = count($fcresources);
         if($fcrescount > 0)
             {
-            $subquery["where"] = "WHERE r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
-            $subquery_params = array_merge($subquery_params,ps_param_fill($fcresources,"i"));
+            $chunks = [$fcresources];
+            // Large numbers of query parameters can cause errors so chunking may be required for larger collections.
+            if($fcrescount > 20000)
+                {
+                $chunks = array_chunk($fcresources, 20000);
+                }              
+            $fc_resources = [];  
+            $subquery["join"] = implode(" ", $subquery["join"]);
+            foreach($chunks as $fcresources)
+                {
+                $subquery["where"] = " WHERE r.ref IN (" . ps_param_insert(count($fcresources)) . ")";
+                $subquery_params = array_merge($rca_join_params,ps_param_fill($fcresources,"i"), $rca_where_params);
+                $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
+                $subquery_params = array_merge($subquery_params,$fc_permissions_where_params);
+                
+                $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
+                    implode(" ", $subquery),
+                    $union,
+                    sql_limit(null, $limit)
+                );
+            
+                $fc_resources = array_merge($fc_resources, ps_array($sql,array_merge($subquery_params,$unionparams),"themeimage"));
+                }
+                $CACHE_FC_RESOURCES[$cache_id] = $fc_resources;
+                return $fc_resources;
             }
         }
 
     $subquery["join"] = implode(" ", $subquery["join"]);
     $subquery["where"] .= " {$rca_where} {$fc_permissions_where}";
     $subquery_params = array_merge($subquery_params,$fc_permissions_where_params);
-
+    
     $sql = sprintf("SELECT DISTINCT ti.ref AS `value`, ti.use_as_theme_thumbnail, ti.hit_count FROM (%s %s) AS ti ORDER BY ti.use_as_theme_thumbnail DESC, ti.hit_count DESC, ti.ref DESC %s",
         implode(" ", $subquery),
         $union,
@@ -3446,7 +3496,7 @@ function collection_log($collection,$type,$resource,$notes = "")
     $resource = ($resource ?: null);
     $notes = mb_strcut($notes, 0, 255);
 
-	ps_query("INSERT INTO collection_log (date, user, collection, type, resource, notes) VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"i",$type,"i",$resource,"s",$notes));
+	ps_query("INSERT INTO collection_log (date, user, collection, type, resource, notes) VALUES (now(), ?, ?, ?, ?, ?)",array("i",$user,"i",$collection,"s",$type,"i",$resource,"s",$notes));
     }
 
 /**
@@ -3457,10 +3507,10 @@ function collection_log($collection,$type,$resource,$notes = "")
  * @return array
  */
 function get_collection_log($collection, $fetchrows = -1)
-	{
+    {
     debug_function_call("get_collection_log", func_get_args());
 
-	global $view_title_field;
+    global $view_title_field;
 
     $extra_fields = hook("collection_log_extra_fields");
     if(!$extra_fields)
@@ -3468,8 +3518,8 @@ function get_collection_log($collection, $fetchrows = -1)
         $extra_fields = "";
         }
 
-	return ps_query("
-                 SELECT c.ref,
+    $log_query = new PreparedStatementQuery(
+        "SELECT c.ref,
                         c.date,
                         u.username,
                         u.fullname,
@@ -3482,9 +3532,15 @@ function get_collection_log($collection, $fetchrows = -1)
         LEFT OUTER JOIN user AS u ON u.ref = c.user
         LEFT OUTER JOIN resource AS r ON r.ref = c.resource
                   WHERE collection = ?
-               ORDER BY c.ref DESC", array("i",$collection), false, $fetchrows);
-	}
-        
+               ORDER BY c.ref DESC",
+        array("i",$collection)
+    );
+
+    $log = sql_limit_with_total_count($log_query,$fetchrows,0,false,NULL);
+
+    return $log;
+    }
+
 /**
  * Returns the maximum access (the most permissive) that the current user has to the resources in $collection.
  *
@@ -3861,7 +3917,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
            $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
-           $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
+           $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
@@ -5657,7 +5713,7 @@ function validate_collection_parent($c)
             }
         }
 
-    return (trim($collection["parent"]) == "" ? null : (int) $collection["parent"]);
+    return (is_null($collection["parent"]) ? null : (int) $collection["parent"]);
     }
 
 /**
@@ -5856,7 +5912,7 @@ function allow_collection_share(array $c)
             || checkperm ("g") 
             || collection_min_access($c["ref"]) <= RESOURCE_ACCESS_RESTRICTED
             || $restricted_share)
-        && !in_array($c['type'],[COLLECTION_TYPE_REQUEST,COLLECTION_TYPE_SELECTION])
+        && !in_array($c['type'],[COLLECTION_TYPE_REQUEST])
     )
         {
         return true;
@@ -6209,7 +6265,8 @@ function can_reorder_featured_collections()
 function cleanup_anonymous_collections(int $limit = 100)
     {
     global $anonymous_login;
-    
+
+    $sql_limit = "";
     $params = [];
     if($limit != 0)
         {
@@ -6226,7 +6283,7 @@ function cleanup_anonymous_collections(int $limit = 100)
         $user = get_user_by_username($anonymous_user);
         if(is_int_loose($user))
             {
-            ps_query("DELETE FROM collection WHERE user ='" . $user . "' AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit, array_merge(['i', $user], $params));
+            ps_query("DELETE FROM collection WHERE user = ? AND created < (curdate() - interval '2' DAY) ORDER BY created ASC " . $sql_limit, array_merge(['i', $user], $params));
             }
         }
     }
@@ -6460,7 +6517,7 @@ function upload_share_setup(string $key,$shareopts = array())
     {
     debug_function_call("upload_share_setup",func_get_args());
     global $baseurl, $pagename, $upload_share_active, $upload_then_edit;
-    global $upload_link_workflow_state, $override_status_default;
+    global $upload_link_workflow_state, $override_status_default,$usergroup;
 
     $rqdopts = array("collection", "usergroup", "user");
     foreach($rqdopts as $rqdopt)

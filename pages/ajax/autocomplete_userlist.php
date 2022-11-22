@@ -6,7 +6,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php";
 
 $find=getval("term","  ");
-$userlists=ps_query("select userlist_name from user_userlist where user= ? and userlist_name like '%?%'", ['i', $user, 's', $find]);
+$userlists=ps_query("select userlist_name from user_userlist where user= ? and userlist_name like ?", ['i', $userref, 's', '%'.$find.'%']);
 $first=true;
 ?>[
 <?php

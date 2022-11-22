@@ -128,6 +128,8 @@ if(getval('loginas', '') != '')
 
 <div class="RecordHeader">
 
+<h1><?php echo $lang["edituser"]; ?></h1>
+
 <?php
 // Breadcrumbs links
 global $display_useredit_ref;
@@ -143,7 +145,6 @@ $links_trail = array(
     ),
     array(
         'title' => $lang["edituser"] . ($display_useredit_ref ? " " . $ref : ""),
-        'href'  => $url,
         'help' => 'systemadmin/creating-users'
     )
 );
@@ -218,11 +219,25 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="clearerleft"> </div></div>
 <?php hook("additionalusergroupfields"); ?>
 
-<div class="Question"><label><?php echo $lang["emailaddress"]?></label><input name="email" id="user_edit_email" type="text" class="stdwidth" value="<?php echo form_value_display($user,"email") ?>"><div class="clearerleft"> </div></div>
+<div class="Question">
+    <label><?php echo $lang["emailaddress"]?></label>
+    <input 
+        name="email" 
+        id="user_edit_email" 
+        type="text" 
+        class="stdwidth<?php if($user["email_invalid"]??false){echo " emailinvalid";}?>" 
+        value="<?php echo form_value_display($user,"email") ?>"
+        <?php if($user["email_invalid"]??false)
+            {
+            echo "title='" . escape_quoted_data($lang["emailmarkedinvalid"]) . "'";
+            }
+        ?>>
+    <div class="clearerleft"> </div>
+</div>
 
 <div class="Question"><label><?php echo $lang["accountexpiresoptional"]?><br/><?php echo $lang["format"] . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
 
 <?php
 if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
@@ -402,8 +417,13 @@ hook("usertool")?>
 
 <?php 
 if ($user["approved"]==1 && !hook("loginasuser"))
-    { 
-    if (($user['account_expires'] == "" || strtotime($user['account_expires']) > time()) && ($password_expiry == 0 || ($password_expiry > 0 && strtotime($user['password_last_change']) != "" && (time()-strtotime($user['password_last_change'])) < $password_expiry*60*60*24)))
+    {
+    if  (trim((string)$user["origin"]) != "" || 
+            ( ($user['account_expires'] == "" || strtotime((string)$user['account_expires']) > time()) 
+            && ($password_expiry == 0 || ($password_expiry > 0 && strtotime((string)$user['password_last_change']) != "" 
+            && (time()-strtotime((string)$user['password_last_change'])) < $password_expiry*60*60*24))
+            )
+        )
         {
         ?>
         <div class="Question"><label><?php echo $lang["login"]?></label>

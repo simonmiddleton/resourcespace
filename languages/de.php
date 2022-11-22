@@ -854,7 +854,7 @@ $lang["collectioncommentsinfo"]="Add a comment to this collection for this resou
 $lang["comment"]="Kommentar";
 $lang["warningexpired"]="Ressource abgelaufen";
 $lang["warningexpiredtext"]="Warnung! Diese Ressource hat das Ablaufdatum überschritten. Klicken Sie den untenstehenden Link um die Download-Funktion wieder zu aktivieren..";
-$lang["warningexpiredok"]="&gt; Ressourcen-Download aktivieren";
+$lang["warningexpiredok"]="Ressourcen-Download aktivieren";
 $lang["userrequestcomment"]="Kommentar";
 $lang["addresourcebatchbrowser"]="Ressourcen hinzufügen - Im Browser";
 

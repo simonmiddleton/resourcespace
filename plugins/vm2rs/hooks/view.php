@@ -64,7 +64,7 @@ function Hookvm2rsViewreplacedownloadoptions()
     if ($vimeo_url !== "" && isValidVimeoURL($vimeo_url))
         {
         ?>
-        <table cellpadding="0" cellspacing="0">
+        <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
             <tr >
                 <td>File Information</td>
                 <td>File Size </td>

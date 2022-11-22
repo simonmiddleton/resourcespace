@@ -1,11 +1,14 @@
 <?php
 
-function HookRse_versionEditEdit_all_extra_modes()
+function HookRse_versionEditEdit_all_extra_modes($field)
     {
-    global $lang;
-    ?>
-    <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
-    <?php
+    global $lang, $FIXED_LIST_FIELD_TYPES;
+    if (!in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        ?>
+        <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
+        <?php
+        }
     }
     
     #edit_all_mode_js
@@ -57,23 +60,24 @@ function HookRse_versionEditEdit_all_after_findreplace($field,$n)
     }
     
     
-function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field)
+function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field,$existing)
     {
     # Process the batch revert action - hooks in to the save operation (save_resource_data_multi())
-    				
+
     # Remove text/option(s) mode?
     if (getval("modeselect_" . $field["ref"],"")=="Revert")
-            {
-            $revert_date=getval("revert_" . $field["ref"],"");
-            
-            # Find the value of this field as of this date and time in the resource log.
-            $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);
-            $value=ps_value("SELECT previous_value value from resource_log 
-                where resource=? and resource_type_field=? 
-                and (type='e' or type='m') and date>? and previous_value is not null order by date limit 1",$parameters,-1);
-           
-            if ($value!=-1) {return $value;}
-            }
+        {
+        $revert_date=getval("revert_" . $field["ref"],"");
+        
+        # Find the value of this field as of this date and time in the resource log.
+        $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);
+        $value=ps_value("SELECT previous_value value from resource_log 
+            where resource=? and resource_type_field=? 
+            and (type='e' or type='m') and date>? and previous_value is not null order by date limit 1",$parameters,-1);
+        if ($value!=-1) {return $value;}
+        // No log entries for this field, don't change
+        return $existing;
+        }
     return false;
     }
 

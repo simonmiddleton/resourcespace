@@ -131,7 +131,13 @@ function setup_user(array $userdata)
     $useracceptedterms = $userdata['accepted_terms'];
 	
 	# Create userpermissions array for checkperm() function
-	$userpermissions=array_diff(array_merge(explode(",",trim($global_permissions)),explode(",",trim($userdata["permissions"]))),explode(",",trim($global_permissions_mask))); 
+	$userpermissions=array_diff(
+        array_merge(
+            explode(",",trim($global_permissions??"")),
+            explode(",",trim($userdata["permissions"]??""))
+        ),
+        explode(",",trim($global_permissions_mask??""))
+    ); 
 	$userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
 	
 	$actions_on=$actions_enable;
@@ -262,8 +268,7 @@ function setup_user(array $userdata)
     if ($config_options!="")
         {
         // We need to get all globals as we don't know what may be referenced here
-        extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-        eval(eval_check_signed($config_options));
+        override_rs_variables_by_eval($GLOBALS, $config_options);
         debug_track_vars('end@setup_user', get_defined_vars());
         }
 
@@ -317,6 +322,9 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     {
     global $usergroup, $U_perm_strict;
 
+    $order_by_parts = explode(" ",($order_by ?? ""));
+    $order_by       = $order_by_parts[0] ?? "u.username";
+    $sort           = strtoupper(($order_by_parts[1] ?? "ASC")) == "DESC" ? "DESC" : "ASC";
     if (!in_array($order_by, array("u.created", "u.username", "approved", "u.fullname", 'g.name', 'email', 'created', 'last_active')))
         {
         $order_by = "u.username";
@@ -353,7 +361,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
             {
             if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
             $sql .= "LOWER(username) like ?";
-            $sql_params = array_merge($sql_params, array("s", "%".$find."%"));
+            $sql_params = array_merge($sql_params, array("s", $find."%"));
             }
         }
     
@@ -417,7 +425,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         $select = "u.*, g.name groupname, g.ref groupref, g.parent groupparent";
         }
 
-    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup = g.ref $sql order by $order_by";
+    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup = g.ref $sql order by $order_by $sort";
 
     # Executes query.
     if($returnsql)
@@ -453,8 +461,11 @@ function get_users_with_permission($permission)
     $groups = ps_query("SELECT ref,permissions FROM usergroup");
     $matched = array();
     for ($n = 0;$n<count($groups);$n++) {
-        $perms = trim_array(explode(",",$groups[$n]["permissions"]));
+        $perms = trim_array(explode(",", (string) $groups[$n]["permissions"]));
         if (in_array($permission,$perms)) {$matched[] = $groups[$n]["ref"];}
+    }
+    if (count($matched)<1) {
+        return array();
     }
     # Executes query.
     $r = ps_query("SELECT u.*, g.name groupname, g.ref groupref, g.parent groupparent FROM user u
@@ -480,8 +491,8 @@ function get_users_with_permission($permission)
  * @return array Matching user records
  */
 function get_user_by_email($email)
-{
-    $r = ps_query("SELECT u.*, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
+    {
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -491,7 +502,7 @@ function get_user_by_email($email)
     }
 
     return $return;
-}
+    }
 
 /**
  * Retrieve user ID by username
@@ -632,15 +643,40 @@ function get_user($ref)
         }
     else
         {
-        $udata_cache[$ref] = ps_query("SELECT u.ref, u.username, u.password, u.fullname, u.email, u.usergroup, u.last_active, u.logged_in, u.last_browser, u.last_ip, 
-            u.current_collection, u.accepted_terms, u.account_expires, u.comments, u.session, u.password_last_change, u.login_tries, 
-            u.login_last_try, u.approved, u.lang, u.created, u.hidden_collections, u.password_reset_hash, u.origin, u.unique_hash, u.csrf_token,
-            u.profile_image, u.profile_text, if(find_in_set('permissions', g.inherit_flags) > 0 AND pg.permissions IS NOT NULL, pg.permissions, g.permissions) permissions, 
-            g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, 
-            (select count(*) from collection where ref = u.current_collection) as current_collection_valid, u.search_filter_o_id, g.resource_defaults, 
-            if(find_in_set('config_options',g.inherit_flags) > 0 AND pg.config_options IS NOT NULL, pg.config_options, g.config_options) config_options, g.request_mode, 
-            g.derestrict_filter, g.search_filter_id, g.download_limit, g.download_log_days, g.edit_filter_id, g.derestrict_filter_id FROM user u LEFT JOIN usergroup g 
-            ON u.usergroup = g.ref LEFT JOIN usergroup pg ON g.parent = pg.ref WHERE u.ref = ?", array("i", $ref));
+        $user_columns = columns_in("user","u");
+        $user_columns = str_replace("ip_restrict`","ip_restrict` ip_restrict_user",$user_columns); 
+
+        $udata_cache[$ref] = ps_query(
+            "SELECT 
+                {$user_columns},
+                if(find_in_set('permissions',g.inherit_flags)>0 
+                        AND pg.permissions IS NOT NULL,
+                    pg.permissions,
+                    g.permissions) permissions, 
+                g.parent, 
+                g.search_filter, 
+                g.edit_filter, 
+                g.ip_restrict ip_restrict_group, 
+                g.name groupname,
+                (select count(*) from collection where ref=u.current_collection) as current_collection_valid,
+                g.resource_defaults,
+                if(find_in_set('config_options',g.inherit_flags)>0 
+                        AND pg.config_options IS NOT NULL,
+                    pg.config_options,
+                    g.config_options) config_options,
+                g.request_mode,
+                g.derestrict_filter,
+                g.search_filter_id,
+                g.download_limit,
+                g.download_log_days,
+                g.edit_filter_id,
+                g.derestrict_filter_id
+            FROM user u 
+                LEFT JOIN usergroup g ON u.usergroup = g.ref 
+                LEFT JOIN usergroup pg ON g.parent = pg.ref 
+            WHERE u.ref = ?",
+            array("i", $ref)
+        );
         }
     
     # Return a user's credentials.
@@ -721,7 +757,7 @@ function save_user($ref)
             }
         else   
             {
-            $expires = "'" . date("Y-m-d",strtotime($expires)) . "'";
+            $expires =  date("Y-m-d",strtotime($expires));
             }
 
         $passsql = '';
@@ -767,7 +803,7 @@ function save_user($ref)
         if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
             {
             log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
-            ps_query("DELETE FROM resource WHERE ref = ?", array("i", $ref));
+            ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
             }
 
         log_activity(null, LOG_CODE_EDITED, $ip_restrict, 'user', 'ip_restrict', $ref, null, '');
@@ -836,7 +872,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
     
     # Fetch any welcome message for this user group
     $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
-    if (trim($welcome)!="") {$welcome.="\n\n";}
+    if (trim((string)$welcome)!="") {$welcome.="\n\n";}
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
     $templatevars['username'] = $username;
@@ -891,7 +927,7 @@ function email_reset_link($email,$newuser=false)
         // Fetch any welcome message for this user group
         $welcome = ps_value('SELECT welcome_message AS value FROM usergroup WHERE ref = ?', array("i",$details['usergroup']), '');
 
-        if(trim($welcome) != '')
+        if(trim((string)$welcome) != '')
             {
             $welcome .= "\n\n";
             }
@@ -938,8 +974,8 @@ function email_reset_link($email,$newuser=false)
  */
 function auto_create_user_account($hash="")
     {
-    global $applicationname, $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash,$defaultlanguage;
+    global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $account_request_send_confirmation_email_to_requester, $applicationname;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -954,7 +990,7 @@ function auto_create_user_account($hash="")
 
     if ($registration_group_select)
         {
-        $usergroup=getval("usergroup","",true);
+        $usergroup=getval("usergroup",0,true);
         # Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
         if (ps_value("SELECT allow_registration_selection value FROM usergroup WHERE ref = ?",["i",$usergroup],0)!=1)
             {
@@ -1129,12 +1165,24 @@ function auto_create_user_account($hash="")
             }
         $message->append_text("lang_userrequestnotification3");
         $message->append_text("<br/><br/>" . $templatevars['linktouser']);
-        $message->user_preference = "user_pref_user_management_notifications";
+        $message->user_preference =  [
+            "user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true],
+            "actions_account_requests"=>["requiredvalue"=>false,"default"=>true],
+            ];
         $message->url = $url;
         $message->template = "account_request";
         $message->templatevars = $templatevars;
         $message->eventdata = $eventdata;
         send_user_notification($approval_notify_users,$message);
+        }
+
+    // Send a confirmation e-mail to requester
+    if($account_request_send_confirmation_email_to_requester)
+        {
+        send_mail(
+            $email,
+            "{$applicationname}: {$lang['account_request_label']}",
+            $lang['account_request_confirmation_email_to_requester']);
         }
 
     return true;
@@ -1150,8 +1198,8 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
-           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$defaultlanguage;
+    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify,
+           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$user_account_auto_creation;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getval('name', ''));
@@ -1163,13 +1211,13 @@ function email_user_request()
         {
         $user_registration_opt_in_message .= $lang["user_registration_opt_in_message"];
         }
-    
-    $approval_notify_users = get_notification_users("USER_ADMIN");
+    $requestedgroup = getval("usergroup",0,true);
+    $approval_notify_users = get_notification_users("USER_ADMIN",$requestedgroup !=0 ? $requestedgroup : NULL);
     $message = new ResourceSpaceUserNotification;
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
     $message->append_subject(" - " . $name);
-    $message->set_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
+    $message->set_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
     $message->append_text("<br/><br/>");
     $message->append_text("lang_name");
     $message->append_text(": " . $name . "<br/><br/>");
@@ -1184,8 +1232,8 @@ function email_user_request()
         {
         $message->append_text($customContents . "<br/><br/>");
         }
-    $message->append_text($account_email_exists_note ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
-    $message->user_preference = "user_pref_user_management_notifications";
+    $message->append_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
+    $message->user_preference = ["user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
     $message->url = $baseurl . "/pages/team/team_user.php";
     send_user_notification($approval_notify_users,$message);
 
@@ -1887,14 +1935,11 @@ function check_access_key($resources,$key)
         
         if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
             {
-
             # Apply config override options
-            $config_options=trim($userinfo[0]["config_options"]);
+            $config_options=trim($userinfo[0]["config_options"]??"");
 
             // We need to get all globals as we don't know what may be referenced here
-            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval(eval_check_signed($config_options));
-
+            override_rs_variables_by_eval($GLOBALS, $config_options);
             }
         }
     
@@ -2219,11 +2264,16 @@ function resolve_user_emails($user_list)
 
     foreach($user_list as $user)
         {
-        $email_details    = ps_query("SELECT ref, email, approved, account_expires FROM user WHERE username = ?", array("s", $user));
-        if(isset($email_details[0]) && (time() < strtotime($email_details[0]['account_expires']))) 
-          {
-          continue;
-          }
+        $email_details = ps_query("SELECT ref, email, approved, account_expires FROM user WHERE username = ?", ['s', $user]);
+        if(
+            isset($email_details[0])
+            && !(is_null($email_details[0]['account_expires']) || trim($email_details[0]['account_expires']) === '')
+            && (time() > strtotime($email_details[0]['account_expires']))
+        )
+            {
+            debug('Email collection: ' . __FUNCTION__ . '() Username ' . $user . ' skipped as their user account has expired.');
+            continue;
+            }
 
         // Not a recognised user, if @ sign present, assume e-mail address specified
         if(0 === count($email_details))
@@ -2265,7 +2315,51 @@ function resolve_user_emails($user_list)
     return $emails_key_required;
     }
 
+/**
+ * Finds all users with matching email and marks them as having an invalid email
+ *
+ * @param  string  $email
+ * @return boolean 
+ */
+function mark_email_as_invalid(string $email)
+    {
+    if($email == ""){return false;}
 
+    $users = get_user_by_email($email);
+    $matched_user=false;
+
+    foreach ($users as $user)
+        {
+        if(strtolower($email) == strtolower($user["email"]))
+            {
+            $matched_user = true;
+            ps_query("UPDATE user SET email_invalid = 1 WHERE ref = ?",["i",$user["ref"]]);
+            }
+        }
+        
+    return $matched_user;
+    }
+
+/**
+ * Checks if the email entered is marked as invalid for any users
+ * 
+ * @param  string $email
+ * @return boolean true if email is marked invalid for any users with matching email address
+ */
+function check_email_invalid(string $email)
+{
+    if($email == ""){return false;}
+    $users = get_user_by_email($email);
+    $email_invalid=false;
+
+    foreach ($users as $user)
+        {
+        # Check email is exact match 
+        if(strtolower($email) == strtolower($user["email"]) && $user["email_invalid"]==1){$email_invalid=true;}
+        }
+        
+    return $email_invalid;
+}
 
 /**
  * Creates a reset key for password reset e-mails
@@ -2356,7 +2450,10 @@ function get_rs_session_id($create=false)
  *      USER_ADMIN
  *      RESOURCE_ADMIN
  *
- * @param  string $userpermission
+ * @param   string      $userpermission     Permission string
+ * @param   int|null    $usergroup          Optional id of usergroup to find notification users for e.g. the parent group of 
+ *                                          new user or as defined in $usergroup_approval_mappings
+ * 
  * @return array
  */
 function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = NULL)
@@ -2515,13 +2612,13 @@ function check_share_password($key,$password,$cookie)
     if($password != "")
         {
         $hashcheck = hash('sha256', $key . $password . $scramble_key);
-        $valid = $hashcheck == $sharehash;
+        $valid = $hashcheck === $sharehash;
         debug("checking share access password for key: " . $key);
         }
     else
         {
         $hashcheck = hash('sha256',  date("Ymd") . $key . $sharehash . $scramble_key);
-        $valid = $hashcheck == $cookie;
+        $valid = $hashcheck === $cookie;
         debug("checking share access cookie for key: " . $key);    
         }
     
@@ -2609,7 +2706,7 @@ function checkPermission_dashadmin()
     
 
 /**
- * Does the current user have the dash enabled?
+ * Can the user manage their own dash tiles. 
  *
  * @return boolean
  */
@@ -2870,7 +2967,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         $profile_image_path = $storagedir . '/user_profiles' . '/' . $profile_image_name;
         
         # Create profile image - cropped to square from centre.
-        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize '400x400' -thumbnail 200x200^^ -gravity center -extent '200x200'" . " " . escapeshellarg($profile_image_path);
+        $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize 400x400 -thumbnail 200x200^^ -gravity center -extent 200x200" . " " . escapeshellarg($profile_image_path);
         $output = run_command($command);
 
         # Store reference to user image.
@@ -3143,11 +3240,10 @@ function emulate_user($user, $usergroup="")
         if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
             {
             # Apply config override options
-            $config_options=trim($userinfo[0]["config_options"]);
+            $config_options=trim($userinfo[0]["config_options"]??"");
 
             // We need to get all globals as we don't know what may be referenced here
-            extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
-            eval(eval_check_signed($config_options));
+            override_rs_variables_by_eval($GLOBALS, $config_options);
             }
         }
     

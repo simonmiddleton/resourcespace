@@ -2,6 +2,10 @@
 command_line_only();
 
 // Check $wildcard_always_applied search e.g. "cat" will always match "catch", "catalogue", "category"
+$wildcard_always_applied_cache = $wildcard_always_applied;
+$wildcard_always_applied_leading_cache = $wildcard_always_applied_leading;
+$wildcard_always_applied=false;
+$wildcard_always_applied_leading=false;
 
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
@@ -80,8 +84,8 @@ if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$reso
     return false;
     }
 
+$wildcard_always_applied = $wildcard_always_applied_cache;
+$wildcard_always_applied_leading = $wildcard_always_applied_leading_cache;
 
-$wildcard_always_applied=false;
-$wildcard_always_applied_leading = false;
 
 return true;

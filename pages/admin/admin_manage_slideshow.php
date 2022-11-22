@@ -179,6 +179,7 @@ button[disabled]{
 }
 </style>
 <div class="BasicsBox">
+    <h1><?php echo $lang["manage_slideshow"]; ?></h1>
     <?php
     $links_trail = array(
         array(

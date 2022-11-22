@@ -90,7 +90,7 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
     if($all_users==1 && empty($specific_user_groups))
         {
         ps_query("DELETE FROM user_dash_tile WHERE dash_tile= ?", ['i', $tile]);
-        $result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile."',5 FROM user");
+        $result = ps_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,?,5 FROM user", ['i', $tile]);
         }
     
     hook('after_create_dash_tile', '', array($tile));
@@ -767,7 +767,7 @@ function add_usergroup_dash_tile($usergroup, $tile, $default_order_by)
         $reorder          = false;
         }
 
-    $existing = ps_query("ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $usergroup, 'i', $tile]);
+    $existing = ps_query("SELECT ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $usergroup, 'i', $tile]);
     if(!$existing)
         {
         $result = ps_query("INSERT INTO usergroup_dash_tile (usergroup, dash_tile, default_order_by) VALUES (?, ?, ?)", ['i', $usergroup, 'i', $tile, 'i', $default_order_by]);
@@ -1044,7 +1044,7 @@ function reorder_user_dash($user)
         {
         return;	
         }
-    $order_by=10 * count($user_tiles);
+    $order_by = (10 * count($user_tiles)) + 10; # Begin ordering at 10 for first position, not 0.
     
     $sql="UPDATE user_dash_tile SET order_by = (CASE ";
     $params = [];
@@ -1472,7 +1472,7 @@ function build_dash_tile_list($dtiles_available)
                   </a>
               </td>
               <td><?php echo $tile["resource_count"]? $lang["yes"]: $lang["no"];?></td>
-              <td>
+              <td class="ListTools">
                   <?php
                   if  (	
                           $tile["allow_delete"]
@@ -1484,7 +1484,7 @@ function build_dash_tile_list($dtiles_available)
                           )
                       )
                       { ?>
-                      <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>" ><?php echo $lang["action-edit"];?></a>
+                      <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>" ><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"];?></a>
                       <?php
                       }
                   ?>
@@ -2141,11 +2141,6 @@ function get_dash_search_data($link='', $promimg=0)
     $searchdata["count"] = 0;
     $searchdata["images"] = [];
     
-    if(!(checkPermission_dashadmin() || checkPermission_dashuser()))
-        {
-        return $searchdata;
-        }
-
     $search_string = explode('?',$link);
     parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
     $search = isset($search_string["search"]) ? $search_string["search"] :"";

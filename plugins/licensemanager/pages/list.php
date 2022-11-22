@@ -2,7 +2,9 @@
 include dirname(__FILE__)."/../../../include/db.php";
 
 include dirname(__FILE__)."/../../../include/authenticate.php";
-if (!checkperm("a") && !checkperm("lm")) {exit ("Permission denied.");}
+
+$is_admin = checkperm("a");
+if (!$is_admin && !checkperm("lm")) {exit ("Permission denied.");}
 global $baseurl;
 
 
@@ -35,12 +37,13 @@ $url_params = array(
 );
 ?>
 <div class="BasicsBox"> 
+<h1><?php echo $lang["managelicenses"]; ?></h1>
 <?php
     $links_trail = array(
         array(
-            'title' => $lang["teamcentre"],
-            'href'  => $baseurl_short . "pages/team/team_home.php",
-			'menu' =>  true
+            'title' => !$is_admin ? htmlspecialchars($lang["home"]) : htmlspecialchars($lang["teamcentre"]),
+            'href'  => $baseurl_short . (!$is_admin ? "pages/home.php" : "pages/team/team_home.php"),
+            'menu'  => !$is_admin ? false : true
         ),
         array(
             'title' => $lang["managelicenses"]
@@ -114,8 +117,8 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
 		
 			<td><div class="ListTools">
-			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
-			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
+			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
 			</div></td>
 	</tr>
 	<?php

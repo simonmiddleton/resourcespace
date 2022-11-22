@@ -5,4 +5,5 @@ version: 2.0
 desc: Enables to publish videos from youtube.
 icon: fa fa-youtube
 config_url: /plugins/yt2rs/pages/setup.php
-category: content sharing
+category: Integrations
+info_url: https://www.resourcespace.com/knowledge-base/plugins/yt2rs

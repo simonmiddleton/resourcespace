@@ -1,8 +1,9 @@
 name: feedback
 title: Feedback
-author: Dan Huby
+author: Montala Limited
 version: 1.0
 desc: Adds a general user feedback function with configurable questions.
 icon: fa fa-comments
 config_url: /plugins/feedback/pages/setup.php
 category: Collaboration
+info_url: https://www.resourcespace.com/knowledge-base/plugins/feedback

@@ -616,6 +616,10 @@ if(!hook('replaceviewtitle'))
     } //end hook replaceresourceistrancoding ?>
 
 <?php hook('renderbeforeresourceview', '', array('resource' => $resource));
+
+# Keep track of need for openseadragon library
+$image_preview_zoom_lib_required = false;
+
 if (in_array($resource["file_extension"], config_merge_non_image_types()) && $non_image_types_generate_preview_only)
     {
     $download_multisize=false;
@@ -816,6 +820,7 @@ if($image_preview_zoom)
         $hide_real_filepath = $orig_hrfp;
 
         // Generate the custom tile source object for OpenSeadragon
+        $image_preview_zoom_lib_required = true;
         ?>
         <script>
         var openseadragon_custom_tile_source = {
@@ -852,6 +857,7 @@ if($image_preview_zoom)
                 $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
 
                 // Generate the custom tile source object for OpenSeadragon
+                $image_preview_zoom_lib_required = true;
                 ?>
                 <script>
                 var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
@@ -1007,6 +1013,19 @@ if($image_preview_zoom)
 			
             if($image_preview_zoom)
                 {
+                $image_preview_zoom_lib_required = true;
+
+                # Process rotation from preview tweaks and use it to display the openseadragon preview in the correct orientation.
+                if (isset($resource['preview_tweaks']))
+                    {
+                    $preview_tweak_parts = explode('|', $resource['preview_tweaks']);
+                    $osd_preview_rotation = 0;
+                    if ($preview_tweak_parts[0] > 0 && is_numeric($preview_tweak_parts[0]))
+                        {
+                        $osd_preview_rotation = 360 - $preview_tweak_parts[0];
+                        }
+                    }
+
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -1034,7 +1053,7 @@ if($image_preview_zoom)
                         openseadragon_viewer = OpenSeadragon({
                             id: "openseadragon_viewer",
                             prefixUrl: "<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/images/",
-
+                            degrees: <?php echo $osd_preview_rotation; ?>,
                             // debugMode: true,
                             // debugGridColor: ['red'],
 
@@ -1895,6 +1914,7 @@ if (!hook('replacemetadata')) {
  
  */
 $pushed=do_search("!relatedpushed" . $ref);
+
 // Get metadata for all related resources to save multiple db queries
 $pushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),true,($k != "" && !$internal_share_access));
 $allpushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),false, ($k != "" && !$internal_share_access));
@@ -1906,14 +1926,18 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access;
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions;
     // Save currentt resource data
     $reset_ref          = $ref;
     $reset_access       = $access;
     $reset_fields_all   = $fields_all;
 
     $ref            = $resource["ref"];
-    $fields         = isset($field_data[$ref]) ? $field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
+
+    // Ensure that this pushed resource honours any resource type overrides
+    resource_type_config_override($resource["resource_type"]);
+
+    $fields         = get_resource_field_data($ref,true,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
     $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
     $access         = get_resource_access($resource);
     ?>
@@ -2395,7 +2419,7 @@ if($annotate_enabled)
     <?php
 	}
 
-if($image_preview_zoom)
+if($image_preview_zoom_lib_required)
     {
     ?>
     <script src="<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/openseadragon.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>

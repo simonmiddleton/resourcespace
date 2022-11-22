@@ -18,6 +18,13 @@ $rse_workflow_email_from = getval('rse_workflow_email_from', '');
 $rse_workflow_bcc_admin = getval('rse_workflow_bcc_admin', 0, true);
 $simple_search = getval('simple_search', 0, true);
 $icon = getval('icon', '');
+
+// Check valid icon
+if(!in_array($icon,$font_awesome_icons))
+    {
+    $icon = WORKFLOW_DEFAULT_ICON;
+    }
+
 $errortext="";
 $saved=false;
 
@@ -118,12 +125,13 @@ include '../../../include/header.php';
 ?>
 
 <div class="BasicsBox">
+<h1><?php echo $lang["rse_workflow_edit_state"]; ?></h1> 
 <?php
 $links_trail = array(
     array(
-        'title' => $lang["teamcentre"],
-        'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'title' => $lang["systemsetup"],
+        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+        'menu' =>  true
     ),
     array(
         'title' => $lang["rse_workflow_manage_workflow"],
