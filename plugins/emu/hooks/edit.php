@@ -118,30 +118,33 @@ function HookEmuEditSaveextraresourcedata($list)
     return false;
     }
 
-
+/**
+* Emu plugin attaching to the 'aftersaveresourcedata' hook
+* IMPORTANT: 'aftersaveresourcedata' hook is called from both save_resource_data() and save_resource_data_multi()!
+* 
+* @return boolean|array Returns FALSE to show hook didn't run -OR- a list of errors. See hook 'aftersaveresourcedata'
+*                       in resource_functions.php for more info.
+*/
 function HookEmuEditAftersaveresourcedata()
     {
-    global $emu_import;
-
-    if(!isset($emu_import) || (isset($emu_import) && !$emu_import))
+    if(!isset($GLOBALS['emu_import']) || (isset($GLOBALS['emu_import']) && !$GLOBALS['emu_import']))
         {
         return false;
         }
 
-    // Update Resource with EMu data
-    global $ref, $emu_irn_field, $emu_rs_saved_mappings, $emu_data, $emu_update_list;
+    global $ref, $emu_irn_field, $emu_rs_saved_mappings, $emu_data, $emu_update_list, $lang;
 
+    if(count($emu_data) === 0)
+        {
+        return [$lang['emu_nodata_returned']];
+        }
+
+    // Update resources with EMu data
+    $resources = (is_array($emu_update_list) ? $emu_update_list : [(int) $ref]);
     $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
     $emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
 
-    // Not a batch edit, make up the $list array so we can pretend it is
-    if(!is_array($emu_update_list))
-        {
-        $emu_update_list    = array();
-        $emu_update_list[0] = $ref;
-        }
-
-    foreach($emu_update_list as $resource_ref)
+    foreach($resources as $resource_ref)
         {
         debug("emu: Updating resource ID #{$resource_ref} with data from EMu database");
 
@@ -157,5 +160,5 @@ function HookEmuEditAftersaveresourcedata()
             }
         }
 
-    return;
+    return false;
     }

@@ -47,3 +47,4 @@ $lang['emu_run_script'] = 'Process';
 $lang['emu_script_problem'] = 'WARNING - the EMu script has not successfully completed within the last %days% days. Last run time: ';
 $lang['emu_no_resource'] = 'No resource ID specified!';
 $lang['emu_upload_nodata'] = 'No EMu data found for this IRN: ';
+$lang['emu_nodata_returned'] = 'No EMu data found for the specified IRN.';
