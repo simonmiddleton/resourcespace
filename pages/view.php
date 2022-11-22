@@ -659,7 +659,11 @@ if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
 	include "../players/type" . $resource["resource_type"] . ".php";
 	}
 elseif (hook("replacevideoplayerlogic","",array($video_preview_file))){ }
-elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($video_preview_file)))
+elseif (
+        !(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
+        && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
+        && file_exists($video_preview_file)
+)
 	{
 	# Include the player if a video preview file exists for this resource.
 	$download_multisize=false;
