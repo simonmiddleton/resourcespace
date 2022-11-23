@@ -724,7 +724,7 @@ if ($processupload)
                 $result["status"] = true;
                 $result["message"] = $lang["replacefile"];
                 $result["error"] = 0;
-                $result["id"] = $replace_resource;
+                $result["id"] = htmlspecialchars($replace_resource);
                 }
             }
         else
@@ -792,7 +792,7 @@ if ($processupload)
                         $result["status"] = true;
                         $result["message"] = $lang["replacefile"];
                         $result["error"] = 0;
-                        $result["id"] = $target_resource[0];
+                        $result["id"] = htmlspecialchars($target_resource[0]);
                         }
                     }
                 elseif(count($target_resource)==0)
@@ -827,7 +827,7 @@ if ($processupload)
                         $result["status"] = true;
                         $result["message"] = $lang["replacefile"];
                         $result["error"] = 0;
-                        $result["id"] = $resourcelist;
+                        $result["id"] = htmlspecialchars($resourcelist);
                         }
                     else
                         {
@@ -875,7 +875,7 @@ if ($processupload)
                             $result["status"] = true;                   
                             $result["message"] = $lang["replacefile"];
                             $result["error"] = 0;
-                            $result["id"] = $ref;
+                            $result["id"] = htmlspecialchars($ref);
                             }
                         }
                     else
@@ -1254,11 +1254,12 @@ function processFile(file, forcepost)
     if (trim($upload_alternatives_suffix) != "")
         {?>
         var alternative_suffix = '<?php echo trim($upload_alternatives_suffix); ?>';
+        var is_alternative_file_upload = <?php echo (getval("alternative", "") != "")? 'true':'false'; ?>;
         filename = file.name.substr(0, file.name.lastIndexOf('.' + getFilePathExtension(file.name)));
         console.debug("filename = " + filename);
         console.log("forceprocess: " +  forceprocess);
         // Check if original file, in which case stop here
-        if(filename.lastIndexOf(alternative_suffix) !== -1)
+        if(filename.lastIndexOf(alternative_suffix) !== -1 && is_alternative_file_upload == false)
             {
             console.debug(file.name + " - matches the alternative file format");
             if (!forceprocess)
