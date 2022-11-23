@@ -376,39 +376,43 @@ function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nod
         {
         return false;
         }
+    debug("BANG nodes_renamed : " . implode(",",$nodes_renamed));
     // Find treefields - required so that old value will be logged with full path
     $treefields = array_column(get_resource_type_fields("","ref","asc","",[FIELD_TYPE_CATEGORY_TREE]),"ref");
     $nodefieldchanges = array();
-    foreach ($nodes_current as $node)
+    if(count($nodes_current) != count($nodes_new) || array_diff($nodes_new, $nodes_current) != array_diff($nodes_current, $nodes_new))
         {
-        $nodedata = array();
-        if(get_node($node, $nodedata))
+        foreach ($nodes_current as $node)
             {
-            if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+            $nodedata = array();
+            if(get_node($node, $nodedata))
                 {
-                $parents = get_node_strings(get_parent_nodes($nodedata["ref"],true));
-                //print_r(get_node_strings($parents));
-                $nodefieldchanges[$nodedata["resource_type_field"]][0][] = reset($parents);
-                }
-            else
-                {
-                $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+                if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+                    {
+                    $parents = get_node_strings(get_parent_nodes($nodedata["ref"],true,true));
+                    $nodefieldchanges[$nodedata["resource_type_field"]][0][] = reset($parents);
+                    }
+                else
+                    {
+                    $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+                    }
                 }
             }
-        }
-    foreach ($nodes_new as $node)
-        {
-        $nodedata = array();
-        if(get_node($node, $nodedata))
+        foreach ($nodes_new as $node)
             {
-            if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+            $nodedata = array();
+            if(get_node($node, $nodedata))
                 {
-                $parents = get_node_strings(get_parent_nodes($nodedata["ref"],true));
-                $nodefieldchanges[$nodedata["resource_type_field"]][1][] = reset($parents);
-                }
-            else
-                {
-                $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+                if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+                    {
+                    $parentnodes = get_parent_nodes($nodedata["ref"],true,true);
+                    $parents = get_node_strings($parentnodes,false);
+                    $nodefieldchanges[$nodedata["resource_type_field"]][1][] = reset($parents);
+                    }
+                else
+                    {
+                    $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+                    }
                 }
             }
         }

@@ -1,7 +1,6 @@
 <?php
 command_line_only();
 
-
 $resourcea=create_resource(1,0);
 // Create a standard text field
 $field_title = 'Text field ABC';
@@ -47,15 +46,9 @@ $carrotnode = set_node(NULL, $tree_field_abc, "Carrot",$vegnode,60);
 
 $update_errors = [];
 $set_values = ["Apple","Fruit"];
-$log_value = "+ Fruit\n+ Apple";
+$log_value = "+ Fruit\n+ Fruit/Apple"; // Changed for 10.1 as full paths to nodes are now logged
 $set_value = implode(",",$set_values);
 $check_value = "Fruit/Apple";
-
-
-############ TODO remove
-$debug_log=true;
-$debug_extended_info=true;
-
 
 update_field($resourcea,$tree_field_abc,$set_value,$update_errors);
 
@@ -69,7 +62,9 @@ if(!in_array($check_value,$test_value))
 
 // SUBTEST D - Check action has been logged correctly
 $reslog = get_resource_log($resourcea)['data'];
-$logok = false;  
+$logok = false;
+echo "\nfield_title" . $field_title;
+echo "\log_value" . $log_value;
 foreach($reslog as $logentry)
     {
     if($logentry["type"]==LOG_CODE_EDITED && $logentry["title"] == $field_title && $logentry["diff"] == $log_value)
@@ -77,6 +72,7 @@ foreach($reslog as $logentry)
         $logok = true;        
         }
     }
+
 if(!$logok)
     {
     echo "SUBTEST D";

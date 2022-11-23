@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\Config\Definition\BooleanNode;
-
 /**
 * Set node - Used for both creating and saving a node in the database.
 * Use NULL for ref if you just want to insert a new record.
@@ -1795,38 +1793,37 @@ function copy_resource_type_field_nodes($from, $to)
 /**
  * Get all the parent nodes of the given node, all the way back to the top of the node tree.
  *
- * @param  integer  $noderef    The child node ID * 
- * @param  bool     $detailed   Return all node data? false by default 
+ * @param  integer  $noderef        The child node ID * 
+ * @param  bool     $detailed       Return all node data? false by default 
+ * @param  bool     $include_child  Include the passed node in the returned array (easier for resolving tree nodes to paths)? false by default 
  * 
  * @return array Array of the parent node IDs
  */
-function get_parent_nodes(int $noderef,bool $detailed = false)
+function get_parent_nodes(int $noderef,bool $detailed = false, $include_child=false)
     {
-
     // Get all parents. Query varies according to MySQL cte support
     $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
-    if(false && version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
+    if(version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
         {
-        $colsa = $detailed ? columns_in("node") : "ref, name";
-        $colsb = $detailed ? columns_in("node","n") : "n.ref, n.name";
+        $colsa = $detailed ? "ref, name, parent, resource_type_field, order_by" : "ref, name, parent";
+        $colsb = $detailed ? "n.ref, n.name, n.parent, n.resource_type_field, n.order_by" : "n.ref, n.name, n.parent";
         $parent_nodes = ps_query("
             WITH RECURSIVE cte($colsa,level) AS
                     (
-                    SELECT  $colsa,
-                            1 AS level
-                    FROM  node
-                    WHERE  ref= ?
-                UNION ALL
-                    SELECT  $colsb,
-                            level+1 AS LEVEL
-                    FROM  node n
+                    SELECT $colsa,
+                           1 AS level
+                      FROM node
+                     WHERE ref= ?
+                 UNION ALL
+                    SELECT $colsb,
+                           level+1 AS LEVEL
+                      FROM  node n
                 INNER JOIN  cte
                         ON  n.ref = cte.parent
                     )
-            SELECT $colsa,
-                level
-            FROM cte
-        ORDER BY level DESC;",
+            SELECT $colsa
+              FROM cte
+          ORDER BY level ASC;",
         ['i', $noderef]);
         }
     else
@@ -1842,9 +1839,19 @@ function get_parent_nodes(int $noderef,bool $detailed = false)
         WHERE  @r <> 0) N1
         JOIN  node N2
             ON  N1.p_ref = N2.ref
-        ORDER BY  N1.lvl DESC",
+        ORDER BY  N1.lvl ASC",
             ['i', $noderef]);
         }
+
+    if(!$include_child)
+        {
+        $parent_nodes = array_values(array_filter($parent_nodes,function($node) use ($noderef) {return $node["ref"] != $noderef;}));
+        }
+    if(!$detailed)
+        {
+        $parent_nodes = array_column($parent_nodes,"name", "ref");
+        }
+   
     return $parent_nodes;
     }
 
@@ -2231,7 +2238,6 @@ function cattree_node_flatten($node) {
  */
 function get_node_strings($resource_nodes,$allnodes = false)
     {
-    global $category_tree_add_parents;
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
     $orderednodes = array();
     $orderednoderefs = array();
