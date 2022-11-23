@@ -508,7 +508,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     {
     # Create a new resource.
     global $k;
-    debug("BANG " . $origin);
+    
     if(!is_numeric($archive))
         {
         return false;

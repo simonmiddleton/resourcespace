@@ -1051,7 +1051,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         if (file_exists($target) && $pdf_split_pages_to_resources)
             {
             # Create a new resource based upon the metadata/type of the current resource.
-            $copy=copy_resource($ref);
+            $copy=copy_resource($ref,-1,$lang["createdfromsplittingpdf"]);
                         
             # Find out the path to the original file.
             $copy_path=get_resource_path($copy,true,"",true,"pdf");

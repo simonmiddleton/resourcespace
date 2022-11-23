@@ -624,6 +624,8 @@ $lang["createdfromcontactsheet"] =          "Created from Contact Sheet";
 $lang["createdfrommergerssystems"] =        "Created from Merge RS Systems";
 $lang["createdfromwebuploader"] =           "Created from Web Uploader";
 $lang["createdfromwebuploadertemplate"] =   "Created from Web Uploader as template";
+$lang["createdfromsplittingpdf"] =          "Created from splitting PDF";
+$lang["createdfromteamcentre"] =            "Created from Resource menu";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";

@@ -217,7 +217,8 @@ function api_delete_resource($resource)
 
 function api_copy_resource($from,$resource_type=-1)
     {
-    return copy_resource($from,$resource_type);            
+    global $lang;
+    return copy_resource($from,$resource_type,$lang["createdfromapi"]);            
     }
 
 function api_get_resource_log($resource, $fetchrows=-1)

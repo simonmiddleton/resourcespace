@@ -901,7 +901,7 @@ if ($processupload)
     }
 elseif ($upload_no_file && getval("createblank","")!="")
 	{
-    $ref=copy_resource(0-$userref); 
+    $ref=copy_resource(0-$userref,$lang["createdfromwebuploader"]); 
                                 
     if($ref === false)
         {
