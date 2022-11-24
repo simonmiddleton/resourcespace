@@ -3392,36 +3392,47 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     }
 
 /**
- * get_resource_types
+ * Return an array of resource types that this user has access to
  *
- * @param  string   $types          Comma separated resource type references to return specific types
- * @param  boolean  $translate      Option to translate resource type names in result
- * @param  boolean  $ignore_access  Return all resource types regardless of access?
- * @return array    Array of resource types returned from mySQL
+ * @param  string   $types      Comma separated list to limit the types that are returned by ref, 
+ *                              blank string returns all available types
+ * @param  boolean  $translate  Flag to translate the resource types before returning
+ * 
+ * @return array    Array of resource types limited by T* permissions and optionally by $types
  */
-function get_resource_types($types = "", $translate = true, $ignore_access = false)
+function get_resource_types($types = "", $translate = true)
     {
-    # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
-    // support getting info for a comma-delimited list of restypes (as in a search)
-    $parameters=array();
-    if ($types==""){$sql="";} else
-        {
-        # Ensure $types are suitably quoted and escaped
-        $cleantypes="";
-        $s=explode(",",$types);
+    $resource_types = get_all_resource_types();
+    $return=array();
 
-        foreach ($s as $type)
-            {
-            if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
-                {
-                if ($cleantypes!="") {$cleantypes.=",";}
-                $cleantypes.="?";
-                $parameters[]="i";$parameters[]=$type;
-                }
-            }
-        $sql=" WHERE ref IN ($cleantypes) ";
+    if ($types="")
+        {
+        $s=explode(",",$types);
         }
 
+    for ($n=0;$n<count($resource_types);$n++)
+        {
+        if ((!isset($s) || in_array($resource_types[$n]['ref'],$s)) && !checkperm('T' . $resource_types[$n]['ref']))
+            {
+            if ($translate==true) 
+                {
+                $resource_types[$n]["name"]=lang_or_i18n_get_translated($resource_types[$n]["name"], "resourcetype-");
+                }
+            $return[]=$resource_types[$n];
+            }
+        }
+    return $return;
+    }
+
+/**
+ * Returns all resources types
+ * 
+ * No permissions are checked or applied, do not expose this function to the API
+ *
+ * @return array Array of resource types ordered by 'order_by' then 'ref'
+ */
+function get_all_resource_types()
+    {
     $r=ps_query("SELECT ref,
                         name,
                         allowed_extensions,
@@ -3433,23 +3444,11 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                         colour,
                         icon
                    FROM resource_type
-                        $sql
                ORDER BY order_by,
                         ref",
-                        $parameters,
+                        [],
                         "schema");
-
-    $return=array();
-    # Check permissions and Translate names (if $translate==true)
-    for ($n=0;$n<count($r);$n++)
-        {
-        if (!checkperm('T' . $r[$n]['ref']) || $ignore_access)
-            {
-            if ($translate==true) {$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");} # Translate name
-            $return[]=$r[$n]; # Add to return array
-            }
-        }
-    return $return;
+    return $r;
     }
 
 function get_resource_top_keywords($resource,$count)
@@ -3491,7 +3490,6 @@ function get_resource_top_keywords($resource,$count)
 
 function clear_resource_data($resource)
     {
-        debug("BANG " . $resource);
     # Clears stored data for a resource.
 	ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
 	ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);

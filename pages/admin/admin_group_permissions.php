@@ -194,7 +194,9 @@ foreach ($fields as $field)
 <?php
 
 # ------------ View access to resource types
-$rtypes=get_resource_types("",true,true);
+# All resource types need to be visible so get_resource_types() is unsuitable
+# If the user can edit their own permissions they can access any resource type by editing the special permissons anyway
+$rtypes=get_all_resource_types();
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
