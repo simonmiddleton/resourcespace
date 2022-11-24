@@ -231,7 +231,10 @@ if($collectionsearch)
     $search_trimmed = substr($search,11); // The collection search must always be the first part of the search string
     $search_elements = split_keywords($search_trimmed, false, false, false, false, true);
     $collection = (int)array_shift($search_elements);
-    $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+    if(count($search_elements) > 0)
+        {
+        $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+        }
     }
 
 hook("searchstringprocessing");
