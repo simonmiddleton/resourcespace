@@ -701,7 +701,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
-                        $new_nodes_val = implode(",", $new_nodevals);
+
+                        $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
                             update_resource_field_column($ref,$fields[$n]["ref"],$new_nodes_val);
