@@ -3316,3 +3316,11 @@ $thumbs_display_archive_state = false;
 
 // Cache the count of search results to improve performance
 $cache_search_count = true;
+
+/*
+Separator used for storing multiple node values in the resource table (column fieldX).
+
+IMPORTANT: if the separator value is changed then pages/tools/update_data_joins.php must be run to update currently 
+stored values. This will affect the response of API calls that return fieldX data.
+*/
+$field_column_string_separator = ',';
