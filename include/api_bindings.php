@@ -961,3 +961,12 @@ function api_get_user_message($ref)
     {
     return get_user_message($ref);
     }
+
+function api_get_users_by_permission($permissions)
+    {
+    if(!is_array($permissions))
+        {
+        $permissions = explode(",",$permissions);
+        }
+    return get_users_by_permission($permissions); 
+    }
