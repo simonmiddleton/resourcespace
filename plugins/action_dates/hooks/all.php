@@ -347,7 +347,7 @@ function HookAction_datesCronCron()
         }
 
     # Prepare and send separate state change notifications    
-    if(count($email_state_refs)>0)
+    if (count($email_state_refs) > 0 && $action_dates_email_for_state == "1")
         {
         # Send a notification for the resources whose date is within the specified number of days
         $notification_state = $message_state; 
@@ -372,7 +372,7 @@ function HookAction_datesCronCron()
         }
 
     # Prepare and send separate access restrict notifications    
-    if(count($email_restrict_refs)>0)
+    if (count($email_restrict_refs) > 0 && $action_dates_email_for_restrict == "1")
         {
         # Send a notification for the resources whose date is within the specified number of days
         $notification_restrict = $message_restrict; 
