@@ -13,7 +13,7 @@ $lang['action_dates_restrict']="Automatically restrict access to resources when 
 $lang['action_dates_delete_logtext']=" - Automatically actioned by action_dates plugin";
 $lang['action_dates_restrict_logtext']=" - Automatically restricted by action_dates plugin";
 $lang['action_dates_reallydelete']="Fully delete resource when action date passed? If set to false resources will be moved to the configured resource_deletion_state and thus recoverable";
-$lang['action_dates_email_admin_days']="Email system administrators a set number of days before this date is reached. Leave this option blank for no email to be sent.";
+$lang['action_dates_email_admin_days']="Notify system administrators a set number of days before this date is reached. Leave this option blank for no notification to be sent.";
 
 $lang['action_dates_email_text_restrict']="The following resources are due to be restricted in %%DAYS days.";
 $lang['action_dates_email_text_state']="The following resources are due to change state in %%DAYS days.";
@@ -33,8 +33,8 @@ $lang['action_dates_additional_settings_info']="Additionally move resources to t
 $lang['action_dates_additional_settings_date']="When this date is reached";
 $lang['action_dates_additional_settings_status']="Move resources to this archive state";
 $lang['action_dates_remove_from_collection']="Remove resources from all associated collections when state is changed?";
-$lang['action_dates_email_for_state']="Send notification email for resources changing state. Requires change of state fields above to be configured.";
-$lang['action_dates_email_for_restrict']="Send notification email for resources to be restricted. Requires restrict resource fields above to be configured.";
+$lang['action_dates_email_for_state']="Send notification for resources changing state. Requires change of state fields above to be configured.";
+$lang['action_dates_email_for_restrict']="Send notification for resources to be restricted. Requires restrict resource fields above to be configured.";
 $lang['action_dates_workflow_actions']="If the Advanced Workflow plugin is enabled, should its notifications be applied to state changes initiated by this plugin?";
 
 $lang['action_dates_weekdays']="Select the weekdays when actions be processed.";
