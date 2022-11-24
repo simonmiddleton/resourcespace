@@ -17,7 +17,7 @@ $field_column_string_separator = '|:|';
 $data_joins[] = $rtf_checkbox;
 $_POST['nodes'][$rtf_checkbox] = [$ckb_opt_a, $ckb_opt_b];
 save_resource_data($resource_a, false, $rtf_checkbox);
-if(!mb_strpos(get_resource_data($resource_a, false)["field{$rtf_checkbox}"], $field_column_string_separator))
+if(mb_strpos(get_resource_data($resource_a, false)["field{$rtf_checkbox}"], $field_column_string_separator) === false)
     {
     echo "Use case: use separator for storing multiple node values in the resource table (column fieldX) - ";
     return false;
