@@ -1467,7 +1467,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // Build new value:
                     foreach($new_nodes as $new_node)
                         {
-                        $new_nodes_val .= ",{$node_options[$new_node]}";
+                        $new_nodes_val .= $GLOBALS['field_column_string_separator'] . $node_options[$new_node];
                         $log_nodes_new[] = $node_options[$new_node];
                         }
                     // Build existing value:
