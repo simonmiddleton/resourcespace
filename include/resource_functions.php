@@ -4041,29 +4041,46 @@ function update_resource_type($ref,$type)
 /**
 * Returns a list of exiftool fields, which are basically fields with an 'exiftool field' set.
 *
-* @param integer resource_type
+* @param integer    $resource_type
+* @param string     $option_separator   String to separate the node options returned for fixed list fields
+*                                       - Recommended NODE_NAME_STRING_SEPARATOR
+*                                       - Defaults to comma for backwards compatibility
 *
 * @return array
 */
-function get_exiftool_fields($resource_type)
+function get_exiftool_fields($resource_type,string $option_separator = ",")
     {
-
+    global $FIXED_LIST_FIELD_TYPES;
     $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
 
-    return ps_query("
-           SELECT f.ref,
-                  f.type,
-                  f.exiftool_field,
-                  f.exiftool_filter,
-                  group_concat(n.name) AS options,
-                  f.name,
-                  f.read_only
-             FROM resource_type_field AS f
-        LEFT JOIN node AS n ON f.ref = n.resource_type_field
+    $return = ps_query("
+           SELECT ref,
+                  type,
+                  exiftool_field,
+                  exiftool_filter,
+                  name,
+                  read_only
+             FROM resource_type_field 
             WHERE length(exiftool_field) > 0
               AND (resource_type = ? ". ($include_globals == 1 ?" OR resource_type = '0'":"") .")
-         GROUP BY f.ref
+         GROUP BY ref
          ORDER BY exiftool_field", array("i",$resource_type),"schema");
+        
+
+    // Add options for fixed list fields
+    foreach($return as &$field)
+        {
+        if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            $options = get_field_options($field["ref"]);
+            $field["options"] = implode($option_separator,$options);            
+            }
+        else
+            {
+            $field["options"] = "";
+            }
+        }
+    return $return;
     }
 
 /**
