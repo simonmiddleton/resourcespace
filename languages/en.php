@@ -618,6 +618,14 @@ $lang['lock-tooltip']='Lock field to be copied to next resource';
 $lang['resource_type_not_found'] = 'Resource type not found.';
 $lang["view_directly_in_browser"] = "View directly in browser";
 $lang["view_in_browser"] = "View in browser";
+$lang["createdfromapi"] =                   "Created from API";
+$lang["createdfromstaticsync"] =            "Created from StaticSync";
+$lang["createdfromcontactsheet"] =          "Created from Contact Sheet";
+$lang["createdfrommergerssystems"] =        "Created from Merge RS Systems";
+$lang["createdfromwebuploader"] =           "Created from Web Uploader";
+$lang["createdfromwebuploadertemplate"] =   "Created from Web Uploader as template";
+$lang["createdfromsplittingpdf"] =          "Created from splitting PDF";
+$lang["createdfromteamcentre"] =            "Created from Resource menu";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";

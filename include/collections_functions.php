@@ -3226,7 +3226,11 @@ function relate_to_collection($ref,$collection)
         {
         $params = array_merge($params, ['i', $ref, 'i', $colresource]);
         }
-    ps_query("insert into resource_related(resource,related) values ". str_repeat('(?, ?)', count($colresources)), $params);
+    ps_query(
+        "INSERT INTO resource_related (resource,related) 
+            VALUES ". implode(', ',array_fill(0, count($colresources), '(?, ?)')),
+        $params
+    );
 	}
 
 /**

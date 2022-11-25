@@ -48,3 +48,5 @@ $lang['emu_script_problem'] = 'WARNING - the EMu script has not successfully com
 $lang['emu_no_resource'] = 'No resource ID specified!';
 $lang['emu_upload_nodata'] = 'No EMu data found for this IRN: ';
 $lang['emu_nodata_returned'] = 'No EMu data found for the specified IRN.';
+
+$lang["emu_createdfromemu"] = "Created from EMU plugin";

@@ -495,11 +495,21 @@ function put_resource_data($resource,$data)
     }
 
 
-function create_resource($resource_type,$archive=999,$user=-1)
+/**
+ * create_resource
+ *
+ * @param  integer  $resource_type  ID of target resource type
+ * @param  integer  $archive        ID of target archive state, 999 if archived
+ * @param  integer  $user           User ID, -1 for current user
+ * @param  string   $origin         Source of resource, should not be blank
+ * 
+ * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
+ */
+function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     {
     # Create a new resource.
     global $k;
-
+    
     if(!is_numeric($archive))
         {
         return false;
@@ -545,7 +555,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
     # Log this
     daily_stat("Create resource",$insert);
 
-    resource_log($insert, LOG_CODE_CREATED, 0);
+    resource_log($insert, LOG_CODE_CREATED, 0,$origin);
     if(upload_share_active())
         {
         resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
@@ -3538,10 +3548,11 @@ function get_resource_ref_range($lower,$higher)
 *
 * @param  int    $from            ID of resource
 * @param  mixed  $resource_type   ID of resource type
+* @param  string $origin          Origin of resource when uploading, leave blank if not an upload
 *
 * @return boolean|integer
 */
-function copy_resource($from,$resource_type=-1)
+function copy_resource($from,$resource_type=-1,$origin='')
     {
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
     global $userref;
@@ -3651,7 +3662,7 @@ function copy_resource($from,$resource_type=-1)
 
     # Log this
     daily_stat("Create resource",$to);
-    resource_log($to,LOG_CODE_CREATED,0);
+    resource_log($to,LOG_CODE_CREATED,0,$origin);
 
     hook("afternewresource", "", array($to));
 
@@ -4536,14 +4547,21 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 
 function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
 	{
-    global $syncdir;
+    global $syncdir,$lang;
     // Import the resource at the given path
     // This is used by staticsync.php and Camillo's SOAP API
     // Note that the file will be used at it's present location and will not be copied.
 
     $r=create_resource($type);
     // Log this in case the original location is not stored anywhere else
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_CREATED,'','','', $syncdir . DIRECTORY_SEPARATOR . $path);
+    resource_log(
+        RESOURCE_LOG_APPEND_PREVIOUS,
+        LOG_CODE_CREATED,
+        '',
+        $lang["createdfromstaticsync"],
+        '',
+        $syncdir . DIRECTORY_SEPARATOR . $path
+    );
     return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
     }
 

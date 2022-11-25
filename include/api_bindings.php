@@ -100,6 +100,7 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    global $lang;
     if (!(checkperm("c") || checkperm("d")) || checkperm("XU" . $resource_type))
         {
         return false;
@@ -110,7 +111,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
     # Create a new resource
-    $ref=create_resource($resource_type,$archive);
+    $ref=create_resource($resource_type,$archive,-1,$lang["createdfromapi"]);
     if (!is_int($ref))
         {
         return false;
@@ -212,7 +213,8 @@ function api_delete_resource($resource)
 
 function api_copy_resource($from,$resource_type=-1)
     {
-    return copy_resource($from,$resource_type);            
+    global $lang;
+    return copy_resource($from,$resource_type,$lang["createdfromapi"]);            
     }
 
 function api_get_resource_log($resource, $fetchrows=-1)
