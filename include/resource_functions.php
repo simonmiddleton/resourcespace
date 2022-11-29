@@ -6569,7 +6569,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                     }
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
-                            $values_string = implode(",",$node_vals);
+                            $values_string = implode($GLOBALS['field_column_string_separator'], $node_vals);
                             update_resource_field_column($ref,$resource_type_field,$values_string);
                             }
                         }
