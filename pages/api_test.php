@@ -52,6 +52,13 @@ if (getval("submitting","")!="" && $api_function!="")
 <div class="RecordPanel">
 <h1><?php echo $lang['api-test-tool']; ?></h1>
 
+<?php
+renderBreadcrumbs([
+    ['title' => $lang["systemsetup"], 'href'  => $baseurl_short . "pages/admin/admin_home.php", 'menu' => true],
+    ['title' => $lang['api-test-tool']]
+]);
+?>
+
 <p><?php echo $lang["api-help"];render_help_link("api"); ?></p>
 
 <form id="api-form" method="post" action="<?php echo $baseurl_short?>pages/api_test.php" onSubmit="return CentralSpacePost(this);">

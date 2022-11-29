@@ -5,6 +5,6 @@ icon: fab fa-wordpress-simple
 author: Montala Limited
 version: 1.0
 config_url: /plugins/wordpress_sso/pages/setup.php
-info_url: /plugins/wordpress_sso/pages/readme.txt
+info_url: https://www.resourcespace.com/knowledge-base/plugins/wordpress_sso
 category: authentication
 disable_group_select: 1

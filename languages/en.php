@@ -618,6 +618,14 @@ $lang['lock-tooltip']='Lock field to be copied to next resource';
 $lang['resource_type_not_found'] = 'Resource type not found.';
 $lang["view_directly_in_browser"] = "View directly in browser";
 $lang["view_in_browser"] = "View in browser";
+$lang["createdfromapi"] =                   "Created from API";
+$lang["createdfromstaticsync"] =            "Created from StaticSync";
+$lang["createdfromcontactsheet"] =          "Created from Contact Sheet";
+$lang["createdfrommergerssystems"] =        "Created from Merge RS Systems";
+$lang["createdfromwebuploader"] =           "Created from Web Uploader";
+$lang["createdfromwebuploadertemplate"] =   "Created from Web Uploader as template";
+$lang["createdfromsplittingpdf"] =          "Created from splitting PDF";
+$lang["createdfromteamcentre"] =            "Created from Resource menu";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
@@ -1891,8 +1899,8 @@ $lang["can_see_resource_type"]="Can see resource type '%TYPE'";
 $lang["restricted_access_only_to_resource_type"]="Restricted access only to resource type";
 $lang["restricted_upload_for_resource_of_type"]="Restricted upload for resource of type";
 $lang["deny_edit_resource_type"]="Deny edit access to resource of type";
-$lang["deny_edit_all_resource_types"]="Deny edit access to all resource types except those specified by XE- permissions";
-$lang["can_edit_resource_type"]="Can edit resources of type %%RESOURCETYPE%%. Ignored if XE permission is not present";
+$lang["deny_edit_all_resource_types"]="Deny edit access to all resource types except those specified by \"ALLOW edit access to resources of the given resource type\" permissions";
+$lang["can_edit_resource_type"]="Can edit resources of type %%RESOURCETYPE%%. Ignored if \"DENY edit access to given resource type\" permission is not present";
 $lang["edit_access_to_workflow_state"]="Edit access to workflow state";
 $lang["edit_access_to_access"]="Edit access to access state '%STATE'";
 $lang["can_create_resources_and_upload_files-admins"]="Can create resources / upload files<br>(admin users; resources go to 'Active' state)";
@@ -2522,7 +2530,7 @@ $lang["last"]="Last";
 $lang["managedefaultdash"]="All user tiles";
 $lang["dashtile"]="Dash tile";
 $lang["manage_own_dash"]="Can manage own dash";
-$lang["manage_all_dash_h"]="Manage default dash / all user tiles (Requires h permission)";
+$lang["manage_all_dash_h"]="Manage default dash / all user tiles (Requires \"Can publish collections as featured collections\" permission)";
 $lang["manage_all_dash"]="Default dash / all user tiles";
 $lang["manage_all_dash_perm"]="Manage default dash / all user tiles";
 $lang["dashtiledeleteaction"]="What delete action would you like to take?";
@@ -2583,7 +2591,7 @@ $lang["plugin_category_api"]="API";
 $lang["plugin_category_advanced"]="Advanced";
 $lang["plugin_category_design"]="Design";
 $lang["plugin_category_ecommerce"]="Ecommerce";
-$lang["plugin_category_sharing"]="Content Sharing";
+$lang["plugin_integrations"]="Integrations";
 /* * End - Plugin Category Strings * */
 
 /* System Down page strings */

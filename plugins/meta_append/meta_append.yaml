@@ -6,3 +6,4 @@ desc       : Append user definable timestamp and daily upload number (per user) 
 icon       : fa fa-user-clock
 config_url : /plugins/meta_append/pages/setup.php
 category: Workflow and access
+info_url: https://www.resourcespace.com/knowledge-base/plugins/meta_append

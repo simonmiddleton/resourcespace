@@ -24,10 +24,18 @@ if($share_collection != 0 &&!collection_readable($share_collection))
 if(!checkperm('a') || $share_user == $userref)
     {
     $pagetitle  = $lang["my_shares"];
+    $breadcrumbs = [
+        ['title' => $userfullname == "" ? $username : $userfullname, 'href'  => $baseurl_short . "pages/user/user_home.php", 'menu' => true],
+        ['title' => $pagetitle]
+    ];
     }
 else
     {
     $pagetitle  = $lang["manage_shares_title"];
+    $breadcrumbs = [
+        ['title' => $lang["teamcentre"], 'href'  => $baseurl_short . "pages/team/team_home.php", 'menu' => true],
+        ['title' => $pagetitle]
+    ];
     }
 
 $ajax              = ('true' == getval('ajax', '') ? true : false);
@@ -433,7 +441,9 @@ function clearsharefilter()
 
 <div class='BasicsBox'>
     <h1><?php echo htmlspecialchars($pagetitle);render_help_link('user/manage_external_shares'); ?></h1>
+
     <?php
+    renderBreadcrumbs($breadcrumbs);
 
     if(count($messages) > 0)
         {

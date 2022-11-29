@@ -43,6 +43,12 @@ if ($callback == "")
     ?>
     <div class="BasicsBox">
         <h1><?php echo $lang["systemconsole"] ?></h1>
+		<?php
+		renderBreadcrumbs([
+			['title' => $lang["systemsetup"], 'href'  => $baseurl_short . "pages/admin/admin_home.php", 'menu' => true],
+			['title' => $lang["systemconsole"]]
+		]);
+		?>
     </div>    
     <?php
 

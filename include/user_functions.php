@@ -3342,3 +3342,73 @@ function get_usergroup_approvers($usergroup = "")
 
     return $approver_groups;
     }
+
+/**
+ * Retrieve all user records in groups with/without the specified permissions
+ *
+ * @param  array $permissions      array of permission strings to check
+ * 
+ * @return array Matching user records (only returns a subset of columns)
+ * 
+ * Note that this can't use a straight FIND_IN_SET for permissions since that is case insensitive
+ * 
+ **/
+function get_users_by_permission(array $permissions)
+    {
+    global $U_perm_strict, $usergroup;
+    if(!(checkperm("a") || checkperm("u")))
+        {
+        return [];
+        }
+
+    $groupsql_filter = "";
+    $groupsql_params = [];
+    if (checkperm("U"))
+        {
+        # Only return users in children groups to the user's group
+        if($U_perm_strict)
+            {         
+            $groupsql_filter = "WHERE FIND_IN_SET(?, g.parent)";
+            $groupsql_params = array("i", $usergroup);
+            }
+        else
+            {
+            $groupsql_filter = "WHERE (g.ref = ? or find_in_set(?, g.parent))";
+            $groupsql_params = array("i", $usergroup, "i", $usergroup);
+            }
+        }
+
+    $usergroups = ps_query("SELECT g.ref,
+                                   IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg. permissions,g.permissions) permissions
+                              FROM usergroup g
+                         LEFT JOIN usergroup AS pg ON g.parent=pg.ref " .
+                                    $groupsql_filter,
+                                    $groupsql_params);
+
+    $validgroups = [];
+    foreach($usergroups as $usergroup)
+        {
+        $groupperms = explode(",",$usergroup["permissions"]);
+        if(count(array_diff($permissions,$groupperms)) == 0)
+            {
+            $validgroups[] = $usergroup["ref"];
+            }
+        }
+    if(count($validgroups)==0)
+        {
+        return [];
+        }
+
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg. permissions,g.permissions) permissions, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref LEFT JOIN usergroup AS pg ON g.parent=pg.ref WHERE g.ref IN (" . ps_param_insert(count($validgroups)) . ") ORDER BY username", ps_param_fill($validgroups,"i"));
+
+    $return = [];
+    for ($n = 0;$n<count($r);$n++)
+        {
+        # Translates group names in the newly created array.
+        $r[$n]["groupname"] = lang_or_i18n_get_translated($r[$n]["groupname"], "usergroup-");
+       
+        $return[] = array_filter($r[$n],function($k){return in_array($k,["ref","username","fullname","email","groupname","usergroup","approved","comments","simplesaml_custom_attributes","origin","profile_image","profile_text","last_ip","account_expires","created","last_active"]);},ARRAY_FILTER_USE_KEY);
+        }
+
+    return $return;
+    }

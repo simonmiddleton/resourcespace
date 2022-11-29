@@ -6,3 +6,4 @@ desc: Google VR View - 360 degree image and video previews (equirectangular form
 icon: fa fa-vr-cardboard
 config_url: /plugins/vr_view/pages/setup.php
 category: User interface
+info_url: https://www.resourcespace.com/knowledge-base/plugins/googlevrview

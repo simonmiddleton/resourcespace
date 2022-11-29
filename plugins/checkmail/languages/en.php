@@ -42,3 +42,4 @@ $lang['yourresourcehasbeenuploaded']="Your resource has been uploaded";
 $lang['yourresourceshavebeenuploaded']="Your resources have been uploaded";
 
 $lang['checkmail_not_allowed_error_template'] = '[user-fullname] ([username]), with ID [user-ref] and e-mail [user-email] is not allowed to upload via e-mail (check permissions "c" or "d" or the blocked users in checkmail setup page). Recorded on: [datetime].';
+$lang["checkmail_createdfromcheckmail"] = "Created from Check Mail plugin";

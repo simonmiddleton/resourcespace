@@ -376,7 +376,7 @@
 		if (url!="")
 			{
 				url=decodeURIComponent(url);
-				url="<a href='" + url + "'><?php echo $lang['link']; ?></a>";
+				url="<a class='message_link' href='" + url + "'><?php echo $lang['link']; ?></a>";
 			}
 		if (typeof owner==="undefined" || owner=='')
 			{

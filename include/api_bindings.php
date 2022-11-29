@@ -100,6 +100,7 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    global $lang;
     if (!(checkperm("c") || checkperm("d")) || checkperm("XU" . $resource_type))
         {
         return false;
@@ -110,7 +111,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
     # Create a new resource
-    $ref=create_resource($resource_type,$archive);
+    $ref=create_resource($resource_type,$archive,-1,$lang["createdfromapi"]);
     if (!is_int($ref))
         {
         return false;
@@ -174,14 +175,10 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
-    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
-    
-    # check that $resource param is a positive integer and valid for int type db field
-    $options_resource = [ 'options' => [ 'min_range' => 1,   'max_range' => 2147483647] ];
-    if (!filter_var($resource, FILTER_VALIDATE_INT, $options_resource))
-        {
-        return false;
-        }
+    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit, $userref;
+
+    // This user's template or real resources only
+    if ($resource<1 && $resource!=0-$userref) {return false;}
 
     $resourcedata=get_resource_data($resource,true);
     if (!$resourcedata)
@@ -216,7 +213,8 @@ function api_delete_resource($resource)
 
 function api_copy_resource($from,$resource_type=-1)
     {
-    return copy_resource($from,$resource_type);            
+    global $lang;
+    return copy_resource($from,$resource_type,$lang["createdfromapi"]);            
     }
 
 function api_get_resource_log($resource, $fetchrows=-1)
@@ -762,7 +760,7 @@ function api_get_resource_collections($ref)
     return $ref_collections;
     }
 
-function api_update_related_resource($ref,$related,$add=true)
+function api_update_related_resource($ref,$related,$add=true) 
     {
     global $enable_related_resources;
     if(!$enable_related_resources)
@@ -770,7 +768,10 @@ function api_update_related_resource($ref,$related,$add=true)
         return false;
         }
     $related = explode(",",$related);
-    return update_related_resource($ref,$related,$add);
+    $addboolean = null;
+    if ($add==="true") { $addboolean=true; }
+    elseif ($add==="false") { $addboolean=false; }
+    return update_related_resource($ref,$related,$addboolean);
     }
 
 function api_get_collections_resource_count(string $refs)
@@ -961,4 +962,13 @@ function api_mark_email_as_invalid($email)
 function api_get_user_message($ref)
     {
     return get_user_message($ref);
+    }
+
+function api_get_users_by_permission($permissions)
+    {
+    if(!is_array($permissions))
+        {
+        $permissions = explode(",",$permissions);
+        }
+    return get_users_by_permission($permissions); 
     }

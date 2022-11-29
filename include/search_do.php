@@ -179,6 +179,7 @@ function do_search(
 
     $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
+    $searchidmatch = false;
     // Used to check if ok to skip keyword due to a match with resource type/resource ID
     if(is_int_loose($search))
         {
@@ -495,31 +496,7 @@ function do_search(
                                 $c++;
                                 }
                             }
-                        elseif ($kw[0]=="startdate")
-                            {
-                            if ($sql_filter->sql != "")
-                                {
-                                $sql_filter->sql.=" AND ";
-                                }
-                            $sql_filter->sql.= ($sql_filter->sql !="" ? " AND " : "") . "rdfn" . $c . ".name >= ? ";
-                            array_push($sql_filter->parameters,"s",$keystring);
-
-                            $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?";
-                            array_push($sql_join->parameters,"s",$datefield);
-                            }
-                        elseif ($kw[0]=="enddate")
-                            {
-                            if ($sql_filter->sql!="")
-                                {
-                                $sql_filter->sql.=" AND ";
-                                }
-                            $sql_filter->sql.= ($sql_filter->sql != "" ? " AND " : "") . "rdfn" . $c . ".value <= ? ";
-                            array_push($sql_filter->parameters,"s",$keystring . " 23:59:59");
-
-                            $sql_join->sql .=" JOIN resource_node rdf" . $c . " ON rdfn" . $c . ".resource=r.ref LEFT JOIN node rdfn" . $c . " ON rdfn" . $c . ".ref=rdf" . $c . ".node AND rdfn" . $c . ".resource_type_field = ?";
-                            array_push($sql_join->parameters,"s",$datefield);
-                            }
-                            # Additional date range filtering
+                        # Additional date range filtering
                         elseif (count($datefieldinfo) && substr($keystring,0,5)=="range")
                             {
                             $c++;
@@ -926,7 +903,7 @@ function do_search(
                                                          WHERE rn[union_index].node IN
                                                                (SELECT node
                                                                   FROM `node_keyword` nk[union_index]
-                                                                 WHERE (nk[union_index].keyword = ? " . $relatedsql->sql .  $union_restriction_clause->sql . ")" .
+                                                                 WHERE ((nk[union_index].keyword = ? " . $relatedsql->sql .") ".  $union_restriction_clause->sql . ")" .
                                                                  ($alternative_keywords_sql->sql != "" ? ($alternative_keywords_sql->sql . $union_restriction_clause->sql) : "" ) .
                                                     ") GROUP BY resource " .
                                                        ($non_field_keyword_sql->sql != "" ? $non_field_keyword_sql->sql : "") ;

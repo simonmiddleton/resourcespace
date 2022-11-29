@@ -7,3 +7,4 @@ version: 1.0
 default_priority: 1
 config_url: /plugins/google_analytics/pages/setup.php
 category: system
+info_url: https://www.resourcespace.com/knowledge-base/plugins/google-analytics

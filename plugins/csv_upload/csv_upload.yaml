@@ -5,3 +5,4 @@ version: 1.0
 desc: [Advanced] Upload meta data using a CSV file.
 icon: fa fa-file-csv
 category: asset processing
+info_url: https://www.resourcespace.com/knowledge-base/plugins/csv-upload

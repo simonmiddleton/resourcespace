@@ -7,3 +7,4 @@ icon: fa fa-history
 config_url: /plugins/track_field_history/pages/setup.php
 default_priority: 999
 category: Workflow and access
+info_url: https://www.resourcespace.com/knowledge-base/plugins/track-field-changes

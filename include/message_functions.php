@@ -332,7 +332,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
                     $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                               
-                    if(strpos($message_text,$url) === false)
+                    if($url !== '' && strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
                         $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
@@ -1021,7 +1021,7 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
             }
         if (count($notifications["emails"])>0)
             {
-            if(!empty($url) && strpos($messagetext,$url) === false)
+            if(!empty($url) && !is_null($url) && strpos($messagetext,$url) === false)
                 {
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";

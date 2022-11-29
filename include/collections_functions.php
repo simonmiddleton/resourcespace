@@ -2254,6 +2254,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         $notifymessage->append_text($internalmessage);
         $notifymessage->append_text("<br/><br/>" . $templatevars['message'] . "<br/><br/>");
         $notifymessage->append_text($viewlinktext);
+        $notifymessage->url = $url; 
         send_user_notification($internal_user_ids,$notifymessage);
         }
 
@@ -2261,8 +2262,8 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     # Return an empty string (all OK).
     return "";
     }
-
-
+    
+    
 
 /**
  * Generate an external access key to allow external people to view the resources in this collection.
@@ -3225,7 +3226,11 @@ function relate_to_collection($ref,$collection)
         {
         $params = array_merge($params, ['i', $ref, 'i', $colresource]);
         }
-    ps_query("insert into resource_related(resource,related) values ". str_repeat('(?, ?)', count($colresources)), $params);
+    ps_query(
+        "INSERT INTO resource_related (resource,related) 
+            VALUES ". implode(', ',array_fill(0, count($colresources), '(?, ?)')),
+        $params
+    );
 	}
 
 /**
@@ -3916,7 +3921,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
            $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
-           $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
+           $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,

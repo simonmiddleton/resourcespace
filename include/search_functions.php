@@ -598,11 +598,11 @@ function compile_search_actions($top_actions)
     $omit_edit_all = false;
 
     #This is to stop duplicate "Edit all resources" caused on a collection search
-    if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
+    if(isset($search) && substr($search, 0, 11) == '!collection')
         { 
         $omit_edit_all = true;
         }
-                   
+
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
         if($top_actions && $allow_save_search && $usercollection != $collection)
@@ -1612,12 +1612,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     case "fmin":
                         // Need to convert MB value to bytes
                         $propertiessql->sql .= $sql_filter_properties_and . " r.file_size >= ?";
-                        array_push($propertiessql->parameters,"i",$floatval($propertyval) * 1024 * 1024);
+                        array_push($propertiessql->parameters,"i",floatval($propertyval) * 1024 * 1024);
                     break;
                     case "fmax":
                         // Need to convert MB value to bytes
                         $propertiessql->sql .= $sql_filter_properties_and . " r.file_size <= ?";
-                        array_push($propertiessql->parameters,"i",$floatval($propertyval) * 1024 * 1024);
+                        array_push($propertiessql->parameters,"i",floatval($propertyval) * 1024 * 1024);
                     break;
                     case "fext":
                         $propertyval=str_replace("*","%",$propertyval);
@@ -2937,7 +2937,7 @@ function update_search_from_request($search)
         // Nodes can be searched directly when displayed on simple search bar
         // Note: intially they come grouped by field as we need to know whether if
         // there is a OR case involved (ie. @@101@@102)
-        else if('' != $value && substr($key, 0, 14) == 'nodes_searched')
+        else if('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
             {
             $node_ref = '';
 

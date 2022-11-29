@@ -11,9 +11,20 @@ $cpu_baseline=970410;
 $disk_baseline=20558;
 ?>
 <div class="BasicsBox">
-<p>&gt; <a href="admin_system_performance.php?reload=<?php echo time() ?>" onClick="return CentralSpaceLoad(this,false);"><?php echo $lang["reload"] ?></a></p>
+    <p>
+        <a href="admin_system_performance.php?reload=<?php echo time() ?>" onClick="return CentralSpaceLoad(this,false);">
+            <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . $lang["reload"] ?>
+        </a>
+    </p>
 
-<h1><?php echo $lang["system_performance"] ?></h1>
+    <h1><?php echo $lang["system_performance"] ?></h1>
+
+<?php
+renderBreadcrumbs([
+    ['title' => $lang["systemsetup"], 'href'  => $baseurl_short . "pages/admin/admin_home.php", 'menu' => true],
+    ['title' => $lang["system_performance"]]
+]);
+?>
 
 <?php
 # Database read/write speed

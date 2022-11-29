@@ -364,9 +364,15 @@ if(!$is_search)
             }
 
         <?php
-        if($edit_autosave)
+        if(!$is_search && $edit_autosave)
             {
-            echo "AutoSave('{$field['ref']}');";
+            ?>// Give time for all actions e.g. check parents to complete before autosaving
+            if(typeof(edit_tree_block_autosave) == 'undefined' || !edit_tree_block_autosave)
+                {
+                edit_tree_block_autosave = true;
+                loadingtimers.push(window.setTimeout("AutoSave('<?php echo htmlspecialchars($field['ref']); ?>');edit_tree_block_autosave = false;",500));
+                }
+            <?php
             }
 
         echo $update_result_count_function_call;

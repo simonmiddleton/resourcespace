@@ -19,7 +19,6 @@ function HookEmuEditEdithidefield($field)
 function HookEmuEditEditbeforesectionhead()
     {
     global $lang, $baseurl, $ref, $resource, $emu_irn_field, $emu_confirm_upload, $emu_resource_types;
-
     if(0 > $ref && in_array($resource['resource_type'], $emu_resource_types))
         {
         $value = htmlspecialchars(get_data_by_field($ref,$emu_irn_field));
@@ -58,13 +57,13 @@ function HookEmuAllAdditionalvalcheck($fields, $fields_item)
         global $emu_data;
 
         $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
-        $emu_rs_mappings = unserialize(base64_decode($emu_rs_saved_mappings));
+        $emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
         $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($emu_irn), $emu_rs_mappings);
 
         // Make sure we actually do save this data, even if we return an error
         update_field($ref, $emu_irn_field, $emu_irn);
 
-        if(!is_array($emu_data) && 0 > $ref)
+        if(count($emu_data) === 0 && 0 > $ref)
             {
             // We can't get any data from EMu for this new resource. Need to show warning if user has not already accepted this
             if('' == getval('emu_confirm_upload', ''))
@@ -73,7 +72,7 @@ function HookEmuAllAdditionalvalcheck($fields, $fields_item)
 
                 $emu_confirm_upload = true;
 
-                $error = "{$lang['emu_upload_nodata']} {$emu_form_post_id} {$lang['emu_confirm_upload_nodata']}";
+                $error = "{$lang['emu_upload_nodata']} {$lang['emu_confirm_upload_nodata']}";
 
                 return $error;
                 }
@@ -105,7 +104,7 @@ function HookEmuEditSaveextraresourcedata($list)
 
     global $emu_api_server, $emu_api_server_port, $emu_rs_saved_mappings, $emu_data;
 
-    $emu_rs_mappings = unserialize(base64_decode($emu_rs_saved_mappings));
+    $emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
     $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($emu_irn), $emu_rs_mappings);
 
     if(is_array($emu_data))
@@ -119,30 +118,33 @@ function HookEmuEditSaveextraresourcedata($list)
     return false;
     }
 
-
+/**
+* Emu plugin attaching to the 'aftersaveresourcedata' hook
+* IMPORTANT: 'aftersaveresourcedata' hook is called from both save_resource_data() and save_resource_data_multi()!
+* 
+* @return boolean|array Returns FALSE to show hook didn't run -OR- a list of errors. See hook 'aftersaveresourcedata'
+*                       in resource_functions.php for more info.
+*/
 function HookEmuEditAftersaveresourcedata()
     {
-    global $emu_import;
-
-    if(!isset($emu_import) || (isset($emu_import) && !$emu_import))
+    if(!isset($GLOBALS['emu_import']) || (isset($GLOBALS['emu_import']) && !$GLOBALS['emu_import']))
         {
         return false;
         }
 
-    // Update Resource with EMu data
-    global $ref, $emu_irn_field, $emu_rs_saved_mappings, $emu_data, $emu_update_list;
+    global $ref, $emu_irn_field, $emu_rs_saved_mappings, $emu_data, $emu_update_list, $lang;
 
-    $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
-    $emu_rs_mappings = unserialize(base64_decode($emu_rs_saved_mappings));
-
-    // Not a batch edit, make up the $list array so we can pretend it is
-    if(!is_array($emu_update_list))
+    if(count($emu_data) === 0)
         {
-        $emu_update_list    = array();
-        $emu_update_list[0] = $ref;
+        return [$lang['emu_nodata_returned']];
         }
 
-    foreach($emu_update_list as $resource_ref)
+    // Update resources with EMu data
+    $resources = (is_array($emu_update_list) ? $emu_update_list : [(int) $ref]);
+    $emu_irn         = intval(getval("field_{$emu_irn_field}", '', true));
+    $emu_rs_mappings = plugin_decode_complex_configs($emu_rs_saved_mappings);
+
+    foreach($resources as $resource_ref)
         {
         debug("emu: Updating resource ID #{$resource_ref} with data from EMu database");
 
@@ -158,5 +160,5 @@ function HookEmuEditAftersaveresourcedata()
             }
         }
 
-    return;
+    return false;
     }

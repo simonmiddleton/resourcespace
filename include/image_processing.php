@@ -33,7 +33,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
-    global $storagedir, $syncdir, $batch_replace_local_folder;
+    global $storagedir, $syncdir, $batch_replace_local_folder, $valid_upload_paths, $tempdir;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -61,6 +61,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $valid_upload_paths[] = $storagedir;
         $valid_upload_paths[] = $syncdir;    
         $valid_upload_paths[] = $batch_replace_local_folder;
+        if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
  
         foreach($valid_upload_paths as $valid_upload_path)
             {
@@ -658,7 +659,7 @@ function extract_exif_comment($ref,$extension="")
             exiftool_resolution_calc($image,$ref);
             }
         
-        $read_from=get_exiftool_fields($resource['resource_type']);
+        $read_from=get_exiftool_fields($resource['resource_type'],NODE_NAME_STRING_SEPARATOR);
 
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
@@ -794,7 +795,7 @@ function extract_exif_comment($ref,$extension="")
                         # The use of safe_file_name and strtolower ensures matching takes place on alphanumeric characters only and ignores case.
                         
                         # First fetch all options in all languages
-                        $options=trim_array(explode(",",strtolower($read_from[$i]["options"])));
+                        $options=trim_array(explode(NODE_NAME_STRING_SEPARATOR,strtolower($read_from[$i]["options"])));
                         for ($n=0;$n<count($options);$n++)  {$options[$n]=$options[$n];}
 
                         # If not in the options list, do not read this value
@@ -2316,7 +2317,7 @@ function extract_mean_colour($image,$ref)
         {
         for ($x=0;$x<20;$x++)
             {
-            $rgb = imagecolorat($image, round($x*($width/20)), round($y*($height/20)));
+            $rgb = imagecolorat($image, floor($x*($width/20)), floor($y*($height/20)));
             $red = ($rgb >> 16) & 0xFF;
             $green = ($rgb >> 8) & 0xFF;
             $blue = $rgb & 0xFF;

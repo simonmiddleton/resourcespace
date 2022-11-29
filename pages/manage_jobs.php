@@ -18,10 +18,16 @@ $job_find       = getval("job_find","");
 if(!checkperm('a') || $job_user == $userref)
     {
     $pagetitle  = $lang["my_jobs"];
+    $breadcrumbs = [
+        ['title' => $userfullname=="" ? $username : $userfullname, 'href' => "{$baseurl_short}pages/user/user_home.php", 'menu' => true],
+        ['title' => $pagetitle]];
     }
 else
     {
     $pagetitle  = $lang["manage_jobs_title"];
+    $breadcrumbs = [
+        ['title' => $lang['systemsetup'], 'href' => "{$baseurl_short}pages/admin/admin_home.php", 'menu' => true],
+        ['title' => $pagetitle]];
     }
 
 $deletejob = getval("delete_job",0,true);
@@ -244,6 +250,8 @@ include '../include/header.php';
         {
         echo "<p>" . text("introtext") . "</p>";
         }
+
+    renderBreadcrumbs($breadcrumbs);
 
     if(checkperm('a') && $endedjobs > 0)
         {

@@ -1729,6 +1729,9 @@ $alt_types=array("");
 # organize View page display according to alt_type
 $alt_types_organize=false;
 
+# Allow for alternative files to be natively displayed in the browser
+$alternative_file_view_in_browser = ['pdf', 'mp3'];
+
 # Display col-size image of resource on alternative file management page
 $alternative_file_resource_preview=true;
 
@@ -1853,9 +1856,6 @@ $dynamic_keyword_suggest_contains=false;
 
 # Option to show resource ID in the thumbnail, next to the action icons.
 $display_resource_id_in_thumbnail=false;
-
-# Show "Save" and "Clear" buttons at the top of the resource edit form as well as at the bottom
-$edit_show_save_clear_buttons_at_top=false;
 
 # Allow empty collections to be shared?
 $collection_allow_empty_share=false;
@@ -2610,9 +2610,6 @@ $download_no_session_cache_limiter=false;
 # Option to show only existing shares that have been shared by the user when sharing resources (not collections)
 $resource_share_filter_collections=false;
 
-# Set the following to false to disable permission checking before showing edit_all link in collection bar and on Manage my collections page, useful as this can be a performance hit if there are many resources in collections
-$edit_all_checkperms=false;
-
 # Option to turn off email sharing.
 $email_sharing=true;
 
@@ -3311,7 +3308,7 @@ $owner_field_mappings = [];
 
 // Optional - $valid_upload_paths
 // Any file paths  passed to the upload_file() function must be located under one of the $valid_upload_paths
-// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder - these don't need to be added to the array
+// The function will always permit the following: $storagedir, $syncdir, $batch_replace_local_folder, $tempdir - these don't need to be added to the array
 // $valid_upload_paths = [];
 
 // Option to show the resource workflow state (icon and text) in search results when in thumbnail display mode

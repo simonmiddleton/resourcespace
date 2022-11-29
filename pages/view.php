@@ -1014,6 +1014,18 @@ if($image_preview_zoom)
             if($image_preview_zoom)
                 {
                 $image_preview_zoom_lib_required = true;
+
+                # Process rotation from preview tweaks and use it to display the openseadragon preview in the correct orientation.
+                if (isset($resource['preview_tweaks']))
+                    {
+                    $preview_tweak_parts = explode('|', $resource['preview_tweaks']);
+                    $osd_preview_rotation = 0;
+                    if ($preview_tweak_parts[0] > 0 && is_numeric($preview_tweak_parts[0]))
+                        {
+                        $osd_preview_rotation = 360 - $preview_tweak_parts[0];
+                        }
+                    }
+
                 ?>
                 <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
@@ -1041,7 +1053,7 @@ if($image_preview_zoom)
                         openseadragon_viewer = OpenSeadragon({
                             id: "openseadragon_viewer",
                             prefixUrl: "<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/images/",
-
+                            degrees: <?php echo $osd_preview_rotation; ?>,
                             // debugMode: true,
                             // debugGridColor: ['red'],
 

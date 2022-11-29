@@ -28,4 +28,4 @@ $lang["confirmdeleteconsentfile"]="Are you sure you wish to DELETE this file? Th
 
 $lang['consent_manager_mediums']='Consent usage mediums';
 
-$lang["consent_manager_access"]="Manage consent data (where not already enabled via 'a')";
+$lang["consent_manager_access"]="Manage consent data (where not already enabled via \"Can access the System Setup area\" permission)";

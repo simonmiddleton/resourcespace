@@ -4457,6 +4457,8 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             <?php
             }
 
+        hook("extra_edit_buttons");
+        
         # Duplicate navigation
        if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav") && $backtoresults)
             {
@@ -4683,6 +4685,12 @@ function render_featured_collections(array $ctx, array $items)
                 ),
                 "text" => $lang['add_to_dash']);
             }
+        if($is_featured_collection && allow_featured_collection_share($fc))
+            {
+            $render_ctx["tools"][] = array(
+                "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "text" => $lang["share"]);
+            }
         if($is_featured_collection && collection_readable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_select;
@@ -4763,7 +4771,7 @@ function render_featured_collections(array $ctx, array $items)
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
             }
-
+            
         // Don't show the tools for external shares
         if((trim($k) != ""))
             {
