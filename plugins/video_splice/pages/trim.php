@@ -112,7 +112,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c")))
         {
         // create a new resource.
-        $newref=copy_resource($ref);
+        $newref=copy_resource($ref,-1,$lang["video_splice_createdfromvideosplice"]);
         $target=get_resource_path(
             $newref,
             true,

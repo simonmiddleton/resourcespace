@@ -495,11 +495,21 @@ function put_resource_data($resource,$data)
     }
 
 
-function create_resource($resource_type,$archive=999,$user=-1)
+/**
+ * create_resource
+ *
+ * @param  integer  $resource_type  ID of target resource type
+ * @param  integer  $archive        ID of target archive state, 999 if archived
+ * @param  integer  $user           User ID, -1 for current user
+ * @param  string   $origin         Source of resource, should not be blank
+ * 
+ * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
+ */
+function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     {
     # Create a new resource.
     global $k;
-
+    
     if(!is_numeric($archive))
         {
         return false;
@@ -545,7 +555,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
     # Log this
     daily_stat("Create resource",$insert);
 
-    resource_log($insert, LOG_CODE_CREATED, 0);
+    resource_log($insert, LOG_CODE_CREATED, 0,$origin);
     if(upload_share_active())
         {
         resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
@@ -3393,36 +3403,47 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     }
 
 /**
- * get_resource_types
+ * Return an array of resource types that this user has access to
  *
- * @param  string   $types          Comma separated resource type references to return specific types
- * @param  boolean  $translate      Option to translate resource type names in result
- * @param  boolean  $ignore_access  Return all resource types regardless of access?
- * @return array    Array of resource types returned from mySQL
+ * @param  string   $types      Comma separated list to limit the types that are returned by ref, 
+ *                              blank string returns all available types
+ * @param  boolean  $translate  Flag to translate the resource types before returning
+ * 
+ * @return array    Array of resource types limited by T* permissions and optionally by $types
  */
-function get_resource_types($types = "", $translate = true, $ignore_access = false)
+function get_resource_types($types = "", $translate = true)
     {
-    # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
-    // support getting info for a comma-delimited list of restypes (as in a search)
-    $parameters=array();
-    if ($types==""){$sql="";} else
-        {
-        # Ensure $types are suitably quoted and escaped
-        $cleantypes="";
-        $s=explode(",",$types);
+    $resource_types = get_all_resource_types();
+    $return=array();
 
-        foreach ($s as $type)
-            {
-            if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
-                {
-                if ($cleantypes!="") {$cleantypes.=",";}
-                $cleantypes.="?";
-                $parameters[]="i";$parameters[]=$type;
-                }
-            }
-        $sql=" WHERE ref IN ($cleantypes) ";
+    if ($types="")
+        {
+        $s=explode(",",$types);
         }
 
+    for ($n=0;$n<count($resource_types);$n++)
+        {
+        if ((!isset($s) || in_array($resource_types[$n]['ref'],$s)) && !checkperm('T' . $resource_types[$n]['ref']))
+            {
+            if ($translate==true) 
+                {
+                $resource_types[$n]["name"]=lang_or_i18n_get_translated($resource_types[$n]["name"], "resourcetype-");
+                }
+            $return[]=$resource_types[$n];
+            }
+        }
+    return $return;
+    }
+
+/**
+ * Returns all resources types
+ * 
+ * No permissions are checked or applied, do not expose this function to the API
+ *
+ * @return array Array of resource types ordered by 'order_by' then 'ref'
+ */
+function get_all_resource_types()
+    {
     $r=ps_query("SELECT ref,
                         name,
                         allowed_extensions,
@@ -3434,23 +3455,11 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                         colour,
                         icon
                    FROM resource_type
-                        $sql
                ORDER BY order_by,
                         ref",
-                        $parameters,
+                        [],
                         "schema");
-
-    $return=array();
-    # Check permissions and Translate names (if $translate==true)
-    for ($n=0;$n<count($r);$n++)
-        {
-        if (!checkperm('T' . $r[$n]['ref']) || $ignore_access)
-            {
-            if ($translate==true) {$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");} # Translate name
-            $return[]=$r[$n]; # Add to return array
-            }
-        }
-    return $return;
+    return $r;
     }
 
 function get_resource_top_keywords($resource,$count)
@@ -3492,7 +3501,6 @@ function get_resource_top_keywords($resource,$count)
 
 function clear_resource_data($resource)
     {
-        debug("BANG " . $resource);
     # Clears stored data for a resource.
 	ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
 	ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);
@@ -3541,10 +3549,11 @@ function get_resource_ref_range($lower,$higher)
 *
 * @param  int    $from            ID of resource
 * @param  mixed  $resource_type   ID of resource type
+* @param  string $origin          Origin of resource when uploading, leave blank if not an upload
 *
 * @return boolean|integer
 */
-function copy_resource($from,$resource_type=-1)
+function copy_resource($from,$resource_type=-1,$origin='')
     {
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
     global $userref;
@@ -3654,7 +3663,7 @@ function copy_resource($from,$resource_type=-1)
 
     # Log this
     daily_stat("Create resource",$to);
-    resource_log($to,LOG_CODE_CREATED,0);
+    resource_log($to,LOG_CODE_CREATED,0,$origin);
 
     hook("afternewresource", "", array($to));
 
@@ -4033,29 +4042,46 @@ function update_resource_type($ref,$type)
 /**
 * Returns a list of exiftool fields, which are basically fields with an 'exiftool field' set.
 *
-* @param integer resource_type
+* @param integer    $resource_type
+* @param string     $option_separator   String to separate the node options returned for fixed list fields
+*                                       - Recommended NODE_NAME_STRING_SEPARATOR
+*                                       - Defaults to comma for backwards compatibility
 *
 * @return array
 */
-function get_exiftool_fields($resource_type)
+function get_exiftool_fields($resource_type,string $option_separator = ",")
     {
-
+    global $FIXED_LIST_FIELD_TYPES;
     $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
 
-    return ps_query("
-           SELECT f.ref,
-                  f.type,
-                  f.exiftool_field,
-                  f.exiftool_filter,
-                  group_concat(n.name) AS options,
-                  f.name,
-                  f.read_only
-             FROM resource_type_field AS f
-        LEFT JOIN node AS n ON f.ref = n.resource_type_field
+    $return = ps_query("
+           SELECT ref,
+                  type,
+                  exiftool_field,
+                  exiftool_filter,
+                  name,
+                  read_only
+             FROM resource_type_field 
             WHERE length(exiftool_field) > 0
               AND (resource_type = ? ". ($include_globals == 1 ?" OR resource_type = '0'":"") .")
-         GROUP BY f.ref
+         GROUP BY ref
          ORDER BY exiftool_field", array("i",$resource_type),"schema");
+        
+
+    // Add options for fixed list fields
+    foreach($return as &$field)
+        {
+        if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            $options = get_field_options($field["ref"]);
+            $field["options"] = implode($option_separator,$options);            
+            }
+        else
+            {
+            $field["options"] = "";
+            }
+        }
+    return $return;
     }
 
 /**
@@ -4539,14 +4565,21 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 
 function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
 	{
-    global $syncdir;
+    global $syncdir,$lang;
     // Import the resource at the given path
     // This is used by staticsync.php and Camillo's SOAP API
     // Note that the file will be used at it's present location and will not be copied.
 
     $r=create_resource($type);
     // Log this in case the original location is not stored anywhere else
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_CREATED,'','','', $syncdir . DIRECTORY_SEPARATOR . $path);
+    resource_log(
+        RESOURCE_LOG_APPEND_PREVIOUS,
+        LOG_CODE_CREATED,
+        '',
+        $lang["createdfromstaticsync"],
+        '',
+        $syncdir . DIRECTORY_SEPARATOR . $path
+    );
     return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
     }
 

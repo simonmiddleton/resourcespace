@@ -659,7 +659,7 @@ function extract_exif_comment($ref,$extension="")
             exiftool_resolution_calc($image,$ref);
             }
         
-        $read_from=get_exiftool_fields($resource['resource_type']);
+        $read_from=get_exiftool_fields($resource['resource_type'],NODE_NAME_STRING_SEPARATOR);
 
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
@@ -795,7 +795,7 @@ function extract_exif_comment($ref,$extension="")
                         # The use of safe_file_name and strtolower ensures matching takes place on alphanumeric characters only and ignores case.
                         
                         # First fetch all options in all languages
-                        $options=trim_array(explode(",",strtolower($read_from[$i]["options"])));
+                        $options=trim_array(explode(NODE_NAME_STRING_SEPARATOR,strtolower($read_from[$i]["options"])));
                         for ($n=0;$n<count($options);$n++)  {$options[$n]=$options[$n];}
 
                         # If not in the options list, do not read this value
