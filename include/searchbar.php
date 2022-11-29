@@ -88,7 +88,17 @@ for ($n=0;$n<count($keywords);$n++)
             {
             $s=explode(":",$keywords[$n]);
             if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}
-            else {$set_fields[$s[0]]=$s[1];}
+            else
+                {
+                $set_fields[$s[0]] = $s[1];
+                $i = $n + 1;
+                while ($i < count($keywords) && strpos($keywords[$i], ":") == false)
+                    {
+                    $set_fields[$s[0]] .= " " . $keywords[$i];
+                    $i++;
+                    }
+                $n = $i - 1;
+            }
             if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
             }
             
