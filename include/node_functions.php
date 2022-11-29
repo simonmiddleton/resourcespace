@@ -297,7 +297,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     if (!isset($asdefaultlanguage))
         $asdefaultlanguage='en';
 
-    // Use langauge specified if not use default
+    // Use language specified, if not use default
     isset($language)?$language_in_use = $language:$language_in_use = $defaultlanguage;
 
     $return_nodes = array();
@@ -396,20 +396,70 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         " . $limit;
 
     $nodes = ps_query($query,$parameters,"schema");
-
-    foreach($nodes as $node)
+  
+    // No need to recurse if no parent was specified as we already have all nodes
+    if($recursive && (int)$parent > 0)
         {
-        array_push($return_nodes, $node);
-
-        // No need to recurse if no parent was specified as we already have all nodes
-        if($recursive && (int)$parent > 0)
+        foreach($nodes as $node)
             {
             foreach(get_nodes($resource_type_field, $node['ref'], TRUE) as $sub_node)
                 {
-                array_push($return_nodes, $sub_node);
+                array_push($nodes, $sub_node);
                 }
             }
         }
+    else
+        {
+        $return_nodes = $nodes;
+        }
+
+    if($recursive)
+        {
+        // Need to reorder so that parents are ordered by first, with children between. Query will have returned them all according to the passed order_by
+        $parents_processed = [];        
+        $orderednodes = array_values(array_filter($return_nodes,function($node) use ($parent){return (int)$node["parent"] ==  0 || (int)$node["parent"] == $parent;}));
+        for($n=0;$n < count($orderednodes);$n++)
+            {
+            $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
+            $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"];
+            }
+        while(count($return_nodes) > 0)
+            {
+            // Loop to find children
+            for($n=0;$n < count($orderednodes);$n++)
+                {
+                if(!in_array($orderednodes[$n]["ref"],$parents_processed))
+                    {
+                    // Add the children of this node with the the path added (relative to the specified parent)
+                    $children = array_filter($return_nodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
+                    // Set order
+                    uasort($children,"node_orderby_comparator");
+                    $children = array_values($children);
+                    for($c=0;$c < count($children);$c++)
+                        {
+                        $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
+                        $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  $children[$c]["translated_name"];
+                        // Insert the child after the parent and any nodes with a lower order_by value
+                        array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
+                        // Remove child from $treenodes
+                        $pos = array_search($children[$c]["ref"],array_column($return_nodes,"ref"));
+                        unset($return_nodes[$pos]);
+                        $return_nodes = array_values($return_nodes);
+                        }
+                    $parents_processed[] = $orderednodes[$n]["ref"];
+                    }
+                else
+                    {
+                    $pos = array_search($orderednodes[$n]["ref"],array_column($return_nodes,"ref"));
+                    // Remove from $treenodes
+                    unset($return_nodes[$pos]);
+                    }
+                }
+            $return_nodes = array_values($return_nodes);
+            }
+        $return_nodes =  $orderednodes;
+        }
+   
     return $return_nodes;
     }
 
@@ -2722,7 +2772,7 @@ function get_field_node_strings_ordered(int $field,bool $namekey=false,bool $det
         }    
     $treenodes = get_nodes($field,NULL,TRUE);
 
-    // Set up array to store ordered nodes and keep track of ethsoe that have been processed
+    // Set up array to store ordered nodes and keep track of those that have been processed
     $orderednodes = [];
     $parents_processed = [];
 
@@ -2745,12 +2795,13 @@ function get_field_node_strings_ordered(int $field,bool $namekey=false,bool $det
                 // Set order
                 uasort($children,"node_orderby_comparator");
                 $children = array_values($children);
-                // print_r($children);
                 for($c=0;$c < count($children);$c++)
                     {
                     $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
                     $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  $children[$c]["translated_name"];
+                    // Insert the child after the parent and any nodes with a lower order_by value
                     array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
+                    // Remove child from $treenodes
                     $pos = array_search($children[$c]["ref"],array_column($treenodes,"ref"));
                     unset($treenodes[$pos]);
                     $treenodes = array_values($treenodes);
@@ -2760,6 +2811,7 @@ function get_field_node_strings_ordered(int $field,bool $namekey=false,bool $det
             else
                 {
                 $pos = array_search($orderednodes[$n]["ref"],array_column($treenodes,"ref"));
+                // Remove from $treenodes
                 unset($treenodes[$pos]);
                 }
             }

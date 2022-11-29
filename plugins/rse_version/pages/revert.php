@@ -53,48 +53,60 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
 
     // resolve node changes
     if($is_fixed_field)
-        {
-        $is_cat_tree = ($log["resource_type_field_type"] == FIELD_TYPE_CATEGORY_TREE);
-        $nodes_available=array();
-        foreach(get_nodes($log['resource_type_field'], null, $is_cat_tree) as $available_node)
+        {    
+        // Create array of all possible values - precedence of index as follows (last added): 
+        // 1) Full path untranslated
+        // 2) Full path translated
+        // 3) Name untranslated
+        // 4) Name translated
+        $nodes_available_keys = [];
+        $nodes_available_full = get_field_node_strings_ordered($log['resource_type_field'],false,true);
+        foreach($nodes_available_full as $node_ref=>$node_details)
             {
-            $nodes_available[$available_node['ref']]=$available_node['name'];
-            }
+            $nodes_available_keys[$node_details["path"]] = $node_ref;
+            $nodes_available_keys[$node_details["translated_path"]] = $node_ref;
+            $nodes_available_keys[$node_details["name"]] = $node_ref;
+            $nodes_available_keys[$node_details["translated_name"]] = $node_ref;
+            }       
 
-        // all to be added
+        // All to be added
         preg_match_all('/^\s*\-\s*(.*?)$/m',$log['diff'],$matches);
         if(isset($matches[1][0]))
             {
             foreach ($matches[1] as $match)
                 {
                 $match=trim($match);
-                $found_key=array_search($match,$nodes_available);
-                if($found_key===false)
+                $found_key=array_search($match,$nodes_available_full);
+                if(isset($nodes_available_keys[$match]))
                     {
-                    $node_strings_not_found[]=$match;
+                    debug("Found '" . $match . "' in \$nodes_available_keys");
+                    $nodes_to_add[] = $nodes_available_keys[$match];
                     }
                 else
                     {
-                    $nodes_to_add[]=$found_key;
+                    echo "Not found: '" . $match . "'\n<br/>";
+                    $node_strings_not_found[]=$match;
                     }
                 }
             }
 
-        // all to be removed
+        // All to be removed
         preg_match_all('/^\s*\+\s*(.*?)$/m',$log['diff'],$matches);
         if(isset($matches[1][0]))
             {
             foreach ($matches[1] as $match)
                 {
                 $match=trim($match);
-                $found_key=array_search($match,$nodes_available);
-                if($found_key===false)
+                $found_key=array_search($match,$nodes_available_full);
+                if(isset($nodes_available_keys[$match]))
                     {
-                    $node_strings_not_found[]=$match;
+                    debug("Found '" . $match . "' in \$nodes_available_keys");
+                    $nodes_to_remove[] = $nodes_available_keys[$match];
                     }
                 else
                     {
-                    $nodes_to_remove[]=$found_key;
+                    echo "Not found: '" . $match . "'\n<br/>";
+                    $node_strings_not_found[]=$match;
                     }
                 }
             }
@@ -251,7 +263,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         <?php
         foreach($nodes_to_add as $node_to_add)
             {
-            echo htmlspecialchars(i18n_get_translated($nodes_available[$node_to_add]));
+            echo htmlspecialchars(i18n_get_translated($nodes_available_full[$node_to_add]["translated_path"]));
             ?><br/>
             <?php
             }
@@ -265,9 +277,9 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
     <label><?php echo $lang["revertingwillremove"]?></label>
     <div class="Fixed">
         <?php
-        foreach($nodes_to_remove as $nodes_to_remove)
+        foreach($nodes_to_remove as $node_to_remove)
             {
-            echo htmlspecialchars(i18n_get_translated($nodes_available[$nodes_to_remove]));
+            echo htmlspecialchars(i18n_get_translated($nodes_available_full[$node_to_remove]["translated_path"]));
             ?><br/>
             <?php
             }
