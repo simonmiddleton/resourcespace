@@ -814,3 +814,15 @@ const WORKFLOW_DEFAULT_ICONS = [
     '2'     => 'fa-solid fa-box-archive',
     '3'     => 'fa-solid fa-trash',
     ];
+
+// ------------------------- MACRO CONTEXTS -------------------------
+
+define ('MACRO_CONTEXT_UNSPECIFIED',                0);
+define ('MACRO_CONTEXT_CREATE_RESOURCE',            1);
+define ('MACRO_CONTEXT_EXTRACT_EXIF',               2);
+define ('MACRO_CONTEXT_EDIT_SAVE',                  3);
+define ('MACRO_CONTEXT_SAVE_RESOURCE_DATA',         4);
+define ('MACRO_CONTEXT_SAVE_RESOURCE_DATA_MULTI',   5);
+define ('MACRO_CONTEXT_COPY_RESOURCE',              6);
+define ('MACRO_CONTEXT_CSV_UPLOAD',                 7);
+define ('MACRO_CONTEXT_BULK_RUN',                   8);
