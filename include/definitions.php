@@ -826,3 +826,6 @@ define ('MACRO_CONTEXT_SAVE_RESOURCE_DATA_MULTI',   5);
 define ('MACRO_CONTEXT_COPY_RESOURCE',              6);
 define ('MACRO_CONTEXT_CSV_UPLOAD',                 7);
 define ('MACRO_CONTEXT_BULK_RUN',                   8);
+
+// Alternative file extensions that can be natively viewed in the browser
+const ALT_FILE_VIEW_IN_BROWSER = ['pdf', 'mp3'];

@@ -61,7 +61,7 @@ if ($alt_access)
         $enable_alt_file_preview_mouseover = $alt_pre != '' && $alternative_file_previews_mouseover;
         $css_PointerEventsNone = $enable_alt_file_preview_mouseover ? ' PointerEventsNone' : '';
         $rowspan = 1;
-        if(in_array($altfiles[$n]["file_extension"],$alternative_file_view_in_browser) && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"]))
+        if(in_array(strtolower($altfiles[$n]["file_extension"]),ALT_FILE_VIEW_IN_BROWSER) && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"]))
             {
             $rowspan = 2;
             }
@@ -84,7 +84,7 @@ if ($alt_access)
             </script>
         <?php
             } ?>
-		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo (string) $rowspan;?>">
+		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo escape_quoted_data((string)$rowspan);?>">
 		<?php
         if(!hook("renderaltthumb"))
             {
@@ -100,7 +100,7 @@ if ($alt_access)
         <div>
 		</td>
         <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
-		<td class="DownloadFileSize" rowspan="<?php echo (string) $rowspan;?>"><?php echo formatfilesize($altfiles[$n]["file_size"])?></td>
+		<td class="DownloadFileSize" rowspan="<?php echo escape_quoted_data((string)$rowspan);?>"><?php echo escape_quoted_data(str_replace('&nbsp;', ' ',formatfilesize($altfiles[$n]["file_size"])))?></td>
 		
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 		?>
