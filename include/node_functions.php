@@ -1220,6 +1220,9 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
         }
     foreach($translations as $translation)
         {
+        // Only index the first 500 characters
+        $translation = mb_strcut($translation,0,500);
+        
         $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
 
         add_verbatim_keywords($keywords, $translation, $node['resource_type_field']);
