@@ -1536,7 +1536,7 @@ elseif (strlen((string) $resource["file_extension"])>0 && ($access==1 && $restri
 // Render a "View in browser" button for PDF/MP3 (no longer configurable in config as SVGs can easily be disguised)
 if (strlen((string) $resource["file_extension"]) > 0 
     && ($access == 0 || ($access == 1 && $restricted_full_download == true)) 
-    && in_array(strtolower($resource["file_extension"]),["pdf","mp3"]))
+    && in_array(strtolower($resource["file_extension"]),VIEW_IN_BROWSER_EXTENSIONS))
     {
     $path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
     if (resource_download_allowed($ref,"",$resource["resource_type"]) && file_exists($path))
