@@ -352,6 +352,8 @@ function get_collection_resources_with_data($ref)
  *                                          to allow this function to determine it but it will affect performance.
  * @param  string   $search                 Optionsl search string. Used to update resource_node hit count
  * 
+ * @param  integer  $sort_order             Sort order of resource in collection  
+ * 
  * @return boolean | string
  */
 function add_resource_to_collection(
@@ -362,7 +364,8 @@ function add_resource_to_collection(
     $addtype="",
     bool $col_access_control = null,
     array $external_shares = null,
-    string $search = ''
+    string $search = '',
+    int $sort_order = null
 )
     {
     global $lang;
@@ -469,8 +472,8 @@ function add_resource_to_collection(
             {
             ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
             ps_query(
-                'INSERT INTO collection_resource(collection, resource, purchase_size) VALUES (?, ?, ?)',
-                ['i', $collection, 'i', $resource, 's', $size ?: null]
+                'INSERT INTO collection_resource(collection, resource, purchase_size, sortorder) VALUES (?, ?, ?, ?)',
+                ['i', $collection, 'i', $resource, 's', $size ?: null, 'i', $sort_order ?: null]
             );
             }
         
@@ -3339,7 +3342,7 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=ps_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
+	$copied_collection=ps_query("select cr.resource, r.resource_type, cr.sortorder from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
 	
 	if ($remove_existing)
 		{
@@ -3352,7 +3355,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 	foreach($copied_collection as $col_resource)
 		{
 		# Use correct function so external sharing is honoured.
-		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
+		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type'], null, null, '', $col_resource['sortorder']);
 		}
 	
 	hook('aftercopycollection','',array($copied,$current));
