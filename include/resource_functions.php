@@ -8913,3 +8913,15 @@ function update_resource_field_column(int $resource,int $field, string $value)
     ps_query($sql,$params);
     return true;
     }
+
+/**
+* Convert $data_joins (ie fieldX column) value to a user friendly version.
+*
+* @param string $value Text to be split by configured separator, having values translated and output as a CSV
+* 
+* @return string
+*/
+function data_joins_field_value_translate_and_csv(string $value): string
+    {
+    return implode(',', array_map('i18n_get_translated', explode($GLOBALS['field_column_string_separator'], $value)));
+    }
