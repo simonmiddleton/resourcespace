@@ -4257,7 +4257,6 @@ function write_metadata($path, $ref, $uniqid="")
             $filtervalue=hook("additionalmetadatafilter", "", [$write_to[$i]["exiftool_field"], $writevalue]);
             if ($filtervalue) $writevalue=$filtervalue;
             # Add the tag name(s) and the value to the command string.
-            echo "\n".$write_to[$i]['exiftool_field']."\n";
             $group_tags = explode(",", $write_to[$i]['exiftool_field']); # Each 'exiftool field' may contain more than one tag.
             foreach ($group_tags as $group_tag)
                 {
@@ -4346,8 +4345,7 @@ function write_metadata($path, $ref, $uniqid="")
             $command.= " " . escapeshellarg($tmpfile);
 
             # Perform the actual writing - execute the command string.
-            //$output = run_command($command);
-            echo $command;
+            $output = run_command($command);
         return $tmpfile;
        }
     else
