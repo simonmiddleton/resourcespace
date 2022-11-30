@@ -1,9 +1,6 @@
 <?php
 command_line_only();
 
-//TODO Remove this once complete
-return true;
-
 // This is a test for the rse_version plugin, now enabled in config.default.php so no point being in the plugin subfolder
 $testid = "test_1125_" . uniqid();
 
@@ -26,18 +23,31 @@ $resourcea=create_resource(1,0);
 // Add nodes to resource
 add_resource_nodes($resourcea,array($child_node_id_11, $parent_node_id_1),false,true);
 
+$debug_log=true;
 
-// Test update using API
-api_update_field($resourcea,$resource_type_field,"Vegetable/Courgette");
-
+// Test update
+update_field($resourcea,$resource_type_field,"Vegetable/Courgette");
 
 // Simulate a POST update
-
-
+unset($_POST);
+$_POST['ref'] = $resourcea;
+$_POST['nodes'][$resource_type_field][] = $child_node_id_12;
+$_POST['nodes'][$resource_type_field][] = $parent_node_id_1;
+$_POST['submit'] = "true";
+save_resource_data($resourcea,false,$resource_type_field);
 
 // Check log
-$log = get_resource_log($resourcea,-1,["r.type"=>"e"]);
+$log = get_resource_log($resourcea,1,["r.type"=>"e"]);
+$lastlog = $log["data"][0];
+if($lastlog["diff"] != "- ~en:Vegetable~fr:Légume
+- ~en:Vegetable~fr:Légume/~en:Courgette~fr:Zucchini
++ ~en:Fruit~fr:Frut
++ ~en:Fruit~fr:Frut/~en:Orange~fr:Orange")
+    {
+    return false;
+    }
 
-
+// Simulate revert to date/time functionality
+$revert_time = date("Y:m:d H:i:sP", time());
 
 return true;

@@ -430,7 +430,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
                 {
                 if(!in_array($orderednodes[$n]["ref"],$parents_processed))
                     {
-                    // Add the children of this node with the the path added (relative to the specified parent)
+                    // Add the children of this node with the the path added (relative to paremnt)
                     $children = array_filter($return_nodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
                     // Set order
                     uasort($children,"node_orderby_comparator");
@@ -2282,11 +2282,12 @@ function cattree_node_flatten($node) {
  * 
  * @param array $resource_nodes - node tree to parse 
  * @param array $allnodes       - include paths to all nodes -if false will just include the paths to the end leaf nodes
+ * @param array $translate      - translate strings?
  * 
  * @return array $nodestrings - array of strings for all nodes passed in correct hierarchical order
  * 
  */
-function get_node_strings($resource_nodes,$allnodes = false)
+function get_node_strings($resource_nodes,$allnodes = false,$translate = true)
     {
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
     $orderednodes = array();
@@ -2327,12 +2328,12 @@ function get_node_strings($resource_nodes,$allnodes = false)
         $node_parts = array();
         // Create an array to hold all the node names, including all parents
         $node_parts[$resource_node["ref"]] = array();
-        $node_parts[$resource_node["ref"]][] = i18n_get_translated($resource_node["name"]);
+        $node_parts[$resource_node["ref"]][] = $translate ? i18n_get_translated($resource_node["name"]) : $resource_node["name"];
         $nodeparent = $resource_node["parent"];
         while($nodeparent != "" && isset($treenodes[$nodeparent]))
             {
             if ($nodeparent == $resource_node["ref"]) { break; } // Cater for potential misconfiguration where parent==self
-            $node_parts[$resource_node["ref"]][] = i18n_get_translated($treenodes[$nodeparent]["name"]);
+            $node_parts[$resource_node["ref"]][] = $translate ? i18n_get_translated($treenodes[$nodeparent]["name"]): $treenodes[$nodeparent]["name"];
             $nodeparent = $treenodes[$nodeparent]["parent"];
             }
 
@@ -2751,77 +2752,3 @@ if (count($nodes)>0)
     ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
     }
 }
-
-
-/**
- * Get all the nodes for the given field, with either the node ref or name as index
- *
- * @param  integer  $field      The resource_type_field id
- * @param  bool     $namekey    Use fullpath to the leaf node as key?
- * @param  bool     $detailed   Get full node information? Just returns IDs and names|paths by default
- * @param  bool     $translated Return translated names?
- * 
- * @return array    Array containing node data 
- */
-function get_field_node_strings_ordered(int $field,bool $namekey=false,bool $detailed=false,bool $translated=false)
-    {
-    global $NODE_STRINGS_ORDERED;
-    if(isset($NODE_STRINGS_ORDERED[$field . "_" . (int)$namekey . (int)$detailed . (int)$translated]))
-        {
-        return $NODE_STRINGS_ORDERED[$field . "_" . (int)$namekey . (int)$detailed . (int)$translated];
-        }    
-    $treenodes = get_nodes($field,NULL,TRUE);
-
-    // Set up array to store ordered nodes and keep track of those that have been processed
-    $orderednodes = [];
-    $parents_processed = [];
-
-    // Add parents first, get_nodes should have returned them according to order_by
-    $orderednodes = array_values(array_filter($treenodes,function($node){return (int)$node["parent"] ==  0;}));
-    for($n=0;$n < count($orderednodes);$n++)
-        {
-        $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
-        $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"];
-        }
-    while(count($treenodes) > 0)
-        {
-        // Loop to find children
-        for($n=0;$n < count($orderednodes);$n++)
-            {
-            if(!in_array($orderednodes[$n]["ref"],$parents_processed))
-                {
-                // Add the children of this node with the full path added
-                $children = array_filter($treenodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
-                // Set order
-                uasort($children,"node_orderby_comparator");
-                $children = array_values($children);
-                for($c=0;$c < count($children);$c++)
-                    {
-                    $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
-                    $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  $children[$c]["translated_name"];
-                    // Insert the child after the parent and any nodes with a lower order_by value
-                    array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
-                    // Remove child from $treenodes
-                    $pos = array_search($children[$c]["ref"],array_column($treenodes,"ref"));
-                    unset($treenodes[$pos]);
-                    $treenodes = array_values($treenodes);
-                    }
-                $parents_processed[] = $orderednodes[$n]["ref"];
-                }
-            else
-                {
-                $pos = array_search($orderednodes[$n]["ref"],array_column($treenodes,"ref"));
-                // Remove from $treenodes
-                unset($treenodes[$pos]);
-                }
-            }
-        $treenodes = array_values($treenodes);
-        }
-
-    $key_column = $namekey ? ($translated ? "translated_path" : "path")  : "ref";
-    $val_column = $namekey ? "ref" : ($translated ? "translated_path" : "path");
-    $sortednodes = $detailed ? array_combine(array_column($orderednodes,$key_column),$orderednodes) :  array_column($orderednodes,$val_column,$key_column);
-    $NODE_STRINGS_ORDERED[$field . "_" . (int)$namekey . (int)$detailed . (int)$translated] = $sortednodes;
-    return $sortednodes;
-    }
-

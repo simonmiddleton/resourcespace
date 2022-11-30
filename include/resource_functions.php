@@ -1085,10 +1085,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
     // Update resource_node table
     db_begin_transaction("update_resource_node");
-
-    debug(__LINE__ . " BANG nodes_to_add" . print_r($nodes_to_add,true));
-    debug(__LINE__ . " BANG nodes_to_remove" . print_r($nodes_to_remove,true));
-    debug(__LINE__ . " BANG ui_selected_node_values" . print_r($ui_selected_node_values,true));
    
     if(count($nodes_to_remove)>0)
         {
@@ -1297,7 +1293,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 function save_resource_data_multi($collection,$editsearch = array())
     {
-    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language;
+    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
 
@@ -1916,9 +1912,6 @@ function save_resource_data_multi($collection,$editsearch = array())
 
                 # Possibility to hook in and alter the value - additional mode support
                 $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$existing));
-
-                debug("BANG hookval" . $hookval);
-                
                 if($hookval !== false)
                     {
                     $val = $hookval;
@@ -2333,25 +2326,14 @@ function save_resource_data_multi($collection,$editsearch = array())
         {
         $save_message = new ResourceSpaceUserNotification();
         $save_message->set_subject("lang_editallresources");
-        $save_message->set_text($lang["batch_edit_save_warning_message"] . 
-                "<table>
-                    <tr>
-                        <th>" . $lang["resourceid"] . "</th>
-                        <th>" . $lang["field"] . "</th>
-                        <th>" . $lang["error"] . "<th>
-                    <tr>
-                    ");
+        $save_message->set_text($lang["batch_edit_save_warning_message"]); // No line breaks or on screen message will end up with <br> tags
+        $save_message->append_text("<div>");
         foreach($save_warnings as $save_warning)
             {
             $field = get_resource_type_field($save_warning["Field"]);
-            $save_message->append_text("
-                    <tr>
-                        <td>" . $save_warning["Resource"] . "</td>
-                        <td>" . $save_warning["Field"]  . "</td>
-                        <td>" . $save_warning["Message"] . "</td>
-                    </tr>");
+            $save_message->append_text("<div><strong>" . $lang["resourceid"] . ": <a href ='" . $baseurl . "/?r=" . $save_warning["Resource"] . "' target='_blank'>" . $save_warning["Resource"] . "</a></strong><br/><strong>" . $lang["field"] . ": </strong>" . $save_warning["Field"] . "<br /><strong>" . $lang["error"] . ": </strong>" . $save_warning["Message"] . "</div><br />");
             }
-        $save_message->append_text("</table>");
+        $save_message->append_text("</div>");
         send_user_notification([$userref],$save_message);
         $errors[] = $lang["batch_edit_save_warning_alert"];
         }
@@ -2517,7 +2499,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
                 $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;   
                 
-                debug("BANG " . $rangestart);
                 $current_dates = array_column($fieldnodes,"ref","name");
                 $nodes_to_add[] = $current_dates[$rangestart] ?? set_node(null, $fieldinfo["ref"], $rangestart, null, null);
                 $nodes_to_add[] = $current_dates[$rangeend] ?? set_node(null, $fieldinfo["ref"], $rangeend, null, null);
@@ -2628,7 +2609,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 
                 foreach($newvalues as $newvalue)
                     {
-                    debug("BANG '" . $newvalue . "'");
                     # Check if each new value exists in current options list
                     if(!in_array($newvalue, $currentoptions) && $newvalue != '')
                         {
