@@ -1585,17 +1585,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 hook('beforesearchviewcalls');
 
                 // Prepare for display all $data_joins fields (ie fieldX columns)
-                $resource_table_joins = get_resource_table_joins();
-                foreach($result[$n] as $resource_props_name => $resource_props_value)
-                    {
-                    if(
-                        mb_substr($resource_props_name, 0, 5) === 'field'
-                        && in_array(mb_substr($resource_props_name, 5), $resource_table_joins)
-                    )
-                        {
-                        $result[$n][$resource_props_name] = data_joins_field_value_translate_and_csv($resource_props_value);
-                        }
-                    }
+                $result[$n] = process_resource_data_joins_values($result[$n], get_resource_table_joins());
 
                 if ($display=="thumbs")
                     {

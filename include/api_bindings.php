@@ -43,12 +43,13 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
         }
 
     $resultset = array();
+    $get_resource_table_joins = get_resource_table_joins();
     $i=0;
     for($n = $offset; $n < $resultcount; $n++)
         {
         if (is_array($results[$n]))
             {
-            $resultset[$i] = array_map("i18n_get_translated",$results[$n]);
+            $resultset[$i] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
             $i++;
             }
         }

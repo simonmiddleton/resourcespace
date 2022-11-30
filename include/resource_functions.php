@@ -8930,3 +8930,19 @@ function data_joins_field_value_translate_and_csv(?string $value): ?string
 
     return implode(',', array_map('i18n_get_translated', explode($GLOBALS['field_column_string_separator'], $value)));
     }
+
+/**
+ * Process resource data_joins (ie fieldX columns) values
+ * 
+ * @param array $resource             A resource table record
+ * @param array $resource_table_joins List of refs for the resource table data_joins. {@see get_resource_table_joins()}
+ * 
+ * @return array Returns the resource record with updated data_joins (ie fieldX columns) values
+ */
+function process_resource_data_joins_values(array $resource, array $resource_table_joins): array
+    {
+    $fieldX_column_names = array_map(prefix_value('field'), $resource_table_joins);
+    $fieldX_data = array_intersect_key($resource, array_flip($fieldX_column_names));
+    $fieldX_translated_csv = array_map('data_joins_field_value_translate_and_csv', $fieldX_data);
+    return array_merge($resource, $fieldX_translated_csv);
+    }
