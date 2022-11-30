@@ -13,6 +13,11 @@ $use_cases = [
         'expected' => '',
     ],
     [
+        'name' => 'NULL returns the same',
+        'input' => null,
+        'expected' => null,
+    ],
+    [
         'name' => 'Value full of spaces returns the empty string',
         'input' => '    ',
         'expected' => '',

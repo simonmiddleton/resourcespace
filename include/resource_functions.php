@@ -8921,7 +8921,12 @@ function update_resource_field_column(int $resource,int $field, string $value)
 * 
 * @return string
 */
-function data_joins_field_value_translate_and_csv(string $value): string
+function data_joins_field_value_translate_and_csv(?string $value): ?string
     {
+    if(is_null($value))
+        {
+        return null;
+        }
+
     return implode(',', array_map('i18n_get_translated', explode($GLOBALS['field_column_string_separator'], $value)));
     }
