@@ -3,6 +3,7 @@ command_line_only();
 
 // --- Set up
 $initial_field_column_string_separator = $field_column_string_separator;
+$field_column_string_separator = ', ';
 
 
 
@@ -45,7 +46,6 @@ $use_cases = [
 ];
 foreach($use_cases as $use_case)
     {
-    $field_column_string_separator = ', ';
     if($use_case['expected'] !== data_joins_field_value_translate_and_csv($use_case['input']))
         {
         echo "Use case: {$use_case['name']} - ";
