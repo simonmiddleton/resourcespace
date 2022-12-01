@@ -3379,7 +3379,7 @@ function get_users_by_permission(array $permissions)
         }
 
     $usergroups = ps_query("SELECT g.ref,
-                                   IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg. permissions,g.permissions) permissions
+                                   IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions
                               FROM usergroup g
                          LEFT JOIN usergroup AS pg ON g.parent=pg.ref " .
                                     $groupsql_filter,
@@ -3399,7 +3399,7 @@ function get_users_by_permission(array $permissions)
         return [];
         }
 
-    $r = ps_query("SELECT " . columns_in('user', 'u') . ", IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg. permissions,g.permissions) permissions, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref LEFT JOIN usergroup AS pg ON g.parent=pg.ref WHERE g.ref IN (" . ps_param_insert(count($validgroups)) . ") ORDER BY username", ps_param_fill($validgroups,"i"));
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref LEFT JOIN usergroup AS pg ON g.parent=pg.ref WHERE g.ref IN (" . ps_param_insert(count($validgroups)) . ") ORDER BY username", ps_param_fill($validgroups,"i"));
 
     $return = [];
     for ($n = 0;$n<count($r);$n++)
