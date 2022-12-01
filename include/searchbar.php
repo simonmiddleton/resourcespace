@@ -74,7 +74,6 @@ for ($n=0;$n<count($fields);$n++)
 # Also build a quicksearch string.
 $quicksearch    = refine_searchstring($quicksearch);
 $keywords       = split_keywords($quicksearch,false,false,false,false,true);
-
 $set_fields     = array();
 $simple         = array();
 $searched_nodes = array();
@@ -84,7 +83,8 @@ for ($n=0;$n<count($keywords);$n++)
     {
     if (trim($keywords[$n])!="")
         {
-        if (strpos($keywords[$n],":")!==false && substr($keywords[$n],0,11)!="!properties")
+        $quoted_string=(substr($keywords[$n],0,1)=="\""  || substr($keywords[$n],0,2)=="-\"" ) && substr($keywords[$n],-1,1)=="\"";
+        if (!$quoted_string && strpos($keywords[$n],":")!==false && substr($keywords[$n],0,11)!="!properties")
             {
             $s=explode(":",$keywords[$n]);
             if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}

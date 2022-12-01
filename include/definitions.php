@@ -211,6 +211,11 @@ define ('NODE_TOKEN_OR','|');
 define ('NODE_TOKEN_NOT','!');
 define ('NODE_NAME_STRING_SEPARATOR','@@|@@');
 
+
+// Full text search prefix
+define ('FULLTEXT_SEARCH_PREFIX', '@FULL_TEXT');
+define ('FULLTEXT_SEARCH_QUOTES_PLACEHOLDER', '[QUOTES]');
+
 // Simple Search pills' delimiter
 define ('TAG_EDITOR_DELIMITER', '~');
 
