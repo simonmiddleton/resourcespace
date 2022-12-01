@@ -3970,13 +3970,20 @@ function save_resource_custom_access($resource)
 function get_custom_access($resource,$usergroup,$return_default=true)
 	{
 	global $custom_access,$default_customaccess;
-	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
+	if ($custom_access==false) {return false;} # Custom access disabled
 
 	$result=ps_value("select access value from resource_custom_access where resource=? and usergroup=?",array("i",$resource,"i",$usergroup),'');
-	if($result=='' && $return_default)
+	if($result=='')
 		{
-		return $default_customaccess;
-		}
+        if($return_default)
+            {
+            $result=$default_customaccess;
+            }
+        else
+            {
+            $result=false;
+            }
+        }
 	return $result;
 	}
 
@@ -4915,8 +4922,11 @@ function get_resource_access($resource)
 		$customgroupaccess=true;
 		# Load custom access level
 		if ($passthru=="no"){
-			$access=get_custom_access($resource,$usergroup);
-			}
+            $customaccess=get_custom_access($resource,$usergroup);
+            if ($customaccess!==false) {
+                $access=$customaccess;
+            }
+		}
 		else {
 			$access=$resource['group_access'];
 		}
@@ -4957,7 +4967,7 @@ function get_resource_access($resource)
         $customuseraccess=true;
         return (int) $userspecific;
         }        
-    if (isset($groupspecific) && $groupspecific !== "")
+    if (isset($groupspecific) && $groupspecific !== false)
         {
         $customgroupaccess=true;
         return (int) $groupspecific;

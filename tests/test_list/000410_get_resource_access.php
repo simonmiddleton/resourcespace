@@ -7,13 +7,13 @@ $original_user_ref = $userref;
 
 
 // Active resource - un-restricted
-$resource_unrestricted_access = create_resource(1, 0);
+$resource_unrestricted_access = create_resource(1, 0);   # Resource type=1, archive=0 active
 update_archive_status($resource_unrestricted_access, 0);
 
 // Archived resource - restricted access
 $additional_archive_states = array(4);
 $lang['status4']="Test state";
-$resource_restricted_access = create_resource(1, 0);
+$resource_restricted_access = create_resource(1, 0);     # Resource type=1, archive=0 active
 update_archive_status($resource_restricted_access, 4);
 
 
