@@ -279,7 +279,7 @@ else
 		$parameters=array
 			(
 			"s",$language,
-			"s",$usergroup
+			"i",$usergroup
 			);
 
 		if ($pagename!="admin_content") // Load all content on the admin_content page to allow management.
