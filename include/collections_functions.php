@@ -2426,7 +2426,7 @@ function get_saved_searches($collection)
  */
 function add_saved_search($collection)
 	{
-	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"i",getval("archive","")));
+	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"s",getval("archive","")));
 	}
 
 /**
@@ -2453,7 +2453,9 @@ function add_smart_collection()
 	$search=getval("addsmartcollection","");
 	$restypes=getval("restypes","");
 	if($restypes=="Global"){$restypes="";}
-	$archive = getval('archive', 0, true);
+	# archive can be a string of values
+	$archive = getval('archive', 0, false);
+    if($archive==""){$archive=0;}
 	
 	// more compact search strings should work with get_search_title
 	$searchstring=array();
@@ -2465,7 +2467,7 @@ function add_smart_collection()
 	$newcollection=create_collection($userref,get_search_title($searchstring),1);	
 
 	ps_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) 
-        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"i",$archive,"i",DEPRECATED_STARSEARCH));
+        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"s",$archive,"i",DEPRECATED_STARSEARCH));
 	$savedsearch=sql_insert_id();
 	ps_query("update collection set savedsearch=? where ref=?",array("i",$savedsearch,"i",$newcollection)); 
     set_user_collection($userref,$newcollection);
