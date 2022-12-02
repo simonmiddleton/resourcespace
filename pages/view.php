@@ -2434,5 +2434,8 @@ jQuery('document').ready(function()
     SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
     registerCollapsibleSections(false);
     });
+    jQuery('#previewimage').click(function(){
+        window.location='#Header';
+    }); 
 </script>
 <?php include "../include/footer.php";
