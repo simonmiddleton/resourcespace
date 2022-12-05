@@ -980,6 +980,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $sql = "";
     $sql_params = []; 
     $select_extra = "";
+    debug_function_call("search_public_collections", func_get_args());
     // Validate sort & order_by
     $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
@@ -988,25 +989,46 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     if (strpos($search,"collectiontitle:") !== false)
         {
         // This includes a specific title search from the advanced search page.
-        // Force quotes around any collectiontitle: search to support old behaviour        
+        $searchtitlelength  = 0;
+        $searchtitleval     = "";
+        $origsearch         = $search;
+
+        // Force quotes around any collectiontitle: search to support old behaviour
+        // i.e. to allow split_keywords() to work
+        // collectiontitle:*ser * collection* simpleyear:2022 
+        //  - will be changed to -
+        // "collectiontitle:*ser * collection*" simpleyear:2022 
         $searchstart = mb_substr($search,0,strpos($search,"collectiontitle:"));
-        $searchend = mb_substr($search,strpos($search,"collectiontitle:")+16);
+        $titlepos = strpos($search,"collectiontitle:")+16;
+        $searchend = mb_substr($search,$titlepos);
         if(strpos($searchend,":") != false)
             {
             // Remove any other parts of the search with xxxxx: prefix that relate to other search aspects
-            $searchend=explode(":",$searchend)[0];
-            $searchparts=explode(" ",$searchend);
-            if(count($searchparts) > 1)
+            $searchtitleval=explode(":",$searchend)[0];
+            $searchtitleparts=explode(" ",$searchtitleval);
+            if(count($searchtitleparts) > 1)
                 {
-                array_pop($searchparts);
+                // The last string relates to the next searched field name/attribute
+                array_pop($searchtitleparts);
                 }
-            $searchend = implode(" ",$searchparts);
-            if(substr($searchend,-1,1) == ",")
+            // Build new string for searched value 
+            $searchtitleval = implode(" ",$searchtitleparts);
+            $searchtitlelength = strlen($searchtitleval);
+            if(substr($searchtitleval,-1,1) == ",")
                 {
-                $searchend = substr($searchend,0,-1);
+                $searchtitleval = substr($searchtitleval,0,-1);
                 }
+            // Add quotes 
+            $search = $searchstart . ' "' . "collectiontitle:" . $searchtitleval . '"';
+            // Append the other search strings
+            $search .= substr($origsearch,$titlepos + $searchtitlelength);
             }
-        $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+        else
+            {
+            // nothing to remove
+            $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+            }
+        debug("New search: " . $search);
         }
 
     $keywords=split_keywords($search,false,false,false,false,true);
@@ -1067,7 +1089,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
                     }
                 $keyref=resolve_keyword($keywords[$n],false);
-                if ($keyref!==false)
+                if ($keyref !== false)
                     {
                     $keyrefs[]=$keyref;
                     }

@@ -2190,12 +2190,19 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         }
 
     $return=ps_value("SELECT ref value FROM keyword WHERE keyword = ?",array("s",trim($keyword)),0);
-    if ($return===0 && $create)
+    if ($return===0)
         {
-        # Create a new keyword.
-        debug("resolve_keyword: Creating new keyword for " . $keyword);
-        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
-        $return=sql_insert_id();
+        if($create)
+            {
+            # Create a new keyword.
+            debug("resolve_keyword: Creating new keyword for " . $keyword);
+            ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
+            $return=sql_insert_id();
+            }
+        else
+            {
+            return false;
+            }
         }
     
     $resolve_keyword_cache[$kwhash] = $return;
