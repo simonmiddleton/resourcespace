@@ -315,3 +315,28 @@ function HookResourceConnectAllrenderadditionalthumbattributes($resource)
         echo "data-identifier='".htmlspecialchars($resource['ref_tab'])."'";
         }
     }  
+
+    function HookResourceConnectAllaftercopycollection($copied,$current)
+    {   
+        $copied_rc_collection=ps_query("SELECT ref FROM resourceconnect_collection_resources WHERE collection=?",array("i",$copied),"");
+        #put all the copied collection records in
+        foreach($copied_rc_collection as $col_resource)
+        {
+            $copied_rc_collection=ps_query("SELECT title, thumb, large_thumb, xl_thumb, url, source_ref FROM resourceconnect_collection_resources WHERE ref=?",
+            array("i",$col_resource['ref']),"");
+                    
+            # Add to collection
+            $params = [
+                'i', $current,
+                's', $copied_rc_collection[0]['title'],
+                's', $copied_rc_collection[0]['thumb'],
+                's', $copied_rc_collection[0]['large_thumb'],
+                's', $copied_rc_collection[0]['xl_thumb'],
+                's', $copied_rc_collection[0]['url'],
+                'i', $copied_rc_collection[0]['source_ref']
+            ];
+            
+            ps_query("INSERT INTO resourceconnect_collection_resources (collection,title,thumb,large_thumb,xl_thumb,url,source_ref) VALUES (?,?,?,?,?,?,?)", $params);
+    
+        }
+    }
