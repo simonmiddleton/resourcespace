@@ -362,8 +362,7 @@ function update_fieldx(int $metadata_field_ref)
                     // get_data_by_field() always returns the value separated by ", " when flattening so we have to 
                     // ensure it's stored using the field_column_string_separator in the data_joins (ie fieldX) columns
                     $resdata = str_replace(', ', $GLOBALS['field_column_string_separator'], get_data_by_field($resource,$metadata_field_ref));
-                    $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
+                    update_resource_field_column($resource, $metadata_field_ref, strip_leading_comma($resdata));
                     }
                 }
          }
