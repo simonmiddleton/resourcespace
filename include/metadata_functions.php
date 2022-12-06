@@ -340,8 +340,7 @@ function update_fieldx(int $metadata_field_ref)
     {
     global $NODE_FIELDS;
 
-    $joins=get_resource_table_joins();  // returns an array of field refs  
-    if($metadata_field_ref > 0 && (in_array($metadata_field_ref,$joins)))
+    if($metadata_field_ref > 0 && in_array($metadata_field_ref, get_resource_table_joins()))
         {
         $fieldinfo = get_resource_type_field($metadata_field_ref);
         $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
@@ -351,7 +350,7 @@ function update_fieldx(int $metadata_field_ref)
                     {
                     $resnodes = get_resource_nodes($resource, $metadata_field_ref, true);
                     $resvals = array_column($resnodes,"name");
-                    $resdata = implode(",",$resvals);
+                    $resdata = implode($GLOBALS['field_column_string_separator'], $resvals);
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
                     ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
                     }
@@ -360,7 +359,9 @@ function update_fieldx(int $metadata_field_ref)
                 {
                 foreach($allresources as $resource)
                     {
-                    $resdata = get_data_by_field($resource,$metadata_field_ref);
+                    // get_data_by_field() always returns the value separated by ", " when flattening so we have to 
+                    // ensure it's stored using the field_column_string_separator in the data_joins (ie fieldX) columns
+                    $resdata = str_replace(', ', $GLOBALS['field_column_string_separator'], get_data_by_field($resource,$metadata_field_ref));
                     $value = truncate_join_field_value(strip_leading_comma($resdata));
                     ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
                     }

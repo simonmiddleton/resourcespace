@@ -616,7 +616,8 @@ function api_add_resource_nodes($resource,$nodestring)
         // get_data_by_field() always returns the value separated by ", " when flattening so we have to ensure it's stored
          // using the field_column_string_separator in the data_joins (ie fieldX) columns
         $resource_node_data = str_replace(', ', $GLOBALS['field_column_string_separator'], get_data_by_field($resource, $field_update));
-        ps_query("UPDATE resource SET field".$field_update."= ? WHERE ref= ?", ['s', $resource_node_data, 'i', $resource]);
+        $fieldX_data = truncate_join_field_value(strip_leading_comma($resource_node_data));
+        ps_query("UPDATE resource SET field".$field_update."= ? WHERE ref= ?", ['s', $fieldX_data, 'i', $resource]);
         }
     
     return true;
