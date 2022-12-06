@@ -73,6 +73,8 @@ $logyear    = getval("logyear",($log_search != "" ? "" : $curyear), true);
 // Add filtering if not searching
 if($logmonth != 0 || $logyear != 0)
     {
+    $logmonth=(int)$logmonth;
+    $logyear=(int)$logyear;
     $monthstart = $logmonth == 0 ? 1 : $logmonth;
     $monthend = $logmonth == 0 ? 12 : $logmonth;
     $datevals = " BETWEEN CAST('$logyear-$monthstart-01' AS DATETIME) 

@@ -1729,9 +1729,6 @@ $alt_types=array("");
 # organize View page display according to alt_type
 $alt_types_organize=false;
 
-# Allow for alternative files to be natively displayed in the browser
-$alternative_file_view_in_browser = ['pdf', 'mp3'];
-
 # Display col-size image of resource on alternative file management page
 $alternative_file_resource_preview=true;
 

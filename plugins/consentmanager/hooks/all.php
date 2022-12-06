@@ -11,17 +11,17 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
     // Add the options to link/unlink consent
     global $search,$lang,$k,$baseurl_short;
 
-    if($k != '' || !(checkperm("a") || checkperm("cm")))
-        {
-        return array();
-        }
-
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
     {
     // @see hook() for an explanation about the hook_return_value global
     $options = $GLOBALS["hook_return_value"];
     }
+
+    if($k != '' || !(checkperm("a") || checkperm("cm")))
+        {
+        return $options;
+        }
 
     $collection = (isset($collection_data["ref"]) ? $collection_data["ref"] : null);
 

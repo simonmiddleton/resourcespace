@@ -969,23 +969,24 @@ function render_sort_order(array $order_fields,$default_sort_order)
     <script>
     function UpdateResultOrder(toggle_order)
         {
-        var selected_option      = jQuery('#sort_order_selection :selected');
-        var option_url           = selected_option.data('url');
-        
+        var selected_option = jQuery('#sort_order_selection :selected');
+        var option_url      = selected_option.data('url');
+        var sort_by         = jQuery('#sort_order_selection').find(":selected").val();
+
         if (toggle_order)
             {
             var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
             }
         else
             {
-            if(selected_option='resourcetype')
+            if(sort_by == 'resourcetype' || sort_by == 'collection')
                 {
                 // The default sort should be ascending when sorting by resource type
-                var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
+                var selected_sort_option = 'ASC';
                 }
             else
                 {
-                var selected_sort_option='<?php echo ($sort=='ASC'?'ASC':'DESC'); ?>';
+                var selected_sort_option = 'DESC';
                 }
             }
         option_url += '&sort=' + selected_sort_option;

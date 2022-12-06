@@ -352,6 +352,8 @@ function get_collection_resources_with_data($ref)
  *                                          to allow this function to determine it but it will affect performance.
  * @param  string   $search                 Optionsl search string. Used to update resource_node hit count
  * 
+ * @param  integer  $sort_order             Sort order of resource in collection  
+ * 
  * @return boolean | string
  */
 function add_resource_to_collection(
@@ -362,7 +364,8 @@ function add_resource_to_collection(
     $addtype="",
     bool $col_access_control = null,
     array $external_shares = null,
-    string $search = ''
+    string $search = '',
+    int $sort_order = null
 )
     {
     global $lang;
@@ -469,8 +472,8 @@ function add_resource_to_collection(
             {
             ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
             ps_query(
-                'INSERT INTO collection_resource(collection, resource, purchase_size) VALUES (?, ?, ?)',
-                ['i', $collection, 'i', $resource, 's', $size ?: null]
+                'INSERT INTO collection_resource(collection, resource, purchase_size, sortorder) VALUES (?, ?, ?, ?)',
+                ['i', $collection, 'i', $resource, 's', $size ?: null, 'i', $sort_order ?: null]
             );
             }
         
@@ -977,6 +980,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $sql = "";
     $sql_params = []; 
     $select_extra = "";
+    debug_function_call("search_public_collections", func_get_args());
     // Validate sort & order_by
     $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
@@ -985,25 +989,46 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     if (strpos($search,"collectiontitle:") !== false)
         {
         // This includes a specific title search from the advanced search page.
-        // Force quotes around any collectiontitle: search to support old behaviour        
+        $searchtitlelength  = 0;
+        $searchtitleval     = "";
+        $origsearch         = $search;
+
+        // Force quotes around any collectiontitle: search to support old behaviour
+        // i.e. to allow split_keywords() to work
+        // collectiontitle:*ser * collection* simpleyear:2022 
+        //  - will be changed to -
+        // "collectiontitle:*ser * collection*" simpleyear:2022 
         $searchstart = mb_substr($search,0,strpos($search,"collectiontitle:"));
-        $searchend = mb_substr($search,strpos($search,"collectiontitle:")+16);
+        $titlepos = strpos($search,"collectiontitle:")+16;
+        $searchend = mb_substr($search,$titlepos);
         if(strpos($searchend,":") != false)
             {
             // Remove any other parts of the search with xxxxx: prefix that relate to other search aspects
-            $searchend=explode(":",$searchend)[0];
-            $searchparts=explode(" ",$searchend);
-            if(count($searchparts) > 1)
+            $searchtitleval=explode(":",$searchend)[0];
+            $searchtitleparts=explode(" ",$searchtitleval);
+            if(count($searchtitleparts) > 1)
                 {
-                array_pop($searchparts);
+                // The last string relates to the next searched field name/attribute
+                array_pop($searchtitleparts);
                 }
-            $searchend = implode(" ",$searchparts);
-            if(substr($searchend,-1,1) == ",")
+            // Build new string for searched value 
+            $searchtitleval = implode(" ",$searchtitleparts);
+            $searchtitlelength = strlen($searchtitleval);
+            if(substr($searchtitleval,-1,1) == ",")
                 {
-                $searchend = substr($searchend,0,-1);
+                $searchtitleval = substr($searchtitleval,0,-1);
                 }
+            // Add quotes 
+            $search = $searchstart . ' "' . "collectiontitle:" . $searchtitleval . '"';
+            // Append the other search strings
+            $search .= substr($origsearch,$titlepos + $searchtitlelength);
             }
-        $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+        else
+            {
+            // nothing to remove
+            $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+            }
+        debug("New search: " . $search);
         }
 
     $keywords=split_keywords($search,false,false,false,false,true);
@@ -1064,7 +1089,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
                     }
                 $keyref=resolve_keyword($keywords[$n],false);
-                if ($keyref!==false)
+                if ($keyref !== false)
                     {
                     $keyrefs[]=$keyref;
                     }
@@ -2423,7 +2448,7 @@ function get_saved_searches($collection)
  */
 function add_saved_search($collection)
 	{
-	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"i",getval("archive","")));
+	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"s",getval("archive","")));
 	}
 
 /**
@@ -2450,7 +2475,9 @@ function add_smart_collection()
 	$search=getval("addsmartcollection","");
 	$restypes=getval("restypes","");
 	if($restypes=="Global"){$restypes="";}
-	$archive = getval('archive', 0, true);
+	# archive can be a string of values
+	$archive = getval('archive', 0, false);
+    if($archive==""){$archive=0;}
 	
 	// more compact search strings should work with get_search_title
 	$searchstring=array();
@@ -2462,7 +2489,7 @@ function add_smart_collection()
 	$newcollection=create_collection($userref,get_search_title($searchstring),1);	
 
 	ps_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) 
-        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"i",$archive,"i",DEPRECATED_STARSEARCH));
+        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"s",$archive,"i",DEPRECATED_STARSEARCH));
 	$savedsearch=sql_insert_id();
 	ps_query("update collection set savedsearch=? where ref=?",array("i",$savedsearch,"i",$newcollection)); 
     set_user_collection($userref,$newcollection);
@@ -3339,7 +3366,7 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=ps_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
+	$copied_collection=ps_query("select cr.resource, r.resource_type, cr.sortorder from collection_resource cr join resource r on cr.resource=r.ref where collection=?",array("i",$copied),"");
 	
 	if ($remove_existing)
 		{
@@ -3352,7 +3379,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 	foreach($copied_collection as $col_resource)
 		{
 		# Use correct function so external sharing is honoured.
-		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
+		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type'], null, null, '', $col_resource['sortorder']);
 		}
 	
 	hook('aftercopycollection','',array($copied,$current));

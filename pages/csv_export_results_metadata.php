@@ -7,13 +7,14 @@ $search     = getval('search', '');
 $restypes   = getval('restypes', '');
 $order_by   = getval('order_by', '');
 $archive    = getval('archive', '');
+$access     = getval('access', null, true);
 $sort       = getval('sort', '');
 $offline    = getval("process_offline","") != "";
 $submitted  = getval("submit","") != "";
 $personaldata   = (getval('personaldata', '') != '');
 $allavailable    = (getval('allavailable', '') != '');
 
-$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, DEPRECATED_STARSEARCH, false,false,'',false,false,true);
+$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, DEPRECATED_STARSEARCH, false, false, '', false, false, true, false, false, $access);
 
 $resultcount = is_array($search_results) ? count($search_results) : 0;
 if($resultcount == 0)
@@ -38,6 +39,7 @@ if($submitted && $resultcount > 0)
         $job_data["search"]         = $search;
         $job_data["restypes"]       = $restypes;
         $job_data["archive"]        = $archive;
+        $job_data["access"]         = $access;
         $job_data["sort"]           = $sort;
 
         $job_code = "csv_metadata_export_" . md5($userref . json_encode($job_data)); // unique code for this job, used to prevent duplicate job creation.
@@ -88,6 +90,7 @@ elseif (isset($message))
         <input type="hidden" name="restypes" value="<?php echo htmlspecialchars($restypes) ?>" />
         <input type="hidden" name="order_by" value="<?php echo htmlspecialchars($order_by) ?>" />
         <input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive) ?>" />
+        <input type="hidden" name="access" value="<?php echo htmlspecialchars($access) ?>" />
         <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort) ?>" />
         
         <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>

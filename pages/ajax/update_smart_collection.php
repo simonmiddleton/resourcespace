@@ -57,11 +57,26 @@ if (isset($smartsearch[0]['search']))
 		{
 		# Add any new resources
 		debug( "smart_collections_async : Adding $count_results resources to collection...");
-		for ($n=0;$n<$count_results;$n++)
-			{
-			add_resource_to_collection($results_contents_add[$n],$collection,true);
-			}
-		}
+		
+		# Selected archive states returned as a string
+		$smartsearch_archives=ps_value("select archive AS value from collection_savedsearch where ref= ?", ['i', $smartsearch_ref],"");
+		
+		if(isset($smartsearch_archives))
+     	   	{
+			$smartsearch_archives=explode(",",$smartsearch_archives);
+
+			for ($n=0;$n<$count_results;$n++)
+				{
+				# Check the resource archive state	
+				$archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$results_contents_add[$n]],"");	
+               
+				if (in_array($archivestatus, $smartsearch_archives))
+					{
+					add_resource_to_collection($results_contents_add[$n],$collection,true);
+					}
+				}
+ 			}
+ 		}
 					
 		$count_contents=count($current_contents_remove);
 		if ($count_contents>0)	

@@ -36,6 +36,9 @@ function isInt(value) {
         this.notes = opts.notes;
 		this.toggle= opts.toggle;
 
+        this.height = (this.height() == 0 ? this[0]["height"]:this.height());
+        this.width = (this.width() == 0 ? this[0]["width"]:this.width())
+
         // Specific to ResourceSpace
         var modal = (typeof opts.modal !== "undefined" ? opts.modal : false);
         $.fn.annotateImage.modal = modal;
@@ -48,11 +51,11 @@ function isInt(value) {
         this.image.after(this.canvas);
 
         // Give the canvas and the container their size and background
-        this.canvas.height(this.height());
-        this.canvas.width(this.width());
+        this.canvas.height(this.height);
+        this.canvas.width(this.width);
         this.canvas.css('background-image', 'url("' + this.attr('src') + '")');
-        this.canvas.children('.image-annotate-view, .image-annotate-edit').height(this.height());
-        this.canvas.children('.image-annotate-view, .image-annotate-edit').width(this.width());
+        this.canvas.children('.image-annotate-view, .image-annotate-edit').height(this.height);
+        this.canvas.children('.image-annotate-view, .image-annotate-edit').width(this.width);
 
 
         // load the notes

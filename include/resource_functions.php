@@ -3416,7 +3416,7 @@ function get_resource_types($types = "", $translate = true)
     $resource_types = get_all_resource_types();
     $return=array();
 
-    if ($types="")
+    if ($types!="")
         {
         $s=explode(",",$types);
         }
@@ -3971,13 +3971,20 @@ function save_resource_custom_access($resource)
 function get_custom_access($resource,$usergroup,$return_default=true)
 	{
 	global $custom_access,$default_customaccess;
-	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
+	if ($custom_access==false) {return false;} # Custom access disabled
 
 	$result=ps_value("select access value from resource_custom_access where resource=? and usergroup=?",array("i",$resource,"i",$usergroup),'');
-	if($result=='' && $return_default)
+	if($result=='')
 		{
-		return $default_customaccess;
-		}
+        if($return_default)
+            {
+            $result=$default_customaccess;
+            }
+        else
+            {
+            $result=false;
+            }
+        }
 	return $result;
 	}
 
@@ -4916,8 +4923,11 @@ function get_resource_access($resource)
 		$customgroupaccess=true;
 		# Load custom access level
 		if ($passthru=="no"){
-			$access=get_custom_access($resource,$usergroup);
-			}
+            $customaccess=get_custom_access($resource,$usergroup);
+            if ($customaccess!==false) {
+                $access=$customaccess;
+            }
+		}
 		else {
 			$access=$resource['group_access'];
 		}
@@ -4958,7 +4968,7 @@ function get_resource_access($resource)
         $customuseraccess=true;
         return (int) $userspecific;
         }        
-    if (isset($groupspecific) && $groupspecific !== "")
+    if (isset($groupspecific) && $groupspecific !== false)
         {
         $customgroupaccess=true;
         return (int) $groupspecific;
@@ -5515,9 +5525,11 @@ function check_use_watermark($download_key = "", $resource="")
 * - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data
 * for that field as at this point you probably have the expected data for your field.
 *
+* @param boolean $macro_context  Indicates the context in which the macro is being run.
+*
 * @return boolean|array Success/fail or array of changes made
 */
-function autocomplete_blank_fields($resource, $force_run, $return_changes = false)
+function autocomplete_blank_fields($resource, $force_run, $return_changes = false, $macro_context = MACRO_CONTEXT_UNSPECIFIED)
     {
     global $FIXED_LIST_FIELD_TYPES, $lang;
 

@@ -579,7 +579,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -734,13 +734,14 @@ function compile_search_actions($top_actions)
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
-        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s',
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s&access=%s',
             $baseurl_short,
             urlencode((string) $search),
             urlencode((string) $restypes),
             urlencode((string) $order_by),
             urlencode((string) $archive),
-            urlencode((string) $sort)
+            urlencode((string) $sort),
+            urlencode((string) $search_access)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
@@ -2189,12 +2190,19 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         }
 
     $return=ps_value("SELECT ref value FROM keyword WHERE keyword = ?",array("s",trim($keyword)),0);
-    if ($return===0 && $create)
+    if ($return===0)
         {
-        # Create a new keyword.
-        debug("resolve_keyword: Creating new keyword for " . $keyword);
-        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
-        $return=sql_insert_id();
+        if($create)
+            {
+            # Create a new keyword.
+            debug("resolve_keyword: Creating new keyword for " . $keyword);
+            ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
+            $return=sql_insert_id();
+            }
+        else
+            {
+            return false;
+            }
         }
     
     $resolve_keyword_cache[$kwhash] = $return;
