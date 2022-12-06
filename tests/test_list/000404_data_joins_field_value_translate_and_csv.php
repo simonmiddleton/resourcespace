@@ -36,12 +36,12 @@ $use_cases = [
     [
         'name' => 'Simple CSV returns the same',
         'input' => 'Opt1, Opt2',
-        'expected' => 'Opt1,Opt2',
+        'expected' => 'Opt1, Opt2',
     ],
     [
         'name' => 'Split by separator, translate and output CSV',
         'input' => '~en:Digital camera~fr:Appareil photo numérique, ~en:Scanned negative~fr:Négatif scanné',
-        'expected' => 'Digital camera,Scanned negative',
+        'expected' => 'Digital camera, Scanned negative',
     ],
 ];
 foreach($use_cases as $use_case)

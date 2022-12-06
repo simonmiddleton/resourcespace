@@ -1602,7 +1602,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if (count($new_nodes) > 0)
                         {
                         $date_range_node_values_to_add = array_column(get_nodes_by_refs($new_nodes), 'name');
-                        $new_nodes_val = ',' . implode(',', $date_range_node_values_to_add);
+                        $new_nodes_val = ',' . implode($GLOBALS['field_column_string_separator'], $date_range_node_values_to_add);
                         $log_nodes_new = $date_range_node_values_to_add;
                         }
 
@@ -2273,7 +2273,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         return false;
         }
 
-    $value = trim((string)$value);
+    $value = $data_joins_field_value = trim((string)$value);
     if($value === '' && $fieldinfo['required'])
         {
         $errors[] = i18n_get_translated($fieldinfo['title']) . ": {$lang['requiredfield']}";;
@@ -2524,7 +2524,8 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
                 $treenodenames = get_cattree_node_strings($all_treenodes, true); # True means names are paths to nodes; False means names are node names
-                $value = implode(",",$treenodenames);        
+                $value = implode(",",$treenodenames);
+                $data_joins_field_value = implode($GLOBALS['field_column_string_separator'], $treenodenames);
                 }
             else
                 {
@@ -2538,6 +2539,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
                     }
                 $value = implode(",",$node_names);
+                $data_joins_field_value = implode($GLOBALS['field_column_string_separator'], $node_names);
                 }
             }
 
@@ -2572,7 +2574,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     $joins = get_resource_table_joins();
     if(in_array($fieldinfo['ref'],$joins))
         {
-        update_resource_field_column($resource,$field,$value);
+        update_resource_field_column($resource,$field, $data_joins_field_value);
         }
 
     # Add any onchange code
