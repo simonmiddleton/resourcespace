@@ -4052,10 +4052,11 @@ function update_resource_type($ref,$type)
 * @param string     $option_separator   String to separate the node options returned for fixed list fields
 *                                       - Recommended NODE_NAME_STRING_SEPARATOR
 *                                       - Defaults to comma for backwards compatibility
+* @param bool       $skip_translation   Set to true to return the entire untranslated node value rather than the appropriate translation only.
 *
 * @return array
 */
-function get_exiftool_fields($resource_type,string $option_separator = ",")
+function get_exiftool_fields($resource_type, string $option_separator = ",", bool $skip_translation = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
     $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
@@ -4079,8 +4080,8 @@ function get_exiftool_fields($resource_type,string $option_separator = ",")
         {
         if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
             {
-            $options = get_field_options($field["ref"]);
-            $field["options"] = implode($option_separator,$options);            
+            $options = get_field_options($field["ref"], false, $skip_translation);
+            $field["options"] = implode($option_separator,$options);
             }
         else
             {
@@ -7391,7 +7392,7 @@ function get_related_resources($ref)
     }
 
 
-function get_field_options($ref,$nodeinfo = false)
+function get_field_options($ref, $nodeinfo = false, bool $skip_translation = false)
     {
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
@@ -7404,7 +7405,10 @@ function get_field_options($ref,$nodeinfo = false)
     # Translate options,
     for ($m=0;$m<count($options);$m++)
         {
-        $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+        if (!$skip_translation)
+            {
+            $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+            }
         unset($options[$m]["resource_type_field"]); // Not needed
         }
 
