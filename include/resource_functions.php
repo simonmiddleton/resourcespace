@@ -8928,10 +8928,15 @@ function update_resource_field_column(int $resource,int $field, string $value)
 
 /**
 * Convert $data_joins (ie fieldX column) value to a user friendly version.
-*
-* @param string $value Text to be split by configured separator, having values translated and output as a CSV
 * 
-* @return string
+* Text value will be:-
+* - split by the configued separator {@see $field_column_string_separator};
+* - have all parts translated;
+* - glued back using the same separator
+*
+* @param string|null $value Text to be processed
+* 
+* @return string|null
 */
 function data_joins_field_value_translate_and_csv(?string $value): ?string
     {
@@ -8940,7 +8945,10 @@ function data_joins_field_value_translate_and_csv(?string $value): ?string
         return null;
         }
 
-    return implode(',', array_map('i18n_get_translated', explode($GLOBALS['field_column_string_separator'], $value)));
+    return implode(
+        $GLOBALS['field_column_string_separator'],
+        array_map('i18n_get_translated', explode($GLOBALS['field_column_string_separator'], $value))
+    );
     }
 
 /**
