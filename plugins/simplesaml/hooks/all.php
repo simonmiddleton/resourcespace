@@ -76,10 +76,15 @@ function HookSimplesamlAllPreheaderoutput()
         return true;
         }
 
-	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
+    $url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
+    if ($simplesaml_allow_public_shares)
+        {
+        // Allow redirect for password protected external shares
+        $simplesaml_allowedpaths[] = '/pages/share_access.php';
+        }
 
-	foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
-		{
+    foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
+        {
         if('' == trim($simplesaml_allowedpath))
             {
             continue;

@@ -659,7 +659,7 @@ function extract_exif_comment($ref,$extension="")
             exiftool_resolution_calc($image,$ref);
             }
         
-        $read_from=get_exiftool_fields($resource['resource_type'],NODE_NAME_STRING_SEPARATOR);
+        $read_from = get_exiftool_fields($resource['resource_type'], NODE_NAME_STRING_SEPARATOR, true);
 
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
@@ -2057,7 +2057,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }                 
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %s -resize %s -composite %s',
+                        $runcommand = sprintf('%s %s -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
+
                             $convert_fullpath,
                             escapeshellarg($file),
                             escapeshellarg($watermarkreal),
