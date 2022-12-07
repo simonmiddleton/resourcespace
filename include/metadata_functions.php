@@ -345,24 +345,38 @@ function update_fieldx(int $metadata_field_ref)
         $fieldinfo = get_resource_type_field($metadata_field_ref);
         $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
         if(in_array($fieldinfo['type'],$NODE_FIELDS))
+            {
+            if($fieldinfo['type'] === FIELD_TYPE_CATEGORY_TREE)
+                {
+                foreach($allresources as $resource)
+                    {
+                    // category trees are using full paths to node names
+                    $all_treenodes = get_cattree_nodes_ordered($metadata_field_ref, $resource, false);
+                    $node_names_paths = get_cattree_node_strings($all_treenodes, true);
+                    update_resource_field_column(
+                        $resource,
+                        $metadata_field_ref,
+                        implode($GLOBALS['field_column_string_separator'], $node_names_paths)
+                    );
+                    }
+                }
+            else
                 {
                 foreach($allresources as $resource)
                     {
                     $resnodes = get_resource_nodes($resource, $metadata_field_ref, true);
+                    uasort($resnodes, 'node_orderby_comparator'); 
                     $resvals = array_column($resnodes,"name");
                     $resdata = implode($GLOBALS['field_column_string_separator'], $resvals);
-                    $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
+                    update_resource_field_column($resource, $metadata_field_ref, $resdata);
                     }
                 }
+            }
         else
                 {
                 foreach($allresources as $resource)
                     {
-                    // get_data_by_field() always returns the value separated by ", " when flattening so we have to 
-                    // ensure it's stored using the field_column_string_separator in the data_joins (ie fieldX) columns
-                    $resdata = str_replace(', ', $GLOBALS['field_column_string_separator'], get_data_by_field($resource,$metadata_field_ref));
-                    update_resource_field_column($resource, $metadata_field_ref, strip_leading_comma($resdata));
+                    update_resource_field_column($resource, $metadata_field_ref, get_data_by_field($resource, $metadata_field_ref));
                     }
                 }
          }

@@ -92,25 +92,7 @@ if($add!=='' || $all)
         foreach($add as $column)
             {
             echo "Updating column field$column...";
-            $field_column_string_separator_escaped = escape_check($field_column_string_separator);
-            ps_query(
-                "UPDATE resource AS r,
-                (
-                       SELECT r.ref,
-                              group_concat(n.`name` SEPARATOR '{$field_column_string_separator_escaped}') AS `fieldX`
-                         FROM resource AS r
-                    LEFT JOIN resource_node AS rn ON r.ref = rn.resource
-                    LEFT JOIN node AS n ON n.ref = rn.node
-                        WHERE n.resource_type_field = ?
-                     GROUP BY r.ref
-                ) AS nrn
-                SET r.field{$column} = SUBSTR(nrn.fieldX, 1, ?) 
-                WHERE r.ref = nrn.ref",
-                [
-                    'i',$column,
-                    'i',$resource_field_column_limit,
-                ]
-            );
+            update_fieldx($column);
             echo "done!<br/>";
             flush();
             }
