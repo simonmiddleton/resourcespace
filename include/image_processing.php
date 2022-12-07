@@ -2057,7 +2057,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }                 
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %s -resize %s -composite %s',
+                        $runcommand = sprintf('%s %s -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
+
                             $convert_fullpath,
                             escapeshellarg($file),
                             escapeshellarg($watermarkreal),
