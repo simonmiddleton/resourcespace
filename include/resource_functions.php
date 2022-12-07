@@ -687,8 +687,37 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 $node_options = array_column($fieldnodes, 'name', 'ref');
                 $validnodes   = array_column($fieldnodes, 'ref');
 
-                $ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);
-                natsort($ui_selected_node_values);
+                // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
+                $ui_selected_node_values = array_intersect($validnodes, $ui_selected_node_values);
+
+
+
+
+
+                // TODO: wip on getting node paths for data_joins value (fieldX)
+                // memo: get_cattree_node_strings() is losing the root nodes if they have children. We still need a way to record them
+                // when a user only selects the root values and none of the children.
+                if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                    {
+                    $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
+                    // print_r($all_tree_nodes_ordered);
+
+
+                    // losing order for some reason...
+                    $all_tree_node_paths_ordered = get_cattree_node_strings(
+                        array_intersect_key($all_tree_nodes_ordered, array_flip($ui_selected_node_values)),
+                        true
+                    );
+                    echo "<pre>";print_r($all_tree_node_paths_ordered);echo "</pre>";
+
+
+                    die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
+                    }
+
+
+
+
+
 
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
@@ -711,7 +740,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             {
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
-
+print_r($added_nodes);
                         $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
