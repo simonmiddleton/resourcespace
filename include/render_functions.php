@@ -2961,7 +2961,7 @@ function render_share_options($shareopts=array())
                 { ?>
                 <option value=""><?php echo $lang["never"]?></option><?php 
                 } 
-            for ($n=1;$n<=$resource_share_expire_days;$n++)
+            for ($n=0;$n<=$resource_share_expire_days;$n++)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
