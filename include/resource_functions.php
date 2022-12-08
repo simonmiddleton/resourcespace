@@ -649,6 +649,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 debug("save_resource_data(): Checking nodes to add/ remove for field {$fields[$n]['ref']} - {$fields[$n]['title']}");
+printf(PHP_EOL.PHP_EOL.'---'.PHP_EOL.'$fields[$n]["ref"] = %s', json_encode($fields[$n]["ref"]));
 
                 $val = '';
 
@@ -683,41 +684,54 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 // Check nodes are valid for this field
-                $fieldnodes   = get_nodes($fields[$n]['ref'], '', (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type']));
-                $node_options = array_column($fieldnodes, 'name', 'ref');
-                $validnodes   = array_column($fieldnodes, 'ref');
-
-                // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
-                $ui_selected_node_values = array_intersect($validnodes, $ui_selected_node_values);
-
-
-
-
-
-                // TODO: wip on getting node paths for data_joins value (fieldX)
-                // memo: get_cattree_node_strings() is losing the root nodes if they have children. We still need a way to record them
-                // when a user only selects the root values and none of the children.
                 if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
                     {
+                    /*
+                    - input nodes are valid (done above but something to be aware of)
+                    - nodes should be sorted based on the nodes' order_by
+                    - ensure that category trees are stored using full paths to nodes
+
+                    what current functions can do for me:
+                    - get_cattree_nodes_ordered($fields[$n]['ref'], null, true) <==> will give me the nodes in order
+                    - get_cattree_node_strings($all_tree_nodes_ordered, true); <==> provides a list of node paths (warning
+                    root nodes show only if they're a leaf)
+                    - compute_node_branch_path() <==> can determine the full path (warning untranslated)
+                    - extract_node_options() <==> can be used to translate node values while maintaining ID-name association
+
+                    Objective:
+                    - from a list of CT node IDs get a sorted list of branch paths
+                    Note: must work for a root node (not a leaf node)
+
+                    */
+
+                    // $tree_node_paths = get_cattree_node_strings($all_tree_nodes_ordered, true);
+                    // printf(PHP_EOL.'$tree_node_paths = %s', print_r($tree_node_paths, true));
+                    // printf(PHP_EOL.'test = %s', print_r(compute_node_branch_path(array_values($all_tree_nodes_ordered), $ui_selected_node_values[1]), true));
+                    // printf(PHP_EOL.'test: translating node options = %s', print_r(extract_node_options($all_tree_nodes_ordered, true, true), true));
+
+
                     $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
-                    // print_r($all_tree_nodes_ordered);
+                    // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
+                    array_shift($all_tree_nodes_ordered);
+                    // printf(PHP_EOL.'$all_tree_nodes_ordered = %s', print_r($all_tree_nodes_ordered, true));
 
-
-                    // losing order for some reason...
-                    $all_tree_node_paths_ordered = get_cattree_node_strings(
-                        array_intersect_key($all_tree_nodes_ordered, array_flip($ui_selected_node_values)),
-                        true
-                    );
-                    echo "<pre>";print_r($all_tree_node_paths_ordered);echo "</pre>";
-
-
-                    die("Process stopped in file " . __FILE__ . " at line " . __LINE__);
+                    $fieldnodes = $all_tree_nodes_ordered;
+                    $node_options = array_column($fieldnodes, 'name', 'ref');
+                    // printf(PHP_EOL.'$node_options = %s', print_r($node_options, true));
+                    $validnodes = array_keys($node_options);
+                    printf(PHP_EOL.'$validnodes = %s', print_r($validnodes, true));
+                    }
+                else
+                    {
+                    $fieldnodes   = get_nodes($fields[$n]['ref'], '', false);
+                    $node_options = array_column($fieldnodes, 'name', 'ref');
+                    $validnodes   = array_column($fieldnodes, 'ref');
                     }
 
 
-
-
-
+                // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
+                $ui_selected_node_values = array_values(array_intersect($validnodes, $ui_selected_node_values));
+                printf(PHP_EOL.'$ui_selected_node_values = %s', print_r($ui_selected_node_values, true));
 
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
@@ -738,9 +752,21 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         // Build new value:
                         foreach($ui_selected_node_values as $ui_selected_node_value)
                             {
+
+                            if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                                {
+                                echo "CT";
+                                }
+
+
+
+
+
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
-print_r($added_nodes);
+
+                        printf(PHP_EOL.'$added_nodes = %s', json_encode($added_nodes));
+                        FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'] && die(PHP_EOL.PHP_EOL."Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
                         $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {

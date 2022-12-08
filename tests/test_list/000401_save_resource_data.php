@@ -57,7 +57,7 @@ if(mb_strpos($ckb_fieldx_value, $field_column_string_separator) === false)
     return false;
     }
 
-echo 'TODO: check order of paths is as expected';
+echo 'Not yet implemented: check order of paths is as expected';
 return false;
 
 
