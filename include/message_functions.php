@@ -274,20 +274,20 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
  * @return void
  */
 function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,$ttl_seconds=MESSAGE_DEFAULT_TTL_SECONDS, $related_activity=0, $related_ref=0)
-	{
-	global $userref,$applicationname,$lang, $baseurl, $baseurl_short,$header_colour_style_override;
-	
-	if(!is_int_loose($notification_type))
-		{
-		$notification_type=intval($notification_type); // make sure this in an integer
-		}
-	
-	$orig_text=$text;
+    {
+    global $userref,$applicationname,$lang, $baseurl, $baseurl_short,$header_colour_style_override;
 
-	if (!is_array($users))
-		{
-		$users=array($users);
-		}
+    if(!is_int_loose($notification_type))
+        {
+        $notification_type=intval($notification_type); // make sure this in an integer
+        }
+
+    $orig_text=$text;
+
+    if (!is_array($users))
+        {
+        $users=array($users);
+        }
 
     if(checkperm('E'))
         {
@@ -296,34 +296,36 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
         $users = array_filter($users,function($user) use ($validuserrefs) {return in_array($user,$validuserrefs);});
         }
 
-	if(is_null($owner) || (isset($userref) && $userref != $owner))
-		{
+    if(is_null($owner) || (isset($userref) && $userref != $owner))
+        {
         // Can't send messages from another user
-		$owner=$userref;
-		}
+        $owner=$userref;
+        }
 
-	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
-	$message_ref = sql_insert_id();
+    ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
+    $message_ref = sql_insert_id();
 
-	foreach($users as $user)
-		{
-		ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
-		
-		// send an email if the user has notifications and emails setting and the message hasn't already been sent via email
-		if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
-			{
-			get_config_option($user,'email_and_user_notifications', $notifications_always_email);
-			if($notifications_always_email)
-				{
-				$email_to=ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
-				if($email_to!=='')
-					{
+    foreach($users as $user)
+        {
+        ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
+        
+        // send an email if the user has notifications and emails setting and the message hasn't already been sent via email
+        if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
+            {
+            get_config_option($user,'email_and_user_notifications', $notifications_always_email);
+            if($notifications_always_email)
+                {
+                $email_to=ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
+                if($email_to!=='')
+                    {
                     if(substr($url,0,1) == "/")
                         {
                         // If a relative link is provided make sure we add the full URL when emailing
-                        $url = $baseurl . $url;
+                        $parsed_url = parse_url($baseurl);
+                        $url = $baseurl . (isset($parsed_url["path"]) ? str_replace($parsed_url["path"],"",$url) : $url);
                         }
-					$message_text=nl2br($orig_text);
+
+                    $message_text=nl2br($orig_text);
 
                     // Add system header image to email
                     $headerimghtml = "";
@@ -331,18 +333,18 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
                     $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
-                              
+                                
                     if($url !== '' && strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
                         $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                         }
-					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
-					}
-				}
-			}
-		}
-	}
+                    send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
+                    }
+                }
+            }
+        }
+    }
 
 /**
  * Remove a message from message table and associated user_messages
