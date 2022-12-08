@@ -715,11 +715,10 @@ printf(PHP_EOL.PHP_EOL.'---'.PHP_EOL.'$fields[$n]["ref"] = %s', json_encode($fie
                     array_shift($all_tree_nodes_ordered);
                     // printf(PHP_EOL.'$all_tree_nodes_ordered = %s', print_r($all_tree_nodes_ordered, true));
 
-                    $fieldnodes = $all_tree_nodes_ordered;
-                    $node_options = array_column($fieldnodes, 'name', 'ref');
+                    $node_options = array_column($all_tree_nodes_ordered, 'name', 'ref');
                     // printf(PHP_EOL.'$node_options = %s', print_r($node_options, true));
                     $validnodes = array_keys($node_options);
-                    printf(PHP_EOL.'$validnodes = %s', print_r($validnodes, true));
+                    // printf(PHP_EOL.'$validnodes = %s', print_r($validnodes, true));
                     }
                 else
                     {
@@ -755,17 +754,20 @@ printf(PHP_EOL.PHP_EOL.'---'.PHP_EOL.'$fields[$n]["ref"] = %s', json_encode($fie
 
                             if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
                                 {
-                                echo "CT";
+                                $new_nodevals[] = implode(
+                                    '/',
+                                    array_column(
+                                        compute_node_branch_path(array_values($all_tree_nodes_ordered), $ui_selected_node_value),
+                                        'name'
+                                    )
+                                );
+                                continue;
                                 }
-
-
-
-
 
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
 
-                        printf(PHP_EOL.'$added_nodes = %s', json_encode($added_nodes));
+                        printf(PHP_EOL.'$new_nodevals = %s', print_r($new_nodevals, true));
                         FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'] && die(PHP_EOL.PHP_EOL."Process stopped in file " . __FILE__ . " at line " . __LINE__ . PHP_EOL);
                         $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
