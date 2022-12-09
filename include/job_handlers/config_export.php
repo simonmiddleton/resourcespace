@@ -51,7 +51,7 @@ if(!isset($joberror))
         $dumpfile = $separatesql ? $dumppath . "/" . $exporttable . ".sql" : $dumppath . "/resourcespace.sql";
 
         // Add the 'CREATE TABLE' command
-        $dumpcmd = $path . " -h " . $mysql_server . " -u " . $mysql_username . ($mysql_password == "" ? "" : " -p" . $mysql_password) . " " . $mysql_db . " --no-data " . $exporttable . " >> " . $dumpfile;
+        $dumpcmd = $path . " -h " . $mysql_server . " -u " . $mysql_username . ($mysql_password == "" ? "" : " -p" . $mysql_password) . " " . $mysql_db . " --no-tablespaces --no-data " . $exporttable . " >> " . $dumpfile;
         run_command($dumpcmd);
         
         $sql = "SET sql_mode = '';\n"; // Ensure that any old values that may not now be valid are still accepted into new DB
@@ -82,16 +82,16 @@ if(!isset($joberror))
             fwrite($output,$sql);
             fclose($output);
             }
-        
+
         if($separatesql)
             {
-            $zip->addFile($dumpfile, "mysql/" . $exporttable . ".sql");   
+            $zip->addFile($dumpfile, "mysql/" . $exporttable . ".sql");
             }
         }
-    
+
     if(!$separatesql)
         {
-        $zip->addFile($dumpfile, "mysql/resourcespace.sql");   
+        $zip->addFile($dumpfile, "mysql/resourcespace.sql");
         }
 
     $zip->close();

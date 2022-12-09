@@ -38,7 +38,7 @@ if (!isset($error) && $export!="" && enforcePostRequest(false))
     
     $job_code = "system_export_" . md5($userref . $exportcollection . ($obfuscate ? "1" : "0") . ($separatesql ? "1" : "0")); // unique code for this job, used to prevent duplicate job creation.
     $jobadded=job_queue_add("config_export",$job_data,$userref,'',$lang["exportcomplete"],$lang["exportfailed"],$job_code);
-    if($jobadded!==true)
+    if($jobadded==false)
         {
         $message = $lang["oj-creation-failure-text"] . " : " . $jobadded;  
         }
