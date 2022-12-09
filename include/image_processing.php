@@ -1454,7 +1454,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $lang;
 
     # We will need this to log errors
-    $uploadedfilename=$_REQUEST['file_name']; 
+    $uploadedfilename = getval("file_name",""); 
 
     if(!is_numeric($ref))
         {
