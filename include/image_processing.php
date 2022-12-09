@@ -1451,7 +1451,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $lang;
+
+    # We will need this to log errors
+    $uploadedfilename=$_REQUEST['file_name']; 
 
     if(!is_numeric($ref))
         {
@@ -1517,6 +1520,22 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $alphaoff = "+matte";
             }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
+        
+        if((($extension=="jpg") || ($extension=="jpeg")) && (($sw >= 65500) || ($sh >= 65500 )))
+            {
+            # Jpeg dimensions exceed ImageMagick processing capabilities 
+            ?>
+            <script type="text/javascript">
+            jQuery(document).ready(function()   
+                {
+                    // Add error to log
+                    jQuery("#upload_log").val("<?php echo $lang["plupload_log_intro"].date('d M y @ H:i').'\r\n'.$uploadedfilename.'\r\n'.$lang["max-supported-jpeg-dimensions"].' '.$lang["preview-processing-aborted"]?>");
+                }); 
+            </script>
+            <?php    
+            return false;  
+            } 
+            
         if(is_null($sw) || is_null($sh))
             {
             // This is not a valid image
