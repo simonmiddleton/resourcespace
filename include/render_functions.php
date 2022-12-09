@@ -5126,8 +5126,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
     $resource_download_allowed  = resource_download_allowed($ref,'',$resource["resource_type"]);
     $size_info                  = array('id' => '', 'extension' => 'mp3');
 
-    if (
-        $resource['file_extension']=="wav" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
+    if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
         echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . $lang['mp3_preview_file'] . "</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
