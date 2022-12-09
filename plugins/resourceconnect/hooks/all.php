@@ -340,3 +340,8 @@ function HookResourceConnectAllrenderadditionalthumbattributes($resource)
     
         }
     }
+
+    function HookResourceConnectAlllistviewcolumnid($result,$n)
+        {   
+            return $result[$n]["ref"]=='-87412'?true:false; 
+        } 
