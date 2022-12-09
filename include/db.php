@@ -160,7 +160,7 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
     debug_track_vars('after@remote_config', get_defined_vars());
 	}
 
-if($system_download_config_force_obfuscation)
+if($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFIG_FORCE_OBFUSCATION"))
     {
     // If this has been set in config.php it cannot be overridden by re.g group overrides
     define("SYSTEM_DOWNLOAD_CONFIG_FORCE_OBFUSCATION",true);
