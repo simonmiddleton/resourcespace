@@ -1,4 +1,4 @@
-1,keywords,"Keywords - Other",,1,60,1,0,0,,1,1,2#025,,,0,,"IPTC:Keywords,Subject,XMP:Keywords",1,0,,0,1,,0,0,,,0,,,,,,,,,0,1,1,0,1,0,
+1,keywords,"Keywords - Other",,9,60,1,0,0,,1,1,2#025,,,0,,"IPTC:Keywords,Subject,XMP:Keywords",1,0,,0,1,,0,0,,,0,,,,,,,,,0,1,1,0,1,0,
 3,country,Country,,9,80,1,0,0,country,1,1,2#101,,,0,,"IPTC:Country-PrimaryLocationName,XMP:Country",1,0,,0,1,,0,0,,,,,,,,,,,,0,1,1,0,1,0,
 8,title,Title,,0,10,1,0,0,title,0,1,2#005,,,1,,"IPTC:ObjectName,XMP:title",1,0,,0,1,,0,0,,,,,,,,,,,,1,1,1,0,1,0,
 9,extract,"Document extract",,1,7,0,0,2,,1,0,,"<div class=""RecordStory"">
