@@ -1444,10 +1444,19 @@ function log_mail($email,$subject,$sender)
         }
     $sub = mb_strcut($subject,0,100);
 
-    // Write log to database
-    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
-    }
+    // Record a separate log entry for each email recipient
+    $email_recipients = explode(', ', $email);
+    $sql = array();
+    $params= array();
+    foreach ($email_recipients as $email_recipient)
+        {
+        $sql[] = '(NOW(), ?, ?, ?, ?)';
+        $params = array_merge($params, array("s", $email_recipient, "i", $from, "s", $sub, "s", $sender));
+        }
 
+    // Write log to database
+    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES " . implode(", ", $sql) . ";", $params);
+    }
 
 /**
  * Quoted printable encoding is rather simple.
