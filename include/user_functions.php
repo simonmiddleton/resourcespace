@@ -806,6 +806,11 @@ function save_user($ref)
             ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
             }
 
+        if($email != $current_user_data["email"])
+            {
+            $additional_sql .= ",email_invalid=0 ";
+            }        
+
         log_activity(null, LOG_CODE_EDITED, $ip_restrict, 'user', 'ip_restrict', $ref, null, '');
         log_activity(null, LOG_CODE_EDITED, $search_filter_override, 'user', 'search_filter_override', $ref, null, '');
         log_activity(null, LOG_CODE_EDITED, $expires, 'user', 'account_expires', $ref);
