@@ -3,6 +3,13 @@
 // Note: It is safe to run this script at any time as it will work on differential data if migration interrupted
 
 
+$tables = ps_query("SHOW TABLES");
+ if(!in_array("resource_data",array_column($tables,"Tables_in_" . $mysql_db)))
+    {
+    // Migration only required if resource_data table exists
+    return true;
+    }
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 1.  Convert any missing fixed field type options to nodes (where not already deprecated)
 // ---------------------------------------------------------------------------------------------------------------------
