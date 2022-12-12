@@ -980,6 +980,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $sql = "";
     $sql_params = []; 
     $select_extra = "";
+    debug_function_call("search_public_collections", func_get_args());
     // Validate sort & order_by
     $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
@@ -988,25 +989,46 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     if (strpos($search,"collectiontitle:") !== false)
         {
         // This includes a specific title search from the advanced search page.
-        // Force quotes around any collectiontitle: search to support old behaviour        
+        $searchtitlelength  = 0;
+        $searchtitleval     = "";
+        $origsearch         = $search;
+
+        // Force quotes around any collectiontitle: search to support old behaviour
+        // i.e. to allow split_keywords() to work
+        // collectiontitle:*ser * collection* simpleyear:2022 
+        //  - will be changed to -
+        // "collectiontitle:*ser * collection*" simpleyear:2022 
         $searchstart = mb_substr($search,0,strpos($search,"collectiontitle:"));
-        $searchend = mb_substr($search,strpos($search,"collectiontitle:")+16);
+        $titlepos = strpos($search,"collectiontitle:")+16;
+        $searchend = mb_substr($search,$titlepos);
         if(strpos($searchend,":") != false)
             {
             // Remove any other parts of the search with xxxxx: prefix that relate to other search aspects
-            $searchend=explode(":",$searchend)[0];
-            $searchparts=explode(" ",$searchend);
-            if(count($searchparts) > 1)
+            $searchtitleval=explode(":",$searchend)[0];
+            $searchtitleparts=explode(" ",$searchtitleval);
+            if(count($searchtitleparts) > 1)
                 {
-                array_pop($searchparts);
+                // The last string relates to the next searched field name/attribute
+                array_pop($searchtitleparts);
                 }
-            $searchend = implode(" ",$searchparts);
-            if(substr($searchend,-1,1) == ",")
+            // Build new string for searched value 
+            $searchtitleval = implode(" ",$searchtitleparts);
+            $searchtitlelength = strlen($searchtitleval);
+            if(substr($searchtitleval,-1,1) == ",")
                 {
-                $searchend = substr($searchend,0,-1);
+                $searchtitleval = substr($searchtitleval,0,-1);
                 }
+            // Add quotes 
+            $search = $searchstart . ' "' . "collectiontitle:" . $searchtitleval . '"';
+            // Append the other search strings
+            $search .= substr($origsearch,$titlepos + $searchtitlelength);
             }
-        $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+        else
+            {
+            // nothing to remove
+            $search = $searchstart . ' "' . "collectiontitle:" . $searchend . '"';
+            }
+        debug("New search: " . $search);
         }
 
     $keywords=split_keywords($search,false,false,false,false,true);
@@ -1067,7 +1089,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     $keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);
                     }
                 $keyref=resolve_keyword($keywords[$n],false);
-                if ($keyref!==false)
+                if ($keyref !== false)
                     {
                     $keyrefs[]=$keyref;
                     }
@@ -2426,7 +2448,7 @@ function get_saved_searches($collection)
  */
 function add_saved_search($collection)
 	{
-	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"i",getval("archive","")));
+	ps_query("insert into collection_savedsearch(collection,search,restypes,archive) values (?,?,?,?)",array("i",$collection,"s",getval("addsearch",""),"s",getval("restypes",""),"s",getval("archive","")));
 	}
 
 /**
@@ -2453,7 +2475,9 @@ function add_smart_collection()
 	$search=getval("addsmartcollection","");
 	$restypes=getval("restypes","");
 	if($restypes=="Global"){$restypes="";}
-	$archive = getval('archive', 0, true);
+	# archive can be a string of values
+	$archive = getval('archive', 0, false);
+    if($archive==""){$archive=0;}
 	
 	// more compact search strings should work with get_search_title
 	$searchstring=array();
@@ -2465,7 +2489,7 @@ function add_smart_collection()
 	$newcollection=create_collection($userref,get_search_title($searchstring),1);	
 
 	ps_query("insert into collection_savedsearch(collection,search,restypes,archive,starsearch) 
-        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"i",$archive,"i",DEPRECATED_STARSEARCH));
+        values (?,?,?,?,?)",array("i",$newcollection,"s",$search,"s",$restypes,"s",$archive,"i",DEPRECATED_STARSEARCH));
 	$savedsearch=sql_insert_id();
 	ps_query("update collection set savedsearch=? where ref=?",array("i",$savedsearch,"i",$newcollection)); 
     set_user_collection($userref,$newcollection);
@@ -3611,6 +3635,11 @@ function collection_min_access($collection)
 		# External access - check how this was shared. If internal share access and share is more open than the user's access return that
         $params=ps_param_fill(array_column($result,"ref"),"i");
         $params[]="s";$params[]=$k;
+
+        if (count($result) == 0)
+            {   
+            return false; 
+            }
 
 		$minextaccess = ps_value("SELECT max(access) value FROM external_access_keys WHERE resource IN (" . ps_param_insert(count($result)) . ") AND access_key = ? AND (expires IS NULL OR expires > NOW())", $params, -1);
         if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))

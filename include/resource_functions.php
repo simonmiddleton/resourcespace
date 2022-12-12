@@ -3970,13 +3970,20 @@ function save_resource_custom_access($resource)
 function get_custom_access($resource,$usergroup,$return_default=true)
 	{
 	global $custom_access,$default_customaccess;
-	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
+	if ($custom_access==false) {return false;} # Custom access disabled
 
 	$result=ps_value("select access value from resource_custom_access where resource=? and usergroup=?",array("i",$resource,"i",$usergroup),'');
-	if($result=='' && $return_default)
+	if($result=='')
 		{
-		return $default_customaccess;
-		}
+        if($return_default)
+            {
+            $result=$default_customaccess;
+            }
+        else
+            {
+            $result=false;
+            }
+        }
 	return $result;
 	}
 
@@ -4045,10 +4052,11 @@ function update_resource_type($ref,$type)
 * @param string     $option_separator   String to separate the node options returned for fixed list fields
 *                                       - Recommended NODE_NAME_STRING_SEPARATOR
 *                                       - Defaults to comma for backwards compatibility
+* @param bool       $skip_translation   Set to true to return the entire untranslated node value rather than the appropriate translation only.
 *
 * @return array
 */
-function get_exiftool_fields($resource_type,string $option_separator = ",")
+function get_exiftool_fields($resource_type, string $option_separator = ",", bool $skip_translation = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
     $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
@@ -4072,8 +4080,8 @@ function get_exiftool_fields($resource_type,string $option_separator = ",")
         {
         if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
             {
-            $options = get_field_options($field["ref"]);
-            $field["options"] = implode($option_separator,$options);            
+            $options = get_field_options($field["ref"], false, $skip_translation);
+            $field["options"] = implode($option_separator,$options);
             }
         else
             {
@@ -4257,7 +4265,6 @@ function write_metadata($path, $ref, $uniqid="")
             $filtervalue=hook("additionalmetadatafilter", "", [$write_to[$i]["exiftool_field"], $writevalue]);
             if ($filtervalue) $writevalue=$filtervalue;
             # Add the tag name(s) and the value to the command string.
-            echo "\n".$write_to[$i]['exiftool_field']."\n";
             $group_tags = explode(",", $write_to[$i]['exiftool_field']); # Each 'exiftool field' may contain more than one tag.
             foreach ($group_tags as $group_tag)
                 {
@@ -4346,8 +4353,7 @@ function write_metadata($path, $ref, $uniqid="")
             $command.= " " . escapeshellarg($tmpfile);
 
             # Perform the actual writing - execute the command string.
-            //$output = run_command($command);
-            echo $command;
+            $output = run_command($command);
         return $tmpfile;
        }
     else
@@ -4917,8 +4923,11 @@ function get_resource_access($resource)
 		$customgroupaccess=true;
 		# Load custom access level
 		if ($passthru=="no"){
-			$access=get_custom_access($resource,$usergroup);
-			}
+            $customaccess=get_custom_access($resource,$usergroup);
+            if ($customaccess!==false) {
+                $access=$customaccess;
+            }
+		}
 		else {
 			$access=$resource['group_access'];
 		}
@@ -4959,7 +4968,7 @@ function get_resource_access($resource)
         $customuseraccess=true;
         return (int) $userspecific;
         }        
-    if (isset($groupspecific) && $groupspecific !== "")
+    if (isset($groupspecific) && $groupspecific !== false)
         {
         $customgroupaccess=true;
         return (int) $groupspecific;
@@ -7383,7 +7392,7 @@ function get_related_resources($ref)
     }
 
 
-function get_field_options($ref,$nodeinfo = false)
+function get_field_options($ref, $nodeinfo = false, bool $skip_translation = false)
     {
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
@@ -7396,7 +7405,10 @@ function get_field_options($ref,$nodeinfo = false)
     # Translate options,
     for ($m=0;$m<count($options);$m++)
         {
-        $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+        if (!$skip_translation)
+            {
+            $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+            }
         unset($options[$m]["resource_type_field"]); // Not needed
         }
 

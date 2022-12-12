@@ -118,7 +118,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     	}
 
     // Update the result counter, if the function is available (e.g. on Advanced Search).
-    if(typeof(UpdateResultCount) == 'function')
+    if(typeof(UpdateResultCount) == 'function' && user_action)
         {
         UpdateResultCount();
         }
@@ -258,5 +258,8 @@ jQuery('#<?php echo $name; ?>_selector').keydown(function(event)
 echo $add_searched_nodes_function_call;
 ?>
 
-updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(false);
+jQuery(document).ready(function()
+    {
+    updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(false);
+    });
 </script>

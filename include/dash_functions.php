@@ -2165,7 +2165,7 @@ function get_dash_search_data($link='', $promimg=0)
                 array_unshift($results,$add);
                 }
             }
-        while($imagecount < 4 && $n < $resultcount)
+        while($imagecount < 4 && $n < $resultcount && $n < 50) // Don't keep trying to find images if none exist
             {
             global $access; // Needed by check_use_watermark()
             $access=get_resource_access($results[$n]);

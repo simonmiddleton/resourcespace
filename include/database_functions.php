@@ -843,25 +843,42 @@ function get_query_cache_location()
  * @return boolean
  */
 function clear_query_cache($cache)
-	{
-	global $query_cache_already_completed_this_time;
-	if (!isset($query_cache_already_completed_this_time)) {$query_cache_already_completed_this_time=array();}
-	if (in_array($cache,$query_cache_already_completed_this_time)) {return false;}
+    {
+    global $query_cache_already_completed_this_time;
+    if (!isset($query_cache_already_completed_this_time)) {$query_cache_already_completed_this_time = array();}
+    if (in_array($cache,$query_cache_already_completed_this_time)) {return false;}
 
-	$cache_location=get_query_cache_location();
-	if (!file_exists($cache_location)) {return false;} // Cache has not been used yet.
-	$cache_files=scandir($cache_location);
-	foreach ($cache_files as $file)
-		{
-		if (substr($file,0,strlen($cache)+1)==$cache . "_")
-			{
-            if (file_exists($cache_location . "/" . $file)) {@unlink($cache_location . "/" . $file);} // Note genuine need for the '@' here as the file can still be deleted in between the check for the file and the delete operation, which would throw an error. This seems unlikely but has been shown to happen regularly.
-            }			
-		}
-	
-	$query_cache_already_completed_this_time[]=$cache;
-	return true;
-	}
+    $cache_location = get_query_cache_location();
+    if (!file_exists($cache_location)) {return false;} // Cache has not been used yet.
+    $cache_files = scandir($cache_location);
+    foreach ($cache_files as $file)
+        {
+        if (substr($file, 0, strlen($cache) + 1) == $cache . "_")
+            {
+            if (file_exists($cache_location . "/" . $file))
+                {
+                $GLOBALS["use_error_exception"] = true;
+                try
+                    {
+                    unlink($cache_location . "/" . $file);
+                    }
+                catch (Exception $e)
+                    {
+                    $returned_error = $e->getMessage();
+                    debug("clear_query_cache - unlink(): " . $returned_error);
+                    if (strpos($returned_error, 'No such file or directory') === false)
+                        {
+                        trigger_error($returned_error, E_USER_WARNING);
+                        }
+                    }
+                unset($GLOBALS["use_error_exception"]);
+                }
+            }
+        }
+
+    $query_cache_already_completed_this_time[] = $cache;
+    return true;
+    }
 
 /**
  * Check the database structure conforms to that describe in the /dbstruct folder. Usually only happens after a SQL error after which the SQL is retried, thus the database is automatically upgraded.

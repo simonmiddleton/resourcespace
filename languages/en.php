@@ -2032,6 +2032,8 @@ $lang["total-collections-2"] = "<strong>Total: %number</strong> Collections"; # 
 $lang["owned_by_you-0"] = "(<strong>0</strong> owned by you)";
 $lang["owned_by_you-1"] = "(<strong>1</strong> owned by you)";
 $lang["owned_by_you-2"] = "(<strong>%mynumber</strong> owned by you)"; # %mynumber will be replaced, e.g. (2 owned by you)
+$lang["max-supported-jpeg-dimensions"] = "Maximum supported JPEG dimensions of 65,500x65,500 pixels exceeded.";
+$lang["preview-processing-aborted"] = "Preview processing aborted."; 
 
 $lang["listresources"]= "Resources:";
 $lang["action-log"]="View log";
@@ -2980,7 +2982,7 @@ $lang["oj-collection-download-failure-text"] = "Unable to prepare collection arc
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
-$lang["oj-creation-success"]                 = "Offline job created. You will be notified when it has completed";
+$lang["oj-creation-success"]                 = "Offline job %%JOBNUMBER%% created. You will be notified when it has completed";
 /* End of offline jobs */
 
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";

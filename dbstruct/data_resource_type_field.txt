@@ -40,5 +40,5 @@
 85,landmark,"Keywords - Landmark",0,0,0,1,0,0,,1,1,,,,0,,,1,0,,0,1,,0,0,,,0,,,,,,,0,,0,1,1,0,1,0,
 86,accessibilityalttext,"Accessibility - Alt Text",0,0,0,0,0,1,,1,1,,,,0,,AltTextAccessibility,1,0,"Enter text describing the appearance of the image from a visual perspective, focusing on details that are relevant to the purpose and meaning of the image.
 
-A maximum of 250 characters can be entered.",0,1,,0,0,,,0,,"^.{1,250}$",,,,,0,,0,1,1,0,1,0,
+A maximum of 250 characters can be entered.",0,1,,0,0,,,0,,"^.{0,250}$",,,,,0,,0,1,1,0,1,0,
 87,accessibilityextend,"Accessibility - Extended Description",,1,0,0,0,1,,1,1,,,,0,,ExtDescrAccessibility,1,0,"Enter the text describing the appearance of an image from a visual perspective, focusing on relevant details that further describe the meaning and purpose of the image.",0,1,,0,0,,,0,,,,,,,0,,0,1,1,0,1,0,

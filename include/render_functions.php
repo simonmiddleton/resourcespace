@@ -2961,7 +2961,7 @@ function render_share_options($shareopts=array())
                 { ?>
                 <option value=""><?php echo $lang["never"]?></option><?php 
                 } 
-            for ($n=1;$n<=$resource_share_expire_days;$n++)
+            for ($n=0;$n<=$resource_share_expire_days;$n++)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
@@ -5126,8 +5126,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
     $resource_download_allowed  = resource_download_allowed($ref,'',$resource["resource_type"]);
     $size_info                  = array('id' => '', 'extension' => 'mp3');
 
-    if (
-        $resource['file_extension']=="wav" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
+    if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
         echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . $lang['mp3_preview_file'] . "</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
