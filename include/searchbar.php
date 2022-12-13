@@ -221,7 +221,7 @@ var categoryTreeChecksArray = [];
 
 <?php if (!hook("searchbarremove")) { ?>
 
-<div class="SearchSpace" <?php if (!$basic_simple_search){?>id="searchspace"<?php } ?>>
+<div class="SearchSpace" id="searchspace"> 
 
 <?php if (!hook("searchbarreplace")) { ?>
     
