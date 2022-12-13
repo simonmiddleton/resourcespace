@@ -1256,7 +1256,7 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
     $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
     $datacount = count($data);
-    $total = ($rows == -1) ? $datacount : ($datacount < $rows ? $datacount : max($total,$datacount));
+    $total = ($rows == -1) ? $datacount : ($datacount > $rows ? $datacount : max($total,$datacount));
     return ['total' => $total, 'data' => $data];
     }
 
