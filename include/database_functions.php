@@ -866,10 +866,7 @@ function clear_query_cache($cache)
                     {
                     $returned_error = $e->getMessage();
                     debug("clear_query_cache - unlink(): " . $returned_error);
-                    if (strpos($returned_error, 'No such file or directory') === false)
-                        {
-                        trigger_error($returned_error, E_USER_WARNING);
-                        }
+                    continue;
                     }
                 unset($GLOBALS["use_error_exception"]);
                 }
