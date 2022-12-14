@@ -851,13 +851,14 @@ function clear_query_cache($cache)
     $cache_location = get_query_cache_location();
     if (!file_exists($cache_location)) {return false;} // Cache has not been used yet.
     $cache_files = scandir($cache_location);
+    
+    $GLOBALS["use_error_exception"] = true;
     foreach ($cache_files as $file)
         {
         if (substr($file, 0, strlen($cache) + 1) == $cache . "_")
             {
             if (file_exists($cache_location . "/" . $file))
                 {
-                $GLOBALS["use_error_exception"] = true;
                 try
                     {
                     unlink($cache_location . "/" . $file);
@@ -868,10 +869,10 @@ function clear_query_cache($cache)
                     debug("clear_query_cache - unlink(): " . $returned_error);
                     continue;
                     }
-                unset($GLOBALS["use_error_exception"]);
                 }
             }
         }
+    unset($GLOBALS["use_error_exception"]);
 
     $query_cache_already_completed_this_time[] = $cache;
     return true;
