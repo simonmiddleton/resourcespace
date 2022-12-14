@@ -1512,9 +1512,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
         }
         
     $rtypes=array();
-    if (!isset($types)){$types=get_resource_types();}
+    if (!isset($types)){$types=get_all_resource_types();}
     $types_count = count($types);
-    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
+    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=lang_or_i18n_get_translated($types[$n]["name"], "resourcetype-");}
     if (is_array($result) && count($result)>0)
         {
         /**
