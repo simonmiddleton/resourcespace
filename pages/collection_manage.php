@@ -583,7 +583,9 @@ hook('render_collections_list_tools', '', array($collections[$n])); ?>
 <script>
   jQuery('#<?php echo $action_selection_id ?>').bind({
     mouseenter:function(e){
+      this.disabled=true;
       LoadActions('collections','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]['ref'] ?>');
+      this.disabled=false;
     }
   }
 );
