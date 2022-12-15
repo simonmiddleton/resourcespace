@@ -72,26 +72,28 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
+        if (!is_array($date_field_data) || !isset($date_field_data['resource_type']))
+            {
+            debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
+            return $return;
+            }
         # Insert searchable date field so that it appears as the first array entry for a given resource type
         $return1=array();
         for ($n=0;$n<count($return);$n++)
             {
-            if (isset($date_field_data))
+            if (isset($date_field_data['resource_type']) && $return[$n]["resource_type"] == $date_field_data['resource_type'])
                 {
-                if ($return[$n]["resource_type"] == $date_field_data['resource_type']) 
-                    {
-                    $return1[]=$date_field_data;
-                    $date_field_data=null; # Only insert it once
-                    }
+                $return1[]=$date_field_data;
+                $date_field_data=null; # Only insert it once
                 }
             $return1[]=$return[$n];
             }
         # If not yet added because it's resource type differs from everything in the list then add it to the end of the list
-        if (isset($date_field_data))
+        if (is_array($date_field_data))
             {
             $return1[]=$date_field_data;
             $date_field_data=null; # Keep things tidy
-        }
+            }
         return $return1;
         }
  
