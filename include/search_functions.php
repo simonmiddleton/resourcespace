@@ -212,10 +212,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     if ($full_text_search != "")
         {
         if ($search!="") {$search.=" ";}
-        if(substr($full_text_search,0,1)=="\"" && substr($full_text_search,-1,1)=="\"")
-            {
-            $full_text_search = FULLTEXT_SEARCH_QUOTES_PLACEHOLDER . substr($full_text_search,1,-1) . FULLTEXT_SEARCH_QUOTES_PLACEHOLDER;
-            }
+        $full_text_search = str_replace("\"",FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,$full_text_search);
         $search .= '"' . FULLTEXT_SEARCH_PREFIX . ':' . $full_text_search . '"';
         }
     
