@@ -57,8 +57,7 @@ $group2_users=get_users("2","","username");
 // Get users in groups 1 and 2
 $group1_plus_group2_users=get_users("1,2","","username");
 
-if( count($group1_plus_group2_users) != (count($group1_users) + count($group2_users)) ) {return false;}
-
+if( count($group1_plus_group2_users) != (count($group1_users) + count($group2_users)) ) {echo "Initial test failed";return false;}
 
 
 // Testing config:  $usergroup_approval_mappings;
@@ -114,28 +113,23 @@ $usergroup_before_test = $usergroup;
 // Test 1 - is the config applied for specified groups
 $usergroup = $group_supervisor;
 $users_found_from_config = get_users(0, "", "u.username", true);
+if (count($users_found_from_config) != 2) {echo "Test 1 failed";return false;}  // Failure if any extra users are returned.
 
-if (count($users_found_from_config) != 2) {return false;}  // Failure if any extra users are returned.
-
+// Test 2
 $filtered_users = get_notification_users($userpermission = "USER_ADMIN", $group_independent);
-if (in_array($supervisor, array_column($filtered_users,'ref'))) {return false;}  // Supervisor user should not be returned due to config filter.
+if (in_array($supervisor, array_column($filtered_users,'ref'))) {echo "Test 2 failed";return false;}  // Supervisor user should not be returned due to config filter.
 
-$U_perm_strict = true;
-$users_found_from_config = get_users(0, "", "u.username", true);
-if (count($users_found_from_config) != 1) {return false;}  // Only 1 user should be returned (from the subordinate group).
-$U_perm_strict = false;
-
-// Test 2 - check config doesn't affect other groups
+// Test 3 - check config doesn't affect other groups
 $usergroup = $group_independent;
 $users_found_no_config = get_users(0, "", "u.username", true);
-
-if (count($users_found_no_config) == 2) {return false;}  // Failure if only filtered users are returned.
+if (count($users_found_no_config) == 2) {echo "Test 3 failed.";return false;}  // Failure if only filtered users are returned.
 
 unset($usergroup_approval_mappings);
 unset($notification_users_cache);
 
+// Test 4
 $filtered_users = get_notification_users($userpermission = "USER_ADMIN", $group_independent);
-if (!in_array($supervisor, array_column($filtered_users,'ref'))) {return false;}  // Supervisor user should now be returned as config removed.
+if (!in_array($supervisor, array_column($filtered_users,'ref'))) {echo "Test 4 failed";return false;}  // Supervisor user should now be returned as config removed.
 
 // Tear down
 $usergroup = $usergroup_before_test;

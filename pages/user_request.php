@@ -89,12 +89,7 @@ if (getval("save","")!="")
         $error=$lang["error_invalid_email"];
         }
     # Check that the e-mail address doesn't already exist in the system
-    elseif (($user_email_exists = user_email_exists($user_email)) && $account_email_exists_note)
-        {
-        # E-mail already exists
-        $error=$lang["accountemailalreadyexists"];$error_extra="<br/><a href=\"".$baseurl_short."pages/user_password.php?email=" . urlencode($user_email) . "\">" . $lang["forgottenpassword"] . "</a>";
-        }
-    else if(getval("login_opt_in", "") != "yes" && $user_registration_opt_in)
+    elseif (getval("login_opt_in", "") != "yes" && $user_registration_opt_in)
         {
         $error = $lang["error_user_registration_opt_in"];
         }
@@ -106,7 +101,7 @@ if (getval("save","")!="")
             {
             # Automatically create a new user account
             $success=auto_create_user_account(md5($usercode . $spamtime));
-            if($success!==true && !$account_email_exists_note)
+            if($success!==true)
                 {
                 // send an email about the user request
                 $account_email_exists_notify = true; // Email to admins to explain account with existing email was requested.

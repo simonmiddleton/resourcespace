@@ -320,7 +320,7 @@ function setup_user(array $userdata)
  */
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="",$exact_username_match=false)
     {
-    global $usergroup, $U_perm_strict;
+    global $usergroup;
 
     $order_by_parts = explode(" ",($order_by ?? ""));
     $order_by       = $order_by_parts[0] ?? "u.username";
@@ -367,7 +367,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     
     $approver_groups = get_approver_usergroups($usergroup);
 
-    if ($usepermissions && (checkperm('E') || ((checkperm('U') || count($approver_groups) > 0) && $U_perm_strict)))
+    if ($usepermissions && checkperm('E'))
         {
         # Only return users in children groups to the user's group
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
@@ -399,7 +399,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         }
 
     // Return users in both user's user group and children groups
-    if ($usepermissions && (checkperm('U') || count($approver_groups) > 0) && !$U_perm_strict)
+    if ($usepermissions && (checkperm('U') || count($approver_groups) > 0))
         {
         if (count($approver_groups) > 0)
             {
@@ -538,33 +538,17 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
     if ($usepermissions && (checkperm("U") || count($approver_groups) > 0))
         {
         # Only return users in children groups to the user's group
-        global $U_perm_strict;
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        if ($U_perm_strict)
+
+        if (count($approver_groups) > 0)
             {
-            if (count($approver_groups) > 0)
-                {
-                $sql.= "(find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
-                $sql_params = array_merge(array("i", $usergroup), ps_param_fill($approver_groups, "i"));
-                }
-            else
-                {
-                $sql.= "find_in_set(?, parent)";
-                $sql_params = array("i", $usergroup);
-                }
+            $sql.= "(ref = ? or find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
+            $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups, "i"));
             }
         else
             {
-            if (count($approver_groups) > 0)
-                {
-                $sql.= "(ref = ? or find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
-                $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups, "i"));
-                }
-            else
-                {
-                $sql.= "(ref = ? or find_in_set(?, parent))";
-                $sql_params = array("i", $usergroup, "i", $usergroup);
-                }
+            $sql.= "(ref = ? or find_in_set(?, parent))";
+            $sql_params = array("i", $usergroup, "i", $usergroup);
             }
         }
 
@@ -1311,11 +1295,11 @@ function new_user($newuser, $usergroup = 0)
  */
 function get_active_users()
     {
-    global $usergroup, $U_perm_strict;
+    global $usergroup;
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
     $sql_params = array();
-    if ((checkperm("U") || count($approver_groups) > 0) && $U_perm_strict)
+    if ((checkperm("U") || count($approver_groups) > 0))
         {
         if (count($approver_groups) > 0)
             {
@@ -1330,7 +1314,7 @@ function get_active_users()
         }
 
     // Return users in both user's user group and children groups
-    elseif ((checkperm("U") || count($approver_groups) > 0) && !$U_perm_strict)
+    elseif ((checkperm("U") || count($approver_groups) > 0))
         {
         if (count($approver_groups) > 0)
             {
@@ -1582,9 +1566,12 @@ function resolve_userlist_groups($userlist)
                 }
 
             # Find and add the users.
-            $users = ps_array("SELECT username AS `value` FROM user WHERE usergroup = ?", array("i", $groupref));
-            if ($newlist!="") {$newlist.=",";}
-            $newlist.=join(",",$users);
+            if (isset($groupref))
+                {
+                $users = ps_array("SELECT username AS `value` FROM user WHERE usergroup = ?", array("i", $groupref));
+                if ($newlist!="") {$newlist.=",";}
+                $newlist.=join(",",$users);
+                }
             }
         else
             {
@@ -1658,17 +1645,20 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                         }
                     }
                 }
-            if($return_usernames)
+            if (isset($groupref))
                 {
-                $users = ps_array("select username value from user where usergroup = ?", array("i", $groupref));
-                if ($newlist!="") {$newlist.=",";}
-                $newlist.=join(",",$users);
-                }
-            else
-                {
-                # Find and add the users.
-                if ($newlist!="") {$newlist.=",";}
-                $newlist.=$groupref;
+                if($return_usernames)
+                    {
+                    $users = ps_array("select username value from user where usergroup = ?", array("i", $groupref));
+                    if ($newlist!="") {$newlist.=",";}
+                    $newlist.=join(",",$users);
+                    }
+                else
+                    {
+                    # Find and add the users.
+                    if ($newlist!="") {$newlist.=",";}
+                    $newlist.=$groupref;
+                    }
                 }
             }
         }
@@ -2792,7 +2782,7 @@ function checkperm_user_edit($user)
 		$user=get_user($user);
 		}
 	$editusergroup=$user['usergroup'];
-    global $U_perm_strict, $usergroup;
+    global $usergroup;
     $approver_groups = get_approver_usergroups($usergroup);
 
 	if ((!checkperm('U') && count($approver_groups) == 0) || $editusergroup == '')    // no user editing restriction, or is not defined so return true
@@ -2808,16 +2798,8 @@ function checkperm_user_edit($user)
         $sql .= "ref in (" . ps_param_insert(count($approver_groups)) . ") or ";
         $sql_params = array_merge($sql_params, ps_param_fill($approver_groups,"i"));
         }
-    if ($U_perm_strict)
-        {
-        $sql .= "FIND_IN_SET(?, parent)";
-        $sql_params = array_merge($sql_params, array("i", $usergroup));
-        }
-    else
-        {
-        $sql .= "`ref` = ? OR FIND_IN_SET(?, parent)";
-        $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
-        }
+    $sql .= "`ref` = ? OR FIND_IN_SET(?, parent)";
+    $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
 
 	$validgroups = ps_array($sql, $sql_params);
 	
@@ -3360,7 +3342,7 @@ function get_usergroup_approvers($usergroup = "")
  **/
 function get_users_by_permission(array $permissions)
     {
-    global $U_perm_strict, $usergroup;
+    global $usergroup;
     if(!(checkperm("a") || checkperm("u")))
         {
         return [];
@@ -3371,16 +3353,8 @@ function get_users_by_permission(array $permissions)
     if (checkperm("U"))
         {
         # Only return users in children groups to the user's group
-        if($U_perm_strict)
-            {         
-            $groupsql_filter = "WHERE FIND_IN_SET(?, g.parent)";
-            $groupsql_params = array("i", $usergroup);
-            }
-        else
-            {
-            $groupsql_filter = "WHERE (g.ref = ? or find_in_set(?, g.parent))";
-            $groupsql_params = array("i", $usergroup, "i", $usergroup);
-            }
+        $groupsql_filter = "WHERE (g.ref = ? or find_in_set(?, g.parent))";
+        $groupsql_params = array("i", $usergroup, "i", $usergroup);
         }
 
     $usergroups = ps_query("SELECT g.ref,
