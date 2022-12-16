@@ -4764,7 +4764,7 @@ function get_system_status()
     if($diff_days > 1.5)
         {
         $return['results']['cron_process'] = [
-            'status' => 'FAIL',
+            'status' => 'WARNING',
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
         ];
 
