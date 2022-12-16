@@ -4767,8 +4767,6 @@ function get_system_status()
             'status' => 'WARNING',
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
         ];
-
-        return $return;
         }
 
 
