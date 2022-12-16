@@ -1045,7 +1045,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         return;
         }
 
-    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns, $allow_resource_deletion;
+    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns;
     
     // globals that could also be passed as a reference
     global $result /*search result*/;
