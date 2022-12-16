@@ -964,7 +964,7 @@ function email_reset_link($email,$newuser=false)
 function auto_create_user_account($hash="")
     {
     global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $account_request_send_confirmation_email_to_requester, $applicationname;
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $applicationname;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -1166,13 +1166,10 @@ function auto_create_user_account($hash="")
         }
 
     // Send a confirmation e-mail to requester
-    if($account_request_send_confirmation_email_to_requester)
-        {
-        send_mail(
-            $email,
-            "{$applicationname}: {$lang['account_request_label']}",
-            $lang['account_request_confirmation_email_to_requester']);
-        }
+    send_mail(
+        $email,
+        "{$applicationname}: {$lang['account_request_label']}",
+        $lang['account_request_confirmation_email_to_requester']);
 
     return true;
     }
@@ -1187,8 +1184,7 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify,
-           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$user_account_auto_creation;
+    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify, $user_registration_opt_in,$user_account_auto_creation;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getval('name', ''));
@@ -1227,13 +1223,10 @@ function email_user_request()
     send_user_notification($approval_notify_users,$message);
 
     // Send a confirmation e-mail to requester
-    if($account_request_send_confirmation_email_to_requester)
-        {
-        send_mail(
-            $email,
-            "{$applicationname}: {$lang['account_request_label']}",
-            $lang['account_request_confirmation_email_to_requester']);
-        }
+    send_mail(
+        $email,
+        "{$applicationname}: {$lang['account_request_label']}",
+        $lang['account_request_confirmation_email_to_requester']);
 
     return true;
     }

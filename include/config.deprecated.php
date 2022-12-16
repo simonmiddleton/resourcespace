@@ -8,16 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Send a confirmation e-mail to requester
-$account_request_send_confirmation_email_to_requester = true;
-
-# Allow a link to re-extract metadata per-resource (on the View Page) to users who have edit abilities.
-$allow_metadata_revert=false;
-
-# Allow users to delete resources?
-# (Can also be controlled on a more granular level with the "D" restrictive permission.)
-$allow_resource_deletion = true;
-
 # Allow the addition of 'saved searches' to collections. 
 $allow_save_search=true;
 

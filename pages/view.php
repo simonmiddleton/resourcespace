@@ -1727,7 +1727,7 @@ hook ("resourceactions") ?>
             echo "<a id='edit_link_" . $ref . "' href='" . generateURL($baseurl . "/pages/edit.php", $urlparams) . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-pencil'></i>&nbsp;" . $lang["action-editmetadata"] . "</a>";
             }
         echo "</li>";
-		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))
+		if ((!checkperm("D") || hook('check_single_delete')))
 			{
             $deletetext = (isset($resource_deletion_state) && $resource["archive"] == $resource_deletion_state) ? $lang["action-delete_permanently"] : $lang["action-delete"];
             echo "<li>";
