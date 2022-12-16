@@ -613,10 +613,3 @@ $wildcard_always_applied=false;
 # $zip_contents_field=18;
 $zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
 
-# Enable speed tagging feature? (development)
-$speedtagging=false;
-$speedtaggingfield=1;
-# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
-# default will be $speedtaggingfield
-# example to add speed tags for Photo type(1) to the Caption(18) field:
-# $speedtagging_by_type[1]=18; 
