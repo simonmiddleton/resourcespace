@@ -150,16 +150,7 @@ if($simple_search_pills_view)
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
 <script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
-<!-- Chosen support -->
 <?php 
-if ($chosen_dropdowns || $chosen_dropdowns_collection) 
-        { 
-        ?>
-        <script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
-        <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
-        <?php
-        }
-        
 global $not_authenticated_pages;
 $not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');
 if(isset($GLOBALS['modify_header_not_authenticated_pages']) && is_array($GLOBALS['modify_header_not_authenticated_pages']))
@@ -170,7 +161,7 @@ if(isset($GLOBALS['modify_header_not_authenticated_pages']) && is_array($GLOBALS
 $browse_on = has_browsebar();
 if($browse_on)
     {
-    $browse_width   = $browse_default_width;
+    $browse_width   = 295;
     $browse_show    = getval("browse_show","") == "show";
     ?>
     <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
@@ -185,7 +176,7 @@ var pagename="<?php echo $pagename?>";
 var errorpageload = "<h1><?php echo $lang["error"] ?></h1><p><?php echo str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"])) ?></p>";
 var errortext = "<?php echo $lang["error"] ?>";
 var applicationname = "<?php echo $applicationname?>";
-var branch_limit="<?php echo $cat_tree_singlebranch?>";
+var branch_limit=false;
 var branch_limit_field = new Array();
 var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
@@ -204,26 +195,7 @@ var scrolltopElementContainer='.ui-layout-container';
 var scrolltopElementCollection='.ui-layout-south';
 var scrolltopElementModal='#modal'
 collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
-<?php 
-if ($chosen_dropdowns) 
-	{ 
-	?>
-	var chosen_config = 
-		{
-		"#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>, allow_single_deselect: true, width:"0px"},
-		"#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>, allow_single_deselect: true, width:"0px"}
-		}
-	<?php
-	}
-?>
-var chosenCollection='<?php echo ($chosen_dropdowns_collection)?>';
 <?php
-if($chosen_dropdowns_collection)
-    {
-    ?>
-    var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
-	<?php
-	}
 
 if($browse_on)
     {

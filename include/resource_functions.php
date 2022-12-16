@@ -376,7 +376,7 @@ function get_resource_data($ref,$cache=true)
         }
     # Returns basic resource data (from the resource table alone) for resource $ref.
     # For 'dynamic' field data, see get_resource_field_data
-    global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
+    global $default_resource_type, $get_resource_data_cache;
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
     truncate_cache_arrays();
 
@@ -397,12 +397,8 @@ function get_resource_data($ref,$cache=true)
             if (!(checkperm("c") || checkperm("d"))) {return false;}
             elseif(!hook('replace_upload_template_creation', '', array($ref)))
                 {
-                if (isset($always_record_resource_creator) && $always_record_resource_creator)
-                    {
-                    global $userref;
-                    $user = $userref;
-                    }
-                else {$user = -1;}
+                global $userref;
+                $user = $userref;
 
                 $default_archive_state = get_default_archive_state();
                 $wait = ps_query("insert into resource (ref,resource_type,created_by, archive) values (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
@@ -2597,7 +2593,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 	{
     # Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group=="") {$group=$usergroup;}
@@ -2607,7 +2603,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
 	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
 	$userlist=resolve_userlist_groups($userlist);
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
 		{
 		$userlist_with_groups=$userlist;
 		$groups_users=resolve_userlist_groups_smart($userlist,true);
@@ -3554,9 +3550,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
     {
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
     global $userref;
-    global $always_record_resource_creator, $upload_then_edit;
-
-
+    global $upload_then_edit;
 
     # Check that the resource exists
     if (ps_value("SELECT COUNT(*) value FROM resource WHERE ref = ?",["i",$from],0)==0)
@@ -3611,7 +3605,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
     # This needs to be done if either:
     # 1) The user does not have direct 'resource create' permissions and is therefore contributing using My Contributions directly into the active state
     # 2) The user is contributiting via My Contributions to the standard User Contributed pre-active states.
-    if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
+    if ((!checkperm("c")) || $archive<0)
         {
         # Update the user record
         ps_query("update resource set created_by=? where ref=?",array("i",$userref,"i",$to));

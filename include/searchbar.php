@@ -518,7 +518,7 @@ elseif($restypes=='')
     if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }
     if (!$basic_simple_search) {
     // Include simple search items (if any)
-    global $clear_function, $simple_search_show_dynamic_as_dropdown, $chosen_dropdowns;
+    global $clear_function, $simple_search_show_dynamic_as_dropdown;
     
     $optionfields=array();
     $rendered_names=array();
@@ -872,12 +872,6 @@ elseif($restypes=='')
         {
         <?php
         echo $clear_function;
-        if($chosen_dropdowns)
-            {
-            ?>
-            jQuery('#SearchBox select').trigger('chosen:updated');
-            <?php
-            }
         ?>
         }
     </script>

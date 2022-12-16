@@ -215,7 +215,7 @@ $GLOBALS['get_collection_cache'] = array();
  */
 function get_collection($ref, $usecache = false)
     {
-    global $lang, $userref,$k,$attach_user_smart_groups;
+    global $lang, $userref,$k;
     if(isset($GLOBALS['get_collection_cache'][$ref]) && $usecache)
         {
         return $GLOBALS['get_collection_cache'][$ref];
@@ -234,18 +234,17 @@ function get_collection($ref, $usecache = false)
         $return=$return[0];
         $users = ps_array("SELECT u.username value FROM user u,user_collection c WHERE u.ref=c.user AND c.collection = ? ORDER BY u.username",array("i",$ref));
         $return["users"]=join(", ",$users);
-        if($attach_user_smart_groups)
-            {
-            $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . "',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
-            $return["groups"]=join(", ",$groups);
-            }
+
+        $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . "',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
+        $return["groups"]=join(", ",$groups);
+        
 
         $request_feedback=0;
         if ($return["user"]!=$userref)
             {
             # If this is not the user's own collection, fetch the user_collection row so that the 'request_feedback' property can be returned.
             $request_feedback=ps_value("SELECT request_feedback value FROM user_collection WHERE collection = ? AND user = ?",array("i",$ref,"i",$userref),0);
-            if(!$request_feedback && $attach_user_smart_groups && $k=="")
+            if(!$request_feedback && $k=="")
                 {
                 # try to set via usergroup_collection
                 global $usergroup;
@@ -1349,8 +1348,6 @@ function index_collection($ref,$index_string='')
  */
 function save_collection($ref, $coldata=array())
 	{
-	global $attach_user_smart_groups;
-	
 	if (!is_numeric($ref) || !collection_writeable($ref))
         {
         return false;
@@ -1628,11 +1625,8 @@ function save_collection($ref, $coldata=array())
 
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
-        if ($attach_user_smart_groups)
-            {
-            $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
-            ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
-            }
+        $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
+        ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
     
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
@@ -1671,54 +1665,51 @@ function save_collection($ref, $coldata=array())
             collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));
             }
 
-        if($attach_user_smart_groups)
+        $groups=resolve_userlist_groups_smart($users);
+        $groupnames='';
+        if($groups!='')
             {
-            $groups=resolve_userlist_groups_smart($users);
-            $groupnames='';
-            if($groups!='')
-                {
-                $groups=explode(",",$groups);
-                if (count($groups)>0)
-                    { 
-                    foreach ($groups as $group)
+            $groups=explode(",",$groups);
+            if (count($groups)>0)
+                { 
+                foreach ($groups as $group)
+                    {
+                    ps_query("insert into usergroup_collection(collection,usergroup) values (?,?)",array("i",$ref,"i",$group));
+                    // get the group name
+                    if($groupnames!='')
                         {
-                        ps_query("insert into usergroup_collection(collection,usergroup) values (?,?)",array("i",$ref,"i",$group));
-                        // get the group name
-                        if($groupnames!='')
-                            {
-                            $groupnames.=", ";
-                            }
-                        $groupnames.=ps_value("select name value from usergroup where ref=?",array("i",$group),"");
+                        $groupnames.=", ";
                         }
+                    $groupnames.=ps_value("select name value from usergroup where ref=?",array("i",$group),"");
+                    }
 
-                    $new_attached_groups=array_diff($groups, $old_attached_groups);
-                    if(!empty($new_attached_groups))
+                $new_attached_groups=array_diff($groups, $old_attached_groups);
+                if(!empty($new_attached_groups))
+                    {
+                    foreach($new_attached_groups as $newg)
                         {
-                        foreach($new_attached_groups as $newg)
-                            {
-                            $group_users=ps_array("SELECT ref value FROM user WHERE usergroup=?",array("i",$newg));
-                            $new_attached_users=array_merge($new_attached_users, $group_users);
-                            }
+                        $group_users=ps_array("SELECT ref value FROM user WHERE usergroup=?",array("i",$newg));
+                        $new_attached_users=array_merge($new_attached_users, $group_users);
                         }
                     }
-                #log this
-                collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, $groupnames);
                 }
+            #log this
+            collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, $groupnames);
             }
-        # Send a message to any new attached user
-        if(!empty($new_attached_users))
-            {
-            global $baseurl, $lang;
+        }
+    # Send a message to any new attached user
+    if(!empty($new_attached_users))
+        {
+        global $baseurl, $lang;
 
-            $new_attached_users=array_unique($new_attached_users);
-            $message_text = str_replace(
-                    array('%user%', '%colname%'),
-                    array($collection_owner["fullname"]??$collection_owner["username"],getval("name","")),
-                    $lang['collectionprivate_attachedusermessage']
-            );
-            $message_url = $baseurl . "/?c=" . $ref;
-            message_add($new_attached_users,$message_text,$message_url);
-            }
+        $new_attached_users=array_unique($new_attached_users);
+        $message_text = str_replace(
+                array('%user%', '%colname%'),
+                array($collection_owner["fullname"]??$collection_owner["username"],getval("name","")),
+                $lang['collectionprivate_attachedusermessage']
+        );
+        $message_url = $baseurl . "/?c=" . $ref;
+        message_add($new_attached_users,$message_text,$message_url);
         }
 
     # Relate all resources?
@@ -2003,14 +1994,14 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array
  */
 function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="",$sharepwd="")
 	{
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group==""){$group=$usergroup;}
 	
 	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
 	$userlist=resolve_userlist_groups($userlist);
 	
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false){
+	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false){
 		$groups_users=resolve_userlist_groups_smart($userlist,true);
 		if($groups_users!=''){
 			if($userlist!=""){

@@ -8,58 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Allow the addition of 'saved searches' to collections. 
-$allow_save_search=true;
-
-# Display resource title on alternative file management page
-$alternative_file_resource_title=true;
-
-# option to always send emails from the logged in user
-$always_email_from_user=false;
-
-# Always record the name of the resource creator for new records.
-# If false, will only record when a resource is submitted into a provisional status.
-$always_record_resource_creator = true;
-
-// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
-$annotate_crud_anonymous = false;
-
-// The user can see existing annotations in read-only mode
-$annotate_read_only = false;
-
-# When anonymous access is on, show login in a modal.
-$anon_login_modal=false;
-
-# Place the default dash (tiles set for all_users) on the home page for anonymous users with none of the drag 'n' drop functionality.
-$anonymous_default_dash=true;
-
-$attach_user_smart_groups=true; //enable user attach to include 'smart group option', different from the default "users in group" method (which will still be available)
-
-# Should the "Add to basket" function appear on the download sizes, so the size of the file required is selected earlier and stored in the basket? This means the total price can appear in the basket.
-$basket_stores_size=true; 
-
-// Default browse bar width;
-$browse_default_width = 295;
-
-# Option to force single branch selection in category tree selection 
-$cat_tree_singlebranch=false;
-
-# Should the category tree status window be shown?
-$category_tree_show_status_window=true;
-
-# Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
-$chosen_dropdowns=false;
-
-# The number of options that must be present before including seach capability.
-$chosen_dropdowns_threshold_main=10;
-$chosen_dropdowns_threshold_simplesearch=10;
-
-# Use the 'chosen' library for rendering dropdowns in the collection bar.
-$chosen_dropdowns_collection=false;
-
-# The number of options that must be present before including seach capability for collection bar dropdowns.
-$chosen_dropdowns_threshold_collection=10;
-
 # Show clear button on the upload page
 $clearbutton_on_upload=true;
 
@@ -546,9 +494,6 @@ $upload_review_lock_metadata = true;
 // Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
 // Requires "$upload_then_edit = true;"
 $upload_review_mode_review_by_resourceid = true;
-
-# Use Plugins Manager
-$use_plugins_manager = true;
 
 # Show the fullname of the user who approved the account when editing user
 $user_edit_approved_by=false;
