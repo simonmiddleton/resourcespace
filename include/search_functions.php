@@ -1361,11 +1361,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 if($smart_collections_async && isset($php_path) && file_exists($php_path . '/php'))
                     {
-                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($collection) . ' ' . '> /dev/null 2>&1 &');
+                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($smartsearch_ref) . ' ' . '> /dev/null 2>&1 &');
                     }
                 else 
                     {
-                    include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
+                    update_smart_collection($smartsearch_ref);
                     }
                 }   
             }
