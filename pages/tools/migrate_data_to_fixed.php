@@ -20,7 +20,6 @@ $maxrows        = getval("maxrows",0, true);
 $modal          = (getval("modal","")=="true");
 $dryrun         = getval("dryrun","") != "";
 $deletedata     = getval("deletedata","")=="true";
-
 $backurl=getval("backurl","");
 if($backurl=="")
     {
@@ -56,15 +55,8 @@ if(getval("submit","") != "")
         {
         $messages[] = "Invalid field specified. Only fixed type field types can be specified";
         }
-    
-    // Get all existing nodes
-    $existing_nodes = get_nodes($migrate_field, NULL, TRUE);
-	if($dryrun)
-		{
-		// Set start value for dummy node refs 
-		$newnoderef = (count($existing_nodes) > 0) ? max(array_column($existing_nodes,"ref")) + 1: 0;
-		}
-    
+
+ 
 	$migrated = 0;
     $lastcompletion = 0;
     $completion = 0;
@@ -79,53 +71,60 @@ if(getval("submit","") != "")
     
 
     $chunksize = 1000;    
-    $lower=0;
-    $total = ps_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = ?",array("i",$migrate_field), 0);
+    $nodeinfo = ps_query("SELECT MAX(ref) maxref, MIN(ref) minref, count(*) count FROM node WHERE resource_type_field = ?",array("i",$migrate_field), 0);
+
+	$total = $nodeinfo[0]["count"];
+	$minref = $nodeinfo[0]["minref"];
+	$maxref = $nodeinfo[0]["maxref"];
+    $newnoderef = $maxref+1;
+    $deletenodes = [];
+
+    // Get existing nodes
+    $existing_nodes = get_nodes($migrate_field, NULL, TRUE);
 
     while($migrated < $total && ($maxrows == 0 || $migrated < $maxrows))
         {
-        $resdata = ps_query(
-            "SELECT resource,
-                    `value` 
-                FROM resource_data 
+        $nodedata = ps_query(
+            "SELECT n.ref, n.`name`,
+                GROUP_CONCAT(rn.resource)  AS resources
+                FROM node n 
+                LEFT JOIN resource_node  rn ON n.ref=rn.node
                 WHERE resource_type_field = ?
-                ORDER BY resource
-                LIMIT ? , ?", ['i', $migrate_field, 'i', $lower, 'i', $chunksize]
+                AND ref >= ?
+                GROUP BY n.ref
+                ORDER BY n.ref ASC
+                LIMIT ?", ['i', $migrate_field, 'i', $minref, 'i', $chunksize]
             );
 
+        //exit(print_r($nodedata));
         // Process each data row
-        foreach($resdata as $resdata_row)
+        foreach($nodedata as $node)
             {
-            // No need to process any further if no data is found set for this resource
-            if(trim($resdata_row['value']) == '' || ($maxrows != 0 && $migrated >= $maxrows))
+            $deletenodes[] = $node["ref"];
+            if(trim($node['name']) == '' || ($maxrows != 0 && $migrated >= $maxrows))
                 {
+                $minref = $node["ref"];
                 $migrated++;
                 continue;
                 }
 
             $logtext = "";
-            $nodes_to_add = array();
-            $resource = $resdata_row["resource"];
-            $logtext .= ($dryrun?"TESTING: ":"") . "Checking data for resource id #" . $resource . ". Value: '" . $resdata_row["value"] . "'" . PHP_EOL;
+            $nodes_to_add = [];
+            $resources = explode(",",$node["resources"]);
+            $nodename = $node["name"];
+            $logtext .= ($dryrun?"TESTING: ":"") . "Checking data for node id #" . $node["ref"] . ". Value: '" . $nodename . "'" . PHP_EOL;
 
-            if($splitvalue != "")
-                {
-                $data_values = explode($splitvalue,$resdata_row["value"]);
-                }
-            else
-                {
-                $data_values = array($resdata_row["value"]);   
-                }
-                
-            foreach($data_values as $data_value)
+            $arr_newvals = explode($splitvalue,$nodename);
+            
+            foreach($arr_newvals as $newvalue)
                 {
                 // Skip if this value is empty (e.g if users left a separator at the end of the value by mistake)
-                if(trim($data_value) == '')
+                $newvalue = trim($newvalue);
+                if($newvalue == '')
                     {
                     continue;
                     }
-        
-                $nodeidx = array_search($data_value,array_column($existing_nodes,"name"));
+                $nodeidx = array_search($newvalue,array_column($existing_nodes,"name"));
 
                 if($nodeidx !== false)
                     {
@@ -136,41 +135,51 @@ if(getval("submit","") != "")
                     {
                     if(!$dryrun)
                         {
-                        $newnode = set_node(NULL, $migrate_field, $data_value, NULL, '');
-                        $logtext .= " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnode . PHP_EOL;
-                        $nodes_to_add[] = $newnode;
+                        $newnode = set_node(NULL, $migrate_field, $newvalue, NULL, '');
                         $newnodecounter = count($existing_nodes);
+                        $logtext .= " - New option added for '" . htmlspecialchars($newvalue) . "' - ref: " . $newnode . PHP_EOL;
+                        $nodes_to_add[] = $newnode;
                         $existing_nodes[$newnodecounter]["ref"] = $newnode;
-                        $existing_nodes[$newnodecounter]["name"] = $data_value;
+                        $existing_nodes[$newnodecounter]["name"] = $newvalue;
                         }
-                    else 
+                    else
                         {
                         $newnode = $newnoderef;
-                        $logtext .= ($dryrun?"TESTING: ":"") . " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnoderef . PHP_EOL;
+                        $logtext .= " - Added node for '" . htmlspecialchars($newvalue) . "' - ref: " . $newnode . PHP_EOL;
                         $newnodecounter = count($existing_nodes);
                         $existing_nodes[$newnodecounter]["ref"] = $newnoderef;
-                        $existing_nodes[$newnodecounter]["name"] = $data_value;
-                        $newnoderef++;							
+                        $existing_nodes[$newnodecounter]["name"] = $newvalue;
+                        $newnoderef++;
                         }
                     }
-                }           
+                }
             
             if(count($nodes_to_add) > 0)
                 {
-                $logtext .= ($dryrun?"TESTING: ":"") . "Adding nodes to resource ID #" . $resource . ": " . implode(",", $nodes_to_add) . PHP_EOL;
-
+                $logtext .= ($dryrun?"TESTING: ":"") . "Adding nodes to resource IDs " . $node["resources"] . ": (" . implode(",", $nodes_to_add) . ")" . PHP_EOL;
                 if(!$dryrun)
                     {
-                    add_resource_nodes($resource,$nodes_to_add);
+                    add_resource_nodes_multi($resources,$nodes_to_add);
+                    }
+                }
+            delete_resource_nodes_multi($resources,[$node["ref"]]);
+            
+            if($deletedata)
+                {
+                $logtext = ($dryrun ? "TESTING: " : "") . "Deleting unused node# " . $node["ref"] . PHP_EOL;
+                if(!$dryrun)
+                    {
+                    delete_node($node["ref"]);
                     }
                 }
                
             $migrated++;
-            
+            $minref = $node["ref"];
+
             $completion = ($maxrows == 0) ? floor($migrated/$total*100) : floor($migrated/$maxrows*100);  
             if($showprogress && $lastcompletion != $completion)
                 {               
-                send_event_update("Resource " . $migrated . "/" . $total . PHP_EOL, $completion,$logurl);
+                send_event_update("Node " . $migrated . "/" . $total . PHP_EOL, $completion,$logurl);
                 $lastcompletion = $completion;
                 }
 
@@ -188,22 +197,6 @@ if(getval("submit","") != "")
                 exit();
                 }
             }
-
-        if($deletedata && !$dryrun)
-            {
-            $logtext = ($dryrun?"TESTING: ":"") . "Deleting existing data for " . $chunksize . " resources " . PHP_EOL;
-            $fp = fopen($logfile, 'a');
-            fwrite($fp, $logtext);
-            fclose($fp);
-            ps_query("delete from resource_data where resource_type_field= ? AND resource IN (". ps_param_insert(count($resdata)) .")", array_merge(['i', $migrate_field], ps_param_fill(array_column($resdata, "resource"), 'i')));
-            ps_query("delete from resource_keyword where resource_type_field= ? AND resource IN (". ps_param_insert(count($resdata)) .")",  array_merge(['i', $migrate_field], ps_param_fill(array_column($resdata, "resource"), 'i')));
-            $lower = 0;
-            }
-        else
-            {
-            $lower = $lower + $chunksize;
-            }
-        
         
         if (connection_aborted () != 0)
             {
@@ -214,7 +207,8 @@ if(getval("submit","") != "")
             exit();
             }
         }
-        
+   
+
     $logtext = "Completed at " . date("Y-m-d H:i",time()) . ". " . $total . " rows migrated" . PHP_EOL;
     // Update log
     $fp = fopen($logfile, 'a');
@@ -248,24 +242,14 @@ include_once "../../include/header.php";
 	</p>
 	<h1><?php echo $lang["admin_resource_type_field_migrate_data"] ?></h1>
 
-	<form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" onsubmit="start_task(this);return false;">
-     <?php generateFormToken("migrate_data_to_fixed"); ?>    
-	<div class="Question" >
-		<label for="field" ><?php echo $lang["field"] ?></label>
-        <?php if($migrate_field == 0)
-            {?>
-            <input class="medwidth" type="number" name="field" value="<?php echo $migrate_field ?>">
-            <?php }
-        else
-            {?>
-            <input type="hidden" name="field" value="<?php echo htmlspecialchars($migrate_field); ?>">
-            <div class="Fixed" id="field" ><?php echo htmlspecialchars($field_info["title"]) . " (" . htmlspecialchars($migrate_field) . ")"; ?></div>
-            <?php } ?>
-        <div class="clearerleft"> </div>
-	</div>
+	<form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" onsubmit="if(jQuery('#splitchar').val()==''){styledalert('<?php echo htmlspecialchars($lang["admin_resource_type_field_no_action"]); ?>');return false;};start_task(this);return false;">
+     <?php generateFormToken("migrate_data_to_fixed"); ?>
+    <?php
+    render_field_selector_question($lang["field"],"field",[],"medwidth",false,$migrate_field);
+    ?>
 	<div class="Question" >
 		<label for="splitchar" ><?php echo $lang["admin_resource_type_field_migrate_separator"] ?></label>
-		<input class="medwidth" type="text" name="splitchar" value=",">
+		<input class="medwidth" type="text" id="splitchar" name="splitchar" value=",">
         <div class="clearerleft"> </div>
 	</div>
     <div class="Question" >
