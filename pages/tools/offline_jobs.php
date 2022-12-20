@@ -88,7 +88,7 @@ if($offline_job_queue)
             $process_locks_max_seconds = 9999999;
             if(is_process_lock("job_" . $runningjob["ref"]))
                 {
-                echo "Job is in progress but has exceeded maximum lock time - marking as failed\n";
+                echo "Job is in progress (ID: " . $runningjob["ref"] . ") but has exceeded maximum lock time - marking as failed\n";
                 job_queue_update($runningjob["ref"],$runningjob_data,STATUS_ERROR);
                 clear_process_lock("job_" . $runningjob["ref"]);
                 }
