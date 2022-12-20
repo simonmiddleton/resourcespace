@@ -57,14 +57,14 @@ function HookRse_versionEditEdit_all_after_findreplace($field,$n)
     }
     
     
-function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field,$existing)
+function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field,$existing,$postvals)
     {
     # Process the batch revert action - hooks in to the save operation (save_resource_data_multi())
 
     # Remove text/option(s) mode?
-    if (getval("modeselect_" . $field["ref"],"")=="Revert")
+    if (($postvals["modeselect_" . $field["ref"]] ?? "") == "Revert")
         {
-        $revert_date=getval("revert_" . $field["ref"],"");
+        $revert_date = $postvals["revert_" . $field["ref"]] ?? "";
         
         # Find the value of this field as of this date and time in the resource log.
         $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);

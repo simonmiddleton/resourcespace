@@ -1291,7 +1291,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
     return true;
     }
 
-function save_resource_data_multi($collection,$editsearch = array())
+function save_resource_data_multi($collection,$editsearch = array(), $postvals)
     {
     global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
 
@@ -1360,7 +1360,7 @@ function save_resource_data_multi($collection,$editsearch = array())
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/ removed
-    $user_set_values = getval('nodes', array());
+    $user_set_values = $postvals['nodes'] ?? [];
 
     // Arrays of nodes to add/ remove from all resources
     $all_nodes_to_add        = [];
@@ -1376,9 +1376,8 @@ function save_resource_data_multi($collection,$editsearch = array())
     // Store invalid node values - normally when reverting to old nodes that have been renamed
     $invalid_node_values = [];
     $successfully_edited_resources = [];
-
-    $fields = array_values(array_filter($fields,function($field){
-        return getval('editthis_field_' . $field['ref'], '') != '' || hook('save_resource_data_multi_field_decision', '', array($field['ref']));
+    $fields = array_values(array_filter($fields,function($field) use ($postvals){
+        return ($postvals['editthis_field_' . $field['ref']] ?? '') != '' || hook('save_resource_data_multi_field_decision', '', array($field['ref']));
         }));
 
     // Get all existing nodes for the edited resources
@@ -1392,7 +1391,8 @@ function save_resource_data_multi($collection,$editsearch = array())
         $oldnodenames       = [];
 
         // Append option(s) mode?
-        $mode = getval("modeselect_" . $fields[$n]["ref"],"");
+        $mode = $postvals["modeselect_" . $fields[$n]["ref"]] ?? "";
+
         if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
             {
             // Set up arrays of node ids selected and we will later resolve these to add/remove. Don't remove all nodes since user may not have access
@@ -1465,7 +1465,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                 debug('Current nodes for resource #' . $ref . ' : ' . implode(',',$current_field_nodes));
 
                 # Possibility to hook in and alter the value - additional mode support
-                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes));
+                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes,$postvals));
+
 
                 if($hookval !== false && $hookval != $current_field_nodes)
                     {
@@ -1476,15 +1477,28 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if(trim((string)$hookval != ""))
                         {
                         // Get array of current field options
-                        $validoptions = get_field_node_strings_ordered($fields[$n]['ref'],true);
+                        $nodes_available_keys = [];
+                        $nodes_available_full = get_nodes($fields[$n]['ref'],NULL,$fields[$n]['type'] == FIELD_TYPE_CATEGORY_TREE);
+                        foreach($nodes_available_full as $node_details)
+                            {
+                            if($fields[$n]['type'] == FIELD_TYPE_CATEGORY_TREE)
+                                {                
+                                $nodes_available_keys[mb_strtolower($node_details["path"])] = $node_details["ref"];
+                                $nodes_available_keys[mb_strtolower($node_details["translated_path"])] = $node_details["ref"];
+                                }
+                            $nodes_available_keys[mb_strtolower($node_details["name"])] = $node_details["ref"];
+                            $nodes_available_keys[mb_strtolower($node_details["translated_name"])] = $node_details["ref"];
+                            }
+
                         $oldnodenames = explode(NODE_NAME_STRING_SEPARATOR,$hookval);
                         foreach($oldnodenames as $oldnodename)
                             {
                             debug("Looking for previous node: '" . $oldnodename . "'");
-                            if(isset($validoptions[$oldnodename]))
+                            $findname = strtolower($oldnodename);
+                            if(isset($nodes_available_keys[$findname]))
                                 {
-                                debug(" - Found valid previous node '" . $validoptions[$oldnodename] . "'");
-                                $resource_add_nodes[] = $validoptions[$oldnodename];
+                                debug(" - Found valid previous node '" . $nodes_available_keys[$findname] . "'");
+                                $resource_add_nodes[] = $nodes_available_keys[$findname];
                                 $log_node_names[] = $oldnodename;
                                 $valid_hook_nodes = true;
                                 }
@@ -1582,7 +1596,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             $daterangenodes=array();
             $newval="";
 
-            if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+            if($date_edtf = ($postvals["field_" . $fields[$n]["ref"] . "_edtf"] ?? "") !== "")
                 {
                 // We have been passed the range in EDTF format, check it is in the correct format
                 $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -1615,15 +1629,15 @@ function save_resource_data_multi($collection,$editsearch = array())
 
                 foreach($date_parts as $date_part)
                     {
-                    $val = getval("field_" . $fields[$n]["ref"] . $date_part . "year","");
+                    $val = $postvals["field_" . $fields[$n]["ref"] . $date_part . "year"] ?? "";
                     if (intval($val)<=0)
                         {
                         $val="";
                         }
-                    elseif (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="")
+                    elseif ($field=($postvals["field_" . $fields[$n]["ref"] . $date_part . "month"] ?? "") != "")
                         {
                         $val.="-" . $field;
-                        if (($field=getval("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="")
+                        if ($field=($postvals["field_" . $fields[$n]["ref"] . $date_part . "day"] ?? "") != "")
                             {
                             $val.="-" . $field;
                             }
@@ -1772,20 +1786,20 @@ function save_resource_data_multi($collection,$editsearch = array())
                 )
                 {
                 # Construct a multilingual string from the submitted translations
-                $val = getval("field_" . $fields[$n]["ref"],"");
+                $val = $postvals["field_" . $fields[$n]["ref"]] ?? "";
                 $val="~" . $language . ":" . $val;
                 reset ($languages);
                 foreach ($languages as $langkey => $langname)
                     {
                     if ($language!=$langkey)
                         {
-                        $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
+                        $val.="~" . $langkey . ":" . (string)($postvals["multilingual_" . $n . "_" . $langkey] ?? "");
                         }
                     }
                 }
             else
                 {
-                $val=getval("field_" . $fields[$n]["ref"],"");
+                $val = $postvals["field_" . $fields[$n]["ref"]] ?? "";
                 }
 
             $origval = $val;
@@ -1817,8 +1831,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     {
                     # Find and replace mode? Perform the find and replace.
 
-                    $findstring     = getval("find_" . $fields[$n]["ref"],"");
-                    $replacestring  = getval("replace_" . $fields[$n]["ref"],"");
+                    $findstring     = $postvals["find_" . $fields[$n]["ref"]] ?? "";
+                    $replacestring  = $postvals["replace_" . $fields[$n]["ref"]] ?? "";
                     $val=str_replace($findstring,$replacestring,$existing);
 
                     if (html_entity_decode($existing, ENT_QUOTES | ENT_HTML401) != $existing)
@@ -1887,7 +1901,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 elseif ($mode=="CF")
                     {
                     # Copy text from another text field
-                    $copyfrom = getval("copy_from_field_" . $fields[$n]["ref"],0,true);
+                    $copyfrom = (int)$postvals["copy_from_field_" . $fields[$n]["ref"]] ?? 0;
                     if(!in_array($fields[$n]["type"],$TEXT_FIELD_TYPES))
                         {
                         // Not a valid option for this field
@@ -2108,9 +2122,9 @@ function save_resource_data_multi($collection,$editsearch = array())
     db_end_transaction("save_resource_data_multi");
 
     // Also save related resources field
-    if(getval("editthis_related","")!="")
+    if(($postvals["editthis_related"] ?? "") != "")
         {
-        $related = explode(',', getval('related', ''));
+        $related = explode(',', ($postvals['related'] ?? ''));
 
         // Make sure all submitted values are numeric
         $resources_to_relate = array();
@@ -2158,7 +2172,7 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
 
 	# Also update archive status
-	if (getval("editthis_status","")!="")
+	if (($postvals["editthis_status"] ?? "") != "")
 		{
 		$notifyrefs=array();
 		$usernotifyrefs=array();
@@ -2169,7 +2183,7 @@ function save_resource_data_multi($collection,$editsearch = array())
             if (!hook('forbidsavearchive', '', array($errors)))
                 {
                 $oldarchive = ps_value("SELECT archive value FROM resource WHERE ref = ?" ,["i",$ref],"");
-                $setarchivestate = getval("status",$oldarchive,true); // Originally used to get the 'archive' value but this conflicts with the archive used for searching
+                $setarchivestate = ((int)$postvals["status"] ?? $oldarchive); // Originally used to get the 'archive' value but this conflicts with the archive used for searching
                 $successfully_edited_resources[] = $ref;
 
                 $set_archive_state_hook = hook("save_resource_data_multi_set_archive_state", "", array($ref, $oldarchive));
@@ -2203,14 +2217,13 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
 
     # Also update access level
-    if (getval("editthis_created_by","")!="" && $edit_contributed_by)
+    if (($postvals["editthis_created_by"] ?? "") != "" && $edit_contributed_by)
         {
         for ($m=0;$m<count($list);$m++)
             {
             $ref=$list[$m];
-            $created_by = ps_value("SELECT created_by value FROM resource WHERE ref=?",array("i",$ref),"");
-            $new_created_by = getval("created_by",0,true);
-            if((getval("created_by",0,true) > 0) && $new_created_by != $created_by)
+            $created_by = ps_value("SELECT created_by value FROM resource WHERE ref=?",array("i",$ref),"");            $new_created_by = (int)$postvals["created_by"] ?? 0;
+            if($new_created_by > 0 && $new_created_by != $created_by)
                 {
                 ps_query("UPDATE resource SET created_by=? WHERE ref=?",array("i",$new_created_by,"i",$ref));
                 $olduser=get_user($created_by,true);
@@ -2222,12 +2235,12 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
 
     # Also update access level
-	if (getval("editthis_access","")!="")
+	if (($postvals["editthis_access"] ?? "") != "")
 		{
 		for ($m=0;$m<count($list);$m++)
 			{
 			$ref=$list[$m];
-			$access=getval("access",0);
+			$access = (int)$postvals["access"] ?? 0;
 			$oldaccess=ps_value("SELECT access value FROM resource WHERE ref=?",array("i",$ref),"");
 			if ($access!=$oldaccess)
 				{
@@ -2246,20 +2259,26 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
 
     # Update resource type?
-    if (getval("editresourcetype","")!="")
+
+    if (($postvals["editresourcetype"] ?? "") != "")
         {
-        for ($m=0;$m<count($list);$m++)
+        $newrestype = (int)$postvals["resource_type"] ?? 0;
+        $alltypes=get_resource_types();
+        if(in_array($newrestype,array_column($alltypes,"ref")))
             {
-            $ref=$list[$m];
-            update_resource_type($ref,getval("resource_type",""));
-            $successfully_edited_resources[] = $ref;
+            for ($m=0;$m<count($list);$m++)
+                {
+                $ref=$list[$m];
+                update_resource_type($ref,$newrestype);
+                $successfully_edited_resources[] = $ref;
+                }
             }
         }
 
     # Update location?
-    if (getval("editlocation","")!="")
+    if (($postvals["editlocation"] ?? "") != "")
         {
-        $location=explode(",",getval("location",""));
+        $location=explode(",",$postvals["editlocation"]);
         if (count($list)>0)
             {
             if (count($location)==2)
@@ -2268,7 +2287,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $geo_long=(float)$location[1];
                 ps_query("UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",array_merge(["d",$geo_lat,"d",$geo_long],ps_param_fill($list,"i")));
                 }
-            elseif (getval("location","")=="")
+            elseif (($postvals["location"] ?? "") == "")
                 {
                 ps_query("UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
                 }
@@ -2281,12 +2300,12 @@ function save_resource_data_multi($collection,$editsearch = array())
         }
 
     # Update mapzoom?
-    if (getval("editmapzoom","")!="")
+    if (($postvals["editmapzoom"] ?? "") != "")
         {
-        $mapzoom=getval("mapzoom","");
+        $mapzoom = $postvals["mapzoom"] ?? "";
         if (count($list)>0)
             {
-            if ($mapzoom!="")
+            if ($mapzoom != "")
                 {
                 ps_query("UPDATE resource SET mapzoom = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",array_merge(["i",$mapzoom], ps_param_fill($list,"i")));
                 }
