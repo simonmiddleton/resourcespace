@@ -2757,20 +2757,31 @@ function delete_resource($ref)
 
 	$current_state=$resource['archive'];
 
-	global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
-	if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
-		{
-		# $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
-		update_archive_status($ref, $resource_deletion_state, $current_state);
+    global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
+    if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
+        {
+        # $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
+        update_archive_status($ref, $resource_deletion_state, $current_state);
 
         # log this so that administrator can tell who requested deletion
         resource_log($ref,LOG_CODE_DELETED,'');
 
-		# Remove the resource from any collections
-		ps_query("delete from collection_resource where resource=?",array("i",$ref));
+        # Log the deletion of this resource for any collection it was in.
+        $in_collections = ps_query("select collection, resource from collection_resource where resource = ?", array("i", $ref));
 
-		return true;
-		}
+        # Remove the resource from any collections
+        ps_query("delete from collection_resource where resource = ?", array("i", $ref));
+
+        if (count($in_collections) > 0)
+            {
+            for($n=0; $n < count($in_collections); $n++)
+                {
+                collection_log($in_collections[$n]['collection'], 'd', $in_collections[$n]['resource']);
+                }
+            }
+
+        return true;
+        }
 
     # FStemplate support - do not allow samples from the template to be deleted
     if (resource_file_readonly($ref)) {return false;}
@@ -2816,15 +2827,6 @@ function delete_resource($ref)
 	$dirpath = dirname($resource_path);
     hook('delete_resource_path_extra', '', array($dirpath));
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
-
-	# Log the deletion of this resource for any collection it was in.
-	$in_collections=ps_query("select collection,resource from collection_resource where resource = ?",array("i",$ref));
-	if (count($in_collections)>0){
-		for($n=0;$n<count($in_collections);$n++)
-			{
-			collection_log($in_collections[$n]['collection'],'d',$in_collections[$n]['resource']);
-			}
-		}
 
 	hook("beforedeleteresourcefromdb","",array($ref));
 
