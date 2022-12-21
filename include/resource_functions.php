@@ -8189,7 +8189,7 @@ function get_download_filename($ref,$size,$alternative,$ext)
 
     # Remove critical characters from filename
     $altfilename=hook("downloadfilenamealt");
-    if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
+    if(!($altfilename)) $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
     else $filename=$altfilename;
 
     # Convert $filename to the charset used on the server.
