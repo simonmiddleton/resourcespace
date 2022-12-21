@@ -3044,7 +3044,7 @@ function get_slideshow_files_data()
     $slideshow_records = ps_query(
             'SELECT s.ref, resource_ref, r.resource_type, homepage_show, featured_collections_show, login_show
                FROM slideshow AS s
-         INNER JOIN `resource` AS r ON s.resource_ref = r.ref',
+         LEFT JOIN `resource` AS r ON s.resource_ref = r.ref',
          [],
          'slideshow'
      );
