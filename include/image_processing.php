@@ -1767,7 +1767,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $cb_height = $sh / 6;
                     $cb_scale = 600;
                     }
-                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
+                $addcheckbdpre = "-size " . round($cb_width) . "x" . round($cb_height);
                 if($extension=="svg")
                     {
                     $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% -background none tile:pattern:checkerboard -modulate 150,100 ";
