@@ -6853,7 +6853,7 @@ function get_default_user_collection($setactive=false)
  * 
  * @return void
  */
-function update_smart_collection(int $smartsearch_ref = 0)
+function update_smart_collection(int $smartsearch_ref)
     {
     if ($smartsearch_ref == 0)
         {
