@@ -50,6 +50,7 @@ save_user($childa);
 $udata_cache = [];
 
 // Test A Get all users with $testperm permission, current and child groups
+$U_perm_strict = false;
 $adminadata = get_user($admina);
 setup_user($adminadata);
 $result = get_users_by_permission([$testperm]);
@@ -59,7 +60,19 @@ if(!is_array($result) || !match_values(array_column($result,'ref'),array($admina
     return false;
     }
 
+// Test B Get all users with $testperm permission, strictly limited to child groups
+$U_perm_strict = true;
+$adminadata = get_user($admina);
+setup_user($adminadata);
+$result = get_users_by_permission([$testperm]);
+if(!is_array($result) || !match_values(array_column($result,'ref'),[$childa]))
+	{
+    echo "ERROR - SUBTEST B\n";
+    return false;
+    }
+
 // Test C Get all users with $testperm permission, no restriction
+$U_perm_strict = false;
 $adminbdata = get_user($adminb);
 setup_user($adminbdata);
 $result = get_users_by_permission([$testperm]);

@@ -8,6 +8,75 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
+ # Show an error when someone tries to request an account with an email already in the system.
+# Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
+$account_email_exists_note=false;
+
+ # "U" permission allows management of users in the current group as well as children groups. TO test stricter adherence to the idea of "children only", set this to true. 
+$U_perm_strict=false;
+
+# Send a confirmation e-mail to requester
+$account_request_send_confirmation_email_to_requester = true;
+
+# Allow a link to re-extract metadata per-resource (on the View Page) to users who have edit abilities.
+$allow_metadata_revert=false;
+
+# Allow users to delete resources?
+# (Can also be controlled on a more granular level with the "D" restrictive permission.)
+$allow_resource_deletion = true;
+
+# Allow the addition of 'saved searches' to collections. 
+$allow_save_search=true;
+
+# Display resource title on alternative file management page
+$alternative_file_resource_title=true;
+
+# option to always send emails from the logged in user
+$always_email_from_user=false;
+
+# Always record the name of the resource creator for new records.
+# If false, will only record when a resource is submitted into a provisional status.
+$always_record_resource_creator = true;
+
+// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
+$annotate_crud_anonymous = false;
+
+// The user can see existing annotations in read-only mode
+$annotate_read_only = false;
+
+# When anonymous access is on, show login in a modal.
+$anon_login_modal=false;
+
+# Place the default dash (tiles set for all_users) on the home page for anonymous users with none of the drag 'n' drop functionality.
+$anonymous_default_dash=true;
+
+$attach_user_smart_groups=true; //enable user attach to include 'smart group option', different from the default "users in group" method (which will still be available)
+
+# Should the "Add to basket" function appear on the download sizes, so the size of the file required is selected earlier and stored in the basket? This means the total price can appear in the basket.
+$basket_stores_size=true; 
+
+// Default browse bar width;
+$browse_default_width = 295;
+
+# Option to force single branch selection in category tree selection 
+$cat_tree_singlebranch=false;
+
+# Should the category tree status window be shown?
+$category_tree_show_status_window=true;
+
+# Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
+$chosen_dropdowns=false;
+
+# The number of options that must be present before including seach capability.
+$chosen_dropdowns_threshold_main=10;
+$chosen_dropdowns_threshold_simplesearch=10;
+
+# Use the 'chosen' library for rendering dropdowns in the collection bar.
+$chosen_dropdowns_collection=false;
+
+# The number of options that must be present before including seach capability for collection bar dropdowns.
+$chosen_dropdowns_threshold_collection=10;
+
 # Show clear button on the upload page
 $clearbutton_on_upload=true;
 
