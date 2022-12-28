@@ -8,13 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
- # Show an error when someone tries to request an account with an email already in the system.
-# Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
-$account_email_exists_note=false;
-
- # "U" permission allows management of users in the current group as well as children groups. TO test stricter adherence to the idea of "children only", set this to true. 
-$U_perm_strict=false;
-
 # Send a confirmation e-mail to requester
 $account_request_send_confirmation_email_to_requester = true;
 
