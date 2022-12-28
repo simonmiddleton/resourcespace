@@ -1060,7 +1060,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
         # save related resources field
-        ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?",["i",$ref,"i",$ref]); # remove existing related items
         $related=explode(",",getval("related",""));
         # Trim whitespace from each entry
         foreach ($related as &$relatedentry)
@@ -1069,9 +1068,18 @@ function save_resource_data($ref,$multi,$autosave_field="")
             }
         # Make sure all submitted values are numeric
         $to_relate = array_filter($related,"is_int_loose");
-        if(count($to_relate)>0)
+
+        $currently_related = get_related_resources($ref);
+        $to_add = array_diff($to_relate, $currently_related);
+        $to_delete = array_diff($currently_related, $to_relate);
+
+        if(count($to_add) > 0)
             {
-            update_related_resource($ref,$to_relate,true);
+            update_related_resource($ref, $to_add, true);
+            }
+        if(count($to_delete) > 0)
+            {
+            update_related_resource($ref, $to_delete, false);
             }
         }
 
@@ -6172,6 +6180,7 @@ function update_related_resource($ref,$related,$add=true)
     $access = get_edit_access($ref);
     if(!$access)
         {
+        debug('Failed to update related resources for ref ' . $ref . ' - no edit access to this resource');
         return false;
         }
     foreach($related as $relate)
@@ -6179,6 +6188,7 @@ function update_related_resource($ref,$related,$add=true)
         $access = get_edit_access($relate);
         if(!$access)
             {
+            debug('Failed to update related resources for ref ' . $ref . ' - user cannot edit ref ' . $relate);
             return false;
             }
         }
