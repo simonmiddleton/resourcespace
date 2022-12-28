@@ -717,9 +717,9 @@ $count_result = count($result);
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
-# E-commerce functionality. Work out total price so that they've already selected a suitable size.
+# E-commerce functionality. Work out total price, if $basket_stores_size is enabled so that they've already selected a suitable size.
 $totalprice=0;
-if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3))
+if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 	{
 	foreach ($result as $resource)
 		{
@@ -776,9 +776,9 @@ else if ($basket)
 	{ ?>
 	<p><?php if ($count_result==1) {echo $lang["yourbasketcontains-1"];} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
 
-	<?php  
+	<?php if ($basket_stores_size) {
 	# If they have already selected the size, we can show a total price here.
-	?><br/><?php echo $lang["totalprice"] ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?>
+	?><br/><?php echo $lang["totalprice"] ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?><?php } ?>
 	
 	</p>
 
@@ -1331,10 +1331,11 @@ if (count($addarray)>0 && $addarray[0]!="")
 		
 		<?php if ($count_result==0) { ?>
 		<li><?php echo $lang["yourbasketisempty"] ?></li>
-		<?php } else { 
+		<?php } else { ?>
 
+		<?php if ($basket_stores_size) {
 		# If they have already selected the size, we can show a total price here.
-		?><li><?php echo $lang["totalprice"] ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?></li>
+		?><li><?php echo $lang["totalprice"] ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?><?php } ?></li>
 		<li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection)?>"><?php echo $lang["viewall"]?></a></li>
 		<li><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["buynow"] ?>&nbsp;&nbsp;&nbsp;" /></li>
 		<?php } ?>
@@ -1429,3 +1430,94 @@ if (count($addarray)>0 && $addarray[0]!="")
 
 <?php
 draw_performance_footer();
+
+
+
+
+if ($chosen_dropdowns_collection) { ?>
+<!-- Chosen support -->
+<script type="text/javascript">
+	chosenColElm = (thumbs=='show' ? '#CollectionMaxDiv' : '#CollectionMinDiv');
+	var css_width = jQuery(chosenColElm+" select").css("width");
+	jQuery(chosenColElm+" select").each(function(){
+		var css_width = jQuery(this).css("width");
+		jQuery(this).chosen({disable_search_threshold: chosenCollectionThreshold, 'width': css_width});
+	});
+	
+	jQuery("#CollectionDiv select").on('chosen:showing_dropdown', function(event, params) {
+	   
+	   var chosen_container = jQuery( event.target ).next( '.chosen-container' );
+	   chosen_containerParent = jQuery(chosen_container).parent();
+	   var dropdown = chosen_container.find( '.chosen-drop' );
+	   var dropdown_top = dropdown.offset().top - jQuery('#CollectionDiv').scrollTop();
+	   var dropdown_height = dropdown.height();
+	   var viewport_height = jQuery('#CollectionDiv').height();
+
+	   if ( dropdown_top + dropdown_height > viewport_height ) {
+		  chosen_container.addClass( 'chosen-drop-up' );
+		  myLayout.allowOverflow('south');
+	   }
+	   switch(thumbs){
+	   		case 'show':
+	   			
+	   			if(jQuery(chosen_containerParent).hasClass('SearchItem')){
+					jQuery("#colselect .chosen-drop").css("display","block");
+				}
+				else{
+					jQuery("#CollectionMaxDiv .ActionsContainer .chosen-drop").css("display","block");
+				}
+	   			break;
+	   		case 'hide':
+	   			
+	   			if(jQuery(chosen_containerParent).attr('id')=='MinColDrop'){
+					jQuery("#colselect2 .chosen-drop").css("display","block");
+				}
+				else{
+					jQuery("#CollectionMinRightNav .ActionsContainer .chosen-drop").css("display","block");
+				}
+				break;
+	   }
+
+	});
+	
+	jQuery("#CollectionDiv select").on('chosen:hiding_dropdown', function(event, params) {
+	   
+	   myLayout.resetOverflow('south');
+	   chosen_containerParent = jQuery( event.target ).next( '.chosen-container' ).parent()
+	   jQuery( event.target ).next( '.chosen-container' ).removeClass( 'chosen-drop-up' );
+	   switch(thumbs){
+	   		case 'show':
+	   			if(jQuery(chosen_containerParent).hasClass('SearchItem')){
+					jQuery("#colselect .chosen-drop").css("display","none");
+				}
+				else{
+					jQuery("#CollectionMaxDiv .ActionsContainer .chosen-drop").css("display","none");
+				}
+	   			break;
+	   		case 'hide':
+	   			if(jQuery(chosen_containerParent).attr('id')=='MinColDrop'){
+					jQuery("#colselect2 .chosen-drop").css("display","none");
+				}
+				else{
+					jQuery("#CollectionMinRightNav .ActionsContainer .chosen-drop").css("display","none");
+				}
+				break;
+	   } 
+	});
+	
+	// for some reason creating a collection would not work without specifying this bit of code...
+	jQuery('#entername2').keyup(function(e){
+		if(e.keyCode == 13){
+			jQuery("#colselect2").submit();
+		}
+	});
+	
+	jQuery('#entername').keyup(function(e){
+		if(e.keyCode == 13){
+			jQuery("#colselect").submit();
+		}
+	});
+</script>
+<!-- End of chosen support -->
+<?php 
+} ?>

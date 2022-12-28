@@ -175,6 +175,7 @@ if(isset($system_read_only) && $system_read_only)
     $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
     $global_permissions="p";
     $remove_resources_link_on_collection_bar = false;
+    $allow_save_search = false;
     $mysql_log_transactions=false;
     $enable_collection_copy = false;
     }
@@ -224,72 +225,83 @@ $querytime=0;
 $querylog=array();
 
 # -----------LANGUAGES AND PLUGINS-------------------------------
-$legacy_plugins = $plugins; # Make a copy of plugins activated via config.php
-# Check that manually (via config.php) activated plugins are included in the plugins table.
-foreach($plugins as $plugin_name)
+
+if ($use_plugins_manager)
     {
-    if ($plugin_name!='')
+    $legacy_plugins = $plugins; # Make a copy of plugins activated via config.php
+    # Check that manually (via config.php) activated plugins are included in the plugins table.
+    foreach($plugins as $plugin_name)
         {
-        if (ps_value("SELECT inst_version AS value FROM plugins WHERE name=?",array("s",$plugin_name),'',"plugins")=='')
+        if ($plugin_name!='')
             {
-            # Installed plugin isn't marked as installed in the DB.  Update it now.
-            # Check if there's a plugin.yaml file to get version and author info.
-            $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
-            $p_y = get_plugin_yaml($plugin_yaml_path, false);
-            # Write what information we have to the plugin DB.
-            ps_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-                ,array
-                    (
-                    "s",$p_y['version'],
-                    "s",$p_y['author'],
-                    "s",$p_y['desc'],
-                    "s",$plugin_name,
-                    "s",$p_y['info_url'],
-                    "s",$p_y['update_url'],
-                    "s",$p_y['config_url'],
-                    "s",$p_y['default_priority'],
-                    "s",$p_y['disable_group_select'],
-                    "s",$p_y['title'],
-                    "s",$p_y['icon']
-                    )
-                );
-            clear_query_cache("plugins");
+            if (ps_value("SELECT inst_version AS value FROM plugins WHERE name=?",array("s",$plugin_name),'',"plugins")=='')
+                {
+                # Installed plugin isn't marked as installed in the DB.  Update it now.
+                # Check if there's a plugin.yaml file to get version and author info.
+                $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
+                $p_y = get_plugin_yaml($plugin_yaml_path, false);
+                # Write what information we have to the plugin DB.
+                ps_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select, title, icon) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                    ,array
+                        (
+                        "s",$p_y['version'],
+                        "s",$p_y['author'],
+                        "s",$p_y['desc'],
+                        "s",$plugin_name,
+                        "s",$p_y['info_url'],
+                        "s",$p_y['update_url'],
+                        "s",$p_y['config_url'],
+                        "s",$p_y['default_priority'],
+                        "s",$p_y['disable_group_select'],
+                        "s",$p_y['title'],
+                        "s",$p_y['icon']
+                        )
+                    );
+                clear_query_cache("plugins");
+                }
             }
         }
-    }
-# Need verbatim queries for this query
-$mysql_vq = $mysql_verbatim_queries;
-$mysql_verbatim_queries = true;
-$active_plugins = get_active_plugins();
-$mysql_verbatim_queries = $mysql_vq;
+    # Need verbatim queries for this query
+    $mysql_vq = $mysql_verbatim_queries;
+    $mysql_verbatim_queries = true;
+    $active_plugins = get_active_plugins();
+    $mysql_verbatim_queries = $mysql_vq;
 
-$active_yaml = array();
-$plugins = array();
-foreach($active_plugins as $plugin)
-    {
-    # Check group access && YAML, only enable for global access at this point
-    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
-    $py = get_plugin_yaml($plugin_yaml_path, false);
-    array_push($active_yaml,$py);
-    if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
-        {
-        # Add to the plugins array if not already present which is what we are working with
-        $plugins[]=$plugin['name'];
-        }
-    }
+    $active_yaml = array();
+    $plugins = array();
+    foreach($active_plugins as $plugin)
+	    {
+	    # Check group access && YAML, only enable for global access at this point
+	    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
+	    $py = get_plugin_yaml($plugin_yaml_path, false);
+	    array_push($active_yaml,$py);
+	    if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
+		    {
+		    # Add to the plugins array if not already present which is what we are working with
+		    $plugins[]=$plugin['name'];
+		    }
+	    }
 
-for ($n=count($active_plugins)-1;$n>=0;$n--)
-    {
-    $plugin=$active_plugins[$n];
-    # Check group access && YAML, only enable for global access at this point
-    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
-    $py = get_plugin_yaml($plugin_yaml_path, false);
-    if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
-        {
-        include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
-        }
-    }
-
+	for ($n=count($active_plugins)-1;$n>=0;$n--)
+		{
+		$plugin=$active_plugins[$n];
+        # Check group access && YAML, only enable for global access at this point
+	    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
+	    $py = get_plugin_yaml($plugin_yaml_path, false);
+		if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
+			{
+			include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
+			}
+		}
+	}
+else
+	{
+	for ($n=count($plugins)-1;$n>=0;$n--)
+		{
+        if (!isset($plugins[$n])) { continue; }
+		include_plugin_config($plugins[$n]);
+		}
+	}
 
 // Load system wide config options from database and then store them to distinguish between the system wide and user preference
 process_config_options();

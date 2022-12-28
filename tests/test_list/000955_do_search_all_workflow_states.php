@@ -10,6 +10,7 @@ $pending_review_visible_to_all = false;
 $search_all_workflow_states = false;
 $pending_submission_searchable_to_all=false;
 $notify_user_contributed_submitted = false;
+$always_record_resource_creator = true;
 
 // Get baseline to compare in case pre-existing data changes
 $results = do_search('');
@@ -105,5 +106,6 @@ $pending_review_visible_to_all=false;
 $pending_submission_searchable_to_all=false;
 $search_all_workflow_states=false;
 $notify_user_contributed_submitted = true;
+$always_record_resource_creator = false;
 
 return true;

@@ -1,6 +1,6 @@
 <?php /* -------- Date Range ---------------------------- */ 
 
-global $date_d_m_y, $tabs_on_edit;
+global $date_d_m_y, $chosen_dropdowns, $tabs_on_edit;
 
 # Start with a null date
 $start_dy="";

@@ -639,35 +639,48 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
  */
 function get_managed_dash()
     {
-    global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $userref, $usergroup;
+    global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $anonymous_default_dash, $userref, $usergroup;
     global $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash, $help_modal;
     #Build Tile Templates
-    $tiles = ps_query("
-        SELECT dash_tile.ref AS 'tile',
-                dash_tile.title,
-                dash_tile.url,
-                dash_tile.reload_interval_secs,
-                dash_tile.link,
-                dash_tile.default_order_by,
-                (
-                    SELECT ugdt.default_order_by
-                        FROM usergroup_dash_tile AS ugdt
-                        WHERE ugdt.dash_tile = dash_tile.ref
-                        AND ugdt.usergroup = ?
-                ) AS 'usergroup_default_order_by'
-            FROM dash_tile
-            WHERE dash_tile.all_users = 1
-            AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = ?)
-            OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
-            AND (
-                dash_tile.allow_delete = 1
-                OR (
-                    dash_tile.allow_delete = 0
-                    AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
-                    )
-                )
-        ORDER BY usergroup_default_order_by ASC, default_order_by ASC
-    ", ['i', $usergroup, 'i', $usergroup]);
+    if(checkPermission_anonymoususer() && !$anonymous_default_dash)
+        {
+        // Anonymous user but may have had dash customised dash configured first
+        $tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by'
+                       FROM user_dash_tile
+                            JOIN dash_tile
+                            ON user_dash_tile.dash_tile = dash_tile.ref
+                            WHERE user_dash_tile.user= ?
+                            ORDER BY user_dash_tile.order_by", ['i', $userref]);    
+        }
+    else
+        {
+        $tiles = ps_query("
+            SELECT dash_tile.ref AS 'tile',
+                   dash_tile.title,
+                   dash_tile.url,
+                   dash_tile.reload_interval_secs,
+                   dash_tile.link,
+                   dash_tile.default_order_by,
+                   (
+                        SELECT ugdt.default_order_by
+                          FROM usergroup_dash_tile AS ugdt
+                         WHERE ugdt.dash_tile = dash_tile.ref
+                           AND ugdt.usergroup = ?
+                   ) AS 'usergroup_default_order_by'
+              FROM dash_tile
+             WHERE dash_tile.all_users = 1
+               AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = ?)
+                OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
+               AND (
+                    dash_tile.allow_delete = 1
+                    OR (
+                        dash_tile.allow_delete = 0
+                        AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
+                       )
+                   )
+            ORDER BY usergroup_default_order_by ASC, default_order_by ASC
+        ", ['i', $usergroup, 'i', $usergroup]);
+        }
     
     foreach($tiles as $tile)
         {

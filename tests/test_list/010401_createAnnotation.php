@@ -46,7 +46,19 @@ if($annotation_ref === false)
     return false;
     }
 
+
+// Read-only mode should fail to create new annotations
+$annotate_read_only = true;
+$annotation_ref = createAnnotation($annotorious_annotation);
+if($annotation_ref !== false)
+    {
+    echo 'Read-only mode - ';
+    return false;
+    }
+
+
+
 // Tear down
-unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref);
+unset($annotate_fields, $resource_ref, $uk, $annotorious_annotation, $annotation_ref, $annotate_read_only);
 
 return true;

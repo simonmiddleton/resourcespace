@@ -756,7 +756,27 @@ if (getval("ajax","") == "")
 			});
 
 	</script>
-
+	
+	<?php if ($chosen_dropdowns)
+		{ ?>
+		<!-- Chosen support -->
+		<script>
+		jQuery(document).ready(function()
+			{
+			for (var selector in chosen_config)
+				{
+				console.log("selector="+selector);
+				jQuery(selector).each(function()
+					{
+					ChosenDropdownInit(this, selector);
+					});
+				}
+			});
+		</script>
+		<!-- End of chosen support -->
+		<?php
+		}
+	?>
 	</body>
 	</html><?php
 	} // end if !ajax ?>

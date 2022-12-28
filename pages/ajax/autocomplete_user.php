@@ -52,7 +52,7 @@ if(!$ignoregroups)
         }
     }
 
-if(!$ignoregroups)
+if($attach_user_smart_groups && !$ignoregroups)
     {
     if(!isset($groups))
         {

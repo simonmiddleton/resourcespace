@@ -210,7 +210,13 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
 function annotationEditable(array $annotation)
     {
     debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
-    global $userref;
+    global $userref, $annotate_read_only, $annotate_crud_anonymous;
+
+    if($annotate_read_only)
+        {
+        debug('[annotations][fct=annotationEditable][info] read-only annotation! Reason: the system is configured with annotate_read_only = true');
+        return false;
+        }
 
     $add_operation = !isset($annotation['user']);
     $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
@@ -224,7 +230,7 @@ function annotationEditable(array $annotation)
     // Anonymous users cannot edit by default. They can only edit if they are allowed CRUD operations
     if(checkPermission_anonymoususer())
         {
-        return $non_admin_athz && $field_edit_access;
+        return $annotate_crud_anonymous && $non_admin_athz && $field_edit_access;
         }
 
     return (checkperm('a') || $non_admin_athz) && $field_edit_access;

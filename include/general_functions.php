@@ -830,8 +830,8 @@ function allowed_type_mime($allowedtype)
  * @param  string $email            Email address to send to 
  * @param  string $subject          Email subject
  * @param  string $message          Message text
- * @param  string $from             From address - defaults to $email_from
- * @param  string $reply_to         Reply to address - defaults to $email_from 
+ * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
  * @param  string $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name
@@ -843,11 +843,17 @@ function allowed_type_mime($allowedtype)
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
-    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
+    global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
 
     if(defined("RS_TEST_MODE"))
         {
         return false;
+        }
+    if($always_email_from_user)
+        {
+        $from_name=($userfullname!="")?$userfullname:$username;
+        $from=$useremail;
+        $reply_to=$useremail;
         }
 
     if($always_email_copy_admin)
@@ -1054,8 +1060,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
  * @param  string $email           Email address to send to 
  * @param  string $subject          Email subject
  * @param  string $message          Message text
- * @param  string $from             From address - defaults to $email_from 
- * @param  string $reply_to         Reply to address - defaults to $email_from
+ * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
  * @param  string $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name

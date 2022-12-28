@@ -188,7 +188,7 @@ include "../include/header.php";
 <?php } /*end hook replacepreviewbacktoview*/ ?>
 <?php if ($k=="") { ?>
 
-<?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3)) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
+<?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
 <?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php }
@@ -388,7 +388,7 @@ if($annotate_enabled)
                 annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                 nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                 resource            : <?php echo (int) $ref; ?>,
-                read_only           : false,
+                read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
                 // First page of a document is exactly the same as the preview
                 page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>,
                 // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
