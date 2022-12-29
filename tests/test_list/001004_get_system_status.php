@@ -6,7 +6,7 @@ command_line_only();
 $system_status = get_system_status();
 if(isset($system_status['results']['required_php_modules']) && $system_status['results']['required_php_modules']['status'] === 'FAIL')
     {
-    echo "INFO: {$system_status['results'][$find_stat_idx]['info']}; - ";
+    echo "INFO: {$system_status['results']['required_php_modules']['info']}; - ";
     }
 
 
