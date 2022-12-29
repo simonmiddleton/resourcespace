@@ -4545,10 +4545,9 @@ function get_system_status()
     $return = [
         'results' => [
             // Example of a test result
-            // [
-            // 'name' => 'Short name of what is being tested',
-            // 'status' => 'OK/FAIL/WARNING',
-            // 'info' => 'Any relevant information',
+            // 'name' => [
+            //     'status' => 'OK/FAIL/WARNING',
+            //     'info' => 'Any relevant information',
             // ]
         ],
         'status' => 'FAIL',
