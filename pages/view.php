@@ -929,7 +929,7 @@ if($image_preview_zoom)
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                             resource            : <?php echo (int) $ref; ?>,
-                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
+                            read_only           : false,
                             // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                             csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
                             <?php echo generateAjaxToken('RSTagging'); ?>
@@ -1682,7 +1682,7 @@ hook ("resourceactions") ?>
 		<?php 
 		}
 	if (!hook("replaceaddtocollection") && !checkperm("b")
-			&& !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
+			&& !(($userrequestmode==2 || $userrequestmode==3))
 			&& !in_array($resource["resource_type"],$collection_block_restypes)) 
 		{ 
 		?>

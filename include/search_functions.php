@@ -580,7 +580,7 @@ function compile_search_actions($top_actions)
     $o=0;
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
-           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
+           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset,
            $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
@@ -607,7 +607,7 @@ function compile_search_actions($top_actions)
 
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
-        if($top_actions && $allow_save_search && $usercollection != $collection)
+        if($top_actions && $usercollection != $collection)
             {
             $options[$o]['value']='save_search_to_collection';
             $options[$o]['label']=$lang['savethissearchtocollection'];
