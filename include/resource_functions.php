@@ -2790,7 +2790,7 @@ function delete_resource($ref)
             {
             for($n=0; $n < count($in_collections); $n++)
                 {
-                collection_log($in_collections[$n]['collection'], 'd', $in_collections[$n]['resource']);
+                collection_log($in_collections[$n]['collection'], LOG_CODE_COLLECTION_DELETED_RESOURCE, $in_collections[$n]['resource']);
                 }
             }
 
