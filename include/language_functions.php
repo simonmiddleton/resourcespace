@@ -655,37 +655,26 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
 
     // Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
     $GLOBALS['customsitetext'] = array();
-    // Go through the results twice, setting the default language first, then repeat for the user language so we can override the default with any language specific entries
-    for ($n=0;$n<count($results);$n++) 
+
+    // Set the default language first, user language second so we can override the default with any language specific entries
+    foreach([$defaultlanguage, $language] as $check_lang)
         {
-        if($results[$n]["language"]!=$defaultlanguage)
+        foreach($results as $result)
             {
-            continue;
-            }
-        if ($results[$n]["page"]=="") 
-            {
-            $lang[$results[$n]["name"]]=$results[$n]["text"];
-            $GLOBALS['customsitetext'][$results[$n]['name']] = $results[$n]['text'];
-            } 
-        else 
-            {
-            $lang[$results[$n]["page"] . "__" . $results[$n]["name"]]=$results[$n]["text"];
-            }
-        }
-    for ($n=0;$n<count($results);$n++) 
-        {
-        if($results[$n]["language"]!=$language)
-            {
-            continue;
-            }
-        if ($results[$n]["page"]=="") 
-            {
-            $lang[$results[$n]["name"]]=$results[$n]["text"];
-            $GLOBALS['customsitetext'][$results[$n]['name']] = $results[$n]['text'];
-            } 
-        else 
-            {
-            $lang[$results[$n]["page"] . "__" . $results[$n]["name"]]=$results[$n]["text"];
-            }
-        }
+             if($result['language'] != $check_lang)
+                 {
+                 continue;
+                 }
+
+             if($result['page'] == '')
+                 {
+                 $lang[$result['name']] = $result['text'];
+                 $GLOBALS['customsitetext'][$result['name']] = $result['text'];
+                 } 
+             else 
+                 {
+                 $lang["{$result['page']}__{$result['name']}"] = $result['text'];
+                 }
+             }
+         }
     }
