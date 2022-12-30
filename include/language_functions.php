@@ -654,7 +654,7 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
     $results=ps_query($query,$parameters,"sitetext");
 
     // Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
-    $customsitetext=array();
+    $GLOBALS['customsitetext'] = array();
     // Go through the results twice, setting the default language first, then repeat for the user language so we can override the default with any language specific entries
     for ($n=0;$n<count($results);$n++) 
         {
@@ -665,7 +665,7 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
         if ($results[$n]["page"]=="") 
             {
             $lang[$results[$n]["name"]]=$results[$n]["text"];
-            $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+            $GLOBALS['customsitetext'][$results[$n]['name']] = $results[$n]['text'];
             } 
         else 
             {
@@ -681,7 +681,7 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
         if ($results[$n]["page"]=="") 
             {
             $lang[$results[$n]["name"]]=$results[$n]["text"];
-            $customsitetext[$results[$n]['name']] = $results[$n]['text'];
+            $GLOBALS['customsitetext'][$results[$n]['name']] = $results[$n]['text'];
             } 
         else 
             {
