@@ -96,7 +96,6 @@ if(getval("submit","") != "")
                 LIMIT ?", ['i', $migrate_field, 'i', $minref, 'i', $chunksize]
             );
 
-        //exit(print_r($nodedata));
         // Process each data row
         foreach($nodedata as $node)
             {
