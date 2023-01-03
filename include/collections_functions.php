@@ -5206,12 +5206,19 @@ function collection_cleanup_inaccessible_resources($collection)
     global $userref;
 
     $editable_states = array_column(get_editable_states($userref), 'id');
+    $count_editable_states = count($editable_states);
+
+    if($count_editable_states === 0)
+        {
+        return;
+        }
+
     ps_query("DELETE a 
                 FROM   collection_resource AS a 
                 INNER JOIN resource AS b 
                 ON a.resource = b.ref 
                 WHERE  a.collection = ? 
-                AND b.archive NOT IN (". ps_param_insert(count($editable_states)) .")", array_merge(['i', $collection], ps_param_fill($editable_states, 'i')));
+                AND b.archive NOT IN (". ps_param_insert($count_editable_states) .")", array_merge(['i', $collection], ps_param_fill($editable_states, 'i')));
     }
 /**
 * Relate all resources in a collection
