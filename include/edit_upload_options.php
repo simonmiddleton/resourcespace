@@ -88,7 +88,7 @@ if ($on_upload || (isset($ref) && $ref<0))
             <?php
             } 
 	    }
-	if($enable_related_resources && $relate_on_upload && ($on_upload || ($ref<0 && !$multiple))) # When uploading
+	if($enable_related_resources && $relate_on_upload && ($on_upload || ($ref<0 && !$multiple)) && !$external_upload) # When uploading
         {
         ?>
         <div class="Question" id="question_related">
