@@ -622,7 +622,6 @@ function reorder_nodes(array $unordered_nodes)
             }
         }
 
-    clear_query_cache("schema");
     return $reordered_nodes;
     }
 

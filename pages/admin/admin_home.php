@@ -20,13 +20,8 @@ include ("../../include/header.php");
 		
 		<?php if (checkperm("o")) { ?><li><a href="<?php echo $baseurl_short?>pages/admin/admin_content.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-pencil-square-o"></i><br /><?php echo $lang["managecontent"]?></a></li><?php } ?>
 		
+		<li><a href="<?php echo $baseurl_short?>pages/team/team_plugins.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-plug"></i><br /><?php echo $lang["pluginssetup"]?></a></li>
 		<?php
-        if($use_plugins_manager == true)
-            {
-            ?>
-            <li><a href="<?php echo $baseurl_short?>pages/team/team_plugins.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-plug"></i><br /><?php echo $lang["pluginssetup"]?></a></li>
-            <?php
-            }
 
 			if(checkperm('a'))
             {

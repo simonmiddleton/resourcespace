@@ -76,7 +76,7 @@ if (!(PHP_SAPI == 'cli'))
     <div class="BasicsBox">
         <form method="post" action="reindex_field.php">
             <?php generateFormToken("reindex_field"); ?>
-            <?php render_field_selector_question("Choose field to reindex", "field",[]); ?>
+            <?php render_field_selector_question("Choose field to reindex", "field",[],"stdwidth",false,$field); ?>
             <div class="Question">
                 <label></label><input type="submit" name="submit" value="Reindex field">
             </div>

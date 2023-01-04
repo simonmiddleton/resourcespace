@@ -376,7 +376,7 @@ function get_resource_data($ref,$cache=true)
         }
     # Returns basic resource data (from the resource table alone) for resource $ref.
     # For 'dynamic' field data, see get_resource_field_data
-    global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
+    global $default_resource_type, $get_resource_data_cache;
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
     truncate_cache_arrays();
 
@@ -397,12 +397,8 @@ function get_resource_data($ref,$cache=true)
             if (!(checkperm("c") || checkperm("d"))) {return false;}
             elseif(!hook('replace_upload_template_creation', '', array($ref)))
                 {
-                if (isset($always_record_resource_creator) && $always_record_resource_creator)
-                    {
-                    global $userref;
-                    $user = $userref;
-                    }
-                else {$user = -1;}
+                global $userref;
+                $user = $userref;
 
                 $default_archive_state = get_default_archive_state();
                 $wait = ps_query("insert into resource (ref,resource_type,created_by, archive) values (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
@@ -495,11 +491,21 @@ function put_resource_data($resource,$data)
     }
 
 
-function create_resource($resource_type,$archive=999,$user=-1)
+/**
+ * create_resource
+ *
+ * @param  integer  $resource_type  ID of target resource type
+ * @param  integer  $archive        ID of target archive state, 999 if archived
+ * @param  integer  $user           User ID, -1 for current user
+ * @param  string   $origin         Source of resource, should not be blank
+ * 
+ * @return mixed    false if invalid inputs given, integer of resource reference if resource is created
+ */
+function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     {
     # Create a new resource.
     global $k;
-
+    
     if(!is_numeric($archive))
         {
         return false;
@@ -545,7 +551,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
     # Log this
     daily_stat("Create resource",$insert);
 
-    resource_log($insert, LOG_CODE_CREATED, 0);
+    resource_log($insert, LOG_CODE_CREATED, 0,$origin);
     if(upload_share_active())
         {
         resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
@@ -1054,7 +1060,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
         # save related resources field
-        ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?",["i",$ref,"i",$ref]); # remove existing related items
         $related=explode(",",getval("related",""));
         # Trim whitespace from each entry
         foreach ($related as &$relatedentry)
@@ -1063,9 +1068,18 @@ function save_resource_data($ref,$multi,$autosave_field="")
             }
         # Make sure all submitted values are numeric
         $to_relate = array_filter($related,"is_int_loose");
-        if(count($to_relate)>0)
+
+        $currently_related = get_related_resources($ref);
+        $to_add = array_diff($to_relate, $currently_related);
+        $to_delete = array_diff($currently_related, $to_relate);
+
+        if(count($to_add) > 0)
             {
-            update_related_resource($ref,$to_relate,true);
+            update_related_resource($ref, $to_add, true);
+            }
+        if(count($to_delete) > 0)
+            {
+            update_related_resource($ref, $to_delete, false);
             }
         }
 
@@ -2587,7 +2601,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 	{
     # Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group=="") {$group=$usergroup;}
@@ -2597,7 +2611,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
 	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
 	$userlist=resolve_userlist_groups($userlist);
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
 		{
 		$userlist_with_groups=$userlist;
 		$groups_users=resolve_userlist_groups_smart($userlist,true);
@@ -2753,20 +2767,31 @@ function delete_resource($ref)
 
 	$current_state=$resource['archive'];
 
-	global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
-	if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
-		{
-		# $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
-		update_archive_status($ref, $resource_deletion_state, $current_state);
+    global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
+    if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
+        {
+        # $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
+        update_archive_status($ref, $resource_deletion_state, $current_state);
 
         # log this so that administrator can tell who requested deletion
         resource_log($ref,LOG_CODE_DELETED,'');
 
-		# Remove the resource from any collections
-		ps_query("delete from collection_resource where resource=?",array("i",$ref));
+        # Log the deletion of this resource for any collection it was in.
+        $in_collections = ps_query("select collection, resource from collection_resource where resource = ?", array("i", $ref));
 
-		return true;
-		}
+        # Remove the resource from any collections
+        ps_query("delete from collection_resource where resource = ?", array("i", $ref));
+
+        if (count($in_collections) > 0)
+            {
+            for($n=0; $n < count($in_collections); $n++)
+                {
+                collection_log($in_collections[$n]['collection'], LOG_CODE_COLLECTION_DELETED_RESOURCE, $in_collections[$n]['resource']);
+                }
+            }
+
+        return true;
+        }
 
     # FStemplate support - do not allow samples from the template to be deleted
     if (resource_file_readonly($ref)) {return false;}
@@ -2812,15 +2837,6 @@ function delete_resource($ref)
 	$dirpath = dirname($resource_path);
     hook('delete_resource_path_extra', '', array($dirpath));
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
-
-	# Log the deletion of this resource for any collection it was in.
-	$in_collections=ps_query("select collection,resource from collection_resource where resource = ?",array("i",$ref));
-	if (count($in_collections)>0){
-		for($n=0;$n<count($in_collections);$n++)
-			{
-			collection_log($in_collections[$n]['collection'],'d',$in_collections[$n]['resource']);
-			}
-		}
 
 	hook("beforedeleteresourcefromdb","",array($ref));
 
@@ -3392,36 +3408,47 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     }
 
 /**
- * get_resource_types
+ * Return an array of resource types that this user has access to
  *
- * @param  string   $types          Comma separated resource type references to return specific types
- * @param  boolean  $translate      Option to translate resource type names in result
- * @param  boolean  $ignore_access  Return all resource types regardless of access?
- * @return array    Array of resource types returned from mySQL
+ * @param  string   $types      Comma separated list to limit the types that are returned by ref, 
+ *                              blank string returns all available types
+ * @param  boolean  $translate  Flag to translate the resource types before returning
+ * 
+ * @return array    Array of resource types limited by T* permissions and optionally by $types
  */
-function get_resource_types($types = "", $translate = true, $ignore_access = false)
+function get_resource_types($types = "", $translate = true)
     {
-    # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
-    // support getting info for a comma-delimited list of restypes (as in a search)
-    $parameters=array();
-    if ($types==""){$sql="";} else
-        {
-        # Ensure $types are suitably quoted and escaped
-        $cleantypes="";
-        $s=explode(",",$types);
+    $resource_types = get_all_resource_types();
+    $return=array();
 
-        foreach ($s as $type)
-            {
-            if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
-                {
-                if ($cleantypes!="") {$cleantypes.=",";}
-                $cleantypes.="?";
-                $parameters[]="i";$parameters[]=$type;
-                }
-            }
-        $sql=" WHERE ref IN ($cleantypes) ";
+    if ($types!="")
+        {
+        $s=explode(",",$types);
         }
 
+    for ($n=0;$n<count($resource_types);$n++)
+        {
+        if ((!isset($s) || in_array($resource_types[$n]['ref'],$s)) && !checkperm('T' . $resource_types[$n]['ref']))
+            {
+            if ($translate==true) 
+                {
+                $resource_types[$n]["name"]=lang_or_i18n_get_translated($resource_types[$n]["name"], "resourcetype-");
+                }
+            $return[]=$resource_types[$n];
+            }
+        }
+    return $return;
+    }
+
+/**
+ * Returns all resources types
+ * 
+ * No permissions are checked or applied, do not expose this function to the API
+ *
+ * @return array Array of resource types ordered by 'order_by' then 'ref'
+ */
+function get_all_resource_types()
+    {
     $r=ps_query("SELECT ref,
                         name,
                         allowed_extensions,
@@ -3433,23 +3460,11 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                         colour,
                         icon
                    FROM resource_type
-                        $sql
                ORDER BY order_by,
                         ref",
-                        $parameters,
+                        [],
                         "schema");
-
-    $return=array();
-    # Check permissions and Translate names (if $translate==true)
-    for ($n=0;$n<count($r);$n++)
-        {
-        if (!checkperm('T' . $r[$n]['ref']) || $ignore_access)
-            {
-            if ($translate==true) {$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");} # Translate name
-            $return[]=$r[$n]; # Add to return array
-            }
-        }
-    return $return;
+    return $r;
     }
 
 function get_resource_top_keywords($resource,$count)
@@ -3491,7 +3506,6 @@ function get_resource_top_keywords($resource,$count)
 
 function clear_resource_data($resource)
     {
-        debug("BANG " . $resource);
     # Clears stored data for a resource.
 	ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
 	ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);
@@ -3540,16 +3554,15 @@ function get_resource_ref_range($lower,$higher)
 *
 * @param  int    $from            ID of resource
 * @param  mixed  $resource_type   ID of resource type
+* @param  string $origin          Origin of resource when uploading, leave blank if not an upload
 *
 * @return boolean|integer
 */
-function copy_resource($from,$resource_type=-1)
+function copy_resource($from,$resource_type=-1,$origin='')
     {
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
     global $userref;
-    global $always_record_resource_creator, $upload_then_edit;
-
-
+    global $upload_then_edit;
 
     # Check that the resource exists
     if (ps_value("SELECT COUNT(*) value FROM resource WHERE ref = ?",["i",$from],0)==0)
@@ -3604,7 +3617,7 @@ function copy_resource($from,$resource_type=-1)
     # This needs to be done if either:
     # 1) The user does not have direct 'resource create' permissions and is therefore contributing using My Contributions directly into the active state
     # 2) The user is contributiting via My Contributions to the standard User Contributed pre-active states.
-    if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
+    if ((!checkperm("c")) || $archive<0)
         {
         # Update the user record
         ps_query("update resource set created_by=? where ref=?",array("i",$userref,"i",$to));
@@ -3653,7 +3666,7 @@ function copy_resource($from,$resource_type=-1)
 
     # Log this
     daily_stat("Create resource",$to);
-    resource_log($to,LOG_CODE_CREATED,0);
+    resource_log($to,LOG_CODE_CREATED,0,$origin);
 
     hook("afternewresource", "", array($to));
 
@@ -3961,13 +3974,20 @@ function save_resource_custom_access($resource)
 function get_custom_access($resource,$usergroup,$return_default=true)
 	{
 	global $custom_access,$default_customaccess;
-	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
+	if ($custom_access==false) {return false;} # Custom access disabled
 
 	$result=ps_value("select access value from resource_custom_access where resource=? and usergroup=?",array("i",$resource,"i",$usergroup),'');
-	if($result=='' && $return_default)
+	if($result=='')
 		{
-		return $default_customaccess;
-		}
+        if($return_default)
+            {
+            $result=$default_customaccess;
+            }
+        else
+            {
+            $result=false;
+            }
+        }
 	return $result;
 	}
 
@@ -4032,29 +4052,47 @@ function update_resource_type($ref,$type)
 /**
 * Returns a list of exiftool fields, which are basically fields with an 'exiftool field' set.
 *
-* @param integer resource_type
+* @param integer    $resource_type
+* @param string     $option_separator   String to separate the node options returned for fixed list fields
+*                                       - Recommended NODE_NAME_STRING_SEPARATOR
+*                                       - Defaults to comma for backwards compatibility
+* @param bool       $skip_translation   Set to true to return the entire untranslated node value rather than the appropriate translation only.
 *
 * @return array
 */
-function get_exiftool_fields($resource_type)
+function get_exiftool_fields($resource_type, string $option_separator = ",", bool $skip_translation = false)
     {
-
+    global $FIXED_LIST_FIELD_TYPES;
     $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
 
-    return ps_query("
-           SELECT f.ref,
-                  f.type,
-                  f.exiftool_field,
-                  f.exiftool_filter,
-                  group_concat(n.name) AS options,
-                  f.name,
-                  f.read_only
-             FROM resource_type_field AS f
-        LEFT JOIN node AS n ON f.ref = n.resource_type_field
+    $return = ps_query("
+           SELECT ref,
+                  type,
+                  exiftool_field,
+                  exiftool_filter,
+                  name,
+                  read_only
+             FROM resource_type_field 
             WHERE length(exiftool_field) > 0
               AND (resource_type = ? ". ($include_globals == 1 ?" OR resource_type = '0'":"") .")
-         GROUP BY f.ref
+         GROUP BY ref
          ORDER BY exiftool_field", array("i",$resource_type),"schema");
+        
+
+    // Add options for fixed list fields
+    foreach($return as &$field)
+        {
+        if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            $options = get_field_options($field["ref"], false, $skip_translation);
+            $field["options"] = implode($option_separator,$options);
+            }
+        else
+            {
+            $field["options"] = "";
+            }
+        }
+    return $return;
     }
 
 /**
@@ -4538,14 +4576,21 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 
 function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
 	{
-    global $syncdir;
+    global $syncdir,$lang;
     // Import the resource at the given path
     // This is used by staticsync.php and Camillo's SOAP API
     // Note that the file will be used at it's present location and will not be copied.
 
     $r=create_resource($type);
     // Log this in case the original location is not stored anywhere else
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_CREATED,'','','', $syncdir . DIRECTORY_SEPARATOR . $path);
+    resource_log(
+        RESOURCE_LOG_APPEND_PREVIOUS,
+        LOG_CODE_CREATED,
+        '',
+        $lang["createdfromstaticsync"],
+        '',
+        $syncdir . DIRECTORY_SEPARATOR . $path
+    );
     return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
     }
 
@@ -4882,8 +4927,11 @@ function get_resource_access($resource)
 		$customgroupaccess=true;
 		# Load custom access level
 		if ($passthru=="no"){
-			$access=get_custom_access($resource,$usergroup);
-			}
+            $customaccess=get_custom_access($resource,$usergroup);
+            if ($customaccess!==false) {
+                $access=$customaccess;
+            }
+		}
 		else {
 			$access=$resource['group_access'];
 		}
@@ -4924,7 +4972,7 @@ function get_resource_access($resource)
         $customuseraccess=true;
         return (int) $userspecific;
         }        
-    if (isset($groupspecific) && $groupspecific !== "")
+    if (isset($groupspecific) && $groupspecific !== false)
         {
         $customgroupaccess=true;
         return (int) $groupspecific;
@@ -5481,9 +5529,11 @@ function check_use_watermark($download_key = "", $resource="")
 * - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data
 * for that field as at this point you probably have the expected data for your field.
 *
+* @param boolean $macro_context  Indicates the context in which the macro is being run.
+*
 * @return boolean|array Success/fail or array of changes made
 */
-function autocomplete_blank_fields($resource, $force_run, $return_changes = false)
+function autocomplete_blank_fields($resource, $force_run, $return_changes = false, $macro_context = MACRO_CONTEXT_UNSPECIFIED)
     {
     global $FIXED_LIST_FIELD_TYPES, $lang;
 
@@ -6132,6 +6182,7 @@ function update_related_resource($ref,$related,$add=true)
     $access = get_edit_access($ref);
     if(!$access)
         {
+        debug('Failed to update related resources for ref ' . $ref . ' - no edit access to this resource');
         return false;
         }
     foreach($related as $relate)
@@ -6139,6 +6190,7 @@ function update_related_resource($ref,$related,$add=true)
         $access = get_edit_access($relate);
         if(!$access)
             {
+            debug('Failed to update related resources for ref ' . $ref . ' - user cannot edit ref ' . $relate);
             return false;
             }
         }
@@ -7346,7 +7398,7 @@ function get_related_resources($ref)
     }
 
 
-function get_field_options($ref,$nodeinfo = false)
+function get_field_options($ref, $nodeinfo = false, bool $skip_translation = false)
     {
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
@@ -7359,7 +7411,10 @@ function get_field_options($ref,$nodeinfo = false)
     # Translate options,
     for ($m=0;$m<count($options);$m++)
         {
-        $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+        if (!$skip_translation)
+            {
+            $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+            }
         unset($options[$m]["resource_type_field"]); // Not needed
         }
 
@@ -8148,7 +8203,7 @@ function get_download_filename($ref,$size,$alternative,$ext)
 
     # Remove critical characters from filename
     $altfilename=hook("downloadfilenamealt");
-    if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
+    if(!($altfilename)) $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
     else $filename=$altfilename;
 
     # Convert $filename to the charset used on the server.

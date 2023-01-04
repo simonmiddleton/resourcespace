@@ -101,13 +101,12 @@ $links_trail = array(
     ),
 );
 include '../../../include/header.php';
-
-renderBreadcrumbs($links_trail);
-
 ?>
 <div class="BasicsBox"> 
-  
+    <h1><?php echo htmlspecialchars($lang['simplesaml_configuration']); ?></h1>
 <?php
+renderBreadcrumbs($links_trail);
+
  if(($simplesaml_rsconfig && !isset($simplesamlconfig)) || (!$simplesaml_rsconfig && !(file_exists(simplesaml_get_lib_path() . '/config/config.php'))))
     {
     echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . "</div>";

@@ -71,3 +71,5 @@ $lang["csv_upload_ignore_errors"]               = "Ignore errors and process fil
 $lang["csv_upload_process_offline_quick"]       = "Skip validation and process CSV file offline? This should only be used for large CSV files when testing on smaller files has been completed. You will be notified via a ResourceSpace message once the upload is complete";
 $lang["csv_upload_force_offline"]               = "This large CSV may take a long time to process so will be run offline. You will be notified via a ResourceSpace message once the processing is complete";
 $lang["csv_upload_recommend_offline"]           = "This large CSV may take a very long time to process. It is recommended that offline jobs are enabled if you need to process large CSVs";
+
+$lang["csv_upload_createdfromcsvupload"]        = "Created from CSV Upload plugin";

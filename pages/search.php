@@ -231,7 +231,10 @@ if($collectionsearch)
     $search_trimmed = substr($search,11); // The collection search must always be the first part of the search string
     $search_elements = split_keywords($search_trimmed, false, false, false, false, true);
     $collection = (int)array_shift($search_elements);
-    $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+    if(count($search_elements) > 0)
+        {
+        $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+        }
     }
 
 hook("searchstringprocessing");
@@ -1504,9 +1507,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
         }
         
     $rtypes=array();
-    if (!isset($types)){$types=get_resource_types();}
+    if (!isset($types)){$types=get_all_resource_types();}
     $types_count = count($types);
-    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
+    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=lang_or_i18n_get_translated($types[$n]["name"], "resourcetype-");}
     if (is_array($result) && count($result)>0)
         {
         /**

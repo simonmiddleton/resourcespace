@@ -65,7 +65,7 @@ function HookFormat_chooserAllReplaceuseoriginal()
 		?><script>
 			var originalDownloadFunction = ajax_download;
 			ajax_download = function(download_offline) {
-				originalDownloadFunction(download_offline);
+				originalDownloadFunction(download_offline,tar);
 				jQuery('#downloadformat').attr('disabled', 'disabled');
 				jQuery('#profile').attr('disabled', 'disabled');
 			}

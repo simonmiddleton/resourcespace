@@ -83,10 +83,21 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
         }
     elseif($column == "revert_enabled" && $value > 0)
         {
-        $field_info = get_resource_type_field($logentry["field"]);
-        if((bool)$field_info["required"] === false || trim($logentry["previous_value"]) != "")
+        $show_revert_link = false;
+        if ($logentry["type"] == LOG_CODE_UPLOADED) // Show revert link for Replace file.
             {
-            // Show revert link
+            $show_revert_link = true;
+            }
+        else
+            {
+            $field_info = get_resource_type_field($logentry["field"]);
+            if((bool)$field_info["required"] === false || trim($logentry["previous_value"]) != "")
+                {
+                $show_revert_link = true;
+                }
+            }
+        if($show_revert_link)
+            {
             ?>
             <td><?php echo $lang["actions"]; ?></td>
             <td><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>

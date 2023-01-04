@@ -26,7 +26,7 @@ if (time()-strtotime($last_delete_tmp_files) < 24*60*60)
 // Set up array of folders to scan
 $folderstoscan = array();
 $folderstoscan[] = get_temp_dir(false);
-$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "plupload";
+$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "tus";
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "querycache";
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "remote_files";
 

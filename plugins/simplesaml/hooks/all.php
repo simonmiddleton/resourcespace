@@ -2,8 +2,9 @@
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 function HookSimplesamlAllPreheaderoutput()
     {      
-    if(!simplesaml_php_check())
+    if(!simplesaml_php_check() || get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL) != SYSTEM_UPGRADE_LEVEL)
         {
+        // If a new version then allow upgrade scripts to run first
         return false;
         }
 
@@ -76,10 +77,15 @@ function HookSimplesamlAllPreheaderoutput()
         return true;
         }
 
-	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
+    $url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
+    if ($simplesaml_allow_public_shares)
+        {
+        // Allow redirect for password protected external shares
+        $simplesaml_allowedpaths[] = '/pages/share_access.php';
+        }
 
-	foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
-		{
+    foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
+        {
         if('' == trim($simplesaml_allowedpath))
             {
             continue;

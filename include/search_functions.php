@@ -72,26 +72,28 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
+        if (!is_array($date_field_data) || !isset($date_field_data['resource_type']))
+            {
+            debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
+            return $return;
+            }
         # Insert searchable date field so that it appears as the first array entry for a given resource type
         $return1=array();
         for ($n=0;$n<count($return);$n++)
             {
-            if (isset($date_field_data))
+            if (isset($date_field_data['resource_type']) && $return[$n]["resource_type"] == $date_field_data['resource_type'])
                 {
-                if ($return[$n]["resource_type"] == $date_field_data['resource_type']) 
-                    {
-                    $return1[]=$date_field_data;
-                    $date_field_data=null; # Only insert it once
-                    }
+                $return1[]=$date_field_data;
+                $date_field_data=null; # Only insert it once
                 }
             $return1[]=$return[$n];
             }
         # If not yet added because it's resource type differs from everything in the list then add it to the end of the list
-        if (isset($date_field_data))
+        if (is_array($date_field_data))
             {
             $return1[]=$date_field_data;
             $date_field_data=null; # Keep things tidy
-        }
+            }
         return $return1;
         }
  
@@ -578,8 +580,8 @@ function compile_search_actions($top_actions)
     $o=0;
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
-           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
+           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset,
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -605,7 +607,7 @@ function compile_search_actions($top_actions)
 
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
-        if($top_actions && $allow_save_search && $usercollection != $collection)
+        if($top_actions && $usercollection != $collection)
             {
             $options[$o]['value']='save_search_to_collection';
             $options[$o]['label']=$lang['savethissearchtocollection'];
@@ -734,13 +736,14 @@ function compile_search_actions($top_actions)
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
-        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s',
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s&access=%s',
             $baseurl_short,
             urlencode((string) $search),
             urlencode((string) $restypes),
             urlencode((string) $order_by),
             urlencode((string) $archive),
-            urlencode((string) $sort)
+            urlencode((string) $sort),
+            urlencode((string) $search_access)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
@@ -1358,11 +1361,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 if($smart_collections_async && isset($php_path) && file_exists($php_path . '/php'))
                     {
-                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($collection) . ' ' . '> /dev/null 2>&1 &');
+                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($smartsearch_ref) . ' ' . '> /dev/null 2>&1 &');
                     }
                 else 
                     {
-                    include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
+                    update_smart_collection($smartsearch_ref);
                     }
                 }   
             }
@@ -2191,12 +2194,19 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         }
 
     $return=ps_value("SELECT ref value FROM keyword WHERE keyword = ?",array("s",trim($keyword)),0);
-    if ($return===0 && $create)
+    if ($return===0)
         {
-        # Create a new keyword.
-        debug("resolve_keyword: Creating new keyword for " . $keyword);
-        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
-        $return=sql_insert_id();
+        if($create)
+            {
+            # Create a new keyword.
+            debug("resolve_keyword: Creating new keyword for " . $keyword);
+            ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
+            $return=sql_insert_id();
+            }
+        else
+            {
+            return false;
+            }
         }
     
     $resolve_keyword_cache[$kwhash] = $return;

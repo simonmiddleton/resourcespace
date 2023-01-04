@@ -36,7 +36,7 @@ if ($save)
     // Save as a new resource
 
     // Create the resource record
-    $ref=create_resource($stencilvg_resource_type_for_new,0,$userref);
+    $ref=create_resource($stencilvg_resource_type_for_new,0,$userref,$lang["stencilvg_createdfromstencilvg"]);
 
     // Dump the supplied SVG data to the file and process it.
     $svg_path=get_resource_path($ref,true,'',true,$filetype);

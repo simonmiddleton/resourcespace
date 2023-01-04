@@ -3,6 +3,13 @@
 
 set_time_limit(0);
 
+$tables = ps_query("SHOW TABLES");
+ if(!in_array("resource_data",array_column($tables,"Tables_in_" . $mysql_db)))
+    {
+    // Migration only required if resource_data table exists
+    return true;
+    }
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 1.  Check that composite primary key has been set on resource_node table (since added to dbstruct)
 // ---------------------------------------------------------------------------------------------------------------------

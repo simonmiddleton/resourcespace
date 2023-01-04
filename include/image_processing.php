@@ -659,7 +659,7 @@ function extract_exif_comment($ref,$extension="")
             exiftool_resolution_calc($image,$ref);
             }
         
-        $read_from=get_exiftool_fields($resource['resource_type']);
+        $read_from = get_exiftool_fields($resource['resource_type'], NODE_NAME_STRING_SEPARATOR, true);
 
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
@@ -795,7 +795,7 @@ function extract_exif_comment($ref,$extension="")
                         # The use of safe_file_name and strtolower ensures matching takes place on alphanumeric characters only and ignores case.
                         
                         # First fetch all options in all languages
-                        $options=trim_array(explode(",",strtolower($read_from[$i]["options"])));
+                        $options=trim_array(explode(NODE_NAME_STRING_SEPARATOR,strtolower($read_from[$i]["options"])));
                         for ($n=0;$n<count($options);$n++)  {$options[$n]=$options[$n];}
 
                         # If not in the options list, do not read this value
@@ -1451,7 +1451,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $lang;
+
+    # We will need this to log errors
+    $uploadedfilename = getval("file_name",""); 
 
     if(!is_numeric($ref))
         {
@@ -1517,6 +1520,22 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $alphaoff = "+matte";
             }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
+        
+        if((($extension=="jpg") || ($extension=="jpeg")) && (($sw >= 65500) || ($sh >= 65500 )))
+            {
+            # Jpeg dimensions exceed ImageMagick processing capabilities 
+            ?>
+            <script type="text/javascript">
+            jQuery(document).ready(function()   
+                {
+                    // Add error to log
+                    jQuery("#upload_log").val("<?php echo $lang["plupload_log_intro"].date('d M y @ H:i').'\r\n'.$uploadedfilename.'\r\n'.$lang["max-supported-jpeg-dimensions"].' '.$lang["preview-processing-aborted"]?>");
+                }); 
+            </script>
+            <?php    
+            return false;  
+            } 
+            
         if(is_null($sw) || is_null($sh))
             {
             // This is not a valid image
@@ -1748,7 +1767,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $cb_height = $sh / 6;
                     $cb_scale = 600;
                     }
-                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
+                $addcheckbdpre = "-size " . round($cb_width, 0, PHP_ROUND_HALF_DOWN) . "x" . round($cb_height, 0, PHP_ROUND_HALF_DOWN);
                 if($extension=="svg")
                     {
                     $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% -background none tile:pattern:checkerboard -modulate 150,100 ";
@@ -2057,7 +2076,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }                 
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %s -resize %s -composite %s',
+                        $runcommand = sprintf('%s %s -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
+
                             $convert_fullpath,
                             escapeshellarg($file),
                             escapeshellarg($watermarkreal),
