@@ -1583,7 +1583,6 @@ if (strlen((string) $resource["file_extension"]) > 0
         }
     }
 
-if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'] . '_'))
 if(($nodownloads || $counter == 0) && !resource_has_access_denied_by_RT_size($resource['resource_type'], ''))
 	{
 	hook('beforenodownloadresult');
