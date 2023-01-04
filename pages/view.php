@@ -862,7 +862,7 @@ if($image_preview_zoom)
         foreach(['lpr', 'scr'] as $hrs)
             {
             $zoom_image_path = get_resource_path($ref, true, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
-            if(file_exists($zoom_image_path))
+            if(file_exists($zoom_image_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], $hrs))
                 {
                 $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
 
