@@ -46,19 +46,38 @@ if($ckb_fieldx_value !== $expected_fieldX_value)
     return false;
     }
 
+
 // - Category tree
 $data_joins[] = $rtf_cat_tree;
 $_POST['nodes'][$rtf_cat_tree] = [$ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black];
 save_resource_data($resource_a, false, $rtf_cat_tree);
-$ckb_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_cat_tree}"];
-if(mb_strpos($ckb_fieldx_value, $field_column_string_separator) === false)
+$cat_tree_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_cat_tree}"];
+if(mb_strpos($cat_tree_fieldx_value, $field_column_string_separator) === false)
     {
     echo 'Use case: use separator for storing multiple node paths for category tree in column fieldX - ';
     return false;
     }
 
-echo 'Not yet implemented: check order of paths is as expected';
-return false;
+$cat_tree_fieldX_values = array_intersect_key(
+    array_column(get_nodes($rtf_cat_tree, null, true), 'name', 'ref'),
+    array_flip([$ct_opt_colors, $ct_opt_colors_black, $ct_opt_colors_red])
+);
+$expected_cat_tree_fieldx_value = implode(
+    $field_column_string_separator,
+    array_map(
+        function(array $v): string { return implode('/', $v); },
+        [
+            [$cat_tree_fieldX_values[$ct_opt_colors]],
+            [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_black]],
+            [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_red]],
+        ]
+    )
+);
+if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value)
+    {
+    echo 'Use case: column fieldX (category tree) having nodes resolved according to their order_by - ';
+    return false;
+    }
 
 
 
@@ -75,4 +94,3 @@ unset(
 );
  
 return true;
-
