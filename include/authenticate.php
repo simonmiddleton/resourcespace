@@ -2,7 +2,6 @@
 include_once __DIR__ . '/login_functions.php';
 
 debug("[authenticate.php] Reached authenticate page...");
-debug("[authenticate.php] ");
 # authenticate user based on cookie
 
 $valid=true;
