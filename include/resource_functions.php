@@ -688,6 +688,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
                     // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
                     array_shift($all_tree_nodes_ordered);
+                    $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
 
                     $node_options = array_column($all_tree_nodes_ordered, 'name', 'ref');
                     $validnodes = array_keys($node_options);
@@ -727,7 +728,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 $new_nodevals[] = implode(
                                     '/',
                                     array_column(
-                                        compute_node_branch_path(array_values($all_tree_nodes_ordered), $ui_selected_node_value),
+                                        compute_node_branch_path($all_tree_nodes_ordered, $ui_selected_node_value),
                                         'name'
                                     )
                                 );

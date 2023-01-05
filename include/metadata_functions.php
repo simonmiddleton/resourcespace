@@ -348,11 +348,26 @@ function update_fieldx(int $metadata_field_ref)
             {
             if($fieldinfo['type'] === FIELD_TYPE_CATEGORY_TREE)
                 {
+                $all_tree_nodes_ordered = get_cattree_nodes_ordered($fieldinfo['ref'], null, true);
+                // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
+                array_shift($all_tree_nodes_ordered);
+                $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
+
                 foreach($allresources as $resource)
                     {
                     // category trees are using full paths to node names
-                    $all_treenodes = get_cattree_nodes_ordered($metadata_field_ref, $resource, false);
-                    $node_names_paths = get_cattree_node_strings($all_treenodes, true);
+                    $resource_nodes = get_resource_nodes($resource, $fieldinfo['ref']);
+                    $node_names_paths = [];
+                    foreach($resource_nodes as $node_ref)
+                        {
+                        // Reset cache because r17006 is caching (incorrectly?) for a non-tree context
+                        $GLOBALS['NODE_BRANCH_PATHS_CACHE'] = [];
+                        $node_names_paths[] = implode(
+                            '/',
+                            array_column(compute_node_branch_path($all_tree_nodes_ordered, $node_ref), 'name')
+                        );
+                        }
+
                     update_resource_field_column(
                         $resource,
                         $metadata_field_ref,
