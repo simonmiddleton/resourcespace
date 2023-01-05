@@ -1841,8 +1841,10 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             foreach ($getsizes as $getsize)
                 {
                 if(!(in_array($getsize,array_column($available,"id")))){continue;}
-                $resfile=get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark);
-                if(file_exists($resfile))
+                if(
+                    !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], $getsize)
+                    && file_exists(get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark))
+                )
                     {
                     $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
                     }

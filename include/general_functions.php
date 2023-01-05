@@ -3044,17 +3044,28 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $slideshow_records = ps_query(
+            'SELECT s.ref, resource_ref, r.resource_type, homepage_show, featured_collections_show, login_show
+               FROM slideshow AS s
+         LEFT JOIN `resource` AS r ON s.resource_ref = r.ref',
+         [],
+         'slideshow'
+     );
 
     $slideshow_files = array();
 
     foreach($slideshow_records as $slideshow)
         {
         $slideshow_file = $slideshow;
+        $has_resource_linked = (int) $slideshow['resource_ref'] > 0;
 
         $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
-
-        if(!file_exists($image_file_path) || !is_readable($image_file_path))
+        if(
+            // Transform plugin crop uses the original file to create the slideshow image.
+            ($has_resource_linked && resource_has_access_denied_by_RT_size($slideshow['resource_type'], ''))
+            || !file_exists($image_file_path)
+            || !is_readable($image_file_path)
+        )
             {
             continue;
             }
@@ -3068,7 +3079,7 @@ function get_slideshow_files_data()
                 'nc' => $slideshow_file['checksum'],
             ));
 
-        if((int) $slideshow['resource_ref'] > 0)
+        if($has_resource_linked)
             {
             $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
             }

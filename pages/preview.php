@@ -115,15 +115,14 @@ $ext="jpg";
 if ($ext!="" && $ext!="gif" && $ext!="jpg" && $ext!="png") {$ext="jpg";$border=false;} # Supports types that have been created using ImageMagick
 
 
-# Load access level
+# Check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
 $access=get_resource_access($ref);
-$use_watermark=check_use_watermark();
+if($access == RESOURCE_ACCESS_CONFIDENTIAL) 
+    {
+    exit("This is a confidential resource.");
+    }
 
-# check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
-if ($access==2) 
-		{
-		exit("This is a confidential resource.");
-		}
+$use_watermark=check_use_watermark();
 
 hook('replacepreview');
 
@@ -136,16 +135,14 @@ if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_
 
 # Locate the resource
 $path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
-
-if(file_exists($path) && (resource_download_allowed($ref, 'scr', $resource['resource_type']) || $use_watermark))
+if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path))
     {
     $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
     }
 else
     {
     $path = get_resource_path($ref, true, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
-
-    if(file_exists($path))
+    if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre') && file_exists($path))
         {
         $url = get_resource_path($ref, false, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
         }
@@ -471,4 +468,3 @@ if($annotate_enabled)
     }
 
 include "../include/footer.php";
-?>

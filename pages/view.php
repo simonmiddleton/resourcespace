@@ -165,6 +165,11 @@ if($use_mp3_player)
         {
         $mp3path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, 'mp3');
         }
+
+    if(resource_has_access_denied_by_RT_size($resource['resource_type'], ''))
+        {
+        $use_mp3_player = false;
+        }
     }
 
 # Load access level
@@ -654,7 +659,11 @@ if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
 	include "../players/type" . $resource["resource_type"] . ".php";
 	}
 elseif (hook("replacevideoplayerlogic","",array($video_preview_file))){ }
-elseif ((!(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) && file_exists($video_preview_file)))
+elseif (
+        !(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
+        && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
+        && file_exists($video_preview_file)
+)
 	{
 	# Include the player if a video preview file exists for this resource.
 	$download_multisize=false;
@@ -676,7 +685,7 @@ elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"
 	<div id="previewimagewrapper">
 	<?php 
 	$thumb_path=get_resource_path($ref,true,"pre",false,"jpg");
-	if(file_exists($thumb_path))
+	if(file_exists($thumb_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre'))
 		{$thumb_url=get_resource_path($ref,false,"pre",false,"jpg"); }
 	else
 		{$thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);}
@@ -690,35 +699,36 @@ elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"
 else if(1 == $resource['has_image'])
     {
     $use_watermark = check_use_watermark();
-	$use_size="scr";
-	$imagepath = "";
 
-	# Obtain imagepath for 'scr' if permissions allow
-	if (resource_download_allowed($ref, $use_size, $resource['resource_type']))
-		{
-		$imagepath = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
-		}
-
-	# Note that retina mode uses 'scr' size which we have just obtained, so superfluous code removed
-
-	# Obtain imagepath for 'pre' if 'scr' absent OR hide filepath OR force 'pre' on view page 
-    if(!( isset($imagepath) && file_exists($imagepath) )
-       || $hide_real_filepath
-       || $resource_view_use_pre)
+    // Determine the appropriate preview size to display
+    // Retina mode uses 'scr' size
+    foreach(['scr', 'pre', 'thm'] as $use_size)
         {
-		$use_size="pre";
-		$imagepath = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
-		}
+        if(resource_has_access_denied_by_RT_size($resource['resource_type'], $use_size))
+            {
+            continue;
+            }
 
-	# Imagepath is the actual file path and can point to 'scr' or 'pre' as a result of the above
+        $imagepath = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
+        if(!file_exists($imagepath))
+            {
+            continue;
+            }
 
-	# Fall back to 'thm' if necessary
-    if(!file_exists($imagepath))
-        {
-        $use_size="thm";
+        // 'pre' can take precedence if system is configured so
+        if($use_size === 'scr' && ($hide_real_filepath || $resource_view_use_pre))
+            {
+            continue;
+            }
+
+        $imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
+        break;
         }
-	$imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
-	# Imageurl is the url version of the path and can point to 'scr' or 'pre' or 'thm' as a result of the above
+    if(!isset($imagepath))
+        {
+        $imagepath = dirname(__DIR__) . '/gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+        $imageurl = $baseurl_short . 'gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+        }
 
     $previewimagelink = generateURL("{$baseurl}/pages/preview.php", $urlparams, array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
     $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
@@ -852,7 +862,7 @@ if($image_preview_zoom)
         foreach(['lpr', 'scr'] as $hrs)
             {
             $zoom_image_path = get_resource_path($ref, true, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
-            if(file_exists($zoom_image_path))
+            if(file_exists($zoom_image_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], $hrs))
                 {
                 $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
 
@@ -1573,7 +1583,7 @@ if (strlen((string) $resource["file_extension"]) > 0
         }
     }
 
-if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'] . '_'))
+if(($nodownloads || $counter == 0) && !resource_has_access_denied_by_RT_size($resource['resource_type'], ''))
 	{
 	hook('beforenodownloadresult');
 
@@ -2149,7 +2159,7 @@ if (count($result)>0)
                     <!--Resource Panel-->
                     <div class="CollectionPanelShell">
                     <table border="0" class="CollectionResourceAlign"><tr><td>
-                    <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+                    <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col')) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
                     </tr></table>
                     <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
                     <?php hook("relatedresourceaddlink");?>
@@ -2211,7 +2221,7 @@ if (count($result)>0)
                     <!--Resource Panel-->
                     <div class="CollectionPanelShell">
                     <table border="0" class="CollectionResourceAlign"><tr><td>
-                    <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+                    <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col')) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
                     </tr></table>
                     <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
                     <?php hook("relatedresourceaddlink");?>
@@ -2268,7 +2278,7 @@ if (count($result)>0)
         	<!--Resource Panel-->
         	<div class="CollectionPanelShell">
             <table border="0" class="CollectionResourceAlign"><tr><td>
-            <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" /><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+            <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $related_resource_preview_size)) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" /><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
             </tr></table>
             <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
 				<?php hook("relatedresourceaddlink");?>       

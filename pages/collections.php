@@ -824,11 +824,14 @@ else if ($basket)
 		<table border="0" class="CollectionResourceAlign"><tr><td>
 				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
                 <?php
-                if(1 == $result[$n]['has_image']
-                    && file_exists(get_resource_path($ref, true, ($retina_mode ? 'thm' : 'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
+                $colimg_preview_size = $retina_mode ? 'thm' : 'col';
+                if(
+                    $result[$n]['has_image'] == 1
+                    && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
+                    && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
                 )
                     {
-                    $colimgpath = get_resource_path($ref, false, ($retina_mode ? 'thm':'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+                    $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
                     ?>
                     <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
                     <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
@@ -1189,11 +1192,14 @@ else
 		<table border="0" class="CollectionResourceAlign"><tr><td>
 				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
                 <?php
-                if(1 == $result[$n]['has_image']
-                    && file_exists(get_resource_path($ref, true, ($retina_mode ? 'thm' : 'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
+                $colimg_preview_size = $retina_mode ? 'thm' : 'col';
+                if(
+                    1 == $result[$n]['has_image']
+                    && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
+                    && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
                 )
                     {
-                    $colimgpath = get_resource_path($ref, false, ($retina_mode ? 'thm':'col'), false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+                    $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
                     ?>
                     <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
                     <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php

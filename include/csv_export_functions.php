@@ -118,7 +118,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
             /*Provide the original URL only if we have access to the resource or the user group
             doesn't have restricted access to the original size*/
             $access = get_resource_access($resdata);
-            if(0 != $access || checkperm("T{$resdata['resource_type']}_"))
+            if(0 != $access || resource_has_access_denied_by_RT_size($resdata['resource_type'], ''))
                 {
                 continue;
                 }
