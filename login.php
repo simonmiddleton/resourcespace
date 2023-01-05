@@ -2,6 +2,7 @@
 include "include/db.php";
 include_once "include/login_functions.php";
 
+debug("[login.php] Reached login page...");
 $url=getval("url","index.php");
 
 if (is_array($url))
@@ -36,6 +37,7 @@ if (isset($anonymous_login) && $anon_login_modal && !$modal && getval("logout","
 		$anon_login_redirect="/pages/search.php?search=".urlencode('!last'.$recent_search_quantity)."&".$anon_login_extras;
 		}
 	# this shouldn't load as a unique page. go to the home page and display the login modal
+    debug("[login.php] \$anon_login_redirect = $anon_login_redirect");
 	redirect($baseurl.$anon_login_redirect);
 	}
         
@@ -57,6 +59,7 @@ $lockouts=ps_value("select count(*) value from ip_lockout where ip = ? and tries
 $username = getval("username","");
 if (is_array($username))
     {
+    debug("[login.php] redirect to login because username is array");
     redirect($baseurl . "/login.php");
     }
 
@@ -90,10 +93,14 @@ if ($lockouts>0 || $ulockouts>0)
 # Process the submitted login
 elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     {
+    debug("[login.php] Process the submitting login details...");
+
     $password = trim(getval("password",""));
 	$result = perform_login();
 	if ($result['valid'])
 		{
+        debug("[login.php] Performed login - valid result");
+
         set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
 
         # Set 'user_local_timezone' in cookie like 'user preferences page' does
@@ -112,6 +119,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
         else{
             $redirect_url=$url;
             }
+        debug("[login.php] Redirecting to $redirect_url");
             
 		if(!$modal)
 			{
@@ -138,6 +146,8 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 
 if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     {
+    debug("[login.php] Logging user out...");
+
     $session = $_COOKIE["user"];
 
     // Check CSRF Token

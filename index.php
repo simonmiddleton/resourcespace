@@ -1,5 +1,6 @@
 <?php
 include "include/db.php";
+debug("[index.php] Reached index page...");
 
 if (getval("rp","")!="")
 	{
@@ -13,6 +14,7 @@ if (getval("rp","")!="")
 $k = getval('k', '');
 if('' == $k || (!check_access_key_collection(getval('c', ''), $k) && !check_access_key(getval('r', ''), $k)))
     {
+    debug("[index.php] External access support, include authenticate.php next.");
     include 'include/authenticate.php';
     }
 
