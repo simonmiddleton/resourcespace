@@ -916,7 +916,7 @@ function delete_collection($collection)
 	if($home_dash)
 		{
 		// Delete any dash tiles pointing to this collection
-		$collection_dash_tiles=ps_array("SELECT ref value FROM dash_tile WHERE link LIKE ?",array("s","%search.php?search=!collection" . $ref . "&%"),0);
+		$collection_dash_tiles=ps_array("SELECT ref value FROM dash_tile WHERE link LIKE ?",array("s","%search.php?search=!collection" . $ref . "&%"));
 		if(count($collection_dash_tiles)>0)
 			{
 			ps_query("DELETE FROM dash_tile WHERE ref IN (" .  ps_param_insert(count($collection_dash_tiles)) . ")",ps_param_fill($collection_dash_tiles,"i"));

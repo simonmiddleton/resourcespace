@@ -747,7 +747,7 @@ if ($processupload)
                     }
                 $sql .= " ORDER BY ref ASC";
 
-                $replace_resources = ps_array($sql,$sql_params,0);
+                $replace_resources = ps_array($sql,$sql_params);
                 debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
                 }
             else
