@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__ . '/login_functions.php';
 
+debug("[authenticate.php] Reached authenticate page...");
+debug("[authenticate.php] ");
 # authenticate user based on cookie
 
 $valid=true;
@@ -10,6 +12,8 @@ $is_authenticated=false;
 
 if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset($anonymous_login) || hook('provideusercredentials'))
     {
+    debug("[authenticate.php] Attempting to resolve user session...");
+
     $username="";
     // Resolve anonymous login user if it is configured at domain level
     if(isset($anonymous_login) && is_array($anonymous_login))
@@ -54,6 +58,8 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 
     if(count($userdata) > 0)
         {
+        debug("[authenticate.php] User valid!");
+
         $valid = true;
         setup_user($userdata[0]);
 
@@ -63,6 +69,8 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 	        $last_password_change=time()-strtotime((string) $userdata[0]["password_last_change"]);
 		if ($last_password_change>($password_expiry*60*60*24))
 			{
+            debug("[authenticate.php] Redirecting user to change password...");
+
 			?>
 			<script>
 			top.location.href="<?php echo $baseurl_short?>pages/user/user_change_password.php?expired=true";
@@ -75,11 +83,13 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
         	{
 	        if ($userdata[0]["idle_seconds"]>($session_length*60))
 	        	{
+                debug("[authenticate.php] Session length expired!");
           	    # Last active more than $session_length mins ago?
 				$al="";if (isset($anonymous_login)) {$al=$anonymous_login;}
 				
 				if ($session_autologout && $username!=$al) # If auto logout enabled, but this is not the anonymous user, log them out.
 					{
+                    debug("[authenticate.php] Autologging out user.");
 					# Reached the end of valid session time, auto log out the user.
 					
 					# Remove session
@@ -157,10 +167,12 @@ if (!$valid && isset($anonymous_autouser_group))
     
 if (!$valid && !isset($system_login))
     {
+    debug("[authenticate.php] User not valid!");
 	$_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?
 	$_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER
 	['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')));
     $path = $_SERVER["REQUEST_URI"];
+    debug("[authenticate.php] path = $path");
     
     if(strpos($path,"/ajax") !== false)
         {
@@ -198,6 +210,7 @@ if (!$valid && !isset($system_login))
     else
         {
         $url = generateURL($baseurl . "/login.php",$redirparams);
+        debug("[authenticate.php] Redirecting to $url");
         redirect($url);
         exit();
         }
@@ -309,7 +322,6 @@ else
 # Load group specific plugins and reorder plugins list
 $plugins= array();
 $active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
-
 
 foreach($active_plugins as $plugin)
 	{

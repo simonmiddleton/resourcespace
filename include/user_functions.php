@@ -96,6 +96,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 
         if('' != $validuser)
             {
+            debug("[validate_user()] User #{$validuser} is valid!");
             return true;
             }
         }
