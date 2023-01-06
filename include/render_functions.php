@@ -1371,30 +1371,25 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             <?php
             if(!$top_actions)
                 {
-                if($allow_resource_deletion)
-                    {
-                    ?>
-                    case 'delete_all_in_collection':
-                        if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
-                            {
-                            var post_data = {
-                                submitted: true,
-                                ref: '<?php echo $collection_data["ref"]; ?>',
-                                name: <?php echo json_encode($collection_data["name"]); ?>,
-                                public: '<?php echo ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0); ?>',
-                                deleteall: 'on',
-                                <?php echo generateAjaxToken("delete_all_in_collection"); ?>
-                            };
+                ?>
+                case 'delete_all_in_collection':
+                    if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
+                        {
+                        var post_data = {
+                            submitted: true,
+                            ref: '<?php echo $collection_data["ref"]; ?>',
+                            name: <?php echo json_encode($collection_data["name"]); ?>,
+                            public: '<?php echo ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0); ?>',
+                            deleteall: 'on',
+                            <?php echo generateAjaxToken("delete_all_in_collection"); ?>
+                        };
 
-                            jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
-                                {
-                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
-                                });
-                            }
-                        break;
-                    <?php
-                    }
-                    ?>
+                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
+                            {
+                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
+                            });
+                        }
+                    break;
 
 					case 'hide_collection':
 						var action = 'hidecollection';

@@ -2751,8 +2751,6 @@ function delete_resource($ref)
                 (
                 checkperm("D")
                 ||
-                (isset($allow_resource_deletion) && !$allow_resource_deletion)
-                ||
                 !get_edit_access($ref,$resource["archive"], false,$resource)
                 ||
                 (isset($userref) && $resource["lock_user"] > 0 && $resource["lock_user"] != $userref)

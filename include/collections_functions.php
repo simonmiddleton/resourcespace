@@ -3948,8 +3948,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
-           $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet,
-           $allow_resource_deletion, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
+           $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
            $system_read_only;
                
 	#This is to properly render the actions drop down in the themes page	
@@ -4415,7 +4414,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if(($k=="" || $internal_share_access) 
 		&& !$top_actions
         && ((is_array($result) && count($result) != 0) || $count_result != 0)
-        && (isset($allow_resource_deletion) && $allow_resource_deletion)
         && collection_writeable($collection_data['ref'])
         && $allow_multi_edit
         && !checkperm('D'))

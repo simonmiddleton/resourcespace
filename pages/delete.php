@@ -4,7 +4,7 @@ include "../include/authenticate.php";
 
 $ref=getval("ref","",true);
 
-if ((isset($allow_resource_deletion) and !$allow_resource_deletion) or (checkperm('D') and !hook('check_single_delete'))){
+if (checkperm('D') and !hook('check_single_delete')){
 	include "../include/header.php";
 	echo "Error: Resource deletion is disabled.";
 	exit;
