@@ -5881,7 +5881,18 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)){$rawfile=true;}
 
         # Use GD to calculate the size
-        if (!((@list($sw,$sh) = @getimagesize($file))===false)&& !$rawfile)
+        $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                list($sw,$sh) = getimagesize($file);
+                }
+            catch (Exception $e)
+                {
+                $returned_error = $e->getMessage();
+                debug("get_original_imagesize: Unable to get image size for file: $file  -  $returned_error");
+                }
+        unset($GLOBALS["use_error_exception"]);
+        if ((isset($sw) && isset($sh)) && !$rawfile)
             {
             if(!$o_size)
                 {
