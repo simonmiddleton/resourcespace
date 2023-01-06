@@ -1392,7 +1392,7 @@ hook("editbefresmetadata"); ?>
                 {
                 if(trim((string) $types[$n]['allowed_extensions']) != "")
                     {
-                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions'])); // As MIME types
                     }
                 else
                     {
@@ -1409,7 +1409,7 @@ hook("editbefresmetadata"); ?>
                         (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 
-                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                            && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
