@@ -2297,7 +2297,9 @@ function compute_node_branch_path(array $nodes, int $id)
         return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
         }
 
-    $found_node_index = array_search($id, array_column($nodes, 'ref'));
+    $nodes_ref_list = array_column($nodes, 'ref');
+
+    $found_node_index = array_search($id, $nodes_ref_list);
     if($found_node_index === false)
         {
         return array();
@@ -2309,22 +2311,15 @@ function compute_node_branch_path(array $nodes, int $id)
     $path = array($node);
     while(!is_null($node_parent))
         {
-        $id = $node_parent;
-        if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id]))
+        // Parent node path is already known (cached), use it instead of recalculating it
+        if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$node_parent]))
             {
-            # Check the nodes found before returning cached value to handle multiple branches containing the same node e.g. resource in multiple collections.
-            $available_nodes = array();
-            foreach ($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id] as $node_available)
-                {
-                $available_nodes[]=$node_available['ref'];
-                }
-            if (in_array($path[0]['ref'],$available_nodes))
-                {
-                return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
-                }
+            $parent_branch_reversed = array_reverse($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$node_parent]);
+            $path = array_merge($path, $parent_branch_reversed);
+            break;
             }
 
-        $found_node_index = array_search($id, array_column($nodes, 'ref'));
+        $found_node_index = array_search($node_parent, $nodes_ref_list);
         if($found_node_index === false)
             {
             break;
