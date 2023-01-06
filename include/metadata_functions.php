@@ -360,8 +360,6 @@ function update_fieldx(int $metadata_field_ref)
                     $node_names_paths = [];
                     foreach($resource_nodes as $node_ref)
                         {
-                        // Reset cache because r17006 is caching (incorrectly?) for a non-tree context
-                        $GLOBALS['NODE_BRANCH_PATHS_CACHE'] = [];
                         $node_names_paths[] = implode(
                             '/',
                             array_column(compute_node_branch_path($all_tree_nodes_ordered, $node_ref), 'name')
