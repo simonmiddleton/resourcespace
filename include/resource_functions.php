@@ -376,7 +376,7 @@ function get_resource_data($ref,$cache=true)
         }
     # Returns basic resource data (from the resource table alone) for resource $ref.
     # For 'dynamic' field data, see get_resource_field_data
-    global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
+    global $default_resource_type, $get_resource_data_cache;
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
     truncate_cache_arrays();
 
@@ -397,12 +397,8 @@ function get_resource_data($ref,$cache=true)
             if (!(checkperm("c") || checkperm("d"))) {return false;}
             elseif(!hook('replace_upload_template_creation', '', array($ref)))
                 {
-                if (isset($always_record_resource_creator) && $always_record_resource_creator)
-                    {
-                    global $userref;
-                    $user = $userref;
-                    }
-                else {$user = -1;}
+                global $userref;
+                $user = $userref;
 
                 $default_archive_state = get_default_archive_state();
                 $wait = ps_query("insert into resource (ref,resource_type,created_by, archive) values (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
@@ -1091,7 +1087,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
     if (($autosave_field=="" || $autosave_field=="Related") && isset($_POST["related"]))
         {
         # save related resources field
-        ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?",["i",$ref,"i",$ref]); # remove existing related items
         $related=explode(",",getval("related",""));
         # Trim whitespace from each entry
         foreach ($related as &$relatedentry)
@@ -1100,9 +1095,18 @@ function save_resource_data($ref,$multi,$autosave_field="")
             }
         # Make sure all submitted values are numeric
         $to_relate = array_filter($related,"is_int_loose");
-        if(count($to_relate)>0)
+
+        $currently_related = get_related_resources($ref);
+        $to_add = array_diff($to_relate, $currently_related);
+        $to_delete = array_diff($currently_related, $to_relate);
+
+        if(count($to_add) > 0)
             {
-            update_related_resource($ref,$to_relate,true);
+            update_related_resource($ref, $to_add, true);
+            }
+        if(count($to_delete) > 0)
+            {
+            update_related_resource($ref, $to_delete, false);
             }
         }
 
@@ -2626,7 +2630,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 	{
     # Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group=="") {$group=$usergroup;}
@@ -2636,7 +2640,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
 	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
 	$userlist=resolve_userlist_groups($userlist);
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
 		{
 		$userlist_with_groups=$userlist;
 		$groups_users=resolve_userlist_groups_smart($userlist,true);
@@ -2792,20 +2796,31 @@ function delete_resource($ref)
 
 	$current_state=$resource['archive'];
 
-	global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
-	if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
-		{
-		# $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
-		update_archive_status($ref, $resource_deletion_state, $current_state);
+    global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
+    if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
+        {
+        # $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
+        update_archive_status($ref, $resource_deletion_state, $current_state);
 
         # log this so that administrator can tell who requested deletion
         resource_log($ref,LOG_CODE_DELETED,'');
 
-		# Remove the resource from any collections
-		ps_query("delete from collection_resource where resource=?",array("i",$ref));
+        # Log the deletion of this resource for any collection it was in.
+        $in_collections = ps_query("select collection, resource from collection_resource where resource = ?", array("i", $ref));
 
-		return true;
-		}
+        # Remove the resource from any collections
+        ps_query("delete from collection_resource where resource = ?", array("i", $ref));
+
+        if (count($in_collections) > 0)
+            {
+            for($n=0; $n < count($in_collections); $n++)
+                {
+                collection_log($in_collections[$n]['collection'], LOG_CODE_COLLECTION_DELETED_RESOURCE, $in_collections[$n]['resource']);
+                }
+            }
+
+        return true;
+        }
 
     # FStemplate support - do not allow samples from the template to be deleted
     if (resource_file_readonly($ref)) {return false;}
@@ -2852,15 +2867,6 @@ function delete_resource($ref)
     hook('delete_resource_path_extra', '', array($dirpath));
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
 
-	# Log the deletion of this resource for any collection it was in.
-	$in_collections=ps_query("select collection,resource from collection_resource where resource = ?",array("i",$ref));
-	if (count($in_collections)>0){
-		for($n=0;$n<count($in_collections);$n++)
-			{
-			collection_log($in_collections[$n]['collection'],'d',$in_collections[$n]['resource']);
-			}
-		}
-
 	hook("beforedeleteresourcefromdb","",array($ref));
 
 	# Delete all database entries
@@ -2878,9 +2884,11 @@ function delete_resource($ref)
               WHERE a.resource = ?",array("i",$ref)
     );
     ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
+    ps_query('DELETE FROM slideshow WHERE resource_ref = ?', ['i', $ref]);
 	hook("afterdeleteresource");
     
     clear_query_cache("stats");
+    clear_query_cache('slideshow');
 
 	return true;
 	}
@@ -3585,9 +3593,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
     {
     debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
     global $userref;
-    global $always_record_resource_creator, $upload_then_edit;
-
-
+    global $upload_then_edit;
 
     # Check that the resource exists
     if (ps_value("SELECT COUNT(*) value FROM resource WHERE ref = ?",["i",$from],0)==0)
@@ -3638,7 +3644,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
     # This needs to be done if either:
     # 1) The user does not have direct 'resource create' permissions and is therefore contributing using My Contributions directly into the active state
     # 2) The user is contributiting via My Contributions to the standard User Contributed pre-active states.
-    if ((!checkperm("c")) || $archive<0 || (isset($always_record_resource_creator) && $always_record_resource_creator))
+    if ((!checkperm("c")) || $archive<0)
         {
         # Update the user record
         ps_query("update resource set created_by=? where ref=?",array("i",$userref,"i",$to));
@@ -5124,7 +5130,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 
 	$access=get_resource_access($resource);
 
-    if (checkperm('T' . $resource_type . "_" . $size))
+    if(resource_has_access_denied_by_RT_size($resource_type, $size))
         {
         return false;
         }
@@ -6203,6 +6209,7 @@ function update_related_resource($ref,$related,$add=true)
     $access = get_edit_access($ref);
     if(!$access)
         {
+        debug('Failed to update related resources for ref ' . $ref . ' - no edit access to this resource');
         return false;
         }
     foreach($related as $relate)
@@ -6210,6 +6217,7 @@ function update_related_resource($ref,$related,$add=true)
         $access = get_edit_access($relate);
         if(!$access)
             {
+            debug('Failed to update related resources for ref ' . $ref . ' - user cannot edit ref ' . $relate);
             return false;
             }
         }
@@ -7276,7 +7284,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
-    if (file_exists($path2) && !checkperm("T" . $resource_type . "_"))
+    if(!resource_has_access_denied_by_RT_size($resource_type, '') && file_exists($path2))
     {
         $returnline=array();
         $returnline["name"]=lang_or_i18n_get_translated($lastname, "imagesize-");
@@ -7327,9 +7335,9 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
     for ($n=0;$n<count($sizes);$n++)
         {
         $path=get_resource_path($ref,true,$sizes[$n]["id"],false,"jpg");
-
         $file_exists = file_exists($path);
-        if (($file_exists || (!$onlyifexists)) && !checkperm("T" . $resource_type . "_" . $sizes[$n]["id"]))
+
+        if(($file_exists || !$onlyifexists) && !resource_has_access_denied_by_RT_size($resource_type, $sizes[$n]['id']))
             {
             if (($sizes[$n]["internal"]==0) || ($internal))
                 {
@@ -8222,7 +8230,7 @@ function get_download_filename($ref,$size,$alternative,$ext)
 
     # Remove critical characters from filename
     $altfilename=hook("downloadfilenamealt");
-    if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
+    if(!($altfilename)) $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
     else $filename=$altfilename;
 
     # Convert $filename to the charset used on the server.
@@ -8993,4 +9001,18 @@ function process_resource_data_joins_values(array $resource, array $resource_tab
     $fieldX_data = array_intersect_key($resource, array_flip($fieldX_column_names));
     $fieldX_translated_csv = array_map('data_joins_field_value_translate_and_csv', $fieldX_data);
     return array_merge($resource, $fieldX_translated_csv);
+    }
+
+/**
+ * Check if resource has access denied by its type and for a size.
+ * 
+ * @param int $resource_type Resource type ref
+ * @param string $size Preview size ID (not ref).
+ * 
+ * @return bool
+ */
+function resource_has_access_denied_by_RT_size(int $resource_type, string $size): bool
+    {
+    $Trt = 'T' . $resource_type;
+    return checkperm($Trt) || checkperm("{$Trt}_{$size}");
     }

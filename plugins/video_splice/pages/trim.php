@@ -155,11 +155,29 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             }
         else
             {
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            $output = exec($shell_exec_cmd);
+            $ffprobe_fullpath = get_utility_path("ffprobe");    
+            $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($video_original_file) . " -show_streams -of json");
+            $ffprobe_array=json_decode($ffprobe_output, true);
+            if($ffprobe_array['streams'][1]['codec_name'] = "pcm_s24le")
+                {
+                # ffmpeg does not support PCM in the MP4 container
+                $ffmpeg_local_preview_seconds = $ffmpeg_preview_seconds;
+                $duration = intval(gmdate("i", $end_time - $start_time))*60 + intval(gmdate("s", $end_time - $start_time))+intval(gmdate("H", $end_time - $start_time))*3600;
+                $ffmpeg_preview_seconds=$duration;
+                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time -c copy -c:a aac " . escapeshellarg($target);
+                $output = run_command($shell_exec_cmd);
+                }
+            else
+                {
+                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
+                $output = exec($shell_exec_cmd);
+                }
             }
 
         create_previews($newref,false,$ffmpeg_preview_extension);
+        
+        # Restore default value of $ffmpeg_preview_seconds
+        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds;
 
         if ($collection_add == "yes")
             {
@@ -223,8 +241,22 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             }
         else
             {
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            $output = exec($shell_exec_cmd);
+            $ffprobe_fullpath = get_utility_path("ffprobe");    
+            $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($video_original_file) . " -show_streams -of json");
+            $ffprobe_array=json_decode($ffprobe_output, true);
+            if($ffprobe_array['streams'][1]['codec_name'] = "pcm_s24le")
+                {
+                # ffmpeg does not support PCM in the MP4 container
+                $ffmpeg_local_preview_seconds = $ffmpeg_preview_seconds;
+                $ffmpeg_preview_seconds='';
+                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time -c copy -c:a aac " . escapeshellarg($target);
+                $output = run_command($shell_exec_cmd);
+                }
+            else
+                {
+                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
+                $output = exec($shell_exec_cmd);
+                }
             }
 
         chmod($target,0777);
@@ -262,6 +294,8 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // add ref to list
         $trimmed_resources_alt[] = $alt_ref;
         }
+        # Restore default value of $ffmpeg_preview_seconds
+        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds;
     }
 ?>
 

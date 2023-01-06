@@ -7,7 +7,6 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 global $baseurl;
-$chosen_dropdowns=true;
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'falcon_link';
 if(!in_array($plugin_name, $plugins))

@@ -2,7 +2,7 @@
 
 function HookConsentmanagerAllExport_add_tables()
     {
-    return array("consent"=>array("scramble"=>array( "name","email","telephone","consent_usage","expires")));
+    return array("consent"=>array("scramble"=>array("name"=>"mix_text","email"=>"mix_email","telephone"=>"mix_text","consent_usage"=>"mix_text","expires"=>"mix_date")));
     return array("resource_consent"=>array("scramble"=>array()));
     }
 

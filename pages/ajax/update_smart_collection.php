@@ -1,97 +1,16 @@
 <?php
+// Command line only script to process smart collections when $smart_collections_async is enabled.
 
-if (!defined("RUNNING_ASYNC")) {define("RUNNING_ASYNC", !isset($allow_smart_collections));}
 
-if (RUNNING_ASYNC)
+include dirname(__FILE__)."/../../include/db.php";
+command_line_only();
+
+if (empty($_SERVER['argv'][1]))
 	{
-	include dirname(__FILE__)."/../../include/db.php";
-	
-	include dirname(__FILE__)."/../../include/authenticate.php";
-	if (empty($_SERVER['argv'][1])) {exit();}
-
-	$collection=$_SERVER['argv'][1];
-	$smartsearch_ref=ps_value("select savedsearch value from collection where ref= ?", ['i', $collection],"");	
+	exit();
 	}
 
+$smartsearch_ref = (int) $_SERVER['argv'][1];
+update_smart_collection($smartsearch_ref);
 
-$smartsearch=ps_query("select search,restypes,starsearch,archive,created,result_limit from collection_savedsearch where ref= ?", ['i', $smartsearch_ref]);
 
-if (isset($smartsearch[0]['search']))
-	{
-	$smartsearch=$smartsearch[0];
-					
-	# Option to limit results;
-	$result_limit=$smartsearch["result_limit"]; if ($result_limit=="" || $result_limit==0) {$result_limit=-1;}
-	 	
-	$startTime = microtime(true);
-	global $smartsearch_accessoverride;
-	$results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch'],false,false,"",false,true,false,false,false,null,true);
-	//$startTime = microtime(true); 
-	# results is a list of the current search without any restrictions
-	# we need to compare against the current collection contents to minimize inserts and deletions
-	$current_contents=ps_array("select resource value from collection_resource where collection= ?", ['i', $collection]);
-		
-	$results_contents=array();
-	$counter=0;
-	if (!empty($results)&&is_array($results))
-		{
-		foreach($results as $results_item)
-			{ 
-			if (isset($results_item['ref']))
-				{
-				$results_contents[]=$results_item['ref'];
-				$counter++;
-				if ($counter>=$result_limit && $result_limit!=-1) 
-					{	
-					break;
-					}
-				}
-			}
-		}
-		
-	$results_contents_add = array_values(array_diff($results_contents, $current_contents));
-	$current_contents_remove = array_values(array_diff($current_contents, $results_contents));
-							
-	$count_results=count($results_contents_add);
-	if ($count_results>0)	
-		{
-		# Add any new resources
-		debug( "smart_collections_async : Adding $count_results resources to collection...");
-		
-		# Selected archive states returned as a string
-		$smartsearch_archives=ps_value("select archive AS value from collection_savedsearch where ref= ?", ['i', $smartsearch_ref],"");
-		
-		if(isset($smartsearch_archives))
-     	   	{
-			$smartsearch_archives=explode(",",$smartsearch_archives);
-
-			for ($n=0;$n<$count_results;$n++)
-				{
-				# Check the resource archive state	
-				$archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$results_contents_add[$n]],"");	
-               
-				if (in_array($archivestatus, $smartsearch_archives))
-					{
-					add_resource_to_collection($results_contents_add[$n],$collection,true);
-					}
-				}
- 			}
- 		}
-					
-		$count_contents=count($current_contents_remove);
-		if ($count_contents>0)	
-			{
-			# Remove any resources no longer present.
-			debug( "smart_collections_async : Removing $count_contents resources...");	
-			for ($n=0;$n<$count_contents;$n++)
-				{				
-				remove_resource_from_collection($current_contents_remove[$n],$collection,true);
-				}
-			}	
-		$endTime = microtime(true);  
-		$elapsed = $endTime - $startTime;
-		if (RUNNING_ASYNC)
-			{
-			debug("smart_collections_async : $elapsed seconds for ".$smartsearch['search']);
-			}
-	}		

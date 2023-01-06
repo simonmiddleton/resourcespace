@@ -2,8 +2,9 @@
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 function HookSimplesamlAllPreheaderoutput()
     {      
-    if(!simplesaml_php_check())
+    if(!simplesaml_php_check() || get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL) != SYSTEM_UPGRADE_LEVEL)
         {
+        // If a new version then allow upgrade scripts to run first
         return false;
         }
 

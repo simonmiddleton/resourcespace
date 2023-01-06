@@ -144,10 +144,9 @@ function HookFormat_chooserViewReplacedownloadoptions()
             {
             # Only add choice if allowed
             $downloadthissize = resource_download_allowed($ref, $size["id"], $resource["resource_type"]);
-            $check_T_perm = checkperm("T{$resource["resource_type"]}_{$size["id"]}");
 
             // Skip size if not allowed to download resource because user is denied access to it (for this resource type & size combo)
-            if(!$downloadthissize && $check_T_perm)
+            if(!$downloadthissize && resource_has_access_denied_by_RT_size($resource['resource_type'], $size['id']))
                 {
                 continue;
                 }

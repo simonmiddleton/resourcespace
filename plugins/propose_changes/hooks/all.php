@@ -29,5 +29,5 @@ function HookPropose_changesAllShowfieldedit($field)
 
 function HookPropose_changesAllExport_add_tables()
     {
-    return array("propose_changes_data"=>array("scramble"=>array("value")));
+    return array("propose_changes_data"=>array("scramble"=>array("value"=>"mix_text")));
     }

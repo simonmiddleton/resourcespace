@@ -96,6 +96,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 
         if('' != $validuser)
             {
+            debug("[validate_user()] User #{$validuser} is valid!");
             return true;
             }
         }
@@ -805,6 +806,11 @@ function save_user($ref)
             log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
             ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
             }
+
+        if($email != $current_user_data["email"])
+            {
+            $additional_sql .= ",email_invalid=0 ";
+            }        
 
         log_activity(null, LOG_CODE_EDITED, $ip_restrict, 'user', 'ip_restrict', $ref, null, '');
         log_activity(null, LOG_CODE_EDITED, $search_filter_override, 'user', 'search_filter_override', $ref, null, '');
@@ -2725,8 +2731,8 @@ function checkPermission_dashuser()
  */
 function checkPermission_dashmanage()
 	{
-	global $managed_home_dash,$unmanaged_home_dash_admins, $anonymous_default_dash;
-	return (!checkPermission_anonymoususer() || !$anonymous_default_dash) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
+	global $managed_home_dash,$unmanaged_home_dash_admins;
+	return (!checkPermission_anonymoususer()) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
 				|| ($unmanaged_home_dash_admins && checkPermission_dashadmin()));
     }
     

@@ -830,8 +830,8 @@ function allowed_type_mime($allowedtype)
  * @param  string $email            Email address to send to 
  * @param  string $subject          Email subject
  * @param  string $message          Message text
- * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
- * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $from             From address - defaults to $email_from
+ * @param  string $reply_to         Reply to address - defaults to $email_from 
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
  * @param  string $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name
@@ -843,17 +843,11 @@ function allowed_type_mime($allowedtype)
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
-    global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
+    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
 
     if(defined("RS_TEST_MODE"))
         {
         return false;
-        }
-    if($always_email_from_user)
-        {
-        $from_name=($userfullname!="")?$userfullname:$username;
-        $from=$useremail;
-        $reply_to=$useremail;
         }
 
     if($always_email_copy_admin)
@@ -1060,8 +1054,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
  * @param  string $email           Email address to send to 
  * @param  string $subject          Email subject
  * @param  string $message          Message text
- * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
- * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $from             From address - defaults to $email_from 
+ * @param  string $reply_to         Reply to address - defaults to $email_from
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
  * @param  string $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name
@@ -1444,10 +1438,19 @@ function log_mail($email,$subject,$sender)
         }
     $sub = mb_strcut($subject,0,100);
 
-    // Write log to database
-    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
-    }
+    // Record a separate log entry for each email recipient
+    $email_recipients = explode(', ', $email);
+    $sql = array();
+    $params= array();
+    foreach ($email_recipients as $email_recipient)
+        {
+        $sql[] = '(NOW(), ?, ?, ?, ?)';
+        $params = array_merge($params, array("s", $email_recipient, "i", $from, "s", $sub, "s", $sender));
+        }
 
+    // Write log to database
+    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES " . implode(", ", $sql) . ";", $params);
+    }
 
 /**
  * Quoted printable encoding is rather simple.
@@ -3041,17 +3044,28 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $slideshow_records = ps_query(
+            'SELECT s.ref, resource_ref, r.resource_type, homepage_show, featured_collections_show, login_show
+               FROM slideshow AS s
+         LEFT JOIN `resource` AS r ON s.resource_ref = r.ref',
+         [],
+         'slideshow'
+     );
 
     $slideshow_files = array();
 
     foreach($slideshow_records as $slideshow)
         {
         $slideshow_file = $slideshow;
+        $has_resource_linked = (int) $slideshow['resource_ref'] > 0;
 
         $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
-
-        if(!file_exists($image_file_path) || !is_readable($image_file_path))
+        if(
+            // Transform plugin crop uses the original file to create the slideshow image.
+            ($has_resource_linked && resource_has_access_denied_by_RT_size($slideshow['resource_type'], ''))
+            || !file_exists($image_file_path)
+            || !is_readable($image_file_path)
+        )
             {
             continue;
             }
@@ -3065,7 +3079,7 @@ function get_slideshow_files_data()
                 'nc' => $slideshow_file['checksum'],
             ));
 
-        if((int) $slideshow['resource_ref'] > 0)
+        if($has_resource_linked)
             {
             $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
             }
@@ -4536,10 +4550,9 @@ function get_system_status()
     $return = [
         'results' => [
             // Example of a test result
-            // [
-            // 'name' => 'Short name of what is being tested',
-            // 'status' => 'OK/FAIL/WARNING',
-            // 'info' => 'Any relevant information',
+            // 'name' => [
+            //     'status' => 'OK/FAIL/WARNING',
+            //     'info' => 'Any relevant information',
             // ]
         ],
         'status' => 'FAIL',
@@ -4755,11 +4768,9 @@ function get_system_status()
     if($diff_days > 1.5)
         {
         $return['results']['cron_process'] = [
-            'status' => 'FAIL',
+            'status' => 'WARNING',
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
         ];
-
-        return $return;
         }
 
 

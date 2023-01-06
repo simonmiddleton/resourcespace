@@ -92,7 +92,7 @@ for ($n=0;$n<count($keywords);$n++)
                 {
                 $set_fields[$s[0]] = $s[1];
                 $i = $n + 1;
-                while ($i < count($keywords) && strpos($keywords[$i], ":") == false)
+                while ($i < count($keywords) && strpos($keywords[$i], ":") === false)
                     {
                     $set_fields[$s[0]] .= " " . $keywords[$i];
                     $i++;
@@ -221,7 +221,7 @@ var categoryTreeChecksArray = [];
 
 <?php if (!hook("searchbarremove")) { ?>
 
-<div class="SearchSpace" <?php if (!$basic_simple_search){?>id="searchspace"<?php } ?>>
+<div class="SearchSpace" id="searchspace"> 
 
 <?php if (!hook("searchbarreplace")) { ?>
     
@@ -518,7 +518,7 @@ elseif($restypes=='')
     if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }
     if (!$basic_simple_search) {
     // Include simple search items (if any)
-    global $clear_function, $simple_search_show_dynamic_as_dropdown, $chosen_dropdowns;
+    global $clear_function, $simple_search_show_dynamic_as_dropdown;
     
     $optionfields=array();
     $rendered_names=array();
@@ -872,12 +872,6 @@ elseif($restypes=='')
         {
         <?php
         echo $clear_function;
-        if($chosen_dropdowns)
-            {
-            ?>
-            jQuery('#SearchBox select').trigger('chosen:updated');
-            <?php
-            }
         ?>
         }
     </script>

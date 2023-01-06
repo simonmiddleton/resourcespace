@@ -747,7 +747,7 @@ if ($processupload)
                     }
                 $sql .= " ORDER BY ref ASC";
 
-                $replace_resources = ps_array($sql,$sql_params,0);
+                $replace_resources = ps_array($sql,$sql_params);
                 debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
                 }
             else
@@ -1139,6 +1139,7 @@ jQuery(document).ready(function () {
         if(uploadProgress >= count)
             {
             console.debug("Processing uploaded resources");
+            CentralSpaceShowProcessing();
             pageScrolltop(scrolltopElementCentral);
             }
         });
@@ -1526,7 +1527,7 @@ function postUploadActions()
             }, 2000);
         return;
         }
-    CentralSpaceShowProcessing();
+    CentralSpaceHideProcessing();
     // Upload has completed, perform post upload actions
     console.debug("Upload processing completed");
     CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nc=' . time() ?>");
@@ -1695,10 +1696,7 @@ if ($alternative!="")
             <?php
             }
         }
-    if ($alternative_file_resource_title)
-        { 
-        echo "<h2>" . htmlspecialchars((string) $resource['field'.$view_title_field]) . "</h2><br/>";
-        }
+    echo "<h2>" . htmlspecialchars((string) $resource['field'.$view_title_field]) . "</h2><br/>";
     }
 
 # Define the titles:

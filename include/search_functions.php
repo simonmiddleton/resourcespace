@@ -72,26 +72,28 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
+        if (!is_array($date_field_data) || !isset($date_field_data['resource_type']))
+            {
+            debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
+            return $return;
+            }
         # Insert searchable date field so that it appears as the first array entry for a given resource type
         $return1=array();
         for ($n=0;$n<count($return);$n++)
             {
-            if (isset($date_field_data))
+            if (isset($date_field_data['resource_type']) && $return[$n]["resource_type"] == $date_field_data['resource_type'])
                 {
-                if ($return[$n]["resource_type"] == $date_field_data['resource_type']) 
-                    {
-                    $return1[]=$date_field_data;
-                    $date_field_data=null; # Only insert it once
-                    }
+                $return1[]=$date_field_data;
+                $date_field_data=null; # Only insert it once
                 }
             $return1[]=$return[$n];
             }
         # If not yet added because it's resource type differs from everything in the list then add it to the end of the list
-        if (isset($date_field_data))
+        if (is_array($date_field_data))
             {
             $return1[]=$date_field_data;
             $date_field_data=null; # Keep things tidy
-        }
+            }
         return $return1;
         }
  
@@ -578,7 +580,7 @@ function compile_search_actions($top_actions)
     $o=0;
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
-           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
+           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset,
            $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
@@ -605,7 +607,7 @@ function compile_search_actions($top_actions)
 
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
-        if($top_actions && $allow_save_search && $usercollection != $collection)
+        if($top_actions && $usercollection != $collection)
             {
             $options[$o]['value']='save_search_to_collection';
             $options[$o]['label']=$lang['savethissearchtocollection'];
@@ -1359,11 +1361,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 if($smart_collections_async && isset($php_path) && file_exists($php_path . '/php'))
                     {
-                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($collection) . ' ' . '> /dev/null 2>&1 &');
+                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($smartsearch_ref) . ' ' . '> /dev/null 2>&1 &');
                     }
                 else 
                     {
-                    include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
+                    update_smart_collection($smartsearch_ref);
                     }
                 }   
             }
@@ -1839,8 +1841,10 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             foreach ($getsizes as $getsize)
                 {
                 if(!(in_array($getsize,array_column($available,"id")))){continue;}
-                $resfile=get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark);
-                if(file_exists($resfile))
+                if(
+                    !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], $getsize)
+                    && file_exists(get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark))
+                )
                     {
                     $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
                     }

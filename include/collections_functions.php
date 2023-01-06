@@ -215,7 +215,7 @@ $GLOBALS['get_collection_cache'] = array();
  */
 function get_collection($ref, $usecache = false)
     {
-    global $lang, $userref,$k,$attach_user_smart_groups;
+    global $lang, $userref,$k;
     if(isset($GLOBALS['get_collection_cache'][$ref]) && $usecache)
         {
         return $GLOBALS['get_collection_cache'][$ref];
@@ -234,18 +234,17 @@ function get_collection($ref, $usecache = false)
         $return=$return[0];
         $users = ps_array("SELECT u.username value FROM user u,user_collection c WHERE u.ref=c.user AND c.collection = ? ORDER BY u.username",array("i",$ref));
         $return["users"]=join(", ",$users);
-        if($attach_user_smart_groups)
-            {
-            $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . "',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
-            $return["groups"]=join(", ",$groups);
-            }
+
+        $groups = ps_array("SELECT concat('" . $lang["groupsmart"] . "',u.name) value FROM usergroup u,usergroup_collection c WHERE u.ref = c.usergroup AND c.collection = ? ORDER BY u.name",array("i",$ref));
+        $return["groups"]=join(", ",$groups);
+        
 
         $request_feedback=0;
         if ($return["user"]!=$userref)
             {
             # If this is not the user's own collection, fetch the user_collection row so that the 'request_feedback' property can be returned.
             $request_feedback=ps_value("SELECT request_feedback value FROM user_collection WHERE collection = ? AND user = ?",array("i",$ref,"i",$userref),0);
-            if(!$request_feedback && $attach_user_smart_groups && $k=="")
+            if(!$request_feedback && $k=="")
                 {
                 # try to set via usergroup_collection
                 global $usergroup;
@@ -917,7 +916,7 @@ function delete_collection($collection)
 	if($home_dash)
 		{
 		// Delete any dash tiles pointing to this collection
-		$collection_dash_tiles=ps_array("SELECT ref value FROM dash_tile WHERE link LIKE ?",array("s","%search.php?search=!collection" . $ref . "&%"),0);
+		$collection_dash_tiles=ps_array("SELECT ref value FROM dash_tile WHERE link LIKE ?",array("s","%search.php?search=!collection" . $ref . "&%"));
 		if(count($collection_dash_tiles)>0)
 			{
 			ps_query("DELETE FROM dash_tile WHERE ref IN (" .  ps_param_insert(count($collection_dash_tiles)) . ")",ps_param_fill($collection_dash_tiles,"i"));
@@ -1349,8 +1348,6 @@ function index_collection($ref,$index_string='')
  */
 function save_collection($ref, $coldata=array())
 	{
-	global $attach_user_smart_groups;
-	
 	if (!is_numeric($ref) || !collection_writeable($ref))
         {
         return false;
@@ -1628,11 +1625,8 @@ function save_collection($ref, $coldata=array())
 
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
-        if ($attach_user_smart_groups)
-            {
-            $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
-            ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
-            }
+        $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
+        ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
     
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
@@ -1671,54 +1665,51 @@ function save_collection($ref, $coldata=array())
             collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));
             }
 
-        if($attach_user_smart_groups)
+        $groups=resolve_userlist_groups_smart($users);
+        $groupnames='';
+        if($groups!='')
             {
-            $groups=resolve_userlist_groups_smart($users);
-            $groupnames='';
-            if($groups!='')
-                {
-                $groups=explode(",",$groups);
-                if (count($groups)>0)
-                    { 
-                    foreach ($groups as $group)
+            $groups=explode(",",$groups);
+            if (count($groups)>0)
+                { 
+                foreach ($groups as $group)
+                    {
+                    ps_query("insert into usergroup_collection(collection,usergroup) values (?,?)",array("i",$ref,"i",$group));
+                    // get the group name
+                    if($groupnames!='')
                         {
-                        ps_query("insert into usergroup_collection(collection,usergroup) values (?,?)",array("i",$ref,"i",$group));
-                        // get the group name
-                        if($groupnames!='')
-                            {
-                            $groupnames.=", ";
-                            }
-                        $groupnames.=ps_value("select name value from usergroup where ref=?",array("i",$group),"");
+                        $groupnames.=", ";
                         }
+                    $groupnames.=ps_value("select name value from usergroup where ref=?",array("i",$group),"");
+                    }
 
-                    $new_attached_groups=array_diff($groups, $old_attached_groups);
-                    if(!empty($new_attached_groups))
+                $new_attached_groups=array_diff($groups, $old_attached_groups);
+                if(!empty($new_attached_groups))
+                    {
+                    foreach($new_attached_groups as $newg)
                         {
-                        foreach($new_attached_groups as $newg)
-                            {
-                            $group_users=ps_array("SELECT ref value FROM user WHERE usergroup=?",array("i",$newg));
-                            $new_attached_users=array_merge($new_attached_users, $group_users);
-                            }
+                        $group_users=ps_array("SELECT ref value FROM user WHERE usergroup=?",array("i",$newg));
+                        $new_attached_users=array_merge($new_attached_users, $group_users);
                         }
                     }
-                #log this
-                collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, $groupnames);
                 }
+            #log this
+            collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, $groupnames);
             }
-        # Send a message to any new attached user
-        if(!empty($new_attached_users))
-            {
-            global $baseurl, $lang;
+        }
+    # Send a message to any new attached user
+    if(!empty($new_attached_users))
+        {
+        global $baseurl, $lang;
 
-            $new_attached_users=array_unique($new_attached_users);
-            $message_text = str_replace(
-                    array('%user%', '%colname%'),
-                    array($collection_owner["fullname"]??$collection_owner["username"],getval("name","")),
-                    $lang['collectionprivate_attachedusermessage']
-            );
-            $message_url = $baseurl . "/?c=" . $ref;
-            message_add($new_attached_users,$message_text,$message_url);
-            }
+        $new_attached_users=array_unique($new_attached_users);
+        $message_text = str_replace(
+                array('%user%', '%colname%'),
+                array($collection_owner["fullname"]??$collection_owner["username"],getval("name","")),
+                $lang['collectionprivate_attachedusermessage']
+        );
+        $message_url = $baseurl . "/?c=" . $ref;
+        message_add($new_attached_users,$message_text,$message_url);
         }
 
     # Relate all resources?
@@ -2003,14 +1994,14 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array
  */
 function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="",$sharepwd="")
 	{
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup,$attach_user_smart_groups;
+	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group==""){$group=$usergroup;}
 	
 	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
 	$userlist=resolve_userlist_groups($userlist);
 	
-	if($attach_user_smart_groups && strpos($userlist,$lang["groupsmart"] . ": ")!==false){
+	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false){
 		$groups_users=resolve_userlist_groups_smart($userlist,true);
 		if($groups_users!=''){
 			if($userlist!=""){
@@ -5215,12 +5206,19 @@ function collection_cleanup_inaccessible_resources($collection)
     global $userref;
 
     $editable_states = array_column(get_editable_states($userref), 'id');
+    $count_editable_states = count($editable_states);
+
+    if($count_editable_states === 0)
+        {
+        return;
+        }
+
     ps_query("DELETE a 
                 FROM   collection_resource AS a 
                 INNER JOIN resource AS b 
                 ON a.resource = b.ref 
                 WHERE  a.collection = ? 
-                AND b.archive NOT IN (". ps_param_insert(count($editable_states)) .")", array_merge(['i', $collection], ps_param_fill($editable_states, 'i')));
+                AND b.archive NOT IN (". ps_param_insert($count_editable_states) .")", array_merge(['i', $collection], ps_param_fill($editable_states, 'i')));
     }
 /**
 * Relate all resources in a collection
@@ -6855,4 +6853,99 @@ function get_default_user_collection($setactive=false)
 		set_user_collection($userref,$usercollection);
         }
     return $usercollection;
+    }
+
+/**
+ * Update a smart collection with or without the $smart_collections_async option.
+ *
+ * @param  int   $smartsearch_ref   Id of 'savedsearch'.
+ * 
+ * @return void
+ */
+function update_smart_collection(int $smartsearch_ref)
+    {
+    if ($smartsearch_ref == 0)
+        {
+        return;
+        }
+    $smartsearch=ps_query("select search, collection, restypes, starsearch, archive, created, result_limit from collection_savedsearch where ref = ?", ['i', $smartsearch_ref]);
+    global $smart_collections_async;
+
+    if (isset($smartsearch[0]['search']))
+        {
+        $smartsearch=$smartsearch[0];
+        $collection = $smartsearch['collection'];
+
+        # Option to limit results;
+        $result_limit=$smartsearch["result_limit"]; if ($result_limit=="" || $result_limit==0) {$result_limit=-1;}
+
+        $startTime = microtime(true);
+        global $smartsearch_accessoverride;
+        $results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch'],false,false,"",false,true,false,false,false,null,true);
+        //$startTime = microtime(true); 
+        # results is a list of the current search without any restrictions
+        # we need to compare against the current collection contents to minimize inserts and deletions
+        $current_contents=ps_array("select resource value from collection_resource where collection= ?", ['i', $collection]);
+
+        $results_contents=array();
+        $counter=0;
+        if (!empty($results)&&is_array($results))
+            {
+            foreach($results as $results_item)
+                { 
+                if (isset($results_item['ref']))
+                    {
+                    $results_contents[]=$results_item['ref'];
+                    $counter++;
+                    if ($counter>=$result_limit && $result_limit!=-1)
+                        {	
+                        break;
+                        }
+                    }
+                }
+            }
+
+        $results_contents_add = array_values(array_diff($results_contents, $current_contents));
+        $current_contents_remove = array_values(array_diff($current_contents, $results_contents));
+
+        $count_results=count($results_contents_add);
+        if ($count_results>0)
+            {
+            # Add any new resources
+            debug( "smart_collections" . (($smart_collections_async) ? "_async:" : ":") . " Adding $count_results resources to collection...");
+
+            # Selected archive states returned as a string
+            $smartsearch_archives=ps_value("select archive AS value from collection_savedsearch where ref= ?", ['i', $smartsearch_ref],"");
+
+            if(isset($smartsearch_archives))
+                {
+                $smartsearch_archives=explode(",",$smartsearch_archives);
+
+                for ($n=0;$n<$count_results;$n++)
+                    {
+                    # Check the resource archive state	
+                    $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$results_contents_add[$n]],"");
+                
+                    if (in_array($archivestatus, $smartsearch_archives))
+                        {
+                        add_resource_to_collection($results_contents_add[$n],$collection,true);
+                        }
+                    }
+                }
+            }
+
+            $count_contents=count($current_contents_remove);
+            if ($count_contents>0)
+                {
+                # Remove any resources no longer present.
+                debug( "smart_collections" . (($smart_collections_async) ? "_async:" : ":") . " Removing $count_contents resources...");
+                for ($n=0;$n<$count_contents;$n++)
+                    {				
+                    remove_resource_from_collection($current_contents_remove[$n],$collection,true);
+                    }
+                }
+            $endTime = microtime(true);  
+            $elapsed = $endTime - $startTime;
+            debug("smart_collections" . (($smart_collections_async) ? "_async:" : ":") . " $elapsed seconds for " . $smartsearch['search']);
+        }
     }

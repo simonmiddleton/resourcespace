@@ -50,16 +50,23 @@ function HookAnnotateViewRenderinnerresourcepreview()
         </script>
         <?php
         $use_watermark = check_use_watermark();
-        $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
+        $use_size      = 'pre';
+        $imagepath     = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], -1, 1, $use_watermark);
 
         if(!file_exists($imagepath))
             {
-            $imagepath=get_resource_path($ref,true,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);    
-            $imageurl=get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);
+            $use_size = 'thm';
+            $imagepath=get_resource_path($ref,true, $use_size,false,$resource["preview_extension"],-1,1,$use_watermark);    
+            $imageurl=get_resource_path($ref,false, $use_size,false,$resource["preview_extension"],-1,1,$use_watermark);
             }
         else
             {
-            $imageurl=get_resource_path($ref,false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
+            $imageurl=get_resource_path($ref,false, $use_size,false,$resource["preview_extension"],-1,1,$use_watermark);
+            }
+
+        if(resource_has_access_denied_by_RT_size($resource['resource_type'], $use_size))
+            {
+            return false;
             }
 
         if (!file_exists($imagepath))

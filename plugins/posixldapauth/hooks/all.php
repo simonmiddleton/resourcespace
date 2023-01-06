@@ -14,55 +14,53 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 	include_once dirname(__FILE__) . "/ldap_class.php";
 	global $username;
 	global $password;
-	global $password_hash,$use_plugins_manager,$ldapauth;
+	global $password_hash,$ldapauth;
 	$debugMode = false;
         
     if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  Starting Debug") ; }    
         
         
-	if ($use_plugins_manager==true)
-	{
-		$ldapauth = get_plugin_config("posixldapauth");
-		
 
-		if ($ldapauth==null || $ldapauth['enable']==false) 
-		{
-			return false;
-		}
-		if (!isset($ldapauth['ldapgroupcontainer']))
-		{
-			$ldapauth['ldapgroupcontainer'] = "";
-		}
-		if (!isset($ldapauth['port']))
-		{
-			$ldapauth['port'] = 389;
-		}
-		if (!isset($ldapauth['ldapmemberfield']))
-		{
-			$ldapauth['ldapmemberfield'] = "";	
-		}
-			if (!isset($ldapauth['ldapmemberfieldtype']))
-		{
-			$ldapauth['ldapmemberfieldtype'] = 0;	
-		}
-		
-		if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  Configuration") ; }
-		
-		if ($ldap_debug) {
-			foreach ( $ldapauth as $key => $value ) {
-				if ($key == "groupmap") {
-					foreach ($ldapauth['groupmap'] as $ldapGrpName => $arrLdapGrp) {	
-						if ($arrLdapGrp['enabled'])	{
-							error_log( $ldapGrpName . " is enabled and mapped to " . $arrLdapGrp['rsGroup']);
-							
-						}
-					} 	
-				} else {
-					error_log( $key . " = " . $value);	
-				}  
- 	
-			} 		
-		}
+	$ldapauth = get_plugin_config("posixldapauth");
+	
+
+	if ($ldapauth==null || $ldapauth['enable']==false) 
+	{
+		return false;
+	}
+	if (!isset($ldapauth['ldapgroupcontainer']))
+	{
+		$ldapauth['ldapgroupcontainer'] = "";
+	}
+	if (!isset($ldapauth['port']))
+	{
+		$ldapauth['port'] = 389;
+	}
+	if (!isset($ldapauth['ldapmemberfield']))
+	{
+		$ldapauth['ldapmemberfield'] = "";	
+	}
+		if (!isset($ldapauth['ldapmemberfieldtype']))
+	{
+		$ldapauth['ldapmemberfieldtype'] = 0;	
+	}
+	
+	if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  Configuration") ; }
+	
+	if ($ldap_debug) {
+		foreach ( $ldapauth as $key => $value ) {
+			if ($key == "groupmap") {
+				foreach ($ldapauth['groupmap'] as $ldapGrpName => $arrLdapGrp) {	
+					if ($arrLdapGrp['enabled'])	{
+						error_log( $ldapGrpName . " is enabled and mapped to " . $arrLdapGrp['rsGroup']);
+						
+					}
+				} 	
+			} else {
+				error_log( $key . " = " . $value);	
+			}  
+
+		} 		
 	}
 	
 	if ($uname != "" && $pword != "") 
