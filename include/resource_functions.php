@@ -2853,11 +2853,9 @@ function delete_resource($ref)
               WHERE a.resource = ?",array("i",$ref)
     );
     ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
-    ps_query('DELETE FROM slideshow WHERE resource_ref = ?', ['i', $ref]);
 	hook("afterdeleteresource");
     
     clear_query_cache("stats");
-    clear_query_cache('slideshow');
 
 	return true;
 	}

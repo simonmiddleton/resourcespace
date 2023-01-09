@@ -3062,7 +3062,7 @@ function get_slideshow_files_data()
         $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
         if(
             // Transform plugin crop uses the original file to create the slideshow image.
-            ($has_resource_linked && resource_has_access_denied_by_RT_size($slideshow['resource_type'], ''))
+            ($has_resource_linked && resource_has_access_denied_by_RT_size((int)$slideshow['resource_type'], ''))
             || !file_exists($image_file_path)
             || !is_readable($image_file_path)
         )
