@@ -5519,19 +5519,20 @@ function check_use_watermark($download_key = "", $resource="")
 * @uses update_field()
 * @uses get_resource_nodes()
 *
-* @param integer $resource  Resource ID
-* @param boolean $force_run  Allow code to force running this function and update the fields even if there is data.
-* @param boolean $return_changes  When true an array of fields changed by autocomplete is returned.
+* @param  integer   $resource         Resource ID
+* @param  boolean   $force_run        Allow code to force running this function and update the fields even if there is data.
+* @param  boolean   $return_changes   When true an array of fields changed by autocomplete is returned.
 * For example:
 * - when creating a resource, autocomplete_blank_fields() should always be triggered regardless if user has data in its user template.
 * - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data
 * for that field as at this point you probably have the expected data for your field.
 *
-* @param boolean $macro_context  Indicates the context in which the macro is being run.
+* @param  boolean   $macro_context    Indicates the context in which the macro is being run.
+* @param  integer   $field_ref        Optional parameter to specify which metadata field should be processed. Left blank, all fields will be processed (default behaviour).
 *
 * @return boolean|array Success/fail or array of changes made
 */
-function autocomplete_blank_fields($resource, $force_run, $return_changes = false, $macro_context = MACRO_CONTEXT_UNSPECIFIED)
+function autocomplete_blank_fields($resource, $force_run, $return_changes = false, $macro_context = MACRO_CONTEXT_UNSPECIFIED, int $field_ref = 0)
     {
     global $FIXED_LIST_FIELD_TYPES, $lang;
 
@@ -5542,6 +5543,14 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
     $resource_type = ps_value("SELECT resource_type AS `value` FROM resource WHERE ref = ?", ["i",$resource], 0);
 
+    $sql_set_field = '';
+    $sql_set_field_params = array();
+    if ($field_ref > 0)
+        {
+        $sql_set_field = ' AND rtf.ref = ?';
+        $sql_set_field_params = array('i', $field_ref);
+        }
+
     $fields = ps_query(
         "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
           FROM resource_type_field rtf
@@ -5549,7 +5558,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
           WHERE length(rtf.autocomplete_macro) > 0
           AND (   (rtf.resource_type<>0 AND rtf.resource_type = rt.ref)
                OR (rtf.resource_type=0  AND rt.inherit_global_fields=1)
-              )",array("i",$resource_type),"schema");
+              ) $sql_set_field", array_merge(array("i", $resource_type), $sql_set_field_params), "schema");
 
     $fields_updated = array();
 
