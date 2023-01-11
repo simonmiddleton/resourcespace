@@ -43,6 +43,11 @@ $use_cases = [
         'input' => '~en:Digital camera~fr:Appareil photo numérique, ~en:Scanned negative~fr:Négatif scanné',
         'expected' => 'Digital camera, Scanned negative',
     ],
+    [
+        'name' => 'Split a category tree path by separator, translate and output CSV',
+        'input' => '~en:Colors~fr:Couleurs, ~en:Colors~fr:Couleurs/~en:red~fr:rouge',
+        'expected' => 'Colors, Colors/red',
+    ],
 ];
 foreach($use_cases as $use_case)
     {

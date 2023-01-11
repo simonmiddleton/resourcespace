@@ -8970,9 +8970,11 @@ function update_resource_field_column(int $resource,int $field, string $value)
 /**
 * Convert $data_joins (ie fieldX column) value to a user friendly version.
 * 
+* IMPORTANT: csv in this context simply means user defined separator values (relies on {@see $field_column_string_separator}).
+* 
 * Text value will be:-
 * - split by the configued separator {@see $field_column_string_separator};
-* - have all parts translated;
+* - have all parts translated; (note: to correctly translate tree paths, a part will also be broken into path elements)
 * - glued back using the same separator
 *
 * @param string|null $value Text to be processed
@@ -8986,10 +8988,14 @@ function data_joins_field_value_translate_and_csv(?string $value): ?string
         return null;
         }
 
-    return implode(
-        $GLOBALS['field_column_string_separator'],
-        array_map('i18n_get_translated', explode($GLOBALS['field_column_string_separator'], $value))
-    );
+    $value_parts = [];
+    $split_by_fcss = explode($GLOBALS['field_column_string_separator'], $value);
+    foreach($split_by_fcss as $el)
+        {
+        $value_parts[] = implode('/', array_map('i18n_get_translated', explode('/', $el)));
+        }
+
+    return implode($GLOBALS['field_column_string_separator'], $value_parts);
     }
 
 /**
