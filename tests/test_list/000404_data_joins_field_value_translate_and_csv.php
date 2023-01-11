@@ -21,7 +21,7 @@ $use_cases = [
     [
         'name' => 'Value full of spaces returns the empty string',
         'input' => '    ',
-        'expected' => '',
+        'expected' => '    ',
     ],
     [
         'name' => 'One value returns it back the same',

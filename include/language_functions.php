@@ -34,12 +34,12 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
 /**
  * For field names / values using the i18n syntax, return the version in the current user's language. Format is ~en:Somename~es:Someothername
  *
- * @param  string $text
+ * @param  string|null $text
  * @return string
  */
 function i18n_get_translated($text)
     {
-    $text=trim($text ?? "");
+    $text ??= ''; 
         
     global $language,$defaultlanguage;
 	$asdefaultlanguage=$defaultlanguage;
