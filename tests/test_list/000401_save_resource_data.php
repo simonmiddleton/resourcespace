@@ -84,8 +84,7 @@ if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value)
 
 // Tear down
 $field_column_string_separator = $initial_field_column_string_separator;
-$data_joins = [];
-$_POST = [];
+$data_joins = $_POST = [];
 unset(
     $initial_field_column_string_separator,
     $rtf_checkbox, $ckb_opt_a, $ckb_opt_b,
