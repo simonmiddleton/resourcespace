@@ -356,7 +356,7 @@ function update_fieldx(int $metadata_field_ref)
                 foreach($allresources as $resource)
                     {
                     // category trees are using full paths to node names
-                    $resource_nodes = get_resource_nodes($resource, $fieldinfo['ref']);
+                    $resource_nodes = array_keys(get_cattree_nodes_ordered($fieldinfo['ref'], $resource, false));
                     $node_names_paths = [];
                     foreach($resource_nodes as $node_ref)
                         {
