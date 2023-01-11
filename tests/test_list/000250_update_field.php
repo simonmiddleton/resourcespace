@@ -46,8 +46,8 @@ $carrotnode = set_node(NULL, $tree_field_abc, "Carrot",$vegnode,60);
 
 $update_errors = [];
 $set_values = ["Apple","Fruit"];
-$log_value = "+ Fruit\n+ Fruit/Apple"; // Changed for 10.1 as full paths to nodes are now logged
-$set_value = implode(",",$set_values);
+$log_value = "+ Fruit/Apple\n+ Fruit"; // Changed for 10.1 as full paths to nodes are now logged to hanle duplicate node names
+$set_value = implode(NODE_NAME_STRING_SEPARATOR,$set_values);
 $check_value = "Fruit/Apple";
 
 update_field($resourcea,$tree_field_abc,$set_value,$update_errors);
@@ -62,9 +62,7 @@ if(!in_array($check_value,$test_value))
 
 // SUBTEST D - Check action has been logged correctly
 $reslog = get_resource_log($resourcea)['data'];
-$logok = false;
-echo "\nfield_title" . $field_title;
-echo "\log_value" . $log_value;
+$logok = false;;
 foreach($reslog as $logentry)
     {
     if($logentry["type"]==LOG_CODE_EDITED && $logentry["title"] == $field_title && $logentry["diff"] == $log_value)

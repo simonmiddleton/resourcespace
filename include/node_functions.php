@@ -415,49 +415,8 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
 
     if($recursive)
         {
-        // Need to reorder so that parents are ordered by first, with children between. Query will have returned them all according to the passed order_by
-        $parents_processed = [];        
-        $orderednodes = array_values(array_filter($return_nodes,function($node) use ($parent){return (int)$node["parent"] ==  0 || (int)$node["parent"] == $parent;}));
-        for($n=0;$n < count($orderednodes);$n++)
-            {
-            $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
-            $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"];
-            }
-        while(count($return_nodes) > 0)
-            {
-            // Loop to find children
-            for($n=0;$n < count($orderednodes);$n++)
-                {
-                if(!in_array($orderednodes[$n]["ref"],$parents_processed))
-                    {
-                    // Add the children of this node with the the path added (relative to paremnt)
-                    $children = array_filter($return_nodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
-                    // Set order
-                    uasort($children,"node_orderby_comparator");
-                    $children = array_values($children);
-                    for($c=0;$c < count($children);$c++)
-                        {
-                        $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
-                        $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  $children[$c]["translated_name"];
-                        // Insert the child after the parent and any nodes with a lower order_by value
-                        array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
-                        // Remove child from $treenodes
-                        $pos = array_search($children[$c]["ref"],array_column($return_nodes,"ref"));
-                        unset($return_nodes[$pos]);
-                        $return_nodes = array_values($return_nodes);
-                        }
-                    $parents_processed[] = $orderednodes[$n]["ref"];
-                    }
-                else
-                    {
-                    $pos = array_search($orderednodes[$n]["ref"],array_column($return_nodes,"ref"));
-                    // Remove from $treenodes
-                    unset($return_nodes[$pos]);
-                    }
-                }
-            $return_nodes = array_values($return_nodes);
-            }
-        $return_nodes =  $orderednodes;
+        // Need to reorder so that parents are ordered by first, with children between (query will have returned them all according to the passed order_by)
+        $return_nodes = order_tree_nodes($return_nodes,$parent);
         }
    
     return $return_nodes;
@@ -2746,3 +2705,50 @@ if (count($nodes)>0)
     ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
     }
 }
+
+
+function order_tree_nodes($nodes, $parent)
+    {
+    $parents_processed = [];        
+    $orderednodes = array_values(array_filter($nodes,function($node) use ($parent){return (int)$node["parent"] ==  0 || (int)$node["parent"] == $parent;}));
+    for($n=0;$n < count($orderednodes);$n++)
+        {
+        $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
+        $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"];
+        }
+    while(count($nodes) > 0)
+        {
+        // Loop to find children
+        for($n=0;$n < count($orderednodes);$n++)
+            {
+            if(!in_array($orderednodes[$n]["ref"],$parents_processed))
+                {
+                // Add the children of this node with the the path added (relative to paremnt)
+                $children = array_filter($nodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
+                // Set order
+                uasort($children,"node_orderby_comparator");
+                $children = array_values($children);
+                for($c=0;$c < count($children);$c++)
+                    {
+                    $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
+                    $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  $children[$c]["translated_name"];
+                    // Insert the child after the parent and any nodes with a lower order_by value
+                    array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
+                    // Remove child from $treenodes
+                    $pos = array_search($children[$c]["ref"],array_column($nodes,"ref"));
+                    unset($nodes[$pos]);
+                    $nodes = array_values($nodes);
+                    }
+                $parents_processed[] = $orderednodes[$n]["ref"];
+                }
+            else
+                {
+                $pos = array_search($orderednodes[$n]["ref"],array_column($nodes,"ref"));
+                // Remove from $treenodes
+                unset($nodes[$pos]);
+                }
+            }
+        $nodes = array_values($nodes);
+        }
+    return $orderednodes;
+    }

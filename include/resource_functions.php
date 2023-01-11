@@ -2496,7 +2496,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             // Get all the new values into an array
             if(strpos($value,NODE_NAME_STRING_SEPARATOR) != false)
                 {
-                $newvalues = array_map('trim', explode(NODE_NAME_STRING_SEPARATOR, $value));                        
+                $newvalues = array_map('trim', explode(NODE_NAME_STRING_SEPARATOR, $value));
                 }                
             else
                 {
@@ -2542,7 +2542,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             elseif($fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE)
                 {
                 // Create array with indexes as the values to look for
-                $nodes_available_keys   = [];
+                $nodes_available_keys   = [];         
                 foreach($fieldnodes as $fieldnode)
                     {
                     $nodes_available_keys[mb_strtolower($fieldnode["path"])] = $fieldnode["ref"];
