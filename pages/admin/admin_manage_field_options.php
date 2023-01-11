@@ -203,6 +203,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     if('delete' === $node_action && enforcePostRequest($ajax))
         {
         delete_node($node_ref);
+        clear_query_cache("schema");
         }
     }
 
@@ -406,6 +407,8 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
             reorder_node($new_nodes_order);
             }
         }
+    
+    clear_query_cache("schema");
     }
 
 // [Export nodes]

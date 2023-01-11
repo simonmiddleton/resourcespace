@@ -3190,4 +3190,4 @@ $lang["upload_view_log"]                    = "View log";
 
 $lang["code_sign_required"]                 = "Inline code signing";
 $lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";
-$lang["search_full_text"]                   = "Search all text";
+$lang["search_full_text"]                   = "Search all text (full text search)";

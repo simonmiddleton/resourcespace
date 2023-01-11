@@ -56,6 +56,8 @@ function migrate_resource_type_field_check(&$resource_type_field)
         // important!  this signifies that this field has been migrated by prefixing with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
         ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "',',',options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 		}
+    
+    clear_query_cache("schema");
 	}
 
 function migrate_category_tree_to_nodes($resource_type_field_ref,$category_tree_options)
