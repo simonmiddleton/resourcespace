@@ -985,13 +985,6 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    $resource=get_resource_data($ref,false);
    }
 
-# Simulate reupload (preserving filename and thumbs, but otherwise resetting metadata).
-if (getval("exif","")!="")
-    {
-    upload_file($ref,$no_exif=false,true);
-    resource_log($ref,"r","");
-    }   
-
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
     {
@@ -2433,12 +2426,6 @@ if ($ref>0 && !$multiple)
                 <?php 
                 }
 
-            if ($allow_metadata_revert && !checkperm('F*'))
-                {?>
-                <br />
-                <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
-                <?php
-                }
             hook("afterfileoptions"); ?>
             </div>
             <div class="clearerleft"> </div>

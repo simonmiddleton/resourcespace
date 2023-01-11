@@ -3503,7 +3503,19 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         // we really need dimensions here, so fallback to php's method
         if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
             {
-            list($w,$h) = getimagesize($file);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                list($w,$h) = getimagesize($file);
+                }
+            catch (Exception $e)
+                {
+                $returned_error = $e->getMessage();
+                debug("getFileDimensions: Unable to get image size for file: $file  -  $returned_error");
+                $w = null; 
+                $h = null;
+                }
+           unset($GLOBALS["use_error_exception"]);
             }
         else
             {

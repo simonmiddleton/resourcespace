@@ -2780,8 +2780,6 @@ function delete_resource($ref)
                 (
                 checkperm("D")
                 ||
-                (isset($allow_resource_deletion) && !$allow_resource_deletion)
-                ||
                 !get_edit_access($ref,$resource["archive"], false,$resource)
                 ||
                 (isset($userref) && $resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
@@ -2884,11 +2882,9 @@ function delete_resource($ref)
               WHERE a.resource = ?",array("i",$ref)
     );
     ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
-    ps_query('DELETE FROM slideshow WHERE resource_ref = ?', ['i', $ref]);
 	hook("afterdeleteresource");
     
     clear_query_cache("stats");
-    clear_query_cache('slideshow');
 
 	return true;
 	}
@@ -5556,11 +5552,9 @@ function check_use_watermark($download_key = "", $resource="")
 * - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data
 * for that field as at this point you probably have the expected data for your field.
 *
-* @param boolean $macro_context  Indicates the context in which the macro is being run.
-*
 * @return boolean|array Success/fail or array of changes made
 */
-function autocomplete_blank_fields($resource, $force_run, $return_changes = false, $macro_context = MACRO_CONTEXT_UNSPECIFIED)
+function autocomplete_blank_fields($resource, $force_run, $return_changes = false)
     {
     global $FIXED_LIST_FIELD_TYPES, $lang;
 
@@ -5906,7 +5900,18 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)){$rawfile=true;}
 
         # Use GD to calculate the size
-        if (!((@list($sw,$sh) = @getimagesize($file))===false)&& !$rawfile)
+        $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                list($sw,$sh) = getimagesize($file);
+                }
+            catch (Exception $e)
+                {
+                $returned_error = $e->getMessage();
+                debug("get_original_imagesize: Unable to get image size for file: $file  -  $returned_error");
+                }
+        unset($GLOBALS["use_error_exception"]);
+        if ((isset($sw) && isset($sh)) && !$rawfile)
             {
             if(!$o_size)
                 {
