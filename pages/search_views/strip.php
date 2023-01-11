@@ -33,7 +33,7 @@ if(isset($result[$n]['thm_url']))
         onClick="return <?php echo ($resource_view_modal ? 'Modal' : 'CentralSpace'); ?>Load(this, true);" 
         title=""
         ><?php 
-            if(1 == $result[$n]['has_image'])
+        if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'pre'))
             {
             ?><img 
             src="<?php echo $thm_url; ?>" 

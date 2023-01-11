@@ -243,33 +243,18 @@ foreach($results as $result_data)
         }
 
     // Determine the image path. If no file is found then do not continue.
-    $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
-
-    if(!file_exists($img_path))
+    $img_path = dirname(__DIR__, 2) . "/gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false);
+    foreach([$img_size, 'lpr', 'scr', 'pre'] as $img_preview_size)
         {
-        $img_path = get_resource_path($result_data['ref'], true, 'lpr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        }
-
-    if(!file_exists($img_path))
-        {
-        $img_path = get_resource_path($result_data['ref'], true, 'scr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        }
-
-    // If we can't find the size, drop back to preview size
-    if(!file_exists($img_path))
-        {
-        $img_path = get_resource_path($result_data['ref'], true, 'pre', false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        }
-
-    if(!file_exists($img_path))
-        {
-        $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
-        }
-
-    if(!file_exists($img_path))
-        {
-        debug("CONTACT_SHEET: could not find image path at '{$img_path}'. Skipping resource!");
-        continue;
+        if(
+            !resource_has_access_denied_by_RT_size($result_data['resource_type'], $img_preview_size)
+            && ($img_preview_size_path = get_resource_path($result_data['ref'], true, $img_preview_size, false, $result_data['preview_extension'], -1, 1, $use_watermark))
+            && file_exists($img_preview_size_path)
+        )
+            {
+            $img_path = $img_preview_size_path;
+            break;
+            }
         }
 
     // Note: _drawImage from html2pdf.class.php supports paths. If using URLs, allow_url_fopen should be turned ON but on
@@ -387,7 +372,7 @@ if ($preview && isset($imagemagick_path))
 // Create a resource based on this PDF file or download it?
 if($contact_sheet_resource && enforcePostRequest(getval("ajax", false)))
     {
-    $new_resource = create_resource($contact_sheet_resource_type, 0);
+    $new_resource = create_resource($contact_sheet_resource_type, 0,-1,$lang["createdfromcontactsheet"]);
 
     update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy));
     update_field($new_resource, $filename_field, "{$new_resource}.pdf");

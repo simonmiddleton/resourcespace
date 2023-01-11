@@ -969,23 +969,24 @@ function render_sort_order(array $order_fields,$default_sort_order)
     <script>
     function UpdateResultOrder(toggle_order)
         {
-        var selected_option      = jQuery('#sort_order_selection :selected');
-        var option_url           = selected_option.data('url');
-        
+        var selected_option = jQuery('#sort_order_selection :selected');
+        var option_url      = selected_option.data('url');
+        var sort_by         = jQuery('#sort_order_selection').find(":selected").val();
+
         if (toggle_order)
             {
             var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
             }
         else
             {
-            if(selected_option='resourcetype')
+            if(sort_by == 'resourcetype' || sort_by == 'collection')
                 {
                 // The default sort should be ascending when sorting by resource type
-                var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
+                var selected_sort_option = 'ASC';
                 }
             else
                 {
-                var selected_sort_option='<?php echo ($sort=='ASC'?'ASC':'DESC'); ?>';
+                var selected_sort_option = 'DESC';
                 }
             }
         option_url += '&sort=' + selected_sort_option;
@@ -1370,30 +1371,25 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             <?php
             if(!$top_actions)
                 {
-                if($allow_resource_deletion)
-                    {
-                    ?>
-                    case 'delete_all_in_collection':
-                        if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
-                            {
-                            var post_data = {
-                                submitted: true,
-                                ref: '<?php echo $collection_data["ref"]; ?>',
-                                name: <?php echo json_encode($collection_data["name"]); ?>,
-                                public: '<?php echo ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0); ?>',
-                                deleteall: 'on',
-                                <?php echo generateAjaxToken("delete_all_in_collection"); ?>
-                            };
+                ?>
+                case 'delete_all_in_collection':
+                    if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
+                        {
+                        var post_data = {
+                            submitted: true,
+                            ref: '<?php echo $collection_data["ref"]; ?>',
+                            name: <?php echo json_encode($collection_data["name"]); ?>,
+                            public: '<?php echo ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0); ?>',
+                            deleteall: 'on',
+                            <?php echo generateAjaxToken("delete_all_in_collection"); ?>
+                        };
 
-                            jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
-                                {
-                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
-                                });
-                            }
-                        break;
-                    <?php
-                    }
-                    ?>
+                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
+                            {
+                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
+                            });
+                        }
+                    break;
 
 					case 'hide_collection':
 						var action = 'hidecollection';
@@ -1450,14 +1446,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 				
                 // Go back to no action option
                 jQuery('#<?php echo $action_selection_id; ?> option[value=""]').prop('selected', true);
-                <?php
-                if($chosen_dropdowns)
-                	{
-                	?>
-                	jQuery('#<?php echo $action_selection_id; ?>').trigger('chosen:updated');
-                	<?php
-                	}
-                ?>
+                
 
         }
         </script>
@@ -2228,7 +2217,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
     {
     $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
-    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
+    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $edit_autosave,$forsearchbar, $maxyear_extends_current;
     if($forsearch)
         {
         // Get the start/end date from the string
@@ -2306,7 +2295,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_start_day"
-             <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+             <?php
             if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
             else if (!$forsearch  && $edit_autosave)
@@ -2323,7 +2312,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
             <select name="<?php echo $name?>_start_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
+                <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2344,7 +2333,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             ?>		
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
             <select name="<?php echo $name?>_start_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
+                <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2360,7 +2349,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_start_day"
-              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+              <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2381,7 +2370,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
             <select name="<?php echo htmlspecialchars($name) ?>_start_year"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php } 
+                <?php 
                 if ($forsearch && $autoupdate) 
                         { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2402,7 +2391,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
             <input size="5" name="<?php echo htmlspecialchars($name) ?>_start_year" id="<?php echo htmlspecialchars($name) ?>_start_year" type="text" value="<?php echo $found_start_year ?>"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
+                <?php 
                 if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 if($forsearch && !$forsearchbar)
@@ -2428,7 +2417,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_end_day"
-              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+              <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2444,7 +2433,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
             <select name="<?php echo $name?>_end_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
+                <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2464,12 +2453,11 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
-            <select name="<?php echo $name?>_end_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
-                if ($forsearch && $autoupdate) 
-                    { ?>onChange="UpdateResultCount();"<?php }
-                else if (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+            <select name="<?php echo $name?>_end_month" <?php 
+                if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } 
+                else
+                    {?>onChange="UpdateResultCount();"<?php } ?>
                     >					
                 <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
                 <?php
@@ -2481,7 +2469,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_end_day"
-              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+              <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2502,7 +2490,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
             <select name="<?php echo $name?>_end_year" 
-            <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
+            <?php 
             if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
                 else if (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
@@ -2523,7 +2511,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 {?>
                 <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
                 <input size="5" name="<?php echo htmlspecialchars($name) ?>_end_year" id="<?php echo htmlspecialchars($name) ?>_end_year" type="text" value="<?php echo $found_end_year ?>"
-                    <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
+                    <?php 
                     
                     if ($forsearch && $autoupdate)
                         { ?>onChange="UpdateResultCount();"<?php }
@@ -2960,7 +2948,7 @@ function render_share_options($shareopts=array())
                 { ?>
                 <option value=""><?php echo $lang["never"]?></option><?php 
                 } 
-            for ($n=1;$n<=$resource_share_expire_days;$n++)
+            for ($n=0;$n<=$resource_share_expire_days;$n++)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
@@ -4685,6 +4673,12 @@ function render_featured_collections(array $ctx, array $items)
                 ),
                 "text" => $lang['add_to_dash']);
             }
+        if($is_featured_collection && allow_featured_collection_share($fc))
+            {
+            $render_ctx["tools"][] = array(
+                "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "text" => $lang["share"]);
+            }
         if($is_featured_collection && collection_readable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_select;
@@ -4765,7 +4759,7 @@ function render_featured_collections(array $ctx, array $items)
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
             }
-
+            
         // Don't show the tools for external shares
         if((trim($k) != ""))
             {
@@ -5119,8 +5113,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
     $resource_download_allowed  = resource_download_allowed($ref,'',$resource["resource_type"]);
     $size_info                  = array('id' => '', 'extension' => 'mp3');
 
-    if (
-        $resource['file_extension']=="wav" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
+    if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
         echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . $lang['mp3_preview_file'] . "</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 

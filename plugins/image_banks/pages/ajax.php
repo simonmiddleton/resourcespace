@@ -39,7 +39,12 @@ if($original_file_url != "")
     $new_resource_ref = copy_resource(0 - $userref, $resource_type_from_extension);
     if($new_resource_ref === false)
         {
-        $new_resource_ref = create_resource($resource_type_from_extension, 999, $userref);
+        $new_resource_ref = create_resource(
+            $resource_type_from_extension,
+            999,
+            $userref,
+            $lang["image_banks_createdfromimagebanks"]
+        );
         }
 
     if(!$new_resource_ref)

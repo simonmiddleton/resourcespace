@@ -366,7 +366,8 @@ for ($n=0;$n<count($files);$n++){
 		}
 
 	// Create resource
-	$r=create_resource($resource_type,$checkmail_archive_state,$fromuser_ref);  echo "Creating Resource $r \r\n";
+    $r=create_resource($resource_type,$checkmail_archive_state,$fromuser_ref,$lang["checkmail_createdfromcheckmail"]);
+    echo "Creating Resource $r \r\n";
 	ps_query("update resource set access = ?, file_extension = ?, preview_extension = 'jpg', file_modified = now() where ref = ?", array("i",$access,"s",$file['extension'],"i",$r));
 
 	// Update metadata fields  // HTML OPTIONS

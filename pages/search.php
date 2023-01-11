@@ -231,7 +231,10 @@ if($collectionsearch)
     $search_trimmed = substr($search,11); // The collection search must always be the first part of the search string
     $search_elements = split_keywords($search_trimmed, false, false, false, false, true);
     $collection = (int)array_shift($search_elements);
-    $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+    if(count($search_elements) > 0)
+        {
+        $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+        }
     }
 
 hook("searchstringprocessing");
@@ -1467,22 +1470,17 @@ if (!hook("replacesearchheader")) # Always show search header now.
             // Get resource data for resources returned by the current search.
             $geo = $result[$n]['ref'];
             $geomark = get_resource_data($geo, true);
-            $geomark['preview_path'] = get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
-            // Get custom metadata field value.
-            if (isset($marker_metadata_field))
-                {
-                $geomark2 = get_data_by_field($geo,$marker_metadata_field);
-                }
-            else
-                {
-                $geomark2 = '';
-                }
+            $geomark2 = isset($marker_metadata_field) ? get_data_by_field($geo, $marker_metadata_field) : '';
+
             // Check for resources without geolocation or invalid coordinates and skip those.
             if (is_numeric($geomark['geo_lat']) && is_numeric($geomark['geo_long']) && $geomark['geo_lat'] >= -90 && $geomark['geo_lat'] <= 90 && $geomark['geo_long'] >= -180 && $geomark['geo_long'] <= 180)
                 {
                 // Create array of geolocation parameters.
                 $geomarker[] = "[" . $geomark['geo_long'] . ", " . $geomark['geo_lat'] . ", " . $geomark['ref'] . ", " . $geomark['resource_type'] . "," . (trim($geomark2) != "" ? floatval($geomark2) : "") . "]";
-                $preview_paths[] = $geomark['preview_path'];
+                $preview_paths[] = $result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'thm')
+                    ? get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified'])
+                    : $baseurl_short . 'gfx/' . get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false);
+
                 }
             }
         }
@@ -1509,9 +1507,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
         }
         
     $rtypes=array();
-    if (!isset($types)){$types=get_resource_types();}
+    if (!isset($types)){$types=get_all_resource_types();}
     $types_count = count($types);
-    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
+    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=lang_or_i18n_get_translated($types[$n]["name"], "resourcetype-");}
     if (is_array($result) && count($result)>0)
         {
         /**

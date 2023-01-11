@@ -69,7 +69,7 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
     if ($video_splice_type == "video_splice_save_new")
         {
         // Create new blank resource with the type specified in the config
-        $ref = create_resource($videosplice_resourcetype, 0);
+        $ref = create_resource($videosplice_resourcetype, 0,-1,$lang["video_splice_createdfromvideosplice"]);
         $resource_location = get_resource_path(
             $ref,
             true,

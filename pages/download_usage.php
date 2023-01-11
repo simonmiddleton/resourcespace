@@ -74,7 +74,16 @@ if (getval("save",'') != '' && enforcePostRequest(false))
                                 "&email=" . urlencode($email);
         
         hook('before_usage_redirect');
-        if(strpos($url, 'download.php') != false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
+        $url_parts = [];
+        if(strpos($url, '?') != false)
+            {
+            parse_str(explode('?',$url)[1],$url_parts);
+            }
+        if(strpos($url, 'download.php') != false && count($url_parts) > 0 && $url_parts['noattatch'] = true)
+            {
+            $redirect_url = $url;
+            }
+        elseif(strpos($url, 'download.php') != false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
             {
             $download_url_suffix .='&url=' . urlencode($url);
             }
@@ -104,7 +113,7 @@ if(isset($download_usage_prevent_options))
 
 <div class="BasicsBox">
 
-    <form method="post" action="<?php echo $baseurl_short?>pages/download_usage.php<?php echo $download_url_suffix ?>" onSubmit="return CentralSpacePost(this,true);">
+    <form method="post" action="<?php echo $baseurl_short?>pages/download_usage.php<?php echo $download_url_suffix ?>">
         <?php
         generateFormToken("download_usage");
 

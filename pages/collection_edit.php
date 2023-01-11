@@ -269,14 +269,11 @@ if(isset($error))
 				<label for="users"><?php echo $lang["attachedusers"]?></label>
 				<?php $userstring=htmlspecialchars($collection["users"]);
 				
-				if($attach_user_smart_groups)
-					{
-					if($userstring!='')
-						{
-						$userstring.=",";
-						}
-					$userstring.=htmlspecialchars($collection["groups"]);
-					}
+                if($userstring!='')
+                    {
+                    $userstring.=",";
+                    }
+                $userstring.=htmlspecialchars($collection["groups"]);
 					
 				include "../include/user_select.php"; ?>
 				<div class="clearerleft"> </div>

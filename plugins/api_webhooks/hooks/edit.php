@@ -16,7 +16,7 @@ function HookApi_webhooksEditExtra_edit_buttons()
         <input  name="save"
         class="editsave APIWebhooksEditButton"
         type="submit"
-        value="&nbsp;&nbsp;&#8634;&nbsp;<?php echo i18n_get_translated($url["buttontext"]); ?>&nbsp;&nbsp;"
+        value="&nbsp;&nbsp;&#8634;&nbsp;<?php echo escape_quoted_data(i18n_get_translated($url["buttontext"])); ?>&nbsp;&nbsp;"
         onclick="document.getElementById('api_webhooks_submitted_button').value=<?php echo $counter ?>;"
         />
         <?php
@@ -53,7 +53,7 @@ function HookApi_webhooksEditRedirectaftersave()
     if (strpos($http_response_header[0],"200 OK")===false)
         {
         ?>
-        <script>alert('Error - POST to <?php echo $url ?> returned <?php echo $http_response_header[0] ?>');</script>
+        <script>alert('Error - POST to <?php echo escape_quoted_data($url) ?> returned <?php echo escape_quoted_data($http_response_header[0]) ?>');</script>
         <?php
         }
 

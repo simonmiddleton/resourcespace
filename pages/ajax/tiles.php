@@ -11,29 +11,30 @@ $variant    = safe_file_name($variant);
 # http://wiki.openstreetmap.org/wiki/ProxySimplePHP
 # The main benefit is for SSL sites which don't want to be making HTTP calls which result in content warnings
 
-if(isset($geo_tile_cache_directory))
+if(isset($geo_tile_cache_directory) && $geo_tile_cache_directory != "")
     {
     $tilecache = $geo_tile_cache_directory;    
     }
 else
     {
     $tilecache = get_temp_dir()."/tiles";
-    if($provider != "")
+    }
+
+if($provider != "")
+    {
+    $tilecache .= "/" . $provider;
+    }
+if($variant != "")
+    {
+    $tilecache .= "/" . $variant;
+    }
+if(!is_dir($tilecache))
+    {
+    if(file_exists($tilecache))
         {
-        $tilecache .= "/" . $provider;
+        unlink($tilecache);
         }
-    if($variant != "")
-        {
-        $tilecache .= "/" . $variant;
-        }
-    if(!is_dir($tilecache))
-        {
-        if(file_exists($tilecache))
-            {
-            unlink($tilecache);
-            }
-        mkdir($tilecache,0777,true);
-        }
+    mkdir($tilecache,0777,true);
     }
 
 $ttl = 86400; //cache timeout in seconds

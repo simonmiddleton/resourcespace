@@ -40,6 +40,7 @@ foreach($allfields as $field)
         {
         continue;
         }
+
     if(PHP_SAPI == 'cli')
         {
         echo "Indexing nodes for field# " . $field["ref"] . " (" . $field["title"] . ")\n";
@@ -61,9 +62,13 @@ foreach($allfields as $field)
         db_begin_transaction("reindex_field_nodes");
         for($n=$start;$n<($start + $batchsize) && $indexed < $count;$n++)
             {
-            // Populate node_keyword table
+            // Remove any existing keywords for this field first
             remove_all_node_keyword_mappings($nodes[$n]['ref']);
-            add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
+            if($field["keywords_index"] == 1)
+                {
+                // Populate node_keyword table only if indexing enabled
+                add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
+                }
             $indexed ++;
             }
         db_end_transaction("reindex_field_nodes");

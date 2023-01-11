@@ -231,7 +231,7 @@ function mplus_resource_get_association_data(array $filters)
             case 'byref':
                 $refs = array_filter($filter_args, 'is_int_loose');
                 $additional_filters[] = 'AND r.ref IN ('. ps_param_insert(count($refs)) .')';
-                $additional_params = ps_param_fill($refs, 'i');
+                $additional_params = array_merge($additional_params, ps_param_fill($refs, 'i'));
                 break;
             }
         }
@@ -256,7 +256,7 @@ function mplus_resource_get_association_data(array $filters)
             }
 
         return ps_array('SELECT r.ref `value` FROM resource r WHERE r.archive = 0 
-                          AND r.resource_type IN('. ps_param_insert(count($applicable_resource_types)) .')' . $additional_filters,
+                          AND r.resource_type IN ('. ps_param_insert(count($applicable_resource_types)) .') ' . implode(PHP_EOL, $additional_filters),
                           array_merge(ps_param_fill($applicable_resource_types, 'i'), $additional_params)
                         );
         }

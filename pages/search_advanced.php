@@ -96,6 +96,8 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                         inputs[i].value = content;
                         }
                     }
+                console.debug("Finished updating result count");
+                var updatingcount = false;
                 }
 		
 		<?php if ($count==0) { ?>
@@ -386,19 +388,23 @@ jQuery(document).ready(function()
 
 <script type="text/javascript">
 var categoryTreeChecksArray = [];
-var updating=false;
+var updatingcount=false;
 function UpdateResultCount()
-	{
-	updating=false;
-	// set the target of the form to be the result count iframe and submit
-	document.getElementById("advancedform").target="resultcount";
-	document.getElementById("countonly").value="yes";
-	
-	
-	jQuery("#advancedform").submit();
-	document.getElementById("advancedform").target="";
-	document.getElementById("countonly").value="";
-	}
+    {
+    if(updatingcount)
+        {
+        console.debug("Blocked from updating result count - search in progress");
+        return false;
+        }
+    var updatingcount=true;
+    console.debug("Updating result count");
+    // set the target of the form to be the result count iframe and submit
+    document.getElementById("advancedform").target="resultcount";
+    document.getElementById("countonly").value="yes";	
+    jQuery("#advancedform").submit();
+    document.getElementById("advancedform").target="";
+    document.getElementById("countonly").value="";
+    }
 	
 jQuery(document).ready(function(){
 	    jQuery('#advancedform').submit(function() {

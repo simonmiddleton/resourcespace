@@ -178,6 +178,10 @@ if (!hook("replaceslideshow"))
 	if ($small_slideshow && !$slideshow_big) 
 		{ ?>
 		<div id="SlideshowContainer">
+        <?php
+        if($homeimages > 0)
+            {
+            ?>
 			<div class="HomePicturePanel"
 			<?php if(!hook("replaceeditslideshowwidth"))
 				{
@@ -227,6 +231,7 @@ if (!hook("replaceslideshow"))
 			?>
 			</div>
 			<?php
+            }
 			global $welcome_text_picturepanel,$home_dash,$slideshow_big;
 			if ($welcome_text_picturepanel || ($home_dash && !$slideshow_big))
 				{

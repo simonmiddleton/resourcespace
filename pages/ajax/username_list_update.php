@@ -10,12 +10,11 @@ $userstring=resolve_userlist_groups($userstring);
 $userstring=array_unique(trim_array(explode(",",$userstring)));
 sort($userstring);
 $userstring=implode(", ",$userstring);
-if($attach_user_smart_groups)
+
+$groups=resolve_userlist_groups_smart($userstring);
+if($groups!="")
 	{
-	$groups=resolve_userlist_groups_smart($userstring);
-	if($groups!="")
-		{
-		$userstring.=",".$groups;
-		}
+	$userstring.=",".$groups;
 	}
+
 echo $userstring;

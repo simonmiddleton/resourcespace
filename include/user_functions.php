@@ -96,6 +96,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 
         if('' != $validuser)
             {
+            debug("[validate_user()] User #{$validuser} is valid!");
             return true;
             }
         }
@@ -320,7 +321,7 @@ function setup_user(array $userdata)
  */
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="",$exact_username_match=false)
     {
-    global $usergroup, $U_perm_strict;
+    global $usergroup;
 
     $order_by_parts = explode(" ",($order_by ?? ""));
     $order_by       = $order_by_parts[0] ?? "u.username";
@@ -367,7 +368,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     
     $approver_groups = get_approver_usergroups($usergroup);
 
-    if ($usepermissions && (checkperm('E') || ((checkperm('U') || count($approver_groups) > 0) && $U_perm_strict)))
+    if ($usepermissions && checkperm('E'))
         {
         # Only return users in children groups to the user's group
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
@@ -399,7 +400,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         }
 
     // Return users in both user's user group and children groups
-    if ($usepermissions && (checkperm('U') || count($approver_groups) > 0) && !$U_perm_strict)
+    if ($usepermissions && (checkperm('U') || count($approver_groups) > 0))
         {
         if (count($approver_groups) > 0)
             {
@@ -538,33 +539,17 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
     if ($usepermissions && (checkperm("U") || count($approver_groups) > 0))
         {
         # Only return users in children groups to the user's group
-        global $U_perm_strict;
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        if ($U_perm_strict)
+
+        if (count($approver_groups) > 0)
             {
-            if (count($approver_groups) > 0)
-                {
-                $sql.= "(find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
-                $sql_params = array_merge(array("i", $usergroup), ps_param_fill($approver_groups, "i"));
-                }
-            else
-                {
-                $sql.= "find_in_set(?, parent)";
-                $sql_params = array("i", $usergroup);
-                }
+            $sql.= "(ref = ? or find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
+            $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups, "i"));
             }
         else
             {
-            if (count($approver_groups) > 0)
-                {
-                $sql.= "(ref = ? or find_in_set(?, parent) or ref in (" . ps_param_insert(count($approver_groups)) . "))";
-                $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups, "i"));
-                }
-            else
-                {
-                $sql.= "(ref = ? or find_in_set(?, parent))";
-                $sql_params = array("i", $usergroup, "i", $usergroup);
-                }
+            $sql.= "(ref = ? or find_in_set(?, parent))";
+            $sql_params = array("i", $usergroup, "i", $usergroup);
             }
         }
 
@@ -806,6 +791,11 @@ function save_user($ref)
             ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
             }
 
+        if($email != $current_user_data["email"])
+            {
+            $additional_sql .= ",email_invalid=0 ";
+            }        
+
         log_activity(null, LOG_CODE_EDITED, $ip_restrict, 'user', 'ip_restrict', $ref, null, '');
         log_activity(null, LOG_CODE_EDITED, $search_filter_override, 'user', 'search_filter_override', $ref, null, '');
         log_activity(null, LOG_CODE_EDITED, $expires, 'user', 'account_expires', $ref);
@@ -975,7 +965,7 @@ function email_reset_link($email,$newuser=false)
 function auto_create_user_account($hash="")
     {
     global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
-           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $account_request_send_confirmation_email_to_requester, $applicationname;
+           $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $applicationname;
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -1177,13 +1167,10 @@ function auto_create_user_account($hash="")
         }
 
     // Send a confirmation e-mail to requester
-    if($account_request_send_confirmation_email_to_requester)
-        {
-        send_mail(
-            $email,
-            "{$applicationname}: {$lang['account_request_label']}",
-            $lang['account_request_confirmation_email_to_requester']);
-        }
+    send_mail(
+        $email,
+        "{$applicationname}: {$lang['account_request_label']}",
+        $lang['account_request_confirmation_email_to_requester']);
 
     return true;
     }
@@ -1198,8 +1185,7 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify,
-           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in,$user_account_auto_creation;
+    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify, $user_registration_opt_in,$user_account_auto_creation;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getval('name', ''));
@@ -1238,13 +1224,10 @@ function email_user_request()
     send_user_notification($approval_notify_users,$message);
 
     // Send a confirmation e-mail to requester
-    if($account_request_send_confirmation_email_to_requester)
-        {
-        send_mail(
-            $email,
-            "{$applicationname}: {$lang['account_request_label']}",
-            $lang['account_request_confirmation_email_to_requester']);
-        }
+    send_mail(
+        $email,
+        "{$applicationname}: {$lang['account_request_label']}",
+        $lang['account_request_confirmation_email_to_requester']);
 
     return true;
     }
@@ -1306,11 +1289,11 @@ function new_user($newuser, $usergroup = 0)
  */
 function get_active_users()
     {
-    global $usergroup, $U_perm_strict;
+    global $usergroup;
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
     $sql_params = array();
-    if ((checkperm("U") || count($approver_groups) > 0) && $U_perm_strict)
+    if ((checkperm("U") || count($approver_groups) > 0))
         {
         if (count($approver_groups) > 0)
             {
@@ -1325,7 +1308,7 @@ function get_active_users()
         }
 
     // Return users in both user's user group and children groups
-    elseif ((checkperm("U") || count($approver_groups) > 0) && !$U_perm_strict)
+    elseif ((checkperm("U") || count($approver_groups) > 0))
         {
         if (count($approver_groups) > 0)
             {
@@ -1577,9 +1560,12 @@ function resolve_userlist_groups($userlist)
                 }
 
             # Find and add the users.
-            $users = ps_array("SELECT username AS `value` FROM user WHERE usergroup = ?", array("i", $groupref));
-            if ($newlist!="") {$newlist.=",";}
-            $newlist.=join(",",$users);
+            if (isset($groupref))
+                {
+                $users = ps_array("SELECT username AS `value` FROM user WHERE usergroup = ?", array("i", $groupref));
+                if ($newlist!="") {$newlist.=",";}
+                $newlist.=join(",",$users);
+                }
             }
         else
             {
@@ -1653,17 +1639,20 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
                         }
                     }
                 }
-            if($return_usernames)
+            if (isset($groupref))
                 {
-                $users = ps_array("select username value from user where usergroup = ?", array("i", $groupref));
-                if ($newlist!="") {$newlist.=",";}
-                $newlist.=join(",",$users);
-                }
-            else
-                {
-                # Find and add the users.
-                if ($newlist!="") {$newlist.=",";}
-                $newlist.=$groupref;
+                if($return_usernames)
+                    {
+                    $users = ps_array("select username value from user where usergroup = ?", array("i", $groupref));
+                    if ($newlist!="") {$newlist.=",";}
+                    $newlist.=join(",",$users);
+                    }
+                else
+                    {
+                    # Find and add the users.
+                    if ($newlist!="") {$newlist.=",";}
+                    $newlist.=$groupref;
+                    }
                 }
             }
         }
@@ -2725,8 +2714,8 @@ function checkPermission_dashuser()
  */
 function checkPermission_dashmanage()
 	{
-	global $managed_home_dash,$unmanaged_home_dash_admins, $anonymous_default_dash;
-	return (!checkPermission_anonymoususer() || !$anonymous_default_dash) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
+	global $managed_home_dash,$unmanaged_home_dash_admins;
+	return (!checkPermission_anonymoususer()) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
 				|| ($unmanaged_home_dash_admins && checkPermission_dashadmin()));
     }
     
@@ -2787,7 +2776,7 @@ function checkperm_user_edit($user)
 		$user=get_user($user);
 		}
 	$editusergroup=$user['usergroup'];
-    global $U_perm_strict, $usergroup;
+    global $usergroup;
     $approver_groups = get_approver_usergroups($usergroup);
 
 	if ((!checkperm('U') && count($approver_groups) == 0) || $editusergroup == '')    // no user editing restriction, or is not defined so return true
@@ -2803,16 +2792,8 @@ function checkperm_user_edit($user)
         $sql .= "ref in (" . ps_param_insert(count($approver_groups)) . ") or ";
         $sql_params = array_merge($sql_params, ps_param_fill($approver_groups,"i"));
         }
-    if ($U_perm_strict)
-        {
-        $sql .= "FIND_IN_SET(?, parent)";
-        $sql_params = array_merge($sql_params, array("i", $usergroup));
-        }
-    else
-        {
-        $sql .= "`ref` = ? OR FIND_IN_SET(?, parent)";
-        $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
-        }
+    $sql .= "`ref` = ? OR FIND_IN_SET(?, parent)";
+    $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
 
 	$validgroups = ps_array($sql, $sql_params);
 	
@@ -3341,4 +3322,66 @@ function get_usergroup_approvers($usergroup = "")
         }
 
     return $approver_groups;
+    }
+
+/**
+ * Retrieve all user records in groups with/without the specified permissions
+ *
+ * @param  array $permissions      array of permission strings to check
+ * 
+ * @return array Matching user records (only returns a subset of columns)
+ * 
+ * Note that this can't use a straight FIND_IN_SET for permissions since that is case insensitive
+ * 
+ **/
+function get_users_by_permission(array $permissions)
+    {
+    global $usergroup;
+    if(!(checkperm("a") || checkperm("u")))
+        {
+        return [];
+        }
+
+    $groupsql_filter = "";
+    $groupsql_params = [];
+    if (checkperm("U"))
+        {
+        # Only return users in children groups to the user's group
+        $groupsql_filter = "WHERE (g.ref = ? or find_in_set(?, g.parent))";
+        $groupsql_params = array("i", $usergroup, "i", $usergroup);
+        }
+
+    $usergroups = ps_query("SELECT g.ref,
+                                   IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions
+                              FROM usergroup g
+                         LEFT JOIN usergroup AS pg ON g.parent=pg.ref " .
+                                    $groupsql_filter,
+                                    $groupsql_params);
+
+    $validgroups = [];
+    foreach($usergroups as $usergroup)
+        {
+        $groupperms = explode(",",$usergroup["permissions"]);
+        if(count(array_diff($permissions,$groupperms)) == 0)
+            {
+            $validgroups[] = $usergroup["ref"];
+            }
+        }
+    if(count($validgroups)==0)
+        {
+        return [];
+        }
+
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", IF(FIND_IN_SET('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref LEFT JOIN usergroup AS pg ON g.parent=pg.ref WHERE g.ref IN (" . ps_param_insert(count($validgroups)) . ") ORDER BY username", ps_param_fill($validgroups,"i"));
+
+    $return = [];
+    for ($n = 0;$n<count($r);$n++)
+        {
+        # Translates group names in the newly created array.
+        $r[$n]["groupname"] = lang_or_i18n_get_translated($r[$n]["groupname"], "usergroup-");
+       
+        $return[] = array_filter($r[$n],function($k){return in_array($k,["ref","username","fullname","email","groupname","usergroup","approved","comments","simplesaml_custom_attributes","origin","profile_image","profile_text","last_ip","account_expires","created","last_active"]);},ARRAY_FILTER_USE_KEY);
+        }
+
+    return $return;
     }

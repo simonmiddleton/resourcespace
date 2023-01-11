@@ -109,7 +109,7 @@ $lang["property-allow_registration_selection"]="Allow registration selection";
 $lang["property-support_non_correlated_sql"] = "Support search results";
 
 $lang["property-resource_type_id"]="Resource type id";
-$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpg,image/gif";
+$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpeg,image/gif";
 $lang["property-allowed_extensions"]="Allowed file types";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
 $lang["icon_picker_placeholder"]="Type to filter";
@@ -618,6 +618,14 @@ $lang['lock-tooltip']='Lock field to be copied to next resource';
 $lang['resource_type_not_found'] = 'Resource type not found.';
 $lang["view_directly_in_browser"] = "View directly in browser";
 $lang["view_in_browser"] = "View in browser";
+$lang["createdfromapi"] =                   "Created from API";
+$lang["createdfromstaticsync"] =            "Created from StaticSync";
+$lang["createdfromcontactsheet"] =          "Created from Contact Sheet";
+$lang["createdfrommergerssystems"] =        "Created from Merge RS Systems";
+$lang["createdfromwebuploader"] =           "Created from Web Uploader";
+$lang["createdfromwebuploadertemplate"] =   "Created from Web Uploader as template";
+$lang["createdfromsplittingpdf"] =          "Created from splitting PDF";
+$lang["createdfromteamcentre"] =            "Created from Resource menu";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
@@ -2023,6 +2031,8 @@ $lang["total-collections-2"] = "<strong>Total: %number</strong> Collections"; # 
 $lang["owned_by_you-0"] = "(<strong>0</strong> owned by you)";
 $lang["owned_by_you-1"] = "(<strong>1</strong> owned by you)";
 $lang["owned_by_you-2"] = "(<strong>%mynumber</strong> owned by you)"; # %mynumber will be replaced, e.g. (2 owned by you)
+$lang["max-supported-jpeg-dimensions"] = "Maximum supported JPEG dimensions of 65,500x65,500 pixels exceeded.";
+$lang["preview-processing-aborted"] = "Preview processing aborted."; 
 
 $lang["listresources"]= "Resources:";
 $lang["action-log"]="View log";
@@ -2344,10 +2354,11 @@ $lang["admin_resource_type_field_reorder_select_enable_reordering"]="Select 'Sho
 $lang["admin_resource_type_fields"]="Metadata fields";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Do you want to migrate existing data?";
 $lang["admin_resource_type_field_cannot_migrate_data_prompt"] = "Resource data cannot be migrated from a fixed list field to a text field. Do you want to continue?";
-$lang["admin_resource_type_field_migrate_data"]="Migrate existing data to fixed list options";
+$lang["admin_resource_type_field_migrate_data"]="Migrate free text data to fixed list options";
 $lang["admin_resource_type_field_migrate_delete_data"]="Delete redundant data after migration?";
 $lang["admin_resource_type_field_migrate_dry_run"]="Run without changing any data?";
 $lang["admin_resource_type_field_migrate_separator"]="Separator e.g. ,  - ; :";
+$lang["admin_resource_type_field_no_action"]="No action required, node names already set";
 $lang["admin_resource_type_reorder_information_tab_order"]="Reordering is only available when viewing resource types in display order.";
 $lang["admin_resource_type_reorder_mode"]="Show in display order to enable reordering of resource types using drag and drop ";
 $lang["admin_resource_type_tab_info"]="Setting a tab name means that related resources of this type will be displayed in that tab along with the metadata. The resource type will effectively be part of the \$related_type_show_with_data array). This setting requires that tabs are correctly set for all fields.";
@@ -2583,7 +2594,7 @@ $lang["plugin_category_api"]="API";
 $lang["plugin_category_advanced"]="Advanced";
 $lang["plugin_category_design"]="Design";
 $lang["plugin_category_ecommerce"]="Ecommerce";
-$lang["plugin_category_sharing"]="Content Sharing";
+$lang["plugin_integrations"]="Integrations";
 /* * End - Plugin Category Strings * */
 
 /* System Down page strings */
@@ -2971,7 +2982,7 @@ $lang["oj-collection-download-failure-text"] = "Unable to prepare collection arc
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
-$lang["oj-creation-success"]                 = "Offline job created. You will be notified when it has completed";
+$lang["oj-creation-success"]                 = "Offline job %%JOBNUMBER%% created. You will be notified when it has completed";
 /* End of offline jobs */
 
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";

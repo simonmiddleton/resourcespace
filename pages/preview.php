@@ -115,15 +115,14 @@ $ext="jpg";
 if ($ext!="" && $ext!="gif" && $ext!="jpg" && $ext!="png") {$ext="jpg";$border=false;} # Supports types that have been created using ImageMagick
 
 
-# Load access level
+# Check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
 $access=get_resource_access($ref);
-$use_watermark=check_use_watermark();
+if($access == RESOURCE_ACCESS_CONFIDENTIAL) 
+    {
+    exit("This is a confidential resource.");
+    }
 
-# check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
-if ($access==2) 
-		{
-		exit("This is a confidential resource.");
-		}
+$use_watermark=check_use_watermark();
 
 hook('replacepreview');
 
@@ -136,16 +135,14 @@ if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_
 
 # Locate the resource
 $path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
-
-if(file_exists($path) && (resource_download_allowed($ref, 'scr', $resource['resource_type']) || $use_watermark))
+if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path))
     {
     $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
     }
 else
     {
     $path = get_resource_path($ref, true, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
-
-    if(file_exists($path))
+    if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre') && file_exists($path))
         {
         $url = get_resource_path($ref, false, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
         }
@@ -188,7 +185,7 @@ include "../include/header.php";
 <?php } /*end hook replacepreviewbacktoview*/ ?>
 <?php if ($k=="") { ?>
 
-<?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
+<?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3)) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
 <?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php }
@@ -388,7 +385,7 @@ if($annotate_enabled)
                 annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                 nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                 resource            : <?php echo (int) $ref; ?>,
-                read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
+                read_only           : false,
                 // First page of a document is exactly the same as the preview
                 page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>,
                 // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
@@ -471,4 +468,3 @@ if($annotate_enabled)
     }
 
 include "../include/footer.php";
-?>

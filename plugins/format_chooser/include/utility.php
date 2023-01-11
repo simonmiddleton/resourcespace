@@ -138,7 +138,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         }
 	}
 
-function sendFile($filename, string $download_filename)
+function sendFile($filename, string $download_filename, $usage = -1, $usagecomment = "")
 	{
 	$suffix = pathinfo($filename, PATHINFO_EXTENSION);
 	$size = filesize_unlimited($filename);
@@ -157,10 +157,12 @@ function sendFile($filename, string $download_filename)
     $user_download_url = generateURL(
         $baseurl . '/pages/download.php',
         [
-            'userfile' => pathinfo($filename, PATHINFO_BASENAME),
-            'filename' => strip_extension($download_filename, false),
-			'k'        => getval('k', ''),
-			'ref'      => getval('ref', '')
+            'userfile'      => pathinfo($filename, PATHINFO_BASENAME),
+            'filename'      => strip_extension($download_filename, false),
+            'usage'         => $usage,
+            'usagecomment'  => $usagecomment,
+			'k'             => getval('k', ''),
+			'ref'           => getval('ref', '')
         ]
     );
     redirect($user_download_url);

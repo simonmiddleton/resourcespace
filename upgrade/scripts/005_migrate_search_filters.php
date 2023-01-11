@@ -46,7 +46,7 @@ if(!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRAT
     $groups = ps_query($groups_sql);
     foreach($groups as $group)
         {
-        $filtertext = trim($group["search_filter"]);
+        $filtertext = trim((string)$group["search_filter"]);
         if($filtertext == "")
             {
             continue;

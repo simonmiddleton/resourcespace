@@ -61,6 +61,19 @@ function match_values( $arraya , $arrayb )
 	return $arraya == $arrayb; 
 	} 
 
+/**
+ * Generate a random alpha-numeric UID to use during testing. Helpful to prevent errors when running with 
+ * nosetup & noteardown caused by already having an identical record.
+ * 
+ * @param integer $size The length size of the ID
+ * @return string
+ * 
+ */
+function test_generate_random_ID(int $size): string {
+    return bin2hex(random_bytes($size));
+};
+
+
 $mysql_db = "rs_test_db";
 $test_user_name = "admin";
 $test_user_password = "admin123";

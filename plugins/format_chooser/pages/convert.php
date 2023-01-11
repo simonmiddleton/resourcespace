@@ -8,6 +8,8 @@ $ref = getval('ref', 0, true);
 $size = getval('size', '');
 $page = getval('page', 1, true);
 $alternative = getval('alt', -1, true);
+$usage = getval('usage', "-1");
+$usagecomment=getval('usagecomment',"");
 
 $resource = get_resource_data($ref);
 $width = getval('width', 0, true);
@@ -55,6 +57,6 @@ resource_log($ref, LOG_CODE_DOWNLOADED, 0,$lang['format_chooser'], '',  $size);
 
 if(file_exists($target))
     {
-    sendFile($target, get_download_filename($ref, $size, $alternative, $ext));
+    sendFile($target, get_download_filename($ref, $size, $alternative, $ext), $usage, $usagecomment);
     unlink($target);
     }

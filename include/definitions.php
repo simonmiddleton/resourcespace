@@ -292,7 +292,7 @@ $permitted_html_attributes = array('id', 'class', 'style');
 
 // Standard paths (e.g libraries)
 $jquery_path = "/lib/js/jquery-3.6.0.min.js";
-$jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";
+$jquery_ui_path = "/lib/js/jquery-ui-1.13.2.min.js";
 define('LIB_OPENSEADRAGON', '/lib/openseadragon_2.4.2');
 
 // Define dropdown action categories
@@ -814,3 +814,6 @@ const WORKFLOW_DEFAULT_ICONS = [
     '2'     => 'fa-solid fa-box-archive',
     '3'     => 'fa-solid fa-trash',
     ];
+
+// Alternative file extensions that can be natively viewed in the browser
+const VIEW_IN_BROWSER_EXTENSIONS = ['pdf', 'mp3'];

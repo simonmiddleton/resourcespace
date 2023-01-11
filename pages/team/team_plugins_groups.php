@@ -4,7 +4,6 @@
  * 
  * @package ResourceSpace
  * @subpackage Pages_Team
- * @author Dan Huby
  */
 include "../../include/db.php";
 

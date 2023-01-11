@@ -757,7 +757,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // If noupload is set - create resource without uploading stage
                         if (getval("noupload","") != "")
                             {
-                            $ref=copy_resource(0-$userref,$resource_type);
+                            $ref=copy_resource(0-$userref,$resource_type,$lang["createdfromteamcentre"]);
                             $urlparams["ref"] = $ref;
                             $hidden_collection = false;
                             // Create new collection if necessary
@@ -984,13 +984,6 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    # Reload resource data.
    $resource=get_resource_data($ref,false);
    }
-
-# Simulate reupload (preserving filename and thumbs, but otherwise resetting metadata).
-if (getval("exif","")!="")
-    {
-    upload_file($ref,$no_exif=false,true);
-    resource_log($ref,"r","");
-    }   
 
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
@@ -1392,7 +1385,7 @@ hook("editbefresmetadata"); ?>
                 {
                 if(trim((string) $types[$n]['allowed_extensions']) != "")
                     {
-                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions'])); // As MIME types
                     }
                 else
                     {
@@ -1409,7 +1402,7 @@ hook("editbefresmetadata"); ?>
                         (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 
-                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                            && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
@@ -2385,16 +2378,17 @@ if ($ref>0 && !$multiple)
             <div class="Question QuestionStickyRight" id="question_file">
             <div class="FloatingPreviewContainer">
             <?php
-            if ($resource["has_image"]==1)
+            $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
+            if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
                 <?php // check for watermarked version and show it if it exists
                 if (checkperm("w"))
                     {
-                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
+                    $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                     if (file_exists($wmpath))
                         { ?>
-                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
                         <?php 
                         }
                     } ?>
@@ -2432,12 +2426,6 @@ if ($ref>0 && !$multiple)
                 <?php 
                 }
 
-            if ($allow_metadata_revert && !checkperm('F*'))
-                {?>
-                <br />
-                <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
-                <?php
-                }
             hook("afterfileoptions"); ?>
             </div>
             <div class="clearerleft"> </div>

@@ -138,7 +138,7 @@ if(
     }
 
 
-// Override group confinment
+// Override group confinement
 $public_collections_confine_group = false;
 unset($CACHE_FC_ACCESS_CONTROL, $CACHE_FC_PERMS_FILTER_SQL);
 $spc_result_no_confinment = search_public_collections('', $order_by, $sort, false);
@@ -178,7 +178,6 @@ if(!in_array($public_col, array_column($spc_result, 'ref')))
     return false;
     }
 
-
 // Search for public collections using the "collectiontitle:" special search and wildcards
 unset($CACHE_FC_ACCESS_CONTROL, $CACHE_FC_PERMS_FILTER_SQL);
 $spc_result = search_public_collections('collectiontitle:*ser * collection*', $order_by, $sort, true, $include_resources, false);
@@ -190,7 +189,25 @@ if([$public_col, $public_col_genuser] !== $found_col_refs)
     return false;
     }
 
+// Search for public collections specifying date
+// Set creation date of $fc_b
+$public_collections_confine_group = false;
+save_collection($fc_b,["created"=>"2021-09-01","name"=>"September 2021 Award Ceremony"]);
+unset($CACHE_FC_ACCESS_CONTROL, $CACHE_FC_PERMS_FILTER_SQL);
+$spc_result = search_public_collections('collectiontitle:award basicyear:2021', "name", "ASC", false);
+$found_col_refs = array_column($spc_result, 'ref');
 
+if(
+    in_array($fc_a,$found_col_refs)
+    || 
+    in_array($public_col, $found_col_refs)
+    ||
+    !in_array($fc_b, $found_col_refs)
+    )
+    {
+    echo 'Simple public collections text search with date - ';
+    return false;
+    }
 
 // Tear down
 $public_collections_confine_group = $original_public_collections_confine_group;

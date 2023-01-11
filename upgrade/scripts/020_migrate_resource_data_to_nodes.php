@@ -2,6 +2,14 @@
 
 // Script to migrate all non-fixed list data to nodes
 
+
+$tables = ps_query("SHOW TABLES");
+ if(!in_array("resource_data",array_column($tables,"Tables_in_" . $mysql_db)))
+    {
+    // Migration only required if resource_data table exists
+    return true;
+    }
+    
 // Ensure node name column is moved to mediumtext
 check_db_structs();
 
@@ -37,13 +45,12 @@ foreach($resource_type_fields as $resource_type_field)
     $processed = 0;
     while($resourcestart <= $maxref)
     {
-   // Test performance improvement
     $rows = ps_query("SELECT rd.resource, rd.value
                         FROM resource_data rd 
                         JOIN (SELECT resource, resource_type_field FROM resource_data WHERE resource_type_field = ?) rd2
-                          ON rd2.resource=rd.resource AND rd.resource_type_field=rd2.resource_type_field
-                       WHERE rd.resource >= ? AND rd.resource < ?",
-                       [
+                        ON rd2.resource=rd.resource AND rd.resource_type_field=rd2.resource_type_field
+                    WHERE rd.resource >= ? AND rd.resource < ?",
+                    [
                         "i",$fref,
                         "i",$resourcestart,
                         "i",($resourcestart+$chunksize),
@@ -182,4 +189,3 @@ if($annotate_enabled)
         }
     logScript("Completed " . $count . " annotations");
     }
-echo "Finished<br/>";
