@@ -5526,8 +5526,6 @@ function check_use_watermark($download_key = "", $resource="")
 * - when creating a resource, autocomplete_blank_fields() should always be triggered regardless if user has data in its user template.
 * - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data
 * for that field as at this point you probably have the expected data for your field.
-*
-* @param  boolean   $macro_context    Indicates the context in which the macro is being run.
 * @param  integer   $field_ref        Optional parameter to specify which metadata field should be processed. Left blank, all fields will be processed (default behaviour).
 *
 * @return boolean|array Success/fail or array of changes made
@@ -7353,7 +7351,15 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
                 if ($file_exists && filesize_unlimited($path) > 0)
                     {
                     $filesize = filesize_unlimited($path);
-                    list($sw,$sh) = getimagesize($path);
+                    try
+                        {
+                        list($sw,$sh) = getimagesize($path);
+                        }    
+                    catch (Exception $e)
+                        {
+                        $sw=0;
+                        $sh=0;
+                        }
                     }
                 else
                     {

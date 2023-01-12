@@ -321,7 +321,7 @@ function setup_user(array $userdata)
  */
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="",$exact_username_match=false)
     {
-    global $usergroup;
+    global $usergroup, $usergroupparent;
 
     $order_by_parts = explode(" ",($order_by ?? ""));
     $order_by       = $order_by_parts[0] ?? "u.username";
@@ -370,17 +370,20 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
     if ($usepermissions && checkperm('E'))
         {
-        # Only return users in children groups to the user's group
+        # Return users in child, parent and own groups
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+
+        $parent_own_sql = " g.ref = ? or g.ref = ? or ";
+        $sql_params  = array_merge($sql_params, ['i', $usergroup, 'i', $usergroupparent]);
 
         if (count($approver_groups) > 0)
             {
-            $sql.= "(find_in_set(?, g.parent) or g.ref in (" . ps_param_insert(count($approver_groups)) . "))";
+            $sql.= "(".$parent_own_sql."find_in_set(?, g.parent) or g.ref in (" . ps_param_insert(count($approver_groups)) . "))";
             $sql_params = array_merge($sql_params, array("i", $usergroup), ps_param_fill($approver_groups, "i"));
             }
         else
             {
-            $sql.= "find_in_set(?, g.parent) ";
+            $sql.= "(".$parent_own_sql."find_in_set(?, g.parent))";
             $sql_params = array_merge($sql_params, array("i", $usergroup));
             }
 
@@ -2033,7 +2036,7 @@ function check_access_key_collection($collection, $key)
         }
 
     $sql = "UPDATE external_access_keys SET lastused = NOW() WHERE collection = ? AND access_key = ?";
-
+    
     if(in_array($collection["ref"],array_column($keyinfo,"collection")) && (bool)$keyinfo[0]["upload"] === true)
         {
         // External upload link -set session to use for creating temporary collection
@@ -2050,7 +2053,7 @@ function check_access_key_collection($collection, $key)
         {
         $resources_alt = hook("GetResourcesToCheck","",array($collection));
         $resources = (is_array($resources_alt) && !empty($resources_alt) ? $resources_alt : get_collection_resources($collection_ref));
-
+        
         if(!check_access_key($resources, $key))
             {
             return false;
