@@ -890,7 +890,7 @@ function send_user_message($users,$text)
  *                              "message"   => message text
  *                              "url"       => url
  */
-function send_user_notification($users=[],$notifymessage, $forcemail=false)
+function send_user_notification(array $users, $notifymessage, $forcemail=false)
     {
     global $userref, $lang, $plugins, $header_colour_style_override;
 
