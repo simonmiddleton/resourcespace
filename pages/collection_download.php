@@ -601,7 +601,7 @@ function ajax_download(download_offline, tar)
         }
     else
         {
-        progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode($uniqid) ?>&user=<?php echo urlencode($userref) ?>", {
+        progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode((string)$uniqid) ?>&user=<?php echo urlencode((string)$userref) ?>", {
                 method: 'post',          // method; get or post
                 data: '',               //  e.g. {name: "John", greeting: "hello"}
                 minTimeout: 500,       // starting value for the timeout in milliseconds
