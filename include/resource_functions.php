@@ -7342,7 +7342,15 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
                 if ($file_exists && filesize_unlimited($path) > 0)
                     {
                     $filesize = filesize_unlimited($path);
-                    list($sw,$sh) = getimagesize($path);
+                    try
+                        {
+                        list($sw,$sh) = getimagesize($path);
+                        }    
+                    catch (Exception $e)
+                        {
+                        $sw=0;
+                        $sh=0;
+                        }
                     }
                 else
                     {
