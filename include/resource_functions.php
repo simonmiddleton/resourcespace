@@ -5532,7 +5532,7 @@ function check_use_watermark($download_key = "", $resource="")
 *
 * @return boolean|array Success/fail or array of changes made
 */
-function autocomplete_blank_fields($resource, $force_run, $return_changes = false, $macro_context = MACRO_CONTEXT_UNSPECIFIED, int $field_ref = 0)
+function autocomplete_blank_fields($resource, $force_run, $return_changes = false, int $field_ref = 0)
     {
     global $FIXED_LIST_FIELD_TYPES, $lang;
 

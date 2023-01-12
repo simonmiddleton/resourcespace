@@ -56,8 +56,8 @@ $autocomplete_macro2_value = 'test';
 ps_query('UPDATE resource_type_field SET autocomplete_macro = ? WHERE ref = ?', array('s', $autocomplete_macro2, 'i', $autocomplete_field2));
 resign_all_code(false, false);
 
-autocomplete_blank_fields($resource1, true, false, MACRO_CONTEXT_UNSPECIFIED, $autocomplete_field1);
-autocomplete_blank_fields($resource2, true, false, MACRO_CONTEXT_UNSPECIFIED, $autocomplete_field1);
+autocomplete_blank_fields($resource1, true, false, $autocomplete_field1);
+autocomplete_blank_fields($resource2, true, false, $autocomplete_field1);
 
 $resource1_field_value_field1 = get_data_by_field($resource1, $autocomplete_field1);
 $resource2_field_value_field1 = get_data_by_field($resource2, $autocomplete_field1);

@@ -108,7 +108,7 @@ else
 
 foreach ($resources as $resource)
     {
-    $fields_updated = autocomplete_blank_fields((int) $resource, $force_update, true, MACRO_CONTEXT_BULK_RUN, $field);
+    $fields_updated = autocomplete_blank_fields((int) $resource, $force_update, true, $field);
 
     foreach ($fields_updated as $key => $val)
         {
