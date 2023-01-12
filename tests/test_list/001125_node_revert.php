@@ -22,8 +22,6 @@ $resourcea=create_resource(1,0);
 // Add nodes to resource
 add_resource_nodes($resourcea,array($child_node_id_11, $parent_node_id_1),false,true);
 
-$debug_log=true;
-
 // Test update
 update_field($resourcea,$revert_field,"Vegetable/Courgette");
 
@@ -35,7 +33,7 @@ $_POST['nodes'][$revert_field][] = $parent_node_id_1;
 $_POST['submit'] = "true";
 save_resource_data($resourcea,false,$revert_field);
 
-// Check log
+// Subtest A  - Check log
 $log = get_resource_log($resourcea,1,["r.type"=>"e"]);
 $lastlog = $log["data"][0];
 if($lastlog["diff"] != "- ~en:Vegetable~fr:Légume
@@ -43,23 +41,32 @@ if($lastlog["diff"] != "- ~en:Vegetable~fr:Légume
 + ~en:Fruit~fr:Frut
 + ~en:Fruit~fr:Frut/~en:Orange~fr:Orange")
     {
+    echo "SUBTEST A";
     return false;
     }
 
-// Simulate revert to date/time functionality 
-// TODO need to fake date in the past
-$revert_time = date("Y:m:d H:i:sP", time());
+// Subtest B - Simulate revert to date/time functionality 
+$revert_time = date("Y:m:d H:i:s", time());
+sleep(2);
+// Update value
 update_field($resourcea,$revert_field,"~en:Apple~fr:Pomme");
+
+// Perform revert
 $colrevert = create_collection($userref,"Test 00125 revert");
 add_resource_to_collection($resourcea,$colrevert);
+$postvals = [];
 $postvals['editthis_field_' . $revert_field] = "true";
 $postvals["revert_" . $revert_field] = $revert_time;
+$postvals["modeselect_" . $revert_field] = "Revert";
 $save_errors=save_resource_data_multi($colrevert,[],$postvals);
 
-// Check value is correct
 $revertedval = get_data_by_field($resourcea,$revert_field);
+if($revertedval != "Fruit/Orange")
+    {
+    echo "SUBTEST B";
+    return false;
+    }
 
-echo " --" . $revertedval . "--";
 
 // Check log is accurate
 

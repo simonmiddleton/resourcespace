@@ -66,3 +66,25 @@ function HookRse_VersionAllGet_alternative_files_extra_sql($resource)
     $extra_query->parameters=array("i",$resource);
     return $extra_query;
     }
+
+    
+function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$existing,$postvals)
+    {
+    # Process the batch revert action - hooks in to the save operation (save_resource_data_multi())
+
+    # Remove text/option(s) mode?
+    if (($postvals["modeselect_" . $field["ref"]] ?? "") == "Revert")
+        {
+        $revert_date = $postvals["revert_" . $field["ref"]] ?? "";
+        
+        # Find the value of this field as of this date and time in the resource log.
+        $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);
+        $value=ps_value("SELECT previous_value value from resource_log 
+            where resource=? and resource_type_field=? 
+            and (type='e' or type='m') and date>? and previous_value is not null order by date limit 1",$parameters,-1);
+        if ($value!=-1) {return $value;}
+        // No log entries for this field, don't change
+        return $existing;
+        }
+    return false;
+    }

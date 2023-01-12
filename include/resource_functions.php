@@ -2581,7 +2581,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     if(!$validval)
                         {
                         // Still not found - invalid option passed
-                        echo "update_field: " . $newvalue . " not found: in field tree";
+                        debug("update_field: " . $newvalue . " not found: in field tree");
                         return false;
                         }
 
