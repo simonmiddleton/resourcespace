@@ -1504,8 +1504,11 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
                 debug('Removed nodes from resource #' . $ref . ' : ' . implode(',',$removed_nodes));
 
-                // Work out what new nodes for this resource  will be
-                $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
+                // Work out what new nodes for this resource  will be while maintaining their order
+                $new_nodes = array_intersect(
+                    $valid_nodes,
+                    array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes)
+                );
                 debug('New nodes: ' . implode(',',$new_nodes));
 
                 if(count($added_nodes)>0 || count($removed_nodes)>0)

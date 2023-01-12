@@ -64,12 +64,13 @@ $_POST["modeselect_{$rtf_checkbox}"] = 'RT';
 save_resource_data_multi($collection_ref);
 if(!$assert_same_all_resources_fieldx($resources_list, $rtf_checkbox))
     {
-    echo "Use case: use separator for storing multiple node values in the resource table (column fieldX) - ";
+    echo "Use case (RT mode): use separator for storing multiple node values in the resource table (column fieldX) - ";
     return false;
     }
 
 
 // - Category tree
+// -- Replace all text/options
 $data_joins[] = $rtf_cat_tree;
 $_POST['nodes'][$rtf_cat_tree] = [$ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black];
 $_POST["editthis_field_{$rtf_cat_tree}"] = 'yes';
@@ -77,7 +78,7 @@ $_POST["modeselect_{$rtf_cat_tree}"] = 'RT';
 save_resource_data_multi($collection_ref);
 if(!$assert_same_all_resources_fieldx($resources_list, $rtf_cat_tree))
     {
-    echo 'Use case: use separator for storing multiple node paths for category tree in column fieldX - ';
+    echo 'Use case (RT mode): use separator for storing multiple node paths for category tree in column fieldX - ';
     return false;
     }
 
@@ -101,7 +102,44 @@ $expected_cat_tree_fieldx_value = implode(
 if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
 )
     {
-    echo 'Use case: column fieldX (category tree) having nodes resolved according to their order_by - ';
+    echo 'Use case (RT mode): column fieldX (category tree) having nodes resolved according to their order_by - ';
+    return false;
+    }
+
+
+// -- Append all text/options
+$data_joins[] = $rtf_cat_tree;
+$_POST['nodes'][$rtf_cat_tree] = [$ct_opt_numbers, $ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black];
+$_POST["editthis_field_{$rtf_cat_tree}"] = 'yes';
+$_POST["modeselect_{$rtf_cat_tree}"] = 'AP';
+save_resource_data_multi($collection_ref);
+if(!$assert_same_all_resources_fieldx($resources_list, $rtf_cat_tree))
+    {
+    echo 'Use case (AP mode): use separator for storing multiple node paths for category tree in column fieldX - ';
+    return false;
+    }
+
+$cat_tree_fieldx_value = get_resource_data($resource_a, false)["field{$rtf_cat_tree}"];
+$cat_tree_fieldX_values = array_intersect_key(
+    array_column(get_nodes($rtf_cat_tree, null, true), 'name', 'ref'),
+    array_flip([$ct_opt_colors, $ct_opt_colors_black, $ct_opt_colors_red, $ct_opt_numbers])
+);
+$expected_cat_tree_fieldx_value = implode(
+    $field_column_string_separator,
+    array_map(
+        function(array $v): string { return implode('/', $v); },
+        [
+            [$cat_tree_fieldX_values[$ct_opt_colors]],
+            [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_black]],
+            [$cat_tree_fieldX_values[$ct_opt_colors], $cat_tree_fieldX_values[$ct_opt_colors_red]],
+            [$cat_tree_fieldX_values[$ct_opt_numbers]],
+        ]
+    )
+);
+if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
+)
+    {
+    echo 'Use case (AP mode): column fieldX (category tree) having nodes resolved according to their order_by - ';
     return false;
     }
 
