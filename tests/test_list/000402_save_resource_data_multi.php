@@ -2,6 +2,8 @@
 command_line_only();
 
 // --- Set up
+$initial_field_column_string_separator = $field_column_string_separator;
+
 // Metadata fields
 $rtf_checkbox = create_resource_type_field("Test #402 checkbox", 1, FIELD_TYPE_CHECK_BOX_LIST, "test_402_checkbox", true);
 $ckb_opt_a = set_node(null, $rtf_checkbox, '~en:Scanned negative~fr:Négatif scanné', null, 10);
@@ -99,8 +101,6 @@ $expected_cat_tree_fieldx_value = implode(
 if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
 )
     {
-    echo PHP_EOL;
-    var_dump($cat_tree_fieldx_value);
     echo 'Use case: column fieldX (category tree) having nodes resolved according to their order_by - ';
     return false;
     }
@@ -108,7 +108,11 @@ if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
 
 
 // Tear down
+$field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
-unset($rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a);
+unset(
+    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a, $resource_b, $collection_ref, $resources_list,
+    $assert_same_all_resources_fieldx, $cat_tree_fieldx_value, $cat_tree_fieldX_values, $expected_cat_tree_fieldx_value
+);
  
 return true;
