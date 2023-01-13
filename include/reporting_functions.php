@@ -27,7 +27,8 @@ function get_reports()
             {
             $r[$n]["name"] = get_report_name($r[$n]);
             $r[$n]["contains_date"] = report_has_date((string) $r[$n]["query"]);
-            $return[] = $r[$n]; # Adds to return array.
+            $r[$n]['has_thumbnail'] = report_has_thumbnail((string) $r[$n]["query"]);
+            $return[] = $r[$n];
             }
         }
     return $return;
@@ -623,4 +624,14 @@ function report_has_date_by_id(int $report)
     $query = ps_value("SELECT `query` as value FROM report WHERE ref = ?", array("i",$report), 0);
     $result = report_has_date($query);
     return $result;
+    }
+
+/**
+ * Check if report has a "thumbnail" column in its SQL query.
+ * 
+ * @param string $query The reports' SQL query.
+*/
+function report_has_thumbnail(string $query): bool
+    {
+    return preg_match('/(AS )*\'thumbnail\'/mi', $query);
     }
