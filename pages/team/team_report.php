@@ -265,15 +265,16 @@ else
         }
     </script>
 <label for="report"><?php echo $lang["viewreport"]?></label>
-<select id="report" name="report" class="stdwidth" onchange="show_hide_date();">
+<select id="report" name="report" class="stdwidth" onchange="show_hide_date(); update_view_as_search_results_btn(this);">
     <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
 <?php
 foreach($report_options as $report_opt)
     {
     echo sprintf(
-        '<option value="%s" data-contains_date=%d %s>%s</option>',
+        '<option value="%s" data-contains_date=%d data-has_thumbnail=%s %s>%s</option>',
         $report_opt['ref'],
         ($report_opt['contains_date'] == true ? 1 : 0),
+        ((int) $report_opt['has_thumbnail']),
         ($report_opt['ref'] == $report ? ' selected' : ''),
         htmlspecialchars($report_opt['name']));
     }
@@ -349,7 +350,7 @@ foreach($report_options as $report_opt)
 			?>
 			<div class="clearerleft"></div>
 			<br />
-			<input name="createemail" type="submit" onClick="do_download=true;" value="&nbsp;&nbsp;<?php echo $lang["create"] ?>&nbsp;&nbsp;" />
+			<input name="createemail" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["create"]); ?>" />
 			</div>
 			<div class="clearerleft"></div>
 		</div>
@@ -357,24 +358,42 @@ foreach($report_options as $report_opt)
 	</div><!-- End of EmailSetup -->
 </div>
 <!-- End of E-mail Me function -->
-
 <?php hook('customreportform', '', array($report)); ?>
-
-<script language="text/javascript">
-var do_download=false;
-</script>
-
-
-<div class="QuestionSubmit" id="SubmitBlock">
-<label for="buttons"> </label>			
-<input name="save" type="submit" onClick="do_download=false;" value="&nbsp;&nbsp;<?php echo $lang["viewreport"] ?>&nbsp;&nbsp;" />
-<input name="download" type="submit" onClick="do_download=true;" value="&nbsp;&nbsp;<?php echo $lang["downloadreport"] ?>&nbsp;&nbsp;" />
-</div>
+    <script language="text/javascript">
+    var do_download=false;
+    </script>
+    <div class="QuestionSubmit" id="SubmitBlock">
+        <label for="buttons"></label>			
+        <input name="save" type="submit" onClick="do_download=false;" value="<?php echo htmlspecialchars($lang["viewreport"]); ?>" />
+        <input name="download" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["downloadreport"]); ?>" />
+        <input name="view_as_search_results"
+               class="DisplayNone"
+               onclick="return CentralSpaceLoad(GenerateRsUrlFromElement(this, 'pages/search.php', 'url-report'), true);"
+               type="submit"
+               value="<?php echo htmlspecialchars($lang['action-view_as_search_results']); ?>">
+    </div>
 </form>
-
 <?php echo $output; ?>
-
 </div>
+<script>
+function update_view_as_search_results_btn(el)
+    {
+    report = jQuery(el).find('option:selected');
+    report_id = report.val();
+    view_as_search_results_btn = jQuery('#SubmitBlock input[name=view_as_search_results]');
+
+    if(report.data('has_thumbnail'))
+        {
+        view_as_search_results_btn.data('url-report', {search: '!report' + report_id});
+        view_as_search_results_btn.removeClass('DisplayNone');
+        return;
+        }
+
+    view_as_search_results_btn.data('url-report', {});
+    view_as_search_results_btn.addClass('DisplayNone');
+    return;
+    }
+</script>
 <?php
 }
 include "../../include/footer.php";
