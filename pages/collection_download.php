@@ -92,7 +92,7 @@ for ($n=0;$n<count($result);$n++)
 	$ref=$result[$n]["ref"];
 	# Load access level (0,1,2) for this resource
 	$access=get_resource_access($result[$n]);
-	
+    
     # Get all possible sizes for this resource. If largest available has been requested then include internal or user could end up with no file depite being able to see the preview
 	$sizes=get_all_image_sizes($size=="largest",$access>=1);
 
@@ -217,7 +217,7 @@ if ($submitted != "")
 	for ($n=0;$n<count($result);$n++)
 		{
         $ref = $result[$n]['ref'];
-        
+        $usesize = null;
         if($size=="largest")
             {
             foreach($available_sizes as $available_size => $resources)
@@ -238,7 +238,11 @@ if ($submitted != "")
             {
             $usesize = ($size == 'original') ? "" : $size;
             }        
-
+        if($usesize === null)
+            {
+            unset($result[$n]);
+            continue;
+            }
         $use_watermark=check_use_watermark();
             
 
@@ -256,6 +260,7 @@ if ($submitted != "")
 			$totalsize+=filesize_unlimited($f);
 			}
 		}
+        $result = array_values($result);
 	if ($totalsize>$collection_download_max_size  && !$collection_download_tar)
 		{
 		?>
