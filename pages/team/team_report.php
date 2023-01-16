@@ -376,6 +376,10 @@ foreach($report_options as $report_opt)
 <?php echo $output; ?>
 </div>
 <script>
+jQuery(function() {
+    update_view_as_search_results_btn(jQuery('#report'));
+});
+
 function update_view_as_search_results_btn(el)
     {
     report = jQuery(el).find('option:selected');
