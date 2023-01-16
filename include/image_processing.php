@@ -3840,11 +3840,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' %sourcepath[0]';
         }
 
-    if (isset($actions["repage"]) && $actions["repage"])
-        {
-        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
-        }
-
     if(array_key_exists('transparent', $actions))
         {
         $cmd_args['%transparent'] = $actions['transparent'];
@@ -3987,6 +3982,11 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $cmd_args['%finalxcoord'] = $finalxcoord;
         $cmd_args['%finalycoord'] = $finalycoord;
         $command .= ' -crop %finalwidthx%finalheight+%finalxcoord+%finalycoord';
+        }
+
+    if (isset($actions["repage"]) && $actions["repage"])
+        {
+        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
         }
 
     // Did the user request a width? If so, tack that on
