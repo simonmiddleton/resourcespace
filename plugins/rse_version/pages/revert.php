@@ -43,7 +43,7 @@ $type=$log["type"];
 $nodes_to_add=array();
 $nodes_to_remove=array();
 $node_strings_not_found=array();
-
+$cattree = false;
 // FIELD_TYPE_DATE_RANGE is a special type holding up to 2 nodes per resource (star/end dates). See definitions.php for more info.
 $is_fixed_field = in_array($log['resource_type_field_type'], array_merge($FIXED_LIST_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE]));
 
@@ -60,12 +60,13 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         // 3) Name untranslated
         // 4) Name translated
         $nodes_available_keys = [];
-        $nodes_available_full = get_nodes($log['resource_type_field'],NULL,$log['resource_type_field_type'] == FIELD_TYPE_CATEGORY_TREE);
+        $cattree = $log['resource_type_field_type'] == FIELD_TYPE_CATEGORY_TREE;
+        $nodes_available_full = get_nodes($log['resource_type_field'],NULL,$cattree);
         $nodes_by_ref = [];
         foreach($nodes_available_full as $node_details)
             {
             $nodes_by_ref[$node_details["ref"]] = $node_details;
-            if($log['resource_type_field_type'] == FIELD_TYPE_CATEGORY_TREE)
+            if($cattree)
                 {                
                 $nodes_available_keys[mb_strtolower($node_details["path"])] = $node_details["ref"];
                 $nodes_available_keys[mb_strtolower($node_details["translated_path"])] = $node_details["ref"];
@@ -267,7 +268,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         <?php
         foreach($nodes_to_add as $node_to_add)
             {
-            echo htmlspecialchars(i18n_get_translated($nodes_by_ref[$node_to_add]["translated_path"]));
+            echo htmlspecialchars($cattree ? $nodes_by_ref[$node_to_add]["translated_path"] : $nodes_by_ref[$node_to_add]["translated_name"]);
             ?><br/>
             <?php
             }
@@ -283,7 +284,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         <?php
         foreach($nodes_to_remove as $node_to_remove)
             {
-            echo htmlspecialchars(i18n_get_translated($nodes_by_ref[$node_to_remove]["translated_path"]));
+            echo htmlspecialchars($cattree ? $nodes_by_ref[$node_to_remove]["translated_path"] : $nodes_by_ref[$node_to_remove]["translated_name"]);
             ?><br/>
             <?php
             }
