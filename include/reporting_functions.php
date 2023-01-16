@@ -690,3 +690,26 @@ function report_process_period(array $info): array
         'to_day' => $to_d,
     ];
     }
+
+
+/**
+ * Find and replace a reports' query placeholers with their values.
+ * 
+ * @param string $query Reports' SQL query
+ * @param array $placeholders Map between a placeholder and its actual value
+ */
+function report_process_query_placeholders(string $query, array $placeholders): string
+    {
+    $default_placeholders = [
+        '[title_field]' => $GLOBALS['view_title_field'],
+    ];
+    $all_placeholders = array_merge($default_placeholders, $placeholders);
+
+    $sql = $query;
+    foreach($all_placeholders as $placeholder => $value)
+        {
+        $sql = str_replace($placeholder, $value, $sql);
+        }
+
+    return $sql;
+    }
