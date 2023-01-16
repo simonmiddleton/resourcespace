@@ -635,3 +635,58 @@ function report_has_thumbnail(string $query): bool
     {
     return preg_match('/(AS )*\'thumbnail\'/mi', $query);
     }
+
+/**
+ * Get report date range based on user input
+ * 
+ * @param array $info Information about the period selection. See unit test for example input
+ */
+function report_process_period(array $info): array
+    {
+    $availabe_periods = array_merge($GLOBALS['reporting_periods_default'], [0, -1]);
+    $period = isset($info['period']) && in_array($info['period'], $availabe_periods) ? $info['period'] : $availabe_periods[0];
+
+    // Specific number of days specified.
+    if($period == 0)
+        {
+        $period = (int) $info['period_days'] ?? 0;
+        if($period < 1)
+            {
+            $period = 1;
+            }
+        }
+
+    // Specific date range specified.
+    if($period == -1)
+        {
+        $from_y = $info['from-y'] ?? '';
+        $from_m = $info['from-m'] ?? '';
+        $from_d = $info['from-d'] ?? '';
+        
+        $to_y = $info['to-y'] ?? '';
+        $to_m = $info['to-m'] ?? '';
+        $to_d = $info['to-d'] ?? '';
+        }
+    // Work out the FROM and TO range based on the provided period in days.
+    else
+        {
+        $start = time() - (60 * 60 * 24 * $period);
+
+        $from_y = date('Y', $start);
+        $from_m = date('m', $start);
+        $from_d = date('d', $start);
+            
+        $to_y = date('Y');
+        $to_m = date('m');
+        $to_d = date('d');
+        }
+
+    return [
+        'from_year' => $from_y,
+        'from_month' => $from_m,
+        'from_day' => $from_d,
+        'to_year' => $to_y,
+        'to_month' => $to_m,
+        'to_day' => $to_d,
+    ];
+    }

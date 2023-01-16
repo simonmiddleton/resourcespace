@@ -23,38 +23,6 @@ $backurl = getval('backurl', '');
 $backurl_path = parse_url($backurl, PHP_URL_PATH);
 $backurl_query = parse_url($backurl, PHP_URL_QUERY);
 
-if ($period==0)
-	{
-	# Specific number of days specified.
-	$period=getval("period_days","");
-	if (!is_numeric($period) || $period<1) {$period=1;} # Invalid period specified.
-	}
-
-if ($period==-1)
-	{
-	# Specific date range specified.
-	$from_y = getval("from-y","");
-	$from_m = getval("from-m","");
-	$from_d = getval("from-d","");
-	
-	$to_y = getval("to-y","");
-	$to_m = getval("to-m","");
-	$to_d = getval("to-d","");
-	}
-else
-	{
-	# Work out the from and to range based on the provided period in days.
-	$start=time()-(60*60*24*$period);
-
-	$from_y = date("Y",$start);
-	$from_m = date("m",$start);
-	$from_d = date("d",$start);
-		
-	$to_y = date("Y");
-	$to_m = date("m");
-	$to_d = date("d");
-	}
-	
 $from=getval("from","");
 $to=getval("to","");
 $output="";
@@ -72,6 +40,16 @@ if("{$baseurl_short}pages/search.php" === $backurl_path)
 if ($report!="" && (getval("createemail","")==""))
 	{
 	$download=getval("download","")!="";
+    list($from_y, $from_m, $from_d, $to_y, $to_m, $to_d) = array_values(report_process_period([
+            'period' => $period,
+            'period_days' => getval('period_days', ''),
+            'from-y' => getval('from-y', ''),
+            'from-m' => getval('from-m', ''),
+            'from-d' => getval('from-d', ''),
+            'to-y' => getval('to-y', ''),
+            'to-m' => getval('to-m', ''),
+            'to-d' => getval('to-d', ''),
+        ]));
 	$output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download, false, false, $search_params);
 	}
 
@@ -368,7 +346,7 @@ foreach($report_options as $report_opt)
         <input name="download" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["downloadreport"]); ?>" />
         <input name="view_as_search_results"
                class="DisplayNone"
-               onclick="return CentralSpaceLoad(GenerateRsUrlFromElement(this, 'pages/search.php', 'url-report'), true);"
+               onclick="return report_view_as_search_results_btn(this);"
                type="submit"
                value="<?php echo htmlspecialchars($lang['action-view_as_search_results']); ?>">
     </div>
@@ -382,13 +360,37 @@ jQuery(function() {
 
 function update_view_as_search_results_btn(el)
     {
-    report = jQuery(el).find('option:selected');
-    report_id = report.val();
-    view_as_search_results_btn = jQuery('#SubmitBlock input[name=view_as_search_results]');
+    let report = jQuery(el).find('option:selected');
+    let report_id = report.val();
+    let view_as_search_results_btn = jQuery('#SubmitBlock input[name=view_as_search_results]');
 
     if(report.data('has_thumbnail'))
         {
-        view_as_search_results_btn.data('url-report', {search: '!report' + report_id});
+        let period = jQuery('#period').find('option:selected').val();
+
+        // e.g for period: p7 (last 7 days)
+        let report_period_data = 'p' + period;
+
+        if(period == 0)
+            {
+            // e.g for period days: p0d23 (specific number of days - 23)
+            report_period_data += 'd' + jQuery('#period_days').val();
+            }
+        else if(period == -1)
+            {
+            data_range = jQuery('#DateRange');
+            
+            // e.g for period date range: p-1fyXXXXfmXXfdXXtyXXXXtmXXtdXX
+            report_period_data += 'fy' + data_range.find('input[name="from-y"]').val();
+            report_period_data += 'fm' + data_range.find('select[name="from-m"] option:selected').val();
+            report_period_data += 'fd' + data_range.find('select[name="from-d"] option:selected').val();
+
+            report_period_data += 'ty' + data_range.find('input[name="to-y"]').val();
+            report_period_data += 'tm' + data_range.find('select[name="to-m"] option:selected').val();
+            report_period_data += 'td' + data_range.find('select[name="to-d"] option:selected').val();
+            }
+
+        view_as_search_results_btn.data('url-report', {search: '!report' + report_id + report_period_data});
         view_as_search_results_btn.removeClass('DisplayNone');
         return;
         }
@@ -396,6 +398,12 @@ function update_view_as_search_results_btn(el)
     view_as_search_results_btn.data('url-report', {});
     view_as_search_results_btn.addClass('DisplayNone');
     return;
+    }
+
+function report_view_as_search_results_btn(el)
+    {
+    update_view_as_search_results_btn(jQuery('#report'));
+    return CentralSpaceLoad(GenerateRsUrlFromElement(el, 'pages/search.php', 'url-report'), true);
     }
 </script>
 <?php
