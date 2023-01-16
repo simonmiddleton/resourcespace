@@ -1,8 +1,6 @@
 <?php
-
-command_line_only();
-
 include(dirname(__FILE__) . "/../include/db.php");
+command_line_only();
 include_once(dirname(__FILE__) . "/../include/image_processing.php");
 
 $expired_resources = ps_query('SELECT r.ref, r.field8 AS title 
