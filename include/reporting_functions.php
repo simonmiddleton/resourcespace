@@ -92,18 +92,15 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     else
         {
         // Generate report results normally
-        $sql_parameters=array();
-        $sql=$report["query"];
-        $sql=str_replace("[from-y]",$from_y,$sql);
-        $sql=str_replace("[from-m]",$from_m,$sql);
-        $sql=str_replace("[from-d]",$from_d,$sql);
-        $sql=str_replace("[to-y]",$to_y,$sql);
-        $sql=str_replace("[to-m]",$to_m,$sql);
-        $sql=str_replace("[to-d]",$to_d,$sql);
-
-        global $view_title_field;
-        $sql=str_replace("[title_field]",$view_title_field,$sql);
-
+        $sql_parameters = array();
+        $report_placeholders = [
+            '[from-y]' => $from_y,
+            '[from-m]' => $from_m,
+            '[from-d]' => $from_d,
+            '[to-y]' => $to_y,
+            '[to-m]' => $to_m,
+            '[to-d]' => $to_d,
+        ];
         if((bool)$report['support_non_correlated_sql'] === true && !empty($search_params))
             {
             // If report supports being run on search results, embed the non correlated sql necessary to feed the report
@@ -131,12 +128,11 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 debug("Invalid SQL returned by do_search(). Report cannot be generated");
                 return "";
                 }
-            $sql_parameters=array_merge($sql_parameters,$returned_search->parameters);
-            $noncorsql = sprintf('(SELECT noncorsql.ref FROM (%s) AS noncorsql)', $returned_search->sql);
-
-            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $noncorsql, $sql);
+            $sql_parameters = array_merge($sql_parameters, $returned_search->parameters);
+            $report_placeholders[REPORT_PLACEHOLDER_NON_CORRELATED_SQL] = "(SELECT ncsql.ref FROM ({$returned_search->sql}) AS ncsql)";
             }
-        
+
+        $sql = report_process_query_placeholders($report['query'], $report_placeholders);
         $results = ps_query($sql,$sql_parameters);
         }
     
