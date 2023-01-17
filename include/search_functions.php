@@ -1719,8 +1719,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $sql_prefix . "SELECT DISTINCT r.hit_count score, {$select} FROM resource AS r "
             . $sql_join->sql
             . ' WHERE 1 = 2 AND ' . $sql_filter->sql
-            . ' GROUP BY r.ref ORDER BY ' . $order_by
-            . ' LIMIT 1',
+            . ' GROUP BY r.ref ORDER BY ' . $order_by,
             array_merge($sql_join->parameters, $sql_filter->parameters)
         );
 
