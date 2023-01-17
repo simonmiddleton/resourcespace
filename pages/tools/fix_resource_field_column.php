@@ -1,7 +1,5 @@
 <?php
 include "../../include/db.php";
-
-
 include_once "../../include/authenticate.php";
 if(!checkperm("a")){exit("Access denied");}
 
@@ -17,7 +15,7 @@ if($field > 0)
                 {
                 $resnodes = get_resource_nodes($resource, $field, true);
                 $resvals = array_column($resnodes,"name");
-                $resdata = implode(",",$resvals);
+                $resdata = implode($field_column_string_separator, $resvals);
                 $value = truncate_join_field_value(strip_leading_comma($resdata));
                 ps_query("update resource set field" . $field . "= ? where ref= ?", ['s', $value, 'i', $resource]);
                 echo "Updated resource " . $resource . ". Value: " . $value . "<br />";

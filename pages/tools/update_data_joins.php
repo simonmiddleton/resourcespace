@@ -14,20 +14,21 @@ $remove=getval("remove","");
 $all=(($add=='' && $remove=='')?true:false);
 
 $fields=ps_array("SELECT `COLUMN_NAME` value FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='{$mysql_db}' AND `TABLE_NAME`='resource' AND `COLUMN_NAME` LIKE 'field%'",[]);
-echo "fields:";print_r($fields);echo"<br/><br/>";
+echo "fields: " . json_encode($fields) . "<br/>";
 
-echo "data_joins:";print_r($data_joins);echo"<br/><br/>";
+$resource_table_joins = get_resource_table_joins();
+echo "resource_table_joins: " . json_encode($resource_table_joins) . "<br/>";
 if($remove!=='' || $all)
     {
     // drop tables first
     if($all)
         {
-        // we need to create a list of fields that aren't in $data_joins
+        // we need to create a list of fields that aren't in $resource_table_joins
         $remove=array();        
         foreach($fields as $field)
             {
             $field_ref=substr($field,(strlen("field")));
-            if(!in_array($field_ref,$data_joins))
+            if(!in_array($field_ref,$resource_table_joins))
                 {
                 $remove[]=(int)$field_ref;
                 }
@@ -71,16 +72,16 @@ if($add!=='' || $all)
     {
     if($all)
         {
-        $add=$data_joins;
+        $add=$resource_table_joins;
         }
     else{
         $add=explode(",",$add);
         $a_count=count($add);
         for($a=0;$a<$a_count;$a++)
             {
-            if(!in_array($add[$a],$data_joins))
+            if(!in_array($add[$a],$resource_table_joins))
                 {
-                echo "Field $option is not part of $data_joins...removing from list<br/>";
+                echo "Field {$add[$a]} is not part of \$resource_table_joins...removing from list<br/>";
                 unset($add[$a]);
                 }
             }
@@ -91,7 +92,7 @@ if($add!=='' || $all)
         foreach($add as $column)
             {
             echo "Updating column field$column...";
-            $wait = ps_query("UPDATE resource r LEFT JOIN resource_node rn ON r.ref = rn.resource LEFT JOIN node n ON n.ref=rn.node  SET r.field{$column} = SUBSTR(n.name, 1, ?) WHERE n.resource_type_field = ?",["i",$resource_field_column_limit,"i",$column]);
+            update_fieldx($column);
             echo "done!<br/>";
             flush();
             }
