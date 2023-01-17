@@ -419,8 +419,6 @@ function get_resource_data($ref,$cache=true)
         }
     }
 
-
-
 /**
  * get_resource_data_batch - get data from resource table for all resource IDs
  *
@@ -621,7 +619,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
     $nodes_check_delete         = [];
     $resource_update_log_sql    = [];
     $ui_selected_node_values    = [];
-    $current_field_nodes        = [];
+    $all_current_field_nodes    = [];
+    $new_node_values            = [];
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
@@ -649,9 +648,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 debug("save_resource_data(): Checking nodes to add/ remove for field {$fields[$n]['ref']} - {$fields[$n]['title']}");
 
                 $val = '';
-
                 // Get currently selected nodes for this field
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
+                $all_current_field_nodes = array_merge($all_current_field_nodes,$current_field_nodes);
 
                 // Check if resource field data has been changed between form being loaded and submitted
                 $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
@@ -687,7 +686,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 natsort($ui_selected_node_values);
 
                 // Set new value for logging
-                $new_node_values = $ui_selected_node_values;
+                $new_node_values = array_merge($new_node_values,$ui_selected_node_values);
 
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
@@ -809,6 +808,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                         // Get currently selected nodes for this field
                         $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref'], false, SORT_ASC);
+                        $all_current_field_nodes = array_merge($all_current_field_nodes,$current_field_nodes);
 
                         // Check if resource field data has been changed between form being loaded and submitted
                         $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
@@ -999,7 +999,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     // Remove any existing node IDs for this non-fixed list field (there should only be one) unless used by other resources.
                     $current_field_nodes = array_filter(explode(",",$fields[$n]["nodes"]),"is_int_loose");
-
+                    $all_current_field_nodes = array_merge($all_current_field_nodes,$current_field_nodes);
                     foreach($current_field_nodes as $current_field_node)
                         {
                         $inuse = get_nodes_use_count([$current_field_node]);
@@ -1043,7 +1043,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $new_node_values = [$use_node];
                         }
                     
-
                     // Add to array for logging
                     $oldnodenames[$use_node] = $fields[$n]['value'];
                     }
@@ -1111,7 +1110,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         add_resource_nodes($ref,$nodes_to_add, false, false);
         }
 
-    log_node_changes($ref,$new_node_values, $current_field_nodes,"",$oldnodenames);
+    log_node_changes($ref,$new_node_values, $all_current_field_nodes,"",$oldnodenames);
 
     if(count($nodes_check_delete)>0)
         {
@@ -1386,6 +1385,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
     // Other changes to make
     $nodes_check_delete      = [];
     $resource_log_updates    = [];
+    $log_node_updates        = [];
     $resource_update_sql_arr = [];
     $resource_update_params  = [];
     // Store invalid node values - normally when reverting to old nodes that have been renamed
@@ -1446,7 +1446,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
                 $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
                 debug("Removing nodes: " .  implode(",",$nodes_to_remove));
                 }
-            elseif($mode=="")
+            else
                 {
                 // Replace option(s) mode
                 $nodes_to_add  = $ui_selected_node_values;
@@ -1481,7 +1481,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
 
                 # Possibility to hook in and alter the value - additional mode support
                 $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes,$postvals));
-
 
                 if($hookval !== false && $hookval != $current_field_nodes)
                     {
@@ -1530,75 +1529,70 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
                             {
                             debug(" - No previous node for required field");
                             $save_warnings[] = ["Resource" => $ref,"Field" => $fields[$n]['title'],"Message"=>$lang["requiredfield"]];
-                            $nodes_to_add  = $current_field_nodes;
-                            }
-                        else
-                            {
-                            $valid_hook_nodes = true;
+                            continue;
                             }
                         }
 
                     if($valid_hook_nodes)
                         {
-                        delete_resource_nodes($ref,$current_field_nodes,false);
-                        add_resource_nodes($ref,$resource_add_nodes,false,false);
-                        log_node_changes($ref,$resource_add_nodes,$current_field_nodes);
-                         // If this is a 'joined' field it still needs to add it to the resource column
+                        $resource_nodes_add[$ref] =$resource_add_nodes;
+                        $resource_nodes_remove[$ref] = array_diff($current_field_nodes,$resource_add_nodes);                        
+                        $log_node_updates[$ref][] = [
+                            'from'  => $current_field_nodes,
+                            'to'    => $resource_add_nodes,
+                            ];
                         if(in_array($fields[$n]['ref'], $joins))
                             {
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode(",",$log_node_names);
                             }
                         }
-                    continue;
                     }
-
-                $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
-                debug('Adding nodes to resource #' . $ref . ' : ' . implode(',',$added_nodes));
-
-                $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
-                debug('Removed nodes from resource #' . $ref . ' : ' . implode(',',$removed_nodes));
-
-                // Work out what new nodes for this resource  will be
-                $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
-                debug('New nodes: ' . implode(',',$new_nodes));
-
-                if(count($added_nodes)>0 || count($removed_nodes)>0)
+                else
                     {
-                    $existing_nodes_value = '';
-                    $new_nodes_val        = '';
-                    $log_nodes_old = [];
-                    $log_nodes_new = [];
+                    $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
+                    debug('Adding nodes to resource #' . $ref . ' : ' . implode(',',$added_nodes));
 
-                    $successfully_edited_resources[] = $ref;
+                    $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
+                    debug('Removed nodes from resource #' . $ref . ' : ' . implode(',',$removed_nodes));
 
-                    // Build new value:
-                    foreach($new_nodes as $new_node)
+                    // Work out what new nodes for this resource  will be
+                    $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
+                    debug('New nodes: ' . implode(',',$new_nodes));
+
+                    if(count($added_nodes)>0 || count($removed_nodes)>0)
                         {
-                        $new_nodes_val .= ",{$node_options[$new_node]}";
-                        $log_nodes_new[] = $node_options[$new_node];
-                        }
-                    // Build existing value:
-                    foreach($current_field_nodes as $current_field_node)
-                        {
-                        $existing_nodes_value .= ",{$node_options[$current_field_node]}";
-                        $log_nodes_old[] = $node_options[$current_field_node];
-                        }
+                        $existing_nodes_value = '';
+                        $new_nodes_val        = '';
+                        $log_nodes_old = [];
+                        $log_nodes_new = [];
 
-                    $resource_log_updates[$ref][] = [
-                        'ref'   => $ref,
-                        'type'  => LOG_CODE_EDITED,
-                        'field' => $fields[$n]["ref"],
-                        'notes' => '',
-                        'from'  => implode(NODE_NAME_STRING_SEPARATOR, $log_nodes_old),
-                        'to'    => implode(NODE_NAME_STRING_SEPARATOR, $log_nodes_new),
-                        ];
+                        $successfully_edited_resources[] = $ref;
 
-                    // If this is a 'joined' field it still needs to add it to the resource column
-                    if(in_array($fields[$n]['ref'], $joins))
-                        {
-                        $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                        $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
+                        // Build new value:
+                        foreach($new_nodes as $new_node)
+                            {
+                            $new_nodes_val .= ",{$node_options[$new_node]}";
+                            $log_nodes_new[] = $node_options[$new_node];
+                            }
+                        // Build existing value:
+                        foreach($current_field_nodes as $current_field_node)
+                            {
+                            $existing_nodes_value .= ",{$node_options[$current_field_node]}";
+                            $log_nodes_old[] = $node_options[$current_field_node];
+                            }
+
+                        $log_node_updates[$ref][] = [
+                            'from'  => $log_nodes_old,
+                            'to'    => $log_nodes_new,
+                            ];
+
+                        // If this is a 'joined' field it still needs to add it to the resource column
+                        if(in_array($fields[$n]['ref'], $joins))
+                            {
+                            $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
+                            $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
+                            }
                         }
                     }
                 }
@@ -1680,7 +1674,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
                 $current_field_nodes = $existing_nodes[$ref][$fields[$n]['ref']] ?? [];
 
                 # Possibility to hook in and alter the value - additional mode support
-                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes));
+                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes,$postvals));
 
                 if($hookval != $current_field_nodes)
                     {
@@ -1704,71 +1698,70 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
                         }
                     if($valid_hook_nodes)
                         {
-                        delete_resource_nodes($ref,$current_field_nodes,false);
-                        add_resource_nodes($ref,$resource_add_nodes,false,false);
-                        log_node_changes($ref,$resource_add_nodes,$current_field_nodes);
+                        $resource_nodes_add[$ref] =$resource_add_nodes;
+                        $resource_nodes_remove[$ref] =$current_field_nodes;
+                        $log_node_updates[$ref][] = [
+                            'from'  => $current_field_nodes,
+                            'to'    => $resource_add_nodes,
+                            ];
                         if(in_array($fields[$n]['ref'], $joins))
                             {
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode(",",$log_node_names);
                             }
                         }
-                    continue;
                     }
-
-                $added_nodes = array_diff($daterangenodes, $current_field_nodes);
-                debug("save_resource_data_multi(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
-                $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-
-                $removed_nodes = array_diff($current_field_nodes,$daterangenodes);
-                debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
-                $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
-
-                if(count($added_nodes)>0 || count($removed_nodes)>0)
+                else
                     {
-                    $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
+                    $added_nodes = array_diff($daterangenodes, $current_field_nodes);
+                    debug("save_resource_data_multi(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
+                    $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
 
-                    $existing_nodes_value = '';
-                    $new_nodes_val        = '';
-                    $log_nodes_old = [];
-                    $log_nodes_new = [];
+                    $removed_nodes = array_diff($current_field_nodes,$daterangenodes);
+                    debug("save_resource_data_multi(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
+                    $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
 
-                    // Build new value:
-                    if (count($new_nodes) > 0)
+                    if(count($added_nodes)>0 || count($removed_nodes)>0)
                         {
-                        $date_range_node_values_to_add = array_column(get_nodes_by_refs($new_nodes), 'name');
-                        $new_nodes_val = ',' . implode(',', $date_range_node_values_to_add);
-                        $log_nodes_new = $date_range_node_values_to_add;
-                        }
+                        $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
 
-                    // Build existing value:
-                    if (count($current_field_nodes) > 0)
-                        {
-                        $date_range_node_values_to_remove = array_column(get_nodes_by_refs($current_field_nodes), 'name');
-                        $existing_nodes_value = ',' . implode(',', $date_range_node_values_to_remove);
-                        $log_nodes_old = $date_range_node_values_to_remove;
-                        }
+                        $existing_nodes_value = '';
+                        $new_nodes_val        = '';
+                        $log_nodes_old = [];
+                        $log_nodes_new = [];
 
-                    $resource_log_updates[$ref][] = [
-                        'ref'   => $ref,
-                        'type'  => LOG_CODE_EDITED,
-                        'field' => $fields[$n]["ref"],
-                        'notes' => '',
-                        'from'  => implode(NODE_NAME_STRING_SEPARATOR, $log_nodes_old),
-                        'to'    => implode(NODE_NAME_STRING_SEPARATOR, $log_nodes_new),
-                        ];
+                        // Build new value:
+                        if (count($new_nodes) > 0)
+                            {
+                            $date_range_node_values_to_add = array_column(get_nodes_by_refs($new_nodes), 'name');
+                            $new_nodes_val = ',' . implode(',', $date_range_node_values_to_add);
+                            $log_nodes_new = $date_range_node_values_to_add;
+                            }
 
-                    // If this is a 'joined' field it still needs to add it to the resource column
-                    if(in_array($fields[$n]['ref'], $joins))
-                        {
-                        $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                        $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
+                        // Build existing value:
+                        if (count($current_field_nodes) > 0)
+                            {
+                            $date_range_node_values_to_remove = array_column(get_nodes_by_refs($current_field_nodes), 'name');
+                            $existing_nodes_value = ',' . implode(',', $date_range_node_values_to_remove);
+                            $log_nodes_old = $date_range_node_values_to_remove;
+                            }
+                        
+                        $log_node_updates[$ref][] = [
+                            'from'  => $log_nodes_old,
+                            'to'    => $log_nodes_new,
+                            ];
+
+                        // If this is a 'joined' field it still needs to add it to the resource column
+                        if(in_array($fields[$n]['ref'], $joins))
+                            {
+                            $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
+                            $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
+                            }
                         }
-                    // $val = $newval;
                     }
+                $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
+                $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
                 }
-            $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
-            $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
             }
         else
             {
@@ -1940,7 +1933,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
                     }
 
                 # Possibility to hook in and alter the value - additional mode support
-                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$existing));
+                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$existing,$postvals));
                 if($hookval !== false)
                     {
                     $val = $hookval;
@@ -2123,8 +2116,15 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals)
     foreach($resource_log_updates as $resource=>$log_add)
         {
         foreach($log_add as $log_sql)
-            {
+            {                
             resource_log($resource,$log_sql["type"],$log_sql["field"],$log_sql["notes"],$log_sql["from"],$log_sql["to"]);
+            }
+        }
+    foreach($log_node_updates as $resource=>$log_add)
+        {
+        foreach($log_add as $log_node_sql)
+            {
+            log_node_changes($resource,$log_node_sql["from"],$log_node_sql["to"]);
             }
         }
     
