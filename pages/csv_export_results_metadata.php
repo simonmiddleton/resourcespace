@@ -86,12 +86,12 @@ elseif (isset($message))
         generateFormToken("csv_export_results");
         ?>
 
-        <input type="hidden" name="search" value="<?php echo htmlspecialchars($search) ?>" />
-        <input type="hidden" name="restypes" value="<?php echo htmlspecialchars($restypes) ?>" />
-        <input type="hidden" name="order_by" value="<?php echo htmlspecialchars($order_by) ?>" />
-        <input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive) ?>" />
-        <input type="hidden" name="access" value="<?php echo htmlspecialchars($access) ?>" />
-        <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort) ?>" />
+        <input type="hidden" name="search" value="<?php echo htmlspecialchars((string)$search) ?>" />
+        <input type="hidden" name="restypes" value="<?php echo htmlspecialchars((string)$restypes) ?>" />
+        <input type="hidden" name="order_by" value="<?php echo htmlspecialchars((string)$order_by) ?>" />
+        <input type="hidden" name="archive" value="<?php echo htmlspecialchars((string)$archive) ?>" />
+        <input type="hidden" name="access" value="<?php echo htmlspecialchars((string)$access) ?>" />
+        <input type="hidden" name="sort" value="<?php echo htmlspecialchars((string)$sort) ?>" />
         
         <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>
 

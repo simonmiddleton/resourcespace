@@ -1268,7 +1268,7 @@ function processFile(file, forcepost)
                 // Add to array to process later
                 processafter.push(file);
                 console.debug("Added " + file.name + " to process after array");
-                if(processafter.length == count)
+                if((processafter.length + rscompleted.length) >= count)
                     {
                     jQuery('#CentralSpace').trigger('ProcessedMain');
                     }

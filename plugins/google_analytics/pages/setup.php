@@ -13,6 +13,7 @@ $page_heading = 'Google Analytics Key Configuration';
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 $page_def[] = config_add_text_list_input('google_analytics_key','Google Analytics Key');
+$page_def[] = config_add_boolean_select('use_google_analytics_4', $lang['use_google_analytics_4'], '', 100);
 $page_def[] = config_add_text_input('google_analytics_verification_code', $lang['google_analytics_verification_code'], false, 300);
 
 

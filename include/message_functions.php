@@ -291,7 +291,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 
     if(checkperm('E'))
         {
-        $validusers = get_users(0,"","u.username",true,1);
+        $validusers = get_users(0,"","u.username",true);
         $validuserrefs = array_column($validusers,"ref");
         $users = array_filter($users,function($user) use ($validuserrefs) {return in_array($user,$validuserrefs);});
         }
@@ -890,7 +890,7 @@ function send_user_message($users,$text)
  *                              "message"   => message text
  *                              "url"       => url
  */
-function send_user_notification($users=[],$notifymessage, $forcemail=false)
+function send_user_notification(array $users, $notifymessage, $forcemail=false)
     {
     global $userref, $lang, $plugins, $header_colour_style_override;
 

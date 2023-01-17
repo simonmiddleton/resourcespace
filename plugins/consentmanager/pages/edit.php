@@ -125,17 +125,32 @@ if (getval("submitted","")!="")
         }
 
     # Handle file upload
+    global $banned_extensions;
     if (isset($_FILES["file"]) && $_FILES["file"]["tmp_name"]!="")
         {
-        move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
-        ps_query("update consent set file= ? where ref= ?", ['s', $_FILES["file"]["name"], 'i', $ref]);
+        # Work out the extension
+        $uploadfileparts=explode(".",$_FILES["file"]["name"]);
+        $uploadfileextension=trim($uploadfileparts[count($uploadfileparts)-1]);
+        $uploadfileextension=strtolower($uploadfileextension);
+
+        if (in_array($uploadfileextension,$banned_extensions))
+            {
+            $error_extension = str_replace("%%FILETYPE%%",$uploadfileextension,$lang["error_upload_invalid_file"]);
+            error_alert($error_extension, true);
+            exit();
+            }
+        else
+            {
+            move_uploaded_file($_FILES["file"]["tmp_name"],$file_path);  
+            ps_query("UPDATE consent set file= ? where ref= ?", ['s', $_FILES["file"]["name"], 'i', $ref]);
+            }
         }
 
     # Handle file clear
     if (getval("clear_file","")!="")
         {
         if (file_exists($file_path)) {unlink($file_path);}  
-        ps_query("update consent set file='' where ref= ?", ['i', $ref]);
+        ps_query("UPDATE consent set file='' where ref= ?", ['i', $ref]);
         }
 
     redirect($redirect_url);

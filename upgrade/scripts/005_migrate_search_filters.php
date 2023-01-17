@@ -46,7 +46,7 @@ if(!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRAT
     $groups = ps_query($groups_sql);
     foreach($groups as $group)
         {
-        $filtertext = trim($group["search_filter"]);
+        $filtertext = trim((string)$group["search_filter"]);
         if($filtertext == "")
             {
             continue;
@@ -73,7 +73,7 @@ if(!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRAT
     $filterusers = ps_query("SELECT ref, search_filter_override, search_filter_o_id FROM user WHERE search_filter_o_id IS NULL OR search_filter_o_id=0");
     foreach($filterusers as $user)
         {
-        $filtertext = trim($user["search_filter_override"]);
+        $filtertext = trim((string)$user["search_filter_override"]);
         if($filtertext == "")
             {
             continue;
