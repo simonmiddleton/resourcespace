@@ -249,10 +249,10 @@ else
 foreach($report_options as $report_opt)
     {
     echo sprintf(
-        '<option value="%s" data-contains_date=%d data-has_thumbnail=%s %s>%s</option>',
+        '<option value="%s" data-contains_date=%d data-view_as_search_results=%s %s>%s</option>',
         $report_opt['ref'],
         ($report_opt['contains_date'] == true ? 1 : 0),
-        ((int) $report_opt['has_thumbnail']),
+        (int) ($report_opt['has_thumbnail'] && !$report_opt['support_non_correlated_sql']),
         ($report_opt['ref'] == $report ? ' selected' : ''),
         htmlspecialchars($report_opt['name']));
     }
@@ -364,7 +364,7 @@ function update_view_as_search_results_btn(el)
     let report_id = report.val();
     let view_as_search_results_btn = jQuery('#SubmitBlock input[name=view_as_search_results]');
 
-    if(report.data('has_thumbnail'))
+    if(report.data('view_as_search_results'))
         {
         let period = jQuery('#period').find('option:selected').val();
 

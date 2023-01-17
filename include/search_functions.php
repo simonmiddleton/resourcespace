@@ -1733,7 +1733,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             include_once 'reporting_functions.php';
             $report_id = $report_search_data[1];
-            $reports = array_filter(array_column(get_reports(), 'query', 'ref'), 'report_has_thumbnail');
+            $all_reports = get_reports();
+            $reports_w_thumbnail = array_filter(array_column($all_reports, 'query', 'ref'), 'report_has_thumbnail');
+            $reports_w_support_non_correlated_sql = array_filter(array_column($all_reports, 'support_non_correlated_sql', 'ref'));
+            $reports = array_diff_key($reports_w_thumbnail, $reports_w_support_non_correlated_sql);
             if(isset($reports[$report_id]))
                 {
                 $report = $reports[$report_id];
