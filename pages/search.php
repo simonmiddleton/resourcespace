@@ -453,7 +453,16 @@ if (getval("refreshcollectionframe","")!="")
 $refs=array();
 
 # Special query? Ignore restypes
-if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$special_search_honors_restypes) {$restypes="";}
+if(
+    mb_strpos($search, '!') !== false
+    && !$special_search_honors_restypes
+    // Except for these special searches
+    && substr($search, 0, 11) !== '!properties'
+    && substr($search, 0, 7) !== '!report'
+)
+    {
+    $restypes = '';
+    }
 
 # Do the search!
 $search=refine_searchstring($search);
