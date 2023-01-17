@@ -1772,6 +1772,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     . $sql_suffix;
                 $sql->parameters = array_merge($sql_join->parameters, $sql_filter->parameters);
                 // printf('<br>$sql = %s', print_r($sql, true));
+                debug("[search_special] SQL = " . json_encode($sql));
                 }
             else
                 {

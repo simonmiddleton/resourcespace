@@ -1183,7 +1183,7 @@ function get_user_dash($user)
             # Check link for external or internal
             if(mb_strtolower(substr($tile["link"],0,4))=="http")
                 {
-                $link = $tile["link"];
+                $link = htmlspecialchars($tile["link"]);
                 $newtab = true;
                 }
             else

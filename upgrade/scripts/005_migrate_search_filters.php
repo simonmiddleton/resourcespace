@@ -73,7 +73,7 @@ if(!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysvars["SEARCH_FILTER_MIGRAT
     $filterusers = ps_query("SELECT ref, search_filter_override, search_filter_o_id FROM user WHERE search_filter_o_id IS NULL OR search_filter_o_id=0");
     foreach($filterusers as $user)
         {
-        $filtertext = trim($user["search_filter_override"]);
+        $filtertext = trim((string)$user["search_filter_override"]);
         if($filtertext == "")
             {
             continue;
