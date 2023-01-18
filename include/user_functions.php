@@ -1748,10 +1748,11 @@ function resolve_users($users)
  * Verify a supplied external access key
  *
  * @param  array | integer $resources   Resource ID | Array of resource IDs 
- * @param  string $key          The external access key
+ * @param  string $key                  The external access key
+ * @param  boolean $checkcollection     Check collection access key? true by default but required to prevent infinite recursion
  * @return boolean Valid?
  */
-function check_access_key($resources,$key)
+function check_access_key($resources,$key,$checkcollection=true)
     {
     if(!is_array($resources))
         {
@@ -1804,7 +1805,7 @@ function check_access_key($resources,$key)
         {
         // Check if this is a request for a resource uploaded to an upload_share
         $upload_sharecol = upload_share_active();
-        if($upload_sharecol && check_access_key_collection($upload_sharecol,$key))
+        if($checkcollection && $upload_sharecol && check_access_key_collection($upload_sharecol,$key,false))
             {
             $uploadsession = get_rs_session_id();
             $uploadcols = get_session_collections($uploadsession);
@@ -1963,10 +1964,11 @@ function check_access_key($resources,$key)
 * 
 * @param integer $collection        Collection ID
 * @param string  $key               Access key
+* @param  boolean $checkresource    Check for resource access key? true by default but required to prevent infinite recursion
 * 
 * @return boolean
 */
-function check_access_key_collection($collection, $key)
+function check_access_key_collection($collection, $key, $checkresource=true)
     {
     if(!is_int_loose($collection))
         {
@@ -2053,8 +2055,7 @@ function check_access_key_collection($collection, $key)
         {
         $resources_alt = hook("GetResourcesToCheck","",array($collection));
         $resources = (is_array($resources_alt) && !empty($resources_alt) ? $resources_alt : get_collection_resources($collection_ref));
-        
-        if(!check_access_key($resources, $key))
+        if(!check_access_key($resources, $key, false))
             {
             return false;
             }
