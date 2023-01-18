@@ -1099,7 +1099,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
     // Update resource_node table
     db_begin_transaction("update_resource_node");
-   
     if(count($nodes_to_remove)>0)
         {
         delete_resource_nodes($ref,$nodes_to_remove, false);
@@ -1109,7 +1108,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
         {
         add_resource_nodes($ref,$nodes_to_add, false, false);
         }
-
     log_node_changes($ref,$new_node_values, $all_current_field_nodes,"",$oldnodenames);
 
     if(count($nodes_check_delete)>0)
@@ -6767,7 +6765,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                 if($save)
                     {
                     debug("- adding locked field nodes for resource " . $ref . ", field id: " . $locked_field);
-                    delete_resource_nodes($ref,$field_node_refs);
+                    delete_resource_nodes($ref,$field_node_refs,false);
                     if(count($locked_nodes) > 0)
                         {
                         add_resource_nodes($ref, $locked_nodes, false);
