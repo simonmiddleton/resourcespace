@@ -409,60 +409,67 @@ else if($edit)
     $title=$tile["title"];
     $resource_count=$tile["resource_count"];
     $current_specific_user_groups = get_tile_user_groups($edit);
-    
-    #Get field data
-    $buildstring = explode('?',$tile["url"]);
-    if(isset($buildstring[1])) 
-        {
-        parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
-        }
-    
-    if(isset($buildstring["tltype"]))
-        {
-        $tile_type=$buildstring["tltype"];
-        $tile_nostyle = isset($buildstring["tlstyle"]) && $tile_type!="conf" ? FALSE : TRUE;
-        $tile_style=$buildstring["tlstyle"];
 
-        $tile_style_colour = '';
-        if(allow_tile_colour_change($tile_type) && isset($buildstring['tlstylecolour']))
-            {
-            $tile_style_colour = $buildstring['tlstylecolour'];
-            }
+    if (!can_edit_tile($tile['ref'], $allusers, $userref))
+        {
+        $validpage = false;
         }
     else
         {
-        $tile_type="";
-        $tile_nostyle = true;
-        }
-
-    if (!isset($tile_style)) 
-        {
-        $tile_style = "";
-        }
+        #Get field data
+        $buildstring = explode('?',$tile["url"]);
+        if(isset($buildstring[1])) 
+            {
+            parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
+            }
         
-    # Show freetext field if the tile style is not analytics
-    if ($tile_style != 'analytics') 
-        {
-        $freetext = empty($tile["txt"])? "true" : $tile["txt"];
+        if(isset($buildstring["tltype"]))
+            {
+            $tile_type=$buildstring["tltype"];
+            $tile_nostyle = isset($buildstring["tlstyle"]) && $tile_type!="conf" ? FALSE : TRUE;
+            $tile_style=$buildstring["tlstyle"];
+
+            $tile_style_colour = '';
+            if(allow_tile_colour_change($tile_type) && isset($buildstring['tlstylecolour']))
+                {
+                $tile_style_colour = $buildstring['tlstylecolour'];
+                }
+            }
+        else
+            {
+            $tile_type="";
+            $tile_nostyle = true;
+            }
+
+        if (!isset($tile_style)) 
+            {
+            $tile_style = "";
+            }
+            
+        # Show freetext field if the tile style is not analytics
+        if ($tile_style != 'analytics') 
+            {
+            $freetext = empty($tile["txt"])? "true" : $tile["txt"];
+            }
+        else 
+            {
+            $freetext = false;
+            }
+        
+        $promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : FALSE;
+
+        $tlsize = (isset($buildstring['tlsize']) && 'double' === $buildstring['tlsize'] ? $buildstring['tlsize'] : '');
+
+        $modifylink = ($tile_type=="ftxt") ? TRUE: FALSE;
+        
+        $notitle = isset($buildstring["nottitle"])? TRUE : FALSE;
+
+        $pagetitle = $lang["editdashtile"];
+        $formextra = '<input type="hidden" name="submitdashtile" value="true" />';
+        $formextra .= '<input type="hidden" name="editdashtile" value="'.$tile["ref"].'" />';
+        $validpage = true;
+        $submittext = $lang["save"];
         }
-    else 
-        {
-        $freetext = false;
-        }
-    
-    $promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : FALSE;
-
-    $tlsize = (isset($buildstring['tlsize']) && 'double' === $buildstring['tlsize'] ? $buildstring['tlsize'] : '');
-
-    $modifylink = ($tile_type=="ftxt") ? TRUE: FALSE;
-    
-    $notitle = isset($buildstring["nottitle"])? TRUE : FALSE;
-
-    $pagetitle = $lang["editdashtile"];
-    $formextra = '<input type="hidden" name="submitdashtile" value="true" />';
-    $formextra .= '<input type="hidden" name="editdashtile" value="'.$tile["ref"].'" />';
-    $validpage = true;
-    $submittext = $lang["save"];
     }
 
 /* Start Display*/

@@ -2176,3 +2176,35 @@ function get_dash_search_data($link='', $promimg=0)
         }
     return $searchdata;
     }
+
+/**
+ * Check if current user can edit dash tile. Users shouldn't be able to edit tiles that they can't view and only dash admins should be able to edit shared tiles.
+ *
+ * @param  int   $usertile   Ref of the tile being edited. Typically obtained from get_tile()
+ * @param  int   $audience   0 for tile available to one user, 1 for all users. Typically obtained from get_tile()
+ * @param  int   $user       Ref of the user editing the tile.
+ * 
+ * @return bool   Will return true if editing is allowed else will return false.
+ */
+function can_edit_tile(int $tileref, int $audience, int $user)
+    {
+    if ($audience === 0)
+        {
+        // User is trying to edit a tile visible to only them.
+        $result = ps_query("SELECT ref, user, dash_tile, order_by FROM user_dash_tile WHERE dash_tile = ? AND user = ?", ['i', $tileref, 'i', $user]);
+        if (isset($result[0]))
+            {
+            return true;
+            }
+        else
+            {
+            return false;
+            }
+        }
+    else
+        {
+        // Tile is available to all users so editable only to dash admin users.
+        // This includes tiles available to a specified group.
+        return checkPermission_dashadmin();
+        }
+    }
