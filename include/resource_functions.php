@@ -7407,6 +7407,8 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
                 if ($file_exists && filesize_unlimited($path) > 0)
                     {
                     $filesize = filesize_unlimited($path);
+                    $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+                    $GLOBALS["use_error_exception"] = true;
                     try
                         {
                         list($sw,$sh) = getimagesize($path);
@@ -7416,6 +7418,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
                         $sw=0;
                         $sh=0;
                         }
+                    $GLOBALS["use_error_exception"] = $use_error_exception_cache;
                     }
                 else
                     {
