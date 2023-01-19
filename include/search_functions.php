@@ -1695,6 +1695,95 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
+    else if(preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data))
+        {
+        /*
+        View report as search results.
+
+        Special search "!report" can contain extra info for the reports' query period.
+
+        Syntax: !reportID[p?][d??][fy????][fm??][fd??][ty????][tm??][td??]
+        Where:
+        - ID  is the actual report ref (mandatory)
+        - p   is the selected period (see $reporting_periods_default config option)
+        - d   is the period in specific number of days (p=0 in this case)
+        - fy,fm,fd (and their counter parts: ty,tm,td) represent a full date range (p=-1 in this case)
+
+        Examples for viewing as search results report #18:
+         - Last 7 days: !report18p7
+         - Last 23 days: !report18p0d23
+         - Between 2000-01-06 & 2023-03-16: !report18p-1fy2000fm01fd06ty2023tm03td16
+        */
+        debug('[search_special] Running a "!report" search...');
+        $no_results_sql = new PreparedStatementQuery(
+            $sql_prefix . "SELECT DISTINCT r.hit_count score, {$select} FROM resource AS r "
+            . $sql_join->sql
+            . ' WHERE 1 = 2 AND ' . $sql_filter->sql
+            . ' GROUP BY r.ref ORDER BY ' . $order_by,
+            array_merge($sql_join->parameters, $sql_filter->parameters)
+        );
+
+        // Users with no access control to reports get no results back (ie []).
+        if(!checkperm('t'))
+            {
+            debug(sprintf('[WARNING][search_special][access control] User #%s attempted to run "%s" search without the right permissions', (int) $userref, $search));
+            $sql = $no_results_sql;
+            }
+        else
+            {
+            include_once 'reporting_functions.php';
+            $report_id = $report_search_data[1];
+            $all_reports = get_reports();
+            $reports_w_thumbnail = array_filter(array_column($all_reports, 'query', 'ref'), 'report_has_thumbnail');
+            $reports_w_support_non_correlated_sql = array_filter(array_column($all_reports, 'support_non_correlated_sql', 'ref'));
+            $reports = array_diff_key($reports_w_thumbnail, $reports_w_support_non_correlated_sql);
+            if(isset($reports[$report_id]))
+                {
+                $report = $reports[$report_id];
+
+                $report_period = [];
+                $report_period_info_idxs = range(2,9);
+                $report_period_info_names = array_combine($report_period_info_idxs, ['period', 'period_days', 'from-y', 'from-m', 'from-d', 'to-y', 'to-m', 'to-d']);
+                $report_period_info_lookups = array_combine($report_period_info_idxs, ['p', 'd', 'fy', 'fm', 'fd', 'ty', 'tm', 'td']);
+                foreach($report_period_info_names as $idx => $info_name)
+                    { 
+                    if(!isset($report_search_data[$idx]))
+                        {
+                        continue;
+                        }
+
+                    $report_period[$info_name] = str_replace($report_period_info_lookups[$idx], '', $report_search_data[$idx]);
+                    }
+
+                $period = report_process_period($report_period);
+
+                $report_sql = report_process_query_placeholders($report, [
+                    '[from-y]' => $period['from_year'],
+                    '[from-m]' => $period['from_month'],
+                    '[from-d]' => $period['from_day'],
+                    '[to-y]' => $period['to_year'],
+                    '[to-m]' => $period['to_month'],
+                    '[to-d]' => $period['to_day'],
+                ]);
+                $report_sql = preg_replace('/;\s?/m', '', $report_sql, 1);
+
+                $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource AS r"
+                    . " INNER JOIN ($report_sql) AS rsr ON rsr.thumbnail = r.ref "
+                    . $sql_join->sql
+                    . ' WHERE ' . $sql_filter->sql
+                    . ' GROUP BY r.ref ORDER BY ' . $order_by
+                    . $sql_suffix;
+                $sql->parameters = array_merge($sql_join->parameters, $sql_filter->parameters);
+                // printf('<br>$sql = %s', print_r($sql, true));
+                debug("[search_special] SQL = " . json_encode($sql));
+                }
+            else
+                {
+                debug("[search_special] Report #{$report_id} not found");
+                $sql = $no_results_sql;
+                }
+            }
+        }
 
     # Within this hook implementation, set the value of the global $sql variable:
     # Since there will only be one special search executed at a time, only one of the

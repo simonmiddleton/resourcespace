@@ -27,7 +27,8 @@ function get_reports()
             {
             $r[$n]["name"] = get_report_name($r[$n]);
             $r[$n]["contains_date"] = report_has_date((string) $r[$n]["query"]);
-            $return[] = $r[$n]; # Adds to return array.
+            $r[$n]['has_thumbnail'] = report_has_thumbnail((string) $r[$n]["query"]);
+            $return[] = $r[$n];
             }
         }
     return $return;
@@ -91,18 +92,15 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     else
         {
         // Generate report results normally
-        $sql_parameters=array();
-        $sql=$report["query"];
-        $sql=str_replace("[from-y]",$from_y,$sql);
-        $sql=str_replace("[from-m]",$from_m,$sql);
-        $sql=str_replace("[from-d]",$from_d,$sql);
-        $sql=str_replace("[to-y]",$to_y,$sql);
-        $sql=str_replace("[to-m]",$to_m,$sql);
-        $sql=str_replace("[to-d]",$to_d,$sql);
-
-        global $view_title_field;
-        $sql=str_replace("[title_field]",$view_title_field,$sql);
-
+        $sql_parameters = array();
+        $report_placeholders = [
+            '[from-y]' => $from_y,
+            '[from-m]' => $from_m,
+            '[from-d]' => $from_d,
+            '[to-y]' => $to_y,
+            '[to-m]' => $to_m,
+            '[to-d]' => $to_d,
+        ];
         if((bool)$report['support_non_correlated_sql'] === true && !empty($search_params))
             {
             // If report supports being run on search results, embed the non correlated sql necessary to feed the report
@@ -130,12 +128,11 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 debug("Invalid SQL returned by do_search(). Report cannot be generated");
                 return "";
                 }
-            $sql_parameters=array_merge($sql_parameters,$returned_search->parameters);
-            $noncorsql = sprintf('(SELECT noncorsql.ref FROM (%s) AS noncorsql)', $returned_search->sql);
-
-            $sql = str_replace(REPORT_PLACEHOLDER_NON_CORRELATED_SQL, $noncorsql, $sql);
+            $sql_parameters = array_merge($sql_parameters, $returned_search->parameters);
+            $report_placeholders[REPORT_PLACEHOLDER_NON_CORRELATED_SQL] = "(SELECT ncsql.ref FROM ({$returned_search->sql}) AS ncsql)";
             }
-        
+
+        $sql = report_process_query_placeholders($report['query'], $report_placeholders);
         $results = ps_query($sql,$sql_parameters);
         }
     
@@ -623,4 +620,92 @@ function report_has_date_by_id(int $report)
     $query = ps_value("SELECT `query` as value FROM report WHERE ref = ?", array("i",$report), 0);
     $result = report_has_date($query);
     return $result;
+    }
+
+/**
+ * Check if report has a "thumbnail" column in its SQL query.
+ * 
+ * @param string $query The reports' SQL query.
+*/
+function report_has_thumbnail(string $query): bool
+    {
+    return preg_match('/(AS )*\'thumbnail\'/mi', $query);
+    }
+
+/**
+ * Get report date range based on user input
+ * 
+ * @param array $info Information about the period selection. See unit test for example input
+ */
+function report_process_period(array $info): array
+    {
+    $availabe_periods = array_merge($GLOBALS['reporting_periods_default'], [0, -1]);
+    $period = isset($info['period']) && in_array($info['period'], $availabe_periods) ? $info['period'] : $availabe_periods[0];
+
+    // Specific number of days specified.
+    if($period == 0)
+        {
+        $period = (int) $info['period_days'] ?? 0;
+        if($period < 1)
+            {
+            $period = 1;
+            }
+        }
+
+    // Specific date range specified.
+    if($period == -1)
+        {
+        $from_y = $info['from-y'] ?? '';
+        $from_m = $info['from-m'] ?? '';
+        $from_d = $info['from-d'] ?? '';
+        
+        $to_y = $info['to-y'] ?? '';
+        $to_m = $info['to-m'] ?? '';
+        $to_d = $info['to-d'] ?? '';
+        }
+    // Work out the FROM and TO range based on the provided period in days.
+    else
+        {
+        $start = time() - (60 * 60 * 24 * $period);
+
+        $from_y = date('Y', $start);
+        $from_m = date('m', $start);
+        $from_d = date('d', $start);
+            
+        $to_y = date('Y');
+        $to_m = date('m');
+        $to_d = date('d');
+        }
+
+    return [
+        'from_year' => $from_y,
+        'from_month' => $from_m,
+        'from_day' => $from_d,
+        'to_year' => $to_y,
+        'to_month' => $to_m,
+        'to_day' => $to_d,
+    ];
+    }
+
+
+/**
+ * Find and replace a reports' query placeholers with their values.
+ * 
+ * @param string $query Reports' SQL query
+ * @param array $placeholders Map between a placeholder and its actual value
+ */
+function report_process_query_placeholders(string $query, array $placeholders): string
+    {
+    $default_placeholders = [
+        '[title_field]' => $GLOBALS['view_title_field'],
+    ];
+    $all_placeholders = array_merge($default_placeholders, $placeholders);
+
+    $sql = $query;
+    foreach($all_placeholders as $placeholder => $value)
+        {
+        $sql = str_replace($placeholder, $value, $sql);
+        }
+
+    return $sql;
     }
