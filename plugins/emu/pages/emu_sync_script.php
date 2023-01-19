@@ -97,8 +97,16 @@ if(isset($emu_userref))
 
 
 emu_script_log('Starting...', $emu_log_file);
-
-$emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
+$GLOBALS['use_error_exception'] = true;
+try
+    {
+    $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
+    }
+catch(Throwable $t)
+    {
+    emu_script_log(PHP_EOL . $t->getMessage(), $emu_log_file);
+    exit();
+    }
 
 // Step 1 - Build the EMu Objects Data array
 emu_script_log(PHP_EOL . 'Building EMu found records data array', $emu_log_file);
@@ -202,7 +210,16 @@ if(0 < $rs_emu_resources_count)
     {
     emu_script_log(PHP_EOL . 'Archiving resources', $emu_log_file);
 
-    $emu_api_expired_resources = new EMuAPI($emu_api_server, $emu_api_server_port);
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $emu_api_expired_resources = new EMuAPI($emu_api_server, $emu_api_server_port);
+        }
+    catch(Throwable $t)
+        {
+        emu_script_log(PHP_EOL . $t->getMessage(), $emu_log_file);
+        exit();
+        }
 
     foreach($rs_emu_resources as $rs_emu_resource)
         {

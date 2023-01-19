@@ -3313,3 +3313,40 @@ $thumbs_display_archive_state = false;
 
 // Cache the count of search results to improve performance
 $cache_search_count = true;
+
+/*
+Separator used for multiple node values in the resource table (column fieldX). The separator will be used as is, both for
+storing and displaying such information (ie on search results or API responses).
+
+IMPORTANT: if the separator value is changed then pages/tools/update_data_joins.php must be run to update currently 
+stored values. This will affect the response of API calls that return fieldX data.
+*/
+$field_column_string_separator = ',';
+
+// $uploader_plugins - Array of additional Uppy plugins that can be enabled 
+// See https://uppy.io/docs/plugins/ for more details on each plugin
+//
+// Nearly all of these plugins require the setting up of a Companion server which is not part of or affiliated with ResourceSpace. 
+// Please refer to the official Companion documentation for instructions on setting this up https://uppy.io/docs/companion/
+// Note that companion server should have the ResourceSpace URL included in the 'COMPANION_UPLOAD_URLS' environmnent variable
+// 
+// Supported options (* requires a Companion server and $uppy_companion_url to be set)
+//
+// Webcam
+// GoogleDrive*
+// Facebook*
+// Dropbox*
+// Onedrive*
+// Instagram*
+// Zoom*
+// Unsplash*
+// Url*
+
+// e.g.
+// $uploader_plugins[] = "GoogleDrive";
+// $uploader_plugins[] = "Facebook";
+// $uploader_plugins[] = "Webcam";
+// $uploader_plugins[] = "Onedrive";
+
+$uploader_plugins = [];
+$uppy_companion_url = "";

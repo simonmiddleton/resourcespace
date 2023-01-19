@@ -5356,7 +5356,7 @@ function render_array_in_table_cells($array)
             }
         else
             {
-            echo htmlspecialchars($value);
+            echo htmlspecialchars((string)$value);
             }
                 
         echo "</td></tr>";

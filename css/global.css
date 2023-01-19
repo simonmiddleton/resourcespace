@@ -890,6 +890,21 @@ div.autocomplete ul li {
     display:none;
 }
 
+.uppy-DashboardTab-btn {
+    max-height:73px; 
+}
+ 
+.uppy-ProviderBrowserItem-inner {
+    color: #000;
+    background-color: #F0F0F0;
+    width: 100%;
+}
+ 
+.uppy-ProviderBrowser-searchInput[type="text"] {
+    padding-left: 27px;
+    margin: 0 8px;
+}
+
 #showlog,#hidelog
     {
     margin-top:10px;

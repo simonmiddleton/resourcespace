@@ -43,12 +43,13 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
         }
 
     $resultset = array();
+    $get_resource_table_joins = get_resource_table_joins();
     $i=0;
     for($n = $offset; $n < $resultcount; $n++)
         {
         if (is_array($results[$n]))
             {
-            $resultset[$i] = array_map("i18n_get_translated",$results[$n]);
+            $resultset[$i] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
             $i++;
             }
         }
@@ -73,12 +74,13 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
         
+    $get_resource_table_joins = get_resource_table_joins();
     $resultcount= count ($results);
     for($n=0;$n<$resultcount;$n++)
         {
         if(is_array($results[$n]))
             {
-            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            $results[$n] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
             }
         }
     return $results;
@@ -283,6 +285,7 @@ function api_get_resource_data($resource)
             }
         }
         
+    $resdata = process_resource_data_joins_values($resdata, $joins);
     return $resdata;
     }
 
@@ -610,8 +613,10 @@ function api_add_resource_nodes($resource,$nodestring)
         }
     foreach ($joined_fields_to_update as $field_update)
         {
-        $resource_node_data = get_data_by_field($resource, $field_update);
-        ps_query("UPDATE resource SET field".$field_update."= ? WHERE ref= ?", ['s', $resource_node_data, 'i', $resource]);
+        // get_data_by_field() always returns the value separated by ", " when flattening so we have to ensure it's stored
+        // using the field_column_string_separator in the data_joins (ie fieldX) columns
+        $resource_node_data = str_replace(', ', $GLOBALS['field_column_string_separator'], get_data_by_field($resource, $field_update));
+        update_resource_field_column($resource, $field_update, $resource_node_data);
         }
     
     return true;

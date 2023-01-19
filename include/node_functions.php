@@ -2276,7 +2276,6 @@ function get_node_strings($resource_nodes,$allnodes = false)
 * 
 * @param  array    $nodes  List of nodes to search through (MUST contain elements with at least the "ref" index)
 * @param  integer  $id     Node ref we compute the branch path for
-* @param  array    $carry  Branch structure data which is carried forward. List of nodes, first item is the ROOT node
 * 
 * @return array Branch path structure starting from root to the searched node
 */

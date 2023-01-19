@@ -340,29 +340,56 @@ function update_fieldx(int $metadata_field_ref)
     {
     global $NODE_FIELDS;
 
-    $joins=get_resource_table_joins();  // returns an array of field refs  
-    if($metadata_field_ref > 0 && (in_array($metadata_field_ref,$joins)))
+    if($metadata_field_ref > 0 && in_array($metadata_field_ref, get_resource_table_joins()))
         {
         $fieldinfo = get_resource_type_field($metadata_field_ref);
         $allresources = ps_array("SELECT ref value FROM resource WHERE ref>0 ORDER BY ref ASC", []);
         if(in_array($fieldinfo['type'],$NODE_FIELDS))
+            {
+            if($fieldinfo['type'] === FIELD_TYPE_CATEGORY_TREE)
+                {
+                $all_tree_nodes_ordered = get_cattree_nodes_ordered($fieldinfo['ref'], null, true);
+                // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
+                array_shift($all_tree_nodes_ordered);
+                $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
+
+                foreach($allresources as $resource)
+                    {
+                    // category trees are using full paths to node names
+                    $resource_nodes = array_keys(get_cattree_nodes_ordered($fieldinfo['ref'], $resource, false));
+                    $node_names_paths = [];
+                    foreach($resource_nodes as $node_ref)
+                        {
+                        $node_names_paths[] = implode(
+                            '/',
+                            array_column(compute_node_branch_path($all_tree_nodes_ordered, $node_ref), 'name')
+                        );
+                        }
+
+                    update_resource_field_column(
+                        $resource,
+                        $metadata_field_ref,
+                        implode($GLOBALS['field_column_string_separator'], $node_names_paths)
+                    );
+                    }
+                }
+            else
                 {
                 foreach($allresources as $resource)
                     {
                     $resnodes = get_resource_nodes($resource, $metadata_field_ref, true);
+                    uasort($resnodes, 'node_orderby_comparator'); 
                     $resvals = array_column($resnodes,"name");
-                    $resdata = implode(",",$resvals);
-                    $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
+                    $resdata = implode($GLOBALS['field_column_string_separator'], $resvals);
+                    update_resource_field_column($resource, $metadata_field_ref, $resdata);
                     }
                 }
+            }
         else
                 {
                 foreach($allresources as $resource)
                     {
-                    $resdata = get_data_by_field($resource,$metadata_field_ref);
-                    $value = truncate_join_field_value(strip_leading_comma($resdata));
-                    ps_query("update resource set field" . $metadata_field_ref . "= ? where ref= ?", ['s', $value, 'i', $resource]);
+                    update_resource_field_column($resource, $metadata_field_ref, get_data_by_field($resource, $metadata_field_ref));
                     }
                 }
          }

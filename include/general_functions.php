@@ -4897,7 +4897,7 @@ function get_system_status()
         foreach ($extra_warn_checks as $extra_warn_check)
             {
             $return['results'][$extra_warn_check['name']] = [
-                'status' => 'WARN',
+                'status' => 'WARNING',
                 'info' => $extra_warn_check['info'],
                 ];
             }
@@ -5084,4 +5084,22 @@ function command_line_only()
         http_response_code(401);
         exit('Access denied - Command line only!');
         }
+    }
+
+/**
+ * Helper function to quickly build a list of values, all prefixed the same way.
+ * 
+ * Example use:
+ * $fieldXs = array_map(prefix_value('field'), [3, 88]);
+ * 
+ * @param string $prefix Prefix value to prepend.
+ * 
+ * @return Closure
+ */
+function prefix_value(string $prefix): Closure
+    {
+    return function(string $value) use ($prefix): string
+        {
+        return $prefix . $value;
+        };
     }

@@ -207,7 +207,7 @@ echo $hidden_input_elements;
                             };
                     }
             },
-            'multiple' : <?php echo (!$is_search ? 'false' : 'true'); ?>,
+            'multiple' : true,
             'themes' : {
                 'icons' : false
             }

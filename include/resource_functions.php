@@ -382,7 +382,7 @@ function get_resource_data($ref,$cache=true)
 
     # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
     $joins=get_resource_table_joins();
-    $join_fields="";foreach ($joins as $j) {$join_fields.=",field" . $j;}
+    $join_fields = empty($joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $joins));
 
     $resource=ps_query("select ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " from resource where ref=?",array("i",$ref));
     if (count($resource)==0)
@@ -440,7 +440,7 @@ function get_resource_data_batch($refs)
 
     # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
     $joins=get_resource_table_joins();
-    $join_fields="";foreach ($joins as $j) {$join_fields.=",field" . $j;}
+    $join_fields = empty($joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $joins));
 
     $resdata=ps_query("SELECT ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
     // Create array with resource ID as index
@@ -679,12 +679,26 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 // Check nodes are valid for this field
-                $fieldnodes   = get_nodes($fields[$n]['ref'], '', (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type']));
-                $node_options = array_column($fieldnodes, 'name', 'ref');
-                $validnodes   = array_column($fieldnodes, 'ref');
+                if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                    {
+                    $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
+                    // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
+                    array_shift($all_tree_nodes_ordered);
+                    $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
 
-                $ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);
-                natsort($ui_selected_node_values);
+                    $node_options = array_column($all_tree_nodes_ordered, 'name', 'ref');
+                    $validnodes = array_keys($node_options);
+                    }
+                else
+                    {
+                    $fieldnodes   = get_nodes($fields[$n]['ref'], '', false);
+                    $node_options = array_column($fieldnodes, 'name', 'ref');
+                    $validnodes   = array_column($fieldnodes, 'ref');
+                    }
+
+
+                // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
+                $ui_selected_node_values = array_values(array_intersect($validnodes, $ui_selected_node_values));
 
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
@@ -705,9 +719,22 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         // Build new value:
                         foreach($ui_selected_node_values as $ui_selected_node_value)
                             {
+                            if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                                {
+                                $new_nodevals[] = implode(
+                                    '/',
+                                    array_column(
+                                        compute_node_branch_path($all_tree_nodes_ordered, $ui_selected_node_value),
+                                        'name'
+                                    )
+                                );
+                                continue;
+                                }
+
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
-                        $new_nodes_val = implode(",", $new_nodevals);
+
+                        $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
                             update_resource_field_column($ref,$fields[$n]["ref"],$new_nodes_val);
@@ -1408,12 +1435,25 @@ function save_resource_data_multi($collection,$editsearch = array())
                 }
 
             // Check nodes are valid for this field
-            $fieldnodes   = get_nodes($fields[$n]['ref'], '', (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type']));
-            $node_options = array_column($fieldnodes, 'name', 'ref');
-            $valid_nodes  = array_column($fieldnodes, 'ref');
+            if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                {
+                $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
+                // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
+                array_shift($all_tree_nodes_ordered);
+                $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
 
-            // Store selected/deselected values in array
-            $ui_selected_node_values=array_intersect($ui_selected_node_values,$valid_nodes);
+                $node_options = array_column($all_tree_nodes_ordered, 'name', 'ref');
+                $valid_nodes = array_keys($node_options);
+                }
+            else
+                {
+                $fieldnodes   = get_nodes($fields[$n]['ref'], '', false);
+                $node_options = array_column($fieldnodes, 'name', 'ref');
+                $valid_nodes   = array_column($fieldnodes, 'ref');
+                }
+
+            // $valid_nodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
+            $ui_selected_node_values = array_intersect($valid_nodes, $ui_selected_node_values);
             $ui_deselected_node_values = array_diff($valid_nodes, $ui_selected_node_values);
 
             if ($mode=="AP")
@@ -1464,14 +1504,17 @@ function save_resource_data_multi($collection,$editsearch = array())
                 $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
                 debug('Removed nodes from resource #' . $ref . ' : ' . implode(',',$removed_nodes));
 
-                // Work out what new nodes for this resource  will be
-                $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
+                // Work out what new nodes for this resource  will be while maintaining their order
+                $new_nodes = array_intersect(
+                    $valid_nodes,
+                    array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes)
+                );
                 debug('New nodes: ' . implode(',',$new_nodes));
 
                 if(count($added_nodes)>0 || count($removed_nodes)>0)
                     {
                     $existing_nodes_value = '';
-                    $new_nodes_val        = '';
+                    $new_nodes_val = [];
                     $log_nodes_old = [];
                     $log_nodes_new = [];
 
@@ -1480,8 +1523,22 @@ function save_resource_data_multi($collection,$editsearch = array())
                     // Build new value:
                     foreach($new_nodes as $new_node)
                         {
-                        $new_nodes_val .= ",{$node_options[$new_node]}";
-                        $log_nodes_new[] = $node_options[$new_node];
+                        if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                            {
+                            $node_branch_path = implode(
+                                '/',
+                                array_column(
+                                    compute_node_branch_path($all_tree_nodes_ordered, $new_node),
+                                    'name'
+                                )
+                            );
+                            $new_nodes_val[] = $node_branch_path;
+                            $log_nodes_new[] = $node_options[$new_node];
+
+                            continue;
+                            }
+
+                        $new_nodes_val[] = $log_nodes_new[] = $node_options[$new_node];
                         }
                     // Build existing value:
                     foreach($current_field_nodes as $current_field_node)
@@ -1503,7 +1560,8 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if(in_array($fields[$n]['ref'], $joins))
                         {
                         $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                        $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$new_nodes_val;
+                        $resource_update_params[$ref][]="s";
+                        $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
                         }
                     }
                 }
@@ -1605,7 +1663,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                     if (count($new_nodes) > 0)
                         {
                         $date_range_node_values_to_add = array_column(get_nodes_by_refs($new_nodes), 'name');
-                        $new_nodes_val = ',' . implode(',', $date_range_node_values_to_add);
+                        $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $date_range_node_values_to_add);
                         $log_nodes_new = $date_range_node_values_to_add;
                         }
 
@@ -2276,7 +2334,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         return false;
         }
 
-    $value = trim((string)$value);
+    $value = $data_joins_field_value = trim((string)$value);
     if($value === '' && $fieldinfo['required'])
         {
         $errors[] = i18n_get_translated($fieldinfo['title']) . ": {$lang['requiredfield']}";;
@@ -2527,7 +2585,8 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
                 $treenodenames = get_cattree_node_strings($all_treenodes, true); # True means names are paths to nodes; False means names are node names
-                $value = implode(",",$treenodenames);        
+                $value = implode(",",$treenodenames);
+                $data_joins_field_value = implode($GLOBALS['field_column_string_separator'], $treenodenames);
                 }
             else
                 {
@@ -2541,6 +2600,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
                     }
                 $value = implode(",",$node_names);
+                $data_joins_field_value = implode($GLOBALS['field_column_string_separator'], $node_names);
                 }
             }
 
@@ -2575,7 +2635,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     $joins = get_resource_table_joins();
     if(in_array($fieldinfo['ref'],$joins))
         {
-        update_resource_field_column($resource,$field,$value);
+        update_resource_field_column($resource,$field, $data_joins_field_value);
         }
 
     # Add any onchange code
@@ -3580,11 +3640,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
     $irrelevant_rtype_fields = ps_array($query,["i",$from]);
     $irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
     $filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
-
-    $joins_sql="";
-    foreach ($filtered_joins as $join){
-        $joins_sql.=",field$join ";
-    }
+    $joins_sql = empty($filtered_joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $filtered_joins));
 
     $archive=ps_value("SELECT archive value FROM resource WHERE ref = ?",["i",$from],0);
 
@@ -6603,7 +6659,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                                     }
                                 }
                             $resource_type_field=$field_nodes[$key]["resource_type_field"];
-                            $values_string = implode(",",$node_vals);
+                            $values_string = implode($GLOBALS['field_column_string_separator'], $node_vals);
                             update_resource_field_column($ref,$resource_type_field,$values_string);
                             }
                         }
@@ -8957,6 +9013,53 @@ function update_resource_field_column(int $resource,int $field, string $value)
     $params = ["s",truncate_join_field_value($value),"i",$resource];
     ps_query($sql,$params);
     return true;
+    }
+
+/**
+* Convert $data_joins (ie fieldX column) value to a user friendly version.
+* 
+* IMPORTANT: csv in this context simply means user defined separator values (relies on {@see $field_column_string_separator}).
+* 
+* Text value will be:-
+* - split by the configued separator {@see $field_column_string_separator};
+* - have all parts translated; (note: to correctly translate tree paths, a part will also be broken into path elements)
+* - glued back using the same separator
+*
+* @param string|null $value Text to be processed
+* 
+* @return string|null
+*/
+function data_joins_field_value_translate_and_csv(?string $value): ?string
+    {
+    if(is_null($value))
+        {
+        return null;
+        }
+
+    $value_parts = [];
+    $split_by_fcss = explode($GLOBALS['field_column_string_separator'], $value);
+    foreach($split_by_fcss as $el)
+        {
+        $value_parts[] = implode('/', array_map('i18n_get_translated', explode('/', $el)));
+        }
+
+    return implode($GLOBALS['field_column_string_separator'], $value_parts);
+    }
+
+/**
+ * Process resource data_joins (ie fieldX columns) values
+ * 
+ * @param array $resource             A resource table record
+ * @param array $resource_table_joins List of refs for the resource table data_joins. {@see get_resource_table_joins()}
+ * 
+ * @return array Returns the resource record with updated data_joins (ie fieldX columns) values
+ */
+function process_resource_data_joins_values(array $resource, array $resource_table_joins): array
+    {
+    $fieldX_column_names = array_map(prefix_value('field'), $resource_table_joins);
+    $fieldX_data = array_intersect_key($resource, array_flip($fieldX_column_names));
+    $fieldX_translated_csv = array_map('data_joins_field_value_translate_and_csv', $fieldX_data);
+    return array_merge($resource, $fieldX_translated_csv);
     }
 
 /**
