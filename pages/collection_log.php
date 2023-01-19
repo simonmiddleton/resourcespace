@@ -82,7 +82,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 			$standard = array('#all_users', '#new_resource');
 			$translated   = array($lang["all_users"], $lang["new_resource"]);
 			$newnotes = " - " . str_replace($standard, $translated, $log[$n]["notes"]);
-			echo $newnotes;
+			echo htmlspecialchars($newnotes);
 		}
 		?></td>
 	<td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo $log[$n]["resource"]?></a><?php } ?></td>

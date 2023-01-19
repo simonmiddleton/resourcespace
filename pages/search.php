@@ -1579,6 +1579,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
     
                 hook('beforesearchviewcalls');
 
+                // Prepare for display all $data_joins fields (ie fieldX columns)
+                $result[$n] = process_resource_data_joins_values($result[$n], get_resource_table_joins());
+
                 if ($display=="thumbs")
                     {
                     #  ---------------------------- Thumbnails view ----------------------------
