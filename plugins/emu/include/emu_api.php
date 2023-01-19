@@ -46,6 +46,10 @@ class EMuAPI
         {
         $this->session = new IMuSession($server_address, $server_port);
 
+        // IMPORTANT: connecting now will throw an exception if connection is refused. Calling code should deal with it
+        // as appropriate for the context
+        $this->session->connect();
+
         return;
         }
 

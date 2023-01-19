@@ -4897,7 +4897,7 @@ function get_system_status()
         foreach ($extra_warn_checks as $extra_warn_check)
             {
             $return['results'][$extra_warn_check['name']] = [
-                'status' => 'WARN',
+                'status' => 'WARNING',
                 'info' => $extra_warn_check['info'],
                 ];
             }

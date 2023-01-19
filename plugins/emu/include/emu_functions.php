@@ -98,9 +98,18 @@ function get_emu_resources()
 */
 function get_emu_data($emu_api_server, $emu_api_server_port, array $irns, array $emu_rs_mappings)
     {
-    $return  = array();
-    $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
+        }
+    catch(Throwable $t)
+        {
+        return [];
+        }
+    unset($GLOBALS['use_error_exception']);
 
+    $return = [];
     foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
         {
         $columns_list = array_keys($emu_module_columns);
