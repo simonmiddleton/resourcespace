@@ -317,7 +317,6 @@ $corefields = array(
         'download_filename_field',
         'extracted_text_field',
         'facial_recognition_tag_field',
-        'speedtaggingfield',
         'staticsync_filepath_to_field',
         'staticsync_extension_mapping_append_values_fields',
         'portrait_landscape_field',

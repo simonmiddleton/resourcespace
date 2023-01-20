@@ -257,8 +257,6 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['metadata'] . '</h3><div id="SystemConfigMetadataSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('metadata_report', $lang['metadata-report'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('metadata_read_default', $lang['embedded_metadata'], array($lang['embedded_metadata_donot_extract_option'], $lang['embedded_metadata_extract_option']), 420, '', true);
-$page_def[] = config_add_boolean_select('speedtagging', $lang['speedtagging'], $enable_disable_options, 420, '', true);
-$page_def[] = config_add_single_ftype_select('speedtaggingfield', $lang['speedtaggingfield'], 420, false, $TEXT_FIELD_TYPES,true);
 $page_def[] = config_add_html('</div>');
 
 

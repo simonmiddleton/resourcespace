@@ -22,24 +22,6 @@ if ($modal || getval("ajax","")!="")
 	<script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
 	<?php
 	}
-
-if (isset($anonymous_login) && $anon_login_modal && !$modal && getval("logout","")==false && !array_key_exists("username",$_POST))
-	{
-	$anon_login_extras="loginmodal=true&url=".urlencode($url)."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""));
-	
-	$anon_login_redirect="/pages/".$default_home_page."?".$anon_login_extras;
-	if ($use_theme_as_home)
-		{
-		$anon_login_redirect="/pages/themes.php?".$anon_login_extras;
-		}
-	if ($use_recent_as_home)
-		{
-		$anon_login_redirect="/pages/search.php?search=".urlencode('!last'.$recent_search_quantity)."&".$anon_login_extras;
-		}
-	# this shouldn't load as a unique page. go to the home page and display the login modal
-    debug("[login.php] \$anon_login_redirect = $anon_login_redirect");
-	redirect($baseurl.$anon_login_redirect);
-	}
         
 # process log in
 $error=getval("error","");

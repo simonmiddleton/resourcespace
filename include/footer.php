@@ -176,9 +176,6 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
 		else if ($pagename=="help"){
 			$pagetitle=$lang["helpandadvice"];
 		}
-		else if ($pagename=="tag"){
-			$pagetitle=$lang["tagging"];
-		}
 		else if (strpos($pagename,"upload")!==false){
 			$pagetitle=$lang["upload"];
 		}

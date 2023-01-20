@@ -581,7 +581,7 @@ function HookSimplesamlAllReplaceheadernav1anon()
         return false;
         }
 
-    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block, $simplesaml_allow_standard_login, $simplesaml_login;
+    global $baseurl, $lang, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block, $simplesaml_allow_standard_login, $simplesaml_login;
 
     // Don't show any link if signed in via SAML already and standard logins have been disabled
     if(!$simplesaml_allow_standard_login && !$simplesaml_login && simplesaml_is_authenticated())
@@ -594,16 +594,10 @@ function HookSimplesamlAllReplaceheadernav1anon()
         return false;
         }
 
-    $onClick = '';
-
-    if($anon_login_modal)
-        {
-        $onClick = 'onClick="return ModalLoad(this, true);"';
-        }
         ?>
     <ul>
         <li>
-            <a href="<?php echo $baseurl; ?>/?usesso=true"<?php echo $onClick; ?>><?php echo $lang['login']; ?></a>
+            <a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo $lang['login']; ?></a>
         </li>
     <?php
     if($contact_link)
