@@ -68,14 +68,25 @@ function HookRse_VersionAllGet_alternative_files_extra_sql($resource)
     }
 
     
-function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$existing,$postvals)
+function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$existing,$postvals,&$errors)
     {
     # Process the batch revert action - hooks in to the save operation (save_resource_data_multi())
-
+    global $FIXED_LIST_FIELD_TYPES, $lang;
     # Remove text/option(s) mode?
     if (($postvals["modeselect_" . $field["ref"]] ?? "") == "Revert")
         {
         $revert_date = $postvals["revert_" . $field["ref"]] ?? "";
+
+        if(in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            // Check if nodes can be reverted - only supported from date moved to system upgrade level 23 (v10.1)
+            $revert_min_time = get_sysvar("fixed_list_revert_enabled");
+            if($revert_min_time  > $revert_date)
+                {
+                $errors[$field["ref"]] = str_replace("%%DATE%%",$revert_min_time,$lang["rse_version_invalid_time"]);
+                return false;
+                }                                
+            }
         
         # Find the value of this field as of this date and time in the resource log.
         $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);

@@ -15,3 +15,4 @@ $lang["rse_version_override_groups"]= "API calls by the following user groups ca
 $lang["rse_version_log_not_found"]  = "Log entry not found";
 $lang["rse_version_revert_state"]   = "Revert state";
 $lang["rse_version_rstate_changes"] = "Reverting state for collection #%COLLECTION by replaying events up to, but not including selected record.";
+$lang["rse_version_invalid_time"]   = "Reverting to a time prior to %%DATE%% is not supported";
