@@ -7,7 +7,7 @@ if (checkperm("b")){exit($lang["error-permissiondenied"]);}
 include_once dirname(__FILE__)."/../include/research_functions.php";
 
 
-$sort            = getval('sort', 'DESC');
+$sort            = getval('sort', 'ASC');
 $search          = getval('search', '');
 $last_collection = getval('last_collection', '');
 $restypes        = getval('restypes', '');
@@ -29,7 +29,6 @@ if('!collection' === substr($search, 0, 11) && "!collection{$collection}" == $se
     {
     $order_by = getval('order_by', $default_collection_sort);
     }
-
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share

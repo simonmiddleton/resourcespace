@@ -866,7 +866,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $editsearch["search"]   = $search;
                 $editsearch["restypes"] = $restypes;
                 $editsearch["archive"]  = $archive;
-                $save_errors=save_resource_data_multi(0,$editsearch);
+                $save_errors=save_resource_data_multi(0,$editsearch,$_POST);
 
                 // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
                 if(!is_array($save_errors) && $edit_selection_collection_resources)
@@ -917,7 +917,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 }
             else
                 {
-                $save_errors=save_resource_data_multi($collection);
+                $save_errors=save_resource_data_multi($collection, [],$_POST);
                 if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
                     redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));

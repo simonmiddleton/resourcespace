@@ -2076,7 +2076,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
-
+        $selected_nodes = get_resource_nodes($ref, $field['ref']);
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
             $name = "nodes[{$field['ref']}]";
@@ -2091,7 +2091,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 $name = "field_{$field['ref']}";
                 }
 			
-			$field_nodes = array();
+			$field_nodes = array_column($selected_nodes,"ref");
 			foreach($selected_nodes as $selected_node)
 				{
                 $node_data = array();

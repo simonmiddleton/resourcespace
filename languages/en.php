@@ -3188,3 +3188,8 @@ $lang["upload_view_log"]                    = "View log";
 $lang["code_sign_required"]                 = "Inline code signing";
 $lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";
 $lang["search_full_text"]                   = "Search all text (full text search)";
+
+$lang["error_invalid_revert_option"]        = "The previously stored value '%%VALUE%%' could not be found in the current options. Please check if the name of this option has changed and manually update the resource if required.";
+$lang["error_invalid_revert_date"]          = "The previously stored date '%%VALUE%%' is invalid. Please update the resource manually if required.";
+$lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
+$lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";

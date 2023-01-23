@@ -105,9 +105,11 @@ $use_cases = [
         'expected' => '',
     ],
 ];
+
 foreach($use_cases as $use_case)
     {
     $result = get_data_by_field($use_case['resource'], $use_case['rtf'], $use_case['flatten'] ?? true);
+
     if($result instanceof Generator)
         {
         $result = iterator_to_array($result);
@@ -119,8 +121,6 @@ foreach($use_cases as $use_case)
         return false;
         }
     }
-
-
 
 // Tear down
 unset(

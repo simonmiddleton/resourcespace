@@ -1,9 +1,7 @@
 <?php
 command_line_only();
 
-
 $resourcea=create_resource(1,0);
-
 // Create a standard text field
 $field_title = 'Text field ABC';
 $text_field_abc = create_resource_type_field($field_title, 1, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, 'textfieldabc', false);
@@ -48,13 +46,15 @@ $carrotnode = set_node(NULL, $tree_field_abc, "Carrot",$vegnode,60);
 
 $update_errors = [];
 $set_values = ["Apple","Fruit"];
-$log_value = "+ Fruit\n+ Apple";
-$set_value = implode(",",$set_values);
+$log_value = "+ Fruit/Apple\n+ Fruit"; // Changed for 10.1 as full paths to nodes are now logged to hanle duplicate node names
+$set_value = implode(NODE_NAME_STRING_SEPARATOR,$set_values);
 $check_value = "Fruit/Apple";
+
 update_field($resourcea,$tree_field_abc,$set_value,$update_errors);
 
 // SUBTEST C - Check value is saved
-$test_value = get_node_strings(get_resource_nodes($resourcea,$tree_field_abc,true));
+$resnodes = get_resource_nodes($resourcea,$tree_field_abc,true);
+$test_value = get_node_strings($resnodes);
 if(!in_array($check_value,$test_value))
     {
     echo "SUBTEST C";
@@ -63,7 +63,7 @@ if(!in_array($check_value,$test_value))
 
 // SUBTEST D - Check action has been logged correctly
 $reslog = get_resource_log($resourcea)['data'];
-$logok = false;  
+$logok = false;;
 foreach($reslog as $logentry)
     {
     if($logentry["type"]==LOG_CODE_EDITED && $logentry["title"] == $field_title && $logentry["diff"] == $log_value)
@@ -71,6 +71,7 @@ foreach($reslog as $logentry)
         $logok = true;        
         }
     }
+
 if(!$logok)
     {
     echo "SUBTEST D";
