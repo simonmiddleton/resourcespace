@@ -1433,7 +1433,7 @@ $mime_type_by_extension = array(
 
 # PHP execution time limit
 # Default is 5 minutes.
-$php_time_limit=300;
+$php_time_limit = PHP_SAPI != "cli" ? 300 : 0;
 
 # Cron jobs maximum execution time (Default: 30 minutes)
 $cron_job_time_limit = 1800;

@@ -405,10 +405,6 @@ $search_anchors=true;
 # Highlight last viewed result when using $search_anchors
 $search_anchors_highlight=false;
 
-# Make search filter strict (prevents direct access to view/preview page)
-# Set to 2 in order to emulate single resource behaviour in search (EXPERIMENTAL). Prevents search results that are not accessible from showing up. Slight performance penalty on larger search results.
-$search_filter_strict=true;
-
 # Show an edit icon/link in the search results.
 $search_results_edit_icon=true;
 

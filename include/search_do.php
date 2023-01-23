@@ -344,6 +344,27 @@ function do_search(
             // Extra sql to search non-field data that used to be stored in resource_keyword e.g. resource type/resource contributor
             $non_field_keyword_sql = new PreparedStatementQuery();
 
+            if($quoted_string && substr($keyword,1,strlen(FULLTEXT_SEARCH_PREFIX))==FULLTEXT_SEARCH_PREFIX)
+                {
+                // Full text search
+                $fulltext_string = str_replace(FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,"\"",substr($keyword,strlen(FULLTEXT_SEARCH_PREFIX)+2,-1));
+                
+                $freetextunion = new PreparedStatementQuery();
+                $freetextunion->sql = " SELECT resource, [bit_or_condition] 1 AS score FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE)";
+                $freetextunion->parameters = ["s",$fulltext_string];
+                if (count($hidden_indexed_fields) > 0)
+                    {
+                    $freetextunion->sql .= " AND n.resource_type_field NOT IN (" .  ps_param_insert(count($hidden_indexed_fields)) . ")";
+                    $freetextunion->parameters = array_merge($freetextunion->parameters,ps_param_fill($hidden_indexed_fields,"i"));
+                    }
+
+                $sql_keyword_union[] = $freetextunion;
+                $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
+                $sql_keyword_union_or[]=FALSE;
+                $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                continue;
+                }
+
             if($keyword == $search && is_int_loose($keyword) && $searchidmatch)
                 {
                 // Resource ID is no longer indexed, if search is just for a single integer then include this

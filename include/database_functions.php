@@ -1185,7 +1185,7 @@ function CheckDBStruct($path,$verbose=false)
                                 }
                             }
 
-                        $sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
+                        $sql="CREATE " . ($col[10]=="FULLTEXT" ? "FULLTEXT" : "") . " INDEX " . $col[2] . " ON $table (" . join(",",$cols) . ")";
                         ps_query($sql,[],false,-1,false);
                         $done[]=$col[2];
                         }

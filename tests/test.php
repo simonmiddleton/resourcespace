@@ -26,6 +26,7 @@ Command line paramaters:
 
 -nosetup        Do not setup the database, connect user in current state
 -noteardown     Do not drop the database once tests have completed
+-performance    Test performance
 -help or -?     This help information
 [n]...          Specific test number(s) to run
 <?php
@@ -34,11 +35,16 @@ Command line paramaters:
 
 # Create an array of tests that were passed from the command line
 $specific_tests=array();
+$performancetest=false;
 foreach($argv as $arg)
     {
     if(is_numeric($arg))
         {
         array_push($specific_tests, str_pad($arg,6,'0',STR_PAD_LEFT));
+        }
+    elseif($arg == "performance")
+        {
+        $performancetest =true;
         }
     }
     
@@ -154,8 +160,9 @@ mkdir($storagedir);
 $storageurl .= '/rs_test';
 echo "Filestore is now at $storagedir\n";
 
+$test_dir = $performancetest ? "performance_tests" : "test_list";
 # Get a list of core tests
-$core_tests = scandir("test_list");
+$core_tests = scandir($test_dir);
 $core_tests = array_filter($core_tests, function ($string)
     {
     global $specific_tests;
@@ -178,37 +185,40 @@ $core_tests = array_filter($core_tests, function ($string)
     }); # PHP files only
 asort($core_tests);
 
-$core_tests = array('test_list' => $core_tests);
+$core_tests = array($test_dir => $core_tests);
+
 
 # Get a list of plugin tests
 $plugin_tests = array();
-foreach ($inst_plugins as $plugin)
+if(!$performancetest)
     {
-    if (file_exists('../plugins/' . $plugin['name'] . '/tests'))
+    foreach ($inst_plugins as $plugin)
         {
-        $plugin_tests['../plugins/' . $plugin['name'] . '/tests'] = scandir('../plugins/' . $plugin['name'] . '/tests');
+        if (file_exists('../plugins/' . $plugin['name'] . '/tests'))
+            {
+            $plugin_tests['../plugins/' . $plugin['name'] . '/tests'] = scandir('../plugins/' . $plugin['name'] . '/tests');
+            }
         }
-    }
-foreach ($plugin_tests as $key => $tests)
-    {
-    $plugin_tests[$key] = array_filter($tests, function ($string)
+    foreach ($plugin_tests as $key => $tests)
         {
-        global $specific_tests;
-        if (substr($string,-4,4) != ".php")
+        $plugin_tests[$key] = array_filter($tests, function ($string)
             {
+            global $specific_tests;
+            if (substr($string,-4,4) != ".php")
+                {
+                return false;
+                }
+            if (count($specific_tests)==0)
+                {
+                return true;
+                }
             return false;
-            }
-        if (count($specific_tests)==0)
-            {
-            return true;
-            }
-        return false;
-        });
-    asort($tests);
+            });
+        asort($tests);
+        }
+        
+    $plugin_tests = array_filter($plugin_tests); # Remove empty sub arrays
     }
-	
-$plugin_tests = array_filter($plugin_tests); # Remove empty sub arrays
-
 if (!empty($plugin_tests))
     {
     $tests = array_merge($core_tests, $plugin_tests);	

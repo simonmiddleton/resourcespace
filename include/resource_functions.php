@@ -4913,7 +4913,7 @@ function get_resource_access($resource)
 	{
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
         $prevent_open_access_on_edit_for_active, $open_access_for_contributor,
-        $userref,$usergroup, $usersearchfilter, $search_filter_strict, $search_all_workflow_states,
+        $userref,$usergroup, $usersearchfilter, $search_all_workflow_states,
         $userderestrictfilter, $userdata;
 	# $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.
 
@@ -5038,7 +5038,7 @@ function get_resource_access($resource)
 		return 2;
 		}
 
-	if ((trim($usersearchfilter??"")!="") && $search_filter_strict)
+	if (trim($usersearchfilter??"")!="")
         {
 		# A search filter has been set. Perform filter processing to establish if the user can view this resource.
         # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.

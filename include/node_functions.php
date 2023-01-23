@@ -14,6 +14,7 @@
 */
 function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
+    global $FIXED_LIST_FIELD_TYPES;
     if(!is_null($name))
         {
         $name = trim((string) $name);
@@ -154,7 +155,6 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         }
     else
         {
-        global $FIXED_LIST_FIELD_TYPES;
         if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
             {
             log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
@@ -167,8 +167,10 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
             }
         return $new_ref;
         }
-    
-    clear_query_cache("schema");
+    if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        clear_query_cache("schema");
+        }
     }
 
 
@@ -190,8 +192,6 @@ function delete_node($ref)
 
     remove_all_node_keyword_mappings($ref);
 
-    clear_query_cache("schema");
-
     return;
     }
 
@@ -212,8 +212,6 @@ function delete_nodes_for_resource_type_field($ref)
 
     ps_query("DELETE FROM node WHERE resource_type_field = ?",array("i",$ref));
 
-    clear_query_cache("schema");
-
     return;
     }
 
@@ -233,7 +231,7 @@ function get_node($ref, array &$returned_node)
         return false;
         }
 
-    $node  = ps_query("SELECT " . columns_in("node") . " FROM node WHERE ref = ?",array("i", $ref),"schema");
+    $node  = ps_query("SELECT " . columns_in("node") . " FROM node WHERE ref = ?",array("i", $ref));
 
     if(count($node)==0)
         {
@@ -283,19 +281,20 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         if ($parent == ""){$parent=NULL;}
         else {$parent = (int) $parent;}
         }
-   
 
     $fieldinfo  = get_resource_type_field($resource_type_field);
     if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
         {
         $rows = 10000;
         }
-            
+
     global $language,$defaultlanguage;
     $asdefaultlanguage=$defaultlanguage;
 
     if (!isset($asdefaultlanguage))
+        {
         $asdefaultlanguage='en';
+        }
 
     // Use langauge specified if not use default
     isset($language)?$language_in_use = $language:$language_in_use = $defaultlanguage;
@@ -395,7 +394,8 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         ORDER BY " . $order_by . ", ref ASC
         " . $limit;
 
-    $nodes = ps_query($query,$parameters,"schema");
+    $sqlcache = in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) ? "schema" : "";
+    $nodes = ps_query($query,$parameters,$sqlcache);
 
     foreach($nodes as $node)
         {
@@ -431,7 +431,7 @@ function get_nodes_by_refs(array $refs)
 
     $query = "SELECT ref, name, resource_type_field, parent,order_by FROM node WHERE ref IN (" . ps_param_insert(count($refs)) . ")";
     $parameters = ps_param_fill($refs,"i");
-    return ps_query($query, $parameters, "schema");
+    return ps_query($query, $parameters);
     }
 
 
@@ -1072,12 +1072,6 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
     $keyword_ref = resolve_keyword($keyword, true,$normalize,false); // We have already stemmed
 
     ps_query("INSERT INTO node_keyword (node, keyword, position) VALUES (?, ?, ?)",array("i",$node,"i",$keyword_ref,"i",$position));
-    ps_query("UPDATE keyword SET hit_count = hit_count + 1 WHERE ref = ?",array("i",$keyword_ref));
-
-    log_activity("Keyword {$keyword_ref} added for node ID #{$node}", LOG_CODE_CREATED, $keyword, 'node_keyword');
-
-    clear_query_cache("schema");
-
     return true;
     }
 
@@ -1121,11 +1115,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
     ps_query("DELETE FROM node_keyword WHERE node = ? AND keyword = ? $position_sql",$parameters);
     
     ps_query("UPDATE keyword SET hit_count = hit_count - 1 WHERE ref = ?",array("i",$keyword_ref));
-
-    log_activity("Keyword ID {$keyword_ref} removed for node ID #{$node}", LOG_CODE_DELETED, null, 'node_keyword', null, null, null, $keyword);
-
-    clear_query_cache("schema");
-
     return;
     }
 
@@ -1140,7 +1129,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 function remove_all_node_keyword_mappings($node)
     {
     ps_query("DELETE FROM node_keyword WHERE node = ?",array("i",$node));
-    clear_query_cache("schema");
     return;
     }
 
@@ -1171,7 +1159,6 @@ function check_node_indexed(array $node, $partial_index = false)
     // (re-)index node
     remove_all_node_keyword_mappings($node['ref']);
     add_node_keyword_mappings($node, $partial_index);
-    clear_query_cache("schema");
 
     return;
     }
@@ -1220,6 +1207,9 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
         }
     foreach($translations as $translation)
         {
+        // Only index the first 500 characters
+        $translation = mb_strcut($translation,0,500);
+        
         $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
 
         add_verbatim_keywords($keywords, $translation, $node['resource_type_field']);
@@ -1246,7 +1236,6 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
         {
         db_end_transaction("add_node_keyword_mappings");
         }
-    clear_query_cache("schema");
 
     return true;
     }
@@ -1300,7 +1289,6 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
         remove_node_keyword($node['ref'], $keywords[$n], $keyword_position);
         }
 
-    clear_query_cache("schema");
     return true;
     }
 
@@ -1928,7 +1916,7 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 */
 function get_node_id($value,$resource_type_field)
     {
-    $node=ps_query("select ref from node where resource_type_field=? and name=?",array("i",$resource_type_field,"s",$value), "schema");
+    $node=ps_query("select ref from node where resource_type_field=? and name=?",array("i",$resource_type_field,"s",$value));
     if (count($node)>0)
         {
         return $node[0]["ref"];
@@ -2558,7 +2546,6 @@ function delete_unused_non_fixed_list_nodes(int $resource_type_field)
         array_merge(['i', $resource_type_field], ps_param_fill(NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES, 'i'))
     );
     remove_invalid_node_keyword_mappings();
-    clear_query_cache('schema');
     }
 
 
@@ -2568,7 +2555,6 @@ function delete_unused_non_fixed_list_nodes(int $resource_type_field)
 function remove_invalid_node_keyword_mappings()
     {
     ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
-    clear_query_cache('schema');
     }
 
 /**

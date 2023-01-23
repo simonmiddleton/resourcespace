@@ -210,6 +210,13 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         $listsql="!list" . join(":",trim_array(split_keywords(getval("resourceids",""))));
         $search=$listsql . " " . $search;
         }
+    $full_text_search = getval(FULLTEXT_SEARCH_PREFIX,"");
+    if ($full_text_search != "")
+        {
+        if ($search!="") {$search.=" ";}
+        $full_text_search = str_replace("\"",FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,$full_text_search);
+        $search .= '"' . FULLTEXT_SEARCH_PREFIX . ':' . $full_text_search . '"';
+        }
     
     for ($n=0;$n<count($fields);$n++)
         {
