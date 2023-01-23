@@ -436,11 +436,9 @@ function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nod
         $fromvalue  = isset($value[0]) ? implode(NODE_NAME_STRING_SEPARATOR,$value[0]) : "";
         $tovalue    = isset($value[1]) ? implode(NODE_NAME_STRING_SEPARATOR,$value[1]) : "";
         resource_log($resource,LOG_CODE_EDITED,$key,$lognote,$fromvalue,$tovalue);
-        return true;
         }
 
-    // Nothing to log
-    return false;
+    return true;
     }
 
 /**
