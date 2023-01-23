@@ -699,7 +699,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 // Set new value for logging
                 $new_node_values = array_merge($new_node_values,$ui_selected_node_values);
-
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
                 debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
@@ -1050,11 +1049,11 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $nodes_to_remove[] = $use_node;
                         $nodes_check_delete[]=$use_node;
                         // Set new value for logging
-                        $new_node_values = [$newnode];
+                        $new_node_values[] = $newnode;
                         }
                     else
                         {
-                        $new_node_values = [$use_node];
+                        $new_node_values[] = $use_node;
                         }
                     
                     // Add to array for logging
