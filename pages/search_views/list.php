@@ -133,14 +133,8 @@ if (!hook("replacelistitem"))
             { ?>
             <td <?php hook("listviewcolumnstyle");?> >
                 <?php 
-                if (hook("listviewcolumnid",'',array($result, $n)))
-                    {
-                    echo $result[$n]["source_ref"]; 
-                    } 
-                else 
-                    {
-                    echo $result[$n]["ref"];
-                    }                
+                $plugin_column_id = hook("listviewcolumnid",'',array($result, $n));
+                echo $plugin_column_id !== false ? $plugin_column_id : $result[$n]["ref"];             
                 ?>
             </td>
             <?php
