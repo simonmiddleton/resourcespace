@@ -639,8 +639,8 @@ function report_has_thumbnail(string $query): bool
  */
 function report_process_period(array $info): array
     {
-    $availabe_periods = array_merge($GLOBALS['reporting_periods_default'], [0, -1]);
-    $period = isset($info['period']) && in_array($info['period'], $availabe_periods) ? $info['period'] : $availabe_periods[0];
+    $available_periods = array_merge($GLOBALS['reporting_periods_default'], [0, -1]);
+    $period = isset($info['period']) && in_array($info['period'], $available_periods) ? $info['period'] : $available_periods[0];
 
     // Specific number of days specified.
     if($period == 0)
@@ -689,7 +689,7 @@ function report_process_period(array $info): array
 
 
 /**
- * Find and replace a reports' query placeholers with their values.
+ * Find and replace a reports' query placeholders with their values.
  * 
  * @param string $query Reports' SQL query
  * @param array $placeholders Map between a placeholder and its actual value
