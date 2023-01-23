@@ -630,7 +630,7 @@ for ($n=0;$n<count($fields);$n++)
 
 <!-- Full text search (uses built in MySQL indexing) -->
 <div class="Question">
-    <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo $lang["search_full_text"]?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo htmlspecialchars($full_text_search); ?>" onChange="UpdateResultCount();">
+    <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape_quoted_data($full_text_search); ?>" onChange="UpdateResultCount();">
     <div class="clearerleft"> </div>
 </div>
 
