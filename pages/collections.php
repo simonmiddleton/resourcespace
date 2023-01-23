@@ -988,7 +988,7 @@ else
             <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
                 <div style="padding:0;margin:0;"><?php echo $lang["currentcollection"]?>: 
                     <br />
-                    <select name="collection" id="collection"
+                    <select name="collection" id="collection" aria-label="<?php echo escape_quoted_data($lang["collections"]) ?>"
 
 					onchange="if(document.getElementById('collection').value=='new') {
 								document.getElementById('entername').style.display='block';

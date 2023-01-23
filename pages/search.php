@@ -1205,7 +1205,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             {
             ?>
             <div class="InpageNavLeftBlock">
-                <select id="resultsdisplay" style="width:auto" name="resultsdisplay" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
+                <select id="resultsdisplay" style="width:auto" name="resultsdisplay" aria-label="<?php echo escape_quoted_data($lang["resultsdisplay"]) ?>" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
             <?php
             $results_display_array_count = count($results_display_array);
             for($n = 0; $n < $results_display_array_count; $n++)

@@ -911,7 +911,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     $modal  = ('true' == getval('modal', ''));
     $sort = (in_array(mb_strtoupper($sort), array("ASC", "DESC")) ? mb_strtoupper($sort) : "DESC");
     ?>
-    <select id="sort_order_selection" onChange="UpdateResultOrder();">
+    <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape_quoted_data($lang["sortorder"]) ?>">
     
     <?php
     $options = '';
@@ -962,7 +962,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     ?>
     </select>
     &nbsp;
-    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);">
+    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);" aria-label="<?php echo escape_quoted_data($sort === "ASC" ? $lang['sortorder-asc'] : $lang['sortorder-desc']) ?>">
         <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
     </a>
 
@@ -1074,7 +1074,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     <?php
                     }
                     ?>
-                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?>>
+                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?> aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
             <?php } ?>
             <option class="SelectAction" selected disabled hidden value=""><?php echo $lang["actions-select"]?></option>
             <?php

@@ -819,7 +819,7 @@ elseif($restypes=='')
                 ?>  
     
                  <?php  echo $lang["bydate"]?><br />
-    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>">
+    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>" aria-label="<?php echo escape_quoted_data($lang['year']) ?>">
               <option selected="selected" value=""><?php echo $lang["anyyear"]?></option>
               <?php
               
@@ -834,7 +834,7 @@ elseif($restypes=='')
     
             <?php if ($searchbyday) { ?><br /><?php } ?>
     
-            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>">
+            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>" aria-label="<?php echo escape_quoted_data($lang['month']) ?>">
               <option selected="selected" value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($n=1;$n<=12;$n++)
