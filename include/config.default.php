@@ -2823,6 +2823,17 @@ $external_share_groups_config_options=false;
 // CSV Download - add original URL column
 $csv_export_add_original_size_url_column = false;
 
+/* CSV Download - fields to add from resource table if $alldata = true
+Fields must be added in the format ["column" => column name,"title" => column title]
+where column name is the name of the column as in the resource table
+and column title is the string to be used in the header of the export
+
+File Checksums are included if $file_checksums = true so do not need to be added here
+
+$csv_export_add_data_fields[] = ["column" =>"creation_date","title"=>"Resource Created"];
+$csv_export_add_data_fields[] = ["column" =>"file_modified","title"=>"File Modified"];
+*/
+
 # Prevent users without accounts from requesting resources when accessing external shares. If true, external users requesting access will be redirected to the login screen so only recommended if account requests are allowed.
 $prevent_external_requests=false;
 

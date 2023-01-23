@@ -11,7 +11,8 @@
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false,$outputfile="")
     {
-    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key, $get_resource_data_cache;
+    global $lang, $csv_export_add_original_size_url_column, $file_checksums, $k, $scramble_key,
+        $get_resource_data_cache,$csv_export_add_data_fields;
     
     // Write the CSV to a disk to avoid memory issues with large result sets
     $tempcsv = trim($outputfile) != "" ? $outputfile : get_temp_dir() . "/csv_export_" . uniqid() . ".csv";
@@ -77,10 +78,22 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                 $resources_fields_data[$resource]["created_by"] = (trim($udata["fullname"]??"") != "" ? $udata["fullname"] :  $udata["username"]);
                 }
 
-            if ($alldata && $file_checksums)
+            if ($alldata)
                 {
-                $resources_fields_data[$resource]["file_checksum"] = $resdata["file_checksum"];
-                }       
+                if (isset($csv_export_add_data_fields))
+                    {
+                    foreach($csv_export_add_data_fields as $addfield)
+                        {
+                        $resources_fields_data[$resource][$addfield["column"]] = $resdata[$addfield["column"]];
+                        $csv_field_headers[$addfield["column"]]=$addfield["title"];
+                        }
+                    }
+                if ($file_checksums)
+                    {
+                    $resources_fields_data[$resource]["file_checksum"] = $resdata["file_checksum"];
+                    }
+                }
+            
             foreach($allfields as $restypefield)
                 {
                 if  (
