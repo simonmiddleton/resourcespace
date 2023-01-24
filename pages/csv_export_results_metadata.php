@@ -28,6 +28,8 @@ if($submitted && $resultcount > 0)
     $findstrings = array("%%SEARCH%%","%%TIME%%");
     $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
     $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
+
+    $csv_filename_noext = strip_extension($csv_filename);
    
     if($offline || (($resultcount > $metadata_export_offline_limit) && $offline_job_queue))
         {
@@ -60,7 +62,7 @@ if($submitted && $resultcount > 0)
         if (!hook('csvreplaceheader'))
             {
             header("Content-type: application/octet-stream");
-            header("Content-disposition: attachment; filename=" . $csv_filename  . ".csv");
+            header("Content-disposition: attachment; filename=" . $csv_filename_noext  . ".csv");
             }
         
         generateResourcesMetadataCSV(array_column($search_results,"ref"),$personaldata, $allavailable);
