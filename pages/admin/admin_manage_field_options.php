@@ -203,8 +203,8 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     if('delete' === $node_action && enforcePostRequest($ajax))
         {
         delete_node($node_ref);
-        clear_query_cache("schema");
         }
+    clear_query_cache("schema");
     }
 
 // [Toggle tree node]
@@ -237,7 +237,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
     $new_node_index      = $new_option_order_by/10;
 
     $new_record_ref = set_node(NULL, $field, $new_option_name, $new_option_parent, $new_option_order_by);
-
+    clear_query_cache("schema");
     if(getval("reload","") == "")
         {
         if(isset($new_record_ref) && !(trim($new_record_ref)==""))
