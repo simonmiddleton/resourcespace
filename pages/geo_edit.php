@@ -205,7 +205,7 @@ echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-vali
 
     map2.on('click', function(e) 
         {
-        currentZoom = map2.getZoom();        
+        currentZoom = map2.getZoom();
         console.log('Zoom: ' + currentZoom);
         realpoint = map2.wrapLatLng(e.latlng);
         geoLat = realpoint.lat;
@@ -247,6 +247,11 @@ echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-vali
                 });
             <?php
             }?>                
+        });
+    map2.on('zoomend', function() {   
+        currentZoom = map2.getZoom();     
+        console.debug('Zoom: ' + currentZoom);
+        document.getElementById('map-zoom').value=currentZoom;
         });
 </script>
 <?php
