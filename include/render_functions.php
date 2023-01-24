@@ -2090,10 +2090,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 {
                 $name = "field_{$field['ref']}";
                 }
-			
-			$field_nodes = array_column($selected_nodes,"ref");
-			foreach($selected_nodes as $selected_node)
-				{
+
+            $field_nodes = array_column($selected_nodes,"ref");
+            foreach($selected_nodes as $selected_node)
+                {
                 $node_data = array();
                 if(get_node($selected_node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
                     {
@@ -2102,16 +2102,16 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
                 $field_nodes[] = $selected_node;
                 unset($node_data);
-				}
-
-			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
-				{
-				echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
-				echo "<input id='field_" . (int) $field['ref']  . "_currentval' name='" . "field_" . (int) $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
-				}
+                }
+            sort($field_nodes);
+            if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
+                {
+                echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
+                echo "<input id='field_" . (int) $field['ref']  . "_currentval' name='" . "field_" . (int) $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
+                }
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
-			{
+            {
             $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
             $field_nodes = array();
 			foreach($selected_nodes as $selected_node)
@@ -2121,8 +2121,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 					$field_nodes[] = $selected_node;
 					}
 				}
-			natsort($field_nodes);
-			
+			sort($field_nodes);			
 			echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
 		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "" && $check_edit_checksums)

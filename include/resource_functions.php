@@ -650,9 +650,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 // Get currently selected nodes for this field
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
                 $all_current_field_nodes = array_merge($all_current_field_nodes,$current_field_nodes);
-
                 // Check if resource field data has been changed between form being loaded and submitted
                 $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+                sort($current_field_nodes);
                 $current_cs = md5(implode(",",$current_field_nodes));
                 if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
                     {
@@ -740,7 +740,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             }
                         }
                     }
-                $new_checksums[$fields[$n]['ref']] = md5(implode(',', $ui_selected_node_values));
+                sort($ui_selected_node_values);
+                $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
                 } // End of if in $FIXED_LIST_FIELD_TYPES
             else
                 {
@@ -825,6 +826,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                         // Check if resource field data has been changed between form being loaded and submitted
                         $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+                        sort($current_field_nodes);
                         $current_cs = md5(implode(",",$current_field_nodes));
                         if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
                             {
@@ -848,6 +850,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 {
                                 update_resource_field_column($ref,$fields[$n]["ref"],$newval);
                                 }
+                            sort($daterangenodes);
                             $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                             }
                     }
