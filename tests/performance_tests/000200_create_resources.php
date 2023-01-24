@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 
 $start_time = microtime(true);
 

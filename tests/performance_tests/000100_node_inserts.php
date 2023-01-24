@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 
 // Create array of fake words
 $password_min_length=8;
