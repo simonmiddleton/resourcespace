@@ -176,6 +176,7 @@ function touch_category_tree_level($path_parts)
        	    $tree[]=array("ref"=>$newnode,"parent"=>$parent_search,"name"=>$nodename,"order_by"=>$order_by);
             $parent_search = $newnode; # Search for this as the parent node on the pass for the next level.
             $treenodes[]=$newnode;
+            clear_query_cache("schema");
             }
         }
     // Return the matching path nodes
