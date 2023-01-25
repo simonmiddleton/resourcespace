@@ -1324,7 +1324,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
-    if(empty($postvals) && isset($_POST))
+    if(empty($postvals))
         {
         $postvals = $_POST;
         }
@@ -2312,7 +2312,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         for ($m=0;$m<count($list);$m++)
             {
             $ref=$list[$m];
-            $created_by = ps_value("SELECT created_by value FROM resource WHERE ref=?",array("i",$ref),"");            $new_created_by = (int)$postvals["created_by"] ?? 0;
+            $created_by = ps_value("SELECT created_by value FROM resource WHERE ref=?",array("i",$ref),"");
+            $new_created_by = (int)$postvals["created_by"] ?? 0;
             if($new_created_by > 0 && $new_created_by != $created_by)
                 {
                 ps_query("UPDATE resource SET created_by=? WHERE ref=?",array("i",$new_created_by,"i",$ref));
