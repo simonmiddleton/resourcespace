@@ -108,6 +108,13 @@ $use_cases = [
         'expected' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
     ],
     [
+        'name' => 'Non standard tags',
+        'input' => [
+            'html' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,<invalid tag>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
+        ],
+        'expected' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>'
+    ],
+    [
         'name' => 'HTML with new line feeds at the end',
         'input' => [
             'html' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL,
