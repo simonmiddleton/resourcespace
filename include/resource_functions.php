@@ -832,7 +832,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             {
                             $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                             continue;
-                            };
+                            }
 
                         if($daterangenodes !== $current_field_nodes)
                             {
@@ -2687,6 +2687,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         $currentoptions[]   = trim($newvalue);
                         $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
                         debug("update_field: field option added: '" . trim($newvalue));
+                        clear_query_cache("schema");
                         }
                     }
                 } // End of FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
