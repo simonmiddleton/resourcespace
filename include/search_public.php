@@ -26,12 +26,15 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             {
             $border=true;    
 			$ref=$resources[$m]['ref'];
-            if ($resources[$m]['has_image']){
+            if($resources[$m]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($resources[$m]['resource_type'], 'col'))
+                {
                 $previewpath=get_resource_path($ref,false,"col",false,"jpg",-1,1,false,$resources[$m]["file_modified"]);
-            }
-            else {
-                $previewpath="../gfx/".get_nopreview_icon($resources[$m]["resource_type"],$resources[$m]["file_extension"],"col");$border=false;
-            }
+                }
+            else
+                {
+                $previewpath = "{$baseurl_short}gfx/".get_nopreview_icon($resources[$m]["resource_type"],$resources[$m]["file_extension"],"col");
+                $border = false;
+                }
             $modifiedurl=hook('searchpublicmodifyurl');
 			if ($modifiedurl){ $previewpath=$modifiedurl;$border=true;}
             $images++;
