@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 
 $resource1 = create_resource(1);
 

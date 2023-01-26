@@ -293,7 +293,6 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         }
 
     $return_nodes = array();
-    $return_nodes = array();
 
     $parameters= [];
     $sql = "";
@@ -2199,8 +2198,8 @@ function cattree_node_flatten($node) {
  * This function returns an array of strings that represent the full paths to each tree node passed
  * 
  * @param array $resource_nodes - node tree to parse 
- * @param array $allnodes       - include paths to all nodes -if false will just include the paths to the end leaf nodes
- * @param array $translate      - translate strings?
+ * @param bool  $allnodes       - include paths to all nodes -if false will just include the paths to the end leaf nodes
+ * @param bool  $translate      - translate strings?
  * 
  * @return array $nodestrings - array of strings for all nodes passed in correct hierarchical order
  * 
@@ -2673,12 +2672,12 @@ function order_tree_nodes($nodes)
 
 
 /**
- * Append SQL to an existing node query to obtain the tranlsated names of the node
+ * Append SQL to an existing node query to obtain the translated names of the node
  *
- * @param mixed $sql_select
- * @param mixed $sql_params
+ * @param string $sql_select    SQL query
+ * @param array  $sql_params    Array of SQL parameters
  * 
- * @return [type]
+ * @return void
  * 
  */
 function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
@@ -2696,7 +2695,7 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
     isset($language) ? $language_in_use = $language : $language_in_use = $defaultlanguage;
 
 
-    // Get length of language string + 2 (for ~ and :) for usuage in SQL below
+    // Get length of language string + 2 (for ~ and :) for usage in SQL below
     $language_string_length = (strlen($language_in_use) + 2);
 
     $sql_params= array_merge($sql_params,[

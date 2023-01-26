@@ -36,12 +36,35 @@ $found_meta_append_field_ref = false;
 	
 function HookMeta_appendAlleditbeforesave()
 	{
-	global $meta_append_field_ref, $found_meta_append_field_ref;	
-	if (isset($_POST["field_{$meta_append_field_ref}"]) && isset($_POST["field_{$meta_append_field_ref}_meta_append"]) && $_POST["field_{$meta_append_field_ref}_meta_append"] == CHECKED_VALUE)
-		{		
-		$found_meta_append_field_ref = $meta_append_field_ref;		
-		unset ($_POST["field_{$meta_append_field_ref}_meta_append"]);		// remove from the POST data at earliest stage and set flag in this scope ready for addtouploadurl() hook
-		}
+	global $meta_append_field_ref, $found_meta_append_field_ref, $upload_then_edit, $meta_append_date_format, $userref;	
+
+    if (isset($_POST["field_{$meta_append_field_ref}"]) && isset($_POST["field_{$meta_append_field_ref}_meta_append"]) && $_POST["field_{$meta_append_field_ref}_meta_append"] == CHECKED_VALUE)
+        {
+        if($upload_then_edit)
+            {
+            if (trim(getval('field_'.$meta_append_field_ref, '')) == '')
+            {
+            return;
+            }		
+            $result = ps_query("SELECT ref FROM resource WHERE date(creation_date) = curdate() AND created_by = ?", array("i", $userref));		
+            if (!isset($result[0]))
+                {
+                $count = 1;
+                }
+                else
+                {
+                $count = count($result);
+                }
+            $count_string = str_pad($count,4,"0", STR_PAD_LEFT);	
+            $date_string = date($meta_append_date_format);
+            $_POST['field_'.$meta_append_field_ref] .= $date_string . $count_string;
+            }
+        else
+            {
+            $found_meta_append_field_ref = $meta_append_field_ref;		
+            unset ($_POST["field_{$meta_append_field_ref}_meta_append"]);		// remove from the POST data at earliest stage and set flag in this scope ready for addtouploadurl() hook
+            }
+        }
 	}
 	
 function HookMeta_appendAllAddtouploadurl()

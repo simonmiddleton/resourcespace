@@ -24,6 +24,7 @@ $new_node_id = set_node(null, $field, $keyword, null, null);
 if(false !== $new_node_id && is_numeric($new_node_id))
     {
     $result['new_node_id'] = $new_node_id;
+    clear_query_cache("schema");
     }
 
 echo json_encode($result);

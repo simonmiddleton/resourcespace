@@ -1,5 +1,17 @@
 <?php
+include_once __DIR__ . '/../include/openai_gpt_functions.php';
 
+global $valid_ai_field_types;
+
+
+/**
+ * Add to array of field column data on metadata field editing page
+ *
+ * @param array     $fieldcolumns   Existing array of columns
+ * 
+ * @return array    Updated array of columns
+ * 
+ */
 function HookOpenai_gptAllModifyresourcetypefieldcolumns($fieldcolumns)
     {
     global $lang;
@@ -10,9 +22,20 @@ function HookOpenai_gptAllModifyresourcetypefieldcolumns($fieldcolumns)
     return array_merge($fieldcolumns,$addcolumns);
     }
 
+/**
+ * Alter rendering of the new columns on the metadata field editing page
+ *
+ * @param int           $ref            Ref of the metadata field being edited
+ * @param string        $column         Name of table column for which input is being rendered
+ * @param array         $column_detail  Array of metadata field rendering data from the edit page
+ * @param array         $fielddata      Array of metadata field information from get_resource_type_field()
+ * 
+ * @return bool         Is standard display rendering being overridden?
+ * 
+ */
 function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_question($ref,$column,$column_detail,$fielddata)
     {
-    global $lang;
+    global $lang, $valid_ai_field_types;
     if(!in_array($column,["openai_gpt_output_field","openai_gpt_prompt"]))
         {
         return false;
@@ -21,18 +44,6 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
     $currentvalue = $fielddata[$column];
     if($column=="openai_gpt_output_field")
         {
-        $valid_ai_field_types = [
-            FIELD_TYPE_RADIO_BUTTONS,
-            FIELD_TYPE_CHECK_BOX_LIST,
-            FIELD_TYPE_DROP_DOWN_LIST,
-            FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,
-            FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
-            FIELD_TYPE_TEXT_BOX_MULTI_LINE,
-            FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
-            FIELD_TYPE_WARNING_MESSAGE,
-            FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
-        ];
-
         $fields = get_resource_type_fields("","title","asc","",$valid_ai_field_types);
         ?>
         <div class="Question" >
@@ -59,7 +70,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         ?>
         <div class="Question" >
 		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
-            <textarea class="stdwidth" rows="5" id="field_edit_<?php echo htmlspecialchars((string) $column_detail[0]); ?>" name="<?php echo htmlspecialchars((string) $column); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
+            <textarea class="stdwidth" rows="3" id="field_edit_<?php echo htmlspecialchars((string) $column_detail[0]); ?>" name="<?php echo htmlspecialchars((string) $column); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
         </div>		
         <?php
         return true;
@@ -67,48 +78,100 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
     return false;
     }
 
-// function HookOpenai_gptAllUpdate_field($resource, $field, $value)
+/**
+ * Hook into update_field() to process value changes
+ *
+ * @param int       $resource       Resource ID
+ * @param int       $field          Metadata field ref
+ * @param string    $value          New field value (comma separated for nodes)
+ * @param string    $existing       Existing field value
+ * @param array     $fieldinfo      Array of metadata field information from get_resource_type_field()
+ * 
+ * @return bool
+ * 
+ */
+function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fieldinfo)
+    {
+    $target_field = (int) $fieldinfo["openai_gpt_output_field"];
+    if($target_field > 0)
+        {
+        $updated = openai_gpt_update_linked_field($resource,$target_field,$fieldinfo,$value);
+        return $updated;
+        }
+    return false;
+    }
+    
+// /**
+//  *  Hook into save_resource_data() to process value changes
+//  *
+//  * @param int       $resource       Resource ID
+//  * @param int       $field          Metadata field ref
+//  * @param string    $val            New field value (comma separated for nodes)
+//  * 
+//  * @return bool
+//  * 
+//  */
+// function HookOpenai_gptAllSave_resource_data_after_field_processed($resource,$field,$val)
 //     {
-//     $validfield = false;
-
-//     $resdata = get_resource_data($resource);
-//     foreach(tms_link_get_modules_mappings() as $module_uid => $module)
+//     $target_field = (int) $field["openai_gpt_output_field"];
+//     if($target_field > 0)
 //         {
-//         if(!in_array($resdata['resource_type'], $module['applicable_resource_types']))
-//             {
-//             continue;
-//             }
-
-//         $tms_object_id = intval($value);
-//         debug("tms_link: updating resource id #" . $resource);
-
-//         $module_name = $module['module_name'];
-//         $tmsdata = tms_link_get_tms_data($resource, $tms_object_id,'', $module_name);
-
-//         // if call to tms_link_get_tms_data() does not return an array, error has occurred
-//         if (!is_array($tmsdata))
-//             {
-//             return $tmsdata;  // return error message
-//             }
-
-//         if(!array_key_exists($module_name, $tmsdata))
-//             {
-//             continue;
-//             }
-
-//         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
-//             {
-//             if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tmsdata[$module_name][$tms_rs_mapping['tms_column']]))
-//                 {
-//                 debug("tms_link: updating field '{$field}' with data from column '{$tms_rs_mapping['tms_column']}' for resource id #{$resource}");
-
-//                 update_field($resource, $tms_rs_mapping['rs_field'], $tmsdata[$module_name][$tms_rs_mapping['tms_column']]);
-//                 }
-//             }
+//         $updated = openai_gpt_update_linked_field($resource,$target_field,$field,$val);
+//         return $updated;
 //         }
-
-//     tms_link_check_preview($resource);
-
-//     return true;
+//     return false;
 //     }
 
+/**
+ *  Hook into save_resource_data() and save_resource_data_multi() to process value changes
+ *
+ * @param int|array     $r                      Resource ID or array of resource IDs
+ * @param mixed         $all_nodes_to_add       Passed from hook, unused
+ * @param mixed         $all_nodes_to_remove    Passed from hook, unused
+ * @param mixed         $autosave_field         Passed from hook, unused
+ * @param mixed         $fields                 Array of edited field data
+ * @param mixed         $updated_fields         Array of resources that have been changed
+ *                                              with resources as top level key and field IDs as subkeys
+ * 
+ * @return bool
+ * 
+ */
+function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_nodes_to_remove,$autosave_field, $fields,$updated_fields)
+    {
+    if(!(is_int_loose($r) || is_array($r)))
+        {
+        return false;
+        }
+    
+    $refs = (is_array($r) ? $r : [$r]);
+
+    debug("openai_gpt_output_field - resources to update:  " . implode(",",$refs));
+    $success=false;
+    // Check if any configured fields have been edited
+    $allfieldrefs = array_column(get_resource_type_fields(),"ref");
+    foreach($fields as $field)
+        {
+        debug("BANG " . print_r($field,true));
+        $linkedfield = (int)$field["openai_gpt_output_field"];
+        if(!in_array($linkedfield,$allfieldrefs))
+            {
+            debug("openai_gpt - found invalid linked field #" . $linkedfield);
+            continue;
+            }
+        foreach($refs as $ref)
+            {
+            $fieldval = $updated_fields[$ref][$field["ref"]] ?? "";
+            debug("openai_gpt - found updated value: for resource # " . $ref .  ", field '" . $field["name"] . "' : '" . $fieldval . "'");  
+            if($fieldval != "")
+                {
+                $updated = openai_gpt_update_linked_field($ref,(int) $linkedfield,$field,$fieldval);
+                if($updated)
+                    {
+                    debug("openai_gpt - Updated resource # " . $ref . ", field #" . $linkedfield . ""); 
+                    $success=true;
+                    }
+                }
+            }
+        }
+    return $success;
+    }

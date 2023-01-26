@@ -9,7 +9,6 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     if(isset($_SERVER['HTTP_UPPY_AUTH_TOKEN']))
         {
         $validupload = false;
-        $CSRF_enabled =true;
         // Token should be in form 'cs:xxxxxxxxxx-ct:xxxxxxxxxx'
         $companion_sessinfo = explode("-",$_SERVER["HTTP_UPPY_AUTH_TOKEN"]);
         if(count($companion_sessinfo) == 2)
@@ -85,7 +84,6 @@ if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !(isset($_
 // TUS handling
 // Use PHP APCU cache if available as more robust, unless on Windows as too many errors reported
 $cachestore = (function_exists('apcu_fetch') && !$config_windows) ? "apcu" : "file";
-$CSRF_enabled =true;
 
 $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . "upload_" . $upload_session;
 if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
@@ -1140,8 +1138,7 @@ jQuery(document).ready(function () {
             <?php
             if($CSRF_enabled)
                 {
-                // Add CSRF token
-                echo "rs_" . $CSRF_token_identifier . ": '" . generateCSRFToken($usersession, "upload_batch") . "',";
+                echo "rs_" . $CSRF_token_identifier . ": '" . generateCSRFToken($upload_session, "upload_batch") . "',";
                 }
             if($k != "")
                 {

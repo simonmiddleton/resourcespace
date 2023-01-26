@@ -13,7 +13,7 @@ if(!in_array($plugin_name, $plugins))
 
 $plugin_page_heading = $lang['meta_append_configuration'];
 
-$page_def[] = config_add_single_ftype_select('meta_append_field_ref',$lang['meta_append_configuration_field_type']);
+$page_def[] = config_add_single_ftype_select('meta_append_field_ref',$lang['meta_append_configuration_field_type'], 300, false, $TEXT_FIELD_TYPES);
 $page_def[] = config_add_text_input('meta_append_date_format',$lang['meta_append_configuration_date_format']);
 $page_def[] = config_add_text_input('meta_append_prompt',$lang['meta_append_configuration_prompt']);
 
