@@ -52,7 +52,7 @@ if($submitted && $resultcount > 0)
             }
         else
             {
-            $message = $lang["oj-creation-success"] . " : " . $jobadded;  
+            $message = str_replace('%%JOBNUMBER%%', $jobadded, $lang['oj-creation-success']);
             }
         }
     else
