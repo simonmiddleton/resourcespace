@@ -621,7 +621,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     $ui_selected_node_values    = [];
     $all_current_field_nodes    = [];
     $new_node_values            = [];
-    $updated_fields             = [];
+    $updated_resources          = [];
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
@@ -742,7 +742,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $val = implode(",",$new_nodevals);
                     sort($ui_selected_node_values);
                     $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
-                    $updated_fields[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
+                    $updated_resources[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
                     }
                 } // End of if in $FIXED_LIST_FIELD_TYPES
             else
@@ -854,7 +854,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             }
                         sort($daterangenodes);
                         $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
-                        $updated_fields[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
+                        $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
@@ -896,7 +896,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         };
 
                     $new_checksums[$fields[$n]['ref']] = md5($val);
-                    $updated_fields[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 elseif (
                     $multilingual_text_fields
@@ -930,7 +930,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         };
 
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
-                    $updated_fields[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 else
                     {
@@ -946,7 +946,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         continue;
                         };
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
-                    $updated_fields[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
 
                 # Check for regular expression match
@@ -1261,7 +1261,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
 
     // Plugins can do extra actions once all fields have been saved and return errors back if needed
-    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields,$updated_fields));
+    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields,$updated_resources));
     if(is_array($plg_errors) && !empty($plg_errors))
         {
         $errors = array_merge($errors, $plg_errors);
@@ -1411,7 +1411,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     $log_node_updates        = [];
     $resource_update_sql_arr = [];
     $resource_update_params  = [];
-    $updated_fields          = [];
+    $updated_resources       = [];
     $successfully_edited_resources = [];
     $fields = array_values(array_filter($fields,function($field) use ($postvals){
         return ($postvals['editthis_field_' . $field['ref']] ?? '') != '' || hook('save_resource_data_multi_field_decision', '', array($field['ref']));
@@ -1600,7 +1600,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
                             }
                         
-                        $updated_fields[$ref][$fields[$n]['ref']][] = $new_nodes_val; // To pass to hook
+                        $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
                 else
@@ -1636,7 +1636,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         $resource_update_params[$ref][]="s";
                         $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
 
-                        $updated_fields[$ref][$fields[$n]['ref']][] = $new_nodes_val; // To pass to hook
+                        $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
                 }
@@ -1770,7 +1770,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode($range_separator,$log_node_names);
                             }
-                        $updated_fields[$ref][$fields[$n]['ref']] = $log_node_names; // To pass to hook
+                        $updated_resources[$ref][$fields[$n]['ref']] = $log_node_names; // To pass to hook
                         }
                     }
                 else
@@ -1799,7 +1799,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$newval;
                             }
                         
-                        $updated_fields[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
+                        $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
                 $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
@@ -2121,7 +2121,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         }
 
                     $successfully_edited_resources[] = $ref;
-                    $updated_fields[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                     }
                 } // End of for each resource
             }  // End of non-fixed list editing section
@@ -2390,7 +2390,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
     // Plugins can do extra actions once all fields have been saved and return errors back if needed.
     // NOTE: Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
-    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', $fields,$updated_fields));
+    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', $fields,$updated_resources));
     if(is_array($plg_errors) && !empty($plg_errors))
         {
         $errors = array_merge($errors, $plg_errors);

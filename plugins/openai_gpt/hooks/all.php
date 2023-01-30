@@ -121,24 +121,6 @@ function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fi
             $source_values[] = $value;
             }
 
-        // // Remove i18n values and use default system language
-        // $saved_language = $language;
-        // $language = $defaultlanguage;
-        // foreach($source_nodes as $source_node)
-        //     {
-        //     $nodename = $source_node["name"];
-        //     if(substr($nodename,0,1) == "~")
-        //         {
-        //         $source_values[] = i18n_get_translated($nodename);
-        //         }
-        //     else
-        //         {
-        //         $source_values[] = $nodename;                
-        //         }
-        //     }
-        // $language = $saved_language;
-
-
         // $source_field = get_resource_field_data($resource,$targetfield);
         if(!in_array($targetfield["type"],$valid_ai_field_types) || count($source_values) == 0)
             {
@@ -159,13 +141,13 @@ function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fi
  * @param mixed         $all_nodes_to_remove    Passed from hook, unused
  * @param mixed         $autosave_field         Passed from hook, unused
  * @param mixed         $fields                 Array of edited field data
- * @param mixed         $updated_fields         Array of resources that have been changed
- *                                              with resources as top level key and field IDs as subkeys
+ * @param mixed         $updated_resources      Array of resources & fields that have been updated
+ *                                              with resources as the top level key and field IDs as subkeys
  * 
  * @return bool
  * 
  */
-function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_nodes_to_remove,$autosave_field, $fields,$updated_fields)
+function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_nodes_to_remove,$autosave_field, $fields,$updated_resources)
     {
     if(!(is_int_loose($r) || is_array($r)))
         {
@@ -173,22 +155,25 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
         }
     
     $refs = (is_array($r) ? $r : [$r]);
-
-    debug("openai_gpt_input_field - resources to update:  " . implode(",",$refs));
+    debug("openai_gpt Aftersaveresourcedata - resources to update:  " . implode(",",$refs));
     $success=false;
     // Check if any configured fields have been edited
-    $targetfields = openai_gpt_get_dependent_fields($field);
-    foreach($targetfields as $targetfield)
+    foreach($fields as $field)
         {
-        foreach($refs as $ref)
+        $targetfields = openai_gpt_get_dependent_fields($field["ref"]);
+        foreach($targetfields as $targetfield)
             {
-            // Has the value been updated?
-            if(isset($updated_fields[$ref][$targetfield]) && count($updated_fields[$ref][$targetfield]) > 0)
+            debug("openai_gpt aftersaveresourcedata - processing field #" . $targetfield["ref"] . " (" . $targetfield["title"] . ")");
+            foreach($refs as $ref)
                 {
-                $updated = openai_gpt_update_field($ref,$targetfield,$updated_fields[$ref][$targetfield]);
-                if($updated)
+                // Has the value been updated?
+                if(isset($updated_resources[$ref][$field["ref"]]) && count($updated_resources[$ref][$field["ref"]]) > 0)
                     {
-                    $success=true;
+                    $updated = openai_gpt_update_field($ref,$targetfield,$updated_resources[$ref][$field["ref"]]);
+                    if($updated)
+                        {
+                        $success=true;
+                        }
                     }
                 }
             }

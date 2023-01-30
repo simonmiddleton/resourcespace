@@ -4,24 +4,28 @@
  * Send the new field value to the Open AI API in order to update the linked field 
  *
  * @param int       $resource           Resource ID
- * @param int       $target_field       Target metadata field ID
+ * @param array     $target_field       Target metadata field (array
  * @param array     $values             Array of strings from the field currently being processed
  * 
  * @return bool     True if update successful, false if invalid field or no data returned
  * 
  */
-function  openai_gpt_update_field($resource,$target_field,$values)
+function openai_gpt_update_field($resource,$target_field,$values)
     {
-    global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$openai_gpt_api_key, $openai_gpt_api_model,
-    $openai_gpt_api_max_tokens,$openai_gpt_api_temperature, $language, $defaultlanguage,
-    $openai_gpt_prompt_prefix, $openai_gpt_prompt_suffix;
+    global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage,
+    $openai_gpt_prompt_prefix, $openai_gpt_prompt_suffix, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,$openai_gpt_temperature ,$openai_gpt_max_tokens, $openai_gpt_max_data_length;
 
     // Don't update if not a valid field type
-    $target_field_info = get_resource_type_field($target_field);
-    if(!in_array($target_field_info["type"],$valid_ai_field_types) || count($values) == 0)
+    if(!in_array($target_field["type"],$valid_ai_field_types) 
+        || 
+        count($values) == 0
+        || isset($openai_gpt_processed[$resource . "_" . $target_field["ref"]])
+        )
         {
         return false;
         }
+
+    debug("openai_gpt_update_field() - resource # " . $resource . ", target field #" . $target_field["ref"]);
 
     // Remove any i18n variants and use default system language
     $prompt_values = [];
@@ -31,44 +35,51 @@ function  openai_gpt_update_field($resource,$target_field,$values)
         {
         if(substr($value,0,1) == "~")
             {
-            $prompt_values[] = i18n_get_translated($value);
+            $prompt_values[] = mb_strcut(i18n_get_translated($value),0,$openai_gpt_max_data_length);
             }
         else
             {
-            $prompt_values[] = $value;                
+            $prompt_values[] = mb_strcut($value,0,$openai_gpt_max_data_length);
             }
         }
     $language = $saved_language;
 
-    $prompt = $openai_gpt_prompt_prefix . $target_field_info["openai_gpt_prompt"] . json_encode($prompt_values)  . $openai_gpt_prompt_suffix;
-
+    $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . $openai_gpt_prompt_suffix . json_encode($prompt_values);
 
     if(isset($openai_response_cache[md5($prompt)]))
         {
         return $openai_response_cache[md5($prompt)];
         }
 
-    debug("openai_gpt - sending request prompt '" . $prompt . "'");
-    $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$openai_gpt_api_model,$prompt,$openai_gpt_api_temperature,$openai_gpt_api_max_tokens);
-    
+    debug("openai_gpt - sending request prompt '" . $prompt . "'");    
+    $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$openai_gpt_model,$prompt,$openai_gpt_temperature,$openai_gpt_max_tokens);
+
     if(trim($openai_response) != "")
         {
+        debug("openai_gpt_generate_completions text response : " . print_r($openai_response,true));
         $newvalues = json_decode($openai_response,true);
-        if($newvalues !== false)
+
+        if(json_last_error() !== JSON_ERROR_NONE)
             {
+            debug("openai_gpt error - invalid JSON text response received from API: " . json_last_error_msg() . " " . trim($openai_response));
+            return false;
+            }
+        if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            // update_field() will separate on NODE_NAME_STRING_SEPARATOR
             $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newvalues);
-            // update_field() will separate on comma separated values
-            $result = update_field($resource,$target_field,$newvalue);
-            return $result;
             }
         else
             {
-            debug("openai_gpt error - invalid JSON received from API: " . trim($openai_response));
-            return false;
+            $newvalue = implode(",",$newvalues);
             }
-        return $newvalue;
+        $result = update_field($resource,$target_field["ref"],$newvalue);
+        $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
+
+        // Set a flag to prevent any opossibility of infinite recursion within update_field()
+        $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
+        return $result;
         }
-    
     debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
     return false;
     }
@@ -90,6 +101,8 @@ function  openai_gpt_update_field($resource,$target_field,$values)
  */
 function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature = 0, $max_tokens = 2048)
     {
+    debug_function_call("openai_gpt_generate_completions", func_get_args());
+
     // Set the endpoint URL
     global $openai_gpt_endpoint,  $openai_response_cache;
     
@@ -97,7 +110,13 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         {
         return $openai_response_cache[md5($openai_gpt_endpoint . $prompt)];
         }
-    
+
+    // $temperature must be between 0 and 1
+    if(floatval($temperature)>1 || floatval($temperature)<0)
+        {
+        debug("openai_gpt invalid temperature value set : '" . $temperature . "'");
+        $temperature = 0;
+        }
 
     // Set the headers for the request
     $headers = [
@@ -112,7 +131,7 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         "temperature" => $temperature,
         "max_tokens" => $max_tokens,
     ];
-    
+
     // Initialize cURL
     $ch = curl_init($openai_gpt_endpoint);
     
@@ -125,13 +144,20 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false,
     ]);
-    
+
     // Send the request and get the response
     $response = curl_exec($ch);
 
     // Decode the response as JSON
+    debug("openai_gpt_generate_completions original response : " . print_r($response,true));
     $response_data = json_decode($response, true);
-    debug("openai_gpt_generate_completions decoded response : " . print_r($response_data,true));
+
+    if(json_last_error() !== JSON_ERROR_NONE)
+        {
+        debug("openai_gpt error - invalid JSON response received from API: " . json_last_error_msg() . " " . trim($response));
+        $openai_response_cache[md5($openai_gpt_endpoint . $prompt)] = false;
+        return false;
+        }
 
     if(isset($response_data["error"][0]["message"]))
         {
@@ -152,6 +178,6 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
 
 function openai_gpt_get_dependent_fields($field)
     {
-    $ai_gpt_input_fields = ps_query("SELECT ref, type FROM resource_type_field WHERE openai_gpt_input_field = ?",["i",$field]);
+    $ai_gpt_input_fields = ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = ?",["i",$field]);
     return $ai_gpt_input_fields;
     }
