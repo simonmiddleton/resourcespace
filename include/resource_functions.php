@@ -2485,6 +2485,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $errors[] = i18n_get_translated($fieldinfo['title']) . ": {$lang['requiredfield']}";;
         return false;
         }
+    
+    // Create arrays that will be passed to hook function later
+    $newnodes        = [];
+    $newvalues       = [];
 
     if (in_array($fieldinfo['type'], array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE])))
         {
@@ -2492,8 +2496,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         // Set up arrays of node ids to add/remove and all new nodes.
         $nodes_to_add    = [];
         $nodes_to_remove = [];
-        $newnodes        = [];
-        $newvalues       = [];
 
         // Get all node values into an array to search
         $fieldnodes      = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);

@@ -127,7 +127,7 @@ function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fi
             return false;
             }
         // Use this field's value to update the dependent field
-        $updated = openai_gpt_update_field($resource,$targetfield["ref"],$source_values);
+        $updated = openai_gpt_update_field($resource,$targetfield,$source_values);
         return $updated;
         }
     return false;

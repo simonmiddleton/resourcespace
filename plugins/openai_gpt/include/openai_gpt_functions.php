@@ -112,12 +112,16 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         }
 
     // $temperature must be between 0 and 1
-    if(floatval($temperature)>1 || floatval($temperature)<0)
+    $temperature = floatval($temperature);
+    if($temperature>1 || $temperature<0)
         {
         debug("openai_gpt invalid temperature value set : '" . $temperature . "'");
         $temperature = 0;
         }
-
+    if(trim($apiKey) == "")
+        {
+        debug("openai_gpt error - missing API key");
+        }
     // Set the headers for the request
     $headers = [
         "Content-Type: application/json",

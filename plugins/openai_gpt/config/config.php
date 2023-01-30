@@ -1,6 +1,6 @@
 <?php
 // Open AI key from https://openai.com/api/
-$openai_gpt_key = "";
+$openai_gpt_api_key = "";
 $openai_gpt_model = "text-davinci-003";
 $openai_gpt_prompt_prefix = "For the following JSON encoded array, ";
 $openai_gpt_prompt_suffix = ". The output choices must be in the form of a JSON encoded array: ";
