@@ -101,7 +101,7 @@ function openai_gpt_update_field($resource,$target_field,$values)
  */
 function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature = 0, $max_tokens = 2048)
     {
-    debug_function_call("openai_gpt_generate_completions", func_get_args());
+    debug("openai_gpt_generate_completions() model = '" . $model . "', prompt = '" . $prompt . "' temperature = '" . $temperature . "'");
 
     // Set the endpoint URL
     global $openai_gpt_endpoint,  $openai_response_cache;
