@@ -28,7 +28,7 @@ if (!hook("replacetopurl"))
 
 $c = trim(getval("c", ""));
 if($c != "")
-	{
+    {
     $collection = get_collection($c);
     if($collection === false)
         {
@@ -37,25 +37,22 @@ if($c != "")
 
     $topurl = "pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
 
-    if(trim($k) != "")
+    $collection_resources = get_collection_resources($c);
+
+    if($collection["type"] == COLLECTION_TYPE_FEATURED)
         {
-        $collection_resources = get_collection_resources($c);
-
-        if($collection["type"] == COLLECTION_TYPE_FEATURED)
-            {
-            $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
-            }
-
-        if(is_featured_collection_category($collection))
-            {
-            $topurl = "pages/collections_featured.php?parent={$c}&k={$k}";
-            }
-        else if(is_array($collection_resources) && count($collection_resources) > 0 && $feedback_resource_select && $collection["request_feedback"])
-            {
-            $topurl = "pages/collection_feedback.php?collection={$c}&k={$k}";      
-            }
+        $collection["has_resources"] = (is_array($collection_resources) && !empty($collection_resources) ? 1 : 0);
         }
-	}
+
+    if(is_featured_collection_category($collection))
+        {
+        $topurl = "pages/collections_featured.php?parent={$c}&k={$k}";
+        }
+    else if(is_array($collection_resources) && count($collection_resources) > 0 && $feedback_resource_select && $collection["request_feedback"])
+        {
+        $topurl = "pages/collection_feedback.php?collection={$c}&k={$k}";      
+        }
+    }
 
 if (getval("r","")!="")
 	{
