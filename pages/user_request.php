@@ -110,7 +110,7 @@ if (getval("save","")!="")
             }
         else
             {
-            $account_email_exists_notify = $user_email_exists;
+            $account_email_exists_notify = user_email_exists($user_email);
             $success=email_user_request();
             }
 			
