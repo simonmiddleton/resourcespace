@@ -742,7 +742,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $val = implode(",",$new_nodevals);
                     sort($ui_selected_node_values);
                     $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
-                    $updated_fields[$ref][$fields[$n]['ref']] = $val; // To pass to hook
+                    $updated_fields[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
                     }
                 } // End of if in $FIXED_LIST_FIELD_TYPES
             else
@@ -854,7 +854,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             }
                         sort($daterangenodes);
                         $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
-                        $updated_fields[$ref][$fields[$n]['ref']] = $newval; // To pass to hook
+                        $updated_fields[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
@@ -896,7 +896,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         };
 
                     $new_checksums[$fields[$n]['ref']] = md5($val);
-                    $updated_fields[$ref][$fields[$n]['ref']] = $val; // To pass to hook
+                    $updated_fields[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 elseif (
                     $multilingual_text_fields
@@ -930,7 +930,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         };
 
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
-                    $updated_fields[$ref][$fields[$n]['ref']] = $val; // To pass to hook
+                    $updated_fields[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 else
                     {
@@ -946,7 +946,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         continue;
                         };
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
-                    $updated_fields[$ref][$fields[$n]['ref']] = $val; // To pass to hook
+                    $updated_fields[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
 
                 # Check for regular expression match
@@ -1600,7 +1600,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
                             }
                         
-                        $updated_fields[$ref][$fields[$n]['ref']] = implode(",",$new_nodes_val); // To pass to hook
+                        $updated_fields[$ref][$fields[$n]['ref']][] = $new_nodes_val; // To pass to hook
                         }
                     }
                 else
@@ -1636,7 +1636,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         $resource_update_params[$ref][]="s";
                         $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
 
-                        $updated_fields[$ref][$fields[$n]['ref']] = implode(",",$new_nodes_val); // To pass to hook
+                        $updated_fields[$ref][$fields[$n]['ref']][] = $new_nodes_val; // To pass to hook
                         }
                     }
                 }
@@ -1770,7 +1770,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode($range_separator,$log_node_names);
                             }
-                        $updated_fields[$ref][$fields[$n]['ref']] = implode(",",$log_node_names); // To pass to hook
+                        $updated_fields[$ref][$fields[$n]['ref']] = $log_node_names; // To pass to hook
                         }
                     }
                 else
@@ -1799,7 +1799,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$newval;
                             }
                         
-                        $updated_fields[$ref][$fields[$n]['ref']] = $newval; // To pass to hook
+                        $updated_fields[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
                 $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
@@ -2121,7 +2121,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         }
 
                     $successfully_edited_resources[] = $ref;
-                    $updated_fields[$ref][$fields[$n]['ref']] = $newval; // To pass to hook
+                    $updated_fields[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                     }
                 } // End of for each resource
             }  // End of non-fixed list editing section
@@ -2490,9 +2490,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         {
         // Standard node fields
         // Set up arrays of node ids to add/remove and all new nodes.
-        $nodes_to_add    = array();
-        $nodes_to_remove = array();
-        $newnodes        = array();
+        $nodes_to_add    = [];
+        $nodes_to_remove = [];
+        $newnodes        = [];
+        $newvalues       = [];
 
         // Get all node values into an array to search
         $fieldnodes      = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
@@ -2849,7 +2850,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     # Allow plugins to perform additional actions.
-    hook("update_field","",array($resource,$field,$value,$existing,$fieldinfo));
+    hook("update_field","",array($resource,$field,$value,$existing,$fieldinfo,$newnodes,$newvalues));
     return true;
     }
 

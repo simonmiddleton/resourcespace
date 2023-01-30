@@ -4,40 +4,44 @@
  * Send the new field value to the Open AI API in order to update the linked field 
  *
  * @param int       $resource           Resource ID
- * @param int       $target_field       Metadata field ref of the linked field (openai_gpt_output_field)
- * @param array     $fieldinfo          Array of resource_type_field data for field currently being updated
- * @param string    $value              New value of the field currently being processed (comma separated for node names)
+ * @param int       $target_field       Target metadata field ID
+ * @param array     $values             Array of strings from the field currently being processed
  * 
- * @return bool     True if uipdat successful, false if invalid field or no data returned
+ * @return bool     True if update successful, false if invalid field or no data returned
  * 
  */
-function  openai_gpt_update_linked_field($resource,$target_field,$fieldinfo,$value)
+function  openai_gpt_update_field($resource,$target_field,$values)
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$openai_gpt_api_key, $openai_gpt_api_model,
-    $openai_gpt_api_max_tokens,$openai_gpt_api_temperature, $language, $defaultlanguage;
+    $openai_gpt_api_max_tokens,$openai_gpt_api_temperature, $language, $defaultlanguage,
+    $openai_gpt_prompt_prefix, $openai_gpt_prompt_suffix;
 
+    // Don't update if not a valid field type
     $target_field_info = get_resource_type_field($target_field);
-    if(!in_array($target_field_info["type"],$valid_ai_field_types))
+    if(!in_array($target_field_info["type"],$valid_ai_field_types) || count($values) == 0)
         {
         return false;
-        }    
-    
-    $prompt = $fieldinfo["openai_gpt_prompt"] . (in_array($target_field_info["type"],$FIXED_LIST_FIELD_TYPES) ?  ", comma separated" : "") . ":";
+        }
 
-    if(in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && substr($value,0,1) == "~")
+    // Remove any i18n variants and use default system language
+    $prompt_values = [];
+    $saved_language = $language;
+    $language = $defaultlanguage;
+    foreach($values as $value)
         {
-        // Remove i18n values and use default system language
-        $allvals = explode(",",$value);
-        $saved_language = $language;
-        $language = $defaultlanguage;
-        $allvals = array_map("i18n_get_translated",$allvals);
-        $language = $saved_language;
-        $prompt .= implode(",",$allvals);
+        if(substr($value,0,1) == "~")
+            {
+            $prompt_values[] = i18n_get_translated($value);
+            }
+        else
+            {
+            $prompt_values[] = $value;                
+            }
         }
-    else
-        {
-        $prompt .= $value;
-        }
+    $language = $saved_language;
+
+    $prompt = $openai_gpt_prompt_prefix . $target_field_info["openai_gpt_prompt"] . json_encode($prompt_values)  . $openai_gpt_prompt_suffix;
+
 
     if(isset($openai_response_cache[md5($prompt)]))
         {
@@ -49,10 +53,23 @@ function  openai_gpt_update_linked_field($resource,$target_field,$fieldinfo,$val
     
     if(trim($openai_response) != "")
         {
-        // update_field() will separate on comma separated values
-        $result = update_field($resource,$target_field,trim($openai_response));
-        return $result;
+        $newvalues = json_decode($openai_response,true);
+        if($newvalues !== false)
+            {
+            $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newvalues);
+            // update_field() will separate on comma separated values
+            $result = update_field($resource,$target_field,$newvalue);
+            return $result;
+            }
+        else
+            {
+            debug("openai_gpt error - invalid JSON received from API: " . trim($openai_response));
+            return false;
+            }
+        return $newvalue;
         }
+    
+    debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
     return false;
     }
 
@@ -74,11 +91,11 @@ function  openai_gpt_update_linked_field($resource,$target_field,$fieldinfo,$val
 function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature = 0, $max_tokens = 2048)
     {
     // Set the endpoint URL
-    global $openai_gpt_api_endpoint,  $openai_response_cache;
+    global $openai_gpt_endpoint,  $openai_response_cache;
     
-    if(isset($openai_response_cache[md5($openai_gpt_api_endpoint . $prompt)]))
+    if(isset($openai_response_cache[md5($openai_gpt_endpoint . $prompt)]))
         {
-        return $openai_response_cache[md5($openai_gpt_api_endpoint . $prompt)];
+        return $openai_response_cache[md5($openai_gpt_endpoint . $prompt)];
         }
     
 
@@ -97,7 +114,7 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
     ];
     
     // Initialize cURL
-    $ch = curl_init($openai_gpt_api_endpoint);
+    $ch = curl_init($openai_gpt_endpoint);
     
     // Set the options for the request
     curl_setopt_array($ch, [
@@ -119,7 +136,7 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
     if(isset($response_data["error"][0]["message"]))
         {
         debug("openai_gpt_generate_completions API error - type:" . $response_data["error"][0]["type"] . ", message: " . $response_data["error"][0]["message"]);
-        $openai_response_cache[md5($openai_gpt_api_endpoint . $prompt)] = false;
+        $openai_response_cache[md5($openai_gpt_endpoint . $prompt)] = false;
         return false;
         }
 
@@ -127,8 +144,14 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
     if (isset($response_data["choices"][0]["text"]))
         {
         $return = $response_data["choices"][0]["text"];
-        $openai_response_cache[md5($openai_gpt_api_endpoint . $prompt)] = $return;
+        $openai_response_cache[md5($openai_gpt_endpoint . $prompt)] = $return;
         return $return;
         }
     return false;
+    }
+
+function openai_gpt_get_dependent_fields($field)
+    {
+    $ai_gpt_input_fields = ps_query("SELECT ref, type FROM resource_type_field WHERE openai_gpt_input_field = ?",["i",$field]);
+    return $ai_gpt_input_fields;
     }
