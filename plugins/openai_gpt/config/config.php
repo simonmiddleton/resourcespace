@@ -3,12 +3,12 @@
 $openai_gpt_api_key = "";
 $openai_gpt_model = "text-davinci-003";
 $openai_gpt_prompt_prefix = "For the following JSON encoded array, ";
-$openai_gpt_prompt_suffix = ". The output choices must be in the form of a JSON encoded array: ";
+$openai_gpt_prompt_return_json = "The output choices must be in the form of a JSON encoded array."; // Used for fixed list fields
 $openai_gpt_temperature = 0;
 
 // The following can't be changed from the plugin setup page
 $openai_gpt_endpoint = "https://api.openai.com/v1/completions";
-$openai_gpt_max_tokens = 100;
+$openai_gpt_max_tokens = 1000;
 $openai_gpt_max_data_length = 10000;
 
 $valid_ai_field_types = [

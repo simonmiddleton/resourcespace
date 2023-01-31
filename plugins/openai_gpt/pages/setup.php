@@ -15,8 +15,9 @@ $page_intro = "<p>" . $lang['openai_gpt_intro'] . "</p>";
 $page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_key"]);
 $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
 $page_def[] = config_add_text_input("openai_gpt_prompt_prefix",$lang["openai_gpt_prompt_prefix"]);
-$page_def[] = config_add_text_input("openai_gpt_prompt_suffix",$lang["openai_gpt_prompt_suffix"]);
+$page_def[] = config_add_text_input("openai_gpt_prompt_return_json",$lang["openai_gpt_prompt_return_json"]);
 $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_temperature"]);
+$page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_max_tokens"]);
 
 // Do the page generation ritual
 $upload_status = config_gen_setup_post($page_def, $plugin_name);

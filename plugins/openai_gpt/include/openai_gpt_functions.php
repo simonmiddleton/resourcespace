@@ -13,7 +13,7 @@
 function openai_gpt_update_field($resource,$target_field,$values)
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage,
-    $openai_gpt_prompt_prefix, $openai_gpt_prompt_suffix, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,$openai_gpt_temperature ,$openai_gpt_max_tokens, $openai_gpt_max_data_length;
+    $openai_gpt_prompt_prefix, $openai_gpt_prompt_return_json, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,$openai_gpt_temperature ,$openai_gpt_max_tokens, $openai_gpt_max_data_length;
 
     // Don't update if not a valid field type
     if(!in_array($target_field["type"],$valid_ai_field_types) 
@@ -44,7 +44,7 @@ function openai_gpt_update_field($resource,$target_field,$values)
         }
     $language = $saved_language;
 
-    $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . $openai_gpt_prompt_suffix . json_encode($prompt_values);
+    $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . (in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES) ? " " . $openai_gpt_prompt_return_json : "") . json_encode($prompt_values);
 
     if(isset($openai_response_cache[md5($prompt)]))
         {
@@ -56,28 +56,35 @@ function openai_gpt_update_field($resource,$target_field,$values)
 
     if(trim($openai_response) != "")
         {
-        debug("openai_gpt_generate_completions text response : " . print_r($openai_response,true));
-        $newvalues = json_decode($openai_response,true);
-
-        if(json_last_error() !== JSON_ERROR_NONE)
-            {
-            debug("openai_gpt error - invalid JSON text response received from API: " . json_last_error_msg() . " " . trim($openai_response));
-            return false;
-            }
+        debug("openai_gpt_generate_completions text response : " . $openai_response);
         if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
             {
+            $apivalues = json_decode(trim($openai_response),true);
+            if(json_last_error() !== JSON_ERROR_NONE || !is_array($apivalues))
+                {
+                debug("openai_gpt error - invalid JSON text response received from API: " . json_last_error_msg() . " " . trim($openai_response));               
+                }
+            // The returned array elements may be associative or contain sub arrays - convert to list of strings
+            $newstrings = [];
+            foreach($apivalues as $attribute=>&$value)
+                {
+                if(is_array($value))
+                    {
+                    $value = json_encode($value);
+                    }                
+                $newstrings[] = is_int_loose($attribute) ? $value : $attribute . " : " . $value;
+                }            
             // update_field() will separate on NODE_NAME_STRING_SEPARATOR
-            $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newvalues);
+            $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newstrings);          
             }
         else
             {
-            $newvalue = implode(",",$newvalues);
+            $newvalue = $openai_response;
             }
-        $result = update_field($resource,$target_field["ref"],$newvalue);
-        $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
-
         // Set a flag to prevent any opossibility of infinite recursion within update_field()
         $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
+
+        $result = update_field($resource,$target_field["ref"],$newvalue);
         return $result;
         }
     debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
@@ -101,7 +108,7 @@ function openai_gpt_update_field($resource,$target_field,$values)
  */
 function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature = 0, $max_tokens = 2048)
     {
-    debug("openai_gpt_generate_completions() model = '" . $model . "', prompt = '" . $prompt . "' temperature = '" . $temperature . "'");
+    debug("openai_gpt_generate_completions() \$model = '" . $model . "', \$prompt = '" . $prompt . "' \$temperature = '" . $temperature . "', \$max_tokens = " . $max_tokens);
 
     // Set the endpoint URL
     global $openai_gpt_endpoint,  $openai_response_cache;
