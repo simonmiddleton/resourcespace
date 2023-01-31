@@ -358,7 +358,7 @@ EOT;
                 }
             else
                 {
-                echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div></a>";
+                echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars((string)$comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div></a>";
                 }
 
             if ($comments_show_anonymous_email_address && !empty($comment['email']))
