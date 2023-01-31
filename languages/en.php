@@ -175,7 +175,7 @@ $lang["property-omit_when_copying"]="Omit when copying";
 $lang["property-sync_with_field"]="Sync with field";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref>Copy field</a>";
 $lang["property-display_condition"]="Display condition";
-$lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
+$lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. The conditioning field being checked must be one of the fixed types: dropdown list, checkbox list, radio buttons, dynamic keyword or category tree. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
 $lang["property-onchange_macro"]="On change macro";
 $lang["information-onchange_macro"]="On change macro: code to be executed when field value is changed. CAUTION ADVISED";
 $lang["information-derestrict_filter"]="Derestrict filter. Only effective when used in conjunction with removing the g permission so that all resources are restricted unless the metadata condition is met";
