@@ -249,7 +249,7 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
     $sort = "ASC";
     }
 
-    $messages=ps_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
+    $messages=ps_query("SELECT user_message.ref, message.ref AS 'message_id', user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
 		"FROM `user_message`
 		INNER JOIN `message` ON user_message.message=message.ref " .
 		"LEFT OUTER JOIN `user` ON message.owner=user.ref " .
@@ -1060,7 +1060,7 @@ function get_user_message(int $ref, bool $checkaccess=true)
     global $userref;
     if($checkaccess)
         {
-        $validmessages = ps_array("SELECT ref value FROM user_message WHERE user = ?",["i",$userref]);
+        $validmessages = ps_array("SELECT `message` value FROM user_message WHERE user = ?",["i",$userref]);
         if(!in_array($ref,$validmessages))
             {
             return false;
