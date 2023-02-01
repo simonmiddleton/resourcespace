@@ -169,7 +169,16 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
                 // Has the value been updated?
                 if(isset($updated_resources[$ref][$field["ref"]]) && count($updated_resources[$ref][$field["ref"]]) > 0)
                     {
-                    $updated = openai_gpt_update_field($ref,$targetfield,$updated_resources[$ref][$field["ref"]]);
+                    if(count($updated_resources[$ref][$field["ref"]]) == 1 && trim($updated_resources[$ref][$field["ref"]][0]) == "")
+                        {
+                        // Empty value - clear the target field
+                        debug("openai_gpt - no value set for resource # " . $ref . ", field #" . $field["ref"] . " " . $field["name"] . ", clearing target field #" . $targetfield["ref"]);
+                        $updated =  update_field($ref,$targetfield["ref"],"");
+                        }
+                    else
+                        {
+                        $updated = openai_gpt_update_field($ref,$targetfield,$updated_resources[$ref][$field["ref"]]);
+                        }
                     if($updated)
                         {
                         $success=true;

@@ -170,9 +170,10 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         return false;
         }
 
-    if(isset($response_data["error"][0]["message"]))
+    $error = $response_data["error"] ?? ($response_data["error"][0] ?? []); 
+    if(!empty($error))
         {
-        debug("openai_gpt_generate_completions API error - type:" . $response_data["error"][0]["type"] . ", message: " . $response_data["error"][0]["message"]);
+        debug("openai_gpt_generate_completions API error - type:" . $error["type"] . ", message: " . $error["message"]);
         $openai_response_cache[md5($openai_gpt_endpoint . $prompt)] = false;
         return false;
         }
