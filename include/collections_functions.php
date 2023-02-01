@@ -5120,7 +5120,9 @@ function collection_download_process_collection_download_name(&$filename, $colle
  * @param  boolean $archiver
  * @param  integer $settings_id
  * @param  string $zipfile
- * @return void
+ * 
+ * @return bool   Will return true if there is no further work to be done as will be the case for a tar file.
+ *                False when further processing needed e.g. when producing a zip file.
  */
 function collection_download_process_archive_command($collection_download_tar, &$zip, $filename, $usertempdir, $archiver, $settings_id, &$zipfile)
     {
@@ -5144,7 +5146,7 @@ function collection_download_process_archive_command($collection_download_tar, &
         debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
         $cmdtempdir = escapeshellarg($usertempdir);
         passthru("find " . $cmdtempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $cmdtempdir . " -T -");
-        exit();
+        return true;
         }
     else if ($archiver)
         {
@@ -5167,6 +5169,7 @@ function collection_download_process_archive_command($collection_download_tar, &
             }
             update_zip_progress_file("complete");
         }
+    return false;
     }
 
 /**

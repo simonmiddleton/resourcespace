@@ -209,6 +209,8 @@ if ($submitted != "")
             JOB_PRIORITY_USER
             );
 
+        collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
+
         exit();
         }
 
@@ -511,7 +513,14 @@ if ($submitted != "")
 
 	collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
 		
-    collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
+    $completed = collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
+
+    if ($completed)
+        {
+        // A tar file was requested. Nothing further to do.
+        collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", "tar - " . $size);
+        exit();
+        }
 
     collection_download_clean_temp_files($deletion_array);
 
@@ -554,11 +563,12 @@ if ($submitted != "")
             {
             debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
             }
-        collection_log($collection,"Z","","-".$size);
-		}
-	hook('beforedownloadcollectionexit');
-	exit();
-	}
+        }
+    collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
+    hook('beforedownloadcollectionexit');
+    exit();
+    }
+
 include "../include/header.php";
 
 ?>
