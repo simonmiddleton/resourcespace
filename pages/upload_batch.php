@@ -1170,7 +1170,7 @@ jQuery(document).ready(function () {
         closeModalOnClickOutside: false,
         closeAfterFinish: false,
         disableStatusBar: false,
-        disableInformer: false,
+        disableInformer: true,
         disableThumbnailGenerator: false,
         disablePageScrollWhenModalOpen: true,
         animateOpenClose: true,
