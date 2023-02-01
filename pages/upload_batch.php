@@ -813,6 +813,8 @@ if ($processupload)
                 debug("batch_replace upload: replacing resources within collection " . $batch_replace_col . " only");
                 }
 
+            if($filename_field != 0)
+                {
                 $target_resourceDebug = $target_resource;
                 $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);
