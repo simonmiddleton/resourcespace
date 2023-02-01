@@ -112,7 +112,7 @@ function <?php echo $autocomplete_user_scope; ?>addUser(event,ui)
 
 	if (typeof ui!=='undefined') {username=ui.item.value;}
 	
-	if (username.indexOf("<?php echo $lang["group"]?>")!=-1 && (!attachUserSmartGroups || (attachUserSmartGroups && username.indexOf("<?php echo $lang["groupsmart"]?>")==-1)))
+	if (username.indexOf("<?php echo escape_quoted_data($lang["group"]); ?>") != -1)
 		{
 		if ((confirm("<?php echo $lang["confirmaddgroup"]?>"))==false) {return false;}
 		}
