@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Send the new field value to the Open AI API in order to update the linked field 
+ * Send the new field value to the OpenAI API in order to update the linked field 
  *
  * @param int       $resource           Resource ID
  * @param array     $target_field       Target metadata field (array
@@ -92,7 +92,7 @@ function openai_gpt_update_field($resource,$target_field,$values)
     }
 
 /**
- * Call the Open AI API
+ * Call the OpenAI API
  *
  * Refer to https://beta.openai.com/docs/api-reference for detailed explanation
  * 

@@ -1,5 +1,5 @@
 <?php
-// Open AI key from https://openai.com/api/
+// OpenAI key from https://openai.com/api/
 $openai_gpt_api_key = "";
 $openai_gpt_model = "text-davinci-003";
 $openai_gpt_prompt_prefix = "For the following JSON encoded array, ";
