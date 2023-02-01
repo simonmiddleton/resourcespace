@@ -140,7 +140,7 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         "model" => $model,
         "prompt" => $prompt,
         "temperature" => $temperature,
-        "max_tokens" => $max_tokens,
+        "max_tokens" => (int)$max_tokens,
     ];
 
     // Initialize cURL
