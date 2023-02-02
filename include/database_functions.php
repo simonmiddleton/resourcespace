@@ -1254,12 +1254,24 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
     $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
     $datacount = count($data);
-    if($cachecount && ($datacount + $offset > $total))
+
+    // Check if cached total will cause errors
+    if($datacount ==  0)
         {
-        // Make sure cached count isn't lower than the actual number of results returned
+        // No data returned. Either beyond the last page of results or there were no results at all
+        $total = min($total,$offset);
+        }
+    elseif($datacount < $rows)
+        {
+        // Some data but not as many rows returned as expected, set to actual value
+        $total = $offset + $datacount;        
+        }
+    elseif($offset + $datacount > $total)
+        {
+        // More rows returned than expected. 
+        // Set total to the actual number of results
         $total = $offset + $datacount;
         }
-    
     return ['total' => $total, 'data' => $data];
     }
 

@@ -141,8 +141,8 @@ include "../../include/header.php";
     $usersfound = count($users["data"]) > 0;
     if($usersfound == 0)
         {
-        // Deleted last user on page? Go to last page
-        $offset     = $results - $per_page;
+        // No results, go to last page
+        $offset     = floor(($results-1)/$per_page)*$per_page;
         $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
         $results    = $users["total"];
         }
@@ -283,7 +283,7 @@ include "../../include/header.php";
     </div>
     <div class="BottomInpageNav">
     <div class="BottomInpageNavLeft">
-    <strong><?php echo $lang["total"] . ": " . count($users); ?> </strong><?php echo $lang["users"]; ?>
+    <strong><?php echo $lang["total"] . ": " . $results; ?> </strong><?php echo $lang["users"]; ?>
     </div>
 
     <?php pager(false); ?></div>

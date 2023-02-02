@@ -54,6 +54,18 @@ $tab_records = get_tabs_with_usage_count([
     'order_by' => [$tab_orderby, $tab_sort],
     'limit' => ['per_page' => $per_page, 'offset' => $offset],
 ]);
+
+$tabsfound = count($tab_records["data"]) > 0;
+if(!$tabsfound)
+    {
+    // No results, go to last page
+    $offset     = floor(($tab_records['total']-1)/$per_page)*$per_page;
+    $tab_records = get_tabs_with_usage_count([
+        'order_by' => [$tab_orderby, $tab_sort],
+        'limit' => ['per_page' => $per_page, 'offset' => $offset],
+    ]);
+    }
+
 $totalpages = ceil($tab_records['total'] / $per_page);
 $curpage = floor($offset / $per_page) + 1;
 
