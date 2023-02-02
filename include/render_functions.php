@@ -1948,9 +1948,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
       if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
         {
         # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
-        ?> 
+        if ($field['required'] == 0) 
+            {
+            # And it only applies if the field is optional
+            ?> 
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
+            }
         }
         hook ("edit_all_extra_modes","",[$field]);
         ?>
