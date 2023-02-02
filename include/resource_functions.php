@@ -5808,7 +5808,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
             if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 # Multiple values are comma separated
-                $autovals = str_getcsv($value);
+                $autovals = str_getcsv((string) $value);
                 $autonodes = array();
                 # Establish an array of nodes from the values
                 foreach($autovals as $autoval)
