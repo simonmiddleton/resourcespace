@@ -2351,8 +2351,11 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
         if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
             {
             $fields = array_filter($resource_type_fields,"is_int_loose");
-            $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
-            $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
+            if (count($fields) > 0)
+                {
+                $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
+                $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
+                }
             }
 
         if(!is_null($node_sort))
