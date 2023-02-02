@@ -1609,7 +1609,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         'to'    => $nodes_to_add,
                         ];
 
-                    if(count($added_nodes)>0 || count($removed_nodes)>0 && in_array($fields[$n]['ref'], $joins))
+                    if((count($added_nodes)>0 || count($removed_nodes)>0) && in_array($fields[$n]['ref'], $joins))
                         {
                         // Build new value:
                         foreach($new_nodes as $noderef=>$new_node)
