@@ -130,11 +130,22 @@ include "../../include/header.php";
     <?php 
     hook('modifyusersearch');
 
-    # Fetch rows
+    $groups     = get_usergroups(true);
+    # Fetch users
+    $usersfound = false;
+
+
     $users_sql  = get_users($group,$find,$order_by,true,$offset+$per_page,"",true);
     $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
-    $groups     = get_usergroups(true);
     $results    = $users["total"];
+    $usersfound = count($users["data"]) > 0;
+    if($usersfound == 0)
+        {
+        // Deleted last user on page? Go to last page
+        $offset     = $results - $per_page;
+        $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
+        $results    = $users["total"];
+        }
     $users  	= $users["data"];
     $totalpages	=ceil($results/$per_page);
     $curpage	=floor($offset/$per_page)+1;
