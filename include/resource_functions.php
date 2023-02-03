@@ -621,6 +621,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     $ui_selected_node_values    = [];
     $all_current_field_nodes    = [];
     $new_node_values            = [];
+    $updated_resources          = [];
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
@@ -710,38 +711,39 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 if(count($added_nodes) > 0 || count($removed_nodes) > 0)
                     {
-                    # If this is a 'joined' field it still needs to add it to the resource column
+                    $new_nodevals = array();
+                    // Build new value
+                    foreach($ui_selected_node_values as $ui_selected_node_value)
+                        {
+                        if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
+                            {
+                            $new_nodevals[] = implode(
+                                '/',
+                                array_column(
+                                    compute_node_branch_path($all_tree_nodes_ordered, $ui_selected_node_value),
+                                    'name'
+                                )
+                            );
+                            continue;
+                            }
+
+                        $new_nodevals[] = $node_options[$ui_selected_node_value];
+                        }
+                    # Is this is a 'joined' field?
                     $joins=get_resource_table_joins();
                     if (in_array($fields[$n]["ref"],$joins))
                         {
-                        $new_nodevals = array();
-                        // Build new value:
-                        foreach($ui_selected_node_values as $ui_selected_node_value)
-                            {
-                            if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
-                                {
-                                $new_nodevals[] = implode(
-                                    '/',
-                                    array_column(
-                                        compute_node_branch_path($all_tree_nodes_ordered, $ui_selected_node_value),
-                                        'name'
-                                    )
-                                );
-                                continue;
-                                }
-
-                            $new_nodevals[] = $node_options[$ui_selected_node_value];
-                            }
-
                         $new_nodes_val = implode($GLOBALS['field_column_string_separator'], $new_nodevals);
                         if ((1 == $fields[$n]['required'] && "" != $new_nodes_val) || 0 == $fields[$n]['required']) # If joined field is required we shouldn't be able to clear it.
                             {
                             update_resource_field_column($ref,$fields[$n]["ref"],$new_nodes_val);
                             }
                         }
+                    $val = implode(",",$new_nodevals);
+                    sort($ui_selected_node_values);
+                    $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
+                    $updated_resources[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
                     }
-                sort($ui_selected_node_values);
-                $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
                 } // End of if in $FIXED_LIST_FIELD_TYPES
             else
                 {
@@ -815,14 +817,14 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 }
                             }
                         }
-                        natsort($daterangenodes);
+                    natsort($daterangenodes);
 
-                        // Set new value for logging
-                        $new_node_values = array_merge($new_node_values,$daterangenodes);
+                    // Set new value for logging
+                    $new_node_values = array_merge($new_node_values,$daterangenodes);
 
-                        // Get currently selected nodes for this field
-                        $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref'], false, SORT_ASC);
-                        $all_current_field_nodes = array_merge($all_current_field_nodes,$current_field_nodes);
+                    // Get currently selected nodes for this field
+                    $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref'], false, SORT_ASC);
+                    $all_current_field_nodes = array_merge($all_current_field_nodes,$current_field_nodes);
 
                         // Check if resource field data has been changed between form being loaded and submitted
                         $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
@@ -834,25 +836,26 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             continue;
                             }
 
-                        if($daterangenodes !== $current_field_nodes)
-                            {
-                            $added_nodes = array_diff($daterangenodes, $current_field_nodes);
-                            debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
-                            $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-                            $removed_nodes = array_diff($current_field_nodes,$daterangenodes);
-                            debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
-                            $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
+                    if($daterangenodes !== $current_field_nodes)
+                        {
+                        $added_nodes = array_diff($daterangenodes, $current_field_nodes);
+                        debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
+                        $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
+                        $removed_nodes = array_diff($current_field_nodes,$daterangenodes);
+                        debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
+                        $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
 
-                            $val = $newval;
-                            # If this is a 'joined' field it still needs to be added to the resource column
-                            $joins=get_resource_table_joins();
-                            if (in_array($fields[$n]["ref"],$joins))
-                                {
-                                update_resource_field_column($ref,$fields[$n]["ref"],$newval);
-                                }
-                            sort($daterangenodes);
-                            $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
+                        $val = $newval;
+                        # If this is a 'joined' field it still needs to be added to the resource column
+                        $joins=get_resource_table_joins();
+                        if (in_array($fields[$n]["ref"],$joins))
+                            {
+                            update_resource_field_column($ref,$fields[$n]["ref"],$newval);
                             }
+                        sort($daterangenodes);
+                        $new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
+                        $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
+                        }
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                     {
@@ -893,6 +896,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         };
 
                     $new_checksums[$fields[$n]['ref']] = md5($val);
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 elseif (
                     $multilingual_text_fields
@@ -926,6 +930,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         };
 
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 else
                     {
@@ -941,6 +946,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         continue;
                         };
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
 
                 # Check for regular expression match
@@ -1077,7 +1083,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 $macro_resource_id=$ref;
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
-			} # End of if "allowed to edit field conditions"
+			} # End of if "allowed to edit field conditions"        
 		} # End of for $fields
 
     // When editing a resource, prevent applying the change to the resource if there are any errors
@@ -1255,7 +1261,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
 
     // Plugins can do extra actions once all fields have been saved and return errors back if needed
-    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields));
+    $plg_errors = hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field, $fields,$updated_resources));
     if(is_array($plg_errors) && !empty($plg_errors))
         {
         $errors = array_merge($errors, $plg_errors);
@@ -1405,6 +1411,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     $log_node_updates        = [];
     $resource_update_sql_arr = [];
     $resource_update_params  = [];
+    $updated_resources       = [];
     $successfully_edited_resources = [];
     $fields = array_values(array_filter($fields,function($field) use ($postvals){
         return ($postvals['editthis_field_' . $field['ref']] ?? '') != '' || hook('save_resource_data_multi_field_decision', '', array($field['ref']));
@@ -1592,6 +1599,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][]="s";
                             $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
                             }
+                        
+                        $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
                 else
@@ -1626,6 +1635,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                         $resource_update_params[$ref][]="s";
                         $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
+
+                        $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
                 }
@@ -1759,6 +1770,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode($range_separator,$log_node_names);
                             }
+                        $updated_resources[$ref][$fields[$n]['ref']] = $log_node_names; // To pass to hook
                         }
                     }
                 else
@@ -1786,6 +1798,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$newval;
                             }
+                        
+                        $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
                 $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
@@ -2107,6 +2121,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         }
 
                     $successfully_edited_resources[] = $ref;
+                    $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                     }
                 } // End of for each resource
             }  // End of non-fixed list editing section
@@ -2375,7 +2390,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
     // Plugins can do extra actions once all fields have been saved and return errors back if needed.
     // NOTE: Ensure the list of arguments is matching with aftersaveresourcedata hook in save_resource_data()
-    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', array()));
+    $plg_errors = hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, '', $fields,$updated_resources));
     if(is_array($plg_errors) && !empty($plg_errors))
         {
         $errors = array_merge($errors, $plg_errors);
@@ -2470,14 +2485,17 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $errors[] = i18n_get_translated($fieldinfo['title']) . ": {$lang['requiredfield']}";;
         return false;
         }
+    
+    // Create arrays that will be passed to hook function later
+    $newnodes        = [];
+    $newvalues       = [];
 
     if (in_array($fieldinfo['type'], array_merge($FIXED_LIST_FIELD_TYPES,[FIELD_TYPE_DATE_RANGE])))
         {
         // Standard node fields
         // Set up arrays of node ids to add/remove and all new nodes.
-        $nodes_to_add    = array();
-        $nodes_to_remove = array();
-        $newnodes        = array();
+        $nodes_to_add    = [];
+        $nodes_to_remove = [];
 
         // Get all node values into an array to search
         $fieldnodes      = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
@@ -2834,7 +2852,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
 
     # Allow plugins to perform additional actions.
-    hook("update_field","",array($resource,$field,$value,$existing));
+    hook("update_field","",array($resource,$field,$value,$existing,$fieldinfo,$newnodes,$newvalues));
     return true;
     }
 
@@ -3113,50 +3131,7 @@ function delete_resource($ref)
 */
 function get_resource_type_field($field)
     {
-    $rtf_query="SELECT ref,
-                name,
-                title,
-                type,
-                order_by,
-                keywords_index,
-                partial_index,
-                resource_type,
-                resource_column,
-                display_field,
-                use_for_similar,
-                iptc_equiv,
-                display_template,
-                tab_name,
-                tab,
-                required,
-                smart_theme_name,
-                exiftool_field,
-                advanced_search,
-                simple_search,
-                help_text,
-                display_as_dropdown,
-                external_user_access,
-                autocomplete_macro,
-                hide_when_uploading,
-                hide_when_restricted,
-                value_filter,
-                exiftool_filter,
-                omit_when_copying,
-                tooltip_text,
-                regexp_filter,
-                sync_field,
-                display_condition,
-                onchange_macro,
-                field_constraint,
-                linked_data_field,
-                automatic_nodes_ordering,
-                fits_field,
-                personal_data,
-                include_in_csv_export,
-                browse_bar,
-                active,
-                full_width,
-                read_only" . hook('add_resource_type_field_column') . "
+    $rtf_query="SELECT " . columns_in("resource_type_field") . "
            FROM resource_type_field
           WHERE ref = ?
     ";
@@ -3221,53 +3196,11 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $field_data_sql = "
              SELECT group_concat(n.name SEPARATOR ', ') AS `value`,
                     group_concat(n.ref) AS `nodes`,
-                    f.ref,
                     f.ref resource_type_field,
                     f.ref AS fref,
-                    f.name,
-                    f.title,
-                    f.field_constraint,
-                    f.type,
-                    f.order_by,
-                    f.keywords_index,
-                    f.partial_index,
-                    f.resource_type,
-                    f.resource_column,
-                    f.display_field,
-                    f.use_for_similar,
-                    f.iptc_equiv,
-                    f.display_template,
-                    f.tab,
-                    f.required,
-                    f.required AS frequired,
-                    f.smart_theme_name,
-                    f.exiftool_field,
-                    f.advanced_search,
-                    f.simple_search,
-                    f.help_text,
-                    f.display_as_dropdown,
-                    f.external_user_access,
-                    f.autocomplete_macro,
-                    f.hide_when_uploading,
-                    f.hide_when_restricted,
-                    f.value_filter,
-                    f.exiftool_filter,
-                    f.omit_when_copying,
-                    f.tooltip_text,
-                    f.regexp_filter,
-                    f.sync_field,
-                    f.display_condition,
-                    f.onchange_macro,
-                    f.linked_data_field,
-                    f.automatic_nodes_ordering,
-                    f.fits_field,
-                    f.personal_data,
-                    f.include_in_csv_export,
-                    f.browse_bar,
-                    f.read_only,
-                    f.active,
-                    f.full_width
-               FROM resource_type_field f
+                    f.required AS frequired, " .
+                    columns_in("resource_type_field", "f") . 
+              "FROM resource_type_field f
           LEFT JOIN (SELECT ref, name, resource_type_field FROM node WHERE ref IN (SELECT node FROM resource_node WHERE resource = ?) ORDER BY order_by) AS n
                     ON n.resource_type_field = f.ref
               WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($node_fields)) . ") " . $restypesql . ")
