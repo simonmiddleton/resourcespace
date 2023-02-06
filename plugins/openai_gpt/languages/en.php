@@ -9,4 +9,6 @@ $lang["openai_gpt_prompt_prefix"]           = "Completion prompt prefix";
 $lang["openai_gpt_prompt_return_json"]      = "Completion prompt suffix (to return JSON for fixed list fields)";
 $lang["openai_gpt_temperature"]             = "Sampling temperature between 0 and 1 (higher values means the model will take more risks)";
 $lang["openai_gpt_max_tokens"]              = "Max tokens";
+$lang["openai_gpt_advanced"]                = "WARNING - This section is for testing purposes only and should not be changed on live systems. Changing any of the plugin options here will affect the behaviour of all the metadata fields that have been configured. Alter with extreme caution!";
+
 
