@@ -992,7 +992,7 @@ if (getval("refreshcollectionframe","")!="")
     }
 
 
-// Manually set any errors that ned to be shown e.g. after saving with locked values
+// Manually set any errors that need to be shown e.g. after saving with locked values
 $showextraerrors = getval("showextraerrors","");
 if ($showextraerrors != "")
     {

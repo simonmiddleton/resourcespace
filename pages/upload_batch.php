@@ -276,7 +276,8 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
 # If uploading alternative file, redirect to the resource rather than search results.
 if($alternative != "")
     {
-    $redirecturl = generateURL("{$baseurl}/pages/view.php", array('ref' => $alternative));
+    $searchparams = get_search_params();
+    $redirecturl = generateURL("{$baseurl}/pages/view.php", array_merge(['ref' => $alternative],$searchparams));
     }
 
 $modify_redirecturl=hook('modify_redirecturl');

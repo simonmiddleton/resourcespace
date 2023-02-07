@@ -6283,8 +6283,14 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
 
 function delete_resources_in_collection($collection)
     {
-    global $resource_deletion_state,$userref,$lang;
+    global $resource_deletion_state,$userref,$lang,$delete_requires_password,$modal;
 
+    if($delete_requires_password && !rs_password_verify(getval('password', ''), $userpassword, ['username' => $username]))
+        {
+        $error = $lang['wrongpassword'];
+        error_alert($error,!$modal);
+        exit();
+        }
 	// Always find all resources in deleted state and delete them permanently:
 	// Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
     $query = "SELECT ref AS value FROM resource INNER JOIN collection_resource ON collection_resource.resource = resource.ref AND collection_resource.collection = ?";
