@@ -3281,9 +3281,14 @@ function get_imagemagick_version($array=true){
 */
 function calculate_image_dimensions($image_path, $target_width, $target_height, $enlarge_image = false)
     {
-    if(false === (list($source_width, $source_height) = @getimagesize($image_path)))
+    $identify_fullpath = get_utility_path("im-identify");
+    if($identify_fullpath !== false)
         {
-        trigger_error("'{$image_path}' is not a valid image!");
+        list($source_width, $source_height) = getFileDimensions($identify_fullpath, '', $image_path, pathinfo($image_path, PATHINFO_EXTENSION));
+        }
+    else
+        {
+        $source_width = $source_height = 0;
         }
 
     $return = array(
@@ -3761,7 +3766,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     global $exiftool_no_process;
 
     $command = get_utility_path("im-convert");
-    if($command === false)
+    $identify_fullpath = get_utility_path("im-identify");
+    if($command === false || $identify_fullpath === false)
         {
         return false;
         }
@@ -3803,16 +3809,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $profile = ' +profile icc -colorspace %imagemagick_colorspace'; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
         }
 
-    if(strtoupper($sf_parts["extension"]) == 'SVG')
-        {
-        list($origwidth, $origheight) = getSvgSize($sourcepath);
-        }
-    else
-        {
-        $origsizes  = getimagesize($sourcepath);
-        $origwidth  = $origsizes[0];
-        $origheight = $origsizes[1];
-        }
+    list($origwidth, $origheight) = getFileDimensions($identify_fullpath, '', $sourcepath, pathinfo($sourcepath, PATHINFO_EXTENSION));
 
     $keep_transparency=false;
     if(isset($actions['background']) && $actions['background'] !== '')
