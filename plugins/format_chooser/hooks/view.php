@@ -200,7 +200,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 	hook("formatchooseraftertable");
 	if ($downloadCount > 0)
 		{
-        $use_originalSize_for_size_info = $originalSize['width'] !== '?' && $originalSize['height'] !== '?';
+        $originalSize_for_size_info = $originalSize['width'] !== '?' && $originalSize['height'] !== '?' ? $originalSize : null;
 		?><script type="text/javascript">
 			// Store size info in JavaScript array
 			var sizeInfo = {
@@ -216,7 +216,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     $size_to_output['width']=$size_image_dimensions['new_width'];
                     $size_to_output['height']=$size_image_dimensions['new_height'];
                     echo $n ?>: {
-                    'info': '<?php echo get_size_info($size_to_output, $use_originalSize_for_size_info ?: null) ?>',
+                    'info': '<?php echo get_size_info($size_to_output, $originalSize_for_size_info ?: null) ?>',
                     'id': '<?php echo $size['id'] ?>',
                     'restricted': '<?php echo in_array($sizes[$n]["id"],$restrictedsizes) ? "1" : "0" ?>'
 				},
