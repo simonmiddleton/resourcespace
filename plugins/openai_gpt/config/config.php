@@ -4,6 +4,7 @@ $openai_gpt_api_key = "";
 $openai_gpt_model = "text-davinci-003";
 $openai_gpt_prompt_prefix = "For the following JSON encoded array, ";
 $openai_gpt_prompt_return_json = "The output choices must be in the form of a JSON encoded array."; // Used for fixed list fields
+$openai_gpt_prompt_return_text = "The response must be in plain text.";
 $openai_gpt_temperature = 0;
 
 // The following can't be changed from the plugin setup page

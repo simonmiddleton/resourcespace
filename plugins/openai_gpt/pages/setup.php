@@ -18,6 +18,7 @@ $page_def[] = config_add_html("<div class='Question'><strong>" . $lang["openai_g
 $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
 $page_def[] = config_add_text_input("openai_gpt_prompt_prefix",$lang["openai_gpt_prompt_prefix"]);
 $page_def[] = config_add_text_input("openai_gpt_prompt_return_json",$lang["openai_gpt_prompt_return_json"]);
+$page_def[] = config_add_text_input("openai_gpt_prompt_return_text",$lang["openai_gpt_prompt_return_text"]);
 $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_temperature"]);
 $page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_max_tokens"]);
 

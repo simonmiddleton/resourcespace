@@ -13,7 +13,9 @@
 function openai_gpt_update_field($resource,$target_field,$values)
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage,
-    $openai_gpt_prompt_prefix, $openai_gpt_prompt_return_json, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,$openai_gpt_temperature ,$openai_gpt_max_tokens, $openai_gpt_max_data_length;
+    $openai_gpt_prompt_prefix, $openai_gpt_prompt_return_json, $openai_gpt_prompt_return_text,
+    $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,$openai_gpt_temperature,
+    $openai_gpt_max_tokens, $openai_gpt_max_data_length;
 
     // Don't update if not a valid field type
     if(!in_array($target_field["type"],$valid_ai_field_types) 
@@ -44,7 +46,7 @@ function openai_gpt_update_field($resource,$target_field,$values)
         }
     $language = $saved_language;
 
-    $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . (in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES) ? " " . $openai_gpt_prompt_return_json : "") . json_encode($prompt_values);
+    $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . (in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES) ? " " . $openai_gpt_prompt_return_json : " " . $openai_gpt_prompt_return_text) . json_encode($prompt_values);
 
     if(isset($openai_response_cache[md5($prompt)]))
         {
@@ -81,7 +83,7 @@ function openai_gpt_update_field($resource,$target_field,$values)
             {
             $newvalue = $openai_response;
             }
-        // Set a flag to prevent any opossibility of infinite recursion within update_field()
+        // Set a flag to prevent any possibility of infinite recursion within update_field()
         $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
 
         $result = update_field($resource,$target_field["ref"],$newvalue);
@@ -152,8 +154,8 @@ function openai_gpt_generate_completions($apiKey, $model, $prompt, $temperature 
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => $headers,
         CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_SSL_VERIFYHOST => 2,
     ]);
 
     // Send the request and get the response
