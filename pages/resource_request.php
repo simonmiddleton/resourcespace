@@ -41,6 +41,21 @@ $use_antispam = ($k !== '' || $user_is_anon);
 $resource            = get_resource_data($ref);
 $resource_field_data = get_resource_field_data($ref);
 
+if(!is_array($resource))
+    {   
+    if(getval("ajax","") != "")
+        {
+        error_alert($lang['resourcenotfound'], false);
+        }
+    else
+        {
+        include "../include/header.php";
+        $onload_message = array("title" => $lang["error"],"text" => $lang['resourcenotfound']);
+        include "../include/footer.php";
+        }
+    exit();
+    }
+
 resource_type_config_override($resource["resource_type"]);
 
 $resource_title = '';
