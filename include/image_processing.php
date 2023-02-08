@@ -1867,7 +1867,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
-                    $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                    if ($icc_preview_profile != "" && $icc_preview_profile_embed)
+                        {
+                        $targetprofile = "-profile " . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        }
+                    else
+                        {
+                        $targetprofile = "";
+                        }
+
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
@@ -1878,8 +1886,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile $iccpath $icc_preview_options -profile $targetprofile".($icc_preview_profile_embed?" ":" -strip ");
+                        $profile  = " -strip -profile $iccpath $icc_preview_options $targetprofile";
                         }
+
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
                     if ($id == 'hpr' || $id == 'lpr' || $id == 'scr')
                         {
