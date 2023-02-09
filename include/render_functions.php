@@ -1763,7 +1763,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
   $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
 
   // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
@@ -1811,7 +1811,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
     else
         {
         $selected_nodes = $all_selected_nodes;
-        $submitted_val = getval("field_" . $field['ref'],"");
+        if (in_array($field["type"], $DATE_FIELD_TYPES))
+            {
+            $submitted_val = sanitize_date_field_input($field["ref"], false);
+            }
+        else
+            {
+            $submitted_val = getval("field_" . $field['ref'], "");
+            }
         if(!empty($save_errors) && $submitted_val != "")
             {
             // Set to the value that was submitted 
