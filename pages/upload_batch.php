@@ -513,9 +513,9 @@ if ($processupload)
             }
         }
 
-    $filename_field=getval("filename_field",0,true);
+    $replace_filename_field=getval("filename_field",0,true);
     $target_resource = [];
-    if($filename_field != 0)
+    if($replace_filename_field != 0)
         {
         $target_resource = ps_array(
             'SELECT resource value
@@ -525,7 +525,7 @@ if ($processupload)
                 AND name = ?
                 AND resource > ?',
             [
-                'i', $filename_field,
+                'i', $replace_filename_field,
                 's', $origuploadedfilename,
                 'i', $fstemplate_alt_threshold
             ]);
@@ -814,10 +814,10 @@ if ($processupload)
                 debug("batch_replace upload: replacing resources within collection " . $batch_replace_col . " only");
                 }
 
-            if($filename_field != 0)
+            if($replace_filename_field != 0)
                 {
                 $target_resourceDebug = $target_resource;
-                $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
+                $target_resourceDebug_message1= "Target resource details - target_resource: " . (count($target_resource)>0 ? json_encode($target_resource) : "NONE") . " . resource_type_field: $replace_filename_field . value: $origuploadedfilename . template_alt_threshold: $fstemplate_alt_threshold . collection: $batch_replace_col";
                 debug($target_resourceDebug_message1);
                 $target_resource=array_values(array_intersect($target_resource,$replace_resources));
                 if(count($target_resource)==1  && !resource_file_readonly($target_resource[0]))
