@@ -3495,7 +3495,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
     $identoutput=run_command($identcommand);
 
-    if($extension == "svg")
+    if(strtolower($extension) == "svg")
         {
         list($w, $h) = getSvgSize($file);
         }
