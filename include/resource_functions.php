@@ -8972,19 +8972,19 @@ function get_external_shares(array $filteropts)
 */
 function get_video_duration(string $file_path)
     {
-        // Escape file_path
-        $file_path_escaped = escapeshellarg($file_path);
+    $exiftool_fullpath = get_utility_path("exiftool");
+    
+    $duration_tag = run_command($exiftool_fullpath . "-n -duration %filepath", false, ["%filepath" => $file_path]);
 
-        if(!empty(run_command("exiftool -duration {$file_path_escaped}")))
-            {
-            $duration_tag = run_command("exiftool -n -duration {$file_path_escaped}");
-            $duration = str_replace(" s", "", substr($duration_tag, strpos($duration_tag, ":") + 2));
-            return floatval($duration);
-            }
-        else
-            {
-            return 0;
-            }
+    if(!empty($duration_tag))
+        {
+        $duration = str_replace(" s", "", substr($duration_tag, strpos($duration_tag, ":") + 2));
+        return floatval($duration);
+        }
+    else
+        {
+        return 0;
+        }
     }
 
 /**
