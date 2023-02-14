@@ -173,7 +173,7 @@ include "../include/header.php";
 	<div class="Question">
 	<label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
 	<input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-	<input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+	<input name="email" type="email" class="stdwidth" value="<?php echo htmlspecialchars(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 
