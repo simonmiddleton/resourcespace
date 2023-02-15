@@ -530,7 +530,7 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
         ?>
-        <a href="<?php echo generateURL($baseurl, $parameters); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo htmlspecialchars($lang['simplesaml_use_sso']); ?></a><br/>
+        <a href="<?php echo generateURL($baseurl, $parameters); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo strip_tags_and_attributes($lang['simplesaml_use_sso']); ?></a><br/>
         <?php
         }
 
