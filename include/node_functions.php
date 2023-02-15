@@ -287,6 +287,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         }
 
     $fieldinfo  = get_resource_type_field($resource_type_field);
+    if($fieldinfo === false){return false;}
     if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
         {
         $rows = 10000;

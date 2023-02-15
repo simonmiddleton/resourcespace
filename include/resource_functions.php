@@ -7594,7 +7594,7 @@ function get_field_options($ref, $nodeinfo = false, bool $skip_translation = fal
         }
 
     $options = get_nodes($ref, null, true);
-
+    if($options === false){return false;}
     # Translate options,
     for ($m=0;$m<count($options);$m++)
         {
