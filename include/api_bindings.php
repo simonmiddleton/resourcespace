@@ -456,7 +456,7 @@ function api_get_field_options($ref, $nodeinfo = false)
     if(!is_numeric($ref))
         {
         // Name may have been passed    
-        $ref = ps_value("select ref value from resource_type_field where name= ?", ['i',$ref], "", "schema");
+        $ref = ps_value("select ref value from resource_type_field where name= ?", ['s',$ref], "", "schema");
         }
         
     if(!metadata_field_view_access($ref))

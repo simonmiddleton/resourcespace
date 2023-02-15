@@ -7590,7 +7590,7 @@ function get_field_options($ref, $nodeinfo = false, bool $skip_translation = fal
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
     if(!is_numeric($ref))
         {
-        $ref = ps_value("select ref value from resource_type_field where name=?'",array("s",$ref), "", "schema"); // $ref is a string in this case
+        $ref = ps_value("select ref value from resource_type_field where name=?",array("s",$ref), "", "schema"); // $ref is a string in this case
         }
 
     $options = get_nodes($ref, null, true);
