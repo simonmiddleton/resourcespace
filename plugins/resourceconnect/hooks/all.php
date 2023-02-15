@@ -96,6 +96,18 @@ function HookResourceConnectAllInitialise()
     
     }
 
+function HookResourceConnectAllAfterregisterplugin($plugin = "")
+    {
+    if ($plugin !== "" && $plugin == "resourceconnect")
+        {
+        # Plugin's group access has been set to a specific group so hook("initialise"); is skipped.
+        # After authenticating the user, the plugin is registered in authenticate.php so we need to initialise
+        # it here to finish setting up variables for use as globals e.g. $resourceconnect_this
+        HookResourceConnectAllInitialise();
+        }
+    }
+
+
 function ResourceConnectCollectionWarning($languagestring,$collection)
     {
     global $lang;
