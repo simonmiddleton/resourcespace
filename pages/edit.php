@@ -378,11 +378,35 @@ $uploadparams["resource_type"] = $resource['resource_type'];
 // Resource archive (ie user template - negative resource ID) can be default only when user actually gets to set it otherwise
 // makes no sense in using it and we should let the system decide based on configuration and permissions what it should use.
 $default_setarchivestate = ($show_status_and_access_on_upload || $resource['ref'] > 0 ? $resource['archive'] : '');
-$setarchivestate = getval('status', $default_setarchivestate, TRUE);
+if ($resetform)
+    {
+    $setarchivestate = $default_setarchivestate;
+    }
+else
+    {
+    $setarchivestate = getval('status', $default_setarchivestate, TRUE);
+    }
 // Validate this is permitted
 $setarchivestate = get_default_archive_state($setarchivestate);
 
 $uploadparams["status"] = $setarchivestate;
+
+if (in_array(getval("access", RESOURCE_ACCESS_INVALID_REQUEST, true), RESOURCE_ACCESS_TYPES) && !$resetform)
+    {
+    // Preserve selected access values including custom access if form validation returns a missed required field.
+    $access_submitted = (int) getval("access", 2, true);
+    if ($access_submitted == 3)
+        {
+        $submitted_access_groups = array();
+        $custom_access_groups = get_resource_custom_access($ref);
+        for ($n = 0; $n < count($custom_access_groups); $n++)
+                {
+                $access_usergroup = $custom_access_groups[$n]["ref"];
+                $custom_access_level = getval("custom_" . $access_usergroup, 0);
+                $submitted_access_groups[$access_usergroup] = (int) $custom_access_level;
+                }
+        }
+    }
 
 # Allow alternative configuration settings for this resource type.
 resource_type_config_override($resource["resource_type"]);
@@ -1909,15 +1933,12 @@ echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . 
 
 # Work out the correct archive status.
 if ($ref < 0 && !$show_status_and_access_on_upload) 
-   {
-    # # Upload template and not displaying status. Hide the dropdown and set the default status.
+    {
+    # Upload template and not displaying status. Hide the dropdown and set the default status.
     ?>
     <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
     }
-else # Edit Resource(s).
-    {
-    $setarchivestate = $resource["archive"];
-    }
+
 ?>
 </div><!-- end of ResourceMetadataSection -->
 <?php
@@ -2033,11 +2054,18 @@ else
       $ea1=!checkperm('ea1');
       $ea2=checkperm("v")?(!checkperm('ea2')?true:false):false;
       $ea3=$custom_access?!checkperm('ea3'):false;
+
+      $access_stored_value = $resource["access"];  
+      if (getval("submitted","") != "" && isset($access_submitted) && $access_submitted != $resource["access"])
+          {
+          $resource["access"] = $access_submitted; // Keep value chosen on form when a required field wasn't completed.
+          }
+
       if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
       {
         if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
 			{
-			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $resource["access"] . "'>";
+			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
 			}?>
         <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo $lang["confirm_remove_custom_usergroup_access"] ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
@@ -2074,7 +2102,16 @@ else
                  {
                    $access=$default_customaccess;
                    $editable= (!$ea3)?false:true;
-                   if ($groups[$n]["access"]!=='') {$access=$groups[$n]["access"];}
+
+                   if (isset($submitted_access_groups) && $submitted_access_groups[$groups[$n]['ref']] !== "" )
+                       {
+                       $access = $submitted_access_groups[$groups[$n]['ref']];
+                       }
+                   elseif ($groups[$n]["access"] !== '')
+                       {
+                       $access = $groups[$n]["access"];
+                       }
+
                    $perms=explode(",",(string) $groups[$n]["permissions"]);
                    if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
