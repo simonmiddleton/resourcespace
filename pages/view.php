@@ -1017,7 +1017,18 @@ if($image_preview_zoom)
 
                     return false;
                     }
-                </script>
+                    <?php
+                    if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
+                        {
+                        ?>
+                        jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
+                            {
+                            toggleAnnotationsOption(jQuery('.AnnotationsOption'));
+                            });
+                        <?php
+                        }
+                        ?>
+                    </script>
                 <?php
                 }
 			
