@@ -322,8 +322,8 @@ function HookAction_datesCronCron()
         $templatevars['message']=$message_combined;
 
         # Construct url lists for message_add function
-        $url_restrict = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_restrict_refs);
-        $url_state = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_state_refs);
+        $url_restrict = build_actiondates_urls($email_restrict_refs);
+        $url_state = build_actiondates_urls($email_state_refs);
 
         foreach($admin_notify_emails as $admin_notify_email)
             {
@@ -337,8 +337,8 @@ function HookAction_datesCronCron()
                 echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
                 }
             # Note that message_add can also send an additional email
-            message_add($admin_notify_users,$notification_restrict,$url_restrict,0);
-            message_add($admin_notify_users,$notification_state,$url_state,0);
+            message_add($admin_notify_users, $notification_restrict . $url_restrict['multiple'], $url_restrict['single'], 0);
+            message_add($admin_notify_users, $notification_state . $url_state['multiple'], $url_state['single'], 0);
             }
 
         # Now empty the arrays to prevent separate notifications because they have already been dealt with here
@@ -352,7 +352,7 @@ function HookAction_datesCronCron()
         # Send a notification for the resources whose date is within the specified number of days
         $notification_state = $message_state; 
         $message_state.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_state_refs) . "\r\n";
-        $url = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_state_refs);
+        $url = build_actiondates_urls($email_state_refs);
         $templatevars['message']=$message_state;
 
         foreach($admin_notify_emails as $admin_notify_email)
@@ -367,7 +367,7 @@ function HookAction_datesCronCron()
                 echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
                 }
             # Note that message_add can also send an additional email
-            message_add($admin_notify_users,$notification_state,$url,0);
+            message_add($admin_notify_users, $notification_state . $url['multiple'], $url['single'], 0);
             }
         }
 
@@ -377,7 +377,7 @@ function HookAction_datesCronCron()
         # Send a notification for the resources whose date is within the specified number of days
         $notification_restrict = $message_restrict; 
         $message_restrict.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_restrict_refs) . "\r\n";
-        $url = $baseurl_short . "pages/search.php?search=!list" . implode(":",$email_restrict_refs);
+        $url = build_actiondates_urls($email_restrict_refs);
         $templatevars['message']=$message_restrict;
 
         foreach($admin_notify_emails as $admin_notify_email)
@@ -392,7 +392,7 @@ function HookAction_datesCronCron()
                 echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
                 }
             # Note that message_add can also send an additional email
-            message_add($admin_notify_users,$notification_restrict,$url,0);
+            message_add($admin_notify_users, $notification_restrict . $url['multiple'], $url['single'], 0);
             }
         }
 
@@ -448,6 +448,46 @@ function HookAction_datesCronCron()
                 }
             }
         }
+    }
+
+/**
+ * Limit the length of url by adding a maximum of 250 resources. Multiple urls will be returned, formatted to include in 
+ * action dates notifications.
+ *
+ * @param  array   $resource_refs   Array containing resource references to include in url.
+ * 
+ * @return array   Array containing 'single' value of url (250 resources or less) and 'multiple' value of url (more than 250 resources).
+ */
+function build_actiondates_urls(array $resource_refs)
+    {
+    global $baseurl, $lang;
+
+    $return_urls['single'] = ''; // Two values returned to determine where the url is placed in message_add() - multiple urls must be passed in message, not url parameter.
+    $return_urls['multiple'] = '';
+
+    if (count($resource_refs) <= 250)
+        {
+        $return_urls['single'] = '<a href="' . $baseurl . "/pages/search.php?search=!list" . implode(":", $resource_refs) . '">' . htmlspecialchars($lang["link"]) . '</a>';
+        }
+    else
+        {
+        $urls = array('<br /><div><ul>');
+
+        $link_no = 1;
+        foreach(array_chunk($resource_refs, 250) as $refs_chunk)
+            {
+            $url = $baseurl . "/pages/search.php?search=!list";
+            $url .= implode(":", $refs_chunk);
+            $url = '<li><a href="' . $url . '">' . htmlspecialchars($lang["show_affected_resources"]) . ' [' . htmlspecialchars($lang["group_no"]) . ' ' . $link_no . ']</a></li>';
+            $urls[] = $url;
+            $link_no ++;
+            }
+        
+        $urls[] = '</ul></div>';
+        $return_urls['multiple'] = implode("", $urls);;
+        }
+
+    return $return_urls;
     }
 
 // This is required if cron task is run via pages/tools/cron_copy_hitcount.php
