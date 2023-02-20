@@ -44,7 +44,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
             }
         }
 
-    if(!$validupload)
+    if(!isset($validupload) || !$validupload)
         {
         exit ("Permission denied.");
         }
