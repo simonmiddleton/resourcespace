@@ -681,15 +681,15 @@ else
     {
     ?>
     <div class="Question"><label><?php echo $lang["property-field_id"] ?></label>
-	<div class="Fixed"><?php echo  $fielddata["ref"] ?></div>
-	<div class="clearerleft"> </div>
+    <div class="Fixed"><?php echo  $fielddata["ref"] ?></div>
+    <div class="clearerleft"> </div>
     </div>
     
     <?php
     $system_date_field = $ref==$date_field?true:false;
     foreach ($fieldcolumns as $column=>$column_detail)		
-	    {;
-	    if(!hook("admin_field_replace_question","admin_resource_type_field_edit",[$ref,$column,$column_detail, $fielddata]))
+        {
+        if(!hook("admin_field_replace_question","admin_resource_type_field_edit",[$ref,$column,$column_detail, $fielddata]))
             {
             if ($column=="partial_index") // Start the hidden advanced section here
                 {?>
@@ -701,8 +701,7 @@ else
             }
         }
     ?>
-    </div><!-- End of hidden advanced section -->
-    
+    </div><!-- End of hidden advanced section -->    
     
     <div class="QuestionSubmit">
     <label for="buttons"> </label>			
