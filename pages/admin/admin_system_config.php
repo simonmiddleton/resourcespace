@@ -491,7 +491,7 @@ if ($searching)
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1 class="inline_config_search"><?php echo $lang["systemconfig"]; ?></h1>
+    <h1 class="inline_config_search"><?php echo htmlspecialchars($lang["systemconfig"]); ?></h1>
 
     <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
         <?php generateFormToken("system_config_search"); ?>
