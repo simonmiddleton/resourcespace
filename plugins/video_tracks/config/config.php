@@ -7,7 +7,6 @@ $video_tracks_download_export=false;
 $video_tracks_audio_extensions=array("mp3","wav","m4a","ogg");
 $video_tracks_subtitle_extensions=array("vtt","srt");
 $video_tracks_permitted_video_extensions=array("mp4","avi","wmv","mpeg","mov","mkv", "flv","mpg");
-$video_tracks_export_folder="";
 $video_tracks_process_size_limit=100;
 
 $video_tracks_allow_original_custom_formats = false;
