@@ -3361,3 +3361,7 @@ $field_column_string_separator = ',';
 
 $uploader_plugins = [];
 $uppy_companion_url = "";
+
+# Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
+# URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
+# $api_upload_urls = array();
