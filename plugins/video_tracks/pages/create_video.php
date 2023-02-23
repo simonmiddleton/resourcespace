@@ -132,12 +132,10 @@ if($generate && enforcePostRequest(false))
             {
             // Save into export directory
             $filename=get_download_filename($ref,"","",$video_track_command["extension"]);
-            $filename=remove_extension($filename) . "_" . safe_file_name($video_track_format) . "." . $video_track_command["extension"];
-            $targetfile=$video_tracks_export_folder . DIRECTORY_SEPARATOR  .$filename;
+            $targetfile = $video_tracks_export_folder . DIRECTORY_SEPARATOR . generateSecureKey(64);
             if(file_exists($targetfile))
                 {
-                $filename=remove_extension($filename) . "_" . date("Ymd_Hi") . "." . $video_track_command["extension"];
-                $targetfile=$video_tracks_export_folder . DIRECTORY_SEPARATOR . $filename;
+                $targetfile = $video_tracks_export_folder . DIRECTORY_SEPARATOR . generateSecureKey(64);
                 }
 
             $message=$lang["video_tracks_export_file_created"];
@@ -150,10 +148,10 @@ if($generate && enforcePostRequest(false))
                 $job_data["command"]=$shell_exec_cmd;	
                 $job_data["outputfile"]=$targetfile;
                 $job_code=$ref . md5($job_data["command"]); // unique code for this job, used to prevent duplicate job creation
-                if($video_tracks_download_export)
-                    {
-                    $job_data["url"]=$baseurl_short . "pages/download.php?userfile=" . $ref . "_" . $randstring . "." . $video_track_command["extension"] . "&video_tracks_export=" . base64_encode(json_encode(array($userref,$filename)));         
-                    }
+                $job_data["url"] = generateURL("{$baseurl_short}pages/download.php", [
+                    'userfile' => "{$ref}_{$randstring}.{$video_track_command["extension"]}",
+                    'video_tracks_export' => base64_encode(json_encode(array($userref, $filename, mb_basename($targetfile)))),
+                ]);
                 $jobadded=job_queue_add("create_download_file",$job_data,$userref,'',$job_success_lang,$job_failure_lang,$job_code);
                 if(!is_int_loose($jobadded))
                     {
@@ -246,12 +244,14 @@ if($generate && enforcePostRequest(false))
                 else
                     {
                     // Exported file
-                    $web_root = dirname(__DIR__,3);
-                    if(strpos($targetfile, $web_root) !== false)
-                        {
-                        $targetfile = str_replace([$web_root, '\\'], [$baseurl, '/'], $targetfile);
-                        }
-                    $message.="<br/>" . $targetfile;
+                    $message .= sprintf(
+                        '<br><a href="%s">%s</a>',
+                        generateURL("{$baseurl_short}pages/download.php", [
+                            'userfile' => "{$ref}_{$randstring}.{$video_track_command["extension"]}",
+                            'video_tracks_export' => base64_encode(json_encode(array($userref, $filename, mb_basename($targetfile)))),
+                        ]),
+                        $lang['download']
+                    );
                     }
                 }
                 else
@@ -279,7 +279,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
     <?php
     if ($message!="")
         {
-        echo "<div class=\"PageInformal\">" . $message . "</div>";
+        echo "<div class=\"PageInformal\">" . strip_tags_and_attributes($message, ['a'], ['href']) . "</div>";
         }
     ?>
     <form id="video_tracks_create_form" method="post" action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
