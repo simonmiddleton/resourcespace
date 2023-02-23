@@ -33,6 +33,13 @@ $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
 
+if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterms"]) || $_COOKIE["acceptedterms"] != true))
+    {
+    # Getting to this page without accepting terms means skipping the upload page
+    # This won't allow uploads without accepting terms but this is the most helpful message to display
+    exit($lang["mustaccept"]);
+    }
+
 if($camera_autorotation)
     {
     // If enabled and specified in URL then override the default

@@ -502,7 +502,7 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     {
     # Create a new resource.
-    global $k;
+    global $k,$terms_upload;
     
     if(!is_numeric($archive))
         {
@@ -552,7 +552,9 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     resource_log($insert, LOG_CODE_CREATED, 0,$origin);
     if(upload_share_active())
         {
-        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
+        # Terms needed to be accepted to complete upload
+        $notes = ($terms_upload ? "Terms accepted" : "");
+        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,$notes,'',$k . ' ('  . get_ip() . ')');
         }
 
     return $insert;

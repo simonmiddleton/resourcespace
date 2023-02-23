@@ -3115,7 +3115,7 @@ function get_languages_notify_users(array $languages = array())
  */
 function get_upload_url($collection="",$k="")
     {
-    global $upload_then_edit, $userref, $baseurl;
+    global $upload_then_edit, $userref, $baseurl,$terms_upload;
     if ($upload_then_edit || $k != "" || !isset($userref))
         {
         $url = generateURL($baseurl . "/pages/upload_batch.php",array("k" => $k,"collection_add"=>$collection));
@@ -3123,6 +3123,10 @@ function get_upload_url($collection="",$k="")
     elseif(isset($userref))
         {
         $url = generateURL($baseurl . "/pages/edit.php", array("ref" => "-" . $userref,"collection_add"=>$collection));
+        }
+    if ($terms_upload && !check_upload_terms($collection,$k))
+        {
+        $url = generateURL($baseurl . "/pages/terms.php",array("k" => $k,"collection"=>$collection,"url"=>$url,"upload"=>true));
         }
     return $url;
     }
