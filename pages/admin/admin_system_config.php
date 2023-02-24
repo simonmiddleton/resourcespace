@@ -3,6 +3,11 @@ include '../../include/db.php';
 include '../../include/authenticate.php'; if(!checkperm('a')) { exit('Permission denied.'); }
 include_once '../../include/config_functions.php';
 
+// Search functionality
+$searching = (((getval("find", "") != "" && getval("clear_search", "") == "") || getval("only_modified", "no") == "yes") ? true : false);
+$find = getval("find", "");
+$only_modified = (getval('only_modified', 'no') == 'yes');
+if (!$searching) {$find = "";}
 
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 $yes_no_options         = array($lang['no'], $lang['yes']);
@@ -450,10 +455,64 @@ if (!isset($userref))
     $userref = $userdata[0]['ref'];
     }
 
+if ($searching)
+    {
+    // Check for search phrase in config. description.
+    if ($find !== '')
+        {
+        $search_matches = array();
+        foreach ($page_def as $config_to_check)
+            {
+            if (isset($config_to_check[2]) && stripos($config_to_check[2], $find) !== false)
+                {
+                $search_matches[] = $config_to_check;
+                }
+            }
+        $page_def = $search_matches;
+        }
+    // Filter results to only config which has been changed previously i.e. exists in user_preferences with null in user column.
+    if ($only_modified)
+        {
+        $search_matches = array();
+        $returned_options = array();
+        get_config_options(null, $returned_options);
+        $returned_options = array_column($returned_options, 'parameter');
+        foreach ($page_def as $config_to_check)
+            {
+            if (isset($config_to_check[1]) && in_array($config_to_check[1], $returned_options))
+                {
+                $search_matches[] = $config_to_check;
+                }
+            }
+        $page_def = $search_matches;
+        }
+    }
+
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang["systemconfig"]; ?></h1>
+    <h1 class="inline_config_search"><?php echo htmlspecialchars($lang["systemconfig"]); ?></h1>
+
+    <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
+        <?php generateFormToken("system_config_search"); ?>
+        <div>
+        <input type="text" name="find" id="configsearch" value="<?php echo htmlspecialchars($find); ?>">
+        <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
+        <?php
+        if($searching)
+            {
+            ?>
+            <input type="button" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <?php
+            }
+        ?>
+        </div>
+        <div>
+        <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php  echo $only_modified ? 'checked="checked"' : ''; ?>>
+        <label for="only_modified"><?php echo htmlspecialchars($lang["systemconfig_only_show_modified"]); ?></label>
+        </div>
+    </form>
+
     <?php
 	$links_trail = array(
 	    array(
