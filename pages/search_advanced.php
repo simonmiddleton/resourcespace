@@ -75,7 +75,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             }
         if (is_array($result))
             {
-            $count=count($result);
+            $count = $result["total"] ?? count($result);
             }
         else
             {
