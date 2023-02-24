@@ -8,12 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Show clear button on the upload page
-$clearbutton_on_upload=true;
-
-# Show clear button on the edit page
-$clearbutton_on_edit=true;
-
 # Allow users to create new collections. Set to false to prevent creation of new collections.
 $collection_allow_creation=true;
 
@@ -34,8 +28,7 @@ $collection_dropdown_user_access_mode=false;
 # Option to remove all resources from the current collection once it has been requested
 $collection_empty_on_submit=false;
 
-# Ability to alter collection frame height/width
-$collection_frame_divider_height=3;
+# Ability to alter collection frame height
 $collection_frame_height=153;
 
 # add a prefix to all collection refs, to distinguish them from resource refs
@@ -209,9 +202,6 @@ $hide_collection_share_generate_url=false;
 # Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
 $hide_failed_reset_text=true;
 
-# Hide "Generate URL" from the resource_share.php page?
-$hide_resource_share_generate_url=false;
-
 # Highlight search keywords when displaying results and resources?
 $highlightkeywords=true;
 
@@ -251,9 +241,6 @@ $launch_kb_on_login_for_groups=array();
 # Prevent previews from creating versions that result in the same size?
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
-
-# Use a file tree display for local folder upload
-$local_upload_file_tree=false;
 
 # if using $collections_compact_style, you may want to remove the contact sheet link from the Manage Collections page
 $manage_collections_contact_sheet_link=true;
@@ -320,20 +307,6 @@ $pending_submission_searchable_to_all=false;
 # Option that specifically allows the per-page dropdown without needing $display_selector_dropdown=true. This is useful if you'd like to use the display selector icons with per-page dropdowns.
 $perpage_dropdown = true;
 
-# Maximum number of attempts to upload a file chunk before erroring
-$plupload_max_retries=5;
-
-# Plupload settings
-# Specify the supported runtimes and priority
-$plupload_runtimes = 'html5,gears,silverlight,html4';
-
-# Keep failed uploads in the queue after uploads have completed
-$plupload_show_failed=true;
-
-# Use the JQuery UI Widget instead of the Queue interface (includes a stop button and optional thumbnail mode
-$plupload_widget=true;
-$plupload_widget_thumbnails=true;
-
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;
 
@@ -381,12 +354,6 @@ $remove_collections_vertical_line=false;
 
 # Show/ hide "Remove resources" link from collection bar:
 $remove_resources_link_on_collection_bar = TRUE;
-
-# Display col-size image of resource on replace file page
-$replace_file_resource_preview=true;
-
-# Display resource title on replace file page
-$replace_file_resource_title=true;
 
 # Send confirmation emails to user when request sent or assigned
 $request_senduserupdates=true;
@@ -455,16 +422,6 @@ $suppress_sql_log = false;
 # and the relevant Admin item when there are requests that need managing
 # only affects users with permissions to do this.
 $team_centre_alert_icon = true;
-
-# optional columns in themes collection lists
-$themes_date_column=false;
-$themes_ref_column=false;
-
-# Show only collections that have resources the current user can see?
-$themes_with_resources_only=false;
-
-# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
-$thumbs_previews_via_download=false;
 
 # Normally, image tweaks are only applied to scr size and lower. 
 # If using Magictouch, you may want tweaks like rotation to be applied to the larger images as well.

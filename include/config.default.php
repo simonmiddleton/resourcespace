@@ -2721,9 +2721,6 @@ $search_results_edit_icon=true;
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
 
-# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
-$thumbs_previews_via_download=false;
-
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
 
@@ -3361,3 +3358,7 @@ $field_column_string_separator = ',';
 
 $uploader_plugins = [];
 $uppy_companion_url = "";
+
+# Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
+# URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
+# $api_upload_urls = array();

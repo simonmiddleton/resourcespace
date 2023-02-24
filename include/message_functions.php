@@ -526,22 +526,32 @@ function message_send_unread_emails()
     $unreadmessages = ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0"
       . (count($digestusers) > 0 ? " AND u.ref IN (" . ps_param_insert(count($digestusers)) . ")" : "") . " AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
 
-    $inactive_message_auto_digest_period_saved = $inactive_message_auto_digest_period;
+    // Keep record of the current value for these config options. setup_user() may override them with the user group specific ones.
+    $current_inactive_message_auto_digest_period = $inactive_message_auto_digest_period;
+    $current_user_pref_inactive_digest = $user_pref_inactive_digest;
+    $current_user_pref_daily_digest = $user_pref_daily_digest;
+
 	foreach($digestusers as $digestuser)
 		{
-        // Reset config before setting up user so that any user groups processed later are not affected by the override
-        $inactive_message_auto_digest_period = $inactive_message_auto_digest_period_saved;
+        // Reset config variables before setting up the user to not have logic influenced by the previous iteration.
+        $inactive_message_auto_digest_period = $current_inactive_message_auto_digest_period;
+        $user_pref_inactive_digest = $current_user_pref_inactive_digest;
+        $user_pref_daily_digest = $current_user_pref_daily_digest;
+
         $messageuser=get_user($digestuser);
         if(!$messageuser)
             {
             // Invalid user
             continue;
             }
+
 		setup_user($messageuser);
-        get_config_option($digestuser,'user_pref_inactive_digest', $user_pref_inactive_digest);
-        get_config_option($digestuser,'user_pref_daily_digest', $user_pref_daily_digest);
-        
-        if($inactive_message_auto_digest_period == 0 || (!$user_pref_inactive_digest && !$user_pref_daily_digest)) // This may be set differently as a group configuration overerride or disabled by user
+
+        $pref_msg_user_for_inactive_digest = $pref_msg_user_pref_daily_digest = null;
+        get_config_option($digestuser, 'user_pref_inactive_digest', $pref_msg_user_for_inactive_digest);
+        get_config_option($digestuser, 'user_pref_daily_digest', $pref_msg_user_pref_daily_digest);
+
+        if($inactive_message_auto_digest_period == 0 || (!$pref_msg_user_for_inactive_digest && !$pref_msg_user_pref_daily_digest))
             {
             debug("Skipping email digest for user ref " . $digestuser . " as user or group preference disabled");
             continue;

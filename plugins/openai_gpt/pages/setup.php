@@ -14,7 +14,7 @@ $page_intro = "<p>" . $lang['openai_gpt_intro'] . "</p>";
 // Build configuration variable descriptions
 $page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_key"]);
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
-$page_def[] = config_add_html("<div class='Question'><strong>" . $lang["openai_gpt_advanced"] . "</strong><div class='clearerleft'></div></div>");
+$page_def[] = config_add_html("<div class='Question'><strong>" . htmlspecialchars($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");
 $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
 $page_def[] = config_add_text_input("openai_gpt_prompt_prefix",$lang["openai_gpt_prompt_prefix"]);
 $page_def[] = config_add_text_input("openai_gpt_prompt_return_json",$lang["openai_gpt_prompt_return_json"]);

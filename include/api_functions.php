@@ -419,3 +419,39 @@ function api_login($username,$password)
 
     return false;
     }
+
+/**
+ * Validate URL supplied in APIs create resource or upload by URL. Requires the URL hostname to be added in config $api_upload_urls
+ *
+ * @param   string   $url   The full URL.
+ * 
+ * @return  bool   Returns true if a valid URL is found.
+ */
+function api_validate_upload_url($url)
+    {
+    $url = filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
+    if ($url === false)
+        {
+        return false;
+        }
+
+    global $api_upload_urls;
+    if (!isset($api_upload_urls))
+        {
+        return true; // For systems prior to this config.
+        }
+
+    $url_parts = parse_url($url);
+
+    if ($url_parts['scheme'] == "php")
+        {
+        return false;
+        }
+
+    if (in_array($url_parts['host'], $api_upload_urls))
+        {
+        return true;
+        }
+
+    return false;
+    }

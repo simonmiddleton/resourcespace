@@ -41,7 +41,7 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 	if ($user_preferences_change_username && $username != $newUsername)
 		{
 		ps_query("UPDATE user SET username = ? WHERE ref = ?", ['s', $newUsername, 'i', $userref]);
-		$username = $newUsername;
+		$username = ps_value("SELECT username as `value` FROM user WHERE ref = ?", ['i', $userref], '');
 		}
 	if ($user_preferences_change_email && $useremail != $newEmail)
 		{
@@ -69,7 +69,7 @@ function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
 	?>
 	<div class="Question">
 	<label for="username"><?php echo $lang["username"]?></label>
-	<input type="text" class="stdwidth" name="username" id="username" value="<?php echo htmlspecialchars($username) ?>"/>
+	<input type="text" class="stdwidth" name="username" id="username" value="<?php echo escape_quoted_data($username) ?>"/>
 	<div class="clearerleft"> </div>
 	<?php if (isset($errorUsername)) { ?><div class="FormError">!! <?php echo $errorUsername ?> !!</div><?php } ?>
 	</div>
@@ -82,7 +82,7 @@ function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
 	?>
 	<div class="Question">
 	<label for="email"><?php echo $lang["email"]?></label>
-	<input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars($useremail) ?>"/>
+	<input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape_quoted_data($useremail) ?>"/>
 	<div class="clearerleft"> </div>
 	<?php if (isset($errorEmail)) { ?><div class="FormError">!! <?php echo $errorEmail ?> !!</div><?php } ?>
 	</div>
@@ -95,7 +95,7 @@ function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
 	?>
 	<div class="Question">
 	<label for="fullname"><?php echo $lang["fullname"]?></label>
-	<input type="text" class="stdwidth" name="fullname" id="fullname" value="<?php echo htmlspecialchars($userfullname) ?>"/>
+	<input type="text" class="stdwidth" name="fullname" id="fullname" value="<?php echo escape_quoted_data($userfullname) ?>"/>
 	<div class="clearerleft"> </div>
 	<?php if (isset($errorFullname)) { ?><div class="FormError">!! <?php echo $errorFullname ?> !!</div><?php } ?>
 	</div>

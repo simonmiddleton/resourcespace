@@ -12,6 +12,12 @@ $end_dm=$end_dd=$end_dh=$end__di=-1;
 $rangedates = explode(",",$value);
 natsort($rangedates);
 $value = implode(",",$rangedates);
-$reset = (getval("resetform","")=="true"?"true":"");
+
+$reset = "";
+if (getval("resetform","") == "true" || getval("copyfrom","") != "")
+    {
+    $reset = true;
+    }
+
 render_date_range_field($name,$value,false,false,$field,$reset);
 	 

@@ -112,6 +112,12 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
+    if (!api_validate_upload_url($url))
+        {
+        // URL failed validation
+        return false;
+        }
+
     # Create a new resource
     $ref=create_resource($resource_type,$archive,-1,$lang["createdfromapi"]);
     if (!is_int($ref))
@@ -412,6 +418,12 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
+    if (!api_validate_upload_url($url))
+        {
+        // URL failed validation
+        return false;
+        }
 
     // Generate unique hash to use so that other uploads with the same name won't conflict
     $upload_key = uniqid((int)$ref . "_");
