@@ -121,11 +121,17 @@ else
     {
     $errors[] = "Unable to find original file";
     }
-    
-$previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
-if(!file_exists($previewsourcepath))
+
+// Check if an uncropped preview exists
+$previewsourcepath = $org = get_resource_path($ref,true,"org",false,$useext);
+
+if(!file_exists($org))
     {
-    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+    $previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
+    if(!file_exists($previewsourcepath))
+        {
+        $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+        }
     }
 
 // Get the actions that have been requested
@@ -280,6 +286,12 @@ if ($saveaction != '' && enforcePostRequest(false))
     
     $newpath = "$tmpdir/transform_plugin/download_" . $ref . uniqid() . "." . $new_ext;
 
+    // Preserve scr of original file incase transforms are used for previews
+    if(!file_exists($org))
+        {
+        $scr = get_resource_path($ref,true,"scr",false,$useext);
+        rename($scr,$org);
+        }
 
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
