@@ -12,7 +12,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         }
 
     $resources              = get_collection_resources($collection_ref);
-    $resource_data          = get_resource_field_data($resources[0]); // in this case it should only have one resource
+    $resource_data          = get_resource_field_data($resources[0], false, true, NULL, false, false, false, false); // in this case it should only have one resource
     $mapped_fields          = get_mapped_fields();
     $assigned_administrator = 0;
     $resource_nodes         = get_resource_nodes($resources[0]);
@@ -102,7 +102,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     foreach ($resources as $resource)
         {
         // Don't use permissions as requesting user may not have access to field
-        $resource_data          = get_resource_field_data($resource,false,false);
+        $resource_data          = get_resource_field_data($resource, false, false, NULL, false, false, false, false);
         $assigned_administrator = 0;
         $resource_not_assigned  = true;
 

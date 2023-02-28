@@ -3157,9 +3157,11 @@ function get_resource_type_field($field)
  * @param  bool $external_access    Only get data permitted to view externally. FALSE by default
  * @param  bool $ord_by             Use field order_by setting. FALSE by default (order is by resource type first)
  * @param  bool $forcsv             Get data for CSV export (uses \ separator for category tree nodes). FALSE by default
+ * @param  bool $translate_value    Field value will be translated with i18n_get_translated() unless FALSE supplied.
+ * 
  * @return array|boolean
  */
-function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
+function get_resource_field_data($ref, $multi = false, $use_permissions = true, $originalref = NULL, $external_access = false, $ord_by = false, $forcsv = false, $translate_value = true)
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
     # for this resource, for display in an edit / view form.
@@ -3314,7 +3316,14 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                 $fieldnoderefs = explode(",",$fields[$n]['nodes']);
                 $fieldnodes = get_nodes_by_refs($fieldnoderefs);
                 $ordered_nodes = array_column(reorder_nodes($fieldnodes),"name");
-                $fields[$n]['value'] = implode(", ",array_map("i18n_get_translated",$ordered_nodes));
+                if ($translate_value)
+                    {
+                    $fields[$n]['value'] = implode(", ", array_map("i18n_get_translated", $ordered_nodes));
+                    }
+                else
+                    {
+                    $fields[$n]['value'] = implode(", ", $ordered_nodes);
+                    }
                 }
 
             $return[] = $fields[$n];
