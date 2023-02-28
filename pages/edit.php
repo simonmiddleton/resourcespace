@@ -32,6 +32,8 @@ $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
+$redirecturl = getval("redirecturl","");
+if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
 
 if($camera_autorotation)
     {
@@ -154,7 +156,7 @@ if ($upload_review_mode)
                 $redirectparams["promptsubmit"] = 'true';
                 }
             
-            $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
+            $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
             }
         redirect($url);
         exit();
@@ -747,7 +749,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
                                 
-                                $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
+                                $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; ?>',true);</script>
@@ -784,6 +786,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             $ref=copy_resource(0-$userref,$resource_type,$lang["createdfromteamcentre"]);
                             $urlparams["ref"] = $ref;
                             $hidden_collection = false;
+
+                            $relateto = getval("relateto","",true);
+                            if($relateto!="" && !upload_share_active())
+                                {
+                                // This has been added from a related resource upload link
+                                update_related_resource($relateto,$ref);
+                                }
                             // Create new collection if necessary
                             if($collection_add=="new") 
                                 {
@@ -803,15 +812,18 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     show_hide_collection($collection_add, false, $userref);
                                     }
                                 }
-                            redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
+                            redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                            if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
+                        if (!hook('redirectaftersavetemplate')) {redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     else
                         {
                         // Default
-                        if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
+                        if (!hook('redirectaftersavetemplate'))
+                            {
+                            redirect(generateURL($redirecturl != "" ? $redirecturl : $baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            }
                         }
                     }
                 }
@@ -944,7 +956,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $save_errors=save_resource_data_multi($collection, [],$_POST);
                 if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
-                    redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
+                    redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
                     }
                 }
                 
