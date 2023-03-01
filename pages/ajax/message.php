@@ -229,7 +229,6 @@
                                 if($user_pref_show_notifications)
                                     {
                                     ?>
-                                    console.log('TEST.f: message = %o, url = %o, ref = %o', message, url, ref);
                                     message_display(message, url, ref, function (ref) {
                                     jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
                                     });
