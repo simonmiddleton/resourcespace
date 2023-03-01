@@ -91,9 +91,11 @@ if (getval("name","")!="" && getval("tweak","")=="" && enforcePostRequest(false)
 
     if (getval("tweak","")!='')
         {
+        $url_params["ref"]=$ref;
+        $url_params = array_merge(["resource"=>$resource],$url_params);
         redirect(generateURL(
             "{$baseurl_short}pages/alternative_file.php",
-            array_merge(["resource"=>$resource],$url_params)
+            $url_params
         ));
         }
     else
@@ -129,7 +131,7 @@ if($modal)
     ?>
     <input type="hidden" name="modal" value="true">
     <?php
-    if($context="Modal")
+    if($context=="Modal")
         {
         ?>
         <input type="hidden" name="context" value="Modal">
