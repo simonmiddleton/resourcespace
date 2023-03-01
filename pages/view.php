@@ -2122,8 +2122,10 @@ if($enable_related_resources)
         "relatedresources" => $relatedresources,
         "related_resources_shown" => $related_resources_shown,
         "related_restypes" => $related_restypes,
-        "relatedtypes_shown" => $relatedtypes_shown,        
-    ];
+        "relatedtypes_shown" => $relatedtypes_shown,  
+        "edit_access" => $edit_access,         
+        "urlparams" => $urlparams,        
+        ];
     display_related_resources($relatedcontext);
     }
 

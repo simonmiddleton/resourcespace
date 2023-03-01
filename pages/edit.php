@@ -74,6 +74,7 @@ $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getval("entercolname","");
 $uploadparams["k"] = $k;
+$uploadparams["redirecturl"] = $redirecturl;
 
 # Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
@@ -536,6 +537,7 @@ $urlparams= array(
     "collection_add"    => $collection_add,
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
+    'redirecturl'       => $redirecturl,
 );
 
 check_order_by_in_table_joins($order_by);
@@ -812,8 +814,11 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     show_hide_collection($collection_add, false, $userref);
                                     }
                                 }
-                            redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
-                            exit();
+                            if($redirecturl == "")
+                                {
+                                $redirecturl = generateURL($baseurl_short . "pages/view.php",$urlparams, ["refreshcollectionframe"=>"true"]);
+                                }
+                            exit(json_encode(["redirecturl"=>$redirecturl]));
                             }
                         if (!hook('redirectaftersavetemplate')) {redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
@@ -822,7 +827,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // Default
                         if (!hook('redirectaftersavetemplate'))
                             {
-                            redirect(generateURL($redirecturl != "" ? $redirecturl : $baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                             }
                         }
                     }

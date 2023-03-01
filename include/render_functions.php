@@ -5888,34 +5888,44 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
  *
  * @param array $context Array with all required info from the view page
  * 
- * @return [type]
+ * @return void
  * 
  */
 function display_related_resources($context)
     {
-    $ref                        =  $context["ref"];
-    $k                          =  $context["k"];
-    $userref                    =  $context["userref"];
-    $arr_related                =  $context["relatedresources"];
-    $related_resources_shown    =  $context["related_resources_shown"];
-    $internal_share_access      =  $context["internal_share_access"];
-    $related_restypes           =  $context["related_restypes"];
-    $relatedtypes_shown         =  $context["relatedtypes_shown"];    
+    $ref                        =  $context["ref"] ?? 0;
+    $k                          =  $context["k"] ?? "";
+    $userref                    =  $context["userref"] ?? 0;
+    $arr_related                =  $context["relatedresources"] ?? [];
+    $related_resources_shown    =  $context["related_resources_shown"] ?? [];
+    $internal_share_access      =  $context["internal_share_access"] ?? false;
+    $related_restypes           =  $context["related_restypes"] ?? [];
+    $relatedtypes_shown         =  $context["relatedtypes_shown"] ?? [];
+    $edit_access                =  $context["edit_access"] ?? false;
+    $urlparams                  =  $context["urlparams"] ?? ["ref"=>$ref];    
     
-
     global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type, $related_resource_preview_size;
+    
+    if($ref==0)
+        {
+        return;
+        }
     ?>
     <!--Display panel for related resources-->
     <div class="RecordBox">
     <div class="RecordPanel">
     <div id="RelatedResources">
     <div class="RecordResource">
+    <div class="Title"><?php echo $lang["relatedresources"]?></div>
     <?php
     if(count($arr_related) > $related_resources_shown
         && checkperm("s")
         && ($k == "" || $internal_share_access)
         )
         {
+        ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+        <div class="clearerleft"> </div>
+        <?php
         if($sort_relations_by_filetype)
             {
             // Sort by file extension
@@ -5923,7 +5933,7 @@ function display_related_resources($context)
             foreach($related_file_extensions as $rext)
                 {
                 ?>
-                <div class="Title"><?php echo str_replace_formatted_placeholder("%extension", $rext, $lang["relatedresources-filename_extension"]); ?></div>
+                <h4><?php echo htmlspecialchars($rext); ?></h4>
                 <?php
                 # loop and display the results by file extension
                 for ($n=0;$n<count($arr_related);$n++)			
@@ -5985,7 +5995,7 @@ function display_related_resources($context)
                 $restypename=ps_value("SELECT name AS value FROM resource_type WHERE ref = ?",array("i",$rtype), "", "schema");
                 $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
                 ?>
-                <div class="Title"><?php echo htmlspecialchars(str_replace_formatted_placeholder("%restype%", $restypename, $lang["relatedresources-restype"])); ?></div>
+                <h4><?php echo htmlspecialchars($restypename); ?></h4>
                 <?php
                 # loop and display the results by file extension
                 for ($n=0;$n<count($arr_related);$n++)			
@@ -6035,10 +6045,6 @@ function display_related_resources($context)
         else
             {
             // Related resources (default view)
-            ?>
-            <div class="Title"><?php echo $lang["relatedresources"]?></div>
-            <?php
-            // loop and display the results
             for ($n=0;$n<count($arr_related);$n++)            
                 {
                 if(in_array($arr_related[$n]["resource_type"],$relatedtypes_shown))
@@ -6084,17 +6090,27 @@ function display_related_resources($context)
                     }?>
                 <?php
                 } // End related resources default display
-            } // End of if any related resources exist 
-        // Add link to create new related resource and view as result set
-        $addrelated_url = generateURL($baseurl_short . "pages/edit.php",["ref"=>-$userref,"relateto"=>$ref,"noupload"=>"true","recordonly"=>"true","collection_add"=>"","redirecturl"=>generateURL($baseurl . "/pages/view.php",["ref"=>$ref])]);
+            } // End of if any related resources exist
         ?>
         </div><!-- End of RecordResource -->
         </div><!-- End of RelatedResources -->
-    <div class="clearerleft"></div>
-    <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
-    <div class="clearerleft"> </div>
-
-    <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+    <?php if ($edit_access)
+        {
+        // Add link to create new related resource and view as result set
+        $add_related_params = [
+            "ref"=>-$userref,
+            "relateto"=>$ref,
+            "noupload"=>"true",
+            "recordonly"=>"true",
+            "collection_add"=>"false",
+            "redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams),
+            ];
+        $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
+        ?>
+        <div class="clearerleft"></div>
+        <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+        <?php
+        }?>
     </div><!-- End of RecordPanel -->
     </div><!-- End of RecordBox -->
     <?php
