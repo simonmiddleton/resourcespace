@@ -3783,7 +3783,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
     if(isset($upload) && $upload){$setvals['upload'] = 1;}
     if($expires!="") 
         {
-        $expires = date_format(date_create($expires), 'Y-m-d 23:59:59') . ' 23:59:59';
+        $expires = date_format(date_create($expires), 'Y-m-d') . ' 23:59:59';
         $setvals["expires"] = $expires;
         }
     else
