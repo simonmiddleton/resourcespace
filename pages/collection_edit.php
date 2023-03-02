@@ -14,6 +14,9 @@ $sort=getval("sort","ASC");
 $modal=getval("modal","")=="true";
 $redirection_endpoint = trim(urldecode(getval("redirection_endpoint", "")));
 $redirect = getval("redirect", "") != "";
+$name = getval("name","");
+$public = getval("public","");
+$delete_all = getval("deleteall","") != "";
 
 
 # Does this user have edit access to collections? Variable will be found in functions below.  
@@ -21,16 +24,16 @@ $multi_edit=allow_multi_edit($ref);
 
 # Check access
 if (!collection_writeable($ref)) 
-	{exit($lang["no_access_to_collection"]);}
+    {exit($lang["no_access_to_collection"]);}
 
 $collection=get_collection($ref);
 
 if ($collection===false) 
-	{
-	$error=$lang['error-collectionnotfound'];
-	error_alert($error);
-	exit();
-	}
+    {
+    $error=$lang['error-collectionnotfound'];
+    error_alert($error);
+    exit();
+    }
 
 if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
     {
@@ -47,14 +50,14 @@ $colcount=count($resources);
 # Collection copy functionality
 $copy=getval("copy","");
 if ($copy!="")
-	{
-	copy_collection($copy,$ref,$copycollectionremoveall!="");
-	refresh_collection_frame();
-	}
+    {
+    copy_collection($copy,$ref,$copycollectionremoveall!="");
+    refresh_collection_frame();
+    }
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
-	{
-	# Save collection data
+    {
+    # Save collection data
     $coldata["name"] = getval("name","");
     $coldata["allow_changes"] = getval("allow_changes","") != "" ? 1 : 0;
     $coldata["public"] = getval('public', 0, true);
@@ -62,8 +65,27 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     $coldata["description"] = getval("description","");
     $coldata["result_limit"] = getval("result_limit",0,true);
     $coldata["users"] = getval("users","");
-    $coldata["deleteall"] = getval("deleteall","") != "";
+    $coldata["deleteall"] = $delete_all;
 
+    if($coldata["deleteall"] && $delete_requires_password)
+        {
+        if(!rs_password_verify(getval('password', ''), $userpassword, ['username' => $username]))
+            {
+            $error = $lang['wrongpassword'];
+            error_alert($error,!$modal);
+            exit();
+            }
+        else if(!isset($error))
+            {
+            save_collection($ref, $coldata);
+            // Modal load done.php
+            $search_params = get_search_params();
+            $url_params = array_merge(["text"=>"deleted","refreshcollection"=>"true",],$search_params);
+            $done_url = generateURL("{$baseurl_short}pages/done.php",$url_params);
+            redirect($done_url);
+            exit();
+            }
+        }
     if($collection["public"] == 1 && getval("update_parent", "") == "true")
         {
         // Prepare coldata for save_collection() for posted featured collections (if any changes have been made)
@@ -170,7 +192,9 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         }
     }
 
-$form_action = generateURL("{$baseurl_short}pages/collection_edit.php", array("ref" => $collection["ref"]));
+$search_params = get_search_params();
+$url_params = array_merge(["ref" => $collection["ref"]],$search_params);
+$form_action = generateURL("{$baseurl_short}pages/collection_edit.php",$url_params);
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -179,23 +203,68 @@ if(isset($error))
     {
     render_top_page_error_style($error);
     }
-?>
+else if($delete_requires_password && $delete_all)
+    {
+    $form_action .= "&redirect=false";
+    ?>
+    <h1><?php echo $lang["deleteresources"];render_help_link("user/deleting-resources");?></h1>
+    <p><?php text("introtext");?></p>
+    <form method="post" action="<?php echo $form_action;?>">
+    <input type=hidden name=ref value="<?php echo $ref ?>">
+    <input type=hidden name=name value="<?php echo escape_quoted_data($name) ?>">
+    <input type=hidden name=public value="<?php echo $public ?>">
+    <input type=hidden name=deleteall value="on">
+    <?php generateFormToken("delete_resource"); ?>
+
+    <div class="Question">
+    <label><?php echo $lang["collectionid"]?></label>
+    <div class="Fixed"><?php echo urlencode($ref) ?></div>
+    <div class="clearerleft"> </div>
+    </div>
+    
+    <div class="Question">
+    <label for="password"><?php echo $lang["yourpassword"]?></label>
+    <input type=password class="shrtwidth" name="password" id="password" />
+    <div class="clearerleft"> </div>
+    <?php if ($error??""!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($error) ?> !!</div><?php } ?>
+    </div>
+
+    <div class="QuestionSubmit">
+    <input name="submitted" type="hidden" value=true />
+    <label for="buttons"> </label>
+    <input 
+        name="save" 
+        type="submit" 
+        value="&nbsp;&nbsp;<?php echo $lang["deleteresources"]?>&nbsp;&nbsp;"  
+        onclick="return ModalPost(this.form,true);"
+    />
+    <input 
+        name="cancel" 
+        type="button" 
+        value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  
+        onclick='return ModalClose();'
+    />
+    </div>
+    </form>
+<?php }
+else
+{?>
 <h1><?php echo $lang["editcollection"]; render_help_link("user/edit-collection"); ?></h1>
 <p><?php echo text("introtext"); ?></p>
 <form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this, false);">
     <?php generateFormToken("collectionform"); ?>
     <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
     <input type="hidden" name="redirection_endpoint" id="redirection_endpoint" value="<?php echo urlencode($redirection_endpoint); ?>">
-	<input type="hidden" name="redirect" id="redirect" value="yes" >
-	<input type=hidden name="submitted" value="true">
+    <input type="hidden" name="redirect" id="redirect" value="yes" >
+    <input type=hidden name="submitted" value="true">
     <input type=hidden name="update_parent" value="false">
-	<div class="Question">
-		<label for="name"><?php echo $lang["name"]?></label>
-		<input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
-		<div class="clearerleft"> </div>
-	</div>
+    <div class="Question">
+        <label for="name"><?php echo $lang["name"]?></label>
+        <input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
+        <div class="clearerleft"> </div>
+    </div>
 
-	<?php hook('additionalfields');?>
+    <?php hook('additionalfields');?>
 
     <div class="Question">
         <label for="description"><?php echo $lang["collection_description"]?></label>
@@ -203,58 +272,58 @@ if(isset($error))
         <div class="clearerleft"> </div>
     </div>
 
-	<div class="Question">
-		<label for="keywords"><?php echo $lang["relatedkeywords"]?></label>
-		<textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo htmlspecialchars((string) $collection["keywords"])?></textarea>
-		<div class="clearerleft"> </div>
-	</div>
+    <div class="Question">
+        <label for="keywords"><?php echo $lang["relatedkeywords"]?></label>
+        <textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo htmlspecialchars((string) $collection["keywords"])?></textarea>
+        <div class="clearerleft"> </div>
+    </div>
 
-	<div class="Question">
-		<label><?php echo $lang["id"]?></label>
-		<div class="Fixed"><?php echo htmlspecialchars($collection["ref"]) ?></div>
-		<div class="clearerleft"> </div>
-	</div>
+    <div class="Question">
+        <label><?php echo $lang["id"]?></label>
+        <div class="Fixed"><?php echo htmlspecialchars($collection["ref"]) ?></div>
+        <div class="clearerleft"> </div>
+    </div>
 
-	<?php 
-	if ($collection["savedsearch"]!="") 
-	{ 
-	$result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");	
-	?>
-	<div class="Question">
-		<label for="name"><?php echo htmlspecialchars($lang["smart_collection_result_limit"]); ?></label>
-		<input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo escape_quoted_data((string) $result_limit); ?>" />
-		<div class="clearerleft"> </div>
-	</div>
-	<?php 
-	} ?>
+    <?php 
+    if ($collection["savedsearch"]!="") 
+    { 
+    $result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");	
+    ?>
+    <div class="Question">
+        <label for="name"><?php echo htmlspecialchars($lang["smart_collection_result_limit"]); ?></label>
+        <input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo escape_quoted_data((string) $result_limit); ?>" />
+        <div class="clearerleft"> </div>
+    </div>
+    <?php 
+    } ?>
 
-	<div class="Question">
-		<label for="public"><?php echo $lang["access"]?></label>
-		<?php 
-		if ($collection["cant_delete"]==1) 
-			{ 
-			# This is a user's My Collection, which cannot be made public or turned into a theme. Display a warning.
-			?>
-			<input type="hidden" id="public" name="public" value="0">
-			<div class="Fixed"><?php echo $lang["mycollection_notpublic"] ?></div>
-			<?php 
-			} 
-		else 
-			{ ?>
-			<select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
-				<option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo $lang["private"]?></option>
-				<?php 
-				if ($collection["cant_delete"]!=1 && ($enable_public_collections || checkperm("h"))) 
-					{ ?>
-					<option value="1" <?php if ($collection["public"]==1) {?>selected<?php } ?>><?php echo $lang["public"]?></option>
-					<?php 
-					} ?>
-			</select>
-			<?php 
-			} ?>
-		<div class="clearerleft"> </div>
-	</div>
-	<?php
+    <div class="Question">
+        <label for="public"><?php echo $lang["access"]?></label>
+        <?php 
+        if ($collection["cant_delete"]==1) 
+            { 
+            # This is a user's My Collection, which cannot be made public or turned into a theme. Display a warning.
+            ?>
+            <input type="hidden" id="public" name="public" value="0">
+            <div class="Fixed"><?php echo $lang["mycollection_notpublic"] ?></div>
+            <?php 
+            } 
+        else 
+            { ?>
+            <select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
+                <option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo $lang["private"]?></option>
+                <?php 
+                if ($collection["cant_delete"]!=1 && ($enable_public_collections || checkperm("h"))) 
+                    { ?>
+                    <option value="1" <?php if ($collection["public"]==1) {?>selected<?php } ?>><?php echo $lang["public"]?></option>
+                    <?php 
+                    } ?>
+            </select>
+            <?php 
+            } ?>
+        <div class="clearerleft"> </div>
+    </div>
+    <?php
     if(
         $collection["public"] == 0
         || (
@@ -262,26 +331,26 @@ if(isset($error))
             || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
         )
     )
-		{
-		if (!hook("replaceuserselect"))
-			{?>
-			<div class="Question">
-				<label for="users"><?php echo $lang["attachedusers"]?></label>
-				<?php $userstring=htmlspecialchars($collection["users"]);
-				
+        {
+        if (!hook("replaceuserselect"))
+            {?>
+            <div class="Question">
+                <label for="users"><?php echo $lang["attachedusers"]?></label>
+                <?php $userstring=htmlspecialchars($collection["users"]);
+                
                 if($userstring!='')
                     {
                     $userstring.=",";
                     }
                 $userstring.=htmlspecialchars($collection["groups"]);
-					
-				include "../include/user_select.php"; ?>
-				<div class="clearerleft"> </div>
-			</div>
-			<?php 
-			} /* end hook replaceuserselect */
-		} 
-	
+                    
+                include "../include/user_select.php"; ?>
+                <div class="clearerleft"> </div>
+            </div>
+            <?php 
+            } /* end hook replaceuserselect */
+        } 
+    
     if($enable_themes && $collection["public"] == 1 && checkperm("h"))
         {
         render_featured_collection_category_selector(
@@ -326,64 +395,64 @@ if(isset($error))
                 ));
             }
         }
-		
-	if (checkperm("h") && $collection['public']==1 && !$home_dash)
-		{
-		# Option to publish to the home page.
-		?>
-		<div class="Question">
-		<label for="allow_changes"><?php echo $lang["theme_home_promote"]?></label>
-		<input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
-		<div class="clearerleft"> </div>
-		</div>
-		<?php
-		if ($collection["home_page_publish"]&&!hook("hidehomepagepublishoptions"))
-			{
-			# Option ticked - collect extra data
-			?>
-			<div class="Question">
-			<label for="home_page_text"><?php echo $lang["theme_home_page_text"]?></label>
-			<textarea class="stdwidth" rows="3" name="home_page_text" id="home_page_text"><?php echo htmlspecialchars($collection["home_page_text"]==""?$collection["name"]:$collection["home_page_text"])?></textarea>
-			<div class="clearerleft"> </div>
-			</div>
-			<div class="Question">
-			<label for="home_page_image">
-			<?php echo $lang["theme_home_page_image"]?></label>
-			<select class="stdwidth" name="home_page_image" id="home_page_image">
-			<?php foreach ($resources as $resource)
-				{
-				?>
-				<option value="<?php echo htmlspecialchars($resource["ref"]) ?>" <?php if ($resource["ref"]==$collection["home_page_image"]) { ?>selected<?php } ?>><?php echo str_replace(array("%ref", "%title"), array($resource["ref"], i18n_get_translated($resource["field" . $view_title_field])), $lang["ref-title"]) ?></option>
-				<?php
-				}
-			?>
-			</select>
-			<div class="clearerleft"> </div>
-			</div>		
-			<?php hook("morehomepagepublishoptions");
-			}
-		}
+        
+    if (checkperm("h") && $collection['public']==1 && !$home_dash)
+        {
+        # Option to publish to the home page.
+        ?>
+        <div class="Question">
+        <label for="allow_changes"><?php echo $lang["theme_home_promote"]?></label>
+        <input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
+        <div class="clearerleft"> </div>
+        </div>
+        <?php
+        if ($collection["home_page_publish"]&&!hook("hidehomepagepublishoptions"))
+            {
+            # Option ticked - collect extra data
+            ?>
+            <div class="Question">
+            <label for="home_page_text"><?php echo $lang["theme_home_page_text"]?></label>
+            <textarea class="stdwidth" rows="3" name="home_page_text" id="home_page_text"><?php echo htmlspecialchars($collection["home_page_text"]==""?$collection["name"]:$collection["home_page_text"])?></textarea>
+            <div class="clearerleft"> </div>
+            </div>
+            <div class="Question">
+            <label for="home_page_image">
+            <?php echo $lang["theme_home_page_image"]?></label>
+            <select class="stdwidth" name="home_page_image" id="home_page_image">
+            <?php foreach ($resources as $resource)
+                {
+                ?>
+                <option value="<?php echo htmlspecialchars($resource["ref"]) ?>" <?php if ($resource["ref"]==$collection["home_page_image"]) { ?>selected<?php } ?>><?php echo str_replace(array("%ref", "%title"), array($resource["ref"], i18n_get_translated($resource["field" . $view_title_field])), $lang["ref-title"]) ?></option>
+                <?php
+                }
+            ?>
+            </select>
+            <div class="clearerleft"> </div>
+            </div>		
+            <?php hook("morehomepagepublishoptions");
+            }
+        }
 
-	if (!isset($collection['savedsearch']) || $collection['savedsearch']==null)
-		{
-		# disallowing share breaks smart collections 
-		?>
-		<div class="Question">
-		<label for="allow_changes"><?php echo $lang["allowothersaddremove"]?></label>
-		<input type="checkbox" id="allow_changes" name="allow_changes" <?php if ($collection["allow_changes"]==1) { ?>checked<?php } ?>>
-		<div class="clearerleft"> </div>
-		</div>
-		<?php 
-		} 
-	else 
-		{ 
-		# allow changes by default
-		?>
-		<input type=hidden id="allow_changes" name="allow_changes" value="checked">
-		<?php 
-		}
+    if (!isset($collection['savedsearch']) || $collection['savedsearch']==null)
+        {
+        # disallowing share breaks smart collections 
+        ?>
+        <div class="Question">
+        <label for="allow_changes"><?php echo $lang["allowothersaddremove"]?></label>
+        <input type="checkbox" id="allow_changes" name="allow_changes" <?php if ($collection["allow_changes"]==1) { ?>checked<?php } ?>>
+        <div class="clearerleft"> </div>
+        </div>
+        <?php 
+        } 
+    else 
+        { 
+        # allow changes by default
+        ?>
+        <input type=hidden id="allow_changes" name="allow_changes" value="checked">
+        <?php 
+        }
     
-	hook('additionalfields2');
+    hook('additionalfields2');
     hook('colleditformbottom');
     
     if (file_exists("plugins/collection_edit.php"))
@@ -391,11 +460,12 @@ if(isset($error))
         include "plugins/collection_edit.php";
         }
     ?>
-	<div class="QuestionSubmit">
-		<label for="buttons"> </label>			
-		<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
-	</div>
+    <div class="QuestionSubmit">
+        <label for="buttons"> </label>			
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+    </div>
 </form>
+<?php } ?>
 </div>
 <?php
 if(getval("reload","") == "true" && getval("ajax","") != "")
