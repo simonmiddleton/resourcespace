@@ -2573,13 +2573,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         {
         return false;
         }
-        
-	# Check if this collection has already been shared externally. If it has, we must add a further entry
-	# for this specific resource, and warn the user that this has happened.
-	$keys = get_collection_external_access($collection);
-	$resourcesnotadded = array(); # record the resources that are not added so we can display to the user
-	$blockedtypes = array();# Record the resource types that are not added 
-	
+
     // To maintain current collection order but add the search items in the correct order we must first ove the existing collection resoruces out the way
     $searchcount = count($results);
     if($searchcount > 0)
@@ -2592,6 +2586,43 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
             ]
         );
         }
+
+    // If this is a featured collection apply all the external access keys from the categories which make up its 
+    // branch path to prevent breaking existing shares for any of those featured collection categories.
+    $fc_branch_path_keys = [];
+    $collection_data = get_collection($collection, true);
+    if($collection_data !== false && $collection_data['type'] === COLLECTION_TYPE_FEATURED)
+        {
+        $branch_category_ids = array_column(
+            // determine the branch from the parent because the keys for the collection in question will be done below
+            get_featured_collection_category_branch_by_leaf((int)$collection_data['parent'], []),
+            'ref'
+        );
+        foreach($branch_category_ids as $fc_category_id)
+            {
+            $fc_branch_path_keys = array_merge(
+                $fc_branch_path_keys,
+                get_external_shares([
+                    'share_collection' => $fc_category_id,
+                    'share_type' => 0,
+                    'ignore_permissions' => true,
+                ])
+            );
+            }
+        }
+    
+    # Check if this collection has already been shared externally. If it has, we must add a further entry
+    # for this specific resource, and warn the user that this has happened.
+    $keys = array_merge(
+        get_external_shares([
+            'share_collection' => $collection,
+            'share_type' => 0,
+            'ignore_permissions' => true,
+        ]),
+        $fc_branch_path_keys
+    );
+    $resourcesnotadded = array(); # record the resources that are not added so we can display to the user
+    $blockedtypes = array();# Record the resource types that are not added 
 
 	for ($r=0;$r<$searchcount;$r++)
         {
@@ -2606,11 +2637,12 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 
         if (count($keys)>0)
             {			
-            if ($archivestatus<0 && !$collection_allow_not_approved_share)
+            if ( ($archivestatus < 0 && !$collection_allow_not_approved_share) || !can_share_resource($resource) )
                 {
                 $resourcesnotadded[$resource] = $results[$r];
                 continue;
                 }
+
             for ($n=0;$n<count($keys);$n++)
                 {
                 $sql = '';
@@ -2666,6 +2698,10 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                 }
             }
 		}
+
+    // Clear theme image cache
+    clear_query_cache('themeimage');
+    clear_query_cache('col_total_ref_count_w_perm');
 
     if (!empty($resourcesnotadded) || count($blockedtypes)>0)
         {
