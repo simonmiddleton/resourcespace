@@ -417,24 +417,19 @@ function UpdateResultCount()
     }
 	
 jQuery(document).ready(function(){
-	    jQuery('#advancedform').submit(function() {
-            if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
-                {
-                    jQuery('.tickboxcoll').prop('checked',false);
-                }
-	       var inputs = jQuery('#advancedform :input');
-	       var hiddenfields = Array();
-	       inputs.each(function() {
-
-	           if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));
-	           
-	       });
-	      jQuery("#hiddenfields").val(hiddenfields.toString());
-	    
-    	    
-    	    	
-	    });
-		});
+    jQuery('#advancedform').submit(function() {
+        if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
+            {
+            jQuery('.tickboxcoll').prop('checked',false);
+            }
+        var inputs = jQuery('#advancedform :input');
+        var hiddenfields = Array();
+        inputs.each(function() {
+            if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));            
+            });
+        jQuery("#hiddenfields").val(hiddenfields.toString());    	    	
+        });
+    });
 
 </script>
 
@@ -831,7 +826,6 @@ if($archive!==0){
 	<script>
 	jQuery(document).ready(function()
 	  {
-	  UpdateResultCount();
 	  jQuery("input").keypress(function(event) {
 		   if (event.which == 13) {
 			   event.preventDefault();

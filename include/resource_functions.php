@@ -5388,7 +5388,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         return ('false' === $plugincustomeditaccess ? false : true);
         }
 
-    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed
+    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data may not be passed
         {
         $resourcedata=get_resource_data($resource);
         }

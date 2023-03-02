@@ -282,6 +282,7 @@ if($editsearch)
     $editable_resource_refs=array_column($edititems,"ref");
 
     # If not all resources are editable then the batch edit may not be approprate
+
     if($editable_resources_count != $all_resources_count)
         {
         # Counts differ meaning there are non-editable resources
@@ -293,7 +294,7 @@ if($editsearch)
             if ( !hook('customediteaccess','',array($non_editable_ref)) ) 
                 {
                 $error = $lang['error-editpermissiondenied'];
-                error_alert($error);
+                error_alert($error, false);
                 exit();
                 }
             }
