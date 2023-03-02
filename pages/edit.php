@@ -2107,7 +2107,7 @@ else
                        {
                        $access = $submitted_access_groups[$groups[$n]['ref']];
                        }
-                   elseif ($groups[$n]["access"] !== '')
+                   elseif (isset($groups[$n]["access"]) && $groups[$n]["access"] !== '')
                        {
                        $access = $groups[$n]["access"];
                        }
