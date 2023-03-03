@@ -9197,8 +9197,7 @@ function data_joins_field_value_translate_and_csv(?string $value): ?string
     }
 
 /**
- * Process resource data_joins array (ie fieldX columns) and reflect the updated values in the returned resource.
- * Multiple value fields will be split prior to translation and then recombined. 
+ * Process resource data_joins (ie fieldX columns) values
  * 
  * @param array $resource             A resource table record
  * @param array $resource_table_joins List of refs for the resource table data_joins. {@see get_resource_table_joins()}
@@ -9207,31 +9206,9 @@ function data_joins_field_value_translate_and_csv(?string $value): ?string
  */
 function process_resource_data_joins_values(array $resource, array $resource_table_joins): array
     {
-    # Example resource_table_joins is an array (8,12) yields fieldX_column_names array ("field8","field12")
     $fieldX_column_names = array_map(prefix_value('field'), $resource_table_joins);
-
-    # Example fieldX_data ("field8" => "datainfield8", "field12" => "datainfield12")
     $fieldX_data = array_intersect_key($resource, array_flip($fieldX_column_names));
-
-    $fieldX_translated_csv=array();
-    foreach($fieldX_data as $fieldX_data_key => $fieldX_data_value)
-        {
-        $fieldX_fieldref = substr($fieldX_data_key,5); # extract field ref
-        $fieldX_fielddefinition = get_resource_type_field($fieldX_fieldref);
-
-        if (in_array($fieldX_fielddefinition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
-            {
-            # Split/translate/combine value fields if they can contain multiple values delimited by a separator
-            $fieldX_translated_csv[$fieldX_data_key] = data_joins_field_value_translate_and_csv($fieldX_data_value);       
-            }
-        else
-            {
-            # Non multiple value fields do not have separators; translate them directly without attempting to split them
-            $fieldX_translated_csv[$fieldX_data_key] = i18n_get_translated($fieldX_data_value);
-            }
-        }
-
-    # The key value pairs in the fieldX_translated_csv array will overwrite any with the same key in the resource array
+    $fieldX_translated_csv = array_map('data_joins_field_value_translate_and_csv', $fieldX_data);
     return array_merge($resource, $fieldX_translated_csv);
     }
 
