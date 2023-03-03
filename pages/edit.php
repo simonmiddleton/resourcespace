@@ -395,8 +395,8 @@ $uploadparams["status"] = $setarchivestate;
 if (in_array(getval("access", RESOURCE_ACCESS_INVALID_REQUEST, true), RESOURCE_ACCESS_TYPES) && !$resetform)
     {
     // Preserve selected access values including custom access if form validation returns a missed required field.
-    $access_submitted = (int) getval("access", 2, true);
-    if ($access_submitted == 3)
+    $access_submitted = (int) getval("access", RESOURCE_ACCESS_CONFIDENTIAL, true);
+    if ($access_submitted == RESOURCE_ACCESS_CUSTOM_GROUP)
         {
         $submitted_access_groups = array();
         $custom_access_groups = get_resource_custom_access($ref);
