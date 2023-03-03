@@ -496,13 +496,13 @@ include '../../include/header.php';
     <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
         <?php generateFormToken("system_config_search"); ?>
         <div>
-        <input type="text" name="find" id="configsearch" value="<?php echo htmlspecialchars($find); ?>">
-        <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
+        <input type="text" name="find" id="configsearch" value="<?php echo escape_quoted_data($find); ?>">
+        <input type="submit" name="searching" value="<?php echo escape_quoted_data($lang["searchbutton"]); ?>">
         <?php
         if($searching)
             {
             ?>
-            <input type="button" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <input type="button" name="clear_search" value="<?php echo escape_quoted_data($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
             <?php
             }
         ?>
