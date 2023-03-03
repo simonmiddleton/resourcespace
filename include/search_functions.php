@@ -1244,17 +1244,38 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $order_by = str_replace("r.rating","rating",$order_by);
 
         // Remove order if only getting resource refs
-        $order_by  = $return_refs_only ? "" : " ORDER BY " . $order_by;
+        if($return_refs_only)
+            {
+            $order_by       = "";
+            $selectouter    = "DISTINCT r2.ref";
+            }
+        else
+            {
+            $order_by       = " ORDER BY " . $order_by;
+            $selectouter    = "DISTINCT *,r2.total_hit_count score ";
+            }
 
-        $sql->sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 $order_by" . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT $selectouter FROM (SELECT $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
-   
     // View Resources With No Downloads
     elseif (substr($search,0,12)=="!nodownloads") 
         {
         if ($orig_order=="relevance") {$order_by="ref DESC";}
-        $sql->sql = $sql_prefix . "SELECT r.hit_count score, $select FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+
+
+        // Remove order if only getting resource refs
+        if($return_refs_only)
+            {
+            $order_by   = "";
+            $select     = "r.ref";
+            }
+        else
+            {
+            $select     = "r.hit_count score, $select";
+            }
+        
+        $sql->sql = $sql_prefix . "SELECT $select FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by " . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
     
@@ -1821,7 +1842,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         else
             {
             $count_sql = clone($sql);
-            $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
+            if($order_by != "")
+                {
+                $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
+                }
             if(!$return_refs_only)
                 {
                 // Prevent excessive memory use
