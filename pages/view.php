@@ -1327,7 +1327,22 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                 ?> <a id="downloadlink" <?php
                 if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
                     {
-                    echo 'href=' . $baseurl . '/pages/download_usage.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k);
+                        if ($view_in_browser)
+                        {
+                        echo "href=\"" . generateURL($baseurl . "/pages/download_usage.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"],"direct"=>1,"noattach"=>true)))) . "\"";
+                        }
+                    else
+                        {
+                        echo "href=\"" . generateURL($baseurl . "/pages/download_usage.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                        }
+                    }
+                    if($iOS_save || $view_in_browser)
+                    {
+                    echo " target=\"_blank\"";
+                    }
+                    else
+                    {
+                    echo " onClick=\"return CentralSpaceLoad(this,true);\"";
                     }
                 ?>><?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?></a><?php
                 }
