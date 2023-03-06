@@ -123,7 +123,7 @@ else
     }
 
 // Check if an uncropped preview exists
-$previewsourcepath = $org = get_resource_path($ref,true,"orginal_copy",false,$useext);
+$previewsourcepath = $org = get_resource_path($ref,true,"original_copy",false,$useext);
 
 if(!file_exists($org))
     {
