@@ -94,7 +94,7 @@ include "../include/header.php";
  	<div class="Question">
 	<label><?php echo $lang["termsandconditions"]?></label>
 	<div class="Terms"><?php 
-		$termstext=text("terms");
+		$termstext=text(($upload?"upload_terms":"terms"));
 		$modified_termstext=hook('modified_termstext');
 		if($modified_termstext!=''){$termstext=$modified_termstext;}
 		if (is_html($termstext)){
