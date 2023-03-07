@@ -648,6 +648,7 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
             {
             return false;
             }
+            // Element #CentralSpaceResources (search results) can be dropped on by .CollectionPanelShell elements (collection bar)
             jQuery('#CentralSpaceResources').droppable({
                 accept: '.CollectionPanelShell',
 
@@ -681,7 +682,9 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
 if(!$collectionsearch)
     {
     ?>
-    <!-- Search items should only be draggable if results are not a collection -->
+    <!-- Search item results in centralspace have a class of "ResourcePanel" -->
+    <!-- These items should be draggable to add them to the collection in the collection bar if results are NOT from collection search -->
+    <!-- They should also be draggable to the trash_bin to removing them from a collection if results ARE from collection search -->
     <script>    
     // The below numbers are hardcoded mid points for thumbs and xlthumbs
     var thumb_vertical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
@@ -711,12 +714,20 @@ if(!$collectionsearch)
     <?php
     }
     
-if ($allow_reorder && $display!="list" && $order_by == "collection") {
+// The sortable method must be enabled regardless of the order_by so that the trash bin is available for interactions from CentralSpace
+// This allows resources to be removed from collection via the trash bin, but will abandon reorder attempts unless order_by is "collection"
+if ($allow_reorder && $display!="list") {
     global $usersession;
 ?>
     <script type="text/javascript">
     var allow_reorder = true;
-    
+
+    var use_sortable_for_trash_only = false;
+    <?php if ($order_by != "collection") { ?>
+        var use_sortable_for_trash_only = true;
+    <?php
+    }
+    ?>    
     function ReorderResources(idsInOrder) {
         var newOrder = [];
         jQuery.each(idsInOrder, function() {
@@ -784,6 +795,13 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
 
             update: function(event, ui)
                 {
+                if (use_sortable_for_trash_only)
+                    {
+                    // We are only using sortable for the ability to use the trash bin when the collection order is not "collection" 
+                    // and so we need to abandon the attempted reorder in this scenario
+                    return false;    
+                    }
+                
                 // Don't reorder when top and bottom collections are the same and you drag & reorder from top to bottom
                 if(ui.item[0].parentElement.id == 'CollectionSpace')
                     {
