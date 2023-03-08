@@ -1544,6 +1544,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         
         $sizes="";
         $params = [];
+        $lookup_sizes = true;
         if ($thumbonly)
             {
             $sizes=" WHERE id='thm' or id='col'";
@@ -1560,10 +1561,20 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $sizes = " WHERE id IN (" . ps_param_insert(count($sizefilter)) . ")";
                 $params = ps_param_fill($sizefilter, 's');
                 }
+            else
+                {
+                // No valid sizes supplied in $onlysizes. Don't return all sizes from the db instead.
+                $lookup_sizes = false;
+                $ps = array();
+                }
             $all_sizes= false;
             }
         
-        $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
+        if ($lookup_sizes)
+            {
+            $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
+            }
+
         if($lean_preview_generation && $all_sizes)
             {
             $force_make=array("pre","thm","col");
