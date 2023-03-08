@@ -144,9 +144,6 @@ $email_from_user=false;
 ##  If blank, uses $baseurl 
 $email_url_save_user = ""; //emaillogindetails
 
-# Enable remote apis - MUST ALWAYS BE TRUE now as parts of the UI use the API.
-$enable_remote_apis=true;
-
 $enable_theme_breadcrumbs = true;
 
 # Require email address to be entered when users are submitting collecion feedback

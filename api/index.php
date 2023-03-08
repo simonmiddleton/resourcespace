@@ -9,16 +9,23 @@ include_once "../include/api_bindings.php";
 include_once "../include/login_functions.php";
 include_once "../include/dash_functions.php";
 
-if (!$enable_remote_apis) {http_response_code(403);exit("API not enabled.");}
+# Get authentication mode (userkey, sessionkey or native)
+$authmode = getval("authmode","userkey");
+
+# Native authmode always required
+if (!$enable_remote_apis && $authmode !== "native")
+    {
+    http_response_code(403);
+    exit("API not enabled.");
+    }
 
 debug("API:");
 define("API_CALL", true);
 
 # Get parameters
-$user       = getval("user","");
-$sign       = getval("sign","");
-$authmode   = getval("authmode","userkey");
-$query      = $_SERVER["QUERY_STRING"];
+$user = getval("user","");
+$sign = getval("sign","");
+$query = $_SERVER["QUERY_STRING"];
 $pretty = filter_var(getval('pretty', ''), FILTER_VALIDATE_BOOLEAN); # Should response be prettyfied?
 
 # Support POST request where 'query' is POSTed and is the full query string.
