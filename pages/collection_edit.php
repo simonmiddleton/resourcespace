@@ -212,13 +212,13 @@ else if($delete_requires_password && $delete_all)
     <form method="post" action="<?php echo $form_action;?>">
     <input type=hidden name=ref value="<?php echo $ref ?>">
     <input type=hidden name=name value="<?php echo escape_quoted_data($name) ?>">
-    <input type=hidden name=public value="<?php echo $public ?>">
+    <input type=hidden name=public value="<?php echo escape_quoted_data($public) ?>">
     <input type=hidden name=deleteall value="on">
     <?php generateFormToken("delete_resource"); ?>
 
     <div class="Question">
     <label><?php echo $lang["collectionid"]?></label>
-    <div class="Fixed"><?php echo urlencode($ref) ?></div>
+    <div class="Fixed"><?php echo $ref ?></div>
     <div class="clearerleft"> </div>
     </div>
     
@@ -226,7 +226,7 @@ else if($delete_requires_password && $delete_all)
     <label for="password"><?php echo $lang["yourpassword"]?></label>
     <input type=password class="shrtwidth" name="password" id="password" />
     <div class="clearerleft"> </div>
-    <?php if ($error??""!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($error) ?> !!</div><?php } ?>
+    <?php if ($error??""!="") { ?><div class="FormError"><?php echo htmlspecialchars($error) ?></div><?php } ?>
     </div>
 
     <div class="QuestionSubmit">
