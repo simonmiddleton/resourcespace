@@ -956,7 +956,7 @@ function extract_exif_comment($ref,$extension="")
                             }
 
                             $oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-                            if(strpos($oldval, $value) !== FALSE) {
+                            if($value == "" || strpos($oldval, $value) !== FALSE) {
                                 continue;
                             }
                             
