@@ -821,3 +821,6 @@ const WORKFLOW_DEFAULT_ICONS = [
 
 // Alternative file extensions that can be natively viewed in the browser
 const VIEW_IN_BROWSER_EXTENSIONS = ['pdf', 'mp3'];
+
+// PHP stream wrappers that will be blocked when attempting uploads by URL via the API.
+const BLOCKED_STREAM_WRAPPERS = ['php', 'file'];

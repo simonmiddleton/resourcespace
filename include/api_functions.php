@@ -443,7 +443,7 @@ function api_validate_upload_url($url)
 
     $url_parts = parse_url($url);
 
-    if ($url_parts['scheme'] == "php")
+    if (in_array($url_parts['scheme'], BLOCKED_STREAM_WRAPPERS))
         {
         return false;
         }
