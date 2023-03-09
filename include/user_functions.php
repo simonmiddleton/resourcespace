@@ -120,7 +120,7 @@ function setup_user(array $userdata)
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
-           $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
+           $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
            $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION;
 		
@@ -241,9 +241,6 @@ function setup_user(array $userdata)
             return false;
             }
         }
-
-    $userpreferences = ($user_preferences) ? ps_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = ? AND parameter = 'colour_theme';", array("i", $userref), "preferences") : FALSE;
-    $userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
 
     # Some alternative language choices for basket mode / e-commerce
     if ($userrequestmode==2 || $userrequestmode==3)
