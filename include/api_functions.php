@@ -434,18 +434,18 @@ function api_validate_upload_url($url)
         {
         return false;
         }
-
-    global $api_upload_urls;
-    if (!isset($api_upload_urls))
-        {
-        return true; // For systems prior to this config.
-        }
-
+    
     $url_parts = parse_url($url);
 
     if (in_array($url_parts['scheme'], BLOCKED_STREAM_WRAPPERS))
         {
         return false;
+        }
+
+    global $api_upload_urls;
+    if (!isset($api_upload_urls))
+        {
+        return true; // For systems prior to this config.
         }
 
     if (in_array($url_parts['host'], $api_upload_urls))
