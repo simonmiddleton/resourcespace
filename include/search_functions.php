@@ -1243,41 +1243,16 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         
         # Fix the ORDER BY for this query (special case due to inner query)
-        $order_by = str_replace("r.rating","rating",$order_by);
-
-        // Remove order if only getting resource refs
-        if($return_refs_only)
-            {
-            $order_by       = "";
-            $selectouter    = "DISTINCT r2.ref";
-            }
-        else
-            {
-            $order_by       = " ORDER BY " . $order_by;
-            $selectouter    = "DISTINCT *,r2.total_hit_count score ";
-            }
-
-        $sql->sql = $sql_prefix . "SELECT $selectouter FROM (SELECT $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 $order_by" . $sql_suffix;
+        $order_by=str_replace("r.rating","rating",$order_by);
+        $sql->sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
+   
     // View Resources With No Downloads
     elseif (substr($search,0,12)=="!nodownloads") 
         {
         if ($orig_order=="relevance") {$order_by="ref DESC";}
-
-
-        // Remove order if only getting resource refs
-        if($return_refs_only)
-            {
-            $order_by   = "";
-            $select     = "r.ref";
-            }
-        else
-            {
-            $select     = "r.hit_count score, $select";
-            }
-        
-        $sql->sql = $sql_prefix . "SELECT $select FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by " . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT r.hit_count score, $select FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
     
@@ -1404,11 +1379,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 }   
             }
 
-        
-        // Remove order if only getting resource refs
-        $order_by  = $return_refs_only ? "" : " ORDER BY " . $order_by;
-
-        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $colcustfilter->sql . ") GROUP BY r.ref $order_by" . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $colcustfilter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$colcustfilter->parameters);
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($sql));
 
@@ -1844,10 +1815,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         else
             {
             $count_sql = clone($sql);
-            if($order_by != "")
-                {
-                $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-                }
+            $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
             if(!$return_refs_only)
                 {
                 // Prevent excessive memory use
@@ -1856,7 +1824,22 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
             $resultcount = $result["total"]  ?? 0;
             if ($resultcount>0 && count($result["data"]) > 0)
-                {
+                { 
+                if($return_refs_only)
+                    {
+                    // This needs to include archive and created_by columns too as often used to work out permission to edit collection
+                    $result["data"] = array_map(function($val)
+                        {
+                        return([
+                            "ref"           =>$val["ref"],
+                            "resource_type" =>$val["resource_type"],
+                            "archive"       =>$val["archive"],
+                            "created_by"    =>$val["created_by"],
+                            "access"        =>$val["access"],
+                                ]);
+                            }, $result["data"]
+                        );
+                    }
                 $return = array_pad($result["data"],$resultcount,0);              
                 }
             else

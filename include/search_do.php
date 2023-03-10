@@ -251,7 +251,7 @@ function do_search(
     # If returning disk used by the resources in the search results ($return_disk_usage=true) then wrap the returned SQL in an outer query that sums disk usage.
     $sql_prefix="";
     $sql_suffix="";
-    if ($return_disk_usage && !$return_refs_only)
+    if ($return_disk_usage)
         {
         $sql_prefix="SELECT sum(disk_usage) total_disk_usage,count(*) total_resources, resourcelist.ref, resourcelist.score, resourcelist.user_rating, resourcelist.total_hit_count FROM (";
         $sql_suffix=") resourcelist";
@@ -275,44 +275,36 @@ function do_search(
         }
 
     # Join thumbs_display_fields to resource table
-    if($return_refs_only)
+    $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
+    $sql_hitcount_select="r.hit_count";
+
+    $modified_select=hook('modifyselect');
+    $select.=$modified_select ? $modified_select : '';      // modify select hook 1
+
+    $modified_select2=hook('modifyselect2');
+    $select.=$modified_select2 ? $modified_select2 : '';    // modify select hook 2
+
+    $select.=$return_disk_usage ? ',r.disk_usage' : '';      // disk usage
+
+    # select group and user access rights if available, otherwise select null values so columns can still be used regardless
+    # this makes group and user specific access available in the basic search query, which can then be passed through access functions
+    # in order to eliminate many single queries.
+    if (!checkperm("v") && !$access_override)
         {
-        $select = "r.ref ";
+        $select.=",rca.access group_access,rca2.access user_access ";
         }
     else
         {
-        $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified, r.file_size ";
+        $select.=",null group_access, null user_access ";
+        }
 
-        $sql_hitcount_select="r.hit_count";
-
-        $modified_select=hook('modifyselect');
-        $select.=$modified_select ? $modified_select : '';      // modify select hook 1
-
-        $modified_select2=hook('modifyselect2');
-        $select.=$modified_select2 ? $modified_select2 : '';    // modify select hook 2
-
-        $select.=$return_disk_usage ? ',r.disk_usage' : '';      // disk usage
-
-        # select group and user access rights if available, otherwise select null values so columns can still be used regardless
-        # this makes group and user specific access available in the basic search query, which can then be passed through access functions
-        # in order to eliminate many single queries.
-        if (!checkperm("v") && !$access_override)
+    # add 'joins' to select (only add fields if not returning the refs only)
+    $joins=$return_refs_only===false||$include_fieldx===true ? get_resource_table_joins() : array();
+    foreach($joins as $datajoin)
+        {
+        if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
             {
-            $select.=",rca.access group_access,rca2.access user_access ";
-            }
-        else
-            {
-            $select.=",null group_access, null user_access ";
-            }
-
-        # add 'joins' to select (only add fields if not returning the refs only)
-        $joins=$return_refs_only===false||$include_fieldx===true ? get_resource_table_joins() : array();
-        foreach($joins as $datajoin)
-            {
-            if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
-                {
-                $select .= ", r.field{$datajoin} ";
-                }
+            $select .= ", r.field{$datajoin} ";
             }
         }
 
@@ -1122,10 +1114,7 @@ function do_search(
 
     $sql_join->sql .= " JOIN resource_type AS rty ON r.resource_type = rty.ref ";
 
-    if(!$return_refs_only)
-        {
-        $select .= ", rty.order_by ";
-        }
+    $select .= ", rty.order_by ";
 
     // *******************************************************************************
     //                                                       START add node conditions
@@ -1160,10 +1149,7 @@ function do_search(
         }
 
 
-    if(!$return_refs_only)
-        {
-        $select .= ", " . $sql_hitcount_select . " total_hit_count";
-        }
+    $select .= ", " . $sql_hitcount_select . " total_hit_count";
 
     $sql_filter->sql  = $node_bucket_sql . $sql_filter->sql;
 
@@ -1497,7 +1483,7 @@ function do_search(
     $t->sql .= $sql_join->sql;
     $t->parameters = array_merge($t->parameters, $sql_join->parameters);
 
-    if ($score=="" && !$return_refs_only)
+    if ($score=="")
         {
         $score=$sql_hitcount_select;
         } # In case score hasn't been set (i.e. empty search)
@@ -1507,23 +1493,9 @@ function do_search(
         $sql->sql = " AND " . $sql->sql;
         }
 
-    
-    if($return_refs_only)
-        {
-        $select = "r.ref";
-        $group_by = "r.ref";
-        $order_by = "";
-        }
-    else
-        {
-        $select = $score . " score, " . $select;
-        $group_by = "r.ref, user_access, group_access";
-        $order_by = "ORDER BY " . $order_by;
-        }
-
     # Compile final SQL
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY " . $group_by . " " . $order_by . " " . $sql_suffix;
+    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
     $results_sql->parameters = array_merge($t->parameters,$t2->parameters,$sql->parameters);
 
     # Debug

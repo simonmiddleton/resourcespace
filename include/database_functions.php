@@ -1250,13 +1250,21 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     {
     global $cache_search_count;
     $limit = sql_limit($offset, $rows);
-    $data = ps_query("{$query->sql} {$limit}", $query->parameters);    
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);  
+    
+    
+    
+    debug("BANG rows ==" . $rows  . "==");
+
+
     $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
     $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
     $datacount = count($data);
 
+    debug("BANG total ==" . $total  . "==");
+    debug("BANG datacount ==" . $datacount  . "==");
     // Check if cached total will cause errors
-    if($datacount ==  0)
+    if($datacount ==  0 && $rows > 0)
         {
         // No data returned. Either beyond the last page of results or there were no results at all
         $total = min($total,$offset);
@@ -1272,6 +1280,7 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
         // Set total to the actual number of results
         $total = $offset + $datacount;
         }
+        debug("BANG new total ==" . $total  . "==");
     return ['total' => $total, 'data' => $data];
     }
 

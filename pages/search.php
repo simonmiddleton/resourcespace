@@ -552,7 +552,8 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,[max($offset-$colcount,0),$resourcestoretrieve],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        //exit("HERE " . print_r($result));
         }
     }
 else
@@ -1351,7 +1352,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
         // Search archive but don't log this to daily_stat
         $arcresults=do_search($search,$restypes,$order_by,2,0,'desc',false,0,false,false,'',false,false);
         $archive_standard = $saved_archive_standard;
-        
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
         if ($arcresults>0) 
             {
@@ -1558,12 +1558,26 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         else
             {
-            $startresource = max($offset-$colcount,0);
-            $endresource = $result_count-$colcount;
+            // Display the number of resources required after collections have been displayed
+            $cols_displayed = max($colcount-floor($colcount/$per_page*$offset),0);
+            $endresource = min($per_page-$cols_displayed,$result_count-$colcount-$offset);
+
+
+//             echo "result_count" .  $result_count . "<br/>";
+//              echo "cols_displayed" . $cols_displayed . "<br/>";
+//              echo "colcount" .  $colcount . "<br/>";
+//              echo "offset" .  $offset . "<br/>";
+//              echo "per_page" .  $per_page . "<br/>";
+//              echo "resourcestoretrieve" .  $resourcestoretrieve . "<br/>";
+
+//   exit("==" . $endresource . "==");
+
+// exit(print_r($result));
+
 
             // This is used to ensure that all resource panels are the same height 
             $resource_panel_height_max = 0;            
-            for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
+            for ($n=0;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
                 {
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);
