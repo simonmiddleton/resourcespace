@@ -22,7 +22,7 @@ $chunk_offset = 0; // Return data in batches. Required for particularly large cs
 
 while ($chunk_offset < $resources_found)
     {
-    $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, DEPRECATED_STARSEARCH, false, false, '', false, false, true, false, false, $access, null, array($chunk_offset, $search_chunk_size));
+    $search_results = do_search($search, $restypes, $order_by, $archive, array($chunk_offset, $search_chunk_size), $sort, false, DEPRECATED_STARSEARCH, false, false, '', false, false, true, false, false, $access, null);
     $resources_to_process = array_merge($resources_to_process, array_column($search_results, "ref"));
     $chunk_offset = $chunk_offset + $search_chunk_size;
     }
