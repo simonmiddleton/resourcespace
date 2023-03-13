@@ -8495,21 +8495,40 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 * Helper function for Preview tools feature. Checks all necessary permissions or options
 * in order to tell the system whether PreviewTools panel should be displayed
 *
-* @param boolean $edit_access Does user have the permissions to edit this resource
-*
 * @return boolean
 */
-function canSeePreviewTools($edit_access)
+function canSeePreviewTools()
     {
-    global $annotate_enabled, $image_preview_zoom;
+    global $image_preview_zoom;
 
-    return
-        (
-           ($annotate_enabled && $edit_access)
-        || $image_preview_zoom
-        );
+    $visible_annotate_fields = canSeeAnnotationsFields();
+
+    return (count($visible_annotate_fields) > 0 || $image_preview_zoom);
     }
 
+/**
+ * Helper function to determine if annotations are to be displayed.
+ *
+ * @return array   Array of annotation fields that can be viewed.
+ */
+function canSeeAnnotationsFields()
+    {
+    global $annotate_enabled, $annotate_fields, $k;
+
+    $can_view_fields = array();
+    if ($annotate_enabled && $k == "")
+        {
+        foreach ($annotate_fields as $annotate_field)
+            {
+            if(metadata_field_view_access($annotate_field))
+                {
+                $can_view_fields[] = $annotate_field;
+                }
+            }
+        }
+
+    return $can_view_fields;
+    }
 
 /**
 * Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)

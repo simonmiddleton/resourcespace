@@ -881,7 +881,7 @@ if($image_preview_zoom)
 
     }
 
-    if(canSeePreviewTools($edit_access))
+    if(canSeePreviewTools())
         {
     	if($annotate_enabled)
     		{
@@ -914,7 +914,7 @@ if($image_preview_zoom)
             </script>
             <div id="PreviewToolsOptionsWrapper">
             <?php
-            if($annotate_enabled && file_exists($imagepath))
+            if($annotate_enabled && file_exists($imagepath) && canSeeAnnotationsFields())
                 {
                 ?>
                 <a class="ToolsOptionLink AnnotationsOption" href="#" onclick="toggleAnnotationsOption(this); return false;">
@@ -939,7 +939,7 @@ if($image_preview_zoom)
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                             resource            : <?php echo (int) $ref; ?>,
-                            read_only           : false,
+                            read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
                             // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                             csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
                             <?php echo generateAjaxToken('RSTagging'); ?>

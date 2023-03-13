@@ -190,7 +190,7 @@ include "../include/header.php";
 <?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
 <?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php }
 
-if($annotate_enabled)
+if(count(canSeeAnnotationsFields()) > 0)
     {
     ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="#" onclick="toggleAnnotationsOption(this); return false;">
@@ -304,7 +304,7 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
                          class="Picture"
                          src="<?php echo $url; ?>"
                          <?php
-                         if($annotate_enabled)
+                         if(count(canSeeAnnotationsFields()) > 0)
                             {
                             ?>
                             data-original="<?php echo "{$baseurl}/annotation/resource/{$ref}"; ?>"
@@ -346,7 +346,7 @@ if ($show_resource_title_in_titlebar){
 	}
 }
 
-if($annotate_enabled)
+if(count(canSeeAnnotationsFields()) > 0)
     {
     ?>
     <!-- Annotorious -->
