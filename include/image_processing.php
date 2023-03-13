@@ -4012,8 +4012,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             // or the original size of the image
             if (isset($actions["crop"]) && $actions["crop"])
                 {
-                $checkwidth  = $actions["finalwidth"];
-                $checkheight = $actions["finalheight"];
+                $checkwidth  = $actions["new_width"];
+                $checkheight = $actions["new_height"];
                 } 
             else
                 {
