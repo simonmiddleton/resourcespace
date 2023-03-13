@@ -270,6 +270,7 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 $page_def[] = config_add_boolean_select('allow_account_request', $lang['systemconfig_allow_account_request_label'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_boolean_select('terms_download', $lang['systemconfig_terms_download_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('terms_login', $lang['systemconfig_terms_login_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('terms_upload', $lang['systemconfig_terms_upload_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('user_rating', $lang['systemconfig_user_rating_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 

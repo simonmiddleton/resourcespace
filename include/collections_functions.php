@@ -6633,6 +6633,7 @@ function upload_share_setup(string $key,$shareopts = array())
         "suggest_keywords",
         "add_keyword",
         "download", // Required to see newly created thumbnails if $hide_real_filepath=true;
+        "terms",
         );
 
     if(!in_array($pagename,$validpages))
@@ -6990,5 +6991,42 @@ function update_smart_collection(int $smartsearch_ref)
             $endTime = microtime(true);  
             $elapsed = $endTime - $startTime;
             debug("smart_collections" . (($smart_collections_async) ? "_async:" : ":") . " $elapsed seconds for " . $smartsearch['search']);
+        }
+    }
+
+/**
+ * Check if the terms have been accepted for the given upload
+ * Terms only need to be accepted when uploading through an upload share link
+ * If uploading through an upload share link then the accepted terms have been stored in $_COOKIE["acceptedterms"]
+ *
+ * @param  int $collection  Collection ref
+ * @param  string $k        Share key
+ * 
+ * @return boolean          True if external upload share and terms have also been accepted
+ *                          OR if not an external upload
+ *                          False if external upload share and terms have NOT been accepted
+ */
+function check_upload_terms($collection,$k)
+    {
+    $keyinfo = ps_query(
+       "SELECT collection,upload
+            FROM external_access_keys
+        WHERE access_key = ?
+            AND (expires IS NULL OR expires > now())",
+        array("s", $k)
+    );
+
+    $collection = get_collection($collection);
+
+    if (!is_array($collection)                                                  // not uploading to collection
+        || !in_array($collection["ref"],array_column($keyinfo,"collection"))    // share is not for this collection
+        || (bool)$keyinfo[0]["upload"] != true)                                 // share type not upload
+        {
+        return true;
+        }
+    else
+        {
+        $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==true);
+        return $return;
         }
     }

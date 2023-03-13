@@ -758,6 +758,9 @@ $mycontributions_link = false;
 # Require terms for download?
 $terms_download=false;
 
+# Require terms for upload share links?
+$terms_upload=false;
+
 # Require terms on first login?
 $terms_login=false;
 
