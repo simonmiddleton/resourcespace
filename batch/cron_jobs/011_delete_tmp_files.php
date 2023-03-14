@@ -81,7 +81,7 @@ foreach ($folderstodelete as $foldertodelete)
         continue;    
         }
     
-    $success = @rcRmdir($foldertodelete);
+    $success = rcRmdir($foldertodelete);
     
     if('cli' == PHP_SAPI)
         {
@@ -98,7 +98,7 @@ foreach ($filestodelete as $filetodelete)
         continue;    
         }
         
-    $success = @unlink($filetodelete);
+    $success = try_unlink($filetodelete);
     
     if('cli' == PHP_SAPI)
         {
