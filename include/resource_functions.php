@@ -502,7 +502,7 @@ function put_resource_data($resource,$data)
 function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     {
     # Create a new resource.
-    global $k;
+    global $k,$terms_upload;
     
     if(!is_numeric($archive))
         {
@@ -552,7 +552,9 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     resource_log($insert, LOG_CODE_CREATED, 0,$origin);
     if(upload_share_active())
         {
-        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,'','',$k . ' ('  . get_ip() . ')');
+        # Terms needed to be accepted to complete upload
+        $notes = ($terms_upload ? "Terms accepted" : "");
+        resource_log($insert, LOG_CODE_EXTERNAL_UPLOAD, 0,$notes,'',$k . ' ('  . get_ip() . ')');
         }
 
     return $insert;
@@ -3157,9 +3159,11 @@ function get_resource_type_field($field)
  * @param  bool $external_access    Only get data permitted to view externally. FALSE by default
  * @param  bool $ord_by             Use field order_by setting. FALSE by default (order is by resource type first)
  * @param  bool $forcsv             Get data for CSV export (uses \ separator for category tree nodes). FALSE by default
+ * @param  bool $translate_value    Field value will be translated with i18n_get_translated() unless FALSE supplied.
+ * 
  * @return array|boolean
  */
-function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=NULL,$external_access=false,$ord_by=false, $forcsv = false)
+function get_resource_field_data($ref, $multi = false, $use_permissions = true, $originalref = NULL, $external_access = false, $ord_by = false, $forcsv = false, $translate_value = true)
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
     # for this resource, for display in an edit / view form.
@@ -3314,7 +3318,14 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                 $fieldnoderefs = explode(",",$fields[$n]['nodes']);
                 $fieldnodes = get_nodes_by_refs($fieldnoderefs);
                 $ordered_nodes = array_column(reorder_nodes($fieldnodes),"name");
-                $fields[$n]['value'] = implode(", ",array_map("i18n_get_translated",$ordered_nodes));
+                if ($translate_value)
+                    {
+                    $fields[$n]['value'] = implode(", ", array_map("i18n_get_translated", $ordered_nodes));
+                    }
+                else
+                    {
+                    $fields[$n]['value'] = implode(", ", $ordered_nodes);
+                    }
                 }
 
             $return[] = $fields[$n];
@@ -4139,18 +4150,35 @@ function save_resource_custom_access($resource)
 		}
 	}
 
-function get_custom_access($resource,$usergroup,$return_default=true)
-	{
-	global $custom_access,$default_customaccess;
-	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
+/**
+ * Lookup custom access value for a resource
+ *
+ * @param  int     $resource         Resource ID.
+ * @param  int     $usergroup        User group ID.
+ * @param  bool    $return_default   Return default custom access value from config. $default_customaccess.
+ * 
+ * @return mixed   False if custom access is disabled or there is no custom access value set for this resource.
+ *                 Int representing custom access level if set; 0 - open, 1 - restricted, 2 - confidential.
+ */
+function get_custom_access($resource, $usergroup, $return_default = true)
+    {
+    global $custom_access, $default_customaccess;
 
-	$result=ps_value("select access value from resource_custom_access where resource=? and usergroup=?",array("i",$resource,"i",$usergroup),'');
-	if($result=='' && $return_default)
-		{
-		return $default_customaccess;
-		}
-	return $result;
-	}
+    if ($custom_access == false) {return false;}
+
+    $result = ps_value("select access value from resource_custom_access where resource = ? and usergroup = ?", array("i", $resource, "i", $usergroup), '');
+
+    if ($result === '' && $return_default)
+        {
+        return $default_customaccess;
+        }
+    else if ($result === '')
+        {
+        return false;
+        }
+
+    return $result;
+    }
 
 
 /**
@@ -5021,7 +5049,7 @@ function get_resource_access($resource)
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
         $prevent_open_access_on_edit_for_active, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_all_workflow_states,
-        $userderestrictfilter, $userdata;
+        $userderestrictfilter, $userdata, $custom_access;
 	# $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.
 
 	# Returns the access that the currently logged-in user has to $resource.
@@ -5083,17 +5111,34 @@ function get_resource_access($resource)
 		return 0;
 		}
 
-	if ($access==3)
-		{
-		$customgroupaccess=true;
-		# Load custom access level
-		if ($passthru=="no"){
-			$access=get_custom_access($resource,$usergroup);
-			}
-		else {
-			$access=$resource['group_access'];
-		}
-	}
+    if ($access == 3)
+        {
+        $customgroupaccess = true;
+        # Load custom access level
+        if ($passthru == "no")
+            {
+            $access = get_custom_access($resource, $usergroup);
+            if ($access === false)
+                {
+                # Custom access disabled? Always return 'open' access for resources marked as custom.
+                $access = 0;
+                $customgroupaccess = false;
+                }
+            }
+        else
+            {
+            if ($custom_access)
+                {
+                $access = $resource['group_access'];
+                }
+            else
+                {
+                # Custom access disabled? Always return 'open' access for resources marked as custom.
+                $access = 0;
+                $customgroupaccess = false;
+                }
+            }
+        }
 
 	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],false,$resourcedata) && !$prevent_open_access_on_edit_for_active)
 		{
@@ -5130,7 +5175,7 @@ function get_resource_access($resource)
         $customuseraccess=true;
         return (int) $userspecific;
         }        
-    if (isset($groupspecific) && $groupspecific !== "")
+    if (isset($groupspecific) && $groupspecific !== false)
         {
         $customgroupaccess=true;
         return (int) $groupspecific;
@@ -5272,7 +5317,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 		# Only if no specific user access override (i.e. they have successfully requested this size).
 		$usercustomaccess = get_custom_access_user($resource,$userref);
 		$usergroupcustomaccess = get_custom_access($resource,$usergroup);
-		if (($usercustomaccess === false || !($usercustomaccess==='0')) && ($usergroupcustomaccess === false || !($usergroupcustomaccess==='0'))) {return false;}
+		if (($usercustomaccess === false || !($usercustomaccess === 0)) && ($usergroupcustomaccess === false || !($usergroupcustomaccess === 0))) {return false;}
         }
 
     if(($size == "" || $size == "hpr" || getval("noattach","") == "")  && intval($user_dl_limit) > 0)
@@ -5345,7 +5390,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         return ('false' === $plugincustomeditaccess ? false : true);
         }
 
-    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed
+    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data may not be passed
         {
         $resourcedata=get_resource_data($resource);
         }
@@ -8452,21 +8497,40 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
 * Helper function for Preview tools feature. Checks all necessary permissions or options
 * in order to tell the system whether PreviewTools panel should be displayed
 *
-* @param boolean $edit_access Does user have the permissions to edit this resource
-*
 * @return boolean
 */
-function canSeePreviewTools($edit_access)
+function canSeePreviewTools()
     {
-    global $annotate_enabled, $image_preview_zoom;
+    global $image_preview_zoom;
 
-    return
-        (
-           ($annotate_enabled && $edit_access)
-        || $image_preview_zoom
-        );
+    $visible_annotate_fields = canSeeAnnotationsFields();
+
+    return (count($visible_annotate_fields) > 0 || $image_preview_zoom);
     }
 
+/**
+ * Helper function to determine if annotations are to be displayed.
+ *
+ * @return array   Array of annotation fields that can be viewed.
+ */
+function canSeeAnnotationsFields()
+    {
+    global $annotate_enabled, $annotate_fields, $k;
+
+    $can_view_fields = array();
+    if ($annotate_enabled && $k == "")
+        {
+        foreach ($annotate_fields as $annotate_field)
+            {
+            if(metadata_field_view_access($annotate_field))
+                {
+                $can_view_fields[] = $annotate_field;
+                }
+            }
+        }
+
+    return $can_view_fields;
+    }
 
 /**
 * Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)

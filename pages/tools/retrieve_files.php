@@ -80,7 +80,7 @@ if (!isset($collectionid))
     $filtersql .= " r.ref >= ?"; $params[] = 'i'; $params[] = $min;
     if (isset($max))
         {
-        $filtersql .= "AND r.ref <= ?"; $params[] = 'i'; $params[] = $max;
+        $filtersql .= " AND r.ref <= ?"; $params[] = 'i'; $params[] = $max;
         }
     }
 else

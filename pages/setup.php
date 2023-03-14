@@ -1163,7 +1163,7 @@ else
                     $success = is_writable($storagedir);
                     if ($success===false)
                         {
-                        $result = $lang["status-warning"] . ": " . realpath($storagedir) . $lang["nowriteaccesstofilestore"] . "<br/>" . $lang["setup-override_location_in_advanced"];
+                        $result = $lang["status-warning"] . ": " . realpath($storagedir) . $lang["nowriteaccesstofilestore"];
                         $pass = false;
                         }
                     else

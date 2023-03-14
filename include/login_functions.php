@@ -281,13 +281,6 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
 
     # Set default resource types
     rs_setcookie('restypes', $default_res_types);
-
-    $userpreferences = ($user_preferences) ? ps_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = ? AND parameter = 'colour_theme'",array("i",$user)) : FALSE;
-    $userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
-    if($userpreferences && isset($userpreferences["colour_theme"]) && $userpreferences["colour_theme"]!="" && (!isset($_COOKIE["colour_theme"]) || $userpreferences["colour_theme"]!=$_COOKIE["colour_theme"]))
-        {
-        rs_setcookie("colour_theme", $userpreferences["colour_theme"],100, "/", "", substr($baseurl,0,5)=="https", true);
-        }
     }
 
 /**

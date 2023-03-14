@@ -91,6 +91,9 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         update_fieldx($field); 
         
         echo json_encode($response);
+
+        clear_query_cache("schema");
+
         exit();
         }
 

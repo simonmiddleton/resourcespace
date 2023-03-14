@@ -16,7 +16,8 @@
 * @param string      $restypes                Optionally used to specify which resource types to search for
 * @param string      $order_by
 * @param string      $archive                 Allows searching in more than one archive state
-* @param integer     $fetchrows               Fetch "$fetchrows" rows
+* @param int|array   $fetchrows               Fetch "$fetchrows" int rows or array containing $chunk_offset[0] (the offset of the first row to return) and 
+*                                             $chunk_offset[1] (the number of rows to return in the batch). See setup_search_chunks() for more detail.
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
@@ -1500,6 +1501,8 @@ function do_search(
     # Debug
     debug('$results_sql=' . $results_sql->sql . ", parameters: " . implode(",",$results_sql->parameters));
 
+    setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
+
     if($return_refs_only)
         {
         # Execute query but only ask for ref columns back from ps_query();
@@ -1514,7 +1517,7 @@ function do_search(
             }
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,$count_sql);
+        $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         $resultcount = $result["total"]  ?? 0;
         if ($resultcount>0 & count($result["data"]) > 0)
             {
@@ -1532,7 +1535,9 @@ function do_search(
             }
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,$count_sql);
+        // Prevent excessive memory use when not just getting refs
+        $search_chunk_size = min($search_chunk_size, $max_results); ## !! NEED TO CONSIDER IMPACT ON CHUNKING IF $max_results IS USED !!
+        $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         }
     $resultcount = $result["total"]  ?? 0;
     if ($resultcount>0 & count($result["data"]) > 0)

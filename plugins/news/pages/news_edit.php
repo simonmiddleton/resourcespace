@@ -77,15 +77,15 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
 	{
 	?>
 	<tr>
-	<td><div class="ListTitle"><?php echo highlightkeywords($news[$n]["date"],$findtext,true);?></div></td>
+	<td><div class="ListTitle"><?php echo highlightkeywords($news[$n]["date"],htmlspecialchars($findtext),true);?></div></td>
 	
-	<td><div class="ListTitle"><?php echo "<a href=\"" . $baseurl . "/plugins/news/pages/news.php?ref=" . $news[$n]["ref"] . "\">" . highlightkeywords($news[$n]["title"],$findtext,true);?></a></div></td>
+	<td><div class="ListTitle"><?php echo "<a href=\"" . $baseurl . "/plugins/news/pages/news.php?ref=" . $news[$n]["ref"] . "\">" . highlightkeywords($news[$n]["title"],htmlspecialchars($findtext),true);?></a></div></td>
 	
 	<td><?php echo highlightkeywords(tidy_trim(htmlspecialchars($news[$n]["body"]),100),$findtext,true)?></td>
 	
 	<td>
 	<div class="ListTools">
-		<a href="news_content_edit.php?ref=<?php echo $news[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
+		<a href="news_content_edit.php?ref=<?php echo $news[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . escape_quoted_data($findtext))?>"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
 		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('newsdelete').value='<?php echo $news[$n]["ref"]?>';document.getElementById('newsform').submit();} return false;"><?php echo LINK_CARET . $lang["action-delete"]?></a>
 		</div>
 	</td>
@@ -106,7 +106,7 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
 			<label for="find"><?php echo $lang["news_search"]?><br/></label>
 			<div class="tickset">
 			 <div class="Inline">			
-			<input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo $findtext?>" maxlength="100" class="shrtwidth" />
+			<input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo escape_quoted_data($findtext)?>" maxlength="100" class="shrtwidth" />
 			
 			<input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';form.submit();" />
 			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />

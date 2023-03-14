@@ -415,27 +415,16 @@ if ($search_titles)
             $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a> ' . $searchcrumbs . '</div></div> ';
             }
         }
-    elseif (!$archive_standard && strpos($archive,",")===false) // Don't construct title if more than one archive state is selected
+    
+    elseif (!$archive_standard) 
         {
-        switch ($archive)
+        $title_strings = [];
+        $wfstates = explode(",",$archive);
+        foreach($wfstates as $wfstate)
             {
-            case -2:
-                $title_string = $lang["userpendingsubmission"];
-                break;
-            case -1:
-                $title_string = $lang["userpending"];
-                break;
-            case 2:
-                $title_string = $lang["archiveonlysearch"];
-                break;
-            case 3:
-                $title_string = $lang["deletedresources"];
-                break;
-            default: 
-                $title_string = $lang["archive"] . ": " . $archive;
-                break;
+            $title_strings[] = $lang["status" . $wfstate] ?? $lang["archive"] . ": " . $wfstate;
             }
-        $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a>' . htmlspecialchars($searchcrumbs) . '</div></div> ';
+        $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars(implode(", ",$title_strings)) . '</a>' . htmlspecialchars($searchcrumbs) . '</div></div> ';
         }
 	
 	hook("addspecialsearchtitle");

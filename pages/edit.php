@@ -33,6 +33,13 @@ $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
 
+if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterms"]) || $_COOKIE["acceptedterms"] != true))
+    {
+    # Getting to this page without accepting terms means skipping the upload page
+    # This won't allow uploads without accepting terms but this is the most helpful message to display
+    exit($lang["mustaccept"]);
+    }
+
 if($camera_autorotation)
     {
     // If enabled and specified in URL then override the default
@@ -282,6 +289,7 @@ if($editsearch)
     $editable_resource_refs=array_column($edititems,"ref");
 
     # If not all resources are editable then the batch edit may not be approprate
+
     if($editable_resources_count != $all_resources_count)
         {
         # Counts differ meaning there are non-editable resources
@@ -293,7 +301,7 @@ if($editsearch)
             if ( !hook('customediteaccess','',array($non_editable_ref)) ) 
                 {
                 $error = $lang['error-editpermissiondenied'];
-                error_alert($error);
+                error_alert($error, false);
                 exit();
                 }
             }
@@ -394,8 +402,8 @@ $uploadparams["status"] = $setarchivestate;
 if (in_array(getval("access", RESOURCE_ACCESS_INVALID_REQUEST, true), RESOURCE_ACCESS_TYPES) && !$resetform)
     {
     // Preserve selected access values including custom access if form validation returns a missed required field.
-    $access_submitted = (int) getval("access", 2, true);
-    if ($access_submitted == 3)
+    $access_submitted = (int) getval("access", RESOURCE_ACCESS_CONFIDENTIAL, true);
+    if ($access_submitted == RESOURCE_ACCESS_CUSTOM_GROUP)
         {
         $submitted_access_groups = array();
         $custom_access_groups = get_resource_custom_access($ref);
@@ -2107,7 +2115,7 @@ else
                        {
                        $access = $submitted_access_groups[$groups[$n]['ref']];
                        }
-                   elseif ($groups[$n]["access"] !== '')
+                   elseif (isset($groups[$n]["access"]) && $groups[$n]["access"] !== '')
                        {
                        $access = $groups[$n]["access"];
                        }

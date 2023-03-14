@@ -758,6 +758,9 @@ $mycontributions_link = false;
 # Require terms for download?
 $terms_download=false;
 
+# Require terms for upload share links?
+$terms_upload=false;
+
 # Require terms on first login?
 $terms_login=false;
 
@@ -2343,6 +2346,9 @@ $list_recipients=false;
 # How many keywords should be included in the search when a single keyword expands via a wildcard. Setting this too high may cause performance issues.
 $wildcard_expand_limit=50;
 
+# Enable remote apis - NOTE: does not affect "native" authmode which is always enabled.
+$enable_remote_apis = true;
+
 # Default scramble key (never used as a new one is written to config.php during system install)
 $api_scramble_key="abcdef123";
 
@@ -2720,9 +2726,6 @@ $search_results_edit_icon=true;
 
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
-
-# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
-$thumbs_previews_via_download=false;
 
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
@@ -3361,3 +3364,7 @@ $field_column_string_separator = ',';
 
 $uploader_plugins = [];
 $uppy_companion_url = "";
+
+# Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
+# URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
+# $api_upload_urls = array();

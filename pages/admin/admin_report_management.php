@@ -84,7 +84,7 @@ function addColumnHeader($orderName, $labelKey)
 
     ?><td>
     <a href="<?php echo $baseurl ?>/pages/admin/admin_report_management.php?<?php
-    if ($find!="") { ?>&find=<?php echo $find; }
+    if ($find!="") { ?>&find=<?php echo escape_quoted_data($find); }
     ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
        onClick="return CentralSpaceLoad(this);"><?php echo $lang[$labelKey] . $image ?></a>
     </td>
@@ -115,10 +115,10 @@ function addColumnHeader($orderName, $labelKey)
             ?>
             <tr>
                 <td>
-                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["ref"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
+                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["ref"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE); ?></a>
                 </td>
                 <td>
-                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
+                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE); ?></a>
                 </td>
                 <td><?php echo ($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>
                 <td>
@@ -151,7 +151,7 @@ function addColumnHeader($orderName, $labelKey)
         <?php generateFormToken("admin_report_management_find"); ?>
         <div class="Question">
             <label for="find"><?php echo $lang["property-search_filter"] ?></label>
-            <input name="find" type="text" class="medwidth" value="<?php echo $find; ?>">
+            <input name="find" type="text" class="medwidth" value="<?php echo escape_quoted_data($find); ?>">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>
         </div>
@@ -191,7 +191,7 @@ function addColumnHeader($orderName, $labelKey)
             }
         if ($find)
             {
-            ?><input type="hidden" name="find" value="<?php echo $find; ?>">
+            ?><input type="hidden" name="find" value="<?php echo escape_quoted_data($find); ?>">
             <?php
             }
         ?>

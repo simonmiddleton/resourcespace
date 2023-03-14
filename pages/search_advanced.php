@@ -65,7 +65,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Only show the results (this will appear in an iframe)
         if (substr($restypes,0,11)!="Collections")
             {
-            $result=do_search($search,$restypes,"relevance",$archive,-1,"",false,DEPRECATED_STARSEARCH, false, false, "", false,true, false, false, false, $access);
+            $result=do_search($search,$restypes,"relevance",$archive,-1,"",false,DEPRECATED_STARSEARCH, false, false, "", false,false, true, false, false, $access);
             }
         else 
             {
@@ -75,7 +75,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             }
         if (is_array($result))
             {
-            $count=count($result);
+            $count = $result["total"] ?? count($result);
             }
         else
             {
@@ -417,24 +417,19 @@ function UpdateResultCount()
     }
 	
 jQuery(document).ready(function(){
-	    jQuery('#advancedform').submit(function() {
-            if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
-                {
-                    jQuery('.tickboxcoll').prop('checked',false);
-                }
-	       var inputs = jQuery('#advancedform :input');
-	       var hiddenfields = Array();
-	       inputs.each(function() {
-
-	           if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));
-	           
-	       });
-	      jQuery("#hiddenfields").val(hiddenfields.toString());
-	    
-    	    
-    	    	
-	    });
-		});
+    jQuery('#advancedform').submit(function() {
+        if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
+            {
+            jQuery('.tickboxcoll').prop('checked',false);
+            }
+        var inputs = jQuery('#advancedform :input');
+        var hiddenfields = Array();
+        inputs.each(function() {
+            if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));            
+            });
+        jQuery("#hiddenfields").val(hiddenfields.toString());    	    	
+        });
+    });
 
 </script>
 
@@ -831,7 +826,6 @@ if($archive!==0){
 	<script>
 	jQuery(document).ready(function()
 	  {
-	  UpdateResultCount();
 	  jQuery("input").keypress(function(event) {
 		   if (event.which == 13) {
 			   event.preventDefault();
