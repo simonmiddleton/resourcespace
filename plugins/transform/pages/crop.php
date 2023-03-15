@@ -6,7 +6,7 @@ include_once "../../../include/image_processing.php";
 include_once "../../../include/slideshow_functions.php";
 include_once "../include/transform_functions.php";
 
-global $cropper_allowed_extensions, $custom_cropper_preset_sizes;
+global $cropper_allowed_extensions, $custom_cropper_preset_sizes, $cropper_use_filename_as_title;
 
 $ref        = getval("ref",0,true);
 $search     = getval("search","");
@@ -306,11 +306,27 @@ if ($saveaction != '' && enforcePostRequest(false))
 
         $name       = getval("filename","");
         $filename   = safe_file_name($name);
-        if (trim($filename) == "")
+
+        if ($cropper_use_filename_as_title) 
             {
-            $filename = $ref . "_" . strtolower($lang['transformed']);
+            if(trim((string)$filename) == "")
+                {
+                // Compute a file name using file naming configuration
+                $filename = get_download_filename($ref, "", "", $new_ext);
+                }
+            else
+                {
+                $filename .= "." . $new_ext;                    
+                }
             }
-        $filename .= "." . $new_ext;
+        else
+            {
+            if (trim((string)$filename) == "")
+                {
+                $filename = $ref . "_" . strtolower($lang['transformed']);
+                }
+            $filename .= "." . $new_ext;
+            }
 
         // Use the resultant file as requested
         if ($saveaction == "alternative" && $cropper_enable_alternative_files)
