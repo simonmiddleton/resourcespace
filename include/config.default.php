@@ -3368,3 +3368,8 @@ $uppy_companion_url = "";
 # Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
 # URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
 # $api_upload_urls = array();
+
+# The maximum number of resources which will have their disk usage calculated each time batch/cron_jobs/006_update_disk_usage.php
+# is run (normally daily). This script checks resources which were last checked more than 30 days ago. 
+# Consider increasing this if system contains a very large number of resources so all are checked regularly.
+$update_disk_usage_batch_size = 20000;
