@@ -1818,8 +1818,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
             if(!$return_refs_only)
                 {
-                // Prevent excessive memory use
-                $search_chunk_size = min($search_chunk_size, $max_results); ## !! NEED TO CONSIDER IMPACT ON CHUNKING IF $max_results IS USED !!
+                if (!(is_array($fetchrows) && isset($fetchrows[0]) && isset($fetchrows[1])))
+                    {
+                    // Prevent excessive memory use.
+                    // Don't allow $max_results to alter the chunk size if chunking is being used.
+                    $search_chunk_size = min($search_chunk_size, $max_results);
+                    }
                 }
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
             $resultcount = $result["total"]  ?? 0;
