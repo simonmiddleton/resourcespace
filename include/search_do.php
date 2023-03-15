@@ -1535,12 +1535,6 @@ function do_search(
             }
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-        // Prevent excessive memory use when not just getting refs.
-        // Don't allow $max_results to alter the chunk size if chunking is being used.
-        if (!(is_array($fetchrows) && isset($fetchrows[0]) && isset($fetchrows[1])))
-            {
-            $search_chunk_size = min($search_chunk_size, $max_results);
-            }
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         }
     $resultcount = $result["total"]  ?? 0;

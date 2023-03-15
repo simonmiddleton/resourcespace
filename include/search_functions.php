@@ -1191,7 +1191,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # Process special searches. These return early with results.
     global $FIXED_LIST_FIELD_TYPES, $lang, $k, $USER_SELECTION_COLLECTION, $date_field;
     global $allow_smart_collections, $smart_collections_async;
-    global $config_search_for_number,$userref, $max_results;
+    global $config_search_for_number,$userref;
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
@@ -1816,15 +1816,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $count_sql = clone($sql);
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-            if(!$return_refs_only)
-                {
-                if (!(is_array($fetchrows) && isset($fetchrows[0]) && isset($fetchrows[1])))
-                    {
-                    // Prevent excessive memory use.
-                    // Don't allow $max_results to alter the chunk size if chunking is being used.
-                    $search_chunk_size = min($search_chunk_size, $max_results);
-                    }
-                }
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
             $resultcount = $result["total"]  ?? 0;
             if ($resultcount>0 && count($result["data"]) > 0)
