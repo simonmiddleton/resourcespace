@@ -4107,6 +4107,7 @@ function rcRmdir ($path,$ignore=array())
         }
     catch(Throwable $t)
         {
+        $success = false;
         debug(sprintf('rcRmdir: failed to remove directory "%s". Reason: %s', $path, $t->getMessage()));
         }
     unset($GLOBALS['use_error_exception']);
