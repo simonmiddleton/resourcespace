@@ -1303,8 +1303,8 @@ jQuery(document).ready(function () {
         if(typeof errorslogged[file.id] == 'undefined' || errorslogged[file.id] != errmessage)
             {
             // Add error to log if not already done
-            errorslogged[file.id] = errmessage;
-            jQuery("#upload_log").append("\r\n'" + file.name + "' <?php echo $lang["error"]?>:" + errmessage);
+            errorslogged[file.id] = errmessage;          
+            jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "' <?php echo $lang["error"]?>:" + errmessage);
             }
         else
             {
@@ -1383,7 +1383,7 @@ function processFile(file, forcepost)
                 else
                     {
                     processerrors.push(filename);
-                    jQuery("#upload_log").append("\r\n'" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
+                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
                     return false;
                     }
@@ -1464,7 +1464,7 @@ function processFile(file, forcepost)
                 if(uploadresponse.error==108)
                     {
                     message = '<?php echo $lang['error-duplicatesfound']?>';
-                    jQuery("#upload_log").append("\r\n" + file.name + "&nbsp;" + uploadresponse.message);
+                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + "&nbsp;" + uploadresponse.message);
                     if(!logopened)
                         {
                         jQuery("#UploadLogSectionHead").click();
@@ -1475,7 +1475,7 @@ function processFile(file, forcepost)
                     {
                     message = uploadresponse.message +  ' ' + uploadresponse.id;
                     styledalert('<?php echo $lang["error"] ?> ' + uploadresponse.error, message);
-                    jQuery("#upload_log").append("\r\n" + message);
+                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + message);
                     if(!logopened)
                         {
                         jQuery("#UploadLogSectionHead").click();
@@ -1485,7 +1485,7 @@ function processFile(file, forcepost)
                 else
                     {
                     styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error, uploadresponse.message);
-                    jQuery("#upload_log").append("\r\n" + uploadresponse.message + " [" + uploadresponse.error + "]");
+                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + uploadresponse.message + " [" + uploadresponse.error + "]");
                     }
 
                 if(processerrors.indexOf(file.id) === -1)
@@ -1497,7 +1497,7 @@ function processFile(file, forcepost)
             else
                 {
                 // Successful upload - add to log
-                jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
+                jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
                 if(resource_keys===processed_resource_keys)
                     {
                     resource_keys=[];
@@ -1545,7 +1545,7 @@ function processFile(file, forcepost)
                 rscompleted.push(file.id);
                 }
             console.log("Error:  " + error);
-            jQuery("#upload_log").append("\r\n" + file.name + ": " + error);
+            jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + ": " + error);
             styledalert('<?php echo $lang["error"]?> ', error);
             upRedirBlock = true;
 
