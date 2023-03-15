@@ -8515,7 +8515,7 @@ function canSeePreviewTools()
  *
  * @return array   Array of annotation fields that can be viewed.
  */
-function canSeeAnnotationsFields()
+function canSeeAnnotationsFields(): array
     {
     global $annotate_enabled, $annotate_fields, $k;
 
