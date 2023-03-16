@@ -14,6 +14,10 @@ $ref=getval("ref","",true);
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 $use=$ref;
 
+
+debug("EDIT POST VARIABLE COUNT=".count($_POST));
+
+
 # Fetch search details (for next/back browsing and forwarding of search params)
 $search=getval("search","");
 $order_by=getval("order_by","relevance");
