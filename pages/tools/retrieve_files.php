@@ -97,7 +97,7 @@ $copied = array();
 $sizearray = ps_array("select id value from preview_size",[],false);
 $sizearray[] = ""; // Add jpg version of original if present
 
-$hide_real_filepath = (isset($remote_hidden_paths) && $remote_hidden_paths) ? true : false;
+$hide_real_filepath = isset($remote_hidden_paths) && $remote_hidden_paths;
 
 foreach($resources as $resource)
     {
@@ -127,22 +127,34 @@ foreach($resources as $resource)
     foreach($altfiles as $altfile)
         {
         // Primary alternative file
-        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,$altfile["file_extension"],true,-1,1,false,'',$altfile["ref"]);
-        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,$altfile["file_extension"],true,-1,1,false,'',$altfile["ref"]);
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,$altfile["file_extension"],true, 1, false, '', $altfile["ref"]);
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,$altfile["file_extension"],true, 1, false, '', $altfile["ref"]);
         $n++;
-        
-        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,'icc',true,-1,1,false,'',$altfile["ref"]);
-        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,'icc',true,-1,1,false,'',$altfile["ref"]);
+
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,$altfile["file_extension"],true, 1, true, '', $altfile["ref"]);
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,$altfile["file_extension"],true, 1, true, '', $altfile["ref"]);
         $n++;
-        
+
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,'icc',true, 1, false, '', $altfile["ref"]);
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,'icc',true, 1, false, '', $altfile["ref"]);
+        $n++;
+
+        $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,'',false,'icc',true, 1, true, '', $altfile["ref"]);
+        $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,'',false,'icc',true, 1, true, '', $altfile["ref"]);
+        $n++;
+
         foreach($sizearray as $size)
             {
-            $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,$size,false,"jpg",true,-1,1,false,"",$altfile["ref"]);
-            $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,$size,false,"jpg",true,-1,1,false,"",$altfile["ref"]);
+            $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,$size,false,"jpg",true, 1, false, '', $altfile["ref"]);
+            $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,$size,false,"jpg",true, 1, false, '', $altfile["ref"]);
+            $n++;
+
+            $resfiles[$n]["local"]  = get_resource_path($resource["ref"],true,$size,false,"jpg",true, 1, true, '', $altfile["ref"]);
+            $resfiles[$n]["url"]    = get_resource_path($resource["ref"],false,$size,false,"jpg",true, 1, true, '', $altfile["ref"]);
             $n++;
             }
         }
-    
+
     // Now check if files exist
     $i=0;    
     for($i=0;$i<$n;$i++)
