@@ -4771,6 +4771,11 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
     // Note that the file will be used at it's present location and will not be copied.
 
     $r=create_resource($type);
+    if($r === false)
+        {
+        return false;
+        }
+
     // Log this in case the original location is not stored anywhere else
     resource_log(
         RESOURCE_LOG_APPEND_PREVIOUS,
