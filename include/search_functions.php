@@ -1835,7 +1835,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                             }, $result["data"]
                         );
                     }
-                $return = array_pad($result["data"],$resultcount,0);              
+                $return = $result['data'];
+                $resultcount -= count($return);
+                while($resultcount > 0)
+                    {
+                    $return = array_merge($return, array_pad([],($resultcount > 1000000?1000000:$resultcount),0));
+                    $resultcount -= 1000000;              
+                    }
                 }
             else
                 {
