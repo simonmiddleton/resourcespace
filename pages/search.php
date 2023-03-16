@@ -123,8 +123,10 @@ foreach($keywords as $keyword)
     foreach($keywords_expanded as $keyword_expanded)
         {
         $node_found = get_node_by_name($nodes, $keyword_expanded);
-        $node_field = get_resource_type_field($node_found["resource_type_field"]);
-        if(0 < count($node_found) && in_array($node_field,$FIXED_LIST_FIELD_TYPES))
+        if(
+            0 < count($node_found) 
+            && in_array(get_resource_type_field($node_found["resource_type_field"]),$FIXED_LIST_FIELD_TYPES)
+        )
             {
             $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
             }
