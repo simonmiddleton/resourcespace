@@ -4828,20 +4828,22 @@ function collection_download_process_text_file($ref, $collection, $filename)
 /**
  * Update the resource log to show the download during a collection download.
  *
- * @param  string $tmpfile
- * @param  array $deletion_array
- * @param  integer $ref The resource ID
+ * @param  string    $tmpfile
+ * @param  array     $deletion_array
+ * @param  integer   $ref The resource ID
+ * @param  string    ID of size requested e.g. "" for original, "scr", "pre" etc.
+ * 
  * @return void
  */
-function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref)
+function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref, $size)
     {
-    global $usage, $usagecomment, $size, $resource_hit_count_on_downloads;
+    global $usage, $usagecomment, $resource_hit_count_on_downloads;
 
     # build an array of paths so we can clean up any exiftool-modified files.
     if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 
-    daily_stat("Resource download",$ref);
-    resource_log($ref,'d',0,$usagecomment,"","", (int) $usage,$size);
+    daily_stat("Resource download", $ref);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage, $size);
     
     # update hit count if tracking downloads only
     if ($resource_hit_count_on_downloads)

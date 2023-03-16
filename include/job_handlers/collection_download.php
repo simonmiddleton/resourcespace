@@ -239,7 +239,7 @@ for($n = 0; $n < count($collection_resources); $n++)
         $zip->addFile($p,$filename);
         }
 
-    collection_download_log_resource_ready($tmpfile, $deletion_array, $ref);
+    collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
     }
 
 if(0 < $count_data_only_types)
@@ -303,6 +303,8 @@ collection_download_process_collection_download_name($filename, $collection, $si
 collection_download_process_archive_command(false, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
 
 collection_download_clean_temp_files($deletion_array);
+
+collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
 
 if($offline_job_delete_completed)
     {
