@@ -212,6 +212,23 @@ jQuery(document).ready(function ()
 
             });
         }
+    <?php if (!$themes_simple_view)
+        {
+        ?>
+        // Load collection actions when dropdown is clicked
+        jQuery('.fcollectionactions').on("focus", function(e){
+                var el = jQuery(this);
+                if(el.attr('data-actions-populating') != '0')
+                    {
+                    return false
+                    }
+                el.attr('data-actions-populating','1');
+                var action_selection_id = el.attr('id');
+                var colref = el.attr('data-col-id');
+                LoadActions('collections',action_selection_id,'collection',colref);
+                });
+        <?php
+        }?>
     });
 
 

@@ -1404,7 +1404,7 @@ div.video-js {margin:auto;}
 }
 
 .ListTools .ActionsContainer select {
-    width: 150px !important; /*not permanent...until we get out of bug fix period*/
+    width: 250px;
 }
 
 .ListTools .ActionsContainer .DropdownActionsLabel {

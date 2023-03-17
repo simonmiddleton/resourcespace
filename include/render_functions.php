@@ -4952,18 +4952,10 @@ function render_featured_collection(array $ctx, array $fc)
         ?>
         <div class="ListTools">
             <div class="ActionsContainer">
-                <select id="<?php echo $action_selection_id; ?>" onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);">
+                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $fc["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
                     <option><?php echo htmlspecialchars($lang["actions-select"]); ?></option>
                 </select>
-            </div>
-            <script>
-            jQuery('#<?php echo $action_selection_id; ?>').bind({
-                mouseenter: function(e)
-                    {
-                    LoadActions('themes', '<?php echo $action_selection_id; ?>', 'collection', '<?php echo $fc["ref"]; ?>');
-                    }
-            });
-            </script>
+            </div>            
         </div><!-- End of ListTools -->
         <?php
         }

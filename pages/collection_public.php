@@ -233,17 +233,29 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             ?>
             <div class="ActionsContainer  ">
             <div class="DropdownActionsLabel">Actions:</div>
-            <select class="collectionpublicactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+
+            <select class="collectionpublicactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $collections[$n]["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
             <option><?php echo $lang["actions-select"]?></option>
             </select>
             </div>
         </td>
     </tr>
     <script>
-        jQuery('#<?php echo $action_selection_id ?>').bind({
-                        mouseenter:function(e){
-                        LoadActions('collectionpublic','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]["ref"] ?>');
-                        }});
+    jQuery(document).ready(function()
+        {
+       // Load collection actions when dropdown is clicked
+       jQuery('.collectionpublicactions').on("focus", function(e){
+            var el = jQuery(this);
+            if(el.attr('data-actions-populating') != '0')
+                {
+                return false
+                }
+            el.attr('data-actions-populating','1');
+            var action_selection_id = el.attr('id');
+            var colref = el.attr('data-col-id');
+            LoadActions('collections',action_selection_id,'collection',colref);
+            });
+        });
     </script>
     <?php
     }
