@@ -41,7 +41,7 @@ if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterm
     {
     # Getting to this page without accepting terms means skipping the upload page
     # This won't allow uploads without accepting terms but this is the most helpful message to display
-    exit($lang["mustaccept"]);
+    exit(error_alert($lang["mustaccept"],false));
     }
 
 if($camera_autorotation)

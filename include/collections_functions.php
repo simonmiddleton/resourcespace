@@ -7008,7 +7008,7 @@ function update_smart_collection(int $smartsearch_ref)
  *                          OR if not an external upload
  *                          False if external upload share and terms have NOT been accepted
  */
-function check_upload_terms($collection,$k)
+function check_upload_terms(int $collection, string $k) : bool
     {
     $keyinfo = ps_query(
        "SELECT collection,upload
@@ -7028,7 +7028,7 @@ function check_upload_terms($collection,$k)
         }
     else
         {
-        $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==true);
+        $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==1);
         return $return;
         }
     }

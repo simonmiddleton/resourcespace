@@ -3121,7 +3121,7 @@ function get_upload_url($collection="",$k="")
         {
         $url = generateURL($baseurl . "/pages/edit.php", array("ref" => "-" . $userref,"collection_add"=>$collection));
         }
-    if ($terms_upload && !check_upload_terms($collection,$k))
+    if ($terms_upload && !check_upload_terms((int) $collection,$k))
         {
         $url = generateURL($baseurl . "/pages/terms.php",array("k" => $k,"collection"=>$collection,"url"=>$url,"upload"=>true));
         }
