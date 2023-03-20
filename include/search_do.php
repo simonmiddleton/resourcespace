@@ -16,8 +16,13 @@
 * @param string      $restypes                Optionally used to specify which resource types to search for
 * @param string      $order_by
 * @param string      $archive                 Allows searching in more than one archive state
-* @param int|array   $fetchrows               Fetch "$fetchrows" int rows or array containing $chunk_offset[0] (the offset of the first row to return) and 
-*                                             $chunk_offset[1] (the number of rows to return in the batch). See setup_search_chunks() for more detail.
+* @param int|array   $fetchrows               - If passing an integer, retrieve the specified number of rows (a limit with no offset).
+*                                             The returned array of resources will be padded with '0' elements up to the total without the limit.
+*                                             - If passing an array, the first element must be the offset (int) and the second the limit (int)
+*                                             (the number of rows to return). See setup_search_chunks() for more detail.
+*                                             IMPORTANT: When passing an array, the returned array will be in structured form - as returned by 
+*                                             sql_limit_with_total_count() i.e. the array will have 'total' (the count) and 'data' (the resources) 
+*                                             named array elements, and the data will not be padded.
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
@@ -1518,6 +1523,13 @@ function do_search(
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
+        
+        if(is_array($fetchrows))
+            {
+            // Return without converting into the legacy padded array
+            return $result;
+            }
+        
         $resultcount = $result["total"]  ?? 0;
         if ($resultcount>0 & count($result["data"]) > 0)
             {
@@ -1536,6 +1548,12 @@ function do_search(
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
+        }
+
+    if(is_array($fetchrows))
+        {
+        // Return without converting into the legacy padded array
+        return $result;
         }
     $resultcount = $result["total"]  ?? 0;
     if ($resultcount>0 & count($result["data"]) > 0)

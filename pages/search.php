@@ -524,12 +524,13 @@ if( isset($_REQUEST["search"]) && $_REQUEST["search"] == "" )
     }
 hook('searchaftersearchcookie');
 
-$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page+$offset;
+$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page;
 
 // Do collections search first as this will determine the rows to fetch for do_search() - not for external shares
 if(($k=="" || $internal_share_access) 
     && strpos($search,"!")===false
     && ($archive_standard || in_array(0,$selected_archive_states))
+    && $display !== "map"
     )
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
@@ -541,12 +542,15 @@ if(($k=="" || $internal_share_access)
         {
         $colcount = 0;
         }
-    $resourcestoretrieve = max(($rowstoretrieve-$colcount),0);
+
+    // Get the number of resources required after collections have been displayed
+    $cols_this_page = max($colcount-$offset,0);
+    $resourcestoretrieve = $per_page - $cols_this_page;
     }
 else
     {
-    $resourcestoretrieve = $rowstoretrieve;
     $colcount = 0;
+    $resourcestoretrieve = $rowstoretrieve;
     }
 
 if ($search_includes_resources || substr($search,0,1)==="!")
@@ -554,19 +558,20 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,[max($offset-$colcount,0),$resourcestoretrieve],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access,false,true);
         }
     }
 else
     {
-    $result=array(); # Do not return resources (e.g. for collection searching only)
+    $result=["total"=>0,"data"=>[]]; # Do not return resources (e.g. for collection searching only)
     }
-
 # Allow results to be processed by a plugin
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$result_count = is_array($result) ? min(count($result),$max_results) : 0;
+// Convert structured results back to a simple array for display
+$result_count   = $result["total"];
+$result         = $result["data"];
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
@@ -1353,7 +1358,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
         // Search archive but don't log this to daily_stat
         $arcresults=do_search($search,$restypes,$order_by,2,0,'desc',false,0,false,false,'',false,false);
         $archive_standard = $saved_archive_standard;
-        
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
         if ($arcresults>0) 
             {
@@ -1560,12 +1564,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         else
             {
-            $startresource = max($offset-$colcount,0);
-            $endresource = $result_count-$colcount;
-
             // This is used to ensure that all resource panels are the same height 
             $resource_panel_height_max = 0;            
-            for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
+            for ($n=0;$n<$result_count-$offset && $n<$resourcestoretrieve;$n++)
                 {
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);

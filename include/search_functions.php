@@ -1817,9 +1817,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $count_sql = clone($sql);
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
+            if(is_array($fetchrows))
+                {
+                return $result;
+                }
+
             $resultcount = $result["total"]  ?? 0;
-            if ($resultcount>0 && count($result["data"]) > 0)
-                { 
+            if($resultcount>0 && count($result["data"]) > 0)
+                {
                 if($return_refs_only)
                     {
                     // This needs to include archive and created_by columns too as often used to work out permission to edit collection
@@ -3213,15 +3218,14 @@ function get_collections_resource_count(array $refs)
             continue;
             }
 
-        $sql = do_search("!collection{$ref}", '', 'relevance', '0', -1, 'desc', false, 0, false, false, '', false, false, true, false, true, null, false);
-        if(!(is_a($sql,"PreparedStatementQuery") && trim($sql->sql) !== ''))
+        $colresults = do_search("!collection{$ref}", '', 'relevance', '0',[0,0]);
+        if(!isset($colresults["total"]))
             {
             continue;
             }
-
-        $resources = ps_query($sql->sql, $sql->parameters,'col_total_ref_count_w_perm', -1, true, 2, true, ['ref']);
-        $return[$ref] = count($resources);
+        $return[$ref] = $colresults["total"];
         }
+    
     return $return;
     }
 
