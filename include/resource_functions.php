@@ -2341,11 +2341,11 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 }
             }
         }
-
+debug("BANG " . $postvals["editlocation"] . " end");
     # Update location?
     if (($postvals["editlocation"] ?? "") != "")
         {
-        $location=explode(",",$postvals["editlocation"]);
+        $location=explode(",",$postvals["location"]);
         if (count($list)>0)
             {
             if (count($location)==2)
