@@ -1425,7 +1425,7 @@ hook("editbefresmetadata"); ?>
                     }
                 else
                     {
-                    array();
+                    $allowed_extensions = array();
                     }
                 // skip showing a resource type that we do not to have permission to change to 
                 // (unless it is currently set to that). Applies to upload only
