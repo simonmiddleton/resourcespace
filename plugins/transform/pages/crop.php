@@ -6,7 +6,7 @@ include_once "../../../include/image_processing.php";
 include_once "../../../include/slideshow_functions.php";
 include_once "../include/transform_functions.php";
 
-global $cropper_allowed_extensions, $custom_cropper_preset_sizes;
+global $cropper_allowed_extensions, $custom_cropper_preset_sizes, $cropper_use_filename_as_title;
 
 $ref        = getval("ref",0,true);
 $search     = getval("search","");
@@ -121,11 +121,17 @@ else
     {
     $errors[] = "Unable to find original file";
     }
-    
-$previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
-if(!file_exists($previewsourcepath))
+
+// Check if an uncropped preview exists
+$previewsourcepath = $org = get_resource_path($ref,true,"original_copy",false,$useext);
+
+if(!file_exists($org))
     {
-    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+    $previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
+    if(!file_exists($previewsourcepath))
+        {
+        $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+        }
     }
 
 // Get the actions that have been requested
@@ -280,6 +286,12 @@ if ($saveaction != '' && enforcePostRequest(false))
     
     $newpath = "$tmpdir/transform_plugin/download_" . $ref . uniqid() . "." . $new_ext;
 
+    // Preserve scr of original file incase transforms are used for previews
+    if(!file_exists($org))
+        {
+        $scr = get_resource_path($ref,true,"scr",false,$useext);
+        rename($scr,$org);
+        }
 
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
@@ -294,11 +306,27 @@ if ($saveaction != '' && enforcePostRequest(false))
 
         $name       = getval("filename","");
         $filename   = safe_file_name($name);
-        if (trim($filename) == "")
+
+        if ($cropper_use_filename_as_title) 
             {
-            $filename = $ref . "_" . strtolower($lang['transformed']);
+            if(trim((string)$filename) == "")
+                {
+                // Compute a file name using file naming configuration
+                $filename = get_download_filename($ref, "", "", $new_ext);
+                }
+            else
+                {
+                $filename .= "." . $new_ext;                    
+                }
             }
-        $filename .= "." . $new_ext;
+        else
+            {
+            if (trim((string)$filename) == "")
+                {
+                $filename = $ref . "_" . strtolower($lang['transformed']);
+                }
+            $filename .= "." . $new_ext;
+            }
 
         // Use the resultant file as requested
         if ($saveaction == "alternative" && $cropper_enable_alternative_files)

@@ -178,14 +178,14 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     }
 
 hook("postlogout2");
-    
-if (getval("langupdate","")!="")
-	{
-	# Update language while remaining on this page.
+
+if (getval("langupdate","") != "")
+    {
+    # Update language while remaining on this page.
     rs_setcookie("language", $language, 1000); # Only used if not global cookies
-    rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");    
-	redirect("login.php?username=" . urlencode(getval("username","")));
-	}
+    rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
+    redirect("login.php");
+    }
 
 include "include/header.php";
 

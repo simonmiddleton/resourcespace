@@ -48,31 +48,32 @@ if (getval("save",'') != '' && enforcePostRequest(false))
 
     if (count($error) === 0)
         {
-    
+        $download_url_suffix_params = [];
         $download_url_suffix .= ($download_url_suffix == '') ? '?' : '&';
         if($download_usage && -1 != $col) 
             {
-            $download_url_suffix .= "collection=" . urlencode($col);
+            $download_url_suffix_params["collection"] = $col;
             $redirect_url = "pages/collection_download.php";
             } 
         else 
             {
-            $download_url_suffix .= "ref=" . urlencode($ref);
+            $download_url_suffix_params["ref"] = $ref;
             $redirect_url = "pages/download_progress.php";
             }
-        $download_url_suffix .= "&size=" . urlencode($size) . 
-                                "&ext=" . urlencode($ext) . 
-                                "&k=" . urlencode($k) . 
-                                "&alternative=" . urlencode($alternative) . 
-                                "&iaccept=" . urlencode($iaccept) .
-                                "&usage=" . urlencode($usage) . 
-                                "&usagecomment=" . urlencode($usagecomment) .
-                                "&offset=" . urlencode(getval("saved_offset", getval("offset",0,true))) .
-                                "&order_by=" . urlencode(getval("saved_order_by",getval("order_by",''))) . 
-                                "&sort=" . urlencode(getval("saved_sort",getval("sort",''))) .
-                                "&archive=" . urlencode(getval("saved_archive",getval("archive",''))) . 
-                                "&email=" . urlencode($email);
-        
+        $download_url_suffix_params = array_merge($download_url_suffix_params,
+                               ["size"          => $size,
+                                "ext"           => $ext, 
+                                "k"             => $k, 
+                                "alternative"   => $alternative,
+                                "iaccept"       => $iaccept,
+                                "usage"         => $usage,
+                                "usagecomment"  => $usagecomment,
+                                "offset"        => getval("saved_offset", getval("offset",0,true)),
+                                "order_by"      => getval("saved_order_by",getval("order_by",'')), 
+                                "sort"          => getval("saved_sort",getval("sort",'')),
+                                "archive"       => getval("saved_archive",getval("archive",'')), 
+                                "email"         => $email]);
+
         hook('before_usage_redirect');
         $url_parts = [];
         if(strpos($url, '?') != false)
@@ -85,10 +86,9 @@ if (getval("save",'') != '' && enforcePostRequest(false))
             }
         elseif(strpos($url, 'download.php') != false && (strpos($url, $baseurl_short) !== false || strpos($url, $baseurl) !== false))
             {
-            $download_url_suffix .='&url=' . urlencode($url);
+            $download_url_suffix_params['url'] = $url;
             }
-        
-        redirect($redirect_url . $download_url_suffix);
+            redirect(generateURL($redirect_url, $download_url_suffix_params, $url_parts));
         }
     }
 

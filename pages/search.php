@@ -123,8 +123,10 @@ foreach($keywords as $keyword)
     foreach($keywords_expanded as $keyword_expanded)
         {
         $node_found = get_node_by_name($nodes, $keyword_expanded);
-
-        if(0 < count($node_found))
+        if(
+            0 < count($node_found) 
+            && in_array(get_resource_type_field($node_found["resource_type_field"]),$FIXED_LIST_FIELD_TYPES)
+        )
             {
             $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
             }
@@ -522,12 +524,13 @@ if( isset($_REQUEST["search"]) && $_REQUEST["search"] == "" )
     }
 hook('searchaftersearchcookie');
 
-$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page+$offset;
+$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page;
 
 // Do collections search first as this will determine the rows to fetch for do_search() - not for external shares
 if(($k=="" || $internal_share_access) 
     && strpos($search,"!")===false
     && ($archive_standard || in_array(0,$selected_archive_states))
+    && $display !== "map"
     )
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
@@ -539,12 +542,15 @@ if(($k=="" || $internal_share_access)
         {
         $colcount = 0;
         }
-    $resourcestoretrieve = max(($rowstoretrieve-$colcount),0);
+
+    // Get the number of resources required after collections have been displayed
+    $cols_this_page = max($colcount-$offset,0);
+    $resourcestoretrieve = $per_page - $cols_this_page;
     }
 else
     {
-    $resourcestoretrieve = $rowstoretrieve;
     $colcount = 0;
+    $resourcestoretrieve = $rowstoretrieve;
     }
 
 if ($search_includes_resources || substr($search,0,1)==="!")
@@ -552,19 +558,20 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,[max($offset-$colcount,0),$resourcestoretrieve],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access,false,true);
         }
     }
 else
     {
-    $result=array(); # Do not return resources (e.g. for collection searching only)
+    $result=["total"=>0,"data"=>[]]; # Do not return resources (e.g. for collection searching only)
     }
-
 # Allow results to be processed by a plugin
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$result_count = is_array($result) ? count($result) : 0;
+// Convert structured results back to a simple array for display
+$result_count   = $result["total"];
+$result         = $result["data"];
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
@@ -648,6 +655,7 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
             {
             return false;
             }
+            // Element #CentralSpaceResources (search results) can be dropped on by .CollectionPanelShell elements (collection bar)
             jQuery('#CentralSpaceResources').droppable({
                 accept: '.CollectionPanelShell',
 
@@ -681,7 +689,9 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
 if(!$collectionsearch)
     {
     ?>
-    <!-- Search items should only be draggable if results are not a collection -->
+    <!-- Search item results in centralspace have a class of "ResourcePanel" -->
+    <!-- These items should be draggable to add them to the collection in the collection bar if results are NOT from collection search -->
+    <!-- They should also be draggable to the trash_bin to removing them from a collection if results ARE from collection search -->
     <script>    
     // The below numbers are hardcoded mid points for thumbs and xlthumbs
     var thumb_vertical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
@@ -711,12 +721,20 @@ if(!$collectionsearch)
     <?php
     }
     
-if ($allow_reorder && $display!="list" && $order_by == "collection") {
+// The sortable method must be enabled regardless of the order_by so that the trash bin is available for interactions from CentralSpace
+// This allows resources to be removed from collection via the trash bin, but will abandon reorder attempts unless order_by is "collection"
+if ($allow_reorder && $display!="list") {
     global $usersession;
 ?>
     <script type="text/javascript">
     var allow_reorder = true;
-    
+
+    var use_sortable_for_trash_only = false;
+    <?php if ($order_by != "collection") { ?>
+        var use_sortable_for_trash_only = true;
+    <?php
+    }
+    ?>    
     function ReorderResources(idsInOrder) {
         var newOrder = [];
         jQuery.each(idsInOrder, function() {
@@ -784,6 +802,13 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
 
             update: function(event, ui)
                 {
+                if (use_sortable_for_trash_only)
+                    {
+                    // We are only using sortable for the ability to use the trash bin when the collection order is not "collection" 
+                    // and so we need to abandon the attempted reorder in this scenario
+                    return false;    
+                    }
+                
                 // Don't reorder when top and bottom collections are the same and you drag & reorder from top to bottom
                 if(ui.item[0].parentElement.id == 'CollectionSpace')
                     {
@@ -1333,7 +1358,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
         // Search archive but don't log this to daily_stat
         $arcresults=do_search($search,$restypes,$order_by,2,0,'desc',false,0,false,false,'',false,false);
         $archive_standard = $saved_archive_standard;
-        
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
         if ($arcresults>0) 
             {
@@ -1540,12 +1564,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         else
             {
-            $startresource = max($offset-$colcount,0);
-            $endresource = $result_count-$colcount;
-
             // This is used to ensure that all resource panels are the same height 
             $resource_panel_height_max = 0;            
-            for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
+            for ($n=0;$n<$result_count-$offset && $n<$resourcestoretrieve;$n++)
                 {
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);

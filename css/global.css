@@ -1253,7 +1253,7 @@ a.HomePanel:hover {
 .plugin-category-container .CollapsiblePluginList {margin-top:10px; margin-left: 30px;}
 .plugin-category-container{margin-bottom:10px;}
 .plugin-upload{margin-top:20px;}
-#SearchPlugins, .ResultsFilterTopRight {
+#SearchSystemPages, .ResultsFilterTopRight {
     float: right;
     font-size: 0.7em;
 }
@@ -1404,7 +1404,7 @@ div.video-js {margin:auto;}
 }
 
 .ListTools .ActionsContainer select {
-    width: 150px !important; /*not permanent...until we get out of bug fix period*/
+    width: 250px;
 }
 
 .ListTools .ActionsContainer .DropdownActionsLabel {
@@ -2434,3 +2434,6 @@ input[type="text"]#iconpicker-input {
     box-shadow: none;
 }
 
+.inline_config_search {
+    display: inline-block;
+}

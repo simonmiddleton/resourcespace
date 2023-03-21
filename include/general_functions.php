@@ -4099,7 +4099,19 @@ function rcRmdir ($path,$ignore=array())
                 }
             }
         }
-    $success = @rmdir($path);
+
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $success = rmdir($path);
+        }
+    catch(Throwable $t)
+        {
+        $success = false;
+        debug(sprintf('rcRmdir: failed to remove directory "%s". Reason: %s', $path, $t->getMessage()));
+        }
+    unset($GLOBALS['use_error_exception']);
+
     debug("rcRmdir: " . $path . " - " . ($success ? "SUCCESS" : "FAILED"));
     return $success;
     }

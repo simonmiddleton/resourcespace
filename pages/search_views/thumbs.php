@@ -217,7 +217,7 @@ if (!hook("renderresultthumb"))
             echo $workflow_html;
             }
 
-        if($annotate_enabled)
+        if(count(canSeeAnnotationsFields()) > 0)
             {
             $annotations_count = getResourceAnnotationsCount($ref);
             $message           = '';

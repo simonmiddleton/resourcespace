@@ -48,6 +48,8 @@ $tempfile           = getval("tempfile","");
 $slideshow          = getval("slideshow",0,true);
 $userfiledownload   = getval('userfile', '');
 
+$log_download = true;
+
 // Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
 $checktermsusage =  !in_array($size, $sizes_always_allowed)
     && $tempfile == ""
@@ -92,6 +94,12 @@ if('' != $userfiledownload)
     if($rqstname!="")
         {
         $filename   = $rqstname . "." . $ext;
+        $filename_prefix = explode('_', $filename);
+        if(($filename_prefix[0] == 'Col' && $ext == 'zip') || ($filename_prefix[0] == 'metadata' && isset($filename_prefix[1]) && $filename_prefix[1] == 'export' && $ext == 'csv'))
+            {
+            // For offline collection or offline csv download, $ref will be user ref not resource ref.
+            $log_download = false;
+            }
         }
     hook('modifydownloadpath');
     }
@@ -292,7 +300,7 @@ if(!$file_handle)
     }
 
 // Log this activity (download only, not preview)
-if('' == $noattach)
+if('' == $noattach && $log_download)
     {
     daily_stat('Resource download', $ref);
 

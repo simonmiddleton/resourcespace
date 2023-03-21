@@ -158,6 +158,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     global $baseurl;
 
     $annotations = array();
+    $can_view_fields = canSeeAnnotationsFields();
 
     /*
     Build an annotations array of Annotorious annotation objects
@@ -169,7 +170,9 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     */
     foreach(getResourceAnnotations($resource, $page) as $annotation)
         {
-        $annotations[] = array(
+        if(in_array($annotation['resource_type_field'], $can_view_fields))
+            {
+            $annotations[] = array(
                 'src'    => "{$baseurl}/annotation/resource/{$resource}",
                 'text'   => '',
                 'shapes' => array(
@@ -192,6 +195,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
                 'page'                => (int) $annotation['page'],
                 'tags'                => getAnnotationTags($annotation),
             );
+            }
         }
 
     return $annotations;

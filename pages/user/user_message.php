@@ -39,8 +39,8 @@ $usertoimage    = get_profile_image($msgto)
 msgto = <?php echo $msgto; ?>;
 
 defaultimghtml =  jQuery("<i />", {
-    title           : '<?php echo htmlspecialchars($userfullname); ?>',
-    alt             : '<?php echo htmlspecialchars($userfullname); ?>',
+    title           : '<?php echo escape_quoted_data($userfullname); ?>',
+    alt             : '<?php echo escape_quoted_data($userfullname); ?>',
     'class'         : 'fa fa-user fa-lg fa-fw ProfileImage',
     'aria-hidden'   : true
     });
@@ -50,10 +50,10 @@ if($userimage != "")
     {
     ?>
     userimghtml =  jQuery("<img />", {
-        title   : '<?php echo htmlspecialchars($userfullname); ?>',
-        alt     : '<?php echo htmlspecialchars($userfullname); ?>',
+        title   : '<?php echo escape_quoted_data($userfullname); ?>',
+        alt     : '<?php echo escape_quoted_data($userfullname); ?>',
         'class' : 'ProfileImage',
-        src     : '<?php echo htmlspecialchars($userimage); ?>'
+        src     : '<?php echo escape_quoted_data($userimage); ?>'
         });
     <?php
     }
@@ -66,10 +66,10 @@ if($usertoimage != "")
     {
     ?>
     usertoimghtml =  jQuery("<img />", {
-        title   : '<?php echo htmlspecialchars($userfullname); ?>',
-        alt     : '<?php echo htmlspecialchars($userfullname); ?>',
+        title   : '<?php echo escape_quoted_data($userfullname); ?>',
+        alt     : '<?php echo escape_quoted_data($userfullname); ?>',
         'class' : 'ProfileImage',
-        src     : '<?php echo htmlspecialchars($usertoimage); ?>'
+        src     : '<?php echo escape_quoted_data($usertoimage); ?>'
         });
     <?php
     }
@@ -132,9 +132,11 @@ function showUserMessage(message,fromself)
         }
 
     msgtemp = msgtemp.replace("%%CLASSES%%", classtxt);
-    msgtemp = msgtemp.replace("%%MESSAGE%%", message);
+
+    let msg = new DOMParser().parseFromString(msgtemp, 'text/html');
+    msg.querySelector('div.user_message_text').textContent = message;
     
-    jQuery('#message_conversation').append(msgtemp);
+    jQuery('#message_conversation').append(msg.querySelector('div'));
     jQuery('#message_conversation').scrollTop(jQuery('#message_conversation').prop('scrollHeight'));
     }
 

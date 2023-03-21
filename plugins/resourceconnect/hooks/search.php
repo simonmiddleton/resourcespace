@@ -175,7 +175,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
         {
         $urlparams = array("k"=>$k,"col"=>$collection,"url"=>$resource["url"]);
         $url = generateURL("{$baseurl}/plugins/resourceconnect/pages/view.php",$urlparams);
-        $result[]=array
+        $result["data"][]=array
             (
             "ref"=>-87412,
             "ref_tab"=>$resource["ref"],
@@ -196,6 +196,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
             "pre_url"=>$resource["xl_thumb"],
             "user_rating"=>''
             );
+        $result["count"]++;
         }
     return $result;
     }

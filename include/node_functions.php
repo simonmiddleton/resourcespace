@@ -1810,16 +1810,19 @@ function get_parent_nodes(int $noderef,bool $detailed = false, $include_child=fa
         {
         $parent_nodes = array_values(array_filter($parent_nodes,function($node) use ($noderef) {return $node["ref"] != $noderef;}));
         }
+
     if(!$detailed)
         {
         $parent_nodes = array_column($parent_nodes,"name", "ref");
         }
-
-    for($n=0;$n<count($parent_nodes);$n++)
+    else
         {
-        $parent_nodes[$n]["translated_name"] = i18n_get_translated($parent_nodes[$n]["name"]);
+        for($n=0;$n<count($parent_nodes);$n++)
+            {
+            $parent_nodes[$n]["translated_name"] = i18n_get_translated($parent_nodes[$n]["name"]);
+            }
         }
-   
+
     return $parent_nodes;
     }
 

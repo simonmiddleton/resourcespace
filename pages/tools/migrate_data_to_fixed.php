@@ -100,7 +100,7 @@ if(getval("submit","") != "")
         foreach($nodedata as $node)
             {
             $deletenodes[] = $node["ref"];
-            if(trim($node['name']) == '' || ($maxrows != 0 && $migrated >= $maxrows))
+            if(trim($node['name']) == '' || strpos($node['name'],$splitvalue) === false || ($maxrows != 0 && $migrated >= $maxrows))
                 {
                 $minref = $node["ref"];
                 $migrated++;

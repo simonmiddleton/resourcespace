@@ -476,6 +476,19 @@ function delete_collections()
             console.log("collection_LIST\n" + JSON.stringify(res_list));
 
             });
+
+        // Load collection actions when dropdown is clicked
+        jQuery('.collectionactions').on("focus", function(e){
+            var el = jQuery(this);
+            if(el.attr('data-actions-populating') != '0')
+                {
+                return false
+                }
+            el.attr('data-actions-populating','1');
+            var action_selection_id = el.attr('id');
+            var colref = el.attr('data-col-id');
+            LoadActions('collections',action_selection_id,'collection',colref);
+            });
         });
 
 // Add confirmation message to advise selected collections will be cleared on paging.
@@ -525,41 +538,46 @@ function promptBeforePaging()
 <?php
 
 for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
-	{
+    {
+    if($collections[$n]['ref'] < 0)
+        {
+        // Don't show special 'new uploads' collection
+        continue;
+        }
     $colusername=$collections[$n]['fullname'];
     $count_result = $collections[$n]["count"];
-	?><tr <?php hook("collectionlistrowstyle");?>>
-	<td> <?php if (can_delete_collection($collections[$n], $userref, $k)) 
-	               { 
-				   echo '<input type="checkbox" class="check_delete" id="check_' . $collections[$n]['ref'] . '" value="' . $collections[$n]['ref'] . '" onClick="show_delete()">'; 
-				   } ?> </td>
-	<td class="name"><div class="ListTitle">
-		<a <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
-	<td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
-	<td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collection_prefix . $collections[$n]["ref"], $find)); ?></td>
-	<td class="created"><?php echo nicedate($collections[$n]["created"],true) ?></td>
-	<td class="count"><?php echo $collections[$n]["count"] ?></td>
-<?php if (! $hide_access_column){ ?>	<td class="access"><?php
-if(!hook('collectionaccessmode'))
-    {
-    switch($collections[$n]["type"])
+    ?><tr <?php hook("collectionlistrowstyle");?>>
+    <td> <?php if (can_delete_collection($collections[$n], $userref, $k)) 
+        { 
+        echo '<input type="checkbox" class="check_delete" id="check_' . $collections[$n]['ref'] . '" value="' . $collections[$n]['ref'] . '" onClick="show_delete()">'; 
+        } ?> </td>
+    <td class="name"><div class="ListTitle">
+        <a <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo strip_tags_and_attributes(highlightkeywords(htmlspecialchars_decode(i18n_get_collection_name($collections[$n])), $find)); ?></a></div></td>
+    <td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
+    <td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collection_prefix . $collections[$n]["ref"], $find)); ?></td>
+    <td class="created"><?php echo nicedate($collections[$n]["created"],true) ?></td>
+    <td class="count"><?php echo $collections[$n]["count"] ?></td>
+    <?php if (! $hide_access_column){ ?>	<td class="access"><?php
+    if(!hook('collectionaccessmode'))
         {
-        case COLLECTION_TYPE_PUBLIC:
-            echo $lang["public"];
-            break;
+        switch($collections[$n]["type"])
+            {
+            case COLLECTION_TYPE_PUBLIC:
+                echo $lang["public"];
+                break;
 
-        case COLLECTION_TYPE_FEATURED:
-            echo $lang["theme"];
-            break;
+            case COLLECTION_TYPE_FEATURED:
+                echo $lang["theme"];
+                break;
 
-        case COLLECTION_TYPE_STANDARD:
-        default:
-            echo $lang["private"];
-            break;
+            case COLLECTION_TYPE_STANDARD:
+            default:
+                echo $lang["private"];
+                break;
+            }
         }
-    }
-?></td><?php
-}?>
+    ?></td><?php
+    }?>
 
 <td class="collectionin"><input type="checkbox" onClick='UpdateHiddenCollections(this, "<?php echo $collections[$n]['ref'] ?>", {<?php echo generateAjaxToken("colactions"); ?>});' <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
 
@@ -570,7 +588,7 @@ hook('render_collections_list_tools', '', array($collections[$n])); ?>
     <div class="ListTools">
     <?php hook('legacy_list_tools', '', array($collections[$n])); ?>
         <div class="ActionsContainer">
-            <select class="collectionactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+            <select class="collectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $collections[$n]["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
             <option>
                 <?php echo $lang["actions-select"]?>
             </option>
@@ -580,16 +598,6 @@ hook('render_collections_list_tools', '', array($collections[$n])); ?>
 </div>
 </td>
 </tr>
-<script>
-  jQuery('#<?php echo $action_selection_id ?>').bind({
-    mouseenter:function(e){
-      this.disabled=true;
-      LoadActions('collections','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]['ref'] ?>');
-      this.disabled=false;
-    }
-  }
-);
-</script>
 <input type=hidden name="deleteempty" id="collectiondeleteempty" value="">
 <?php
 }

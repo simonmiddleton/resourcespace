@@ -2331,6 +2331,11 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
     // will share the same key
     $k = generate_share_key($collection["ref"]);
 
+    if($expires != '')
+        {
+        $expires = date_format(date_create($expires), 'Y-m-d') . ' 23:59:59';
+        }
+
     $main_collection = $collection; // keep record of this info as we need it at the end to record the successful generation of a key for a featured collection category
     $created_sub_fc_access_key = false;
     foreach($collections as $collection)
@@ -2568,13 +2573,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         {
         return false;
         }
-        
-	# Check if this collection has already been shared externally. If it has, we must add a further entry
-	# for this specific resource, and warn the user that this has happened.
-	$keys = get_collection_external_access($collection);
-	$resourcesnotadded = array(); # record the resources that are not added so we can display to the user
-	$blockedtypes = array();# Record the resource types that are not added 
-	
+
     // To maintain current collection order but add the search items in the correct order we must first ove the existing collection resoruces out the way
     $searchcount = count($results);
     if($searchcount > 0)
@@ -2587,6 +2586,43 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
             ]
         );
         }
+
+    // If this is a featured collection apply all the external access keys from the categories which make up its 
+    // branch path to prevent breaking existing shares for any of those featured collection categories.
+    $fc_branch_path_keys = [];
+    $collection_data = get_collection($collection, true);
+    if($collection_data !== false && $collection_data['type'] === COLLECTION_TYPE_FEATURED)
+        {
+        $branch_category_ids = array_column(
+            // determine the branch from the parent because the keys for the collection in question will be done below
+            get_featured_collection_category_branch_by_leaf((int)$collection_data['parent'], []),
+            'ref'
+        );
+        foreach($branch_category_ids as $fc_category_id)
+            {
+            $fc_branch_path_keys = array_merge(
+                $fc_branch_path_keys,
+                get_external_shares([
+                    'share_collection' => $fc_category_id,
+                    'share_type' => 0,
+                    'ignore_permissions' => true,
+                ])
+            );
+            }
+        }
+    
+    # Check if this collection has already been shared externally. If it has, we must add a further entry
+    # for this specific resource, and warn the user that this has happened.
+    $keys = array_merge(
+        get_external_shares([
+            'share_collection' => $collection,
+            'share_type' => 0,
+            'ignore_permissions' => true,
+        ]),
+        $fc_branch_path_keys
+    );
+    $resourcesnotadded = array(); # record the resources that are not added so we can display to the user
+    $blockedtypes = array();# Record the resource types that are not added 
 
 	for ($r=0;$r<$searchcount;$r++)
         {
@@ -2601,11 +2637,12 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 
         if (count($keys)>0)
             {			
-            if ($archivestatus<0 && !$collection_allow_not_approved_share)
+            if ( ($archivestatus < 0 && !$collection_allow_not_approved_share) || !can_share_resource($resource) )
                 {
                 $resourcesnotadded[$resource] = $results[$r];
                 continue;
                 }
+
             for ($n=0;$n<count($keys);$n++)
                 {
                 $sql = '';
@@ -2661,6 +2698,10 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                 }
             }
 		}
+
+    // Clear theme image cache
+    clear_query_cache('themeimage');
+    clear_query_cache('col_total_ref_count_w_perm');
 
     if (!empty($resourcesnotadded) || count($blockedtypes)>0)
         {
@@ -3778,6 +3819,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
     if(isset($upload) && $upload){$setvals['upload'] = 1;}
     if($expires!="") 
         {
+        $expires = date_format(date_create($expires), 'Y-m-d') . ' 23:59:59';
         $setvals["expires"] = $expires;
         }
     else
@@ -4786,20 +4828,22 @@ function collection_download_process_text_file($ref, $collection, $filename)
 /**
  * Update the resource log to show the download during a collection download.
  *
- * @param  string $tmpfile
- * @param  array $deletion_array
- * @param  integer $ref The resource ID
+ * @param  string    $tmpfile
+ * @param  array     $deletion_array
+ * @param  integer   $ref The resource ID
+ * @param  string    ID of size requested e.g. "" for original, "scr", "pre" etc.
+ * 
  * @return void
  */
-function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref)
+function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref, $size)
     {
-    global $usage, $usagecomment, $size, $resource_hit_count_on_downloads;
+    global $usage, $usagecomment, $resource_hit_count_on_downloads;
 
     # build an array of paths so we can clean up any exiftool-modified files.
     if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 
-    daily_stat("Resource download",$ref);
-    resource_log($ref,'d',0,$usagecomment,"","", (int) $usage,$size);
+    daily_stat("Resource download", $ref);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage, $size);
     
     # update hit count if tracking downloads only
     if ($resource_hit_count_on_downloads)
@@ -6591,6 +6635,7 @@ function upload_share_setup(string $key,$shareopts = array())
         "suggest_keywords",
         "add_keyword",
         "download", // Required to see newly created thumbnails if $hide_real_filepath=true;
+        "terms",
         );
 
     if(!in_array($pagename,$validpages))
@@ -6948,5 +6993,42 @@ function update_smart_collection(int $smartsearch_ref)
             $endTime = microtime(true);  
             $elapsed = $endTime - $startTime;
             debug("smart_collections" . (($smart_collections_async) ? "_async:" : ":") . " $elapsed seconds for " . $smartsearch['search']);
+        }
+    }
+
+/**
+ * Check if the terms have been accepted for the given upload
+ * Terms only need to be accepted when uploading through an upload share link
+ * If uploading through an upload share link then the accepted terms have been stored in $_COOKIE["acceptedterms"]
+ *
+ * @param  int $collection  Collection ref
+ * @param  string $k        Share key
+ * 
+ * @return boolean          True if external upload share and terms have also been accepted
+ *                          OR if not an external upload
+ *                          False if external upload share and terms have NOT been accepted
+ */
+function check_upload_terms(int $collection, string $k) : bool
+    {
+    $keyinfo = ps_query(
+       "SELECT collection,upload
+            FROM external_access_keys
+        WHERE access_key = ?
+            AND (expires IS NULL OR expires > now())",
+        array("s", $k)
+    );
+
+    $collection = get_collection($collection);
+
+    if (!is_array($collection)                                                  // not uploading to collection
+        || !in_array($collection["ref"],array_column($keyinfo,"collection"))    // share is not for this collection
+        || (bool)$keyinfo[0]["upload"] != true)                                 // share type not upload
+        {
+        return true;
+        }
+    else
+        {
+        $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==1);
+        return $return;
         }
     }

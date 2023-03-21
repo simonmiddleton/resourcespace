@@ -401,3 +401,6 @@ include "../../../include/header.php";
 <script type="text/javascript">
 	ldapsetDisplayFields();
 	</script>
+<?php
+
+include "../../../include/footer.php";

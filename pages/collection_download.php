@@ -209,8 +209,6 @@ if ($submitted != "")
             JOB_PRIORITY_USER
             );
 
-        collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
-
         exit();
         }
 
@@ -457,7 +455,7 @@ if ($submitted != "")
 					update_zip_progress_file("file ".$n);
 					}
 
-                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref);
+                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
 				}
 			}
 
