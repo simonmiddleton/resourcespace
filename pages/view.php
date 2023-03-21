@@ -1197,17 +1197,28 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                 
                 if (!hook("renderresourcedownloadspace"))
                     { ?>
-                    <div class="RecordDownload" id="RecordDownload">
-                        <div class="RecordDownloadSpace">
+                    <div class="TabBar" id="RecordDownloadTabButtons">
+                        <div class="Tab TabSelected" id="DownloadsTabButton">
+                            <a href="#" onclick="selectDownloadTab('DownloadsTab',<?php echo $modal ? 'true' : 'false'; ?>);">
+                                <?php echo $use_larger_layout ? htmlspecialchars($lang["resourcedownloads"]) : htmlspecialchars($lang["downloads"]) ?>
+                            </a>
+                        </div>
+                        <?php
+                        if ($download_summary)
+                            {
+                            ?>
+                            <div class="Tab" id="RecordDownloadSummaryButton">
+                                <a href="#" onclick="selectDownloadTab('RecordDownloadSummary',<?php echo $modal ? 'true' : 'false'; ?>);">
+                                    <?php echo htmlspecialchars($lang["usagehistory"]) ?>
+                                </a>
+                            </div>
                             <?php
-                            hook("beforeresourcetoolsheader");
-                            if (!hook('replaceresourcetoolsheader'))
-                                {
-                                ?>
-                                <h2 id="resourcetools"><?php echo $lang["resourcedownloads"]?></h2>
-                                <?php
-                                }
-
+                            }
+                        hook("additionaldownloadtabbuttons"); ?>
+                    </div>
+                    <div class="RecordDownload" id="RecordDownloadTabContainer">
+                        <div class="RecordDownloadSpace" id="DownloadsTab">
+                            <?php
                             # DPI calculations
                             function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
                                 {
@@ -1810,6 +1821,14 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 }
                             ?>
                         </div><!-- End of RecordDownloadSpace -->
+                            
+                        <?php
+                        if ($download_summary)
+                            {
+                            include "../include/download_summary.php";
+                            }
+
+                        hook("additionaldownloadtabs"); ?>
 
                         <div class="clearerleft"> </div>
 
@@ -2060,11 +2079,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     <?php
                     } /* End of renderresourcedownloadspace hook */
                 } /* End of renderinnerresourceview hook */
-
-            if ($download_summary)
-                {
-                include "../include/download_summary.php";
-                }
 
             hook("renderbeforeresourcedetails");
 

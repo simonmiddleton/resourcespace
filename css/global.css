@@ -580,7 +580,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
 .RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: 100%;}
-.RecordPanel.RecordPanelLarge .RecordDownload {width: 100%;}
+.RecordPanel.RecordPanelLarge .RecordDownload {width: 70%; margin-right: 10px;}
 .RecordPanel.RecordPanelLarge #ResourceDownloadOptions {
     float: left;
     margin-right: 3%;
@@ -630,9 +630,11 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;    text-align: left;}
 
-.RecordPanel.RecordPanelLarge .RecordDownload#RecordDownload{width: 70%; margin-right: 10px;}
+#RecordDownloadTabContainer {border-top-left-radius: 0;}
+.RecordPanel.RecordPanelLarge #RecordDownloadTabContainer {width: 70%; margin-right: 10px;}
 
 .RecordTools {display: inline-block; background: #FFF; border-radius: 8px; width: 445px; box-sizing: border-box; margin-bottom: 10px}
+.RecordPanel .RecordDownloadSpace.RecordTools {padding-bottom: 5px;}
 .RecordPanelLarge .RecordTools {width: calc(30% - 10px)}
 
 .RecordStory {padding: 8px;}
@@ -2131,6 +2133,7 @@ a.BrowseRefresh{
 
 .RecordPanelLarge #ResourceWorkflowActions, .RecordPanelLarge #RecordDownloadSummary {
     width: 100%;
+    box-sizing: border-box;
 }
 
 .UploadButton a
