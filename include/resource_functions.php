@@ -2341,7 +2341,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 }
             }
         }
-debug("BANG " . $postvals["editlocation"] . " end");
+
     # Update location?
     if (($postvals["editlocation"] ?? "") != "")
         {
