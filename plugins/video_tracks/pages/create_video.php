@@ -23,7 +23,6 @@ if($access != 0)
     }
 
 $message                     = '';
-$video_tracks_output_formats = unserialize(base64_decode($video_tracks_output_formats_saved));
 $video_tracks_export_folder  = get_temp_dir(false, 'video_tracks_exports');
 $resource                    = get_resource_data($ref);
 $edit_access                 = get_edit_access($ref, $resource['archive']);
