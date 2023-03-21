@@ -582,7 +582,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: 100%;}
 .RecordPanel.RecordPanelLarge .RecordDownload {width: 100%;}
 .RecordPanel.RecordPanelLarge #ResourceDownloadOptions {
-    width: 70%;
     float: left;
     margin-right: 3%;
     clear: left;
@@ -630,6 +629,11 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;    text-align: left;}
+
+.RecordPanel.RecordPanelLarge .RecordDownload#RecordDownload{width: 70%; margin-right: 10px;}
+
+.RecordTools {display: inline-block; background: #FFF; border-radius: 8px; width: 445px; box-sizing: border-box; margin-bottom: 10px}
+.RecordPanelLarge .RecordTools {width: calc(30% - 10px)}
 
 .RecordStory {padding: 8px;}
 .RecordStory h1{font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;}
