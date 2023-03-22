@@ -1038,11 +1038,11 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                 }
-            send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
 
-            foreach($notifications["emails"] as $emailsent)
+            foreach($notifications["emails"] as $emailrecipient)
                 {
-                $results["emails"][] = ["email"=>$emailsent,"subject"=>$subject,"body"=>$headerimghtml . $messagetext];
+                send_mail($emailrecipient,$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
+                $results["emails"][] = ["email"=>$emailrecipient,"subject"=>$subject,"body"=>$headerimghtml . $messagetext];
                 }
 
             foreach($notifications["message_users"] as $notifyuser)
