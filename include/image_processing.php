@@ -1880,7 +1880,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // we have an extracted ICC profile, so use it as source
                     if ($icc_preview_profile != "" && $icc_preview_profile_embed)
                         {
-                        $targetprofile = $imagemagick_mpr ? "-profile " : "" . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        $targetprofile = ($imagemagick_mpr ? "" : "-profile ") . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
                         }
                     else
                         {
