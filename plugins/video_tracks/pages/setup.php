@@ -18,7 +18,6 @@ $page_def[] = config_add_text_list_input('video_tracks_permitted_video_extension
 $page_def[] = config_add_text_list_input('video_tracks_audio_extensions', $lang['video_tracks_audio_extensions']);
 $page_def[] = config_add_text_list_input('video_tracks_subtitle_extensions', $lang['video_tracks_subtitle_extensions']);
 $page_def[] = config_add_text_input('video_tracks_process_size_limit', $lang['video_tracks_process_size_limit']);
-$page_def[] = config_add_section_header($lang["video_tracks_export_section"]);
 $page_def[] = config_add_boolean_select('video_tracks_allow_original_custom_formats', $lang['video_tracks_use_for_custom_video_formats_of_original_label']);
 
 

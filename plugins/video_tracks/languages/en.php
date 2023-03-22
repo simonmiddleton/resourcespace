@@ -18,7 +18,6 @@ $lang["video_tracks_invalid_resource"] ="Invalid resource";
 $lang["video_tracks_invalid_option"] ="Invalid options selected";
 $lang["video_tracks_save_to"] = "Save to";
 $lang["video_tracks_save_alternative"] = "Alternative file";
-$lang["video_tracks_export_section"] = "Export folder";
 $lang["video_tracks_save_export"] = "Export folder";
 $lang["video_tracks_generate"] = "Generate";
 $lang["video_tracks_process_size_limit"] = "Maximum size of resource file that will be processed immediately (MB). Larger files will be processed offline and the user notified upon completion";
