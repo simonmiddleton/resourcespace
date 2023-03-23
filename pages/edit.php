@@ -1440,6 +1440,8 @@ hook("editbefresmetadata"); ?>
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
+                        (checkperm("XE" . $types[$n]['ref']))
+                        ||
                         (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 

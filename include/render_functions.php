@@ -5897,7 +5897,7 @@ function display_related_resources($context)
     $k                          =  $context["k"] ?? "";
     $userref                    =  $context["userref"] ?? 0;
     $arr_related                =  $context["relatedresources"] ?? [];
-    $related_resources_shown    =  $context["related_resources_shown"] ?? [];
+    $relatedtypes_shown         =  $context["related_types_shown"] ?? [];
     $internal_share_access      =  $context["internal_share_access"] ?? false;
     $related_restypes           =  $context["related_restypes"] ?? [];
     $relatedtypes_shown         =  $context["relatedtypes_shown"] ?? [];
@@ -5906,7 +5906,7 @@ function display_related_resources($context)
     
     global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type, $related_resource_preview_size;
     
-    if($ref==0)
+    if($ref==0 || count(array_diff(array_column($arr_related,"resource_type"),$relatedtypes_shown)) == 0) 
         {
         return;
         }
@@ -5918,8 +5918,7 @@ function display_related_resources($context)
     <div class="RecordResource">
     <div class="Title"><?php echo $lang["relatedresources"]?></div>
     <?php
-    if(count($arr_related) > $related_resources_shown
-        && checkperm("s")
+    if(checkperm("s")
         && ($k == "" || $internal_share_access)
         )
         {
@@ -6093,24 +6092,24 @@ function display_related_resources($context)
             } // End of if any related resources exist
         ?>
         </div><!-- End of RecordResource -->
+        <?php if ($edit_access)
+            {
+            // Add link to create new related resource and view as result set
+            $add_related_params = [
+                "ref"=>-$userref,
+                "relateto"=>$ref,
+                "noupload"=>"true",
+                "recordonly"=>"true",
+                "collection_add"=>"false",
+                "redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams),
+                ];
+            $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
+            ?>
+            <div class="clearerleft"></div>
+            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+            <?php
+            }?>
         </div><!-- End of RelatedResources -->
-    <?php if ($edit_access)
-        {
-        // Add link to create new related resource and view as result set
-        $add_related_params = [
-            "ref"=>-$userref,
-            "relateto"=>$ref,
-            "noupload"=>"true",
-            "recordonly"=>"true",
-            "collection_add"=>"false",
-            "redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams),
-            ];
-        $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
-        ?>
-        <div class="clearerleft"></div>
-        <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
-        <?php
-        }?>
     </div><!-- End of RecordPanel -->
     </div><!-- End of RecordBox -->
     <?php
