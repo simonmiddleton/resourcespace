@@ -32,12 +32,12 @@ $test_security_logs_on_login = function ($test_user_name,$password,$log_code='',
         }
     if($log_code != '')
         {
-        $sql_where_clauses[] .= "`log_code` = ?";
+        $sql_where_clauses[] = "`log_code` = ?";
         $sql_params = array_merge($sql_params,["s",$log_code]);
         }
     if($note     != '')      
         {
-        $sql_where_clauses[] .= "`note` like ?";
+        $sql_where_clauses[] = "`note` like ?";
         $sql_params = array_merge($sql_params,["s","%{$note}%"]);
         }
 
