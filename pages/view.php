@@ -1197,26 +1197,26 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                 
                 if (!hook("renderresourcedownloadspace"))
                     { ?>
-                    <div class="TabBar" id="RecordDownloadTabButtons">
-                        <div class="Tab TabSelected" id="DownloadsTabButton">
-                            <a href="#" onclick="selectDownloadTab('DownloadsTab',<?php echo $modal ? 'true' : 'false'; ?>);">
-                                <?php echo $use_larger_layout ? htmlspecialchars($lang["resourcedownloads"]) : htmlspecialchars($lang["downloads"]) ?>
-                            </a>
-                        </div>
-                        <?php
-                        if ($download_summary)
-                            {
-                            ?>
-                            <div class="Tab" id="RecordDownloadSummaryButton">
-                                <a href="#" onclick="selectDownloadTab('RecordDownloadSummary',<?php echo $modal ? 'true' : 'false'; ?>);">
-                                    <?php echo htmlspecialchars($lang["usagehistory"]) ?>
+                    <div class="RecordDownload" id="RecordDownloadTabContainer">
+                        <div class="TabBar" id="RecordDownloadTabButtons">
+                            <div class="Tab TabSelected" id="DownloadsTabButton">
+                                <a href="#" onclick="selectDownloadTab('DownloadsTab',<?php echo $modal ? 'true' : 'false'; ?>);">
+                                    <?php echo $use_larger_layout ? htmlspecialchars($lang["resourcedownloads"]) : htmlspecialchars($lang["downloads"]) ?>
                                 </a>
                             </div>
                             <?php
-                            }
-                        hook("additionaldownloadtabbuttons"); ?>
-                    </div>
-                    <div class="RecordDownload" id="RecordDownloadTabContainer">
+                            if ($download_summary)
+                                {
+                                ?>
+                                <div class="Tab" id="RecordDownloadSummaryButton">
+                                    <a href="#" onclick="selectDownloadTab('RecordDownloadSummary',<?php echo $modal ? 'true' : 'false'; ?>);">
+                                        <?php echo htmlspecialchars($lang["usagehistory"]) ?>
+                                    </a>
+                                </div>
+                                <?php
+                                }
+                            hook("additionaldownloadtabbuttons"); ?>
+                        </div>
                         <div class="RecordDownloadSpace" id="DownloadsTab">
                             <?php
                             # DPI calculations
