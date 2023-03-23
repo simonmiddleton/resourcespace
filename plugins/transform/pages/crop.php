@@ -7,7 +7,7 @@ include_once "../../../include/slideshow_functions.php";
 include_once "../include/transform_functions.php";
 
 global $cropper_allowed_extensions, $custom_cropper_preset_sizes, $cropper_use_filename_as_title;
-global $replace_resource_preserve_option;
+global $replace_resource_preserve_option, $replace_resource_preserve_default;
 
 $ref        = getval("ref",0,true);
 $search     = getval("search","");
