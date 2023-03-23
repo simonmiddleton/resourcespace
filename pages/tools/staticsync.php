@@ -46,6 +46,11 @@ if(isset($staticsync_userref))
     # If a user is specified, log them in.
     $userref=$staticsync_userref;
     $userdata=get_user($userref);
+    if ($userdata === false)
+        {
+        echo 'Unable to get user.' . PHP_EOL;
+        exit(1);
+        }
     $userdata = array($userdata);
     setup_user($userdata[0]);
     }
