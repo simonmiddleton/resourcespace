@@ -86,7 +86,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 	{
     debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
 
-	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield;
+	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield,
+    $resource_type_array;
 	if($propertyname=="linked_data_field")
 		{
 		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
@@ -115,27 +116,35 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 	<div class="Question" >
 		<label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
 		<?php
-		if($propertyname=="resource_type")
-			{ echo "TO DO";
-                /*
-			global $resource_types;
-			?>
-            <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
-            <option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
+		if($propertyname=="global")
+			{ 
+            // Special case - new global/resource type selector
+            
+            //$resource_type_array[$resource_type["ref"]]=$resource_type["name"];
+            
+    		?>
+            <input type="checkbox" name="global" id="globalfield" value="1"<?php if(1 == $currentvalue) { ?> checked="checked"<?php } ?> onchange="showHideResTypeSelector();">
 
+            <script>
+            function showHideResTypeSelector() {
+                if(jQuery("#globalfield").prop("checked")){
+                    jQuery("#fieldrestypes").display = 'none';
+                }
+                else {
+                    
+                    jQuery("#fieldrestypes").display = 'block';
+                }
+            }
+            </script>
             <?php
-              for($n=0;$n<count($resource_types);$n++){
-            ?>
-            <option value="<?php echo $resource_types[$n]["ref"]; ?>"<?php if ($currentvalue == $resource_types[$n]["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($resource_types[$n]["name"]); ?></option>
-            <?php
-              }
-            ?>
 
-            <option value="999"<?php if ($currentvalue == "999") { echo " selected"; } ?>><?php echo $lang["resourcetype-archive_only"]; ?></option>
-            </select>
-			<?php
-            */
-			}
+            foreach($resource_type_array as $resource_type=>$restypename)
+                {
+                ?>
+                <input type="checkbox" name="field_restype_select" class="field_restype_select" value="<?php echo $resource_type; ?>" <?php if(1 == $currentvalue) { ?> checked="checked"<?php } ?>>
+                <?php
+                }
+            }
 		elseif($propertyname=="type")
 			{
 			global $field_types;
@@ -381,6 +390,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 
 $fieldcolumns = array(
     'active'                   => array($lang['property-field_active'],'',1,1),
+    'global'                   => array($lang['property-resource_type'],'',0,0),
     'title'                    => array($lang['property-title'],'',0,1),
     'type'                     => array($lang['property-field_type'],'',0,1),
     'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
@@ -695,8 +705,8 @@ else
 			<div class="CollapsibleSection" id="admin_hidden_field_properties" >	 
 			<?php
 			}
-	    admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
-	    }
+        admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
+        }
     ?>
     
     </div><!-- End of hidden advanced section -->

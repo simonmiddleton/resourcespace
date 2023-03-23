@@ -7775,60 +7775,44 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     $valid_sorts = ['asc', 'ascending', 'desc', 'descending'];
     if(!in_array(strtolower($field_sort), $valid_sorts)){$field_sort = 'asc';}
 
-    $conditionsql=""; $params = [];
+    $conditions = []; $joins = [];$params = [];
     if(is_array($restypes))
         {
-        $conditionsql = " WHERE (select count(*) from resource_type_field_resource_type where resource_type_field=resource_type_field.ref and resource_type IN (". ps_param_insert(count($restypes)) .")>0)";
+        if(in_array(0,$restypes))
+            {
+            $conditions[] = "global=1";
+            }
+        else
+            {
+            $conditions[] = "global=0";
+            }
+        
+        $joins[] = " RIGHT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = resource_type_field.ref AND rtfrt.resource_type IN (". ps_param_insert(count($restypes)) .")";
         $params = ps_param_fill($restypes, 'i');
         }
     if ($include_inactive==false)
         {
-        if($conditionsql != "")
-            {
-            $conditionsql .= " AND active=1 ";
-            }
-        else
-            {
-            $conditionsql .= " WHERE active=1 ";
-            }
+        $conditions[]  = "active=1";
         }
     if($find!="")
         {
-        if($conditionsql != "")
-            {
-            $conditionsql .= " AND ( ";
-            }
-        else
-            {
-            $conditionsql .= " WHERE ( ";
-            }
-        $conditionsql.=" name LIKE ? OR title LIKE ? OR tab_name LIKE ? OR exiftool_field LIKE ? OR help_text LIKE ? OR ref LIKE ? OR tooltip_text LIKE ? OR display_template LIKE ?)";
+        $conditions[] =" name LIKE ? OR title LIKE ? OR tab_name LIKE ? OR exiftool_field LIKE ? OR help_text LIKE ? OR ref LIKE ? OR tooltip_text LIKE ? OR display_template LIKE ?)";
         $params = array_merge($params, ['s', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%"]);
         }
 
     $newfieldtypes = array_filter($fieldtypes,function($v){return (string)(int)$v == $v;});
 
     if(count($newfieldtypes) > 0)
-        {
-        if($conditionsql != "")
-			{
-			$conditionsql .= " AND ( ";
-			}
-		else
-			{
-			$conditionsql .= " WHERE ( ";
-			}
-        $conditionsql .= " type IN (". ps_param_insert(count($newfieldtypes)) ."))";
+        {        
+        $conditions[] = " type IN (". ps_param_insert(count($newfieldtypes)) ."))";
         $params = array_merge($params, ps_param_fill($newfieldtypes, 'i'));
 		}
-    // Allow for sorting, enabled for use by System Setup pages
-    //if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}
+    
+    $conditionstring = count($conditions) > 0 ? (" WHERE (" . implode(") AND (",$conditions) . ")") : "";
 
     $allfields = ps_query("
         SELECT " . columns_in("resource_type_field") . "
-          FROM resource_type_field" . $conditionsql . " ORDER BY active desc," . $field_order_by . " " . $field_sort, $params, "schema"); // TO DO - JN to ensure order by params locked to expected as per comment on r20006
-
-
+          FROM resource_type_field " . implode(" ",$joins)  . $conditionstring . " GROUP BY resource_type_field.ref ORDER BY active desc," . $field_order_by . " " . $field_sort, $params, "schema");
 
     // Sort by translated strings if sorting by title
     if(strtolower($field_order_by) == "title")
