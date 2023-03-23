@@ -1074,9 +1074,9 @@ jQuery(document).ready(function () {
         locale: {
                 strings: {
                     uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
-                    browseFiles: '<?php echo $lang["upload_browse"] ?>',
-                    uploadXFiles: '<?php echo $lang["upload_start"] ?>',
-                    dropPaste: '<?php echo $lang["upload_droparea_text"] ?>',
+                    browseFiles: '<?php echo escape_quoted_data($lang["upload_browse"]) ?>',
+                    uploadXFiles: '<?php echo escape_quoted_data($lang["upload_start"]) ?>',
+                    dropPaste: '<?php echo escape_quoted_data($lang["upload_droparea_text"]) ?>',
                 },
             },
 
@@ -1095,7 +1095,7 @@ jQuery(document).ready(function () {
                 ?>
                 if (res_type == "")
                     {
-                    styledalert("<?php echo $lang["error"]?>", "<?php echo $lang["requiredfield_resource_type"]?>", 450);
+                    styledalert("<?php echo escape_quoted_data($lang["error"])?>", "<?php echo escape_quoted_data($lang["requiredfield_resource_type"])?>", 450);
                     return false;
                     }
                 <?php
@@ -1256,11 +1256,11 @@ jQuery(document).ready(function () {
             }
         if(errmessage.indexOf('410') !== -1)
             {
-            errmessage += ' <?php echo $lang["error_suggest_apcu"]; ?>';
+            errmessage += ' <?php echo escape_quoted_data($lang["error_suggest_apcu"]); ?>';
             }
         else if(errmessage == "")
             {
-            errmessage += ' <?php echo $lang["upload_error_unknown"]; ?>';
+            errmessage += ' <?php echo escape_quoted_data($lang["upload_error_unknown"]); ?>';
             }
         <?php
         // Automatically retry any errors that may be caused by TUS file cache
@@ -1304,7 +1304,7 @@ jQuery(document).ready(function () {
             {
             // Add error to log if not already done
             errorslogged[file.id] = errmessage;          
-            jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "' <?php echo $lang["error"]?>:" + errmessage);
+            jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "' <?php echo escape_quoted_data($lang["error"])?>:" + errmessage);
             }
         else
             {
@@ -1318,7 +1318,7 @@ jQuery(document).ready(function () {
 if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0)
     {
     # Show warning.
-    ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
+    ?>alert("<?php echo escape_quoted_data($lang["sharedcollectionaddwarningupload"])?>");<?php
     }
 ?>
 
@@ -1383,7 +1383,7 @@ function processFile(file, forcepost)
                 else
                     {
                     processerrors.push(filename);
-                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "': <?php echo $lang['error'] . ": " . $lang['error_upload_resource_not_found']; ?>");
+                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "': <?php echo escape_quoted_data($lang['error']) . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
                     return false;
                     }
@@ -1454,7 +1454,7 @@ function processFile(file, forcepost)
                 uploadresponse = new Object();
                 uploadresponse.status =false;
                 uploadresponse.error = '';
-                uploadresponse.message = file.name + ': <?php echo $lang['upload_error_unknown'] ; ?> ' + data;
+                uploadresponse.message = file.name + ': <?php echo escape_quoted_data($lang['upload_error_unknown']) ; ?> ' + data;
                 }
 
             if (uploadresponse.status != true)
@@ -1463,7 +1463,7 @@ function processFile(file, forcepost)
                 upRedirBlock = true;
                 if(uploadresponse.error==108)
                     {
-                    message = '<?php echo $lang['error-duplicatesfound']?>';
+                    message = '<?php echo escape_quoted_data($lang['error-duplicatesfound'])?>';
                     jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + "&nbsp;" + uploadresponse.message);
                     if(!logopened)
                         {
@@ -1474,7 +1474,7 @@ function processFile(file, forcepost)
                 else if(uploadresponse.error==109)
                     {
                     message = uploadresponse.message +  ' ' + uploadresponse.id;
-                    styledalert('<?php echo $lang["error"] ?> ' + uploadresponse.error, message);
+                    styledalert('<?php echo escape_quoted_data($lang["error"]) ?> ' + uploadresponse.error, message);
                     jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + message);
                     if(!logopened)
                         {
@@ -1484,7 +1484,7 @@ function processFile(file, forcepost)
                     }
                 else
                     {
-                    styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error, uploadresponse.message);
+                    styledalert('<?php echo escape_quoted_data($lang["error"])?> ' + uploadresponse.error, uploadresponse.message);
                     jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + uploadresponse.message + " [" + uploadresponse.error + "]");
                     }
 
@@ -1546,7 +1546,7 @@ function processFile(file, forcepost)
                 }
             console.log("Error:  " + error);
             jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + ": " + error);
-            styledalert('<?php echo $lang["error"]?> ', error);
+            styledalert('<?php echo escape_quoted_data($lang["error"])?> ', error);
             upRedirBlock = true;
 
             if(processerrors.indexOf(file.id) === -1)
@@ -1718,7 +1718,7 @@ function postUploadActions()
 
         jQuery("#modal_dialog").html(completedlang);
         jQuery("#modal_dialog").dialog({
-            title:'<?php echo $lang["error"]; ?>',
+            title:'<?php echo escape_quoted_data($lang["error"]); ?>',
             modal: true,
             width: 400,
             resizable: false,
@@ -1763,7 +1763,7 @@ if  ($alternative!="")
     $alturl = generateURL($baseurl_short . 'pages/alternative_files.php',$searchparams,array("ref"=>$alternative));
     ?>
     <p>
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtomanagealternativefiles"])?></a>
     </p><?php
     }
 elseif ($replace_resource!="")
@@ -1772,9 +1772,9 @@ elseif ($replace_resource!="")
     $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams,array("ref"=>$replace_resource));
     ?>
     <p>
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoeditmetadata"])?></a>
     <br />
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresourceview"])?></a>
     </p>
     <?php
     }
@@ -1862,7 +1862,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
+    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo htmlspecialchars($lang["upload-options"]); ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php
@@ -1877,12 +1877,12 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
             }
         ?>
         <div class="Question">
-            <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
+            <label for="keep_original"><?php echo htmlspecialchars($lang["replace_resource_preserve_original"]); ?></label>
             <input id="keep_original" type="checkbox" name="keep_original" <?php if($replace_resource_preserve_default) { ?>checked<?php } ?> value="yes">
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="replace_resource_original_alt_filename"><?php echo $lang['replace_resource_original_alt_filename']; ?></label>
+            <label for="replace_resource_original_alt_filename"><?php echo htmlspecialchars($lang['replace_resource_original_alt_filename']); ?></label>
             <input id="replace_resource_original_alt_filename" type="text" name="replace_resource_original_alt_filename" value="<?php echo $default_replace_resource_original_alt_filename; ?>">
             <div class="clearerleft"></div>
             <script>
@@ -1923,7 +1923,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
         if ((getval("upload_a_file","")!="" || getval("replace_resource","")!=""  || getval("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
-                <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if ($no_exif){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                <label for="no_exif"><?php echo htmlspecialchars($lang["no_exif"])?></label><input type=checkbox <?php if ($no_exif){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
                 <div class="clearerleft"> </div>
             </div>
             <?php
@@ -1937,7 +1937,7 @@ hook('plupload_before_status');
 </div><!-- End of UploadOptionsSection -->
 
 <div class="BasicsBox" >
-    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo $lang["log"]; ?></h2>
+    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo htmlspecialchars($lang["log"]); ?></h2>
     <div class="CollapsibleSection" id="UploadLogSection">
         <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
     </div> <!-- End of UploadLogSection -->
@@ -1946,7 +1946,7 @@ hook('plupload_before_status');
 
 <!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
 <div class="BasicsBox" >
-    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo $lang['continue']; ?>&nbsp;&nbsp;"
+    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang['continue']); ?>&nbsp;&nbsp;"
         onclick="return CentralSpaceLoad('<?php echo $redirecturl?>',true);">
 </div>
 <?php
