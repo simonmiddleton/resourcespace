@@ -299,7 +299,7 @@ function flickr_get_photoset()
     }
 
 
-function flickr_update_tokens($userref = 0, $OauthToken,$OauthSecretToken)
+function flickr_update_tokens($userref, $OauthToken,$OauthSecretToken)
     {
     if((string)(int)$userref != $userref)
         {
