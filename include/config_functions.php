@@ -1293,3 +1293,22 @@ function override_rs_variables_by_eval(array $variables, string $code)
 
     return;
     }
+
+
+function update_resource_type_field_resource_types(int $ref,array $resource_types)
+    {
+    ps_query("DELETE FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$ref]);
+    if(in_array(0,$resource_types))
+        {
+        // Global field, cannot have specific fields assigned
+        ps_query("UPDATE resource_type_field SET global=1 WHERE ref = ?",["i",$ref]);
+        }
+    elseif(count($resource_types)>0)
+        {
+        $query = "INSERT INTO resource_type_field_resource_type (resource_type_field, resource_type) VALUES ";
+        $valuestring = "(" . (int)$ref . (str_repeat(",?),(" . $ref,count($resource_types)-1)) . ",?)";
+
+        //exit($query .$valuestring);
+        ps_query($query .$valuestring,ps_param_fill($resource_types,"i"));
+        }
+    }

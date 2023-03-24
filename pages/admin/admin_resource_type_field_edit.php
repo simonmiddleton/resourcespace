@@ -87,7 +87,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
     debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
 
 	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield,
-    $resource_type_array;
+    $resource_type_array, $existingrestypes;
 	if($propertyname=="linked_data_field")
 		{
 		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
@@ -114,36 +114,58 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 	
 	?>
 	<div class="Question" >
-		<label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
-		<?php
-		if($propertyname=="global")
-			{ 
+        <label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
+        <?php
+        if($propertyname=="global")
+            { 
             // Special case - new global/resource type selector
-            
-            //$resource_type_array[$resource_type["ref"]]=$resource_type["name"];
-            
-    		?>
-            <input type="checkbox" name="global" id="globalfield" value="1"<?php if(1 == $currentvalue) { ?> checked="checked"<?php } ?> onchange="showHideResTypeSelector();">
-
+            ?>
+            <table>
+                <tr>
+                    <td>
+                        <input type="checkbox" 
+                            name="global" 
+                            id="globalfield" 
+                            value="1"
+                            <?php if($currentvalue == 1) { ?> checked="checked"<?php } ?>s
+                            onchange="showHideResTypeSelector();">
+                        <?php echo htmlspecialchars($lang["resourcetype-global_field"]) ?>
+                    </td>
+                </tr>
+                <?php
+                foreach($resource_type_array as $resource_type=>$restypename)
+                    {
+                    ?>
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                name="field_restype_select_<?php echo $resource_type; ?>"
+                                id="field_restype_select_<?php echo $resource_type; ?>" 
+                                class="field_restype_select"
+                                value="1"
+                                <?php if($currentvalue == 1) { ?> disabled="true"<?php } ?>
+                                <?php if(in_array($resource_type,$existingrestypes)) { ?> checked="checked"<?php } ?>>
+                            <?php echo htmlspecialchars($restypename) ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                ?>
+            </table>
             <script>
             function showHideResTypeSelector() {
                 if(jQuery("#globalfield").prop("checked")){
-                    jQuery("#fieldrestypes").display = 'none';
+                    jQuery(".field_restype_select").display = 'none';
+                    jQuery(".field_restype_select").prop('disabled',true);
                 }
                 else {
                     
-                    jQuery("#fieldrestypes").display = 'block';
+                    jQuery(".field_restype_select").display = 'block';
+                    jQuery(".field_restype_select").prop('disabled',false);
                 }
             }
             </script>
             <?php
-
-            foreach($resource_type_array as $resource_type=>$restypename)
-                {
-                ?>
-                <input type="checkbox" name="field_restype_select" class="field_restype_select" value="<?php echo $resource_type; ?>" <?php if(1 == $currentvalue) { ?> checked="checked"<?php } ?>>
-                <?php
-                }
             }
 		elseif($propertyname=="type")
 			{
@@ -390,7 +412,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 
 $fieldcolumns = array(
     'active'                   => array($lang['property-field_active'],'',1,1),
-    'global'                   => array($lang['property-resource_type'],'',0,0),
+    'global'                   => array($lang['property-resource_type'],'',1,0),
     'title'                    => array($lang['property-title'],'',0,1),
     'type'                     => array($lang['property-field_type'],'',0,1),
     'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
@@ -429,6 +451,12 @@ $fieldcolumns = array(
     'onchange_macro'           => array($lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1),
     'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
 );
+
+$resource_types=get_resource_types();
+foreach($resource_types as $resource_type)
+    {
+    $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
+    }
 
 # Remove some items if $execution_lockout is set to prevent code execution
 if ($execution_lockout)
@@ -491,7 +519,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 			}
 		else
 			{
-			$sql="update resource_type_field set ";
+			$sql="UPDATE resource_type_field SET ";
 			}		
 		
 		$sql.="{$column}=";
@@ -506,6 +534,20 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
             $params[]=$val;
             }
 
+        if($column == "global" && $val !== $existingfield["global"])
+            {
+            $setresypes = [];
+            foreach($resource_type_array as $resource_type=>$resource_type_name)
+                {
+                if(getval("field_restype_select_" . $resource_type,"" != ""))
+                    {
+                    $setresypes[] = $resource_type;
+                    }
+                }
+            // Update all resource_type_field -> resource_type associations
+            update_resource_type_field_resource_types($ref,$setresypes);
+            }
+
 		log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
 
 		// Add SQL to update synced fields if field is marked as a sync field
@@ -517,7 +559,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 				}
 			else
 				{
-				$syncsql="update resource_type_field set ";
+				$syncsql="UPDATE resource_type_field SET ";
 				}
 			$syncsql.="{$column}=";
             if ($val=="")
@@ -548,7 +590,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 
 	if($sync_field!="" && $sync_field>0)
 		{
-		$syncsql.=" where ref=? or sync_field=?";
+		$syncsql.=" WHERE ref=? OR sync_field=?";
         $syncparams[]="i";$syncparams[]=$sync_field;
         $syncparams[]="i";$syncparams[]=$ref;
 
@@ -558,7 +600,6 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 	hook('afterresourcetypefieldeditsave');
 	
 	$saved_text=$lang["saved"];
-	//redirect($backurl);
 	}
 
 $confirm_delete=false;	
@@ -617,13 +658,8 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 	
 # Fetch  data
 $allfields=get_resource_type_fields();
-$resource_types=get_resource_types();
-foreach($resource_types as $resource_type)
-	{
-	$resource_type_array[$resource_type["ref"]]=$resource_type["name"];
-	}
-$resource_type_array[0]=$lang["resourcetype-global_field"];
 $fielddata=get_resource_type_field($ref);
+$existingrestypes = $fielddata["resource_types"] ? explode(",",$fielddata["resource_types"]) : [];
 
 include "../../include/header.php";
 ?>
