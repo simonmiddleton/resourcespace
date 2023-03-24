@@ -1914,7 +1914,7 @@ $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 $staticsync_userref=1;
 
 # ------------------------------------------------------------------------------------------------------------------
-$syncdir="/dummy/path/to/syncfolder"; # The sync folder
+$syncdir=""; # The sync folder e.g. "/dummy/path/to/syncfolder"
 $nogo="[folder1]"; # A list of folders to ignore within the sign folder.
 
 /*
@@ -3149,7 +3149,7 @@ $browse_bar = true;
 $browse_bar_workflow=true;
 
 // Batch replace from local folder
-$batch_replace_local_folder = "/upload";
+$batch_replace_local_folder = ""; # e.g. "/upload";
 
 // Option to distribute files in filestore more equally. 
 // Setting $filestore_evenspread=true; means that all resources with IDs ending in 1 will be stored under filestore/1, whereas historically (with this set to false) this would contain all resources with IDs starting with 1.

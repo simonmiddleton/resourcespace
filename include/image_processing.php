@@ -59,8 +59,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         unset($GLOBALS["use_error_exception"]);
         $valid_upload_paths = $valid_upload_paths ?? [];
         $valid_upload_paths[] = $storagedir;
-        $valid_upload_paths[] = $syncdir;    
-        $valid_upload_paths[] = $batch_replace_local_folder;
+        if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }   
+        if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
         if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
  
         foreach($valid_upload_paths as $valid_upload_path)
