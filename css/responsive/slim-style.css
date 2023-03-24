@@ -184,6 +184,13 @@ body {
         margin: 20px 0 15px 0;
     }
 }
+@media(max-width:900px) {
+    .RecordPanel.RecordPanelLarge #RecordDownloadTabContainer,
+    .RecordPanel .RecordDownloadSpace.RecordTools,
+    #RecordDownloadTabContainer {
+        width: 100%;
+    }
+}
 @media(max-width:700px) {
     .FormHelp {
         margin:0 0 10px 0;
@@ -195,6 +202,12 @@ body {
         width: 100%;
         box-sizing: border-box;
         margin-left: 0;
+    }
+}
+@media(max-width:600px) {
+    #RecordDownloadTabButtons .Tab {
+        display: inline-table;
+        width: 25%;
     }
 }
 @media(max-width:525px) {

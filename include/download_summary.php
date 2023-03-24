@@ -24,11 +24,7 @@ $rl_params_override = array(
     "filter_by_usageoption" => null,
 );
 ?>
-<div class="RecordDownload" id="RecordDownloadSummary" style="margin-right:10px;">
-<div class="RecordDownloadSpace">
-
-<h2><?php echo $lang["usagehistory"] ?></h2>
-
+<div class="RecordDownloadSpace" id="RecordDownloadSummary" style="margin-right:10px; display: none;">
 
 <table cellpadding="0" cellspacing="0">
 <tr>
@@ -62,5 +58,4 @@ $rl_params_override = array(
 ?>
 </table>
 <?php } ?>
-</div>
 </div>
