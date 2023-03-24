@@ -527,7 +527,8 @@ if($ref < 0)
     $cfb = check_filestore_browseability();
     if(!$cfb['index_disabled'])
         {
-        exit(error_alert($lang['error_generic_misconfiguration'], true, 200)); 
+    error_alert($lang['error_generic_misconfiguration'], true, 200);
+        exit(); 
         }
     }
 
