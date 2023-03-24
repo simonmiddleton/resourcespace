@@ -630,6 +630,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         echo highlightkeywords(htmlspecialchars(i18n_get_translated(get_data_by_field($resource['ref'], $title_field), false)), $search);
                         } /* end hook replaceviewtitle */
                     ?>
+                    &nbsp;
                 </h1>
             <?php
             } /* End of renderinnerresourceheader hook */ ?>
