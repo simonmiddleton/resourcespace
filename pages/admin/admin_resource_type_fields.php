@@ -105,7 +105,7 @@ function addColumnHeader($orderName, $labelKey)
     {
     echo "<p>" . text("introtext") . "</p>";
     }
- 
+
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
 $resource_types=get_resource_types();
 $arr_restypes=array();
@@ -114,10 +114,8 @@ foreach($resource_types as $resource_type)
     $arr_restypes[$resource_type["ref"]]=$resource_type["name"];
     }
 $arr_restypes[0]=$lang["resourcetype-global_field"];
-$arr_restypes[999]=$lang["resourcetype-archive_only"];
-
 $results=count($fields);
-
+debug("BANG " . print_r($fields,true));
 ?>
 
 <div class="FormError" id="PageError"
@@ -127,7 +125,7 @@ $results=count($fields);
 </div>
 
 <?php
-if($allow_reorder  )
+if($allow_reorder)
     {
     ?>
     <p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
@@ -185,8 +183,6 @@ else
             <?php
               }
             ?>
-            
-            <option value="999"<?php if ($restypefilter == "999") { echo " selected"; } ?>><?php echo $lang["resourcetype-archive_only"]; ?></option>
             </select>
           </div>
         </div>

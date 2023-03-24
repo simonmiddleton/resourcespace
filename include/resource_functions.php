@@ -7774,7 +7774,6 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 
     $valid_sorts = ['asc', 'ascending', 'desc', 'descending'];
     if(!in_array(strtolower($field_sort), $valid_sorts)){$field_sort = 'asc';}
-
     $conditions = []; $joins = [];$params = [];
     if(is_array($restypes))
         {
@@ -7784,11 +7783,11 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
             }
         else
             {
-            $conditions[] = "global=0";
+            $conditions[] = "global=0";  
+            $joins[] = " RIGHT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = resource_type_field.ref AND rtfrt.resource_type IN (". ps_param_insert(count($restypes)) .")";
+            $params = ps_param_fill($restypes, 'i');
             }
-        
-        $joins[] = " RIGHT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = resource_type_field.ref AND rtfrt.resource_type IN (". ps_param_insert(count($restypes)) .")";
-        $params = ps_param_fill($restypes, 'i');
+      
         }
     if ($include_inactive==false)
         {
