@@ -111,9 +111,6 @@ $disable_quoted_printable_enc=false;
 # edit.php - disable links to upload preview 
 $disable_upload_preview = false;
 
-# The following can be set to show a custom message for disabled plugins. Default is the language string 'plugins-disabled-plugin-message' but this will override it.
-$disabled_plugins_message = "";
-
 # Disk Usage Warnings - require running check_disk_usage.php
 # Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
 #$disk_quota_notification_limit_percent_warning=90;

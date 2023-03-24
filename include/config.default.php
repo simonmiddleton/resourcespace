@@ -853,6 +853,9 @@ $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_not
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
 
+# The following can be set to show a custom message for disabled plugins. Default is the language string 'plugins-disabled-plugin-message' but this will override it.
+$disabled_plugins_message = "";
+
 # Uncomment and set the next line to allow anonymous access. 
 # You must set this to the USERNAME of the USER who will represent all your anonymous users
 # Note that collections will be shared among all anonymous users - it's therefore usually best to turn off all collections functionality for the anonymous user.
