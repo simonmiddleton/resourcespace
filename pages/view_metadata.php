@@ -210,9 +210,10 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
         {
+        $fieldrestypes = explode(",",$fields[$i]['resource_types']);
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
-        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] 
+        if($fields[$i]['global'] == '1' || in_array($resource['resource_type'],$fieldrestypes)
                                                || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
             {
             if($displaycondition && $tab_ref == $fields[$i]['tab'])
