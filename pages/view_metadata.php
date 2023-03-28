@@ -205,6 +205,7 @@ $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
+//exit(print_r($fields));
 $show_default_related_resources = TRUE;
 foreach($fields_tab_names as $tab_ref => $tabname)
     {

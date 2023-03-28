@@ -1295,6 +1295,15 @@ function override_rs_variables_by_eval(array $variables, string $code)
     }
 
 
+/**
+ * Update the resource_type_field - resource_type mappings
+ *
+ * @param int $ref                  Resource type field ref
+ * @param array $resource_types     Array of resource type refs
+ * 
+ * @return void
+ * 
+ */
 function update_resource_type_field_resource_types(int $ref,array $resource_types)
     {
     ps_query("DELETE FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$ref]);
@@ -1307,8 +1316,7 @@ function update_resource_type_field_resource_types(int $ref,array $resource_type
         {
         $query = "INSERT INTO resource_type_field_resource_type (resource_type_field, resource_type) VALUES ";
         $valuestring = "(" . (int)$ref . (str_repeat(",?),(" . $ref,count($resource_types)-1)) . ",?)";
-
-        //exit($query .$valuestring);
         ps_query($query .$valuestring,ps_param_fill($resource_types,"i"));
         }
     }
+

@@ -555,7 +555,7 @@ if (!$daterange_search)
 <?php
 # Fetch fields
 $fields=get_advanced_search_fields($archiveonly);
-$showndivide=-1;
+$showndivide="";
 
 # Preload resource types
 $rtypes=get_resource_types();
@@ -563,22 +563,28 @@ $rtypes=get_resource_types();
 for ($n=0;$n<count($fields);$n++)
 	{
 	# Show a dividing header for resource type specific fields?
-	if (($fields[$n]["resource_type"]!=0) && ($showndivide!=$fields[$n]["resource_type"]))
+    $fieldrestypes = explode(",",$fields[$n]["resource_types"]);
+    $restypestring = implode("_", $fieldrestypes);
+	if (($fields[$n]["global"] == 0) && ($showndivide != $restypestring))
 		{
-		$showndivide=$fields[$n]["resource_type"];
-		$label="??";
-		# Find resource type name
+		$showndivide=$restypestring;
+		$labels = [];
+		# Find resource type names
 		for ($m=0;$m<count($rtypes);$m++)
 			{
 			# Note: get_resource_types() has already translated the resource type name for the current user.
-			if ($rtypes[$m]["ref"]==$fields[$n]["resource_type"]) {$label=$rtypes[$m]["name"];}
+			if (in_array($rtypes[$m]["ref"],$fieldrestypes))
+                {
+                $labels[] =$rtypes[$m]["name"];
+                }
 			}
+        $label = implode(", ",$labels);
 		?>
 		</div>
             <h1 class="AdvancedSectionHead CollapsibleSectionHead ResTypeSectionHead"
-                id="AdvancedSearch<?php echo $fields[$n]["resource_type"]; ?>SectionHead"
+                id="AdvancedSearch<?php echo $restypestring; ?>SectionHead"
                 <?php
-                if(!in_array($fields[$n]["resource_type"], $restypes) || in_array("Global", $restypes) || count($restypes) > 1)
+                if(count(array_intersect($fieldrestypes, $restypes)) > 0 && !in_array("Global", $restypes))
                     {
                     ?> style="display: none;"
                     <?php
@@ -586,9 +592,9 @@ for ($n=0;$n<count($fields);$n++)
                     ?>
             ><?php echo $lang["typespecific"] . ": " . $label ?></h1>
         <div class="AdvancedSection ResTypeSection"
-             id="AdvancedSearch<?php echo $fields[$n]["resource_type"]; ?>Section"
+             id="AdvancedSearch<?php echo $restypestring; ?>Section"
              <?php
-             if(!in_array($fields[$n]["resource_type"], $selectedtypes))
+             if(!count(array_intersect($fieldrestypes, $selectedtypes)) > 0)
                 {
                 ?> style="display: none;"
                 <?php

@@ -50,12 +50,11 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . "))  ORDER BY order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
-
+    $fields=ps_query("SELECT " . columns_in("resource_type_field","f") . ", GROUP_CONCAT(rtfrt.resource_type) resource_types FROM resource_type_field f LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = f.ref  WHERE f.advanced_search=1 AND f.active=1 AND (f.keywords_index=1 AND length(f.name)>0) AND (f.global=1 OR rtfrt.resource_type IS NOT NULL) GROUP BY f.ref ORDER BY f.global DESC, f.order_by ASC", [], "schema"); // Constants do not need to be parameters in the prepared statement
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
-        if (metadata_field_view_access($fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
+        if (metadata_field_view_access($fields[$n]["ref"]) && !in_array($fields[$n]["ref"], $hiddenfields))
             {
             $return[]=$fields[$n];
             if($fields[$n]["ref"]==$date_field)
@@ -78,7 +77,10 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
             {
             if (isset($date_field_data))
                 {
-                if ($return[$n]["resource_type"] == $date_field_data['resource_type']) 
+                if (
+                    ($date_field_data['global'] == 1)
+                    || in_array($return[$n]["resource_type"],explode(",",$date_field_data['resource_types']))
+                    ) 
                     {
                     $return1[]=$date_field_data;
                     $date_field_data=null; # Only insert it once

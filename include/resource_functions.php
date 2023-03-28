@@ -1682,14 +1682,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 // Reset nodes to add/remove as may differ for each resource
                 $nodes_to_add       = [];
                 $nodes_to_remove    = [];
-                if(
-                    (
-                        // Not applicable for global fields or archive only fields
-                        !in_array($fields[$n]["resource_type"], array(0, 999))
-                        && $resource_data[$ref]["resource_type"] != $fields[$n]["resource_type"]
-                    )
-                    || ($fields[$n]["resource_type"] == 999 && $resource_data[$ref]["archive"] != 2)
-                )
+                if($fields[$n]["global"] == 0 && !in_array($resource_data[$ref]["resource_type"],explode(",",$fields[$n]["resource_types"])))
                     {
                     continue;
                     }
@@ -2966,6 +2959,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f.read_only,
                     f.active,
                     f.full_width,
+                    '" . (int)$rtype . "' as resource_type" . ",
                     GROUP_CONCAT(rtfrt.resource_type) resource_types
                FROM resource_type_field f
           LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = f.ref 
@@ -2974,6 +2968,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
               WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($node_fields)) . ") " . $restypesql . ")
               GROUP BY f.ref
               ORDER BY {$order_by_sql}";
+
 
     $field_data_params = array_merge(["i", $ref], ps_param_fill($node_fields,"i"),$restype_params);
     if(!$ord_by)
@@ -2990,7 +2985,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $validtypes[] = 999;
 
     // Add category tree values, reflecting tree structure
-    $valid_resource_types = array('0',$rtype);
+    $valid_resource_types = ['0',$rtype];
     if ($multi)
         {
         // All resource types checked as this is a metadata template.
@@ -3009,6 +3004,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         $valstring = $forcsv ? ("\"" . implode("\",\"",$treenodenames) . "\"") : implode(",",$treenodenames);
         $addfield["value"] = count($treenodenames) > 0 ? $valstring : "";
         $addfield["resource_type_field"] = $tree_field["ref"];
+        $addfield["resource_type"] = $rtype;
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
         }
@@ -7783,7 +7779,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         if(in_array(0,$restypes))
             {
             $conditions[] = "global=1";
-            $restypeselect = ", GROUP_CONCAT(rtfrt.resource_type) resource_types ";
+            $restypeselect = ", '' AS resource_types ";
             }
         else
             {
