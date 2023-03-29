@@ -7,3 +7,4 @@ version: 1.0
 config_url: /plugins/resourceconnect/pages/setup.php
 category: Integrations
 info_url: https://www.resourcespace.com/knowledge-base/plugins/resourceconnect
+disable_group_select: 1
