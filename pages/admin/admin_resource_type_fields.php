@@ -108,14 +108,9 @@ function addColumnHeader($orderName, $labelKey)
 
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
 $resource_types=get_resource_types();
-$arr_restypes=array();
-foreach($resource_types as $resource_type)
-    {
-    $arr_restypes[$resource_type["ref"]]=$resource_type["name"];
-    }
-$arr_restypes[0]=$lang["resourcetype-global_field"];
+$arr_restypes=array_column($resource_types,"name","ref");
+
 $results=count($fields);
-debug("BANG " . print_r($fields,true));
 ?>
 
 <div class="FormError" id="PageError"
@@ -200,10 +195,15 @@ $system_tabs = get_tab_name_options();
 addColumnHeader('ref', 'property-reference');
 addColumnHeader('title', 'property-title');
 if (!hook('replacenamecolumnheader'))
+    {
     addColumnHeader('name', 'property-shorthand_name');
+    }
 addColumnHeader('type', 'property-field_type');
+addColumnHeader('type', 'resourcetypes');
 if (!hook('replacetabnamecolumnheader'))
+    {
     addColumnHeader('tab_name', 'property-tab_name');
+    }
 ?>
 <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 </tr>
@@ -225,19 +225,39 @@ for ($n=0;$n<count($fields);$n++)
             </div>
         </td>
 
-    <?php if (!hook('replacenamecolumn')) {
-        ?><td>
-            <?php echo str_highlight($fields[$n]["name"],$find,STR_HIGHLIGHT_SIMPLE);?>
-        </td><?php
-    }?>
-        <td>        
-            <?php echo ($fields[$n]["type"]!="")?$lang[$field_types[$fields[$n]["type"]]]:$lang[$field_types[0]];  // if no value it is treated as type 0 (single line text) ?>
+        <?php if (!hook('replacenamecolumn'))
+            {
+            ?><td>
+                <?php echo str_highlight($fields[$n]["name"],$find,STR_HIGHLIGHT_SIMPLE);?>
+            </td><?php
+            }?>
+        <td>
+            <?php
+            // If no field value is set it is treated as type 0 (single line text) 
+            echo ($fields[$n]["type"]!="") ? $lang[$field_types[$fields[$n]["type"]]] : $lang[$field_types[0]];
+            ?>
         </td>
-    <?php if (!hook('replacetabnamecolumn')) {
-        ?><td>
-            <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', $find, STR_HIGHLIGHT_SIMPLE); ?>
-        </td><?php
-    }?>
+        <td>
+            <?php
+            # Resolve resource type names
+            if((bool)$fields[$n]["global"] == 1)
+                {
+                $restypestring = $lang["resourcetype-global_field"];
+                }
+            else
+                {
+                $fieldrestypes = explode(",",(string)$fields[$n]["resource_types"]);
+                $restypestring = implode(", ",array_intersect_key($arr_restypes, array_flip($fieldrestypes)));
+                }
+            echo $restypestring;
+            ?>
+        </td>
+        <?php if (!hook('replacetabnamecolumn'))
+            {
+            ?><td>
+                <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', $find, STR_HIGHLIGHT_SIMPLE); ?>
+            </td><?php
+            }?>
         <td>
             <div class="ListTools">
               
@@ -295,7 +315,7 @@ for ($n=0;$n<count($fields);$n++)
         <div class="Question">
             <label for="newfield"><?php echo $lang["admin_resource_type_field_create"]?></label>
             <div class="tickset">
-             <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>""/>   
+             <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>"/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
 
             <div class="Inline"><select name="field_type" id="new_field_type_select" class="medwidth">

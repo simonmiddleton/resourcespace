@@ -2372,7 +2372,6 @@ $lang["resource_type_delete_confirmation"]="There are %%RESOURCECOUNT%% resource
 $lang["resource_type_delete_assoc_rtf_confirm"] = "There are %COUNT metadata field(s) associated with this resource type.";
 $lang["resource_type_delete_select_new"]="Please select the resource type that these will be converted to.";
 $lang["resourcetype-global_field"]="Global";
-$lang["resourcetype-global_field"]="Global";
 $lang["search_title_hasdata"]="Resources with data in field";
 $lang["search_title_empty"]="Resources with no data in field";
 $lang["show_resources"]="Show resources";

@@ -1682,7 +1682,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                 // Reset nodes to add/remove as may differ for each resource
                 $nodes_to_add       = [];
                 $nodes_to_remove    = [];
-                if($fields[$n]["global"] == 0 && !in_array($resource_data[$ref]["resource_type"],explode(",",$fields[$n]["resource_types"])))
+                if($fields[$n]["global"] == 0 && !in_array($resource_data[$ref]["resource_type"],explode(",",(string)$fields[$n]["resource_types"])))
                     {
                     continue;
                     }
@@ -7755,7 +7755,13 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         $valid_order_by_cols = array();
         foreach ($order_by_cols as $col)
             {
-            if (in_array(trim($col),  $fields))
+            if($col == "resource_type" && strtolower($field_sort)=="asc")
+                {
+                // Now multiple mapping and resource_type no longer used. Need to reverse order and show global fields first
+                $valid_order_by_cols[] = "global DESC";
+                }
+
+            elseif (in_array(trim($col),  $fields))
                 {
                 $valid_order_by_cols[] = trim($col);
                 }
@@ -7772,26 +7778,37 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 
     $valid_sorts = ['asc', 'ascending', 'desc', 'descending'];
     if(!in_array(strtolower($field_sort), $valid_sorts)){$field_sort = 'asc';}
-    $conditions = []; $joins = [];$params = [];
-    $restypeselect = "";
-    if(is_array($restypes))
+    $conditions = [];
+    $restypeconditions = [];
+    $groupcondition = "";
+    $joins = [];
+    $params = [];
+
+    if(!is_array($restypes))
         {
-        if(in_array(0,$restypes))
+        $restypes = array_filter(explode(",",$restypes),"is_int_loose"); 
+        }
+   
+    $restypeselect = ", GROUP_CONCAT(rtfrt.resource_type) resource_types ";
+    $joins[] = " LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = rtf.ref";
+
+    foreach($restypes as $restype)
+        {
+        if($restype == 0)
             {
-            $conditions[] = "global=1";
-            $restypeselect = ", '' AS resource_types ";
+            $restypeconditions[] = "global=1";
             }
         else
             {
-            $conditions[] = "global=0";
-            $restypeselect = ", GROUP_CONCAT(rtfrt.resource_type) resource_types ";
+            $restypeconditions[] = "FIND_IN_SET(?,resource_types)";
+            $params[] = "i";$params[] = $restype;
             }
-        if(count(array_diff($restypes,[0])) > 0)
-            { 
-            $joins[] = " LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = rtf.ref AND rtfrt.resource_type IN (". ps_param_insert(count($restypes)) .")";
-            $params = ps_param_fill($restypes, 'i');
-            }
+        }    
+    if(count($restypeconditions) > 0)
+        {
+        $groupcondition = " HAVING ((" . implode(") OR (",$restypeconditions) . "))";
         }
+
     if ($include_inactive==false)
         {
         $conditions[]  = "active=1";
@@ -7801,7 +7818,6 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         $conditions[] =" name LIKE ? OR title LIKE ? OR tab_name LIKE ? OR exiftool_field LIKE ? OR help_text LIKE ? OR ref LIKE ? OR tooltip_text LIKE ? OR display_template LIKE ?)";
         $params = array_merge($params, ['s', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%"]);
         }
-
     $newfieldtypes = array_filter($fieldtypes,function($v){return (string)(int)$v == $v;});
 
     if(count($newfieldtypes) > 0)
@@ -7813,9 +7829,12 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     $conditionstring = count($conditions) > 0 ? (" WHERE (" . implode(") AND (",$conditions) . ")") : "";
 
     $allfields = ps_query("
-        SELECT " . columns_in("resource_type_field", "rtf") . $restypeselect . "
-          FROM resource_type_field rtf " . implode(" ",$joins)  . $conditionstring . " GROUP BY rtf.ref ORDER BY active desc," . $field_order_by . " " . $field_sort, $params, "schema");
-
+           SELECT " . columns_in("resource_type_field", "rtf") . $restypeselect . "
+             FROM resource_type_field rtf " . implode(" ",$joins)  . $conditionstring . " 
+         GROUP BY rtf.ref " . $groupcondition . "
+         ORDER BY active desc," . $field_order_by . " " . $field_sort,
+          $params,
+          "schema");
     // Sort by translated strings if sorting by title
     if(strtolower($field_order_by) == "title")
         {
@@ -8220,6 +8239,8 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
         }
 
     $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$shortname), 0, "schema");
+    $order_by_current = ps_value("SELECT MAX(order_by) AS `value` FROM resource_type_field",[],0,"schema");
+    $default_tab = ps_value("SELECT MIN(ref) value FROM tab",[],0,"schema");
 
     // Global type?
     $global=0;$restypes=array();
@@ -8232,14 +8253,14 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
         if (!is_array($restype)) {$restypes=array($restype);} // Single resource type passed, put it in an array
         }
 
-    ps_query("INSERT INTO resource_type_field (title, global, type, `name`, keywords_index) VALUES (?, ?, ?, ?, ?)",
-    array("s",$name,"i",$global,"i",$type,"s",$shortname,"i",($index ? "1" : "0")));
+    ps_query("INSERT INTO resource_type_field (title, global, type, `name`, keywords_index, order_by, tab) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    array("s",$name,"i",$global,"i",$type,"s",$shortname,"i",($index ? "1" : "0"),"i",$order_by_current+10,"i",$default_tab));
     $new = sql_insert_id();
 
     // Add joins
     foreach ($restypes as $resinsert)
         {
-        ps_query("insert into resource_type_field_resource_type (resource_type_field,resource_type) values (?, ?)", array("i",$new,"i",$resinsert));
+        ps_query("INSERT INTO resource_type_field_resource_type (resource_type_field,resource_type) VALUES (?, ?)", array("i",$new,"i",$resinsert));
         }
 
     if($duplicate)

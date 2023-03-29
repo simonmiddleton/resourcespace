@@ -1667,6 +1667,7 @@ $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) 
     {
+        // TODO Fix this
     $fields_to_include = array();
     foreach ($fields as $field_candidate) 
         {
@@ -1693,26 +1694,35 @@ if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
     }
 
 # if this is a metadata template, set the metadata template title field at the top
-if (($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
+if (($ref < 0 || $upload_review_mode) 
+    && isset($metadata_template_resource_type)
+    && (isset($metadata_template_title_field))
+    && in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"]))
+    )
+    {
     # recreate fields array, first with metadata template field
-  $x=0;
-  $fields_count = count($fields);
-  for ($n=0;$n<$fields_count;$n++){
-    if ($fields[$n]["resource_type"]==$metadata_template_resource_type){
-      $newfields[$x]=$fields[$n];
-      ++$x;
-   }
-}
+    $x=0;
+    $fields_count = count($fields);
+    for ($n=0;$n<$fields_count;$n++)
+        {
+        if (in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"])))
+            {
+            $newfields[$x]=$fields[$n];
+            ++$x;
+            }
+        }
     # then add the others
-$fields_count = count($fields);
-for ($n=0;$n<$fields_count;$n++){
- if ($fields[$n]["resource_type"]!=$metadata_template_resource_type){
-   $newfields[$x]=$fields[$n];
-   ++$x;
-}
-}
-$fields=$newfields;
-}
+    $fields_count = count($fields);
+    for ($n=0;$n<$fields_count;$n++)
+        {
+        if (!in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"])))
+            {
+            $newfields[$x]=$fields[$n];
+            ++$x;
+            }
+        }
+    $fields=$newfields;
+    }
 
 $required_fields_exempt=array(); # new array to contain required fields that have not met the display condition
 
@@ -1746,7 +1756,7 @@ if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
 if($multiple)// this is closing a div that can be omitted via hook("replaceedittype")
 	{
 	?>
-	</div><!-- end collapisble ResourceTypeSection -->
+	</div><!-- end collapsible ResourceTypeSection -->
 	<?php
 	}
 hook('editbeforesectionhead');
@@ -1865,40 +1875,40 @@ if($tabs_on_edit)
         }
     }
 
-    #  -----------------------------  Draw fields ---------------------------
-    $tabcount = 0;
-    $last_tab_drawn = 0;
-    foreach($fields as $n => $field)
+#  -----------------------------  Draw fields ---------------------------
+$tabcount = 0;
+$last_tab_drawn = 0;
+foreach($fields as $n => $field)
+    {
+    if(!(is_field_displayed($field)))
         {
-        if(!(is_field_displayed($field) && !in_array($field['resource_type'], $hide_resource_types)))
-            {
-            continue;
-            }
-
-        // Draw a new tab panel?
-        $newtab = $tabs_on_edit && $field['tab'] !== $last_tab_drawn;  
-        if($newtab)
-            {
-            $new_TabbedPanel_id = sprintf('%stab%s-%s', $modal ? 'Modal' : '', $tabcount, (int) $ref);
-            ?>
-            <div class="clearerleft"></div>
-            <?php
-            // Display the custom formatted data (ie customer template) $extra at the bottom of this tab panel.
-            if(isset($extra)) { echo $extra; }
-            ?>
-                </div><!-- end of TabPanelInner -->
-            </div><!-- end of TabbedPanel -->
-            <div id="<?php echo $new_TabbedPanel_id; ?>" class="TabbedPanel <?php echo $tabModalityClass; ?> StyledTabbedPanel" style="display:none;">
-                <div class="TabPanelInner">
-            <?php
-            ++$tabcount;
-            $extra = '';
-            $last_tab_drawn = $field['tab'];
-            }
-
-        node_field_options_override($field);
-        display_field($n, $field, $newtab, $modal);
+        continue;
         }
+
+    // Draw a new tab panel?
+    $newtab = $tabs_on_edit && $field['tab'] !== $last_tab_drawn;  
+    if($newtab)
+        {
+        $new_TabbedPanel_id = sprintf('%stab%s-%s', $modal ? 'Modal' : '', $tabcount, (int) $ref);
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        // Display the custom formatted data (ie customer template) $extra at the bottom of this tab panel.
+        if(isset($extra)) { echo $extra; }
+        ?>
+            </div><!-- end of TabPanelInner -->
+        </div><!-- end of TabbedPanel -->
+        <div id="<?php echo $new_TabbedPanel_id; ?>" class="TabbedPanel <?php echo $tabModalityClass; ?> StyledTabbedPanel" style="display:none;">
+            <div class="TabPanelInner">
+        <?php
+        ++$tabcount;
+        $extra = '';
+        $last_tab_drawn = $field['tab'];
+        }
+
+    node_field_options_override($field);
+    display_field($n, $field, $newtab, $modal);
+    }
 
     if ($tabs_on_edit && $tabcount>0)
         {

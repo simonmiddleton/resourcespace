@@ -211,7 +211,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
         {
-        $fieldrestypes = explode(",",$fields[$i]['resource_types']);
+        $fieldrestypes = explode(",",(string)$fields[$i]['resource_types']);
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
         if($fields[$i]['global'] == '1' || in_array($resource['resource_type'],$fieldrestypes)

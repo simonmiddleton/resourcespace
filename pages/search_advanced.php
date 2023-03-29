@@ -561,25 +561,25 @@ $showndivide="";
 $rtypes=get_resource_types();
 
 for ($n=0;$n<count($fields);$n++)
-	{
-	# Show a dividing header for resource type specific fields?
-    $fieldrestypes = explode(",",$fields[$n]["resource_types"]);
+    {
+    # Show a dividing header for resource type specific fields?
+    $fieldrestypes = explode(",",(string)$fields[$n]["resource_types"]);
     $restypestring = implode("_", $fieldrestypes);
-	if (($fields[$n]["global"] == 0) && ($showndivide != $restypestring))
-		{
-		$showndivide=$restypestring;
-		$labels = [];
-		# Find resource type names
-		for ($m=0;$m<count($rtypes);$m++)
-			{
-			# Note: get_resource_types() has already translated the resource type name for the current user.
-			if (in_array($rtypes[$m]["ref"],$fieldrestypes))
+    if (($fields[$n]["global"] == 0) && ($showndivide != $restypestring))
+        {
+        $showndivide=$restypestring;
+        $labels = [];
+        # Find resource type names
+        for ($m=0;$m<count($rtypes);$m++)
+            {
+            # Note: get_resource_types() has already translated the resource type name for the current user.
+            if (in_array($rtypes[$m]["ref"],$fieldrestypes))
                 {
                 $labels[] =$rtypes[$m]["name"];
                 }
-			}
+            }
         $label = implode(", ",$labels);
-		?>
+        ?>
 		</div>
             <h1 class="AdvancedSectionHead CollapsibleSectionHead ResTypeSectionHead"
                 id="AdvancedSearch<?php echo $restypestring; ?>SectionHead"
