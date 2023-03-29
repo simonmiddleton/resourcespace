@@ -70,6 +70,7 @@ function update_preview($ref, $previewbased, $sizes)
         else{$ingested=true;}
         create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,true,$ingested, true, $sizes);
         hook("afterupdatepreview","",array($ref));
+        update_disk_usage($ref);
         return true;
         }
     return false;
