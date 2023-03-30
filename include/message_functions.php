@@ -511,20 +511,91 @@ function message_send_unread_emails()
             }
         }
 
-	# Get all unread notifications created since last run, or all mesages sent to inactive users. 
-    # Build array of sql query parameters
-    $parameters = array();
     if (count($digestusers) > 0)
         {
-        $parameters = array_merge($parameters, ps_param_fill($digestusers,"i"));
+        $digestuserschunks = array_chunk($digestusers,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+        $unreadmessages = [];
+        foreach($digestuserschunks as $chunk)
+            {
+            # Get all unread notifications created since last run, or all messages sent to inactive users. 
+            # Build array of sql query parameters
+            
+            $parameters = array();
+
+            $parameters = array_merge($parameters, ps_param_fill($chunk,"i"));
+            $parameters = array_merge($parameters, array("s",$lastrun));
+            $digestusers_sql = " AND u.ref IN (" . ps_param_insert(count($chunk)) . ")";
+
+            $sendall_chunk = array_intersect($sendall,$chunk);
+            if (count($sendall_chunk) > 0)
+                {
+                $parameters  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
+                $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")";
+                }
+            else
+                {
+                $sendall_sql = "";
+                }
+
+            $unreadmessages = array_merge(
+                $unreadmessages,
+                ps_query(
+                "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                    FROM user_message um 
+                        JOIN user u ON u.ref = um.user 
+                        JOIN message m ON m.ref = um.message 
+                        WHERE um.seen = 0
+                        $digestusers_sql
+                        AND u.email <> '' 
+                        AND (m.created > ? 
+                            $sendall_sql) 
+                        ORDER BY m.created DESC", 
+                    $parameters
+                ));
+            }
         }
-    $parameters = array_merge($parameters, array("s",$lastrun));
-    if (count($sendall) > 0)
+    else
         {
-        $parameters = array_merge($parameters, ps_param_fill($sendall,"i"));
+        $parameters = array("s",$lastrun);
+        $unreadmessages = ps_query(
+            "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                FROM user_message um 
+                    JOIN user u ON u.ref = um.user 
+                    JOIN message m ON m.ref = um.message 
+                    WHERE um.seen = 0
+                    AND u.email <> '' 
+                    AND (m.created > ?) 
+                    ORDER BY m.created DESC", 
+                $parameters
+            );
+        
+        if (count($sendall) > 0)
+            {
+            $sendall_chunk = array_chunk($sendall,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+
+            if (count($sendall_chunk) > 0)
+                {
+                $parameters  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
+                $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
+                }
+                
+            $unreadmessages = array_merge(
+                $unreadmessages,
+                ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                    FROM user_message um 
+                        JOIN user u ON u.ref = um.user 
+                        JOIN message m ON m.ref = um.message 
+                        WHERE um.seen = 0
+                        AND u.email <> '' 
+                        AND (m.created > ? 
+                            $sendall_sql) 
+                        ORDER BY m.created DESC", 
+                    $parameters
+                )
+            );
+            }
         }
-    $unreadmessages = ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0"
-      . (count($digestusers) > 0 ? " AND u.ref IN (" . ps_param_insert(count($digestusers)) . ")" : "") . " AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
+
 
     // Keep record of the current value for these config options. setup_user() may override them with the user group specific ones.
     $current_inactive_message_auto_digest_period = $inactive_message_auto_digest_period;
