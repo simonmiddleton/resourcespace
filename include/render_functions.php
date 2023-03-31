@@ -4991,8 +4991,8 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
         // trigger_error('reload parameter is now deprecated!', E_USER_DEPRECATED);
         }
 
-    $permission_name = base64_encode($permission);
     $input_value = $reverse ? "reverse" : "normal";
+    $base64_perm = base64_encode($permission);
 
     // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
     $disabled_attr = '';
@@ -5003,16 +5003,16 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
         }
     $checked_attr = $checked ? ' checked' : '';
     ?>
-    <input type="hidden" name="permission_<?php echo $permission_name; ?>" value="<?php echo $input_value; ?>">
+    <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
         <td><?php echo htmlspecialchars($description); ?></td>
         <td>
             <input
                 type="checkbox"
-                name="checked_<?php echo $permission_name; ?>"
+                name="checked_<?php echo $base64_perm; ?>"
                 data-reverse="<?php echo (int) $reverse; ?>"
                 <?php echo $disabled_attr . $checked_attr; ?>
-                onchange="SavePermission('<?php echo $permission_name; ?>');">
+                onchange="SavePermission('<?php echo $base64_perm; ?>');">
         </td>
     </tr>
     <?php

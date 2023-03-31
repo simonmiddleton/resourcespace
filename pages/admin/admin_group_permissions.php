@@ -1,13 +1,12 @@
 <?php
 include "../../include/db.php";
 include "../../include/authenticate.php";
+include "../../include/ajax_functions.php";
 
 if (!checkperm("a"))
 	{
 	exit ("Permission denied.");
 	}
-
-include "../../include/header.php";
 
 $ref=getval("ref","");
 $offset=getval("offset",0,true);
@@ -17,16 +16,89 @@ $find=getval("find","");
 $filter_by_permissions=getval("filterbypermissions","");
 $copy_from=getval("copyfrom","");
 
-$url_params=
-	"?ref={$ref}" .
-	($offset ? "&offset={$offset}" : "") .
-	($order_by ? "&orderby={$order_by}" : "") .
-	($filter_by_parent ? "&filterbyparent={$filter_by_parent}" : "") .
-	($find ? "&find={$find}" : "") .
-	($filter_by_permissions ? "&filterbypermissions={$filter_by_permissions}" : "");
+$url_params = [
+    'ref' => $ref,
+];
+if ($offset)
+    {
+    $url_params['offset'] = $offset;
+    }
+if ($order_by)
+    {
+    $url_params['orderby'] = $order_by;
+    }
+if ($filter_by_parent)
+    {
+    $url_params['filterbyparent'] = $filter_by_parent;
+    }
+if ($find)
+    {
+    $url_params['find'] = $find;
+    }
+if ($filter_by_permissions)
+    {
+    $url_params['filterbypermissions'] = $filter_by_permissions;
+    }
 
-if (getval("save","")!="" && enforcePostRequest(false))
+$admin_group_permissions_url = generateURL("{$baseurl_short}pages/admin/admin_group_permissions.php", $url_params);
+$group = get_usergroup($ref);
+
+if (getval("save","")!="" && enforcePostRequest(getval('ajax', '') == 'true'))
 	{
+    if (
+        $group !== false
+        && isset($group['inherit']) 
+        && is_array($group['inherit'])
+        && in_array("permissions", $group['inherit'])
+    )
+        {
+        ajax_unauthorized();
+        }
+    
+    $permissions = trim_array(explode(',', (string) $group['permissions']));
+    $permissions_to_add = $permissions_to_remove = [];
+
+    // Data input
+    $permission = getval('permission', '');
+    $reverse = getval('reverse', 0, true) == 1;
+    $checked = getval('checked', '') === 'true';
+
+    if (
+        // Normal permissions
+        (!$reverse && $checked)
+        // Negative permissions
+        || ($reverse && !$checked)
+    )
+        {
+        $permissions_to_add[] = base64_decode($permission);
+
+        }
+    else
+        {
+        $permissions_to_remove[] = base64_decode($permission);
+        }
+
+    $perms = array_values(array_unique(
+        array_diff(
+            array_merge($permissions, $permissions_to_add),
+            $permissions_to_remove
+        )
+    ));
+    $perms_csv = join(',', $perms);
+
+    log_activity(null, LOG_CODE_EDITED, $perms_csv, 'usergroup', 'permissions', $ref, null, null, null, true);
+    ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ["s",$perms_csv, "i",$ref]);
+    
+    ajax_send_response(200, ajax_response_ok_no_data());
+
+    /*
+    todo:
+    - allow save to deal with a list of permissions so custom permissions can be dealt with
+    - deal with disabled permissions (check before changes again how they should work)
+    */
+
+    // old code - kept for reference - todo: delete
+    echo '<pre>';print_r($_POST);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
 	$perms=array();
 	foreach ($_POST as $key=>$value)
 		{
@@ -50,6 +122,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	$perms = array_unique($perms);
 	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
     ps_query("update usergroup set permissions=? where ref=?",["s",join(",",$perms),"i",$ref]);
+    // old code above - kept for reference - todo: delete
 	}
 
 if ($copy_from!="")
@@ -57,15 +130,18 @@ if ($copy_from!="")
     copy_usergroup_permissions($copy_from,$ref);
     }
 
+// todo: why is this so low in the process? Someone could change perms and then get a permission denied
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",(string)$group["permissions"]));
 $permissions_done=array();	
+
+include "../../include/header.php";
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"]); ?></h1>
 <?php
-    $links_trail = array(
+$links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
@@ -77,7 +153,7 @@ $permissions_done=array();
     ),
     array(
         'title' => $lang["page-title_user_group_management_edit"],
-		'href'  => $baseurl_short . "pages/admin/admin_group_management_edit.php" . $url_params
+        'href'  => generateURL("{$baseurl_short}pages/admin/admin_group_management_edit.php", $url_params),
     ),
 	array(
 		'title' => $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"])
@@ -88,7 +164,7 @@ renderBreadcrumbs($links_trail);
 ?>
 	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
 
-    <form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
+    <form method="post" id="permissions" action="<?php echo $admin_group_permissions_url; ?> onsubmit="return CentralSpacePost(this,true);" >	
         <input type="hidden" name="save" value="1">
         
         <div class="BasicsBox">
@@ -384,6 +460,51 @@ hook("additionalperms");
 
 	</form>	
 </div>  <!-- end of BasicsBox -->
-	
+<script>
+function SavePermission(perm)
+    {
+    console.debug('SavePermission(perm = %o) -- base64_decoded: %o', perm, atob(perm));
+    let el = jQuery("input[name='checked_" + perm + "']");
+
+    CentralSpaceShowLoading();
+    jQuery.ajax(
+        {
+        type: 'POST',
+        url: '<?php echo $admin_group_permissions_url; ?>',
+        data: {
+            ajax: true,
+            save: '1',
+            permission: perm,
+            reverse: el.data('reverse'),
+            checked: el.prop('checked'),
+            <?php echo generateAjaxToken('SaveUsergroupPermission'); ?>
+        },
+        dataType: "json"
+        })
+        .done(function(response, textStatus, jqXHR)
+            {
+            // redraw page to show/hide any dependendant permissions
+            CentralSpaceLoad('<?php echo $admin_group_permissions_url; ?>', false);
+            })
+        .fail(function(data, textStatus, jqXHR)
+            {
+            if(typeof data.responseJSON === 'undefined')
+                {
+                console.debug('data = %o', data);
+                styledalert('', "<?php echo escape_quoted_data($lang['error_generic']); ?>");
+                return;
+                }
+
+            let response = data.responseJSON;
+            styledalert(jqXHR, response.data.message);
+            })
+        .always(function()
+            {
+            CentralSpaceHideLoading();
+            });
+
+    return;
+    }
+</script>	
 <?php
 include "../../include/footer.php";
