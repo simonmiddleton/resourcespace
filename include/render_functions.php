@@ -4974,23 +4974,49 @@ function render_featured_collection(array $ctx, array $fc)
 * @param boolean $reverse      Reverse the permission
 * @param boolean $reload       Autosave changes done on this permission
 * @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
-* 
-* @return void
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
+function DrawOption(string $permission, string $description, bool $reverse = false, bool $reload = false, bool $disabled = false): void
     {
     global $permissions,$permissions_done;
-    $checked=(in_array($permission,$permissions));
-    if ($reverse) {$checked=!$checked;}
+
+    $checked = in_array($permission, $permissions);
+    if ($reverse)
+        {
+        $checked = !$checked;
+        }
+    
+    if ($reload)
+        {
+        // todo: uncomment after cleaning core base
+        // trigger_error('reload parameter is now deprecated!', E_USER_DEPRECATED);
+        }
+
+    $permission_name = base64_encode($permission);
+    $input_value = $reverse ? "reverse" : "normal";
+
+    // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
+    $disabled_attr = '';
+    if ($disabled)
+        {
+        $checked = true;
+        $disabled_attr = ' disabled';
+        }
+    $checked_attr = $checked ? ' checked' : '';
     ?>
-    <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+    <input type="hidden" name="permission_<?php echo $permission_name; ?>" value="<?php echo $input_value; ?>">
     <tr>
-        <td><?php echo $description?></td>
-        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
-            if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
+        <td><?php echo htmlspecialchars($description); ?></td>
+        <td>
+            <input
+                type="checkbox"
+                name="checked_<?php echo $permission_name; ?>"
+                data-reverse="<?php echo (int) $reverse; ?>"
+                <?php echo $disabled_attr . $checked_attr; ?>
+                onchange="SavePermission('<?php echo $permission_name; ?>');">
+        </td>
     </tr>
     <?php
-    $permissions_done[]=$permission;
+    $permissions_done[] = $permission;
     }
 
 
