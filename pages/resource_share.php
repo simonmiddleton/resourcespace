@@ -352,7 +352,7 @@ if($editing && !$editexternalurl)
                             <td><div class="ListTitle"><a target="_blank" href="<?php echo $url ?>"><?php echo htmlspecialchars($key["access_key"]) ?></a></div></td>
                             <td><?php echo $type                                              ?></td>
                             <td><?php echo htmlspecialchars(resolve_users($key["users"]))     ?></td>
-                            <td><?php echo htmlspecialchars($key["emails"])                   ?></td>
+                            <td><?php echo htmlspecialchars($key["emails"]??"")                   ?></td>
                             <td><?php echo htmlspecialchars(nicedate($key["maxdate"],true));  ?></td>
                             <td><?php echo htmlspecialchars(nicedate($key["lastused"],true)); ?></td>
                             <td><?php echo htmlspecialchars($keyexpires)                         ?></td>

@@ -41,7 +41,7 @@ foreach($tmsdata as $module_name => $module_tms_data)
         ?>
         <tr> 
            <td><strong><?php echo htmlspecialchars($tms_column); ?></strong></td>
-           <td><?php echo htmlspecialchars($tms_value); ?></td>
+           <td><?php echo htmlspecialchars($tms_value??""); ?></td>
         </tr>
         <?php
         }
