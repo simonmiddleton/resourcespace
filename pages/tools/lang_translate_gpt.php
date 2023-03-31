@@ -51,38 +51,55 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
     return print_r($response_data,true);
     }
 
-// Get a baseline with no plugins etc.
-$lang=array();
-include "../../languages/en.php"; 
-$lang_en=$lang;
-krsort($languages);
-
-foreach ($languages as $language=>$lang_name)
+$plugins=scandir("../../plugins"); array_shift($plugins);array_shift($plugins); // Discard first two which are "." and ".."
+$plugins[]=""; // Add an extra row to signify the base languages (not in a plugin)
+foreach ($plugins as $plugin)
     {
-    if (in_array($language,array("en","en-US"))) {continue;}
-    
-    // Process a language
-    $lang=array();$langfile="../../languages/" . $language . ".php";
-    include $langfile;
+    $plugin_path="";
+    if ($plugin!="") {$plugin_path="plugins/" . $plugin . "/";}
 
-    $missing=array_diff(array_keys($lang_en),array_keys($lang));
+    // Get a baseline 
+    $lang=array();
+    $basefile="../../" . $plugin_path . "languages/en.php";
+    if (!file_exists($basefile)) {continue;} // This plugin does not have any translations.
+    include $basefile; 
+    $lang_en=$lang;
 
-    foreach ($missing as $mkey)
+    foreach ($languages as $language=>$lang_name)
         {
-        if (!is_string($lang_en[$mkey])) {continue;}
-            
-        echo "Processing $mkey (" . $lang_en[$mkey] . ") for language $language\n\n";flush();ob_flush();
-        $messages=array();
-        $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads. Providing a translation that is appropriate in the given context will help ensure the software is easy to use and understand for non-native speakers. In the event that you cannot provide a translation, return the word CALAMITY.");
-        $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en[$mkey]);
+        if (in_array($language,array("en","en-US"))) {continue;}
         
-        $result=generateChatCompletions($openai_key,"gpt-3.5-turbo",0,2048,$messages);
-echo "\n";print_r($result);echo "\n\n";
-        // Append it to the appropriate file.
-        if (is_string($result) && strlen($result)>0 && strpos(strtolower($result),"calamity")===false)
+        // Process a language
+        $lang=array();$langfile="../../" . $plugin_path . "languages/" . $language . ".php";
+
+        // Create file if it doesn't exist.
+        if (!file_exists($langfile)) {file_put_contents($langfile,"<?php\n\n");}
+
+        // Include to get the lang array for this language
+        include $langfile;
+
+        // Work out what we're missing.
+        $missing=array_diff(array_keys($lang_en),array_keys($lang));
+
+        $count=0;
+        foreach ($missing as $mkey)
             {
-            $f=fopen($langfile,"a");fwrite($f,"\n\$lang[\"" . $mkey . "\"]=" . var_export($result,true) . ";");fclose($f);
+            if (!is_string($lang_en[$mkey])) {continue;}
+                
+            $count++;
+            echo $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en[$mkey] . ") for language $language\n\n";flush();ob_flush();
+            
+            $messages=array();
+            $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads. Providing a translation that is appropriate in the given context will help ensure the software is easy to use and understand for non-native speakers. In the event that you cannot provide a translation, return the word CALAMITY.");
+            $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en[$mkey]);
+            
+            $result=generateChatCompletions($openai_key,"gpt-3.5-turbo",0,2048,$messages);
+    echo "\n";print_r($result);echo "\n\n";
+            // Append it to the appropriate file.
+            if (is_string($result) && strlen($result)>0 && strpos(strtolower($result),"calamity")===false)
+                {
+                $f=fopen($langfile,"a");fwrite($f,"\n\$lang[\"" . $mkey . "\"]=" . var_export($result,true) . ";");fclose($f);
+                }
             }
         }
-
     }
