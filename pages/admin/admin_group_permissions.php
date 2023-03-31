@@ -109,6 +109,22 @@ renderBreadcrumbs($links_trail);
 <?php		}
 ?>		<div class="Listview">
 			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+
+				<tr class="ListviewTitleStyle">
+					<td colspan=3 class="permheader">TEST permissions (use cases) --- ToDo: delete once done!!!</td>
+				</tr>
+				<?php
+				DrawOption('simpleperm', 'A simple (regular) permision', false, true);
+				DrawOption('reversedperm', 'A reversed permision', true, true);
+				DrawOption('myparent', 'A parent permision', false, true);
+				if (in_array("myparent", $permissions))
+					{
+					DrawOption('mychild', 'A dependant permision (on parent)', false, true);
+					}
+				DrawOption('disabledsimple', 'DISABLED: A simple permision', false, true, true);
+				DrawOption('disabledreverse', 'DISABLED: A reversed permision', true, true, true);
+				?>
+
 				<tr class="ListviewTitleStyle">
 					<td colspan=2 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
 				</tr>
@@ -263,11 +279,10 @@ DrawOption("D", $lang["can_delete_resources"], true);
 
 DrawOption("i", $lang["can_manage_archive_resources"]);
 DrawOption('A', $lang["can_manage_alternative_files"], true);
-
-
-?>				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["themes_and_collections"] ?></td>
-				</tr>
+?>
+	<tr class="ListviewTitleStyle">
+		<td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["themes_and_collections"]); ?></td>
+	</tr>
 <?php
 
 DrawOption("b", $lang["enable_bottom_collection_bar"], true);
@@ -349,6 +364,8 @@ DrawOption("E", $lang["can_email_resources_to_own_and_children_and_parent_groups
 DrawOption("x", $lang["allow_user_group_selection_for_access_when_sharing_externally"]);
 DrawOption("noex", $lang["prevent_user_group_sharing_externally"]);
 DrawOption("nolock", $lang["permission_nolock"]);
+
+
 
 hook("additionalperms");
 ?>			</table>
