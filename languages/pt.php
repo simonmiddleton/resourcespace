@@ -440,6 +440,3 @@ $lang["newflag"]="NOVO!";
 
 $lang["resourcemetadata"]="Conteúdo metadados";
 
-
-
-?>

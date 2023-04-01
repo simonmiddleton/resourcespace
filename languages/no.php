@@ -1208,4 +1208,3 @@ $lang["nodownloadcollection"]="Du har ikke tilgang til å laste ned noe av mater
 
 $lang["progress"]="Fremdrift";
 $lang["ticktodeletethisresearchrequest"]="Kryss av for å slette denne forespørselen";
-?>

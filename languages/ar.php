@@ -1095,18 +1095,6 @@ $lang["background_manual_selection_resource_label"]='صورة الخلفية - �
 $lang["share_fc_warning"]='يرجى ملاحظة أنه عند مشاركة فئة مجموعة مميزة، سيتم مشاركة المجموعات المميزة التي تحتوي على موارد فقط.';
 $lang["featured_collection_root_category"]='المستوى الأعلى';
 $lang["delete_multiple_collections"]='هل أنت متأكد أنك تريد حذف المجموعات المحددة؟';
-$lang["page_collections_message"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 6ad54cccfb9838b15fb8ec2072f4ee53 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["delete_all_selected"]='حذف كل المحددة';
 $lang["range_no_start_header"]='خطأ في النطاق';
 $lang["range_no_start"]='لا يمكن إنهاء النطاق بدون بداية. يرجى تحرير مفتاح التحويل.';
@@ -1600,18 +1588,6 @@ $lang["reportbug"]='إعداد تقرير الأخطاء لفريق ResourceSpac
 $lang["reportbug-detail"]='تم جمع المعلومات التالية لتضمينها في تقرير الخلل. ستتمكن من تغيير جميع القيم قبل تقديم التقرير.';
 $lang["reportbug-login"]='ملاحظة: انقر هنا لتسجيل الدخول إلى متعقب الأخطاء قبل النقر على "التحضير".';
 $lang["reportbug-preparebutton"]='إعداد تقرير الأخطاء.';
-$lang["enterantispamcode"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 046bb5ae91df6cf731c70d985c5374e6 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["groupaccess"]='صلاحية المجموعة';
 $lang["plugin-groupsallaccess"]='تم تفعيل هذه الإضافة لجميع المجموعات.';
 $lang["plugin-groupsspecific"]='تم تفعيل هذه الإضافة للمجموعات المحددة فقط.';
@@ -2967,18 +2943,6 @@ $lang["my_jobs"]='وظائف';
 $lang["job_reset"]='إعادة تعيين';
 $lang["job_status_0"]='مُعَوَّق.';
 $lang["job_status_1"]='نشط';
-$lang["job_status_2"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 312cbe95807047699e0e100951aadb6b in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["job_status_3"]='قيد التقدم';
 $lang["job_status_5"]='فشل';
 $lang["jobs_action_purge_complete"]='تم حذف الوظائف المكتملة والفاشلة';

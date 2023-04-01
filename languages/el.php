@@ -625,4 +625,4 @@ $lang["viewrequesturl"]="Για να δείτε αυτό το αίτημα, κά
 $lang["requestreason"]="Λόγος για την αίτηση";
 $lang["resourcerequeststatus0"]="Ανοικτός";
 $lang["resourcerequeststatus1"]="Κλειστή";
-?>
+

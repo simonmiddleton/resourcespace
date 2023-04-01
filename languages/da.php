@@ -632,4 +632,3 @@ $lang["editrequestorder"]="Rediger Anmodning / Bestilling";
 $lang["requestorderid"]="Anmodning / Ordre-id";
 $lang["viewrequesturl"]="For at se denne anmodning, skal du klikke på nedenstående link:";
 $lang["requestreason"]="Begrundelse for anmodningen";
-?>

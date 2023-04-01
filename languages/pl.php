@@ -858,5 +858,3 @@ $lang["emailfromsystem"]="If unchecked, email will be sent from the system addre
 
 
 $lang["previewpage"]="Preview Page";
-
-?>

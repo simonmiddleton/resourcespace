@@ -626,4 +626,4 @@ $lang["viewrequesturl"]="Da biste vidjeli ovaj zahtjev, kliknite na link ispod:"
 $lang["requestreason"]="Razlog za zahtjev";
 $lang["resourcerequeststatus0"]="Otvoriti";
 $lang["resourcerequeststatus1"]="Zatvoreno";
-?>
+

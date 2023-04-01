@@ -510,4 +510,4 @@ $lang["emailfromuser"]="Invia l'e-mail da ";
 $lang["never"]="Mai";
 $lang["noattachedusers"]="nessun utente allegato";
 $lang["emailfromsystem"]="Se non selezioni l'opzione, la mail verrÃ  mandata dall'indirizzo di sistema: ";
-?>
+

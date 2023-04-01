@@ -684,8 +684,6 @@ $lang["videoplaylist"]="Playlist Video";
 
 $lang["resourcemetadata"]="Aset Metadata";
 
-?>
-
 $lang["usergroup-administrators"]='Administrator (Administrator)';
 $lang["usergroup-general_users"]='Pengguna Umum';
 $lang["usergroup-super_admin"]='Super Admin: Administrator Utama';
@@ -716,18 +714,6 @@ $lang["fieldtitle-country"]='Negara';
 $lang["fieldtitle-title"]='Judul';
 $lang["fieldtitle-story_extract"]='Ekstrak Cerita';
 $lang["fieldtitle-credit"]='Kredit';
-$lang["fieldtitle-date"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 61e194a5b64045a85e9c4ef9aead90b0 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["fieldtitle-expiry_date"]='Tanggal kedaluwarsa.';
 $lang["fieldtitle-caption"]='Terjemahan: Keterangan.';
 $lang["fieldtitle-notes"]='Catatan';
@@ -782,18 +768,6 @@ $lang["property-fixed_theme"]='Tema Tetap.';
 $lang["property-parent"]='Induk';
 $lang["property-search_filter"]='Filter pencarian.';
 $lang["property-edit_filter"]='Mengedit filter.';
-$lang["property-resource_defaults"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID deba867fe271d7cc519f663d6e281bd2 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["property-override_config_options"]='Mengesampingkan opsi konfigurasi.';
 $lang["property-config_inherit"]='Mewarisi dari grup induk';
 $lang["property-email_welcome_message"]='Pesan sambutan email.';
@@ -964,18 +938,6 @@ $lang["contributedps"]='Kontribusi Saya - Menunggu Pengajuan';
 $lang["contributedpr"]='Kontribusi Saya - Menunggu Ulasan';
 $lang["contributedsubittedl"]='Kontribusi Saya - Aktif';
 $lang["editcollectionresources"]='Mengedit pratinjau koleksi.';
-$lang["collection_set_theme_category"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 3d241cd752c8372362ed7ea9d472be04 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["collection_set_theme_category_title"]='Tambahkan koleksi ke kategori koleksi unggulan.';
 $lang["collection-name"]='Koleksi: %collectionname%';
 $lang["collectionidprefix"]='Silakan terjemahkan: Col_ID
@@ -1524,31 +1486,7 @@ $lang["marker"]='Pena spidol.';
 $lang["markers"]='Penanda-penanda.';
 $lang["map_configuration"]='Peta Hasil Pencarian';
 $lang["map_introtext1"]='Peta di bawah ini menunjukkan sumber daya dari hasil pencarian yang memiliki geolokasi terkait. Warna penanda diatur sesuai dengan jenis sumber daya atau bidang metadata kustom (kunci di bawah peta). Ketika penanda tumpang tindih, pengelompokan berwarna hijau digunakan dengan angka yang menunjukkan jumlah penanda yang dikelompokkan, perbesar atau klik dua kali pada pengelompokan. Klik pada penanda individu untuk memuat popup untuk sumber daya tersebut yang menampilkan gambar pratinjau. Klik gambar pratinjau untuk memuat jendela untuk sumber daya tersebut. Sorot penanda individu untuk mendapatkan koordinat geografis. Ubah peta dasar menggunakan tombol peta kanan atas. Simpan peta ke file PNG menggunakan tombol peta kiri bawah.';
-$lang["search_map_introtext"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 49700e79ab71129299b152bff320957e in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["edit_map_introtext"]='Perbesar dan perkecil tampilan peta ke area yang diinginkan, lalu klik pada peta untuk menandai lokasi sumber daya. Simpan geolokasi terbaru dengan menggunakan tombol Simpan, lalu klik \'Kembali ke pengeditan sumber daya atau geolokasi koleksi\' untuk kembali. Untuk mencari lokasi atau nama fitur geografis tertentu, gunakan tombol pencarian di pojok kanan atas. Ubah peta dasar dengan menggunakan tombol lapisan peta di pojok kanan atas. Simpan peta ke file PNG dengan menggunakan tombol peta di pojok kiri bawah.';
-$lang["mapview"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID bd3d0ba00c62654eda6f5c73bfc061e2 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["maptitle"]='Tampilan Peta';
 $lang["mapemptysearch"]='Tidak ada hasil pencarian.';
 $lang["map_print_title"]='Peta Hasil Pencarian';
@@ -1627,18 +1565,6 @@ $lang["downloadreport"]='Unduh laporan.';
 $lang["reportbug"]='Siapkan laporan bug untuk tim ResourceSpace.';
 $lang["reportbug-detail"]='Informasi berikut telah dikompilasi untuk dimasukkan ke dalam laporan bug. Anda dapat mengubah semua nilai sebelum mengirimkan laporan.';
 $lang["reportbug-login"]='CATATAN: Klik di sini untuk masuk ke pelacak bug SEBELUM mengklik siapkan.';
-$lang["reportbug-preparebutton"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID afdb822e2e9fe05b5939241d5501590a in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["enterantispamcode"]='<strong>Anti-Spam</strong> <sup>*</sup><br />Silakan masukkan kode berikut:';
 $lang["groupaccess"]='Akses grup.';
 $lang["plugin-groupsallaccess"]='Plugin ini diaktifkan untuk semua grup.';
@@ -1836,18 +1762,6 @@ $lang["deletion_instruction"]='Biarkan kosong dan simpan untuk menghapus berkas.
 $lang["upload_file"]='Unggah berkas';
 $lang["item_deleted"]='Item dihapus.';
 $lang["viewing_version_created_by"]='Melihat versi yang dibuat oleh';
-$lang["on_date"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 47badb2d2ed5e05c5dd5260804fd7e3a in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["launchpermissionsmanager"]='Manajer izin peluncuran.';
 $lang["confirm-deletion"]='Apakah Anda yakin ingin menghapus?';
 $lang["accept_png_gif_only"]='Hanya ekstensi .png atau .gif yang diterima.';
@@ -2015,18 +1929,6 @@ $lang["fileaddedtozip"]='berkas berhasil disalin';
 $lang["zipping"]='Mengompresi (file)';
 $lang["zipcomplete"]='Unduhan berkas Zip Anda seharusnya sudah dimulai. Anda dapat meninggalkan halaman ini.';
 $lang["starttypingkeyword"]='Mulai mengetik kata kunci...';
-$lang["createnewentryfor"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 8dba7bf48b572ada37fd071734c60bef in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["confirmcreatenewentryfor"]='Apakah Anda yakin ingin membuat entri daftar kata kunci baru untuk \'%%\'?';
 $lang["noentryexists"]='Tidak ada entri yang tersedia.';
 $lang["editresourcepreviews"]='Mengedit Pratinjau Sumber Daya.';
@@ -2291,18 +2193,6 @@ $lang["resourcetype-photo-2"]='Foto-foto';
 $lang["resourcetype-document-2"]='Dokumen';
 $lang["resourcetype-video-2"]='Video-video';
 $lang["resourcetype-audio-2"]='Audio: Audio';
-$lang["imagesize-thumbnail"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 4ea927928ec02712e39c46e439fd854b in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["imagesize-preview"]='Pratinjau';
 $lang["imagesize-screen"]='Layar';
 $lang["imagesize-low_resolution_print"]='Cetakan resolusi rendah.';
@@ -2495,18 +2385,6 @@ $lang["seconds"]='detik';
 $lang["reload"]='Muat ulang';
 $lang["pause"]='Jeda';
 $lang["filterbutton"]='Menyaring';
-$lang["stopbutton"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 969cc7d63e1f043d0b97f8a4a3eb3b87 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["loadmorebutton"]='Muat lebih banyak.';
 $lang["treeobjecttype-report"]='Laporan';
 $lang["systemlog"]='Catatan (or Jurnal)';
@@ -2583,18 +2461,6 @@ $lang["collection_download_settings-not-defined"]='$collection_download_settings
 $lang["collection_download_settings-not-an-array"]='$collection_download_settings bukanlah sebuah array.';
 $lang["listfile-argument-not-defined"]='$archiver_listfile_argument tidak didefinisikan.';
 $lang["nothing_to_download"]='Tidak ada yang bisa diunduh.';
-$lang["purgeanddelete"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 883ae881bc199923a7c07c4e6a19e379 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["purgecollectionareyousure"]='Apakah Anda yakin ingin menghapus koleksi ini DAN MENGHAPUS semua sumber daya di dalamnya?';
 $lang["collectionsdeleteempty"]='Hapus koleksi kosong.';
 $lang["collectionsdeleteemptyareyousure"]='Apakah Anda yakin ingin menghapus semua koleksi kosong milik Anda?';
@@ -2619,18 +2485,6 @@ $lang["background_manual_selection"]='Pilih gambar';
 $lang["background_manual_selection_resource_label"]='Gambar latar belakang - ID sumber daya';
 $lang["share_fc_warning"]='Harap dicatat bahwa saat membagikan kategori koleksi unggulan, hanya koleksi unggulan yang berisi sumber daya yang akan dibagikan secara eksternal.';
 $lang["featured_collection_root_category"]='(lapisan atas)';
-$lang["delete_multiple_collections"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID aa698bfe2d07ea7dbcdf978b2e058e00 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["page_collections_message"]='Melanjutkan akan membatalkan pilihan koleksi yang ditandai untuk dihapus pada halaman ini.';
 $lang["delete_all_selected"]='Hapus semua yang dipilih.';
 $lang["range_no_start_header"]='Kesalahan Rentang';
@@ -3392,18 +3246,6 @@ $lang["configdefault-title"]='Maaf, saya tidak melihat opsi apa pun yang perlu d
 $lang["config-title"]='(HARAP BERHATI-HATI agar tidak membuat kesalahan sintaks. Jika Anda merusak file ini, Anda harus memperbaikinya di sisi server!)';
 $lang["file_too_large"]='Berkas terlalu besar.';
 $lang["field_updated"]='Bidang diperbarui.';
-$lang["zoom"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID 4b8ce98ac284a5e8e042402b35798dc5 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["deletion_instruction"]='Biarkan kosong dan simpan untuk menghapus berkas.';
 $lang["upload_file"]='Unggah berkas';
 $lang["item_deleted"]='Item dihapus.';
@@ -3528,18 +3370,6 @@ $lang["error-method-not_allowed"]='Metode Tidak Diizinkan.';
 $lang["error-405-method-not_allowed"]='405 Metode Tidak Diizinkan.';
 $lang["error-403-forbidden"]='403 Dilarang.';
 $lang["error-plugin-not-activated"]='Plugin tidak diaktifkan.';
-$lang["error-failed-to-delete"]='Array
-(
-    [error] => Array
-        (
-            [message] => That model is currently overloaded with other requests. You can retry your request, or contact us through our help center at help.openai.com if the error persists. (Please include the request ID f01d42bc458d411a9a6144d16eb2b625 in your message.)
-            [type] => server_error
-            [param] => 
-            [code] => 
-        )
-
-)
-';
 $lang["error-failed-to-move"]='Gagal memindahkan';
 $lang["error-type-mismatch"]='Argumen \'%arg\' harus berupa tipe %expected-type, tipe %type diberikan.';
 $lang["error-request-missing-key"]='Permintaan kehilangan parameter \'%key\'.';

@@ -659,5 +659,3 @@ $lang["notapproved"]="Não Aprovado";
 $lang["userrequestnotification3"]="Se esta é uma requisição válida, clique no link abaixo para revisar os detalhes e aprovar o conteúdo.";
 
 $lang["ticktoapproveuser"]="Você deve marcar a caixa para aprovar este usuário e habilitar a sua conta";
-
-?>
