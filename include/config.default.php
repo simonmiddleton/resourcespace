@@ -239,6 +239,7 @@ $languages["no"]="Norsk"; # Norwegian
 $languages["pl"]="Polski"; # Polish
 $languages["pt"]="Português"; # Portuguese
 $languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
+$languages["ro"]="Limba română"; # Romanian
 $languages["ru"]="Русский язык"; # Russian
 $languages["sk"]="Slovenčina"; # Slovak
 $languages["fi"]="Suomi"; # Finnish

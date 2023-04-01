@@ -53,6 +53,8 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
 
 $plugins=scandir("../../plugins"); array_shift($plugins);array_shift($plugins); // Discard first two which are "." and ".."
 $plugins[]=""; // Add an extra row to signify the base languages (not in a plugin)
+//$plugins=array_reverse($plugins);
+
 foreach ($plugins as $plugin)
     {
     $plugin_path="";
@@ -96,7 +98,7 @@ foreach ($plugins as $plugin)
             $result=generateChatCompletions($openai_key,"gpt-3.5-turbo",0,2048,$messages);
     echo "\n";print_r($result);echo "\n\n";
             // Append it to the appropriate file.
-            if (is_string($result) && strlen($result)>0 && strpos(strtolower($result),"calamity")===false)
+            if (is_string($result) && strlen($result)>0 && strpos(strtolower($result),"calamity")===false && strpos(strtolower($result),"[error]")===false)
                 {
                 $f=fopen($langfile,"a");fwrite($f,"\n\$lang[\"" . $mkey . "\"]=" . var_export($result,true) . ";");fclose($f);
                 }
