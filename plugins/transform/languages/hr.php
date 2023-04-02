@@ -75,3 +75,4 @@ $lang["transform-recrop"]='Ponovno obreži sliku.';
 $lang["transform_update_preview"]='Ažuriranje pregleda.';
 $lang["transform_preset_sizes"]='Odaberite iz unaprijed definirane ciljne veličine.';
 $lang["error_crop_invalid"]='Molimo odaberite regiju slike.';
+$lang["errormustchoosecropscale"]='Greška: Morate odabrati izrez i/ili unijeti vrijednosti skaliranja.';

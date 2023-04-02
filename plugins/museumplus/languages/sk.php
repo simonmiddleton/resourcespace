@@ -54,3 +54,4 @@ $lang["museumplus_error_unknown_type_saved_config"]='"museumplus_modules_saved_c
 $lang["museumplus_error_invalid_association"]='Neplatné prepojenie modulu. Uistite sa, že ste zadali správne ID modulu a / alebo záznamu!';
 $lang["museumplus_id_returns_multiple_records"]='Nájdených viacero záznamov - prosím, zadajte technické ID namiesto toho.';
 $lang["museumplus_error_module_no_field_maps"]='Nemožné synchronizovať dáta z MuseumPlus. Dôvod: modul \'%name\' nemá nakonfigurované mapovanie polí.';
+$lang["museumplus_rs_uid_field"]='ResourceSpace pole UID';

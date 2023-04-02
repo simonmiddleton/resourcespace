@@ -40,3 +40,4 @@ $lang["offline_archive_resource_log_restore_set"]='Marcado para restauración de
 $lang["offline_archive_resource_log_restore_removed"]='Restauración cancelada desde el archivo.';
 $lang["offline_archive_resource_log_restore_request"]='Solicitud de restauración desde el archivo.';
 $lang["offline_archive_resource_restore"]='Restaurar recursos.';
+$lang["offline_archive_archivefield"]='Por favor, seleccione el campo de metadatos que contendrá el código de referencia de archivo.';

@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision hanya mengembalikan kata
 $lang["google_vision_translation_api_key"]='Aktifkan terjemahan kata kunci Vision melalui API terjemahan dengan memasukkan kunci API Google yang valid.';
 $lang["google_vision_translation_languages"]='Daftar kode bahasa yang dipisahkan dengan koma, contohnya "no,es"';
 $lang["google_vision_translation_keep_english"]='Tetapkan kata kunci bahasa Inggris asli?';
+$lang["google_vision_autotitle"]='Secara otomatis mengatur judul ke kata kunci dengan peringkat tertinggi.';

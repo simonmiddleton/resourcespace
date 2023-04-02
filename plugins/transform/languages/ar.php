@@ -75,3 +75,4 @@ $lang["transform-recrop"]='إعادة تقطيع الصورة';
 $lang["transform_update_preview"]='تحديث المعاينة';
 $lang["transform_preset_sizes"]='اختر من الأحجام المستهدفة المحددة مسبقًا.';
 $lang["error_crop_invalid"]='يرجى تحديد منطقة من الصورة.';
+$lang["error-transform-failed"]='خطأ: فشل تحويل المورد %res.';

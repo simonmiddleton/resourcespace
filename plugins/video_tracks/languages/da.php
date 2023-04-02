@@ -35,3 +35,4 @@ $lang["video_tracks_custom_video_formats_label"]='Brugerdefinerede formater.';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Tillad de tilgængelige filudgangsindstillinger at blive brugt til at oprette brugerdefinerede videoformater for den originale fil?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Marker af for at starte transkodningen nu. Hvis ikke markeret, vil du modtage en notifikation, når filen er klar.';
 $lang["video_tracks_transcode_now_label"]='Transkod nu.';
+$lang["video_tracks_generate_label"]='Generer.';

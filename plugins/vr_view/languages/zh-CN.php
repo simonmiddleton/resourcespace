@@ -16,8 +16,6 @@ $lang["vr_view_additional_options_detail"]='以下内容允许您通过将元数
 $lang["vr_view_stereo_field"]='用于确定图像/视频是否为立体声的字段（可选，默认为false如果未设置）';
 $lang["vr_view_stereo_value"]='需要检查的值。如果找到，则立即将立体声设置为true。';
 $lang["vr_view_yaw_only_field"]='用于确定是否应防止横滚/俯仰的字段（可选，默认情况下如果未设置则为false）。';
-$lang["vr_view_yaw_only_value"]='需要检查的值。如果找到，则is_yaw_only选项将被设置为true。 
-
-(Note: The translation assumes that "is_yaw_only" refers to an option or setting within the software.)';
+$lang["vr_view_yaw_only_value"]='需要检查的值。如果找到，则is_yaw_only选项将被设置为true。';
 $lang["vr_view_orig_image"]='使用原始资源文件作为图像预览的源文件？';
 $lang["vr_view_orig_video"]='使用原始资源文件作为视频预览的源文件？';

@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Visionは英語のキーワー�
 $lang["google_vision_translation_api_key"]='Google APIキーを入力して、ビジョンキーワードの翻訳を翻訳APIで有効にしてください。';
 $lang["google_vision_translation_languages"]='言語コードのカンマ区切りリスト、例："no,es"';
 $lang["google_vision_translation_keep_english"]='オリジナルの英語のキーワードを保持しますか？';
+$lang["google_vision_translation"]='多言語翻訳 (たげんごほんやく)';

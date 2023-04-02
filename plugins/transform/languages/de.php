@@ -83,3 +83,4 @@ $lang["transform-recrop"]='Bitte übersetzen: Bild neu zuschneiden.';
 $lang["transform_update_preview"]='Vorschau aktualisieren';
 $lang["transform_preset_sizes"]='Aus vordefinierten Zielgrößen auswählen.';
 $lang["error_crop_invalid"]='Bitte wählen Sie einen Bereich des Bildes aus.';
+$lang["transform_preview_gen_error"]='Fehler beim Generieren der Transformationsvorschau.';

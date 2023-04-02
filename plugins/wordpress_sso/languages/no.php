@@ -13,3 +13,4 @@ $lang["wordpress_sso_use_standard_login"]='Logg inn ved hjelp av en ikke-WordPre
 $lang["wordpress_sso_use_wp_login"]='Logg inn ved hjelp av WordPress-kontoen din.';
 $lang["wordpress_sso_retry"]='Klikk her for å prøve å logge inn igjen.';
 $lang["origin_wordpress_sso"]='Wordpress SSO-tillegg.';
+$lang["wordpress_sso_configuration"]='WordPress SSO - Oppsett';

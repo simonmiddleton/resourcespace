@@ -48,3 +48,5 @@ $lang["youtube_publish_success"]='Videoen er publisert!';
 $lang["youtube_publish_category"]='Kategori';
 $lang["youtube_publish_category_error"]='Feil ved henting av YouTube-kategorier: -';
 $lang["youtube_chunk_size"]='Størrelse på biter å bruke ved opplasting til YouTube (MB)';
+$lang["youtube_publish_renewing_token"]='Fornye tilgangstoken';
+$lang["youtube_publish_add_anchor"]='Legg til ankerkoblinger til URL når du lagrer til YouTube URL-metadatafeltet?';

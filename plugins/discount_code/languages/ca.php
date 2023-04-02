@@ -16,3 +16,4 @@ $lang["error-invalid-discount-code"]='<strong>Codi de descompte no vàlid.</stro
 $lang["error-discount-code-already-used"]='<strong>Codi de descompte ja utilitzat.</strong><br>Pots utilitzar els codis de descompte només una vegada. El descompte no s\'ha aplicat.';
 $lang["error_code-expires"]='<strong>Data d\'expiració del codi de descompte no vàlida.</strong><br>No s\'ha aplicat cap descompte.';
 $lang["discount_applied"]='Descompte aplicat.';
+$lang["code-expires"]='Caduca.';

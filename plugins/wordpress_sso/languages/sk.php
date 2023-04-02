@@ -8,9 +8,7 @@ $lang["wordpress_sso_auto_create"]='Automatické vytváranie používateľských
 $lang["wordpress_sso_auto_approve"]='Automatické schvaľovanie používateľských účtov?';
 $lang["wordpress_sso_auto_create_group"]='Zadajte číslo skupiny pre automaticky vytvorenú.';
 $lang["wordpress_sso_auto_created"]='Automaticky vytvorené pomocou doplnku wordpress_sso.';
-$lang["wordpress_sso_loggedout"]='Budete presmerovaní na WordPress, aby ste dokončili odhlásenie. Ak nie ste automaticky presmerovaní, kliknite prosím na nižšie uvedený odkaz. 
-
-(Note: If "WordPress" should be translated to a localized term, please let me know.)';
+$lang["wordpress_sso_loggedout"]='Budete presmerovaní na WordPress, aby ste dokončili odhlásenie. Ak nie ste automaticky presmerovaní, kliknite prosím na nižšie uvedený odkaz.';
 $lang["wordpress_sso_allow_standard_login"]='Povoliť štandardné prihlásenia do ResourceSpace.';
 $lang["wordpress_sso_use_standard_login"]='Prihlásiť sa pomocou účtu mimo WordPressu.';
 $lang["wordpress_sso_use_wp_login"]='Prihlásiť sa pomocou účtu WordPress.';

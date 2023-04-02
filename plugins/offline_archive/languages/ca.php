@@ -40,3 +40,4 @@ $lang["offline_archive_resource_log_restore_set"]='Marcada per a la restauració
 $lang["offline_archive_resource_log_restore_removed"]='Restauració cancel·lada des de l\'arxiu.';
 $lang["offline_archive_resource_log_restore_request"]='Sol·licitud de restauració des de l\'arxiu.';
 $lang["offline_archive_resource_restore"]='Restaurar recursos.';
+$lang["offline_archive_request_restore"]='Sol·licitud de restauració.';

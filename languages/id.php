@@ -2103,7 +2103,7 @@ $lang["merge_filename_title_replace"]='Mengganti';
 $lang["merge_filename_title_prefix"]='Awalan';
 $lang["merge_filename_title_suffix"]='Akhiran.';
 $lang["merge_filename_title_include_extensions"]='Termasuk ekstensi?';
-$lang["merge_filename_title_spacer"]='Spaser. (Note: "Spacer" is already a loanword in Bahasa Indonesia and refers to a type of shoe insert, while "spaser" is the term used for the technology term "spacer" in digital asset management software.)';
+$lang["merge_filename_title_spacer"]='Spaser.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Sumber daya yang diajukan oleh pengguna.';
 $lang["send_collection_to_admin_emailsubject"]='Koleksi diunggah oleh';
 $lang["send_collection_to_admin_usercontributedcollection"]='mengunggah sumber daya ini sebagai koleksi utuh';
@@ -4862,7 +4862,7 @@ $lang["merge_filename_title_replace"]='Mengganti';
 $lang["merge_filename_title_prefix"]='Awalan';
 $lang["merge_filename_title_suffix"]='Akhiran.';
 $lang["merge_filename_title_include_extensions"]='Termasuk ekstensi?';
-$lang["merge_filename_title_spacer"]='Spaser. (Note: "Spacer" is already a commonly used term in Bahasa Indonesia and does not require translation.)';
+$lang["merge_filename_title_spacer"]='Spaser.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Sumber daya yang diajukan oleh pengguna.';
 $lang["send_collection_to_admin_emailsubject"]='Koleksi diunggah oleh';
 $lang["send_collection_to_admin_usercontributedcollection"]='mengunggah sumber daya ini sebagai koleksi utuh';
@@ -4983,9 +4983,7 @@ $lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessa
 
 Pesan Koleksi Email Eksternal dari [fromusername]<br /><br />
 [lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-Note: The term "Koleksi" is used to refer to "Collection" in ResourceSpace.';
+[lang_clicklinkviewcollection] [list]<br /><br />';
 $lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[pesan]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[teks_footer]';
 $lang["all__emaillogindetails"]='Selamat datang<br /><br />
 Berikut detail masuk baru Anda<br /><br />
@@ -5049,16 +5047,12 @@ $lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><
 [pesan]<br /><br />
 <a href="[url]">[embed_thumbnail]</a><br /><br />
 [lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-Note: Some words such as "embed_thumbnail", "resourcename", and "text_footer" may not need to be translated as they are technical terms used in ResourceSpace.';
+[text_footer]<br /><br />';
 $lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
 [daftar] <br />
 [rincian]<br /><br />
 [lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> 
-
-(Note: I assumed that [list] and [details] are not specific terms used in ResourceSpace, so I translated them as "daftar" and "rincian" respectively, which means "list" and "details" in Bahasa Indonesia.)';
+<a href="[url]">[url]</a> ';
 $lang["all__footer"]='Didukung oleh <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Biarkan tim sumber daya kami menemukan sumber daya yang Anda butuhkan.';
 $lang["change_language__introtext"]='Silakan pilih bahasa Anda di bawah ini.';
@@ -5802,3 +5796,5 @@ $lang["error_invalid_revert_option"]='Nilai yang sebelumnya disimpan \'%%VALUE%%
 $lang["error_invalid_revert_date"]='Tanggal yang sebelumnya disimpan \'%%VALUE%%\' tidak valid. Harap perbarui sumber daya secara manual jika diperlukan.';
 $lang["batch_edit_save_warning_message"]='Kesalahan terjadi saat mengedit sumber daya berikut-';
 $lang["batch_edit_save_warning_alert"]='Beberapa kesalahan terjadi saat melakukan operasi ini. Silakan lihat pesan Anda untuk lebih detail.';
+$lang["dashtilesmalldevice"]='Fungsionalitas drag yang diperlukan tidak tersedia pada perangkat dengan layar kecil.';
+$lang["systemconfig_description"]='Opsi pada halaman ini bersifat sistemik dan dapat mengubah beberapa fungsi yang tersedia untuk pengguna. Harap dicatat bahwa opsi yang juga bersifat khusus pengguna akan memiliki prioritas jika diatur.';

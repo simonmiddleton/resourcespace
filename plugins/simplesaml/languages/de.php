@@ -17,9 +17,7 @@ $lang["simplesaml_fullname_separator"]='Wenn Felder für den vollständigen Name
 $lang["simplesaml_email_attribute"]='Attribut für die Verwendung der E-Mail-Adresse.';
 $lang["simplesaml_group_attribute"]='Attribut zur Bestimmung der Gruppenmitgliedschaft.';
 $lang["simplesaml_username_suffix"]='Suffix, der zu erstellenden Benutzernamen hinzugefügt wird, um sie von Standard-ResourceSpace-Konten zu unterscheiden.';
-$lang["simplesaml_update_group"]='Benutzergruppe bei jedem Anmelden aktualisieren. Wenn die SSO-Gruppenattribute nicht verwendet werden, um den Zugriff zu bestimmen, setzen Sie dies auf "false", damit Benutzer manuell zwischen Gruppen verschoben werden können. 
-
-Note: SSO stands for Single Sign-On.';
+$lang["simplesaml_update_group"]='Benutzergruppe bei jedem Anmelden aktualisieren. Wenn die SSO-Gruppenattribute nicht verwendet werden, um den Zugriff zu bestimmen, setzen Sie dies auf "false", damit Benutzer manuell zwischen Gruppen verschoben werden können. ';
 $lang["simplesaml_groupmapping"]='SAML - Zuordnung von ResourceSpace-Gruppen';
 $lang["simplesaml_fallback_group"]='Standard Benutzergruppe, die für neu erstellte Benutzer verwendet wird.';
 $lang["simplesaml_samlgroup"]='SAML-Gruppe';

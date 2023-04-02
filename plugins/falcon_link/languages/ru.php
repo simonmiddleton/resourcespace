@@ -40,3 +40,4 @@ $lang["falcon_link_share_user"]='Текст пользователя для от
 $lang["falcon_link_log_publish"]='Общий ресурс через Falcon.';
 $lang["falcon_link_log_archive"]='Архивированный ресурс через Falcon.';
 $lang["falcon_link_error_falcon_check_tags"]='Пожалуйста, проверьте, что описание и теги не пусты.';
+$lang["falcon_link_api_key"]='Ключ API Falcon.';

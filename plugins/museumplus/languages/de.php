@@ -57,3 +57,5 @@ $lang["museumplus_error_unknown_type_saved_config"]='Die \'museumplus_modules_sa
 $lang["museumplus_error_invalid_association"]='Ungültige Modulverknüpfung(en). Bitte stellen Sie sicher, dass das richtige Modul und/oder die richtige Datensatz-ID eingegeben wurden!';
 $lang["museumplus_id_returns_multiple_records"]='Mehrere Datensätze gefunden - bitte geben Sie stattdessen die technische ID ein.';
 $lang["museumplus_error_module_no_field_maps"]='Die Daten können nicht von MuseumPlus synchronisiert werden. Grund: Das Modul \'%name\' hat keine Feldzuordnungen konfiguriert.';
+$lang["museumplus_api_pass"]='Passwort';
+$lang["museumplus_modules_configuration_header"]='Konfiguration der Module';

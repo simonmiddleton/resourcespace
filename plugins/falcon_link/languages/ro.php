@@ -40,3 +40,4 @@ $lang["falcon_link_share_user"]='Textul utilizatorului pentru afișarea partajă
 $lang["falcon_link_log_publish"]='Resursa partajată prin intermediul Falcon.';
 $lang["falcon_link_log_archive"]='Resursa arhivată prin intermediul Falcon.';
 $lang["falcon_link_error_falcon_check_tags"]='Vă rugăm să verificați că descrierea și etichetele nu sunt goale.';
+$lang["falcon_link_default_tag"]='Textul implicit al etichetei care va fi adăugat automat la toate conținuturile publicate Falcon. Dacă includeți textul \'[ID]\', acesta va fi înlocuit cu ID-ul resursei în etichetă.';

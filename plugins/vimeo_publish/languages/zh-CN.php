@@ -35,3 +35,4 @@ $lang["vimeo_publish_resource_published"]='资源已发布到 Vimeo。您可以�
 $lang["vimeo_publish_account_options"]='Vimeo账户选项';
 $lang["vimeo_publish_allow_user_accounts"]='允许用户发布到他们自己的 Vimeo 帐户。如果为假，则必须在下面配置对单个 Vimeo 帐户的访问。';
 $lang["vimeo_publish_set_account"]='设置 Vimeo 帐户';
+$lang["vimeo_api_instructions_condition_8"]='复制客户端ID和密钥，然后粘贴到下面的详细信息中。';

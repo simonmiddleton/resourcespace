@@ -40,3 +40,4 @@ $lang["falcon_link_share_user"]='Text používateľa na zobrazenie zdieľaní vy
 $lang["falcon_link_log_publish"]='Zdieľaný zdroj cez Falcon.';
 $lang["falcon_link_log_archive"]='Archivovaný zdrojový súbor cez Falcon.';
 $lang["falcon_link_error_falcon_check_tags"]='Prosím, skontrolujte, či popis a tagy nie sú prázdne.';
+$lang["falcon_link_access_denied"]='Nemáte oprávnenie publikovať vybrané zdroje.';

@@ -52,3 +52,4 @@ $lang["flickr_nice_progress_min_timeout"]='Tid mellom fremdriftsvarsler (ms)';
 $lang["flickr_api_key"]='Flickr API-nøkkel';
 $lang["flickr_api_secret"]='Flickr API hemmelighet.';
 $lang["flickr_warn_no_title_access"]='Publisering er ikke tillatt uten tilgang til tittelfeltet (ID #%id). Vennligst kontakt en administrator!';
+$lang["flickr_processing"]='Behandling';

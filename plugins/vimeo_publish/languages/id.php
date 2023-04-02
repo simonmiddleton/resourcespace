@@ -35,3 +35,4 @@ $lang["vimeo_publish_resource_published"]='Sumber daya telah dipublikasikan ke V
 $lang["vimeo_publish_account_options"]='Opsi akun Vimeo.';
 $lang["vimeo_publish_allow_user_accounts"]='Izinkan pengguna untuk mempublikasikan ke akun Vimeo mereka sendiri. Jika salah, maka akses ke satu akun Vimeo harus dikonfigurasi di bawah ini.';
 $lang["vimeo_publish_set_account"]='Mengatur akun Vimeo.';
+$lang["vimeo_publish_video_details"]='Rincian Video Vimeo.';

@@ -43,3 +43,4 @@ $lang["video_splice_download_offline_message"]='Montaggio video completato. Il t
 $lang["video_splice_failure"]='Unione video: Qualcosa è andato storto. Si prega di contattare un amministratore per ulteriore assistenza.';
 $lang["video_splice_no_export_folder"]='Impossibile eseguire l\'esportazione poiché il percorso del file per la cartella di esportazione video non è stato impostato nel file di configurazione.';
 $lang["video_splice_createdfromvideosplice"]='Creato dal plugin Video Splice.';
+$lang["video_splice_incorrect_quantity"]='Una risorsa valida è stata rimossa o aggiunta alla collezione dopo il caricamento di questa pagina. Si prega di riprovare.';

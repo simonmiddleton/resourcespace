@@ -75,3 +75,4 @@ $lang["transform-recrop"]='Vennligst beskjær bildet på nytt.';
 $lang["transform_update_preview"]='Oppdater forhåndsvisning.';
 $lang["transform_preset_sizes"]='Velg fra forhåndsdefinert målstørrelse.';
 $lang["error_crop_invalid"]='Vennligst velg en region av bildet.';
+$lang["replaceslideshowimage"]='Erstatt lysbildefremvisningsbilde';

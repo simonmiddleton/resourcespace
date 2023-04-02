@@ -18,3 +18,4 @@ $lang["vr_view_yaw_only_field"]='Kenttä, jota käytetään määrittämään, p
 $lang["vr_view_yaw_only_value"]='Tarkistettava arvo. Jos se löytyy, is_yaw_only -valinta asetetaan todeksi.';
 $lang["vr_view_orig_image"]='Käytetäänkö alkuperäistä resurssitiedostoa kuvan esikatselun lähteenä?';
 $lang["vr_view_orig_video"]='Käytetäänkö alkuperäistä resurssitiedostoa lähteenä videon esikatselussa?';
+$lang["vr_view_projection_field"]='VR-näkymän projektion tyyppi -kenttä';

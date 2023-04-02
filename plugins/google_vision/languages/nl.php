@@ -22,3 +22,4 @@ $lang["google_vision_translation_intro"]='Google Vision geeft alleen Engelse tre
 $lang["google_vision_translation_api_key"]='Activeer de vertaling van Vision zoekwoorden via de vertaling API door een geldige Google API-sleutel in te voeren.';
 $lang["google_vision_translation_languages"]='Komma-gescheiden lijst van taalcodes, bijvoorbeeld "no,es".';
 $lang["google_vision_translation_keep_english"]='Behoud de originele Engelse zoekwoorden?';
+$lang["google_vision_face_dependent_field"]='Selecteer een metadata-veld dat verborgen zal worden wanneer het veld voor gezichtsherkenning leeg is (optioneel).';

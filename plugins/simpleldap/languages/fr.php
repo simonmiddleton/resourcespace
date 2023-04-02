@@ -15,9 +15,7 @@ $lang["port"]='Port can have multiple meanings in the context of digital asset m
 - Port (noun): Port can also refer to a physical connection point on a computer or a device, such as a USB port or an Ethernet port. In ResourceSpace, you may need to connect external devices to upload or download resources. Port peut également faire référence à un point de connexion physique sur un ordinateur ou un périphérique, tel qu\'un port USB ou un port Ethernet. Dans ResourceSpace, vous devrez peut-être connecter des périphériques externes pour télécharger ou télécharger des ressources.
 
 Please let me know if you need a more specific translation based on the context of your sentence.';
-$lang["basedn"]='Veuillez traduire : Base DN. Si les utilisateurs sont dans plusieurs DN, séparez-les avec des points-virgules. 
-
-(Note: DN stands for "Distinguished Name" and refers to the unique identifier for an object in an LDAP directory.)';
+$lang["basedn"]='Veuillez traduire : Base DN. Si les utilisateurs sont dans plusieurs DN, séparez-les avec des points-virgules. ';
 $lang["loginfield"]='Champ de connexion.';
 $lang["usersuffix"]='Suffixe de l\'utilisateur (un point sera ajouté devant le suffixe)';
 $lang["groupfield"]='Champ de groupe.';

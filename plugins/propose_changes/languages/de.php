@@ -24,9 +24,7 @@ $lang["propose_changes_proposed_changes_accepted"]='Die folgenden vorgeschlagene
 $lang["propose_changes_proposed_changes_rejected"]='Die folgenden vorgeschlagenen Änderungen wurden abgelehnt.';
 $lang["propose_changes_proposed_changes_submitted"]='Vorgeschlagene Änderungen wurden eingereicht.';
 $lang["propose_changes_proposed_changes_submitted_text"]='Hat Änderungen an der Ressourcen-ID # vorgeschlagen.';
-$lang["propose_changes_always_allow"]='Ermöglicht Benutzern, Änderungen an jeder Ressource vorzuschlagen. Wenn auf "false" gesetzt, muss eine Sammlung mit Benutzern geteilt werden und eine zusätzliche Option ausgewählt werden. 
-
-(Note: The translation assumes that "an additional option" refers to a specific option in the software that needs to be selected. If this is not the case, please provide more context.)';
+$lang["propose_changes_always_allow"]='Ermöglicht Benutzern, Änderungen an jeder Ressource vorzuschlagen. Wenn auf "false" gesetzt, muss eine Sammlung mit Benutzern geteilt werden und eine zusätzliche Option ausgewählt werden. ';
 $lang["propose_changes_allow_open"]='Immer Benutzern mit offenem Zugang zu einem Ressource erlauben, Änderungen vorzuschlagen.';
 $lang["propose_changes_no_changes_to_review"]='<h1 style="text-align: center;">Es gibt keine vorgeschlagenen Änderungen zur Überprüfung.</h1>';
 $lang["actions_type_proposed_change"]='Vorgeschlagene Bearbeitung';

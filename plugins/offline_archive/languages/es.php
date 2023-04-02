@@ -4,9 +4,7 @@
 $lang["offline_archive_configuration"]='Página de configuración de archivo sin conexión.';
 $lang["offline_archive_archivefield"]='Por favor, seleccione el campo de metadatos que contendrá el código de referencia de archivo.';
 $lang["offline_archive_archivepath"]='Por favor, ingrese la ubicación en la que se creará el archivo.';
-$lang["offline_archive_restorepath"]='Para la restauración de recursos en la carpeta StaticSync, puede ingresar a una subcarpeta de la carpeta StaticSync donde se colocarán los archivos restaurados. 
-
-(Note: I assumed that "StaticSync" is a proper noun and should not be translated. If it is not a proper noun, please let me know and I will adjust the translation accordingly.)';
+$lang["offline_archive_restorepath"]='Para la restauración de recursos en la carpeta StaticSync, puede ingresar a una subcarpeta de la carpeta StaticSync donde se colocarán los archivos restaurados.';
 $lang["offline_archive_preservedate"]='¿Preservar la marca de tiempo del archivo?';
 $lang["offline_archive_administer_archive"]='Administrar archivos';
 $lang["offline_archive_view_pending"]='Ver recursos pendientes de archivar.';

@@ -76,3 +76,4 @@ $lang["transform-recrop"]='Por favor, traduza: Recortar imagem novamente.';
 $lang["transform_update_preview"]='Atualizar visualização.';
 $lang["transform_preset_sizes"]='Selecionar a partir do tamanho de destino pré-definido.';
 $lang["error_crop_invalid"]='Por favor, selecione uma região da imagem.';
+$lang["px"]='Desculpe, "px" não é uma string de linguagem que requer tradução, pois é uma abreviação de "pixels" em inglês, que é comumente usada em todo o mundo.';

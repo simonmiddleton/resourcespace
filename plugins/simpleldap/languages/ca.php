@@ -48,3 +48,5 @@ $lang["simpleldap_usercomment"]='Creat per l\'extensió SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Actualitzat a usuari LDAP per SimpleLDAP.';
 $lang["origin_simpleldap"]='Connector SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='No comprovis el FQDN del servidor amb el CN del certificat.';
+$lang["simpleldap_update_group"]='Actualitza el grup d\'usuari en cada inici de sessió. Si no s\'utilitzen grups d\'AD per determinar l\'accés, establiu-ho com a fals perquè els usuaris puguin ser promocionats manualment.';
+$lang["simpleldap_testing"]='Provant la configuració LDAP.';

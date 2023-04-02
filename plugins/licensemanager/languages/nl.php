@@ -27,3 +27,4 @@ $lang["selectlicence"]='Selecteer alstublieft een Licentie-ID.';
 $lang["confirmdeletelicensefile"]='Weet u zeker dat u dit bestand wilt VERWIJDEREN? Dit kan niet ongedaan worden gemaakt.';
 $lang["license_manager_mediums"]='Licentiegebruik media.';
 $lang["license_manager_access"]='Beheer licentiegegevens (indien nog niet ingeschakeld via de toestemming "Toegang tot het systeeminstellingen gebied").';
+$lang["outbound_license_description"]='Wij zijn de auteursrechthebbenden.';

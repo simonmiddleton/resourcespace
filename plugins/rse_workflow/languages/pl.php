@@ -52,3 +52,4 @@ $lang["rse_workflow_link_close"]='Zamknij.';
 $lang["rse_workflow_more_notes_title"]='Notatki:';
 $lang["rse_workflow_email_from"]='Adres e-mail do wysyłania powiadomień (będzie użyty %EMAILFROM%, jeśli puste):';
 $lang["rse_workflow_bcc_admin"]='Powiadom administratorów systemu, gdy zostanie powiadomiony współtwórca.';
+$lang["rse_workflow_state_not_editable"]='Ten stan archiwum nie jest edytowalny, jest to stan wymagany przez system, został ustawiony w pliku config.php lub nie istnieje.';

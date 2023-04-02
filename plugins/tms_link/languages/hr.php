@@ -69,3 +69,4 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 
 TMS %module_name %tms_uid_field (TMS %naziv_modula %TMS_UID_polje)';
 $lang["tms_link_confirm_delete_module_config"]='Jeste li sigurni da želite izbrisati konfiguraciju ovog modula? Ova radnja se ne može poništiti!';
+$lang["tms_link_modules_mappings"]='Sinkronizacija iz dodatnih modula (tablica/prikaza)';

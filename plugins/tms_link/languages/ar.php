@@ -69,3 +69,4 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 
 TMS (نظام إدارة الموارد) %module_name (اسم الوحدة) %tms_uid_field (حقل معرف TMS)';
 $lang["tms_link_confirm_delete_module_config"]='هل أنت متأكد أنك تريد حذف تكوين هذه الوحدة؟ لا يمكن التراجع عن هذا الإجراء!';
+$lang["tms_link_log_expiry"]='عدد الأيام لتخزين سجلات البرنامج النصي. سيتم حذف أي سجلات TMS في هذا الدليل والتي تعود تاريخها إلى فترة أقدم من ذلك.';

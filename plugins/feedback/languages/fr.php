@@ -19,3 +19,4 @@ $lang["feedback_add_new_question_after"]='Ajouter une nouvelle question après c
 $lang["feedback_text-html"]='Texte / HTML:';
 $lang["feedback_options-comma_separated"]='Options: (séparées par des virgules)';
 $lang["feedback_back_to_plugin_manager"]='Retourner au Gestionnaire de plugins.';
+$lang["feedback_add_new_field"]='Ajouter un nouveau champ.';

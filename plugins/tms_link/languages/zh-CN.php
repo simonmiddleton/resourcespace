@@ -9,9 +9,7 @@ $lang["tms_link_password"]='TMS数据库用户的密码';
 $lang["tms_link_resource_types"]='选择与TMS相关联的资源类型。';
 $lang["tms_link_object_id_field"]='用于存储TMS对象ID的字段';
 $lang["tms_link_checksum_field"]='用于存储校验和的元数据字段。这是为了防止在数据未更改时进行不必要的更新。';
-$lang["tms_link_checksum_column_name"]='从TMS表返回的列用于从TMS数据库返回的校验和。 
-
-(Note: TMS and checksum are technical terms and may not have direct translations in Chinese. The translation provided is based on the context of digital asset management software.)';
+$lang["tms_link_checksum_column_name"]='从TMS表返回的列用于从TMS数据库返回的校验和。 ';
 $lang["tms_link_tms_data"]='实时 TMS 数据';
 $lang["tms_link_database_setup"]='TMS数据库连接';
 $lang["tms_link_metadata_setup"]='TMS元数据配置';
@@ -69,3 +67,4 @@ $lang["tms_link_not_found_error_title"]='未找到';
 $lang["tms_link_not_deleted_error_detail"]='无法删除所请求的模块配置。';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field 的翻译是：TMS %模块名称 %TMS_UID_字段';
 $lang["tms_link_confirm_delete_module_config"]='您确定要删除此模块配置吗？此操作无法撤销！';
+$lang["tms_link_column_name"]='TMS列';

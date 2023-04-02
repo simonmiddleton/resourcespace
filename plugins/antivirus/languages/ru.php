@@ -9,3 +9,4 @@ $lang["antivirus_action_quarantine"]='Переместить в карантин
 $lang["antivirus_deleting_file"]='Удаление ресурса [%resource_id%] и всех связанных файлов!';
 $lang["antivirus_moving_file"]='Перемещение ресурса [%resource_id%] в архивное состояние [%archive_state%].';
 $lang["antivirus_av_not_setup_error"]='Путь для антивируса не настроен!';
+$lang["antivirus_action_delete"]='Удалить навсегда.';

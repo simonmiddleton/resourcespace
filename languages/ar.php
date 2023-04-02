@@ -1541,10 +1541,9 @@ $lang["map_tfoutdoors"]='في الهواء الطلق';
 $lang["map_tfpioneer"]='الرائد';
 $lang["map_tfmobileatlas"]='الأطلس المتنقل';
 $lang["map_tfneighbourhood"]='حي';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" doesn\'t seem to be an English word or a term used in ResourceSpace. Can you please provide more context or information about the term you want me to translate?';
 $lang["map_hyddafull"]='الخريطة الافتراضية';
 $lang["map_hyddabase"]='قاعدة البيانات';
-$lang["map_stamen_group"]='الطلعة (Note: This translation refers to the reproductive organ of a flower, which is also known as a stamen in English. If the context is different, please provide more information.)';
+$lang["map_stamen_group"]='الطلعة';
 $lang["map_stamentoner"]='حبر الطابعة.';
 $lang["map_stamentonerlt"]='ضوء الحبر الخفيف.';
 $lang["map_stamentonerback"]='خلفية الحبر الجاف.';
@@ -1554,7 +1553,6 @@ $lang["map_stamenrelief"]='تخفيف';
 $lang["map_stamenwatercolor"]='ألوان مائية';
 $lang["map_esri_group"]='ESRI تعني "Environmental Systems Research Institute" وهي شركة تكنولوجيا المعلومات الجغرافية.';
 $lang["map_esristreet"]='الشوارع';
-$lang["map_esridelorme"]='I\'m sorry, but "DeLorme" is a proper noun and it doesn\'t have a specific meaning in English language. Therefore, it doesn\'t require translation.';
 $lang["map_esritopo"]='توبوغرافيا (Topography)';
 $lang["map_esriimagery"]='صورة / صور فوتوغرافية / صور فنية / صور رقمية';
 $lang["map_esriterrain"]='التضاريس';
@@ -2913,9 +2911,7 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [img_headerlogo] - شعار الرأس<br />
 [message] - الرسالة<br />
 [url] - الرابط<br />
-[text_footer] - نص التذييل<br />
-
-Note: Some of the strings are variables and should not be translated.';
+[text_footer] - نص التذييل<br />';
 $lang["error_edit_filter_invalid"]='المرشح للتحرير غير مُعدّل بشكل صحيح لهذه المجموعة من المستخدمين. يرجى الاتصال بالمسؤول الخاص بك.';
 $lang["error_search_filter_invalid"]='عامل تصفية البحث غير مُعدّل بشكل صحيح لهذه المجموعة من المستخدمين. يرجى الاتصال بالمسؤول الخاص بك.';
 $lang["action_lock"]='قفل';
@@ -3039,3 +3035,6 @@ $lang["error_invalid_revert_option"]='تعذر العثور على القيمة 
 $lang["error_invalid_revert_date"]='التاريخ المخزن سابقًا \'%%VALUE%%\' غير صالح. يرجى تحديث المورد يدويًا إذا لزم الأمر.';
 $lang["batch_edit_save_warning_message"]='تم اكتشاف أخطاء أثناء تحرير الموارد التالية-';
 $lang["batch_edit_save_warning_alert"]='تم اكتشاف بعض الأخطاء أثناء تنفيذ هذه العملية. يرجى الرجوع إلى الرسائل الخاصة بك لمزيد من التفاصيل.';
+$lang["page_collections_message"]='الاستمرار سيؤدي إلى إلغاء تحديد المجموعات المحددة للحذف على هذه الصفحة.';
+$lang["enterantispamcode"]='<strong>مكافحة البريد المزعج</strong> <sup>*</sup><br /> يرجى إدخال الرمز التالي:';
+$lang["job_status_2"]='اكتمال';

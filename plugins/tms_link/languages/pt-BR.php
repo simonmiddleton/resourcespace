@@ -69,3 +69,4 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 
 TMS %nome_do_módulo %campo_uid_tms';
 $lang["tms_link_confirm_delete_module_config"]='Você tem certeza de que deseja excluir esta configuração de módulo? Esta ação não pode ser desfeita!';
+$lang["tms_link_database_setup"]='Conexão de banco de dados TMS.';

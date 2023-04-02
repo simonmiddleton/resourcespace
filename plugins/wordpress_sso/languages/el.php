@@ -13,3 +13,4 @@ $lang["wordpress_sso_use_standard_login"]='Σύνδεση χρησιμοποιώ
 $lang["wordpress_sso_use_wp_login"]='Σύνδεση με λογαριασμό WordPress.';
 $lang["wordpress_sso_retry"]='Κάντε κλικ εδώ για να δοκιμάσετε να συνδεθείτε ξανά.';
 $lang["origin_wordpress_sso"]='Πρόσθετο ενιαίας σύνδεσης (SSO) για το Wordpress.';
+$lang["wordpress_sso_auto_created"]='Δημιουργήθηκε αυτόματα από το πρόσθετο wordpress_sso.';

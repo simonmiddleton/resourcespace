@@ -10,3 +10,4 @@ $lang["winauth_prefer_normal"]='Preferir los inicios de sesión estándar de Res
 $lang["winauth_test"]='Prueba.';
 $lang["winauth_user_info"]='Has iniciado sesión como: [nombre de usuario]';
 $lang["winauth_not_logged_in"]='No has iniciado sesión o tu servidor web no ha sido configurado correctamente.';
+$lang["winauth_nouser"]='Su cuenta no está habilitada en el sistema. Por favor solicite una cuenta o contacte a su administrador.';

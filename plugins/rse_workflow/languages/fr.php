@@ -51,3 +51,5 @@ $lang["rse_workflow_link_close"]='Fermer';
 $lang["rse_workflow_more_notes_title"]='Notes: Notes';
 $lang["rse_workflow_email_from"]='Adresse e-mail pour envoyer les notifications (utilisera %EMAILFROM% si vide) :';
 $lang["rse_workflow_bcc_admin"]='Notifier les administrateurs système lorsque le contributeur est notifié.';
+$lang["rse_workflow_configuration"]='Configuration de flux de travail.';
+$lang["rse_workflow_state_notify_message"]='Il y a de nouvelles ressources dans l\'état de flux de travail:';

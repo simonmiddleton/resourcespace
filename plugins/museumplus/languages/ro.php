@@ -56,3 +56,4 @@ $lang["museumplus_error_unknown_type_saved_config"]='"museumplus_modules_saved_c
 $lang["museumplus_error_invalid_association"]='Asociere modul(e) invalid(e). Vă rugăm să vă asigurați că ați introdus ID-ul corect de Modul și/sau Înregistrare!';
 $lang["museumplus_id_returns_multiple_records"]='Au fost găsite mai multe înregistrări - vă rugăm să introduceți ID-ul tehnic în loc.';
 $lang["museumplus_error_module_no_field_maps"]='Imposibil de sincronizat datele din MuseumPlus. Motiv: modulul \'%name\' nu are configurate nicio mapare de câmpuri.';
+$lang["museumplus_api_user"]='Utilizator';

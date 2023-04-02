@@ -31,6 +31,7 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
+        CURLOPT_TIMEOUT => 10,
         CURLOPT_HTTPHEADER => $headers,
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_SSL_VERIFYPEER => false,
@@ -53,7 +54,7 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
 
 $plugins=scandir("../../plugins"); array_shift($plugins);array_shift($plugins); // Discard first two which are "." and ".."
 $plugins[]=""; // Add an extra row to signify the base languages (not in a plugin)
-//$plugins=array_reverse($plugins);
+$plugins=array_reverse($plugins);
 
 foreach ($plugins as $plugin)
     {
@@ -92,7 +93,7 @@ foreach ($plugins as $plugin)
             echo $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en[$mkey] . ") for language $language\n\n";flush();ob_flush();
             
             $messages=array();
-            $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads. Providing a translation that is appropriate in the given context will help ensure the software is easy to use and understand for non-native speakers. In the event that you cannot provide a translation, return the word CALAMITY.");
+            $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads. Where the context is unclear, make a best guess. In the event that you cannot provide a translation, return the word CALAMITY.");
             $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en[$mkey]);
             
             $result=generateChatCompletions($openai_key,"gpt-3.5-turbo",0,2048,$messages);

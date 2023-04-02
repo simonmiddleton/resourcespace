@@ -11,3 +11,4 @@ $lang["adobe_link_import_successful"]='Файл импортируется.';
 $lang["adobe_link_upload_document"]='Сохранить';
 $lang["adobe_link_saving"]='Сохранение...';
 $lang["adobe_link_saving_wait"]='Файл сохраняется, пожалуйста, дождитесь сообщения о подтверждении. Возможно, вам потребуется обновить страницу, чтобы обновить изображение предварительного просмотра.';
+$lang["adobe_link_import"]='Импорт';

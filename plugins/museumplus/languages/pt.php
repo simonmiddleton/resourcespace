@@ -56,3 +56,4 @@ $lang["museumplus_error_unknown_type_saved_config"]='O \'museumplus_modules_save
 $lang["museumplus_error_invalid_association"]='Associação de módulo(s) inválida. Por favor, certifique-se de que o módulo correto e/ou o ID do registro tenham sido inseridos!';
 $lang["museumplus_id_returns_multiple_records"]='Vários registros encontrados - por favor, insira o ID técnico em vez disso.';
 $lang["museumplus_error_module_no_field_maps"]='Não é possível sincronizar dados do MuseumPlus. Motivo: o módulo \'%name\' não possui mapeamentos de campos configurados.';
+$lang["museumplus_module_setup"]='Configuração do módulo.';

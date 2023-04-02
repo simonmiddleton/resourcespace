@@ -15,9 +15,7 @@ $lang["simplesaml_username_separator"]='如果要将字段连接起来作为用�
 $lang["simplesaml_fullname_attribute"]='用于全名的属性。如果这是两个属性的连接，请用逗号分隔。';
 $lang["simplesaml_fullname_separator"]='如果要将字段合并为全名，请使用此字符作为分隔符。';
 $lang["simplesaml_group_attribute"]='用于确定组成员身份的属性';
-$lang["simplesaml_username_suffix"]='创建的用户名后缀，用于将其与标准ResourceSpace帐户区分开来。 
-
-(Note: This translation assumes that "standard ResourceSpace accounts" refers to default accounts created by the software, and not to any specific type of account.)';
+$lang["simplesaml_username_suffix"]='创建的用户名后缀，用于将其与标准ResourceSpace帐户区分开来。 ';
 $lang["simplesaml_update_group"]='每次登录时更新用户组。如果不使用SSO组属性来确定访问权限，则将其设置为false，以便可以手动移动用户到不同的组中。';
 $lang["simplesaml_groupmapping"]='SAML - ResourceSpace组映射';
 $lang["simplesaml_fallback_group"]='新创建用户将使用的默认用户组';
@@ -51,9 +49,7 @@ $lang["simplesaml_authorisation_claim_value_label"]='属性（断言/声明）�
 $lang["simplesaml_authorisation_login_error"]='您没有访问此应用程序的权限！请联系您账户的管理员！';
 $lang["simplesaml_authorisation_version_error"]='重要提示：您的SimpleSAML配置需要更新。请参考知识库中的“将SP迁移到使用ResourceSpace配置”部分，了解更多信息。<a href=\'https://www.resourcespace.com/knowledge-base/plugins/simplesaml#saml_instructions_migrate\' target=\'_blank\'>（链接）</a>';
 $lang["simplesaml_healthcheck_error"]='SimpleSAML插件错误';
-$lang["simplesaml_rsconfig"]='使用标准的ResourceSpace配置文件来设置SP配置和元数据？如果设置为false，则需要手动编辑文件。 
-
-(Note: "SP" is not a term used in ResourceSpace, so I have left it as is. If you can provide more context or information about what "SP" refers to, I can adjust the translation accordingly.)';
+$lang["simplesaml_rsconfig"]='使用标准的ResourceSpace配置文件来设置SP配置和元数据？如果设置为false，则需要手动编辑文件。';
 $lang["simplesaml_sp_generate_config"]='生成SP配置';
 $lang["simplesaml_sp_config"]='服务提供商（SP）配置';
 $lang["simplesaml_sp_data"]='服务提供商（SP）信息';
@@ -82,3 +78,5 @@ $lang["simplesaml_single_logout_url"]='单点注销URL';
 $lang["simplesaml_start_url"]='开始/登录网址';
 $lang["simplesaml_existing_config"]='请按照知识库中的说明进行操作，以迁移您现有的SAML配置。';
 $lang["simplesaml_test_site_url"]='SimpleSAML测试站点URL';
+$lang["simplesaml_email_attribute"]='用于电子邮件地址的属性';
+$lang["simplesaml_sp_cert_organizationalunitname"]='组织单位 / 部门';

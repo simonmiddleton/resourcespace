@@ -65,3 +65,4 @@ $lang["csv_upload_process_offline_quick"]='تخطي التحقق ومعالجة 
 $lang["csv_upload_force_offline"]='قد يستغرق معالجة هذا الملف الكبير بتنسيق CSV وقتًا طويلاً، لذلك سيتم تشغيله دون اتصال. سيتم إعلامك عبر رسالة من ResourceSpace بمجرد الانتهاء من المعالجة.';
 $lang["csv_upload_recommend_offline"]='قد يستغرق معالجة هذا الملف الكبير من نوع CSV وقتًا طويلاً. يُوصَى بتمكين الوظائف غير المتصلة إذا كنت بحاجة إلى معالجة ملفات CSV كبيرة.';
 $lang["csv_upload_createdfromcsvupload"]='تم إنشاؤها باستخدام ملحق تحميل CSV.';
+$lang["csv_upload_resource_match_column"]='يرجى اختيار العمود الذي يحتوي على مُعرف المورد.';

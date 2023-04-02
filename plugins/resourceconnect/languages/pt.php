@@ -16,3 +16,4 @@ $lang["resourceconnect_collectionwarning"]='<span style=\'color:red;\'><strong>A
 $lang["refineresults"]='Refinar resultados.';
 $lang["additionalkeywords"]='Palavras-chave adicionais.';
 $lang["resourceconnect_help"]='Adicionar recurso a uma coleção.';
+$lang["refine"]='Refinar';

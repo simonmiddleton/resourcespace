@@ -45,3 +45,4 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Nepodarilo sa pripojiť
 $lang["posixldapauth_unable_to_search_ldap_server"]='Nemožno vyhľadávať na LDAP serveri.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% zlyhal, prosím skontrolujte nastavenia.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP vyhľadávanie bolo úspešné, ale nenašli sa žiadne skupiny.';
+$lang["posixldapauth_user_suffix"]='Prípona používateľa:';

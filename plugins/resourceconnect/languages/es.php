@@ -16,3 +16,4 @@ $lang["refineresults"]='Refinar resultados.';
 $lang["additionalkeywords"]='Palabras clave adicionales.';
 $lang["refine"]='Por favor, traduce: Refinar.';
 $lang["resourceconnect_help"]='Agregar recurso a una colección.';
+$lang["resourceconnect_pleasewait"]='Accediendo al sistema de afiliados...';

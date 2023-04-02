@@ -45,3 +45,4 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='تعذر الاتصال
 $lang["posixldapauth_unable_to_search_ldap_server"]='غير قادر على البحث في خادم LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='فشل %call%، يرجى التحقق من الإعدادات.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='البحث في LDAP ناجح، ولكن لم يتم العثور على أي مجموعات.';
+$lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='تم اجتياز الاختبارات، يرجى حفظ الإعدادات الخاصة بك ثم العودة لتعيين تعيين المجموعة.';

@@ -56,3 +56,4 @@ $lang["museumplus_error_unknown_type_saved_config"]='"El \'museumplus_modules_sa
 $lang["museumplus_error_invalid_association"]='Associació de mòduls no vàlida. Assegureu-vos que s\'han introduït el mòdul i/o l\'ID de registre correctes.';
 $lang["museumplus_id_returns_multiple_records"]='S\'han trobat diversos registres - si us plau, introdueixi l\'ID tècnic en lloc d\'això.';
 $lang["museumplus_error_module_no_field_maps"]='No es possible sincronitzar les dades de MuseumPlus. Raó: el mòdul \'%name\' no té cap configuració de mapeig de camps.';
+$lang["museumplus_field_mappings"]='MuseumPlus - Assignacions de camps de ResourceSpace';

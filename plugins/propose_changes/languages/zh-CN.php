@@ -30,3 +30,4 @@ $lang["actions_type_proposed_change"]='建议编辑';
 $lang["actions_propose_changes"]='请显示我在我的操作列表中的用户建议更改。';
 $lang["propose_changes_emailreviewed"]='[img_headerlogo]<br />您的建议更改已经被审核。<br/>[changesummary]<br/>请点击下方链接查看更改详情<br/><a href=\'[url]\'>[url]</a>';
 $lang["propose_changes_emailproposedchanges"]='[img_headerlogo]<br />已提交建议更改。<br/>[changesummary]<br/>点击下方查看更改<br/><a href=\'[url]\'>[url]</a>';
+$lang["propose_changes_accept_change"]='接受';

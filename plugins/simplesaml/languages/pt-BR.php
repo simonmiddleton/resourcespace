@@ -81,3 +81,4 @@ $lang["simplesaml_single_logout_url"]='URL de logout único.';
 $lang["simplesaml_start_url"]='Iniciar/URL de login.';
 $lang["simplesaml_existing_config"]='Siga as instruções da Base de Conhecimento para migrar sua configuração SAML existente.';
 $lang["simplesaml_test_site_url"]='URL do site de teste do SimpleSAML.';
+$lang["simplesaml_site_block"]='Utilize SAML para bloquear completamente o acesso ao site. Se definido como verdadeiro, ninguém poderá acessar o site, nem mesmo anonimamente, sem autenticação.';

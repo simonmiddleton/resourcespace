@@ -37,3 +37,4 @@ $lang["yourresourcehasbeenuploaded"]='リソースがアップロードされま
 $lang["yourresourceshavebeenuploaded"]='あなたのリソースがアップロードされました。';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username])、ID [user-ref]、およびメールアドレス [user-email] は、Eメールによるアップロードが許可されていません（権限「c」または「d」を確認するか、checkmail設定ページでブロックされたユーザーを確認してください）。記録日時：[datetime]。';
 $lang["checkmail_createdfromcheckmail"]='「Check Mail」プラグインから作成されました。';
+$lang["checkmail_email"]='電子メール (でんしメール)';

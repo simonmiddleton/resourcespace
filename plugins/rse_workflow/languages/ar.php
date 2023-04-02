@@ -52,3 +52,4 @@ $lang["rse_workflow_link_close"]='إغلاق';
 $lang["rse_workflow_more_notes_title"]='ملاحظات:';
 $lang["rse_workflow_email_from"]='عنوان البريد الإلكتروني لإرسال الإشعارات (سيتم استخدام %EMAILFROM% إذا كانت الخانة فارغة):';
 $lang["rse_workflow_bcc_admin"]='إخطار مسؤولي النظام عند إخطار المساهم.';
+$lang["rse_workflow_action_status_from"]='من الحالة';

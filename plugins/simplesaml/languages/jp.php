@@ -81,3 +81,4 @@ $lang["simplesaml_single_logout_url"]='シングルログアウトURL';
 $lang["simplesaml_start_url"]='開始/サインオンURL';
 $lang["simplesaml_existing_config"]='既存のSAML設定を移行するために、ナレッジベースの手順に従ってください。';
 $lang["simplesaml_test_site_url"]='SimpleSAMLのテストサイトのURL';
+$lang["simplesaml_sp_cert_emailaddress"]='メールアドレス';

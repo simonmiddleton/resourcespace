@@ -18,3 +18,4 @@ $lang["vr_view_stereo_value"]='Verdi å sjekke for. Hvis den blir funnet, vil st
 $lang["vr_view_yaw_only_field"]='Felt brukt til å bestemme om rulling/helling skal forhindres (valgfritt, standardverdi er falsk hvis ikke satt)';
 $lang["vr_view_yaw_only_value"]='Verdi å sjekke for. Hvis funnet, vil is_yaw_only-alternativet bli satt til sant.';
 $lang["vr_view_orig_image"]='Bruk original ressursfil som kilde for bildevisning?';
+$lang["vr_view_orig_video"]='Bruk original ressursfil som kilde for video forhåndsvisning?';

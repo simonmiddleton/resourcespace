@@ -24,3 +24,4 @@ $lang["image_banks_shutterstock_token"]='Shutterstock-tokeni (<a href=\'https://
 $lang["image_banks_shutterstock_result_limit"]='Tulosten rajoitus (enintään 1000 ilmaisille tileille)';
 $lang["image_banks_shutterstock_id"]='Shutterstock-kuvan tunniste-ID';
 $lang["image_banks_createdfromimagebanks"]='Luotu kuvapankki-liitännäisestä.';
+$lang["image_banks_try_something_else"]='Kokeile jotain muuta.';

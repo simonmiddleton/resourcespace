@@ -23,9 +23,7 @@ $lang["video_tracks_generate"]='生成';
 $lang["video_tracks_options"]='可用的文件输出选项。应在服务器上进行测试，以确保ffmpeg/avconv的语法在您的安装中正确。';
 $lang["video_tracks_command"]='ffmpeg/avconv 命令';
 $lang["video_tracks_option_name"]='输出格式代码';
-$lang["video_tracks_process_size_limit"]='资源文件的最大大小，将立即处理（MB）。更大的文件将在离线状态下处理，并在完成后通知用户。 
-
-Note: I assumed "processed" refers to uploading the file to the system. If it refers to something else, please let me know.';
+$lang["video_tracks_process_size_limit"]='资源文件的最大大小，将立即处理（MB）。更大的文件将在离线状态下处理，并在完成后通知用户。 ';
 $lang["video_tracks_offline_notice"]='您的请求已进入队列。新文件生成后，您将收到通知。';
 $lang["video_tracks_export_file_created"]='您的自定义视频文件已创建。';
 $lang["video_tracks_export_file_failed"]='输出文件的创建失败。';

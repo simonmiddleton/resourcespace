@@ -41,3 +41,4 @@ $lang["emu_no_resource"]='ID de recurso não especificado!';
 $lang["emu_upload_nodata"]='Não foram encontrados dados do EMu para este IRN:';
 $lang["emu_nodata_returned"]='Não foram encontrados dados do EMu para o IRN especificado.';
 $lang["emu_createdfromemu"]='Criado a partir do plugin EMU.';
+$lang["emu_upload_emu_field_label"]='EMu IRN translates to "EMu Número de Registro de Identificação" in Português.';

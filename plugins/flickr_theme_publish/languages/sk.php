@@ -52,3 +52,4 @@ $lang["flickr_nice_progress_min_timeout"]='Čas med posameznimi pingi napredka (
 $lang["flickr_api_key"]='Flickr API kľúč';
 $lang["flickr_api_secret"]='Tajný kľúč Flickr API.';
 $lang["flickr_warn_no_title_access"]='Publikovanie nie je povolené bez prístupu k názvu pola (ID #%id). Prosím, kontaktujte administrátora!';
+$lang["flickr_prefix_id_title"]='Pridajte predponu ID zdroja k názvu.';

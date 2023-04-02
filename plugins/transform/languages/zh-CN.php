@@ -66,9 +66,7 @@ $lang["cropper_enable_alternative_files"]='启用存储备选文件。';
 $lang["enable_replace_slideshow"]='启用替换幻灯片。';
 $lang["cropper_restricteduse_groups"]='限制所选组仅缩放（无旋转或裁剪选项）';
 $lang["transformblurbrestricted"]='选择一个宽度和/或高度来重新调整图像。完成后，选择一个名称和格式的新文件，然后单击下载。';
-$lang["cropper_resolutions"]='预设分辨率更改，例如72、300。如果设置了值，这些值将可供用户选择作为嵌入文件的分辨率。 
-
-(Note: I assumed "embedded file" refers to an image or graphic file that can be inserted into another document or file.)';
+$lang["cropper_resolutions"]='预设分辨率更改，例如72、300。如果设置了值，这些值将可供用户选择作为嵌入文件的分辨率。 ';
 $lang["cropper_resolution_select"]='从预设分辨率 (PPI) 中选择。<br>留空以使用原始分辨率值。';
 $lang["cropper_quality_select"]='允许用户选择结果文件的质量（仅限JPG / PNG）。';
 $lang["cropper_srgb_option"]='添加选项以强制使用sRGB配置文件。';

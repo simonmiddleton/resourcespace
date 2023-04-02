@@ -49,3 +49,4 @@ $lang["simpleldap_usercomment"]='Skapad av SimpleLDAP-pluginet.';
 $lang["simpleldap_usermatchcomment"]='Uppdaterad till LDAP-användare av SimpleLDAP.';
 $lang["origin_simpleldap"]='EnkelLDAP-tillägg.';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Kontrollera inte FQDN för servern mot CN i certifikatet.';
+$lang["simpleldap_username"]='Användarnamn/Användar-DN.';

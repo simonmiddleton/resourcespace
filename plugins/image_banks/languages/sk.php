@@ -24,3 +24,4 @@ $lang["image_banks_shutterstock_token"]='Shutterstock token (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Limit výsledkov (max. 1000 pre bezplatné účty)';
 $lang["image_banks_shutterstock_id"]='Identifikácia obrázka zo služby Shutterstock.';
 $lang["image_banks_createdfromimagebanks"]='Vytvorené pomocou pluginu Image Banks.';
+$lang["image_banks_bad_file_create_attempt"]='Používateľ sa pokúsil vytvoriť zdroj súboru \'%FILE\' pomocou pluginu ImageBank tým, že ukázal na systém, ktorý nie je súčasťou povolených poskytovateľov.';

@@ -65,3 +65,4 @@ $lang["csv_upload_process_offline_quick"]='Ignorar validação e processar arqui
 $lang["csv_upload_force_offline"]='Este arquivo CSV grande pode levar muito tempo para ser processado, portanto será executado offline. Você será notificado por meio de uma mensagem do ResourceSpace assim que o processamento estiver concluído.';
 $lang["csv_upload_recommend_offline"]='Este arquivo CSV grande pode levar muito tempo para ser processado. É recomendável que os trabalhos offline sejam habilitados se você precisar processar arquivos CSV grandes.';
 $lang["csv_upload_createdfromcsvupload"]='Criado a partir do plugin de upload de CSV.';
+$lang["csv_upload_create_new_title"]='Criar novos recursos.';

@@ -16,3 +16,4 @@ $lang["error-invalid-discount-code"]='<strong>Código de descuento inválido.</s
 $lang["error-discount-code-already-used"]='<strong>Código de descuento ya utilizado.</strong><br>Solo puedes usar los códigos de descuento una vez. No se ha aplicado ningún descuento.';
 $lang["error_code-expires"]='<strong>Fecha de caducidad del código de descuento no válida.</strong><br>No se ha aplicado ningún descuento.';
 $lang["discount_applied"]='Descuento aplicado.';
+$lang["code-expires-yyyymmdd"]='Caduca: (aaaa-mm-dd)';
