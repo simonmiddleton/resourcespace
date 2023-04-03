@@ -1,35 +1,7 @@
 <?php
 # Swedish
 # Language File for ResourceSpace
-# -------
-# Översättningsfil för huvudprogrammet.
-#
-# Tilläggsprogram översätts i plugins/*/languages/sv.php
-# Webbplatsens innehåll såsom instruktioner och andra skräddarsydda texter är översatta i dbstruct/data_site_text.txt - se även Hantera webbplatsens innehåll (Manage Content)
-# Fältvärden översätts (än så länge) i Hantera fältalternativ (Manage Field Options)
-# Komponenter som t.ex. JUpload översätts inom respektive projekt
-#
-# Fraserna har översatts för hand, med hjälp av:
-# En befintlig svensk maskinöversättning
-# Den norska översättningen (den danska var maskinöversatt)
-# Computer Swedens språkwebb: http://cstjanster.idg.se/sprakwebben/
-# Svenska datatermgruppen: http://www.datatermgruppen.se/
-# Svensk översättning av Gnome: http://live.gnome.org/Swedish/GNOMEOrdlista
-# Språkrådet: http://www.sprakradet.se/frågelådan
-# Norstedts stora engelsk-svenska ordbok
-# Nationalencyklopedins ordbok
-#
-# Mer information om den svenska översättningen finns på sidan:
-# http://wiki.resourcespace.org/index.php/Swedish_Translation_-_svensk_%C3%B6vers%C3%A4ttning
-# Där finns bland annat de skrivregler och den ordlista som används internt i ResourceSpace
-#
-# En första version av översättningen skapades av Henrik Frizén (förnamn.efternamn utan accenttecken i e-postboxen.Sveriges landskod) 20110124 för version 2295
-#
-# Senast uppdaterad av [Namn] [Datum] för version [svn-version], [kommentar]
-# Senast uppdaterad av Henrik Frizén 20140312 för version 5361
 
-#
-#
 # User group names (for the default user groups)
 $lang["usergroup-administrators"]="Administratörer";
 $lang["usergroup-general_users"]="Vanliga användare";

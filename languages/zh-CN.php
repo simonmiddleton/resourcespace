@@ -1,9 +1,6 @@
 <?php
 # Chinese Simplified
 # Language File for ResourceSpace
-# -------
-# Note: this has been automatically translated and could probably use some work. It's intended as a starting point.
-
 
 # Top navigation bar (also reused for page titles)
 $lang["logout"]="登出";

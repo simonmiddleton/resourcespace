@@ -1,21 +1,6 @@
 <?php
 # German
 # Language File for ResourceSpace
-# UTF-8 encoded
-# -------
-# Note: when translating to a new language, preserve the original case if possible.
-#
-# Updated by [Name] [Date] for version [svn version], [comments]
-# Updated by Henrik Frizén 20110124 for version 2296, added missing $lang from the en.php (search for #$lang to find the untranslated strings).
-# Updated by Stefan Wild 20110201 for version 2296, translated the missing $lang keys from the en.php that Henrik added.
-# Updated by Henrik Frizén 20110222 for version 2390+, added missing $lang from the en.php (search for #$lang to find the untranslated strings).
-# Updated by Stefan Wild 20110309 for version 2390+, translated the missing $lang keys from the en.php that Henrik added.
-# Updated by Stefan Wild 20110427 for version 2652, translated the missing $lang keys from the en.php.
-# Updated by Stefan Wild 20110730 for version 2852, translated the missing $lang keys from the en.php.
-# Updated by Stefan Wild 20130124 for version 4220, translated the missing $lang keys from the en.php.
-# Updated by Stefan Wild 20140220 for version 5313, translated the missing $lang keys from the en.php.
-# Updated by Stefan Wild 20140619 for version 5550, translated the missing $lang keys from the en.php.
-# Updated by Stefan Wild 20141215 for version 6127, translated the missing $lang keys from the en.php.
 
 # User group names (for the default user groups)
 $lang["usergroup-administrators"]="Administratoren";

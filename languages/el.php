@@ -1,8 +1,6 @@
 <?php
 # Greek
 # Language File for ResourceSpace
-# -------
-# Note: this has been automatically translated and could probably use some work. It's intended as a starting point.
 
 $lang["logout"]="Αποσύνδεση";
 $lang["contactus"]="Επικοινωνία";

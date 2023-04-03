@@ -1,9 +1,6 @@
 <?php
 # Russian
 # Language File for ResourceSpace
-# -------
-# version 0.3 edited by Alexey Tikhonov alt@altert.net
-
 
 $lang["logout"]="Выйти";
 $lang["contactus"]="Связаться с нами";

@@ -1,9 +1,6 @@
 <?php
 # Croatian
 # Language File for ResourceSpace
-# -------
-# Note: when translating to a new language, preserve the original case if possible.
-
 
 $lang["logout"]="Log Out";
 $lang["contactus"]="Kontaktirajte nas";

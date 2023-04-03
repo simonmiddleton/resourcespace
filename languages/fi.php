@@ -1,7 +1,6 @@
 <?php
 # Finnish
 # Language File for ResourceSpace
-# Note: when translating to a new language, preserve the original case if possible.
 
 # User group names (for the default user groups)
 $lang["usergroup-administrators"]="Ylläpitäjät";

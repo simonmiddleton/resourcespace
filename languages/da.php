@@ -1,12 +1,6 @@
 <?php
 # Danish
 # Language File for ResourceSpace
-# -------
-# Note: this has been automatically translated and could probably use some work. It's intended as a starting point.
-#
-# This file has been reviewed by Hans Ole Jørgensen - February 2015
-# A lot of the automatic translated text has been reviewed and changed to give a good Danish user experience.
-#
 
 $lang["logout"]="Log Out";
 $lang["contactus"]="Kontakt os";

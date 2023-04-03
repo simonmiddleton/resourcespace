@@ -1,7 +1,5 @@
 <?php
 
-
-
 $lang["usergroup-administrators"]='Administratori.';
 $lang["usergroup-general_users"]='Utilizatori generali.';
 $lang["usergroup-super_admin"]='Super Administrator';

@@ -1,9 +1,6 @@
 <?php
 # Japanese
 # Language File for ResourceSpace
-# -------
-# Note: when translating to a new language, preserve the original case if possible.
-
 
 # Top navigation bar (also reused for page titles)
 $lang["logout"]="Log Out";
