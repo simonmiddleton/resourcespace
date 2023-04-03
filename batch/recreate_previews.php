@@ -45,7 +45,10 @@ else
     echo "php recreate_previews.php resource 1 -videoupdate\n";
     echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
     echo "php recreate_previews.php collection 247 sizes scr,col\n";
-    echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";   
+    echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";
+    echo "php recreate_previews.php collection 247 -delete\n";
+    echo "- this will remove all existing previews before recreating all preview sizes for all resources in collection #247\n";
+    echo "- the -delete option cannot be used with options -videoupdate, -previewbased or sizes\n\n";
     exit();
     }
 
@@ -60,15 +63,19 @@ else
 
 $previewbased = in_array("-previewbased",$argv);
 $videoupdate = in_array("-videoupdate",$argv);
+$delete_existing = in_array("-delete", $argv) && !$previewbased && !$videoupdate && count($sizes) == 0;
 
-function update_preview($ref, $previewbased, $sizes)
+function update_preview($ref, $previewbased, $sizes, $delete_existing)
     {
     $resourceinfo = ps_query("select file_path, file_extension from resource where ref = ?", array("i", (int)$ref));
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0])))
         {
         if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
         else{$ingested=true;}
-        delete_previews($ref);
+        if ($delete_existing)
+            {
+            delete_previews($ref);
+            }
         create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,true,$ingested, true, $sizes);
         hook("afterupdatepreview","",array($ref));
         update_disk_usage($ref);
@@ -128,7 +135,7 @@ if(is_array($resources) && count($resources) > 0)
             
         echo "Recreating previews for resource #" . $resource . "...";
         ob_flush(); 
-        if (update_preview($resource, $previewbased, $sizes))
+        if (update_preview($resource, $previewbased, $sizes, $delete_existing))
             {
             echo "....completed\n"; 
             }
