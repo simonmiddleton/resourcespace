@@ -68,6 +68,7 @@ function update_preview($ref, $previewbased, $sizes)
         {
         if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
         else{$ingested=true;}
+        delete_previews($ref);
         create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,true,$ingested, true, $sizes);
         hook("afterupdatepreview","",array($ref));
         update_disk_usage($ref);
