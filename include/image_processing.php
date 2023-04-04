@@ -3468,6 +3468,7 @@ function delete_previews($resource,$alternative=-1)
     $delete_prefixes = array();
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
+    $delete_prefixes[] = "tmp_";
 
     if(!file_exists($resourcefolder))
         {

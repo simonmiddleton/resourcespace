@@ -69,7 +69,7 @@ abstract class File implements FileInterface, \Countable
             $this->loadFromFile();
         }
 
-        $this->stats = array(
+        $this->stats = [
             'tooSlow'        => 0,
             'slowAcceptable' => 0,
             'aBitSlow'       => 0,
@@ -79,14 +79,14 @@ abstract class File implements FileInterface, \Countable
             'aBitFast'       => 0,
             'fastAcceptable' => 0,
             'tooFast'        => 0
-        );
+        ];
     }
 
     /**
      * @param string $_filename The filename
      * @return $this
      */
-    public function setFilename($_filename)
+    public function setFilename(string $_filename): self
     {
         $this->filename = file_exists($_filename) ? $_filename : null;
 
@@ -97,7 +97,7 @@ abstract class File implements FileInterface, \Countable
      * @param string $_encoding
      * @return $this
      */
-    public function setEncoding($_encoding)
+    public function setEncoding(string $_encoding): self
     {
         $this->encoding = $_encoding;
 
@@ -108,7 +108,7 @@ abstract class File implements FileInterface, \Countable
      * @param bool $_useIconv
      * @return $this
      */
-    public function setUseIconv($_useIconv)
+    public function setUseIconv(bool $_useIconv): self
     {
         $this->useIconv = $_useIconv;
 
@@ -118,13 +118,13 @@ abstract class File implements FileInterface, \Countable
     /**
      * @param string $_lineEnding
      */
-    public function setLineEnding($_lineEnding)
+    public function setLineEnding(string $_lineEnding)
     {
-        $lineEndings = array(
+        $lineEndings = [
             self::UNIX_LINE_ENDING,
             self::MAC_LINE_ENDING,
             self::WINDOWS_LINE_ENDING
-        );
+        ];
         if (!in_array($_lineEnding, $lineEndings)) {
             return;
         }
@@ -139,7 +139,7 @@ abstract class File implements FileInterface, \Countable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFilename()
     {
@@ -147,7 +147,7 @@ abstract class File implements FileInterface, \Countable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFileContent()
     {
@@ -157,7 +157,7 @@ abstract class File implements FileInterface, \Countable
     /**
      * @return string
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
@@ -165,7 +165,7 @@ abstract class File implements FileInterface, \Countable
     /**
      * @return bool|false
      */
-    public function getUseIconv()
+    public function getUseIconv(): bool
     {
         return $this->useIconv;
     }
@@ -174,9 +174,9 @@ abstract class File implements FileInterface, \Countable
      * @param integer $_index
      * @return Cue|null
      */
-    public function getCue($_index)
+    public function getCue(int $_index)
     {
-        return isset($this->cues[$_index]) ? $this->cues[$_index] : null;
+        return $this->cues[$_index] ?? null;
     }
 
     /**
@@ -184,7 +184,7 @@ abstract class File implements FileInterface, \Countable
      */
     public function getFirstCue()
     {
-        return isset($this->cues[0]) ? $this->cues[0] : null;
+        return $this->cues[0] ?? null;
     }
 
     /**
@@ -200,7 +200,7 @@ abstract class File implements FileInterface, \Countable
     /**
      * @return array
      */
-    public function getCues()
+    public function getCues(): array
     {
         return $this->cues;
     }
@@ -208,7 +208,7 @@ abstract class File implements FileInterface, \Countable
     /**
      * @return integer
      */
-    public function getCuesCount()
+    public function getCuesCount(): int
     {
         return count($this->cues);
     }
@@ -218,7 +218,7 @@ abstract class File implements FileInterface, \Countable
      * @return $this
      * @throws \Exception
      */
-    public  function loadFromFile($_filename = null)
+    public  function loadFromFile($_filename = null): self
     {
         if ($_filename === null) {
             $_filename = $this->filename;
@@ -243,10 +243,10 @@ abstract class File implements FileInterface, \Countable
      * @param string $_str
      * @return $this
      */
-    public function loadFromString($_str)
+    public function loadFromString(string $_str): self
     {
         // Clear cues from previous runs
-        $this->cues = array();
+        $this->cues = [];
         $this->fileContent = $_str;
 
         $this->encode();
@@ -263,9 +263,9 @@ abstract class File implements FileInterface, \Countable
      * @param boolean $_strict
      * @return array containing ids of entries
      */
-    public function search($_word, $_case_sensitive = false, $_strict = false)
+    public function search(string $_word, $_case_sensitive = false, $_strict = false): array
     {
-        $list = array();
+        $list = [];
         $pattern = preg_quote($_word, '#');
 
         $pattern = str_replace(' ', '( |\r\n|\r|\n)', $pattern);
@@ -291,7 +291,7 @@ abstract class File implements FileInterface, \Countable
         return (count($list) > 0) ? $list : -1;
     }
 
-    public function getCueFromStart($_start)
+    public function getCueFromStart($_start): int
     {
         $cueClass = self::getExpectedCueClass($this);
         $start = is_int($_start) ? $_start : $cueClass::tc2ms($_start);
@@ -319,7 +319,7 @@ abstract class File implements FileInterface, \Countable
      * @throws \Exception
      * @return File
      */
-    public function addCue($_mixed, $_start = null, $_stop = null)
+    public function addCue($_mixed, $_start = null, $_stop = null): self
     {
         $fileFormat = self::getFormat($this);
 
@@ -347,7 +347,7 @@ abstract class File implements FileInterface, \Countable
      * @param int $_index
      * @return File
      */
-    public function removeCue($_index)
+    public function removeCue(int $_index): self
     {
         if (isset($this->cues[$_index])) {
             unset($this->cues[$_index]);
@@ -359,13 +359,13 @@ abstract class File implements FileInterface, \Countable
     /**
      * Sorts cues
      */
-    public function sortCues()
+    public function sortCues(): self
     {
         if (count($this->cues) === 0) {
             return $this;
         }
 
-        $tmp = array();
+        $tmp = [];
 
         $count = 0; // useful if 2 cues start at the same time code
         foreach ($this->cues as $cue) {
@@ -375,7 +375,7 @@ abstract class File implements FileInterface, \Countable
 
         ksort($tmp);
 
-        $this->cues = array();
+        $this->cues = [];
         foreach ($tmp as $cue) {
             $this->cues[] = $cue;
         }
@@ -390,7 +390,7 @@ abstract class File implements FileInterface, \Countable
      * @param float $_new_fps
      * @return File
      */
-    public function changeFPS($_old_fps, $_new_fps)
+    public function changeFPS(float $_old_fps, float $_new_fps): self
     {
         $cuesCount = $this->getCuesCount();
         for ($i = 0; $i < $cuesCount; $i++) {
@@ -414,7 +414,7 @@ abstract class File implements FileInterface, \Countable
      * @return $this
      * @throws \Exception
      */
-    public function merge(FileInterface $_file)
+    public function merge(FileInterface $_file): self
     {
         if (!is_a($_file, get_class($this))) {
             throw new \Exception('Can\'t merge! Wrong format: '.$this->getFormat($_file));
@@ -433,12 +433,9 @@ abstract class File implements FileInterface, \Countable
      * @param int $_startIndex The subtitle index the range begins with.
      * @param int $_endIndex The subtitle index the range ends with.
      */
-    public function shift($_time, $_startIndex = null, $_endIndex = null)
+    public function shift(int $_time, $_startIndex = null, $_endIndex = null): bool
     {
-        if (!is_int($_time)) {
-            return false;
-        }
-        if ($_time == 0) {
+        if ($_time === 0) {
             return true;
         }
 
@@ -458,8 +455,8 @@ abstract class File implements FileInterface, \Countable
         }
 
         for ($i = $_startIndex; $i <= $_endIndex; $i++) {
-                $cue = $this->getCue($i);
-                $cue->shift($_time);
+            $cue = $this->getCue($i);
+            $cue->shift($_time);
         }
 
         return true;
@@ -479,7 +476,7 @@ abstract class File implements FileInterface, \Countable
      * @param bool $_syncLast Whether to sync the last subtitle.
      * @return bool Whether the subtitles could be adjusted
      */
-    public function sync($_startIndex, $_startTime, $_endIndex, $_endTime, $_syncLast = true)
+    public function sync(int $_startIndex, int $_startTime, int $_endIndex, int $_endTime, $_syncLast = true): bool
     {
         //set first and last subtitles index
         if (!$_startIndex) {
@@ -519,7 +516,7 @@ abstract class File implements FileInterface, \Countable
     /**
      * @return $this
      */
-    public function build()
+    public function build(): FileInterface
     {
         $this->buildPart(0, $this->getCuesCount() - 1);
 
@@ -538,12 +535,12 @@ abstract class File implements FileInterface, \Countable
             $filename = $this->filename;
         }
 
-        if (trim($this->fileContent) == '') {
+        if (trim((string)$this->fileContent) === '') {
             $this->build();
         }
 
         $file_content = $this->fileContent;
-        if (strtolower($this->encoding) != 'utf-8') {
+        if (strtolower($this->encoding) !== 'utf-8') {
             if ($this->useIconv) {
                 $file_content = iconv('UTF-8', $this->encoding, $file_content);
             } else {
@@ -564,9 +561,9 @@ abstract class File implements FileInterface, \Countable
     /**
      * Computes reading speed statistics
      */
-    public function getStats()
+    public function getStats(): array
     {
-        $this->stats = array(
+        $this->stats = [
             'tooSlow'        => 0,
             'slowAcceptable' => 0,
             'aBitSlow'       => 0,
@@ -576,7 +573,7 @@ abstract class File implements FileInterface, \Countable
             'aBitFast'       => 0,
             'fastAcceptable' => 0,
             'tooFast'        => 0
-        );
+        ];
 
         $cuesCount = $this->getCuesCount();
         for ($i = 0; $i < $cuesCount; $i++) {
@@ -627,7 +624,7 @@ abstract class File implements FileInterface, \Countable
      * @param bool|true     $_full_namespace
      * @return string
      */
-    public static function getExpectedCueClass(FileInterface $_file, $_full_namespace = true)
+    public static function getExpectedCueClass(FileInterface $_file, $_full_namespace = true): string
     {
         $format = self::getFormat($_file).'Cue';
 
@@ -644,10 +641,10 @@ abstract class File implements FileInterface, \Countable
      * @param string $_output_format
      * @return mixed
      */
-    public function convertTo($_output_format)
+    public function convertTo(string $_output_format): FileInterface
     {
         $fileFormat = self::getFormat($this);
-        $method     = strtolower($fileFormat).'2'.strtolower(rtrim($_output_format, 'File'));
+        $method     = strtolower($fileFormat).'2'.strtolower(rtrim((string)$_output_format, 'File'));
 
         if (method_exists(new Converter(), $method)) {
             return Converter::$method($this);
@@ -671,22 +668,22 @@ abstract class File implements FileInterface, \Countable
      * @return array
      * @throws \Exception
      */
-    protected function getFileContentAsArray()
+    protected function getFileContentAsArray(): array
     {
         if (empty($this->fileContent)) {
             $this->loadFromFile($this->filename);
         }
         $fileContent = str_replace( // So we change line endings to one format
-            array(
+            [
                 self::WINDOWS_LINE_ENDING,
                 self::MAC_LINE_ENDING,
-            ),
+            ],
             self::UNIX_LINE_ENDING,
             $this->fileContent
         );
-        $fileContentArray = explode(self::UNIX_LINE_ENDING, $fileContent); // Create array from file content
 
-        return $fileContentArray;
+        // Create array from file content
+        return explode(self::UNIX_LINE_ENDING, $fileContent);
     }
 
     /**
@@ -704,7 +701,8 @@ abstract class File implements FileInterface, \Countable
     /**
      * @return int
      */
-    public function count()
+    #[\ReturnTypeWillChange]
+    public function count(): int
     {
         return $this->getCuesCount();
     }

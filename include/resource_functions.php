@@ -5535,7 +5535,7 @@ function filter_match($filter,$name,$value)
 			$checkvalues=$s[1];
 
 			$s=explode("|",strtoupper($checkvalues));
-			$v=trim_array(explode(",",strtoupper($value)));
+			$v=trim_array(explode(",",strtoupper($value??"")));
 			foreach ($s as $checkvalue)
 				{
 				if (in_array($checkvalue,$v))

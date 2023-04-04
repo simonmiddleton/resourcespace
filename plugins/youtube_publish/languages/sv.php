@@ -64,3 +64,12 @@ $lang["youtube_publish_howto"]="Instruktioner och stil";
 $lang["youtube_publish_education"]="Utbildning";
 $lang["youtube_publish_tech"]="Vetenskap och teknik";
 $lang["youtube_publish_nonprofit"]="Ideellt arbete och aktivism";
+
+$lang["youtube_publish_oauth2_advice_desc"]='För att installera detta tillägg behöver du ställa in OAuth 2.0 eftersom alla andra autentiseringsmetoder officiellt är föråldrade. För detta behöver du registrera din ResourceSpace-webbplats som ett projekt med Google och få en OAuth-klient-ID och hemlighet. Det finns ingen kostnad involverad.
+
+<ul><li>Logga in på Google och gå till din instrumentpanel: <a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>.</li><li>Skapa ett nytt projekt (namn och ID spelar ingen roll, de är för din referens).</li><li>Klicka på \'AKTIVERA API:ER OCH TJÄNSTER\' och scrolla ner till alternativet \'YouTube Data API\'.</li><li>Klicka på \'Aktivera\'.</li><li>Välj \'Anslutningar\' i menyn till vänster.</li><li>Klicka sedan på \'SKAPA ANSLUTNINGAR\' och välj \'Oauth-klient-ID\' i rullgardinsmenyn.</li><li>Då presenteras du med sidan \'Skapa OAuth-klient-ID\'.</li><li>För att fortsätta behöver vi först klicka på den blåa knappen \'Konfigurera samtyckesskärm\'.</li><li>Fyll i relevant information och spara.</li><li>Du kommer sedan att omdirigeras tillbaka till sidan \'Skapa OAuth-klient-ID\'.</li><li>Välj \'Webbapplikation\' under \'Applikationstyp\' och fyll i \'Godkända Javascript-ursprung\' med din systembas-URL och omdirigerings-URL med callback-URL:en som anges högst upp på denna sida och klicka på \'Skapa\'.</li><li>Du kommer sedan att presenteras med en skärm som visar ditt nyss skapade \'klient-ID\' och \'klient-hemlighet\'.</li><li>Skriv ner klient-ID och hemlighet och ange sedan dessa detaljer nedan.</li></ul>';
+$lang["youtube_publish_base"]='Bas-URL';
+$lang["youtube_publish_failedupload_error"]='Överföringsfel.';
+$lang["youtube_publish_category_error"]='Fel vid hämtning av YouTube-kategorier: -';
+$lang["youtube_chunk_size"]='Storlek på segment att använda vid uppladdning till YouTube (MB)';
+$lang["youtube_publish_add_anchor"]='Lägg till ankaretiketter till URL:en när du sparar till metadatafältet för YouTube-URL?';

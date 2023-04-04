@@ -4996,10 +4996,12 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
 
     // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
     $disabled_attr = '';
+    $onchange_attr = " onchange=SavePermission('$base64_perm');";
     if ($disabled)
         {
         $checked = true;
         $disabled_attr = ' disabled';
+        $onchange_attr = '';
         }
     $checked_attr = $checked ? ' checked' : '';
     ?>
@@ -5011,8 +5013,7 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
                 type="checkbox"
                 name="checked_<?php echo $base64_perm; ?>"
                 data-reverse="<?php echo (int) $reverse; ?>"
-                <?php echo $disabled_attr . $checked_attr; ?>
-                onchange="SavePermission('<?php echo $base64_perm; ?>');">
+                <?php echo $disabled_attr . $checked_attr . $onchange_attr; ?>>
         </td>
     </tr>
     <?php

@@ -9,10 +9,15 @@
 namespace Captioning\Format;
 
 use Captioning\File;
+use Captioning\FileInterface;
 
 class JsonFile extends File
 {
-    public function parse()
+    /**
+     * @return JsonFile
+     * @throws \Exception
+     */
+    public function parse(): FileInterface
     {
         $decodedContent = json_decode($this->fileContent, true);
 
@@ -33,7 +38,12 @@ class JsonFile extends File
         return $this;
     }
 
-    public function buildPart($_from, $_to)
+    /**
+     * @param int $_from
+     * @param int $_to
+     * @return JsonFile
+     */
+    public function buildPart(int $_from, int $_to): FileInterface
     {
         $this->sortCues();
 
@@ -46,20 +56,20 @@ class JsonFile extends File
         }
 
 
-        $captions = array();
+        $captions = [];
         for ($j = $_from; $j <= $_to; $j++) {
             /** @var JsonCue $cue */
             $cue = $this->getCue($j);
 
-            $captions[] = array(
+            $captions[] = [
                 'duration'         => $cue->getDuration(),
                 'content'          => $cue->getText(),
                 'startOfParagraph' => $cue->isStartOfParagraph(),
                 'startTime'        => $cue->getStart(),
-            );
+            ];
         }
 
-        $this->fileContent = json_encode(array('captions' => $captions));
+        $this->fileContent = json_encode(['captions' => $captions]);
 
         return $this;
     }
