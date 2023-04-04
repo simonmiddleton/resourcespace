@@ -511,7 +511,7 @@ function message_send_unread_emails()
             }
         }
 
-    if (count($digestusers) > 0)
+    if (!empty($digestusers))
         {
         $digestuserschunks = array_chunk($digestusers,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
         $unreadmessages = [];
@@ -530,7 +530,7 @@ function message_send_unread_emails()
             if (count($sendall_chunk) > 0)
                 {
                 $parameters  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
-                $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")";
+                $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
                 }
             else
                 {
@@ -569,30 +569,33 @@ function message_send_unread_emails()
                 $parameters
             );
         
-        if (count($sendall) > 0)
+        if (!empty($sendall))
             {
-            $sendall_chunk = array_chunk($sendall,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+            $sendall_chunks = array_chunk($sendall,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
 
-            if (count($sendall_chunk) > 0)
+            foreach ($sendall_chunks as $sendall_chunk)
                 {
-                $parameters  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
-                $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
+                if (count($sendall_chunk) > 0)
+                    {
+                    $parameters_chunk  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
+                    $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
+                    }
+                    
+                $unreadmessages = array_merge(
+                    $unreadmessages,
+                    ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                        FROM user_message um 
+                            JOIN user u ON u.ref = um.user 
+                            JOIN message m ON m.ref = um.message 
+                            WHERE um.seen = 0
+                            AND u.email <> '' 
+                            AND (m.created > ? 
+                                $sendall_sql) 
+                            ORDER BY m.created DESC", 
+                        $parameters_chunk
+                    )
+                );
                 }
-                
-            $unreadmessages = array_merge(
-                $unreadmessages,
-                ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
-                    FROM user_message um 
-                        JOIN user u ON u.ref = um.user 
-                        JOIN message m ON m.ref = um.message 
-                        WHERE um.seen = 0
-                        AND u.email <> '' 
-                        AND (m.created > ? 
-                            $sendall_sql) 
-                        ORDER BY m.created DESC", 
-                    $parameters
-                )
-            );
             }
         }
 
