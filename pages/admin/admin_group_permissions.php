@@ -15,6 +15,7 @@ $filter_by_parent=getval("filterbyparent","");
 $find=getval("find","");
 $filter_by_permissions=getval("filterbypermissions","");
 $copy_from=getval("copyfrom","");
+$save = getval('save', '');
 
 $url_params = [
     'ref' => $ref,
@@ -41,15 +42,15 @@ if ($filter_by_permissions)
     }
 
 $admin_group_permissions_url = generateURL("{$baseurl_short}pages/admin/admin_group_permissions.php", $url_params);
-$group = get_usergroup($ref);
 
-if (getval("save","")!="" && enforcePostRequest(getval('ajax', '') == 'true'))
+if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') == 'true'))
 	{
+    $group = get_usergroup($ref);
     if (
         $group !== false
         && isset($group['inherit']) 
         && is_array($group['inherit'])
-        && in_array("permissions", $group['inherit'])
+        && in_array('permissions', $group['inherit'])
     )
         {
         ajax_unauthorized();
@@ -58,24 +59,32 @@ if (getval("save","")!="" && enforcePostRequest(getval('ajax', '') == 'true'))
     $permissions = trim_array(explode(',', (string) $group['permissions']));
     $permissions_to_add = $permissions_to_remove = [];
 
-    // Data input
-    $permission = getval('permission', '');
-    $reverse = getval('reverse', 0, true) == 1;
-    $checked = getval('checked', '') === 'true';
-
-    if (
-        // Normal permissions
-        (!$reverse && $checked)
-        // Negative permissions
-        || ($reverse && !$checked)
-    )
+    $processing_permissions = $_POST['permissions'] ?? [];
+    foreach ($processing_permissions as $perm)
         {
-        $permissions_to_add[] = base64_decode($permission);
+        if (!isset($perm['permission'], $perm['reverse'], $perm['checked']))
+            {
+            return ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_invalid_input'])));
+            }
 
-        }
-    else
-        {
-        $permissions_to_remove[] = base64_decode($permission);
+        $permission = $perm['permission'];
+        $reverse = $perm['reverse'] == 1;
+        $checked = $perm['checked'] === 'true';
+
+        if (
+            // Normal permissions
+            (!$reverse && $checked)
+            // Negative permissions
+            || ($reverse && !$checked)
+        )
+            {
+            $permissions_to_add[] = base64_decode($permission);
+
+            }
+        else
+            {
+            $permissions_to_remove[] = base64_decode($permission);
+            }
         }
 
     $perms = array_values(array_unique(
@@ -90,47 +99,16 @@ if (getval("save","")!="" && enforcePostRequest(getval('ajax', '') == 'true'))
     ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ["s",$perms_csv, "i",$ref]);
     
     ajax_send_response(200, ajax_response_ok_no_data());
-
     /*
     todo:
-    - allow save to deal with a list of permissions so custom permissions can be dealt with
     - deal with disabled permissions (check before changes again how they should work)
     */
-
-    // old code - kept for reference - todo: delete
-    echo '<pre>';print_r($_POST);echo '</pre>';die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
-	$perms=array();
-	foreach ($_POST as $key=>$value)
-		{
-		if (substr($key,0,11)=="permission_")
-			{
-			# Found a permisison.
-			$reverse=($value=="reverse");
-			$key=substr($key,11);
-			if ((!$reverse && getval("checked_" . $key,"")!="") || ($reverse && !getval("checked_" . $key,"")!=""))
-				{
-				$perms[]=base64_decode($key);
-				}
-			}
-		}		
-	if (getval("other","")!="")
-		{
-		$otherperms=explode(",", getval("other",""));
-		$perms = array_merge($perms, $otherperms);
-		}
-
-	$perms = array_unique($perms);
-	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
-    ps_query("update usergroup set permissions=? where ref=?",["s",join(",",$perms),"i",$ref]);
-    // old code above - kept for reference - todo: delete
 	}
-
-if ($copy_from!="")
+else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
     {
     copy_usergroup_permissions($copy_from,$ref);
     }
 
-// todo: why is this so low in the process? Someone could change perms and then get a permission denied
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",(string)$group["permissions"]));
@@ -164,7 +142,8 @@ renderBreadcrumbs($links_trail);
 ?>
 	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
 
-    <form method="post" id="permissions" action="<?php echo $admin_group_permissions_url; ?> onsubmit="return CentralSpacePost(this,true);" >	
+    <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">	
+        <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">
         
         <div class="BasicsBox">
@@ -172,18 +151,24 @@ renderBreadcrumbs($links_trail);
             <input type="text" name="copyfrom">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]; ?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirmcopypermissions"]?>');">
         </div>
-        <?php
-        generateFormToken("permissions");
+    </form>
 
+    <form method="post" id="permissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="event.preventDefault();">	
+    <?php
 	if ($offset) 
 		{
-?>			<input type="hidden" name="offset" value="<?php echo $offset; ?>">
-<?php		}
+        ?>
+        <input type="hidden" name="offset" value="<?php echo escape_quoted_data($offset); ?>">
+        <?php
+        }
 	if ($order_by) 
 		{
-?>			<input type="hidden" name="order_by" value="<?php echo $order_by; ?>">
-<?php		}
-?>		<div class="Listview">
+        ?>
+        <input type="hidden" name="order_by" value="<?php echo escape_quoted_data($order_by); ?>">
+        <?php
+        }
+        ?>
+        <div class="Listview">
 			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 
 				<tr class="ListviewTitleStyle">
@@ -454,18 +439,51 @@ hook("additionalperms");
 		
 		<div class="QuestionSubmit">
 			<label for="buttons"> </label>			
-			<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
+			<input 
+                name="save"
+                type="button"
+                onclick="SaveCustomPermissions();"
+                value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"]); ?>&nbsp;&nbsp;">
 		</div>
 
 	</form>	
 </div>  <!-- end of BasicsBox -->
 <script>
-function SavePermission(perm)
+function SavePermissions(perms)
     {
-    console.debug('SavePermission(perm = %o) -- base64_decoded: %o', perm, atob(perm));
-    let el = jQuery("input[name='checked_" + perm + "']");
+    console.debug('SavePermissions(perms = %o)', perms);
 
     CentralSpaceShowLoading();
+    let permissions_list = perms.map(function(perm) {
+        // Custom Permissions are provided with all the required info
+        if (
+            typeof perm === 'object'
+            && perm.hasOwnProperty('permission')
+            && perm.hasOwnProperty('reverse')
+            && perm.hasOwnProperty('checked')
+        )
+            {
+            return perm;
+            }
+        // Auto saving a permission will only provide its base64 value
+        else
+            {
+            console.debug('perm = %o -- base64_decoded: %o', perm, atob(perm));
+            let el = jQuery("input[name='checked_" + perm + "']");
+            if (el.length === 0)
+                {
+                console.error('Unable to find permission!');
+                return null;
+                }
+            return {
+                permission: perm,
+                reverse: el.data('reverse'),
+                checked: el.prop('checked'),
+            };
+            }
+    });
+    let found_perms = permissions_list.filter(x => x);
+
     jQuery.ajax(
         {
         type: 'POST',
@@ -473,9 +491,7 @@ function SavePermission(perm)
         data: {
             ajax: true,
             save: '1',
-            permission: perm,
-            reverse: el.data('reverse'),
-            checked: el.prop('checked'),
+            permissions: found_perms,
             <?php echo generateAjaxToken('SaveUsergroupPermission'); ?>
         },
         dataType: "json"
@@ -503,6 +519,20 @@ function SavePermission(perm)
             });
 
     return;
+    }
+
+function SaveCustomPermissions()
+    {
+    console.debug('SaveCustomPermissions()');
+    let perms = jQuery("textarea[name='other']").val().split(',');
+    let custom_perms = perms.map(function(perm) {
+        return {
+            permission: btoa(perm),
+            reverse: 0,
+            checked: true,
+        };
+    });
+    SavePermissions(custom_perms);
     }
 </script>	
 <?php

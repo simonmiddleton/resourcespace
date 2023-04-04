@@ -5006,7 +5006,7 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
 
     // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
     $disabled_attr = '';
-    $onchange_attr = " onchange=SavePermission('$base64_perm');";
+    $onchange_attr = " onchange=SavePermissions(['$base64_perm']);";
     if ($disabled)
         {
         $checked = true;
