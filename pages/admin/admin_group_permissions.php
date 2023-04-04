@@ -442,7 +442,6 @@ DrawOption("noex", $lang["prevent_user_group_sharing_externally"]);
 DrawOption("nolock", $lang["permission_nolock"]);
 
 
-
 hook("additionalperms");
 ?>			</table>
 		</div>  <!-- end of Listview -->

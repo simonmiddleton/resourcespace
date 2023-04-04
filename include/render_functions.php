@@ -4979,6 +4979,16 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
     {
     global $permissions,$permissions_done;
 
+    // The description can contain <br> tags and "&mdash;" HTML entities which we still want to allow.
+    $description_escaped = nl2br(
+        str_replace(
+            '&amp;',
+            '&',
+            htmlspecialchars(preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $description))
+        ),
+        false
+    );
+
     $checked = in_array($permission, $permissions);
     if ($reverse)
         {
@@ -5007,7 +5017,7 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
     ?>
     <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
-        <td><?php echo htmlspecialchars($description); ?></td>
+        <td><?php echo $description_escaped; ?></td>
         <td>
             <input
                 type="checkbox"
