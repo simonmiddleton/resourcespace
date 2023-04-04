@@ -156,7 +156,6 @@ else if(is_featured_collection_category($collection))
 
     // To keep it in line with the legacy theme_category_share.php page, disable these features (home_dash, hide_internal_sharing_url)
     $home_dash = false;
-    $hide_internal_sharing_url = true;
 
     // Beyond this point mark accordingly any validations that have been enforced specifically for Featured Collections
     // (categories or otherwise) type in a different way than for a normal collection
@@ -304,9 +303,14 @@ include "../include/header.php";
 			{ ?>
 			<li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo $lang["generateurl"]?></a></li> <?php 
 			} 
-		else // Just show the internal share URL straight away as there is no generate link
+
+        if($hide_internal_sharing_url==false 
+            && ($collection["type"] == COLLECTION_TYPE_FEATURED
+            && allow_featured_collection_share($collection)
+            || $collection["public"]==1 || $ignore_collection_access)
+            && !$generateurl) // Just show the internal share URL straight away as there is no generate link
 			{ ?>
-			<h2><?php echo $lang["generateurlinternal"]; ?></h2><br />
+			<p><?php echo $lang["generateurlinternal"]; ?></p><br />
 			<p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
 			<?php
 			}?>
