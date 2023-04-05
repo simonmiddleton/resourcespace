@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='Seleziona i tipi di risorse collegati a EMu.';
 $lang["emu_email_notify"]='Indirizzo e-mail a cui lo script invierà le notifiche. Lasciare vuoto per utilizzare l\'indirizzo di notifica di sistema predefinito.';
 $lang["emu_script_failure_notify_days"]='Numero di giorni dopo i quali visualizzare l\'avviso e inviare un\'e-mail se lo script non è stato completato.';
 $lang["emu_script_header"]='Abilita lo script che aggiornerà automaticamente i dati di EMu ogni volta che ResourceSpace esegue il suo compito pianificato (cron_copy_hitcount.php).';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>Ultima esecuzione dello script</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='Ultima esecuzione dello script';
 $lang["emu_script_mode"]='Modalità script.';
 $lang["emu_script_mode_option_1"]='Importa metadati da EMu.';
 $lang["emu_script_mode_option_2"]='Estrarre tutti i record di EMu e mantenere RS e EMu sincronizzati.';

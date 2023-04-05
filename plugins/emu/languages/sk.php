@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='Vyberte typy zdrojov spojené s EMu.';
 $lang["emu_email_notify"]='E-mailová adresa, na ktorú skript bude posielať upozornenia. Ak chcete použiť predvolenú e-mailovú adresu systému, ponechajte prázdne.';
 $lang["emu_script_failure_notify_days"]='Po koliko dneh naj se prikaže opozorilo in pošlje e-pošta, če skript ni dokončan.';
 $lang["emu_script_header"]='Povolite skriptu, ki bo samodejno posodabljala EMu podatke, kadar ResourceSpace zažene svojo načrtovano nalogo (cron_copy_hitcount.php).';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>Posledný beh skriptu</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='Posledný beh skriptu';
 $lang["emu_script_mode"]='Režim skripta.';
 $lang["emu_script_mode_option_1"]='Importovať metadáta z EMu.';
 $lang["emu_script_mode_option_2"]='Stiahnite všetky záznamy z EMu a udržujte RS a EMu synchronizované.';

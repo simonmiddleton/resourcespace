@@ -34,11 +34,4 @@ $lang["emu_no_resource"]='Resurssin tunnusta ei ole määritetty!';
 $lang["emu_upload_nodata"]='Tälle IRN:lle ei löytynyt EMu-tietoja.';
 $lang["emu_nodata_returned"]='Määriteltyä IRN-tunnusta vastaavia EMu-tietoja ei löytynyt.';
 $lang["emu_createdfromemu"]='Luotu EMU-liitännäisestä.';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>Skripti viimeksi suoritettu</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='Skripti viimeksi suoritettu';

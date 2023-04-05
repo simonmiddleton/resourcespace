@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='选择与 EMu 相关联的资源类型。';
 $lang["emu_email_notify"]='脚本将发送通知的电子邮件地址。留空以使用系统通知地址。';
 $lang["emu_script_failure_notify_days"]='若脚本未完成，多少天后显示警报并发送电子邮件。';
 $lang["emu_script_header"]='启用脚本，每当ResourceSpace运行其计划任务（cron_copy_hitcount.php）时，将自动更新EMu数据。';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>脚本上次运行时间</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='脚本上次运行时间';
 $lang["emu_script_mode"]='脚本模式';
 $lang["emu_script_mode_option_1"]='从 EMu 导入元数据';
 $lang["emu_script_mode_option_2"]='提取所有 EMu 记录并保持 RS 和 EMu 同步。';
