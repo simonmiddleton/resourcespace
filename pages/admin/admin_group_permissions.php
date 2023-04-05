@@ -424,12 +424,19 @@ DrawOption("nolock", $lang["permission_nolock"]);
 
 
 hook("additionalperms");
+$custom_permissions = join(",", array_diff($permissions, $permissions_done));
 ?>			</table>
 		</div>  <!-- end of Listview -->
 		
 		<div class="Question">
 			<label for="other"><?php echo $lang["custompermissions"]; ?></label>
-			<textarea name="other" class="stdwidth" rows="3" cols="50"><?php echo join(",",array_diff($permissions,$permissions_done)); ?></textarea>			
+			<textarea
+                name="other"
+                class="stdwidth"
+                rows="3"
+                cols="50"
+                data-custom_permissions_copy="<?php echo escape_quoted_data($custom_permissions);  ?>"
+            ><?php echo htmlspecialchars($custom_permissions); ?></textarea>			
 			<div class="clearerleft"></div>
 		</div>
 		
@@ -445,6 +452,17 @@ hook("additionalperms");
 	</form>	
 </div>  <!-- end of BasicsBox -->
 <script>
+/**
+ * Save specific permissions
+ * @param  {array} perms List of permissions to get information for, if applicable, and save. A permission can either be
+ *                       a base64 encoded permission or an object:
+ *                       {
+ *                       permission: same base64 value,
+ *                       reverse: 1 for negative permissions, 0 otherwise
+ *                       checked: bool
+ *                       }
+ * @return {void}
+ */
 function SavePermissions(perms)
     {
     console.debug('SavePermissions(perms = %o)', perms);
@@ -516,10 +534,21 @@ function SavePermissions(perms)
     return;
     }
 
+/**
+ * Save custom permissions. Removed permissions will be marked accordingly.
+ * @return {void}
+ */
 function SaveCustomPermissions()
     {
     console.debug('SaveCustomPermissions()');
-    let perms = jQuery("textarea[name='other']").val().split(',');
+    let custom_perms_el = jQuery("textarea[name='other']");
+    let perms = custom_perms_el.val().split(',');
+    let diff = custom_perms_el
+        .data('custom_permissions_copy')
+        .split(',')
+        .filter(x => !perms.includes(x));
+
+    // Current custom permissions added by user
     let custom_perms = perms.map(function(perm) {
         return {
             permission: btoa(perm),
@@ -527,17 +556,28 @@ function SaveCustomPermissions()
             checked: true,
         };
     });
-    SavePermissions(ProcessDisabledPermissions(custom_perms));
+
+    // Custom permissions removed by user
+    jQuery.each(diff, function(idx, perm) {
+        custom_perms.push({
+            permission: btoa(perm),
+            reverse: 0,
+            checked: false,
+        });
+    });
+
+    SavePermissions(custom_perms);
     }
 
-/*
-Use cases for disabled perms:
-- normal permissions simply get disabled (ie not submitted). Usually because when another permission is enabled
-(e.g perm "a" - licensemanager).
-
-- disabled negative permissions always get added (processed) when (auto)saving a normal permission. This was legacy
-behaviour.
-*/
+/**
+ * Process disabled permissions. Known use cases behaviour:
+ * - normal permissions simply get disabled (ie not submitted). Usually when another permission is enabled instead
+ * (e.g perm "a" - licensemanager).
+ * - disabled negative permissions always get added when (auto)saving a permission. This was legacy behaviour.
+ * 
+ * @param  {array} perms List of permissions
+ * @return {array}       List of disabled negative permissions
+ */
 function ProcessDisabledPermissions(perms)
     {
     jQuery("input[name^='checked_'][data-reverse=1]:disabled").each(function(idx, disabled_negative_perm) {
