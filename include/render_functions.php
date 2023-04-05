@@ -4972,7 +4972,7 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $permission   Permission identifier
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
-* @deprecated boolean $reload  Autosave changes done on this permission
+* @param boolean $reload       deprecated - Autosave changes done on this permission
 * @param boolean $disabled     Disable this permission as another supersedes it (greys it out and checks it)
 */
 function DrawOption(string $permission, string $description, bool $reverse = false, bool $reload = false, bool $disabled = false): void
