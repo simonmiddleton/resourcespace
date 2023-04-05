@@ -101,7 +101,9 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
     ajax_send_response(200, ajax_response_ok_no_data());
     /*
     todo:
-    - deal with disabled permissions (check before changes again how they should work)
+        Use cases for disabled perms:
+        - simple permissions get disabled (not submitted) when another permission is enabled (e.g "a" - licensemanager)
+        - saving a simple perm (autosave) also added the disabled negative perm
     */
 	}
 else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
