@@ -460,8 +460,8 @@ if($editing && !$editexternalurl)
 						$custexpires = ($ca["expires"] == "") ? $lang["never"] : nicedate($ca["expires"],false);
 						$custaccess  = ($ca["access"] == -1)  ? "" : $lang["access" . $ca["access"]];
 						?><tr>
-							<td><?php echo htmlspecialchars($ca["user"]); ?></td>
-							<td><?php echo htmlspecialchars($ca["usergroup"]); ?></td>
+							<td><?php echo htmlspecialchars($ca["user"]??""); ?></td>
+							<td><?php echo htmlspecialchars($ca["usergroup"]??""); ?></td>
 							<td><?php echo htmlspecialchars($custexpires); ?></td>
 							<td><?php echo htmlspecialchars($custaccess); ?></td>
 							<td><div class="ListTools"><a href="#" onClick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a></div></td>
