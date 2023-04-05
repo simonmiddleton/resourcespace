@@ -166,22 +166,6 @@ renderBreadcrumbs($links_trail);
         ?>
         <div class="Listview">
 			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-
-				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader">TEST permissions (use cases) --- ToDo: delete once done!!!</td>
-				</tr>
-				<?php
-				DrawOption('simpleperm', 'A simple (regular) permision', false, true);
-				DrawOption('reversedperm', 'A reversed permision', true, true);
-				DrawOption('myparent', 'A parent permision', false, true);
-				if (in_array("myparent", $permissions))
-					{
-					DrawOption('mychild', 'A dependant permision (on parent)', false, true);
-					}
-				DrawOption('disabledsimple', 'DISABLED: A simple permision', false, true, true);
-				DrawOption('disabledreverse', 'DISABLED: A reversed permision', true, true, true);
-				?>
-
 				<tr class="ListviewTitleStyle">
 					<td colspan=2 class="permheader"><?php echo $lang["searching_and_access"] ?></td>
 				</tr>
