@@ -17,13 +17,7 @@ $lang["museumplus_module_name_field"]='Πεδίο μεταδεδομένων π�
 $lang["museumplus_secondary_links_field"]='Πεδίο μεταδεδομένων που χρησιμοποιείται για την αποθήκευση δευτερεύοντων συνδέσμων προς άλλα modules. Το ResourceSpace θα δημιουργήσει ένα URL MuseumPlus για κάθε σύνδεσμο. Οι σύνδεσμοι θα έχουν ένα ειδικό συντακτικό μορφής: module_name:ID (π.χ. "Object:1234").';
 $lang["museumplus_object_details_title"]='Λεπτομέρειες MuseumPlus.';
 $lang["museumplus_script_header"]='Ρυθμίσεις σεναρίου.';
-$lang["museumplus_last_run_date"]='<div class="Question">
-    <label>
-        <strong>Τελευταία εκτέλεση σεναρίου</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Τελευταία εκτέλεση σεναρίου';
 $lang["museumplus_enable_script"]='Ενεργοποίηση του script του MuseumPlus.';
 $lang["museumplus_interval_run"]='Εκτέλεση script στο παρακάτω διάστημα (π.χ. +1 ημέρα, +2 εβδομάδες, δεκαπενθήμερο). Αφήστε κενό και θα εκτελεστεί κάθε φορά που τρέχει το cron_copy_hitcount.php.';
 $lang["museumplus_log_directory"]='Κατάλογος για την αποθήκευση αρχείων καταγραφής σεναρίων. Εάν αυτό αφεθεί κενό ή είναι μη έγκυρο, τότε δεν θα γίνεται καμία καταγραφή.';

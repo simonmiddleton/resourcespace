@@ -18,13 +18,7 @@ $lang["museumplus_object_details_title"]='MuseumPlus Details
 
 Details zu MuseumPlus';
 $lang["museumplus_script_header"]='Skript-Einstellungen';
-$lang["museumplus_last_run_date"]='<div class="Question">
-    <label>
-        <strong>Letzte Ausführung des Skripts</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Letzte Ausführung des Skripts';
 $lang["museumplus_enable_script"]='Aktiviere das MuseumPlus-Skript.';
 $lang["museumplus_interval_run"]='Skript in folgendem Intervall ausführen (z.B. +1 Tag, +2 Wochen, vierzehn Tage). Wenn leer gelassen, wird es jedes Mal ausgeführt, wenn cron_copy_hitcount.php ausgeführt wird.';
 $lang["museumplus_log_directory"]='Verzeichnis zum Speichern von Skript-Logs. Wenn dies leer bleibt oder ungültig ist, werden keine Protokolle erstellt.';

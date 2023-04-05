@@ -17,14 +17,7 @@ $lang["museumplus_module_name_field"]='حقل البيانات الوصفية ا
 $lang["museumplus_secondary_links_field"]='حقل البيانات الوصفية المستخدم لاحتواء الروابط الثانوية إلى وحدات أخرى. سيقوم ResourceSpace بإنشاء عنوان URL لـ MuseumPlus لكل من الروابط. ستحتوي الروابط على تنسيق بناء جملة خاص: اسم الوحدة: المعرف (على سبيل المثال "Object:1234").';
 $lang["museumplus_object_details_title"]='تفاصيل MuseumPlus';
 $lang["museumplus_script_header"]='إعدادات النص البرمجي';
-$lang["museumplus_last_run_date"]='يرجى ترجمة:
-<div class="Question">
-    <label>
-        <strong>تم تشغيل النص الأخير</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='تم تشغيل النص الأخير';
 $lang["museumplus_enable_script"]='تمكين نص MuseumPlus.';
 $lang["museumplus_interval_run"]='تشغيل النص البرمجي في فترة زمنية محددة (على سبيل المثال، +1 يوم، +2 أسابيع، فترة أسبوعين). اتركه فارغًا وسيتم تشغيله في كل مرة يتم فيها تشغيل cron_copy_hitcount.php.';
 $lang["museumplus_log_directory"]='الدليل الذي يتم فيه تخزين سجلات النصوص البرمجية. إذا ترك هذا الحقل فارغًا أو كان غير صالح، فلن يتم تسجيل أي سجلات.';

@@ -17,13 +17,7 @@ $lang["museumplus_module_name_field"]='Metadátové pole používané na uchovan
 $lang["museumplus_secondary_links_field"]='Metadátové pole používané na uchovávanie sekundárnych odkazov na iné moduly. ResourceSpace pre každý odkaz vygeneruje URL pre MuseumPlus. Odkazy budú mať špeciálny formát syntaxe: názov_modulu:ID (napr. "Object:1234").';
 $lang["museumplus_object_details_title"]='Podrobnosti o MuseumPlus.';
 $lang["museumplus_script_header"]='Nastavitve skripta.';
-$lang["museumplus_last_run_date"]='<div class="Question">
-    <label>
-        <strong>Posledný beh skriptu</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Posledný beh skriptu';
 $lang["museumplus_enable_script"]='Povolit skript MuseumPlus.';
 $lang["museumplus_interval_run"]='Spustiť skript v nasledujúcom intervale (napr. +1 deň, +2 týždne, dva týždne). Ak chcete, aby sa spustil pri každom behu cron_copy_hitcount.php, ponechajte prázdne.';
 $lang["museumplus_log_directory"]='Adresár pre ukladanie záznamov skriptov. Ak je toto pole prázdne alebo neplatné, záznamy nebudú vytvorené.';

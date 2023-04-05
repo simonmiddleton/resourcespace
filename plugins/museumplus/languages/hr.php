@@ -17,14 +17,7 @@ $lang["museumplus_module_name_field"]='Polje metapodataka koje se koristi za poh
 $lang["museumplus_secondary_links_field"]='Polje metapodataka koje se koristi za držanje sekundarnih veza prema drugim modulima. ResourceSpace će generirati MuseumPlus URL za svaku vezu. Veze će imati poseban sintaksni format: naziv_modula:ID (npr. "Objekt:1234").';
 $lang["museumplus_object_details_title"]='Detalji MuseumPlus-a.';
 $lang["museumplus_script_header"]='Postavke skripte.';
-$lang["museumplus_last_run_date"]='Molimo prevedite:
-<div class="Question">
-    <label>
-        <strong>Zadnje pokretanje skripte</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Zadnje pokretanje skripte';
 $lang["museumplus_enable_script"]='Omogući MuseumPlus skriptu.';
 $lang["museumplus_interval_run"]='Pokreni skriptu u sljedećem intervalu (npr. +1 dan, +2 tjedna, dva tjedna). Ostavi prazno i pokrenut će se svaki put kada se cron_copy_hitcount.php pokrene.';
 $lang["museumplus_log_directory"]='Mapa za pohranu zapisa skripti. Ako se ostavi prazno ili je neispravno, neće se vršiti nikakvo evidentiranje.';

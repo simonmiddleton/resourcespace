@@ -60,7 +60,18 @@ $page_def[] = config_add_single_ftype_select(
 $page_def[] = config_add_section_header($lang['museumplus_script_header']);
 $museumplus_script_last_ran = '';
 check_script_last_ran(MPLUS_LAST_IMPORT, $museumplus_script_failure_notify_days, $museumplus_script_last_ran);
-$script_last_ran_content = str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_last_run_date']);
+$script_last_ran_content = sprintf(
+    "<div class=\"Question\">
+    <label>
+        <strong>%s</strong>
+    </label>
+    <input name=\"script_last_ran\" type=\"text\" value=\"%s\" disabled style=\"width: 420px;\">
+</div>
+<div class=\"clearerleft\"></div>",
+$lang['museumplus_last_run_date'],
+$museumplus_script_last_ran
+);
+//$script_last_ran_content = str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_last_run_date']);
 $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);
