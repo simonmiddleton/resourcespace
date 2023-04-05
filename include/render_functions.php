@@ -4972,8 +4972,8 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $permission   Permission identifier
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
-* @param boolean $reload       Autosave changes done on this permission
-* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
+* @deprecated boolean $reload  Autosave changes done on this permission
+* @param boolean $disabled     Disable this permission as another supersedes it (greys it out and checks it)
 */
 function DrawOption(string $permission, string $description, bool $reverse = false, bool $reload = false, bool $disabled = false): void
     {
@@ -4995,12 +4995,6 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
         $checked = !$checked;
         }
     
-    if ($reload)
-        {
-        // todo: uncomment after cleaning core base
-        // trigger_error('reload parameter is now deprecated!', E_USER_DEPRECATED);
-        }
-
     $input_value = $reverse ? "reverse" : "normal";
     $base64_perm = base64_encode($permission);
 
