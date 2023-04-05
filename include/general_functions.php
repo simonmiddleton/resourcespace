@@ -1628,8 +1628,17 @@ function send_statistics()
     $total_resources = ps_value("select count(*) value from resource", array(), 0);
 
     # Send stats
-    @file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
-
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+        }
+    catch (Exception $e)
+        {
+        debug("send_statistics(): " . $e->getMessage());
+        }
+    unset($GLOBALS["use_error_exception"]);
+    
     # Update last sent date/time.
     set_sysvar("last_sent_stats",date("Y-m-d H:i:s")); 
     }
