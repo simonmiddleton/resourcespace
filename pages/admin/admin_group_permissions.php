@@ -99,12 +99,6 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
     ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ["s",$perms_csv, "i",$ref]);
     
     ajax_send_response(200, ajax_response_ok_no_data());
-    /*
-    todo:
-        Use cases for disabled perms:
-        - simple permissions get disabled (not submitted) when another permission is enabled (e.g "a" - licensemanager)
-        - saving a simple perm (autosave) also added the disabled negative perm
-    */
 	}
 else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
     {
@@ -456,7 +450,7 @@ function SavePermissions(perms)
     console.debug('SavePermissions(perms = %o)', perms);
 
     CentralSpaceShowLoading();
-    let permissions_list = perms.map(function(perm) {
+    let permissions_list = ProcessDisabledPermissions(perms).map(function(perm) {
         // Custom Permissions are provided with all the required info
         if (
             typeof perm === 'object'
@@ -470,7 +464,6 @@ function SavePermissions(perms)
         // Auto saving a permission will only provide its base64 value
         else
             {
-            console.debug('perm = %o -- base64_decoded: %o', perm, atob(perm));
             let el = jQuery("input[name='checked_" + perm + "']");
             if (el.length === 0)
                 {
@@ -534,7 +527,27 @@ function SaveCustomPermissions()
             checked: true,
         };
     });
-    SavePermissions(custom_perms);
+    SavePermissions(ProcessDisabledPermissions(custom_perms));
+    }
+
+/*
+Use cases for disabled perms:
+- normal permissions simply get disabled (ie not submitted). Usually because when another permission is enabled
+(e.g perm "a" - licensemanager).
+
+- disabled negative permissions always get added (processed) when (auto)saving a normal permission. This was legacy
+behaviour.
+*/
+function ProcessDisabledPermissions(perms)
+    {
+    jQuery("input[name^='checked_'][data-reverse=1]:disabled").each(function(idx, disabled_negative_perm) {
+        perms.push({
+            permission: jQuery(disabled_negative_perm).attr('name').substring(8),
+            reverse: 1,
+            checked: false,
+        });
+    });
+    return perms;
     }
 </script>	
 <?php
