@@ -977,31 +977,31 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     continue;
                     }
                 } // End of if not a fixed list field
-            if(
-                $fields[$n]['required'] == 1
+
+            if( $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
                 && (
-                    // No nodes submitted
+                    // Required node field with no nodes submitted is a candidate for error
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
-                    // No value submitted
+                    // Required continuous field with no value is a candidate for error
                     || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && trim(strip_leading_comma($val)) == '')
                 )
                 && (
-                    // Existing resource, but not in upload review mode with blank template and existing value (e.g. for resource default)
-                    ($ref > 0 && !($upload_review_mode && $blank_edit_template && $fields[$n]['value'] != ''))
-                    // Template with blank template and existing value
-                    || ($ref < 0 && !($blank_edit_template && $fields[$n]["value"] !== ''))
+                    // An existing resource which is not being reviewed with an existing value (e.g. for resource default)
+                    ($ref > 0 && !($upload_review_mode && $fields[$n]['value'] != ''))
+                    // A template without an existing value
+                    || ($ref < 0 && $fields[$n]["value"] == '')
                 )
                 // Not a metadata template
                 && !$is_template
             )
                 {
                 $field_visibility_status=getval("field_".$fields[$n]['ref']."_displayed","");
-                # Register an error only if the required field was actually displayed
+                # Register an error only if the empty required field was actually displayed
                 if (is_field_displayed($fields[$n]) && $field_visibility_status=="block")
-                   {
-                   $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
-                   }
+                    {
+                    $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
+                    }
                 continue;
                 }
 
