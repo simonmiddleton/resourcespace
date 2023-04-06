@@ -3230,7 +3230,7 @@ function extract_icc($infile, $ref='') {
    //this makes things work with alternatives, the deepzoom plugin, etc.
    $path_parts = pathinfo($infile);
    
-   if(strpos($infile, $syncdir)===false)
+   if($syncdir === "" || strpos($infile, $syncdir)===false)
         {
         $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
         }
