@@ -5134,3 +5134,16 @@ function prefix_value(string $prefix): Closure
         return $prefix . $value;
         };
     }
+
+/**
+* Utility function to check if string is a valid date (time) value
+*
+* @param string $datestring       - date string
+* @param string $format           - DateTime format to compare
+* @return boolean
+*/
+function validateDatetime(string $datestring, string $format = 'Y-m-d H:i:s'): bool
+    {
+    $date = DateTime::createFromFormat($format, $datestring);
+    return $date && $date->format($format) === $datestring;
+    }
