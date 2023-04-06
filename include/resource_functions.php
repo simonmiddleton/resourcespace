@@ -868,7 +868,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     if($fields[$n]['type'] === FIELD_TYPE_DATE)
                         {
                         $val = getval("field_{$fields[$n]['ref']}", '');
-                        if(!validateDatetime($val, 'Y-m-d'))
+                        if($val !== '' && !validateDatetime($val, 'Y-m-d'))
                             {
                             $errors[$fields[$n]['ref']] = $val;
                             continue;
@@ -1820,7 +1820,16 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             }
         else
             {
-            if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+            if($fields[$n]['type'] === FIELD_TYPE_DATE)
+                {
+                $val = $postvals["field_{$fields[$n]['ref']}"] ?? '';
+                if($val !== '' && !validateDatetime($val, 'Y-m-d'))
+                    {
+                    $errors[$fields[$n]['ref']] = $val;
+                    continue;
+                    }
+                }
+            else if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
