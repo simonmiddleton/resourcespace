@@ -107,7 +107,7 @@ if(
                 $acceptedfields[]=$proposed_change["resource_type_field"];
                 }
             }
-        $proposed_changes_fields = array_column($proposed_changes,"resource_type_field");
+        $proposed_changes_fields = array_values(array_filter(array_column($proposed_changes, 'resource_type_field')));
         // Actually save the data
         save_resource_data($ref,false,$acceptedfields);
         daily_stat("Resource edit",$ref);

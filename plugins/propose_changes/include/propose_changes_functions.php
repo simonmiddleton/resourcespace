@@ -115,6 +115,19 @@ function save_proposed_changes($ref)
 						}
 						$val=$newval;
                     }
+                else if($fields[$n]['type'] === FIELD_TYPE_DATE)
+                    {
+                    $val = getval("field_{$fields[$n]['ref']}", '');
+                    if(!validateDatetime($val, 'Y-m-d'))
+                        {
+						$errors[$fields[$n]["ref"]] = str_replace(
+                            [' %row%', '%date%', '%field%'],
+                            ['', $val, $fields[$n]['name']],
+                            $GLOBALS['lang']['invalid_date_error']
+                        );
+                        continue;
+                        }
+                    }
 				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{
                     # date type, construct the value from the date/time dropdowns
