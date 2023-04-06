@@ -864,7 +864,17 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     # date type, construct the value from the date/time dropdowns to be used in DB
                     $val=sanitize_date_field_input($fields[$n]["ref"], false);
 
-                    if ($date_validator && $val != "")
+                    // A proper input:date field
+                    if($fields[$n]['type'] === FIELD_TYPE_DATE)
+                        {
+                        $val = getval("field_{$fields[$n]['ref']}", '');
+                        if(!validateDatetime($val, 'Y-m-d'))
+                            {
+                            $errors[$fields[$n]['ref']] = $val;
+                            continue;
+                            }
+                        }
+                    else if ($date_validator && $val != "")
                         {
                         # date type, construct the value from the date/time dropdowns to be used in date validator
                         $check_date_val=sanitize_date_field_input($fields[$n]["ref"], true);
