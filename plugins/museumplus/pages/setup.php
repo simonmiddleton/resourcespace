@@ -71,7 +71,7 @@ $script_last_ran_content = sprintf(
 $lang['museumplus_last_run_date'],
 $museumplus_script_last_ran
 );
-//$script_last_ran_content = str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_last_run_date']);
+
 $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);
