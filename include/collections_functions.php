@@ -3331,7 +3331,7 @@ function send_collection_feedback($collection,$comment)
     else
         {
         # External user.
-        if ($feedback_email_required && !preg_match ("/${regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
+        if ($feedback_email_required && !preg_match ("/{$regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
         $body.=$lang["fullname"] . ": " . getval("name","") . "\n";
         $body.=$lang["email"] . ": " . getval("email","") . "\n";
         }

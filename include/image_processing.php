@@ -702,7 +702,7 @@ function extract_exif_comment($ref,$extension="")
                     if($encoding!="UTF-8")
                         {
                         debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
-                        $value=utf8_encode($value);
+                        $value = mb_convert_encoding($value, 'UTF-8', $encoding);
 
                         debug("extract_exif_comment: Converted value: " . $value);
                         }
