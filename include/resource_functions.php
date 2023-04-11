@@ -7645,7 +7645,8 @@ function get_field_options($ref, $nodeinfo = false, bool $skip_translation = fal
         $ref = ps_value("select ref value from resource_type_field where name=?",array("s",$ref), "", "schema"); // $ref is a string in this case
         }
 
-    $options = get_nodes($ref, null, true);
+    $field = get_resource_type_field($ref);
+    $options = get_nodes($ref, null, $field["type"]==FIELD_TYPE_CATEGORY_TREE);
     if($options === false){return false;}
     # Translate options,
     for ($m=0;$m<count($options);$m++)
