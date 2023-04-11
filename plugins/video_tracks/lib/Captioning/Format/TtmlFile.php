@@ -15,27 +15,27 @@ class TtmlFile extends File
 
     private $tickRate;
 
-    private $styles = array();
+    private $styles = [];
 
-    private $regions = array();
+    private $regions = [];
 
     /**
      * @param string $_timeBase
      * @return TtmlFile
      */
-    public function setTimeBase($_timeBase)
+    public function setTimeBase(string $_timeBase): TtmlFile
     {
-        $matchingTable = array(
+        $matchingTable = [
             'media' => self::TIMEBASE_MEDIA,
             'smpte' => self::TIMEBASE_SMPTE,
             'clock' => self::TIMEBASE_CLOCK
-        );
+        ];
 
         if (isset($matchingTable[$_timeBase])) {
             $_timeBase = $matchingTable[$_timeBase];
         }
 
-        if (!in_array($_timeBase, array(self::TIMEBASE_MEDIA, self::TIMEBASE_SMPTE, self::TIMEBASE_CLOCK))) {
+        if (!in_array($_timeBase, [self::TIMEBASE_MEDIA, self::TIMEBASE_SMPTE, self::TIMEBASE_CLOCK], true)) {
             throw new \InvalidArgumentException;
         }
 
@@ -52,7 +52,7 @@ class TtmlFile extends File
     /**
      * @param string $_tickRate
      */
-    public function setTickRate($_tickRate)
+    public function setTickRate(string $_tickRate)
     {
         $this->tickRate = $_tickRate;
     }
@@ -62,7 +62,10 @@ class TtmlFile extends File
         return $this->tickRate;
     }
 
-    public function parse()
+    /**
+     * @return TtmlFile
+     */
+    public function parse(): FileInterface
     {
         $xml = simplexml_load_string($this->fileContent);
 
@@ -85,7 +88,7 @@ class TtmlFile extends File
             $this->regions[$regionData['id']] = $regionData;
 
             if ($region->style) {
-                $regionAttr = array();
+                $regionAttr = [];
                 foreach ($region->style as $regionStyle) {
                     $regionAttr = array_merge($regionAttr, $this->parseAttributes($regionStyle));
                 }
@@ -99,7 +102,12 @@ class TtmlFile extends File
         return $this;
     }
 
-    public function buildPart($_from, $_to)
+    /**
+     * @param int $_from
+     * @param int $_to
+     * @return TtmlFile
+     */
+    public function buildPart(int $_from, int $_to): FileInterface
     {
         // TODO: Implement buildPart() method.
         return $this;
@@ -107,9 +115,9 @@ class TtmlFile extends File
 
     /**
      * @param TtmlCue $_mixed
-     * @return FileInterface
+     * @return TtmlFile
      */
-    public function addCue($_mixed, $_start = null, $_stop = null)
+    public function addCue($_mixed, $_start = null, $_stop = null): File
     {
         if (is_object($_mixed) && get_class($_mixed) === self::getExpectedCueClass($this)) {
             if (null !== $_mixed->getStyle() && !isset($this->styles[$_mixed->getStyle()])) {
@@ -153,7 +161,7 @@ class TtmlFile extends File
 
     private function parseAttributes($_node, $_namespace = 'tts')
     {
-        $attributes = array();
+        $attributes = [];
 
         foreach ($_node->attributes($_namespace, true) as $property => $value) {
             $attributes[(string)$property] = (string)$value;

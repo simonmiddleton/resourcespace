@@ -23,3 +23,5 @@ $lang["error-invalid-discount-code"]="<strong>Ogiltig rabattkod.</strong><br>Ing
 $lang["error-discount-code-already-used"]="<strong>Rabattkoden har redan använts.</strong><br>Du kan bara använda varje rabattkod vid ett tillfälle. Ingen rabatt har dragits av.";
 
 $lang["discount_applied"]="Avdragen rabatt";
+
+$lang["error_code-expires"]='Ogiltigt utgångsdatum för rabattkod.<br>En rabatt har inte tillämpats.';

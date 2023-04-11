@@ -68,10 +68,20 @@ if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
     {
     $scripts_test_functionality = '<button type="button" onclick="testScript(document.getElementById(\'emu_script_mode\').value);" style="font-size: 1em;">Test script</button>';
     }
-$script_last_ran_content = str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']);
-$script_last_ran_content = str_replace('%scripts_test_functionality%', (isset($scripts_test_functionality) ? $scripts_test_functionality : ''), $script_last_ran_content);
 
-
+$script_last_ran_content =sprintf(
+    "<div class=\"Question\">
+    <label>
+        <strong>%s</strong>
+    </label>
+    <input name=\"script_last_ran\" type=\"text\" value=\"%s\" disabled style=\"width: 300px;\">
+    %s
+    </div>
+    <div class=\"clearerleft\"></div>",
+    $lang['emu_last_run_date'],
+    $emu_script_last_ran,
+    $scripts_test_functionality??""
+);
 
 // API server settings
 $page_def[] = config_add_section_header($lang['emu_api_settings']);

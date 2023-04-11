@@ -3,6 +3,7 @@
 namespace Captioning\Format;
 
 use Captioning\File;
+use Captioning\FileInterface;
 
 class WebvttFile extends File
 {
@@ -11,28 +12,32 @@ class WebvttFile extends File
     /**
      * @var WebvttRegion[]
      */
-    protected $regions = array();
+    protected $regions = [];
 
     /**
      * @var string
      */
     protected $fileDescription;
 
-    public function parse()
+    /**
+     * @return WebvttFile
+     * @throws \Exception
+     */
+    public function parse(): FileInterface
     {
         $fileContentArray = $this->getFileContentAsArray();
-        $parsing_errors = array();
+        $parsing_errors = [];
         $i = 2;
 
         // Parse signature.
         $signature = $this->getNextValueFromArray($fileContentArray);
 
-        if (substr($signature, 0, 6) !== 'WEBVTT') {
+        if (strpos($signature, 'WEBVTT') !== 0) {
             $parsing_errors[] = 'Missing "WEBVTT" at the beginning of the file';
         }
 
         if (strlen($signature) > 6) {
-            if (substr($signature, 0, 7) === 'WEBVTT ') {
+            if (strpos($signature, 'WEBVTT ') === 0) {
                 $fileDescription = substr($signature, 7);
 
                 if (strpos($fileDescription, '-->') !== false) {
@@ -90,7 +95,7 @@ class WebvttFile extends File
             }
 
             // Timecode.
-            $matches = array();
+            $matches = [];
             $timecode_match = preg_match(self::TIMECODE_PATTERN, $line, $matches);
 
             if ($timecode_match) {
@@ -131,7 +136,7 @@ class WebvttFile extends File
      * @param WebvttRegion $_region
      * @return $this
      */
-    public function addRegion(WebvttRegion $_region)
+    public function addRegion(WebvttRegion $_region): self
     {
         $this->regions[] = $_region;
 
@@ -154,7 +159,7 @@ class WebvttFile extends File
     /**
      * @return WebvttRegion[]
      */
-    public function getRegions()
+    public function getRegions(): array
     {
         return $this->regions;
     }
@@ -164,7 +169,7 @@ class WebvttFile extends File
      * @param int $_to
      * @return $this
      */
-    public function buildPart($_from, $_to)
+    public function buildPart(int $_from, int $_to): FileInterface
     {
         $this->sortCues();
 
@@ -207,7 +212,7 @@ class WebvttFile extends File
      * @param string $note
      * @return WebvttCue
      */
-    private function createCue($start, $stop, $text, $settings, $id, $note)
+    private function createCue($start, $stop, $text, $settings, $id, $note): WebvttCue
     {
         $cue = new WebvttCue($start, $stop, $text);
         $tmp = explode(' ', trim($settings));
@@ -234,7 +239,7 @@ class WebvttFile extends File
     /**
      * @return string
      */
-    public function getFileDescription()
+    public function getFileDescription(): string
     {
         return $this->fileDescription;
     }
@@ -242,7 +247,7 @@ class WebvttFile extends File
     /**
      * @param string $fileDescription
      */
-    public function setFileDescription($fileDescription)
+    public function setFileDescription(string $fileDescription): self
     {
         $this->fileDescription = $fileDescription;
 

@@ -12,5 +12,3 @@ $lang["new_content_rss_feed"]="New content RSS feed";
 $lang["subject"]="Subject";
 $lang["rss_feed_for_search_filter"]="Create RSS feed for this query";
 $lang["filtered_resource_update_for"]="Filtered resource update for search [%search%]"; #%search% will be replaced, e.g. "!last50"
-
-?>

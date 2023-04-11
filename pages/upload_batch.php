@@ -712,13 +712,13 @@ if ($processupload)
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
                         $resource_detail = ps_query ("
-                            SELECT r.ref, r.file_extension, n.name
-                              FROM resource r
-                         LEFT JOIN resource_node rn ON rn.resource=r.ref
-                         LEFT JOIN node n ON n.ref=rn.node
-                             WHERE n.resource_type_field = ? AND r.ref= ?",
-                                ["i",$view_title_field,"i",$ref]);
-
+                        SELECT d.*, n.name FROM (SELECT r.ref, r.file_extension FROM resource r
+                        WHERE r.ref = ?) as d
+                        LEFT JOIN resource_node rn ON rn.resource=d.ref
+                        LEFT JOIN node n ON n.ref=rn.node AND n.resource_type_field = ?
+                        LIMIT 1",
+                            ["i",$ref, "i",$view_title_field]);
+            
                         $new_auto_generated_title = str_replace(
                             array('%title', '%resource', '%extension'),
                             array(

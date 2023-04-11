@@ -232,7 +232,7 @@ elseif($type==LOG_CODE_UPLOADED)
         if (file_exists($revert_path))
             {
             copy($revert_path,$current_path);
-            $parameters=array("i",$revert_ext, "i",$resource);
+            $parameters=array("s",$revert_ext, "i",$resource);
             ps_query("update resource set file_extension=? where ref=?",$parameters);
             create_previews($resource,false,$revert_ext);
             }

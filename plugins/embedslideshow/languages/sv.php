@@ -31,3 +31,8 @@ $lang["embedslideshow_directlink"]="Icke-inbäddad direktlänk";
 $lang["embedslideshow_directlinkopen"]="Öppna direktlänk (ny sida)";
 
 $lang["jump"]="Hoppa";
+
+$lang["embedslideshowconfig"]='Bädda in bildspelskonfiguration';
+$lang["embedslideshow_textfield"]='Visa ytterligare bildtext?';
+$lang["embedslideshow_resourcedatatextfield"]='Metadatafält för att lagra bildtext?';
+$lang["embedslideshow_dynamic_size"]='Dynamisk storleksändring av förhandsvisning baserat på spelarstorlek?';

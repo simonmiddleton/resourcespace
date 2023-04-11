@@ -5980,6 +5980,8 @@ function allow_collection_share(array $c)
         }
     $internal_share_access = (!is_null($internal_share_access) && is_bool($internal_share_access) ? $internal_share_access : internal_share_access());
 
+    if (!isset($c['type'])){$c = get_collection($c['ref']);}
+    
     if(
         $allow_share
         && !$system_read_only
