@@ -1095,6 +1095,12 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                 }
             }
 
+        if($sql == "" && count($keyrefs) == 0)
+            {
+            // Not a recognised collection search syntax and no matching keywords
+            return [];
+            }
+
         for($n=0;$n<count($keyrefs);$n++)
             {
             $select_extra .= ", k.key" . $n;
