@@ -194,7 +194,7 @@ $page_def[] = config_add_single_select(
     '',
     true
 );
-$page_def[] = config_add_single_select('default_perpage', $lang['userpreference_default_perpage_label'], array(24, 48, 72, 120, 240), false, 420, '', true);
+$page_def[] = config_add_single_select('default_perpage', $lang['userpreference_default_perpage_label'], $results_display_array, false, 420, '', true);
 $page_def[] = config_add_single_select(
     'default_display',
     $lang['userpreference_default_display_label'],
