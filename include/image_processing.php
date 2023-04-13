@@ -876,7 +876,14 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
-                            $original_filename = $_REQUEST['file_name'];
+                            if (isset($_REQUEST['file_name']))
+                                {
+                                $original_filename = $_REQUEST['file_name'];
+                                }
+                            else
+                                {
+                                $original_filename = "";
+                                }
 
                             if($merge_filename_with_title_include_extensions == 'yes') {
                                 $merged_filename = $original_filename;
