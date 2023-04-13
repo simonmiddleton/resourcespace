@@ -78,9 +78,9 @@ $script_last_ran_content =sprintf(
     %s
     </div>
     <div class=\"clearerleft\"></div>",
-    $lang['emu_last_run_date'],
-    $emu_script_last_ran,
-    $scripts_test_functionality??""
+    htmlspecialchars($lang['emu_last_run_date']),
+    escape_quoted_data($emu_script_last_ran),
+    escape_quoted_data($scripts_test_functionality??"")
 );
 
 // API server settings

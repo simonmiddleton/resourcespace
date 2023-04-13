@@ -68,8 +68,8 @@ $script_last_ran_content = sprintf(
     <input name=\"script_last_ran\" type=\"text\" value=\"%s\" disabled style=\"width: 420px;\">
 </div>
 <div class=\"clearerleft\"></div>",
-$lang['museumplus_last_run_date'],
-$museumplus_script_last_ran
+htmlspecialchars($lang['museumplus_last_run_date']),
+escape_quoted_data($museumplus_script_last_ran)
 );
 
 $page_def[] = config_add_html($script_last_ran_content);
