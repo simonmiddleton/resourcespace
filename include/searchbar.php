@@ -232,7 +232,7 @@ var categoryTreeChecksArray = [];
     if(!hook("replacesearchbox") && !$header_search)
         {
         ?>
-        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>" placeholder="<?php echo htmlspecialchars($lang["searchbutton"]); ?>" alt="<?php echo htmlspecialchars($lang["simplesearch"]); ?>">
+        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>" placeholder="<?php echo htmlspecialchars($lang["searchbutton"]); ?>" aria-label="<?php echo htmlspecialchars($lang["simplesearch"]); ?>">
         <input id="ssearchhiddenfields" name="ssearchhiddenfields" type="hidden" value="<?php echo $ssearchhiddenfields; ?>">
         <button class="fas fa-search search-icon" type="submit" alt="<?php echo htmlspecialchars($lang['searchbutton']); ?>" title="<?php echo htmlspecialchars($lang['searchbutton']); ?>"></button>
         <script>

@@ -5757,7 +5757,7 @@ function render_antispam_question()
             </div>
         </label> 
         <input type="text" name="antispam_user_code" class="stdwidth" value="">
-        <input type=text name="antispam" class="stdwidth" value="">
+        <input type=text name="antispam" id="antispam" class="stdwidth" value="">
         <div class="clearerleft"></div>        
     </div>
     <?php
