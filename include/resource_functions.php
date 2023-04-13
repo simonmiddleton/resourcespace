@@ -2977,19 +2977,20 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         }
 
     $fields = ps_query($field_data_sql,$field_data_params);
-    # Build an array of valid types and only return fields of this type. Translate field titles.
-    $validtypes = ps_array('SELECT ref AS `value` FROM resource_type',[],'schema');
-
-    # Support archive and global.
-    $validtypes[] = 0;
-    $validtypes[] = 999;
+    
+    # Build an array of valid resource types and only return fields for these types. Translate field titles.
+    
 
     // Add category tree values, reflecting tree structure
-    $valid_resource_types = ['0',$rtype];
+
     if ($multi)
         {
-        // All resource types checked as this is a metadata template.
-        $valid_resource_types = $validtypes;
+        // Get all fields
+        $valid_resource_types = ps_array('SELECT ref AS `value` FROM resource_type',[],'schema');
+        }
+    else
+        {
+        $valid_resource_types = [$rtype] ;
         }
 
     $tree_fields = get_resource_type_fields($valid_resource_types,"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
@@ -3029,29 +3030,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         array_multisort($fieldglobal, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
 
-    // Resource types can be configured to not have global fields in which case we only present the user fields valid for
-    // this resource type
-    $inherit_global_fields = (bool) ps_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?", array("i",$rtype), true, "schema");
-    if(!$inherit_global_fields && !$multi)
-        {
-        $validtypes = array($rtype);
-
-        # Add title field even if $inherit_global_fields = false
         for ($n = 0; $n < count($fields); $n++)
-            {
-            if  (
-                $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
-                &&
-                metadata_field_view_access($fields[$n]["fref"]) #Check permissions to access title field
-            )
-                {
-                $return[] = $fields[$n];
-                break;
-                }
-            }
-        }
-
-    for ($n = 0; $n < count($fields); $n++)
         {
         if  (
                 (!$use_permissions
@@ -3082,7 +3061,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
             $return[] = $fields[$n];
             }
         }
-    # Remove duplicate fields e.g. $view_title_field included when $inherit_global_fields is false and also as a valid field.
+    # Remove duplicate fields
     $return = array_unique($return, SORT_REGULAR);
 
     # Return reindexed array
@@ -3253,8 +3232,6 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     $res=0;
     $allresdata=array();
     $validtypes = array();
-    # Support archive and global.
-    $inherit_global_fields = array();
     for ($n=0;$n<count($fields);$n++)
         {
         $rowadded = false;
@@ -3269,44 +3246,32 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             $rtype = $restype[$fields[$n]["resource"]];
             $validtypes[$fields[$n]["ref"]] = array();
             $validtypes[$fields[$n]["ref"]][] = $rtype;
-            $validtypes[$fields[$n]["ref"]][] = 999;
-
-            // Resource types can be configured to not have global fields in which case we only present the user fields valid for
-            // this resource type
-            if(!isset($inherit_global_fields[$fields[$n]["ref"]]))
-                {
-                $inherit_global_fields[$fields[$n]["ref"]] = (bool) ps_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?", array("i",$rtype), true, "schema");
-                }
-            if($inherit_global_fields[$fields[$n]["ref"]])
-                {
-                $validtypes[$fields[$n]["ref"]][] = 0;
-                }
             }
 
-            // Add data to array
-            if  (
-                    (!$use_permissions
-                    ||
-                    ($fields[$n]["resource"]<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
-                    ||
-                    (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $fields[$n]["resource_type"]))
-                    )
-                &&
-                    in_array($fields[$n]["resource_type"],$validtypes[$fields[$n]["ref"]])
-                &&
-                    (!($external_access && !$fields[$n]["external_user_access"]))
-                &&
-                   (!$personal || $fields[$n]["personal_data"])
-                &&
-                   ($alldata || $fields[$n]["include_in_csv_export"])
+        // Add data to array
+        if  (
+                (!$use_permissions
+                ||
+                ($fields[$n]["resource"]<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
+                ||
+                (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $fields[$n]["resource_type"]))
                 )
-                {
-                $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
-                $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
-                $rowadded = true;
-                }
+            &&
+                in_array($restype[$fields[$n]["resource"]],explode(",",$fields[$n]["resource_types"]))
+            &&
+                (!($external_access && !$fields[$n]["external_user_access"]))
+            &&
+                (!$personal || $fields[$n]["personal_data"])
+            &&
+                ($alldata || $fields[$n]["include_in_csv_export"])
+            )
+            {
+            $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
+            $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
+            $rowadded = true;
+            }
 
-        # Add title field even if $inherit_global_fields = false
+        # Add title field
         if  (!$rowadded &&
                 $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
                 &&
@@ -3378,7 +3343,6 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                         config_options,
                         tab_name,
                         push_metadata,
-                        inherit_global_fields,
                         colour,
                         icon
                    FROM resource_type
@@ -3987,9 +3951,6 @@ function update_resource_type($ref,$type)
 */
 function get_exiftool_fields($resource_type)
     {
-
-    $include_globals = ps_value('SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?', ['i', $resource_type], 1);
-
     return ps_query("
            SELECT f.ref,
                   f.type,
@@ -3999,9 +3960,10 @@ function get_exiftool_fields($resource_type)
                   f.name,
                   f.read_only
              FROM resource_type_field AS f
+        LEFT JOIN resource_type_field_resource_type rtfrt ON f.ref=rtfrt.resource_type_field
         LEFT JOIN node AS n ON f.ref = n.resource_type_field
             WHERE length(exiftool_field) > 0
-              AND (resource_type = ? ". ($include_globals == 1 ?" OR resource_type = '0'":"") .")
+              AND (rtfrt.resource_type = ? OR rtf.global=1)
          GROUP BY f.ref
          ORDER BY exiftool_field", array("i",$resource_type),"schema");
     }
@@ -5450,8 +5412,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
           WHERE length(rtf.autocomplete_macro) > 0
           AND (
               (rtf.global=0 AND rt.ref IN (SELECT resource_type FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type_field=rtf.ref))
-
-               OR (rtf.global=1  AND rt.inherit_global_fields=1)
+               OR (rtf.global=1)
               )",array("i",$resource_type),"schema");
 
     $fields_updated = array();
@@ -7783,27 +7744,27 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     $groupcondition = "";
     $joins = [];
     $params = [];
-
     if(!is_array($restypes))
         {
         $restypes = array_filter(explode(",",$restypes),"is_int_loose"); 
-        }
-   
+        }   
     $restypeselect = ", GROUP_CONCAT(rtfrt.resource_type) resource_types ";
     $joins[] = " LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = rtf.ref";
-
+   
     foreach($restypes as $restype)
         {
         if($restype == 0)
             {
-            $restypeconditions[] = "global=1";
+            // Global field is a special case
+            $restypeconditions[]  = "global=1"; 
             }
         else
             {
             $restypeconditions[] = "FIND_IN_SET(?,resource_types)";
             $params[] = "i";$params[] = $restype;
             }
-        }    
+        }
+
     if(count($restypeconditions) > 0)
         {
         $groupcondition = " HAVING ((" . implode(") OR (",$restypeconditions) . "))";

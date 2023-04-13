@@ -106,6 +106,7 @@ function addColumnHeader($orderName, $labelKey)
     echo "<p>" . text("introtext") . "</p>";
     }
 
+    debug("BANG ". print_r($restypesfilter,true));
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
 $resource_types=get_resource_types();
 $arr_restypes=array_column($resource_types,"name","ref");
