@@ -454,58 +454,95 @@ else
 		$iiif_results = do_search($iiif_search);
 		
         if(is_array($iiif_results) && count($iiif_results)>0)
-			{
+            {
             if(!isset($xpath[1]))
-				{
-				$errorcode=404;
-				$errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
-				$errors[] = "For the manifest: " . $rooturl . $xpath[0] . "/manifest";
-				$errors[] = "For a sequence : " . $rooturl . $xpath[0] . "/sequence";
-				$errors[] = "For a canvas : " . $rooturl . $xpath[0] . "/canvas/<identifier>";
-				}
-			else
-				{
-				if(!is_array($iiif_results) || count($iiif_results) == 0)
-					{
-					$errorcode=404;
-					$errors[] = "Invalid identifier: " . $identifier;
-					}
-				else
-					{
-					// Add sequence position information
-					$resultcount = count($iiif_results);
-				    for ($n=0;$n<$resultcount;$n++)
-						{
-						if(isset($iiif_sequence_field))
-							{
-							if(isset($iiif_results[$n]["field" . $iiif_sequence_field]))
-								{
-								$position = $iiif_results[$n]["field" . $iiif_sequence_field];
-								}
-							else
-								{
-								$position = get_data_by_field($iiif_results[$n]["ref"],$iiif_sequence_field);
-								}
-							$position_field=get_resource_type_field($iiif_sequence_field);
-							$position_prefix = $position_field["name"] . " ";
-							}
-						if(!isset($position) || trim($position) == "")
-							{
-							$position = $n;
-							}
-						debug("iiif position" . $position);
-						$iiif_results[$n]["iiif_position"] = $position;
-						}
-
-                    // Sort by position
-                    usort($iiif_results, function($a, $b)
+                {
+                $errorcode=404;
+                $errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
+                $errors[] = "For the manifest: " . $rooturl . $xpath[0] . "/manifest";
+                $errors[] = "For a sequence : " . $rooturl . $xpath[0] . "/sequence";
+                $errors[] = "For a canvas : " . $rooturl . $xpath[0] . "/canvas/<identifier>";
+                }
+            else
+                {
+                if(!is_array($iiif_results) || count($iiif_results) == 0)
+                    {
+                    $errorcode=404;
+                    $errors[] = "Invalid identifier: " . $identifier;
+                    }
+                else
+                    {
+                    // Add sequence position information
+                    $resultcount = count($iiif_results);
+                    $iiif_results_with_position = array();
+                    $iiif_results_without_position = array();
+                    for ($n=0;$n<$resultcount;$n++)
                         {
-                        if(is_int_loose($a['iiif_position']) && is_int_loose($b['iiif_position']))
+                        if(isset($iiif_sequence_field))
                             {
-                            return $a['iiif_position'] - $b['iiif_position'];
+                            if(isset($iiif_results[$n]["field" . $iiif_sequence_field]))
+                                {
+                                $position = $iiif_results[$n]["field" . $iiif_sequence_field];
+                                }
+                            else
+                                {
+                                $position = get_data_by_field($iiif_results[$n]["ref"],$iiif_sequence_field);
+                                }
+                            $position_field=get_resource_type_field($iiif_sequence_field);
+                            $position_prefix = $position_field["name"] . " ";
+
+                            if(!isset($position) || trim($position) == "")
+                                {
+                                // Processing resources without a sequence position separately
+                                debug("iiif position empty for resource ref " . $iiif_results[$n]["ref"]);
+                                $iiif_results_without_position[] = $iiif_results[$n];
+                                continue;
+                                }
+
+                            debug("iiif position $position found in resource ref " . $iiif_results[$n]["ref"]);
+                            $iiif_results[$n]["iiif_position"] = $position;
+                            $iiif_results_with_position[] = $iiif_results[$n];
                             }
-                        return strcmp($a['iiif_position'],$b['iiif_position']);                        
-                        });
+                        else
+                            {
+                            $position = $n;
+                            debug("iiif position $position assigned to resource ref " . $iiif_results[$n]["ref"]);
+                            $iiif_results[$n]["iiif_position"] = $position;
+                            }
+                        }
+
+                    // Sort by user supplied position (handle blanks and duplicates)
+                    if (isset($iiif_sequence_field))
+                        {
+                        # First sort by ref. Any duplicate positions will then be sorted oldest resource first.
+                        usort($iiif_results_with_position, function($a, $b) { return $a['ref'] - $b['ref']; });
+                        # Sort resources with user supplied position.
+                        usort($iiif_results_with_position, function($a, $b)
+                            {
+                            if(is_int_loose($a['iiif_position']) && is_int_loose($b['iiif_position']))
+                                {
+                                return $a['iiif_position'] - $b['iiif_position'];
+                                }
+                            return strcmp($a['iiif_position'],$b['iiif_position']);
+                            });
+
+                        if (count($iiif_results_without_position) > 0)
+                            {
+                            # Sort resources without a user supplied position by resource reference.
+                            # These will appear at the end of the sequence after those with a user supplied position.
+                            usort($iiif_results_without_position, function($a, $b) { return $a['ref'] - $b['ref']; });
+                            $iiif_results = array_merge($iiif_results_with_position, $iiif_results_without_position);
+                            }
+
+                        foreach ($iiif_results as $result_key => $result_val)
+                            {
+                            # Update iiif_position after sorting using unique array key, removing potential user entered duplicates in sequence field.
+                            # iiif_get_canvases() requires unique iiif_position values.
+                            $iiif_results[$result_key]['iiif_position'] = $result_key;
+                            debug("final iiif position $result_key given for resource ref " . $iiif_results[$result_key]["ref"]);
+                            }
+                        }
+
 					if($xpath[1] == "manifest" || $xpath[1] == "")
 						{
 						/* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
