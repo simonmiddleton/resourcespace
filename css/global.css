@@ -1402,6 +1402,10 @@ div.video-js {margin:auto;}
 #modal .BasicsBox .HelpHeader a { color: #999; }
 #modal .BasicsBox .HelpHeader .backtoresults { margin-top: 18px; }
 
+#modal:focus {
+    outline: none;
+}
+
 .modalform {
     min-width: 600px;
     margin-bottom: 20px;
@@ -1980,6 +1984,10 @@ select.MultiSelect:before {
     padding: 3px;
     border: 1px solid rgba(0,0,0,0.25);
     border-radius: 4px;
+}
+.MultiRTypeSelect label {
+    float: unset;
+    padding-left: 3px;
 }
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink {
     min-height: unset;

@@ -1000,20 +1000,23 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
     {
     global $lang;
     $rtypes=get_resource_types();
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
-<?php
-    foreach($rtypes as $rtype)
-        {
-        echo '    <input type="checkbox" value="'. $rtype['ref'] . '" name="' . $name . '[]"' . (in_array($rtype['ref'],$current)?' checked="checked"':'') . '>' . lang_or_i18n_get_translated($rtype['name'],'resourcetype-') . '</option><br />';
-        }
-?>
-    </fieldset>
-    <div class="clearerleft"></div>
-  </div>
-<?php
+    ?>
+    <div class="Question">
+        <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+        <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
+            <?php foreach($rtypes as $rtype) { ?>
+                <input type="checkbox"
+                    value="<?php echo $rtype['ref'] ?>"
+                    name="<?php echo $name ?>[]"
+                    id="<?php echo $name . $rtype['ref'] ?>"
+                    <?php echo (in_array($rtype['ref'],$current) ? ' checked="checked"' : '') ?>>
+                <label for="<?php echo $name . $rtype['ref'] ?>"><?php echo lang_or_i18n_get_translated($rtype['name'],'resourcetype-') ?></label>
+                <br />
+            <?php } ?>
+        </fieldset>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
     }
 
 /**
@@ -1043,21 +1046,25 @@ function config_add_multi_rtype_select($config_var, $label, $width=300)
 function config_multi_archive_select($name, $label, $current, $choices, $width=300)
     {
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
-<?php
-    foreach($choices as $statekey => $statename)
-        {
-        echo '<span id="archivestate' . $statekey . '"><input type="checkbox" value="'. $statekey . '" name="' . $name . '[]" id="' . $name . $statekey . '" ' 
-            . (isset($current) && $current!='' && in_array($statekey,$current)?' checked="checked"':'') . '> '. $statename . '<br /></span>';
-        }
-?>
-    </fieldset>
-    <div class="clearerleft"></div>
-  </div>
-<?php
+    ?>
+    <div class="Question">
+        <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+        <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
+            <?php foreach($choices as $statekey => $statename) { ?>
+                <span id="archivestate<?php echo $statekey ?>">
+                    <input type="checkbox"
+                        value="<?php echo $statekey ?>"
+                        name="<?php echo $name . '[]' ?>"
+                        id="<?php echo $name . $statekey ?>" 
+                        <?php echo (isset($current) && $current!='' && in_array($statekey,$current) ? ' checked="checked"' : '') ?>>
+                    <label for="<?php echo $name . $statekey ?>"><?php echo $statename ?></label>
+                    <br />
+                </span>
+            <?php } ?>
+        </fieldset>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
     }
 
 /**

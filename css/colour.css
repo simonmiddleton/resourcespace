@@ -126,7 +126,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Table header styling */
 .ListviewStyle thead, .ListviewTitleStyle {
-    background: gray;
+    background: #6a6a6a;
     text-transform: uppercase;
 }
 .ListviewTitleStyle td, .ListviewTitleStyle th, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
