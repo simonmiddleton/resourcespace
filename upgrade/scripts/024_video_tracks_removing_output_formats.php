@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 if(!is_plugin_activated('video_tracks'))
     {
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'SKipping...Video Tracks plugin is disabled!');
