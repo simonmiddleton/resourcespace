@@ -2836,6 +2836,15 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             return true;
             }
 
+        if($fieldinfo['type'] === FIELD_TYPE_DATE)
+            {
+            if($value !== '' && !validateDatetime($value, 'Y-m-d'))
+                {
+                $errors[] = sprintf('%s: %s', i18n_get_translated($fieldinfo['title']), $lang['invalid_date_generic']);
+                return false;
+                }
+            }
+
         $curnode = $existing_resource_node["ref"] ?? 0 ;
         if ($curnode > 0 && get_nodes_use_count([$curnode]) == 1)
             {

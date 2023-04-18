@@ -5136,14 +5136,14 @@ function prefix_value(string $prefix): Closure
     }
 
 /**
-* Utility function to check if string is a valid date (time) value
+* Utility function to check string is a valid date/time with a specific format.
 *
-* @param string $datetime String representing the time
-* @param string $format The format that the passed in date string should be in. {@see https://www.php.net/manual/en/datetimeimmutable.createfromformat.php}
+* @param string $datetime Date/time value
+* @param string $format The format that date/time value should be in. {@see https://www.php.net/manual/en/datetimeimmutable.createfromformat.php}
 * @return boolean
 */
 function validateDatetime(string $datetime, string $format = 'Y-m-d H:i:s'): bool
     {
-    $date = DateTime::createFromFormat($format, $datetime);
+    $date = DateTimeImmutable::createFromFormat($format, $datetime);
     return $date && $date->format($format) === $datetime;
     }
