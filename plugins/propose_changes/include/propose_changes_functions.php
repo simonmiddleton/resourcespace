@@ -120,7 +120,7 @@ function save_proposed_changes($ref)
                     $val = getval("field_{$fields[$n]['ref']}", '');
                     if(!validateDatetime($val, 'Y-m-d'))
                         {
-						$errors[$fields[$n]["ref"]] = str_replace(
+                        $errors[$fields[$n]["ref"]] = str_replace(
                             [' %row%', '%date%', '%field%'],
                             ['', $val, $fields[$n]['name']],
                             $GLOBALS['lang']['invalid_date_error']
