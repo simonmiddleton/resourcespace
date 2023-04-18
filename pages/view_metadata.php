@@ -197,15 +197,16 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 
 $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 ?>
-<div id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>" class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
+<div class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>" id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>">
 <div class="clearerleft"> </div>
-<div>
 <?php 
-#  ----------------------------- Draw standard fields ------------------------
+#  ----------------------------- Draw standard and template fields ------------------------
 $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
 $show_default_related_resources = TRUE;
+
+// Process each tab which has fields attached to a defined tab name or the Default tab
 foreach($fields_tab_names as $tab_ref => $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
@@ -225,22 +226,28 @@ foreach($fields_tab_names as $tab_ref => $tabname)
             }
         }
 
-    // Show related resources which have the same tab name:
+    // Fields without templates which are linked to the in-process tab have now all been rendered
+    // Those with templates which are linked to the in-process tab have had their markup appended to $extra
+
+    // Show related resources which have the in-process tab name:
     include '../include/related_resources.php';
 
+    // Now render any markup previously sidelined in $extra (eg. fields with a display template)
+    echo $extra;
+    $extra = '';
+    ?>
+    </div>
+    <?php
+    // All fields linked to the in-process tab are now rendered
+
+    // If this is not the last in-process tab then render the next TabbedPanel ready for the next tranche of fields 
     $tabcount++;
     if($tabcount != count($fields_tab_names))
         {
         ?>
-        <div class="clearerleft"></div>
-        <?php
-        // Show the fields with a display template now
-        echo $extra;
-        $extra = '';
-        ?>
-        <div class="clearerleft"></div>
         </div>
         </div>
+        <div class="clearerleft"></div>
         <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div>
         <?php
         }

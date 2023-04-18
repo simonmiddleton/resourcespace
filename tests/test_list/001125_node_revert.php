@@ -46,7 +46,7 @@ if($lastlog["diff"] != "- ~en:Vegetable~fr:Légume
     }
 
 // Subtest B - Simulate revert to date/time functionality 
-$revert_time = date("Y:m:d H:i:s", time());
+$revert_time = ps_value("select now() value", array(), "");
 sleep(2);
 // Update value
 update_field($resourcea,$revert_field,"~en:Apple~fr:Pomme");

@@ -43,7 +43,7 @@ $x = intval(getval('x',0,true));
 $y = intval(getval('y',0,true));
 $z = intval(getval('z',0,true));
 
-$file = $tilecache."/${z}_${x}_$y.png";
+$file = $tilecache."/{$z}_{$x}_$y.png";
 $gettile = true;
 while((     !is_file($file)
             ||

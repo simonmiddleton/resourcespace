@@ -1628,8 +1628,17 @@ function send_statistics()
     $total_resources = ps_value("select count(*) value from resource", array(), 0);
 
     # Send stats
-    @file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
-
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+        }
+    catch (Exception $e)
+        {
+        debug("send_statistics(): " . $e->getMessage());
+        }
+    unset($GLOBALS["use_error_exception"]);
+    
     # Update last sent date/time.
     set_sysvar("last_sent_stats",date("Y-m-d H:i:s")); 
     }
@@ -3765,7 +3774,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         }
 
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = mb_convert_encoding(htmlspecialchars_decode($html), 'HTML-ENTITIES', 'UTF-8');
+    $html = htmlspecialchars_decode(htmlentities($html, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
 
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
@@ -3842,9 +3851,6 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         $html = strip_tags($html);
         }
 
-    // Revert back to UTF-8
-    $html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
-
     return $html;
     }
 
@@ -3863,7 +3869,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 function get_inner_html_from_tag(string $txt, string $tag)
     {
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = mb_convert_encoding($txt, "HTML-ENTITIES", "UTF-8");
+    $html = htmlspecialchars_decode(htmlentities($txt, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
 
     if($html == strip_tags($txt))
         {
@@ -3893,9 +3899,6 @@ function get_inner_html_from_tag(string $txt, string $tag)
             $inner_html .= $tmp_doc->saveHTML();
             }
         }
-
-    // Revert back to UTF-8
-    $inner_html = mb_convert_encoding($inner_html, "UTF-8","HTML-ENTITIES");
 
     return $inner_html;
     }

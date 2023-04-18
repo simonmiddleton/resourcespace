@@ -14,7 +14,12 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
     $key=end($s);
     }
 
-    if ($key !== substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
+    if ($key !== substr(md5($access_key . $resource),0,10)) 
+        {
+        debug("resourceconnect: invalid key $key when requesting resource $resource");
+        debug("resourceconnect: expecting " . substr(md5($access_key . $resource),0,10) . " for access_key $access_key");
+        return false; # Invalid access key. Fall back to user logins.
+        }
 
     global $resourceconnect_user; # Which user to use for remote access?
     $user_select_sql = new PreparedStatementQuery();
@@ -127,11 +132,7 @@ function HookResourceConnectAllSearchfiltertop()
     global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected;
     if (!checkperm("resourceconnect")) {return false;}
     ?>
-<script>
-  jQuery(document).ready(function(){
-    jQuery( document ).tooltip();
-  } );
-  </script>
+
     <div class="SearchItem ResourceConnectSearch"><?php echo $lang["resourceconnect_search_database"];?>&nbsp;<a href="#" onClick="styledalert('<?php echo $lang["resourceconnect_search_database"] ?>','<?php echo $lang["resourceconnect_search_info"] ?>');" title="<?php echo $lang["resourceconnect_search_info"] ?>"><i class="fa fa-info-circle"></i></a><br />
     <select class="SearchWidth" name="resourceconnect_selected">
     

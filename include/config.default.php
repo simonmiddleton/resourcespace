@@ -239,6 +239,7 @@ $languages["no"]="Norsk"; # Norwegian
 $languages["pl"]="Polski"; # Polish
 $languages["pt"]="Português"; # Portuguese
 $languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
+$languages["ro"]="Limba română"; # Romanian
 $languages["ru"]="Русский язык"; # Russian
 $languages["sk"]="Slovenčina"; # Slovak
 $languages["fi"]="Suomi"; # Finnish
@@ -852,6 +853,9 @@ $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_not
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
+
+# The following can be set to show a custom message for disabled plugins. Default is the language string 'plugins-disabled-plugin-message' but this will override it.
+$disabled_plugins_message = "";
 
 # Uncomment and set the next line to allow anonymous access. 
 # You must set this to the USERNAME of the USER who will represent all your anonymous users
@@ -1911,7 +1915,7 @@ $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 $staticsync_userref=1;
 
 # ------------------------------------------------------------------------------------------------------------------
-$syncdir="/dummy/path/to/syncfolder"; # The sync folder
+$syncdir=""; # The sync folder e.g. "/dummy/path/to/syncfolder"
 $nogo="[folder1]"; # A list of folders to ignore within the sign folder.
 
 /*
@@ -3146,7 +3150,7 @@ $browse_bar = true;
 $browse_bar_workflow=true;
 
 // Batch replace from local folder
-$batch_replace_local_folder = "/upload";
+$batch_replace_local_folder = ""; # e.g. "/upload";
 
 // Option to distribute files in filestore more equally. 
 // Setting $filestore_evenspread=true; means that all resources with IDs ending in 1 will be stored under filestore/1, whereas historically (with this set to false) this would contain all resources with IDs starting with 1.

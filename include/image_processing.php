@@ -59,8 +59,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         unset($GLOBALS["use_error_exception"]);
         $valid_upload_paths = $valid_upload_paths ?? [];
         $valid_upload_paths[] = $storagedir;
-        $valid_upload_paths[] = $syncdir;    
-        $valid_upload_paths[] = $batch_replace_local_folder;
+        if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }   
+        if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
         if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
  
         foreach($valid_upload_paths as $valid_upload_path)
@@ -702,7 +702,7 @@ function extract_exif_comment($ref,$extension="")
                     if($encoding!="UTF-8")
                         {
                         debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
-                        $value=utf8_encode($value);
+                        $value = mb_convert_encoding($value, 'UTF-8', $encoding);
 
                         debug("extract_exif_comment: Converted value: " . $value);
                         }
@@ -876,7 +876,14 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
-                            $original_filename = $_REQUEST['file_name'];
+                            if (isset($_REQUEST['file_name']))
+                                {
+                                $original_filename = $_REQUEST['file_name'];
+                                }
+                            else
+                                {
+                                $original_filename = "";
+                                }
 
                             if($merge_filename_with_title_include_extensions == 'yes') {
                                 $merged_filename = $original_filename;
@@ -1880,7 +1887,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // we have an extracted ICC profile, so use it as source
                     if ($icc_preview_profile != "" && $icc_preview_profile_embed)
                         {
-                        $targetprofile = $imagemagick_mpr ? "-profile " : "" . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        $targetprofile = ($imagemagick_mpr ? "" : "-profile ") . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
                         }
                     else
                         {
@@ -3230,7 +3237,7 @@ function extract_icc($infile, $ref='') {
    //this makes things work with alternatives, the deepzoom plugin, etc.
    $path_parts = pathinfo($infile);
    
-   if(strpos($infile, $syncdir)===false)
+   if($syncdir === "" || strpos($infile, $syncdir)===false)
         {
         $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
         }
@@ -3425,7 +3432,7 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
  */ 
 function delete_previews($resource,$alternative=-1)
     {
-    global $ffmpeg_preview_extension;
+    global $ffmpeg_preview_extension, $watermark;
     
     // If a resource array has been passed we already have the extensions
     if(is_array($resource))
@@ -3462,12 +3469,21 @@ function delete_previews($resource,$alternative=-1)
                 {
                 unlink($previewpath);
                 }
+            if (isset($watermark))
+                {
+                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
+                if (file_exists($wm_path))
+                    {
+                    unlink($wm_path);
+                    }
+                }
             }
         }
 
     $delete_prefixes = array();
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
+    $delete_prefixes[] = "tmp_";
 
     if(!file_exists($resourcefolder))
         {

@@ -23,3 +23,16 @@ $lang["outbound_license_description"]="(vi är upphovsrättsinnehavare)";
 
 $lang["inbound"]="Ingående";
 $lang["inbound_license_description"]="(de är upphovsrättsinnehavare)";
+
+$lang["managelicenses"]='Licenser.';
+$lang["no_expiry_date"]='Ingen utgångsdatum.';
+$lang["action-unlink"]='Avlänka';
+$lang["unlink_license"]='Avlänka licens.';
+$lang["licensesearch"]='Sök efter licensgivare/licenstagare/medium/beskrivning.';
+$lang["linkedresources"]='Länkade resurser.';
+$lang["linklicense"]='Länka licens';
+$lang["unlinklicense"]='Avlänka licens.';
+$lang["selectlicence"]='Vänligen välj ett licens-ID.';
+$lang["confirmdeletelicensefile"]='Är du säker på att du vill RADERA den här filen? Det går inte att ångra.';
+$lang["license_manager_mediums"]='Licensanvändningsmedier.';
+$lang["license_manager_access"]='Hantera licensdata (där det inte redan är aktiverat via "Kan komma åt Systeminställningar"-behörighet)';

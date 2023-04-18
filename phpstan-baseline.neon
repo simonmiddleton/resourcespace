@@ -271,11 +271,6 @@ parameters:
 			path: include/resource_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$allow_resource_deletion$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$anonymous_login$#"
 			count: 1
 			path: include/resource_functions.php
@@ -329,11 +324,6 @@ parameters:
 			message: "#^Function GetStem not found\\.$#"
 			count: 1
 			path: include/search_do.php
-
-		-
-			message: "#^Undefined variable\\: \\$floatval$#"
-			count: 2
-			path: include/search_functions.php
 
 		-
 			message: "#^Undefined variable\\: \\$search_includes_themes$#"
@@ -661,14 +651,14 @@ parameters:
 			path: plugins/consentmanager/pages/list.php
 
 		-
+			message: "#^Undefined variable\\: \\$flagpath$#"
+			count: 2
+			path: plugins/csv_upload/include/csv_functions.php
+
+		-
 			message: "#^Result of function display_video_subtitles \\(void\\) is used\\.$#"
 			count: 1
 			path: plugins/embedvideo/hooks/view.php
-
-		-
-			message: "#^Undefined variable\\: \\$emu_form_post_id$#"
-			count: 1
-			path: plugins/emu/hooks/edit.php
 
 		-
 			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"
@@ -694,11 +684,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$resource$#"
 			count: 1
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$alternative_file_previews_mouseover$#"
-			count: 1
-			path: plugins/format_chooser/hooks/view.php
 
 		-
 			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$configs\\.$#"
@@ -769,6 +754,11 @@ parameters:
 			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
 			count: 1
 			path: plugins/offline_archive/pages/restore_request.php
+
+		-
+			message: "#^Undefined variable\\: \\$openai_response_cache$#"
+			count: 1
+			path: plugins/openai_gpt/include/openai_gpt_functions.php
 
 		-
 			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"

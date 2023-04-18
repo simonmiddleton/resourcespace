@@ -82,7 +82,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 		<?php
 	}
 	
-function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type,$currentvalue,$fieldtype,$system_date_field)
+function admin_resource_type_field_option($propertyname,$propertytitle,$helptext,$type,$currentvalue,$fieldtype,$system_date_field)
 	{
     debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
 

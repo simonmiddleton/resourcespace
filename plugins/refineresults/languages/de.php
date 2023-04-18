@@ -9,4 +9,3 @@ $lang["refine"]="Suchen";
 $lang["refineresults"]="In diesen Suchergebnissen suchen";
 $lang["additionalkeywords"]="Zusätzliche Stichworte";
 $lang["clearsearch"]="Suchbegriffe zurücksetzen";
-?>

@@ -8,16 +8,16 @@ class WebvttCue extends Cue
 {
     protected $identifier = null;
     protected $note       = null;
-    protected $settings   = array();
+    protected $settings   = [];
 
-    public static function tc2ms($tc)
+    public static function tc2ms(string $_timecode): int
     {
-        return SubripCue::tc2ms($tc);
+        return SubripCue::tc2ms($_timecode);
     }
 
-    public static function ms2tc($ms, $_separator = '.', $isHoursPaddingEnabled = true)
+    public static function ms2tc(int $_ms, string $_separator = '.', $isHoursPaddingEnabled = true): string
     {
-        return SubripCue::ms2tc($ms, $_separator, $isHoursPaddingEnabled);
+        return SubripCue::ms2tc($_ms, $_separator, $isHoursPaddingEnabled);
     }
 
     public function setSetting($_name, $_value)
@@ -45,7 +45,7 @@ class WebvttCue extends Cue
 
     public function getSetting($_name)
     {
-        return isset($this->settings[$_name]) ? $this->settings[$_name] : false;
+        return $this->settings[$_name] ?? false;
     }
 
     public function getSettings()
@@ -58,21 +58,21 @@ class WebvttCue extends Cue
         return $this->identifier;
     }
 
-    public static function checkSetting($_name, $_value)
+    public static function checkSetting($_name, $_value): bool
     {
         switch ($_name) {
             case 'region':
                 return true;
             case 'vertical':
-                return in_array($_value, array('rl', 'lr'));
+                return in_array($_value, ['rl', 'lr']);
             case 'line':
-                return preg_match('#^[0-9][0-9]?%$|^100%$#', $_value) || in_array($_value, array('start', 'middle', 'end'));
+                return preg_match('#^[0-9][0-9]?%$|^100%$#', $_value) || in_array($_value, ['start', 'middle', 'end']);
             case 'size':
                 return preg_match('#^[0-9][0-9]?%$|^100%$#', $_value);
             case 'position':
-                return in_array($_value, array('start', 'middle', 'end'));
+                return in_array($_value, ['start', 'middle', 'end']);
             case 'align':
-                return in_array($_value, array('start', 'middle', 'end', 'left', 'right'));
+                return in_array($_value, ['start', 'middle', 'end', 'left', 'right']);
             default:
                 return false;
         }
@@ -83,12 +83,12 @@ class WebvttCue extends Cue
      *
      * @return string
      */
-    public function getTimeCodeString()
+    public function getTimeCodeString(): string
     {
         return $this->start.' --> '.$this->stop;
     }
 
-    public function getSettingsString()
+    public function getSettingsString(): string
     {
         $buffer = '';
         foreach ($this->settings as $setting => $value) {
@@ -98,7 +98,7 @@ class WebvttCue extends Cue
         return trim($buffer);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $buffer = '';
 

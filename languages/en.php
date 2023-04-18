@@ -564,6 +564,7 @@ $lang["addresourcebatch"]="Add resource batch";
 $lang["fileupload"]="File upload";
 $lang["clickbrowsetolocate"]="Click browse to locate a file";
 $lang["resourcetools"]="Resource tools";
+$lang["resourcedownloads"]="Resource downloads";
 $lang["fileinformation"]="File information";
 $lang["filedimensions"]="File dimensions";
 $lang["options"]="Options";

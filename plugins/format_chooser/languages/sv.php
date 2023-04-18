@@ -11,3 +11,11 @@ $lang['format_chooser_output_formats'] = 'Utdataformat';
 $lang['format_chooser_input_formats'] = 'Indataformat';
 $lang['format_chooser_original_size'] = 'Originalupplösning';
 $lang['downloadformat'] = 'Hämtningsformat';
+
+$lang["format_chooser_keep_format"]='Ändra inte.';
+$lang["format_chooser_choose_profile"]='Välj färgprofil.';
+$lang["format_chooser_keep_profile"]='Behåll profil.';
+$lang["format_chooser_remove_profile"]='Ta bort profil.';
+$lang["are_available-2"]='kommer att konverteras';
+$lang["are_available-1"]='kommer att konverteras';
+$lang["are_available-0"]='kommer att konverteras';
