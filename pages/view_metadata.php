@@ -19,8 +19,8 @@ if(isset($related_type_show_with_data) && !empty($related_type_show_with_data) &
         "SELECT DISTINCT t.ref AS `value`
             FROM resource_type AS rt
         INNER JOIN tab AS t ON t.ref = rt.tab
-            WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ");",
-        ps_param_fill($related_type_show_with_data, 'i'),
+            WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
+        array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
         'schema'
     );
     }
