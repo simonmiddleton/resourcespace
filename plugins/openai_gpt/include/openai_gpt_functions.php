@@ -48,11 +48,6 @@ function openai_gpt_update_field($resource,$target_field,$values)
 
     $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . (in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES) ? " " . $openai_gpt_prompt_return_json : " " . $openai_gpt_prompt_return_text) . json_encode($prompt_values);
 
-    if(isset($openai_response_cache[md5($prompt)]))
-        {
-        return $openai_response_cache[md5($prompt)];
-        }
-
     debug("openai_gpt - sending request prompt '" . $prompt . "'");    
     $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$openai_gpt_model,$prompt,$openai_gpt_temperature,$openai_gpt_max_tokens);
 
