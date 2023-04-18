@@ -2192,14 +2192,30 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         {
         $related = explode(',', ($postvals['related'] ?? ''));
 
-        // Make sure all submitted values are numeric
+        // Make sure all submitted values are numeric and each related resource is editable.
         $resources_to_relate = array();
+        $no_access_to_relate = array();
         for($n = 0; $n < count($related); $n++)
             {
-            if(is_numeric(trim($related[$n])))
+            $ref_to_relate = trim($related[$n]);
+            if(is_numeric($ref_to_relate))
                 {
-                $resources_to_relate[] = trim($related[$n]);
+                if (!get_edit_access($ref_to_relate))
+                    {
+                    debug("Edit multiple - Failed to update related resource - no edit access to resource $ref_to_relate");
+                    $no_access_to_relate[] = $ref_to_relate;
+                    }
+                else
+                    {
+                    $resources_to_relate[] = $ref_to_relate;
+                    }
                 }
+            }
+
+        if(count($no_access_to_relate) > 0)
+            {
+            $errors[] = $lang["error-edit_noaccess_related_resources"] . implode(",",$no_access_to_relate);
+            return $errors;
             }
 
         // Clear out all relationships between related resources in this collection

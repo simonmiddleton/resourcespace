@@ -3088,6 +3088,7 @@ $lang["status_locked_self"]                 = "You have locked this resource";
 $lang["error_locked_by_user"]               = "Resource is locked by %%USER%%";
 $lang["error_locked_other_user"]            = "Resource is locked by another user";
 $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
+$lang["error-edit_noaccess_related_resources"] = "Unable to relate resources. No access to: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
