@@ -2553,6 +2553,7 @@ $lang['view_tiles'] = 'View tiles';
 $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'View version information on the ResourceSpace website';
 $lang["upgrade_in_progress"] = "Upgrade in progress";
+$lang["upgrade_script"] = "Upgrade script";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
