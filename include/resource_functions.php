@@ -5295,7 +5295,7 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
         $sql = "password_hash= ?,";
         $params = ['s', (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key))];
         }
-        else{$sql = "";}
+        else{$sql = "";$params=[];}
 	# Update the expiration and acccess
 	ps_query("UPDATE external_access_keys SET {$sql} access= ?, expires= ?,date=NOW(),usergroup= ? WHERE access_key = ?",
         array_merge($params, [
