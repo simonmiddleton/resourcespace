@@ -712,7 +712,7 @@ if ($processupload)
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
                         $resource_detail = ps_query ("
-                        SELECT d.*, n.name FROM (SELECT r.ref, r.file_extension FROM resource r
+                        SELECT d.ref, d.file_extension, n.name FROM (SELECT r.ref, r.file_extension FROM resource r
                         WHERE r.ref = ?) as d
                         LEFT JOIN resource_node rn ON rn.resource=d.ref
                         LEFT JOIN node n ON n.ref=rn.node AND n.resource_type_field = ?
