@@ -129,9 +129,10 @@ $field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
 unset(
     $initial_field_column_string_separator,
-    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b,
+    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $rtf_date,
     $rtf_cat_tree, $ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black, $ct_opt_colors_blue, $ct_opt_numbers,
-    $resource_a
+    $resource_a, $resource_b,
+    $use_cases
 );
  
 return true;
