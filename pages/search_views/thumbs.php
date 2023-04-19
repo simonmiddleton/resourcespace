@@ -263,9 +263,6 @@ if (!hook("renderresultthumb"))
             else if (file_exists($plugin)) 
                 {include $plugin;}
 
-            # Remove any html added by value filter.
-            $value = strip_tags((string)$value);
-
             # swap title fields if necessary
             if (isset($metadata_template_resource_type) && isset($metadata_template_title_field) && is_int_loose($metadata_template_title_field))
                 {
