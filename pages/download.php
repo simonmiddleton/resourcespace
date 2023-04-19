@@ -113,11 +113,29 @@ elseif($tempfile != "")
     $noattach       = true;
     $exiftool_write = false;
     $filedetails    = explode('_', $tempfile);
-    $code           = safe_file_name($filedetails[0]);
-    $ref            = (int)$filedetails[1];
-    $downloadkey    = strip_extension($filedetails[2]);
-    $ext            = safe_file_name(substr($filedetails[2], strlen($downloadkey) + 1));
-    $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
+    if(count($filedetails) >= 3)
+        {     
+        $code           = safe_file_name($filedetails[0]);
+        $ref            = (int)$filedetails[1];
+        $downloadkey    = strip_extension($filedetails[2]);
+        $ext            = safe_file_name(substr($filedetails[2], strlen($downloadkey) + 1));
+        $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
+        }
+    else
+        {
+        $error = $lang['downloadfile_nofile'];
+        if(getval('ajax', '') != '')
+            {
+            error_alert($error, true, 200);
+            }
+        else
+            {
+            include "../include/header.php";
+            $onload_message = ['title' => $lang["error"],'text' => $error];
+            include "../include/footer.php";
+            }
+        exit();
+        }
     }
 else
     {
