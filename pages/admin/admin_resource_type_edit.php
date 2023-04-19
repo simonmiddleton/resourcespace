@@ -22,7 +22,6 @@ $allowed_extensions    = getval('allowed_extensions', '');
 $tab                   = (int) getval('tab', 0);
 $colour                = getval('colour', 0, true);
 $push_metadata         = ('' != getval('push_metadata', '') ? 1 : 0);
-$inherit_global_fields = ('' != getval('inherit_global_fields', '') ? 1 : 0);
 $icon                  = getval('icon', '');
 
 $restype_order_by=getval("restype_order_by","rt");
@@ -42,38 +41,16 @@ if($backurl=="")
 if (getval("save","")!="" && enforcePostRequest(false))
     {
     # Save resource type data
-    log_activity(null,LOG_CODE_EDITED,$name,'resource_type','name',$ref);
-    log_activity(null,LOG_CODE_EDITED,$config_options,'resource_type','config_options',$ref);
-    log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
-    log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab',$ref);
-
-    if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
-
-    ps_query(
-        "UPDATE resource_type
-            SET `name` = ?,
-                config_options = ?,
-                allowed_extensions = ?,
-                tab = ?,
-                push_metadata = ?,
-                inherit_global_fields = ?,
-                colour = ?,
-                icon = ?
-          WHERE ref = ?",
-        [
-        's', $name,
-        's', $config_options,
-        's', $allowed_extensions,
-        'i', $tab ?: null,
-        'i', $push_metadata,
-        'i', $inherit_global_fields,
-        'i', $colour,
-        's', $icon,
-        'i', $ref,
-        ]
-    );
-    clear_query_cache("schema");
-
+    $savedata = [
+        "name" => $name,
+        "config_options" => $config_options,
+        "allowed_extensions" => $allowed_extensions,
+        "tab" => $tab,
+        "push_metadata" => $push_metadata,
+        "colour" => $colour,
+        "icon" => $icon,
+    ];
+    save_resource_type($ref, $savedata);
     redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
     }
 
@@ -142,8 +119,6 @@ $restypedata=ps_query(
 );
 if (count($restypedata)==0) {exit("Resource type not found.");} // Should arrive here unless someone has an old/incorrect URL.
 $restypedata=$restypedata[0];
-
-$inherit_global_fields_checked = ((bool) $restypedata['inherit_global_fields'] ? 'checked' : '');
 
 include "../../include/header.php";
 ?>
@@ -297,15 +272,6 @@ else
         </div>
     </div>
     <div class="clearerleft"> </div>
-    </div>
-
-    <div class="Question">
-        <label><?php echo $lang['property-inherit_global_fields']; ?></label>
-        <input name="inherit_global_fields" type="checkbox" value="yes" <?php echo $inherit_global_fields_checked; ?> />
-        <div class="FormHelp" style="padding:0;clear:left;" >
-            <div class="FormHelpInner"><?php echo $lang['information-inherit_global_fields']; ?></div>
-        </div>
-        <div class="clearerleft"></div>
     </div>
     
     <div class="QuestionSubmit">

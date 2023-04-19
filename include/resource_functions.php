@@ -2959,10 +2959,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f.read_only,
                     f.active,
                     f.full_width,
-                    '" . (int)$rtype . "' as resource_type" . ",
-                    GROUP_CONCAT(rtfrt.resource_type) resource_types
+                    '" . (int)$rtype . "' as resource_type" . "
                FROM resource_type_field f
-          LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = f.ref 
           LEFT JOIN (SELECT ref, name, resource_type_field FROM node WHERE ref IN (SELECT node FROM resource_node WHERE resource = ?) ORDER BY order_by) AS n
                     ON n.resource_type_field = f.ref
               WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($node_fields)) . ") " . $restypesql . ")
@@ -3189,7 +3187,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                     f.automatic_nodes_ordering,
                     f.personal_data,
                     f.include_in_csv_export,
-                    f.full_width
+                    f.full_width,
                FROM resource_node rn
           LEFT JOIN node n ON n.ref=rn.node
           LEFT JOIN resource_type_field f ON f.ref=n.resource_type_field
@@ -3253,11 +3251,9 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 (!$use_permissions
                 ||
                 ($fields[$n]["resource"]<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
-                ||
-                (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $fields[$n]["resource_type"]))
+                ||                
+                metadata_field_view_access($fields[$n]["fref"])
                 )
-            &&
-                in_array($restype[$fields[$n]["resource"]],explode(",",$fields[$n]["resource_types"]))
             &&
                 (!($external_access && !$fields[$n]["external_user_access"]))
             &&
@@ -3290,7 +3286,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
         foreach($resdata as $fkey => $field)
             {
             $fieldorder_by[$fkey]   = $field["order_by"];
-            $fieldrestype[$fkey]    = $field["resource_type"];
+            $fieldrestype[$fkey]    = $rtype;
             $fieldref[$fkey]        = $field["ref"];
             }
         if($ord_by)
@@ -3333,22 +3329,20 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                 $parameters[]="i";$parameters[]=$type;
                 }
             }
-        $sql=" WHERE ref IN ($cleantypes) ";
+        $sql=" WHERE rt.ref IN ($cleantypes) ";
         }
 
-    $r=ps_query("SELECT ref,
-                        name,
-                        allowed_extensions,
-                        order_by,
-                        config_options,
-                        tab_name,
-                        push_metadata,
-                        colour,
-                        icon
-                   FROM resource_type
+    $r=ps_query("SELECT " . columns_in("resource_type","rt") . ",
+                        t.name as tab_name,
+                        GROUP_CONCAT(rtfrt.resource_type_field) as resource_type_fields
+                   FROM resource_type rt
+              LEFT JOIN tab t ON t.ref=rt.tab
+              LEFT JOIN resource_type_field_resource_type rtfrt
+                     ON rtfrt.resource_type=rt.ref
                         $sql
+               GROUP BY rt.ref
                ORDER BY order_by,
-                        ref",
+                        rt.ref",
                         $parameters,
                         "schema");
 
@@ -3963,7 +3957,7 @@ function get_exiftool_fields($resource_type)
         LEFT JOIN resource_type_field_resource_type rtfrt ON f.ref=rtfrt.resource_type_field
         LEFT JOIN node AS n ON f.ref = n.resource_type_field
             WHERE length(exiftool_field) > 0
-              AND (rtfrt.resource_type = ? OR rtf.global=1)
+              AND (rtfrt.resource_type = ? OR f.global=1)
          GROUP BY f.ref
          ORDER BY exiftool_field", array("i",$resource_type),"schema");
     }
@@ -7753,7 +7747,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
    
     foreach($restypes as $restype)
         {
-        if($restype == 0)
+        if($restype !== 0)
             {
             // Global field is a special case
             $restypeconditions[]  = "global=1"; 

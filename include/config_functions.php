@@ -1317,6 +1317,127 @@ function update_resource_type_field_resource_types(int $ref,array $resource_type
         $query = "INSERT INTO resource_type_field_resource_type (resource_type_field, resource_type) VALUES ";
         $valuestring = "(" . (int)$ref . (str_repeat(",?),(" . $ref,count($resource_types)-1)) . ",?)";
         ps_query($query .$valuestring,ps_param_fill($resource_types,"i"));
+        ps_query("UPDATE resource_type_field SET global=0 WHERE ref = ?",["i",$ref]);
         }
+    clear_query_cache("schema");
     }
 
+/**
+ * Create a new resource type with the specified name
+ *
+ * @param $name         Name of new resouce type
+ * 
+ * @return int| bool    ref of new resource type or false if invalid data passed
+ * 
+ */
+function create_resource_type($name)
+    {
+    if(!checkperm('a') || trim($name) == "")
+        {
+        return false;
+        }
+
+    ps_query("INSERT INTO resource_type (name) VALUES (?) ",array("s",$name));
+    $newid = sql_insert_id();
+    clear_query_cache("schema");
+    return $newid;
+    }
+
+/**
+ * Save updated resource_type data
+ *
+ * @param int   $ref        Ref of resource type
+ * @param array $savedata   Array of column values
+ * 
+ * @return bool
+ * 
+ */
+
+function save_resource_type(int $ref, array $savedata)
+    {
+    global $execution_lockout;
+
+    $restypes = get_resource_types();
+    $restype_refs = array_column($restypes,"ref");
+    if(!checkperm('a') || !in_array($ref,$restype_refs))
+        {
+        return false;
+        }
+
+    $setcolumns = [];
+    $setparams = [];
+    $restypes = array_combine($restype_refs,$restypes);
+    //exit(print_r($restypes));
+    foreach($savedata as $savecol=>$saveval)
+        {
+            debug("checking for column " . $savecol . " in " . print_r($restypes,true));
+        if($saveval == $restypes[$ref][$savecol])
+            {
+            // Unchanged value, skip
+            continue;
+            }
+        switch($savecol)
+            {
+            case "name":               
+                $setcolumns[] = "`name`";
+                $setparams[] = "s";
+                $setparams[] = mb_strcut($saveval, 0, 100);
+                break;
+
+            case "order_by":
+            case "push_metadata":
+            case "tab":
+            case "colour":
+                $setcolumns[] = $savecol;
+                $setparams[] = "i";
+                $setparams[] = $saveval;
+                break;
+
+            case "config_options":
+                if (!$execution_lockout) 
+                    {
+                    // Not allowed to save PHP if execution_lockout set.
+                    $setcolumns[] = $savecol;
+                    $setparams[] = "s";
+                    $setparams[] = $saveval;
+                    }
+                break;
+
+            case "allowed_extensions":
+                $setcolumns[] = $savecol;
+                $setparams[] = "s";
+                $setparams[] = $saveval;
+                break;
+                
+            case "icon":            
+                $setcolumns[] = $savecol;
+                $setparams[] = "s";
+                $setparams[] = mb_strcut($saveval, 0, 120);
+                break;
+
+            default:
+                // Invalid option, ignore
+                break;
+            }
+        }
+    if(count($setcolumns) == 0)
+        {
+        return false;
+        }
+    
+    $setparams[] = "i";
+    $setparams[] = $ref;
+    
+    ps_query(
+        "UPDATE resource_type
+            SET " . implode("=?,",$setcolumns) . "=?
+            WHERE ref = ?", $setparams
+        );
+
+    for($n=0;$n<count($setcolumns);$n++)
+        {
+        log_activity(null,LOG_CODE_EDITED,$setparams[(2*$n)+1],'resource_type',$setcolumns[$n],$ref,null,$restypes[$ref][$setcolumns[$n]]);
+        }
+
+    clear_query_cache("schema");
+    }

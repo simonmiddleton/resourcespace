@@ -10,10 +10,10 @@ if (!checkperm("a"))
 	}
 
 
-$restype_order_by=getval("restype_order_by","rt");
+$restype_order_by=getval("restype_order_by","ref");
 $restype_sort=getval("restype_sort","asc");
 
-if(!in_array($restype_order_by,array("rt","name","tab_name","order_by","fieldcount"))){$restype_order_by="rt";}
+if(!in_array($restype_order_by,array("ref","name","tab_name","order_by","fieldcount"))){$restype_order_by="ref";}
 
 $url_params = array("restype_order_by"=>$restype_order_by,"restype_sort"=>$restype_sort);
 $url=generateURL($baseurl . "/pages/admin/admin_resource_types.php",$url_params);
@@ -29,54 +29,13 @@ if($backurl=="")
 $newtype=getval("newtype","");
 if ($newtype!="" && enforcePostRequest(false))
 	{
-	ps_query("insert into resource_type (name) values (?) ",array("s",$newtype));
-	$new=sql_insert_id();
-	clear_query_cache("schema");
-	redirect($baseurl_short."pages/admin/admin_resource_type_edit.php?ref=" . $new);
+	$new = create_resource_type(["name"=>$newtype]);
+    redirect($baseurl_short."pages/admin/admin_resource_type_edit.php?ref=" . $new);
 	}
 
-$resource_types=ps_query ("
-	select * from 
-		(
-		select if(rt is null, rt.ref, rt) rt,
-		name,
-		if(rt=0,'0',if(rt=999,'999999999',order_by)) order_by,
-		config_options,
-		allowed_extensions,
-		tab_name,
-		fieldcount
-        from
-		resource_type rt
-	left join 
-	      (select ref, resource_type rt, count(*) fieldcount from resource_type_field group by resource_type) f 
-	on rt.ref=f.rt
-	
-	union 
-	
-	select 
-		rt,
-		if (rt=0,'" . $lang["resourcetype-global_field"] . "',if(rt=999,'" . $lang["resourcetype-archive_only"] . "',name)) name,
-		if(rt=0,'0',if(rt=999,'999999999',order_by)) order_by,
-		config_options,
-		allowed_extensions,
-		tab_name,
-		fieldcount
-        from
-		resource_type rt
-	right join 
-	      (select resource_type rt, count(*) fieldcount from resource_type_field group by resource_type) f 
-	on rt.ref=f.rt
-	)
-	
-	restypes
-	
-	order by $sql_restype_order_by
-	$restype_sort
-	"
-);
+$resource_types=get_resource_types();
 
 include "../../include/header.php";
-
 
 function addColumnHeader($orderName, $labelKey)
     {
@@ -142,7 +101,7 @@ if(!$allow_reorder)
 <tr class="ListviewTitleStyle">
 
 <?php
-addColumnHeader('rt', 'property-reference');
+addColumnHeader('ref', 'property-reference');
 addColumnHeader('name', 'property-name');
 addColumnHeader('fieldcount', 'admin_resource_type_field_count');
 ?>
@@ -157,41 +116,27 @@ addColumnHeader('fieldcount', 'admin_resource_type_field_count');
 for ($n=0;$n<count($resource_types);$n++)
 	{
 	?>
-	<tr <?php if (!in_array($resource_types[$n]["rt"],array(0,999))){?> class="resource_type_row" id="restype_sort_<?php echo $resource_types[$n]["rt"];?>" <?php }?> >
+	<tr class="resource_type_row" id="restype_sort_<?php echo $resource_types[$n]["ref"];?>" >
 		<td>
-			<?php echo $resource_types[$n]["rt"];?>
+			<?php echo $resource_types[$n]["ref"];?>
 		</td>	
 		<td>
 			<div class="ListTitle">
-				<?php
-				if($resource_types[$n]["name"]!="" && !in_array($resource_types[$n]["rt"],array(0,999)))
-				    {
-				    ?>
-				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
+				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
 				    <?php echo htmlspecialchars(i18n_get_translated($resource_types[$n]["name"]));?>
 				    </a>
-				    <?php
-				    }
-				elseif ($resource_types[$n]["rt"]==999)
-				    {
-				    echo $lang["resourcetype-archive_only"];
-				    }
-				elseif ($resource_types[$n]["rt"]==0)
-				    {
-				    echo $lang["resourcetype-global_field"];
-				    }?>			    
-				
 				</a>
 			</div>
 		</td>
 		<td>
 			<div class="ListTitle">
 				<?php
-				if($resource_types[$n]["fieldcount"]!="")
+				if($resource_types[$n]["resource_type_fields"]!="")
 				    {
+                    $fieldcount = substr_count($resource_types[$n]["resource_type_fields"],",")+1;
 				    ?>
-				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["rt"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-				    <?php echo $resource_types[$n]["fieldcount"] ?>
+				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
+				    <?php echo $fieldcount ?>
 				    </a>
 				    <?php
 				    }
@@ -205,7 +150,7 @@ for ($n=0;$n<count($resource_types);$n++)
 		<td>
 			<div class="ListTools">
 				<?php 
-				if($restype_order_by=="order_by" && !in_array($resource_types[$n]["rt"],array(0,999)))
+				if($restype_order_by=="order_by")
 				     {
 				     ?>		
 				     <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($resource_types)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move down</a>
@@ -213,15 +158,9 @@ for ($n=0;$n<count($resource_types);$n++)
 				     <?php
 				     }
 				    ?>
-				<?php
-				if(!in_array($resource_types[$n]["rt"],array(0,999)))
-				  {
-				  ?>
-				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
-				  <?php
-				  }
-				  ?>
-				  <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["rt"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
+				<a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
+
+				<a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
 				
 			</div>
 		</td>
