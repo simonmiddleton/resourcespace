@@ -1271,6 +1271,23 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         }
                     }); 
                     break;
+
+                case 'unrelate_all':
+                    var collection = <?php echo urlencode($collection_data['ref']);?>;
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: baseurl_short + 'pages/ajax/unrelate_resources.php?collection=' + collection,
+                        data: {<?php echo generateAjaxToken("unrelate_resources"); ?>},
+                        success: function(data) {
+                            if (data.trim() == "SUCCESS") {
+                                styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['unrelateallresources_confirmation']?>');
+                            }
+                        },
+                        error: function (err) {
+                            console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                        }
+                    }); 
+                    break;
                 <?php
                 }
 
