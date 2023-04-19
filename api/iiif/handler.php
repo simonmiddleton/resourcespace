@@ -526,7 +526,7 @@ else
                             return strcmp($a['iiif_position'],$b['iiif_position']);
                             });
 
-                        if (count($iiif_results_without_position) > 0 && count($iiif_results_with_position) != 0)
+                        if (count($iiif_results_without_position) > 0 && count($iiif_results_with_position) > 0)
                             {
                             # Sort resources without a user supplied position by resource reference.
                             # These will appear at the end of the sequence after those with a user supplied position.
