@@ -4,13 +4,18 @@ include_once __DIR__ . '/../include/search_notifications_functions.php';
 
 function HookRse_search_notificationsAllRender_search_actions_add_option($options)
     {
-    global $lang, $watched_searches_url, $search, $restypes, $archive, $k, $system_read_only;
+    global $lang, $watched_searches_url, $search, $restypes, $archive, $k, $system_read_only, $anonymous_login, $username;
 
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
         // @see hook() for an explanation about the hook_return_value global
         $options = $GLOBALS["hook_return_value"];
+        }
+
+    if (isset($anonymous_login) && $username == $anonymous_login)
+        {
+        return $options;
         }
 
     if($k != '' || $system_read_only)
