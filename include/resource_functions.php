@@ -2889,6 +2889,11 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $rtype = ps_value("SELECT resource_type value FROM resource WHERE ref=?",array("i",$originalref),0);
     $rtype = ($rtype == "") ? 0 : $rtype;
 
+    if($use_permissions && checkperm("T" . $rtype))
+        {
+        return false;
+        }
+
     # If using metadata templates,
     $templatesql = "";
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
@@ -2899,8 +2904,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $return           = array();
     $order_by_sql     = ($ord_by ? 'f.order_by, f.ref' : 'f.global desc, f.order_by, f.ref');
 
-    // Remove Category tree fields as these need special handling
-    $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
+    // Category tree fields need special handling
+    $nontree_field_types    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
 
     $restypesql = "";
     $restype_params = [];
@@ -2958,17 +2963,16 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f.browse_bar,
                     f.read_only,
                     f.active,
-                    f.full_width,
-                    '" . (int)$rtype . "' as resource_type" . "
+                    f.full_width                    
                FROM resource_type_field f
           LEFT JOIN (SELECT ref, name, resource_type_field FROM node WHERE ref IN (SELECT node FROM resource_node WHERE resource = ?) ORDER BY order_by) AS n
                     ON n.resource_type_field = f.ref
-              WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($node_fields)) . ") " . $restypesql . ")
+              WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . ") " . $restypesql . ")
               GROUP BY f.ref
               ORDER BY {$order_by_sql}";
 
 
-    $field_data_params = array_merge(["i", $ref], ps_param_fill($node_fields,"i"),$restype_params);
+    $field_data_params = array_merge(["i", $ref], ps_param_fill($nontree_field_types,"i"),$restype_params);
     if(!$ord_by)
         {
         debug('GENERAL/GET_RESOURCE_FIELD_DATA: use perms: ' . !$use_permissions);
@@ -2980,7 +2984,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     
 
     // Add category tree values, reflecting tree structure
-
     if ($multi)
         {
         // Get all fields
@@ -3003,7 +3006,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         $valstring = $forcsv ? ("\"" . implode("\",\"",$treenodenames) . "\"") : implode(",",$treenodenames);
         $addfield["value"] = count($treenodenames) > 0 ? $valstring : "";
         $addfield["resource_type_field"] = $tree_field["ref"];
-        $addfield["resource_type"] = $rtype;
+        //$addfield["resource_type"] = $rtype; // Not used?
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
         }
@@ -3016,7 +3019,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     foreach($fields as $fkey => $field)
         {
         $fieldorder_by[$fkey]   = $field["order_by"];
-        $fieldglobal[$fkey]    = $field["global"];
+        $fieldglobal[$fkey]     = $field["global"];
         $fieldref[$fkey]        = $field["ref"];
         }
     if($ord_by)
@@ -3035,7 +3038,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                 ||
                 ($ref<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
                 ||
-                (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $rtype))
+                (metadata_field_view_access($fields[$n]["fref"]))
                 )
             &&
                 (!($external_access && !$fields[$n]["external_user_access"]))
@@ -3117,134 +3120,159 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     $personal = isset($exportoptions["personal"]) ? $exportoptions["personal"] : false;
     $alldata = isset($exportoptions["alldata"]) ? $exportoptions["alldata"] : false;
 
+    // Category tree fields need special handling
+    $nontree_field_types = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
+
+    // Create array to store all the $resources resource_type info
     $restype = array();
-    if(isset($resources[0]["resource_type"]))
-        {
-        // This is an array of search results so we already have the resource types
-        $restype = array_column($resources,"resource_type","ref");
-        $resourceids = array_filter(array_column($resources,"ref"),function($v){return (string)(int)$v == (string)$v;});
-        $getresources = $resources;
-        }
-    else
-        {
-        $resources = array_filter($resources,function($v){return (string)(int)$v == $v;});
-        $resourceids = $resources;
-        $allresourcedata = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($resourceids)) . ")", ps_param_fill($resourceids,"i"));
-        foreach($allresourcedata as $resourcedata)
-            {
-            $restype[$resourcedata["ref"]] = $resourcedata["resource_type"];
-            }
-        $getresources = array();
-        foreach($resources as $resource)
-            {
-            $getresources[]["ref"] = $resource;
-            }
-        }
 
-    // Remove Category tree fields as these need special handling
-    $node_fields    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
-
-    $field_data_sql = "
-             SELECT rn.resource,
-                    group_concat(n.name) AS `value`,
-                    f.ref,
-                    f.ref resource_type_field,
-                    f.ref AS fref,
-                    f.name,
-                    f.title,
-                    f.type,
-                    f.order_by,
-                    f.keywords_index,
-                    f.partial_index,
-                    f.display_field,
-                    f.use_for_similar,
-                    f.display_template,
-                    f.tab,
-                    f.smart_theme_name,
-                    f.advanced_search,
-                    f.simple_search,
-                    f.help_text,
-                    f.display_as_dropdown,
-                    f.external_user_access,
-                    f.autocomplete_macro,
-                    f.hide_when_uploading,
-                    f.value_filter,
-                    f.exiftool_filter,
-                    f.hide_when_restricted,
-                    f.omit_when_copying,
-                    f.tooltip_text,
-                    f.regexp_filter,
-                    f.sync_field,
-                    f.display_condition,
-                    f.onchange_macro,
-                    f.field_constraint,
-                    f.linked_data_field,
-                    f.fits_field,
-                    f.browse_bar,
-                    f.read_only,
-                    f.active,
-                    f.required AS frequired,
-                    f.automatic_nodes_ordering,
-                    f.personal_data,
-                    f.include_in_csv_export,
-                    f.full_width,
-               FROM resource_node rn
-          LEFT JOIN node n ON n.ref=rn.node
-          LEFT JOIN resource_type_field f ON f.ref=n.resource_type_field
-              WHERE rn.resource IN (" . ps_param_insert(count($resourceids)) . ")
-                    AND (f.active=1 AND f.type IN (" . ps_param_insert(count($node_fields)) . "))
-              GROUP BY resource, f.ref";
-
-    $field_data_params = array_merge(ps_param_fill($resourceids,"i"), ps_param_fill($node_fields,"i"));
-
-    $fields = ps_query($field_data_sql,$field_data_params);
-
-    // Get category tree fields
+    // Get field_info
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
-    
-    foreach($tree_fields as $tree_field)
+    $all_fields = get_resource_type_fields("","ref","asc",'',$nontree_field_types);
+    $field_restypes = [];
+    foreach($all_fields as $field)
         {
-        // Establish the tree strings for all nodes belonging to the tree field
-        $addfield = $tree_field;
-        // Now for each resource, build an array consisting of all of the paths for the selected nodes
-        foreach($getresources as $getresource)
-            {
-            $treenodes = get_cattree_nodes_ordered($tree_field["ref"], $getresource["ref"], false); # True means get all nodes; False means get selected nodes
-            $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
+        $field_restypes[$field["ref"]] = explode(",",$field["resource_types"]);
+        }        
 
-            $valstring = $csvexport ? ("\"" . implode("\",\"",$treenodenames) . "\"") : implode(",",$treenodenames);
-
-            $addfield["resource"] = $getresource["ref"];
-            $addfield["value"] = count($treenodenames) > 0 ? $valstring : "";
-            $addfield["resource_type_field"] = $tree_field["ref"];
-            $addfield["fref"] = $tree_field["ref"];
-            $fields[] = $addfield;
-            }
-        }
-
-    if (empty($fields))
-        {
-        return array();
-        }
-    // Convert to array with resource ID as index
-    $res=0;
+    // Create array to store data
     $allresdata=array();
-    $validtypes = array();
+
+    $resource_chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    foreach($resource_chunks as $resource_chunk)
+        {
+        if(isset($resource_chunk[0]["resource_type"]))
+            {
+            // This is an array of search results so we already have the resource types
+            $restype = array_column($resource_chunk,"resource_type","ref");
+            $resourceids = array_filter(array_column($resource_chunk,"ref"),function($v){return (string)(int)$v == (string)$v;});
+            $getresources = $resource_chunk;
+            }
+        else
+            {
+            $resource_chunk = array_filter($resource_chunk,function($v){return (string)(int)$v == $v;});
+            $resourceids = $resource_chunk;
+            $allresourcedata = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($resource_chunk)) . ")", ps_param_fill($resource_chunk,"i"));
+            foreach($allresourcedata as $resourcedata)
+                {
+                $restype[$resourcedata["ref"]] = $resourcedata["resource_type"];
+                }
+            $getresources = array();
+            foreach($resource_chunk as $resource)
+                {
+                $getresources[]["ref"] = $resource;
+                }
+            }
+    
+        $field_data_sql = "
+                SELECT rn.resource,
+                        group_concat(n.name) AS `value`,
+                        f.ref,
+                        f.ref resource_type_field,
+                        f.ref AS fref,
+                        f.name,
+                        f.title,
+                        f.type,
+                        f.order_by,
+                        f.keywords_index,
+                        f.partial_index,
+                        f.display_field,
+                        f.use_for_similar,
+                        f.display_template,
+                        f.tab,
+                        f.smart_theme_name,
+                        f.advanced_search,
+                        f.simple_search,
+                        f.help_text,
+                        f.display_as_dropdown,
+                        f.external_user_access,
+                        f.autocomplete_macro,
+                        f.hide_when_uploading,
+                        f.value_filter,
+                        f.exiftool_filter,
+                        f.hide_when_restricted,
+                        f.omit_when_copying,
+                        f.tooltip_text,
+                        f.regexp_filter,
+                        f.sync_field,
+                        f.display_condition,
+                        f.onchange_macro,
+                        f.field_constraint,
+                        f.linked_data_field,
+                        f.fits_field,
+                        f.browse_bar,
+                        f.read_only,
+                        f.active,
+                        f.required AS frequired,
+                        f.automatic_nodes_ordering,
+                        f.personal_data,
+                        f.include_in_csv_export,
+                        f.full_width,
+                        f.global
+                FROM resource_node rn
+            LEFT JOIN node n ON n.ref=rn.node
+            LEFT JOIN resource_type_field f ON f.ref=n.resource_type_field
+                WHERE rn.resource IN (" . ps_param_insert(count($resourceids)) . ")
+                        AND (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
+                GROUP BY resource, f.ref";
+
+        $field_data_params = array_merge(ps_param_fill($resourceids,"i"), ps_param_fill($nontree_field_types,"i"));
+
+        $fields = ps_query($field_data_sql,$field_data_params);
+        
+        foreach($tree_fields as $tree_field)
+            {
+            // Establish the tree strings for all nodes belonging to the tree field
+            $addfield = $tree_field;
+            // Now for each resource, build an array consisting of all of the paths for the selected nodes
+            foreach($getresources as $getresource)
+                {
+                $treenodes = get_cattree_nodes_ordered($tree_field["ref"], $getresource["ref"], false); # True means get all nodes; False means get selected nodes
+                $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
+
+                $valstring = $csvexport ? ("\"" . implode("\",\"",$treenodenames) . "\"") : implode(",",$treenodenames);
+
+                $addfield["resource"] = $getresource["ref"];
+                $addfield["value"] = count($treenodenames) > 0 ? $valstring : "";
+                $addfield["resource_type_field"] = $tree_field["ref"];
+                $addfield["fref"] = $tree_field["ref"];
+                $fields[] = $addfield;
+                }
+            }
+
+        if (empty($fields))
+            {
+            return array();
+            }
+
+    // Convert to array with resource ID as index
+
+
+    //$res=0;
+    //$validtypes = array();
     for ($n=0;$n<count($fields);$n++)
         {
         $rowadded = false;
         if (!isset($allresdata[$fields[$n]["resource"]]))
             {
-            $allresdata[$fields[$n]["resource"]]=array();
+            $allresdata[$fields[$n]["resource"]]=[];
             }
 
-        // Get valid field values for resource type
-        if(!isset($validtypes[$fields[$n]["ref"]]))
+        // Get valid resource_type_field refs for resource type, so we can skip fields which are not applicable
+        //$rtype = $restype[$fields[$n]["resource"]];
+
+        if($fields[$n]["global"] != 1 && !in_array($restype[$fields[$n]["resource"]],$field_restypes[$fields[$n]["ref"]]))
             {
-            $rtype = $restype[$fields[$n]["resource"]];
-            $validtypes[$fields[$n]["ref"]] = array();
-            $validtypes[$fields[$n]["ref"]][] = $rtype;
+            // This resource's resource_type is not associated with this field
+            continue;
             }
+
+        // if(!isset($validtypes[$fields[$n]["ref"]]))
+        //     {
+        //     $rtype = ];
+        //     $validtypes[$fields[$n]["ref"]] = array();
+        //     $validtypes[$fields[$n]["ref"]][] = $rtype;
+        //     }
 
         // Add data to array
         if  (

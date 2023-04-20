@@ -238,20 +238,19 @@ for ($n=0;$n<count($fields);$n++)
             echo ($fields[$n]["type"]!="") ? $lang[$field_types[$fields[$n]["type"]]] : $lang[$field_types[0]];
             ?>
         </td>
-        <td>
-            <?php
-            # Resolve resource type names
-            if((bool)$fields[$n]["global"] == 1)
-                {
-                $restypestring = $lang["resourcetype-global_field"];
-                }
-            else
-                {
-                $fieldrestypes = explode(",",(string)$fields[$n]["resource_types"]);
-                $restypestring = implode(", ",array_intersect_key($arr_restypes, array_flip($fieldrestypes)));
-                }
-            echo $restypestring;
-            ?>
+        <?php
+        # Resolve resource type names
+        if((bool)$fields[$n]["global"] == 1)
+            {
+            $restypestring = $lang["resourcetype-global_field"];
+            }
+        else
+            {
+            $fieldrestypes = explode(",",(string)$fields[$n]["resource_types"]);
+            $restypestring = implode(", ",array_intersect_key($arr_restypes, array_flip($fieldrestypes)));
+            }?>
+        <td title="<?php echo escape_quoted_data($restypestring); ?>">
+            <?php echo htmlspecialchars(tidy_trim($restypestring,30)); ?>
         </td>
         <?php if (!hook('replacetabnamecolumn'))
             {
