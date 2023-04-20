@@ -1122,6 +1122,7 @@ function auto_create_user_account($hash="")
         # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
         # but also adds the new user name to the mail)
+        global $user_pref_user_management_notifications;
         
         $templatevars['name']=getval("name","");
         $templatevars['email']=getval("email","");
