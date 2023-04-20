@@ -198,7 +198,9 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 ?>
 <div class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>" id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>">
+<!-- START of FIRST TabbedPanel -->
 <div class="clearerleft"> </div>
+<div>
 <?php 
 #  ----------------------------- Draw standard and template fields ------------------------
 $tabname                        = '';
@@ -237,6 +239,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     $extra = '';
     ?>
     </div>
+    </div> <!-- END of TabbedPanel (after extra rendered) -->
     <?php
     // All fields linked to the in-process tab are now rendered
 
@@ -245,10 +248,10 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     if($tabcount != count($fields_tab_names))
         {
         ?>
-        </div>
-        </div>
-        <div class="clearerleft"></div>
-        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>"><div>
+        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>">
+        <!-- START of NEXT TabbedPanel -->
+        <div class="clearerleft"> </div>
+        <div>
         <?php
         }
     }
