@@ -3,8 +3,7 @@
 function adobe_link_genkey($user,$resource)
     {
     global $scramble_key;
-    $remote_ip = get_ip();
-    return hash('sha256',$user . date('Ymd') . $scramble_key . $resource . $remote_ip);
+    return hash('sha256',$user . date('Ymd') . $scramble_key . $resource);
     }
 
 function adobe_link_check_credentials()
@@ -32,7 +31,6 @@ function adobe_link_check_credentials()
     $user_select_sql->sql = "and u.ref = ?";
     $user_select_sql->parameters = array("i", $adb_link_user);
     
-    $anonymous_login = $adb_link_user;
     $session_hash = "";
     $usercredentialsprovided = true;
     return true;
