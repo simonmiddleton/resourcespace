@@ -2993,7 +2993,7 @@ function update_search_from_request($search)
 
         if ($value!="" && substr($key,0,6)=="field_")
             {
-            if ((strpos($key,"_year")!==false)||(strpos($key,"_month")!==false)||(strpos($key,"_day")!==false))
+            if ((str_ends_with($key,"_year")!==false)||(str_ends_with($key,"_month")!==false)||(str_ends_with($key,"_day")!==false))
                 {
                 # Date field
                 
