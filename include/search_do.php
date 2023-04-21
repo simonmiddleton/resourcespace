@@ -708,6 +708,7 @@ function do_search(
                                     {
                                     if($keywords_expanded_or)
                                         {
+                                        $alternative_keywords = array();
                                         foreach($keywords_expanded as $keyword_expanded)
                                             {
                                             $alternative_keyword_keyref = resolve_keyword($keyword_expanded, false, true, true);    

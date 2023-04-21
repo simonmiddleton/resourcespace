@@ -17,13 +17,7 @@ $lang["museumplus_module_name_field"]='用于保存MpID有效的模块名称的�
 $lang["museumplus_secondary_links_field"]='用于保存指向其他模块的次要链接的元数据字段。ResourceSpace将为每个链接生成一个MuseumPlus URL。链接将具有特殊的语法格式：module_name:ID（例如，“Object:1234”）。';
 $lang["museumplus_object_details_title"]='MuseumPlus 详细信息';
 $lang["museumplus_script_header"]='脚本设置';
-$lang["museumplus_last_run_date"]='<div class="Question">
-    <label>
-        <strong>脚本上次运行时间</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='脚本上次运行时间';
 $lang["museumplus_enable_script"]='启用MuseumPlus脚本';
 $lang["museumplus_interval_run"]='请翻译：在以下时间间隔内运行脚本（例如+1天，+2周，两周）。如果留空，它将在cron_copy_hitcount.php每次运行时运行。';
 $lang["museumplus_log_directory"]='存储脚本日志的目录。如果留空或无效，则不会发生记录日志。';

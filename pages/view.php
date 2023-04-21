@@ -563,7 +563,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         if($modal)
                             { ?>
                             <a href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
-                                onClick="return CentralSpaceLoad(this);"
+                                onClick="return CentralSpaceLoad(this, true);"
                                 class="maxLink fa fa-expand"
                                 title="<?php echo $lang["maximise"]?>">
                             </a>

@@ -17,13 +17,7 @@ $lang["museumplus_module_name_field"]='MpIDが有効なモジュールの名前�
 $lang["museumplus_secondary_links_field"]='他のモジュールへのセカンダリリンクを保持するために使用されるメタデータフィールド。ResourceSpaceは、各リンクに対してMuseumPlus URLを生成します。リンクには特別な構文形式があります：module_name:ID（例：「Object:1234」）。';
 $lang["museumplus_object_details_title"]='MuseumPlusの詳細';
 $lang["museumplus_script_header"]='スクリプト設定';
-$lang["museumplus_last_run_date"]='<div class="Question">
-    <label>
-        <strong>スクリプトの最終実行</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='スクリプトの最終実行';
 $lang["museumplus_enable_script"]='MuseumPlusスクリプトを有効にする。';
 $lang["museumplus_interval_run"]='次の間隔でスクリプトを実行します（例：+1日、+2週間、2週間）。空白にしておくと、cron_copy_hitcount.php が実行されるたびに実行されます。';
 $lang["museumplus_log_directory"]='スクリプトログを保存するディレクトリ。もし空欄であるか無効な場合、ログは記録されません。';

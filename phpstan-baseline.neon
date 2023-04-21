@@ -341,6 +341,11 @@ parameters:
 			path: include/user_functions.php
 
 		-
+			message: "#^Undefined variable\\: \\$user_pref_user_management_notifications$#"
+			count: 1
+			path: include/user_functions.php
+
+		-
 			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
 			count: 1
 			path: pages/admin/admin_content_edit.php
@@ -566,7 +571,7 @@ parameters:
 			path: pages/tools/update_paths.php
 
 		-
-			message: "#^Function update_preview invoked with 1 parameter, 3 required\\.$#"
+			message: "#^Function update_preview invoked with 1 parameter, 4 required\\.$#"
 			count: 2
 			path: pages/tools/update_previews.php
 
@@ -754,11 +759,6 @@ parameters:
 			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
 			count: 1
 			path: plugins/offline_archive/pages/restore_request.php
-
-		-
-			message: "#^Undefined variable\\: \\$openai_response_cache$#"
-			count: 1
-			path: plugins/openai_gpt/include/openai_gpt_functions.php
 
 		-
 			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"

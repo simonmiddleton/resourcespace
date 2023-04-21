@@ -17,13 +17,7 @@ $lang["museumplus_module_name_field"]='Bidang metadata yang digunakan untuk meny
 $lang["museumplus_secondary_links_field"]='Bidang metadata yang digunakan untuk menyimpan tautan sekunder ke modul lain. ResourceSpace akan menghasilkan URL MuseumPlus untuk setiap tautan. Tautan akan memiliki format sintaks khusus: nama_modul:ID (misalnya "Object:1234").';
 $lang["museumplus_object_details_title"]='Rincian MuseumPlus.';
 $lang["museumplus_script_header"]='Pengaturan skrip.';
-$lang["museumplus_last_run_date"]='<div class="Pertanyaan">
-    <label>
-        <strong>Terakhir kali skrip dijalankan</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Terakhir kali skrip dijalankan';
 $lang["museumplus_enable_script"]='Aktifkan skrip MuseumPlus.';
 $lang["museumplus_interval_run"]='Jalankan skrip pada interval berikut (misalnya +1 hari, +2 minggu, dua minggu). Biarkan kosong dan skrip akan dijalankan setiap kali cron_copy_hitcount.php dijalankan.';
 $lang["museumplus_log_directory"]='Direktori untuk menyimpan log skrip. Jika ini dikosongkan atau tidak valid, maka tidak akan ada pencatatan log.';

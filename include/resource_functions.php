@@ -977,31 +977,31 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     continue;
                     }
                 } // End of if not a fixed list field
-            if(
-                $fields[$n]['required'] == 1
+
+            if( $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
                 && (
-                    // No nodes submitted
+                    // Required node field with no nodes submitted is a candidate for error
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
-                    // No value submitted
+                    // Required continuous field with no value is a candidate for error
                     || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && trim(strip_leading_comma($val)) == '')
                 )
                 && (
-                    // Existing resource, but not in upload review mode with blank template and existing value (e.g. for resource default)
-                    ($ref > 0 && !($upload_review_mode && $blank_edit_template && $fields[$n]['value'] != ''))
-                    // Template with blank template and existing value
-                    || ($ref < 0 && !($blank_edit_template && $fields[$n]["value"] !== ''))
+                    // An existing resource which is not being reviewed with an existing value (e.g. for resource default)
+                    ($ref > 0 && !($upload_review_mode && $fields[$n]['value'] != ''))
+                    // A template without an existing value
+                    || ($ref < 0 && $fields[$n]["value"] == '')
                 )
                 // Not a metadata template
                 && !$is_template
             )
                 {
                 $field_visibility_status=getval("field_".$fields[$n]['ref']."_displayed","");
-                # Register an error only if the required field was actually displayed
+                # Register an error only if the empty required field was actually displayed
                 if (is_field_displayed($fields[$n]) && $field_visibility_status=="block")
-                   {
-                   $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
-                   }
+                    {
+                    $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
+                    }
                 continue;
                 }
 
@@ -2192,14 +2192,30 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         {
         $related = explode(',', ($postvals['related'] ?? ''));
 
-        // Make sure all submitted values are numeric
+        // Make sure all submitted values are numeric and each related resource is editable.
         $resources_to_relate = array();
+        $no_access_to_relate = array();
         for($n = 0; $n < count($related); $n++)
             {
-            if(is_numeric(trim($related[$n])))
+            $ref_to_relate = trim($related[$n]);
+            if(is_numeric($ref_to_relate))
                 {
-                $resources_to_relate[] = trim($related[$n]);
+                if (!get_edit_access($ref_to_relate))
+                    {
+                    debug("Edit multiple - Failed to update related resource - no edit access to resource $ref_to_relate");
+                    $no_access_to_relate[] = $ref_to_relate;
+                    }
+                else
+                    {
+                    $resources_to_relate[] = $ref_to_relate;
+                    }
                 }
+            }
+
+        if(count($no_access_to_relate) > 0)
+            {
+            $errors[] = $lang["error-edit_noaccess_related_resources"] . implode(",",$no_access_to_relate);
+            return $errors;
             }
 
         // Clear out all relationships between related resources in this collection
@@ -5279,7 +5295,7 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
         $sql = "password_hash= ?,";
         $params = ['s', (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key))];
         }
-        else{$sql = "";}
+        else{$sql = "";$params=[];}
 	# Update the expiration and acccess
 	ps_query("UPDATE external_access_keys SET {$sql} access= ?, expires= ?,date=NOW(),usergroup= ? WHERE access_key = ?",
         array_merge($params, [
@@ -7645,7 +7661,8 @@ function get_field_options($ref, $nodeinfo = false, bool $skip_translation = fal
         $ref = ps_value("select ref value from resource_type_field where name=?",array("s",$ref), "", "schema"); // $ref is a string in this case
         }
 
-    $options = get_nodes($ref, null, true);
+    $field = get_resource_type_field($ref);
+    $options = get_nodes($ref, null, $field["type"]==FIELD_TYPE_CATEGORY_TREE);
     if($options === false){return false;}
     # Translate options,
     for ($m=0;$m<count($options);$m++)

@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='EMuにリンクされたリソースタイプを選
 $lang["emu_email_notify"]='スクリプトが通知を送信する電子メールアドレス。システム通知アドレスにデフォルトにする場合は空白のままにしてください。';
 $lang["emu_script_failure_notify_days"]='スクリプトが完了していない場合にアラートを表示し、メールを送信する日数。';
 $lang["emu_script_header"]='ResourceSpaceがスケジュールされたタスク（cron_copy_hitcount.php）を実行するたびに、EMuデータを自動的に更新するスクリプトを有効にしてください。';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>スクリプトの最終実行</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='スクリプトの最終実行';
 $lang["emu_script_mode"]='スクリプトモード';
 $lang["emu_script_mode_option_1"]='EMuからメタデータをインポートする。';
 $lang["emu_script_mode_option_2"]='すべてのEMuレコードを取得し、RSとEMuを同期させます。';

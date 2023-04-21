@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='Velg ressurstype koblet til EMu.';
 $lang["emu_email_notify"]='E-postadresse som skriptet vil sende varsler til. La stå tomt for å bruke standard systemvarsler.';
 $lang["emu_script_failure_notify_days"]='Antall dager etter hvilket varsel skal vises og e-post sendes hvis skriptet ikke er fullført.';
 $lang["emu_script_header"]='Aktiver skriptet som automatisk oppdaterer EMu-dataene hver gang ResourceSpace kjører sin planlagte oppgave (cron_copy_hitcount.php).';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>Skript sist kjørt</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='Skript sist kjørt';
 $lang["emu_script_mode"]='Skriptmodus';
 $lang["emu_script_mode_option_1"]='Importer metadata fra EMu.';
 $lang["emu_script_mode_option_2"]='Hent alle EMu-poster og hold RS og EMu synkronisert.';

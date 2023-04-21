@@ -17,13 +17,7 @@ $lang["museumplus_module_name_field"]='Metadatafält som används för att håll
 $lang["museumplus_secondary_links_field"]='Metadatafält som används för att hålla sekundära länkar till andra moduler. ResourceSpace kommer att generera en MuseumPlus URL för var och en av länkarna. Länkarna kommer att ha en speciell syntaxformat: modulnamn:ID (t.ex. "Object:1234").';
 $lang["museumplus_object_details_title"]='MuseumPlus detaljer.';
 $lang["museumplus_script_header"]='Skriptinställningar';
-$lang["museumplus_last_run_date"]='<div class="Question">
-    <label>
-        <strong>Senaste körning av skript</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Senaste körning av skript';
 $lang["museumplus_enable_script"]='Aktivera MuseumPlus-skriptet.';
 $lang["museumplus_interval_run"]='Kör skriptet med följande intervall (t.ex. +1 dag, +2 veckor, fjorton dagar). Lämna tomt så körs det varje gång cron_copy_hitcount.php körs.';
 $lang["museumplus_log_directory"]='Katalog för att lagra skriptloggar. Om detta lämnas tomt eller är ogiltigt kommer ingen loggning att ske.';

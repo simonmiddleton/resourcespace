@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='Επιλέξτε τύπους πόρων που σ�
 $lang["emu_email_notify"]='Διεύθυνση email στην οποία το σενάριο θα αποστέλλει ειδοποιήσεις. Αφήστε κενό για να χρησιμοποιηθεί η προεπιλεγμένη διεύθυνση ειδοποιήσεων του συστήματος.';
 $lang["emu_script_failure_notify_days"]='Αριθμός ημερών μετά τα οποία θα εμφανίζεται ειδοποίηση και θα αποστέλλεται ηλεκτρονικό μήνυμα εάν το σενάριο δεν έχει ολοκληρωθεί.';
 $lang["emu_script_header"]='Ενεργοποίηση σεναρίου που θα ενημερώνει αυτόματα τα δεδομένα του EMu κάθε φορά που το ResourceSpace εκτελεί την προγραμματισμένη εργασία της (cron_copy_hitcount.php).';
-$lang["emu_last_run_date"]='<div class="Question">
-	<label>
-		<strong>Τελευταία εκτέλεση σεναρίου</strong>
-	</label>
-	<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-	%scripts_test_functionality%
-</div>
-<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='Τελευταία εκτέλεση σεναρίου';
 $lang["emu_script_mode"]='Λειτουργία σεναρίου';
 $lang["emu_script_mode_option_1"]='Εισαγωγή μεταδεδομένων από το EMu.';
 $lang["emu_script_mode_option_2"]='Εξαγάγετε όλες τις εγγραφές EMu και διατηρήστε το RS και το EMu συγχρονισμένα.';

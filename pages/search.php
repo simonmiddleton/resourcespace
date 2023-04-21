@@ -570,8 +570,15 @@ $hook_result=hook("process_search_results","search",array("result"=>$result,"sea
 if ($hook_result!==false) {$result=$hook_result;}
 
 // Convert structured results back to a simple array for display
-$result_count   = $result["total"];
-$result         = $result["data"];
+if(isset($result["total"]))
+    {
+    $result_count   = $result["total"];
+    $result         = $result["data"];
+    }
+else
+    {
+    $result_count   = 0;
+    }
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.

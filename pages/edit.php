@@ -23,7 +23,9 @@ $search=getval("search","");
 $order_by=getval("order_by","relevance");
 $offset=getval("offset",0,true);
 $restypes=getval("restypes","");
-if (strpos($search,"!")!==false) {$restypes="";}
+
+// Do the same as search.php - ignore except for properties search
+if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$special_search_honors_restypes) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);

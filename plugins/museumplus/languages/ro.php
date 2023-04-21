@@ -16,13 +16,7 @@ $lang["museumplus_module_name_field"]='Câmpul de metadate utilizat pentru a sto
 $lang["museumplus_secondary_links_field"]='Câmpul de metadate utilizat pentru a stoca legăturile secundare către alte module. ResourceSpace va genera un URL MuseumPlus pentru fiecare dintre legături. Legăturile vor avea un format de sintaxă special: nume_modul:ID (de exemplu, "Obiect:1234").';
 $lang["museumplus_object_details_title"]='Detalii MuseumPlus.';
 $lang["museumplus_script_header"]='Setări script.';
-$lang["museumplus_last_run_date"]='<div class="Întrebare">
-    <label>
-        <strong>Ultima rulare a scriptului</strong>
-    </label>
-    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
-</div>
-<div class="clearerleft"></div>';
+$lang["museumplus_last_run_date"]='Ultima rulare a scriptului';
 $lang["museumplus_enable_script"]='Permiteți scriptul MuseumPlus.';
 $lang["museumplus_interval_run"]='Rulați scriptul la următorul interval (de exemplu, +1 zi, +2 săptămâni, două săptămâni). Lăsați gol și se va rula de fiecare dată când cron_copy_hitcount.php rulează.';
 $lang["museumplus_log_directory"]='Director pentru stocarea jurnalelor de scripturi. Dacă acest câmp este lăsat gol sau este invalid, atunci nu va avea loc nicio înregistrare a jurnalelor.';

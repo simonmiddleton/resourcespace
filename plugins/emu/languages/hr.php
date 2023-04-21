@@ -9,14 +9,7 @@ $lang["emu_resource_types"]='Odaberite vrste resursa povezane s EMu.';
 $lang["emu_email_notify"]='Adresa e-pošte na koju će skripta slati obavijesti. Ostavite prazno za zadani sustav adresiranja obavijesti.';
 $lang["emu_script_failure_notify_days"]='Broj dana nakon kojih će se prikazati upozorenje i poslati e-mail ako skripta nije dovršena.';
 $lang["emu_script_header"]='Omogućite skriptu koja će automatski ažurirati EMu podatke kada ResourceSpace pokrene svoj zakazani zadatak (cron_copy_hitcount.php).';
-$lang["emu_last_run_date"]='<div class="Question">
-		<label>
-			<strong>Zadnje pokretanje skripte</strong>
-		</label>
-		<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-		%scripts_test_functionality%
-	</div>
-	<div class="clearerleft"></div>';
+$lang["emu_last_run_date"]='Zadnje pokretanje skripte';
 $lang["emu_script_mode"]='Način skripte.';
 $lang["emu_script_mode_option_1"]='Uvoz metapodataka iz EMu-a.';
 $lang["emu_script_mode_option_2"]='Izvucite sve EMu zapise i održavajte sinkronizaciju između RS i EMu.';

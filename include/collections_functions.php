@@ -1095,6 +1095,12 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                 }
             }
 
+        if($sql == "" && count($keyrefs) == 0)
+            {
+            // Not a recognised collection search syntax and no matching keywords
+            return [];
+            }
+
         for($n=0;$n<count($keyrefs);$n++)
             {
             $select_extra .= ", k.key" . $n;
@@ -3331,7 +3337,7 @@ function send_collection_feedback($collection,$comment)
     else
         {
         # External user.
-        if ($feedback_email_required && !preg_match ("/${regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
+        if ($feedback_email_required && !preg_match ("/{$regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
         $body.=$lang["fullname"] . ": " . getval("name","") . "\n";
         $body.=$lang["email"] . ": " . getval("email","") . "\n";
         }
@@ -5980,6 +5986,8 @@ function allow_collection_share(array $c)
         }
     $internal_share_access = (!is_null($internal_share_access) && is_bool($internal_share_access) ? $internal_share_access : internal_share_access());
 
+    if (!isset($c['type'])){$c = get_collection($c['ref']);}
+    
     if(
         $allow_share
         && !$system_read_only
