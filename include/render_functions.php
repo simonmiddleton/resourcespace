@@ -4972,25 +4972,56 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $permission   Permission identifier
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
-* @param boolean $reload       Autosave changes done on this permission
-* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
-* 
-* @return void
+* @param boolean $reload       deprecated - Autosave changes done on this permission
+* @param boolean $disabled     Disable this permission as another supersedes it (greys it out and checks it)
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
+function DrawOption(string $permission, string $description, bool $reverse = false, bool $reload = false, bool $disabled = false): void
     {
     global $permissions,$permissions_done;
-    $checked=(in_array($permission,$permissions));
-    if ($reverse) {$checked=!$checked;}
+
+    // The description can contain <br> tags and "&mdash;" HTML entities which we still want to allow.
+    $description_escaped = nl2br(
+        str_replace(
+            '&amp;',
+            '&',
+            htmlspecialchars(preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $description))
+        ),
+        false
+    );
+
+    $checked = in_array($permission, $permissions);
+    if ($reverse)
+        {
+        $checked = !$checked;
+        }
+    
+    $input_value = $reverse ? "reverse" : "normal";
+    $base64_perm = base64_encode($permission);
+
+    // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
+    $disabled_attr = '';
+    $onchange_attr = " onchange=SavePermissions(['$base64_perm']);";
+    if ($disabled)
+        {
+        $checked = true;
+        $disabled_attr = ' disabled';
+        $onchange_attr = '';
+        }
+    $checked_attr = $checked ? ' checked' : '';
     ?>
-    <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+    <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
-        <td><?php echo $description?></td>
-        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
-            if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
+        <td><?php echo $description_escaped; ?></td>
+        <td>
+            <input
+                type="checkbox"
+                name="checked_<?php echo $base64_perm; ?>"
+                data-reverse="<?php echo (int) $reverse; ?>"
+                <?php echo $disabled_attr . $checked_attr . $onchange_attr; ?>>
+        </td>
     </tr>
     <?php
-    $permissions_done[]=$permission;
+    $permissions_done[] = $permission;
     }
 
 
