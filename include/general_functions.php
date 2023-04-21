@@ -3774,7 +3774,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         }
 
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = htmlspecialchars_decode(htmlentities($html, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
+    $html = htmlspecialchars_decode(htmlentities($html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
 
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
@@ -3851,6 +3851,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         $html = strip_tags($html);
         }
 
+    $html = html_entity_decode($html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
     return $html;
     }
 
@@ -3869,7 +3870,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 function get_inner_html_from_tag(string $txt, string $tag)
     {
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = htmlspecialchars_decode(htmlentities($txt, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
+    $html = htmlspecialchars_decode(htmlentities($txt, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
 
     if($html == strip_tags($txt))
         {
@@ -3900,6 +3901,7 @@ function get_inner_html_from_tag(string $txt, string $tag)
             }
         }
 
+    $inner_html = html_entity_decode($inner_html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
     return $inner_html;
     }
 
