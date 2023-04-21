@@ -5128,3 +5128,14 @@ function prefix_value(string $prefix): Closure
         return $prefix . $value;
         };
     }
+
+/**
+ *  @param string $haystack Value to be checked
+ *  @param string $needle Substing to seach for in the haystack
+ * 
+ *  @return bool True if the haystack ends with the needle otherwise false
+ */
+function string_ends_with($haystack, $needle)
+    {
+    return substr($haystack, strlen($haystack) - strlen($needle), strlen($needle)) === $needle;
+    }
