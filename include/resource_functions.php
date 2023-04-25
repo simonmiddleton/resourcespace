@@ -2911,7 +2911,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $restype_params = [];
     if(!$multi)
         {
-        $restypesql = "AND (f.global=1 or f.ref in (select resource_type_field from resource_type_field_resource_type rtjoin where rtjoin.resource_type=?))";
+        $restypesql = "AND (f.global=1 OR f.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=?))";
         $restype_params[] = "i";$restype_params[] = $rtype;
         }
 
@@ -3128,14 +3128,14 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     // Get field_info
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
-    $all_fields = get_resource_type_fields("","ref","asc",'',$nontree_field_types);
-    $field_restypes = [];
-    foreach($all_fields as $field)
-        {
-        $field_restypes[$field["ref"]] = explode(",",$field["resource_types"]);
-        }        
+    $nontree_fields = get_resource_type_fields("","ref","asc",'',$nontree_field_types);
+    
+    $field_restypes = get_resource_type_field_resource_types($nontree_fields);
 
-    // Create array to store data
+
+        //exit(print_r($field_restypes));
+
+        // Create array to store data
     $allresdata=array();
 
     $resource_chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
@@ -3245,64 +3245,64 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             return array();
             }
 
-    // Convert to array with resource ID as index
+        // Convert to array with resource ID as index
 
 
-    //$res=0;
-    //$validtypes = array();
-    for ($n=0;$n<count($fields);$n++)
-        {
-        $rowadded = false;
-        if (!isset($allresdata[$fields[$n]["resource"]]))
+        //$res=0;
+        //$validtypes = array();
+        for ($n=0;$n<count($fields);$n++)
             {
-            $allresdata[$fields[$n]["resource"]]=[];
-            }
+            $rowadded = false;
+            if (!isset($allresdata[$fields[$n]["resource"]]))
+                {
+                $allresdata[$fields[$n]["resource"]]=[];
+                }
 
-        // Get valid resource_type_field refs for resource type, so we can skip fields which are not applicable
-        //$rtype = $restype[$fields[$n]["resource"]];
+            // Skip fields which are not applicable
+            $rtype = $restype[$fields[$n]["resource"]];
+            if(!isset($field_restypes[$fields[$n]["ref"]]) || !in_array($restype[$fields[$n]["resource"]],$field_restypes[$fields[$n]["ref"]]))
+                {
+                // This resource's resource_type is not associated with this field
+                continue;
+                }
 
-        if($fields[$n]["global"] != 1 && !in_array($restype[$fields[$n]["resource"]],$field_restypes[$fields[$n]["ref"]]))
-            {
-            // This resource's resource_type is not associated with this field
-            continue;
-            }
+            // if(!isset($validtypes[$fields[$n]["ref"]]))
+            //     {
+            //     $rtype = ];
+            //     $validtypes[$fields[$n]["ref"]] = array();
+            //     $validtypes[$fields[$n]["ref"]][] = $rtype;
+            //     }
 
-        // if(!isset($validtypes[$fields[$n]["ref"]]))
-        //     {
-        //     $rtype = ];
-        //     $validtypes[$fields[$n]["ref"]] = array();
-        //     $validtypes[$fields[$n]["ref"]][] = $rtype;
-        //     }
-
-        // Add data to array
-        if  (
-                (!$use_permissions
-                ||
-                ($fields[$n]["resource"]<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
-                ||                
-                metadata_field_view_access($fields[$n]["fref"])
-                )
-            &&
-                (!($external_access && !$fields[$n]["external_user_access"]))
-            &&
-                (!$personal || $fields[$n]["personal_data"])
-            &&
-                ($alldata || $fields[$n]["include_in_csv_export"])
-            )
-            {
-            $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
-            $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
-            $rowadded = true;
-            }
-
-        # Add title field
-        if  (!$rowadded &&
-                $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
+            // Add data to array
+            if  (
+                    (!$use_permissions
+                    ||
+                    ($fields[$n]["resource"]<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
+                    ||                
+                    metadata_field_view_access($fields[$n]["fref"])
+                    )
                 &&
-                metadata_field_view_access($fields[$n]["fref"]) #Check permissions to access title field
+                    (!($external_access && !$fields[$n]["external_user_access"]))
+                &&
+                    (!$personal || $fields[$n]["personal_data"])
+                &&
+                    ($alldata || $fields[$n]["include_in_csv_export"])
                 )
-            {
-            $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
+                {
+                $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
+                $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
+                $rowadded = true;
+                }
+
+            # Add title field
+            if  (!$rowadded &&
+                    $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
+                    &&
+                    metadata_field_view_access($fields[$n]["fref"]) #Check permissions to access title field
+                    )
+                {
+                $allresdata[$fields[$n]["resource"]][$fields[$n]["ref"]] = $fields[$n];
+                }
             }
         }
     $fields = array();
@@ -3958,7 +3958,17 @@ function update_resource_type($ref,$type)
     ps_query("UPDATE resource SET resource_type = ? WHERE ref = ?",["i",$type,"i",$ref]);
 
     # Clear data that is no longer needed (data/keywords set for other types).
-    ps_query("DELETE FROM resource_node WHERE resource = ? and node>0 AND node NOT IN (SELECT n.ref FROM node n LEFT JOIN resource_type_field rf ON n.resource_type_field=rf.ref WHERE rf.resource_type = ? OR rf.resource_type=999 OR resource_type=0)",["i",$ref,"i",$type]);
+    ps_query("DELETE FROM resource_node
+                    WHERE resource = ?
+                          AND node>0 
+                          AND node NOT IN 
+                                (SELECT n.ref
+                                   FROM node n
+                              LEFT JOIN resource_type_field rf ON n.resource_type_field=rf.ref
+                              LEFT JOIN resource_type_field_resource_type rtfrt ON rf.ref=rtfrt.resource_type_field
+                                  WHERE (rtfrt.resource_type = ? OR rf.global=1)
+                                )"
+                ,["i",$ref,"i",$type]);
 
     return true;
     }

@@ -63,7 +63,6 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
                 }
             }
         }
-
     # If not already in the list of advanced search metadata fields, insert the field which is the designated searchable date ($date_field)
     if(!$date_field_already_present 
         && $daterange_search 
@@ -77,10 +76,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
             {
             if (isset($date_field_data))
                 {
-                if (
-                    ($date_field_data['global'] == 1)
-                    || in_array($return[$n]["resource_type"],explode(",",$date_field_data['resource_types']))
-                    ) 
+                if (count(array_intersect(explode(",",$return[$n]["resource_types"]),explode(",",$date_field_data['resource_types'])))>0)
                     {
                     $return1[]=$date_field_data;
                     $date_field_data=null; # Only insert it once

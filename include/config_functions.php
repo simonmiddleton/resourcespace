@@ -1322,6 +1322,37 @@ function update_resource_type_field_resource_types(int $ref,array $resource_type
     clear_query_cache("schema");
     }
 
+
+/**
+ * Get all resource_type->resource-type_field associations
+ * 
+ * @param array $fields Optional array of resource_type_field data returned by get_resource_type_fields()
+ * 
+ * @return array    Array with resource_type_field ID as keys and arrays of resource_type IDs as values
+ * 
+ */
+function get_resource_type_field_resource_types(array $fields = [])
+    {
+    $field_restypes = [];
+    $allrestypes = array_column(get_resource_types("",false,true),"ref");
+    if(count($fields)==0)
+        {
+        $fields = get_resource_type_fields();
+        }
+    foreach($fields as $field)
+        {
+        if($field["global"]==1)
+            {
+            $field_restypes[$field["ref"]] = $allrestypes;
+            }
+        else
+            {
+            $field_restypes[$field["ref"]] = explode(",",$field["resource_types"]);
+            }
+        }
+    return $field_restypes;
+    }
+
 /**
  * Create a new resource type with the specified name
  *

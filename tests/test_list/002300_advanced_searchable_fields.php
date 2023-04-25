@@ -116,6 +116,8 @@ feedback(PHP_EOL.PHP_EOL);
 # TEST 2 VERIFY
 # Assert that the fields are in the expected sequence
 if (!verify_field_position("PhotoTwoSearch", $search_fields, 0)) return false;
+
+echo "HERE\n";
 if (!verify_field_position("PhotoThreeSearch", $search_fields, 1)) return false;
 if (!verify_field_position("PhotoFiveSearch", $search_fields, 2)) return false;
 if (!verify_field_position("VideoDateNoSearch", $search_fields, 3)) return false;
