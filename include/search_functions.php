@@ -318,25 +318,35 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $value="";
             if (strpos($search, $name.":")===false) 
                 {
+                // Get each part of the date
                 $key_year=$name."_year";
                 $value_year=getval($key_year,"");
-                if ($value_year!="") $value=$value_year;
-                else $value="nnnn";
                 
                 $key_month=$name."_month";
                 $value_month=getval($key_month,"");
-                if ($value_month=="") $value_month.="nn";
                 
                 $key_day=$name."_day";
                 $value_day=getval($key_day,"");
-                if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
-                elseif ($value_month!="nn") $value.="|" . $value_month;
                 
-                if (($value!=="nnnn|nn|nn")&&($value!=="nnnn")) 
-                    {
-                    if ($search!="") {$search.=", ";}
-                    $search.=$fields[$n]["name"] . ":" . $value;
-                    }
+                // The following constructs full date yyyy-mm-dd or partial dates yyyy-mm or yyyy 
+                // However yyyy-00-dd is interpreted as yyyy because its not a valid partial date
+                    
+                $value_date_final="";
+                // Process the valid combinations, otherwise treat it as an empty date
+                if ($value_year !="" && $value_month !="" && $value_day !="") {
+                    $value_date_final=$value_year."-".$value_month."-".$value_day;
+                }
+                elseif ($value_year !="" && $value_month !="") {
+                    $value_date_final=$value_year."-".$value_month;
+                }
+                elseif ($value_year !="") {
+                    $value_date_final=$value_year;
+                }
+
+                // If search already has value, then attach this value separated by a comma
+                if ($search!="") {$search.=", ";}
+                $search.=$fields[$n]["name"] . ":" . $value_date_final;
+
                 }
 
             if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
