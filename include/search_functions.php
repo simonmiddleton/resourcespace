@@ -343,9 +343,11 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     $value_date_final=$value_year;
                 }
 
-                // If search already has value, then attach this value separated by a comma
-                if ($search!="") {$search.=", ";}
-                $search.=$fields[$n]["name"] . ":" . $value_date_final;
+                if ($value_date_final !="") {
+                    // If search already has value, then attach this value separated by a comma
+                    if ($search!="") {$search.=", ";}
+                    $search.=$fields[$n]["name"] . ":" . $value_date_final;
+                }
 
                 }
 
