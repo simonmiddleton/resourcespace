@@ -120,20 +120,21 @@ foreach($keywords as $keyword)
     // Check if multiple nodes have been specified for an OR search
     $keywords_expanded=explode(';',$specific_field_search[1]);
     $subnodestring = "";
-    foreach($keywords_expanded as $keyword_expanded)
+    if(count($keywords_expanded) > 1) 
         {
-        $node_found = get_node_by_name($nodes, $keyword_expanded);
-        if(
-            0 < count($node_found) 
-            && in_array(get_resource_type_field($node_found["resource_type_field"]),$FIXED_LIST_FIELD_TYPES)
-        )
+        foreach($keywords_expanded as $keyword_expanded)
             {
-            $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
+            $node_found = get_node_by_name($nodes, $keyword_expanded);
+
+            if(0 < count($node_found))
+                {
+                $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
+                }
             }
-        }
-    if($subnodestring != "")
-        {
-        $search = str_ireplace($keyword, $subnodestring, $search);
+        if($subnodestring != "")
+            {
+            $search = str_ireplace($keyword, $subnodestring, $search);
+            }
         }
     }
     
