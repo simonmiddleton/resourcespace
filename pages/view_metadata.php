@@ -2,7 +2,7 @@
 # Global everything we need, in case called inside a function (e.g. for push_metadata support)
 global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads,
        $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$force_display_template_order_by,$modal,
-       $sort_tabs;
+       $sort_tabs, $arr_fieldrestypes;
 
 // Is this a modal?
 $modal=(getval("modal","")=="true");

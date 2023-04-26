@@ -116,7 +116,6 @@ if ($resource===false)
 // Get resource_type -> resource_type_field associations
 $arr_fieldrestypes = get_resource_type_field_resource_types();
 
-    //exit(print_r($arr_fieldrestypes));
 hook("aftergetresourcedataview","",array($ref,$resource));
 
 # Allow alternative configuration settings for this resource type.

@@ -1496,7 +1496,8 @@ if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$s
     $uploadparams["resource_type"] = $resource_type;
     }
 
-$globalsrendered = false;
+// Flag used for rendering a new section when switching from global to resource type specific fields
+$lastglobal = false;
 
 if(isset($metadata_template_resource_type) && isset($metadata_template_title_field) && $metadata_template_title_field !== false && !$multiple && ($ref < 0 || $upload_review_mode))
     {

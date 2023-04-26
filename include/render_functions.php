@@ -1768,7 +1768,7 @@ function display_multilingual_text_field($n, $field, $translations)
 
 function display_field($n, $field, $newtab=false,$modal=false)
   {
-  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $globalsrendered,$is_template, $language, $lang,
+  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastglobal,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
@@ -1843,7 +1843,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
   if ($multiple && ((getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
 
-  if ($field["global"] == 0 && $globalsrendered && $collapsible_sections)
+  if ($field["global"] == 0 && $lastglobal && $collapsible_sections)
     {
     ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars($lang["typespecific"]); ?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref<0) echo "Upload"; ?>TypeSpecificSection"><?php
     }
@@ -2140,11 +2140,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $is_search = false;
 
         include "edit_fields/{$type}.php";
-        if($field['global']==1)
-            {
-                debug("BANG " . $field["ref"]);
-            $globalsrendered = true;
-            }    
+        $lastglobal = $field['global']==1;
         }
 		
     # ----------------------------------------------------------------------------
