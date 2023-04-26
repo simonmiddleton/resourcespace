@@ -276,8 +276,7 @@ if(empty($fields_tab_names))
 <?php if(!$force_display_template_order_by){ ?> <div class="clearerleft"></div> <?php } ?>
 <?php if(!isset($related_type_show_with_data)) { echo $extra; } ?>
 <?php if($force_display_template_order_by){ ?> <div class="clearerleft"></div> <?php } ?>
-</div>
-</div>
 <?php hook("renderafterresourcedetails"); ?>
-<!-- end of tabbed panel-->
 </div>
+<!-- End of Metadata-->
+<div class="clearerleft"></div>
