@@ -659,7 +659,7 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
 # Fetch  data
 $allfields=get_resource_type_fields();
 $fielddata=get_resource_type_field($ref);
-$existingrestypes = $fielddata["resource_types"] ? explode(",",$fielddata["resource_types"]) : [];
+$existingrestypes = $fielddata["resource_types"] ? explode(",",(string)$fielddata["resource_types"]) : [];
 
 include "../../include/header.php";
 ?>

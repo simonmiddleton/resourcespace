@@ -17,7 +17,7 @@
  * $lang['cfg-<fieldname>'] to use for the element label.
  * 
  * <code>
- * $options = sql_select("SELECT name as label, ref as value FROM resource_types");
+ * $options = sql_select("SELECT name AS label, ref AS value FROM resource_type");
  * 
  * render_select_option('myfield', $options, 18);
  * </code>
@@ -1339,6 +1339,7 @@ function get_resource_type_field_resource_types(array $fields = [])
         {
         $fields = get_resource_type_fields();
         }
+
     foreach($fields as $field)
         {
         if($field["global"]==1)
@@ -1347,7 +1348,7 @@ function get_resource_type_field_resource_types(array $fields = [])
             }
         else
             {
-            $field_restypes[$field["ref"]] = explode(",",$field["resource_types"]);
+            $field_restypes[$field["ref"]] = explode(",",(string) $field["resource_types"]);
             }
         }
     return $field_restypes;

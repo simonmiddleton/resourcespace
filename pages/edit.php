@@ -1496,7 +1496,7 @@ if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$s
     $uploadparams["resource_type"] = $resource_type;
     }
 
-$lastrt=-1;
+$globalsrendered = false;
 
 if(isset($metadata_template_resource_type) && isset($metadata_template_title_field) && $metadata_template_title_field !== false && !$multiple && ($ref < 0 || $upload_review_mode))
     {
@@ -1916,7 +1916,7 @@ foreach($fields as $n => $field)
         <div class="clearerleft"> </div>
      </div><!-- end of TabPanelInner -->
   </div><!-- end of TabbedPanel -->
-</div><!-- end of Tabs BasicsBox -->
+</div><!-- end of BasicsBoxTabs -->
         <?php
         }
 

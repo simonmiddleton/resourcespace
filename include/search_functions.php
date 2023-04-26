@@ -76,7 +76,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
             {
             if (isset($date_field_data))
                 {
-                if (count(array_intersect(explode(",",$return[$n]["resource_types"]),explode(",",$date_field_data['resource_types'])))>0)
+                if (count(array_intersect(explode(",",(string)$return[$n]["resource_types"]),explode(",",(string)$date_field_data['resource_types'])))>0)
                     {
                     $return1[]=$date_field_data;
                     $date_field_data=null; # Only insert it once

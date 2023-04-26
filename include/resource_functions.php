@@ -2249,7 +2249,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         return false;
         }
 
-    if ($fieldinfo["global"]==0 && !in_array($resource_data['resource_type'],ps_array("select resource_type value from resource_type_field_resource_type where resource_type_field=?",array("i",$field))))
+    if ($fieldinfo["global"]==0 && !in_array($resource_data['resource_type'],ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field=?",array("i",$field))))
         {
         $errors[] = "Field is not valid for this resource type";
         return false;
@@ -2971,7 +2971,6 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
               GROUP BY f.ref
               ORDER BY {$order_by_sql}";
 
-
     $field_data_params = array_merge(["i", $ref], ps_param_fill($nontree_field_types,"i"),$restype_params);
     if(!$ord_by)
         {
@@ -3028,7 +3027,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         }
     else
         {
-        array_multisort($fieldglobal, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
+        array_multisort($fieldglobal, SORT_DESC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
 
         for ($n = 0; $n < count($fields); $n++)
