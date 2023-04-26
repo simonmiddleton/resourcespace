@@ -179,9 +179,8 @@ function redirect($url)
 		}
 	else
 		{	
-		if(strpos($url,$baseurl)!==false)
+		if(strpos($url,$baseurl)===0)
 			{
-			// exit($url);	
 			// Base url has already been added
 			header ("Location: " . $url);	
 			exit();

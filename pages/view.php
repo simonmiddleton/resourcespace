@@ -2283,313 +2283,135 @@ if($enable_related_resources && !isset($relatedresources))
         $related_restypes[] = $relatedresources[$n]['resource_type'];
         }
     $related_restypes = array_unique($related_restypes);
-
     $relatedtypes_shown = array();
     $related_resources_shown = 0;
     }
-if(
-    isset($relatedresources)
-    && (count($relatedresources) > $related_resources_shown)
-    && checkperm("s")
-    && ($k == "" || $internal_share_access)
-)
+
+// Show related resources section
+if($enable_related_resources)
     {
-$result=$relatedresources;
-if (count($result)>0) 
-	{
-	# -------- Related Resources by File Extension
-	if($sort_relations_by_filetype)
-        {
-        #build array of related resources' file extensions
-        for ($n=0;$n<count($result);$n++)
-            {
-            $related_file_extension=$result[$n]["file_extension"];
-            $related_file_extensions[]=$related_file_extension;
-            }
-        #reduce extensions array to unique values
-        $related_file_extensions=array_unique($related_file_extensions);
-        ?><!--Panel for related resources-->
-        <div class="RecordBox">
-        <div class="RecordPanel">  
-        <div id="RelatedResources">
-        <div class="RecordResouce">
-        <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
-        <?php
-        foreach($related_file_extensions as $rext)
-            {
-            ?>
-            <div class="Title"><?php echo str_replace_formatted_placeholder("%extension", $rext, $lang["relatedresources-filename_extension"]); ?></div>
-            <?php
-            # loop and display the results by file extension
-            for ($n=0;$n<count($result);$n++)			
-                {
-                if(in_array($result[$n]["resource_type"],$relatedtypes_shown))
-                    {
-                    // Don't show this type again.
-                    continue;
-                    }
-                if ($result[$n]["file_extension"]==$rext)
-                    {
-                    $rref=$result[$n]["ref"];
-                    $title=$result[$n]["field".$view_title_field];
-                    $access=get_resource_access($rref);
-                    $use_watermark=check_use_watermark();
-                    # swap title fields if necessary
-                    if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-                        {
-                        if ($result[$n]['resource_type']==$metadata_template_resource_type)
-                            {
-                            $title=$result[$n]["field".$metadata_template_title_field];
-                            }
-                        }
-                    ?>
-                    <!--Resource Panel-->
-                    <div class="CollectionPanelShell">
-                    <table border="0" class="CollectionResourceAlign"><tr><td>
-                    <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col')) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
-                    </tr></table>
-                    <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
-                    <?php hook("relatedresourceaddlink");?>
-                    </div>
-                    <?php
-                    }
-                }
-                ?>
-            <div class="clearerleft"> </div>
-            <?php
-            } #end of display loop by resource extension
-        ?>
-        </div>
-        </div>
-        </div>
-        </div>
-        <?php
-        } #end of IF sorted relations
-	elseif($sort_relations_by_restype)
-        {
-        ?> 
-        <!--Panel for related resources-->
-        <div class="RecordBox">
-        <div class="RecordPanel">  
-        <div id="RelatedResources">
-        <div class="RecordResouce">
-        <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
-        <?php
-        foreach($related_restypes as $rtype)
-            {
-            if(in_array($rtype,$relatedtypes_shown))
-                {
-                // Don't show this type again.
-                continue;
-                }
-            $restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype), "", "schema");
-            $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
-            ?>
-            <div class="Title"><?php echo str_replace_formatted_placeholder("%restype%", $restypename, $lang["relatedresources-restype"]); ?></div>
-            <?php
-            # loop and display the results by file extension
-            for ($n=0;$n<count($result);$n++)			
-                {
-                if ($result[$n]["resource_type"]==$rtype)
-                    {
-                    $rref=$result[$n]["ref"];
-                    $title=$result[$n]["field".$view_title_field];
-                    $access=get_resource_access($rref);
-                    $use_watermark=check_use_watermark();
-                    # swap title fields if necessary
-                    if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-                        {
-                        if ($result[$n]['resource_type']==$metadata_template_resource_type)
-                            {
-                            $title=$result[$n]["field".$metadata_template_title_field];
-                            }
-                        }
-                    ?>
-                    <!--Resource Panel-->
-                    <div class="CollectionPanelShell">
-                    <table border="0" class="CollectionResourceAlign"><tr><td>
-                    <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col')) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
-                    </tr></table>
-                    <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
-                    <?php hook("relatedresourceaddlink");?>
-                    </div>
-                    <?php
-                    }
-                }
-            ?>
-            <div class="clearerleft"> </div>
-            <?php 
-            } #end of display loop by resource extension
-        ?>
-        </div>
-        </div>
-        </div>
-        </div>
-        <?php
-        } #end of IF sorted relations
-        # -------- Related Resources (Default)
-	else { 
-		 ?><!--Panel for related resources-->
-		<div class="RecordBox">
-		<div class="RecordPanel">  
-         <div id="RelatedResources">
-		<div class="RecordResouce">
-		<div class="Title"><?php echo $lang["relatedresources"]?></div>
-        <a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
-        <div class="clearerleft"> </div>
-		<?php
-    	# loop and display the results
-    	for ($n=0;$n<count($result);$n++)            
-        	{
-			if(in_array($result[$n]["resource_type"],$relatedtypes_shown))
-				{
-				// Don't show this type again.
-				continue;
-				}
-        	$rref=$result[$n]["ref"];
-			$title=$result[$n]["field".$view_title_field];
-			$access=get_resource_access($rref);
-			$use_watermark=check_use_watermark();
-			# swap title fields if necessary
+    $relatedcontext = [
+        "ref" => $ref,
+        "k" => $k,
+        "userref" => $userref,
+        "internal_share_access" => $internal_share_access,
+        "relatedresources" => $relatedresources,
+        "related_resources_shown" => $related_resources_shown,
+        "related_restypes" => $related_restypes,
+        "relatedtypes_shown" => $relatedtypes_shown,  
+        "edit_access" => $edit_access,         
+        "urlparams" => $urlparams,        
+        ];
+        
+    display_related_resources($relatedcontext);
+    }
 
-			if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-				{
-				if ($result[$n]["resource_type"]==$metadata_template_resource_type)
-					{
-					$title=$result[$n]["field".$metadata_template_title_field];
-					}	
-				}	
-	
-			global $related_resource_preview_size;
-			?>
-        	<!--Resource Panel-->
-        	<div class="CollectionPanelShell">
-            <table border="0" class="CollectionResourceAlign"><tr><td>
-            <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $related_resource_preview_size)) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" /><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
-            </tr></table>
-            <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
-				<?php hook("relatedresourceaddlink");?>       
-       </div>
-        <?php        
+if ($show_related_themes==true )
+    {
+    // Public/featured collections
+    $result=get_themes_by_resource($ref);
+    if (count($result)>0) 
+        {
+        ?><!--Panel for related themes / collections -->
+        <div class="RecordBox">
+            <div class="RecordPanel">  
+                <div id="CollectionsThemes">
+                    <div class="RecordResource BasicsBox nopadding">
+                        <div class="Title"><?php echo $lang["collectionsthemes"]?></div>
+                        <?php
+                            for ($n=0;$n<count($result);$n++)
+                                {
+                                $url = generateURL("{$baseurl}/pages/search.php", array("search" => "!collection{$result[$n]["ref"]}"));
+
+                                $path = $result[$n]["path"];
+                                if(!$collection_public_hide_owner)
+                                    {
+                                    $col_name = i18n_get_translated($result[$n]["name"]);
+                                    // legacy thing: we add the fullname right before the collection name in the path.
+                                    $path = str_replace($col_name, htmlspecialchars($result[$n]["fullname"]) . " / {$col_name}", $path);
+                                    }
+                                $path = sprintf("%s %s", LINK_CARET, htmlspecialchars($path));
+                                ?>
+                                <a href="<?php echo $url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $path; ?></a><br>
+                                <?php
+                                }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div><?php
         }
+    } 
+
+if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access))
+    {
     ?>
+    <!--Panel for search for similar resources-->
+    <div class="RecordBox">
+    <div class="RecordPanel"> 
+    <div id="SearchSimilar">
+
+    <div class="RecordResource">
+    <div class="Title"><?php echo $lang["searchforsimilarresources"]?></div>
+
+    <script type="text/javascript">
+    function <?php echo $context ?>UpdateFSResultCount()
+        {
+        // set the target of the form to be the result count iframe and submit
+
+        // some pages are erroneously calling this function because it exists in unexpected
+        // places due to dynamic page loading. So only do it if it seems likely to work.
+        if(jQuery('#<?php echo $context ?>findsimilar').length > 0)
+            {
+            document.getElementById("<?php echo $context ?>findsimilar").target="<?php echo $context ?>resultcount";
+            document.getElementById("<?php echo $context ?>countonly").value="yes";
+            document.getElementById("<?php echo $context ?>findsimilar").submit();
+            document.getElementById("<?php echo $context ?>findsimilar").target="";
+            document.getElementById("<?php echo $context ?>countonly").value="";
+            }
+        }
+    </script>
+
+    <form method="post" action="<?php echo $baseurl ?>/pages/find_similar.php?context=<?php echo $context ?>" id="<?php echo $context ?>findsimilar">
+    <input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]?>">
+    <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
+    <?php
+    generateFormToken("{$context}findsimilar");
+
+    $keywords=array_values(array_unique(get_resource_top_keywords($ref,50)));
+    if (count($keywords)!=0)
+        {
+        for ($n=0;$n<count($keywords);$n++)
+            {
+            ?>
+            <div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n  ?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
+            onClick="<?php echo $context ?>UpdateFSResultCount();"><label class="customFieldLabel" for="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>"><?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+            <?php
+            }        
+        ?>
+        <div class="clearerleft"> </div>
+        <br />
+        <input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
+        <iframe src="<?php echo $baseurl ?>/pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
+        </form>
+        <?php
+        }
+        
+    else
+        {
+        echo $lang["nosimilarresources"];	
+        }
+        ?>
+
+    <div class="clearerleft"> </div>
     </div>
     </div>
     </div>
-    
-    </div><?php
-		}# end related resources display
-	} 
-	# -------- End Related Resources
-	
-	 } # end of related resources block that requires search permissions
 
-if ($show_related_themes==true ){
-# -------- Public Collections / Themes
-$result=get_themes_by_resource($ref);
-if (count($result)>0) 
-	{
-	?><!--Panel for related themes / collections -->
-	<div class="RecordBox">
-	<div class="RecordPanel">  
-	<div id="CollectionsThemes">
-	<div class="RecordResouce BasicsBox nopadding">
-	<div class="Title"><?php echo $lang["collectionsthemes"]?></div>
-
-	<?php
-		for ($n=0;$n<count($result);$n++)			
-			{
-            $url = generateURL("{$baseurl}/pages/search.php", array("search" => "!collection{$result[$n]["ref"]}"));
-
-            $path = $result[$n]["path"];
-            if(!$collection_public_hide_owner)
-                {
-                $col_name = i18n_get_translated($result[$n]["name"]);
-                // legacy thing: we add the fullname right before the collection name in the path.
-                $path = str_replace($col_name, htmlspecialchars($result[$n]["fullname"]) . " / {$col_name}", $path);
-                }
-            $path = sprintf("%s %s", LINK_CARET, htmlspecialchars($path));
-			?>
-            <a href="<?php echo $url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $path; ?></a><br>
-			<?php
-			}
-		?>
-	
-	</div>
-	</div>
-	</div>
-	
-	</div><?php
-	}} 
-
-if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access)) { ?>
-<!--Panel for search for similar resources-->
-<div class="RecordBox">
-<div class="RecordPanel"> 
-<div id="SearchSimilar">
-
-<div class="RecordResouce">
-<div class="Title"><?php echo $lang["searchforsimilarresources"]?></div>
-
-<script type="text/javascript">
-function <?php echo $context ?>UpdateFSResultCount()
-	{
-	// set the target of the form to be the result count iframe and submit
-
-	// some pages are erroneously calling this function because it exists in unexpected
-	// places due to dynamic page loading. So only do it if it seems likely to work.
-	if(jQuery('#<?php echo $context ?>findsimilar').length > 0)
-		{
-		document.getElementById("<?php echo $context ?>findsimilar").target="<?php echo $context ?>resultcount";
-		document.getElementById("<?php echo $context ?>countonly").value="yes";
-		document.getElementById("<?php echo $context ?>findsimilar").submit();
-		document.getElementById("<?php echo $context ?>findsimilar").target="";
-		document.getElementById("<?php echo $context ?>countonly").value="";
-		}
-	}
-</script>
-
-<form method="post" action="<?php echo $baseurl ?>/pages/find_similar.php?context=<?php echo $context ?>" id="<?php echo $context ?>findsimilar">
-<input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]?>">
-<input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
-<?php
-generateFormToken("{$context}findsimilar");
-
-$keywords=array_values(array_unique(get_resource_top_keywords($ref,50)));
-if (count($keywords)!=0)
-	{
-		for ($n=0;$n<count($keywords);$n++)
-			{
-			?>
-			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n  ?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-			onClick="<?php echo $context ?>UpdateFSResultCount();"><label class="customFieldLabel" for="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>"><?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
-			<?php
-			}
-	
-		?>
-		<div class="clearerleft"> </div>
-		<br />
-		<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
-		<iframe src="<?php echo $baseurl ?>/pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
-		</form>
-		<?php
-	}
-	
-else
-	{
-	echo $lang["nosimilarresources"];	
-	}
-	?>
-
-<div class="clearerleft"> </div>
-</div>
-</div>
-</div>
-
-</div>
-<?php 
-	hook("afterviewfindsimilar");
-}
+    </div>
+    <?php 
+    hook("afterviewfindsimilar");
+    }
 
 if($annotate_enabled)
     {
