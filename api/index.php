@@ -73,7 +73,14 @@ if($function != "login")
         $validuser = setup_user(get_user(get_user_by_username($user)));
         if(!$validuser)
             {
-            ajax_permission_denied();
+            ajax_send_response(
+                401,
+                ['error' => [
+                    'status' => 401,
+                    'title'  => $GLOBALS['lang']['unauthorized'],
+                    'detail' => $GLOBALS['lang']['error-permissiondenied']
+                ]]
+            );
             }
         }
     }
