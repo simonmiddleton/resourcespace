@@ -521,11 +521,6 @@ parameters:
 			path: pages/team/team_analytics.php
 
 		-
-			message: "#^Function getvalescaped not found\\.$#"
-			count: 2
-			path: pages/test_access_key.php
-
-		-
 			message: "#^Result of function validate_html \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/tools/check_html.php
@@ -534,21 +529,6 @@ parameters:
 			message: "#^Result of function validate_html \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/tools/check_text.php
-
-		-
-			message: "#^Function sql_array not found\\.$#"
-			count: 1
-			path: pages/tools/fix_bad_update_archive_status.php
-
-		-
-			message: "#^Function sql_query not found\\.$#"
-			count: 1
-			path: pages/tools/fix_bad_update_archive_status.php
-
-		-
-			message: "#^Function sql_query not found\\.$#"
-			count: 4
-			path: pages/tools/fixutf8.php
 
 		-
 			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
@@ -789,46 +769,6 @@ parameters:
 			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
 			count: 1
 			path: plugins/vimeo_publish/include/vimeo_publish_functions.php
-
-		-
-			message: "#^Function add_action not found\\.$#"
-			count: 1
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
-
-		-
-			message: "#^Function add_settings_field not found\\.$#"
-			count: 2
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
-
-		-
-			message: "#^Function get_option not found\\.$#"
-			count: 2
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
-
-		-
-			message: "#^Function register_setting not found\\.$#"
-			count: 2
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/admin.php
-
-		-
-			message: "#^Function add_action not found\\.$#"
-			count: 1
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
-
-		-
-			message: "#^Function get_option not found\\.$#"
-			count: 2
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
-
-		-
-			message: "#^Function is_admin not found\\.$#"
-			count: 1
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
-
-		-
-			message: "#^Function wp_get_current_user not found\\.$#"
-			count: 1
-			path: plugins/wordpress_sso/wordpress_plugin/resourcespace-sso/resourcespace-sso.php
 
 		-
 			message: "#^Caught class Google_ServiceException not found\\.$#"
