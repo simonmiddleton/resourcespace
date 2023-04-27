@@ -66,11 +66,6 @@ parameters:
 			path: include/database_functions.php
 
 		-
-			message: "#^Function show_pagetime\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$attachments$#"
 			count: 1
 			path: include/general_functions.php
@@ -361,11 +356,6 @@ parameters:
 			path: pages/collection_feedback.php
 
 		-
-			message: "#^Result of function email_collection_request \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/collection_request.php
-
-		-
 			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
 			count: 4
 			path: pages/collection_set_category.php
@@ -374,11 +364,6 @@ parameters:
 			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
 			count: 2
 			path: pages/collection_share.php
-
-		-
-			message: "#^Result of function get_saved_searches \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/collections.php
 
 		-
 			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
@@ -411,11 +396,6 @@ parameters:
 			path: pages/metadata_download.php
 
 		-
-			message: "#^Result of function remove_from_collection_link \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/preview.php
-
-		-
 			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/resource_email.php
@@ -429,11 +409,6 @@ parameters:
 			message: "#^Result of function render_upload_here_button \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/search.php
-
-		-
-			message: "#^Result of function remove_from_collection_link \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/search_views/resource_tools.php
 
 		-
 			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
@@ -456,11 +431,6 @@ parameters:
 			path: pages/tools/staticsync.php
 
 		-
-			message: "#^Function update_preview invoked with 1 parameter, 4 required\\.$#"
-			count: 2
-			path: pages/tools/update_previews.php
-
-		-
 			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
 			count: 1
 			path: pages/upload_batch.php
@@ -474,11 +444,6 @@ parameters:
 			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/upload_batch.php
-
-		-
-			message: "#^Result of function remove_from_collection_link \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/view.php
 
 		-
 			message: "#^Undefined variable\\: \\$original_download_name$#"
@@ -534,11 +499,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$flagpath$#"
 			count: 2
 			path: plugins/csv_upload/include/csv_functions.php
-
-		-
-			message: "#^Result of function display_video_subtitles \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/embedvideo/hooks/view.php
 
 		-
 			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"
@@ -619,11 +579,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
 			count: 1
 			path: plugins/simplesaml/include/simplesaml_functions.php
-
-		-
-			message: "#^Result of function generateFormToken \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/transform/pages/crop.php
 
 		-
 			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"

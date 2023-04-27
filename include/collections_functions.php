@@ -2435,9 +2435,8 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
  * Returns all saved searches in a collection
  *
  * @param  integer $collection
- * @return void
  */
-function get_saved_searches($collection)
+function get_saved_searches($collection): array
 	{
 	return ps_query("select " . columns_in("collection_savedsearch") . " from collection_savedsearch where collection= ? order by created", ['i', $collection]);
 	}
@@ -3464,9 +3463,8 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
  * @param  string   $class
  * @param  string   $onclick  Additional onclick code to call before returning false.
  * 
- * @return void
  */
-function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false)
+function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false): string
     {
     # Generates a HTML link for removing a resource from a collection
     # The collection is referred to as the basket when in basket mode
