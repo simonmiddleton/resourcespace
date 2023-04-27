@@ -28,9 +28,8 @@ function get_api_key($user)
  * @param  string $querystring The query being passed to the API
  * @param  string $sign The signature to check
  * @param  string $authmode The type of key being provided (user key or session key)
- * @return void
  */
-function check_api_key($username,$querystring,$sign,$authmode="userkey")
+function check_api_key($username,$querystring,$sign,$authmode="userkey"): bool
     {
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}
@@ -68,7 +67,7 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey")
  *
  * @param  string $query The query string passed to the API
  * @param  boolean $pretty Should the JSON encoded result be 'pretty' i.e. formatted for reading?
- * @return void
+ * @return bool|string
  */
 function execute_api_call($query,$pretty=false)
     {

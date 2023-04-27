@@ -141,6 +141,3 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
 <?php
 
 include dirname(__FILE__)."/../../../include/footer.php";
-
-?>
-

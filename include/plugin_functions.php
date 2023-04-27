@@ -67,10 +67,9 @@ function activate_plugin($name)
  * in the database.
  *
  * @param string $name Name of plugin to be deativated.
- * @return bool Returns true if plugin is deactivated.
  * @see activate_plugin
  */
-function deactivate_plugin($name)
+function deactivate_plugin($name): void
     {
     $inst_version = ps_value("SELECT inst_version AS value FROM plugins WHERE name = ?", array("s", $name), '');
   

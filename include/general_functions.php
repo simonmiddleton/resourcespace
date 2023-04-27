@@ -2831,7 +2831,7 @@ function get_editable_states($userref)
  * Returns true if $html is valid HTML, otherwise an error string describing the problem.
  *
  * @param  mixed $html
- * @return void
+ * @return bool|string
  */
 function validate_html($html)
     {

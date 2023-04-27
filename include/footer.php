@@ -756,6 +756,6 @@ if (getval("ajax","") == "")
 
 	</body>
 	</html><?php
-	} // end if !ajax ?>
+	} // end if !ajax
 	
 	

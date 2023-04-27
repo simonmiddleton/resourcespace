@@ -18,5 +18,5 @@ foreach ($user_userlists as $user_userlist){?>
 	<option id="<?php echo $user_userlist['ref']?>" value="<?php echo $user_userlist['userlist_string']?>" <?php if ($userstring==$user_userlist['userlist_string']){?>selected<?php } ?>><?php echo $user_userlist['userlist_name']?></option>
 <?php } 
  
-} ?>
+}
 

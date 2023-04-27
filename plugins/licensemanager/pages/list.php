@@ -150,6 +150,3 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 <?php
 
 include dirname(__FILE__)."/../../../include/footer.php";
-
-?>
-
