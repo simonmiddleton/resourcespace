@@ -3360,30 +3360,43 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
         }
 
     $r=ps_query("SELECT " . columns_in("resource_type","rt") . ",
-                        t.name as tab_name,
-                        GROUP_CONCAT(rtfrt.resource_type_field) as resource_type_fields
+                        t.name AS tab_name,
+                        rtfrt.resource_type_field AS resource_type_field
                    FROM resource_type rt
               LEFT JOIN tab t ON t.ref=rt.tab
               LEFT JOIN resource_type_field_resource_type rtfrt
                      ON rtfrt.resource_type=rt.ref
                         $sql
-               GROUP BY rt.ref
                ORDER BY order_by,
-                        rt.ref",
+                        rt.ref,
+                        rtfrt.resource_type_field",
                         $parameters,
                         "schema");
 
-    $return=array();
     # Check permissions and Translate names (if $translate==true)
+    $return=[];
+    //$processed=[];
     for ($n=0;$n<count($r);$n++)
         {
         if (!checkperm('T' . $r[$n]['ref']) || $ignore_access)
             {
-            if ($translate==true) {$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");} # Translate name
-            $return[]=$r[$n]; # Add to return array
+            if(!isset($return[$r[$n]["ref"]]))
+                {
+                if ($translate==true)
+                    {
+                    # Translate name
+                    $r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");
+                    }
+                $return[$r[$n]["ref"]]=$r[$n]; # Add to return array
+                // Create an array to hold associated resource_type_field, no need to keep the current row's field ID
+                $return[$r[$n]["ref"]]["resource_type_fields"] = [];
+                unset($return[$r[$n]["ref"]]["resource_type_field"]);
+                }
+            // Add associated fields to the resource_types array
+            $return[$r[$n]["ref"]]["resource_type_fields"][] = (int)$r[$n]["resource_type_field"];
             }
         }
-    return $return;
+    return array_values($return);
     }
 
 function get_resource_top_keywords($resource,$count)
@@ -7742,15 +7755,16 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     if ($field_order_by != "ref")
         {
         // Default order by is not being used so check order by columns supplied are valid for the table
-        $fields = array_column(ps_query('DESCRIBE resource_type_field'), 'Field');
+        $fields = columns_in("resource_type_field",null,null,true);
+        $fields[] = "tab_name";
         $order_by_cols = explode(',', $field_order_by);
         $valid_order_by_cols = array();
         foreach ($order_by_cols as $col)
             {
-            if($col == "resource_type" && strtolower($field_sort)=="asc")
+            if($col == "resource_type")
                 {
                 // Now multiple mapping and resource_type no longer used. Need to reverse order and show global fields first
-                $valid_order_by_cols[] = "global DESC";
+                $valid_order_by_cols[] = "global " . $field_sort . ", resource_types";
                 }
 
             elseif (in_array(trim($col),  $fields))
@@ -7779,12 +7793,13 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         {
         $restypes = array_filter(explode(",",$restypes),"is_int_loose"); 
         }   
-    $restypeselect = ", GROUP_CONCAT(rtfrt.resource_type) resource_types ";
+    $restypeselect = ",t.name AS tab_name, GROUP_CONCAT(rtfrt.resource_type ORDER BY rtfrt.resource_type) resource_types";
     $joins[] = " LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = rtf.ref";
+    $joins[] = " LEFT JOIN tab t ON t.ref=rtf.tab";
    
     foreach($restypes as $restype)
         {
-        if($restype !== 0)
+        if($restype === 0)
             {
             // Global field is a special case
             $restypeconditions[]  = "global=1"; 

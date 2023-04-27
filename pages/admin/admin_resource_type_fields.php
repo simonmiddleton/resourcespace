@@ -47,7 +47,6 @@ $url=generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_p
 $common_rs_url_params = [
     'backurl' => $url,
 ];
-
 if (getval("newfield","")!="" && enforcePostRequest(false))
     {
     $newfieldname = getval("newfield","");
@@ -106,7 +105,6 @@ function addColumnHeader($orderName, $labelKey)
     echo "<p>" . text("introtext") . "</p>";
     }
 
-    debug("BANG ". print_r($restypesfilter,true));
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
 $resource_types=get_resource_types();
 $arr_restypes=array_column($resource_types,"name","ref");
@@ -200,7 +198,7 @@ if (!hook('replacenamecolumnheader'))
     addColumnHeader('name', 'property-shorthand_name');
     }
 addColumnHeader('type', 'property-field_type');
-addColumnHeader('type', 'resourcetypes');
+addColumnHeader('resource_type', 'resourcetypes');
 if (!hook('replacetabnamecolumnheader'))
     {
     addColumnHeader('tab_name', 'property-tab_name');

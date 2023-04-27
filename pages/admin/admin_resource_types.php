@@ -110,191 +110,183 @@ addColumnHeader('fieldcount', 'admin_resource_type_field_count');
 </tr>
 <tbody id="resource_type_table_body">
 <?php
-
-
-
 for ($n=0;$n<count($resource_types);$n++)
-	{
-	?>
-	<tr class="resource_type_row" id="restype_sort_<?php echo $resource_types[$n]["ref"];?>" >
-		<td>
-			<?php echo $resource_types[$n]["ref"];?>
-		</td>	
-		<td>
-			<div class="ListTitle">
-				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-				    <?php echo htmlspecialchars(i18n_get_translated($resource_types[$n]["name"]));?>
-				    </a>
-				</a>
-			</div>
-		</td>
-		<td>
-			<div class="ListTitle">
-				<?php
-				if($resource_types[$n]["resource_type_fields"]!="")
-				    {
-                    $fieldcount = substr_count($resource_types[$n]["resource_type_fields"],",")+1;
-				    ?>
-				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-				    <?php echo $fieldcount ?>
-				    </a>
-				    <?php
-				    }
-				else
-				    {
-				    echo "0";  
-				    }?>
-			</div>
-		</td>
-		
-		<td>
-			<div class="ListTools">
-				<?php 
-				if($restype_order_by=="order_by")
-				     {
-				     ?>		
-				     <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($resource_types)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move down</a>
-				     <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move up	</a>
-				     <?php
-				     }
-				    ?>
-				<a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
+    {
+    ?>
+    <tr class="resource_type_row" id="restype_sort_<?php echo $resource_types[$n]["ref"];?>" >
+        <td>
+            <?php echo $resource_types[$n]["ref"];?>
+        </td>	
+        <td>
+            <div class="ListTitle">
+                    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
+                    <?php echo htmlspecialchars(i18n_get_translated($resource_types[$n]["name"]));?>
+                    </a>
+                </a>
+            </div>
+        </td>
+        <td>
+            <div class="ListTitle">
+                <?php
+                if($resource_types[$n]["resource_type_fields"]!="")
+                    {
+                    $fieldcount = count($resource_types[$n]["resource_type_fields"]);
+                    ?>
+                    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
+                    <?php echo $fieldcount ?>
+                    </a>
+                    <?php
+                    }
+                else
+                    {
+                    echo "0";
+                    }?>
+            </div>
+        </td>
+        <td>
+            <div class="ListTools">
+                <?php 
+                if($restype_order_by=="order_by")
+                        {
+                        ?>		
+                        <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($resource_types)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move down</a>
+                        <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move up	</a>
+                        <?php
+                        }
+                    ?>
+                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
 
-				<a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
-				
-			</div>
-		</td>
-	</tr>
-	<?php
-	}
+                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
+                
+            </div>
+        </td>
+    </tr>
+    <?php
+    }
 ?>
 </tbody>
 </table>
 </div>
 </div>
 
-
-
-
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php"  onSubmit="return CentralSpacePost(this,true);" >
-	   <?php generateFormToken("admin_resource_types"); ?>
-    	<div class="Question">
-			<label for="newtype"><?php echo $lang["admin_resource_type_create"]?></label>
-			<div class="tickset">
-			 <div class="Inline"><input type=text name="newtype" id="newtype" maxlength="100" class="shrtwidth" /></div>
-			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
-			</div>
-			<div class="clearerleft"> </div>
-		</div>
-		<input type="hidden" name="save" id="save" value="yes"/>
-	</form>
+        <?php generateFormToken("admin_resource_types"); ?>
+        <div class="Question">
+            <label for="newtype"><?php echo $lang["admin_resource_type_create"]?></label>
+            <div class="tickset">
+                <div class="Inline"><input type=text name="newtype" id="newtype" maxlength="100" class="shrtwidth" /></div>
+                <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
+            </div>
+            <div class="clearerleft"> </div>
+        </div>
+        <input type="hidden" name="save" id="save" value="yes"/>
+    </form>
 </div>
 
 <script>
   
 function ReorderResourceTypes(idsInOrder)
-	{
-	var newOrder = [];
-	jQuery.each(idsInOrder, function() {
-		newOrder.push(this.substring(13));
-		}); 
-	
-	jQuery.ajax({
-	  type: 'POST',
-	  url: '<?php echo $baseurl_short?>pages/admin/ajax/update_resource_type_order.php?reorder=true',
+    {
+    var newOrder = [];
+    jQuery.each(idsInOrder, function() {
+        newOrder.push(this.substring(13));
+        }); 
+
+    jQuery.ajax({
+        type: 'POST',
+        url: '<?php echo $baseurl_short?>pages/admin/ajax/update_resource_type_order.php?reorder=true',
     data: {
         order:JSON.stringify(newOrder),
         <?php echo generateAjaxToken('ReorderResourceTypes'); ?>
     },
-	  success: function() {
-		
-		//jQuery('.movelink').show();
-	  	jQuery('.movedownlink:last').prop("disabled",true);
-		jQuery('.moveuplink:first').prop("disabled",true);
-	  	jQuery('.movedownlink:not(:last)').prop("disabled",false);
-		jQuery('.moveuplink:not(:first)').prop("disabled",false);
-		//$( "input:not(:checked) + span" )
-		//alert("SUCCESS");
-		//var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
-		//var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
-		//if ((ref==null)&&(results!== null)&&('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1])) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
-	     }
-	  });		
-	}
+        success: function() {
+        
+        //jQuery('.movelink').show();
+        jQuery('.movedownlink:last').prop("disabled",true);
+        jQuery('.moveuplink:first').prop("disabled",true);
+        jQuery('.movedownlink:not(:last)').prop("disabled",false);
+        jQuery('.moveuplink:not(:first)').prop("disabled",false);
+        //$( "input:not(:checked) + span" )
+        //alert("SUCCESS");
+        //var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
+        //var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
+        //if ((ref==null)&&(results!== null)&&('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1])) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
+            }
+        });
+    }
 
 function enableRestypesort(){
-	var fixHelperModified = function(e, tr) {
-		  var $originals = tr.children();
-		  var $helper = tr.clone();
-		  $helper.children().each(function(index)
-		  {
-			jQuery(this).width($originals.eq(index).width())
-		  });
-		  return $helper;
-	  };
+    var fixHelperModified = function(e, tr) {
+            var $originals = tr.children();
+            var $helper = tr.clone();
+            $helper.children().each(function(index)
+            {
+            jQuery(this).width($originals.eq(index).width())
+            });
+            return $helper;
+        };
 
-	  //jQuery('.resource_type_row').draggable({ axis: "y" });
-	  //jQuery('.resource_type_row').droppable();
-	  
-	  jQuery('#resource_type_table_body').sortable({
-			  items: ".resource_type_row",
-			  axis: "y",
-			  cursor: 'move',
-			  opacity: 0.6, 
-			  stop: function(event, ui) {
-			  		//alert("HERE");
-				  <?php
-				  if($allow_reorder)
-					{
-					?>
-					var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
-					//alert(idsInOrder);
-					ReorderResourceTypes(idsInOrder);
-					<?php
-					}
-				else
-					{
-					$errormessage=$lang["admin_resource_type_reorder_information_tab_order"];
-					?>
-					jQuery('#PageError').html("<?php echo $errormessage ?>").show();
-					jQuery( "#resource_type_table_body" ).sortable( "cancel" );
-					<?php
-					}
-					?>
+        //jQuery('.resource_type_row').draggable({ axis: "y" });
+        //jQuery('.resource_type_row').droppable();
+        
+        jQuery('#resource_type_table_body').sortable({
+                items: ".resource_type_row",
+                axis: "y",
+                cursor: 'move',
+                opacity: 0.6, 
+                stop: function(event, ui) {
+                    //alert("HERE");
+                    <?php
+                    if($allow_reorder)
+                    {
+                    ?>
+                    var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
+                    //alert(idsInOrder);
+                    ReorderResourceTypes(idsInOrder);
+                    <?php
+                    }
+                else
+                    {
+                    $errormessage=$lang["admin_resource_type_reorder_information_tab_order"];
+                    ?>
+                    jQuery('#PageError').html("<?php echo $errormessage ?>").show();
+                    jQuery( "#resource_type_table_body" ).sortable( "cancel" );
+                    <?php
+                    }
+                    ?>
 
-				  
-				  },
-			  helper: fixHelperModified
-			 
-			}).disableSelection();
+                    
+                    },
+                helper: fixHelperModified
+                
+            }).disableSelection();
 	}
 	
 enableRestypesort();
 
 jQuery(".moveuplink").click(function(e) {
     if (jQuery(this).prop('disabled')) {
-	      e.preventDefault();
-	      e.stopImmediatePropagation();
-	  }
-      jQuery(this).parents(".resource_type_row").insertBefore(jQuery(this).parents(".resource_type_row").prev());
-      var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
-      ReorderResourceTypes(idsInOrder);
-		
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+        jQuery(this).parents(".resource_type_row").insertBefore(jQuery(this).parents(".resource_type_row").prev());
+        var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
+        ReorderResourceTypes(idsInOrder);
+        
     });
    
 jQuery(".movedownlink").click(function(e) {
-   if (jQuery(this).prop('disabled')) {
-	      e.preventDefault();
-	      e.stopImmediatePropagation();
-	  }
-      jQuery(this).parents(".resource_type_row").insertAfter(jQuery(this).parents(".resource_type_row").next());
-      var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
-      ReorderResourceTypes(idsInOrder);
+    if (jQuery(this).prop('disabled')) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+        jQuery(this).parents(".resource_type_row").insertAfter(jQuery(this).parents(".resource_type_row").next());
+        var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
+        ReorderResourceTypes(idsInOrder);
     });
 	
 </script>
 
 <?php
 include "../../include/footer.php";
-?>
