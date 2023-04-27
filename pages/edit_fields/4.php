@@ -111,5 +111,5 @@ else{
 ><option value=""><?php echo $lang["minute-abbreviated"]?></option>
 <?php for ($m=0;$m<=59;$m++) {?><option <?php if($m==$di){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
-<?php } ?>
+<?php }
 

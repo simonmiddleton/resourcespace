@@ -333,10 +333,9 @@ function check_view_display_condition($fields,$n,$fields_all)
 * updates the value of fieldx field further to a metadata field value update
 * 
 * @param integer $metadata_field_ref - metadata field ref
-
-* @return array
+*
 */
-function update_fieldx(int $metadata_field_ref)
+function update_fieldx(int $metadata_field_ref): void
     {
     global $NODE_FIELDS;
 

@@ -3195,3 +3195,4 @@ $lang["error_invalid_revert_option"]        = "The previously stored value '%%VA
 $lang["error_invalid_revert_date"]          = "The previously stored date '%%VALUE%%' is invalid. Please update the resource manually if required.";
 $lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
 $lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
+$lang["related_resource_create"]            = "Create new related resource";

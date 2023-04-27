@@ -581,7 +581,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
            $languages, $language, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
-           $userref;
+           $userref, $userresourcedefaults;
 
     hook("befsaveresourcedata", "", array($ref));
     // Ability to avoid editing conflicts by checking checksums.
@@ -978,6 +978,29 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
                 } // End of if not a fixed list field
 
+            // Determine whether a required field has a default for the user
+            $field_has_default_for_user=false;
+            if($userresourcedefaults != '')
+                {
+                foreach(explode(';', $userresourcedefaults) as $rule)
+                    {
+                    $rule_detail         = explode('=', trim($rule));
+                    $field_shortname     = $rule_detail[0];
+                    $field_default_value = $rule_detail[1];
+                    if($field_shortname  == $fields[$n]['name'] && $field_default_value !="") 
+                        {
+                        $field_has_default_for_user=true;
+                        break;
+                        }
+                    }
+                }
+                
+            // Populate empty field with the default if necessary
+            if($field_has_default_for_user && strlen((string) $val)==0) {
+                $val=$field_default_value;
+                $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
+            }
+
             if( $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
                 && (
@@ -987,10 +1010,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && trim(strip_leading_comma($val)) == '')
                 )
                 && (
-                    // An existing resource which is not being reviewed with an existing value (e.g. for resource default)
-                    ($ref > 0 && !($upload_review_mode && $fields[$n]['value'] != ''))
-                    // A template without an existing value
-                    || ($ref < 0 && $fields[$n]["value"] == '')
+                    // An existing resource node field with neither any nodes submitted nor a resource default
+                    ($ref > 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
+                    // An existing resource continuous field with neither an input value nor a resource default
+                    || ($ref > 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val)==0 && !$field_has_default_for_user)
+                    // A template without an existing value and no resource default
+                    || ($ref < 0 && $fields[$n]["value"] == '' && !$field_has_default_for_user)
                 )
                 // Not a metadata template
                 && !$is_template
@@ -1001,8 +1026,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 if (is_field_displayed($fields[$n]) && $field_visibility_status=="block")
                     {
                     $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
+                    continue;
                     }
-                continue;
                 }
 
             // If all good so far, then save the data

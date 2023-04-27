@@ -179,9 +179,8 @@ function redirect($url)
 		}
 	else
 		{	
-		if(strpos($url,$baseurl)!==false)
+		if(strpos($url,$baseurl)===0)
 			{
-			// exit($url);	
 			// Base url has already been added
 			header ("Location: " . $url);	
 			exit();
@@ -2292,7 +2291,7 @@ function draw_performance_footer()
     <?php if ($pagename=="collections"){?><br/><br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div style="float:left;"><?php } else { ?><div style="float:right; margin-right: 10px;"><?php } ?>
     <table class="InfoTable" style="float: right;margin-right: 10px;">
-    <tr><td>Page Load</td><td><?php show_pagetime();?></td></tr>
+    <tr><td>Page Load</td><td><?php echo show_pagetime();?></td></tr>
     <?php 
         if(isset($hook_cache_hits) && isset($hook_cache)) {         
         ?>
@@ -2832,7 +2831,7 @@ function get_editable_states($userref)
  * Returns true if $html is valid HTML, otherwise an error string describing the problem.
  *
  * @param  mixed $html
- * @return void
+ * @return bool|string
  */
 function validate_html($html)
     {
@@ -3909,16 +3908,15 @@ function get_inner_html_from_tag(string $txt, string $tag)
 /**
  * Returns the page load time until this point.
  *
- * @return string
  */
-function show_pagetime()
+function show_pagetime():string
     {
     global $pagetime_start;
     $time = microtime();
     $time = explode(' ', $time);
     $time = $time[1] + $time[0];
     $total_time = round(($time - $pagetime_start), 4);
-    echo $total_time." sec";
+    return $total_time." sec";
     }
 
 /**

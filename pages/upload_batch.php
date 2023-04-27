@@ -271,7 +271,8 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         "{$baseurl}/pages/edit.php",
         array(
             'upload_review_mode' => true,
-            'collection_add' => $collection_add
+            'collection_add' => $collection_add,
+            'redirecturl' => $redirecturl,
         ));
 
 	# Clear the user template

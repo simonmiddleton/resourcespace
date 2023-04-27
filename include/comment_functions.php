@@ -180,9 +180,8 @@ function find_root_comment($ref)
  *
  * @param  string  $text                 The input text e.g. the body of the comment
  *
- * @return void
  */
-function comments_tags_to_links($text)
+function comments_tags_to_links($text): string
     {
     global $baseurl_short;
     $text=preg_replace('/@(\S+)/s', '<a href="[BASEURLSHORT]pages/user/user_profile.php?username=$1">@$1</a>', $text);

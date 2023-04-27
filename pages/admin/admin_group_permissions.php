@@ -64,7 +64,7 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
         {
         if (!isset($perm['permission'], $perm['reverse'], $perm['checked']))
             {
-            return ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_invalid_input'])));
+            ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_invalid_input'])));
             }
 
         $permission = $perm['permission'];
@@ -430,7 +430,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
                 name="save"
                 type="button"
                 onclick="SaveCustomPermissions();"
-                value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"]); ?>&nbsp;&nbsp;">
+                value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"]); ?>&nbsp;&nbsp;">
 		</div>
 
 	</form>	

@@ -1280,6 +1280,3 @@ if($suppress_output)
 ps_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 
 clear_process_lock("staticsync");
-
-?>
-

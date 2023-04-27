@@ -38,6 +38,8 @@ $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
+$redirecturl = getval("redirecturl","");
+if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
 
 if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterms"]) || $_COOKIE["acceptedterms"] != true))
     {
@@ -85,6 +87,7 @@ $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getval("entercolname","");
 $uploadparams["k"] = $k;
+$uploadparams["redirecturl"] = $redirecturl;
 
 # Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
@@ -167,7 +170,7 @@ if ($upload_review_mode)
                 $redirectparams["promptsubmit"] = 'true';
                 }
             
-            $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
+            $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
             }
         redirect($url);
         exit();
@@ -549,6 +552,7 @@ $urlparams= array(
     "collection_add"    => $collection_add,
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
+    'redirecturl'       => $redirecturl,
 );
 
 check_order_by_in_table_joins($order_by);
@@ -762,7 +766,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
                                 
-                                $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
+                                $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; ?>',true);</script>
@@ -799,6 +803,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             $ref=copy_resource(0-$userref,$resource_type,$lang["createdfromteamcentre"]);
                             $urlparams["ref"] = $ref;
                             $hidden_collection = false;
+
+                            $relateto = getval("relateto","",true);
+                            if($relateto!="" && !upload_share_active())
+                                {
+                                // This has been added from a related resource upload link
+                                update_related_resource($relateto,$ref);
+                                }
                             // Create new collection if necessary
                             if($collection_add=="new") 
                                 {
@@ -818,15 +829,21 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     show_hide_collection($collection_add, false, $userref);
                                     }
                                 }
-                            redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
-                            exit();
+                            if($redirecturl == "")
+                                {
+                                $redirecturl = generateURL($baseurl_short . "pages/view.php",$urlparams, ["refreshcollectionframe"=>"true"]);
+                                }
+                            exit(json_encode(["redirecturl"=>$redirecturl]));
                             }
-                            if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
+                        if (!hook('redirectaftersavetemplate')) {redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     else
                         {
                         // Default
-                        if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
+                        if (!hook('redirectaftersavetemplate'))
+                            {
+                            redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            }
                         }
                     }
                 }
@@ -959,7 +976,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $save_errors=save_resource_data_multi($collection, [],$_POST);
                 if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
-                    redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
+                    redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
                     }
                 }
                 
@@ -1437,6 +1454,8 @@ hook("editbefresmetadata"); ?>
                         (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types))
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
+                        ||
+                        (checkperm("XE" . $types[$n]['ref']))
                         ||
                         (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
