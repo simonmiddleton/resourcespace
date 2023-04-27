@@ -517,8 +517,6 @@ $lang["youfoundresults"]="výsledkov"; # e.g. you found 17 resources
 $lang["youfoundresult"]="výsledok"; # e.g. you found 1 resource
 $lang["display"]="Zobraziť"; # e.g. Display: thumbnails / list
 $lang["sortorder"]="Zoradiť";
-$lang['sortorder-asc']  = 'Vzostupne';
-$lang['sortorder-desc'] = 'Zostupne';
 $lang["relevance"]="Relevantnosť";
 $lang["asadded"]="Ako bolo pridané";
 $lang["popularity"]="Popularita";
@@ -831,7 +829,6 @@ $lang["status-warning"]="UPOZORNENIE";
 $lang["status-notinstalled"]="Nie je nainštalované";
 $lang["status-never"]="Nikdy";
 $lang["softwareversion"]="? verzia"; # E.g. "Verzia PHP"
-$lang["softwarebuild"]="? zostava"; # E.g. "Zostavenie ResourceSpace"
 $lang["softwarenotfound"]="'?' nenájdené"; # ? will be replaced.
 $lang["client-encoding"]="(kódovanie klienta: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["browseruseragent"]="Používateľský agent prehliadača";
@@ -1634,10 +1631,6 @@ $lang["noupload"]="Nič nahrané";
 
 
 $lang["permissions"]="Oprávnenia";
-
-# System Setup File Editor
-$lang["configdefault-title"]="(skopírujte možnosti odtiaľto)";
-$lang["config-title"]="(POZOR, aby ste neurobili chyby v syntaxe. Ak tento súbor poškodíte, opraviť sa bude dať len na strane servera!)";
 
 # System Setup Properties Pane
 $lang["file_too_large"]="Súbor je príliš veľký";
@@ -3018,7 +3011,6 @@ $lang["mapadd-introtext"]='Približajte in premaknite pogled na zemljevidu na ob
 $lang["mapadd2-introtext"]='Modrý značkovač označuje umiestnenie zdroja, ktorý sa dá presúvať ťahaním. Zmeňte podkladovú mapu pomocou tlačidla mapy v pravom hornom rohu. Uložte mapu do súboru PNG pomocou tlačidla mapy v ľavom dolnom rohu.';
 $lang["marker"]='Značka.';
 $lang["map_configuration"]='Mapa výsledkov vyhľadávania.';
-$lang["search_map_introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["edit_map_introtext"]='Približajte in premaknite se na želeni pogled zemljevida, nato kliknite na zemljevid, da najdete označevalec lokacije vira. Shranite najnovejšo geolokacijo s klikom na gumb Shrani in nato kliknite \'Nazaj na urejanje vira ali geolokacijo zbirke\', da se vrnete. Za iskanje določene lokacije ali imena geografske značilnosti uporabite zgornji desni iskalni gumb. Spremenite osnovni zemljevid z uporabo gumba za plasti zemljevida v zgornjem desnem kotu. Zemljevid shranite v datoteko PNG z uporabo spodnjega levega gumba za zemljevid.';
 $lang["mapview"]='Map - Mapa';
 $lang["maptitle"]='Zobrazenie mapy.';
@@ -3059,7 +3051,6 @@ $lang["map_stamenterrain"]='Terén.';
 $lang["map_stamenterrainback"]='Pozadie terénu.';
 $lang["map_stamenrelief"]='Uľavenie';
 $lang["map_stamenwatercolor"]='Akvarel.';
-$lang["map_esri_group"]='ESRI - to be translated as "ESRI" as it is a proper noun and a brand name.';
 $lang["map_esristreet"]='Ulice.';
 $lang["map_esritopo"]='Topografický';
 $lang["map_esriimagery"]='Vizuálne zobrazenie (alternatively: Obrazový materiál)';
@@ -3069,7 +3060,6 @@ $lang["map_esriphysical"]='Fyzický';
 $lang["map_esriocean"]='Oceán.';
 $lang["map_esrinatgeo"]='Národná geografická.';
 $lang["map_esrigray"]='Sivá plátno.';
-$lang["map_nasagibs_group"]='NASA GIBS should remain in English as it is an acronym for "NASA Global Imagery Browse Services".';
 $lang["map_nasagibscolor"]='Modis/Terra farebné snímky.';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra Falošné Farebné Zobrazenie';
 $lang["map_nasagibsnight"]='Nočné obrazy.';

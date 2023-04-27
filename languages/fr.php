@@ -1060,16 +1060,6 @@ $lang["youfoundresource"]='ressource';
 $lang["youfoundresults"]='résultats';
 $lang["selected"]='sélectionné';
 $lang["youfoundresult"]='résultat';
-$lang["sortorder-asc"]='ASC could have different meanings depending on the context in ResourceSpace. Here are some possible translations:
-
-- If ASC is used as a file extension, it would be translated as "ASC" in French.
-- If ASC is used as an abbreviation for "Ascending" (e.g. in a dropdown menu to sort resources), it would be translated as "Croissant" in French.
-- If ASC is used as an abbreviation for a ResourceSpace plugin or feature, I would need more context to provide an accurate translation.
-
-Please let me know if you have more information about the context in which ASC is used.';
-$lang["sortorder-desc"]='Veuillez traduire : DESC
-
-This is an abbreviation commonly used in ResourceSpace to refer to the "Description" field of a resource. In French, it would be translated as "Description".';
 $lang["modified"]='Modifié.';
 $lang["resourcedownloads"]='Téléchargements de ressources.';
 $lang["filedimensions"]='Dimensions du fichier.';
@@ -1120,7 +1110,7 @@ $lang["log-a"]='Modifier l\'accès.';
 $lang["log-r"]='Métadonnées rétablies.';
 $lang["log-b"]='Créé une alternative.';
 $lang["log-y"]='Supprimé alternatif.';
-$lang["log-missinglang"]='[Type] (langue manquante)';
+$lang["log-missinglang"]='[type] (langue manquante)';
 $lang["log-adminpermissionsrequired"]='Autorisation complète d\'administration requise !';
 $lang["log-removedcustomuseraccess"]='Suppression de l\'accès personnalisé pour l\'utilisateur :';
 $lang["log-deleted_all"]='Toutes les ressources de cette collection ont été supprimées (déplacées vers l\'état %ARCHIVE).';
@@ -1181,8 +1171,6 @@ $lang["treeobjecttype-group"]='Groupe';
 $lang["groupsmart"]='Groupe (Intelligent)';
 $lang["confirmaddgroupsmart"]='Êtes-vous sûr(e) de vouloir inclure dynamiquement des membres dans ce groupe ?';
 $lang["back_to"]='Retour à %area.';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a string used in ResourceSpace or any context that I am aware of. Can you please provide more context or information about the meaning of "HH"?';
-$lang["minute-abbreviated"]='I\'m sorry, but "MM" is not a language string used in ResourceSpace. Can you please provide me with more context or information about where this string appears in the software?';
 $lang["itemstitle"]='Articles';
 $lang["treeobjecttype-field"]='Champ.';
 $lang["save-return"]='Enregistrer et retourner.';
@@ -1217,7 +1205,6 @@ $lang["status-warning"]='AVERTISSEMENT';
 $lang["status-notinstalled"]='Non installé.';
 $lang["status-never"]='Jamais.';
 $lang["softwareversion"]='Version ?';
-$lang["softwarebuild"]='Désolé, mais la chaîne de caractères fournie est incomplète. Veuillez fournir la chaîne de caractères complète à traduire.';
 $lang["softwarenotfound"]='\'?\' non trouvé.';
 $lang["client-encoding"]='(encodage-client : %encodage)';
 $lang["db-default-encoding"]='(encodage de la base de données : %encoding)';
@@ -1516,7 +1503,6 @@ $lang["google_satellite"]='Satellite Google.';
 $lang["marker"]='Marqueur';
 $lang["markers"]='Marqueurs.';
 $lang["map_configuration"]='Résultats de recherche sur la carte.';
-$lang["search_map_introtext"]='Sorry, you haven\'t provided any text to translate. Please provide the text you want me to translate.';
 $lang["mapview"]='Carte';
 $lang["maptitle"]='Vue cartographique';
 $lang["mapemptysearch"]='Aucun résultat de recherche.';
@@ -1546,7 +1532,6 @@ $lang["map_tfoutdoors"]='En plein air.';
 $lang["map_tfpioneer"]='Pionnier.';
 $lang["map_tfmobileatlas"]='Atlas mobile.';
 $lang["map_tfneighbourhood"]='Quartier';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" doesn\'t seem to be an English word or a term used in ResourceSpace. Can you please provide more context or information about the term?';
 $lang["map_hyddafull"]='Carte par défaut.';
 $lang["map_hyddabase"]='Base can have different meanings in the context of digital asset management software. Here are some possible translations:
 
@@ -1563,7 +1548,6 @@ $lang["map_stamenterrain"]='Terrain translates to "Terrain" in Français.';
 $lang["map_stamenterrainback"]='Arrière-plan du terrain.';
 $lang["map_stamenrelief"]='Soulagement';
 $lang["map_stamenwatercolor"]='Aquarelle.';
-$lang["map_esri_group"]='ESRI stands for Environmental Systems Research Institute. In French, it would be translated as "Institut de recherche des systèmes environnementaux" or "Institut de recherche sur les systèmes environnementaux". However, it is commonly referred to as ESRI in both English and French.';
 $lang["map_esristreet"]='Rues';
 $lang["map_esritopo"]='Topographique';
 $lang["map_esriimagery"]='Imagerie';
@@ -1573,7 +1557,6 @@ $lang["map_esriphysical"]='Physique';
 $lang["map_esriocean"]='Océan.';
 $lang["map_esrinatgeo"]='National Geographic: National Géographique';
 $lang["map_esrigray"]='Toile grise.';
-$lang["map_nasagibs_group"]='NASA GIBS se traduit par Système d\'informations géospatiales de la NASA.';
 $lang["map_nasagibscolor"]='Imagerie couleur Modis/Terra.';
 $lang["map_nasagibsfalsecolor"]='Imagerie en fausses couleurs Modis/Terra.';
 $lang["map_nasagibsnight"]='Imagerie nocturne.';
@@ -1787,8 +1770,6 @@ $lang["star"]='Étoile.';
 $lang["stars"]='Étoiles.';
 $lang["noupload"]='Pas de téléchargement.';
 $lang["permissions"]='Autorisations';
-$lang["configdefault-title"]='I am ready to translate, please provide the English strings that need to be translated.';
-$lang["config-title"]='(Faites ATTENTION de ne pas commettre d\'erreurs de syntaxe. Si vous cassez ce fichier, vous devez le réparer côté serveur !)';
 $lang["file_too_large"]='Fichier trop volumineux.';
 $lang["field_updated"]='Champ mis à jour.';
 $lang["zoom"]='Zoom (no translation needed as it is a brand name)';
@@ -1882,14 +1863,11 @@ $lang["editresourcetypewarning"]='Attention : changer le type de ressource suppr
 $lang["geodragmode"]='Mode de glisser-déposer';
 $lang["geodragmodearea"]='épingle de positionnement';
 $lang["geodragmodeareaselect"]='Sélectionner la zone de recherche.';
-$lang["geodragmodepan"]='pan → poêle';
 $lang["substituted_original"]='Remplacé l\'original.';
 $lang["use_original_if_size"]='Utiliser l\'original si la taille sélectionnée n\'est pas disponible ?';
 $lang["originals-available-0"]='disponible';
 $lang["originals-available-1"]='disponible';
 $lang["originals-available-2"]='disponible';
-$lang["inch-short"]='dans';
-$lang["megapixel-short"]='Désolé, je ne peux pas traduire "MP" car cela peut avoir plusieurs significations en anglais. Pouvez-vous fournir plus de contexte ou d\'informations sur ce que cela représente dans le logiciel ResourceSpace ?';
 $lang["deletedresource"]='Ressource supprimée.';
 $lang["deletedresources"]='Ressources supprimées.';
 $lang["nopreviewresources"]='Ressources sans aperçus.';
@@ -2232,10 +2210,6 @@ $lang["action-move-up"]='Déplacer vers le haut.';
 $lang["action-move-down"]='Descendre';
 $lang["action-move-to"]='Déplacer vers';
 $lang["delete_user_group_checkbox_alert_message"]='Veuillez noter que cette action supprimera également tout le texte de contenu qui était pertinent pour ce groupe d\'utilisateurs. Il y a %%RECORDSCOUNT%% enregistrements trouvés dans Gérer le contenu.';
-$lang["all__comments_flag_notification_email_body"]='Sorry, you haven\'t provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_flag_notification_email_subject"]='Sorry, you haven\'t provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_policy"]='Sorry, you haven\'t provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_removal_message"]='Sorry, you haven\'t provided any text to translate. Please provide the text you want me to translate.';
 $lang["all__emailbulk"]='[text]<br /><br />
 [text_footer] 
 
@@ -2782,7 +2756,6 @@ $lang["filter_rule_name"]='Nom de la règle de filtre.';
 $lang["filter_condition_label"]='Critères.';
 $lang["filter_criteria_all"]='TOUTES les règles doivent être respectées.';
 $lang["filter_criteria_none"]='AUCUNE des règles ne doit être respectée.';
-$lang["filter_is_in"]='Without context, "IS" could mean many things. Please provide more context or information about the specific usage of "IS" in ResourceSpace.';
 $lang["filter_is_not_in"]='N\'EST PAS';
 $lang["filter_or"]='Veuillez traduire : OR
 

@@ -653,7 +653,6 @@ $lang["status-warning"]="VAROITUS";
 $lang["status-notinstalled"]="Ei asennettu";
 $lang["status-never"]="Ei koskaan";
 $lang["softwareversion"]="? versio"; # E.g. "PHP version"
-$lang["softwarebuild"]="? ohjelmaversio"; # E.g. "ResourceSpace Build"
 $lang["softwarenotfound"]="'?' ei löydy"; # ? will be replaced.
 $lang["client-encoding"]="(asiakasohjelman merkistökoodaus: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["browseruseragent"]="Selaimen käyttäjäagentti";
@@ -1343,10 +1342,6 @@ $lang["treeobjecttype-preview_size"]="Esikatselun koko";
 
 $lang["permissions"]="Käyttöoikeudet";
 
-# System Setup File Editor
-$lang["configdefault-title"]="(kopioi ja liitä vaihtoehdot täältä)";
-$lang["config-title"]="(VARO syntaksivirheitä. Jos tämä tiedosto hajoaa, se pitää korjata palvelimella!)";
-
 # System Setup Properties Pane
 $lang["file_too_large"]="Liian suuri tiedosto";
 $lang["field_updated"]="Kenttä päivitetty";
@@ -1962,7 +1957,6 @@ $lang["map_tfoutdoors"]='Ulkoilma.';
 $lang["map_tfpioneer"]='Pioneer = Uudisasukas';
 $lang["map_tfmobileatlas"]='Mobiiliatlas.';
 $lang["map_tfneighbourhood"]='Naapurusto';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" does not seem to be an English string used in ResourceSpace. Can you please provide more context or information about where this string appears in the software?';
 $lang["map_hyddafull"]='Oletuskartta.';
 $lang["map_hyddabase"]='Perusta.';
 $lang["map_stamen_group"]='Kukkaosanen (Stamen)';
@@ -1973,7 +1967,6 @@ $lang["map_stamenterrain"]='Maasto.';
 $lang["map_stamenterrainback"]='Maaston tausta.';
 $lang["map_stamenrelief"]='Helpotus';
 $lang["map_stamenwatercolor"]='Vesiväri.';
-$lang["map_esri_group"]='ESRI does not require translation as it is a proper noun and a brand name. It stands for Environmental Systems Research Institute, Inc., a company that provides geographic information system (GIS) software, web GIS, and geodatabase management applications.';
 $lang["map_esristreet"]='Kadut';
 $lang["map_esritopo"]='Topografinen.';
 $lang["map_esriimagery"]='Kuvitus.';
@@ -1983,7 +1976,6 @@ $lang["map_esriphysical"]='Fyysinen';
 $lang["map_esriocean"]='Meri';
 $lang["map_esrinatgeo"]='Kansallinen maantiede.';
 $lang["map_esrigray"]='Harmaa kangas.';
-$lang["map_nasagibs_group"]='NASA GIBS = NASA:n yleinen kuvapalvelinjärjestelmä.';
 $lang["map_nasagibscolor"]='Modis/Terra Värikuvat';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra Väärävärikuvaus';
 $lang["map_nasagibsnight"]='Yökuvaus.';
@@ -2152,7 +2144,6 @@ $lang["all-collectiontypes"]='kokoelmat';
 $lang["resourcetypes-no_collections"]='Kaikki %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Kaikki %collectiontypes%';
 $lang["resourcetypes-collections"]='Kaikki %resurssityypit% ja kaikki %kokoelmatyypit%.';
-$lang["resourcetypes_separator"]='Sorry, I cannot translate a comma as it has no meaning on its own. It is used as a punctuation mark to separate words or phrases in a sentence.';
 $lang["hide_view_access_to_workflow_state"]='Estä pääsy työnkulun tilaan.';
 $lang["collection_share_status_warning"]='Varoitus - tällä kokoelmalla on resursseja seuraavissa tiloissa, tarkista että nämä resurssit ovat käyttäjien saavutettavissa.';
 $lang["contactadmin"]='Ota yhteyttä ylläpitäjään.';
@@ -2905,7 +2896,6 @@ $lang["filter_condition_label"]='Kriteerit.';
 $lang["filter_criteria_all"]='Kaikkien sääntöjen on täytyttävä.';
 $lang["filter_criteria_none"]='YHTÄÄN sääntöä ei saa täyttyä.';
 $lang["filter_criteria_any"]='MINKÄ TAHANSA säännöistä on täytyttävä.';
-$lang["filter_is_in"]='I\'m sorry, but "IS" is not a clear context for me to provide an accurate translation. Could you please provide more information or context about what you are referring to?';
 $lang["filter_is_not_in"]='EI OLE';
 $lang["filter_or"]='OLETAAN';
 $lang["filter_and"]='JA';

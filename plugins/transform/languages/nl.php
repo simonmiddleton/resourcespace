@@ -76,4 +76,3 @@ $lang["transform_update_preview"]='Bijwerken voorbeeldweergave.';
 $lang["transform_preset_sizes"]='Selecteer een vooraf gedefinieerde doelgrootte.';
 $lang["error_crop_invalid"]='Selecteer alstublieft een regio van de afbeelding.';
 $lang["input_formats"]='Invoerformaten';
-$lang["px"]='I\'m sorry, but "px" is not a language string and cannot be translated without context. It is an abbreviation commonly used in web design and refers to "pixels". Can you please provide more context or the full sentence where "px" is used?';

@@ -1171,8 +1171,6 @@ $lang["youfoundresource"]='zasób';
 $lang["youfoundresults"]='wyniki';
 $lang["selected"]='wybrany/wybrana/wybrane (depending on the gender and number of the noun it refers to)';
 $lang["youfoundresult"]='wynik';
-$lang["sortorder-asc"]='ASC - rosnąco (sortowanie)';
-$lang["sortorder-desc"]='OPIS';
 $lang["modified"]='Zmodyfikowany.';
 $lang["resourcedownloads"]='Pobieranie zasobów.';
 $lang["filedimensions"]='Wymiary pliku.';
@@ -1216,7 +1214,6 @@ $lang["log-a"]='Zmień dostęp.';
 $lang["log-r"]='Przywrócone metadane.';
 $lang["log-b"]='Utworzono alternatywną.';
 $lang["log-y"]='Usunięta alternatywa.';
-$lang["log-missinglang"]='Please provide more context or the full sentence where the word [type] is used, as it could have different translations depending on the context.';
 $lang["log-adminpermissionsrequired"]='Wymagane pełne uprawnienia administratora!';
 $lang["log-removedcustomuseraccess"]='Usunięto dostęp niestandardowy dla użytkownika:';
 $lang["log-deleted_all"]='Wszystkie zasoby tej kolekcji zostały usunięte (przeniesione do stanu %ARCHIVE).';
@@ -1305,7 +1302,6 @@ $lang["status-warning"]='OSTRZEŻENIE';
 $lang["status-notinstalled"]='Nie zainstalowane.';
 $lang["status-never"]='Nigdy.';
 $lang["softwareversion"]='Wersja ?';
-$lang["softwarebuild"]='I\'m sorry, but the context of the term "? Build" is unclear to me. Can you please provide more information or the full sentence where this term is used in ResourceSpace?';
 $lang["softwarenotfound"]='\'?\' nie znaleziono.';
 $lang["client-encoding"]='(kodowanie klienta: %encoding)';
 $lang["db-default-encoding"]='(kodowanie bazy danych: %encoding)';
@@ -1520,7 +1516,6 @@ $lang["google_satellite"]='Google satelita';
 $lang["marker"]='Znacznik.';
 $lang["markers"]='Znaczniki.';
 $lang["map_configuration"]='Mapa wyników wyszukiwania.';
-$lang["search_map_introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["mapview"]='Mapa';
 $lang["maptitle"]='Widok mapy.';
 $lang["mapemptysearch"]='Brak wyników wyszukiwania.';
@@ -1561,9 +1556,7 @@ $lang["map_stamenterrain"]='Termin: Teren';
 $lang["map_stamenterrainback"]='Tło terenu.';
 $lang["map_stamenrelief"]='Ulga';
 $lang["map_stamenwatercolor"]='Akwarela.';
-$lang["map_esri_group"]='ESRI - to jest skrót od Environmental Systems Research Institute, czyli firma zajmująca się tworzeniem oprogramowania GIS (Geographic Information System). W języku polskim można to przetłumaczyć jako "Instytut Badań Systemów Środowiskowych".';
 $lang["map_esristreet"]='Ulice.';
-$lang["map_esridelorme"]='I\'m sorry, but "DeLorme" is a proper noun and it should not be translated. It is the name of a company that produces mapping and GPS products.';
 $lang["map_esritopo"]='Topograficzny.';
 $lang["map_esriimagery"]='Obrazowanie';
 $lang["map_esriterrain"]='Termin: Teren';
@@ -1572,7 +1565,6 @@ $lang["map_esriphysical"]='Fizyczny';
 $lang["map_esriocean"]='Ocean - Ocean';
 $lang["map_esrinatgeo"]='National Geographic - Narod Geographic.';
 $lang["map_esrigray"]='Szary płótno.';
-$lang["map_nasagibs_group"]='NASA GIBS (Global Imagery Browse Services) - NASA Globalne Usługi Przeglądania Obrazów';
 $lang["map_nasagibscolor"]='Modis/Terra Kolorowa Obrazowanie';
 $lang["map_nasagibsfalsecolor"]='Obrazowanie w fałszywych kolorach Modis/Terra.';
 $lang["map_nasagibsnight"]='Obrazowanie nocne.';
@@ -1766,8 +1758,6 @@ $lang["star"]='Gwiazda';
 $lang["stars"]='Gwiazdy.';
 $lang["noupload"]='Brak przesyłania.';
 $lang["permissions"]='Uprawnienia.';
-$lang["configdefault-title"]='I am ready to translate, but I need the English strings to be translated. Could you please provide me with the English strings?';
-$lang["config-title"]='(UWAŻAJ, aby nie popełnić błędów składniowych. Jeśli uszkodzisz ten plik, musisz go naprawić po stronie serwera!)';
 $lang["file_too_large"]='Plik jest zbyt duży.';
 $lang["field_updated"]='Pole zaktualizowane.';
 $lang["zoom"]='Zoom';
@@ -1857,20 +1847,11 @@ $lang["editresourcetypewarning"]='Ostrzeżenie: zmiana typu zasobu spowoduje usu
 $lang["geodragmode"]='Tryb przeciągania.';
 $lang["geodragmodearea"]='pozycja pinezki';
 $lang["geodragmodeareaselect"]='wybierz obszar wyszukiwania';
-$lang["geodragmodepan"]='pan = sir / pan (depending on the context, it can mean "sir" or "pan")';
 $lang["substituted_original"]='zastąpiony oryginał';
 $lang["use_original_if_size"]='Czy użyć oryginału, jeśli wybrany rozmiar jest niedostępny?';
 $lang["originals-available-0"]='dostępny';
 $lang["originals-available-1"]='dostępny';
 $lang["originals-available-2"]='dostępny';
-$lang["inch-short"]='w ResourceSpace "in" can have different meanings depending on the context. Here are some possible translations:
-
-- w (when referring to a collection or a resource that belongs to a collection)
-- w ramach (when referring to a workflow step)
-- w polu (when referring to a metadata field)
-- w tagu (when referring to a tag)
-
-If you provide more context, I can give you a more accurate translation.';
 $lang["deletedresource"]='Usunięty zasób.';
 $lang["deletedresources"]='Usunięte zasoby.';
 $lang["nopreviewresources"]='Zasoby bez podglądów.';
@@ -2214,10 +2195,6 @@ $lang["action-move-down"]='Przenieś w dół.';
 $lang["action-move-to"]='Przenieś do';
 $lang["delete_user_group_checkbox_alert_message"]='Proszę zauważyć, że ta akcja spowoduje również usunięcie całej zawartości tekstowej, która była związana z tą grupą użytkowników. Znaleziono %%RECORDSCOUNT%% rekordów w Zarządzaniu Zawartością.';
 $lang["about__about"]='Twój tekst o firmie znajduje się tutaj.';
-$lang["all__comments_flag_notification_email_body"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_flag_notification_email_subject"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_policy"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_removal_message"]='I\'d be happy to! What would you like me to translate?';
 $lang["all__emailbulk"]='<br /><br />
 [tekst]<br /><br />
 [stopka_tekstu]';
@@ -2365,7 +2342,6 @@ $lang["terms__terms"]='Twoje warunki i zasady tutaj.';
 $lang["terms__upload_terms"]='Twoje warunki i zasady dotyczące przesyłania plików znajdują się tutaj.';
 $lang["themes__findpublic"]='Publiczne kolekcje to zbiory zasobów, które zostały udostępnione przez innych użytkowników.';
 $lang["themes__introtext"]='Polecane kolekcje to grupy zasobów wybrane przez administratorów, aby pokazać przykłady zasobów dostępnych w systemie.';
-$lang["upload__introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["user_password__introtext"]='Wprowadź swój adres e-mail, a Twoja nazwa użytkownika oraz hasło zostaną do Ciebie wysłane.';
 $lang["user_preferences__introtext"]='Wprowadź nowe hasło poniżej, aby zmienić swoje hasło.';
 $lang["user_preferences__introtext_new"]='Proszę wprowadzić hasło poniżej.';

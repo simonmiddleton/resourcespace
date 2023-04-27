@@ -889,7 +889,6 @@ $lang["status-warning"]="WARNING";
 $lang["status-notinstalled"]="Not installed";
 $lang["status-never"]="Never";
 $lang["softwareversion"]="? version"; # E.g. "PHP version"
-$lang["softwarebuild"]="? Build"; # E.g. "ResourceSpace Build"
 $lang["softwarenotfound"]="'?' not found"; # ? will be replaced.
 $lang["client-encoding"]="(client-encoding: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["db-default-encoding"] = "(database-encoding: %encoding)"; # %encoding will be replaced
@@ -1824,10 +1823,6 @@ $lang["noupload"]="No upload";
 
 
 $lang["permissions"]="Permissions";
-
-# System Setup File Editor
-$lang["configdefault-title"]="(copy and paste options from here)";
-$lang["config-title"]="(BE CAREFUL not to make syntax errors. If you break this file, you must fix server-side!)";
 
 # System Setup Properties Pane
 $lang["file_too_large"]="File too large";

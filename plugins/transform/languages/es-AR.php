@@ -10,7 +10,6 @@ $lang["transformblurb"]='Seleccione la acción requerida y luego utilice los ico
 $lang["transformblurb-original"]='Para recortar la imagen, arrastre el cursor sobre la imagen. Una vez creada, puede mover y cambiar el tamaño del cuadro de recorte. Cuando haya terminado, presione "transformar original". Opcionalmente, puede elegir un ancho y/o alto para redimensionar la imagen recortada.<br/><br/><strong>Todas las opciones a continuación pueden dejarse en blanco.</strong> Si no proporciona un ancho y alto, se utilizará el ancho y alto originales del área de recorte.';
 $lang["width"]='Nueva anchura.';
 $lang["height"]='Nueva altura.';
-$lang["px"]='I\'m sorry, but "px" is an abbreviation for "pixels" and does not require translation. It is a unit of measurement used in digital asset management software to specify the size of images or other digital resources.';
 $lang["noimagefound"]='Error: No se encontró imagen.';
 $lang["scaled"]='Escalado';
 $lang["cropped"]='Recortado';

@@ -1541,13 +1541,6 @@ $lang["archive-zip"]='ZIP的翻译为“压缩文件”。';
 $lang["archive-7z"]='7Z (7-Zip) 的简体字翻译为：7-Zip。';
 $lang["download-of-collections-not-enabled"]='集合的下载未启用。';
 $lang["archiver-utility-not-found"]='无法找到归档工具。';
-$lang["sortorder-asc"]='ASC的翻译取决于上下文，以下是几种可能的含义：
-
-1. 如果指的是ResourceSpace中的“升序排序”，则翻译为“升序”。
-2. 如果指的是ResourceSpace中的“访问控制清单”，则翻译为“访问控制清单”。
-3. 如果指的是某个组织、机构或公司的缩写，则需要根据具体情况进行翻译。
-4. 如果指的是其他含义，则需要提供更多上下文信息。';
-$lang["sortorder-desc"]='描述';
 $lang["modified"]='修改过的';
 $lang["resourcedownloads"]='资源下载';
 $lang["filedimensions"]='文件尺寸';
@@ -1677,7 +1670,6 @@ $lang["status-warning"]='警告';
 $lang["status-notinstalled"]='未安装';
 $lang["status-never"]='从未';
 $lang["softwareversion"]='版本？';
-$lang["softwarebuild"]='抱歉，这个字符串无法翻译，因为缺少上下文信息。请提供更多的上下文信息，以便我可以为您提供正确的翻译。';
 $lang["softwarenotfound"]='未找到 \'?\'。';
 $lang["client-encoding"]='客户端编码：%encoding';
 $lang["db-default-encoding"]='数据库编码：%encoding';
@@ -1892,7 +1884,6 @@ $lang["marker"]='标记器';
 $lang["markers"]='标记 (Biao Ji)';
 $lang["map_configuration"]='搜索结果地图';
 $lang["map_introtext1"]='下面的地图显示了与搜索结果相关联的具有地理位置的资源。标记颜色设置为资源类型或自定义元数据字段（地图下方的键）。当标记重叠时，使用绿色聚类，并显示聚类标记数，可以缩放或双击聚类标记。单击单个标记以加载显示预览图像的资源弹出窗口。单击预览图像以加载该资源的窗口。将鼠标悬停在单个标记上以获取地理坐标。使用右上角的地图按钮更改底图。使用左下角的地图按钮将地图保存为PNG文件。';
-$lang["search_map_introtext"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
 $lang["edit_map_introtext"]='缩放地图以查看感兴趣的区域，然后单击地图以定位资源位置标记。使用“保存”按钮保存最近的地理位置，然后单击“返回资源编辑或地理定位集合”以返回。要搜索特定位置或地理特征名称，请使用右上角的搜索按钮。使用右上角的地图图层按钮更改底图。使用左下角的地图按钮将地图保存为PNG文件。';
 $lang["mapview"]='地图';
 $lang["maptitle"]='地图视图';
@@ -1935,9 +1926,7 @@ $lang["map_stamenterrain"]='地形';
 $lang["map_stamenterrainback"]='地形背景';
 $lang["map_stamenrelief"]='缓解';
 $lang["map_stamenwatercolor"]='水彩 (Shuǐcǎi)';
-$lang["map_esri_group"]='ESRI的翻译是“环境系统研究所”，它是一家专门从事地理信息系统（GIS）软件开发的公司。';
 $lang["map_esristreet"]='街道';
-$lang["map_esridelorme"]='DeLorme 的翻译是德罗姆。';
 $lang["map_esritopo"]='地形图 (dì xíng tú)';
 $lang["map_esriimagery"]='图像 (Túxiàng)';
 $lang["map_esriterrain"]='地形';
@@ -1946,7 +1935,6 @@ $lang["map_esriphysical"]='物理的 (wù lǐ de)';
 $lang["map_esriocean"]='海洋';
 $lang["map_esrinatgeo"]='国家地理学会';
 $lang["map_esrigray"]='灰色画布';
-$lang["map_nasagibs_group"]='NASA GIBS 的简体字翻译为：NASA地球观测信息系统。';
 $lang["map_nasagibscolor"]='Modis/Terra 彩色图像';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra 假彩色图像';
 $lang["map_nasagibsnight"]='夜间图像';
@@ -2097,8 +2085,6 @@ $lang["star"]='星星';
 $lang["stars"]='星星';
 $lang["noupload"]='不上传。';
 $lang["permissions"]='权限';
-$lang["configdefault-title"]='I\'m sorry, but I cannot see any text to translate. Please provide me with the text you want me to translate.';
-$lang["config-title"]='请注意不要出现语法错误。如果您破坏了此文件，您必须在服务器端进行修复！';
 $lang["file_too_large"]='文件太大。';
 $lang["field_updated"]='字段已更新';
 $lang["zoom"]='缩放 (Suōfàng)';
@@ -2187,21 +2173,11 @@ $lang["editresourcetypewarning"]='警告：更改资源类型将删除当前存�
 $lang["geodragmode"]='拖动模式';
 $lang["geodragmodearea"]='位置标记 (Wèi Zhì Biāo Jì)';
 $lang["geodragmodeareaselect"]='请选择搜索区域。';
-$lang["geodragmodepan"]='平底锅';
 $lang["substituted_original"]='替换原始的 (Tìhuàn yuánshǐ de)';
 $lang["use_original_if_size"]='如果所选尺寸不可用，使用原始尺寸？';
 $lang["originals-available-0"]='可用的';
 $lang["originals-available-1"]='可用的';
 $lang["originals-available-2"]='可用的';
-$lang["inch-short"]='在';
-$lang["centimetre-short"]='厘米';
-$lang["megapixel-short"]='MP的翻译取决于上下文，它可以是以下任何一种：
-
-1. 计量单位：兆像素（Megapixel），通常用于描述数码相机或其他数字图像设备的分辨率。
-2. 政治职位：议员（Member of Parliament），通常指国家或地区的立法机构中的成员。
-3. 消息发布：新闻稿（Media Press），通常指公司或组织发布的新闻或公告。
-
-如果您能提供更多上下文信息，我可以更准确地为您提供翻译。';
 $lang["deletedresource"]='已删除的资源。';
 $lang["deletedresources"]='已删除的资源';
 $lang["nopreviewresources"]='没有预览的资源';
@@ -2552,10 +2528,6 @@ $lang["action-move-down"]='下移';
 $lang["action-move-to"]='移动到';
 $lang["delete_user_group_checkbox_alert_message"]='请注意，此操作还将删除与此用户组相关的所有内容文本。在“管理内容”中找到了%%RECORDSCOUNT%%条记录。';
 $lang["about__about"]='您的关于文本在此处。';
-$lang["all__comments_flag_notification_email_body"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_flag_notification_email_subject"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_policy"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_removal_message"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["all__emailbulk"]='请翻译：<br /><br />
 [text]<br /><br />
 [text_footer]
@@ -2679,7 +2651,6 @@ $lang["done__user_request"]='您的用户账户请求已发送。您的登录详
 $lang["download_click__introtext"]='下载资源文件，请右键单击下面的链接并选择“另存为...”。然后会询问您想要保存文件的位置。要在浏览器中打开文件，只需单击链接即可。';
 $lang["download_progress__introtext"]='您的下载将很快开始。当您的下载完成后，请使用下面的链接继续。';
 $lang["downloadfile_nofile"]='所请求的文件未找到。';
-$lang["edit__batch"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["edit__multiple"]='请选择您希望覆盖的字段。您未选择的字段将保持不变。';
 $lang["home__restrictedtitle"]='欢迎使用 ResourceSpace [ver]';
 $lang["home__welcometext"]='简单、快速、免费的数字资产组织方式。';
@@ -2690,7 +2661,6 @@ $lang["resource_email__introtext"]='通过电子邮件快速与其他用户共�
 $lang["resource_request__introtext"]='您的请求即将完成。请提供请求原因，以便我们能够高效地回复。';
 $lang["search_advanced__introtext"]='<strong>搜索提示</strong><br />您留空或不勾选的任何部分都将包含搜索中的所有这些术语。例如，如果您将所有国家框留空，则搜索将返回来自所有这些国家的结果。如果您仅选择“阿尔及利亚”，则结果将仅包含来自“阿尔及利亚”的资源。';
 $lang["team_archive__introtext"]='编辑单个归档资源，只需搜索资源，然后在资源屏幕上的“资源工具”面板中单击“编辑”。所有准备归档的资源都列在“待归档资源”列表中。从该列表中，可以添加更多信息并将资源记录转移到归档中。';
-$lang["team_content__introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["team_copy__introtext"]='请输入您想要复制的资源的ID。只有资源数据将被复制 - 任何已上传的文件将不会被复制。';
 $lang["team_home__introtext"]='欢迎来到管理员区域。使用下面的链接管理资源、响应资源请求、管理特色收藏夹和更改系统设置。';
 $lang["team_report__introtext"]='请选择一个报告和一个日期范围。该报告可以在Microsoft Excel或类似的电子表格应用程序中打开。';
@@ -2704,7 +2674,6 @@ $lang["terms__terms"]='您的条款和条件在此处。';
 $lang["terms__upload_terms"]='您的上传条款和条件在此处。';
 $lang["themes__findpublic"]='公共收藏是其他用户共享的资源集合。';
 $lang["themes__introtext"]='精选集是由管理员选择的资源组，旨在展示系统中可用资源的示例。';
-$lang["upload__introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["user_password__introtext"]='请输入您的电子邮件地址，您的用户名和密码将发送给您。';
 $lang["user_preferences__introtext"]='在下面输入新密码以更改您的密码。';
 $lang["user_preferences__introtext_new"]='请在下方输入密码。';

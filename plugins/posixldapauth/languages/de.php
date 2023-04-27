@@ -21,7 +21,6 @@ $lang["posixldapauth_use_to_overide_group_containers_member_field"]='Verwenden, 
 $lang["posixldapauth_member_field_type"]='Mitgliederfeldtyp:';
 $lang["posixldapauth_default"]='Standard';
 $lang["posixldapauth_user_name"]='Benutzername';
-$lang["posixldapauth_rdn"]='I\'m sorry, but "RDN" could have multiple meanings depending on the context. Could you please provide more information or context so I can provide an accurate translation?';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Verwenden Sie, um den Inhalt des Gruppenmitgliedfelds zu ändern.';
 $lang["posixldapauth_login_field"]='Anmeldefeld:';
 $lang["posixldapauth_test_connection"]='Verbindung testen:';

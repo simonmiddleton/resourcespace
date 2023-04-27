@@ -21,7 +21,6 @@ $lang["posixldapauth_use_to_overide_group_containers_member_field"]='Digunakan u
 $lang["posixldapauth_member_field_type"]='Jenis Kolom Anggota:';
 $lang["posixldapauth_default"]='Bawaan (Default)';
 $lang["posixldapauth_user_name"]='Nama Pengguna';
-$lang["posixldapauth_rdn"]='I\'m sorry, but "RDN" is not a term commonly used in the context of digital asset management software or ResourceSpace. Can you please provide more context or information about what "RDN" refers to?';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Digunakan untuk mengubah konten dari Kolom Anggota Grup.';
 $lang["posixldapauth_login_field"]='Kolom Login:';
 $lang["posixldapauth_test_connection"]='Uji Koneksi:';

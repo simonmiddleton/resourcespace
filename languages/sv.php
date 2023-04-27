@@ -690,7 +690,6 @@ $lang["status-warning"]="VARNING";
 $lang["status-notinstalled"]="Ej installerad";
 $lang["status-never"]="Aldrig";
 $lang["softwareversion"]="?-version"; # E.g. "PHP version"
-$lang["softwarebuild"]="?-bygge"; # E.g. "ResourceSpace Build"
 $lang["softwarenotfound"]="Programmet ’?’ hittades inte."; # ? will be replaced.
 $lang["client-encoding"]="(klientkodning: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["browseruseragent"]="Webbläsare";
@@ -1412,10 +1411,6 @@ $lang["treeobjecttype-preview_size"]="Storlek";
 
 $lang["permissions"]="Behörigheter";
 
-# System Setup File Editor
-$lang["configdefault-title"]="(Kopiera och klistra in inställningarna härifrån.)";
-$lang["config-title"]="Var <i>mycket</i> noga med att undvika syntaxfel. Om du skapar en fil med ett syntaxfel kan systemet bli obrukbart och felet kan då inte korrigeras inifrån ResourceSpace!";
-
 # System Setup Properties Pane
 $lang["file_too_large"]="Filen är för stor";
 $lang["field_updated"]="Fältet uppdaterat.";
@@ -1893,7 +1888,6 @@ $lang["createpreviews"]='Skapa förhandsvisningar.';
 $lang["recreatepreviews_pending"]='Resurs(er) har markerats för förhandsgranskningsåterskapande.';
 $lang["relatedresources_onupload"]='Relatera alla resurser vid uppladdning.';
 $lang["selected"]='vald';
-$lang["sortorder-desc"]='Beskrivning';
 $lang["modified"]='Ändrad.';
 $lang["resourcedownloads"]='Resursnedladdningar';
 $lang["filedimensions"]='Fil dimensioner';
@@ -2105,7 +2099,6 @@ $lang["mapadd2-introtext"]='Den blå markören indikerar platsen för resursen s
 $lang["marker"]='Markör.';
 $lang["map_configuration"]='Sökresultatkarta.';
 $lang["map_introtext1"]='Kartan nedan visar resurser från sökresultatet som har en geolokalisering kopplad till dem. Markörens färg är inställd på resurstypen eller en anpassad metadatafält (nyckel nedanför kartan). När markörer skulle överlappa andra markörer används grön klustrering med ett nummer som indikerar antalet klustrade markörer, zooma in eller dubbelklicka på en kluster. Klicka på en enskild markör för att ladda en popup för den resursen som visar en förhandsgranskning av bilden. Klicka på förhandsgranskningen för att ladda ett fönster för den resursen. Hovra över en enskild markör för geokoordinaterna. Ändra bas-kartan med den övre högra kartknappen. Spara kartan till en PNG-fil med den nedre vänstra kartknappen.';
-$lang["search_map_introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["edit_map_introtext"]='Zooma och panorera till den kartvy som är av intresse, klicka sedan på kartan för att hitta resursens platsmarkör. Spara den senaste geoplatsen genom att använda Spara-knappen och klicka sedan på "Tillbaka till resursredigering eller geoplacera samling" för att återgå. För att söka efter en specifik plats eller geografisk funktion, använd den övre högra sökknappen. Ändra baskartan med den övre högra kartlagerknappen. Spara kartan som en PNG-fil med den nedre vänstra kartknappen.';
 $lang["mapview"]='Karta';
 $lang["maptitle"]='Kartvy.';
@@ -2148,9 +2141,7 @@ $lang["map_stamenterrain"]='Terräng.';
 $lang["map_stamenterrainback"]='Terrängbakgrund.';
 $lang["map_stamenrelief"]='Lättnad';
 $lang["map_stamenwatercolor"]='Akvarell.';
-$lang["map_esri_group"]='ESRI is not a string that requires translation, as it is an acronym for Environmental Systems Research Institute, which is a company that produces GIS (Geographic Information System) software. However, if you need a translation for the acronym, it would be "Miljösystemforskningsinstitutet".';
 $lang["map_esristreet"]='Gator';
-$lang["map_esridelorme"]='I\'m sorry, but "DeLorme" is a proper noun and it should not be translated. It is the name of a company that produces mapping and GPS products.';
 $lang["map_esritopo"]='Topografisk.';
 $lang["map_esriimagery"]='Bildmaterial.';
 $lang["map_esriterrain"]='Terräng.';
@@ -2159,7 +2150,6 @@ $lang["map_esriphysical"]='Fysisk.';
 $lang["map_esriocean"]='Hav';
 $lang["map_esrinatgeo"]='National Geographic: National Geographic';
 $lang["map_esrigray"]='Grå duk.';
-$lang["map_nasagibs_group"]='NASA GIBS should remain the same in Svenska as it is an acronym and stands for "NASA Global Imagery Browse Services".';
 $lang["map_nasagibscolor"]='Modis/Terra Färgbilder';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra falsk färg-bildmaterial.';
 $lang["map_nasagibsnight"]='Nattbilder.';
@@ -2395,10 +2385,6 @@ $lang["action-move-up"]='Flytta upp';
 $lang["action-move-down"]='Flytta nedåt.';
 $lang["action-move-to"]='Flytta till';
 $lang["delete_user_group_checkbox_alert_message"]='Observera att denna åtgärd också kommer att radera allt innehållstext som var relevant för denna användargrupp. Det finns %%RECORDSCOUNT%% poster som hittades i Hantera innehåll.';
-$lang["all__comments_flag_notification_email_body"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_flag_notification_email_subject"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_policy"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_removal_message"]='I\'d be happy to! What would you like me to translate?';
 $lang["all__emailbulk"]='[text]<br /><br />
 [text_footer] = [textfot]';
 $lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
@@ -2505,7 +2491,6 @@ $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-b
 
 (This is a technical string that refers to an iframe element that displays the ResourceSpace knowledge base. It should not be translated.)';
 $lang["local_tz"]='Lokal tidszon';
-$lang["team_content__introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["team_report__err_report_too_long"]='Rapporten är för stor för att visas och har kapats, ladda ner den istället!';
 $lang["team_user__confirm-deletion"]='Är du säker på att du vill radera den här användaren permanent?';
 $lang["terms__upload_terms"]='Dina villkor för uppladdningar skrivs här.';
