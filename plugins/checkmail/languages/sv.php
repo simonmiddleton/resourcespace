@@ -39,3 +39,8 @@ $lang['uploadviaemail-intro']="<br /><br />Om du vill överföra filer per e-pos
 $lang['checkmail_confirmation_message']="När ditt e-postmeddelande är färdigbearbetat kommer du att få en bekräftelse per e-post. Om ditt e-postmeddelande har hoppats över av någon anledning (om det t.ex. har skickats från fel adress) kommer administratören att få besked om att det finns ett e-postmeddelande som kräver åtgärd.";
 $lang['yourresourcehasbeenuploaded']="Materialet har överförts";
 $lang['yourresourceshavebeenuploaded']="Materialen har överförts";
+
+$lang["checkmail_blocked_users_label"]='Blockerade användare.';
+$lang["checkmail_allow_users_based_on_permission_label"]='Ska användare tillåtas att ladda upp baserat på behörighet?';
+$lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), med ID [user-ref] och e-postadressen [user-email] har inte tillåtelse att ladda upp via e-post (kontrollera behörigheterna "c" eller "d" eller de blockerade användarna på sidan för e-postkontroll). Inspelat den: [datetime].';
+$lang["checkmail_createdfromcheckmail"]='Skapad från Check Mail-tillägg.';

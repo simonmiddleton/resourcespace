@@ -13,19 +13,19 @@ function HookTransformAllAdditionalheaderjs()
 function HookTransformAllRender_actions_add_collection_option($top_actions,$options,$collection_data, array $urlparams)
     {
 	global $cropper_enable_batch,$count_result,$lang, $baseurl, $userref, $internal_share_access;
-
-    $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
-
-    if($k != "" && $internal_share_access === false)
-        {
-        return false;
-        }
     
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
         {
         // @see hook() for an explanation about the hook_return_value global
         $options = $GLOBALS["hook_return_value"];
+        }
+
+    $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
+
+    if($k != "" && $internal_share_access === false)
+        {
+        return $options;
         }
 
     if ($cropper_enable_batch
@@ -88,5 +88,18 @@ function HookTransformAllAdditional_title_pages()
         echo "<script language='javascript'>\n";
         echo "document.title = \"$applicationname - $pagetitle\";\n";
         echo "</script>";
+        }
+    }
+
+function HookTransformAllreplace_resource_file_extra($resource)
+    {
+    // Delete the original_copy alternative when replacing the file via upload_batch
+    if(getval('saveaction', '') === '')
+        {
+        $path = get_resource_path($resource['ref'],true,"original_copy",false,$resource['file_extension']);
+        if(file_exists($path))
+            {
+            unlink($path);
+            }
         }
     }

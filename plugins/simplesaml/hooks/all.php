@@ -2,8 +2,9 @@
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 function HookSimplesamlAllPreheaderoutput()
     {      
-    if(!simplesaml_php_check())
+    if(!simplesaml_php_check() || get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL) != SYSTEM_UPGRADE_LEVEL)
         {
+        // If a new version then allow upgrade scripts to run first
         return false;
         }
 
@@ -76,10 +77,15 @@ function HookSimplesamlAllPreheaderoutput()
         return true;
         }
 
-	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
+    $url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
+    if ($simplesaml_allow_public_shares)
+        {
+        // Allow redirect for password protected external shares
+        $simplesaml_allowedpaths[] = '/pages/share_access.php';
+        }
 
-	foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
-		{
+    foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
+        {
         if('' == trim($simplesaml_allowedpath))
             {
             continue;
@@ -524,7 +530,7 @@ function HookSimplesamlAllLoginformlink()
             return false;
             }
         ?>
-        <a href="<?php echo generateURL($baseurl, $parameters); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo htmlspecialchars($lang['simplesaml_use_sso']); ?></a><br/>
+        <a href="<?php echo generateURL($baseurl, $parameters); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo strip_tags_and_attributes($lang['simplesaml_use_sso']); ?></a><br/>
         <?php
         }
 
@@ -575,7 +581,7 @@ function HookSimplesamlAllReplaceheadernav1anon()
         return false;
         }
 
-    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block, $simplesaml_allow_standard_login, $simplesaml_login;
+    global $baseurl, $lang, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block, $simplesaml_allow_standard_login, $simplesaml_login;
 
     // Don't show any link if signed in via SAML already and standard logins have been disabled
     if(!$simplesaml_allow_standard_login && !$simplesaml_login && simplesaml_is_authenticated())
@@ -588,16 +594,10 @@ function HookSimplesamlAllReplaceheadernav1anon()
         return false;
         }
 
-    $onClick = '';
-
-    if($anon_login_modal)
-        {
-        $onClick = 'onClick="return ModalLoad(this, true);"';
-        }
         ?>
     <ul>
         <li>
-            <a href="<?php echo $baseurl; ?>/?usesso=true"<?php echo $onClick; ?>><?php echo $lang['login']; ?></a>
+            <a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo $lang['login']; ?></a>
         </li>
     <?php
     if($contact_link)

@@ -16,7 +16,13 @@
 * @param string      $restypes                Optionally used to specify which resource types to search for
 * @param string      $order_by
 * @param string      $archive                 Allows searching in more than one archive state
-* @param integer     $fetchrows               Fetch "$fetchrows" rows
+* @param int|array   $fetchrows               - If passing an integer, retrieve the specified number of rows (a limit with no offset).
+*                                             The returned array of resources will be padded with '0' elements up to the total without the limit.
+*                                             - If passing an array, the first element must be the offset (int) and the second the limit (int)
+*                                             (the number of rows to return). See setup_search_chunks() for more detail.
+*                                             IMPORTANT: When passing an array, the returned array will be in structured form - as returned by 
+*                                             sql_limit_with_total_count() i.e. the array will have 'total' (the count) and 'data' (the resources) 
+*                                             named array elements, and the data will not be padded.
 * @param string      $sort
 * @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
 *                                             regardless of the final access-based results
@@ -60,7 +66,7 @@ function do_search(
         $userref,$k, $DATE_FIELD_TYPES,$stemming, $usersearchfilter, $userpermissions, $usereditfilter, $userdata,
         $lang, $baseurl, $internal_share_access, $config_separators, $date_field, $noadd, $wildcard_always_applied,
         $wildcard_always_applied_leading, $index_resource_type, $index_contributed_by, $max_results, $config_search_for_number,
-        $category_tree_search_use_and_logic, $date_field;
+        $category_tree_search_use_and_logic, $date_field, $FIXED_LIST_FIELD_TYPES;
 
     if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
         {
@@ -344,6 +350,27 @@ function do_search(
             // Extra sql to search non-field data that used to be stored in resource_keyword e.g. resource type/resource contributor
             $non_field_keyword_sql = new PreparedStatementQuery();
 
+            if($quoted_string && substr($keyword,1,strlen(FULLTEXT_SEARCH_PREFIX))==FULLTEXT_SEARCH_PREFIX)
+                {
+                // Full text search
+                $fulltext_string = str_replace(FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,"\"",substr($keyword,strlen(FULLTEXT_SEARCH_PREFIX)+2,-1));
+                
+                $freetextunion = new PreparedStatementQuery();
+                $freetextunion->sql = " SELECT resource, [bit_or_condition] 1 AS score FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE)";
+                $freetextunion->parameters = ["s",$fulltext_string];
+                if (count($hidden_indexed_fields) > 0)
+                    {
+                    $freetextunion->sql .= " AND n.resource_type_field NOT IN (" .  ps_param_insert(count($hidden_indexed_fields)) . ")";
+                    $freetextunion->parameters = array_merge($freetextunion->parameters,ps_param_fill($hidden_indexed_fields,"i"));
+                    }
+
+                $sql_keyword_union[] = $freetextunion;
+                $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
+                $sql_keyword_union_or[]=FALSE;
+                $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+                continue;
+                }
+
             if($keyword == $search && is_int_loose($keyword) && $searchidmatch)
                 {
                 // Resource ID is no longer indexed, if search is just for a single integer then include this
@@ -575,7 +602,7 @@ function do_search(
 						$keywordprocessed=true;
                         }
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
-                    else if($field_short_name_specified && !$ignore_filters)
+                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                         $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
@@ -585,6 +612,7 @@ function do_search(
                         $nodeorcount = count($node_bucket);
                         foreach($keywords_expanded as $keyword_expanded)
                             {
+                            debug("keyword_expanded:  " . $keyword_expanded);
                             $field_node_index = array_search(mb_strtolower(i18n_get_translated($keyword_expanded)), array_map('i18n_get_translated',array_map('mb_strtolower',array_column($field_nodes, 'name'))));
                             // Take the ref of the node and add it to the node_bucket as an OR
                             if(false !== $field_node_index)
@@ -610,7 +638,6 @@ function do_search(
                         // If ignoring field specifications then remove them.
                         $keywords_expanded=explode(';',$keyword);
                         $keywords_expanded_or=count($keywords_expanded) > 1;
-
                         # Omit resources containing this keyword?
                         $omit = false;
                         if (substr($keyword, 0, 1) == "-")
@@ -669,7 +696,6 @@ function do_search(
                                 }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
-
                             if ($keyref === false)
                                 {
                                 if($stemming)
@@ -680,20 +706,46 @@ function do_search(
 
                                 if ($keyref === false)
                                     {
-                                    // Check keyword for defined separators and if found each part of the value is added as a keyword for checking.
-                                    $contains_separators = false;
-                                    foreach ($config_separators as $separator)
+                                    if($keywords_expanded_or)
                                         {
-                                        if (strpos($keyword, $separator) !== false)
+                                        $alternative_keywords = array();
+                                        foreach($keywords_expanded as $keyword_expanded)
                                             {
-                                            $contains_separators = true;
+                                            $alternative_keyword_keyref = resolve_keyword($keyword_expanded, false, true, true);    
+                                            if($alternative_keyword_keyref === false)
+                                                {
+                                                continue;
+                                                }
+    
+                                            $alternative_keywords[] = $alternative_keyword_keyref;
+                                            }
+    
+                                        if(count($alternative_keywords) > 0)
+                                            {           
+                                            // Multiple alternative keywords
+                                            $alternative_keywords_sql = new PreparedStatementQuery();
+                                            $alternative_keywords_sql->sql = " OR nk[union_index].keyword IN (" . ps_param_insert(count($alternative_keywords)) .")";
+                                            $alternative_keywords_sql->parameters = ps_param_fill($alternative_keywords,"i");
+                                            debug("do_search(): \$alternative_keywords_sql = {$alternative_keywords_sql->sql}, parameters = " . implode(",",$alternative_keywords_sql->parameters));
                                             }
                                         }
-                                    if ($contains_separators === true)
+                                    else
                                         {
-                                        $keyword_split = split_keywords($keyword);
-                                        $keywords = array_merge($keywords,$keyword_split);
-                                        continue;
+                                        // Check keyword for defined separators and if found each part of the value is added as a keyword for checking.
+                                        $contains_separators = false;
+                                        foreach ($config_separators as $separator)
+                                            {
+                                            if (strpos($keyword, $separator) !== false)
+                                                {
+                                                $contains_separators = true;
+                                                }
+                                            }
+                                        if ($contains_separators === true)
+                                            {
+                                            $keyword_split = split_keywords($keyword);
+                                            $keywords = array_merge($keywords,$keyword_split);
+                                            continue;
+                                            }
                                         }
                                     }
                                 }
@@ -1455,6 +1507,8 @@ function do_search(
     # Debug
     debug('$results_sql=' . $results_sql->sql . ", parameters: " . implode(",",$results_sql->parameters));
 
+    setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
+
     if($return_refs_only)
         {
         # Execute query but only ask for ref columns back from ps_query();
@@ -1469,7 +1523,14 @@ function do_search(
             }
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,$count_sql);
+        $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
+        
+        if(is_array($fetchrows))
+            {
+            // Return without converting into the legacy padded array
+            return $result;
+            }
+        
         $resultcount = $result["total"]  ?? 0;
         if ($resultcount>0 & count($result["data"]) > 0)
             {
@@ -1487,7 +1548,13 @@ function do_search(
             }
         $count_sql = clone($results_sql);
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-        $result=sql_limit_with_total_count($results_sql,$fetchrows,0,true,$count_sql);
+        $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
+        }
+
+    if(is_array($fetchrows))
+        {
+        // Return without converting into the legacy padded array
+        return $result;
         }
     $resultcount = $result["total"]  ?? 0;
     if ($resultcount>0 & count($result["data"]) > 0)

@@ -44,5 +44,3 @@ else
 	Done.	
 	<?php
 	}
-?>
-	

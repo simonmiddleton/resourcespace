@@ -69,7 +69,7 @@ function show_team_user_filter_search(){
             <div class="Question">
                 <label for="find"><?php echo $lang["searchusers"]?></label>
                 <div class="tickset">
-                 <div class="Inline"><input type=text name="find" id="find" value="<?php echo $find?>" maxlength="100" class="shrtwidth" /></div>
+                 <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data($find) ?>" maxlength="100" class="shrtwidth" /></div>
                  <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
                 </div>
                 <div class="clearerleft"> </div>
@@ -130,11 +130,22 @@ include "../../include/header.php";
     <?php 
     hook('modifyusersearch');
 
-    # Fetch rows
+    $groups     = get_usergroups(true);
+    # Fetch users
+    $usersfound = false;
+
+
     $users_sql  = get_users($group,$find,$order_by,true,$offset+$per_page,"",true);
     $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
-    $groups     = get_usergroups(true);
     $results    = $users["total"];
+    $usersfound = count($users["data"]) > 0;
+    if($usersfound == 0)
+        {
+        // No results, go to last page
+        $offset     = floor(($results-1)/$per_page)*$per_page;
+        $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
+        $results    = $users["total"];
+        }
     $users  	= $users["data"];
     $totalpages	=ceil($results/$per_page);
     $curpage	=floor($offset/$per_page)+1;
@@ -272,7 +283,7 @@ include "../../include/header.php";
     </div>
     <div class="BottomInpageNav">
     <div class="BottomInpageNavLeft">
-    <strong><?php echo $lang["total"] . ": " . count($users); ?> </strong><?php echo $lang["users"]; ?>
+    <strong><?php echo $lang["total"] . ": " . $results; ?> </strong><?php echo $lang["users"]; ?>
     </div>
 
     <?php pager(false); ?></div>

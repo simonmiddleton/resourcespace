@@ -109,4 +109,5 @@ HTML;
 	$lang['doi_hide_meta'] = 'DOI Metadaten verbergen';
 
 	$lang['doi_fetched_xml_from_MDS'] = 'Aktuelle XMl-Metadaten konnten vom Metadata-Store von DataCite geladen werden.';
-?>
+
+	$lang["doi_alert_text"]='Achtung! Sobald die DOI an DataCite gesendet wurde, kann die Registrierung nicht rückgängig gemacht werden.';

@@ -8,81 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
- # Show an error when someone tries to request an account with an email already in the system.
-# Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
-$account_email_exists_note=false;
-
- # "U" permission allows management of users in the current group as well as children groups. TO test stricter adherence to the idea of "children only", set this to true. 
-$U_perm_strict=false;
-
-# Send a confirmation e-mail to requester
-$account_request_send_confirmation_email_to_requester = true;
-
-# Allow a link to re-extract metadata per-resource (on the View Page) to users who have edit abilities.
-$allow_metadata_revert=false;
-
-# Allow users to delete resources?
-# (Can also be controlled on a more granular level with the "D" restrictive permission.)
-$allow_resource_deletion = true;
-
-# Allow the addition of 'saved searches' to collections. 
-$allow_save_search=true;
-
-# Display resource title on alternative file management page
-$alternative_file_resource_title=true;
-
-# option to always send emails from the logged in user
-$always_email_from_user=false;
-
-# Always record the name of the resource creator for new records.
-# If false, will only record when a resource is submitted into a provisional status.
-$always_record_resource_creator = true;
-
-// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
-$annotate_crud_anonymous = false;
-
-// The user can see existing annotations in read-only mode
-$annotate_read_only = false;
-
-# When anonymous access is on, show login in a modal.
-$anon_login_modal=false;
-
-# Place the default dash (tiles set for all_users) on the home page for anonymous users with none of the drag 'n' drop functionality.
-$anonymous_default_dash=true;
-
-$attach_user_smart_groups=true; //enable user attach to include 'smart group option', different from the default "users in group" method (which will still be available)
-
-# Should the "Add to basket" function appear on the download sizes, so the size of the file required is selected earlier and stored in the basket? This means the total price can appear in the basket.
-$basket_stores_size=true; 
-
-// Default browse bar width;
-$browse_default_width = 295;
-
-# Option to force single branch selection in category tree selection 
-$cat_tree_singlebranch=false;
-
-# Should the category tree status window be shown?
-$category_tree_show_status_window=true;
-
-# Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
-$chosen_dropdowns=false;
-
-# The number of options that must be present before including seach capability.
-$chosen_dropdowns_threshold_main=10;
-$chosen_dropdowns_threshold_simplesearch=10;
-
-# Use the 'chosen' library for rendering dropdowns in the collection bar.
-$chosen_dropdowns_collection=false;
-
-# The number of options that must be present before including seach capability for collection bar dropdowns.
-$chosen_dropdowns_threshold_collection=10;
-
-# Show clear button on the upload page
-$clearbutton_on_upload=true;
-
-# Show clear button on the edit page
-$clearbutton_on_edit=true;
-
 # Allow users to create new collections. Set to false to prevent creation of new collections.
 $collection_allow_creation=true;
 
@@ -103,8 +28,7 @@ $collection_dropdown_user_access_mode=false;
 # Option to remove all resources from the current collection once it has been requested
 $collection_empty_on_submit=false;
 
-# Ability to alter collection frame height/width
-$collection_frame_divider_height=3;
+# Ability to alter collection frame height
 $collection_frame_height=153;
 
 # add a prefix to all collection refs, to distinguish them from resource refs
@@ -187,9 +111,6 @@ $disable_quoted_printable_enc=false;
 # edit.php - disable links to upload preview 
 $disable_upload_preview = false;
 
-# The following can be set to show a custom message for disabled plugins. Default is the language string 'plugins-disabled-plugin-message' but this will override it.
-$disabled_plugins_message = "";
-
 # Disk Usage Warnings - require running check_disk_usage.php
 # Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
 #$disk_quota_notification_limit_percent_warning=90;
@@ -219,9 +140,6 @@ $email_from_user=false;
 ##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
 ##  If blank, uses $baseurl 
 $email_url_save_user = ""; //emaillogindetails
-
-# Enable remote apis - MUST ALWAYS BE TRUE now as parts of the UI use the API.
-$enable_remote_apis=true;
 
 $enable_theme_breadcrumbs = true;
 
@@ -278,9 +196,6 @@ $hide_collection_share_generate_url=false;
 # Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
 $hide_failed_reset_text=true;
 
-# Hide "Generate URL" from the resource_share.php page?
-$hide_resource_share_generate_url=false;
-
 # Highlight search keywords when displaying results and resources?
 $highlightkeywords=true;
 
@@ -320,9 +235,6 @@ $launch_kb_on_login_for_groups=array();
 # Prevent previews from creating versions that result in the same size?
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
-
-# Use a file tree display for local folder upload
-$local_upload_file_tree=false;
 
 # if using $collections_compact_style, you may want to remove the contact sheet link from the Manage Collections page
 $manage_collections_contact_sheet_link=true;
@@ -389,20 +301,6 @@ $pending_submission_searchable_to_all=false;
 # Option that specifically allows the per-page dropdown without needing $display_selector_dropdown=true. This is useful if you'd like to use the display selector icons with per-page dropdowns.
 $perpage_dropdown = true;
 
-# Maximum number of attempts to upload a file chunk before erroring
-$plupload_max_retries=5;
-
-# Plupload settings
-# Specify the supported runtimes and priority
-$plupload_runtimes = 'html5,gears,silverlight,html4';
-
-# Keep failed uploads in the queue after uploads have completed
-$plupload_show_failed=true;
-
-# Use the JQuery UI Widget instead of the Queue interface (includes a stop button and optional thumbnail mode
-$plupload_widget=true;
-$plupload_widget_thumbnails=true;
-
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;
 
@@ -451,12 +349,6 @@ $remove_collections_vertical_line=false;
 # Show/ hide "Remove resources" link from collection bar:
 $remove_resources_link_on_collection_bar = TRUE;
 
-# Display col-size image of resource on replace file page
-$replace_file_resource_preview=true;
-
-# Display resource title on replace file page
-$replace_file_resource_title=true;
-
 # Send confirmation emails to user when request sent or assigned
 $request_senduserupdates=true;
 
@@ -473,10 +365,6 @@ $search_anchors=true;
 
 # Highlight last viewed result when using $search_anchors
 $search_anchors_highlight=false;
-
-# Make search filter strict (prevents direct access to view/preview page)
-# Set to 2 in order to emulate single resource behaviour in search (EXPERIMENTAL). Prevents search results that are not accessible from showing up. Slight performance penalty on larger search results.
-$search_filter_strict=true;
 
 # Show an edit icon/link in the search results.
 $search_results_edit_icon=true;
@@ -529,18 +417,7 @@ $suppress_sql_log = false;
 # only affects users with permissions to do this.
 $team_centre_alert_icon = true;
 
-# optional columns in themes collection lists
-$themes_date_column=false;
-$themes_ref_column=false;
-
-# Show only collections that have resources the current user can see?
-$themes_with_resources_only=false;
-
-# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
-$thumbs_previews_via_download=false;
-
 # Normally, image tweaks are only applied to scr size and lower. 
-# If using Magictouch, you may want tweaks like rotation to be applied to the larger images as well.
 # This could require recreating previews to sync up the various image rotations.
 $tweak_all_images=false;
 $tweak_allow_gamma=true;
@@ -563,9 +440,6 @@ $upload_review_lock_metadata = true;
 // Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
 // Requires "$upload_then_edit = true;"
 $upload_review_mode_review_by_resourceid = true;
-
-# Use Plugins Manager
-$use_plugins_manager = true;
 
 # Show the fullname of the user who approved the account when editing user
 $user_edit_approved_by=false;
@@ -612,11 +486,3 @@ $wildcard_always_applied=false;
 #
 # $zip_contents_field=18;
 $zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
-
-# Enable speed tagging feature? (development)
-$speedtagging=false;
-$speedtaggingfield=1;
-# To set speed tagging field by resource type, you can set $speedtagging_by_type[resource_type]=resource_type_field; 
-# default will be $speedtaggingfield
-# example to add speed tags for Photo type(1) to the Caption(18) field:
-# $speedtagging_by_type[1]=18; 

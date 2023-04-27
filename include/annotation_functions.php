@@ -158,6 +158,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     global $baseurl;
 
     $annotations = array();
+    $can_view_fields = canSeeAnnotationsFields();
 
     /*
     Build an annotations array of Annotorious annotation objects
@@ -169,7 +170,9 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
     */
     foreach(getResourceAnnotations($resource, $page) as $annotation)
         {
-        $annotations[] = array(
+        if(in_array($annotation['resource_type_field'], $can_view_fields))
+            {
+            $annotations[] = array(
                 'src'    => "{$baseurl}/annotation/resource/{$resource}",
                 'text'   => '',
                 'shapes' => array(
@@ -192,6 +195,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
                 'page'                => (int) $annotation['page'],
                 'tags'                => getAnnotationTags($annotation),
             );
+            }
         }
 
     return $annotations;
@@ -210,13 +214,7 @@ function getAnnotoriousResourceAnnotations($resource, $page = 0)
 function annotationEditable(array $annotation)
     {
     debug(sprintf('[annotations][fct=annotationEditable] $annotation = %s', json_encode($annotation)));
-    global $userref, $annotate_read_only, $annotate_crud_anonymous;
-
-    if($annotate_read_only)
-        {
-        debug('[annotations][fct=annotationEditable][info] read-only annotation! Reason: the system is configured with annotate_read_only = true');
-        return false;
-        }
+    global $userref;
 
     $add_operation = !isset($annotation['user']);
     $field_edit_access = metadata_field_edit_access($annotation['resource_type_field']);
@@ -230,7 +228,7 @@ function annotationEditable(array $annotation)
     // Anonymous users cannot edit by default. They can only edit if they are allowed CRUD operations
     if(checkPermission_anonymoususer())
         {
-        return $annotate_crud_anonymous && $non_admin_athz && $field_edit_access;
+        return $non_admin_athz && $field_edit_access;
         }
 
     return (checkperm('a') || $non_admin_athz) && $field_edit_access;

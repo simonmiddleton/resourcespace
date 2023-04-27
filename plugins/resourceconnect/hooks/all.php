@@ -14,7 +14,12 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
     $key=end($s);
     }
 
-    if ($key !== substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
+    if ($key !== substr(md5($access_key . $resource),0,10)) 
+        {
+        debug("resourceconnect: invalid key $key when requesting resource $resource");
+        debug("resourceconnect: expecting " . substr(md5($access_key . $resource),0,10) . " for access_key $access_key");
+        return false; # Invalid access key. Fall back to user logins.
+        }
 
     global $resourceconnect_user; # Which user to use for remote access?
     $user_select_sql = new PreparedStatementQuery();
@@ -96,6 +101,18 @@ function HookResourceConnectAllInitialise()
     
     }
 
+function HookResourceConnectAllAfterregisterplugin($plugin = "")
+    {
+    if ($plugin !== "" && $plugin == "resourceconnect")
+        {
+        # Plugin's group access has been set to a specific group so hook("initialise"); is skipped.
+        # After authenticating the user, the plugin is registered in authenticate.php so we need to initialise
+        # it here to finish setting up variables for use as globals e.g. $resourceconnect_this
+        HookResourceConnectAllInitialise();
+        }
+    }
+
+
 function ResourceConnectCollectionWarning($languagestring,$collection)
     {
     global $lang;
@@ -115,11 +132,7 @@ function HookResourceConnectAllSearchfiltertop()
     global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected;
     if (!checkperm("resourceconnect")) {return false;}
     ?>
-<script>
-  jQuery(document).ready(function(){
-    jQuery( document ).tooltip();
-  } );
-  </script>
+
     <div class="SearchItem ResourceConnectSearch"><?php echo $lang["resourceconnect_search_database"];?>&nbsp;<a href="#" onClick="styledalert('<?php echo $lang["resourceconnect_search_database"] ?>','<?php echo $lang["resourceconnect_search_info"] ?>');" title="<?php echo $lang["resourceconnect_search_info"] ?>"><i class="fa fa-info-circle"></i></a><br />
     <select class="SearchWidth" name="resourceconnect_selected">
     
@@ -315,3 +328,33 @@ function HookResourceConnectAllrenderadditionalthumbattributes($resource)
         echo "data-identifier='".htmlspecialchars($resource['ref_tab'])."'";
         }
     }  
+
+    function HookResourceConnectAllaftercopycollection($copied,$current)
+    {   
+        $copied_rc_collection=ps_query("SELECT ref FROM resourceconnect_collection_resources WHERE collection=?",array("i",$copied),"");
+        #put all the copied collection records in
+        foreach($copied_rc_collection as $col_resource)
+        {
+            $copied_rc_collection=ps_query("SELECT title, thumb, large_thumb, xl_thumb, url, source_ref FROM resourceconnect_collection_resources WHERE ref=?",
+            array("i",$col_resource['ref']),"");
+                    
+            # Add to collection
+            $params = [
+                'i', $current,
+                's', $copied_rc_collection[0]['title'],
+                's', $copied_rc_collection[0]['thumb'],
+                's', $copied_rc_collection[0]['large_thumb'],
+                's', $copied_rc_collection[0]['xl_thumb'],
+                's', $copied_rc_collection[0]['url'],
+                'i', $copied_rc_collection[0]['source_ref']
+            ];
+            
+            ps_query("INSERT INTO resourceconnect_collection_resources (collection,title,thumb,large_thumb,xl_thumb,url,source_ref) VALUES (?,?,?,?,?,?,?)", $params);
+    
+        }
+    }
+
+function HookResourceConnectAllListviewcolumnid($result,$n)
+    {   
+    return $result[$n]["ref"] == -87412 ? $result[$n]["source_ref"] : false;
+    }

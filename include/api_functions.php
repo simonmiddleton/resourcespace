@@ -28,9 +28,8 @@ function get_api_key($user)
  * @param  string $querystring The query being passed to the API
  * @param  string $sign The signature to check
  * @param  string $authmode The type of key being provided (user key or session key)
- * @return void
  */
-function check_api_key($username,$querystring,$sign,$authmode="userkey")
+function check_api_key($username,$querystring,$sign,$authmode="userkey"): bool
     {
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}
@@ -68,7 +67,7 @@ function check_api_key($username,$querystring,$sign,$authmode="userkey")
  *
  * @param  string $query The query string passed to the API
  * @param  boolean $pretty Should the JSON encoded result be 'pretty' i.e. formatted for reading?
- * @return void
+ * @return bool|string
  */
 function execute_api_call($query,$pretty=false)
     {
@@ -415,6 +414,42 @@ function api_login($username,$password)
     if ((bool)$result['valid'])
         {
         return hash_hmac("sha256", "{$session_hash}{$private_key}", $scramble_key);
+        }
+
+    return false;
+    }
+
+/**
+ * Validate URL supplied in APIs create resource or upload by URL. Requires the URL hostname to be added in config $api_upload_urls
+ *
+ * @param   string   $url   The full URL.
+ * 
+ * @return  bool   Returns true if a valid URL is found.
+ */
+function api_validate_upload_url($url)
+    {
+    $url = filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
+    if ($url === false)
+        {
+        return false;
+        }
+    
+    $url_parts = parse_url($url);
+
+    if (in_array($url_parts['scheme'], BLOCKED_STREAM_WRAPPERS))
+        {
+        return false;
+        }
+
+    global $api_upload_urls;
+    if (!isset($api_upload_urls))
+        {
+        return true; // For systems prior to this config.
+        }
+
+    if (in_array($url_parts['host'], $api_upload_urls))
+        {
+        return true;
         }
 
     return false;

@@ -259,11 +259,8 @@ if(empty($fields_tab_names))
             }
         }
     }
-    
-?><?php hook("extrafields2");?>
-<?php if(!$force_display_template_order_by){ ?> <div class="clearerleft"></div> <?php } ?>
-<?php if(!isset($related_type_show_with_data)) { echo $extra; } ?>
-<?php if($force_display_template_order_by){ ?> <div class="clearerleft"></div> <?php } ?>
+hook("extrafields2");
+echo $extra; ?>
 </div>
 </div>
 <?php hook("renderafterresourcedetails"); ?>

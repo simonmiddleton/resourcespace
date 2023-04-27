@@ -43,12 +43,13 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
         }
 
     $resultset = array();
+    $get_resource_table_joins = get_resource_table_joins();
     $i=0;
     for($n = $offset; $n < $resultcount; $n++)
         {
         if (is_array($results[$n]))
             {
-            $resultset[$i] = array_map("i18n_get_translated",$results[$n]);
+            $resultset[$i] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
             $i++;
             }
         }
@@ -73,12 +74,13 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
         
+    $get_resource_table_joins = get_resource_table_joins();
     $resultcount= count ($results);
     for($n=0;$n<$resultcount;$n++)
         {
         if(is_array($results[$n]))
             {
-            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            $results[$n] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
             }
         }
     return $results;
@@ -100,6 +102,7 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    global $lang;
     if (!(checkperm("c") || checkperm("d")) || checkperm("XU" . $resource_type))
         {
         return false;
@@ -109,8 +112,14 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
+    if (!api_validate_upload_url($url))
+        {
+        // URL failed validation
+        return false;
+        }
+
     # Create a new resource
-    $ref=create_resource($resource_type,$archive);
+    $ref=create_resource($resource_type,$archive,-1,$lang["createdfromapi"]);
     if (!is_int($ref))
         {
         return false;
@@ -212,7 +221,8 @@ function api_delete_resource($resource)
 
 function api_copy_resource($from,$resource_type=-1)
     {
-    return copy_resource($from,$resource_type);            
+    global $lang;
+    return copy_resource($from,$resource_type,$lang["createdfromapi"]);            
     }
 
 function api_get_resource_log($resource, $fetchrows=-1)
@@ -281,6 +291,7 @@ function api_get_resource_data($resource)
             }
         }
         
+    $resdata = process_resource_data_joins_values($resdata, $joins);
     return $resdata;
     }
 
@@ -408,6 +419,12 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
+    if (!api_validate_upload_url($url))
+        {
+        // URL failed validation
+        return false;
+        }
+
     // Generate unique hash to use so that other uploads with the same name won't conflict
     $upload_key = uniqid((int)$ref . "_");
     $tmp_dld_fpath = temp_local_download_remote_file($url, $upload_key);
@@ -451,7 +468,7 @@ function api_get_field_options($ref, $nodeinfo = false)
     if(!is_numeric($ref))
         {
         // Name may have been passed    
-        $ref = ps_value("select ref value from resource_type_field where name= ?", ['i',$ref], "", "schema");
+        $ref = ps_value("select ref value from resource_type_field where name= ?", ['s',$ref], "", "schema");
         }
         
     if(!metadata_field_view_access($ref))
@@ -608,8 +625,10 @@ function api_add_resource_nodes($resource,$nodestring)
         }
     foreach ($joined_fields_to_update as $field_update)
         {
-        $resource_node_data = get_data_by_field($resource, $field_update);
-        ps_query("UPDATE resource SET field".$field_update."= ? WHERE ref= ?", ['s', $resource_node_data, 'i', $resource]);
+        // get_data_by_field() always returns the value separated by ", " when flattening so we have to ensure it's stored
+        // using the field_column_string_separator in the data_joins (ie fieldX) columns
+        $resource_node_data = str_replace(', ', $GLOBALS['field_column_string_separator'], get_data_by_field($resource, $field_update));
+        update_resource_field_column($resource, $field_update, $resource_node_data);
         }
     
     return true;
@@ -960,4 +979,13 @@ function api_mark_email_as_invalid($email)
 function api_get_user_message($ref)
     {
     return get_user_message($ref);
+    }
+
+function api_get_users_by_permission($permissions)
+    {
+    if(!is_array($permissions))
+        {
+        $permissions = explode(",",$permissions);
+        }
+    return get_users_by_permission($permissions); 
     }

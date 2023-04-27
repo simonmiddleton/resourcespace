@@ -82,7 +82,7 @@ function HookRse_workflowViewPageevaluation()
         }
     }
 
-function HookRse_workflowViewRenderbeforeresourcedetails()
+function HookRse_workflowViewAdditionaldownloadtabs()
     {
     include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
 
@@ -103,9 +103,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 
     if(count($validactions)>0)
         {?>
-        <div class="RecordDownload" id="ResourceWorkflowActions">
-        <div class="RecordDownloadSpace" >
-        <h2><?php echo $lang["rse_workflow_actions_heading"]?></h2>
+        <div class="RecordDownloadSpace" id="ResourceWorkflowActions" style="display:none;">
         <p><?php echo $lang['rse_workflow_user_info']; ?></p>
         <script type="text/javascript">
         function open_notes(action_ref) {
@@ -187,11 +185,22 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
             }?>
         </tbody></table>
         </div><!-- End of RecordDownloadSpace-->
-        </div> <!-- End of RecordDownload-->
         <?php
         }
     }
     
+function HookRse_workflowViewAdditionaldownloadtabbuttons()
+    {
+    global $lang, $modal;
+    ?>
+    <div class="Tab" id="ResourceWorkflowActionsButton">
+        <a href="#" onclick="selectDownloadTab('ResourceWorkflowActions',<?php echo $modal ? 'true' : 'false'; ?>);">
+            <?php echo htmlspecialchars($lang["rse_workflow_actions_heading"]) ?>
+        </a>
+    </div>
+    <?php
+    }
+
 function HookRse_workflowViewReplacetitleprefix($state)
     {
     global $lang,$additional_archive_states;

@@ -51,4 +51,4 @@ $lang['posixldapauth_could_not_connect_to_ldap_server'] = 'Could not connect to 
 $lang['posixldapauth_unable_to_search_ldap_server'] = 'Unable to search LDAP server.';
 $lang['posixldapauth_ldap_call_failed_please_check_settings'] = '%call% failed, please check settings.'; # %call% will be replaced, e.g. ldap_search([used parameters]) failed, please check settings.
 $lang['posixldapauth_ldap_search_successfull_but_no_groups_found'] = 'LDAP search successfull, but 0 groups found.';
-?>
+

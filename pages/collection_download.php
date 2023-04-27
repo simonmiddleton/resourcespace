@@ -92,7 +92,7 @@ for ($n=0;$n<count($result);$n++)
 	$ref=$result[$n]["ref"];
 	# Load access level (0,1,2) for this resource
 	$access=get_resource_access($result[$n]);
-	
+    
     # Get all possible sizes for this resource. If largest available has been requested then include internal or user could end up with no file depite being able to see the preview
 	$sizes=get_all_image_sizes($size=="largest",$access>=1);
 
@@ -217,7 +217,7 @@ if ($submitted != "")
 	for ($n=0;$n<count($result);$n++)
 		{
         $ref = $result[$n]['ref'];
-        
+        $usesize = null;
         if($size=="largest")
             {
             foreach($available_sizes as $available_size => $resources)
@@ -238,7 +238,11 @@ if ($submitted != "")
             {
             $usesize = ($size == 'original') ? "" : $size;
             }        
-
+        if($usesize === null)
+            {
+            unset($result[$n]);
+            continue;
+            }
         $use_watermark=check_use_watermark();
             
 
@@ -256,6 +260,7 @@ if ($submitted != "")
 			$totalsize+=filesize_unlimited($f);
 			}
 		}
+        $result = array_values($result);
 	if ($totalsize>$collection_download_max_size  && !$collection_download_tar)
 		{
 		?>
@@ -450,7 +455,7 @@ if ($submitted != "")
 					update_zip_progress_file("file ".$n);
 					}
 
-                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref);
+                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
 				}
 			}
 
@@ -506,7 +511,14 @@ if ($submitted != "")
 
 	collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
 		
-    collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
+    $completed = collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
+
+    if ($completed)
+        {
+        // A tar file was requested. Nothing further to do.
+        collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", "tar - " . $size);
+        exit();
+        }
 
     collection_download_clean_temp_files($deletion_array);
 
@@ -549,11 +561,12 @@ if ($submitted != "")
             {
             debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
             }
-        collection_log($collection,"Z","","-".$size);
-		}
-	hook('beforedownloadcollectionexit');
-	exit();
-	}
+        }
+    collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
+    hook('beforedownloadcollectionexit');
+    exit();
+    }
+
 include "../include/header.php";
 
 ?>
@@ -601,7 +614,7 @@ function ajax_download(download_offline, tar)
         }
     else
         {
-        progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode($uniqid) ?>&user=<?php echo urlencode($userref) ?>", {
+        progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode((string)$uniqid) ?>&user=<?php echo urlencode((string)$userref) ?>", {
                 method: 'post',          // method; get or post
                 data: '',               //  e.g. {name: "John", greeting: "hello"}
                 minTimeout: 500,       // starting value for the timeout in milliseconds
@@ -819,5 +832,3 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 </div>
 <?php 
 include "../include/footer.php";
-?>
-

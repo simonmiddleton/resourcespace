@@ -35,7 +35,7 @@ $resetjob = getval("reset_job",0,true);
 if($deletejob > 0 && enforcePostRequest(true))
     {
     $deletejobdetail = job_queue_get_job($deletejob);
-    if(checkperm('a') || $deletejob["user"] == $userref)
+    if(checkperm('a') || $deletejobdetail["user"] == $userref)
         {
         job_queue_delete($deletejob);
         }

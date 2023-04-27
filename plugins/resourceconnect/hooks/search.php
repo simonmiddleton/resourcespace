@@ -130,10 +130,10 @@ function HookResourceConnectSearchThumblistextras()
     $title = $resource["field8"]; // image title
     ?>
     <!-- Full screen preview -->
-    <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection"></a>
+    <a class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection"></a>
     
     <!-- Share resource -->
-    <a aria-hidden="true" class="fa fa-share-alt"
+    <a class="fa fa-share-alt"
                                 href="<?php echo $baseurl_short?>plugins/resourceconnect/pages/resource_share.php?url=<?php echo urlencode($url) ?>"  
                                 onClick="return CentralSpaceLoad(this,true);"  
                                 title="<?php echo $lang["share-resource"]?>"
@@ -175,7 +175,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
         {
         $urlparams = array("k"=>$k,"col"=>$collection,"url"=>$resource["url"]);
         $url = generateURL("{$baseurl}/plugins/resourceconnect/pages/view.php",$urlparams);
-        $result[]=array
+        $result["data"][]=array
             (
             "ref"=>-87412,
             "ref_tab"=>$resource["ref"],
@@ -196,6 +196,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
             "pre_url"=>$resource["xl_thumb"],
             "user_rating"=>''
             );
+        $result["count"]++;
         }
     return $result;
     }

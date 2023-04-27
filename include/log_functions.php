@@ -361,36 +361,61 @@ function get_user_downloads($userref,$user_dl_days)
 
 /**
 * Add detail of node changes to resource log
+*
+* Note that this function originally required only the added and removed nodes to be passed. 
+* This was prior to node reversion changes, which requires the logging of all the existing resource nodes
 * 
 * @param integer $resource          Resource ID
-* @param array   $nodes_added       Array of node IDs that have been added
-* @param array   $nodes_removed     Array of node IDs that have been removed
+* @param array   $nodes_new         Array of new node IDs
+* @param array   $nodes_current     Array of old node IDs
 * @param string  $lognote           Optional note to add to log entry
 * @param array   $nodes_renamed     Optional array of old node names with node id as key e.g. [345 => 'oldname',678 => "pastname"]
 * 
 * @return boolean                   Success/failure
 */
-function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "",$nodes_renamed = [])
+function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nodes_renamed = [])
     {
     if((string)(int)$resource !== (string)$resource)
         {
         return false;
         }
+    // Find treefields - required so that old value will be logged with full path
+    $treefields = array_column(get_resource_type_fields("","ref","asc","",[FIELD_TYPE_CATEGORY_TREE]),"ref");
     $nodefieldchanges = array();
-    foreach ($nodes_removed as $node)
+    if(count($nodes_current) != count($nodes_new) || array_diff($nodes_new, $nodes_current) != array_diff($nodes_current, $nodes_new))
         {
-        $nodedata = array();
-        if(get_node($node, $nodedata))
+        foreach ($nodes_current as $node)
             {
-            $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+            $nodedata = array();
+            if(get_node($node, $nodedata))
+                {
+                if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+                    {
+                    $parents = get_node_strings(get_parent_nodes($nodedata["ref"],true,true),false,false);
+                    $nodefieldchanges[$nodedata["resource_type_field"]][0][] = reset($parents);
+                    }
+                else
+                    {
+                    $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $nodedata["name"];
+                    }
+                }
             }
-        }
-    foreach ($nodes_added as $node)
-        {
-        $nodedata = array();
-        if(get_node($node, $nodedata))
+        foreach ($nodes_new as $node)
             {
-            $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+            $nodedata = array();
+            if(get_node($node, $nodedata))
+                {
+                if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
+                    {
+                    $parentnodes = get_parent_nodes($nodedata["ref"],true,true);
+                    $parents = get_node_strings($parentnodes,false,false);
+                    $nodefieldchanges[$nodedata["resource_type_field"]][1][] = reset($parents);
+                    }
+                else
+                    {
+                    $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
+                    }
+                }
             }
         }
     foreach ($nodes_renamed as $nodeid=>$oldname)
@@ -402,16 +427,21 @@ function log_node_changes($resource,$nodes_added,$nodes_removed,$lognote = "",$n
             $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
             }
         }
+
     foreach ($nodefieldchanges as $key => $value)
         {
+        if(isset($value[0]) && isset($value[1]) && array_diff($value[0],$value[1])==array_diff($value[1],$value[0]))
+            {
+            // No difference
+            continue;
+            }
         // Log changes to each field separately
         $fromvalue  = isset($value[0]) ? implode(NODE_NAME_STRING_SEPARATOR,$value[0]) : "";
         $tovalue    = isset($value[1]) ? implode(NODE_NAME_STRING_SEPARATOR,$value[1]) : "";
         resource_log($resource,LOG_CODE_EDITED,$key,$lognote,$fromvalue,$tovalue);
         }
 
-    // Nothing to log
-    return false;
+    return true;
     }
 
 /**

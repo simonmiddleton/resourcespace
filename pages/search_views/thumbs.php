@@ -148,7 +148,7 @@ if (!hook("renderresultthumb"))
                     title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
                 >
                         <?php 
-                        if(1 == $result[$n]['has_image'])
+                        if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $image_size))
                         {
                         render_resource_image($result[$n],$thm_url,$display);
                         // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
@@ -217,7 +217,7 @@ if (!hook("renderresultthumb"))
             echo $workflow_html;
             }
 
-        if($annotate_enabled)
+        if(count(canSeeAnnotationsFields()) > 0)
             {
             $annotations_count = getResourceAnnotationsCount($ref);
             $message           = '';
@@ -357,6 +357,7 @@ if (!hook("renderresultthumb"))
                         id="check<?php echo htmlspecialchars($ref)?>" 
                         class="checkselect" 
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
+                        aria-label="<?php echo escape_quoted_data($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
                         <?php 
                         if (in_array($ref, $selection_collection_resources))

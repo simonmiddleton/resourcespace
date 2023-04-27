@@ -239,6 +239,7 @@ $languages["no"]="Norsk"; # Norwegian
 $languages["pl"]="Polski"; # Polish
 $languages["pt"]="Português"; # Portuguese
 $languages["pt-BR"]="Português do Brasil"; # Brazilian Portuguese
+$languages["ro"]="Limba română"; # Romanian
 $languages["ru"]="Русский язык"; # Russian
 $languages["sk"]="Slovenčina"; # Slovak
 $languages["fi"]="Suomi"; # Finnish
@@ -758,6 +759,9 @@ $mycontributions_link = false;
 # Require terms for download?
 $terms_download=false;
 
+# Require terms for upload share links?
+$terms_upload=false;
+
 # Require terms on first login?
 $terms_login=false;
 
@@ -849,6 +853,9 @@ $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_not
 
 # Optional list of plugins that cannot be enabled through the UI. Can be useful to lock down system for hosting situations
 $disabled_plugins=array();
+
+# The following can be set to show a custom message for disabled plugins. Default is the language string 'plugins-disabled-plugin-message' but this will override it.
+$disabled_plugins_message = "";
 
 # Uncomment and set the next line to allow anonymous access. 
 # You must set this to the USERNAME of the USER who will represent all your anonymous users
@@ -1433,7 +1440,7 @@ $mime_type_by_extension = array(
 
 # PHP execution time limit
 # Default is 5 minutes.
-$php_time_limit=300;
+$php_time_limit = PHP_SAPI != "cli" ? 300 : 0;
 
 # Cron jobs maximum execution time (Default: 30 minutes)
 $cron_job_time_limit = 1800;
@@ -1729,9 +1736,6 @@ $alt_types=array("");
 # organize View page display according to alt_type
 $alt_types_organize=false;
 
-# Allow for alternative files to be natively displayed in the browser
-$alternative_file_view_in_browser = ['pdf', 'mp3'];
-
 # Display col-size image of resource on alternative file management page
 $alternative_file_resource_preview=true;
 
@@ -1911,7 +1915,7 @@ $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 $staticsync_userref=1;
 
 # ------------------------------------------------------------------------------------------------------------------
-$syncdir="/dummy/path/to/syncfolder"; # The sync folder
+$syncdir=""; # The sync folder e.g. "/dummy/path/to/syncfolder"
 $nogo="[folder1]"; # A list of folders to ignore within the sign folder.
 
 /*
@@ -2346,6 +2350,9 @@ $list_recipients=false;
 # How many keywords should be included in the search when a single keyword expands via a wildcard. Setting this too high may cause performance issues.
 $wildcard_expand_limit=50;
 
+# Enable remote apis - NOTE: does not affect "native" authmode which is always enabled.
+$enable_remote_apis = true;
+
 # Default scramble key (never used as a new one is written to config.php during system install)
 $api_scramble_key="abcdef123";
 
@@ -2724,9 +2731,6 @@ $search_results_edit_icon=true;
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
 
-# Experimental. Always use 'download.php' to send thumbs and previews. Improved security as 'filestore' web access can be disabled in theory.
-$thumbs_previews_via_download=false;
-
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
 
@@ -2825,6 +2829,17 @@ $external_share_groups_config_options=false;
 
 // CSV Download - add original URL column
 $csv_export_add_original_size_url_column = false;
+
+/* CSV Download - fields to add from resource table if $alldata = true
+Fields must be added in the format ["column" => column name,"title" => column title]
+where column name is the name of the column as in the resource table
+and column title is the string to be used in the header of the export
+
+File Checksums are included if $file_checksums = true so do not need to be added here
+
+$csv_export_add_data_fields[] = ["column" =>"creation_date","title"=>"Resource Created"];
+$csv_export_add_data_fields[] = ["column" =>"file_modified","title"=>"File Modified"];
+*/
 
 # Prevent users without accounts from requesting resources when accessing external shares. If true, external users requesting access will be redirected to the login screen so only recommended if account requests are allowed.
 $prevent_external_requests=false;
@@ -3135,7 +3150,7 @@ $browse_bar = true;
 $browse_bar_workflow=true;
 
 // Batch replace from local folder
-$batch_replace_local_folder = "/upload";
+$batch_replace_local_folder = ""; # e.g. "/upload";
 
 // Option to distribute files in filestore more equally. 
 // Setting $filestore_evenspread=true; means that all resources with IDs ending in 1 will be stored under filestore/1, whereas historically (with this set to false) this would contain all resources with IDs starting with 1.
@@ -3316,3 +3331,49 @@ $thumbs_display_archive_state = false;
 
 // Cache the count of search results to improve performance
 $cache_search_count = true;
+
+/*
+Separator used for multiple node values in the resource table (column fieldX). The separator will be used as is, both for
+storing and displaying such information (ie on search results or API responses).
+
+IMPORTANT: if the separator value is changed then pages/tools/update_data_joins.php must be run to update currently 
+stored values. This will affect the response of API calls that return fieldX data.
+*/
+$field_column_string_separator = ',';
+
+// $uploader_plugins - Array of additional Uppy plugins that can be enabled 
+// See https://uppy.io/docs/plugins/ for more details on each plugin
+//
+// Nearly all of these plugins require the setting up of a Companion server which is not part of or affiliated with ResourceSpace. 
+// Please refer to the official Companion documentation for instructions on setting this up https://uppy.io/docs/companion/
+// Note that companion server should have the ResourceSpace URL included in the 'COMPANION_UPLOAD_URLS' environmnent variable
+// 
+// Supported options (* requires a Companion server and $uppy_companion_url to be set)
+//
+// Webcam
+// GoogleDrive*
+// Facebook*
+// Dropbox*
+// Onedrive*
+// Instagram*
+// Zoom*
+// Unsplash*
+// Url*
+
+// e.g.
+// $uploader_plugins[] = "GoogleDrive";
+// $uploader_plugins[] = "Facebook";
+// $uploader_plugins[] = "Webcam";
+// $uploader_plugins[] = "Onedrive";
+
+$uploader_plugins = [];
+$uppy_companion_url = "";
+
+# Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
+# URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
+# $api_upload_urls = array();
+
+# The maximum number of resources which will have their disk usage calculated each time batch/cron_jobs/006_update_disk_usage.php
+# is run (normally daily). This script checks resources which were last checked more than 30 days ago. 
+# Consider increasing this if system contains a very large number of resources so all are checked regularly.
+$update_disk_usage_batch_size = 20000;

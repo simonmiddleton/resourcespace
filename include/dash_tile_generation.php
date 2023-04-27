@@ -415,9 +415,11 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
 			}
 		
         $no_preview = false;
-		
-        $preview_path = get_resource_path($preview_resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
-        if(file_exists($preview_path))
+
+        if(
+            !resource_has_access_denied_by_RT_size($preview_resource['resource_type'], 'pre')
+            && file_exists(get_resource_path($preview_resource['ref'], true, 'pre', false, 'jpg', -1, 1, false))
+        )
             {
             $preview_path = get_resource_path($preview_resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
             }
@@ -525,9 +527,11 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
             $resource = $resources[$random_picked_resource_key];
     
             $shadow = true;
-    
-            $preview_path = get_resource_path($resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
-            if(file_exists($preview_path))
+
+            if(
+                !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
+                && file_exists(get_resource_path($resource['ref'], true, 'pre', false, 'jpg', -1, 1, false))
+            )
                 {
                 $preview_path = get_resource_path($resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
                 }

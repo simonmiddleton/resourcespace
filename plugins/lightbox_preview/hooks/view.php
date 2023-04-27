@@ -120,6 +120,3 @@ function HookLightbox_previewViewAftersearchimg()
 
     <?php
     }
-
-?>
-

@@ -120,18 +120,21 @@ foreach($keywords as $keyword)
     // Check if multiple nodes have been specified for an OR search
     $keywords_expanded=explode(';',$specific_field_search[1]);
     $subnodestring = "";
-    foreach($keywords_expanded as $keyword_expanded)
+    if(count($keywords_expanded) > 1) 
         {
-        $node_found = get_node_by_name($nodes, $keyword_expanded);
-
-        if(0 < count($node_found))
+        foreach($keywords_expanded as $keyword_expanded)
             {
-            $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
+            $node_found = get_node_by_name($nodes, $keyword_expanded);
+
+            if(0 < count($node_found))
+                {
+                $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
+                }
             }
-        }
-    if($subnodestring != "")
-        {
-        $search = str_ireplace($keyword, $subnodestring, $search);
+        if($subnodestring != "")
+            {
+            $search = str_ireplace($keyword, $subnodestring, $search);
+            }
         }
     }
     
@@ -231,7 +234,10 @@ if($collectionsearch)
     $search_trimmed = substr($search,11); // The collection search must always be the first part of the search string
     $search_elements = split_keywords($search_trimmed, false, false, false, false, true);
     $collection = (int)array_shift($search_elements);
-    $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+    if(count($search_elements) > 0)
+        {
+        $search = "!collection" . $collection . " " . implode(", ",$search_elements);
+        }
     }
 
 hook("searchstringprocessing");
@@ -450,7 +456,16 @@ if (getval("refreshcollectionframe","")!="")
 $refs=array();
 
 # Special query? Ignore restypes
-if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$special_search_honors_restypes) {$restypes="";}
+if(
+    mb_strpos($search, '!') !== false
+    && !$special_search_honors_restypes
+    // Except for these special searches
+    && substr($search, 0, 11) !== '!properties'
+    && substr($search, 0, 7) !== '!report'
+)
+    {
+    $restypes = '';
+    }
 
 # Do the search!
 $search=refine_searchstring($search);
@@ -510,12 +525,13 @@ if( isset($_REQUEST["search"]) && $_REQUEST["search"] == "" )
     }
 hook('searchaftersearchcookie');
 
-$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page+$offset;
+$rowstoretrieve = (!$disable_geocoding && $display == "map") ? $search_map_max_results : $per_page;
 
 // Do collections search first as this will determine the rows to fetch for do_search() - not for external shares
 if(($k=="" || $internal_share_access) 
     && strpos($search,"!")===false
     && ($archive_standard || in_array(0,$selected_archive_states))
+    && $display !== "map"
     )
     {
     $collections=do_collections_search($search,$restypes,0,$order_by,$sort,$rowstoretrieve);
@@ -527,12 +543,15 @@ if(($k=="" || $internal_share_access)
         {
         $colcount = 0;
         }
-    $resourcestoretrieve = max(($rowstoretrieve-$colcount),0);
+
+    // Get the number of resources required after collections have been displayed
+    $cols_this_page = max($colcount-$offset,0);
+    $resourcestoretrieve = $per_page - $cols_this_page;
     }
 else
     {
-    $resourcestoretrieve = $rowstoretrieve;
     $colcount = 0;
+    $resourcestoretrieve = $rowstoretrieve;
     }
 
 if ($search_includes_resources || substr($search,0,1)==="!")
@@ -540,19 +559,27 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $result=do_search($search,$restypes,$order_by,$archive,$resourcestoretrieve,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access);
+        $result=do_search($search,$restypes,$order_by,$archive,[max($offset-$colcount,0),$resourcestoretrieve],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit, getval("go",""), true, false, $editable_only, false, $search_access,false,true);
         }
     }
 else
     {
-    $result=array(); # Do not return resources (e.g. for collection searching only)
+    $result=["total"=>0,"data"=>[]]; # Do not return resources (e.g. for collection searching only)
     }
-
 # Allow results to be processed by a plugin
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$result_count = is_array($result) ? count($result) : 0;
+// Convert structured results back to a simple array for display
+if(isset($result["total"]))
+    {
+    $result_count   = $result["total"];
+    $result         = $result["data"];
+    }
+else
+    {
+    $result_count   = 0;
+    }
 // Log the search and attempt to reduce log spam by only recording initial searches. Basically, if either of the search 
 // string or resource types or archive states changed. Changing, for example, display or paging don't count as different
 // searches.
@@ -636,6 +663,7 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
             {
             return false;
             }
+            // Element #CentralSpaceResources (search results) can be dropped on by .CollectionPanelShell elements (collection bar)
             jQuery('#CentralSpaceResources').droppable({
                 accept: '.CollectionPanelShell',
 
@@ -669,7 +697,9 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
 if(!$collectionsearch)
     {
     ?>
-    <!-- Search items should only be draggable if results are not a collection -->
+    <!-- Search item results in centralspace have a class of "ResourcePanel" -->
+    <!-- These items should be draggable to add them to the collection in the collection bar if results are NOT from collection search -->
+    <!-- They should also be draggable to the trash_bin to removing them from a collection if results ARE from collection search -->
     <script>    
     // The below numbers are hardcoded mid points for thumbs and xlthumbs
     var thumb_vertical_mid = <?php if($display=='xlthumbs'){?>197<?php } else {?>123<?php }?>;
@@ -699,12 +729,20 @@ if(!$collectionsearch)
     <?php
     }
     
-if ($allow_reorder && $display!="list" && $order_by == "collection") {
+// The sortable method must be enabled regardless of the order_by so that the trash bin is available for interactions from CentralSpace
+// This allows resources to be removed from collection via the trash bin, but will abandon reorder attempts unless order_by is "collection"
+if ($allow_reorder && $display!="list") {
     global $usersession;
 ?>
     <script type="text/javascript">
     var allow_reorder = true;
-    
+
+    var use_sortable_for_trash_only = false;
+    <?php if ($order_by != "collection") { ?>
+        var use_sortable_for_trash_only = true;
+    <?php
+    }
+    ?>    
     function ReorderResources(idsInOrder) {
         var newOrder = [];
         jQuery.each(idsInOrder, function() {
@@ -772,6 +810,13 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
 
             update: function(event, ui)
                 {
+                if (use_sortable_for_trash_only)
+                    {
+                    // We are only using sortable for the ability to use the trash bin when the collection order is not "collection" 
+                    // and so we need to abandon the attempted reorder in this scenario
+                    return false;    
+                    }
+                
                 // Don't reorder when top and bottom collections are the same and you drag & reorder from top to bottom
                 if(ui.item[0].parentElement.id == 'CollectionSpace')
                     {
@@ -1193,7 +1238,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             {
             ?>
             <div class="InpageNavLeftBlock">
-                <select id="resultsdisplay" style="width:auto" name="resultsdisplay" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
+                <select id="resultsdisplay" style="width:auto" name="resultsdisplay" aria-label="<?php echo escape_quoted_data($lang["resultsdisplay"]) ?>" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
             <?php
             $results_display_array_count = count($results_display_array);
             for($n = 0; $n < $results_display_array_count; $n++)
@@ -1321,7 +1366,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
         // Search archive but don't log this to daily_stat
         $arcresults=do_search($search,$restypes,$order_by,2,0,'desc',false,0,false,false,'',false,false);
         $archive_standard = $saved_archive_standard;
-        
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
         if ($arcresults>0) 
             {
@@ -1467,22 +1511,17 @@ if (!hook("replacesearchheader")) # Always show search header now.
             // Get resource data for resources returned by the current search.
             $geo = $result[$n]['ref'];
             $geomark = get_resource_data($geo, true);
-            $geomark['preview_path'] = get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
-            // Get custom metadata field value.
-            if (isset($marker_metadata_field))
-                {
-                $geomark2 = get_data_by_field($geo,$marker_metadata_field);
-                }
-            else
-                {
-                $geomark2 = '';
-                }
+            $geomark2 = isset($marker_metadata_field) ? get_data_by_field($geo, $marker_metadata_field) : '';
+
             // Check for resources without geolocation or invalid coordinates and skip those.
             if (is_numeric($geomark['geo_lat']) && is_numeric($geomark['geo_long']) && $geomark['geo_lat'] >= -90 && $geomark['geo_lat'] <= 90 && $geomark['geo_long'] >= -180 && $geomark['geo_long'] <= 180)
                 {
                 // Create array of geolocation parameters.
                 $geomarker[] = "[" . $geomark['geo_long'] . ", " . $geomark['geo_lat'] . ", " . $geomark['ref'] . ", " . $geomark['resource_type'] . "," . (trim($geomark2) != "" ? floatval($geomark2) : "") . "]";
-                $preview_paths[] = $geomark['preview_path'];
+                $preview_paths[] = $result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'thm')
+                    ? get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified'])
+                    : $baseurl_short . 'gfx/' . get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false);
+
                 }
             }
         }
@@ -1509,9 +1548,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
         }
         
     $rtypes=array();
-    if (!isset($types)){$types=get_resource_types();}
+    if (!isset($types)){$types=get_all_resource_types();}
     $types_count = count($types);
-    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=$types[$n]["name"];}
+    for ($n=0;$n<$types_count;$n++) {$rtypes[$types[$n]["ref"]]=lang_or_i18n_get_translated($types[$n]["name"], "resourcetype-");}
     if (is_array($result) && count($result)>0)
         {
         /**
@@ -1533,12 +1572,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         else
             {
-            $startresource = max($offset-$colcount,0);
-            $endresource = $result_count-$colcount;
-
             // This is used to ensure that all resource panels are the same height 
             $resource_panel_height_max = 0;            
-            for ($n=$startresource;(($n<$endresource) && ($n<($resourcestoretrieve)));$n++)
+            for ($n=0;$n<$result_count-$offset && $n<$resourcestoretrieve;$n++)
                 {
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);
@@ -1580,6 +1616,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
     
                 hook('beforesearchviewcalls');
+
+                // Prepare for display all $data_joins fields (ie fieldX columns)
+                $result[$n] = process_resource_data_joins_values($result[$n], get_resource_table_joins());
 
                 if ($display=="thumbs")
                     {

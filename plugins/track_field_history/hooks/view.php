@@ -5,6 +5,8 @@
 function HookTrack_field_historyViewValue_mod_after_highlight($field,$value){
 	global $ref, $track_fields, $baseurl, $k, $search;
 
+    if (!checkperm('a')) {return $value;}
+
 	if($k=='' && in_array($field['ref'], $track_fields)) {
 		
         $get_params = array(

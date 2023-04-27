@@ -19,6 +19,7 @@ function HookAdobe_linkDownloadAllow_in_browser($permitted_mime)
         {
         $addmime[] = "application/x-indesign";
         $addmime[] = "application/photoshop";
+        $addmime[] = "image/vnd.adobe.photoshop";
         foreach($adobe_link_asset_extensions as $adobe_link_asset_extension)
             {
             $addmime[] = "image/" . $adobe_link_asset_extension;

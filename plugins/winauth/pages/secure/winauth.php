@@ -26,7 +26,7 @@ if($userref != 0)
     $ip=get_ip();
     
     # Generate a new session hash.
-    $session_hash = generate_session_hash('sha256', md5("RS" . $username . "WINAUTH"));
+    $session_hash = generate_session_hash(hash('sha256', md5("RS" . $username . "WINAUTH")));
     
     # Update the user record.
     $parameters=array("s",$session_hash, "i",$userref);

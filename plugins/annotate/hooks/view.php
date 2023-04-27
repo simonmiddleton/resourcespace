@@ -50,16 +50,23 @@ function HookAnnotateViewRenderinnerresourcepreview()
         </script>
         <?php
         $use_watermark = check_use_watermark();
-        $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
+        $use_size      = 'pre';
+        $imagepath     = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], -1, 1, $use_watermark);
 
         if(!file_exists($imagepath))
             {
-            $imagepath=get_resource_path($ref,true,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);    
-            $imageurl=get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);
+            $use_size = 'thm';
+            $imagepath=get_resource_path($ref,true, $use_size,false,$resource["preview_extension"],-1,1,$use_watermark);    
+            $imageurl=get_resource_path($ref,false, $use_size,false,$resource["preview_extension"],-1,1,$use_watermark);
             }
         else
             {
-            $imageurl=get_resource_path($ref,false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
+            $imageurl=get_resource_path($ref,false, $use_size,false,$resource["preview_extension"],-1,1,$use_watermark);
+            }
+
+        if(resource_has_access_denied_by_RT_size($resource['resource_type'], $use_size))
+            {
+            return false;
             }
 
         if (!file_exists($imagepath))
@@ -105,27 +112,6 @@ function HookAnnotateViewRenderinnerresourcepreview()
                     
                     <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo $lang["fullscreenpreview"]?>"><?php echo LINK_CARET . $lang["fullscreenpreview"]?></a>
                 <?php
-                // Magictouch plugin compatibility
-                global $magictouch_account_id;
-
-                if('' != $magictouch_account_id)
-                    {
-                    global $plugins, $magictouch_rt_exclude, $magictouch_ext_exclude;
-
-                    if(in_array('magictouch', $plugins)
-                        && !in_array($resource['resource_type'], $magictouch_rt_exclude)
-                        && !in_array($resource['file_extension'], $magictouch_ext_exclude)
-                        && !defined('MTFAIL'))
-                        {
-                            
-                        // Set alternative target based on where user came from
-                        $targetpage = $baseurl_short . "pages/" . ((getval("from","")=="search") ? "search.php" : "view.php");                            
-                        ?>
-                        &nbsp;<a style="display:inline;" href="<?php echo generateURL($targetpage, $urlparams, $mtparams); ?>" onClick="document.cookie='annotate=off';return CentralSpaceLoad(this);">&gt;&nbsp;<?php echo $lang['zoom']?></a>
-                        <?php
-                        }
-                    }
-                    // end of Magictouch plugin compatibility
 
                 if($annotate_pdf_output)
                     {

@@ -44,7 +44,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
 
 	# Replace the link to add the 'previewlink' ID
 	?>
-		<span class="IconPreview"><a aria-hidden="true" class="fa fa-expand" id= "previewlink<?php echo htmlspecialchars($order_by) . $ref?>" href="<?php
+		<span class="IconPreview"><a class="fa fa-expand" id= "previewlink<?php echo htmlspecialchars($order_by) . $ref?>" href="<?php
 			echo $baseurl_short?>pages/preview.php?from=search&ref=<?php
 			echo urlencode($ref)?>&ext=<?php echo $result[$n]["preview_extension"]?>&search=<?php
 			echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php

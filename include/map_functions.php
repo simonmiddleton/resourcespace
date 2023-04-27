@@ -421,13 +421,18 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
 // Determine the map zoom from the geolocation coordinates numeric precision.
 function leaflet_map_zoom($map_zoom)
     {
-    global $resource;
+    global $resource, $geolocation_default_bounds;
 
     // If no zoom level is set or is non-numeric, define as 0 to enable automatic zoom assignment below.
     $zoom = trim((string) $map_zoom);
     if (!is_int_loose($zoom))
         {
         $zoom = 2;
+        $arr_bounds = explode(",",$geolocation_default_bounds);
+        if (count($arr_bounds)==3) 
+            {
+            $zoom = end($arr_bounds);
+            }
         }
 
     if (!($zoom >= 2 && $zoom <= 21))
@@ -452,7 +457,6 @@ function leaflet_map_zoom($map_zoom)
             $zoom = 15;
             }
         }
-
     return $zoom;
     }
 

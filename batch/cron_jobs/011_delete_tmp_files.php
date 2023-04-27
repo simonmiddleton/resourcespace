@@ -26,7 +26,7 @@ if (time()-strtotime($last_delete_tmp_files) < 24*60*60)
 // Set up array of folders to scan
 $folderstoscan = array();
 $folderstoscan[] = get_temp_dir(false);
-$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "plupload";
+$folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "tus";
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "querycache";
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "remote_files";
 
@@ -81,7 +81,7 @@ foreach ($folderstodelete as $foldertodelete)
         continue;    
         }
     
-    $success = @rcRmdir($foldertodelete);
+    $success = rcRmdir($foldertodelete);
     
     if('cli' == PHP_SAPI)
         {
@@ -98,7 +98,7 @@ foreach ($filestodelete as $filetodelete)
         continue;    
         }
         
-    $success = @unlink($filetodelete);
+    $success = try_unlink($filetodelete);
     
     if('cli' == PHP_SAPI)
         {

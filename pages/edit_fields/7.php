@@ -1,7 +1,7 @@
 <?php
 /* -------- Category Tree ------------------- */ 
-global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window;
-global$category_tree_open, $is_search, $cat_tree_singlebranch, $category_tree_add_parents,
+global $lang, $baseurl, $css_reload_key;
+global$category_tree_open, $is_search, $category_tree_add_parents,
 $category_tree_remove_children, $k;
 
 $is_search      = (isset($is_search) ? $is_search : false);
@@ -82,7 +82,7 @@ if(!$is_search)
 if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
-    <div id="<?php echo $status_box_id; ?>" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+    <div id="<?php echo $status_box_id; ?>" class="CategoryBox">
         <div id="<?php echo $tree_id; ?>_statusbox_begin" style="display:none;"></div>
         <div id="<?php echo $tree_id; ?>_statusbox_platform" style="display:none;"></div>
         <?php echo $status_box_elements; ?>
@@ -207,7 +207,7 @@ echo $hidden_input_elements;
                             };
                     }
             },
-            'multiple' : <?php echo ($cat_tree_singlebranch && !$is_search ? 'false' : 'true'); ?>,
+            'multiple' : true,
             'themes' : {
                 'icons' : false
             }
@@ -238,9 +238,7 @@ echo $hidden_input_elements;
     2. Deselecting a parent node will automatically deselect all child nodes, unless the option $category_tree_remove_children
        is set to false
     3. Deselecting a sub node will not affect any parent nodes
-    4. If $cat_tree_singlebranch is set to true, selection of any node will automatically remove any previously selected
-       nodes and follow the behaviour described in (1)
-    5. Selection of a parent node will have no effect on any sub nodes
+    4. Selection of a parent node will have no effect on any sub nodes
     */
     var jquery_tree_by_id             = jQuery('#<?php echo $tree_id; ?>');
     var category_tree_add_parents     = <?php echo ($category_tree_add_parents ? 'true' : 'false'); ?>;
@@ -364,9 +362,15 @@ if(!$is_search)
             }
 
         <?php
-        if($edit_autosave)
+        if(!$is_search && $edit_autosave)
             {
-            echo "AutoSave('{$field['ref']}');";
+            ?>// Give time for all actions e.g. check parents to complete before autosaving
+            if(typeof(edit_tree_block_autosave) == 'undefined' || !edit_tree_block_autosave)
+                {
+                edit_tree_block_autosave = true;
+                loadingtimers.push(window.setTimeout("AutoSave('<?php echo htmlspecialchars($field['ref']); ?>');edit_tree_block_autosave = false;",500));
+                }
+            <?php
             }
 
         echo $update_result_count_function_call;

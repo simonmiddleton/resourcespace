@@ -130,12 +130,13 @@ function sign_code($code)
 /**
 * Returns a signature for a given block of code.
 * 
-* @param   bool  $confirm   Require user to approve code changes when resigning from the server side.
-* @param   bool  $output    Display output. $confirm will override this option to provide detail if approval needed.
+* @param   bool  $confirm                   Require user to approve code changes when resigning from the server side.
+* @param   bool  $output                    Display output. $confirm will override this option to provide detail if approval needed.
+* @param   bool  $output_changes_only       Output changes only - do not sign code.
 * 
 * @return  void
 */
-function resign_all_code($confirm = true, $output = true)
+function resign_all_code($confirm = true, $output = true, $output_changes_only = false)
     {
     if ($confirm)
         {
@@ -160,7 +161,7 @@ function resign_all_code($confirm = true, $output = true)
         foreach ($rows as $row)
             {
             $code=$row[$column];$ref=$row["ref"];if (trim((string)$code)=="") {$code="";}
-            if ($output) {echo $table . " -> " . $column . " -> " . $ref;}
+            if ($output && !$output_changes_only) {echo $table . " -> " . $column . " -> " . $ref;}
 
             // Extract signature if already one present
             $purecode=$code;
@@ -173,21 +174,33 @@ function resign_all_code($confirm = true, $output = true)
                 // Needs signing. Confirm it's safe.
                 if ($confirm)
                     {
-                    echo " needs signing\n-----------------------------\n";echo $purecode;echo "\n-----------------------------\nIs this code safe? (y/n)";ob_flush();
-                    $line = fgets(STDIN);if (trim($line)!="y") {exit();}
+                    
+                    if (!$output_changes_only)
+                        {
+                        echo " needs signing\n-----------------------------\n";echo $purecode;
+                        echo "\n-----------------------------\nIs this code safe? (y/n)";ob_flush();
+                        $line = fgets(STDIN);if (trim($line)!="y") {exit();}
+                        }
+                    else    
+                        {
+                        echo $table . " -> " . $column . " -> " . $ref . "\n" . $code . "\n\n";
+                        }
                     }
 
                 $code=trim($code);
                 $code="//SIG" . sign_code($code) . "\n" . $code;
-                ps_query("update `$table` set `$column`=? where ref=?",array("s",$code,"i",$ref));
+                if (!$output_changes_only) {ps_query("update `$table` set `$column`=? where ref=?",array("s",$code,"i",$ref));}
                 }
             else    
                 {
-                if ($output) {echo " is OK " . $code . "\n";}
+                if ($output && !$output_changes_only) {echo " is OK\n";}
                 }
             }
         }
     // Clear the cache so the code uses the updated signed code.
-    clear_query_cache("schema");
-    set_sysvar("code_sign_required","");
+    if (!$output_changes_only) 
+        {
+        clear_query_cache("schema");
+        set_sysvar("code_sign_required","");
+        }
     }

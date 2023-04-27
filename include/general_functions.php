@@ -179,9 +179,8 @@ function redirect($url)
 		}
 	else
 		{	
-		if(strpos($url,$baseurl)!==false)
+		if(strpos($url,$baseurl)===0)
 			{
-			// exit($url);	
 			// Base url has already been added
 			header ("Location: " . $url);	
 			exit();
@@ -830,8 +829,8 @@ function allowed_type_mime($allowedtype)
  * @param  string $email            Email address to send to 
  * @param  string $subject          Email subject
  * @param  string $message          Message text
- * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
- * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $from             From address - defaults to $email_from
+ * @param  string $reply_to         Reply to address - defaults to $email_from 
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
  * @param  string $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name
@@ -843,17 +842,11 @@ function allowed_type_mime($allowedtype)
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     {
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
-    global $email_footer, $always_email_from_user, $disable_quoted_printable_enc, $header_colour_style_override;
+    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
 
     if(defined("RS_TEST_MODE"))
         {
         return false;
-        }
-    if($always_email_from_user)
-        {
-        $from_name=($userfullname!="")?$userfullname:$username;
-        $from=$useremail;
-        $reply_to=$useremail;
         }
 
     if($always_email_copy_admin)
@@ -1060,8 +1053,8 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
  * @param  string $email           Email address to send to 
  * @param  string $subject          Email subject
  * @param  string $message          Message text
- * @param  string $from             From address - defaults to $email_from or user's email if $always_email_from_user enabled
- * @param  string $reply_to         Reply to address - defaults to $email_from or user's email if $always_email_from_user enabled
+ * @param  string $from             From address - defaults to $email_from 
+ * @param  string $reply_to         Reply to address - defaults to $email_from
  * @param  string $html_template    Optional template (this is a $lang entry with placeholders)
  * @param  string $templatevars     Used to populate email template placeholders
  * @param  string $from_name        Email from name
@@ -1444,10 +1437,19 @@ function log_mail($email,$subject,$sender)
         }
     $sub = mb_strcut($subject,0,100);
 
-    // Write log to database
-    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES (NOW(), ?, ?, ?, ?);", array("s", $email, "i", $from, "s", $sub, "s", $sender));
-    }
+    // Record a separate log entry for each email recipient
+    $email_recipients = explode(', ', $email);
+    $sql = array();
+    $params= array();
+    foreach ($email_recipients as $email_recipient)
+        {
+        $sql[] = '(NOW(), ?, ?, ?, ?)';
+        $params = array_merge($params, array("s", $email_recipient, "i", $from, "s", $sub, "s", $sender));
+        }
 
+    // Write log to database
+    ps_query("INSERT into mail_log (`date`, mail_to, mail_from, `subject`, sender_email) VALUES " . implode(", ", $sql) . ";", $params);
+    }
 
 /**
  * Quoted printable encoding is rather simple.
@@ -1625,8 +1627,17 @@ function send_statistics()
     $total_resources = ps_value("select count(*) value from resource", array(), 0);
 
     # Send stats
-    @file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
-
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+        }
+    catch (Exception $e)
+        {
+        debug("send_statistics(): " . $e->getMessage());
+        }
+    unset($GLOBALS["use_error_exception"]);
+    
     # Update last sent date/time.
     set_sysvar("last_sent_stats",date("Y-m-d H:i:s")); 
     }
@@ -2280,7 +2291,7 @@ function draw_performance_footer()
     <?php if ($pagename=="collections"){?><br/><br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div style="float:left;"><?php } else { ?><div style="float:right; margin-right: 10px;"><?php } ?>
     <table class="InfoTable" style="float: right;margin-right: 10px;">
-    <tr><td>Page Load</td><td><?php show_pagetime();?></td></tr>
+    <tr><td>Page Load</td><td><?php echo show_pagetime();?></td></tr>
     <?php 
         if(isset($hook_cache_hits) && isset($hook_cache)) {         
         ?>
@@ -2820,7 +2831,7 @@ function get_editable_states($userref)
  * Returns true if $html is valid HTML, otherwise an error string describing the problem.
  *
  * @param  mixed $html
- * @return void
+ * @return bool|string
  */
 function validate_html($html)
     {
@@ -3041,17 +3052,28 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $slideshow_records = ps_query(
+            'SELECT s.ref, resource_ref, r.resource_type, homepage_show, featured_collections_show, login_show
+               FROM slideshow AS s
+         LEFT JOIN `resource` AS r ON s.resource_ref = r.ref',
+         [],
+         'slideshow'
+     );
 
     $slideshow_files = array();
 
     foreach($slideshow_records as $slideshow)
         {
         $slideshow_file = $slideshow;
+        $has_resource_linked = (int) $slideshow['resource_ref'] > 0;
 
         $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
-
-        if(!file_exists($image_file_path) || !is_readable($image_file_path))
+        if(
+            // Transform plugin crop uses the original file to create the slideshow image.
+            ($has_resource_linked && resource_has_access_denied_by_RT_size((int)$slideshow['resource_type'], ''))
+            || !file_exists($image_file_path)
+            || !is_readable($image_file_path)
+        )
             {
             continue;
             }
@@ -3065,7 +3087,7 @@ function get_slideshow_files_data()
                 'nc' => $slideshow_file['checksum'],
             ));
 
-        if((int) $slideshow['resource_ref'] > 0)
+        if($has_resource_linked)
             {
             $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
             }
@@ -3326,7 +3348,17 @@ function is_resourcespace_upgrade_available()
         {
         $default_socket_timeout_cache = ini_get('default_socket_timeout');
         ini_set('default_socket_timeout',5); //Set timeout to 5 seconds incase server cannot access resourcespace.com
-        $centralised_version_number = @file_get_contents('https://www.resourcespace.com/current_release.txt');
+        $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            $centralised_version_number = file_get_contents('https://www.resourcespace.com/current_release.txt');
+            }
+        catch (Exception $e)
+            {
+            $centralised_version_number = false;
+            }
+        $GLOBALS["use_error_exception"] = $use_error_exception_cache;
         ini_set('default_socket_timeout',$default_socket_timeout_cache);
         debug("RS_UPGRADE_AVAILABLE: centralised_version_number = $centralised_version_number");
         if($centralised_version_number === false)
@@ -3741,7 +3773,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         }
 
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = mb_convert_encoding(htmlspecialchars_decode($html), 'HTML-ENTITIES', 'UTF-8');
+    $html = htmlspecialchars_decode(htmlentities($html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
 
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
@@ -3818,9 +3850,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         $html = strip_tags($html);
         }
 
-    // Revert back to UTF-8
-    $html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
-
+    $html = html_entity_decode($html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
     return $html;
     }
 
@@ -3839,7 +3869,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 function get_inner_html_from_tag(string $txt, string $tag)
     {
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = mb_convert_encoding($txt, "HTML-ENTITIES", "UTF-8");
+    $html = htmlspecialchars_decode(htmlentities($txt, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
 
     if($html == strip_tags($txt))
         {
@@ -3870,9 +3900,7 @@ function get_inner_html_from_tag(string $txt, string $tag)
             }
         }
 
-    // Revert back to UTF-8
-    $inner_html = mb_convert_encoding($inner_html, "UTF-8","HTML-ENTITIES");
-
+    $inner_html = html_entity_decode($inner_html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
     return $inner_html;
     }
 
@@ -3880,16 +3908,15 @@ function get_inner_html_from_tag(string $txt, string $tag)
 /**
  * Returns the page load time until this point.
  *
- * @return string
  */
-function show_pagetime()
+function show_pagetime():string
     {
     global $pagetime_start;
     $time = microtime();
     $time = explode(' ', $time);
     $time = $time[1] + $time[0];
     $total_time = round(($time - $pagetime_start), 4);
-    echo $total_time." sec";
+    return $total_time." sec";
     }
 
 /**
@@ -4075,7 +4102,19 @@ function rcRmdir ($path,$ignore=array())
                 }
             }
         }
-    $success = @rmdir($path);
+
+    $GLOBALS['use_error_exception'] = true;
+    try
+        {
+        $success = rmdir($path);
+        }
+    catch(Throwable $t)
+        {
+        $success = false;
+        debug(sprintf('rcRmdir: failed to remove directory "%s". Reason: %s', $path, $t->getMessage()));
+        }
+    unset($GLOBALS['use_error_exception']);
+
     debug("rcRmdir: " . $path . " - " . ($success ? "SUCCESS" : "FAILED"));
     return $success;
     }
@@ -4536,10 +4575,9 @@ function get_system_status()
     $return = [
         'results' => [
             // Example of a test result
-            // [
-            // 'name' => 'Short name of what is being tested',
-            // 'status' => 'OK/FAIL/WARNING',
-            // 'info' => 'Any relevant information',
+            // 'name' => [
+            //     'status' => 'OK/FAIL/WARNING',
+            //     'info' => 'Any relevant information',
             // ]
         ],
         'status' => 'FAIL',
@@ -4755,11 +4793,9 @@ function get_system_status()
     if($diff_days > 1.5)
         {
         $return['results']['cron_process'] = [
-            'status' => 'FAIL',
+            'status' => 'WARNING',
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
         ];
-
-        return $return;
         }
 
 
@@ -4886,7 +4922,7 @@ function get_system_status()
         foreach ($extra_warn_checks as $extra_warn_check)
             {
             $return['results'][$extra_warn_check['name']] = [
-                'status' => 'WARN',
+                'status' => 'WARNING',
                 'info' => $extra_warn_check['info'],
                 ];
             }
@@ -5073,4 +5109,33 @@ function command_line_only()
         http_response_code(401);
         exit('Access denied - Command line only!');
         }
+    }
+
+/**
+ * Helper function to quickly build a list of values, all prefixed the same way.
+ * 
+ * Example use:
+ * $fieldXs = array_map(prefix_value('field'), [3, 88]);
+ * 
+ * @param string $prefix Prefix value to prepend.
+ * 
+ * @return Closure
+ */
+function prefix_value(string $prefix): Closure
+    {
+    return function(string $value) use ($prefix): string
+        {
+        return $prefix . $value;
+        };
+    }
+
+/**
+ *  @param string $haystack Value to be checked
+ *  @param string $needle Substing to seach for in the haystack
+ * 
+ *  @return bool True if the haystack ends with the needle otherwise false
+ */
+function string_ends_with($haystack, $needle)
+    {
+    return substr($haystack, strlen($haystack) - strlen($needle), strlen($needle)) === $needle;
     }

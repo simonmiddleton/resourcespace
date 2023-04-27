@@ -100,15 +100,6 @@
                 </li>
             <?php } ?>
         <?php } ?>
-
-        <?php if ($speedtagging && checkperm("s") && checkperm("n")) { ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $baseurl?>/pages/tag.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="fa fa-fw fa-tags"></i>
-                    <?php echo $lang["tagging"]?>
-                </a>
-            </li>
-        <?php } ?>
                 
         <?php 
         /* ------------ Customisable top navigation ------------------- */

@@ -216,11 +216,11 @@ for ($n=0;$n<count($fields);$n++)
     ?>
     <tr class="resource_type_field_row <?php if ($fields[$n]["active"]==0) { ?>FieldDisabled<?php } ?>" id="field_sort_<?php echo $fields[$n]["ref"];?>">
         <td>
-            <?php echo str_highlight ($fields[$n]["ref"],$find,STR_HIGHLIGHT_SIMPLE);?>
+            <?php echo str_highlight ($fields[$n]["ref"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?>
         </td>   
         <td>
             <div class="ListTitle">
-                  <a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params, array("ref"=>$fields[$n]["ref"],"backurl"=>$url)); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),$find,STR_HIGHLIGHT_SIMPLE);?></span></a>
+                  <a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params, array("ref"=>$fields[$n]["ref"],"backurl"=>$url)); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?></span></a>
             </div>
         </td>
 
@@ -236,7 +236,13 @@ for ($n=0;$n<count($fields);$n++)
             echo ($fields[$n]["type"]!="") ? $lang[$field_types[$fields[$n]["type"]]] : $lang[$field_types[0]];
             ?>
         </td>
-        <?php
+    <?php if (!hook('replacenamecolumn')) {
+        ?><td>
+            <?php echo str_highlight($fields[$n]["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?>
+        </td><?php
+    }?>
+        <td>        
+            <?php echo ($fields[$n]["type"]!="")?$lang[$field_types[$fields[$n]["type"]]]:$lang[$field_types[0]];  // if no value it is treated as type 0 (single line text)
         # Resolve resource type names
         if((bool)$fields[$n]["global"] == 1)
             {
@@ -250,12 +256,13 @@ for ($n=0;$n<count($fields);$n++)
         <td title="<?php echo escape_quoted_data($restypestring); ?>">
             <?php echo htmlspecialchars(tidy_trim($restypestring,30)); ?>
         </td>
-        <?php if (!hook('replacetabnamecolumn'))
-            {
-            ?><td>
-                <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', $find, STR_HIGHLIGHT_SIMPLE); ?>
-            </td><?php
-            }?>
+    <?php if (!hook('replacetabnamecolumn')) {
+        ?><td>
+            <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', htmlspecialchars($find), STR_HIGHLIGHT_SIMPLE); ?>
+        </td><?php
+    }?>
+
+
         <td>
             <div class="ListTools">
               
@@ -296,7 +303,7 @@ for ($n=0;$n<count($fields);$n++)
     <div class="Question">
             <label for="find"><?php echo $lang["find"]?></label>
             <div class="tickset">
-             <div class="Inline"><input type=text name="find" id="find" value="<?php echo $find?>" maxlength="100" class="shrtwidth" /></div>
+             <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data($find)?>" maxlength="100" class="shrtwidth" /></div>
              <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
             <?php
             if ($find!="")

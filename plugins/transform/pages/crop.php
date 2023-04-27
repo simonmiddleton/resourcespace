@@ -6,7 +6,8 @@ include_once "../../../include/image_processing.php";
 include_once "../../../include/slideshow_functions.php";
 include_once "../include/transform_functions.php";
 
-global $cropper_allowed_extensions, $custom_cropper_preset_sizes;
+global $cropper_allowed_extensions, $custom_cropper_preset_sizes, $cropper_use_filename_as_title;
+global $replace_resource_preserve_option, $replace_resource_preserve_default;
 
 $ref        = getval("ref",0,true);
 $search     = getval("search","");
@@ -121,11 +122,17 @@ else
     {
     $errors[] = "Unable to find original file";
     }
-    
-$previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
-if(!file_exists($previewsourcepath))
+
+// Check if an uncropped preview exists
+$previewsourcepath = $org = get_resource_path($ref,true,"original_copy",false,$useext);
+
+if(!file_exists($org))
     {
-    $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+    $previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
+    if(!file_exists($previewsourcepath))
+        {
+        $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+        }
     }
 
 // Get the actions that have been requested
@@ -280,6 +287,12 @@ if ($saveaction != '' && enforcePostRequest(false))
     
     $newpath = "$tmpdir/transform_plugin/download_" . $ref . uniqid() . "." . $new_ext;
 
+    // Preserve scr of original file incase transforms are used for previews
+    if(!file_exists($org))
+        {
+        $scr = get_resource_path($ref,true,"scr",false,$useext);
+        rename($scr,$org);
+        }
 
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
@@ -294,11 +307,27 @@ if ($saveaction != '' && enforcePostRequest(false))
 
         $name       = getval("filename","");
         $filename   = safe_file_name($name);
-        if (trim($filename) == "")
+
+        if ($cropper_use_filename_as_title) 
             {
-            $filename = $ref . "_" . strtolower($lang['transformed']);
+            if(trim((string)$filename) == "")
+                {
+                // Compute a file name using file naming configuration
+                $filename = get_download_filename($ref, "", "", $new_ext);
+                }
+            else
+                {
+                $filename .= "." . $new_ext;                    
+                }
             }
-        $filename .= "." . $new_ext;
+        else
+            {
+            if (trim((string)$filename) == "")
+                {
+                $filename = $ref . "_" . strtolower($lang['transformed']);
+                }
+            $filename .= "." . $new_ext;
+            }
 
         // Use the resultant file as requested
         if ($saveaction == "alternative" && $cropper_enable_alternative_files)
@@ -320,7 +349,8 @@ if ($saveaction != '' && enforcePostRequest(false))
             }
         elseif ($saveaction == "original" && $cropper_transform_original && $edit_access && !$cropperestricted)
             {
-            // Replace the original file
+            // Replace the original file with the cropped file in newpath
+            // If keep_original is selected then save the original as an additional file
             $keep_original = getval("keep_original", "") != "";
             $success = replace_resource_file($ref,$newpath,true,false,$keep_original);
             if (!$success)
@@ -899,6 +929,7 @@ renderBreadcrumbs($links_trail);
         <?php 
         if('' === trim($manage_slideshow_action))
             {?>
+            keep_original_available = <?php if($replace_resource_preserve_option) {echo "true";} else {echo "false";}?>;
             slideshow_edit  = false;
             cropper_always  = false;
             jQuery(document).ready(function ()
@@ -937,6 +968,14 @@ renderBreadcrumbs($links_trail);
                     else if(this.value=='original')
                         {
                         slideshow_edit=false;
+                        if(keep_original_available) 
+                            {
+                            jQuery('#keep_original_question').show();
+                            }
+                        else 
+                            {
+                            jQuery('#keep_original_question').hide();
+                            }
                         jQuery('#imagetools_original_actions').show();
                         evaluate_values();
                         cropper_always=false;
@@ -1077,7 +1116,7 @@ renderBreadcrumbs($links_trail);
         <input type='hidden' name='origwidth' id='origwidth'  value='<?php echo $origwidth ?>' />
         <input type='hidden' name='origheight' id='origheight'  value='<?php echo $origheight ?>' />
         <input type='hidden' name='tfactions' id='tfactions'  value='<?php echo $tfactions ?>' />
-        <?php echo generateFormToken("imagetools_form"); ?>
+        <?php generateFormToken("imagetools_form"); ?>
 
     <div class="FloatingOptions">
         <?php
@@ -1146,9 +1185,19 @@ renderBreadcrumbs($links_trail);
             if($cropper_transform_original)
                 {?>
                 <div class="imagetools_save_action" id="imagetools_original_actions" style="display:none;">
-                    <div class="Question">
+                    <div class="Question" id="keep_original_question">
                         <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
+            <?php
+            if($replace_resource_preserve_option && $replace_resource_preserve_default)
+            {?>
                         <input type='checkbox' name='keep_original' value="1" checked />
+            <?php
+            } else {
+            ?>
+                        <input type='checkbox' name='keep_original' value="0" />
+            <?php    
+            }
+            ?>
                         <div class="clearerleft"></div>
                     </div>
                     <div class="Question">

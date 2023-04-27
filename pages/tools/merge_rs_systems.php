@@ -1376,7 +1376,8 @@ if($import && isset($folder_path))
         $new_resource_ref = create_resource(
             $resource_types_spec[$src_resource["resource_type"]],
             $archive_states_spec[$src_resource["archive"]],
-            $created_by);
+            $created_by,
+            $lang["createdfrommergerssystems"]);
 
         if($new_resource_ref === false)
             {

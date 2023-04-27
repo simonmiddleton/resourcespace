@@ -163,16 +163,17 @@ function set_config_option($user_id, $param_name, $param_value)
 
 
 /**
-* Get config option from database
+* Get config option value from the database (system wide -or- a user preference).
 * 
-* @param  integer  $user_id         Current user ID
+* @param  ?integer $user_id         Current user ID. Use NULL to get the system wide setting.
 * @param  string   $name            Parameter name
-* @param  string   $returned_value  If a value does exist it will be returned through
-*                                   this parameter which is passed by reference
+* @param  string   $returned_value  The config value will be returned through this parameter which is passed by reference.
+*                                   IMPORTANT: it falls back (defaults) to the globally scoped config option value if 
+*                                   there's nothing in the database.
 * @param  mixed    $default         Optionally used to set a default that may not be the current
 *                                   global setting e.g. for checking admin resource preferences
 *
-* @return boolean
+* @return boolean Indicates if the config option was found in the database or not.
 */
 function get_config_option($user_id, $name, &$returned_value, $default = null)
     {
@@ -194,14 +195,15 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
     $query = "SELECT `value` FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
     $params[] = "s"; $params[] = $name;
     $config_option = ps_value($query,$params, null);
-    if(is_null($default) && isset($GLOBALS['system_wide_config_options'][$name]))
+
+    if(is_null($default) && isset($GLOBALS[$name]))
         {
-        $default = $GLOBALS['system_wide_config_options'][$name];
+        $default = $GLOBALS[$name];
         }
 
      if(is_null($config_option))
         {
-        $returned_value = isset($default) ? $default : null;
+        $returned_value = $default;
         return false;
         }
 

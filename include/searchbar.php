@@ -74,7 +74,6 @@ for ($n=0;$n<count($fields);$n++)
 # Also build a quicksearch string.
 $quicksearch    = refine_searchstring($quicksearch);
 $keywords       = split_keywords($quicksearch,false,false,false,false,true);
-
 $set_fields     = array();
 $simple         = array();
 $searched_nodes = array();
@@ -84,11 +83,22 @@ for ($n=0;$n<count($keywords);$n++)
     {
     if (trim($keywords[$n])!="")
         {
-        if (strpos($keywords[$n],":")!==false && substr($keywords[$n],0,11)!="!properties")
+        $quoted_string=(substr($keywords[$n],0,1)=="\""  || substr($keywords[$n],0,2)=="-\"" ) && substr($keywords[$n],-1,1)=="\"";
+        if (!$quoted_string && strpos($keywords[$n],":")!==false && substr($keywords[$n],0,11)!="!properties")
             {
             $s=explode(":",$keywords[$n]);
             if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}
-            else {$set_fields[$s[0]]=$s[1];}
+            else
+                {
+                $set_fields[$s[0]] = $s[1];
+                $i = $n + 1;
+                while ($i < count($keywords) && strpos($keywords[$i], ":") === false)
+                    {
+                    $set_fields[$s[0]] .= " " . $keywords[$i];
+                    $i++;
+                    }
+                $n = $i - 1;
+            }
             if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
             }
             
@@ -211,7 +221,7 @@ var categoryTreeChecksArray = [];
 
 <?php if (!hook("searchbarremove")) { ?>
 
-<div class="SearchSpace" <?php if (!$basic_simple_search){?>id="searchspace"<?php } ?>>
+<div class="SearchSpace" id="searchspace"> 
 
 <?php if (!hook("searchbarreplace")) { ?>
     
@@ -508,7 +518,7 @@ elseif($restypes=='')
     if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }
     if (!$basic_simple_search) {
     // Include simple search items (if any)
-    global $clear_function, $simple_search_show_dynamic_as_dropdown, $chosen_dropdowns;
+    global $clear_function, $simple_search_show_dynamic_as_dropdown;
     
     $optionfields=array();
     $rendered_names=array();
@@ -809,7 +819,7 @@ elseif($restypes=='')
                 ?>  
     
                  <?php  echo $lang["bydate"]?><br />
-    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>">
+    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>" aria-label="<?php echo escape_quoted_data($lang['year']) ?>">
               <option selected="selected" value=""><?php echo $lang["anyyear"]?></option>
               <?php
               
@@ -824,7 +834,7 @@ elseif($restypes=='')
     
             <?php if ($searchbyday) { ?><br /><?php } ?>
     
-            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>">
+            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>" aria-label="<?php echo escape_quoted_data($lang['month']) ?>">
               <option selected="selected" value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($n=1;$n<=12;$n++)
@@ -862,12 +872,6 @@ elseif($restypes=='')
         {
         <?php
         echo $clear_function;
-        if($chosen_dropdowns)
-            {
-            ?>
-            jQuery('#SearchBox select').trigger('chosen:updated');
-            <?php
-            }
         ?>
         }
     </script>

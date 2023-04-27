@@ -319,7 +319,14 @@
 		{
 			return;
 		}
-		jQuery('div#MessageContainer').append("<div class='MessageBox' style='display: none;' id='" + id + "'>" + nl2br(message) + "<br />" + url + "</div>").after(function()
+
+        let message_box_div = document.createElement('div');
+        message_box_div.className = 'MessageBox';
+        message_box_div.setAttribute('style', 'display: none;');
+        message_box_div.setAttribute('id', id);
+        message_box_div.textContent = nl2br(message) + '<br>' + url;
+
+        jQuery('div#MessageContainer').append(message_box_div).after(function()
 		{
 			var t = window.setTimeout(function()
 			{
@@ -363,47 +370,53 @@
 		});
 	}
 	
-	function message_modal(message, url, ref, owner)
-		{
-		if (typeof ref==="undefined")
-			{
-				ref=new Date().getTime();
-			}
-		if (typeof url==="undefined")
-			{
-				url="";
-			}
-		if (url!="")
-			{
-				url=decodeURIComponent(url);
-				url="<a class='message_link' href='" + url + "'><?php echo $lang['link']; ?></a>";
-			}
-		if (typeof owner==="undefined" || owner=='')
-			{
-			owner = '<?php echo escape_quoted_data($applicationname); ?>';
-			}
-		jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(message) + "</div>" + url);
-		jQuery("#modal_dialog").addClass('message_dialog');
-		jQuery("#modal_dialog").dialog({
-			title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,
-			modal: true,
-			resizable: false,
-			buttons: [{text: '<?php echo $lang['ok'] ?>',
-					  click: function() {
-						jQuery( this ).dialog( "close" );
-						}}],
-			dialogClass: 'message',
-			width: 400,
-			draggable: true,
-			open: function(event, ui) { jQuery('.ui-widget-overlay').bind('click', function(){ jQuery("#modal_dialog").dialog('close'); }); },
-			close: function( event, ui ) {
-				jQuery('#modal_dialog').html('');
-				jQuery("#modal_dialog").removeClass('message_dialog');
-				jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
-				},
-			dialogClass: 'no-close'
-			});
-			 
-		}
+    function message_modal(message, url, ref, owner)
+        {
+        if (typeof ref==="undefined")
+            {
+                ref=new Date().getTime();
+            }
+        if (typeof url==="undefined")
+            {
+                url="";
+            }
+        if (url!="")
+            {
+                url=decodeURIComponent(url);
+                url=DOMPurify.sanitize(url);
+                url="<a class='message_link' href='" + url + "'><?php echo escape_quoted_data($lang['link']); ?></a>";
+            }
+        if (typeof owner==="undefined" || owner=='')
+            {
+            owner = '<?php echo escape_quoted_data($applicationname); ?>';
+            }
+
+        jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(DOMPurify.sanitize(message)) + "</div>" + url);
+        jQuery("#modal_dialog").addClass('message_dialog');
+        jQuery("#modal_dialog").dialog({
+            title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,
+            modal: true,
+            resizable: false,
+            buttons: [{text: '<?php echo $lang['ok'] ?>',
+                        click: function() {
+                        jQuery( this ).dialog( "close" );
+                        }}],
+            dialogClass: 'message',
+            width: (jQuery(window).width() <= 1280) ? jQuery(window).width()*0.7 : 600,
+            maxHeight: jQuery(window).height()*0.8,
+            draggable: true,
+            open: function(event, ui) {
+                jQuery('.ui-widget-overlay').bind('click', function(){ jQuery("#modal_dialog").dialog('close'); });
+                jQuery( ".ui-dialog-content" ).scrollTop(0);
+                },
+            close: function( event, ui ) {
+                jQuery('#modal_dialog').html('');
+                jQuery("#modal_dialog").removeClass('message_dialog');
+                jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?ajax=true&seen=' + ref);
+                },
+            dialogClass: 'no-close'
+            });
+                
+        }
 
 </script>

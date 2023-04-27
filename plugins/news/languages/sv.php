@@ -12,3 +12,4 @@ $lang['news_headline']      = 'Rubrik';
 $lang['news_body']          = 'Brödtext';
 $lang['news_nonewmessages'] = 'Inga nya meddelanden';
 $lang['title']              = 'Senaste Nytt...';
+$lang["title-too-long"]='Titelfältet är längre än de tillåtna 50 tecknen.';

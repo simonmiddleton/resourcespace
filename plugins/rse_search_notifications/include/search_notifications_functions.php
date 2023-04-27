@@ -56,7 +56,7 @@
 			{
 			$archive=0;
 			}
-		$restypes_names = ps_value("SELECT GROUP_CONCAT(name SEPARATOR ', ') AS value FROM resource_type WHERE ref IN (" .
+		$restypes_names = ps_query("SELECT name FROM resource_type WHERE ref IN (" .
 		ps_param_insert(count(explode(",", $restypes))) . ")", ps_param_fill(explode(",", $restypes), "i"), "");
 
         // Because search can contain direct node IDs searches like @@257
@@ -83,7 +83,7 @@
         $rebuilt_search = str_replace('"', '', $rebuilt_search);
 
         $title = '"' . $rebuilt_search . '"';
-        $title .= ($restypes_names == "") ? "" : " (" . i18n_get_translated($restypes_names) . ")";
+        $title .= ($restypes_names == "") ? "" : " (" . implode(',', array_map('i18n_get_translated',array_column($restypes_names, 'name'))) . ")";
         $title = mb_strcut($title,0,500);
 
 		ps_query("INSERT INTO search_saved(created,owner,title,search,restypes,archive,enabled) VALUES (

@@ -14,12 +14,18 @@ $ref=getval("ref","",true);
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 $use=$ref;
 
+
+debug("EDIT POST VARIABLE COUNT=".count($_POST));
+
+
 # Fetch search details (for next/back browsing and forwarding of search params)
 $search=getval("search","");
 $order_by=getval("order_by","relevance");
 $offset=getval("offset",0,true);
 $restypes=getval("restypes","");
-if (strpos($search,"!")!==false) {$restypes="";}
+
+// Do the same as search.php - ignore except for properties search
+if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$special_search_honors_restypes) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
@@ -32,6 +38,15 @@ $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $external_upload = upload_share_active();
+$redirecturl = getval("redirecturl","");
+if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+
+if($terms_upload && $external_upload !== false && (!isset($_COOKIE["acceptedterms"]) || $_COOKIE["acceptedterms"] != true))
+    {
+    # Getting to this page without accepting terms means skipping the upload page
+    # This won't allow uploads without accepting terms but this is the most helpful message to display
+    exit(error_alert($lang["mustaccept"],false));
+    }
 
 if($camera_autorotation)
     {
@@ -72,6 +87,7 @@ $uploadparams["no_exif"] = $no_exif;
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getval("entercolname","");
 $uploadparams["k"] = $k;
+$uploadparams["redirecturl"] = $redirecturl;
 
 # Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
@@ -154,7 +170,7 @@ if ($upload_review_mode)
                 $redirectparams["promptsubmit"] = 'true';
                 }
             
-            $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
+            $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
             }
         redirect($url);
         exit();
@@ -282,6 +298,7 @@ if($editsearch)
     $editable_resource_refs=array_column($edititems,"ref");
 
     # If not all resources are editable then the batch edit may not be approprate
+
     if($editable_resources_count != $all_resources_count)
         {
         # Counts differ meaning there are non-editable resources
@@ -293,7 +310,7 @@ if($editsearch)
             if ( !hook('customediteaccess','',array($non_editable_ref)) ) 
                 {
                 $error = $lang['error-editpermissiondenied'];
-                error_alert($error);
+                error_alert($error, false);
                 exit();
                 }
             }
@@ -378,11 +395,35 @@ $uploadparams["resource_type"] = $resource['resource_type'];
 // Resource archive (ie user template - negative resource ID) can be default only when user actually gets to set it otherwise
 // makes no sense in using it and we should let the system decide based on configuration and permissions what it should use.
 $default_setarchivestate = ($show_status_and_access_on_upload || $resource['ref'] > 0 ? $resource['archive'] : '');
-$setarchivestate = getval('status', $default_setarchivestate, TRUE);
+if ($resetform)
+    {
+    $setarchivestate = $default_setarchivestate;
+    }
+else
+    {
+    $setarchivestate = getval('status', $default_setarchivestate, TRUE);
+    }
 // Validate this is permitted
 $setarchivestate = get_default_archive_state($setarchivestate);
 
 $uploadparams["status"] = $setarchivestate;
+
+if (in_array(getval("access", RESOURCE_ACCESS_INVALID_REQUEST, true), RESOURCE_ACCESS_TYPES) && !$resetform)
+    {
+    // Preserve selected access values including custom access if form validation returns a missed required field.
+    $access_submitted = (int) getval("access", RESOURCE_ACCESS_CONFIDENTIAL, true);
+    if ($access_submitted == RESOURCE_ACCESS_CUSTOM_GROUP)
+        {
+        $submitted_access_groups = array();
+        $custom_access_groups = get_resource_custom_access($ref);
+        for ($n = 0; $n < count($custom_access_groups); $n++)
+                {
+                $access_usergroup = $custom_access_groups[$n]["ref"];
+                $custom_access_level = getval("custom_" . $access_usergroup, 0);
+                $submitted_access_groups[$access_usergroup] = (int) $custom_access_level;
+                }
+        }
+    }
 
 # Allow alternative configuration settings for this resource type.
 resource_type_config_override($resource["resource_type"]);
@@ -491,7 +532,8 @@ if($ref < 0)
     $cfb = check_filestore_browseability();
     if(!$cfb['index_disabled'])
         {
-        exit(error_alert($lang['error_generic_misconfiguration'], true, 200)); 
+    error_alert($lang['error_generic_misconfiguration'], true, 200);
+        exit(); 
         }
     }
 
@@ -510,6 +552,7 @@ $urlparams= array(
     "collection_add"    => $collection_add,
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
+    'redirecturl'       => $redirecturl,
 );
 
 check_order_by_in_table_joins($order_by);
@@ -720,7 +763,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
                                 
-                                $url = generateURL($baseurl . "/pages/search.php",$redirectparams);
+                                $url = $redirecturl != "" ? $redirecturl : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; ?>',true);</script>
@@ -754,9 +797,16 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         // If noupload is set - create resource without uploading stage
                         if (getval("noupload","") != "")
                             {
-                            $ref=copy_resource(0-$userref,$resource_type);
+                            $ref=copy_resource(0-$userref,$resource_type,$lang["createdfromteamcentre"]);
                             $urlparams["ref"] = $ref;
                             $hidden_collection = false;
+
+                            $relateto = getval("relateto","",true);
+                            if($relateto!="" && !upload_share_active())
+                                {
+                                // This has been added from a related resource upload link
+                                update_related_resource($relateto,$ref);
+                                }
                             // Create new collection if necessary
                             if($collection_add=="new") 
                                 {
@@ -776,15 +826,21 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     show_hide_collection($collection_add, false, $userref);
                                     }
                                 }
-                            redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
-                            exit();
+                            if($redirecturl == "")
+                                {
+                                $redirecturl = generateURL($baseurl_short . "pages/view.php",$urlparams, ["refreshcollectionframe"=>"true"]);
+                                }
+                            exit(json_encode(["redirecturl"=>$redirecturl]));
                             }
-                            if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
+                        if (!hook('redirectaftersavetemplate')) {redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
                         }
                     else
                         {
                         // Default
-                        if (!hook('redirectaftersavetemplate')) {redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));}
+                        if (!hook('redirectaftersavetemplate'))
+                            {
+                            redirect(generateURL($baseurl_short . "pages/upload_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                            }
                         }
                     }
                 }
@@ -863,7 +919,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $editsearch["search"]   = $search;
                 $editsearch["restypes"] = $restypes;
                 $editsearch["archive"]  = $archive;
-                $save_errors=save_resource_data_multi(0,$editsearch);
+                $save_errors=save_resource_data_multi(0,$editsearch,$_POST);
 
                 // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
                 if(!is_array($save_errors) && $edit_selection_collection_resources)
@@ -914,10 +970,10 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 }
             else
                 {
-                $save_errors=save_resource_data_multi($collection);
+                $save_errors=save_resource_data_multi($collection, [],$_POST);
                 if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
-                    redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
+                    redirect($redirecturl != "" ? $redirecturl : generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
                     }
                 }
                 
@@ -982,13 +1038,6 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    $resource=get_resource_data($ref,false);
    }
 
-# Simulate reupload (preserving filename and thumbs, but otherwise resetting metadata).
-if (getval("exif","")!="")
-    {
-    upload_file($ref,$no_exif=false,true);
-    resource_log($ref,"r","");
-    }   
-
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
     {
@@ -996,7 +1045,7 @@ if (getval("refreshcollectionframe","")!="")
     }
 
 
-// Manually set any errors that ned to be shown e.g. after saving with locked values
+// Manually set any errors that need to be shown e.g. after saving with locked values
 $showextraerrors = getval("showextraerrors","");
 if ($showextraerrors != "")
     {
@@ -1389,11 +1438,11 @@ hook("editbefresmetadata"); ?>
                 {
                 if(trim((string) $types[$n]['allowed_extensions']) != "")
                     {
-                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions']));
+                    $allowed_extensions = explode(",",strtolower($types[$n]['allowed_extensions'])); // As MIME types
                     }
                 else
                     {
-                    array();
+                    $allowed_extensions = array();
                     }
                 // skip showing a resource type that we do not to have permission to change to 
                 // (unless it is currently set to that). Applies to upload only
@@ -1403,10 +1452,12 @@ hook("editbefresmetadata"); ?>
                         ||
                         (checkperm("XE") && !checkperm("XE-" . $types[$n]['ref']))
                         ||
+                        (checkperm("XE" . $types[$n]['ref']))
+                        ||
                         (trim((string) $resource["file_extension"]) != ""
                             && isset($allowed_extensions)
                             && count($allowed_extensions) > 0 
-                            && !in_array(strtolower($resource["file_extension"]),$allowed_extensions))
+                            && !in_array(allowed_type_mime(strtolower($resource["file_extension"])), $allowed_extensions))
                     &&
                         $resource['resource_type'] != $types[$n]['ref']
                     )
@@ -1924,15 +1975,12 @@ echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . 
 
 # Work out the correct archive status.
 if ($ref < 0 && !$show_status_and_access_on_upload) 
-   {
-    # # Upload template and not displaying status. Hide the dropdown and set the default status.
+    {
+    # Upload template and not displaying status. Hide the dropdown and set the default status.
     ?>
     <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
     }
-else # Edit Resource(s).
-    {
-    $setarchivestate = $resource["archive"];
-    }
+
 ?>
 </div><!-- end of ResourceMetadataSection -->
 <?php
@@ -2048,11 +2096,18 @@ else
       $ea1=!checkperm('ea1');
       $ea2=checkperm("v")?(!checkperm('ea2')?true:false):false;
       $ea3=$custom_access?!checkperm('ea3'):false;
+
+      $access_stored_value = $resource["access"];  
+      if (getval("submitted","") != "" && isset($access_submitted) && $access_submitted != $resource["access"])
+          {
+          $resource["access"] = $access_submitted; // Keep value chosen on form when a required field wasn't completed.
+          }
+
       if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
       {
         if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
 			{
-			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $resource["access"] . "'>";
+			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
 			}?>
         <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo $lang["confirm_remove_custom_usergroup_access"] ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
@@ -2089,7 +2144,16 @@ else
                  {
                    $access=$default_customaccess;
                    $editable= (!$ea3)?false:true;
-                   if ($groups[$n]["access"]!=='') {$access=$groups[$n]["access"];}
+
+                   if (isset($submitted_access_groups) && $submitted_access_groups[$groups[$n]['ref']] !== "" )
+                       {
+                       $access = $submitted_access_groups[$groups[$n]['ref']];
+                       }
+                   elseif (isset($groups[$n]["access"]) && $groups[$n]["access"] !== '')
+                       {
+                       $access = $groups[$n]["access"];
+                       }
+
                    $perms=explode(",",(string) $groups[$n]["permissions"]);
                    if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
@@ -2393,16 +2457,17 @@ if ($ref>0 && !$multiple)
             <div class="Question QuestionStickyRight" id="question_file">
             <div class="FloatingPreviewContainer">
             <?php
-            if ($resource["has_image"]==1)
+            $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
+            if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
                 <?php // check for watermarked version and show it if it exists
                 if (checkperm("w"))
                     {
-                    $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
+                    $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                     if (file_exists($wmpath))
                         { ?>
-                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
                         <?php 
                         }
                     } ?>
@@ -2440,12 +2505,6 @@ if ($ref>0 && !$multiple)
                 <?php 
                 }
 
-            if ($allow_metadata_revert && !checkperm('F*'))
-                {?>
-                <br />
-                <a href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams,array("exif"=>"true")); ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');"><?php echo LINK_CARET ?><?php echo $lang["action-revertmetadata"]?></a>
-                <?php
-                }
             hook("afterfileoptions"); ?>
             </div>
             <div class="clearerleft"> </div>

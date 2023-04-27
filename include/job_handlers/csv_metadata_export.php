@@ -40,7 +40,9 @@ $findstrings = array("%%SEARCH%%","%%TIME%%");
 $replacestrings = array(safe_file_name("TEST"),date("Ymd-H:i",time()));
 $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
 
-$csvurl = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename . ".csv";
+$csv_filename_noext = strip_extension($csv_filename);
+
+$csvurl = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".csv&filename=" . $csv_filename_noext . ".csv";
 
 generateResourcesMetadataCSV($exportresources,$personaldata, $allavailable, $csvfile);
 

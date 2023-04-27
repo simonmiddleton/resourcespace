@@ -65,7 +65,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Only show the results (this will appear in an iframe)
         if (substr($restypes,0,11)!="Collections")
             {
-            $result=do_search($search,$restypes,"relevance",$archive,-1,"",false,DEPRECATED_STARSEARCH, false, false, "", false,true, false, false, false, $access);
+            $result=do_search($search,$restypes,"relevance",$archive,[0,0],"",false,DEPRECATED_STARSEARCH, false, false, "", false,false, true, false, false, $access);
             }
         else 
             {
@@ -75,7 +75,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             }
         if (is_array($result))
             {
-            $count=count($result);
+            $count = $result["total"] ?? count($result);
             }
         else
             {
@@ -96,6 +96,8 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                         inputs[i].value = content;
                         }
                     }
+                console.debug("Finished updating result count");
+                var updatingcount = false;
                 }
 		
 		<?php if ($count==0) { ?>
@@ -134,6 +136,7 @@ $search= isset($_COOKIE["search"]) ? $_COOKIE["search"] : "";
 $keywords=split_keywords($search,false,false,false,false,true);
 $allwords="";$found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";
 $searched_nodes = array();
+$full_text_search = "";
 
 foreach($advanced_search_properties as $advanced_search_property=>$code)
   {$$advanced_search_property="";}
@@ -142,7 +145,7 @@ $values=array();
 	
 if (getval("resetform","")!="")
   { 
-  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";
+  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$full_text_search="";
   $restypes=get_search_default_restypes();
   $selected_archive_states=array(0);
   rs_setcookie("search","",0,"","",false,false);
@@ -161,14 +164,23 @@ else
   for ($n=0;$n<count($keywords);$n++)
 	  {
 	  $keyword=trim($keywords[$n]);
+      $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
 	  if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
 		  {
             
-          if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+          if((substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"")
             {
             $nk=explode(":",substr($keyword,1,-1));
-            $name=trim($nk[0]);
-            $keyword = "\"" . trim($nk[1]) . "\"";
+            if($nk[0] == FULLTEXT_SEARCH_PREFIX)
+                {
+                $name=trim($nk[0]);
+                $full_text_search = str_replace(FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,"\"",$nk[1]);
+                }
+            else
+                {
+                $name=trim($nk[0]);
+                $keyword = "\"" . trim($nk[1]) . "\"";
+                }
             }
 		  else
             {
@@ -386,39 +398,38 @@ jQuery(document).ready(function()
 
 <script type="text/javascript">
 var categoryTreeChecksArray = [];
-var updating=false;
+var updatingcount=false;
 function UpdateResultCount()
-	{
-	updating=false;
-	// set the target of the form to be the result count iframe and submit
-	document.getElementById("advancedform").target="resultcount";
-	document.getElementById("countonly").value="yes";
-	
-	
-	jQuery("#advancedform").submit();
-	document.getElementById("advancedform").target="";
-	document.getElementById("countonly").value="";
-	}
+    {
+    if(updatingcount)
+        {
+        console.debug("Blocked from updating result count - search in progress");
+        return false;
+        }
+    var updatingcount=true;
+    console.debug("Updating result count");
+    // set the target of the form to be the result count iframe and submit
+    document.getElementById("advancedform").target="resultcount";
+    document.getElementById("countonly").value="yes";	
+    jQuery("#advancedform").submit();
+    document.getElementById("advancedform").target="";
+    document.getElementById("countonly").value="";
+    }
 	
 jQuery(document).ready(function(){
-	    jQuery('#advancedform').submit(function() {
-            if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
-                {
-                    jQuery('.tickboxcoll').prop('checked',false);
-                }
-	       var inputs = jQuery('#advancedform :input');
-	       var hiddenfields = Array();
-	       inputs.each(function() {
-
-	           if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));
-	           
-	       });
-	      jQuery("#hiddenfields").val(hiddenfields.toString());
-	    
-    	    
-    	    	
-	    });
-		});
+    jQuery('#advancedform').submit(function() {
+        if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
+            {
+            jQuery('.tickboxcoll').prop('checked',false);
+            }
+        var inputs = jQuery('#advancedform :input');
+        var hiddenfields = Array();
+        inputs.each(function() {
+            if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));            
+            });
+        jQuery("#hiddenfields").val(hiddenfields.toString());    	    	
+        });
+    });
 
 </script>
 
@@ -618,6 +629,12 @@ for ($n=0;$n<count($fields);$n++)
 ?>
 </div>
 
+<!-- Full text search (uses built in MySQL indexing) -->
+<div class="Question">
+    <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape_quoted_data($full_text_search); ?>" onChange="UpdateResultCount();">
+    <div class="clearerleft"> </div>
+</div>
+
 <?php
 global $advanced_search_archive_select;
 if($advanced_search_archive_select)
@@ -815,7 +832,6 @@ if($archive!==0){
 	<script>
 	jQuery(document).ready(function()
 	  {
-	  UpdateResultCount();
 	  jQuery("input").keypress(function(event) {
 		   if (event.which == 13) {
 			   event.preventDefault();

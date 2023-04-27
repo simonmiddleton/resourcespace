@@ -109,7 +109,7 @@ $lang["property-allow_registration_selection"]="Allow registration selection";
 $lang["property-support_non_correlated_sql"] = "Support search results";
 
 $lang["property-resource_type_id"]="Resource type id";
-$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpg,image/gif";
+$lang["information-allowed_extensions"]="If set, only files of the specified types are allowed upon upload to this type. Use MIME types e.g. image/jpeg,image/gif";
 $lang["property-allowed_extensions"]="Allowed file types";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
 $lang["icon_picker_placeholder"]="Type to filter";
@@ -132,8 +132,9 @@ $lang['property-automatic_nodes_ordering_label'] = 'Automatic ordering';
 $lang["property-required"]="Required";
 $lang["property-order_by"]="Order by";
 $lang["property-indexing"]="<b>Indexing</b>";
-$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]="If you enable indexing below and the field already contains data, you will need to <a target=_blank href=../tools/reindex_field.php?field=%ref>reindex this field</a>"; # %ref will be replaced with the field id
+$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]="If you enable indexing below and the field already contains data, you will need to <strong><a target=_blank href=../tools/reindex_field.php?field=%ref>reindex this field</a></strong>."; # %ref will be replaced with the field id
 $lang["property-index_this_field"]="Index this field";
+$lang["information_index_warning"]="Please refer to the <strong><a href='https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata' target='_blank'>Knowledge Base</a></strong> for detailed information on field indexing.";
 $lang["information-enable_partial_indexing"]="Partial keyword indexing (prefix+infix indexing) should be used sparingly as it will significantly increase the index size. See the Knowledge Base for details.";
 $lang["property-enable_partial_indexing"]="Enable partial indexing";
 $lang["information-shorthand_name"]="Important: Shorthand name must be set for the field to appear on the search bar, in Advanced search or to be used in search/edit filters. It must contain only lowercase alphabetical characters and/or numbers - no spaces or symbols.";
@@ -174,7 +175,7 @@ $lang["property-omit_when_copying"]="Omit when copying";
 $lang["property-sync_with_field"]="Sync with field";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref>Copy field</a>";
 $lang["property-display_condition"]="Display condition";
-$lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
+$lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. The conditioning field being checked must be one of the fixed types: dropdown list, checkbox list, radio buttons, dynamic keyword or category tree. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
 $lang["property-onchange_macro"]="On change macro";
 $lang["information-onchange_macro"]="On change macro: code to be executed when field value is changed. CAUTION ADVISED";
 $lang["information-derestrict_filter"]="Derestrict filter. Only effective when used in conjunction with removing the g permission so that all resources are restricted unless the metadata condition is met";
@@ -563,6 +564,7 @@ $lang["addresourcebatch"]="Add resource batch";
 $lang["fileupload"]="File upload";
 $lang["clickbrowsetolocate"]="Click browse to locate a file";
 $lang["resourcetools"]="Resource tools";
+$lang["resourcedownloads"]="Resource downloads";
 $lang["fileinformation"]="File information";
 $lang["filedimensions"]="File dimensions";
 $lang["options"]="Options";
@@ -618,6 +620,14 @@ $lang['lock-tooltip']='Lock field to be copied to next resource';
 $lang['resource_type_not_found'] = 'Resource type not found.';
 $lang["view_directly_in_browser"] = "View directly in browser";
 $lang["view_in_browser"] = "View in browser";
+$lang["createdfromapi"] =                   "Created from API";
+$lang["createdfromstaticsync"] =            "Created from StaticSync";
+$lang["createdfromcontactsheet"] =          "Created from Contact Sheet";
+$lang["createdfrommergerssystems"] =        "Created from Merge RS Systems";
+$lang["createdfromwebuploader"] =           "Created from Web Uploader";
+$lang["createdfromwebuploadertemplate"] =   "Created from Web Uploader as template";
+$lang["createdfromsplittingpdf"] =          "Created from splitting PDF";
+$lang["createdfromteamcentre"] =            "Created from Resource menu";
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
@@ -835,6 +845,7 @@ $lang["passwordnotvalid"]="This is not a valid password";
 $lang["passwordnotmatch"]="The entered passwords did not match";
 $lang["wrongpassword"]="Incorrect password, please try again";
 $lang["action-view"]="View";
+$lang['action-view_as_search_results'] = "View as search results";
 $lang["action-preview"]="Preview";
 $lang["action-expand"]="Expand";
 $lang["action-more"]="More";
@@ -1044,9 +1055,6 @@ $lang["collection_download_tar_info"] = "TAR files will start downloading instan
 $lang["collection_download_tar_started"] = "TAR files will start downloading shortly.";
 $lang["collection_download_tar_applink"] = "Can't open TAR files? Get the open source 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>here</a>";
 $lang["downloadsize"]="Download size";
-$lang["tagging"]="Tagging";
-$lang["speedtagging"]="Speed tagging";
-$lang["speedtaggingfield"]="Speed tagging field";
 $lang["existingkeywords"]="Existing keywords:";
 $lang["extrakeywords"]="Extra keywords";
 $lang["leaderboard"]="Leaderboard";
@@ -1302,8 +1310,6 @@ $lang["setup-emailerr"]="Not a valid email address.";
 $lang["setup-admin_fullname_error"] = "You must complete the full name field";
 $lang["setup-rs_initial_configuration"]="ResourceSpace: Initial Configuration";
 $lang["setup-include_not_writable"]="'/include' not writable. Only required during setup.";
-$lang["setup-override_location_in_advanced"]="Override location in 'Advanced Settings'.";
-$lang["setup-advancedsettings"]="Advanced Settings";
 $lang["setup-binpath"]="%bin Path"; #%bin will be replaced, e.g. "Imagemagick Path"
 $lang["setup-begin_installation"]="Begin installation!";
 $lang["setup-generaloptions"]="General options";
@@ -1900,7 +1906,6 @@ $lang["can_create_resources_and_upload_files-general_users"]="Can create resourc
 $lang["can_delete_resources"]="Can delete resources<br>(to which the user has write access)";
 $lang["can_manage_archive_resources"]="Can manage archive resources";
 $lang["can_manage_alternative_files"]="Can manage alternative files";
-$lang["can_tag_resources_using_speed_tagging"]="Can tag resources using 'Speed Tagging'<br>(if enabled in the configuration)";
 $lang["enable_bottom_collection_bar"]="Enable bottom collection bar ('Lightbox')";
 $lang["can_publish_collections_as_themes"]="Can publish collections as featured collections";
 $lang["can_see_all_theme_categories"]="Can see all featured collection categories";
@@ -2344,10 +2349,11 @@ $lang["admin_resource_type_field_reorder_select_enable_reordering"]="Select 'Sho
 $lang["admin_resource_type_fields"]="Metadata fields";
 $lang["admin_resource_type_field_migrate_data_prompt"]="Do you want to migrate existing data?";
 $lang["admin_resource_type_field_cannot_migrate_data_prompt"] = "Resource data cannot be migrated from a fixed list field to a text field. Do you want to continue?";
-$lang["admin_resource_type_field_migrate_data"]="Migrate existing data to fixed list options";
+$lang["admin_resource_type_field_migrate_data"]="Migrate free text data to fixed list options";
 $lang["admin_resource_type_field_migrate_delete_data"]="Delete redundant data after migration?";
 $lang["admin_resource_type_field_migrate_dry_run"]="Run without changing any data?";
 $lang["admin_resource_type_field_migrate_separator"]="Separator e.g. ,  - ; :";
+$lang["admin_resource_type_field_no_action"]="No action required, node names already set";
 $lang["admin_resource_type_reorder_information_tab_order"]="Reordering is only available when viewing resource types in display order.";
 $lang["admin_resource_type_reorder_mode"]="Show in display order to enable reordering of resource types using drag and drop ";
 $lang["admin_resource_type_tab_info"]="Setting a tab name means that related resources of this type will be displayed in that tab along with the metadata. The resource type will effectively be part of the \$related_type_show_with_data array). This setting requires that tabs are correctly set for all fields.";
@@ -2445,7 +2451,6 @@ $lang["research_request__introtext"]="Our professional researchers are here to a
 $lang["resource_email__introtext"]="Quickly share this resource with other users by email. A link is automatically sent out. You can also include any message as part of the email.";
 $lang["resource_request__introtext"]="Your request is almost complete. Please include the reason for your request so we can respond efficiently.";
 $lang["search_advanced__introtext"]="<strong>Search Tip</strong><br />Any section that you leave blank, or unticked will include ALL those terms in the search. For example, if you leave all the country boxes empty, the search will return results from all those countries. If you select only 'Algeria' then the results will ONLY contain resources from 'Algeria'. ";
-$lang["tag__introtext"]="Help to improve search results by tagging resources. Say what you see, separated by spaces or commas... for example: dog, house, ball, birthday cake. Enter the full name of anyone visible in the photo and the location the photo was taken if known.";
 $lang["team_archive__introtext"]="To edit individual archive resources, simply search for the resource, and click edit in the 'Resource Tool' panel on the resource screen. All resources that are ready to be archived are listed Resources Pending list. From this list it is possible to add further information and transfer the resource record into the archive. ";
 $lang["team_content__introtext"]="";
 $lang["team_copy__introtext"]="Enter the ID of the resource you would like to copy. Only the resource data will be copied - any uploaded file will not be copied.";
@@ -2459,6 +2464,7 @@ $lang["team_user__introtext"]="Use this section to add, remove and modify users.
 $lang['team_user__confirm-deletion'] = "Are you sure you want to delete permanently this user?";
 $lang["terms__introtext"]="Before you proceed you must accept the terms and conditions.\n\n";
 $lang["terms__terms"]="Your terms and conditions go here.";
+$lang["terms__upload_terms"]="Your terms and conditions for uploads go here.";
 $lang["themes__findpublic"]="Public collections are collections of resources that have been shared by other users.";
 $lang["themes__introtext"]="Featured collections are groups of resources that have been selected by the administrators to provide an example of the resources available in the system.";
 $lang["themes__manage"]="Organise and edit the featured collections available online. Featured collections are specially promoted collections. <br /><br /> <strong>1 To create a new entry under a Featured collection -  build a collection</strong><br /> Choose <strong>My Collections</strong> from the main top menu and set up a brand new <strong>public</strong> collection. Remember to include a featured collection name during the setup. Use an existing featured collection name to group the collection under a current featured collection (make sure you type it exactly the same), or choose a new title to create a brand new featured collection. Never allow users to add/remove resources from featured collections. <br /> <br /><strong>2 To edit the content of an existing entry under a featured collection </strong><br /> Choose <strong>edit collection</strong>. The items in that collection will appear in the <strong>My Collections</strong> panel at the bottom of the screen. Use the standard tools to edit, remove or add resources. <br /> <br /><strong>3 To alter a featured collection name or move a collection to appear under a different featured collection</strong><br /> Choose <strong>edit properties</strong> and edit featured collection category or collection name. Use an existing featured collection name to group the collection under an current featured collection (make sure you type it exactly the same), or choose a new title to create a brand new featured collection. <br /> <br /><strong>4 To remove a collection from a featured collection </strong><br /> Choose <strong>edit properties</strong> and delete the words in the featured collection category box. ";
@@ -2546,6 +2552,7 @@ $lang['view_tiles'] = 'View tiles';
 $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'View version information on the ResourceSpace website';
 $lang["upgrade_in_progress"] = "Upgrade in progress";
+$lang["upgrade_script"] = "Upgrade script";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2675,6 +2682,7 @@ $lang['systemconfig_minyear_label'] = 'The year of the earliest resource record'
 $lang['systemconfig_user_accounts'] = 'User accounts';
 $lang['systemconfig_allow_account_request_label'] = 'Allow users to request accounts';
 $lang['systemconfig_terms_download_label'] = 'Terms and conditions for download';
+$lang['systemconfig_terms_upload_label'] = 'Terms and conditions for external upload shares';
 $lang['systemconfig_terms_login_label'] = 'Terms and conditions on first login';
 $lang['systemconfig_user_rating_label'] = 'User rating of resources';
 $lang['systemconfig_security'] = 'Security';
@@ -2701,6 +2709,7 @@ $lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
 $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 $lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
+$lang['systemconfig_only_show_modified'] = 'Only show modified values';
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2970,7 +2979,7 @@ $lang["oj-collection-download-failure-text"] = "Unable to prepare collection arc
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
-$lang["oj-creation-success"]                 = "Offline job created. You will be notified when it has completed";
+$lang["oj-creation-success"]                 = "Offline job %%JOBNUMBER%% created. You will be notified when it has completed";
 /* End of offline jobs */
 
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
@@ -3079,6 +3088,7 @@ $lang["status_locked_self"]                 = "You have locked this resource";
 $lang["error_locked_by_user"]               = "Resource is locked by %%USER%%";
 $lang["error_locked_other_user"]            = "Resource is locked by another user";
 $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
+$lang["error-edit_noaccess_related_resources"] = "Unable to relate resources. No access to: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
@@ -3178,3 +3188,10 @@ $lang["upload_view_log"]                    = "View log";
 
 $lang["code_sign_required"]                 = "Inline code signing";
 $lang["code_sign_required_warning"]         = "Warning: Inline code has been changed and the updated code has not been signed using the command line utility. Macros performed on metadata may not complete as expected.";
+$lang["search_full_text"]                   = "Search all text (full text search)";
+
+$lang["error_invalid_revert_option"]        = "The previously stored value '%%VALUE%%' could not be found in the current options. Please check if the name of this option has changed and manually update the resource if required.";
+$lang["error_invalid_revert_date"]          = "The previously stored date '%%VALUE%%' is invalid. Please update the resource manually if required.";
+$lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
+$lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
+$lang["related_resource_create"]            = "Create new related resource";

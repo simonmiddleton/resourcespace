@@ -125,7 +125,20 @@ if(!checkperm('v') && !$bypass_permission_check)
                                     foreach($difflines as $diffline)
                                         {
                                         $action = substr($diffline,0,1);
-                                        $transdifflines[] = $action . " " . i18n_get_translated(substr($diffline,2));
+                                        if($log_entry["resource_type_field"] == FIELD_TYPE_CATEGORY_TREE) // If tree
+                                            {
+                                            $nodestrings = explode("/",substr($diffline,2));
+                                            $difftext = [];
+                                            foreach($nodestrings as $nodestring)
+                                                {
+                                                $difftext[] = i18n_get_translated($nodestring);
+                                                }
+                                            $transdifflines[] = $action . " " . implode("/",$difftext);
+                                            }
+                                        else
+                                            {
+                                            $transdifflines[] = $action . " " . i18n_get_translated(substr($diffline,2));
+                                            }
                                         }
                                     $difftext = implode("\n",$transdifflines);
                                     }

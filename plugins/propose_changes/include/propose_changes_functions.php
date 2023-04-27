@@ -23,7 +23,10 @@ function save_proposed_changes($ref)
             $new_nodes = array();
 
             ##### NODES #####
-            $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
+            if (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
+                }
 
             // Fixed list fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))

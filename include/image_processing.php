@@ -59,8 +59,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         unset($GLOBALS["use_error_exception"]);
         $valid_upload_paths = $valid_upload_paths ?? [];
         $valid_upload_paths[] = $storagedir;
-        $valid_upload_paths[] = $syncdir;    
-        $valid_upload_paths[] = $batch_replace_local_folder;
+        if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }   
+        if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
         if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
  
         foreach($valid_upload_paths as $valid_upload_path)
@@ -659,7 +659,7 @@ function extract_exif_comment($ref,$extension="")
             exiftool_resolution_calc($image,$ref);
             }
         
-        $read_from=get_exiftool_fields($resource['resource_type']);
+        $read_from = get_exiftool_fields($resource['resource_type'], NODE_NAME_STRING_SEPARATOR, true);
 
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
@@ -693,16 +693,16 @@ function extract_exif_comment($ref,$extension="")
                     # Extract value
                     $value=strip_tags(trim(substr($metaline,$pos+2)));
                     # Replace '..' with line feed - either Exiftool itself or Adobe Bridge replaces line feeds with '..'
-                    $value = str_replace('....', '\n\n', $value); // Two new line feeds in ExifPro are replaced with 4 dots '....'
-                    $value = str_replace('...','.\n',$value); # Three dots together is interpreted as a full stop then line feed, not the other way round
-                    $value = str_replace('..','\n',$value);
+                    $value = str_replace('....', chr(10) . chr(10), $value); // Two new line feeds in ExifPro are replaced with 4 dots '....'
+                    $value = str_replace('...', chr(46) . chr(10),$value); # Three dots together is interpreted as a full stop then line feed, not the other way round
+                    $value = str_replace('..', chr(10),$value);
 
                     # Convert to UTF-8 if not already encoded
                     $encoding=mb_detect_encoding($value,"UTF-8",true);
                     if($encoding!="UTF-8")
                         {
                         debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
-                        $value=utf8_encode($value);
+                        $value = mb_convert_encoding($value, 'UTF-8', $encoding);
 
                         debug("extract_exif_comment: Converted value: " . $value);
                         }
@@ -795,7 +795,7 @@ function extract_exif_comment($ref,$extension="")
                         # The use of safe_file_name and strtolower ensures matching takes place on alphanumeric characters only and ignores case.
                         
                         # First fetch all options in all languages
-                        $options=trim_array(explode(",",strtolower($read_from[$i]["options"])));
+                        $options=trim_array(explode(NODE_NAME_STRING_SEPARATOR,strtolower($read_from[$i]["options"])));
                         for ($n=0;$n<count($options);$n++)  {$options[$n]=$options[$n];}
 
                         # If not in the options list, do not read this value
@@ -876,7 +876,14 @@ function extract_exif_comment($ref,$extension="")
                             $merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
-                            $original_filename = $_REQUEST['file_name'];
+                            if (isset($_REQUEST['file_name']))
+                                {
+                                $original_filename = $_REQUEST['file_name'];
+                                }
+                            else
+                                {
+                                $original_filename = "";
+                                }
 
                             if($merge_filename_with_title_include_extensions == 'yes') {
                                 $merged_filename = $original_filename;
@@ -956,7 +963,7 @@ function extract_exif_comment($ref,$extension="")
                             }
 
                             $oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-                            if(strpos($oldval, $value) !== FALSE) {
+                            if($value == "" || strpos($oldval, $value) !== FALSE) {
                                 continue;
                             }
                             
@@ -1453,6 +1460,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
+    # We will need this to log errors
+    $uploadedfilename = getval("file_name",""); 
+
     if(!is_numeric($ref))
         {
         trigger_error("Parameter 'ref' must be numeric!");
@@ -1541,6 +1551,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         
         $sizes="";
         $params = [];
+        $lookup_sizes = true;
         if ($thumbonly)
             {
             $sizes=" WHERE id='thm' or id='col'";
@@ -1557,10 +1568,20 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $sizes = " WHERE id IN (" . ps_param_insert(count($sizefilter)) . ")";
                 $params = ps_param_fill($sizefilter, 's');
                 }
+            else
+                {
+                // No valid sizes supplied in $onlysizes. Don't return all sizes from the db instead.
+                $lookup_sizes = false;
+                $ps = array();
+                }
             $all_sizes= false;
             }
         
-        $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
+        if ($lookup_sizes)
+            {
+            $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
+            }
+
         if($lean_preview_generation && $all_sizes)
             {
             $force_make=array("pre","thm","col");
@@ -1709,8 +1730,17 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             // HPR? Use the original image size instead of the hpr.
             if($ps[$n]["id"] == "hpr")
                 {
-                $ps[$n]["width"] = $sw;
-                $ps[$n]["height"] = $sh;
+                if($sw >= 65500 || $sh >= 65500)
+                    {                   
+                    # Source image exceeds maximum JPEG dimensions
+                    $ps[$n]["width"] = 65500;
+                    $ps[$n]["height"] = 65500;
+                    }
+                else
+                    {
+                    $ps[$n]["width"] = $sw;
+                    $ps[$n]["height"] = $sh;
+                    }
                 }
 
             # Locate imagemagick.
@@ -1748,7 +1778,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $cb_height = $sh / 6;
                     $cb_scale = 600;
                     }
-                $addcheckbdpre = "-size " . $cb_width . "x" . $cb_height;
+                $addcheckbdpre = "-size " . round($cb_width, 0, PHP_ROUND_HALF_DOWN) . "x" . round($cb_height, 0, PHP_ROUND_HALF_DOWN);
                 if($extension=="svg")
                     {
                     $addcheckbdpre = $addcheckbdpre  . " -scale " . $cb_scale . "% -background none tile:pattern:checkerboard -modulate 150,100 ";
@@ -1855,7 +1885,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
-                    $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                    if ($icc_preview_profile != "" && $icc_preview_profile_embed)
+                        {
+                        $targetprofile = ($imagemagick_mpr ? "" : "-profile ") . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        }
+                    else
+                        {
+                        $targetprofile = "";
+                        }
+
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
@@ -1866,8 +1904,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile $iccpath $icc_preview_options -profile $targetprofile".($icc_preview_profile_embed?" ":" -strip ");
+                        $profile  = " -strip -profile $iccpath $icc_preview_options $targetprofile";
                         }
+
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
                     if ($id == 'hpr' || $id == 'lpr' || $id == 'scr')
                         {
@@ -2057,7 +2096,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }                 
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %s -resize %s -composite %s',
+                        $runcommand = sprintf('%s %s -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
+
                             $convert_fullpath,
                             escapeshellarg($file),
                             escapeshellarg($watermarkreal),
@@ -3197,7 +3237,7 @@ function extract_icc($infile, $ref='') {
    //this makes things work with alternatives, the deepzoom plugin, etc.
    $path_parts = pathinfo($infile);
    
-   if(strpos($infile, $syncdir)===false)
+   if($syncdir === "" || strpos($infile, $syncdir)===false)
         {
         $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
         }
@@ -3268,9 +3308,14 @@ function get_imagemagick_version($array=true){
 */
 function calculate_image_dimensions($image_path, $target_width, $target_height, $enlarge_image = false)
     {
-    if(false === (list($source_width, $source_height) = @getimagesize($image_path)))
+    $identify_fullpath = get_utility_path("im-identify");
+    if($identify_fullpath !== false)
         {
-        trigger_error("'{$image_path}' is not a valid image!");
+        list($source_width, $source_height) = getFileDimensions($identify_fullpath, '', $image_path, pathinfo($image_path, PATHINFO_EXTENSION));
+        }
+    else
+        {
+        $source_width = $source_height = 0;
         }
 
     $return = array(
@@ -3387,7 +3432,7 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
  */ 
 function delete_previews($resource,$alternative=-1)
     {
-    global $ffmpeg_preview_extension;
+    global $ffmpeg_preview_extension, $watermark;
     
     // If a resource array has been passed we already have the extensions
     if(is_array($resource))
@@ -3424,12 +3469,21 @@ function delete_previews($resource,$alternative=-1)
                 {
                 unlink($previewpath);
                 }
+            if (isset($watermark))
+                {
+                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
+                if (file_exists($wm_path))
+                    {
+                    unlink($wm_path);
+                    }
+                }
             }
         }
 
     $delete_prefixes = array();
     $delete_prefixes[] = "resized_";
     $delete_prefixes[] = "tile_";
+    $delete_prefixes[] = "tmp_";
 
     if(!file_exists($resourcefolder))
         {
@@ -3468,7 +3522,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
     $identoutput=run_command($identcommand);
 
-    if($extension == "svg")
+    if(strtolower($extension) == "svg")
         {
         list($w, $h) = getSvgSize($file);
         }
@@ -3483,7 +3537,19 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         // we really need dimensions here, so fallback to php's method
         if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
             {
-            list($w,$h) = getimagesize($file);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                list($w,$h) = getimagesize($file);
+                }
+            catch (Exception $e)
+                {
+                $returned_error = $e->getMessage();
+                debug("getFileDimensions: Unable to get image size for file: $file  -  $returned_error");
+                $w = null; 
+                $h = null;
+                }
+           unset($GLOBALS["use_error_exception"]);
             }
         else
             {
@@ -3736,7 +3802,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     global $exiftool_no_process;
 
     $command = get_utility_path("im-convert");
-    if($command === false)
+    $identify_fullpath = get_utility_path("im-identify");
+    if($command === false || $identify_fullpath === false)
         {
         return false;
         }
@@ -3778,16 +3845,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $profile = ' +profile icc -colorspace %imagemagick_colorspace'; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
         }
 
-    if(strtoupper($sf_parts["extension"]) == 'SVG')
-        {
-        list($origwidth, $origheight) = getSvgSize($sourcepath);
-        }
-    else
-        {
-        $origsizes  = getimagesize($sourcepath);
-        $origwidth  = $origsizes[0];
-        $origheight = $origsizes[1];
-        }
+    list($origwidth, $origheight) = getFileDimensions($identify_fullpath, '', $sourcepath, pathinfo($sourcepath, PATHINFO_EXTENSION));
 
     $keep_transparency=false;
     if(isset($actions['background']) && $actions['background'] !== '')
@@ -3806,11 +3864,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         {
         $cmd_args['%sourcepath'] = $sourcepath;
         $command .= ' %sourcepath[0]';
-        }
-
-    if (isset($actions["repage"]) && $actions["repage"])
-        {
-        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
         }
 
     if(array_key_exists('transparent', $actions))
@@ -3957,6 +4010,11 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $command .= ' -crop %finalwidthx%finalheight+%finalxcoord+%finalycoord';
         }
 
+    if (isset($actions["repage"]) && $actions["repage"])
+        {
+        $command .= " +repage"; // force imagemagick to repage image to fix canvas and offset info
+        }
+
     // Did the user request a width? If so, tack that on
     if ((isset($actions["new_width"]) && (int)$actions["new_width"] > 0) || (isset($actions["new_height"]) && (int)$actions["new_height"] > 0))
         {
@@ -3970,8 +4028,8 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             // or the original size of the image
             if (isset($actions["crop"]) && $actions["crop"])
                 {
-                $checkwidth  = $actions["finalwidth"];
-                $checkheight = $actions["finalheight"];
+                $checkwidth  = $actions["new_width"];
+                $checkheight = $actions["new_height"];
                 } 
             else
                 {

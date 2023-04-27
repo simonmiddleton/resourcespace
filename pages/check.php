@@ -60,8 +60,9 @@ if ($phpversion<'4.4') {$result=$lang["status-fail"] . ": " . str_replace("?", "
 ?><tr><td><?php echo str_replace("?", "PHP", $lang["softwareversion"]); ?></td><td><?php echo $phpversion .'&ensp;&ensp;' . str_replace("%file", $phpinifile, $lang["config_file"]);?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check MySQL version
-$mysqlversion = mysqli_get_server_info($db["read_write"]);
-if($mysqlversion < '5')
+$mysqlversion_num = mysqli_get_server_version($db["read_write"]);
+$mysqlversion     = mysqli_get_server_info($db["read_write"]);
+if($mysqlversion_num < 50000)
     {
     $result = $lang["status-fail"] . ": " . str_replace("?", "5", $lang["shouldbeversion"]);
     }

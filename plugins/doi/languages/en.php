@@ -111,4 +111,4 @@ HTML;
 	$lang['doi_hide_meta'] = 'Hide DOI metadata';
 
 	$lang['doi_fetched_xml_from_MDS'] = 'Current XMl metadata could be successfully fetched from DataCite\\\'s metadata store.';
-?>
+

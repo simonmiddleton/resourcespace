@@ -24,6 +24,7 @@ if (!hook("replacelistitem"))
                         id="check<?php echo htmlspecialchars($ref)?>" 
                         class="checkselect" 
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
+                        aria-label="<?php echo escape_quoted_data($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
                         <?php if (in_array($ref, $selection_collection_resources)) { ?> checked <?php } ?>
                     >
@@ -52,7 +53,7 @@ if (!hook("replacelistitem"))
                     $thm_url = $result[$n]['thm_url'];
                     } # Option to override thumbnail image in results
 
-                if($result[$n]['has_image'] == 1)
+                if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col'))
                     {
                     render_resource_image($result[$n],$thm_url,"list");
                     }
@@ -131,7 +132,10 @@ if (!hook("replacelistitem"))
         if ($id_column)
             { ?>
             <td <?php hook("listviewcolumnstyle");?> >
-                <?php echo $result[$n]["ref"]?>
+                <?php 
+                $plugin_column_id = hook("listviewcolumnid",'',array($result, $n));
+                echo $plugin_column_id !== false ? $plugin_column_id : $result[$n]["ref"];             
+                ?>
             </td>
             <?php
             }

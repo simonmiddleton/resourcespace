@@ -7,15 +7,37 @@ $search     = getval('search', '');
 $restypes   = getval('restypes', '');
 $order_by   = getval('order_by', '');
 $archive    = getval('archive', '');
+$access     = getval('access', null, true);
 $sort       = getval('sort', '');
 $offline    = getval("process_offline","") != "";
 $submitted  = getval("submit","") != "";
 $personaldata   = (getval('personaldata', '') != '');
 $allavailable    = (getval('allavailable', '') != '');
 
-$search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, DEPRECATED_STARSEARCH, false,false,'',false,false,true);
+$do_search_result = do_search($search, $restypes, $order_by, $archive, 1, $sort, false, DEPRECATED_STARSEARCH, false, false, '', false, false, false, false, false, $access);
 
-$resultcount = is_array($search_results) ? count($search_results) : 0;
+$resources_found = 0;
+if (is_array($do_search_result)) 
+    {
+    $resources_found = count($do_search_result);
+    }
+
+$resources_to_process = array();
+if ($resources_found > 0) 
+    {
+    $search_chunk_size = 100000;
+    $chunk_offset = 0; // Return data in batches. Required for particularly large csv export where there is a risk of PHP memory_limit being exceeded by search returning too many results.
+    
+    while ($chunk_offset < $resources_found)
+        {
+        $search_results = do_search($search, $restypes, $order_by, $archive, array($chunk_offset, $search_chunk_size), $sort, false, DEPRECATED_STARSEARCH, false, false, '', false, false, true, false, false, $access, null);
+        $resources_to_process = array_merge($resources_to_process, array_column($search_results["data"], "ref"));
+        $chunk_offset = $chunk_offset + $search_chunk_size;
+        }
+    }   
+
+$resultcount = count($resources_to_process);
+
 if($resultcount == 0)
     {
     $error = $lang["noresourcesfound"]; 
@@ -27,6 +49,8 @@ if($submitted && $resultcount > 0)
     $findstrings = array("%%SEARCH%%","%%TIME%%");
     $replacestrings = array(safe_file_name($search),date("Ymd-H:i",time()));
     $csv_filename = str_replace($findstrings, $replacestrings, $lang["csv_export_filename"]);
+
+    $csv_filename_noext = strip_extension($csv_filename);
    
     if($offline || (($resultcount > $metadata_export_offline_limit) && $offline_job_queue))
         {
@@ -34,10 +58,11 @@ if($submitted && $resultcount > 0)
         $job_data=array();
         $job_data["personaldata"]   = $personaldata;
         $job_data["allavailable"]   = $allavailable;
-        $job_data["exportresources"]= array_column($search_results,"ref");
+        $job_data["exportresources"]= $resources_to_process;
         $job_data["search"]         = $search;
         $job_data["restypes"]       = $restypes;
         $job_data["archive"]        = $archive;
+        $job_data["access"]         = $access;
         $job_data["sort"]           = $sort;
 
         $job_code = "csv_metadata_export_" . md5($userref . json_encode($job_data)); // unique code for this job, used to prevent duplicate job creation.
@@ -48,7 +73,7 @@ if($submitted && $resultcount > 0)
             }
         else
             {
-            $message = $lang["oj-creation-success"] . " : " . $jobadded;  
+            $message = str_replace('%%JOBNUMBER%%', $jobadded, $lang['oj-creation-success']);
             }
         }
     else
@@ -58,10 +83,10 @@ if($submitted && $resultcount > 0)
         if (!hook('csvreplaceheader'))
             {
             header("Content-type: application/octet-stream");
-            header("Content-disposition: attachment; filename=" . $csv_filename  . ".csv");
+            header("Content-disposition: attachment; filename=" . $csv_filename_noext  . ".csv");
             }
         
-        generateResourcesMetadataCSV(array_column($search_results,"ref"),$personaldata, $allavailable);
+        generateResourcesMetadataCSV($resources_to_process, $personaldata, $allavailable);
         exit();   
         } 
     }
@@ -84,11 +109,12 @@ elseif (isset($message))
         generateFormToken("csv_export_results");
         ?>
 
-        <input type="hidden" name="search" value="<?php echo htmlspecialchars($search) ?>" />
-        <input type="hidden" name="restypes" value="<?php echo htmlspecialchars($restypes) ?>" />
-        <input type="hidden" name="order_by" value="<?php echo htmlspecialchars($order_by) ?>" />
-        <input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive) ?>" />
-        <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort) ?>" />
+        <input type="hidden" name="search" value="<?php echo htmlspecialchars((string)$search) ?>" />
+        <input type="hidden" name="restypes" value="<?php echo htmlspecialchars((string)$restypes) ?>" />
+        <input type="hidden" name="order_by" value="<?php echo htmlspecialchars((string)$order_by) ?>" />
+        <input type="hidden" name="archive" value="<?php echo htmlspecialchars((string)$archive) ?>" />
+        <input type="hidden" name="access" value="<?php echo htmlspecialchars((string)$access) ?>" />
+        <input type="hidden" name="sort" value="<?php echo htmlspecialchars((string)$sort) ?>" />
         
         <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>
 

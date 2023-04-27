@@ -64,7 +64,11 @@ foreach($nodes_in_sequence as $node)
         continue;
         }
 
+    // Replace & " ' < > characters with &amp &quot &apos &lt &gt
     $i18n_node_name = htmlentities(i18n_get_translated($node['name']),ENT_QUOTES);
+
+    // Strip line breaks because there shouldn't be any within dynamic keywords
+    $i18n_node_name = preg_replace('/[\r\n]+/', '', $i18n_node_name);
 
     $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
     }
@@ -118,7 +122,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     	}
 
     // Update the result counter, if the function is available (e.g. on Advanced Search).
-    if(typeof(UpdateResultCount) == 'function')
+    if(typeof(UpdateResultCount) == 'function' && user_action)
         {
         UpdateResultCount();
         }
@@ -258,5 +262,8 @@ jQuery('#<?php echo $name; ?>_selector').keydown(function(event)
 echo $add_searched_nodes_function_call;
 ?>
 
-updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(false);
+jQuery(document).ready(function()
+    {
+    updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(false);
+    });
 </script>

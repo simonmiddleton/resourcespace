@@ -48,6 +48,8 @@ $tempfile           = getval("tempfile","");
 $slideshow          = getval("slideshow",0,true);
 $userfiledownload   = getval('userfile', '');
 
+$log_download = true;
+
 // Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
 $checktermsusage =  !in_array($size, $sizes_always_allowed)
     && $tempfile == ""
@@ -92,6 +94,12 @@ if('' != $userfiledownload)
     if($rqstname!="")
         {
         $filename   = $rqstname . "." . $ext;
+        $filename_prefix = explode('_', $filename);
+        if(($filename_prefix[0] == 'Col' && $ext == 'zip') || ($filename_prefix[0] == 'metadata' && isset($filename_prefix[1]) && $filename_prefix[1] == 'export' && $ext == 'csv'))
+            {
+            // For offline collection or offline csv download, $ref will be user ref not resource ref.
+            $log_download = false;
+            }
         }
     hook('modifydownloadpath');
     }
@@ -105,11 +113,29 @@ elseif($tempfile != "")
     $noattach       = true;
     $exiftool_write = false;
     $filedetails    = explode('_', $tempfile);
-    $code           = safe_file_name($filedetails[0]);
-    $ref            = (int)$filedetails[1];
-    $downloadkey    = strip_extension($filedetails[2]);
-    $ext            = safe_file_name(substr($filedetails[2], strlen($downloadkey) + 1));
-    $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
+    if(count($filedetails) >= 3)
+        {     
+        $code           = safe_file_name($filedetails[0]);
+        $ref            = (int)$filedetails[1];
+        $downloadkey    = strip_extension($filedetails[2]);
+        $ext            = safe_file_name(substr($filedetails[2], strlen($downloadkey) + 1));
+        $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
+        }
+    else
+        {
+        $error = $lang['downloadfile_nofile'];
+        if(getval('ajax', '') != '')
+            {
+            error_alert($error, true, 200);
+            }
+        else
+            {
+            include "../include/header.php";
+            $onload_message = ['title' => $lang["error"],'text' => $error];
+            include "../include/footer.php";
+            }
+        exit();
+        }
     }
 else
     {
@@ -292,7 +318,7 @@ if(!$file_handle)
     }
 
 // Log this activity (download only, not preview)
-if('' == $noattach)
+if('' == $noattach && $log_download)
     {
     daily_stat('Resource download', $ref);
 

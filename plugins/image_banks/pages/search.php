@@ -138,7 +138,6 @@ foreach($results as $result)
         <div class="ResourcePanelIcons">
             <a href="<?php echo $result->getOriginalFileUrl(); ?>"
                class="fa fa-download"
-               aria-hidden="true"
                title="Download resource"
                data-id="<?php echo $result->getId(); ?>"
                onclick="downloadImageBankFile(this);"></a>
@@ -149,7 +148,6 @@ foreach($results as $result)
             ?>
             <a href="<?php echo $result->getOriginalFileUrl(); ?>"
                class="fa fa-files-o"
-               aria-hidden="true"
                title="<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(event, this);"></a>
             <?php

@@ -2,6 +2,7 @@
 include "include/db.php";
 include_once "include/login_functions.php";
 
+debug("[login.php] Reached login page...");
 $url=getval("url","index.php");
 
 if (is_array($url))
@@ -20,23 +21,6 @@ if ($modal || getval("ajax","")!="")
 	?>
 	<script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
 	<?php
-	}
-
-if (isset($anonymous_login) && $anon_login_modal && !$modal && getval("logout","")==false && !array_key_exists("username",$_POST))
-	{
-	$anon_login_extras="loginmodal=true&url=".urlencode($url)."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""));
-	
-	$anon_login_redirect="/pages/".$default_home_page."?".$anon_login_extras;
-	if ($use_theme_as_home)
-		{
-		$anon_login_redirect="/pages/themes.php?".$anon_login_extras;
-		}
-	if ($use_recent_as_home)
-		{
-		$anon_login_redirect="/pages/search.php?search=".urlencode('!last'.$recent_search_quantity)."&".$anon_login_extras;
-		}
-	# this shouldn't load as a unique page. go to the home page and display the login modal
-	redirect($baseurl.$anon_login_redirect);
 	}
         
 # process log in
@@ -57,6 +41,7 @@ $lockouts=ps_value("select count(*) value from ip_lockout where ip = ? and tries
 $username = getval("username","");
 if (is_array($username))
     {
+    debug("[login.php] redirect to login because username is array");
     redirect($baseurl . "/login.php");
     }
 
@@ -90,10 +75,14 @@ if ($lockouts>0 || $ulockouts>0)
 # Process the submitted login
 elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     {
+    debug("[login.php] Process the submitting login details...");
+
     $password = trim(getval("password",""));
 	$result = perform_login();
 	if ($result['valid'])
 		{
+        debug("[login.php] Performed login - valid result");
+
         set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
 
         # Set 'user_local_timezone' in cookie like 'user preferences page' does
@@ -112,6 +101,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
         else{
             $redirect_url=$url;
             }
+        debug("[login.php] Redirecting to $redirect_url");
             
 		if(!$modal)
 			{
@@ -138,6 +128,8 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 
 if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     {
+    debug("[login.php] Logging user out...");
+
     $session = $_COOKIE["user"];
 
     // Check CSRF Token
@@ -186,14 +178,14 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     }
 
 hook("postlogout2");
-    
-if (getval("langupdate","")!="")
-	{
-	# Update language while remaining on this page.
+
+if (getval("langupdate","") != "")
+    {
+    # Update language while remaining on this page.
     rs_setcookie("language", $language, 1000); # Only used if not global cookies
-    rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");    
-	redirect("login.php?username=" . urlencode(getval("username","")));
-	}
+    rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
+    redirect("login.php");
+    }
 
 include "include/header.php";
 

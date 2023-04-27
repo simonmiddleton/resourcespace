@@ -10,15 +10,7 @@ $lang['emu_email_notify'] = 'E-mail address that script will send notifications 
 $lang['emu_script_failure_notify_days'] = 'Number of days after which to display alert and send e-mail if script has not completed';
 
 $lang['emu_script_header'] = 'Enable script that will automatically update the EMu data whenever ResourceSpace runs its scheduled task (cron_copy_hitcount.php)';
-$lang['emu_last_run_date'] = '
-	<div class="Question">
-		<label>
-			<strong>Script last run</strong>
-		</label>
-		<input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;">
-		%scripts_test_functionality%
-	</div>
-	<div class="clearerleft"></div>';
+$lang['emu_last_run_date'] = 'Script last run';
 $lang['emu_script_mode'] = 'Script mode';
 $lang['emu_script_mode_option_1'] = 'Import metadata from EMu';
 $lang['emu_script_mode_option_2'] = 'Pull all EMu records and keep RS and EMu in sync';
@@ -47,3 +39,6 @@ $lang['emu_run_script'] = 'Process';
 $lang['emu_script_problem'] = 'WARNING - the EMu script has not successfully completed within the last %days% days. Last run time: ';
 $lang['emu_no_resource'] = 'No resource ID specified!';
 $lang['emu_upload_nodata'] = 'No EMu data found for this IRN: ';
+$lang['emu_nodata_returned'] = 'No EMu data found for the specified IRN.';
+
+$lang["emu_createdfromemu"] = "Created from EMU plugin";

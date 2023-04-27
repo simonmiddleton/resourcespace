@@ -82,7 +82,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 		<?php
 	}
 	
-function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type,$currentvalue,$fieldtype,$system_date_field)
+function admin_resource_type_field_option($propertyname,$propertytitle,$helptext,$type,$currentvalue,$fieldtype,$system_date_field)
 	{
     debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
 
@@ -255,25 +255,25 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                         <input type="checkbox" name="automatic_nodes_ordering" value="1"<?php if(1 == $automatic_nodes_ordering) { ?> checked="checked"<?php } ?>>
                     <?php
                     // create constraints selector
-					admin_resource_type_field_constraint($ref, $currentvalue);
+                    admin_resource_type_field_constraint($ref, $currentvalue);
                     }
-                }            
+                }
             elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
                 { // create constraints selector
 				admin_resource_type_field_constraint($ref, $currentvalue);
-                }			
-			}
-		elseif($propertyname=="linked_data_field")
-			{
-			if ($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
-				{
-				// The linked_data_field column is is only used for date range fields at present			
-				// Used to store the raw EDTF string submitted
-				?>
-				<input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
-				<?php
-				}
-			}
+                }
+            }
+        elseif($propertyname=="linked_data_field")
+            {
+            if ($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
+                {
+                // The linked_data_field column is is only used for date range fields at present			
+                // Used to store the raw EDTF string submitted
+                ?>
+                <input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
+                <?php
+                }
+            }
 		elseif($propertyname=="sync_field")
 			{
 			global $allfields, $resource_type_array;
@@ -419,7 +419,7 @@ $fieldcolumns = array(
     'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
     'required'                 => array($lang['property-required'],'',1,1),
     'order_by'                 => array($lang['property-order_by'],'',0,0),
-    'keywords_index'           => array($lang['property-index_this_field'],$lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
+    'keywords_index'           => array($lang['property-index_this_field'],$lang["information_index_warning"] . " " . $lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
     'display_field'            => array($lang['property-display_field'],'',1,1),
     'full_width'               => array($lang['property-field_full_width'],'',1,1),
     'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
@@ -727,26 +727,27 @@ else
     {
     ?>
     <div class="Question"><label><?php echo $lang["property-field_id"] ?></label>
-	<div class="Fixed"><?php echo  $fielddata["ref"] ?></div>
-	<div class="clearerleft"> </div>
+    <div class="Fixed"><?php echo  $fielddata["ref"] ?></div>
+    <div class="clearerleft"> </div>
     </div>
     
     <?php
     $system_date_field = $ref==$date_field?true:false;
     foreach ($fieldcolumns as $column=>$column_detail)		
-	    {
-	    if ($column=="partial_index") // Start the hidden advanced section here
-			{?>
-			<h2 id="showhiddenfields" class="CollapsibleSectionHead collapsed" ><?php echo $lang["admin_advanced_field_properties"] ?></h2>
-			<div class="CollapsibleSection" id="admin_hidden_field_properties" >	 
-			<?php
-			}
-        admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
+        {
+        if(!hook("admin_field_replace_question","admin_resource_type_field_edit",[$ref,$column,$column_detail, $fielddata]))
+            {
+            if ($column=="partial_index") // Start the hidden advanced section here
+                {?>
+                <h2 id="showhiddenfields" class="CollapsibleSectionHead collapsed" ><?php echo $lang["admin_advanced_field_properties"] ?></h2>
+                <div class="CollapsibleSection" id="admin_hidden_field_properties" >	 
+                <?php
+                }
+            admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
+            }
         }
     ?>
-    
-    </div><!-- End of hidden advanced section -->
-    
+    </div><!-- End of hidden advanced section -->    
     
     <div class="QuestionSubmit">
     <label for="buttons"> </label>			

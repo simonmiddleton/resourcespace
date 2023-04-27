@@ -639,48 +639,35 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
  */
 function get_managed_dash()
     {
-    global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $anonymous_default_dash, $userref, $usergroup;
+    global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $userref, $usergroup;
     global $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash, $help_modal;
     #Build Tile Templates
-    if(checkPermission_anonymoususer() && !$anonymous_default_dash)
-        {
-        // Anonymous user but may have had dash customised dash configured first
-        $tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by'
-                       FROM user_dash_tile
-                            JOIN dash_tile
-                            ON user_dash_tile.dash_tile = dash_tile.ref
-                            WHERE user_dash_tile.user= ?
-                            ORDER BY user_dash_tile.order_by", ['i', $userref]);    
-        }
-    else
-        {
-        $tiles = ps_query("
-            SELECT dash_tile.ref AS 'tile',
-                   dash_tile.title,
-                   dash_tile.url,
-                   dash_tile.reload_interval_secs,
-                   dash_tile.link,
-                   dash_tile.default_order_by,
-                   (
-                        SELECT ugdt.default_order_by
-                          FROM usergroup_dash_tile AS ugdt
-                         WHERE ugdt.dash_tile = dash_tile.ref
-                           AND ugdt.usergroup = ?
-                   ) AS 'usergroup_default_order_by'
-              FROM dash_tile
-             WHERE dash_tile.all_users = 1
-               AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = ?)
-                OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
-               AND (
-                    dash_tile.allow_delete = 1
-                    OR (
-                        dash_tile.allow_delete = 0
-                        AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
-                       )
-                   )
-            ORDER BY usergroup_default_order_by ASC, default_order_by ASC
-        ", ['i', $usergroup, 'i', $usergroup]);
-        }
+    $tiles = ps_query("
+        SELECT dash_tile.ref AS 'tile',
+                dash_tile.title,
+                dash_tile.url,
+                dash_tile.reload_interval_secs,
+                dash_tile.link,
+                dash_tile.default_order_by,
+                (
+                    SELECT ugdt.default_order_by
+                        FROM usergroup_dash_tile AS ugdt
+                        WHERE ugdt.dash_tile = dash_tile.ref
+                        AND ugdt.usergroup = ?
+                ) AS 'usergroup_default_order_by'
+            FROM dash_tile
+            WHERE dash_tile.all_users = 1
+            AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = ?)
+            OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
+            AND (
+                dash_tile.allow_delete = 1
+                OR (
+                    dash_tile.allow_delete = 0
+                    AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
+                    )
+                )
+        ORDER BY usergroup_default_order_by ASC, default_order_by ASC
+    ", ['i', $usergroup, 'i', $usergroup]);
     
     foreach($tiles as $tile)
         {
@@ -1168,7 +1155,7 @@ function get_user_dash($user)
     global $baseurl,$baseurl_short,$lang,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
 
     #Build User Dash and recalculate order numbers on display
-    $user_tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user=? ORDER BY user_dash_tile.order_by",array("i",$user));
+    $user_tiles = ps_query("SELECT dash_tile.ref AS 'tile', dash_tile.title, dash_tile.all_users, dash_tile.url, dash_tile.reload_interval_secs, dash_tile.link, user_dash_tile.ref AS 'user_tile', user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user = ? ORDER BY user_dash_tile.order_by asc, dash_tile.ref desc", array("i", $user));
 
     $order=10;
     foreach($user_tiles as $tile)
@@ -1196,7 +1183,7 @@ function get_user_dash($user)
             # Check link for external or internal
             if(mb_strtolower(substr($tile["link"],0,4))=="http")
                 {
-                $link = $tile["link"];
+                $link = htmlspecialchars($tile["link"]);
                 $newtab = true;
                 }
             else
@@ -2165,15 +2152,17 @@ function get_dash_search_data($link='', $promimg=0)
                 array_unshift($results,$add);
                 }
             }
-        while($imagecount < 4 && $n < $resultcount)
+        while($imagecount < 4 && $n < $resultcount && $n < 50) // Don't keep trying to find images if none exist
             {
             global $access; // Needed by check_use_watermark()
             $access=get_resource_access($results[$n]);
             if(in_array($access,[RESOURCE_ACCESS_RESTRICTED,RESOURCE_ACCESS_FULL]))
                 {
                 $use_watermark=check_use_watermark();
-                $resfile=get_resource_path($results[$n]["ref"],true,"pre",false,"jpg",-1,1,$use_watermark);
-                if(file_exists($resfile))
+                if(
+                    !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], 'pre')
+                    && file_exists(get_resource_path($results[$n]['ref'], true, 'pre', false, 'jpg', -1, 1, $use_watermark))
+                )
                     {
                     $searchdata["images"][$imagecount]["ref"] = $results[$n]["ref"];
                     $searchdata["images"][$imagecount]["thumb_width"] = $results[$n]["thumb_width"];
@@ -2186,4 +2175,36 @@ function get_dash_search_data($link='', $promimg=0)
             }
         }
     return $searchdata;
+    }
+
+/**
+ * Check if current user can edit dash tile. Users shouldn't be able to edit tiles that they can't view and only dash admins should be able to edit shared tiles.
+ *
+ * @param  int   $usertile   Ref of the tile being edited. Typically obtained from get_tile()
+ * @param  int   $audience   0 for tile available to one user, 1 for all users. Typically obtained from get_tile()
+ * @param  int   $user       Ref of the user editing the tile.
+ * 
+ * @return bool   Will return true if editing is allowed else will return false.
+ */
+function can_edit_tile(int $tileref, int $audience, int $user)
+    {
+    if ($audience === 0)
+        {
+        // User is trying to edit a tile visible to only them.
+        $result = ps_query("SELECT ref, user, dash_tile, order_by FROM user_dash_tile WHERE dash_tile = ? AND user = ?", ['i', $tileref, 'i', $user]);
+        if (isset($result[0]))
+            {
+            return true;
+            }
+        else
+            {
+            return false;
+            }
+        }
+    else
+        {
+        // Tile is available to all users so editable only to dash admin users.
+        // This includes tiles available to a specified group.
+        return checkPermission_dashadmin();
+        }
     }

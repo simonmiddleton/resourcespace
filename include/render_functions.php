@@ -911,7 +911,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     $modal  = ('true' == getval('modal', ''));
     $sort = (in_array(mb_strtoupper($sort), array("ASC", "DESC")) ? mb_strtoupper($sort) : "DESC");
     ?>
-    <select id="sort_order_selection" onChange="UpdateResultOrder();">
+    <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape_quoted_data($lang["sortorder"]) ?>">
     
     <?php
     $options = '';
@@ -962,30 +962,31 @@ function render_sort_order(array $order_fields,$default_sort_order)
     ?>
     </select>
     &nbsp;
-    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);">
+    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);" aria-label="<?php echo escape_quoted_data($sort === "ASC" ? $lang['sortorder-asc'] : $lang['sortorder-desc']) ?>">
         <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
     </a>
 
     <script>
     function UpdateResultOrder(toggle_order)
         {
-        var selected_option      = jQuery('#sort_order_selection :selected');
-        var option_url           = selected_option.data('url');
-        
+        var selected_option = jQuery('#sort_order_selection :selected');
+        var option_url      = selected_option.data('url');
+        var sort_by         = jQuery('#sort_order_selection').find(":selected").val();
+
         if (toggle_order)
             {
             var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
             }
         else
             {
-            if(selected_option='resourcetype')
+            if(sort_by == 'resourcetype' || sort_by == 'collection')
                 {
                 // The default sort should be ascending when sorting by resource type
-                var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
+                var selected_sort_option = 'ASC';
                 }
             else
                 {
-                var selected_sort_option='<?php echo ($sort=='ASC'?'ASC':'DESC'); ?>';
+                var selected_sort_option = 'DESC';
                 }
             }
         option_url += '&sort=' + selected_sort_option;
@@ -1044,7 +1045,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         return;
         }
 
-    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns, $allow_resource_deletion;
+    global $baseurl, $lang, $k, $pagename, $order_by, $sort;
     
     // globals that could also be passed as a reference
     global $result /*search result*/;
@@ -1073,7 +1074,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     <?php
                     }
                     ?>
-                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?>>
+                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?> aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
             <?php } ?>
             <option class="SelectAction" selected disabled hidden value=""><?php echo $lang["actions-select"]?></option>
             <?php
@@ -1370,12 +1371,25 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             <?php
             if(!$top_actions)
                 {
-                if($allow_resource_deletion)
-                    {
-                    ?>
-                    case 'delete_all_in_collection':
-                        if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
+                global $delete_requires_password;
+                ?>
+                case 'delete_all_in_collection':
+                    if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
+                        {<?php
+                        if ($delete_requires_password)
                             {
+                            $delete_all_url_params = [
+                                "ref"       => $collection_data["ref"],
+                                "name"      => $collection_data["name"],
+                                "public"    => ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0),
+                                "deleteall" => 'on'
+                            ];
+                            $delete_all_url = generateURL("{$baseurl}/pages/collection_edit.php",$delete_all_url_params);
+                            echo "ModalLoad('$delete_all_url');";
+                            }
+                        else
+                            {
+                            ?>
                             var post_data = {
                                 submitted: true,
                                 ref: '<?php echo $collection_data["ref"]; ?>',
@@ -1389,11 +1403,10 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                 {
                                 CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
                                 });
-                            }
-                        break;
-                    <?php
-                    }
-                    ?>
+                            <?php
+                            }?>
+                        }
+                    break;
 
 					case 'hide_collection':
 						var action = 'hidecollection';
@@ -1450,14 +1463,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 				
                 // Go back to no action option
                 jQuery('#<?php echo $action_selection_id; ?> option[value=""]').prop('selected', true);
-                <?php
-                if($chosen_dropdowns)
-                	{
-                	?>
-                	jQuery('#<?php echo $action_selection_id; ?>').trigger('chosen:updated');
-                	<?php
-                	}
-                ?>
+                
 
         }
         </script>
@@ -1771,7 +1777,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastglobal,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
   $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
 
   // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
@@ -1819,7 +1825,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
     else
         {
         $selected_nodes = $all_selected_nodes;
-        $submitted_val = getval("field_" . $field['ref'],"");
+        if (in_array($field["type"], $DATE_FIELD_TYPES))
+            {
+            $submitted_val = sanitize_date_field_input($field["ref"], false);
+            }
+        else
+            {
+            $submitted_val = getval("field_" . $field['ref'], "");
+            }
         if(!empty($save_errors) && $submitted_val != "")
             {
             // Set to the value that was submitted 
@@ -1955,9 +1968,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
       if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
         {
         # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
-        ?> 
+        if ($field['required'] == 0) 
+            {
+            # And it only applies if the field is optional
+            ?> 
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
+            }
         }
         hook ("edit_all_extra_modes","",[$field]);
         ?>
@@ -2083,7 +2100,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
-
+        $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
             $name = "nodes[{$field['ref']}]";
@@ -2097,10 +2114,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 {
                 $name = "field_{$field['ref']}";
                 }
-			
-			$field_nodes = array();
-			foreach($selected_nodes as $selected_node)
-				{
+
+            $field_nodes = array();
+            foreach($selected_nodes as $selected_node)
+                {
                 $node_data = array();
                 if(get_node($selected_node, $node_data) && $node_data["resource_type_field"] != $field["ref"])
                     {
@@ -2109,16 +2126,16 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
                 $field_nodes[] = $selected_node;
                 unset($node_data);
-				}
-
-			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
-				{
-				echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
-				echo "<input id='field_" . (int) $field['ref']  . "_currentval' name='" . "field_" . (int) $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
-				}
+                }
+            sort($field_nodes);
+            if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
+                {
+                echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
+                echo "<input id='field_" . (int) $field['ref']  . "_currentval' name='" . "field_" . (int) $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
+                }
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
-			{
+            {
             $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
             $field_nodes = array();
 			foreach($selected_nodes as $selected_node)
@@ -2128,8 +2145,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 					$field_nodes[] = $selected_node;
 					}
 				}
-			natsort($field_nodes);
-			
+			sort($field_nodes);			
 			echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
 		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
@@ -2225,7 +2241,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
     {
     $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
-    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar, $maxyear_extends_current;
+    global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $edit_autosave,$forsearchbar, $maxyear_extends_current;
     if($forsearch)
         {
         // Get the start/end date from the string
@@ -2303,7 +2319,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_start_day"
-             <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+             <?php
             if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
             else if (!$forsearch  && $edit_autosave)
@@ -2320,7 +2336,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
             <select name="<?php echo $name?>_start_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
+                <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2341,7 +2357,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             ?>		
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
             <select name="<?php echo $name?>_start_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
+                <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2357,7 +2373,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_start_day"
-              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+              <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2378,7 +2394,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
             <select name="<?php echo htmlspecialchars($name) ?>_start_year"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php } 
+                <?php 
                 if ($forsearch && $autoupdate) 
                         { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2399,7 +2415,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
             <input size="5" name="<?php echo htmlspecialchars($name) ?>_start_year" id="<?php echo htmlspecialchars($name) ?>_start_year" type="text" value="<?php echo $found_start_year ?>"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
+                <?php 
                 if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
                 if($forsearch && !$forsearchbar)
@@ -2425,7 +2441,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_end_day"
-              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+              <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2441,7 +2457,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
             <select name="<?php echo $name?>_end_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
+                <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2461,12 +2477,11 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
-            <select name="<?php echo $name?>_end_month"
-                <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
-                if ($forsearch && $autoupdate) 
-                    { ?>onChange="UpdateResultCount();"<?php }
-                else if (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+            <select name="<?php echo $name?>_end_month" <?php 
+                if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } 
+                else
+                    {?>onChange="UpdateResultCount();"<?php } ?>
                     >					
                 <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
                 <?php
@@ -2478,7 +2493,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
             <select name="<?php echo $name?>_end_day"
-              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
+              <?php 
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 else if (!$forsearch  && $edit_autosave)
@@ -2499,7 +2514,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
             <select name="<?php echo $name?>_end_year" 
-            <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
+            <?php 
             if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
                 else if (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
@@ -2520,7 +2535,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 {?>
                 <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
                 <input size="5" name="<?php echo htmlspecialchars($name) ?>_end_year" id="<?php echo htmlspecialchars($name) ?>_end_year" type="text" value="<?php echo $found_end_year ?>"
-                    <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
+                    <?php 
                     
                     if ($forsearch && $autoupdate)
                         { ?>onChange="UpdateResultCount();"<?php }
@@ -2957,7 +2972,7 @@ function render_share_options($shareopts=array())
                 { ?>
                 <option value=""><?php echo $lang["never"]?></option><?php 
                 } 
-            for ($n=1;$n<=$resource_share_expire_days;$n++)
+            for ($n=0;$n<=$resource_share_expire_days;$n++)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
@@ -4241,9 +4256,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			    }
 
             # Use a display template to render this field
-            $template = $field['display_template'];
+            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
             $template = str_replace('[title]', $title, $template);
-            $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
+            $template = str_replace('[value]', $value, $template);
             $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
@@ -4268,7 +4283,6 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
                 $i++;
                 }
 
-                debug("BANG " . $field["name"] . ":" . $template);
             $extra   .= $template;
 			}
 		else # No display template
@@ -4683,6 +4697,12 @@ function render_featured_collections(array $ctx, array $items)
                 ),
                 "text" => $lang['add_to_dash']);
             }
+        if($is_featured_collection && allow_featured_collection_share($fc))
+            {
+            $render_ctx["tools"][] = array(
+                "href" => generateURL("{$baseurl_short}pages/collection_share.php", array("ref" => $fc["ref"])),
+                "text" => $lang["share"]);
+            }
         if($is_featured_collection && collection_readable($fc['ref']))
             {
             $render_ctx["tools"][] = $tool_select;
@@ -4763,7 +4783,7 @@ function render_featured_collections(array $ctx, array $items)
             $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
             }
-
+            
         // Don't show the tools for external shares
         if((trim($k) != ""))
             {
@@ -4929,18 +4949,10 @@ function render_featured_collection(array $ctx, array $fc)
         ?>
         <div class="ListTools">
             <div class="ActionsContainer">
-                <select id="<?php echo $action_selection_id; ?>" onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);">
+                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo $fc["ref"];?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
                     <option><?php echo htmlspecialchars($lang["actions-select"]); ?></option>
                 </select>
-            </div>
-            <script>
-            jQuery('#<?php echo $action_selection_id; ?>').bind({
-                mouseenter: function(e)
-                    {
-                    LoadActions('themes', '<?php echo $action_selection_id; ?>', 'collection', '<?php echo $fc["ref"]; ?>');
-                    }
-            });
-            </script>
+            </div>            
         </div><!-- End of ListTools -->
         <?php
         }
@@ -4957,25 +4969,56 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $permission   Permission identifier
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
-* @param boolean $reload       Autosave changes done on this permission
-* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
-* 
-* @return void
+* @param boolean $reload       deprecated - Autosave changes done on this permission
+* @param boolean $disabled     Disable this permission as another supersedes it (greys it out and checks it)
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
+function DrawOption(string $permission, string $description, bool $reverse = false, bool $reload = false, bool $disabled = false): void
     {
     global $permissions,$permissions_done;
-    $checked=(in_array($permission,$permissions));
-    if ($reverse) {$checked=!$checked;}
+
+    // The description can contain <br> tags and "&mdash;" HTML entities which we still want to allow.
+    $description_escaped = nl2br(
+        str_replace(
+            '&amp;',
+            '&',
+            htmlspecialchars(preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $description))
+        ),
+        false
+    );
+
+    $checked = in_array($permission, $permissions);
+    if ($reverse)
+        {
+        $checked = !$checked;
+        }
+    
+    $input_value = $reverse ? "reverse" : "normal";
+    $base64_perm = base64_encode($permission);
+
+    // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
+    $disabled_attr = '';
+    $onchange_attr = " onchange=SavePermissions(['$base64_perm']);";
+    if ($disabled)
+        {
+        $checked = true;
+        $disabled_attr = ' disabled';
+        $onchange_attr = '';
+        }
+    $checked_attr = $checked ? ' checked' : '';
     ?>
-    <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+    <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
-        <td><?php echo $description?></td>
-        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
-            if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
+        <td><?php echo $description_escaped; ?></td>
+        <td>
+            <input
+                type="checkbox"
+                name="checked_<?php echo $base64_perm; ?>"
+                data-reverse="<?php echo (int) $reverse; ?>"
+                <?php echo $disabled_attr . $checked_attr . $onchange_attr; ?>>
+        </td>
     </tr>
     <?php
-    $permissions_done[]=$permission;
+    $permissions_done[] = $permission;
     }
 
 
@@ -5117,8 +5160,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
     $resource_download_allowed  = resource_download_allowed($ref,'',$resource["resource_type"]);
     $size_info                  = array('id' => '', 'extension' => 'mp3');
 
-    if (
-        $resource['file_extension']=="wav" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
+    if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
         echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . $lang['mp3_preview_file'] . "</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
@@ -5361,7 +5403,7 @@ function render_array_in_table_cells($array)
             }
         else
             {
-            echo htmlspecialchars($value);
+            echo htmlspecialchars((string)$value);
             }
                 
         echo "</td></tr>";
@@ -5874,5 +5916,242 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
         }
 
     </script>
+    <?php
+    }
+
+
+/**
+ * Render all related resources on view page
+ *
+ * @param array $context Array with all required info from the view page
+ * 
+ * @return void
+ * 
+ */
+function display_related_resources($context)
+    {
+    $ref                        =  $context["ref"] ?? 0;
+    $k                          =  $context["k"] ?? "";
+    $userref                    =  $context["userref"] ?? 0;
+    $arr_related                =  $context["relatedresources"] ?? [];
+    $relatedtypes_shown         =  $context["related_types_shown"] ?? [];
+    $internal_share_access      =  $context["internal_share_access"] ?? false;
+    $related_restypes           =  $context["related_restypes"] ?? [];
+    $relatedtypes_shown         =  $context["relatedtypes_shown"] ?? [];
+    $edit_access                =  $context["edit_access"] ?? false;
+    $urlparams                  =  $context["urlparams"] ?? ["ref"=>$ref];    
+    
+    global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type, $related_resource_preview_size;
+    
+    $allrestypes = get_resource_types();
+    if($ref==0 || count(array_diff(array_column($allrestypes,"ref"),$relatedtypes_shown)) == 0) 
+        {
+        return;
+        }
+    ?>
+    <!--Display panel for related resources-->
+    <div class="RecordBox">
+    <div class="RecordPanel">
+    <div id="RelatedResources">
+    <div class="RecordResource">
+    <div class="Title"><?php echo $lang["relatedresources"]?></div>
+    <?php
+    if(checkperm("s")
+        && ($k == "" || $internal_share_access)
+        )
+        {
+        if(count(array_diff(array_column($arr_related,"resource_type"),$relatedtypes_shown)) > 0)
+            {
+            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+            <div class="clearerleft"> </div>
+            <?php
+            }
+        if($sort_relations_by_filetype)
+            {
+            // Sort by file extension
+            $related_file_extensions = array_unique(array_column($arr_related, "file_extension"));
+            foreach($related_file_extensions as $rext)
+                {
+                ?>
+                <h4><?php echo htmlspecialchars($rext); ?></h4>
+                <?php
+                # loop and display the results by file extension
+                for ($n=0;$n<count($arr_related);$n++)			
+                    {
+                    if(in_array($arr_related[$n]["resource_type"],$relatedtypes_shown))
+                        {
+                        // Don't show this type again.
+                        continue;
+                        }
+                    if ($arr_related[$n]["file_extension"]==$rext)
+                        {
+                        $rref=$arr_related[$n]["ref"];
+                        $title=$arr_related[$n]["field".$view_title_field];
+                        $access=get_resource_access($rref);
+                        $use_watermark=check_use_watermark();
+                        # swap title fields if necessary
+                        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+                            {
+                            if ($arr_related[$n]['resource_type']==$metadata_template_resource_type)
+                                {
+                                $title=$arr_related[$n]["field".$metadata_template_title_field];
+                                }
+                            }
+                        ?>
+                        <div class="CollectionPanelShell">
+                            <table border="0" class="CollectionResourceAlign">
+                                <tr><td>
+                                        <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                                        if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
+                                            { 
+                                            ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php
+                                            }
+                                        else
+                                            { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                            } ?>
+                                        </a>
+                                </td></tr>
+                            </table>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <?php hook("relatedresourceaddlink");?>
+                        </div>
+                        <?php
+                        }
+                    }
+                    ?>
+                <div class="clearerleft"> </div>
+                <?php
+                } #end of display loop by resource extension
+            } #end of IF sorted relations by extension
+        elseif($sort_relations_by_restype)
+            {
+            foreach($related_restypes as $rtype)
+                {
+                if(in_array($rtype,$relatedtypes_shown))
+                    {
+                    // Don't show this type again.
+                    continue;
+                    }
+                $restypename=ps_value("SELECT name AS value FROM resource_type WHERE ref = ?",array("i",$rtype), "", "schema");
+                $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
+                ?>
+                <h4><?php echo htmlspecialchars($restypename); ?></h4>
+                <?php
+                # loop and display the results by file extension
+                for ($n=0;$n<count($arr_related);$n++)			
+                    {
+                    if ($arr_related[$n]["resource_type"]==$rtype)
+                        {
+                        $rref=$arr_related[$n]["ref"];
+                        $title=$arr_related[$n]["field".$view_title_field];
+                        $access=get_resource_access($rref);
+                        $use_watermark=check_use_watermark();
+                        # swap title fields if necessary
+                        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+                            {
+                            if ($arr_related[$n]['resource_type']==$metadata_template_resource_type)
+                                {
+                                $title=$arr_related[$n]["field".$metadata_template_title_field];
+                                }
+                            }
+                        ?>
+                        <!--Resource Panel-->
+                        <div class="CollectionPanelShell">
+                            <table border="0" class="CollectionResourceAlign">
+                                <tr><td>
+                                <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
+                                    { 
+                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php 
+                                    }
+                                else
+                                    { 
+                                    ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                    } ?>
+                                    </a>
+                                </td></tr>
+                            </table>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
+                        <?php hook("relatedresourceaddlink");?>
+                        </div>
+                        <?php
+                        }
+                    }
+                ?>
+                <div class="clearerleft"> </div>
+                <?php 
+                } #end of display loop by resource extension
+            } #end of IF sorted relations
+        else
+            {
+            // Related resources (default view)
+            for ($n=0;$n<count($arr_related);$n++)            
+                {
+                if(in_array($arr_related[$n]["resource_type"],$relatedtypes_shown))
+                    {
+                    // Don't show this type again.
+                    continue;
+                    }
+                $rref=$arr_related[$n]["ref"];
+                $title=$arr_related[$n]["field".$view_title_field];
+                $access=get_resource_access($rref);
+                $use_watermark=check_use_watermark();
+                # swap title fields if necessary
+
+                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+                    {
+                    if ($arr_related[$n]["resource_type"]==$metadata_template_resource_type)
+                        {
+                        $title=$arr_related[$n]["field".$metadata_template_title_field];
+                        }	
+                    }        
+                ?>
+                <div class="CollectionPanelShell">
+                    <table border="0" class="CollectionResourceAlign">
+                        <tr>
+                            <td>
+                                <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], $related_resource_preview_size))
+                                    {
+                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" /><?php
+                                    }
+                                else
+                                    {
+                                    ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                    }
+                                ?></a>
+                            </td>
+                        </tr>
+                        </table>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <?php hook("relatedresourceaddlink");?>       
+                    </div>
+                    <?php
+                    }?>
+                <?php
+                } // End related resources default display
+            } // End of if any related resources exist
+        ?>
+        </div><!-- End of RecordResource -->
+        <?php if ($edit_access)
+            {
+            // Add link to create new related resource and view as result set
+            $add_related_params = [
+                "ref"=>-$userref,
+                "relateto"=>$ref,
+                "noupload"=>"true",
+                "recordonly"=>"true",
+                "collection_add"=>"false",
+                "redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams),
+                ];
+            $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
+            ?>
+            <div class="clearerleft"></div>
+            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+            <?php
+            }?>
+        </div><!-- End of RelatedResources -->
+    </div><!-- End of RecordPanel -->
+    </div><!-- End of RecordBox -->
     <?php
     }

@@ -249,7 +249,7 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
     $sort = "ASC";
     }
 
-    $messages=ps_query("SELECT user_message.ref, user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
+    $messages=ps_query("SELECT user_message.ref, message.ref AS 'message_id', user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .
 		"FROM `user_message`
 		INNER JOIN `message` ON user_message.message=message.ref " .
 		"LEFT OUTER JOIN `user` ON message.owner=user.ref " .
@@ -274,56 +274,58 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
  * @return void
  */
 function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,$ttl_seconds=MESSAGE_DEFAULT_TTL_SECONDS, $related_activity=0, $related_ref=0)
-	{
-	global $userref,$applicationname,$lang, $baseurl, $baseurl_short,$header_colour_style_override;
-	
-	if(!is_int_loose($notification_type))
-		{
-		$notification_type=intval($notification_type); // make sure this in an integer
-		}
-	
-	$orig_text=$text;
+    {
+    global $userref,$applicationname,$lang, $baseurl, $baseurl_short,$header_colour_style_override;
 
-	if (!is_array($users))
-		{
-		$users=array($users);
-		}
+    if(!is_int_loose($notification_type))
+        {
+        $notification_type=intval($notification_type); // make sure this in an integer
+        }
+
+    $orig_text=$text;
+
+    if (!is_array($users))
+        {
+        $users=array($users);
+        }
 
     if(checkperm('E'))
         {
-        $validusers = get_users(0,"","u.username",true,1);
+        $validusers = get_users(0,"","u.username",true);
         $validuserrefs = array_column($validusers,"ref");
         $users = array_filter($users,function($user) use ($validuserrefs) {return in_array($user,$validuserrefs);});
         }
 
-	if(is_null($owner) || (isset($userref) && $userref != $owner))
-		{
+    if(is_null($owner) || (isset($userref) && $userref != $owner))
+        {
         // Can't send messages from another user
-		$owner=$userref;
-		}
+        $owner=$userref;
+        }
 
-	ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
-	$message_ref = sql_insert_id();
+    ps_query("INSERT INTO `message` (`owner`, `created`, `expires`, `message`, `url`, `related_activity`, `related_ref`, `type`) VALUES (? , NOW(), DATE_ADD(NOW(), INTERVAL ? SECOND), ?, ?, ?, ?, ?)", array("i",$owner,"i",$ttl_seconds,"s",$text,"s",str_replace($baseurl.'/', $baseurl_short, $url),"i",$related_activity,"i",$related_ref,"i",$notification_type));
+    $message_ref = sql_insert_id();
 
-	foreach($users as $user)
-		{
-		ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
-		
-		// send an email if the user has notifications and emails setting and the message hasn't already been sent via email
-		if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
-			{
-			get_config_option($user,'email_and_user_notifications', $notifications_always_email);
-			if($notifications_always_email)
-				{
-				$email_to=ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
-				if($email_to!=='')
-					{
+    foreach($users as $user)
+        {
+        ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
+        
+        // send an email if the user has notifications and emails setting and the message hasn't already been sent via email
+        if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
+            {
+            get_config_option($user,'email_and_user_notifications', $notifications_always_email);
+            if($notifications_always_email)
+                {
+                $email_to=ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
+                if($email_to!=='')
+                    {
                     if(substr($url,0,1) == "/")
                         {
                         // If a relative link is provided make sure we add the full URL when emailing
-                        $url = $baseurl . $url;
+                        $parsed_url = parse_url($baseurl);
+                        $url = $baseurl . (isset($parsed_url["path"]) ? str_replace($parsed_url["path"],"",$url) : $url);
                         }
-					$message_text=nl2br($orig_text);
+
+                    $message_text=nl2br($orig_text);
 
                     // Add system header image to email
                     $headerimghtml = "";
@@ -331,18 +333,18 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $img_div_style = "max-height:50px;padding: 5px;";
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
                     $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
-                              
+                                
                     if($url !== '' && strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
                         $message_text = $message_text . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                         }
-					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
-					}
-				}
-			}
-		}
-	}
+                    send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$headerimghtml . $message_text);
+                    }
+                }
+            }
+        }
+    }
 
 /**
  * Remove a message from message table and associated user_messages
@@ -509,37 +511,121 @@ function message_send_unread_emails()
             }
         }
 
-	# Get all unread notifications created since last run, or all mesages sent to inactive users. 
-    # Build array of sql query parameters
-    $parameters = array();
-    if (count($digestusers) > 0)
+    if (!empty($digestusers))
         {
-        $parameters = array_merge($parameters, ps_param_fill($digestusers,"i"));
-        }
-    $parameters = array_merge($parameters, array("s",$lastrun));
-    if (count($sendall) > 0)
-        {
-        $parameters = array_merge($parameters, ps_param_fill($sendall,"i"));
-        }
-    $unreadmessages = ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref = um.user JOIN message m ON m.ref = um.message WHERE um.seen = 0"
-      . (count($digestusers) > 0 ? " AND u.ref IN (" . ps_param_insert(count($digestusers)) . ")" : "") . " AND u.email <> '' AND (m.created > ?" . (count($sendall) > 0 ? " OR u.ref IN (" . ps_param_insert(count($sendall)) . ")" : "") . ") ORDER BY m.created DESC", $parameters);
+        $digestuserschunks = array_chunk($digestusers,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+        $unreadmessages = [];
+        foreach($digestuserschunks as $chunk)
+            {
+            # Get all unread notifications created since last run, or all messages sent to inactive users. 
+            # Build array of sql query parameters
+            
+            $parameters = array();
 
-    $inactive_message_auto_digest_period_saved = $inactive_message_auto_digest_period;
+            $parameters = array_merge($parameters, ps_param_fill($chunk,"i"));
+            $parameters = array_merge($parameters, array("s",$lastrun));
+            $digestusers_sql = " AND u.ref IN (" . ps_param_insert(count($chunk)) . ")";
+
+            $sendall_chunk = array_intersect($sendall,$chunk);
+            if (count($sendall_chunk) > 0)
+                {
+                $parameters  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
+                $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
+                }
+            else
+                {
+                $sendall_sql = "";
+                }
+
+            $unreadmessages = array_merge(
+                $unreadmessages,
+                ps_query(
+                "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                    FROM user_message um 
+                        JOIN user u ON u.ref = um.user 
+                        JOIN message m ON m.ref = um.message 
+                        WHERE um.seen = 0
+                        $digestusers_sql
+                        AND u.email <> '' 
+                        AND (m.created > ? 
+                            $sendall_sql) 
+                        ORDER BY m.created DESC", 
+                    $parameters
+                ));
+            }
+        }
+    else
+        {
+        $parameters = array("s",$lastrun);
+        $unreadmessages = ps_query(
+            "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                FROM user_message um 
+                    JOIN user u ON u.ref = um.user 
+                    JOIN message m ON m.ref = um.message 
+                    WHERE um.seen = 0
+                    AND u.email <> '' 
+                    AND (m.created > ?) 
+                    ORDER BY m.created DESC", 
+                $parameters
+            );
+        
+        if (!empty($sendall))
+            {
+            $sendall_chunks = array_chunk($sendall,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+
+            foreach ($sendall_chunks as $sendall_chunk)
+                {
+                if (count($sendall_chunk) > 0)
+                    {
+                    $parameters_chunk  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
+                    $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
+                    }
+                    
+                $unreadmessages = array_merge(
+                    $unreadmessages,
+                    ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
+                        FROM user_message um 
+                            JOIN user u ON u.ref = um.user 
+                            JOIN message m ON m.ref = um.message 
+                            WHERE um.seen = 0
+                            AND u.email <> '' 
+                            AND (m.created > ? 
+                                $sendall_sql) 
+                            ORDER BY m.created DESC", 
+                        $parameters_chunk
+                    )
+                );
+                }
+            }
+        }
+
+
+    // Keep record of the current value for these config options. setup_user() may override them with the user group specific ones.
+    $current_inactive_message_auto_digest_period = $inactive_message_auto_digest_period;
+    $current_user_pref_inactive_digest = $user_pref_inactive_digest;
+    $current_user_pref_daily_digest = $user_pref_daily_digest;
+
 	foreach($digestusers as $digestuser)
 		{
-        // Reset config before setting up user so that any user groups processed later are not affected by the override
-        $inactive_message_auto_digest_period = $inactive_message_auto_digest_period_saved;
+        // Reset config variables before setting up the user to not have logic influenced by the previous iteration.
+        $inactive_message_auto_digest_period = $current_inactive_message_auto_digest_period;
+        $user_pref_inactive_digest = $current_user_pref_inactive_digest;
+        $user_pref_daily_digest = $current_user_pref_daily_digest;
+
         $messageuser=get_user($digestuser);
         if(!$messageuser)
             {
             // Invalid user
             continue;
             }
+
 		setup_user($messageuser);
-        get_config_option($digestuser,'user_pref_inactive_digest', $user_pref_inactive_digest);
-        get_config_option($digestuser,'user_pref_daily_digest', $user_pref_daily_digest);
-        
-        if($inactive_message_auto_digest_period == 0 || (!$user_pref_inactive_digest && !$user_pref_daily_digest)) // This may be set differently as a group configuration overerride or disabled by user
+
+        $pref_msg_user_for_inactive_digest = $pref_msg_user_pref_daily_digest = null;
+        get_config_option($digestuser, 'user_pref_inactive_digest', $pref_msg_user_for_inactive_digest);
+        get_config_option($digestuser, 'user_pref_daily_digest', $pref_msg_user_pref_daily_digest);
+
+        if($inactive_message_auto_digest_period == 0 || (!$pref_msg_user_for_inactive_digest && !$pref_msg_user_pref_daily_digest))
             {
             debug("Skipping email digest for user ref " . $digestuser . " as user or group preference disabled");
             continue;
@@ -888,7 +974,7 @@ function send_user_message($users,$text)
  *                              "message"   => message text
  *                              "url"       => url
  */
-function send_user_notification($users=[],$notifymessage, $forcemail=false)
+function send_user_notification(array $users, $notifymessage, $forcemail=false)
     {
     global $userref, $lang, $plugins, $header_colour_style_override;
 
@@ -1026,11 +1112,11 @@ function send_user_notification($users=[],$notifymessage, $forcemail=false)
                 // Add the URL to the message if not already present
                 $messagetext = $messagetext . "<br /><br /><a href='" . $url . "'>" . $url . "</a>";
                 }
-            send_mail(implode(",",$notifications["emails"]),$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
 
-            foreach($notifications["emails"] as $emailsent)
+            foreach($notifications["emails"] as $emailrecipient)
                 {
-                $results["emails"][] = ["email"=>$emailsent,"subject"=>$subject,"body"=>$headerimghtml . $messagetext];
+                send_mail($emailrecipient,$subject,$headerimghtml . $messagetext,"","",$notifymessage->template,$notifymessage->templatevars);
+                $results["emails"][] = ["email"=>$emailrecipient,"subject"=>$subject,"body"=>$headerimghtml . $messagetext];
                 }
 
             foreach($notifications["message_users"] as $notifyuser)
@@ -1058,7 +1144,7 @@ function get_user_message(int $ref, bool $checkaccess=true)
     global $userref;
     if($checkaccess)
         {
-        $validmessages = ps_array("SELECT ref value FROM user_message WHERE user = ?",["i",$userref]);
+        $validmessages = ps_array("SELECT `message` value FROM user_message WHERE user = ?",["i",$userref]);
         if(!in_array($ref,$validmessages))
             {
             return false;

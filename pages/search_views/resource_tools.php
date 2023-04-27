@@ -9,7 +9,7 @@ if($search_results_edit_icon && !hook("iconedit") && (checkperm("e" . $result[$n
         { 
         if ($allow_share && ($k=="" || $internal_share_access)) 
                 { ?>
-                        <a aria-hidden="true" class="fa fa-pencil"
+                        <a class="fa fa-pencil"
                                 href="<?php echo str_replace("view.php","edit.php",$url) ?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
                                 title="<?php echo $lang["action-editmetadata"]?>"
@@ -26,7 +26,7 @@ if($k=="" || $internal_share_access)
         // $collection_reorder_caption is an older config, although no longer in config.default.php some older systems may still have it set.
         if (((isset($collection_reorder_caption) && $collection_reorder_caption) || $collection_commenting) && (substr($search,0,11)=="!collection")) 
                 { ?>
-                        <a aria-hidden="true" class="fa fa-comment"
+                        <a class="fa fa-comment"
                                 href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref)?>&collection=<?php echo urlencode(trim(substr($search,11)))?>"
                                 onClick="return ModalLoad(this,true);" 
                                 title="<?php echo $lang["addorviewcomments"]?>"
@@ -44,7 +44,7 @@ if (!hook("replacefullscreenpreviewicon"))
         {
         if ($result[$n]["has_image"]==1)
                 { ?>
-                        <a aria-hidden="true" class="fa fa-expand"
+                        <a class="fa fa-expand"
                                 onClick="return CentralSpaceLoad(this,true);"
                                 href="<?php echo $baseurl_short?>pages/preview.php?from=search&amp;ref=<?php echo urlencode($ref)?>&amp;ext=<?php echo $result[$n]["preview_extension"]?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;k=<?php echo urlencode($k)?>" 
                                 title="<?php echo $lang["fullscreenpreview"]?>"
@@ -59,7 +59,7 @@ if(!hook("iconemail"))
         { 
         if ($allow_share && ($k=="" || $internal_share_access)) 
                 { ?>
-                        <a aria-hidden="true" class="fa fa-share-alt"
+                        <a class="fa fa-share-alt"
                                 href="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;k=<?php echo urlencode($k)?>"  
                                 onClick="return CentralSpaceLoad(this,true);"  
                                 title="<?php echo $lang["share-resource"]?>"

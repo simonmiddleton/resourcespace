@@ -3,81 +3,87 @@ global $baseurl,$baseurl_short,$enable_related_resources, $edit_access, $title_f
 $view_title_field = $title_field;
 
 if ($enable_related_resources)
-	{
+    {
     $use_watermark = check_use_watermark();
-	$relatedresources = do_search('!related' . $ref);
-	$related_restypes = array();
+    $relatedresources = do_search('!related' . $ref);
+    $related_restypes = array();
 
-	for ($n = 0; $n < count($relatedresources); $n++)
-		{
-		$related_restypes[] = $relatedresources[$n]['resource_type'];
-		}
+    for ($n = 0; $n < count($relatedresources); $n++)
+        {
+        $related_restypes[] = $relatedresources[$n]['resource_type'];
+        }
 
-	$related_restypes = array_unique($related_restypes);
-	$relatedtypes_shown = array();
-	$related_resources_shown = 0;
+    $related_restypes = array_unique($related_restypes);
+    $relatedtypes_shown = array();
+    $related_resources_shown = 0;
 
-	global $related_type_show_with_data, $related_type_upload_link, $userref;
-	if(isset($related_type_show_with_data))
-		{		
-		foreach($related_type_show_with_data as $rtype)
-			{
-			# Is this a resource type that needs to be displayed? Don't show resources of the same type as this is not the standard configuration
-			if ($resource['resource_type'] == $rtype || !in_array($rtype, $related_type_show_with_data) || (!in_array($rtype, $related_restypes) && !$related_type_upload_link))
-				{
-				continue;
-				}
+    global $related_type_show_with_data, $related_type_upload_link, $userref;
+    if(isset($related_type_show_with_data))
+        {
+        foreach($related_type_show_with_data as $rtype)
+            {
+            # Is this a resource type that needs to be displayed? Don't show resources of the same type as this is not the standard configuration
+            if ($resource['resource_type'] == $rtype || !in_array($rtype, $related_type_show_with_data) || (!in_array($rtype, $related_restypes) && !$related_type_upload_link))
+                {
+                continue;
+                }
 
-			// Show only related resource types that match this tab:
-			$resource_type_tab_ref = ps_value('SELECT tab AS value FROM resource_type WHERE ref = ?', ['i', $rtype], '', 'schema');
-			if($tab_ref !== $resource_type_tab_ref)
-				{
-				continue;
-				}
-			
-			
-			$restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype),"", "schema");
-			$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
-				
-			if(isset($related_type_thumbnail_view) && in_array($rtype,$related_type_thumbnail_view))
-				{
-				foreach($relatedresources as $relatedresource)
-					{
-					if($relatedresource['resource_type'] == $rtype)
-						{
-						?>
-						<div class="ResourcePanelShellSmall" id="RelatedResource_<?php echo $relatedresource["ref"]?>">
-							<a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]?>" title="<?php echo htmlspecialchars(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
-							<?php if ($relatedresource["has_image"]==1)
-								{
-								$thm_url = get_resource_path($relatedresource["ref"],false,"col",false,$relatedresource["preview_extension"],-1,1,$use_watermark,$relatedresource["file_modified"]);
-								}
-							else
-								{
-								$thm_url = $baseurl_short . "gfx/" . get_nopreview_icon($relatedresource["resource_type"],$relatedresource["file_extension"],false);
-								$relatedresource["thumb_height"] = 75;
-								$relatedresource["thumb_width"] = 75;
-								}
-							render_resource_image($relatedresource, $thm_url, "collection");
-							?>
-							</a>
-							
-						<?php
-						
-						if($edit_access)
-							{
-							echo "<div class=\"ResourcePanelInfo\" ><a href=\"#\" onClick=\"if(confirm('" . $lang["related_resource_confirm_delete"] . "')){relateresources(" . $ref . "," . $relatedresource["ref"] . ",'remove');jQuery('#RelatedResource_" . $relatedresource["ref"] . "').remove();}return false;\" >" . LINK_CARET . $lang["action-remove"] . "</a></div>";
-							}?>
-						</div>
-						<?php
-						}
-					}
-				if($related_type_upload_link && $edit_access)
-					{
-					echo "<div class=\"clearerleft\" ></div>";
-					echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $baseurl_short . "pages/edit.php?ref=-" . $userref . "&uploader=batch&resource_type=" . $rtype ."&submitted=true&relateto=" . $ref . "&collection_add=&redirecturl=" . urlencode($baseurl . "/?r=" . $ref) . "\">" . LINK_CARET . $lang["upload"] . "</a>";
-					}
-				}
+            // Show only related resource types that match this tab:
+            $resource_type_tab_ref = ps_value('SELECT tab AS value FROM resource_type WHERE ref = ?', ['i', $rtype], '', 'schema');
+            if($tab_ref !== $resource_type_tab_ref)
+                {
+                continue;
+                }
+            $restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype),"", "schema");
+            $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
+                
+            if(isset($related_type_thumbnail_view) && in_array($rtype,$related_type_thumbnail_view))
+                {
+                foreach($relatedresources as $relatedresource)
+                    {
+                    if($relatedresource['resource_type'] == $rtype)
+                        {
+                        ?>
+                        <div class="ResourcePanelShellSmall" id="RelatedResource_<?php echo $relatedresource["ref"]?>">
+                            <a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]?>" title="<?php echo htmlspecialchars(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
+                            <?php if ($relatedresource["has_image"]==1)
+                                {
+                                $thm_url = get_resource_path($relatedresource["ref"],false,"col",false,$relatedresource["preview_extension"],-1,1,$use_watermark,$relatedresource["file_modified"]);
+                                }
+                            else
+                                {
+                                $thm_url = $baseurl_short . "gfx/" . get_nopreview_icon($relatedresource["resource_type"],$relatedresource["file_extension"],false);
+                                $relatedresource["thumb_height"] = 75;
+                                $relatedresource["thumb_width"] = 75;
+                                }
+                            render_resource_image($relatedresource, $thm_url, "collection");
+                            ?>
+                            </a>
+                            
+                        <?php
+                        
+                        if($edit_access)
+                            {
+                            echo "<div class=\"ResourcePanelInfo\" ><a href=\"#\" onClick=\"if(confirm('" . $lang["related_resource_confirm_delete"] . "')){relateresources(" . $ref . "," . $relatedresource["ref"] . ",'remove');jQuery('#RelatedResource_" . $relatedresource["ref"] . "').remove();}return false;\" >" . LINK_CARET . $lang["action-remove"] . "</a></div>";
+                            }?>
+                        </div>
+                        <?php
+                        }
+                    }
+                if($related_type_upload_link && $edit_access)
+                    {
+                    if($upload_then_edit)
+                        {
+                        $uploadurl = generateURL($baseurl . "/pages/upload_batch.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams)],["relateto"=>$ref]);
+                        }
+                    else
+                        {
+                        $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
+                        }
+                    echo "<div class=\"clearerleft\" ></div>";
+                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . $lang["upload"] . "</a>";
+                    }
+                }
 			else
 				{
 				// Standard table view
@@ -118,7 +124,16 @@ if ($enable_related_resources)
 	
 								if($related_type_upload_link && $edit_access)
 									{
-									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $baseurl_short . "pages/edit.php?ref=-" . $userref . "&uploader=batch&resource_type=" . $rtype ."&submitted=true&relateto=" . $ref . "&collection_add=&redirecturl=" . urlencode($baseurl . "/?r=" . $ref) . "\">" . LINK_CARET . $lang["upload"] . "</a></div></td>";
+                                    if($upload_then_edit)
+                                        {
+                                        $uploadurl = generateURL($baseurl . "/pages/upload_batch.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams)],["relateto"=>$ref]);
+                                        }
+                                    else
+                                        {
+                                        $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
+                                        }
+
+									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . $lang["upload"] . "</a></div></td>";
 									}
 							?>
 						</tbody>

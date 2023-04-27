@@ -30,5 +30,3 @@ if ((isset($_REQUEST['mysqlserver']))&&(isset($_REQUEST['mysqlusername']))&&(iss
 	}
 	
 }
-?>	
-	

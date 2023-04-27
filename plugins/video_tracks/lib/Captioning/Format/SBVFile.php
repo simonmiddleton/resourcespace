@@ -3,6 +3,7 @@
 namespace Captioning\Format;
 
 use Captioning\File;
+use Captioning\FileInterface;
 
 class SBVFile extends File
 {
@@ -10,12 +11,16 @@ class SBVFile extends File
 
     protected $lineEnding = File::WINDOWS_LINE_ENDING;
 
-    public function parse()
+    /**
+     * @return SBVFile
+     * @throws \Exception
+     */
+    public function parse(): FileInterface
     {
-        $matches = array();
+        $matches = [];
         $res = preg_match_all(self::PATTERN_TIMECODE, $this->fileContent, $matches);
 
-        if (!$res || $res == 0) {
+        if (!$res) {
             throw new \Exception($this->filename.' is not a proper .sbv file.');
         }
 
@@ -32,7 +37,7 @@ class SBVFile extends File
                     $cueStart = trim($timeline[0]);
                     $cueStop = trim($timeline[1]);
 
-                    $cueText = array();
+                    $cueText = [];
                     $step = 'text';
                     break;
                 case 'text':
@@ -62,7 +67,7 @@ class SBVFile extends File
      * @param int $_to Id of the last entry
      * @return SBVFile
      */
-    public function buildPart($_from, $_to)
+    public function buildPart(int $_from, int $_to): FileInterface
     {
         $this->sortCues();
 

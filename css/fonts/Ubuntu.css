@@ -1,5 +1,8 @@
-
-@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+@font-face
+    {
+    font-family: "Ubuntu";
+    src: url("../../lib/fonts/Ubuntu/Ubuntu-Regular.ttf");
+    }
 
 h1,h2,h3,h4,h5,h6,.Title {font-family: Ubuntu, Arial, Helvetica, sans-serif;}
 

@@ -70,6 +70,11 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
+        if (!is_array($date_field_data))
+            {
+            debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
+            return $return;
+            }
         # Insert searchable date field so that it appears as the first array entry for a given resource type
         $return1=array();
         for ($n=0;$n<count($return);$n++)
@@ -85,11 +90,11 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
             $return1[]=$return[$n];
             }
         # If not yet added because it's resource type differs from everything in the list then add it to the end of the list
-        if (isset($date_field_data))
+        if (is_array($date_field_data))
             {
             $return1[]=$date_field_data;
             $date_field_data=null; # Keep things tidy
-        }
+            }
         return $return1;
         }
  
@@ -206,6 +211,13 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         $listsql="!list" . join(":",trim_array(split_keywords(getval("resourceids",""))));
         $search=$listsql . " " . $search;
         }
+    $full_text_search = getval(FULLTEXT_SEARCH_PREFIX,"");
+    if ($full_text_search != "")
+        {
+        if ($search!="") {$search.=" ";}
+        $full_text_search = str_replace("\"",FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,$full_text_search);
+        $search .= '"' . FULLTEXT_SEARCH_PREFIX . ':' . $full_text_search . '"';
+        }
     
     for ($n=0;$n<count($fields);$n++)
         {
@@ -307,25 +319,37 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $value="";
             if (strpos($search, $name.":")===false) 
                 {
+                // Get each part of the date
                 $key_year=$name."_year";
                 $value_year=getval($key_year,"");
-                if ($value_year!="") $value=$value_year;
-                else $value="nnnn";
                 
                 $key_month=$name."_month";
                 $value_month=getval($key_month,"");
-                if ($value_month=="") $value_month.="nn";
                 
                 $key_day=$name."_day";
                 $value_day=getval($key_day,"");
-                if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
-                elseif ($value_month!="nn") $value.="|" . $value_month;
                 
-                if (($value!=="nnnn|nn|nn")&&($value!=="nnnn")) 
-                    {
+                // The following constructs full date yyyy-mm-dd or partial dates yyyy-mm or yyyy 
+                // However yyyy-00-dd is interpreted as yyyy because its not a valid partial date
+                    
+                $value_date_final="";
+                // Process the valid combinations, otherwise treat it as an empty date
+                if ($value_year !="" && $value_month !="" && $value_day !="") {
+                    $value_date_final=$value_year."-".$value_month."-".$value_day;
+                }
+                elseif ($value_year !="" && $value_month !="") {
+                    $value_date_final=$value_year."-".$value_month;
+                }
+                elseif ($value_year !="") {
+                    $value_date_final=$value_year;
+                }
+
+                if ($value_date_final !="") {
+                    // If search already has value, then attach this value separated by a comma
                     if ($search!="") {$search.=", ";}
-                    $search.=$fields[$n]["name"] . ":" . $value;
-                    }
+                    $search.=$fields[$n]["name"] . ":" . $value_date_final;
+                }
+
                 }
 
             if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
@@ -576,8 +600,8 @@ function compile_search_actions($top_actions)
     $o=0;
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
-           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only;
+           $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset,
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -603,7 +627,7 @@ function compile_search_actions($top_actions)
 
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
-        if($top_actions && $allow_save_search && $usercollection != $collection)
+        if($top_actions && $usercollection != $collection)
             {
             $options[$o]['value']='save_search_to_collection';
             $options[$o]['label']=$lang['savethissearchtocollection'];
@@ -732,13 +756,14 @@ function compile_search_actions($top_actions)
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
-        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s',
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s&access=%s',
             $baseurl_short,
             urlencode((string) $search),
             urlencode((string) $restypes),
             urlencode((string) $order_by),
             urlencode((string) $archive),
-            urlencode((string) $sort)
+            urlencode((string) $sort),
+            urlencode((string) $search_access)
         );
         $options[$o]['category'] = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
@@ -1181,6 +1206,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     global $allow_smart_collections, $smart_collections_async;
     global $config_search_for_number,$userref;
 
+    setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
+
     // Don't cache special searches by default as often used for special purposes 
     // e.g. collection count to determine edit accesss
     $b_cache_count = false;
@@ -1356,11 +1383,11 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 if($smart_collections_async && isset($php_path) && file_exists($php_path . '/php'))
                     {
-                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($collection) . ' ' . '> /dev/null 2>&1 &');
+                    exec($php_path . '/php ' . dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php ' . escapeshellarg($smartsearch_ref) . ' ' . '> /dev/null 2>&1 &');
                     }
                 else 
                     {
-                    include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
+                    update_smart_collection($smartsearch_ref);
                     }
                 }   
             }
@@ -1690,6 +1717,95 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
+    else if(preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data))
+        {
+        /*
+        View report as search results.
+
+        Special search "!report" can contain extra info for the reports' query period.
+
+        Syntax: !reportID[p?][d??][fy????][fm??][fd??][ty????][tm??][td??]
+        Where:
+        - ID  is the actual report ref (mandatory)
+        - p   is the selected period (see $reporting_periods_default config option)
+        - d   is the period in specific number of days (p=0 in this case)
+        - fy,fm,fd (and their counter parts: ty,tm,td) represent a full date range (p=-1 in this case)
+
+        Examples for viewing as search results report #18:
+         - Last 7 days: !report18p7
+         - Last 23 days: !report18p0d23
+         - Between 2000-01-06 & 2023-03-16: !report18p-1fy2000fm01fd06ty2023tm03td16
+        */
+        debug('[search_special] Running a "!report" search...');
+        $no_results_sql = new PreparedStatementQuery(
+            $sql_prefix . "SELECT DISTINCT r.hit_count score, {$select} FROM resource AS r "
+            . $sql_join->sql
+            . ' WHERE 1 = 2 AND ' . $sql_filter->sql
+            . ' GROUP BY r.ref ORDER BY ' . $order_by,
+            array_merge($sql_join->parameters, $sql_filter->parameters)
+        );
+
+        // Users with no access control to reports get no results back (ie []).
+        if(!checkperm('t'))
+            {
+            debug(sprintf('[WARNING][search_special][access control] User #%s attempted to run "%s" search without the right permissions', (int) $userref, $search));
+            $sql = $no_results_sql;
+            }
+        else
+            {
+            include_once 'reporting_functions.php';
+            $report_id = $report_search_data[1];
+            $all_reports = get_reports();
+            $reports_w_thumbnail = array_filter(array_column($all_reports, 'query', 'ref'), 'report_has_thumbnail');
+            $reports_w_support_non_correlated_sql = array_filter(array_column($all_reports, 'support_non_correlated_sql', 'ref'));
+            $reports = array_diff_key($reports_w_thumbnail, $reports_w_support_non_correlated_sql);
+            if(isset($reports[$report_id]))
+                {
+                $report = $reports[$report_id];
+
+                $report_period = [];
+                $report_period_info_idxs = range(2,9);
+                $report_period_info_names = array_combine($report_period_info_idxs, ['period', 'period_days', 'from-y', 'from-m', 'from-d', 'to-y', 'to-m', 'to-d']);
+                $report_period_info_lookups = array_combine($report_period_info_idxs, ['p', 'd', 'fy', 'fm', 'fd', 'ty', 'tm', 'td']);
+                foreach($report_period_info_names as $idx => $info_name)
+                    { 
+                    if(!isset($report_search_data[$idx]))
+                        {
+                        continue;
+                        }
+
+                    $report_period[$info_name] = str_replace($report_period_info_lookups[$idx], '', $report_search_data[$idx]);
+                    }
+
+                $period = report_process_period($report_period);
+
+                $report_sql = report_process_query_placeholders($report, [
+                    '[from-y]' => $period['from_year'],
+                    '[from-m]' => $period['from_month'],
+                    '[from-d]' => $period['from_day'],
+                    '[to-y]' => $period['to_year'],
+                    '[to-m]' => $period['to_month'],
+                    '[to-d]' => $period['to_day'],
+                ]);
+                $report_sql = preg_replace('/;\s?/m', '', $report_sql, 1);
+
+                $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource AS r"
+                    . " INNER JOIN ($report_sql) AS rsr ON rsr.thumbnail = r.ref "
+                    . $sql_join->sql
+                    . ' WHERE ' . $sql_filter->sql
+                    . ' GROUP BY r.ref ORDER BY ' . $order_by
+                    . $sql_suffix;
+                $sql->parameters = array_merge($sql_join->parameters, $sql_filter->parameters);
+                // printf('<br>$sql = %s', print_r($sql, true));
+                debug("[search_special] SQL = " . json_encode($sql));
+                }
+            else
+                {
+                debug("[search_special] Report #{$report_id} not found");
+                $sql = $no_results_sql;
+                }
+            }
+        }
 
     # Within this hook implementation, set the value of the global $sql variable:
     # Since there will only be one special search executed at a time, only one of the
@@ -1713,10 +1829,15 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $count_sql = clone($sql);
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
-            $result=sql_limit_with_total_count($sql,$fetchrows,0,$b_cache_count,$count_sql);
+            $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
+            if(is_array($fetchrows))
+                {
+                return $result;
+                }
+
             $resultcount = $result["total"]  ?? 0;
-            if ($resultcount>0 && count($result["data"]) > 0)
-                { 
+            if($resultcount>0 && count($result["data"]) > 0)
+                {
                 if($return_refs_only)
                     {
                     // This needs to include archive and created_by columns too as often used to work out permission to edit collection
@@ -1732,7 +1853,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                             }, $result["data"]
                         );
                     }
-                $return = array_pad($result["data"],$resultcount,0);              
+                $return = $result['data'];
+                $resultcount -= count($return);
+                while($resultcount > 0)
+                    {
+                    $return = array_merge($return, array_pad([],($resultcount > 1000000?1000000:$resultcount),0));
+                    $resultcount -= 1000000;              
+                    }
                 }
             else
                 {
@@ -1836,8 +1963,10 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             foreach ($getsizes as $getsize)
                 {
                 if(!(in_array($getsize,array_column($available,"id")))){continue;}
-                $resfile=get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark);
-                if(file_exists($resfile))
+                if(
+                    !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], $getsize)
+                    && file_exists(get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark))
+                )
                     {
                     $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
                     }
@@ -2187,12 +2316,19 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         }
 
     $return=ps_value("SELECT ref value FROM keyword WHERE keyword = ?",array("s",trim($keyword)),0);
-    if ($return===0 && $create)
+    if ($return===0)
         {
-        # Create a new keyword.
-        debug("resolve_keyword: Creating new keyword for " . $keyword);
-        ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
-        $return=sql_insert_id();
+        if($create)
+            {
+            # Create a new keyword.
+            debug("resolve_keyword: Creating new keyword for " . $keyword);
+            ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
+            $return=sql_insert_id();
+            }
+        else
+            {
+            return false;
+            }
         }
     
     $resolve_keyword_cache[$kwhash] = $return;
@@ -2870,7 +3006,7 @@ function update_search_from_request($search)
 
         if ($value!="" && substr($key,0,6)=="field_")
             {
-            if ((strpos($key,"_year")!==false)||(strpos($key,"_month")!==false)||(strpos($key,"_day")!==false))
+            if ((string_ends_with($key,"_year")!==false)||(string_ends_with($key,"_month")!==false)||(string_ends_with($key,"_day")!==false))
                 {
                 # Date field
                 
@@ -3095,15 +3231,14 @@ function get_collections_resource_count(array $refs)
             continue;
             }
 
-        $sql = do_search("!collection{$ref}", '', 'relevance', '0', -1, 'desc', false, 0, false, false, '', false, false, true, false, true, null, false);
-        if(!(is_a($sql,"PreparedStatementQuery") && trim($sql->sql) !== ''))
+        $colresults = do_search("!collection{$ref}", '', 'relevance', '0',[0,0]);
+        if(!isset($colresults["total"]))
             {
             continue;
             }
-
-        $resources = ps_query($sql->sql, $sql->parameters,'col_total_ref_count_w_perm', -1, true, 2, true, ['ref']);
-        $return[$ref] = count($resources);
+        $return[$ref] = $colresults["total"];
         }
+    
     return $return;
     }
 
@@ -3168,4 +3303,31 @@ function search_title_node_processing($string)
         return $field_title . ":" . $node_data['name'];
         }
     return $string;
+    }
+
+/**
+ * Allow $fetchrows as supplied to do_search() to support an integer or array. If integer then search will recieve the number of rows with no offset.
+ * If array then search will receive the number of rows to return and an offset allowing for chunking of results.
+ * $chunk_offset[0] is the offset of the first row to return. $chunk_offset[1] is the number of rows to return in the batch. $chunk_offset[0] will normally be 0 in the first search,
+ * increasing by $chunk_offset[1] for each search, generated by an external looping structure. This allows for batches of $chunk_offset[1] search results up to the total size of the search.
+ * For an example {@see pages/csv_export_results_metadata.php}. This approach can be used to avoid particularly large searches exceeding the PHP memory_limit when processing the data in ps_query().
+ *
+ * @param  int|array   $fetchrows           $fetchrows value passed from do_search() / search_special(). See details above.
+ * @param  int         $chunk_offset        Starting position for offset. Default is 0 if none supplied i.e. $fetchrows is int.
+ * @param  int         $search_chunk_size   Number of rows to return.
+ * 
+ * @return void
+ */
+function setup_search_chunks($fetchrows, ?int &$chunk_offset, ?int &$search_chunk_size): void
+    {
+    if (is_array($fetchrows) && isset($fetchrows[0]) && isset($fetchrows[1]))
+        {
+        $chunk_offset = $fetchrows[0];
+        $search_chunk_size = $fetchrows[1];
+        }
+    else
+        {
+        $chunk_offset = 0;
+        $search_chunk_size = $fetchrows;
+        }
     }

@@ -28,3 +28,4 @@ $lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://ww
 $lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
 $lang["image_banks_shutterstock_id"]="Shutterstock image ID";
 
+$lang["image_banks_createdfromimagebanks"] = "Created from Image Banks plugin";

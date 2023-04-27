@@ -14,6 +14,7 @@
 */
 function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
+    global $FIXED_LIST_FIELD_TYPES;
     if(!is_null($name))
         {
         $name = trim((string) $name);
@@ -154,7 +155,6 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         }
     else
         {
-        global $FIXED_LIST_FIELD_TYPES;
         if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
             {
             log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
@@ -167,8 +167,10 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
             }
         return $new_ref;
         }
-    
-    clear_query_cache("schema");
+    if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        clear_query_cache("schema");
+        }
     }
 
 
@@ -190,8 +192,6 @@ function delete_node($ref)
 
     remove_all_node_keyword_mappings($ref);
 
-    clear_query_cache("schema");
-
     return;
     }
 
@@ -212,8 +212,6 @@ function delete_nodes_for_resource_type_field($ref)
 
     ps_query("DELETE FROM node WHERE resource_type_field = ?",array("i",$ref));
 
-    clear_query_cache("schema");
-
     return;
     }
 
@@ -233,7 +231,11 @@ function get_node($ref, array &$returned_node)
         return false;
         }
 
-    $node  = ps_query("SELECT " . columns_in("node") . " FROM node WHERE ref = ?",array("i", $ref),"schema");
+    $parameters= [];
+    $sql = columns_in("node");
+    add_sql_node_language($sql,$parameters);    
+    $parameters[] = "i";$parameters[] = $ref;
+    $node  = ps_query("SELECT " . $sql . " FROM node WHERE ref = ?",$parameters,"schema");
 
     if(count($node)==0)
         {
@@ -283,40 +285,21 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         if ($parent == ""){$parent=NULL;}
         else {$parent = (int) $parent;}
         }
-   
 
     $fieldinfo  = get_resource_type_field($resource_type_field);
+    if($fieldinfo === false){return false;}
     if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
         {
         $rows = 10000;
         }
-            
-    global $language,$defaultlanguage;
-    $asdefaultlanguage=$defaultlanguage;
-
-    if (!isset($asdefaultlanguage))
-        $asdefaultlanguage='en';
-
-    // Use langauge specified if not use default
-    isset($language)?$language_in_use = $language:$language_in_use = $defaultlanguage;
 
     $return_nodes = array();
 
-    // Get length of language string + 2 (for ~ and :) for usuage in SQL below
-    $language_string_length = (strlen($language_in_use) + 2);
+    $parameters= [];
+    $sql = "";
+    add_sql_node_language($sql,$parameters);
 
-    $parameters=
-        array
-        (
-        "s","~" . $language_in_use,
-        "s","~" . $language_in_use. ":",
-        "i",$language_string_length,
-        "s","~" . $language_in_use. ":",
-        "i",$language_string_length,
-        "s","~" . $language_in_use. ":",
-        "i",$language_string_length,
-        "i",$resource_type_field
-        );
+    $parameters[] = "i";$parameters[] = $resource_type_field;
 
     // Filter by name if required
     $filter_by_name = '';
@@ -331,8 +314,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     if($use_count)
         {
         $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
-        }
-  
+        }  
 
     $parent_sql = is_null($parent) ? ($recursive ? "TRUE" : "parent IS NULL") : ("parent = ?");
     if (strpos($parent_sql,"?")!==false) {$parameters[]="i";$parameters[]=$parent;}
@@ -365,29 +347,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
             }
         }
         
-    $query = "
-        SELECT 
-            *,
-            CASE
-                WHEN
-                    POSITION(? IN name) > 0
-                THEN
-                    TRIM(SUBSTRING(name,
-                            POSITION(? IN name) + ?,
-                            CASE
-                                WHEN
-                                    POSITION('~' IN SUBSTRING(name,
-                                            POSITION(? IN name) + ?,
-                                            LENGTH(name) - 1)) > 0
-                                THEN
-                                    POSITION('~' IN SUBSTRING(name,
-                                            POSITION(? IN name) + ?,
-                                            LENGTH(name) - 1)) - 1
-                                ELSE LENGTH(name)
-                            END))
-                ELSE TRIM(name)
-            END AS translated_name
-            " . $use_count_sql . "
+    $query = "SELECT " . columns_in("node") . $sql . $use_count_sql . "
         FROM node 
         WHERE resource_type_field = ?
         " . $filter_by_name . "
@@ -395,21 +355,31 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         ORDER BY " . $order_by . ", ref ASC
         " . $limit;
 
-    $nodes = ps_query($query,$parameters,"schema");
-
-    foreach($nodes as $node)
+    $sqlcache = in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) ? "schema" : "";
+    $nodes = ps_query($query,$parameters,$sqlcache);
+  
+    // No need to recurse if no parent was specified as we already have all nodes
+    if($recursive && (int)$parent > 0)
         {
-        array_push($return_nodes, $node);
-
-        // No need to recurse if no parent was specified as we already have all nodes
-        if($recursive && (int)$parent > 0)
+        foreach($nodes as $node)
             {
             foreach(get_nodes($resource_type_field, $node['ref'], TRUE) as $sub_node)
                 {
-                array_push($return_nodes, $sub_node);
+                array_push($nodes, $sub_node);
                 }
             }
         }
+    else
+        {
+        $return_nodes = $nodes;
+        }
+
+    if($recursive)
+        {
+        // Need to reorder so that parents are ordered by first, with children between (query will have returned them all according to the passed order_by)
+        $return_nodes = order_tree_nodes($return_nodes);
+        }
+   
     return $return_nodes;
     }
 
@@ -429,9 +399,13 @@ function get_nodes_by_refs(array $refs)
         return [];
         }
 
-    $query = "SELECT ref, name, resource_type_field, parent,order_by FROM node WHERE ref IN (" . ps_param_insert(count($refs)) . ")";
-    $parameters = ps_param_fill($refs,"i");
-    return ps_query($query, $parameters, "schema");
+    $parameters= [];
+    $sql = columns_in("node");
+    add_sql_node_language($sql,$parameters);
+    $query = "SELECT " . $sql  . " FROM node WHERE ref IN (" . ps_param_insert(count($refs)) . ")";
+    $parameters = array_merge($parameters,ps_param_fill($refs,"i"));
+
+    return ps_query($query, $parameters);
     }
 
 
@@ -622,7 +596,6 @@ function reorder_nodes(array $unordered_nodes)
             }
         }
 
-    clear_query_cache("schema");
     return $reordered_nodes;
     }
 
@@ -1073,12 +1046,6 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
     $keyword_ref = resolve_keyword($keyword, true,$normalize,false); // We have already stemmed
 
     ps_query("INSERT INTO node_keyword (node, keyword, position) VALUES (?, ?, ?)",array("i",$node,"i",$keyword_ref,"i",$position));
-    ps_query("UPDATE keyword SET hit_count = hit_count + 1 WHERE ref = ?",array("i",$keyword_ref));
-
-    log_activity("Keyword {$keyword_ref} added for node ID #{$node}", LOG_CODE_CREATED, $keyword, 'node_keyword');
-
-    clear_query_cache("schema");
-
     return true;
     }
 
@@ -1122,11 +1089,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
     ps_query("DELETE FROM node_keyword WHERE node = ? AND keyword = ? $position_sql",$parameters);
     
     ps_query("UPDATE keyword SET hit_count = hit_count - 1 WHERE ref = ?",array("i",$keyword_ref));
-
-    log_activity("Keyword ID {$keyword_ref} removed for node ID #{$node}", LOG_CODE_DELETED, null, 'node_keyword', null, null, null, $keyword);
-
-    clear_query_cache("schema");
-
     return;
     }
 
@@ -1141,7 +1103,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 function remove_all_node_keyword_mappings($node)
     {
     ps_query("DELETE FROM node_keyword WHERE node = ?",array("i",$node));
-    clear_query_cache("schema");
     return;
     }
 
@@ -1172,7 +1133,6 @@ function check_node_indexed(array $node, $partial_index = false)
     // (re-)index node
     remove_all_node_keyword_mappings($node['ref']);
     add_node_keyword_mappings($node, $partial_index);
-    clear_query_cache("schema");
 
     return;
     }
@@ -1221,6 +1181,9 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
         }
     foreach($translations as $translation)
         {
+        // Only index the first 500 characters
+        $translation = mb_strcut($translation,0,500);
+        
         $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
 
         add_verbatim_keywords($keywords, $translation, $node['resource_type_field']);
@@ -1247,7 +1210,6 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
         {
         db_end_transaction("add_node_keyword_mappings");
         }
-    clear_query_cache("schema");
 
     return true;
     }
@@ -1301,7 +1263,6 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
         remove_node_keyword($node['ref'], $keywords[$n], $keyword_position);
         }
 
-    clear_query_cache("schema");
     return true;
     }
 
@@ -1477,12 +1438,14 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
     $sql_select = 'n.ref AS `value`';
     if($detailed)
         {
-        $sql_select = 'n.ref, n.resource_type_field, n.`name`, n.parent, n.order_by';
+        $sql_select = columns_in("node","n");
+        // Add code to get translated names
+        $params = [];
+        add_sql_node_language($sql_select,$params,"n");
         }
 
     $query = "SELECT {$sql_select} FROM node AS n INNER JOIN resource_node AS rn ON n.ref = rn.node WHERE rn.resource = ?";
-    $params = ['i', $resource];
-
+    $params[] = 'i';$params[] = $resource;
     if(!is_null($resource_type_field) && is_numeric($resource_type_field))
         {
         $query .= " AND n.resource_type_field = ?";
@@ -1501,13 +1464,12 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
             $query .= " ORDER BY n.ref DESC";
             }
         }
-
-    if($detailed)
+    else
         {
-        return ps_query($query, $params);
+        $query .= " ORDER BY n.resource_type_field, n.order_by ASC";
         }
-
-    return ps_array($query, $params);
+    $return = $detailed ? ps_query($query, $params) : ps_array($query, $params);
+    return $return;
     }
 
 
@@ -1527,13 +1489,18 @@ function get_resources_nodes_by_rtf(int $ref)
         $sql_limit = sql_limit($offset, $rows);
         $offset += $rows;
 
+        $parameters= [];
+        $sql = columns_in("node","n");
+        add_sql_node_language($sql,$parameters,"n");
+        
+        $parameters = array_merge($parameters,['i', $ref]);
         $data = ps_query(
-               "SELECT rn.`resource`, rn.node, n.resource_type_field, n.`name` AS `value`
+               "SELECT " . $sql . "
                   FROM resource_node AS rn
             INNER JOIN node AS n ON rn.node = n.ref AND n.resource_type_field = ?
             INNER JOIN resource AS r ON rn.resource = r.ref
             $sql_limit",
-            ['i', $ref]
+            $parameters            
         );
         foreach($data as $page_data)
             {
@@ -1789,27 +1756,73 @@ function copy_resource_type_field_nodes($from, $to)
 /**
  * Get all the parent nodes of the given node, all the way back to the top of the node tree.
  *
- * @param  integer $noderef The child node ID
+ * @param  integer  $noderef        The child node ID
+ * @param  bool     $detailed       Return all node data? false by default 
+ * @param  bool     $include_child  Include the passed node in the returned array (easier for resolving tree nodes to paths)? false by default 
+ * 
  * @return array Array of the parent node IDs
  */
-function get_parent_nodes($noderef)
+function get_parent_nodes(int $noderef,bool $detailed = false, $include_child=false)
     {
-    $parent_nodes=array();
-    $topnode=false;
-    do
+    // Get all parents. Query varies according to MySQL cte support
+    $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
+    if(version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
         {
-        $node=ps_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref=?", array("i",$noderef), "schema");
-        if(empty($node[0]["parent"]))
+        $colsa = $detailed ? "ref, name, parent, resource_type_field, order_by" : "ref, name, parent";
+        $colsb = $detailed ? "n.ref, n.name, n.parent, n.resource_type_field, n.order_by" : "n.ref, n.name, n.parent";
+        $parent_nodes = ps_query("
+            WITH RECURSIVE cte($colsa,level) AS
+                    (
+                    SELECT $colsa,
+                           1 AS level
+                      FROM node
+                     WHERE ref= ?
+                 UNION ALL
+                    SELECT $colsb,
+                           level+1 AS LEVEL
+                      FROM  node n
+                INNER JOIN  cte
+                        ON  n.ref = cte.parent
+                    )
+            SELECT $colsa
+              FROM cte
+          ORDER BY level ASC;",
+        ['i', $noderef]);
+        }
+    else
+        {
+        $colsa = $detailed ? columns_in("node","N2") : "ref, name";
+        $parent_nodes = ps_query("
+        SELECT  $colsa
+        FROM  (SELECT @r AS p_ref,
+                (SELECT @r := parent FROM node WHERE ref = p_ref) AS parent,
+                @l := @l + 1 AS lvl
+        FROM  (SELECT @r := ?, @l := 0) vars,
+                node c
+        WHERE  @r <> 0) N1
+        JOIN  node N2
+            ON  N1.p_ref = N2.ref
+        ORDER BY  N1.lvl ASC",
+            ['i', $noderef]);
+        }
+
+    if(!$include_child)
+        {
+        $parent_nodes = array_values(array_filter($parent_nodes,function($node) use ($noderef) {return $node["ref"] != $noderef;}));
+        }
+
+    if(!$detailed)
+        {
+        $parent_nodes = array_column($parent_nodes,"name", "ref");
+        }
+    else
+        {
+        for($n=0;$n<count($parent_nodes);$n++)
             {
-            $topnode=true;
-            }
-        else
-            {
-            $parent_nodes[$node[0]["parent"]]=$node[0]["name"];
-            $noderef=$node[0]["parent"];
+            $parent_nodes[$n]["translated_name"] = i18n_get_translated($parent_nodes[$n]["name"]);
             }
         }
-    while (!$topnode);
+
     return $parent_nodes;
     }
 
@@ -1929,7 +1942,7 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 */
 function get_node_id($value,$resource_type_field)
     {
-    $node=ps_query("select ref from node where resource_type_field=? and name=?",array("i",$resource_type_field,"s",$value), "schema");
+    $node=ps_query("select ref from node where resource_type_field=? and name=?",array("i",$resource_type_field,"s",$value));
     if (count($node)>0)
         {
         return $node[0]["ref"];
@@ -1972,7 +1985,6 @@ function node_orderby_comparator($n1, $n2)
     return $n1["order_by"] - $n2["order_by"];
     }
 
-	
 /**
  * 
  * This function returns an array containing list of values for a selected field, identified by $field_label, in the multidimensional array $nodes
@@ -2190,82 +2202,27 @@ function cattree_node_flatten($node) {
  * This function returns an array of strings that represent the full paths to each tree node passed
  * 
  * @param array $resource_nodes - node tree to parse 
- * @param array $allnodes       - include paths to all nodes -if false will just include the paths to the end leaf nodes
+ * @param bool  $allnodes       - include paths to all nodes -if false will just include the paths to the end leaf nodes
+ * @param bool  $translate      - translate strings?
  * 
  * @return array $nodestrings - array of strings for all nodes passed in correct hierarchical order
  * 
  */
-function get_node_strings($resource_nodes,$allnodes = false)
+function get_node_strings($resource_nodes,$allnodes = false,$translate = true)
     {
-    global $category_tree_add_parents;
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
-    $orderednodes = array();
-    $orderednoderefs = array();
-    // Array with node ids as indexes to ease parent tracking
-    $treenodes = array();
-
-    while(count($resource_nodes) > 0)
-        {
-        $todocount = count($resource_nodes);
-        for($n=0;$n < $todocount;$n++)
-            {    
-            if(
-                in_array($resource_nodes[$n]["parent"],array_column($resource_nodes,"ref"))
-                &&
-                !in_array($resource_nodes[$n]["parent"],array_column($orderednodes,"ref"))
-                &&
-                $resource_nodes[$n]["parent"] != $resource_nodes[$n]["ref"] // Cater for potential misconfiguration where parent==self (possibly a legacy from pre-nodes tree config)
-                )
-                {
-                // Don't add yet, add once parent has been added
-                // By continuing, the resource_nodes array is unchanged, so array column does not need to be reestablished
-                continue;
-                }
-            $orderednodes[] = $resource_nodes[$n];
-            $orderednoderefs[] = $resource_nodes[$n]["parent"];
-            $treenodes[$resource_nodes[$n]["ref"]] = $resource_nodes[$n];
-            unset($resource_nodes[$n]);
-            }
-        $resource_nodes = array_values($resource_nodes);
-        }
-
+    $orderednodes = order_tree_nodes($resource_nodes);
     // Create an array of all branch nodes for each node
     $nodestrings = array();
-
     foreach($orderednodes as $resource_node)
         {
-        $node_parts = array();
-        // Create an array to hold all the node names, including all parents
-        $node_parts[$resource_node["ref"]] = array();
-        $node_parts[$resource_node["ref"]][] = i18n_get_translated($resource_node["name"]);
-        $nodeparent = $resource_node["parent"];
-        while($nodeparent != "" && isset($treenodes[$nodeparent]))
+        $path = $translate ? $resource_node["translated_path"] : $resource_node["path"];
+        if(!$allnodes && isset($nodestrings[$resource_node["parent"]]))
             {
-            if ($nodeparent == $resource_node["ref"]) { break; } // Cater for potential misconfiguration where parent==self
-            $node_parts[$resource_node["ref"]][] = i18n_get_translated($treenodes[$nodeparent]["name"]);
-            $nodeparent = $treenodes[$nodeparent]["parent"];
+            unset($nodestrings[$resource_node["parent"]]);
             }
-
-        // Create string representation, reversing the order so parents come first
-        $fullpath = "";
-        for($n=count($node_parts[$resource_node["ref"]])-1;$n>=0;$n--)
-            {
-            $fullpath .= $node_parts[$resource_node["ref"]][$n];
-            if(!$allnodes)
-                {
-                $duplicatepath = array_search($fullpath,$nodestrings);                 
-
-                if($duplicatepath !== false)
-                    {
-                    unset($nodestrings[$duplicatepath]);
-                    }          
-                }
-            if($n>0)
-                {
-                $fullpath .= "/";
-                }
-            }
-        $nodestrings[$resource_node["ref"]] = $fullpath;
+        
+        $nodestrings[$resource_node["ref"]] = $path;
         }
     return $nodestrings;
     }
@@ -2277,7 +2234,6 @@ function get_node_strings($resource_nodes,$allnodes = false)
 * 
 * @param  array    $nodes  List of nodes to search through (MUST contain elements with at least the "ref" index)
 * @param  integer  $id     Node ref we compute the branch path for
-* @param  array    $carry  Branch structure data which is carried forward. List of nodes, first item is the ROOT node
 * 
 * @return array Branch path structure starting from root to the searched node
 */
@@ -2298,7 +2254,9 @@ function compute_node_branch_path(array $nodes, int $id)
         return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
         }
 
-    $found_node_index = array_search($id, array_column($nodes, 'ref'));
+    $nodes_ref_list = array_column($nodes, 'ref');
+
+    $found_node_index = array_search($id, $nodes_ref_list);
     if($found_node_index === false)
         {
         return array();
@@ -2310,22 +2268,15 @@ function compute_node_branch_path(array $nodes, int $id)
     $path = array($node);
     while(!is_null($node_parent))
         {
-        $id = $node_parent;
-        if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id]))
+        // Parent node path is already known (cached), use it instead of recalculating it
+        if(isset($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$node_parent]))
             {
-            # Check the nodes found before returning cached value to handle multiple branches containing the same node e.g. resource in multiple collections.
-            $available_nodes = array();
-            foreach ($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id] as $node_available)
-                {
-                $available_nodes[]=$node_available['ref'];
-                }
-            if (in_array($path[0]['ref'],$available_nodes))
-                {
-                return $NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$id];
-                }
+            $parent_branch_reversed = array_reverse($NODE_BRANCH_PATHS_CACHE[$nodes_list_id][$node_parent]);
+            $path = array_merge($path, $parent_branch_reversed);
+            break;
             }
 
-        $found_node_index = array_search($id, array_column($nodes, 'ref'));
+        $found_node_index = array_search($node_parent, $nodes_ref_list);
         if($found_node_index === false)
             {
             break;
@@ -2404,8 +2355,11 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
         if(is_array($resource_type_fields) && count($resource_type_fields) > 0)
             {
             $fields = array_filter($resource_type_fields,"is_int_loose");
-            $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
-            $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
+            if (count($fields) > 0)
+                {
+                $query .= " AND n.resource_type_field IN (" . ps_param_insert(count($fields)) . ")";
+                $query_params = array_merge($query_params, ps_param_fill($fields, "i"));
+                }
             }
 
         if(!is_null($node_sort))
@@ -2565,7 +2519,6 @@ function delete_unused_non_fixed_list_nodes(int $resource_type_field)
         array_merge(['i', $resource_type_field], ps_param_fill(NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES, 'i'))
     );
     remove_invalid_node_keyword_mappings();
-    clear_query_cache('schema');
     }
 
 
@@ -2575,7 +2528,6 @@ function delete_unused_non_fixed_list_nodes(int $resource_type_field)
 function remove_invalid_node_keyword_mappings()
     {
     ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
-    clear_query_cache('schema');
     }
 
 /**
@@ -2661,3 +2613,126 @@ if (count($nodes)>0)
     ps_query("UPDATE resource_node SET new_hit_count = new_hit_count + 1 WHERE resource = ? AND node IN (" . ps_param_insert(count($nodes)) . ")", array_merge(array("i", $resource), ps_param_fill($nodes, "i")), false, -1, true, 0);
     }
 }
+
+/**
+ * Order array of tree nodes into logical order - Each parent followed by its child nodes,  all following order_by
+ *
+ * @param array $nodes      Array of detailed nodes
+ * 
+ * @return array            Full nodes in order
+ * 
+ */
+function order_tree_nodes($nodes)
+    {
+    if(count($nodes)==0)
+        {
+        return [];
+        }
+    // Find parent nodes first
+    $parents = array_column($nodes,"parent");
+    $toplevels = min($parents) > 0 ? $parents : [0];
+    $orderednodes = array_values(array_filter($nodes,function($node) use ($toplevels){return in_array((int)$node["parent"],$toplevels);}));
+    usort($orderednodes,'node_orderby_comparator');
+    for($n=0;$n < count($orderednodes);$n++)
+        {
+        $orderednodes[$n]["path"] = $orderednodes[$n]["name"];
+        $orderednodes[$n]["translated_path"] = $orderednodes[$n]["translated_name"] ?? i18n_get_translated($orderednodes[$n]["name"]);
+        }
+
+    // Find child nodes
+    $parents_processed = [];
+    while(count($nodes) > 0)
+        {
+        // Loop to find children
+        for($n=0;$n < count($orderednodes);$n++)
+            {
+            if(!in_array($orderednodes[$n]["ref"],$parents_processed))
+                {
+                // Add the children of this node with the the path added (relative to paremnt)
+                $children = array_filter($nodes,function($node) use($orderednodes,$n){return (int)$node["parent"] == $orderednodes[$n]["ref"];});
+                // Set order
+                uasort($children,"node_orderby_comparator");
+                $children = array_values($children);
+                for($c=0;$c < count($children);$c++)
+                    {
+                    $children[$c]["path"] = $orderednodes[$n]["path"] . "/" .  $children[$c]["name"];
+                    $children[$c]["translated_path"] = $orderednodes[$n]["translated_path"] . "/" .  ($children[$c]["translated_name"] ?? i18n_get_translated($children[$c]["name"]));
+                    // Insert the child after the parent and any nodes with a lower order_by value
+                    array_splice($orderednodes, $n+1+$c, 0,  [$children[$c]]);
+                    // Remove child from $treenodes
+                    $pos = array_search($children[$c]["ref"],array_column($nodes,"ref"));
+                    unset($nodes[$pos]);
+                    $nodes = array_values($nodes);
+                    }
+                $parents_processed[] = $orderednodes[$n]["ref"];
+                }
+            else
+                {
+                $pos = array_search($orderednodes[$n]["ref"],array_column($nodes,"ref"));
+                unset($nodes[$pos]);
+                }
+            }
+        $nodes = array_values($nodes);
+        }
+    return $orderednodes;
+    }
+
+
+/**
+ * Append SQL to an existing node query to obtain the translated names of the node
+ *
+ * @param string $sql_select    SQL query
+ * @param array  $sql_params    Array of SQL parameters
+ * 
+ * @return void
+ * 
+ */
+function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
+    {
+    global $language,$defaultlanguage;
+
+    $asdefaultlanguage=$defaultlanguage;
+
+    if (!isset($asdefaultlanguage))
+        {
+        $asdefaultlanguage='en';
+        }
+
+    // Use language specified, if not use default
+    isset($language) ? $language_in_use = $language : $language_in_use = $defaultlanguage;
+
+
+    // Get length of language string + 2 (for ~ and :) for usage in SQL below
+    $language_string_length = (strlen($language_in_use) + 2);
+
+    $sql_params= array_merge($sql_params,[
+        "s","~" . $language_in_use,
+        "s","~" . $language_in_use. ":",
+        "i",$language_string_length,
+        "s","~" . $language_in_use. ":",
+        "i",$language_string_length,
+        "s","~" . $language_in_use. ":",
+        "i",$language_string_length,
+        ]);
+    $sql_select .= ", 
+        CASE
+        WHEN
+            POSITION(? IN " . $alias . ".name) > 0
+        THEN
+            TRIM(SUBSTRING(name,
+                    POSITION(? IN " . $alias . ".name) + ?,
+                    CASE
+                        WHEN
+                            POSITION('~' IN SUBSTRING(" . $alias . ".name,
+                                    POSITION(? IN " . $alias . ".name) + ?,
+                                    LENGTH(" . $alias . ".name) - 1)) > 0
+                        THEN
+                            POSITION('~' IN SUBSTRING(" . $alias . ".name,
+                                    POSITION(? IN " . $alias . ".name) + ?,
+                                    LENGTH(" . $alias . ".name) - 1)) - 1
+                        ELSE LENGTH(" . $alias . ".name)
+                    END))
+        ELSE TRIM(" . $alias . ".name)
+        END AS translated_name";
+    return;    
+    }
