@@ -4094,7 +4094,7 @@ function display_upload_options()
 
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{		
-	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
+	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $range_separator, $force_display_template_orderby;
 
 	$value=$field["value"];
     $title=htmlspecialchars($field["title"]);
@@ -4268,6 +4268,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
                 $i++;
                 }
 
+                debug("BANG " . $field["name"] . ":" . $template);
             $extra   .= $template;
 			}
 		else # No display template

@@ -631,11 +631,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 if($field['required'] == 1
                                     && $field['hide_when_uploading'] != 1
                                     && !checkperm('F' . $field["ref"])
-                                    &&  (
-                                        $field["resource_type"] == $resource["resource_type"]
-                                        ||
-                                        ($field["resource_type"] == 0 && (bool)$resource_types[$resource["resource_type"]]["inherit_global_fields"])
-                                        )
+                                    && ($field["global"] == 1 
+                                        || in_array($resource["resource_type"],explode(",",$field["resource_types"])))
                                     )
                                     {
                                     $displaycondition = check_display_condition(0, $field, $fields, false); 

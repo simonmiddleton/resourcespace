@@ -109,14 +109,8 @@ if(getval("delete", "") != "" && enforcePostRequest(false))
 $actions_required = ($confirm_delete || $confirm_move_associated_rtf);
 
 # Fetch data
-$restypedata=ps_query(
-    "SELECT ref, name, order_by, config_options, allowed_extensions, tab, push_metadata, inherit_global_fields, colour, icon
-       FROM resource_type
-      WHERE ref = ?
-    ORDER BY `name`",
-    array("i",$ref),
-    "schema"
-);
+$restypedata = rs_get_resource_type($ref);
+
 if (count($restypedata)==0) {exit("Resource type not found.");} // Should arrive here unless someone has an old/incorrect URL.
 $restypedata=$restypedata[0];
 

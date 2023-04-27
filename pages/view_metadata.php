@@ -211,7 +211,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     for($i = 0; $i < count($fields); $i++)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-        if(in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
+        if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
             {
             if($displaycondition && $tab_ref == $fields[$i]['tab'])
                 {

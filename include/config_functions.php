@@ -1473,3 +1473,25 @@ function save_resource_type(int $ref, array $savedata)
 
     clear_query_cache("schema");
     }
+
+
+/**
+ * Get resource_type data
+ *
+ * @param int $ref
+ * 
+ * @return array
+ * 
+ */
+function rs_get_resource_type(int $ref)
+    {
+    $return = ps_query("SELECT " . columns_in('resource_type') . "
+                    FROM resource_type
+                WHERE ref = ?
+                ORDER BY `name`",
+            array("i",$ref),
+            "schema"
+            );
+    return $return;
+    }
+   

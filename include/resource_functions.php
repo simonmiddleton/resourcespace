@@ -3334,7 +3334,8 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
  * @param  string   $types          Comma separated resource type references to return specific types
  * @param  boolean  $translate      Option to translate resource type names in result
  * @param  boolean  $ignore_access  Return all resource types regardless of access?
- * @return array    Array of resource types returned from mySQL
+ *  
+ * @return array    Array of resource types, with associated resource_type_fields (excludes global fields)
  */
 function get_resource_types($types = "", $translate = true, $ignore_access = false)
     {
@@ -3388,11 +3389,11 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                     $r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");
                     }
                 $return[$r[$n]["ref"]]=$r[$n]; # Add to return array
-                // Create an array to hold associated resource_type_field, no need to keep the current row's field ID
+                // Create an array to hold associated resource_type_fields, no need to keep the current row's field ID
                 $return[$r[$n]["ref"]]["resource_type_fields"] = [];
                 unset($return[$r[$n]["ref"]]["resource_type_field"]);
                 }
-            // Add associated fields to the resource_types array
+            // Add associated fields to the resource_type_fields array
             $return[$r[$n]["ref"]]["resource_type_fields"][] = (int)$r[$n]["resource_type_field"];
             }
         }
@@ -3840,7 +3841,7 @@ function get_resource_type_name($type)
 	{
 	global $lang;
 	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(ps_value("select name value from resource_type where ref=?",array("i",$type), "schema"),"resourcetype-");
+	return lang_or_i18n_get_translated(ps_value("SELECT name value FROM resource_type WHERE ref=?",array("i",$type), "schema"),"resourcetype-");
 	}
 
 function get_resource_custom_access($resource)
