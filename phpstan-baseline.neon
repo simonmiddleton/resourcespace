@@ -341,11 +341,6 @@ parameters:
 			path: include/user_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$user_pref_user_management_notifications$#"
-			count: 1
-			path: include/user_functions.php
-
-		-
 			message: "#^File ends with a trailing whitespace\\. This may cause problems when running the code in the web browser\\. Remove the closing \\?\\> mark or remove the whitespace\\.$#"
 			count: 1
 			path: pages/admin/admin_content_edit.php
