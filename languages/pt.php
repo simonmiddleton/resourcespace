@@ -1918,17 +1918,6 @@ $lang["resources-with-requeststatus0-1"]='Por favor, traduza: (1 pendente)';
 $lang["researches-with-requeststatus0-0"]='(0 não atribuído)';
 $lang["researches-with-requeststatus0-1"]='(1 não atribuído)';
 $lang["researches-with-requeststatus0-2"]='(%número não atribuído)';
-$lang["byte-symbol"]='Desculpe, "B" não é uma string ou termo utilizado no software ResourceSpace. Por favor, forneça mais contexto ou uma string específica para que eu possa ajudá-lo com a tradução.';
-$lang["kilobyte-symbol"]='Please provide the context in which "KB" is being used. It could stand for different things such as kilobyte, knowledge base, etc.';
-$lang["megabyte-symbol"]='MB translates to "MB" in Português. It is an abbreviation for Megabyte, a unit of digital information storage.';
-$lang["gigabyte-symbol"]='GB translates to "GB" in Português as it is an abbreviation for gigabyte and is commonly used in the same form in both languages.';
-$lang["terabyte-symbol"]='Without any context, "TB" could mean many things. Please provide more information or context so I can provide an accurate translation.';
-$lang["kilobyte-symbol-binary"]='KiB stands for "kibibyte" and in Portuguese it is "kibibyte" as well.';
-$lang["megabyte-symbol-binary"]='MiB stands for "Mebibyte", which is a unit of digital information storage. In Portuguese, it would be translated as "Mebibyte" or "Mebibyte (MiB)" as it is a technical term and does not have a commonly used translation.';
-$lang["gigabyte-symbol-binary"]='Por favor, traduza: GiB
-
-GiB significa "gibibyte", que é uma unidade de medida de armazenamento de dados. Em Português, pode ser traduzido como "gibibyte" ou abreviado como "GiB".';
-$lang["terabyte-symbol-binary"]='TiB stands for "tebibyte", which translates to "tebibyte" in Português.';
 $lang["upload_files"]='Carregar arquivos.';
 $lang["upload_files-to_collection"]='Carregar arquivos (para a coleção \'%collection\')';
 $lang["ascending"]='Crescente.';

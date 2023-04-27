@@ -2018,17 +2018,6 @@ $lang["resources-with-requeststatus0-2"]='Por favor, traduce: (%número pendient
 $lang["researches-with-requeststatus0-0"]='(0 sin asignar)';
 $lang["researches-with-requeststatus0-1"]='(1 sin asignar)';
 $lang["researches-with-requeststatus0-2"]='(%number sin asignar)';
-$lang["byte-symbol"]='Lo siento, "B" no es una cadena de texto que pueda ser traducida. ¿Podría proporcionar más contexto o información para que pueda ayudarle mejor?';
-$lang["kilobyte-symbol"]='Por favor, proporcione más contexto para la traducción de "KB". ¿Se refiere a kilobytes (unidad de medida de tamaño de archivo) o a otra cosa?';
-$lang["megabyte-symbol"]='Please provide the context in which "MB" is being used in ResourceSpace. It could refer to different things such as file size, metadata field, or other objects.';
-$lang["gigabyte-symbol"]='GB can be translated to "GB" in Español as it is an abbreviation for "gigabyte" which is commonly used in digital asset management software.';
-$lang["terabyte-symbol"]='TB does not require translation as it is an abbreviation for Terabyte, which is also used in Español.';
-$lang["kilobyte-symbol-binary"]='KiB significa "kibibyte" y se refiere a una unidad de medida de almacenamiento de datos que equivale a 1024 bytes.';
-$lang["megabyte-symbol-binary"]='MiB significa "Mebibyte", que es una unidad de medida de almacenamiento de datos. En español, se traduce como "Mebibyte" o "Mebibyte (MiB)".';
-$lang["gigabyte-symbol-binary"]='Por favor, traduce: GiB
-
-GiB significa "gibibyte" en inglés y se refiere a una unidad de medida de almacenamiento de datos que equivale a 1.073.741.824 bytes. En español, se traduce como "gibibyte" o "gigabyte binario".';
-$lang["terabyte-symbol-binary"]='TiB significa "Tebibyte", que es una unidad de medida de almacenamiento de datos equivalente a 1024 Gibibytes.';
 $lang["upload_files"]='Subir archivos.';
 $lang["upload_files-to_collection"]='Subir archivos (a la colección \'%collection\')';
 $lang["ascending"]='Por favor, traduce: Ascendente.';

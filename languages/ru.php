@@ -1902,21 +1902,6 @@ $lang["resources-with-requeststatus0-2"]='(%number ожидающих)';
 $lang["researches-with-requeststatus0-0"]='(0 не назначено)';
 $lang["researches-with-requeststatus0-1"]='(1 не назначено)';
 $lang["researches-with-requeststatus0-2"]='(%number не назначены)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string used by ResourceSpace. Can you please provide me with more context or the full sentence where this string appears?';
-$lang["kilobyte-symbol"]='КБ (kilobyte)';
-$lang["megabyte-symbol"]='МБ (мегабайт)';
-$lang["gigabyte-symbol"]='ГБ (gigabyte)';
-$lang["terabyte-symbol"]='Извините, но "TB" не является строкой языка, которую нужно перевести. Можете уточнить контекст или предоставить больше информации?';
-$lang["kilobyte-symbol-binary"]='Пожалуйста, переведите: KiB. 
-
-KiB - это единица измерения объема информации, которая обозначает кибибайт. 1 кибибайт равен 1024 байтам.';
-$lang["megabyte-symbol-binary"]='Пожалуйста, переведите: MiB
-
-MiB означает "мебибайт", что является единицей измерения объема данных, равной 1024 кибибайтам.';
-$lang["gigabyte-symbol-binary"]='Пожалуйста, переведите: GiB
-
-ГиБ (Гигабайт) - это единица измерения объема информации, которая равна 1024 мегабайтам.';
-$lang["terabyte-symbol-binary"]='TiB stands for "Тебибайт" in Русский язык, which is a unit of digital information storage equal to 1024 gibibytes (GiB).';
 $lang["upload_files"]='Загрузить файлы.';
 $lang["upload_files-to_collection"]='Загрузить файлы (в коллекцию \'%collection\')';
 $lang["save-error"]='Ошибка автосохранения - пожалуйста, сохраните вручную.';

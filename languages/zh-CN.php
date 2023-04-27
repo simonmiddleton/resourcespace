@@ -2311,21 +2311,6 @@ $lang["resources-with-requeststatus0-2"]='(%number待处理)';
 $lang["researches-with-requeststatus0-0"]='(0 未分配)';
 $lang["researches-with-requeststatus0-1"]='（1 未分配）';
 $lang["researches-with-requeststatus0-2"]='(%number 未分配)';
-$lang["byte-symbol"]='抱歉，"B" 本身不是一个需要翻译的单词或短语。如果您有其他需要翻译的内容，请告诉我。';
-$lang["kilobyte-symbol"]='请翻译：KB
-
-千字节';
-$lang["megabyte-symbol"]='MB的翻译是“兆字节”，在数字资产管理软件ResourceSpace中通常用于表示资源文件的大小。';
-$lang["gigabyte-symbol"]='GB can be translated to "千兆字节" in simplified Chinese, which is a unit of digital information storage equivalent to 1,000 megabytes or 1 billion bytes.';
-$lang["terabyte-symbol"]='抱歉，这个字符串没有上下文或足够的信息来进行翻译。请提供更多上下文或信息。';
-$lang["kilobyte-symbol-binary"]='请翻译：KiB
-
-KiB是计算机存储容量的单位，表示千字节。';
-$lang["megabyte-symbol-binary"]='MiB 的翻译是“兆字节”（Mebibyte 的缩写）。';
-$lang["gigabyte-symbol-binary"]='请翻译：GiB
-
-GiB是计算机存储容量的单位，表示“Gibibyte”，翻译为简体字为“吉字节”。';
-$lang["terabyte-symbol-binary"]='TiB 的翻译是“提比”（一种计量单位，等于1024 GiB）。';
 $lang["upload_files"]='上传文件';
 $lang["upload_files-to_collection"]='上传文件（到集合 \'%collection\'）';
 $lang["ascending"]='升序';

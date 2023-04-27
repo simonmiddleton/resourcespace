@@ -1891,17 +1891,6 @@ $lang["resources-with-requeststatus0-2"]='(%nombre pendent)';
 $lang["researches-with-requeststatus0-0"]='(0 sense assignar)';
 $lang["researches-with-requeststatus0-1"]='(1 sense assignar)';
 $lang["researches-with-requeststatus0-2"]='(%number sense assignar)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string or a word in English that requires translation. Can you please provide me with a context or a full sentence so I can assist you better?';
-$lang["kilobyte-symbol"]='Please provide the context in which "KB" is being used. It could stand for different things depending on the context.';
-$lang["megabyte-symbol"]='MB: MB (megabyte)';
-$lang["kilobyte-symbol-binary"]='Per favor, tradueixi: KiB
-
-KiB significa "kibibyte" en anglès i es refereix a una unitat de mesura de la quantitat de dades. En català, es pot traduir com a "kibibyte" o "quilobit".';
-$lang["megabyte-symbol-binary"]='MiB significa "mebibyte", que és una unitat de mesura de la quantitat de dades en un arxiu o en un dispositiu de memòria.';
-$lang["gigabyte-symbol-binary"]='Si us plau, tradueixi: GiB
-
-GiB significa "gigabyte binari" i és una unitat de mesura de la capacitat de l\'emmagatzematge d\'informació. És equivalent a 1.073.741.824 bytes.';
-$lang["terabyte-symbol-binary"]='TiB significa "Tebibyte", una unidad de medida de almacenamiento de datos que equivale a 1024 Gibibytes.';
 $lang["upload_files"]='Pujar fitxers.';
 $lang["upload_files-to_collection"]='Pujar fitxers (a la col·lecció \'%collection\')';
 $lang["ascending"]='Ascendent';
@@ -3111,5 +3100,3 @@ $lang["report-resources_with_zero_downloads"]='Recursos sense cap descàrrega.';
 $lang["view__storyextract"]='Extracte de la història:';
 $lang["tile_custm"]='Personalitzat.';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificació del sistema';
-$lang["gigabyte-symbol"]='GB: GB (gigabyte)';
-$lang["terabyte-symbol"]='TB en català és TB (terabyte).';
