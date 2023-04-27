@@ -84,7 +84,6 @@ if($function != "login")
             }
         }
     }
-# Run the requested query
+
 echo execute_api_call($query, $pretty);
 debug("API: finished execute_api_call({$query});");
-
