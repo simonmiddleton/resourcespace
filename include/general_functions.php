@@ -3281,6 +3281,23 @@ function generateAjaxToken($form_id)
     return "{$CSRF_token_identifier}: \"{$token}\"";
     }
 
+/**
+ * Create an HTML data attribute holding a CSRF token (JS) object
+ * 
+ * @param string $fct_name The name of the API function called (e.g create_resource)
+ * @return string JS object with CSRF data (identifier & token)
+ */
+function generate_csrf_data_for_api_native_authmode(string $fct_name): string
+    {
+    global $CSRF_enabled, $CSRF_token_identifier, $usersession;
+    if($CSRF_enabled)
+        {
+        $csrf_data = [$CSRF_token_identifier => generateCSRFToken($usersession, $fct_name)];
+        return sprintf(' data-api-native-csrf="%s"', escape_quoted_data(json_encode($csrf_data)));
+        }
+    return '';
+    }
+
 
 /**
 * Enforce using POST requests
