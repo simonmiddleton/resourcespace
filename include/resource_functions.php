@@ -1513,6 +1513,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     $errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;
                     }
                 $errors[$fields[$n]["ref"]] .=  implode(",", $list);
+                $all_nodes_to_remove = array_diff($all_nodes_to_remove, $nodes_to_remove); // Don't remove any nodes in the required field that would be left empty.
                 $nodes_to_remove = [];
                 continue;
                 }
