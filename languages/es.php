@@ -810,7 +810,6 @@ $lang["information-derestrict_filter"]='Desbloquear filtro. Solo es efectivo cua
 $lang["information-push_metadata"]='Si se establece, los metadatos de este recurso se mostrarán en la página de vista del recurso para cualquier recurso relacionado. Por ejemplo, puede relacionar varias fotos con un recurso de persona. Si esta propiedad se establece en el recurso de persona, entonces los metadatos de la persona aparecerán en todos los registros de recursos de fotos relacionados, evitando la duplicación de datos en el sistema.';
 $lang["property-query"]='Consulta';
 $lang["information-id"]='Nota: \'Id\' debajo DEBE establecerse en un código único de tres caracteres.';
-$lang["property-id"]='Por favor, proporcione más contexto. "Id" puede tener diferentes significados en el software de gestión de activos digitales. ¿Se refiere a la identificación de un recurso, un usuario, un grupo o algún otro objeto en ResourceSpace?';
 $lang["property-width"]='Ancho.';
 $lang["property-height"]='Altura';
 $lang["property-quality"]='Calidad.';
@@ -840,14 +839,12 @@ $lang["xlthumbstitle"]='Miniaturas extra grandes.';
 $lang["largethumbs"]='Grande';
 $lang["largethumbstitle"]='Miniaturas grandes.';
 $lang["smallthumbstitle"]='Miniaturas pequeñas.';
-$lang["strip"]='Por favor, proporcione más contexto. "Strip" puede tener varios significados en inglés, como "tira", "desnudar", "eliminar", entre otros. Sin más información, no puedo proporcionar una traducción precisa.';
 $lang["striptitle"]='Vista de tira.';
 $lang["listtitle"]='Vista de lista.';
-$lang["perpage_option"]='Por página.';
+$lang["perpage_option"]='? por página.';
 $lang["powered_by"]='Alimentado por';
 $lang["powered_by_resourcespace"]='Impulsado por ResourceSpace.';
-$lang["on"]='En (this translation assumes that "On" refers to a button or switch that is turned on/off)';
-$lang["off"]='Por favor, proporcione más contexto. "Off" puede tener diferentes significados en el contexto del software de gestión de activos digitales.';
+$lang["on"]='En';
 $lang["seconds"]='segundos';
 $lang["reload"]='Recargar.';
 $lang["pause"]='Pausa';
@@ -962,8 +959,6 @@ $lang["page_collections_message"]='Continuar deseleccionará las colecciones mar
 $lang["delete_all_selected"]='Eliminar todo lo seleccionado.';
 $lang["range_no_start_header"]='Error de rango.';
 $lang["range_no_start"]='No se puede finalizar el rango sin un inicio. Por favor, suelte la tecla Shift.';
-$lang["lightbox-image"]='Imagen.';
-$lang["lightbox-of"]='de';
 $lang["treeobjecttype-resource_type"]='Tipo de recurso.';
 $lang["resources_selected-1"]='1 recurso seleccionado.';
 $lang["resources_selected-2"]='%number recursos seleccionados.';
@@ -1170,7 +1165,6 @@ $lang["stat-archivesearch"]='Búsqueda de archivo.';
 $lang["stat-addedsmartcollection"]='Añadida colección inteligente.';
 $lang["stat-removedresourcefromcollection"]='Eliminado recurso de la colección.';
 $lang["stat-keywordusage-noresultsfound"]='Uso de palabra clave - no se encontraron resultados';
-$lang["plugin_field_fmt"]='Por favor, proporcione más contexto para esta cadena de texto. No puedo proporcionar una traducción precisa sin saber el propósito y el contexto de la cadena de texto en el software ResourceSpace.';
 $lang["share_selected"]='Compartir seleccionado.';
 $lang["sharecollection-name"]='Compartir colección - %nombredecolección';
 $lang["share_theme_category"]='Compartir categoría de colección destacada.';
@@ -1418,7 +1412,6 @@ $lang["publishstatus"]='Guardar con estado de publicación:';
 $lang["addnewcontent"]='Nuevo contenido (página, nombre)';
 $lang["hitcount"]='Contador de visitas.';
 $lang["downloads"]='Descargas';
-$lang["addremove"]='Por favor, proporcione más contexto. ¿En qué parte del software ResourceSpace se utiliza el símbolo +/-?';
 $lang["list_file_extension"]='Extensión.';
 $lang["all_users"]='todos los usuarios';
 $lang["new_resource"]='Nuevo recurso.';
@@ -1534,19 +1527,6 @@ $lang["map_tfpioneer"]='Pionero.';
 $lang["map_tfmobileatlas"]='Atlas Móvil.';
 $lang["map_tfneighbourhood"]='Barrio';
 $lang["map_hyddafull"]='Mapa predeterminado.';
-$lang["map_hyddabase"]='Por favor, traduce: Base.
-
-Context is needed to provide an accurate translation. Here are some possible translations of "base" in the context of ResourceSpace:
-
-- Base de datos: Database
-- Base de recursos: Resource base
-- Base de metadatos: Metadata base
-- Base de usuarios: User base
-- Base de grupos: Group base
-- Base de flujos de trabajo: Workflow base
-- Base de descargas: Download base
-
-Please provide more context if none of these translations fit your needs.';
 $lang["map_stamen_group"]='Estambre.';
 $lang["map_stamentoner"]='Tóner.';
 $lang["map_stamentonerlt"]='Toner Ligero.';
@@ -1665,7 +1645,7 @@ $lang["purchase_complete_email_user_body"]='Gracias por su compra. Por favor, ut
 $lang["purchase_email_address"]='Por favor, ingrese una dirección de correo electrónico válida si desea recibir la confirmación de su compra.';
 $lang["subcategories"]='Subcategorías.';
 $lang["subcategory"]='Subcategoría.';
-$lang["back"]='Por favor, traduce: Atrás.';
+$lang["back"]='Atrás';
 $lang["pleasewait"]='Por favor, espera...';
 $lang["autorotate"]='¿Rotar automáticamente las imágenes?';
 $lang["user_pref_autorotate"]='¿Rotar automáticamente las imágenes al cargar?';
@@ -1967,9 +1947,6 @@ $lang["saved"]='Guardado.';
 $lang["changessaved"]='Cambios guardados.';
 $lang["resourceids"]='Identificador(es) de recurso(s)';
 $lang["warningrequestapprovalfield"]='Advertencia - ID de recurso % - por favor tome nota de lo siguiente antes de aprobar.';
-$lang["yyyy-mm-dd"]='Por favor, traduce: YYYY-MM-DD
-
-Año-Mes-Día (por ejemplo, 2021-07-15)';
 $lang["resources-with-requeststatus0-0"]='(0 pendientes)';
 $lang["resources-with-requeststatus0-1"]='(1 pendiente)';
 $lang["resources-with-requeststatus0-2"]='Por favor, traduce: (%número pendiente)';
@@ -2040,7 +2017,7 @@ $lang["comments_body-placeholder"]='Añadir un comentario. Usa @(nombre de usuar
 $lang["comments_fullname-placeholder"]='Tu nombre (requerido)';
 $lang["comments_email-placeholder"]='Tu correo electrónico (requerido)';
 $lang["comments_website-url-placeholder"]='Sitio web.';
-$lang["comments_flag-this-comment"]='Por favor, traduce: Bandera.';
+$lang["comments_flag-this-comment"]='Bandera';
 $lang["comments_flag-has-been-flagged"]='Comentario marcado.';
 $lang["comments_flag-reason-placeholder"]='Motivo para marcar el comentario.';
 $lang["comments_validation-fields-failed"]='Por favor, asegúrese de que todos los campos obligatorios estén completados correctamente.';
@@ -2207,83 +2184,6 @@ $lang["action-move-up"]='Mover hacia arriba.';
 $lang["action-move-down"]='Mover hacia abajo.';
 $lang["action-move-to"]='Mover a';
 $lang["delete_user_group_checkbox_alert_message"]='Por favor, tenga en cuenta que esta acción también eliminará todo el texto de contenido que sea relevante para este grupo de usuarios. Se han encontrado %%RECORDSCOUNT%% registros en Administrar contenido.';
-$lang["all__emailbulk"]='Por favor, traduce: <br /><br />
-[text]<br /><br />
-[text_footer]
-
-[cuerpo_del_texto]<br /><br />
-[pie_de_página_del_texto]';
-$lang["all__emailcollection"]='Por favor, traduce: <br />
-[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[De parte del nombre de usuario] [Mensaje de colección de correo electrónico]<br /><br />
-[Mensaje]: [mensaje]<br /><br />
-[Haga clic en el enlace para ver la colección] [lista]';
-$lang["all__emailcollectionexternal"]='Por favor, traduce: <br />
-[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
-[lang_message] : [mensaje]<br /><br /> 
-[lang_clicklinkviewcollection] [lista]';
-$lang["all__emailcontactadmin"]='Por favor, traduce: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[mensaje]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='[bienvenida]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[lista]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]
-
-Por favor, tenga en cuenta que los siguientes recursos aún no han sido enviados para su aprobación:
-<a href="[url]">[url]</a>
-
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Se ha asignado una solicitud de investigación a usted. Por favor, inicie sesión en ResourceSpace para revisar.<br /><br />
-[text_footer] = Este es un correo electrónico automático enviado desde ResourceSpace. Por favor, no responda a este correo electrónico.';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Su solicitud de investigación se ha completado. Los resultados se han agregado a la colección seleccionada. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[mensaje]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[lista] <br />
-[detalles] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> <br /><br />';
 $lang["collection_download__write_metadata_on_download_label"]='¿Incrustar los metadatos del recurso en el archivo o archivos descargados? Habilitar esto ralentizará la descarga.';
 $lang["collection_email__introtextthemeshare"]='Completa el formulario a continuación para enviar por correo electrónico las colecciones destacadas en esta categoría de colecciones destacadas. Los destinatarios recibirán un correo electrónico que contiene enlaces a cada una de las colecciones destacadas.';
 $lang["done__resource_email"]='Se ha enviado un correo electrónico que contiene un enlace al recurso a los usuarios que especificaste.';
@@ -2321,9 +2221,6 @@ $lang["collection_download_too_large"]='Lo siento, esta colección es demasiado 
 $lang["all__passwordnewemailhtml"]='Por favor, haga clic en el enlace de abajo para establecer una nueva contraseña para su cuenta.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nombre de usuario: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Carga temporalmente no disponible.';
 $lang["disk_size_no_upload_explain"]='Debido a limitaciones de espacio, la carga ha sido temporalmente desactivada. Pedimos disculpas por cualquier inconveniente.';
-$lang["dash"]='Por favor, traduce: Dash.
-
-"Dash" se puede traducir al español como "guion". Sin embargo, en el contexto del software de gestión de activos digitales ResourceSpace, puede referirse a diferentes elementos, como el panel de control (dashboard) o el guion de metadatos (metadata dash). Si me proporcionas más contexto, puedo ofrecerte una traducción más precisa.';
 $lang["savethissearchtodash"]='Guardar en mosaico del panel.';
 $lang["createnewdashtile"]='Crear nueva ficha de panel.';
 $lang["specialdashtiles"]='Azulejos de guión especial.';
@@ -2341,7 +2238,6 @@ $lang["dashtilestyle"]='Estilo de mosaico de panel de control.';
 $lang["returntopreviouspage"]='Regresar a la página anterior.';
 $lang["showresourcecount"]='¿Mostrar cantidad de recursos?';
 $lang["tilebin"]='Eliminar';
-$lang["last"]='Por favor, proporcione más contexto. "Last" puede tener diferentes significados en el contexto del software de gestión de activos digitales. ¿Se refiere a la última versión de un recurso? ¿O a la última fecha de modificación de un recurso? ¿O a la última página de resultados de una búsqueda?';
 $lang["managedefaultdash"]='Todos los iconos de usuario.';
 $lang["dashtile"]='Azulejo de panel de control.';
 $lang["manage_own_dash"]='Puede administrar su propio panel.';
@@ -2598,13 +2494,10 @@ $lang["new_report"]='Nuevo informe.';
 $lang["edit_report"]='Editar informe.';
 $lang["all_activity"]='Toda la actividad.';
 $lang["all_resource_types"]='Todos los tipos de recursos.';
-$lang["report-graph-by-pie"]='Por favor, traduce: breakdown.
-
-Desglose.';
 $lang["report-graph-by-piegroup"]='Por grupo de usuario.';
 $lang["report-graph-by-pieresourcetype"]='por tipo de recurso';
 $lang["report-graph-by-line"]='con el tiempo';
-$lang["report-graph-by-summary"]='Por favor, traduce: resumen.';
+$lang["report-graph-by-summary"]='resumen.';
 $lang["update_report"]='Actualización de informe.';
 $lang["save_report"]='Guardar informe.';
 $lang["save_report_as"]='Guardar informe como...';
@@ -2701,7 +2594,6 @@ $lang["error_fail_save"]='No se puede guardar.';
 $lang["image_quality_100"]='Máximo';
 $lang["image_quality_92"]='Imprimir';
 $lang["image_quality_80"]='Sitio web';
-$lang["image_quality_50"]='Por favor, proporcione más contexto. "Low" puede tener diferentes traducciones dependiendo del contexto en el software de gestión de activos digitales.';
 $lang["image_quality_40"]='Muy bajo.';
 $lang["iiif_enable_option"]='Habilitar soporte IIIF.';
 $lang["iiif_disabled"]='IIIF no está configurado.';

@@ -51,7 +51,6 @@ $lang["doi_not_successfully_registered_pl"]='Nie można było zarejestrować pop
 $lang["doi_reload"]='Przeładuj.';
 $lang["doi_successfully_set"]='zostało ustawione.';
 $lang["doi_not_successfully_set"]='nie zostało ustawione.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Zasób(y) już ma/mają DOI.';
 $lang["doi_sum_not_yet_archived"]='Zasób(y) nie jest/są oznaczone.';
 $lang["doi_sum_not_yet_archived_2"]='Jednakże dostęp do tego zasobu lub ich dostęp nie jest ustawiony jako otwarty.';

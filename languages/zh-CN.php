@@ -768,8 +768,6 @@ $lang["addnewcontent"]="新内容 (页数,名称)";
 $lang["hitcount"]="点击率";
 $lang["downloads"]="下载";
 
-$lang["addremove"]="";
-
 ##  Translations for standard log entries
 $lang["all_users"]="所有的用户";
 $lang["new_resource"]="新资源";
@@ -1116,7 +1114,6 @@ $lang["information-derestrict_filter"]='解除限制过滤器。仅在与去除g
 $lang["information-push_metadata"]='如果设置了此属性，则此资源的元数据将显示在任何相关资源的资源查看页面上。例如，您可以将几张照片与一个人物资源相关联。如果在人物资源上设置了此属性，则所有相关照片资源记录上都将显示人物元数据，避免在系统中重复数据。';
 $lang["property-query"]='查询';
 $lang["information-id"]='注意：下面的“Id”必须设置为三个字符的唯一代码。';
-$lang["property-id"]='ID 的翻译是“标识符”或“身份证明”。在 ResourceSpace 中，ID 通常指资源、集合、元数据、标签、用户、组、工作流程或下载的唯一标识符。';
 $lang["property-width"]='宽度';
 $lang["property-height"]='高度';
 $lang["property-quality"]='质量';
@@ -1148,7 +1145,6 @@ $lang["smallthumbstitle"]='小缩略图';
 $lang["strip"]='剥离 (Bōlí)';
 $lang["striptitle"]='剥离视图';
 $lang["listtitle"]='列表视图';
-$lang["perpage_option"]='每页 ? (where ? represents the number of items per page)';
 $lang["powered_by"]='动力来自';
 $lang["powered_by_resourcespace"]='由ResourceSpace提供支持';
 $lang["on"]='在 (zài)';
@@ -1195,7 +1191,6 @@ $lang["editcollectionresources"]='编辑集合预览';
 $lang["collection_set_theme_category"]='添加到精选集分类';
 $lang["collection_set_theme_category_title"]='将集合添加到特色集合类别。';
 $lang["collection-name"]='集合: %collectionname%';
-$lang["_dupe"]='重复 (Chóngfù)';
 $lang["emailtousers_internal"]='电子邮件发送给用户<br><br>开始输入用户的姓名进行搜索，找到后点击所需用户。';
 $lang["create_new_here"]='创建于此处';
 $lang["create_new_below"]='创建一个新分类。';
@@ -1250,8 +1245,6 @@ $lang["page_collections_message"]='继续操作将取消选择此页面上标记
 $lang["delete_all_selected"]='删除所有已选项';
 $lang["range_no_start_header"]='范围错误';
 $lang["range_no_start"]='无法结束范围，因为没有起始点。请释放 Shift 键。';
-$lang["lightbox-image"]='图像';
-$lang["lightbox-of"]='的';
 $lang["treeobjecttype-resource_type"]='资源类型';
 $lang["resources_selected-1"]='已选择 1 个资源。';
 $lang["resources_selected-2"]='已选择%number个资源。';
@@ -1435,7 +1428,6 @@ $lang["information-derestrict_filter"]='解除限制过滤器。仅在与去除g
 $lang["information-push_metadata"]='如果设置了此属性，则此资源的元数据将显示在任何相关资源的资源查看页面上。例如，您可以将几张照片与一个人物资源相关联。如果在人物资源上设置了此属性，则所有相关照片资源记录上都将显示人物元数据，避免在系统中重复数据。';
 $lang["property-query"]='查询';
 $lang["information-id"]='注意：下面的“Id”必须设置为三个字符的唯一代码。';
-$lang["property-id"]='ID 的翻译是“标识符”或“身份证明”。在 ResourceSpace 中，ID 通常指资源、集合、元数据、标签、用户、组、工作流程或下载的唯一标识符。';
 $lang["property-width"]='宽度';
 $lang["property-height"]='高度';
 $lang["property-quality"]='质量';
@@ -1467,7 +1459,6 @@ $lang["smallthumbstitle"]='小缩略图';
 $lang["strip"]='剥离 (Bōlí)';
 $lang["striptitle"]='剥离视图';
 $lang["listtitle"]='列表视图';
-$lang["perpage_option"]='每页 ? (where ? represents the number of items per page)';
 $lang["powered_by"]='动力来自';
 $lang["powered_by_resourcespace"]='由ResourceSpace提供支持';
 $lang["on"]='在 (zài)';
@@ -1514,7 +1505,6 @@ $lang["editcollectionresources"]='编辑集合预览';
 $lang["collection_set_theme_category"]='添加到精选集分类';
 $lang["collection_set_theme_category_title"]='将集合添加到特色集合类别。';
 $lang["collection-name"]='集合: %collectionname%';
-$lang["_dupe"]='重复 (Chóngfù)';
 $lang["emailtousers_internal"]='电子邮件发送给用户<br><br>开始输入用户的姓名进行搜索，找到后点击所需用户。';
 $lang["create_new_here"]='创建于此处';
 $lang["create_new_below"]='创建一个新分类。';
@@ -1706,7 +1696,6 @@ $lang["no_results_found"]='未找到结果。';
 $lang["function_not_enabled"]='此功能未启用。';
 $lang["stat-removedresourcefromcollection"]='从集合中移除资源';
 $lang["stat-keywordusage-noresultsfound"]='关键词使用 - 没有找到结果';
-$lang["plugin_field_fmt"]='%A (%B) 的翻译是： %A（%B）';
 $lang["share_selected"]='分享所选内容';
 $lang["sharecollection-name"]='共享集合 - %collectionname';
 $lang["share_theme_category"]='共享特色收藏分类';
@@ -2342,9 +2331,6 @@ $lang["comments_body-placeholder"]='添加评论。使用@(用户名)来标记�
 $lang["comments_fullname-placeholder"]='您的姓名（必填）';
 $lang["comments_email-placeholder"]='您的电子邮件（必填）';
 $lang["comments_website-url-placeholder"]='网站';
-$lang["comments_flag-this-comment"]='请翻译：Flag
-
-标记';
 $lang["comments_flag-has-been-flagged"]='评论已标记。';
 $lang["comments_flag-reason-placeholder"]='标记评论的原因';
 $lang["comments_validation-fields-failed"]='请确保所有必填字段已正确填写。';
@@ -2513,99 +2499,6 @@ $lang["action-move-down"]='下移';
 $lang["action-move-to"]='移动到';
 $lang["delete_user_group_checkbox_alert_message"]='请注意，此操作还将删除与此用户组相关的所有内容文本。在“管理内容”中找到了%%RECORDSCOUNT%%条记录。';
 $lang["about__about"]='您的关于文本在此处。';
-$lang["all__emailbulk"]='请翻译：<br /><br />
-[text]<br /><br />
-[text_footer]
-
-[文本]<br /><br />
-[页脚文本]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]：[message]<br /><br />
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]：[message]<br /><br />
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [外部电子邮件收集消息]<br /><br />
-[消息]：[message]<br /><br />
-[点击链接查看收藏] [list]';
-$lang["all__emaillogindetails"]='[欢迎]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username]：[username]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[用户名]（[用户全名] - [用户电子邮件]）
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]：[名称]<br /><br />
-[lang_descriptionofproject]：[描述]<br /><br />
-[lang_deadline]：[截止日期]<br /><br />
-[lang_contacttelephone]：[联系电话]<br /><br />
-[lang_finaluse]：[最终用途]<br /><br />
-[lang_shaperequired]：[所需形状]<br /><br />
-[lang_noresourcesrequired]：[所需资源数]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[列表]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] 已分配给您。请登录 ResourceSpace 查看并处理此请求。<br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br /><br />
-
-[lang_researchrequestcompletemessage]：研究请求已完成。 <br /><br />
-[lang_clicklinkviewcollection]：请点击以下链接查看集合。 <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]：此电子邮件由 ResourceSpace 发送。 <br /><br />';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]：[username] <br />
-[list] <br />
-[details] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> ';
 $lang["all__footer"]='由 <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace 开源数字资产管理</a> 驱动';
 $lang["all__researchrequest"]='让我们的资源团队找到您所需的资源。';
 $lang["change_language__introtext"]='请选择下面的语言。';
@@ -3139,17 +3032,6 @@ $lang["start"]='开始';
 $lang["file_integrity_summary"]='文件完整性报告';
 $lang["file_integrity_summary_failed"]='资源文件未通过完整性检查或已丢失。请点击链接查看这些资源，并根据需要采取行动，例如从备份中恢复文件。';
 $lang["file_integrity_fail_search"]='文件完整性故障';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='查看可疑资源';
 $lang["team_resource_integrity_fail_info"]='缺失或可能损坏文件的资源';
 $lang["collection_copy_resources"]='复制集合资源';

@@ -49,7 +49,6 @@ $lang["doi_not_successfully_registered_pl"]='Δεν μπόρεσε να εγγρ
 $lang["doi_reload"]='Επαναφόρτωση';
 $lang["doi_successfully_set"]='έχει οριστεί.';
 $lang["doi_not_successfully_set"]='δεν έχει οριστεί.';
-$lang["doi_sum_of"]='του (masculine), της (feminine), των (plural)';
 $lang["doi_sum_already_reg"]='Οι πόροι έχουν ήδη ένα DOI.';
 $lang["doi_sum_not_yet_archived"]='Οι πόροι δεν έχουν επισημανθεί.';
 $lang["doi_sum_not_yet_archived_2"]='Ωστόσο, η πρόσβαση του/της/των δεν έχει οριστεί ως ανοιχτή.';

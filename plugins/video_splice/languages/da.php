@@ -1,7 +1,6 @@
 <?php
 
 
-$lang["action-trim"]='Trim betyder at beskære eller skære en del af en fil eller et billede for at fjerne uønskede dele eller reducere størrelsen. I ResourceSpace kan Trim også referere til en funktion, der tillader brugere at beskære billeder direkte i systemet.';
 $lang["video-trim"]='Video Trim på dansk er "Video beskæring".';
 $lang["video-trim-warning"]='Beskæring Advarsel.';
 $lang["video-trim-warning-text"]='Dine start- eller slutklip punkter overskrider længden af video-previewet.<br><br>Det viste preview vil ikke fuldt ud repræsentere det endelige resultat. Overvej venligst at øge længden af dit video-preview og genskabe preview-filer, hvis du ønsker at forhåndsvise det beskårne resultat.';
@@ -19,9 +18,6 @@ $lang["frame_rate_resource_field"]='Billedhastighed output.';
 $lang["aspect_ratio_resource_field"]='Sideforhold forholdsmæssig udgang.';
 $lang["video-splice"]='Video Splice kan oversættes til "Video Sammensætning".';
 $lang["video-splice-intro"]='Sammenflet flere videokilder for at danne en samlet videokilde. Træk og slip miniaturebillederne nedenfor for at ændre rækkefølgen af videoklip.';
-$lang["action-splice"]='Venligst oversæt: Splice
-
-Splice kan oversættes til "splejs" på dansk. I konteksten af digital asset management software kan det referere til at kombinere to eller flere separate ressourcer eller filer til en enkelt fil eller ressource.';
 $lang["video_splice_order"]='Videoressourcer i rækkefølge.';
 $lang["video_splice_select_video"]='Videoformat.';
 $lang["video_splice_select_resolution"]='Videoopløsning';

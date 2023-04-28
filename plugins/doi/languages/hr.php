@@ -49,7 +49,6 @@ $lang["doi_not_successfully_registered_pl"]='Nije se moglo registrirati ispravno
 $lang["doi_reload"]='Ponovno učitaj';
 $lang["doi_successfully_set"]='postavljeno je.';
 $lang["doi_not_successfully_set"]='nije postavljeno.';
-$lang["doi_sum_of"]='molim? "of" je veznik koji se koristi za povezivanje riječi u rečenici. Potrebna mi je cijela rečenica ili fraza kako bih mogao pružiti prikladnu uslugu prevođenja.';
 $lang["doi_sum_already_reg"]='Resurs(i) već ima/ju DOI.';
 $lang["doi_sum_not_yet_archived"]='resurs(i) nisu označeni';
 $lang["doi_sum_not_yet_archived_2"]='Još uvijek ili njihov pristup nije postavljen na otvoreno.';

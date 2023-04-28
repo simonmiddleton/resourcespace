@@ -896,7 +896,6 @@ $lang["information-onchange_macro"]='変更マクロ：フィールド値が変�
 $lang["information-derestrict_filter"]='解除制限フィルター。メタデータ条件が満たされない限り、すべてのリソースが制限されるように、g権限を削除するときにのみ効果があります。';
 $lang["property-query"]='クエリ';
 $lang["information-id"]='注意：以下の「Id」は、3文字のユニークなコードに設定する必要があります。';
-$lang["property-id"]='IDの翻訳は「識別子」です。';
 $lang["property-width"]='幅 (はば)';
 $lang["property-height"]='高さ';
 $lang["property-quality"]='品質 (hinshitsu)';
@@ -928,7 +927,6 @@ $lang["smallthumbstitle"]='小さなサムネイル';
 $lang["strip"]='ストリップ';
 $lang["striptitle"]='ストリップビュー';
 $lang["listtitle"]='リストビュー';
-$lang["perpage_option"]='1 ページあたり ? 件';
 $lang["powered_by"]='動力源：';
 $lang["powered_by_resourcespace"]='ResourceSpaceによって動作しています。';
 $lang["on"]='オン';
@@ -981,7 +979,6 @@ $lang["editcollectionresources"]='コレクションのプレビューを編集�
 $lang["collection_set_theme_category"]='注目のコレクションカテゴリーに追加する。';
 $lang["collection_set_theme_category_title"]='注目のコレクションカテゴリにコレクションを追加する。';
 $lang["collection-name"]='コレクション：%collectionname%';
-$lang["_dupe"]='重複 (じゅうふく)';
 $lang["emailtousers_internal"]='ユーザーへのEメール<br><br>検索するためにユーザー名を入力し、見つかったら必要なユーザーをクリックしてください。';
 $lang["create_new_here"]='ここで作成する';
 $lang["create_new_below"]='新しいカテゴリーに作成する。';
@@ -1041,8 +1038,6 @@ $lang["page_collections_message"]='続行すると、このページで削除マ
 $lang["delete_all_selected"]='選択されたすべてを削除する。';
 $lang["range_no_start_header"]='範囲エラー';
 $lang["range_no_start"]='開始点がないため、範囲を終了できません。Shiftキーを離してください。';
-$lang["lightbox-image"]='画像 (がぞう)';
-$lang["lightbox-of"]='の (no)';
 $lang["treeobjecttype-resource_type"]='リソースタイプ';
 $lang["resources_selected-1"]='1つのリソースが選択されました。';
 $lang["resources_selected-2"]='選択されたリソース数：%number';
@@ -1238,7 +1233,6 @@ $lang["item"]='アイテム';
 $lang["stat-addedsmartcollection"]='スマートコレクションが追加されました。';
 $lang["stat-removedresourcefromcollection"]='コレクションからリソースを削除しました。';
 $lang["stat-keywordusage-noresultsfound"]='キーワードの使用 - 結果が見つかりませんでした。';
-$lang["plugin_field_fmt"]='%A (%B) の翻訳は、文脈によって異なります。追加の情報を提供していただけますか？';
 $lang["share_selected"]='選択したものを共有する';
 $lang["sharecollection-name"]='コレクションの共有 - %collectionname';
 $lang["share_theme_category"]='注目のコレクションカテゴリーを共有する';
@@ -1400,7 +1394,6 @@ $lang["publishstatus"]='公開状態で保存する：';
 $lang["addnewcontent"]='新しいコンテンツ（ページ、名前）';
 $lang["hitcount"]='ヒット数';
 $lang["downloads"]='ダウンロード';
-$lang["addremove"]='Please provide more context. The translation of "+/-" can vary depending on the context in which it is used.';
 $lang["list_file_extension"]='拡張子 (Kakuchoushi)';
 $lang["all_users"]='すべてのユーザー';
 $lang["new_resource"]='新しいリソース';
@@ -1933,7 +1926,6 @@ $lang["saved"]='保存されました。';
 $lang["changessaved"]='変更が保存されました。';
 $lang["resourceids"]='リソースID（複数形）';
 $lang["warningrequestapprovalfield"]='警告 - リソースID％ - 承認する前に以下の点に注意してください。';
-$lang["yyyy-mm-dd"]='YYYY-MM-DDを日本語に翻訳すると「年年年年-月月-日日」となります。';
 $lang["resources-with-requeststatus0-0"]='未処理（0件）';
 $lang["resources-with-requeststatus0-1"]='(1 保留中)';
 $lang["resources-with-requeststatus0-2"]='(%number pending) の翻訳は「（%number 保留中）」です。';
@@ -2173,72 +2165,6 @@ $lang["action-move-up"]='上に移動する';
 $lang["action-move-down"]='下に移動する';
 $lang["action-move-to"]='移動する';
 $lang["delete_user_group_checkbox_alert_message"]='このアクションを実行すると、このユーザーグループに関連するすべてのコンテンツテキストも削除されることに注意してください。 管理コンテンツで%%RECORDSCOUNT%%件のレコードが見つかりました。';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] <br /><br />
-[text]：テキスト<br /><br />
-[text_footer]：フッターテキスト';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [メッセージ]<br /><br /> 
-[lang_clicklinkviewcollection] [リスト]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal]<br /><br />
-[lang_message]：[message]<br /><br />
-[lang_clicklinkviewcollection][list]<br />
-
-※Note: It is difficult to provide a precise translation without additional context. The above translation is a best guess based on the limited information provided.';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[メッセージ]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='[ようこそ]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[未提出のユーザーリソース]
-[list]
-[すべての保留中のユーザーを表示]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]の翻訳: <br />
-「リサーチリクエストが割り当てられました。」<br /><br />
-[text_footer]の翻訳: <br />
-「フッター」';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-調査リクエストが完了しました。リクエストされたリソースが利用可能になりました。<br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">コレクションを表示するにはここをクリックしてください</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br />
-
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[メッセージ]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]：[ユーザー名] <br />
-[リスト] <br />
-[詳細]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Powered by <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace オープンソース デジタルアセット管理</a>';
 $lang["collection_download__write_metadata_on_download_label"]='ダウンロードされたファイルにリソースのメタデータを埋め込みますか？これを有効にすると、ダウンロードが遅くなります。';
 $lang["collection_email__introtextthemeshare"]='以下のフォームに記入して、この特集コレクションカテゴリー内の特集コレクションをメールで送信してください。受信者は、各特集コレクションへのリンクが含まれたメールを受け取ります。';

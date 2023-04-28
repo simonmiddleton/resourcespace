@@ -19,7 +19,6 @@ $lang["frame_rate_resource_field"]='Ieșire cadru pe secundă.';
 $lang["aspect_ratio_resource_field"]='Ieșire raport de aspect.';
 $lang["video-splice"]='Unire video.';
 $lang["video-splice-intro"]='Îmbinați mai multe resurse video pentru a forma o singură resursă video combinată. Trageți și plasați miniaturile de mai jos pentru a reordona clipurile video.';
-$lang["action-splice"]='A tăia și a uni (în contextul ResourceSpace, aceasta se referă la funcția de a combina două sau mai multe fișiere media într-un singur fișier)';
 $lang["video_splice_order"]='Resurse video în ordine.';
 $lang["video_splice_select_video"]='Format video.';
 $lang["video_splice_select_resolution"]='Rezoluția video.';

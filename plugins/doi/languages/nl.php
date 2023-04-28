@@ -51,7 +51,6 @@ $lang["doi_not_successfully_registered_pl"]='Kon niet correct worden geregistree
 $lang["doi_reload"]='Herladen.';
 $lang["doi_successfully_set"]='is ingesteld.';
 $lang["doi_not_successfully_set"]='Is niet ingesteld.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Hulpbron(nen) heeft/hebben al een DOI.';
 $lang["doi_sum_not_yet_archived"]='bron(nen) is/zijn niet gemarkeerd';
 $lang["doi_sum_not_yet_archived_2"]='Maar de toegang is niet ingesteld op open.';

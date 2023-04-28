@@ -49,7 +49,6 @@ $lang["doi_not_successfully_registered_pl"]='Ei voitu rekisteröidä oikein.';
 $lang["doi_reload"]='Lataa uudelleen.';
 $lang["doi_successfully_set"]='on asetettu.';
 $lang["doi_not_successfully_set"]='Ei ole asetettu.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Resurssilla tai resursseilla on jo DOI.';
 $lang["doi_sum_not_yet_archived"]='Resurssia ei ole merkitty.';
 $lang["doi_sum_not_yet_archived_2"]='Mutta sen/tämän resurssin saatavuus ei ole asetettu avoimeksi.';

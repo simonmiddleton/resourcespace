@@ -870,8 +870,6 @@ $lang["addnewcontent"]="Nytt innhold (side, navn)";
 $lang["hitcount"]="Antall treff";
 $lang["downloads"]="Nedlastinger";
 
-$lang["addremove"]="Legg til/fjern";
-
 ##  Translations for standard log entries
 $lang["all_users"]="alle brukere";
 $lang["new_resource"]="nytt materiale";
@@ -1307,7 +1305,6 @@ $lang["information-derestrict_filter"]='Fjern begrensingsfilter. Kun effektivt n
 $lang["information-push_metadata"]='Hvis satt, vil metadataene for denne ressursen vises på ressursoversiktssiden for alle relaterte ressurser. For eksempel kan du relatere flere bilder til en personressurs. Hvis denne egenskapen er satt på personressursen, vil personmetadataene vises på alle relaterte bilde-ressursposter, og unngå duplisering av data i systemet.';
 $lang["property-query"]='Spørring';
 $lang["information-id"]='Merk: \'Id\' nedenfor MÅ settes til en unik kode på tre tegn.';
-$lang["property-id"]='Id: Identifikator';
 $lang["property-width"]='Bredde';
 $lang["property-height"]='Høyde';
 $lang["property-quality"]='Kvalitet.';
@@ -1382,7 +1379,6 @@ $lang["editcollectionresources"]='Rediger forhåndsvisninger av samlinger.';
 $lang["collection_set_theme_category"]='Legg til i utvalgt samling kategori.';
 $lang["collection_set_theme_category_title"]='Legg til samling i utvalgt samling-kategori.';
 $lang["collection-name"]='Samling: %collectionname%';
-$lang["_dupe"]='Kopi.';
 $lang["emailtousers_internal"]='E-post til brukere<br><br>Skriv inn navnet på brukeren du vil søke etter, og klikk på den aktuelle brukeren når den blir funnet.';
 $lang["create_new_here"]='Opprett her';
 $lang["create_new_below"]='Opprett i en ny kategori.';
@@ -1430,8 +1426,6 @@ $lang["page_collections_message"]='Å fortsette vil fjerne markeringen for slett
 $lang["delete_all_selected"]='Slett alle valgte.';
 $lang["range_no_start_header"]='Rekkeviddefeil.';
 $lang["range_no_start"]='Kan ikke avslutte rekkevidde uten en start. Vennligst slipp skift-tasten.';
-$lang["lightbox-image"]='Bilde';
-$lang["lightbox-of"]='av';
 $lang["resources_selected-1"]='1 ressurs valgt.';
 $lang["resources_selected-2"]='%number ressurser valgt.';
 $lang["action-upload-to-collection"]='Last opp til denne samlingen.';
@@ -1580,7 +1574,6 @@ $lang["no_results_found"]='Ingen resultater funnet.';
 $lang["function_not_enabled"]='Denne funksjonen er ikke aktivert.';
 $lang["stat-removedresourcefromcollection"]='Fjernet ressurs fra samling.';
 $lang["stat-keywordusage-noresultsfound"]='Nøkkelordbruk - ingen resultater funnet.';
-$lang["plugin_field_fmt"]='%D (%M)';
 $lang["share_selected"]='Del valgte';
 $lang["sharecollection-name"]='Del samling - %collectionname';
 $lang["share_theme_category"]='Del ut fremhevet samling kategori';
@@ -2243,99 +2236,6 @@ $lang["action-move-down"]='Flytt ned.';
 $lang["action-move-to"]='Flytt til';
 $lang["delete_user_group_checkbox_alert_message"]='Vennligst merk at denne handlingen også vil slette all innholdstekst som var relevant for denne brukergruppen. Det er funnet %%RECORDSCOUNT%% poster i Administrer innhold.';
 $lang["about__about"]='Din "om oss"-tekst går her.';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] 
-
-[tekst]<br /><br />
-[tekst_fotnote]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fra brukernavn] [lang_epostsamlingmelding] <br /><br />
-[lang_melding]: [melding]<br /><br />
-[lang_klikklenkesamlingsvisning] [liste]<br /><br />';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fra brukernavn] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_melding]: [melding]<br /><br />
-[Klikk på lenken for å se samlingen] [liste]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[melding]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer] ';
-$lang["all__emaillogindetails"]='[velkommen]<br /><br />
-[lang_nyelogindetaljer]<br /><br />
-[lang_brukernavn] : [brukernavn]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[brukernavn] ([brukernavnfullt] - [brukerepost])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[navn]<br /><br />
-[lang_descriptionofproject]:[beskrivelse]<br /><br />
-[lang_deadline]:[frist]<br /><br />
-[lang_contacttelephone]:[kontakt]<br /><br />
-[lang_finaluse]: [sluttbruk]<br /><br />
-[lang_shaperequired]: [form]<br /><br />
-[lang_noresourcesrequired]: [ingenressurser]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Forskningsforespørsel tildelt.<br /><br />
-[text_footer] = Vennligst svar på denne e-posten hvis du har spørsmål eller kommentarer. Takk!';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Din forskningsforespørsel er fullført. Du vil motta en e-post når ressursene er tilgjengelige i samlingen.<br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">Klikk her for å se samlingen</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[melding]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [brukernavn] <br />
-[liste] <br />
-[detaljer]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Drevet av <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='La vårt ressursteam finne ressursene du trenger.';
 $lang["change_language__introtext"]='Vennligst velg språket ditt nedenfor.';
@@ -2426,14 +2326,6 @@ $lang["collection_download_too_large"]='Beklager, denne samlingen er for stor ti
 $lang["all__passwordnewemailhtml"]='Vennligst klikk på lenken nedenfor for å sette en nytt passord for kontoen din.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Brukernavn: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Opplasting midlertidig utilgjengelig.';
 $lang["disk_size_no_upload_explain"]='På grunn av plassbegrensninger er opplasting midlertidig deaktivert. Vi beklager eventuelle ulemper.';
-$lang["dash"]='Dash can have different meanings in the context of digital asset management software. Here are some possible translations:
-
-- Dash (noun): Bindestrek
-- Dash (verb, e.g. "to dash a tag"): Legge til en tagg
-- Dashboard: Kontrollpanel or Dashbord (anglicism)
-- Dashboard widget: Kontrollpanelmodul or Dashbordmodul (anglicism)
-
-If you provide more context, I can give you a more accurate translation.';
 $lang["savethissearchtodash"]='Lagre til dashbord-flis.';
 $lang["createnewdashtile"]='Opprett ny dashbord-flis.';
 $lang["specialdashtiles"]='Spesielle dashbord-fliser.';
@@ -2710,7 +2602,7 @@ $lang["report-graph-by-pie"]='sammenbrudd';
 $lang["report-graph-by-piegroup"]='etter brukergruppe';
 $lang["report-graph-by-pieresourcetype"]='etter ressurstype';
 $lang["report-graph-by-line"]='over tid';
-$lang["report-graph-by-summary"]='Sammendrag';
+$lang["report-graph-by-summary"]='sammendrag';
 $lang["update_report"]='Oppdater rapport';
 $lang["save_report"]='Lagre rapport';
 $lang["save_report_as"]='Lagre rapport som...';
@@ -2880,17 +2772,6 @@ $lang["start"]='Start';
 $lang["file_integrity_summary"]='Rapport om filintegritet.';
 $lang["file_integrity_summary_failed"]='Ressursfiler har mislyktes i integritetssjekker eller mangler. Vennligst følg lenken for å se disse ressursene og ta nødvendige tiltak, for eksempel å gjenopprette filer fra sikkerhetskopien.';
 $lang["file_integrity_fail_search"]='Filintegritetsfeil.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='Vis mistenkelige ressurser.';
 $lang["team_resource_integrity_fail_info"]='Ressurser med manglende eller muligens korrupte filer.';
 $lang["collection_copy_resources"]='Kopier samlingressurser';

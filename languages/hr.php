@@ -785,7 +785,6 @@ $lang["information-derestrict_filter"]='Ukloni ograničenja filtera. Djelotvoran
 $lang["information-push_metadata"]='Ako je postavljeno, metapodaci za ovaj resurs bit će prikazani na stranici pregleda resursa za sve povezane resurse. Na primjer, možete povezati nekoliko fotografija s resursom osobe. Ako je ova značajka postavljena na resursu osobe, tada će se metapodaci osobe pojaviti na svim povezanim zapisima resursa fotografije, izbjegavajući dupliranje podataka u sustavu.';
 $lang["property-query"]='Upit';
 $lang["information-id"]='Napomena: \'Id\' ispod MORA biti postavljen na jedinstveni kod od tri znaka.';
-$lang["property-id"]='Identifikator (ID)';
 $lang["property-width"]='Širina';
 $lang["property-height"]='Visina';
 $lang["property-quality"]='Kvaliteta.';
@@ -815,13 +814,11 @@ $lang["xlthumbs"]='X-veliko.';
 $lang["xlthumbstitle"]='Dodatno veliki pregledi.';
 $lang["largethumbstitle"]='Velike sličice.';
 $lang["smallthumbstitle"]='Male sličice u minijaturi.';
-$lang["strip"]='Molimo vas da pojasnite u kojem kontekstu se koristi riječ "strip" u digitalnom upravljanju sadržajem kako bismo vam mogli pružiti točan prijevod. Hvala!';
 $lang["striptitle"]='Prikaz trake.';
 $lang["listtitle"]='Prikaz u obliku liste.';
 $lang["powered_by"]='Pokreće ga.';
 $lang["powered_by_resourcespace"]='Pokreće ResourceSpace.';
 $lang["on"]='Na.';
-$lang["off"]='Is the context related to digital asset management software? If so, could you please provide more context so that I can provide an accurate translation?';
 $lang["seconds"]='sekunde';
 $lang["reload"]='Ponovno učitaj';
 $lang["pause"]='Pauza.';
@@ -928,8 +925,6 @@ $lang["page_collections_message"]='Nastavak će poništiti označene zbirke za b
 $lang["delete_all_selected"]='Izbriši sve odabrane.';
 $lang["range_no_start_header"]='Raspon pogreške.';
 $lang["range_no_start"]='Nije moguće završiti raspon bez početka. Molimo otpustite tipku Shift.';
-$lang["lightbox-image"]='Slika';
-$lang["lightbox-of"]='molim';
 $lang["treeobjecttype-resource_type"]='Vrsta resursa.';
 $lang["resources_selected-1"]='1 resurs odabran.';
 $lang["resources_selected-2"]='%number odabranih resursa.';
@@ -1126,7 +1121,6 @@ $lang["item"]='stavka';
 $lang["stat-addedsmartcollection"]='Dodana pametna kolekcija.';
 $lang["stat-removedresourcefromcollection"]='Uklonjen resurs iz kolekcije.';
 $lang["stat-keywordusage-noresultsfound"]='Upotreba ključnih riječi - nema pronađenih rezultata.';
-$lang["plugin_field_fmt"]='%M (%D)';
 $lang["share_selected"]='Podijeli odabrano.';
 $lang["sharecollection-name"]='Podijeli zbirku - %collectionname';
 $lang["share_theme_category"]='Podijeli kategoriju odabrane zbirke.';
@@ -1504,9 +1498,6 @@ $lang["purchase_complete_email_user_body"]='Hvala vam na kupnji. Molimo koristit
 $lang["purchase_email_address"]='Molimo unesite valjanu e-mail adresu ako želite primiti potvrdu o kupnji.';
 $lang["subcategories"]='Podkategorije.';
 $lang["subcategory"]='Podkategorija';
-$lang["back"]='Molim vas prevedite: Back
-
-Natrag.';
 $lang["pleasewait"]='Molimo pričekajte...';
 $lang["autorotate"]='Automatski rotirati slike?';
 $lang["user_pref_autorotate"]='Automatski rotirati slike prilikom prijenosa?';
@@ -2046,68 +2037,6 @@ $lang["action-move-down"]='Pomakni dolje.';
 $lang["action-move-to"]='Premjesti u';
 $lang["delete_user_group_checkbox_alert_message"]='Molimo imajte na umu da će ova radnja također izbrisati sav tekst sadržaja koji je bio relevantan za ovu grupu korisnika. Pronađeno je %%RECORDSCOUNT%% zapisa u Upravljanju sadržajem.';
 $lang["about__about"]='Vaš tekst o stranici ide ovdje.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
- 
-[lang_emailcollectionmessage]: "Ova e-pošta sadrži vezu do kolekcije koja je podijeljena s vama putem sustava za upravljanje digitalnim sadržajem ResourceSpace."<br />
-
-[lang_message]: "Poruka"<br />
-
-[lang_clicklinkviewcollection]: "Kliknite na sljedeću vezu kako biste pregledali kolekciju:"<br />
-
-[list]: "Popis stavki u kolekciji"<br />';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[poruka]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer] ';
-$lang["all__emaillogindetails"]='[dobrodošli]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[popis]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_podnozje]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] - Zahtjev za istraživanjem je dodijeljen korisniku.<br /><br />
-[text_footer] - Podnožje';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Vaš zahtjev za istraživanje je uspješno dovršen. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[lista] <br />
-[detalji]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> ';
 $lang["all__footer"]='Pokreće ga <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Neka naš tim resursa pronađe resurse koje vam trebaju.';
 $lang["change_language__introtext"]='Molimo odaberite svoj jezik u nastavku.';
@@ -2193,7 +2122,6 @@ $lang["collection_download_too_large"]='Žao nam je, ova kolekcija je prevelika 
 $lang["all__passwordnewemailhtml"]='Molimo kliknite na donju poveznicu kako biste postavili novu lozinku za svoj račun.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />korisničko ime: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Prijenos privremeno nedostupan.';
 $lang["disk_size_no_upload_explain"]='Zbog ograničenja prostora, privremeno je onemogućeno učitavanje. Ispričavamo se zbog eventualnih neugodnosti.';
-$lang["dash"]='Traka s prečicama (Dash)';
 $lang["savethissearchtodash"]='Spremi na pločicu sažetka.';
 $lang["createnewdashtile"]='Stvorite novu pločicu upravljačke ploče.';
 $lang["specialdashtiles"]='Posebne pločice s crticama.';
@@ -2471,7 +2399,7 @@ $lang["report-graph-by-pie"]='raspad';
 $lang["report-graph-by-piegroup"]='po korisničkoj grupi';
 $lang["report-graph-by-pieresourcetype"]='po vrsti resursa';
 $lang["report-graph-by-line"]='tijekom vremena';
-$lang["report-graph-by-summary"]='Sažetak';
+$lang["report-graph-by-summary"]='sažetak';
 $lang["update_report"]='Ažuriranje izvještaja.';
 $lang["save_report"]='Spremi izvješće.';
 $lang["save_report_as"]='Spremi izvješće kao...';
@@ -2642,17 +2570,6 @@ $lang["start"]='Započni';
 $lang["file_integrity_summary"]='Izvješće o integritetu datoteke.';
 $lang["file_integrity_summary_failed"]='Resursne datoteke nisu prošle provjeru integriteta ili nedostaju. Molimo slijedite poveznicu kako biste vidjeli ove resurse i poduzeli potrebne radnje, npr. vratili datoteke iz sigurnosne kopije.';
 $lang["file_integrity_fail_search"]='Neuspjehi integriteta datoteke.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='Pregledaj sumnjive resurse.';
 $lang["team_resource_integrity_fail_info"]='Resursi s nedostajućim ili možda oštećenim datotekama.';
 $lang["collection_copy_resources"]='Kopiraj resurse kolekcije.';

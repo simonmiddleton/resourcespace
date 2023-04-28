@@ -478,10 +478,6 @@ $lang["delete_all_selected"] = "Delete all selected";
 $lang["range_no_start_header"] = "Range Error";
 $lang["range_no_start"] = "Cannot end range without a start. Please release the shift key.";
 
-# Lightbox
-$lang["lightbox-image"] = "Image";
-$lang["lightbox-of"] = "of";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Create new resource";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Resource type";

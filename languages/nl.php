@@ -641,9 +641,8 @@ $lang["property-onchange_macro"]='Op wijziging macro.';
 $lang["information-onchange_macro"]='Bij wijziging macro: code die moet worden uitgevoerd wanneer de veldwaarde is gewijzigd. VOORZICHTIGHEID IS GEBODEN.';
 $lang["information-derestrict_filter"]='Filter opheffen. Alleen effectief wanneer gebruikt in combinatie met het verwijderen van de g-toestemming, zodat alle resources beperkt zijn, tenzij aan de metadata-voorwaarde is voldaan.';
 $lang["information-push_metadata"]='Indien ingesteld, worden de metadata voor deze bron weergegeven op de bronweergavepagina voor alle gerelateerde bronnen. Bijvoorbeeld, je kunt verschillende foto\'s relateren aan een persoonlijke bron. Als deze eigenschap is ingesteld op de persoonlijke bron, dan zullen de persoonlijke metadata verschijnen op alle gerelateerde fotobronnen, waardoor duplicatie van gegevens in het systeem wordt vermeden.';
-$lang["property-query"]='Aanvraag (in the context of ResourceSpace)';
+$lang["property-query"]='Aanvraag';
 $lang["information-id"]='Opmerking: \'Id\' hieronder MOET worden ingesteld op een unieke code van drie tekens.';
-$lang["property-id"]='Id translates to "Id" in Nederlands. It is commonly used as an abbreviation for "identifier" in digital asset management software.';
 $lang["property-width"]='Breedte';
 $lang["property-height"]='Hoogte';
 $lang["property-quality"]='Kwaliteit.';
@@ -674,11 +673,6 @@ $lang["largethumbs"]='Groot';
 $lang["largethumbstitle"]='Grote miniaturen.';
 $lang["smallthumbs"]='Klein.';
 $lang["smallthumbstitle"]='Kleine miniaturen.';
-$lang["strip"]='Strip (in the context of ResourceSpace) can have different meanings depending on the context. Here are some possible translations:
-
-- Strip (noun): strook, band, reep. Example: "The image has a strip of metadata at the bottom."
-- Strip (verb, e.g. to strip metadata from a resource): verwijderen, weghalen, ontdoen. Example: "The script strips all metadata from the file."
-- Strip (noun, e.g. comic strip): stripverhaal, strip. Example: "We have a collection of classic comic strips in our library."';
 $lang["striptitle"]='Stripweergave';
 $lang["listtitle"]='Lijstweergave';
 $lang["perpage_option"]='? per pagina.';
@@ -733,7 +727,6 @@ $lang["editcollectionresources"]='Bewerk collectievoorbeelden.';
 $lang["collection_set_theme_category"]='Toevoegen aan uitgelichte collectie categorie.';
 $lang["collection_set_theme_category_title"]='Voeg collectie toe aan de categorie met uitgelichte collecties.';
 $lang["collection-name"]='Collectie: %collectionname%';
-$lang["_dupe"]='Duplicate (Kopie)';
 $lang["emailtousers"]='E-mail naar gebruikers<br><br><b>Voor bestaande gebruikers</b> begin met het typen van de naam van de gebruiker om te zoeken, selecteer de gebruiker wanneer deze gevonden is en klik vervolgens op plus<br><br><b>Voor niet-geregistreerde gebruikers</b> typ het e-mailadres en klik vervolgens op plus.';
 $lang["emailtousers_internal"]='E-mail naar gebruikers<br><br>Begin met het typen van de naam van de gebruiker om te zoeken, klik vervolgens op de vereiste gebruiker wanneer deze is gevonden.';
 $lang["create_new_here"]='Maak hier aan.';
@@ -796,8 +789,6 @@ $lang["page_collections_message"]='Doorgaan zal de selectie van de collecties di
 $lang["delete_all_selected"]='Verwijder alle geselecteerde.';
 $lang["range_no_start_header"]='Bereikfout.';
 $lang["range_no_start"]='Kan bereik niet beëindigen zonder een start. Laat de shift-toets los.';
-$lang["lightbox-image"]='Afbeelding';
-$lang["lightbox-of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["treeobjecttype-resource_type"]='Middel voor bronbeheer.';
 $lang["resources_selected-1"]='1 bron geselecteerd.';
 $lang["resources_selected-2"]='%aantal geselecteerde resources';
@@ -999,7 +990,6 @@ $lang["item"]='item
 $lang["stat-addedsmartcollection"]='Toegevoegde slimme collectie.';
 $lang["stat-removedresourcefromcollection"]='Verwijderde bron uit collectie.';
 $lang["stat-keywordusage-noresultsfound"]='Geen resultaten gevonden voor trefwoordgebruik.';
-$lang["plugin_field_fmt"]='%A (%B) vertaalt naar: %A (%B)';
 $lang["share"]='Delen';
 $lang["share_selected"]='Delen geselecteerd';
 $lang["sharecollection"]='Delen collectie.';
@@ -1407,7 +1397,7 @@ $lang["openstreetmap"]='OpenStreetMap';
 $lang["google_terrain"]='Google terrein.';
 $lang["google_default_map"]='Standaard Google-kaart.';
 $lang["google_satellite"]='Google satelliet.';
-$lang["marker"]='Marker translates to "Markeerstift" in Nederlands.';
+$lang["marker"]='Markeerstift';
 $lang["markers"]='Markeringen';
 $lang["map_configuration"]='Zoekresultatenkaart';
 $lang["edit_map_introtext"]='Zoom en pan naar het kaartweergave van interesse, klik vervolgens op de kaart om de locatie van de bronmarkering te vinden. Sla de meest recente geolocatie op met behulp van de knop Opslaan en klik vervolgens op \'Terug naar bronbewerking of geolocatiecollectie\' om terug te keren. Gebruik de zoekknop rechtsboven om te zoeken naar een specifieke locatie of geografische functienaam. Verander de basiskaart met behulp van de knop kaartlagen rechtsboven. Sla de kaart op als een PNG-bestand met behulp van de knop kaart linksonder.';
@@ -1866,7 +1856,6 @@ $lang["saved"]='Opgeslagen.';
 $lang["changessaved"]='Wijzigingen opgeslagen.';
 $lang["resourceids"]='Bron-ID(\'s)';
 $lang["warningrequestapprovalfield"]='Waarschuwing - bron-ID % - let op de volgende punten voordat u goedkeurt.';
-$lang["yyyy-mm-dd"]='YYYY-MM-DD translates to Jaar-Jaar-Maand-Dag.';
 $lang["resources-with-requeststatus0-0"]='(0 in behandeling)';
 $lang["resources-with-requeststatus0-1"]='(1 in behandeling)';
 $lang["resources-with-requeststatus0-2"]='(%aantal in afwachting)';
@@ -2109,93 +2098,6 @@ $lang["action-move-down"]='Verplaats naar beneden.';
 $lang["action-move-to"]='Verplaats naar';
 $lang["delete_user_group_checkbox_alert_message"]='Let op: deze actie zal ook alle inhoudstekst verwijderen die relevant was voor deze gebruikersgroep. Er zijn %%RECORDSCOUNT%% records gevonden in Beheer inhoud.';
 $lang["about__about"]='Uw "over ons" tekst komt hier.';
-$lang["all__emailbulk"]='[text]<br /><br />
-[tekst_voettekst]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-Van: [fromusername] 
-Onderwerp: [lang_emailcollectionmessage]
-
-Bericht: [message]
-
-Klik op de volgende link om de collectie te bekijken: [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-Van: [fromusername]<br />
-Onderwerp: [lang_emailcollectionmessageexternal]<br /><br />
-Bericht: [message]<br /><br />
-Klik op de volgende link om de collectie te bekijken: [list]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[bericht]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[tekst_footer]';
-$lang["all__emaillogindetails"]='[welkom]<br /><br />
-[lang_nieuweinloggegevens]<br /><br />
-[lang_gebruikersnaam] : [gebruikersnaam]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_voettekst]';
-$lang["all__emailnewresearchrequestwaiting"]='[gebruikersnaam] ([gebruikersvolledigenaam] - [gebruikersemail])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]: [naam]<br /><br />
-[lang_descriptionofproject]: [beschrijving]<br /><br />
-[lang_deadline]: [deadline]<br /><br />
-[lang_contacttelephone]: [contact]<br /><br />
-[lang_finaluse]: [eindgebruik]<br /><br />
-[lang_shaperequired]: [vorm]<br /><br />
-[lang_noresourcesrequired]: [geenbronnen]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Goedgekeurde bronnen van de gebruiker
-[list] <br />
-[Bekijk bijgedragen/ingediende bestanden] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted] <br />
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-
-Nederlands: <br />
-[lang_userresourcesunsubmitted] <br />
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-
-Opmerking: De context van deze string is niet duidelijk voor mij, dus ik kan geen specifieke vertaling geven.';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Onderzoeksverzoek toegewezen aan {assignee}.<br /><br />
-[text_footer] = Met vriendelijke groet,';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Uw onderzoeksverzoek is voltooid. U ontvangt een e-mail wanneer de verzameling beschikbaar is. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-Klik op de volgende link om de verzameling te bekijken: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] heeft u een bron gemaild:<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[Klik hier om de bron te bekijken]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[list] <br />
-[details] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [gebruikersnaam] <br />
-[list] <br />
-[details] <br /><br />
-[Klik om de bron te bekijken] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Aangedreven door <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Laat ons resources team de resources vinden die je nodig hebt.';
 $lang["change_language__introtext"]='Selecteer hieronder uw taal alstublieft.';
@@ -2561,11 +2463,10 @@ $lang["new_report"]='Nieuw rapport.';
 $lang["edit_report"]='Bewerk rapport';
 $lang["all_activity"]='Alle activiteit.';
 $lang["all_resource_types"]='Alle bron types.';
-$lang["report-graph-by-pie"]='In the context of digital asset management software, "breakdown" could have different meanings depending on the specific context. Could you please provide more context or the full sentence where the word "breakdown" is used?';
 $lang["report-graph-by-piegroup"]='per gebruikersgroep';
 $lang["report-graph-by-pieresourcetype"]='Op bron type';
 $lang["report-graph-by-line"]='in de loop van de tijd';
-$lang["report-graph-by-summary"]='Samenvatting';
+$lang["report-graph-by-summary"]='samenvatting';
 $lang["update_report"]='Bijwerken rapport';
 $lang["save_report"]='Opslaan rapport';
 $lang["save_report_as"]='Opslaan rapport als...';

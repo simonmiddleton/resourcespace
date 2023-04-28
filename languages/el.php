@@ -668,7 +668,7 @@ $lang["fieldtitle-channel_mode"]='Λειτουργία καναλιού';
 $lang["fieldtitle-sample_rate"]='Ρυθμός δειγματοληψίας';
 $lang["fieldtitle-audio_bitrate"]='Ρυθμός μετάδοσης ήχου (Audio bitrate)';
 $lang["fieldtitle-frame_rate"]='Ρυθμός καρέ (καρέ ανά δευτερόλεπτο)';
-$lang["fieldtitle-video_bitrate"]='Ρυθμός μετάδοσης βίντεο (Video bitrate)';
+$lang["fieldtitle-video_bitrate"]='Ρυθμός μετάδοσης βίντεο';
 $lang["fieldtitle-aspect_ratio"]='Αναλογία διαστάσεων.';
 $lang["fieldtitle-video_size"]='Μέγεθος βίντεο.';
 $lang["fieldtitle-image_size"]='Μέγεθος εικόνας.';
@@ -774,7 +774,6 @@ $lang["property-onchange_macro"]='Στη μεταβολή μακροεντολή
 $lang["information-onchange_macro"]='Στη μακροεντολή αλλαγής: κώδικας που θα εκτελεστεί όταν αλλάζει η τιμή πεδίου. ΣΥΣΤΑΤΑΙ ΠΡΟΣΟΧΗ.';
 $lang["property-query"]='Ερώτημα.';
 $lang["information-id"]='Σημείωση: Το \'Id\' παρακάτω ΠΡΕΠΕΙ να οριστεί σε έναν μοναδικό κωδικό τριών χαρακτήρων.';
-$lang["property-id"]='Αναγνωριστικό (Id)';
 $lang["property-width"]='Πλάτος';
 $lang["property-height"]='Ύψος.';
 $lang["property-quality"]='Ποιότητα.';
@@ -806,7 +805,6 @@ $lang["smallthumbstitle"]='Μικρές μικρογραφίες.';
 $lang["strip"]='Αποστύλωση';
 $lang["striptitle"]='Προβολή λωρίδας.';
 $lang["listtitle"]='Προβολή λίστας';
-$lang["perpage_option"]='Αναζήτηση ανά σελίδα';
 $lang["powered_by"]='Κινούμενο με τη δύναμη του';
 $lang["powered_by_resourcespace"]='Κινούμενο από το ResourceSpace.';
 $lang["on"]='Ενεργός (Ενεργή for feminine objects)';
@@ -859,7 +857,6 @@ $lang["editcollectionresources"]='Επεξεργασία προεπισκοπή�
 $lang["collection_set_theme_category"]='Προσθήκη στην κατηγορία επιλεγμένων συλλογών.';
 $lang["collection_set_theme_category_title"]='Προσθέστε συλλογή στην κατηγορία συλλογών που προβάλλονται.';
 $lang["collection-name"]='Συλλογή: %collectionname%';
-$lang["_dupe"]='διπλότυπο (referring to a duplicate resource)';
 $lang["emailtousers_internal"]='Αποστολή e-mail στους χρήστες<br><br>Αρχίστε να πληκτρολογείτε το όνομα του χρήστη για αναζήτηση και κάντε κλικ στον αντίστοιχο χρήστη όταν τον βρείτε.';
 $lang["create_new_here"]='Δημιουργία εδώ';
 $lang["create_new_below"]='Δημιουργία σε νέα κατηγορία.';
@@ -919,8 +916,6 @@ $lang["page_collections_message"]='Η συνέχιση θα ακυρώσει τ�
 $lang["delete_all_selected"]='Διαγραφή όλων των επιλεγμένων.';
 $lang["range_no_start_header"]='Σφάλμα Εύρους';
 $lang["range_no_start"]='Δεν είναι δυνατό να τερματιστεί η σειρά χωρίς αρχή. Παρακαλώ απελευθερώστε το πλήκτρο shift.';
-$lang["lightbox-image"]='Εικόνα.';
-$lang["lightbox-of"]='του (masculine), της (feminine), των (plural)';
 $lang["treeobjecttype-resource_type"]='Τύπος πόρου';
 $lang["resources_selected-1"]='Επιλέχθηκε 1 πόρος.';
 $lang["resources_selected-2"]='%number επιλεγμένα αντικείμενα.';
@@ -1115,7 +1110,6 @@ $lang["item"]='αντικείμενο';
 $lang["stat-addedsmartcollection"]='Προστέθηκε έξυπνη συλλογή.';
 $lang["stat-removedresourcefromcollection"]='Αφαιρέθηκε το αντικείμενο από τη συλλογή.';
 $lang["stat-keywordusage-noresultsfound"]='Χρήση λέξεων-κλειδιών - δεν βρέθηκαν αποτελέσματα';
-$lang["plugin_field_fmt"]='Παρακαλώ μεταφράστε: %A (%B)';
 $lang["share_selected"]='Κοινοποίηση επιλεγμένων';
 $lang["sharecollection-name"]='Κοινοποίηση συλλογής - %collectionname';
 $lang["share_theme_category"]='Κοινοποίηση κατηγορίας επιλεγμένης συλλογής.';
@@ -1326,7 +1320,6 @@ $lang["location-noneselected"]='Δεν υπάρχουν δεδομένα τοπ�
 $lang["location"]='Τοποθεσία';
 $lang["mapzoom"]='Εστίαση χάρτη';
 $lang["openstreetmap"]='Ανοικτός Χάρτης του Δρόμου (OpenStreetMap)';
-$lang["google_terrain"]='Google terrain: Τοπογραφικός χάρτης Google';
 $lang["google_default_map"]='Προεπιλεγμένος χάρτης της Google.';
 $lang["google_satellite"]='Δορυφορική εικόνα Google';
 $lang["marker"]='Μαρκαδόρος.';
@@ -2010,83 +2003,6 @@ $lang["action-move-up"]='Μετακίνηση προς τα πάνω.';
 $lang["action-move-down"]='Μετακίνηση προς τα κάτω.';
 $lang["action-move-to"]='Μετακίνηση σε';
 $lang["about__about"]='Ο κείμενος σχετικά με εσάς τοποθετείται εδώ.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-Από: [fromusername] [lang_emailcollectionmessage] <br /><br /> 
-Μήνυμα: [message]<br /><br /> 
-Κάντε κλικ στον σύνδεσμο για να δείτε τη συλλογή: [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-Κάντε κλικ στον σύνδεσμο για να δείτε τη συλλογή: [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[μήνυμα]<br /><br /><a href="[url]">[ενσωματωμένη_εικόνα]</a><br /><br />[κείμενο_υποσέλιδου]';
-$lang["all__emaillogindetails"]='[καλωσόρισμα]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Εγκεκριμένοι Πόροι Χρήστη: 
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Υποβληθείσες πόροι από τον χρήστη
-[λίστα] <br />
-[Προβολή όλων των εκκρεμών υποβολών του χρήστη] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[Υποσέλιδο κειμένου]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Μη υποβληθέντα αντικείμενα χρήστη
-[λίστα]
-[Προβολή όλων των εκκρεμών αντικειμένων χρήστη]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[Υποσέλιδο κειμένου]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] -> Το αίτημα έρευνας έχει ανατεθεί σε εσάς. Παρακαλούμε ελέγξτε την καρτέλα "Αιτήματα Έρευνας" για περισσότερες πληροφορίες.<br /><br />
-[text_footer] -> Υπογραφή';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br />
-
-Από [fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [όνομα χρήστη] <br />
-[λίστα] <br />
-[λεπτομέρειες]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Κινούμενο από <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Αφήστε την ομάδα των πόρων μας να βρει τους πόρους που χρειάζεστε.';
 $lang["change_language__introtext"]='Παρακαλώ επιλέξτε τη γλώσσα σας παρακάτω.';
@@ -2152,9 +2068,6 @@ $lang["collection_download_too_large"]='Λυπούμαστε, αυτή η συλ
 $lang["all__passwordnewemailhtml"]='Παρακαλώ κάντε κλικ στον παρακάτω σύνδεσμο για να ορίσετε ένα νέο κωδικό πρόσβασης για το λογαριασμό σας.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Όνομα χρήστη: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Η μεταφόρτωση δεν είναι προσωρινά διαθέσιμη.';
 $lang["disk_size_no_upload_explain"]='Λόγω περιορισμένου χώρου, η μεταφόρτωση έχει απενεργοποιηθεί προσωρινά. Ζητούμε συγγνώμη για τυχόν αναστάτωση.';
-$lang["dash"]='Παρακαλώ μεταφράστε: Dash
-
-In which context is the term "Dash" used? It could have different translations depending on the context.';
 $lang["savethissearchtodash"]='Αποθήκευση στο πλακάκι του πίνακα ελέγχου.';
 $lang["createnewdashtile"]='Δημιουργία νέου πλακιδίου πίνακα ελέγχου.';
 $lang["specialdashtiles"]='Ειδικά πλακάκια παύλας';
@@ -2417,7 +2330,7 @@ $lang["new_report"]='Νέα έκθεση.';
 $lang["edit_report"]='Επεξεργασία αναφοράς.';
 $lang["all_activity"]='Όλες οι δραστηριότητες';
 $lang["all_resource_types"]='Όλοι οι τύποι πόρων.';
-$lang["report-graph-by-pie"]='ανάλυση (análysi)';
+$lang["report-graph-by-pie"]='ανάλυση';
 $lang["report-graph-by-piegroup"]='ανά ομάδα χρηστών';
 $lang["report-graph-by-pieresourcetype"]='ανά τύπο πόρου';
 $lang["report-graph-by-line"]='με την πάροδο του χρόνου';

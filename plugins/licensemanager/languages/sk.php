@@ -15,7 +15,6 @@ $lang["licensemanager_new"]='Nová licencia.';
 $lang["managelicenses"]='Licencie.';
 $lang["outbound"]='Odchádzajúci.';
 $lang["outbound_license_description"]='Smo imetniki avtorskih pravic.';
-$lang["inbound"]='Prichádzajúci (This translation may vary depending on the context. If you provide more context, I can provide a more accurate translation.)';
 $lang["inbound_license_description"]='Oni sú držiteľmi autorských práv.';
 $lang["no_expiry_date"]='Bez dátumu expirácie.';
 $lang["action-unlink"]='Odpojiť.';

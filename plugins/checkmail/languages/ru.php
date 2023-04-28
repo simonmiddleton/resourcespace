@@ -18,7 +18,6 @@ $lang["checkmail_password"]='Пароль.';
 $lang["checkmail_extension_mapping"]='Тип ресурса через сопоставление расширений файлов.';
 $lang["checkmail_default_resource_type"]='Тип ресурса по умолчанию.';
 $lang["checkmail_extension_mapping_desc"]='После селектора типа ресурса по умолчанию, ниже находится одно поле ввода для каждого из ваших типов ресурсов. <br />Чтобы принудительно загружать файлы разных типов в определенный тип ресурса, добавьте списки расширений файлов, разделенные запятыми (например, jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Please provide the full context of the string including any surrounding text or code so that I can provide an accurate translation.';
 $lang["checkmail_subject_field"]='Поле темы';
 $lang["checkmail_body_field"]='Поле тела.';
 $lang["checkmail_purge"]='Удалить электронные письма после загрузки?';

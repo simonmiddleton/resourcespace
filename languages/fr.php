@@ -728,7 +728,6 @@ $lang["usergroup-restricted_user_-_payment_invoice"]='Utilisateur restreint - Fa
 $lang["resourcetype-photo"]='Photographie';
 $lang["resourcetype-document"]='Document → Document';
 $lang["resourcetype-video"]='Vidéo.';
-$lang["resourcetype-audio"]='Audio translates to "Audio" in Français.';
 $lang["resourcetype-global_fields"]='Champs globaux.';
 $lang["resourcetype-archive_only"]='Archiver seulement.';
 $lang["resourcetype-photo-2"]='Photographies.';
@@ -881,7 +880,6 @@ $lang["property-query"]='Veuillez traduire : Query.
 
 Requête.';
 $lang["information-id"]='Remarque : \'Id\' ci-dessous DOIT être défini sur un code unique de trois caractères.';
-$lang["property-id"]='Identifiant';
 $lang["property-width"]='Largeur';
 $lang["property-height"]='Hauteur';
 $lang["property-quality"]='Qualité.';
@@ -911,18 +909,11 @@ $lang["changethemeto"]='Changer le thème en';
 $lang["xlthumbstitle"]='Vignettes extra larges.';
 $lang["largethumbstitle"]='Grandes vignettes';
 $lang["smallthumbstitle"]='Petites vignettes';
-$lang["strip"]='Veuillez traduire : Strip
-
-This term can have multiple meanings in English. Could you please provide more context or specify which meaning you are referring to?';
 $lang["striptitle"]='Veuillez traduire : Vue en bande.';
 $lang["listtitle"]='Vue en liste';
-$lang["perpage_option"]='Please provide more context. In which part of the software is this string used?';
 $lang["powered_by"]='Alimenté par';
 $lang["powered_by_resourcespace"]='Propulsé par ResourceSpace.';
 $lang["on"]='Sur';
-$lang["off"]='S\'il vous plaît traduire : Off
-
-Hors ligne';
 $lang["seconds"]='secondes';
 $lang["reload"]='Recharger';
 $lang["filterbutton"]='Filtre.';
@@ -1028,8 +1019,6 @@ $lang["page_collections_message"]='Continuer va désélectionner les collections
 $lang["delete_all_selected"]='Supprimer tous les éléments sélectionnés.';
 $lang["range_no_start_header"]='Erreur de plage.';
 $lang["range_no_start"]='Impossible de terminer la plage sans un début. Veuillez relâcher la touche Maj.';
-$lang["lightbox-image"]='Image translates to "Image" in Français.';
-$lang["lightbox-of"]='de';
 $lang["treeobjecttype-resource_type"]='Type de ressource.';
 $lang["resources_selected-1"]='1 ressource sélectionnée.';
 $lang["resources_selected-2"]='%number de ressources sélectionnées.';
@@ -1229,7 +1218,6 @@ $lang["function_not_enabled"]='Cette fonction n\'est pas activée.';
 $lang["stat-addedsmartcollection"]='Collection intelligente ajoutée.';
 $lang["stat-removedresourcefromcollection"]='Supprimé la ressource de la collection.';
 $lang["stat-keywordusage-noresultsfound"]='Utilisation de mot-clé - aucun résultat trouvé.';
-$lang["plugin_field_fmt"]='%S (%T)';
 $lang["share_selected"]='Partager la sélection';
 $lang["sharecollection-name"]='Partager la collection - %nomdelacollection';
 $lang["share_theme_category"]='Partager la catégorie de collection en vedette.';
@@ -1397,7 +1385,6 @@ $lang["publishstatus"]='Enregistrer avec le statut de publication :';
 $lang["addnewcontent"]='Nouveau contenu (page, nom)';
 $lang["hitcount"]='Nombre de vues';
 $lang["downloads"]='Téléchargements';
-$lang["addremove"]='Please provide more context. The translation of "+/-" can vary depending on the context in which it is used.';
 $lang["all_users"]='tous les utilisateurs';
 $lang["new_resource"]='nouvelle ressource';
 $lang["invalidextension_mustbe"]='Extension invalide, doit être';
@@ -1473,7 +1460,6 @@ $lang["location-noneselected"]='Pas de données de localisation.';
 $lang["location"]='Emplacement';
 $lang["mapzoom"]='Zoom de la carte.';
 $lang["openstreetmap"]='OpenStreetMap (OSM)';
-$lang["google_terrain"]='Google terrain translates to "Terrain Google" in Français.';
 $lang["google_default_map"]='Carte par défaut de Google.';
 $lang["google_satellite"]='Satellite Google.';
 $lang["marker"]='Marqueur';
@@ -1492,7 +1478,6 @@ $lang["map_download"]='Télécharger la carte en tant que fichier PNG, sélectio
 $lang["map_osm"]='Par défaut.';
 $lang["map_osmde"]='Style allemand.';
 $lang["map_osmch"]='OSM Suisse';
-$lang["map_osmbzh"]='OSM Luxembourg should remain the same in French as it is an acronym for OpenStreetMap Luxembourg.';
 $lang["map_osmhot"]='Humanitaire';
 $lang["map_osmmtb"]='Carte des parcours de VTT en Europe.';
 $lang["map_osmhikebike"]='Carte de randonnée pédestre et cycliste.';
@@ -1508,25 +1493,16 @@ $lang["map_tfpioneer"]='Pionnier.';
 $lang["map_tfmobileatlas"]='Atlas mobile.';
 $lang["map_tfneighbourhood"]='Quartier';
 $lang["map_hyddafull"]='Carte par défaut.';
-$lang["map_hyddabase"]='Base can have different meanings in the context of digital asset management software. Here are some possible translations:
-
-- Base de données: This refers to the database where all the information about resources, collections, metadata, tags, users, groups, workflows and downloads is stored.
-- Base de ressources: This could refer to a collection of resources that serves as a starting point for other collections or workflows.
-- Base de connaissances: This could refer to a knowledge base or a repository of information about how to use ResourceSpace or how to manage digital assets in general.
-
-Without more context, it\'s difficult to provide a more accurate translation.';
 $lang["map_stamen_group"]='Translate: Étamines';
 $lang["map_stamentoner"]='Toner.';
 $lang["map_stamentonerlt"]='Toner léger.';
 $lang["map_stamentonerback"]='Arrière-plan du toner.';
-$lang["map_stamenterrain"]='Terrain translates to "Terrain" in Français.';
 $lang["map_stamenterrainback"]='Arrière-plan du terrain.';
 $lang["map_stamenrelief"]='Soulagement';
 $lang["map_stamenwatercolor"]='Aquarelle.';
 $lang["map_esristreet"]='Rues';
 $lang["map_esritopo"]='Topographique';
 $lang["map_esriimagery"]='Imagerie';
-$lang["map_esriterrain"]='Terrain translates to "Terrain" in Français.';
 $lang["map_esrirelief"]='Relief ombré';
 $lang["map_esriphysical"]='Physique';
 $lang["map_esriocean"]='Océan.';
@@ -1636,7 +1612,7 @@ $lang["purchase_complete_email_user_body"]='Merci pour votre achat. Veuillez uti
 $lang["purchase_email_address"]='Veuillez saisir une adresse e-mail valide si vous souhaitez recevoir une confirmation de votre achat.';
 $lang["subcategories"]='Sous-catégories.';
 $lang["subcategory"]='Sous-catégorie.';
-$lang["back"]='S\'il vous plaît traduire : Retour';
+$lang["back"]='Retour';
 $lang["pleasewait"]='Veuillez patienter...';
 $lang["autorotate"]='Faire pivoter automatiquement les images ?';
 $lang["user_pref_autorotate"]='Faire pivoter automatiquement les images lors du téléchargement ?';
@@ -1887,7 +1863,6 @@ $lang["intro-batch_edit"]='Veuillez spécifier les paramètres de téléchargeme
 $lang["upload_complete_processing"]='Téléchargement de fichier terminé. Traitement en cours...';
 $lang["upload_finished_processing"]='Traitement terminé. Fichiers : %COUNT%. Erreurs : %ERRORS%.';
 $lang["plupload-maxfilesize"]='La taille maximale autorisée pour le téléchargement est de %s.';
-$lang["collections-1"]='(<strong>1</strong> Collection) translates to (<strong>1</strong> Collection) in Français.';
 $lang["collections-2"]='(<strong>%d</strong> collections avec <strong>%d</strong> éléments)';
 $lang["total-collections-0"]='<strong>Total : 0</strong> Collections';
 $lang["total-collections-1"]='<strong>Total : 1</strong> Collection -> <strong>Total : 1</strong> Collection';
@@ -2180,81 +2155,6 @@ $lang["action-move-up"]='Déplacer vers le haut.';
 $lang["action-move-down"]='Descendre';
 $lang["action-move-to"]='Déplacer vers';
 $lang["delete_user_group_checkbox_alert_message"]='Veuillez noter que cette action supprimera également tout le texte de contenu qui était pertinent pour ce groupe d\'utilisateurs. Il y a %%RECORDSCOUNT%% enregistrements trouvés dans Gérer le contenu.';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] 
-
-[text] : [texte]<br /><br />
-[text_footer] : [pied_de_page]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-De la part de [fromusername], [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message] : [message]<br /><br />
-[lang_clicklinkviewcollection] [list]
-
-De: [fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message] : [message]<br /><br />
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcontactadmin"]='Veuillez traduire : <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-Traduction : <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='[bienvenue]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] : Demande de recherche attribuée avec succès. Vous pouvez suivre l\'état de votre demande dans la section "Mes demandes de recherche".<br /><br />
-[text_footer] : Cordialement.';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [nom d\'utilisateur] <br />
-[liste] <br />
-[détails]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["collection_download__write_metadata_on_download_label"]='Incorporer les métadonnées de la ressource dans le(s) fichier(s) téléchargé(s) ? Activer cette option ralentira votre téléchargement.';
 $lang["collection_email__introtextthemeshare"]='Remplissez le formulaire ci-dessous pour envoyer par e-mail les collections en vedette dans cette catégorie de collections en vedette. Les destinataires recevront un e-mail contenant des liens vers chacune des collections en vedette.';
 $lang["downloadfile_nofile"]='Le fichier demandé n\'a pas été trouvé.';
@@ -2292,9 +2192,6 @@ $lang["collection_download_too_large"]='Désolé, cette collection est trop volu
 $lang["all__passwordnewemailhtml"]='Veuillez cliquer sur le lien ci-dessous pour définir un nouveau mot de passe pour votre compte.<br /><br />URL : <a href="[url]" target="_blank" >[url]</a><br />Nom d\'utilisateur : [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Téléchargement temporairement indisponible.';
 $lang["disk_size_no_upload_explain"]='En raison de contraintes d\'espace, le téléchargement a été temporairement désactivé. Nous nous excusons pour tout inconvénient.';
-$lang["dash"]='Veuillez traduire : Dash
-
-Tableau de bord';
 $lang["savethissearchtodash"]='Enregistrer sur la tuile du tableau de bord.';
 $lang["createnewdashtile"]='Créer une nouvelle tuile de tableau de bord.';
 $lang["specialdashtiles"]='Tuiles de tiret spécial.';
@@ -2312,7 +2209,6 @@ $lang["dashtilestyle"]='Style de tuile de tableau de bord.';
 $lang["returntopreviouspage"]='Retourner à la page précédente.';
 $lang["showresourcecount"]='Afficher le nombre de ressources ?';
 $lang["tilebin"]='Supprimer';
-$lang["last"]='Please provide more context or information about the term "Last" as it can have different meanings in the context of digital asset management software.';
 $lang["managedefaultdash"]='Tous les carreaux d\'utilisateurs.';
 $lang["dashtile"]='Tuile de tableau de bord.';
 $lang["manage_own_dash"]='Peut gérer son propre tableau de bord.';
@@ -2356,7 +2252,6 @@ $lang["createdashtilemycontributions"]='Mes contributions (spécifiques à l\'ut
 $lang["createdashtilehelpandadvice"]='Lien d\'aide et de conseils.';
 $lang["createdashtileuserupload"]='Téléverser une vignette (spécifique à l\'utilisateur)';
 $lang["tile_thmbs"]='Seul(e)';
-$lang["tile_multi"]='Please provide more context. "Multi" can have different meanings depending on the context in which it is used.';
 $lang["tile_blank"]='Vide';
 $lang["tile_analytics"]='Analytique';
 $lang["tile_ftxt"]='Texte uniquement.';
@@ -2566,13 +2461,10 @@ $lang["new_report"]='Nouveau rapport.';
 $lang["edit_report"]='Modifier le rapport.';
 $lang["all_activity"]='Toutes les activités.';
 $lang["all_resource_types"]='Tous les types de ressources.';
-$lang["report-graph-by-pie"]='Veuillez traduire : breakdown.
-
-Traduction : panne.';
 $lang["report-graph-by-piegroup"]='par groupe d\'utilisateurs';
 $lang["report-graph-by-pieresourcetype"]='par type de ressource';
 $lang["report-graph-by-line"]='au fil du temps';
-$lang["report-graph-by-summary"]='Résumé';
+$lang["report-graph-by-summary"]='résumé';
 $lang["update_report"]='Mise à jour du rapport.';
 $lang["save_report"]='Enregistrer le rapport.';
 $lang["save_report_as"]='Enregistrer le rapport sous...';
@@ -2743,17 +2635,6 @@ $lang["start"]='Début';
 $lang["file_integrity_summary"]='Rapport d\'intégrité de fichier.';
 $lang["file_integrity_summary_failed"]='Les fichiers de ressources ont échoué aux vérifications d\'intégrité ou sont manquants. Veuillez suivre le lien pour voir ces ressources et prendre les mesures nécessaires, par exemple, restaurer les fichiers à partir de la sauvegarde.';
 $lang["file_integrity_fail_search"]='Échecs d\'intégrité de fichier.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='Afficher les ressources suspectes.';
 $lang["team_resource_integrity_fail_info"]='Ressources avec des fichiers manquants ou possiblement corrompus.';
 $lang["collection_copy_resources"]='Copier les ressources de la collection.';

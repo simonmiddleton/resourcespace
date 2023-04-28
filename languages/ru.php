@@ -937,7 +937,6 @@ $lang["information-derestrict_filter"]='Снять ограничения фил
 $lang["information-push_metadata"]='Если установлено, метаданные для этого ресурса будут отображаться на странице просмотра ресурса для всех связанных ресурсов. Например, вы можете связать несколько фотографий с ресурсом человека. Если это свойство установлено для ресурса человека, то метаданные человека будут отображаться на всех связанных записях ресурсов фотографий, избегая дублирования данных в системе.';
 $lang["property-query"]='Запрос';
 $lang["information-id"]='Примечание: \'Id\' ниже ДОЛЖЕН быть установлен на уникальный код из трех символов.';
-$lang["property-id"]='Идентификатор (Id)';
 $lang["property-width"]='Ширина';
 $lang["property-height"]='Высота';
 $lang["property-quality"]='Качество';
@@ -968,7 +967,6 @@ $lang["smallthumbstitle"]='Маленькие миниатюры.';
 $lang["strip"]='Полоса.';
 $lang["striptitle"]='Просмотр полосы.';
 $lang["listtitle"]='Список (режим просмотра)';
-$lang["perpage_option"]='Количество ? на странице.';
 $lang["powered_by"]='Предоставлено:';
 $lang["powered_by_resourcespace"]='Работает на ResourceSpace.';
 $lang["on"]='На';
@@ -1075,8 +1073,6 @@ $lang["page_collections_message"]='Продолжение выполнения �
 $lang["delete_all_selected"]='Удалить все выбранные.';
 $lang["range_no_start_header"]='Ошибка диапазона.';
 $lang["range_no_start"]='Невозможно завершить диапазон без начала. Пожалуйста, отпустите клавишу Shift.';
-$lang["lightbox-image"]='Изображение.';
-$lang["lightbox-of"]='принадлежащий (as in "part of")';
 $lang["treeobjecttype-resource_type"]='Тип ресурса.';
 $lang["resources_selected-1"]='1 ресурс выбран.';
 $lang["resources_selected-2"]='Выбрано %number ресурсов.';
@@ -1259,7 +1255,6 @@ $lang["item"]='элемент';
 $lang["stat-addedsmartcollection"]='Добавлен умный сборник.';
 $lang["stat-removedresourcefromcollection"]='Удален ресурс из коллекции.';
 $lang["stat-keywordusage-noresultsfound"]='Использование ключевых слов - результатов не найдено.';
-$lang["plugin_field_fmt"]='Please provide more context so I can give an accurate translation.';
 $lang["share_selected"]='Поделиться выбранным.';
 $lang["share_theme_category"]='Поделиться категорией выбранной коллекции.';
 $lang["share_theme_category_subcategories"]='Включить рекомендуемые коллекции в подкатегории для внешних пользователей?';
@@ -1397,9 +1392,6 @@ $lang["publishstatus"]='Сохранить с статусом публикац�
 $lang["addnewcontent"]='Новый контент (страница, название)';
 $lang["hitcount"]='Количество просмотров.';
 $lang["downloads"]='Загрузки';
-$lang["addremove"]='Пожалуйста, переведите: +/-. 
-
-This symbol is typically used to indicate a range or a degree of uncertainty. In the context of digital asset management software, it may be used to indicate that a particular value or attribute is approximate or estimated. In Русский язык, this symbol is usually translated as "плюс-минус" or "±".';
 $lang["list_file_extension"]='Расширение.';
 $lang["all_users"]='все пользователи';
 $lang["new_resource"]='новый ресурс';
@@ -2090,107 +2082,6 @@ $lang["action-move-down"]='Переместить вниз.';
 $lang["action-move-to"]='Переместить в';
 $lang["delete_user_group_checkbox_alert_message"]='Пожалуйста, обратите внимание, что это действие также удалит весь текст контента, который был связан с этой группой пользователей. Найдено %%RECORDSCOUNT%% записей в управлении контентом.';
 $lang["about__about"]='Ваш текст "О нас" здесь.';
-$lang["all__emailbulk"]='Пожалуйста, переведите: <br /><br />
-[text]<br /><br />
-[text_footer]
-
-[текст]<br /><br />
-[текст_нижний_колонтитул]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessage] - [отправитель] [lang_emailcollectionmessage]<br /><br />
-[lang_message]: [message] - [сообщение]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list] - [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessageexternal] - [отправитель] [lang_emailcollectionmessageexternal]<br /><br />
-[lang_message]: [message] - [сообщение]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list] - [lang_clicklinkviewcollection] [list]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[сообщение]<br /><br /><a href="[url]">[вставить_миниатюру]</a><br /><br />[текст_нижнего_колонтитула]';
-$lang["all__emaillogindetails"]='[welcome]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]<br /><br />
-
-[Добро пожаловать]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[имяпользователя] ([полноепользовательскоеимя] - [почтапользователя])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[название]<br /><br />
-[lang_descriptionofproject]:[описание]<br /><br />
-[lang_deadline]:[крайнийсрок]<br /><br />
-[lang_contacttelephone]:[контакт]<br /><br />
-[lang_finaluse]: [целевоеиспользование]<br /><br />
-[lang_shaperequired]: [формат]<br /><br />
-[lang_noresourcesrequired]: [нетресурсов]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[список] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[список]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[список]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] - Запрос на исследование был назначен.<br /><br />
-[text_footer] - Нижний колонтитул';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_researchrequestcompletemessage] - Ваш запрос на исследование завершен. Мы свяжемся с вами в ближайшее время, чтобы обсудить результаты.<br /><br />
-[lang_clicklinkviewcollection] - Нажмите на ссылку, чтобы просмотреть коллекцию.<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] - Это сообщение было отправлено из ResourceSpace.';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[сообщение]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[список] <br />
-[детали]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-';
 $lang["all__footer"]='Работает на основе <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Позвольте нашей команде ресурсов найти необходимые вам ресурсы.';
 $lang["change_language__introtext"]='Пожалуйста, выберите ваш язык ниже.';
@@ -2279,7 +2170,6 @@ $lang["collection_download_too_large"]='Извините, эта коллекц�
 $lang["all__passwordnewemailhtml"]='Пожалуйста, нажмите на ссылку ниже, чтобы установить новый пароль для вашей учетной записи.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />имя пользователя: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Загрузка временно недоступна.';
 $lang["disk_size_no_upload_explain"]='Из-за ограничений на место, загрузка временно отключена. Приносим извинения за неудобства.';
-$lang["dash"]='Пожалуйста, уточните контекст. "Dash" может иметь несколько значений на русском языке.';
 $lang["savethissearchtodash"]='Сохранить на плитку рабочего стола.';
 $lang["createnewdashtile"]='Создать новый плиточный элемент (tile) для панели управления (dashboard).';
 $lang["specialdashtiles"]='Специальные плитки-тире.';
@@ -2554,13 +2444,10 @@ $lang["new_report"]='Новый отчет.';
 $lang["edit_report"]='Редактировать отчет.';
 $lang["all_activity"]='Вся активность.';
 $lang["all_resource_types"]='Все типы ресурсов.';
-$lang["report-graph-by-pie"]='разрушение (if referring to physical damage) or сбой (if referring to a failure or malfunction)';
 $lang["report-graph-by-piegroup"]='по группе пользователей';
 $lang["report-graph-by-pieresourcetype"]='по типу ресурса';
 $lang["report-graph-by-line"]='со временем';
-$lang["report-graph-by-summary"]='Пожалуйста, переведите: summary.
-
-сводка';
+$lang["report-graph-by-summary"]='сводка';
 $lang["update_report"]='Обновить отчет.';
 $lang["save_report"]='Сохранить отчёт.';
 $lang["save_report_as"]='Сохранить отчет как...';
@@ -2732,25 +2619,6 @@ $lang["start"]='Начать';
 $lang["file_integrity_summary"]='Отчет о целостности файла.';
 $lang["file_integrity_summary_failed"]='Файлы ресурсов не прошли проверку целостности или отсутствуют. Пожалуйста, перейдите по ссылке, чтобы увидеть эти ресурсы и принять необходимые меры, например, восстановить файлы из резервной копии.';
 $lang["file_integrity_fail_search"]='Сбои целостности файла.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-The context of these strings is unclear, so I cannot provide a precise translation.';
 $lang["team_resource_integrity_fail"]='Просмотр подозрительных ресурсов.';
 $lang["team_resource_integrity_fail_info"]='Ресурсы с отсутствующими или возможно поврежденными файлами.';
 $lang["collection_copy_resources"]='Скопировать ресурсы коллекции.';

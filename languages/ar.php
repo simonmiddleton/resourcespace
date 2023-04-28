@@ -746,8 +746,6 @@ $lang["addnewcontent"]=" المحتوى الجديد (صفحة ، الاسم) ";
 $lang["hitcount"]=" ضرب الكونت ";
 $lang["downloads"]=" التنزيلات ";
 
-$lang["addremove"]=" إضافة / إزالة ";
-
 ##  Translations for standard log entries
 $lang["all_users"]=" كافة المستخدمين ";
 $lang["new_resource"]=" مورد جديد ";
@@ -942,7 +940,6 @@ $lang["information-onchange_macro"]='عند تغيير الماكرو: الكو�
 $lang["information-derestrict_filter"]='فلتر إلغاء القيود. فعال فقط عند استخدامه بالتزامن مع إزالة إذن الوصول العام حتى تكون جميع الموارد مقيدة ما لم تتوافر شروط البيانات الوصفية.';
 $lang["information-push_metadata"]='إذا تم تعيين هذا الخيار، سيتم عرض بيانات التعريف الوصفية لهذا المورد على صفحة عرض المورد لأي موارد ذات صلة. على سبيل المثال، يمكنك ربط العديد من الصور بمورد شخص. إذا تم تعيين هذا الخيار على مورد الشخص، فسيتم عرض بيانات التعريف الوصفية للشخص على جميع سجلات الموارد المرتبطة، مما يتجنب تكرار البيانات في النظام.';
 $lang["information-id"]='ملاحظة: يجب تعيين "Id" أدناه إلى رمز فريد مكون من ثلاثة أحرف.';
-$lang["property-id"]='معرف (Mae\'ruf)';
 $lang["property-width"]='العرض';
 $lang["property-height"]='الارتفاع';
 $lang["property-quality"]='الجودة';
@@ -1057,10 +1054,8 @@ $lang["property-field_constraint-none"]='لا شيء';
 $lang["property-query"]='الاستعلام';
 $lang["myrequests"]='طلباتي';
 $lang["xlthumbs"]='X-كبير جداً';
-$lang["strip"]='تعني "Strip" في ResourceSpace إزالة أو تحويل البيانات الوصفية للملفات الرقمية، وهي عملية تستخدم لإزالة البيانات الوصفية غير الضرورية أو الحساسة من الملفات الرقمية. وبالتالي، يمكن استخدام "Strip" لتحويل بيانات الوصف الخاصة بالملفات الرقمية إلى صيغة محددة أو لإزالة بيانات الوصف بشكل كامل.';
 $lang["on"]='على';
 $lang["off"]='إيقاف.';
-$lang["_dupe"]='Sorry, I need more context to provide an accurate translation. "_dupe" could be a part of a phrase or sentence. Can you please provide more information?';
 $lang["purgecollectionareyousure"]='هل أنت متأكد أنك تريد إزالة هذه المجموعة وحذف جميع الموارد الموجودة بها؟';
 $lang["collectionsdeleteempty"]='حذف المجموعات الفارغة';
 $lang["collectionsdeleteemptyareyousure"]='هل أنت متأكد أنك تريد حذف جميع مجموعاتك الخاصة الفارغة؟';
@@ -1089,8 +1084,6 @@ $lang["delete_multiple_collections"]='هل أنت متأكد أنك تريد ح�
 $lang["delete_all_selected"]='حذف كل المحددة';
 $lang["range_no_start_header"]='خطأ في النطاق';
 $lang["range_no_start"]='لا يمكن إنهاء النطاق بدون بداية. يرجى تحرير مفتاح التحويل.';
-$lang["lightbox-image"]='صورة';
-$lang["lightbox-of"]='من';
 $lang["treeobjecttype-resource_type"]='نوع المورد';
 $lang["resources_selected-1"]='1 مورد محدد.';
 $lang["resources_selected-2"]='%number الموارد المحددة';
@@ -1281,7 +1274,6 @@ $lang["item"]='العنصر';
 $lang["stat-addedsmartcollection"]='تمت إضافة مجموعة ذكية.';
 $lang["stat-removedresourcefromcollection"]='تمت إزالة المورد من المجموعة.';
 $lang["stat-keywordusage-noresultsfound"]='استخدام الكلمة الدالة - لا توجد نتائج';
-$lang["plugin_field_fmt"]='يرجى تحديد سياق استخدام هذه العبارة لأن الترجمة المناسبة يمكن أن تختلف حسب السياق.';
 $lang["share_selected"]='مشاركة المحددة';
 $lang["sharecollection-name"]='مشاركة المجموعة - %collectionname';
 $lang["share_theme_category"]='مشاركة فئة المجموعة المميزة';
@@ -1920,7 +1912,6 @@ $lang["saved"]='تم الحفظ';
 $lang["changessaved"]='تم حفظ التغييرات';
 $lang["resourceids"]='معرف/معرفات المصادر';
 $lang["warningrequestapprovalfield"]='تحذير - معرّف المورد % - يرجى ملاحظة ما يلي قبل الموافقة.';
-$lang["yyyy-mm-dd"]='YYYY-MM-DD translates to السنة-الشهر-اليوم in العربية.';
 $lang["resources-with-requeststatus0-0"]='(0 معلق)';
 $lang["resources-with-requeststatus0-1"]='(1 معلق)';
 $lang["resources-with-requeststatus0-2"]='(%number pending) : (%عدد معلق)';
@@ -2161,109 +2152,6 @@ $lang["action-move-down"]='نزل';
 $lang["action-move-to"]='الانتقال إلى';
 $lang["delete_user_group_checkbox_alert_message"]='يرجى ملاحظة أن هذا الإجراء سيؤدي أيضًا إلى حذف جميع نصوص المحتوى التي كانت ذات صلة بهذه المجموعة من المستخدمين. تم العثور على %%RECORDSCOUNT%% سجلات في إدارة المحتوى.';
 $lang["about__about"]='يمكنك وضع نص حولك هنا.';
-$lang["all__emailcollection"]='[lang_emailcollectionmessage] [fromusername]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-تم الترجمة: <br />
-[lang_emailcollectionmessage] [fromusername]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />';
-$lang["all__emailcollectionexternal"]='[lang_emailcollectionmessageexternal] [fromusername]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-ترجمة:<br />
-[lang_emailcollectionmessageexternal] [اسم المستخدم الخاص بالبريد الإلكتروني]<br /><br />
-[lang_message]: [الرسالة]<br /><br />
-[lang_clicklinkviewcollection] [القائمة]<br /><br />';
-$lang["all__emailcontactadmin"]='يرجى ترجمة: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-<br />[اسم_المستخدم_المرسل] ([البريد_الإلكتروني_المرسل])[lang_contactadminemailtext]<br /><br />[الرسالة]<br /><br /><a href="[رابط]">[صورة_مصغرة]</a><br /><br />[نص_التذييل]';
-$lang["all__emaillogindetails"]='[مرحباً]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[اسم_المستخدم] ([الاسم_الكامل_للمستخدم] - [البريد_الإلكتروني_للمستخدم])<br />
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]: [اسم المشروع]<br /><br />
-[lang_descriptionofproject]: [وصف المشروع]<br /><br />
-[lang_deadline]: [الموعد النهائي]<br /><br />
-[lang_contacttelephone]: [رقم الاتصال]<br /><br />
-[lang_finaluse]: [الاستخدام النهائي]<br /><br />
-[lang_shaperequired]: [الشكل المطلوب]<br /><br />
-[lang_noresourcesrequired]: [لا يوجد موارد مطلوبة]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-تمت الموافقة على موارد المستخدمين
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[تم تقديم موارد المستخدم]
-[قائمة]
-[عرض جميع الموارد المعلقة للمستخدم]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[نص الهامش]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[الموارد_غير_المقدمة_من_المستخدم]
-[قائمة]
-[عرض_جميع_المعلقات_لدى_المستخدم]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[نص_التذييل]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] تم تعيين طلب البحث الخاص بك لـ [user_assigned] للمعالجة. <br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage]
-تم إكمال طلب البحث بنجاح. سيتم إرسال الموارد المطلوبة إلى بريدك الإلكتروني.
-
-[lang_clicklinkviewcollection]
-يرجى النقر على الرابط التالي لعرض المجموعة:
-
-<a href="[url]">[url]</a>
-
-[text_footer]
-شكرًا لاستخدام ResourceSpace.';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-تم إرسال مورد لك من قبل [fromusername]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [اسم المستخدم] <br />
-[قائمة] <br />
-[تفاصيل]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='مدعوم بواسطة <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='دع فريق مواردنا يجد لك الموارد التي تحتاجها.';
 $lang["change_language__introtext"]='يرجى اختيار لغتك أدناه.';
@@ -2352,7 +2240,6 @@ $lang["collection_download_too_large"]='عذرًا، هذه المجموعة ك�
 $lang["all__passwordnewemailhtml"]='يرجى النقر على الرابط أدناه لتعيين كلمة مرور جديدة لحسابك. <br /><br />الرابط: <a href="[url]" target="_blank" >[url]</a><br />اسم المستخدم: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='الرفع غير متاح مؤقتًا.';
 $lang["disk_size_no_upload_explain"]='بسبب قيود المساحة، تم تعطيل عملية الرفع مؤقتًا. نعتذر عن أي إزعاج.';
-$lang["dash"]='يرمز "Dash" في برنامج إدارة الأصول الرقمية ResourceSpace إلى "لوحة القيادة" أو "لوحة التحكم" وهي واجهة المستخدم التي توفر معلومات مفصلة حول الموارد والمجموعات والعمليات الأخرى في النظام.';
 $lang["savethissearchtodash"]='حفظ على بلاطة اللوحة';
 $lang["createnewdashtile"]='إنشاء بلاطة لوحة جديدة';
 $lang["specialdashtiles"]='بلاطات خاصة بشكل مخطط خاص.';
@@ -2802,17 +2689,6 @@ $lang["start"]='بدء';
 $lang["file_integrity_summary"]='تقرير سلامة الملفات';
 $lang["file_integrity_summary_failed"]='فشلت فحوصات سلامة ملفات الموارد أو فقدت بعضها. يرجى اتباع الرابط لرؤية هذه الموارد واتخاذ الإجراءات اللازمة مثل استعادة الملفات من النسخ الاحتياطي.';
 $lang["file_integrity_fail_search"]='فشل في سلامة الملفات.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[ملف_اللياقة_الملفوفة_فشلت] <br /><br /> 
-[فشل_البحث_في_اللياقة_الملفوفة] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='عرض الموارد المشبوهة';
 $lang["team_resource_integrity_fail_info"]='الموارد التي تفتقد إلى الملفات أو التي قد تكون تالفة.';
 $lang["collection_copy_resources"]='نسخ موارد المجموعة';

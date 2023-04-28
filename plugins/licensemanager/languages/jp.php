@@ -14,7 +14,6 @@ $lang["licensemanager_new"]='新しいライセンス';
 $lang["managelicenses"]='ライセンス';
 $lang["outbound"]='アウトバウンド';
 $lang["outbound_license_description"]='私たちは著作権の保持者です。';
-$lang["inbound"]='Inboundの日本語訳は「インバウンド」です。';
 $lang["inbound_license_description"]='彼らは著作権保持者です。';
 $lang["no_expiry_date"]='有効期限なし';
 $lang["action-unlink"]='解除リンク';

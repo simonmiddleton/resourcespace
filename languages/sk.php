@@ -451,10 +451,6 @@ $lang["emailthememessage"]="Vám poslal e-mailom výber odporúčaných zbierok 
 $lang["clicklinkviewthemes"]="Kliknutím na odkaz nižšie zobrazíte vybrané zbierky.";
 $lang["clicklinkviewcollections"]="Kliknutím na odkazy nižšie zobrazíte zbierky.";
 
-# Lightbox
-$lang["lightbox-image"] = "Obrázok";
-$lang["lightbox-of"] = "";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Vytvoriť nový zdroj";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Typ zdroja";
@@ -1307,8 +1303,6 @@ $lang["addnewcontent"]="Nový obsah (stránka, názov)";
 $lang["hitcount"]="Počet výskytov";
 $lang["downloads"]="Stiahnuté";
 
-$lang["addremove"]="Pridať/Odobrať";
-
 ##  Translations for standard log entries
 $lang["all_users"]="všetci používatelia";
 $lang["new_resource"]="nový zdroj";
@@ -2148,20 +2142,6 @@ $lang["all__comments_flag_notification_email_body"]="";
 $lang["all__comments_flag_notification_email_subject"]="";
 $lang["all__comments_policy"]="";
 $lang["all__comments_removal_message"]="";
-$lang["all__emailbulk"]="[img_gfx/titles/title.gif]<br /><br />\n[text]<br /><br />\n[text_footer]\n";
-$lang["all__emailcollection"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcollectionexternal"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcontactadmin"]="[img_../gfx/titles/title.gif]<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
-$lang["all__emaillogindetails"]="[img_gfx/titles/title.gif]<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnewresearchrequestwaiting"]="[img_gfx/titles/title.gif]<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesapproved"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcessubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesunsubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesunsubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailreminder"]="[img_gfx/titles/title.gif]<br />\n[lang_newlogindetails] <br /><br />\n[lang_username] : [username] <br /> \n[lang_password]  : [password] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestassigned"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestassignedmessage]<br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestcomplete"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresource"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresourcerequest"]="[img_gfx/titles/title.gif]<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
 $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace Open Source Digital Asset Management</a>";
 $lang["all__researchrequest"]="Nechajte náš tím nájsť pre Vás potrebné zdroje.";
 $lang["all__searchpanel"]="Vyhľadávajte pomocou popisov, kľúčových slov a čísel zdrojov";
@@ -3025,7 +3005,6 @@ $lang["map_osm"]='Predvolené.';
 $lang["map_osmde"]='Nemecký štýl.';
 $lang["map_osmfrance"]='OSM Francúzsko';
 $lang["map_osmch"]='OSM Švajčiarsko';
-$lang["map_osmbzh"]='OSM Luxembourg should remain the same in Slovenčina as it is an acronym for OpenStreetMap Luxembourg.';
 $lang["map_osmhot"]='Humanitárny';
 $lang["map_osmmtb"]='Mapa horských bicyklov v Európe.';
 $lang["map_osmhikebike"]='Mapa pre turistiku a cykloturistiku.';
@@ -3041,7 +3020,6 @@ $lang["map_tfpioneer"]='Pionier.';
 $lang["map_tfmobileatlas"]='Mobilný atlas.';
 $lang["map_tfneighbourhood"]='Susedstvo';
 $lang["map_hyddafull"]='Predvolená mapa.';
-$lang["map_hyddabase"]='Základný (or Báza)';
 $lang["map_stamentoner"]='Toner';
 $lang["map_stamentonerlt"]='Svetla toner barva.';
 $lang["map_stamentonerback"]='Pozadie tonera.';

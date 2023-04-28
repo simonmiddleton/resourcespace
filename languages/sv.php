@@ -315,7 +315,6 @@ $lang["collectionname"]="Samlingsnamn";
 $lang["collection-name"]="Samling: %collectionname%"; # %collectionname will be replaced, e.g. Collection: Cars
 $lang["collectionid"]="Samlingsnr";
 $lang["collectionidprefix"]="Saml_nr";
-$lang["_dupe"]="_dubblett";
 $lang["emailtousers"]="Mottagare<br><br><b>För mottagare med användarkonto:</b> Ange några bokstäver i användarens namn för att söka, klicka sedan på den hittade användaren och därefter på <b>+</b><br><br><b>För mottagare utan användarkonto:</b> Ange en e-postadress och klicka på <b>+</b>";
 $lang["removecollectionareyousure"]="Vill du avlägsna den här samlingen från listan?";
 $lang["managemycollections"]="Hantera Mina samlingar";
@@ -374,10 +373,6 @@ $lang["emailthemecollectionmessageexternal"]="har skickat samlingar med material
 $lang["emailthememessage"]="har skickat ett urval av teman från $applicationname till dig per e-post. Dessa teman har lagts till i Mina samlingar.";
 $lang["clicklinkviewthemes"]="Klicka på länken nedan om du vill visa temana.";
 $lang["clicklinkviewcollections"]="Klicka på länkarna nedan om du vill visa samlingarna.";
-
-# Lightbox
-$lang["lightbox-image"] = "Bild";
-$lang["lightbox-of"] = "av";
 
 # Resource create / edit / view
 $lang["createnewresource"]="Skapa nytt material";
@@ -1085,8 +1080,6 @@ $lang["addnewcontent"]="Nytt innehåll (sida, namn)";
 $lang["hitcount"]="Antal träffar";
 $lang["downloads"]="Hämtningar";
 
-$lang["addremove"]="";
-
 ##  Translations for standard log entries
 $lang["all_users"]="alla användare";
 $lang["new_resource"]="nytt material";
@@ -1608,7 +1601,7 @@ $lang["researches-with-requeststatus0-1"]="(1 ej tilldelad)"; # 1 Unassigned
 $lang["researches-with-requeststatus0-2"]="(%number ej tilldelade)"; # %number will be replaced, e.g. 3 Unassigned
 
 $lang["byte-symbol"]="B";
-$lang["kilobyte-symbol"]="kB"; # Egentligen handlar det om kiB o.s.v., men jag följer RS beteckningar.
+$lang["kilobyte-symbol"]="KB"; # Egentligen handlar det om kiB o.s.v., men jag följer RS beteckningar.
 $lang["megabyte-symbol"]="MB";
 $lang["gigabyte-symbol"]="GB";
 $lang["terabyte-symbol"]="TB";
@@ -2270,7 +2263,7 @@ $lang["internal_share_grant_access_collection"]='Bevilja öppen åtkomst för in
 $lang["merge_filename_title_question"]='Använd filnamnet i titeln (om ingen inbäddad titel hittas)?';
 $lang["merge_filename_title_do_not_use"]='Använd inte.';
 $lang["merge_filename_title_replace"]='Ersätt';
-$lang["merge_filename_title_prefix"]='Prefix - Prefix (used in the context of metadata or naming conventions)';
+$lang["merge_filename_title_prefix"]='Prefix';
 $lang["merge_filename_title_suffix"]='Efternamn (Suffix)';
 $lang["merge_filename_title_include_extensions"]='Inkludera tillägg?';
 $lang["merge_filename_title_spacer"]='Avståndshållare.';
@@ -2375,102 +2368,6 @@ $lang["action-move-up"]='Flytta upp';
 $lang["action-move-down"]='Flytta nedåt.';
 $lang["action-move-to"]='Flytta till';
 $lang["delete_user_group_checkbox_alert_message"]='Observera att denna åtgärd också kommer att radera allt innehållstext som var relevant för denna användargrupp. Det finns %%RECORDSCOUNT%% poster som hittades i Hantera innehåll.';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] = [textfot]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_meddelande] : [meddelande]<br /><br /> 
-[lang_klickalänksekollektion] [lista]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessageexternal] - [från användarnamn] [extern e-postmeddelande om samling]<br /><br />
-[lang_message]: [meddelande]<br /><br />
-[lang_clicklinkviewcollection] [lista] - [klicka på länken för att visa samlingen] [lista]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[meddelande]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer] ';
-$lang["all__emaillogindetails"]='[välkommen]<br /><br />
-[lang_nya_inloggningsuppgifter]<br /><br />
-[lang_användarnamn] : [användarnamn]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_sidfot]';
-$lang["all__emailnewresearchrequestwaiting"]='[användarnamn] ([användarnamnfullständigt] - [användaremejl])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[namn]<br /><br />
-[lang_descriptionofproject]:[beskrivning]<br /><br />
-[lang_deadline]:[sistaansökningsdag]<br /><br />
-[lang_contacttelephone]:[kontakt]<br /><br />
-[lang_finaluse]: [slutanvändning]<br /><br />
-[lang_shaperequired]: [formkrav]<br /><br />
-[lang_noresourcesrequired]: [ingaressurserkrävs]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending] (Visa alla användares väntande)<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Forskningsbegäran har tilldelats till {assignee}.<br /><br />
-[text_footer] = Vänliga hälsningar,';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Din förfrågan har slutförts. Du kommer att meddelas när resurserna har lagts till i samlingen.<br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">Klicka här för att visa samlingen</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_haremejlatdigenresurs]<br /><br />
-[meddelande]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_klickaförattsepresursen]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [användarnamn] <br />
-[list] <br />
-[detaljer]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["collection_download__write_metadata_on_download_label"]='Bädda in metadata för resursen i den nedladdade filen/filerna? Att aktivera detta kommer att göra nedladdningen långsammare.';
 $lang["downloadfile_nofile"]='Den begärda filen kunde inte hittas.';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
@@ -2508,11 +2405,6 @@ $lang["collection_download_too_large"]='Tyvärr, denna samling är för stor fö
 $lang["all__passwordnewemailhtml"]='Vänligen klicka på länken nedan för att ställa in ett nytt lösenord för ditt konto.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Användarnamn: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Uppladdning tillfälligt otillgänglig.';
 $lang["disk_size_no_upload_explain"]='På grund av utrymmesbegränsningar har uppladdning tillfälligt inaktiverats. Vi ber om ursäkt för eventuella olägenheter.';
-$lang["dash"]='Dash can have different meanings in the context of digital asset management software. Here are some possible translations:
-
-- Dash (noun): Bindestreck
-- Dash (verb, e.g. to dash a tag): Lägga till en tagg snabbt
-- Dashboard: Instrumentpanel or Översiktspanel (depending on the context)';
 $lang["savethissearchtodash"]='Spara till panelruta.';
 $lang["createnewdashtile"]='Skapa nytt panelkort.';
 $lang["specialdashtiles"]='Särskilda streckplattor.';
@@ -2574,7 +2466,6 @@ $lang["createdashtilemycontributions"]='Mina bidrag (användarspecifika)';
 $lang["createdashtilehelpandadvice"]='Hjälp- och rådgivningslänk.';
 $lang["createdashtileuserupload"]='Ladda upp flik (användarspecifik)';
 $lang["tile_thmbs"]='Enskild.';
-$lang["tile_multi"]='Multi = Flera/många (depending on the context)';
 $lang["tile_blank"]='Tomt.';
 $lang["tile_analytics"]='Analys';
 $lang["tile_ftxt"]='Endast text';
@@ -2786,7 +2677,6 @@ $lang["new_report"]='Ny rapport.';
 $lang["edit_report"]='Redigera rapport';
 $lang["all_activity"]='Alla aktiviteter.';
 $lang["all_resource_types"]='Alla resurstyper.';
-$lang["report-graph-by-pie"]='Sammansättning (if referring to a breakdown of a compound object) or Haveri (if referring to a technical or mechanical breakdown) or Kollaps (if referring to a system or process breakdown).';
 $lang["report-graph-by-piegroup"]='efter användargrupp';
 $lang["report-graph-by-pieresourcetype"]='efter resurstyp';
 $lang["report-graph-by-line"]='över tid';

@@ -870,8 +870,6 @@ $lang["lastupdated"]="Último actualizado";
 $lang["lastused"]="Último utilizado";
 $lang["latlong"]="Lat / Long";
 $lang["launchpermissionsmanager"]="Ejecutar el administrador de permisos";
-$lang["lightbox-image"]="Imágen";
-$lang["lightbox-of"]="de";
 $lang["listfile-argument-not-defined"]="\$archiver_listfile_argument no está definido";
 $lang["listresources"]="Materiales:";
 $lang["loadasaveduserlist"]="Cargar una lista salvada por el usuario";
@@ -1146,14 +1144,12 @@ $lang["xlthumbstitle"]='Miniaturas extra grandes.';
 $lang["largethumbstitle"]='Miniaturas grandes.';
 $lang["smallthumbs"]='Pequeño/a.';
 $lang["smallthumbstitle"]='Miniaturas pequeñas.';
-$lang["strip"]='Por favor, proporcione más contexto. "Strip" puede tener varios significados en inglés, como "tira", "desnudar", "eliminar", entre otros. Sin más información, no puedo proporcionar una traducción precisa.';
 $lang["striptitle"]='Vista de tira.';
 $lang["listtitle"]='Vista de lista.';
-$lang["perpage_option"]='Por página.';
+$lang["perpage_option"]='? por página.';
 $lang["powered_by"]='Alimentado por';
 $lang["powered_by_resourcespace"]='Impulsado por ResourceSpace.';
-$lang["on"]='En (this translation assumes that "On" refers to a button or switch that is turned on/off).';
-$lang["off"]='Por favor, proporcione más contexto para la palabra "Off" para que pueda proporcionar una traducción precisa. ¿En qué parte del software se utiliza esta palabra?';
+$lang["on"]='En';
 $lang["seconds"]='segundos';
 $lang["pause"]='Pausa';
 $lang["filterbutton"]='Filtro.';
@@ -1194,9 +1190,6 @@ $lang["view_my_contributions_ws"]='Ver mis contribuciones - %workflow_state_name
 $lang["collection_set_theme_category"]='Agregar a la categoría de colecciones destacadas.';
 $lang["collection_set_theme_category_title"]='Agregar colección a la categoría de colecciones destacadas.';
 $lang["collection-name"]='Colección: %collectionname%';
-$lang["_dupe"]='Por favor, traduce: _dupe
-
-This term is not clear enough to provide an accurate translation. Can you please provide more context or information about its usage in ResourceSpace?';
 $lang["emailtousers_internal"]='Correo electrónico a usuarios<br><br>Comience a escribir el nombre del usuario para buscarlo, luego haga clic en el usuario requerido cuando lo encuentre.';
 $lang["create_new_here"]='Crear aquí.';
 $lang["create_new_below"]='Crear en una nueva categoría.';
@@ -1407,7 +1400,6 @@ $lang["stat-addedsmartcollection"]='Colección inteligente agregada.';
 $lang["stat-removedresourcefromcollection"]='Eliminado recurso de la colección.';
 $lang["stat-keywordusage-noresultsfound"]='Uso de palabra clave - no se encontraron resultados';
 $lang["access3"]='Personalizado.';
-$lang["plugin_field_fmt"]='%A (%B) traducido al Español (Argentina) sería: %A (%B)';
 $lang["share_selected"]='Compartir seleccionado.';
 $lang["sharecollection-name"]='Compartir colección - %nombredecolección';
 $lang["share_theme_category"]='Compartir categoría de colección destacada.';
@@ -1594,7 +1586,6 @@ $lang["resourcerequeststatus2"]='Rechazado.';
 $lang["useasthemethumbnail"]='¿Usar este recurso como miniatura de categoría destacada de colección?';
 $lang["sessionexpired"]='Ha sido desconectado automáticamente porque estuvo inactivo durante más de 30 minutos. Por favor, ingrese sus datos de inicio de sesión para continuar.';
 $lang["resourcenotinresults"]='El recurso actual ya no se encuentra dentro de los resultados de búsqueda activos, por lo que no es posible la navegación siguiente/anterior.';
-$lang["addremove"]='Por favor, traducir: +/-';
 $lang["list_file_extension"]='Extensión.';
 $lang["invalidextension_mustbe-extensions"]='Extensión inválida, debe ser %EXTENSIONS.';
 $lang["requestall"]='Solicitar todo.';
@@ -1665,7 +1656,6 @@ $lang["map_tfpioneer"]='Pionero.';
 $lang["map_tfmobileatlas"]='Atlas Móvil.';
 $lang["map_tfneighbourhood"]='Barrio';
 $lang["map_hyddafull"]='Mapa predeterminado.';
-$lang["map_hyddabase"]='Base - Base de datos';
 $lang["map_stamen_group"]='Estambre.';
 $lang["map_stamentoner"]='Tóner.';
 $lang["map_stamentonerlt"]='Toner Ligero.';
@@ -2069,92 +2059,6 @@ $lang["action-move-down"]='Mover hacia abajo.';
 $lang["action-move-to"]='Mover a';
 $lang["delete_user_group_checkbox_alert_message"]='Por favor, tenga en cuenta que esta acción también eliminará todo el texto de contenido que sea relevante para este grupo de usuarios. Se encontraron %%RECORDSCOUNT%% registros en Administrar contenido.';
 $lang["about__about"]='Su texto acerca de va aquí.';
-$lang["all__emailbulk"]='Por favor, traducir: <br /><br />
-[text]<br /><br />
-[text_footer] 
-
-[texto]<br /><br />
-[pie_de_página]';
-$lang["all__emailcollection"]='Por favor, traducir:<br />
-[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[lang_emailcollectionmessage] - Mensaje de correo electrónico de colección
-[lang_message] - Mensaje
-[lang_clicklinkviewcollection] - Haga clic en el enlace para ver la colección
-[list] - Lista
-
-Traducción completa:
-[fromusername] Mensaje de correo electrónico de colección<br /><br /> 
-Mensaje: [message]<br /><br /> 
-Haga clic en el enlace para ver la colección: [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]
-
-De: [fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcontactadmin"]='Por favor, traducir: <br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[mensaje]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-[De] [fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[mensaje]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='[bienvenida]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[lista]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[lista]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Se ha asignado una solicitud de investigación a usted. Por favor, inicie sesión en ResourceSpace para revisar.<br /><br />
-[text_footer] = Este es un correo electrónico automático enviado desde ResourceSpace. Por favor, no responda a este correo electrónico.';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Su solicitud de investigación se ha completado. Los resultados se han agregado a la colección solicitada. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[mensaje]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[lista] <br />
-[detalles] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> 
-';
 $lang["all__footer"]='Desarrollado por <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Deje que nuestro equipo de recursos encuentre los recursos que necesita.';
 $lang["change_language__introtext"]='Por favor, seleccione su idioma a continuación.';
@@ -2241,15 +2145,6 @@ $lang["collection_download_too_large"]='Lo siento, esta colección es demasiado 
 $lang["all__passwordnewemailhtml"]='Por favor, haga clic en el siguiente enlace para establecer una nueva contraseña para su cuenta.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nombre de usuario: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Carga temporalmente no disponible.';
 $lang["disk_size_no_upload_explain"]='Debido a limitaciones de espacio, la carga ha sido temporalmente deshabilitada. Pedimos disculpas por cualquier inconveniente.';
-$lang["dash"]='Por favor, traducir: Dash.
-
-"Dash" puede tener diferentes significados en el contexto del software de gestión de activos digitales. A continuación, se presentan algunas posibles traducciones dependiendo del contexto:
-
-- Si se refiere al panel de control de ResourceSpace, la traducción podría ser "Tablero".
-- Si se refiere a la línea que separa los elementos en una lista o menú, la traducción podría ser "Guión".
-- Si se refiere a la criptomoneda, la traducción sería "Dash" (ya que es un nombre propio y no se traduce).
-
-Por favor, proporcione más contexto para obtener una traducción más precisa.';
 $lang["savethissearchtodash"]='Guardar en mosaico del panel.';
 $lang["createnewdashtile"]='Crear nuevo mosaico de panel.';
 $lang["specialdashtiles"]='Azulejos de guión especial.';
@@ -2311,7 +2206,7 @@ $lang["createdashtilemycontributions"]='Mis contribuciones (específicas del usu
 $lang["createdashtilehelpandadvice"]='Enlace de ayuda y consejos.';
 $lang["createdashtileuserupload"]='Subir archivo (específico del usuario)';
 $lang["tile_thmbs"]='Soltero/a';
-$lang["tile_multi"]='Multi - Multifunción (This translation assumes that "Multi" refers to a feature or capability of the software, such as "multi-select" or "multi-language support". If the context is different, please provide more information.)';
+$lang["tile_multi"]='Multifunción';
 $lang["tile_blank"]='Espacio en blanco.';
 $lang["tile_analytics"]='Análisis estadístico.';
 $lang["tile_ftxt"]='Solo texto.';
@@ -2528,7 +2423,7 @@ $lang["report-graph-by-pie"]='descomposición';
 $lang["report-graph-by-piegroup"]='por grupo de usuario';
 $lang["report-graph-by-pieresourcetype"]='por tipo de recurso';
 $lang["report-graph-by-line"]='con el tiempo';
-$lang["report-graph-by-summary"]='Por favor, traducir: resumen.';
+$lang["report-graph-by-summary"]='resumen.';
 $lang["update_report"]='Actualización de informe.';
 $lang["save_report"]='Guardar informe.';
 $lang["save_report_as"]='Guardar informe como...';
@@ -2698,17 +2593,6 @@ $lang["start"]='Comenzar';
 $lang["file_integrity_summary"]='Informe de integridad del archivo.';
 $lang["file_integrity_summary_failed"]='Los archivos de recursos han fallado en las comprobaciones de integridad o faltan. Por favor, siga el enlace para ver estos recursos y tomar las medidas necesarias, por ejemplo, restaurar los archivos desde la copia de seguridad.';
 $lang["file_integrity_fail_search"]='Fallas de integridad de archivo.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='Ver recursos sospechosos.';
 $lang["team_resource_integrity_fail_info"]='Recursos con archivos faltantes o posiblemente corruptos.';
 $lang["collection_copy_resources"]='Copiar recursos de la colección.';

@@ -19,7 +19,6 @@ $lang["frame_rate_resource_field"]='Keluaran Framerate';
 $lang["aspect_ratio_resource_field"]='Keluaran rasio aspek.';
 $lang["video-splice"]='Menggabungkan Video';
 $lang["video-splice-intro"]='Menggabungkan beberapa sumber video menjadi satu sumber video yang digabungkan. Seret dan lepas gambar mini di bawah ini untuk mengurutkan klip video.';
-$lang["action-splice"]='Memotong dan menggabungkan (potongan)';
 $lang["video_splice_order"]='Sumber daya video secara berurutan.';
 $lang["video_splice_select_video"]='Format video.';
 $lang["video_splice_select_resolution"]='Resolusi video.';

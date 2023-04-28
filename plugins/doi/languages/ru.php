@@ -48,7 +48,6 @@ $lang["doi_not_successfully_registered_pl"]='Не удалось зарегис�
 $lang["doi_reload"]='Перезагрузить.';
 $lang["doi_successfully_set"]='было установлено.';
 $lang["doi_not_successfully_set"]='Не было установлено.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where the word "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Ресурс(ы) уже имеет/имеют DOI.';
 $lang["doi_sum_not_yet_archived"]='Ресурс(ы) не отмечен(ы).';
 $lang["doi_sum_not_yet_archived_2"]='Его/их доступ еще не установлен на открытый.';

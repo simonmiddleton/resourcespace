@@ -378,10 +378,6 @@ $lang["emailthememessage"]="hat Ihnen eine Auswahl an Themen aus $applicationnam
 $lang["clicklinkviewthemes"]="Klicken Sie den untenstehenden Link an, um die Themen anzusehen.";
 $lang["clicklinkviewcollections"]="Klicken Sie den untenstehenden Link an, um die Kollektionen anzusehen.";
 
-# Lightbox
-$lang["lightbox-image"] = "Bild";
-$lang["lightbox-of"] = "von";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Neue Ressource erstellen";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Ressourcen-Typ";
@@ -1098,8 +1094,6 @@ $lang["never"]="Niemals";
  $lang["addnewcontent"]="Neuer Inhalt (Seite,Name)";
  $lang["hitcount"]="Zugriffszähler";
  $lang["downloads"]="Downloads";
-
- $lang["addremove"]="Hinzufügen/Entfernen";
 
 ##  Translations for standard log entries
  $lang["all_users"]="alle Benutzer";
@@ -1953,11 +1947,9 @@ $lang["property-table_reference"]='Tabellenreferenz';
 $lang["themeselector"]='Empfohlene Sammlungen';
 $lang["strip"]='Entfernen';
 $lang["striptitle"]='Ansicht ohne Details';
-$lang["perpage_option"]='Please provide more context. In which part of the software is this string used?';
 $lang["powered_by"]='Betrieben von';
 $lang["powered_by_resourcespace"]='Betrieben von ResourceSpace.';
 $lang["on"]='An:';
-$lang["off"]='Please provide more context or the full sentence where the word "Off" is used in ResourceSpace so I can provide an accurate translation.';
 $lang["seconds"]='Sekunden';
 $lang["filterbutton"]='Filtern';
 $lang["stopbutton"]='Anhalten.';
@@ -2210,7 +2202,7 @@ $lang["location-missing"]='Die folgenden Ressourcen haben keine Geolokationsdate
 $lang["maps-disabled"]='Deaktivierte Karten.';
 $lang["mapadd-introtext"]='Zoomen und schwenken Sie zur Kartenansicht des Interesses für diese Ressource und klicken Sie dann auf die Schaltfläche "Marker hinzufügen" unterhalb der Zoom-Steuerung auf der linken Seite der Karte und klicken Sie auf die Kartenposition, an der sich die Ressource befindet. Ändern Sie die Basiskarte mit der Schaltfläche "Karte" oben rechts auf der Karte. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche "Karte speichern" unten links auf der Karte.';
 $lang["mapadd2-introtext"]='Der blaue Marker zeigt den Standort der Ressource an, die durch Ziehen verschoben werden kann. Ändern Sie die Basiskarte mit der Schaltfläche "Karte" oben rechts. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche "Karte speichern" unten links.';
-$lang["marker"]='Marker (German translation: Marker)';
+$lang["marker"]='Marker';
 $lang["map_configuration"]='Suchergebnisse Karte';
 $lang["edit_map_introtext"]='Zoomen und schwenken Sie zur gewünschten Kartenansicht und klicken Sie dann auf die Karte, um den Standortmarker der Ressource zu lokalisieren. Speichern Sie die neueste Geolokalisierung mit der Schaltfläche "Speichern" und klicken Sie dann auf "Zurück zur Ressourcenbearbeitung oder Geolokalisierung der Sammlung", um zurückzukehren. Verwenden Sie die obere rechte Suchschaltfläche, um nach einem bestimmten Standort oder geografischen Merkmal zu suchen. Ändern Sie die Basiskarte mit der Schaltfläche "Kartenlayer" oben rechts. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche "Karte" unten links.';
 $lang["mapview"]='Karte';
@@ -2338,10 +2330,6 @@ $lang["csvExportResultsMetadataPersonal"]='Nur Daten aus Feldern einbeziehen, vo
 $lang["csvExportResultsMetadataAll"]='Schließe Daten aus allen zugänglichen Feldern ein, z.B. technische Metadaten und detaillierte Dateiinformationen.';
 $lang["csvAddMetadataCSVToArchive"]='Metadaten-CSV-Datei dem Archiv hinzufügen?';
 $lang["changessaved"]='Änderungen gespeichert.';
-$lang["kilobyte-symbol-binary"]='KiB stands for Kibibyte, which translates to Kibibyte in Deutsch.';
-$lang["megabyte-symbol-binary"]='MiB stands for "Mebibyte", which is a unit of digital information storage. In Deutsch, it would be "Mebibyte".';
-$lang["gigabyte-symbol-binary"]='GiB stands for "Gibibyte" and in Deutsch it is "Gibibyte".';
-$lang["terabyte-symbol-binary"]='TiB stands for "Tebibyte", which translates to "Tebibyte" in Deutsch.';
 $lang["save-conflict-error"]='Bearbeitungskonflikt. Bitte laden Sie die Seite neu.';
 $lang["save-conflict-multiple"]='Bearbeitungskonflikt. Bitte laden Sie die Seite neu.';
 $lang["save-conflict-title"]='Bearbeitungskonflikt';
@@ -2411,98 +2399,6 @@ $lang["property-orphaned"]='Verwaist';
 $lang["admin_field_deleted"]='Gelöschtes Feld.';
 $lang["action-move-to"]='Verschieben nach';
 $lang["delete_user_group_checkbox_alert_message"]='Bitte beachten Sie, dass diese Aktion auch alle Inhalte löschen wird, die für diese Benutzergruppe relevant waren. Es wurden %%RECORDSCOUNT%% Datensätze in "Inhalte verwalten" gefunden.';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] = [Textfußzeile]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[vonbenutzername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [Nachricht]<br /><br /> 
-[lang_clicklinkviewcollection] [Liste]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[Nachricht]: [message]<br /><br />
-[Klicken Sie auf den Link, um die Sammlung anzuzeigen] [list]<br /><br />';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[Nachricht]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
-$lang["all__emaillogindetails"]='[Willkommen]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [Benutzername] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[Benutzername] ([Benutzername] - [Benutzer-E-Mail])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[Name]<br /><br />
-[lang_descriptionofproject]:[Beschreibung]<br /><br />
-[lang_deadline]:[Frist]<br /><br />
-[lang_contacttelephone]:[Kontakt]<br /><br />
-[lang_finaluse]: [Endverwendung]<br /><br />
-[lang_shaperequired]: [Form]<br /><br />
-[lang_noresourcesrequired]: [Keine Ressourcen erforderlich]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[Liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[Liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Die Anfrage wurde einem Forscher zugewiesen.<br /><br />
-[text_footer] = Mit freundlichen Grüßen,';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Vielen Dank für Ihre Anfrage. Wir haben die benötigten Ressourcen in der Sammlung [collectionname] bereitgestellt. Bitte klicken Sie auf den folgenden Link, um die Sammlung anzuzeigen: <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[nachricht]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [Benutzername] <br />
-[Liste] <br />
-[Details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Angetrieben von <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["collection_download__write_metadata_on_download_label"]='Metadaten der Ressource in die heruntergeladenen Dateien einbetten? Wenn Sie dies aktivieren, wird Ihr Download langsamer.';
 $lang["collection_email__introtextthemeshare"]='Bitte füllen Sie das untenstehende Formular aus, um die vorgestellten Sammlungen in dieser vorgestellten Sammlungskategorie per E-Mail zu senden. Die Empfänger erhalten eine E-Mail mit Links zu jeder der vorgestellten Sammlungen.';
@@ -2543,7 +2439,6 @@ $lang["collection_download_too_large"]='Entschuldigung, diese Sammlung ist zu gr
 $lang["all__passwordnewemailhtml"]='Bitte klicken Sie auf den unten stehenden Link, um ein neues Passwort für Ihr Konto festzulegen.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Benutzername: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Das Hochladen ist vorübergehend nicht verfügbar.';
 $lang["disk_size_no_upload_explain"]='Aufgrund von Platzbeschränkungen ist das Hochladen vorübergehend deaktiviert. Wir entschuldigen uns für etwaige Unannehmlichkeiten.';
-$lang["dash"]='Please provide more context. "Dash" can have multiple meanings in English and the appropriate translation to Deutsch depends on the intended meaning in the context of digital asset management software.';
 $lang["savethissearchtodash"]='Speichern auf Dashboard-Kachel.';
 $lang["createnewdashtile"]='Neues Dashboard-Kachel erstellen.';
 $lang["specialdashtiles"]='Besondere Kacheln mit Bindestrich.';
@@ -2561,7 +2456,6 @@ $lang["dashtilestyle"]='Kachel-Design für das Dashboard';
 $lang["returntopreviouspage"]='Zurück zur vorherigen Seite.';
 $lang["showresourcecount"]='Anzahl der Ressourcen anzeigen?';
 $lang["tilebin"]='Entfernen';
-$lang["last"]='Please provide more context. "Last" can have different translations in Deutsch depending on the context.';
 $lang["dashtile"]='Dash-Kachel';
 $lang["manage_own_dash"]='Kann das eigene Dashboard verwalten.';
 $lang["manage_all_dash_h"]='Verwalten Sie Standard-Dashboards / alle Benutzerkacheln (Erfordert die Berechtigung "Kann Sammlungen als vorgestellte Sammlungen veröffentlichen").';
@@ -2806,7 +2700,7 @@ $lang["report-graph-by-pie"]='Zusammenbruch';
 $lang["report-graph-by-piegroup"]='nach Benutzergruppe';
 $lang["report-graph-by-pieresourcetype"]='nach Ressourcentyp sortiert';
 $lang["report-graph-by-line"]='im Laufe der Zeit';
-$lang["report-graph-by-summary"]='Zusammenfassung';
+$lang["report-graph-by-summary"]='zusammenfassung';
 $lang["update_report"]='Aktualisierungsbericht';
 $lang["save_report"]='Bericht speichern.';
 $lang["save_report_as"]='Bericht speichern als...';

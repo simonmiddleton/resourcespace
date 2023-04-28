@@ -225,7 +225,6 @@ $lang["largethumbs"]='Mare.';
 $lang["largethumbstitle"]='Miniaturi mari.';
 $lang["smallthumbs"]='Mic.';
 $lang["smallthumbstitle"]='Miniaturi mici.';
-$lang["strip"]='Vă rugăm să precizați contextul în care este utilizat termenul "Strip" în cadrul software-ului ResourceSpace. Există mai multe sensuri ale cuvântului "Strip" în limba engleză, iar traducerea corectă depinde de contextul în care este utilizat.';
 $lang["striptitle"]='Vizualizare cu bandă.';
 $lang["list"]='Lista.';
 $lang["listtitle"]='Vizualizare listă.';
@@ -434,7 +433,6 @@ $lang["page_collections_message"]='Continuarea va anula selecția colecțiilor m
 $lang["delete_all_selected"]='Ștergeți toate elementele selectate.';
 $lang["range_no_start_header"]='Eroare de interval.';
 $lang["range_no_start"]='Nu se poate încheia intervalul fără un început. Vă rugăm să eliberați tasta Shift.';
-$lang["lightbox-image"]='Imagine.';
 $lang["createnewresource"]='Creați o resursă nouă.';
 $lang["resourcetype"]='Tip resursă.';
 $lang["treeobjecttype-resource_type"]='Tip resursă.';
@@ -1810,7 +1808,6 @@ $lang["saved"]='Salvat.';
 $lang["changessaved"]='Modificările au fost salvate.';
 $lang["resourceids"]='Identificator(i) de resursă(e)';
 $lang["warningrequestapprovalfield"]='Atenție - ID-ul resursei % - vă rugăm să luați în considerare următoarele aspecte înainte de a aproba.';
-$lang["yyyy-mm-dd"]='YYYY-MM-DD se referă la formatul de dată an-lună-zi, de exemplu 2022-01-31.';
 $lang["resources-with-requeststatus0-0"]='(0 în așteptare)';
 $lang["resources-with-requeststatus0-1"]='(1 în așteptare)';
 $lang["resources-with-requeststatus0-2"]='(%număr în așteptare)';
@@ -1818,8 +1815,6 @@ $lang["researches-with-requeststatus0-0"]='(0 neatribuite)';
 $lang["researches-with-requeststatus0-1"]='(1 neatribuit)';
 $lang["researches-with-requeststatus0-2"]='(%number neatribuite)';
 $lang["megabyte-symbol"]='MB (megabyte) - megaoctet.';
-$lang["megabyte-symbol-binary"]='MiB se referă la mebibyte, o unitate de măsură a capacității de stocare a datelor, echivalentă cu 1.048.576 de bytes.';
-$lang["terabyte-symbol-binary"]='TiB stands for "tebibyte" and in Limba română it is translated as "tebibaiți".';
 $lang["upload_files"]='Încărcați fișiere.';
 $lang["upload_files-to_collection"]='Încărcați fișiere (în colecția \'%collection\')';
 $lang["ascending"]='Crescător.';
@@ -1948,7 +1943,7 @@ $lang["internal_share_grant_access_collection"]='Acordați acces deschis utiliza
 $lang["merge_filename_title_question"]='Folosește numele fișierului în titlu (dacă nu este găsit niciun titlu încorporat)?';
 $lang["merge_filename_title_do_not_use"]='Nu utilizați.';
 $lang["merge_filename_title_replace"]='Înlocuire';
-$lang["merge_filename_title_prefix"]='Prefix (in ResourceSpace context): Prefix.';
+$lang["merge_filename_title_prefix"]='Prefix';
 $lang["merge_filename_title_suffix"]='Vă rugăm să traduceți: Sufix.';
 $lang["merge_filename_title_include_extensions"]='Includere extensii?';
 $lang["send_collection_to_admin_emailedcollectionname"]='Resurse trimise de utilizatori.';
@@ -2053,90 +2048,6 @@ $lang["action-move-down"]='Mută în jos.';
 $lang["action-move-to"]='Mută în';
 $lang["delete_user_group_checkbox_alert_message"]='Vă rugăm să rețineți că această acțiune va șterge și tot conținutul text care era relevant pentru acest grup de utilizatori. Au fost găsite %%RECORDSCOUNT%% înregistrări în Gestionarea conținutului.';
 $lang["about__about"]='Textul tău despre se introduce aici.';
-$lang["all__emaillogindetails"]='[bun venit]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-This string seems to be incomplete or duplicated. Please provide more context or clarify the intended meaning.';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-This string is used to display a list of resources submitted by a user. It includes a link to view all pending resources submitted by the user. The [url] tag is replaced with the actual URL. The [text_footer] tag is replaced with the footer text.';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] - Cererea de cercetare a fost atribuită cu succes utilizatorului selectat. Vă rugăm să verificați starea cererii în pagina dvs. de profil.<br /><br />
-[text_footer] - Aceasta este o notificare automată generată de ResourceSpace. Vă rugăm să nu răspundeți la acest mesaj.';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Cererea dvs. de cercetare a fost finalizată cu succes. Veți primi un e-mail cu un link către colecția de resurse solicitată. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-Apăsați pe acest link pentru a vizualiza colecția: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_ți-a-trimis-un-resursă-pe-email]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_apasă-pentru-a-vedea-resursa]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username]<br />
-[list]<br />
-[details]<br /><br />
-[lang_clicktoviewresource]<br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [nume_utilizator]<br />
-[list]<br />
-[details]<br /><br />
-[lang_clicktoviewresource]<br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Funcționează cu ajutorul <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Permiteți echipei noastre de resurse să găsească resursele de care aveți nevoie.';
 $lang["change_language__introtext"]='Vă rugăm să selectați limba dumneavoastră mai jos.';
@@ -2219,13 +2130,6 @@ $lang["collection_download_too_large"]='Ne pare rău, această colecție este pr
 $lang["all__passwordnewemailhtml"]='Vă rugăm să faceți clic pe link-ul de mai jos pentru a seta o nouă parolă pentru contul dvs.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Nume de utilizator: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Încărcarea este temporar indisponibilă.';
 $lang["disk_size_no_upload_explain"]='Din cauza restricțiilor de spațiu, încărcarea a fost dezactivată temporar. Ne cerem scuze pentru orice neplăcere.';
-$lang["dash"]='Vă rog să traduceți: Dash
-
-"Dash" poate avea mai multe sensuri în contextul ResourceSpace, așa că vă rog să alegeți varianta potrivită:
-
-- Dacă se referă la "Dashboard", adică panoul de control al utilizatorului, atunci traducerea potrivită ar fi "Tablou de bord".
-- Dacă se referă la "dash" ca semn de punctuație (liniuță scurtă), atunci traducerea potrivită ar fi "liniuță".
-- Dacă se referă la "dash" ca o acțiune de ștergere rapidă a unui element dintr-o colecție, atunci traducerea potrivită ar fi "ștergere rapidă".';
 $lang["savethissearchtodash"]='Salvează pe panoul de bord.';
 $lang["createnewdashtile"]='Creați o nouă piesă de bord.';
 $lang["specialdashtiles"]='Plăci speciale cu linii de despărțire.';

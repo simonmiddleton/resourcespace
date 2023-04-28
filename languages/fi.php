@@ -351,10 +351,6 @@ $lang["selectcollection"]="Valitse kokoelma";
 $lang["total"]="Kaikki";
 $lang["ownedbyyou"]="sinun omistamasi";
 
-# Lightbox
-$lang["lightbox-image"] = "Kuva";
-$lang["lightbox-of"] = "aiheesta";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Luo uusi resurssi";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Resurssityyppi";
@@ -1035,8 +1031,6 @@ $lang["addnewcontent"]="Uusi sisältö (sivu, nimi)";
 $lang["hitcount"]="Osumia";
 $lang["downloads"]="Latauksia";
 
-$lang["addremove"]="";
-
 ##  Translations for standard log entries
 $lang["all_users"]="kaikki käyttäjät";
 $lang["new_resource"]="uusi resurssi";
@@ -1622,11 +1616,9 @@ $lang["smallthumbstitle"]='Pienet esikatselukuvat.';
 $lang["strip"]='Poista.';
 $lang["striptitle"]='Poista näkymä.';
 $lang["listtitle"]='Luettelonäkymä';
-$lang["perpage_option"]='Sivua kohti ? (referring to the number of items displayed on a single page)';
 $lang["powered_by"]='Käyttövoimana';
 $lang["powered_by_resourcespace"]='Käyttää ResourceSpace-ohjelmistoa.';
 $lang["on"]='Päällä.';
-$lang["off"]='Ei päällä / Pois päältä';
 $lang["seconds"]='sekunnit';
 $lang["pause"]='Tauko.';
 $lang["filterbutton"]='Suodatin';
@@ -2068,8 +2060,6 @@ $lang["csvExportResultsMetadataPersonal"]='Vain sisällytä tietoja kentistä, j
 $lang["csvExportResultsMetadataAll"]='Sisällytä kaikki saatavilla olevat tiedot, kuten tekninen metadata ja yksityiskohtaiset tiedostotiedot.';
 $lang["csvAddMetadataCSVToArchive"]='Sisällytetäänkö metatietojen CSV-tiedosto arkistoon?';
 $lang["changessaved"]='Muutokset tallennettu.';
-$lang["kilobyte-symbol-binary"]='KiB is a unit of digital information storage and it stands for "kibibyte". In Suomi, it would be translated as "kibitavu".';
-$lang["gigabyte-symbol-binary"]='GiB stands for "gibibyte" which translates to "gibitavu" in Suomi.';
 $lang["save-conflict-error"]='Muokkauskonflikti. Päivitä sivu uudelleen.';
 $lang["save-conflict-multiple"]='Muokkauskonflikti. Päivitä sivu uudelleen.';
 $lang["save-conflict-title"]='Muokkauskonflikti.';
@@ -2287,93 +2277,6 @@ $lang["action-move-down"]='Siirrä alaspäin.';
 $lang["action-move-to"]='Siirrä kohteeseen';
 $lang["delete_user_group_checkbox_alert_message"]='Huomioithan, että tämä toiminto poistaa myös kaiken sisältötekstin, joka liittyy tähän käyttäjäryhmään. Hallitse sisältöä -osiossa on löydetty %%RECORDSCOUNT%% tietuetta.';
 $lang["about__about"]='Sinun "Tietoja meistä" -tekstisi tulee tähän.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message]: [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_sähköpostikokoelmaviestintä] <br /><br /> 
-[lang_viesti]: [viesti]<br /><br /> 
-[lang_napsautalinkkiänäyttääksesi] [lista]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_sähköpostikokoelmaviestiulkoinen] <br /><br />
-[lang_viesti]: [viesti]<br /><br />
-[lang_napsautalinkkiänäkymäkokoelma] [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[viesti]<br /><br /><a href="[url]">[upotetun_kuvan_esikatselu]</a><br /><br />[teksti_alatunniste]';
-$lang["all__emaillogindetails"]='[tervetuloa]<br /><br />
-[lang_uudetkirjautumistiedot]<br /><br />
-[lang_käyttäjänimi] : [käyttäjänimi] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
-$lang["all__emailnewresearchrequestwaiting"]='[käyttäjänimi] ([käyttäjän koko nimi] - [käyttäjän sähköposti])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[nimi]<br /><br />
-[lang_descriptionofproject]:[kuvaus]<br /><br />
-[lang_deadline]:[määräaika]<br /><br />
-[lang_contacttelephone]:[yhteystiedot]<br /><br />
-[lang_finaluse]: [loppukäyttö]<br /><br />
-[lang_shaperequired]: [muoto]<br /><br />
-[lang_noresourcesrequired]: [ei vaadita resursseja]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Käyttäjän hyväksymät resurssit
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[luettelo]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[luettelo]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Tutkimuspyyntö on nyt määritetty sinulle.<br /><br />
-[text_footer] = Tämä viesti on lähetetty ResourceSpacesta.';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] = Tutkimuspyyntö on suoritettu onnistuneesti. Löydät pyyntöön liittyvät resurssit alla olevasta kokoelmasta.<br /><br />
-[lang_clicklinkviewcollection] = Klikkaa alla olevaa linkkiä tarkastellaksesi kokoelmaa.<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Tämä viesti on lähetetty automaattisesti. Älä vastaa tähän viestiin.';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[viesti]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [käyttäjänimi] <br />
-[lista] <br />
-[tiedot]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Käyttää <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace avoimen lähdekoodin digitaalisen aineistonhallinnan ohjelmistoa</a>';
 $lang["all__researchrequest"]='Anna meidän resurssitiimimme löytää tarvitsemasi resurssit.';
 $lang["change_language__introtext"]='Valitse kieli alla olevasta valikosta.';
@@ -2462,7 +2365,6 @@ $lang["collection_download_too_large"]='Valitettavasti tämä kokoelma on liian 
 $lang["all__passwordnewemailhtml"]='Ole hyvä ja klikkaa alla olevaa linkkiä asettaaksesi uuden salasanan tilillesi.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />käyttäjänimi: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Lataaminen ei ole tilapäisesti käytettävissä.';
 $lang["disk_size_no_upload_explain"]='Tilapäisesti tiedostojen lataaminen on estetty tilanpuutteen vuoksi. Pahoittelemme aiheutunutta vaivaa.';
-$lang["dash"]='Käännäthän: Dash';
 $lang["savethissearchtodash"]='Tallenna kojetaululaattaan';
 $lang["createnewdashtile"]='Luo uusi kojelaatta.';
 $lang["specialdashtiles"]='Erityiset viivapalat.';
@@ -2524,7 +2426,7 @@ $lang["createdashtilemycontributions"]='Minun panokseni (käyttäjäkohtainen)';
 $lang["createdashtilehelpandadvice"]='Ohje- ja neuvontalinkki.';
 $lang["createdashtileuserupload"]='Lataa kuvake (käyttäjäkohtainen)';
 $lang["tile_thmbs"]='Yksittäinen.';
-$lang["tile_multi"]='Use "Monipuolinen" to translate "Multi" in the context of ResourceSpace.';
+$lang["tile_multi"]='Monipuolinen';
 $lang["tile_blank"]='Tyhjä.';
 $lang["tile_analytics"]='Analytiikka.';
 $lang["tile_ftxt"]='Vain teksti.';
@@ -2736,11 +2638,11 @@ $lang["new_report"]='Uusi raportti.';
 $lang["edit_report"]='Muokkaa raporttia.';
 $lang["all_activity"]='Kaikki toiminta';
 $lang["all_resource_types"]='Kaikki resurssityypit.';
-$lang["report-graph-by-pie"]='Translation: hajoaminen';
+$lang["report-graph-by-pie"]='Hajoaminen';
 $lang["report-graph-by-piegroup"]='käyttäjäryhmän mukaan';
 $lang["report-graph-by-pieresourcetype"]='resurssityypin mukaan';
 $lang["report-graph-by-line"]='aikaa myöten';
-$lang["report-graph-by-summary"]='Yhteenveto';
+$lang["report-graph-by-summary"]='yhteenveto';
 $lang["update_report"]='Päivitä raportti.';
 $lang["save_report"]='Tallenna raportti.';
 $lang["save_report_as"]='Tallenna raportti nimellä...';
@@ -2910,25 +2812,6 @@ $lang["start"]='Aloita';
 $lang["file_integrity_summary"]='Tiedoston eheyden raportti.';
 $lang["file_integrity_summary_failed"]='Resurssitiedostojen eheys tarkistus epäonnistui tai tiedostoja puuttuu. Ole hyvä ja seuraa linkkiä nähdäksesi nämä resurssit ja toimi tarvittaessa, esimerkiksi palauttamalla tiedostot varmuuskopiosta.';
 $lang["file_integrity_fail_search"]='Tiedoston eheysvirhe.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-The context of these strings is unclear, so I cannot provide a translation.';
 $lang["team_resource_integrity_fail"]='Näytä epäilyttävät resurssit.';
 $lang["team_resource_integrity_fail_info"]='Resurssit, joissa puuttuu tai mahdollisesti on vioittuneita tiedostoja.';
 $lang["collection_copy_resources"]='Kopioi kokoelman resurssit.';
