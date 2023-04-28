@@ -248,7 +248,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
         foreach($refs as $ref)
             {
             $resource = get_resource_data($ref);
-            if(!is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
+            if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
                 {
                 $return[$ref] = "";
                 continue;
