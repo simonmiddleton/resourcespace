@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Polje za predložene ključne riječi.';
 $lang["google_vision_landmarks_field"]='Polje za znamenitosti.';
 $lang["google_vision_text_field"]='Polje za izvučeni tekst.';
 $lang["google_vision_logo_field"]='Polje za otkrivanje popularnih logotipa.';
-$lang["google_vision_api"]='Google Vision API -> Google Vision API';
 $lang["google_vision_restypes"]='Omogućeni tipovi resursa.';
 $lang["google_vision_features"]='Omogućeno otkrivanje značajki.';
 $lang["google_vision_autotitle"]='Automatski postavite naslov na ključnu riječ s najvišim rangom.';

@@ -5,7 +5,6 @@ $lang["embed"]='Incorporer (or Intégrer)';
 $lang["embedslideshow_minimise"]='Réduire la diapositive.';
 $lang["embedslideshow_maximise"]='Maximiser le diaporama.';
 $lang["embedslideshow_size"]='Taille du diaporama ?';
-$lang["sizename_pixels"]='%name (%pixels pixels) translates to %name (%pixels pixels) in French.';
 $lang["embedslideshow_transitiontime"]='Durée de la diapositive ?';
 $lang["embedslideshow"]='Incorporer le diaporama';
 $lang["embedslideshow_action_description"]='Ceci va créer une clé de partage externe et générer un bloc HTML correspondant qui peut être inséré dans un site web externe.';

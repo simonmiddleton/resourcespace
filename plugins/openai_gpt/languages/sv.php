@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["openai_gpt_title"]='OpenAI integration: OpenAI integration';
+$lang["openai_gpt_title"]='OpenAI integration';
 $lang["openai_gpt_intro"]='Lägger till metadata som genereras genom att skicka befintliga data till OpenAI API med en anpassningsbar prompt. Hämta din API-nyckel från <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a><br />Se https://beta.openai.com/docs/introduction för mer detaljerad information.';
 $lang["property-openai_gpt_prompt"]='GPT-prompt.';
 $lang["property-openai_gpt_input_field"]='GPT Indatafält';

@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Felt for foreslåtte nøkkelord.';
 $lang["google_vision_landmarks_field"]='Felt for landemerker.';
 $lang["google_vision_text_field"]='Felt for uttrukket tekst.';
 $lang["google_vision_logo_field"]='Felt for oppdagede populære logoer.';
-$lang["google_vision_api"]='Google Vision API: Google Vision API';
 $lang["google_vision_restypes"]='Aktiverte ressurstype.';
 $lang["google_vision_features"]='Aktivert funksjonsdeteksjon.';
 $lang["google_vision_autotitle"]='Automatisk sett tittelen til nøkkelordet med høyest rangering.';

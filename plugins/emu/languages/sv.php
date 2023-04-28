@@ -26,7 +26,6 @@ $lang["emu_module"]='EMu-modul';
 $lang["emu_column_name"]='EMu modul kolumn';
 $lang["emu_rs_field"]='ResourceSpace-fält';
 $lang["emu_add_mapping"]='Lägg till kartläggning.';
-$lang["emu_upload_emu_field_label"]='EMu IRN can be translated to EMu IRN (EMu Identifier Record Number) as it is an acronym and does not require translation. EMu is a collections management software used by museums, archives, and other cultural institutions to manage their collections, and IRN is a unique identifier assigned to each record in the system.';
 $lang["emu_confirm_upload_nodata"]='Vänligen markera rutan för att bekräfta att du vill fortsätta med uppladdningen.';
 $lang["emu_test_script_title"]='Testa/ Kör skript.';
 $lang["emu_run_script"]='Bearbeta.';

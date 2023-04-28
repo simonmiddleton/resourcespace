@@ -26,7 +26,6 @@ $lang["emu_module"]='EMu-modul';
 $lang["emu_column_name"]='EMu-modul kolonne.';
 $lang["emu_rs_field"]='ResourceSpace-felt';
 $lang["emu_add_mapping"]='Legg til kartlegging.';
-$lang["emu_upload_emu_field_label"]='EMu IRN can be translated to "EMu identifikasjonsnummer".';
 $lang["emu_confirm_upload_nodata"]='Vennligst sjekk boksen for å bekrefte at du ønsker å fortsette opplastingen.';
 $lang["emu_test_script_title"]='Test/Kjør skript';
 $lang["emu_run_script"]='Behandling';

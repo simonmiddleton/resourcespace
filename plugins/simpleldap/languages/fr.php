@@ -6,15 +6,6 @@ $lang["ldapserver"]='Serveur LDAP';
 $lang["ldap_encoding"]='Encodage de données reçu depuis le serveur LDAP (défini si ce n\'est pas de l\'UTF-8 et que les données ne sont pas affichées correctement - par exemple le nom d\'affichage).';
 $lang["domain"]='Domaine AD, si plusieurs séparés par des points-virgules.';
 $lang["emailsuffix"]='Suffixe de courriel - utilisé si aucune donnée d\'attribut de courriel n\'est trouvée.';
-$lang["port"]='Port can have multiple meanings in the context of digital asset management software. Here are some possible translations:
-
-- Port (noun): Port (in French) can refer to a port number, which is a numerical identifier used to specify a network service in a computer. In ResourceSpace, you may need to configure ports for certain features, such as the search engine or the file storage. Port (port en français) peut se référer à un numéro de port, qui est un identificateur numérique utilisé pour spécifier un service réseau dans un ordinateur. Dans ResourceSpace, vous devrez peut-être configurer des ports pour certaines fonctionnalités, telles que le moteur de recherche ou le stockage de fichiers.
-
-- Port (verb): Port can also be a verb that means to transfer or move data from one system to another. In ResourceSpace, you can port resources from one collection to another, or from one user to another. Port peut également être un verbe qui signifie transférer ou déplacer des données d\'un système à un autre. Dans ResourceSpace, vous pouvez porter des ressources d\'une collection à une autre, ou d\'un utilisateur à un autre.
-
-- Port (noun): Port can also refer to a physical connection point on a computer or a device, such as a USB port or an Ethernet port. In ResourceSpace, you may need to connect external devices to upload or download resources. Port peut également faire référence à un point de connexion physique sur un ordinateur ou un périphérique, tel qu\'un port USB ou un port Ethernet. Dans ResourceSpace, vous devrez peut-être connecter des périphériques externes pour télécharger ou télécharger des ressources.
-
-Please let me know if you need a more specific translation based on the context of your sentence.';
 $lang["basedn"]='Veuillez traduire : Base DN. Si les utilisateurs sont dans plusieurs DN, séparez-les avec des points-virgules. ';
 $lang["loginfield"]='Champ de connexion.';
 $lang["usersuffix"]='Suffixe de l\'utilisateur (un point sera ajouté devant le suffixe)';
@@ -47,10 +38,10 @@ $lang["simpleldap_bind"]='Se connecter au serveur LDAP';
 $lang["simpleldap_username"]='Nom d\'utilisateur / DN de l\'utilisateur';
 $lang["simpleldap_password"]='Mot de passe.';
 $lang["simpleldap_test_auth"]='Vérification de l\'authentification de test.';
-$lang["simpleldap_domain"]='Domain can be translated to "Domaine" in French. In the context of digital asset management software, it could refer to the domain name of a website or the domain of a specific collection or group within the software.';
+$lang["simpleldap_domain"]='Domaine';
 $lang["simpleldap_displayname"]='Nom d\'affichage';
 $lang["simpleldap_memberof"]='Membre de';
-$lang["simpleldap_test_title"]='Test (French): Test';
+$lang["simpleldap_test_title"]='Test';
 $lang["simpleldap_result"]='Résultat';
 $lang["simpleldap_retrieve_user"]='Récupérer les détails de l\'utilisateur.';
 $lang["simpleldap_externsion_required"]='Le module PHP LDAP doit être activé pour que ce plugin fonctionne.';

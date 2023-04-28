@@ -5,9 +5,6 @@ $lang["embed"]='Incorporar';
 $lang["embedslideshow_minimise"]='&minus; minimizar apresentação de slides';
 $lang["embedslideshow_maximise"]='Maximizar apresentação de slides.';
 $lang["embedslideshow_size"]='Tamanho da apresentação de slides?';
-$lang["sizename_pixels"]='Por favor, traduza: %name (%pixels pixels)
-
-%name (%pixels pixels) translates to %name (%pixels pixels) in Português. There is no need to translate this string as it is already in a format that can be easily understood by Portuguese speakers.';
 $lang["embedslideshow_transitiontime"]='Duração do slide?';
 $lang["embedslideshow"]='Incorporar apresentação de slides.';
 $lang["embedslideshow_action_description"]='Isto irá criar uma chave de compartilhamento externo e gerar um bloco correspondente de HTML que pode ser inserido em um site externo.';

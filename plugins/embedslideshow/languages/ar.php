@@ -5,7 +5,6 @@ $lang["embed"]='تضمين';
 $lang["embedslideshow_minimise"]='تصغير عرض الشرائح.';
 $lang["embedslideshow_maximise"]='تكبير عرض الشرائح إلى الحد الأقصى';
 $lang["embedslideshow_size"]='حجم عرض الشرائح؟';
-$lang["sizename_pixels"]='الاسم (%بكسل بيكسل)';
 $lang["embedslideshow_transitiontime"]='المدة الزمنية للشريحة؟';
 $lang["embedslideshow"]='تضمين عرض الشرائح';
 $lang["embedslideshow_action_description"]='سيتم إنشاء مفتاح مشاركة خارجي وإنشاء كتلة HTML مقابلة يمكن إدراجها في موقع ويب خارجي.';

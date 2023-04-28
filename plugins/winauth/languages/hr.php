@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Popis dopuštenih Windows domena (odvojenih zarezom). 
 $lang["winauth_use_win_login"]='Prijava korištenjem Windows autentifikacije.';
 $lang["winauth_nouser"]='Vaš račun nije omogućen u sustavu. Molimo zatražite račun ili kontaktirajte svog administratora.';
 $lang["winauth_prefer_normal"]='Preferiraj standardne ResourceSpace prijave. Ako je ovo istinito, korisnici će se preusmjeriti na stranicu za prijavu gdje će biti opcija za korištenje Windows autentifikacije.';
-$lang["winauth_test"]='Test (Izrada probnog primjerka)';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Prijavljeni ste kao: [korisničko ime]';
 $lang["winauth_not_logged_in"]='Niste prijavljeni ili vaš web poslužitelj nije ispravno konfiguriran.';

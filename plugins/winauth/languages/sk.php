@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Zoznam povolených domén Windows (oddelených čiarko
 $lang["winauth_use_win_login"]='Prihlásiť sa pomocou overenia Windows.';
 $lang["winauth_nouser"]='Váš účet nie je povolený v systéme. Prosím, požiadajte o vytvorenie účtu alebo kontaktujte svojho správcu.';
 $lang["winauth_prefer_normal"]='Uprednostnite štandardné prihlasovanie do ResourceSpace. Ak je to pravda, používatelia budú automaticky presmerovaní na prihlasovaciu stránku, kde bude možnosť použiť Windows autentifikáciu.';
-$lang["winauth_test"]='Test (Skúška)';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Ste prihlásený ako: [username]';
 $lang["winauth_not_logged_in"]='Nie ste prihlásený, alebo váš webový server nie je správne nakonfigurovaný.';

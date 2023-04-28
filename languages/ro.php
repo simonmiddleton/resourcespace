@@ -220,7 +220,6 @@ $lang["anymonth"]='Orice lună.';
 $lang["anyday"]='Orice zi.';
 $lang["anycountry"]='Orice țară.';
 $lang["resultsdisplay"]='Afișare rezultate.';
-$lang["xlthumbs"]='Verry mare (literally "very large")';
 $lang["xlthumbstitle"]='Miniaturi extra mari.';
 $lang["largethumbs"]='Mare.';
 $lang["largethumbstitle"]='Miniaturi mari.';
@@ -530,14 +529,6 @@ $lang["preview"]='Previzualizare';
 $lang["previewithsizename"]='Previzualizare %sizename';
 $lang["fullscreenpreview"]='Previzualizare pe ecran complet.';
 $lang["originalfileoftype"]='Fișierul original %EXTENSION';
-$lang["cell-fileoftype"]='Extensia %EXTENSION a fișierului.';
-$lang["field-fileextension"]='Vă rugăm să traduceți: %EXTENSION
-
-%EXTENSION se referă la extensia unui fișier, de exemplu .jpg, .pdf, .docx, etc.';
-$lang["fileextension-inside-brackets"]='[%EXTENSION] se traduce ca fiind Extensie.';
-$lang["fileextension"]='Vă rugăm să traduceți: %EXTENSION
-
-%EXTENSION se referă la extensia unui fișier, de exemplu .jpg, .pdf, .docx, etc.';
 $lang["mp3_preview_file"]='Fișier de previzualizare MP3.';
 $lang["log"]='Jurnal de activitate';
 $lang["resourcedetails"]='Detalii resursă.';
@@ -741,23 +732,8 @@ $lang["researchrequestcompletemessage"]='Cererea ta de cercetare este completă 
 $lang["researchrequestcomplete"]='Cererea de cercetare a fost finalizată.';
 $lang["researchrequest_custom_field_required"]='Câmpul personalizat \'%field\' este obligatoriu și lipsește.';
 $lang["selectgroupuser"]='Selectați grupul/utilizatorul...';
-$lang["select"]='Select... can have different meanings depending on the context. Here are some possible translations:
-
-- If it refers to selecting an option from a dropdown menu or a list, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting one or more items from a group of items, it can be translated as "Selectați..." or "Bifați...".
-- If it refers to selecting a resource or a collection in ResourceSpace, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a user or a group in ResourceSpace, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a workflow or a download option in ResourceSpace, it can be translated as "Selectați..." or "Alegeți...".
-
-Please provide more context if you need a more specific translation.';
-$lang["selectloading"]='Select... can have different meanings depending on the context. Here are some possible translations:
-
-- If it refers to selecting a resource or a group of resources, it can be translated as "Selectați..." or "Selectați resursele...".
-- If it refers to selecting an option from a dropdown menu, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a language or a region, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a date or a time, it can be translated as "Selectați..." or "Alegeți...".
-
-If you provide more context, I can give you a more accurate translation.';
+$lang["select"]='Selectați...';
+$lang["selectloading"]='Selectați....';
 $lang["add"]='Adăugare';
 $lang["create"]='Creați.';
 $lang["group"]='Grup.';
@@ -843,7 +819,6 @@ $lang["contributedby"]='Contribuit de';
 $lang["format"]='Vă rugăm să traduceți: Format
 
 Formatul';
-$lang["notavailableshort"]='N/A can be translated as "Nedeterminat" or "Indisponibil" depending on the context.';
 $lang["allmonths"]='Toate lunile.';
 $lang["allgroups"]='Toate grupurile.';
 $lang["status-ok"]='OK - Acordat / În regulă.';
@@ -870,7 +845,7 @@ $lang["status-note"]='NOTĂ';
 $lang["action-changelanguage"]='Schimbă limba.';
 $lang["loading"]='Se încarcă...';
 $lang["disable_languages"]='Dezactivați opțiunile de selecție a limbii.';
-$lang["import_export"]='Import/Export - Importare/Exportare';
+$lang["import_export"]='Importare/Exportare';
 $lang["import"]='Importare';
 $lang["export"]='Exportare';
 $lang["origin"]='Origine';
@@ -1429,13 +1404,10 @@ $lang["map_esriterrain"]='Teren.';
 $lang["map_esrirelief"]='Relief umbrit.';
 $lang["map_esriphysical"]='Fizic.';
 $lang["map_esriocean"]='Ocean = Ocean';
-$lang["map_esrinatgeo"]='National Geographic - Geografie Națională';
 $lang["map_esrigray"]='Pânză gri.';
 $lang["map_nasagibscolor"]='Imagistica color Modis/Terra.';
 $lang["map_nasagibsfalsecolor"]='Imaginile False Color Modis/Terra.';
 $lang["map_nasagibsnight"]='Imagistica de noapte.';
-$lang["map_mapbox_group"]='Mapbox - HărțiBox';
-$lang["map_mapboxid"]='ID poate fi tradus ca "ID-ul" sau "identificatorul".';
 $lang["map_mapboxtoken"]='Token de acces.';
 $lang["map_mapbox"]='Hartă implicită.';
 $lang["map_usgs_group"]='Harta Națională.';
@@ -1480,7 +1452,6 @@ $lang["exiftoolnotfound"]='Nu s-a putut găsi Exiftool.';
 $lang["existing_tags"]='Etichete Exiftool existente.';
 $lang["new_tags"]='Noi etichete Exiftool (care vor fi adăugate la descărcare)';
 $lang["date_of_download"]='Data descărcării.';
-$lang["field_ref_and_name"]='%ref% - %name% se traduce ca %ref% - %name%.';
 $lang["metadata-report-fits_section"]='Etichetele FITS mapate.';
 $lang["indicateusage"]='Vă rugăm să descrieți utilizarea planificată pentru acest resursă.';
 $lang["usage"]='Utilizare';
@@ -1862,7 +1833,6 @@ $lang["save-conflict-title"]='Conflict de editare.';
 $lang["theme_home_promote"]='Promovați pe pagina principală?';
 $lang["theme_home_page_text"]='Textul de pe pagina principală.';
 $lang["theme_home_page_image"]='Imaginea paginii principale.';
-$lang["ref-title"]='%ref - %title se traduce ca %ref - %titlu.';
 $lang["error-pageload"]='Ne pare rău, a apărut o eroare la încărcarea acestei pagini. Dacă efectuați o căutare, încercați să rafinați interogarea de căutare. Dacă problema persistă, vă rugăm să contactați administratorul sistemului.';
 $lang["copy-field"]='Vă rugăm să traduceți: Copiere câmp.';
 $lang["copy-to-resource-type"]='Copiază în tipul de resursă.';
@@ -1981,17 +1951,6 @@ $lang["merge_filename_title_replace"]='Înlocuire';
 $lang["merge_filename_title_prefix"]='Prefix (in ResourceSpace context): Prefix.';
 $lang["merge_filename_title_suffix"]='Vă rugăm să traduceți: Sufix.';
 $lang["merge_filename_title_include_extensions"]='Includere extensii?';
-$lang["merge_filename_title_spacer"]='Vă rugăm să traduceți: Spacer
-
-Iată câteva opțiuni posibile pentru traducerea termenului "Spacer" în limba română, în funcție de contextul în care este utilizat în software-ul ResourceSpace:
-
-- Distanțier
-- Element de separare
-- Spațiator
-- Element de umplere
-- Element de golire
-
-Vă rugăm să oferiți mai multe informații despre contextul în care este utilizat termenul pentru a putea oferi o traducere mai precisă.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Resurse trimise de utilizatori.';
 $lang["send_collection_to_admin_emailsubject"]='Colectie incarcata de';
 $lang["send_collection_to_admin_usercontributedcollection"]='Încărcate aceste resurse ca o colecție întreagă.';
@@ -2087,7 +2046,7 @@ $lang["show_resources"]='Afișează resursele.';
 $lang["team_user_contributions"]='Contribuții.';
 $lang["team_user_view_contributions"]='Vizualizare contribuții.';
 $lang["action-title_apply"]='Aplică.';
-$lang["property-orphaned"]='Fără părinți (literally) / Orfan (commonly used)';
+$lang["property-orphaned"]='Orfan';
 $lang["admin_field_deleted"]='Câmp șters.';
 $lang["action-move-up"]='Mută în sus.';
 $lang["action-move-down"]='Mută în jos.';
@@ -2335,7 +2294,6 @@ $lang["tile_thmsl"]='Coleție recomandată.';
 $lang["tile_custm"]='Personalizat.';
 $lang["tile_pend"]='În așteptare.';
 $lang["plugin_category_general"]='General - General';
-$lang["plugin_category_api"]='API (Interfață de programare a aplicațiilor)';
 $lang["plugin_category_advanced"]='Avansat.';
 $lang["plugin_category_design"]='Proiectare.';
 $lang["plugin_category_ecommerce"]='Comerț electronic.';
@@ -2512,7 +2470,6 @@ $lang["user_pref_email_and_user_notifications"]='Trimite-mi e-mailuri în plus f
 $lang["notification_email_subject"]='Email de notificare.';
 $lang["mymessages_introtext"]='Puteți configura ce mesaje apar aici prin schimbarea preferințelor dvs. de utilizator.';
 $lang["login_slideshow_image_notes"]='Această imagine va fi utilizată doar ca fundal pentru pagina de autentificare.';
-$lang["media"]='Media - Media (referring to digital assets such as images, videos, audio files, etc.)';
 $lang["pixel_height"]='Înălțimea pixelilor.';
 $lang["pixel_width"]='Lățimea pixelilor.';
 $lang["file_extension_label"]='Extensie de fișier.';
@@ -2640,12 +2597,8 @@ $lang["error_upload_file_move_failed"]='Nu s-a putut muta fișierul încărcat. 
 $lang["error_fail_save"]='Imposibil de salvat.';
 $lang["image_quality_100"]='Valoare maximă.';
 $lang["image_quality_92"]='Tipărire.';
-$lang["image_quality_80"]='Vă rugăm să traduceți: Web.
-
-"Web" se traduce în Limba română ca "Web". Este un termen utilizat în mod obișnuit și nu are o traducere specifică în limba română.';
 $lang["image_quality_50"]='Scăzut.';
 $lang["image_quality_40"]='Foarte scăzut.';
-$lang["systemconfig_api"]='API (Interfață de programare a aplicațiilor)';
 $lang["iiif_enable_option"]='Activare suport IIIF.';
 $lang["iiif_disabled"]='IIIF nu este configurat.';
 $lang["property-personal_data"]='Poate conține date personale.';
@@ -2761,7 +2714,7 @@ $lang["error_locked_other_user"]='Resursa este blocată de către un alt utiliza
 $lang["error-edit_noaccess_resources"]='Nu aveți acces de editare la resurse:';
 $lang["error-edit_locked_resources"]='Următoarele resurse sunt blocate:';
 $lang["locked_resource_search"]='Resurse blocate.';
-$lang["autocomplete_log_note"]='Completare automată.';
+$lang["autocomplete_log_note"]='(Completare automată)';
 $lang["posted-file-not-found"]='Fișierul postat nu a fost găsit.';
 $lang["error-theme-missing"]='Colectia recomandata lipseste sau nu a fost specificata.';
 $lang["system_config_search_engines"]='Motoare de căutare.';
@@ -2788,7 +2741,6 @@ $lang["job_value"]='Valoare.';
 $lang["job_boost"]='Îmbunătățirea sarcinii.';
 $lang["job_priority"]='Prioritate.';
 $lang["csv_export_offline_option"]='Generați fișierul CSV offline? Acest lucru ar trebui utilizat pentru seturi mari de rezultate. Veți fi notificat printr-un mesaj ResourceSpace odată ce fișierul CSV este disponibil.';
-$lang["csv_export_filename"]='export_metadate_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='Exportul tău CSV este pregătit.';
 $lang["offline_processing_disabled"]='Procesarea de sarcini offline nu este configurată în acest sistem. Pentru a o activa, vă rugăm să contactați administratorul sistemului.';
 $lang["csv_export_offline_only"]='Trebuie utilizat procesarea offline atunci când se exportă date pentru mai mult de %%RESOURCE_COUNT%% resurse.';

@@ -20,7 +20,6 @@ $lang["selectconsent"]='Veuillez sélectionner un identifiant de consentement.';
 $lang["name"]='Nom';
 $lang["usage"]='Utilisation';
 $lang["telephone"]='Téléphone.';
-$lang["notes"]='Notes can be translated to "Notes" in Français.';
 $lang["confirmdeleteconsentfile"]='Êtes-vous sûr(e) de vouloir SUPPRIMER ce fichier ? Cette action est irréversible.';
 $lang["consent_manager_mediums"]='Autoriser les supports d\'utilisation.';
 $lang["consent_manager_access"]='Gérer les données de consentement (lorsqu\'elles ne sont pas déjà activées via l\'autorisation "Peut accéder à la zone de configuration du système").';

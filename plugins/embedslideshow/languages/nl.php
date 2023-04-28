@@ -5,7 +5,6 @@ $lang["embed"]='Insluiten';
 $lang["embedslideshow_minimise"]='&minus; minimaliseer diavoorstelling';
 $lang["embedslideshow_maximise"]='+ Diavoorstelling maximaliseren';
 $lang["embedslideshow_size"]='Diavoorstelling grootte?';
-$lang["sizename_pixels"]='%naam (%pixels pixels) vertalen.';
 $lang["embedslideshow_transitiontime"]='Duur van de dia?';
 $lang["embedslideshow"]='Insluitende diavoorstelling.';
 $lang["embedslideshow_action_description"]='Dit zal een externe deel-sleutel aanmaken en een bijbehorend blok HTML genereren dat kan worden ingevoegd in een externe website.';

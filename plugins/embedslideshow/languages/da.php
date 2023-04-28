@@ -5,7 +5,6 @@ $lang["embed"]='Integrer (as in "Integrer ressource")';
 $lang["embedslideshow_minimise"]='Minimer diasshowet.';
 $lang["embedslideshow_maximise"]='Maksimer slideshowet.';
 $lang["embedslideshow_size"]='Billedshow størrelse?';
-$lang["sizename_pixels"]='%name (%pixels pixels) can be translated to: %name (%pixels pixels)';
 $lang["embedslideshow_transitiontime"]='Varighed pr. dias?';
 $lang["embedslideshow"]='Integrer slideshow.';
 $lang["embedslideshow_action_description"]='Dette vil oprette en ekstern delingsnøgle og generere en tilsvarende blok af HTML, som kan indsættes på en ekstern hjemmeside.';

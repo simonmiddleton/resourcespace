@@ -26,7 +26,6 @@ $lang["emu_module"]='Módulo EMu.';
 $lang["emu_column_name"]='Columna del módulo EMu.';
 $lang["emu_rs_field"]='Campo de ResourceSpace.';
 $lang["emu_add_mapping"]='Agregar mapeo.';
-$lang["emu_upload_emu_field_label"]='EMu IRN se traduce como "Número de Registro de Identificación" en Español.';
 $lang["emu_confirm_upload_nodata"]='Por favor, marque la casilla para confirmar que desea continuar con la carga.';
 $lang["emu_test_script_title"]='Prueba/Ejecutar script.';
 $lang["emu_run_script"]='Por favor, traduce: Proceso.';

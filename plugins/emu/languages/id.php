@@ -25,7 +25,6 @@ $lang["emu_module"]='Modul EMu.';
 $lang["emu_column_name"]='Kolom modul EMu.';
 $lang["emu_rs_field"]='Kolom ResourceSpace.';
 $lang["emu_add_mapping"]='Tambahkan pemetaan.';
-$lang["emu_upload_emu_field_label"]='IRN EMu adalah singkatan dari "Internal Registration Number" pada perangkat lunak manajemen koleksi EMu. IRN digunakan untuk mengidentifikasi setiap objek dalam koleksi dan memastikan bahwa setiap objek memiliki nomor unik yang terdaftar dalam sistem.';
 $lang["emu_confirm_upload_nodata"]='Silakan centang kotak untuk mengkonfirmasi bahwa Anda ingin melanjutkan dengan pengunggahan.';
 $lang["emu_test_script_title"]='Uji/ Jalankan skrip';
 $lang["emu_run_script"]='Proses';

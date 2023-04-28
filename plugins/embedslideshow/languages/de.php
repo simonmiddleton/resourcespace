@@ -5,7 +5,6 @@ $lang["embed"]='Einbetten';
 $lang["embedslideshow_minimise"]='- Diashow minimieren';
 $lang["embedslideshow_maximise"]='Maximiere Diashow.';
 $lang["embedslideshow_size"]='Diashow-Größe?';
-$lang["sizename_pixels"]='%name (%Pixel Pixel) übersetzen.';
 $lang["embedslideshow_transitiontime"]='Dauer der Folie?';
 $lang["embedslideshow"]='Einbetten der Diashow';
 $lang["embedslideshow_action_description"]='Dies wird einen externen Freigabeschlüssel erstellen und einen entsprechenden HTML-Block generieren, der in eine externe Website eingefügt werden kann.';

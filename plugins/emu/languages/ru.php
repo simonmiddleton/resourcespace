@@ -26,7 +26,6 @@ $lang["emu_module"]='Модуль EMu.';
 $lang["emu_column_name"]='Столбец модуля EMu.';
 $lang["emu_rs_field"]='Поле ResourceSpace.';
 $lang["emu_add_mapping"]='Добавить отображение.';
-$lang["emu_upload_emu_field_label"]='EMu IRN (Internal Registration Number) - Внутренний номер регистрации в EMu.';
 $lang["emu_confirm_upload_nodata"]='Пожалуйста, поставьте галочку, чтобы подтвердить, что вы хотите продолжить загрузку.';
 $lang["emu_test_script_title"]='Тест/ Запустить скрипт.';
 $lang["emu_run_script"]='Обработка';

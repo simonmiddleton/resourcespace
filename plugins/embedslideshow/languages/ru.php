@@ -5,7 +5,6 @@ $lang["embed"]='Встроить (Vstroit\')';
 $lang["embedslideshow_minimise"]='&minus; минимизировать слайдшоу';
 $lang["embedslideshow_maximise"]='Максимизировать слайдшоу.';
 $lang["embedslideshow_size"]='Размер слайдшоу?';
-$lang["sizename_pixels"]='%name (%пикселей пикселей)';
 $lang["embedslideshow_transitiontime"]='Продолжительность слайда?';
 $lang["embedslideshow"]='Встроить слайд-шоу.';
 $lang["embedslideshow_action_description"]='Это создаст внешний ключ доступа и сгенерирует соответствующий блок HTML, который можно вставить на внешний веб-сайт.';

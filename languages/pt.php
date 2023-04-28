@@ -631,7 +631,6 @@ $lang["myrequests"]='Minhas solicitações.';
 $lang["collections"]='Coleções';
 $lang["changethemeto"]='Alterar tema para';
 $lang["anyday"]='Qualquer dia.';
-$lang["xlthumbs"]='Grande Extra (or Extra Grande)';
 $lang["xlthumbstitle"]='Miniaturas extra grandes.';
 $lang["largethumbs"]='Grande.';
 $lang["largethumbstitle"]='Miniaturas grandes.';
@@ -692,9 +691,6 @@ $lang["editcollectionresources"]='Editar pré-visualizações da coleção.';
 $lang["collection_set_theme_category"]='Adicionar à categoria de coleção em destaque.';
 $lang["collection_set_theme_category_title"]='Adicionar coleção à categoria de coleções em destaque.';
 $lang["collection-name"]='Coleção: %collectionname%';
-$lang["collectionidprefix"]='Por favor, traduza: Col_ID
-
-Identificador de Coleção';
 $lang["emailtousers_internal"]='E-mail para usuários<br><br>Comece a digitar o nome do usuário para pesquisar e clique no usuário necessário quando encontrado.';
 $lang["create_new_here"]='Criar aqui.';
 $lang["create_new_below"]='Criar em uma nova categoria.';
@@ -787,17 +783,6 @@ $lang["filedimensions"]='Dimensões do arquivo.';
 $lang["vieworiginalresource"]='Visualizar recurso original.';
 $lang["previewithsizename"]='Pré-visualização de %sizename';
 $lang["originalfileoftype"]='Arquivo %EXTENSION Original';
-$lang["fileoftype"]='Por favor, forneça mais contexto para a tradução. "File" pode ser traduzido como "arquivo" ou "ficheiro", mas é necessário saber em que contexto essa palavra é utilizada no software ResourceSpace para fornecer uma tradução precisa.';
-$lang["cell-fileoftype"]='Extensão de arquivo %EXTENSION';
-$lang["field-fileextension"]='Por favor, traduza: %EXTENSION. 
-
-This string seems to refer to a file extension, which in Portuguese can be translated as "extensão de arquivo". Therefore, the translation would be: %EXTENSION -> Extensão de arquivo.';
-$lang["fileextension-inside-brackets"]='Por favor, traduza: [%EXTENSION]
-
-Extensão';
-$lang["fileextension"]='Por favor, traduza: %EXTENSION. 
-
-This string seems to refer to a file extension, which in Portuguese can be translated as "extensão de arquivo". Therefore, the translation would be: %EXTENSION -> Extensão de arquivo.';
 $lang["mp3_preview_file"]='Arquivo de pré-visualização MP3.';
 $lang["action-request"]='Solicitação';
 $lang["requestlog"]='Registro de solicitações.';
@@ -919,7 +904,7 @@ $lang["termsmustspecifyusagecomment"]='Você deve fornecer comentários de uso p
 $lang["proceed"]='Por favor, traduza: Proceed.
 
 Continuar.';
-$lang["notavailableshort"]='N/D (Não Disponível)';
+$lang["notavailableshort"]='N/D';
 $lang["allmonths"]='Todos os meses.';
 $lang["allgroups"]='Todos os grupos.';
 $lang["status-ok"]='OK.';
@@ -1337,7 +1322,7 @@ $lang["requestreason"]='Motivo do pedido.';
 $lang["resourcerequeststatus0"]='Pendente.';
 $lang["resourcerequeststatus1"]='Aprovado.';
 $lang["resourcerequeststatus2"]='Recusado.';
-$lang["ppi"]='PPI (pixels per inch) em Português é "pixels por polegada".';
+
 $lang["useasthemethumbnail"]='Usar este recurso como miniatura de categoria de coleção em destaque?';
 $lang["sessionexpired"]='Você foi desconectado automaticamente porque ficou inativo por mais de 30 minutos. Por favor, insira seus dados de login para continuar.';
 $lang["resourcenotinresults"]='O recurso atual não está mais dentro dos seus resultados de pesquisa ativos, portanto, a navegação próxima/anterior não é possível.';
@@ -1444,7 +1429,6 @@ $lang["map_download"]='Baixar mapa como um arquivo PNG, selecione um tamanho à 
 $lang["map_osm_group"]='OpenStreetMap (OSM)';
 $lang["map_osm"]='Padrão';
 $lang["map_osmde"]='Estilo alemão.';
-$lang["map_osmfrance"]='OSM France (OpenStreetMap France)';
 $lang["map_osmch"]='OSM Suíça.';
 $lang["map_osmbzh"]='OSM Luxembourg (OpenStreetMap Luxembourg)';
 $lang["map_osmhot"]='Humanitário.';
@@ -1480,15 +1464,11 @@ $lang["map_esriterrain"]='Terreno.';
 $lang["map_esrirelief"]='Relevo Sombreado';
 $lang["map_esriphysical"]='Físico.';
 $lang["map_esriocean"]='Oceano.';
-$lang["map_esrinatgeo"]='National Geographic (Portuguese translation: National Geographic)';
 $lang["map_esrigray"]='Tela Cinza.';
 $lang["map_nasagibscolor"]='Imagem Colorida Modis/Terra';
 $lang["map_nasagibsfalsecolor"]='Imagem de Falsa Cor Modis/Terra.';
 $lang["map_nasagibsnight"]='Imagens Noturnas.';
 $lang["map_mapbox_group"]='Mapbox';
-$lang["map_mapboxid"]='Por favor, traduza: ID.
-
-Identificação.';
 $lang["map_mapboxtoken"]='Token de Acesso.';
 $lang["map_mapbox"]='Mapa Padrão.';
 $lang["map_usgs_group"]='O Mapa Nacional.';
@@ -1533,7 +1513,6 @@ $lang["exiftoolnotfound"]='Não foi possível encontrar o Exiftool.';
 $lang["existing_tags"]='Tags Exiftool existentes.';
 $lang["new_tags"]='Novas tags do Exiftool (que serão adicionadas ao baixar)';
 $lang["date_of_download"]='Data de download.';
-$lang["field_ref_and_name"]='%ref% - %name% translates to %ref% - %nome% in Português.';
 $lang["metadata-report-fits_section"]='Etiquetas FITS mapeadas.';
 $lang["indicateusage"]='Por favor, descreva o uso planejado para este recurso.';
 $lang["usage"]='Utilização';
@@ -1918,7 +1897,6 @@ $lang["save-conflict-title"]='Conflito de edição.';
 $lang["theme_home_promote"]='Promover na página inicial?';
 $lang["theme_home_page_text"]='Texto da página inicial.';
 $lang["theme_home_page_image"]='Imagem da página inicial.';
-$lang["ref-title"]='%ref - %title translates to %ref - %título.';
 $lang["error-pageload"]='Desculpe, ocorreu um erro ao carregar esta página. Se você estiver realizando uma pesquisa, tente refinar sua consulta de pesquisa. Se o problema persistir, entre em contato com o administrador do sistema.';
 $lang["copy-field"]='Copiar campo.';
 $lang["copy-to-resource-type"]='Copiar para tipo de recurso.';
@@ -2359,7 +2337,6 @@ $lang["tile_thmsl"]='Coleção em Destaque.';
 $lang["tile_custm"]='Personalizado.';
 $lang["tile_pend"]='Pendente.';
 $lang["plugin_category_general"]='Geral.';
-$lang["plugin_category_api"]='API (Interface de Programação de Aplicativos)';
 $lang["plugin_category_advanced"]='Avançado.';
 $lang["plugin_category_design"]='Projeto de design.';
 $lang["plugin_category_ecommerce"]='Comércio eletrônico.';
@@ -2608,7 +2585,6 @@ $lang["headersmall"]='Pequeno.';
 $lang["headermid"]='Médio.';
 $lang["headerlarge"]='Grande.';
 $lang["responsive_configtitle"]='Responsivo.';
-$lang["responsive_main_menu"]='Menu -> Menu';
 $lang["responsive_settings_menu"]='Conta.';
 $lang["responsive_more"]='Mais...';
 $lang["responsive_less"]='Menos...';
@@ -2667,7 +2643,6 @@ $lang["image_quality_50"]='Por favor, traduza: Low.
 
 Baixo.';
 $lang["image_quality_40"]='Muito baixo.';
-$lang["systemconfig_api"]='API (Interface de Programação de Aplicativos)';
 $lang["iiif_enable_option"]='Ativar suporte IIIF.';
 $lang["iiif_disabled"]='IIIF não está configurado.';
 $lang["property-personal_data"]='Pode conter dados pessoais.';
@@ -2806,7 +2781,6 @@ $lang["job_value"]='Valor';
 $lang["job_boost"]='Impulsionar trabalho.';
 $lang["job_priority"]='Prioridade.';
 $lang["csv_export_offline_option"]='Gerar arquivo CSV offline? Isso deve ser usado para grandes conjuntos de resultados. Você será notificado por meio de uma mensagem do ResourceSpace assim que o CSV estiver disponível.';
-$lang["csv_export_filename"]='Exportação de metadados_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='A sua exportação CSV está pronta.';
 $lang["offline_processing_disabled"]='O processamento de trabalho offline não está configurado neste sistema. Para habilitar, entre em contato com o administrador do sistema.';
 $lang["csv_export_offline_only"]='O processamento offline deve ser usado ao exportar dados para mais de %%RESOURCE_COUNT%% recursos.';

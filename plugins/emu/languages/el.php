@@ -26,7 +26,6 @@ $lang["emu_module"]='Ενότητα EMu';
 $lang["emu_column_name"]='Στήλη του ενότητας του EMu module.';
 $lang["emu_rs_field"]='Πεδίο ResourceSpace';
 $lang["emu_add_mapping"]='Προσθήκη αντιστοίχισης.';
-$lang["emu_upload_emu_field_label"]='Αριθμός Αναγνωριστικού Αντικειμένου (IRN) του EMu.';
 $lang["emu_confirm_upload_nodata"]='Παρακαλώ επιλέξτε το πλαίσιο επιβεβαίωσης για να επιβεβαιώσετε ότι επιθυμείτε να συνεχίσετε με τη μεταφόρτωση.';
 $lang["emu_test_script_title"]='Δοκιμή/ Εκτέλεση σεναρίου';
 $lang["emu_run_script"]='Διαδικασία';
