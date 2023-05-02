@@ -3225,7 +3225,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 * 
 * @param string $type   type of trash_bin
 * 
-* @return void
+* @return string|void
 */ 
 
 function render_trash($type, $deletetext,$forjs=false)

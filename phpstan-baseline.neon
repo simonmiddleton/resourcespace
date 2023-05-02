@@ -91,11 +91,6 @@ parameters:
 			path: include/general_functions.php
 
 		-
-			message: "#^Result of function render_trash \\(void\\) is used\\.$#"
-			count: 1
-			path: include/header.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'C' \\(\"C\", \"C\"\\)\\.$#"
 			count: 1
 			path: include/image_processing.php
@@ -331,11 +326,6 @@ parameters:
 			path: pages/ajax/contactsheet.php
 
 		-
-			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
-			count: 3
-			path: pages/check.php
-
-		-
 			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
 			count: 2
 			path: pages/collection_edit.php
@@ -376,11 +366,6 @@ parameters:
 			path: pages/edit.php
 
 		-
-			message: "#^Result of function get_section_list \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/help.php
-
-		-
 			message: "#^Result of function purge_expired_shares \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/manage_external_shares.php
@@ -409,11 +394,6 @@ parameters:
 			message: "#^Result of function render_upload_here_button \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/search.php
-
-		-
-			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
-			count: 3
-			path: pages/setup.php
 
 		-
 			message: "#^Undefined variable\\: \\$lang$#"
@@ -449,11 +429,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$original_download_name$#"
 			count: 1
 			path: plugins/adobe_link/hooks/view.php
-
-		-
-			message: "#^Undefined variable\\: \\$mtparams$#"
-			count: 1
-			path: plugins/annotate/hooks/view.php
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$notes\\.$#"

@@ -4204,9 +4204,8 @@ function text($name)
  * Gets a list of site text sections, used for a multi-page help area.
  *
  * @param  mixed $page
- * @return void
  */
-function get_section_list($page)
+function get_section_list($page): array
 	{
 
     global $usergroup;
@@ -4303,9 +4302,8 @@ function get_ip()
  * For a value such as 10M return the kilobyte equivalent such as 10240. Used  by check.php
  *
  * @param  mixed $value
- * @return void
  */
-function ResolveKB($value)
+function ResolveKB($value): string
 {
 $value=trim(strtoupper($value));
 if (substr($value,-1,1)=="K")
