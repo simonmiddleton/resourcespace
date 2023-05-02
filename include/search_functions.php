@@ -1119,7 +1119,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             }
         
         // Check for blocked/allowed resource types
-        $allrestypes = get_resource_types();
+        $allrestypes = get_resource_types("",false,false,true);
         $blockedrestypes = array();
         foreach($allrestypes as $restype)
             {

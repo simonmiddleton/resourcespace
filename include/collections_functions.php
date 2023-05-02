@@ -2530,7 +2530,7 @@ function get_search_title($searchstring)
 
     if ($restypes!="")
         { 
-        $resource_types=get_resource_types($restypes);
+        $resource_types=get_resource_types($restypes,true,false,true);
         foreach($resource_types as $type)
             {
             $typenames[]=$type['name'];

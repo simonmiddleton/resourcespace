@@ -28,7 +28,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                     >
                 <option value='' <?php ($resource_type == "") ? "selected" : ""?>><?php echo $lang["select"]; ?></option>
             <?php
-            $types                = get_resource_types();
+            $types                = get_resource_types("",false,false,true);
             $shown_resource_types = array();
 
             for($n = 0; $n < count($types); $n++)

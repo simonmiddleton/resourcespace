@@ -342,7 +342,7 @@ var categoryTreeChecksArray = [];
         <?php
         }
 
-$types=get_resource_types();
+$types=get_resource_types("",true,false,true);
 
 $simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
 

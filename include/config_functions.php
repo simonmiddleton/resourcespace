@@ -1336,7 +1336,7 @@ function update_resource_type_field_resource_types(int $ref,array $resource_type
 function get_resource_type_field_resource_types(array $fields = [])
     {
     $field_restypes = [];
-    $allrestypes = array_column(get_resource_types("",false,true),"ref");
+    $allrestypes = array_column(get_resource_types("",false,true,true),"ref");
     if(count($fields)==0)
         {
         $fields = get_resource_type_fields();
@@ -1391,7 +1391,7 @@ function save_resource_type(int $ref, array $savedata)
     {
     global $execution_lockout;
 
-    $restypes = get_resource_types();
+    $restypes = get_resource_types("",true,false,true);
     $restype_refs = array_column($restypes,"ref");
     if(!checkperm('a') || !in_array($ref,$restype_refs))
         {
@@ -1401,10 +1401,9 @@ function save_resource_type(int $ref, array $savedata)
     $setcolumns = [];
     $setparams = [];
     $restypes = array_combine($restype_refs,$restypes);
-    //exit(print_r($restypes));
     foreach($savedata as $savecol=>$saveval)
         {
-            debug("checking for column " . $savecol . " in " . print_r($restypes,true));
+        debug("checking for column " . $savecol . " in " . print_r($restype_refs,true));
         if($saveval == $restypes[$ref][$savecol])
             {
             // Unchanged value, skip
@@ -1495,5 +1494,153 @@ function rs_get_resource_type(int $ref)
             "schema"
             );
     return $return;
+    }
+
+/**
+ * Save resource type field - used on pages/admin/admin_resource_type_field_edit.php
+ *
+ * @param int   $ref        Field ID
+ * @param array $columns    Array of column data
+ * @param mixed $postdata   POST'd data
+ * 
+ * @return bool 
+ * 
+ */
+function save_resource_type_field($ref,$columns,$postdata)
+    {
+    global $regexp_slash_replace;
+
+    $sync_field = (int)$postdata["sync_field"] ?? 0;
+    $existingfield = get_resource_type_field($ref);
+    $params=array();$syncparams=array();
+
+    $resource_types=get_resource_types("",true,false,true);
+    foreach($resource_types as $resource_type)
+        {
+        $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
+        }
+        
+    foreach ($columns as $column=>$column_detail)		
+        {
+        if ($column_detail[2]==1)
+            {
+            $val= (int)(bool)($postdata[$column] ?? 0);
+            }		
+        else
+            {
+            $val=trim($postdata[$column] ?? "");
+            if($column == 'regexp_filter')
+                {
+                $val = str_replace('\\', $regexp_slash_replace, $val);   
+                }
+        
+            if($column == "type" && $val != $existingfield["type"] && (bool)$postdata["migrate_data"] ?? false)
+                {
+                // Need to migrate field data
+                $migrate_data = true;				
+                }
+            
+            // Set shortname if not already set or invalid
+            if($column=="name" && ($val=="" || in_array($val,array("basicday","basicmonth","basicyear"))))
+                {
+                $val="field" . $ref;
+                }
+
+            if($column === 'tab' && $val == 0)
+                {
+                $val = ''; # set to blank so the code will convert to SQL NULL later
+                }
+            }
+        if (isset($sql))
+            {
+            $sql.=",";
+            }
+        else
+            {
+            $sql="UPDATE resource_type_field SET ";
+            }		
+        
+        $sql.="{$column}=";
+        if ($val=="")
+            {
+            $sql.="NULL";
+            }
+        else    
+            {
+            $sql.="?";
+            $params[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+            $params[]=$val;
+            }
+
+        if($column == "global" && $val !== $existingfield["global"])
+            {
+            $setresypes = [];
+            foreach($resource_type_array as $resource_type=>$resource_type_name)
+                {
+                if(trim($postdata["field_restype_select_" . $resource_type] ?? "") != "")
+                    {
+                    $setresypes[] = $resource_type;
+                    }
+                }
+            // Update all resource_type_field -> resource_type associations
+            update_resource_type_field_resource_types($ref,$setresypes);
+            }
+
+        log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
+
+        // Add SQL to update synced fields if field is marked as a sync field
+        if ($sync_field!="" && $sync_field>0 && $column_detail[3]==1)
+            {
+            if (isset($syncsql))
+                {
+                $syncsql.=",";
+                }
+            else
+                {
+                $syncsql="UPDATE resource_type_field SET ";
+                }
+            $syncsql.="{$column}=";
+            if ($val=="")
+                {
+                $syncsql.="NULL";
+                }
+            else    
+                {
+                $syncsql.="?";
+                $syncparams[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+                $syncparams[]=$val;
+                }
+            }
+        }
+    // add field_constraint sql
+    if (isset($postdata["field_constraint"]) && trim($postdata["field_constraint"]) != "")
+        {
+        $sql.=",field_constraint=?";
+        $params[]="i";$params[]= (int)$postdata["field_constraint"];
+        }
+
+    // Add automatic nodes ordering if set (available only for fixed list fields - except category trees)
+    $sql .= ", automatic_nodes_ordering = ?";
+    $params[]="i";$params[]= (1 == ($postdata['automatic_nodes_ordering'] ?? 0) ? 1 : 0);
+
+    $sql .= " WHERE ref = ?";
+    $params[]="i";$params[]=$ref;
+
+    ps_query($sql,$params);
+    clear_query_cache("schema");
+    clear_query_cache("featured_collections");
+
+    if($sync_field!="" && $sync_field>0)
+        {
+        $syncsql.=" WHERE ref=? OR sync_field=?";
+        $syncparams[]="i";$syncparams[]=$sync_field;
+        $syncparams[]="i";$syncparams[]=$ref;
+
+        ps_query($syncsql,$syncparams);
+        }
+    
+    hook('afterresourcetypefieldeditsave');
+    
+    return true;
     }
    

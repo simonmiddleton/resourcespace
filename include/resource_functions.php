@@ -509,7 +509,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
         return false;
         }
 
-    $alltypes=get_resource_types();
+    $alltypes=get_resource_types("",false,false,true);
     if(!in_array($resource_type,array_column($alltypes,"ref")))
         {
         return false;
@@ -3613,15 +3613,23 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 /**
  * Return an array of resource types that this user has access to
  *
- * @param  string   $types      Comma separated list to limit the types that are returned by ref,
- *                              blank string returns all available types
- * @param  boolean  $translate  Flag to translate the resource types before returning
- * @param  boolean  $ignore_access  Return all resource types regardless of access?
+ * @param  string   $types          Comma separated list to limit the types that are returned by ref,
+ *                                  blank string returns all available types
+ * @param  boolean  $translate      Flag to translate the resource types before returning
+ * @param  boolean  $ignore_access  Return all resource types regardless of access?#
+ * @param  boolean  $usecache       Return cached result?
  *
  * @return array    Array of resource types limited by T* permissions and optionally by $types
  */
-function get_resource_types($types = "", $translate = true, $ignore_access = false)
+function get_resource_types($types = "", $translate = true, $ignore_access = false, $usecache = false)
     {
+    global $restype_cache;
+    $hash = md5(serialize([$types,$translate,$ignore_access]));
+    if($usecache && isset($restype_cache[$hash]))
+        {
+        return $restype_cache[$hash];
+        }
+        
     $resource_types = get_all_resource_types();
 
     if ($types!="")
@@ -3655,6 +3663,7 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
             $return[$resource_types[$n]["ref"]]["resource_type_fields"] = array_filter(explode(",",$resource_types[$n]["resource_type_field"]),"is_int_loose");
             }
         }
+    $restype_cache[$hash] = array_values($return);
     return array_values($return);
     }
 

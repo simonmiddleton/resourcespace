@@ -955,7 +955,7 @@ function config_add_multi_ftype_select($config_var, $label, $width=300,$size=7,$
 function config_single_rtype_select($name, $label, $current, $width=300)
     {
     global $lang;
-    $rtypes=get_resource_types();
+    $rtypes=get_resource_types("",true,false,true);
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
