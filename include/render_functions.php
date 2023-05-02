@@ -2700,8 +2700,6 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
 */
 function render_new_featured_collection_cta(string $url, array $ctx)
     {
-    global $collection_allow_creation;
-
     if('' === $url)
         {
         return;

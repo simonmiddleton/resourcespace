@@ -133,7 +133,7 @@ unset($rendering_options["smart"]);
 
 if($k == "" && $smart_rtf == 0)
     {
-    if($collection_allow_creation && checkperm("h"))
+    if(checkperm("h")&& can_create_collections())
         {
         render_new_featured_collection_cta(
             generateURL(

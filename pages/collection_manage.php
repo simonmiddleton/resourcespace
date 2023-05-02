@@ -23,7 +23,7 @@ if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="create
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 
 $name = getval('name', '');
-if('' != $name && $collection_allow_creation && enforcePostRequest(false))
+if('' != $name && can_create_collections() && enforcePostRequest(false))
     {
     // Create new collection
     $new = create_collection($userref, $name);
@@ -633,7 +633,7 @@ echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber",
 </div>
 
 <!--Create a collection-->
-<?php if ($collection_allow_creation && !hook("replacecollectionmanagecreatenew")) { ?>
+<?php if (!hook("replacecollectionmanagecreatenew")) { ?>
 	<div class="BasicsBox">
 		<h1><?php echo $lang["createnewcollection"]?></h1>
 		<p class="tight"><?php echo text("newcollection")?></p>

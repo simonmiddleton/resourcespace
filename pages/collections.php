@@ -1081,7 +1081,7 @@ else
                             }
                         }
                     
-                    if ($collection_allow_creation)
+                    if (can_create_collections())
                         {?>
                         <option value="new">(<?php echo $lang["createnewcollection"]?>)</option><?php
                         }?>

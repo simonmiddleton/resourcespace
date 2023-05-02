@@ -538,8 +538,8 @@ function api_collection_remove_resources($collection='',$resources='',$removeall
     
 function api_create_collection($name,$forupload=false)
 	{
-    global $userref, $collection_allow_creation;
-    if (checkperm("b") || !$collection_allow_creation)
+    global $userref;
+    if (!can_create_collections())
         {
         return false;
         }

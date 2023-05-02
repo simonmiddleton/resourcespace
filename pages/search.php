@@ -30,8 +30,7 @@ if ($k=="" || $internal_share_access)
         if((isset($anonymous_login) && ($username==$anonymous_login)) && isset($rs_session) && $anonymous_user_session_collection)
             {   
             $sessioncollections=get_session_collections($rs_session,$userref,true); 
-            $usercollection=$sessioncollections[0];
-            $collection_allow_creation=false; // Hide all links that allow creation of new collections                      
+            $usercollection=$sessioncollections[0];                  
             }
         else
             {

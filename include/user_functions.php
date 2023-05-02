@@ -169,13 +169,12 @@ function setup_user(array $userdata)
 
     if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
         {
-        // Get all the collections that relate to this session
-        $sessioncollections=get_session_collections($rs_session,$userref,true); 
         if($anonymous_user_session_collection)
             {
+            // Get all the collections that relate to this session
+            $sessioncollections=get_session_collections($rs_session,$userref,true); 
             // Just get the first one if more
-            $usercollection=$sessioncollections[0];		
-            $collection_allow_creation=false; // Hide all links that allow creation of new collections
+            $usercollection=$sessioncollections[0];
             }
         else
             {
@@ -3390,4 +3389,16 @@ function get_users_by_permission(array $permissions)
         }
 
     return $return;
+    }
+
+/**
+ * Determine whether user is anonymous user
+ *
+ * @return bool
+ * 
+ */
+function is_anonymous_user()
+    {
+    global $anonymous_login, $username;
+    return isset($anonymous_login) && $username == $anonymous_login;
     }

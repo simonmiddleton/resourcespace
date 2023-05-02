@@ -118,7 +118,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                 <label for="collection_add"><?php echo $lang["addtocollection"]?></label>
                 <select name="collection_add" id="collection_add" class="stdwidth" >
                 
-                <?php if ($upload_add_to_new_collection_opt && $collection_allow_creation && !$upload_force_mycollection)
+                <?php if (can_create_collections() && $upload_add_to_new_collection_opt && !$upload_force_mycollection)
                     { 
                     if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle)
                         {

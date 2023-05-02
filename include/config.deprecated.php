@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Allow users to create new collections. Set to false to prevent creation of new collections.
-$collection_allow_creation=true;
-
 # Option to hide the collection bar (hidden, not minimised) if it has no resources in it
 $collection_bar_hide_empty=false;
 

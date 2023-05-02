@@ -4590,14 +4590,9 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
 */
 function new_featured_collection_form(int $parent)
     {
-    global $baseurl_short, $lang, $collection_allow_creation;
+    global $baseurl_short, $lang;
 
-    if(!$collection_allow_creation)
-        {
-        return;
-        }
-
-    if(!checkperm('h'))
+    if(!checkperm('h') || !can_create_collections())
         {
         http_response_code(401);
         exit($lang['error-permissiondenied']);
@@ -7037,4 +7032,13 @@ function check_upload_terms(int $collection, string $k) : bool
         $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==1);
         return $return;
         }
+    }
+
+function can_create_collections()
+    {
+    global $anonymous_user_session_collection;
+    return  !( // Return FALSE if any of these conditions are true
+        checkperm("b") 
+         || (is_anonymous_user() && !$anonymous_user_session_collection) // User is an anonymous user
+        );
     }
