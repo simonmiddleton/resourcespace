@@ -1118,7 +1118,9 @@ jQuery(document).ready(function () {
                         newcol = parseInt(response);
                         console.debug('Created collection #' + newcol);
                         redirurl =  ReplaceUrlParameter(redirurl, 'collection_add', newcol);
-                        });
+                        },
+                        <?php echo generate_csrf_js_object('create_collection'); ?>
+                    );
                     }
                 }
              // Encode the file names
@@ -1635,7 +1637,9 @@ function postUploadActions()
         api('send_collection_to_admin',{'collection': newcol}, function(response)
             {
             console.debug('A copy of collection #' + newcol + ' has been sent to for review.');
-            });
+            },
+            <?php echo generate_csrf_js_object('send_collection_to_admin'); ?>
+        );
         <?php
         }?>
 
@@ -1650,7 +1654,9 @@ function postUploadActions()
         api('relate_all_resources',{'related': resource_keys}, function(response)
             {
             console.debug('Completed relating uploaded resources');
-            });
+            },
+            <?php echo generate_csrf_js_object('relate_all_resources'); ?>
+        );
         }
 
     <?php
