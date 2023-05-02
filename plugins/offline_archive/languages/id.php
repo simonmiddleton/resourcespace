@@ -1,0 +1,43 @@
+<?php
+
+
+$lang["offline_archive_configuration"]='Halaman Konfigurasi Arsip Offline.';
+$lang["offline_archive_archivefield"]='Silakan pilih bidang metadata yang akan menampung kode referensi arsip.';
+$lang["offline_archive_archivepath"]='Silakan masukkan lokasi di mana arsip akan dibuat.';
+$lang["offline_archive_restorepath"]='Untuk memulihkan sumber daya di folder StaticSync, Anda dapat memasukkan subfolder dari folder StaticSync di mana file yang dipulihkan akan ditempatkan.';
+$lang["offline_archive_preservedate"]='Menjaga waktu tanda waktu berkas?';
+$lang["offline_archive_administer_archive"]='Mengelola arsip.';
+$lang["offline_archive_view_pending"]='Melihat sumber daya yang menunggu diarsipkan.';
+$lang["offline_archive_view_pending_restore"]='Melihat sumber daya yang menunggu pemulihan.';
+$lang["offline_archive_view_completed"]='Melihat pekerjaan arsip';
+$lang["offline_archive_view_associated"]='Melihat sumber daya terkait.';
+$lang["offline_archive_view_as_search"]='Melihat sumber daya sebagai pencarian.';
+$lang["offline_archive_entername"]='Silakan masukkan nama arsip.';
+$lang["offline_archive_input_text"]='Silakan masukkan daftar sumber daya atau ID koleksi yang akan ditandai untuk dipulihkan.';
+$lang["offline_archive_input_resources"]='Silakan masukkan ID sumber daya yang akan dipulihkan, dipisahkan dengan koma.';
+$lang["offline_archive_input_collection"]='Silakan masukkan ID koleksi untuk dipulihkan.';
+$lang["offline_archive_name"]='Awalan Arsip';
+$lang["offline_archive_createnew"]='Mengarsipkan secara permanen.';
+$lang["offline_archive_archive_created"]='Arsip berhasil dibuat.';
+$lang["offline_archive_archive_ref"]='Referensi Arsip';
+$lang["offline_archive_archive_date"]='Tanggal Arsip';
+$lang["offline_archive_archive_status"]='Tanggal Arsip';
+$lang["offline_archive_request_restore"]='Meminta pemulihan kembali.';
+$lang["offline_archive_cancel_restore"]='Batalkan pemulihan.';
+$lang["offline_archive_cancel_confirm"]='Anda yakin ingin membatalkan pemulihan sumber daya ini?';
+$lang["offline_archive_restore_pending"]='Menunggu pemulihan dari arsip.';
+$lang["offline_archive_restore_confirm"]='Konfirmasi pemulihan';
+$lang["offline_archive_restore_resources"]='Memulihkan sumber daya dari arsip.';
+$lang["offline_archive_restore_resource"]='Mengembalikan dari arsip.';
+$lang["offline_archive_request_restore_text"]='Silakan masukkan alasan permintaan.';
+$lang["offline_archive_request_restore_reason"]='Alasan permintaan pemulihan.';
+$lang["offline_archive_request_email_subject"]='Permintaan pemulihan arsip offline.';
+$lang["offline_archive_requestsenttext"]='Permintaan pemulihan arsip Anda telah dikirimkan dan akan segera diperiksa.';
+$lang["offline_archive_resources_restore_confirmed"]='Sumber daya berhasil diatur untuk dipulihkan dan akan dipulihkan ketika arsip yang relevan telah dimasukkan atau disalin ke lokasi arsip yang dikonfigurasi.';
+$lang["offline_archive_resources_restore_cancel_confirmed"]='Sumber daya berhasil dihapus dari pemulihan tertunda.';
+$lang["offline_archive_resource_log_archived"]='- Diarsipkan oleh plugin arsip offline. Kode arsip:';
+$lang["offline_archive_resource_log_restored"]='dipulihkan oleh plugin arsip offline';
+$lang["offline_archive_resource_log_restore_set"]='Ditandai untuk dipulihkan dari arsip.';
+$lang["offline_archive_resource_log_restore_removed"]='Dibatalkan pemulihan dari arsip.';
+$lang["offline_archive_resource_log_restore_request"]='Permintaan pemulihan dari arsip yang tersimpan';
+$lang["offline_archive_resource_restore"]='Memulihkan sumber daya.';

@@ -15,7 +15,6 @@ $lang["transformblurb"]='Seleziona l\'azione richiesta e poi utilizza le icone a
 $lang["transformblurb-original"]='Per ritagliare l\'immagine, trascina il cursore sull\'immagine. Una volta creato il riquadro di ritaglio, puoi spostarlo e ridimensionarlo. Quando hai finito, premi "trasforma originale". Opzionalmente, puoi scegliere una larghezza e/o altezza per ridimensionare l\'immagine ritagliata.<br/><br/><strong>Tutte le opzioni sottostanti possono essere lasciate vuote.</strong> Se non fornisci una larghezza e un\'altezza, verranno utilizzate la larghezza e l\'altezza originali dell\'area di ritaglio.';
 $lang["width"]='Nuova larghezza.';
 $lang["height"]='Nuova altezza.';
-$lang["px"]='px stands for "pixel" in English, which translates to "pixel" in Italiano.';
 $lang["noimagefound"]='Errore: Nessuna immagine trovata.';
 $lang["scaled"]='Scalato';
 $lang["cropped"]='Tagliato';

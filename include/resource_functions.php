@@ -631,7 +631,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
     // Initialise array to store new checksums that client needs after autosave, without which subsequent edits will fail
     $new_checksums = array();
-
     for ($n=0;$n<count($fields);$n++)
         {
         if(!(
@@ -1513,6 +1512,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     $errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;
                     }
                 $errors[$fields[$n]["ref"]] .=  implode(",", $list);
+                $all_nodes_to_remove = array_diff($all_nodes_to_remove, $nodes_to_remove); // Don't remove any nodes in the required field that would be left empty.
                 $nodes_to_remove = [];
                 continue;
                 }
@@ -3414,10 +3414,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     
     $field_restypes = get_resource_type_field_resource_types($nontree_fields);
 
-
-        //exit(print_r($field_restypes));
-
-        // Create array to store data
+    // Create array to store data
     $allresdata=array();
 
     $resource_chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
@@ -3627,7 +3624,6 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
     {
     $resource_types = get_all_resource_types();
 
-
     if ($types!="")
         {
         $s=explode(",",$types);
@@ -3656,7 +3652,7 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                 unset($return[$resource_types[$n]["ref"]]["resource_type_field"]);
                 }
             // Add associated fields to the resource_type_fields array
-            $return[$resource_types[$n]["ref"]]["resource_type_fields"][] = (int)$resource_types[$n]["resource_type_field"];
+            $return[$resource_types[$n]["ref"]]["resource_type_fields"] = array_filter(explode(",",$resource_types[$n]["resource_type_field"]),"is_int_loose");
             }
         }
     return array_values($return);
@@ -3674,14 +3670,14 @@ function get_all_resource_types()
     $r=ps_query("
          SELECT " . columns_in("resource_type","rt") . ",
                 t.name AS tab_name,
-                rtfrt.resource_type_field AS resource_type_field
+                GROUP_CONCAT(rtfrt.resource_type_field ORDER BY rtfrt.resource_type_field) AS resource_type_field
            FROM resource_type rt
       LEFT JOIN tab t ON t.ref=rt.tab
       LEFT JOIN resource_type_field_resource_type rtfrt
              ON rtfrt.resource_type=rt.ref
+       GROUP BY rt.ref
        ORDER BY order_by,
-                rt.ref,
-                rtfrt.resource_type_field",
+                rt.ref",
         [],
         "schema");
     return $r;
@@ -8174,13 +8170,13 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     if(!in_array(strtolower($field_sort), $valid_sorts)){$field_sort = 'asc';}
     $conditions = [];
     $restypeconditions = [];
-    $groupcondition = "";
+    $groupcondition = "";$groupparams = [];
     $joins = [];
     $params = [];
     if(!is_array($restypes))
         {
         $restypes = array_filter(explode(",",$restypes),"is_int_loose"); 
-        }   
+        }
     $restypeselect = ",t.name AS tab_name, GROUP_CONCAT(rtfrt.resource_type ORDER BY rtfrt.resource_type) resource_types";
     $joins[] = " LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = rtf.ref";
     $joins[] = " LEFT JOIN tab t ON t.ref=rtf.tab";
@@ -8195,7 +8191,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         else
             {
             $restypeconditions[] = "FIND_IN_SET(?,resource_types)";
-            $params[] = "i";$params[] = $restype;
+            $groupparams[] = "i";$groupparams[] = $restype;
             }
         }
 
@@ -8223,6 +8219,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     
     $conditionstring = count($conditions) > 0 ? (" WHERE (" . implode(") AND (",$conditions) . ")") : "";
 
+    $params = array_merge($params,$groupparams);
     $allfields = ps_query("
            SELECT " . columns_in("resource_type_field", "rtf") . $restypeselect . "
              FROM resource_type_field rtf " . implode(" ",$joins)  . $conditionstring . " 

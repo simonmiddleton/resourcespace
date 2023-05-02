@@ -1,0 +1,47 @@
+<?php
+
+
+$lang["posixldapauth_plugin_heading"]='Konfiguracija dodatka Posixldapauth.';
+$lang["posixldapauth_enabled"]='Omogućeno:';
+$lang["posixldapauth_ldap_server"]='LDAP poslužitelj:';
+$lang["posixldapauth_ldap_information"]='Informacije o LDAP-u';
+$lang["posixldapauth_ldap_type"]='Vrsta LDAP-a:';
+$lang["posixldapauth_open_directory"]='Otvori direktorij';
+$lang["posixldapauth_active_directory"]='Aktivni direktorij';
+$lang["posixldapauth_ad_admin"]='AD administrator: AD administrator (Administrator Active Directory-a)';
+$lang["posixldapauth_ad_password"]='AD lozinka:';
+$lang["posixldapauth_ad_domain"]='AD domena:';
+$lang["posixldapauth_base_dn"]='Osnovni DN:';
+$lang["posixldapauth_user_container"]='Korisnički spremnik:';
+$lang["posixldapauth_this_is_added_to_base_dn"]='Ovo se dodaje na osnovni DN.';
+$lang["posixldapauth_group_container"]='Grupni DN:';
+$lang["posixldapauth_leave_blank_for_default_osx_server_mapping"]='Prebrisava zadani putanja pretraživanja za početnu točku grupa.';
+$lang["posixldapauth_member_field"]='Polje člana:';
+$lang["posixldapauth_use_to_overide_group_containers_member_field"]='Koristi se za poništavanje polja članova spremnika grupe.';
+$lang["posixldapauth_member_field_type"]='Tip polja člana:';
+$lang["posixldapauth_default"]='Zadano.';
+$lang["posixldapauth_user_name"]='Korisničko ime.';
+$lang["posixldapauth_use_to_change_content_of_group_member_field"]='Koristi se za promjenu sadržaja polja Član grupe.';
+$lang["posixldapauth_login_field"]='Polje za prijavu:';
+$lang["posixldapauth_test_connection"]='Testiranje veze:';
+$lang["posixldapauth_resourcespace_configuration"]='Konfiguracija ResourceSpace-a.';
+$lang["posixldapauth_user_suffix"]='Korisnički sufiks:';
+$lang["posixldapauth_create_users"]='Stvaranje korisnika:';
+$lang["posixldapauth_group_based_user_creation"]='Stvaranje korisnika na temelju grupe:';
+$lang["posixldapauth_new_user_group"]='Nova korisnička grupa:';
+$lang["posixldapauth_group_mapping"]='Grupno mapiranje.';
+$lang["posixldapauth_group_name"]='Naziv grupe.';
+$lang["posixldapauth_map_to"]='Mapiraj na';
+$lang["posixldapauth_enable_group"]='Omogući grupu.';
+$lang["posixldapauth_could_not_bind_to_ad_check_credentials"]='Nije bilo moguće povezati se s AD-om, molimo provjerite vjerodajnice.';
+$lang["posixldapauth_connection_to_ldap_server_failed"]='Veza s LDAP poslužiteljem nije uspjela.';
+$lang["posixldapauth_error-msg"]='Greška: %msg%';
+$lang["posixldapauth_passed"]='Prošao.';
+$lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='Testovi su uspješno prošli, molimo spremite svoje postavke i zatim se vratite kako biste postavili mapiranje grupe.';
+$lang["posixldapauth_tests_failed_check_settings_and_test_again"]='Testovi su neuspješni, molimo provjerite svoje postavke i testirajte ponovno.';
+$lang["posixldapauth_status_error_in"]='Statusna greška.';
+$lang["posixldapauth_server_error"]='Greška poslužitelja.';
+$lang["posixldapauth_could_not_connect_to_ldap_server"]='Nije bilo moguće povezati se s LDAP poslužiteljem.';
+$lang["posixldapauth_unable_to_search_ldap_server"]='Nije moguće pretražiti LDAP poslužitelj.';
+$lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% nije uspio, molimo provjerite postavke.';
+$lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP pretraživanje uspješno, ali nije pronađena niti jedna grupa.';

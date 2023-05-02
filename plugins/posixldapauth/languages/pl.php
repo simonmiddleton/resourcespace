@@ -1,0 +1,47 @@
+<?php
+
+
+$lang["posixldapauth_plugin_heading"]='Konfiguracja wtyczki Posixldapauth.';
+$lang["posixldapauth_enabled"]='Włączone:';
+$lang["posixldapauth_ldap_server"]='Serwer LDAP:';
+$lang["posixldapauth_ldap_information"]='Informacje LDAP';
+$lang["posixldapauth_ldap_type"]='Typ LDAP:';
+$lang["posixldapauth_open_directory"]='Otwórz katalog.';
+$lang["posixldapauth_active_directory"]='Katalog Aktywny';
+$lang["posixldapauth_ad_admin"]='AD Admin: Administrator Active Directory';
+$lang["posixldapauth_ad_password"]='Hasło AD:';
+$lang["posixldapauth_ad_domain"]='Domena AD:';
+$lang["posixldapauth_base_dn"]='Podstawowa jednostka bazowa (Base DN):';
+$lang["posixldapauth_user_container"]='Kontener użytkownika:';
+$lang["posixldapauth_this_is_added_to_base_dn"]='To jest dodane do podstawowego DN.';
+$lang["posixldapauth_group_container"]='Grupa DN:';
+$lang["posixldapauth_leave_blank_for_default_osx_server_mapping"]='Nadpisuje domyślną ścieżkę wyszukiwania punktu startowego dla grup.';
+$lang["posixldapauth_member_field"]='Pole członkowskie:';
+$lang["posixldapauth_use_to_overide_group_containers_member_field"]='Użyj, aby zastąpić pole członków kontenerów grupy.';
+$lang["posixldapauth_member_field_type"]='Typ pola członkowskiego:';
+$lang["posixldapauth_default"]='Domyślny';
+$lang["posixldapauth_user_name"]='Nazwa użytkownika.';
+$lang["posixldapauth_use_to_change_content_of_group_member_field"]='Użyj, aby zmienić zawartość pola Członek grupy.';
+$lang["posixldapauth_login_field"]='Pole logowania:';
+$lang["posixldapauth_test_connection"]='Testuj połączenie:';
+$lang["posixldapauth_resourcespace_configuration"]='Konfiguracja ResourceSpace';
+$lang["posixldapauth_user_suffix"]='Przyrostek użytkownika:';
+$lang["posixldapauth_create_users"]='Utwórz użytkowników:';
+$lang["posixldapauth_group_based_user_creation"]='Tworzenie użytkowników na podstawie grupy:';
+$lang["posixldapauth_new_user_group"]='Nowa grupa użytkowników:';
+$lang["posixldapauth_group_mapping"]='Mapowanie grup.';
+$lang["posixldapauth_group_name"]='Nazwa grupy.';
+$lang["posixldapauth_map_to"]='Mapowanie do';
+$lang["posixldapauth_enable_group"]='Włącz grupę.';
+$lang["posixldapauth_could_not_bind_to_ad_check_credentials"]='Nie można połączyć z AD, proszę sprawdzić dane uwierzytelniające.';
+$lang["posixldapauth_connection_to_ldap_server_failed"]='Nie udało się połączyć z serwerem LDAP.';
+$lang["posixldapauth_error-msg"]='Błąd: %msg%';
+$lang["posixldapauth_passed"]='Zaliczone.';
+$lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='Testy zakończone pomyślnie, proszę zapisać ustawienia, a następnie wrócić, aby ustawić mapowanie grup.';
+$lang["posixldapauth_tests_failed_check_settings_and_test_again"]='Testy nie powiodły się, proszę sprawdzić swoje ustawienia i przetestować ponownie.';
+$lang["posixldapauth_status_error_in"]='Błąd statusu.';
+$lang["posixldapauth_server_error"]='Błąd serwera.';
+$lang["posixldapauth_could_not_connect_to_ldap_server"]='Nie można połączyć się z serwerem LDAP.';
+$lang["posixldapauth_unable_to_search_ldap_server"]='Nie można wyszukać serwera LDAP.';
+$lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% nie powiodło się, proszę sprawdzić ustawienia.';
+$lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Sukces wyszukiwania LDAP, ale nie znaleziono żadnych grup.';

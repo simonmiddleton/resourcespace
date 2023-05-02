@@ -1,0 +1,32 @@
+{
+    "name": "montala/resourcespace",
+    "description": "ResourceSpace is the Digital Asset Management software offering a convenient, productive and easy to use solution for organising and sharing files.",
+    "homepage": "https://www.resourcespace.com",
+    "type": "project",
+    "license": "documentation/licenses/resourcespace.txt",
+    "require": {
+        "php": "^7.4 || ~8.1.0",
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "ankitpokhrel/tus-php": "~2.2.1"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.8"
+    },
+    "suggest": {
+        "ext-apcu": "Needed to improve upload performance."
+    },
+    "scripts": {
+        "dev:beforeCommit": [
+            "@dev:phpstan"
+        ],
+        "dev:phpstan": "phpstan analyse"
+    },
+    "support": {
+        "source": "https://svn.resourcespace.com/svn/rs/trunk/",
+        "docs": "https://www.resourcespace.com/knowledge-base/",
+        "forum": "https://groups.google.com/g/resourcespace",
+        "issues": "https://www.resourcespace.com/bug_report",
+        "security": "https://www.resourcespace.com/bug_report"
+    }
+}

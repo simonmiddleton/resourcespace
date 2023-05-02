@@ -1,0 +1,47 @@
+<?php
+
+
+$lang["posixldapauth_plugin_heading"]='Configurazione del plugin Posixldapauth';
+$lang["posixldapauth_enabled"]='Abilitato:';
+$lang["posixldapauth_ldap_information"]='Informazioni LDAP.';
+$lang["posixldapauth_ldap_type"]='Tipo di LDAP:';
+$lang["posixldapauth_open_directory"]='Directory aperto.';
+$lang["posixldapauth_active_directory"]='Directory Attivo';
+$lang["posixldapauth_ad_admin"]='AD Admin: Amministratore di Active Directory';
+$lang["posixldapauth_ad_password"]='Password AD:';
+$lang["posixldapauth_ad_domain"]='Dominio AD:';
+$lang["posixldapauth_base_dn"]='DN di base:';
+$lang["posixldapauth_user_container"]='Contenitore Utente:';
+$lang["posixldapauth_this_is_added_to_base_dn"]='Questo viene aggiunto alla DN di base.';
+$lang["posixldapauth_group_container"]='Gruppo DN:';
+$lang["posixldapauth_leave_blank_for_default_osx_server_mapping"]='Sovrascrive il percorso di ricerca predefinito per il punto di partenza dei gruppi.';
+$lang["posixldapauth_member_field"]='Campo Membro:';
+$lang["posixldapauth_use_to_overide_group_containers_member_field"]='Utilizzare per annullare il campo membro dei contenitori di gruppo.';
+$lang["posixldapauth_member_field_type"]='Tipo di campo membro:';
+$lang["posixldapauth_default"]='Predefinito';
+$lang["posixldapauth_user_name"]='Nome utente';
+$lang["posixldapauth_use_to_change_content_of_group_member_field"]='Usa per cambiare il contenuto del campo Membro del Gruppo.';
+$lang["posixldapauth_login_field"]='Campo di accesso:';
+$lang["posixldapauth_test_connection"]='Test di connessione:';
+$lang["posixldapauth_resourcespace_configuration"]='Configurazione di ResourceSpace';
+$lang["posixldapauth_user_suffix"]='Suffisso utente:';
+$lang["posixldapauth_create_users"]='Creare utenti:';
+$lang["posixldapauth_group_based_user_creation"]='Creazione utente basata su gruppo:';
+$lang["posixldapauth_new_user_group"]='Nuovo Gruppo Utenti:';
+$lang["posixldapauth_group_mapping"]='Mappatura dei gruppi.';
+$lang["posixldapauth_group_name"]='Nome del gruppo.';
+$lang["posixldapauth_map_to"]='Mappare su.';
+$lang["posixldapauth_enable_group"]='Abilita Gruppo.';
+$lang["posixldapauth_could_not_bind_to_ad_check_credentials"]='Impossibile connettersi a AD, controllare le credenziali.';
+$lang["posixldapauth_connection_to_ldap_server_failed"]='Connessione al server LDAP non riuscita.';
+$lang["posixldapauth_error-msg"]='Errore: %msg%';
+$lang["posixldapauth_passed"]='Superato.';
+$lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='Test superati, si prega di salvare le impostazioni e poi tornare per impostare la mappatura del gruppo.';
+$lang["posixldapauth_tests_failed_check_settings_and_test_again"]='Test falliti, controlla le tue impostazioni e riprova il test.';
+$lang["posixldapauth_status_error_in"]='Errore di stato.';
+$lang["posixldapauth_server_error"]='Errore del server.';
+$lang["posixldapauth_could_not_connect_to_ldap_server"]='Impossibile connettersi al server LDAP.';
+$lang["posixldapauth_unable_to_search_ldap_server"]='Impossibile cercare nel server LDAP.';
+$lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% non riuscito, controllare le impostazioni.';
+$lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Ricerca LDAP completata con successo, ma non sono stati trovati gruppi.';
+$lang["posixldapauth_ldap_server"]='Server LDAP:';

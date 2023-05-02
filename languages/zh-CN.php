@@ -673,11 +673,9 @@ $lang["setup-baseurl"]="Base URL:";
 $lang["setup-emailfrom"]="Email From Address:";
 $lang["setup-emailnotify"]="Email Notify:";
 $lang["setup-spiderpassword"]="Spider Password:";
-$lang["setup-scramblekey"]="Scramble Key:";
 $lang["setup-paths"]="Paths";
 $lang["setup-pathsdetail"]="For each path, enter the path without a trailing slash to each binary.  To disable a binary, leave the path blank.  Any auto-detected paths have already been filled in.";
 $lang["setup-applicationname"]="Application Name:";
-$lang["setup-basicsettingsfooter"]="NOTE: The only <strong>required</strong> settings are on this page.  If you're not interested in checking out the advanced options, you may click below to begin the installation process.";
 $lang["setup-if_mysqlserver"]='The IP address or <abbr title="Fully Qualified Domain Name">FQDN</abbr> of your MySQL server installation.  If MySql is installed on the same server as your web server, use "localhost".';
 $lang["setup-if_mysqlusername"]="The username used to connect to your MySQL server.  This user must have rights to create tables in the database named below.";
 $lang["setup-if_mysqlpassword"]="The password for the MySQL username entered above.";
@@ -686,14 +684,10 @@ $lang["setup-if_mysqlbinpath"]="The path to the MySQL client binaries - e.g. mys
 $lang["setup-if_baseurl"]="The 'base' web address for this installation.  NOTE: No trailing slash.";
 $lang["setup-if_emailfrom"]="The address that emails from RS appear to come from.";
 $lang["setup-if_emailnotify"]="The email address to which resource/user/research requests are sent.";
-$lang["setup-if_spiderpassword"]="The spider password is a required field.";
-$lang["setup-if_scramblekey"]="To enable scrambling, set the scramble key to be a hard-to-guess string (similar to a password).  If this is a public installation then this is a very wise idea.  Leave this field blank to disable resource path scrambling. This field has already been randomised for you, but you can change it to match an existing installation, if necessary.";
 $lang["setup-if_applicationname"]="The name of your implementation / installation (e.g. 'MyCompany Resource System').";
 $lang["setup-err_mysqlbinpath"]="Unable to verify path.  Leave blank to disable.";
 $lang["setup-err_baseurl"]="Base URL is a required field.";
 $lang["setup-err_baseurlverify"]="Base URL does not seem to be correct (could not load license.txt).";
-$lang["setup-err_spiderpassword"]="The password required for spider.php.  IMPORTANT: Randomise this for each new installation. Your resources will be readable by anyone that knows this password.  This field has already been randomised for you, but you can change it to match an existing installation, if necessary.";
-$lang["setup-err_scramblekey"]="If this is a public installation, setting the scramble key is recommended.";
 $lang["setup-err_path"]="Unable to verify location of";
 $lang["setup-emailerr"]="Not a valid email address.";
 
@@ -773,8 +767,6 @@ $lang["publishstatus"]="以公布的状态储存:";
 $lang["addnewcontent"]="新内容 (页数,名称)";
 $lang["hitcount"]="点击率";
 $lang["downloads"]="下载";
-
-$lang["addremove"]="";
 
 ##  Translations for standard log entries
 $lang["all_users"]="所有的用户";
@@ -1122,7 +1114,6 @@ $lang["information-derestrict_filter"]='解除限制过滤器。仅在与去除g
 $lang["information-push_metadata"]='如果设置了此属性，则此资源的元数据将显示在任何相关资源的资源查看页面上。例如，您可以将几张照片与一个人物资源相关联。如果在人物资源上设置了此属性，则所有相关照片资源记录上都将显示人物元数据，避免在系统中重复数据。';
 $lang["property-query"]='查询';
 $lang["information-id"]='注意：下面的“Id”必须设置为三个字符的唯一代码。';
-$lang["property-id"]='ID 的翻译是“标识符”或“身份证明”。在 ResourceSpace 中，ID 通常指资源、集合、元数据、标签、用户、组、工作流程或下载的唯一标识符。';
 $lang["property-width"]='宽度';
 $lang["property-height"]='高度';
 $lang["property-quality"]='质量';
@@ -1154,7 +1145,6 @@ $lang["smallthumbstitle"]='小缩略图';
 $lang["strip"]='剥离 (Bōlí)';
 $lang["striptitle"]='剥离视图';
 $lang["listtitle"]='列表视图';
-$lang["perpage_option"]='每页 ? (where ? represents the number of items per page)';
 $lang["powered_by"]='动力来自';
 $lang["powered_by_resourcespace"]='由ResourceSpace提供支持';
 $lang["on"]='在 (zài)';
@@ -1201,8 +1191,6 @@ $lang["editcollectionresources"]='编辑集合预览';
 $lang["collection_set_theme_category"]='添加到精选集分类';
 $lang["collection_set_theme_category_title"]='将集合添加到特色集合类别。';
 $lang["collection-name"]='集合: %collectionname%';
-$lang["collectionidprefix"]='Col_ID 的翻译是“列ID”。';
-$lang["_dupe"]='重复 (Chóngfù)';
 $lang["emailtousers_internal"]='电子邮件发送给用户<br><br>开始输入用户的姓名进行搜索，找到后点击所需用户。';
 $lang["create_new_here"]='创建于此处';
 $lang["create_new_below"]='创建一个新分类。';
@@ -1257,8 +1245,6 @@ $lang["page_collections_message"]='继续操作将取消选择此页面上标记
 $lang["delete_all_selected"]='删除所有已选项';
 $lang["range_no_start_header"]='范围错误';
 $lang["range_no_start"]='无法结束范围，因为没有起始点。请释放 Shift 键。';
-$lang["lightbox-image"]='图像';
-$lang["lightbox-of"]='的';
 $lang["treeobjecttype-resource_type"]='资源类型';
 $lang["resources_selected-1"]='已选择 1 个资源。';
 $lang["resources_selected-2"]='已选择%number个资源。';
@@ -1442,7 +1428,6 @@ $lang["information-derestrict_filter"]='解除限制过滤器。仅在与去除g
 $lang["information-push_metadata"]='如果设置了此属性，则此资源的元数据将显示在任何相关资源的资源查看页面上。例如，您可以将几张照片与一个人物资源相关联。如果在人物资源上设置了此属性，则所有相关照片资源记录上都将显示人物元数据，避免在系统中重复数据。';
 $lang["property-query"]='查询';
 $lang["information-id"]='注意：下面的“Id”必须设置为三个字符的唯一代码。';
-$lang["property-id"]='ID 的翻译是“标识符”或“身份证明”。在 ResourceSpace 中，ID 通常指资源、集合、元数据、标签、用户、组、工作流程或下载的唯一标识符。';
 $lang["property-width"]='宽度';
 $lang["property-height"]='高度';
 $lang["property-quality"]='质量';
@@ -1474,7 +1459,6 @@ $lang["smallthumbstitle"]='小缩略图';
 $lang["strip"]='剥离 (Bōlí)';
 $lang["striptitle"]='剥离视图';
 $lang["listtitle"]='列表视图';
-$lang["perpage_option"]='每页 ? (where ? represents the number of items per page)';
 $lang["powered_by"]='动力来自';
 $lang["powered_by_resourcespace"]='由ResourceSpace提供支持';
 $lang["on"]='在 (zài)';
@@ -1521,8 +1505,6 @@ $lang["editcollectionresources"]='编辑集合预览';
 $lang["collection_set_theme_category"]='添加到精选集分类';
 $lang["collection_set_theme_category_title"]='将集合添加到特色集合类别。';
 $lang["collection-name"]='集合: %collectionname%';
-$lang["collectionidprefix"]='Col_ID 的翻译是“列ID”。';
-$lang["_dupe"]='重复 (Chóngfù)';
 $lang["emailtousers_internal"]='电子邮件发送给用户<br><br>开始输入用户的姓名进行搜索，找到后点击所需用户。';
 $lang["create_new_here"]='创建于此处';
 $lang["create_new_below"]='创建一个新分类。';
@@ -1547,26 +1529,13 @@ $lang["archive-zip"]='ZIP的翻译为“压缩文件”。';
 $lang["archive-7z"]='7Z (7-Zip) 的简体字翻译为：7-Zip。';
 $lang["download-of-collections-not-enabled"]='集合的下载未启用。';
 $lang["archiver-utility-not-found"]='无法找到归档工具。';
-$lang["sortorder-asc"]='ASC的翻译取决于上下文，以下是几种可能的含义：
-
-1. 如果指的是ResourceSpace中的“升序排序”，则翻译为“升序”。
-2. 如果指的是ResourceSpace中的“访问控制清单”，则翻译为“访问控制清单”。
-3. 如果指的是某个组织、机构或公司的缩写，则需要根据具体情况进行翻译。
-4. 如果指的是其他含义，则需要提供更多上下文信息。';
-$lang["sortorder-desc"]='描述';
 $lang["modified"]='修改过的';
 $lang["resourcedownloads"]='资源下载';
 $lang["filedimensions"]='文件尺寸';
 $lang["vieworiginalresource"]='查看原始资源';
 $lang["previewithsizename"]='%sizename 预览';
 $lang["originalfileoftype"]='原始的 %EXTENSION 文件';
-$lang["fileoftype"]='文件';
 $lang["cell-fileoftype"]='文件类型：%EXTENSION';
-$lang["field-fileextension"]='文件扩展名';
-$lang["fileextension-inside-brackets"]='请翻译：[%EXTENSION]
-
-文件扩展名';
-$lang["fileextension"]='文件扩展名';
 $lang["mp3_preview_file"]='MP3 预览文件';
 $lang["action-request"]='请求';
 $lang["requestlog"]='请求日志';
@@ -1674,7 +1643,6 @@ $lang["mustaccept"]='您必须勾选该框以接受条款后才能继续。';
 $lang["termsmustindicateusage"]='您必须在继续之前指定计划使用方式。';
 $lang["termsmustspecifyusagecomment"]='您必须在继续之前提供计划使用注释。';
 $lang["proceed"]='进行';
-$lang["notavailableshort"]='N/A 的意思是“不适用”或“无法适用”，在数字资产管理软件中通常用于表示某些元数据或信息不可用或未填写。';
 $lang["allmonths"]='所有月份';
 $lang["allgroups"]='所有群组';
 $lang["status-ok"]='好的';
@@ -1683,7 +1651,6 @@ $lang["status-warning"]='警告';
 $lang["status-notinstalled"]='未安装';
 $lang["status-never"]='从未';
 $lang["softwareversion"]='版本？';
-$lang["softwarebuild"]='抱歉，这个字符串无法翻译，因为缺少上下文信息。请提供更多的上下文信息，以便我可以为您提供正确的翻译。';
 $lang["softwarenotfound"]='未找到 \'?\'。';
 $lang["client-encoding"]='客户端编码：%encoding';
 $lang["db-default-encoding"]='数据库编码：%encoding';
@@ -1729,7 +1696,6 @@ $lang["no_results_found"]='未找到结果。';
 $lang["function_not_enabled"]='此功能未启用。';
 $lang["stat-removedresourcefromcollection"]='从集合中移除资源';
 $lang["stat-keywordusage-noresultsfound"]='关键词使用 - 没有找到结果';
-$lang["plugin_field_fmt"]='%A (%B) 的翻译是： %A（%B）';
 $lang["share_selected"]='分享所选内容';
 $lang["sharecollection-name"]='共享集合 - %collectionname';
 $lang["share_theme_category"]='共享特色收藏分类';
@@ -1816,34 +1782,15 @@ $lang["setup-admin_password"]='管理员密码';
 $lang["setup-mysql_read_only_username"]='MySQL只读用户名';
 $lang["setup-mysql_read_only_password"]='MySQL只读密码';
 $lang["setup-if_mysql_read_only_username"]='用于以只读模式连接到您的MySQL服务器的用户名。此用户仅必须具有SELECT权限。它是可选的，不需要创建表或插入数据的权限。';
-$lang["setup-apiscramblekey"]='API混淆密钥';
 $lang["setup-if_mysql_read_only_password"]='上面输入的MySQL用户名的密码。';
 $lang["setup-if_admin_username"]='用于连接到ResourceSpace的用户名。此用户将是系统的第一个用户。 ';
 $lang["setup-if_admin_password"]='以上输入的管理员用户名的密码。';
-$lang["setup-if_apiscramblekey"]='将API混淆密钥设置为难以猜测的字符序列（类似于密码）。如果您计划使用API，则这是一个非常明智的想法。';
-$lang["setup-err_apiscramblekey"]='如果这是一个公共安装，建议设置API混淆密钥。';
 $lang["setup-err_phar_injection"]='潜在的 Phar PHP 对象注入检测到。';
 $lang["setup-admin_fullname_error"]='您必须填写完整的名称字段。';
 $lang["setup-rs_initial_configuration"]='ResourceSpace：初始配置';
 $lang["setup-include_not_writable"]='\'/include\' 不可写。仅在安装期间需要。';
 $lang["setup-binpath"]='%bin 路径';
 $lang["setup-begin_installation"]='开始安装！';
-$lang["setup-generaloptions"]='常规选项';
-$lang["setup-allow_password_change"]='允许更改密码？';
-$lang["setup-enable_remote_apis"]='启用远程API？';
-$lang["setup-if_allowpasswordchange"]='允许终端用户更改他们的密码。';
-$lang["setup-if_enableremoteapis"]='允许远程访问API插件。';
-$lang["setup-allow_account_requests"]='允许用户请求账户？';
-$lang["setup-display_research_request"]='显示“研究请求”功能？';
-$lang["setup-if_displayresearchrequest"]='允许用户通过表单请求资源，并通过电子邮件发送。';
-$lang["setup-themes_as_home"]='将特色收藏页面用作主页？';
-$lang["setup-remote_storage_locations"]='远程存储位置';
-$lang["setup-use_remote_storage"]='使用远程存储？';
-$lang["setup-if_useremotestorage"]='勾选此框以配置 RS 的远程存储位置。（使用另一台服务器进行文件存储。）';
-$lang["setup-storage_directory"]='存储目录';
-$lang["setup-if_storagedirectory"]='媒体文件存放位置。可以是绝对路径（/var/www/blah/blah）或相对于安装路径的路径。注意：不要加斜杠。';
-$lang["setup-storage_url"]='存储 URL';
-$lang["setup-if_storageurl"]='存储目录的位置。可以是绝对路径（http://files.example.com），也可以是相对于安装路径的路径。注意：不要包含尾部斜杠。';
 $lang["setup-smtp-settings"]='SMTP设置';
 $lang["setup-if-usesmtp"]='使用外部SMTP服务器发送电子邮件（例如Gmail）。使用PHPMailer。';
 $lang["setup-if-smtpsecure"]='请翻译：\'\'，\'tls\'或\'ssl\'。对于Gmail，需要使用\'tls\'或\'ssl\'。
@@ -1854,9 +1801,6 @@ $lang["setup-if-smtpport"]='端口号，例如使用SSL的Gmail的端口号为46
 $lang["setup-if-smtpauth"]='发送凭据到SMTP服务器（false表示使用匿名访问）';
 $lang["setup-if-smtpusername"]='用户名（完整电子邮件地址）。';
 $lang["setup-if-smtppassword"]='密码';
-$lang["design-options"]='设计选项';
-$lang["use-slim-theme"]='使用SlimHeader设计？';
-$lang["setup-if_slimtheme"]='使用SlimHeader设计而不是原始设计，以显示一个默认情况下带有链接标志的较窄的标题栏。';
 $lang["setup-login_to"]='登录到';
 $lang["setup-configuration_file_output"]='配置文件输出';
 $lang["more-information"]='更多信息';
@@ -1920,7 +1864,6 @@ $lang["marker"]='标记器';
 $lang["markers"]='标记 (Biao Ji)';
 $lang["map_configuration"]='搜索结果地图';
 $lang["map_introtext1"]='下面的地图显示了与搜索结果相关联的具有地理位置的资源。标记颜色设置为资源类型或自定义元数据字段（地图下方的键）。当标记重叠时，使用绿色聚类，并显示聚类标记数，可以缩放或双击聚类标记。单击单个标记以加载显示预览图像的资源弹出窗口。单击预览图像以加载该资源的窗口。将鼠标悬停在单个标记上以获取地理坐标。使用右上角的地图按钮更改底图。使用左下角的地图按钮将地图保存为PNG文件。';
-$lang["search_map_introtext"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
 $lang["edit_map_introtext"]='缩放地图以查看感兴趣的区域，然后单击地图以定位资源位置标记。使用“保存”按钮保存最近的地理位置，然后单击“返回资源编辑或地理定位集合”以返回。要搜索特定位置或地理特征名称，请使用右上角的搜索按钮。使用右上角的地图图层按钮更改底图。使用左下角的地图按钮将地图保存为PNG文件。';
 $lang["mapview"]='地图';
 $lang["maptitle"]='地图视图';
@@ -1963,9 +1906,7 @@ $lang["map_stamenterrain"]='地形';
 $lang["map_stamenterrainback"]='地形背景';
 $lang["map_stamenrelief"]='缓解';
 $lang["map_stamenwatercolor"]='水彩 (Shuǐcǎi)';
-$lang["map_esri_group"]='ESRI的翻译是“环境系统研究所”，它是一家专门从事地理信息系统（GIS）软件开发的公司。';
 $lang["map_esristreet"]='街道';
-$lang["map_esridelorme"]='DeLorme 的翻译是德罗姆。';
 $lang["map_esritopo"]='地形图 (dì xíng tú)';
 $lang["map_esriimagery"]='图像 (Túxiàng)';
 $lang["map_esriterrain"]='地形';
@@ -1974,12 +1915,9 @@ $lang["map_esriphysical"]='物理的 (wù lǐ de)';
 $lang["map_esriocean"]='海洋';
 $lang["map_esrinatgeo"]='国家地理学会';
 $lang["map_esrigray"]='灰色画布';
-$lang["map_nasagibs_group"]='NASA GIBS 的简体字翻译为：NASA地球观测信息系统。';
 $lang["map_nasagibscolor"]='Modis/Terra 彩色图像';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra 假彩色图像';
 $lang["map_nasagibsnight"]='夜间图像';
-$lang["map_mapbox_group"]='Mapbox 的简体字翻译为地图宝。';
-$lang["map_mapboxid"]='ID 的翻译是“标识符”或“身份证明”。在 ResourceSpace 中，ID 通常指资源、用户、组或集合的唯一标识符。';
 $lang["map_mapboxtoken"]='访问令牌';
 $lang["map_mapbox"]='默认地图';
 $lang["map_usgs_group"]='国家地图';
@@ -1997,7 +1935,6 @@ $lang["exiftoolnotfound"]='无法找到Exiftool。';
 $lang["existing_tags"]='现有的Exiftool标签';
 $lang["new_tags"]='新的Exiftool标签（将在下载时添加）';
 $lang["date_of_download"]='下载日期';
-$lang["field_ref_and_name"]='%ref% - %name% 的简体字翻译为：%ref% - %name%。';
 $lang["metadata-report-fits_section"]='FITS标签映射';
 $lang["usagecomments"]='使用';
 $lang["dosavedsearch"]='请翻译：Do saved search
@@ -2125,8 +2062,6 @@ $lang["star"]='星星';
 $lang["stars"]='星星';
 $lang["noupload"]='不上传。';
 $lang["permissions"]='权限';
-$lang["configdefault-title"]='I\'m sorry, but I cannot see any text to translate. Please provide me with the text you want me to translate.';
-$lang["config-title"]='请注意不要出现语法错误。如果您破坏了此文件，您必须在服务器端进行修复！';
 $lang["file_too_large"]='文件太大。';
 $lang["field_updated"]='字段已更新';
 $lang["zoom"]='缩放 (Suōfàng)';
@@ -2215,21 +2150,11 @@ $lang["editresourcetypewarning"]='警告：更改资源类型将删除当前存�
 $lang["geodragmode"]='拖动模式';
 $lang["geodragmodearea"]='位置标记 (Wèi Zhì Biāo Jì)';
 $lang["geodragmodeareaselect"]='请选择搜索区域。';
-$lang["geodragmodepan"]='平底锅';
 $lang["substituted_original"]='替换原始的 (Tìhuàn yuánshǐ de)';
 $lang["use_original_if_size"]='如果所选尺寸不可用，使用原始尺寸？';
 $lang["originals-available-0"]='可用的';
 $lang["originals-available-1"]='可用的';
 $lang["originals-available-2"]='可用的';
-$lang["inch-short"]='在';
-$lang["centimetre-short"]='厘米';
-$lang["megapixel-short"]='MP的翻译取决于上下文，它可以是以下任何一种：
-
-1. 计量单位：兆像素（Megapixel），通常用于描述数码相机或其他数字图像设备的分辨率。
-2. 政治职位：议员（Member of Parliament），通常指国家或地区的立法机构中的成员。
-3. 消息发布：新闻稿（Media Press），通常指公司或组织发布的新闻或公告。
-
-如果您能提供更多上下文信息，我可以更准确地为您提供翻译。';
 $lang["deletedresource"]='已删除的资源。';
 $lang["deletedresources"]='已删除的资源';
 $lang["nopreviewresources"]='没有预览的资源';
@@ -2339,21 +2264,6 @@ $lang["resources-with-requeststatus0-2"]='(%number待处理)';
 $lang["researches-with-requeststatus0-0"]='(0 未分配)';
 $lang["researches-with-requeststatus0-1"]='（1 未分配）';
 $lang["researches-with-requeststatus0-2"]='(%number 未分配)';
-$lang["byte-symbol"]='抱歉，"B" 本身不是一个需要翻译的单词或短语。如果您有其他需要翻译的内容，请告诉我。';
-$lang["kilobyte-symbol"]='请翻译：KB
-
-千字节';
-$lang["megabyte-symbol"]='MB的翻译是“兆字节”，在数字资产管理软件ResourceSpace中通常用于表示资源文件的大小。';
-$lang["gigabyte-symbol"]='GB can be translated to "千兆字节" in simplified Chinese, which is a unit of digital information storage equivalent to 1,000 megabytes or 1 billion bytes.';
-$lang["terabyte-symbol"]='抱歉，这个字符串没有上下文或足够的信息来进行翻译。请提供更多上下文或信息。';
-$lang["kilobyte-symbol-binary"]='请翻译：KiB
-
-KiB是计算机存储容量的单位，表示千字节。';
-$lang["megabyte-symbol-binary"]='MiB 的翻译是“兆字节”（Mebibyte 的缩写）。';
-$lang["gigabyte-symbol-binary"]='请翻译：GiB
-
-GiB是计算机存储容量的单位，表示“Gibibyte”，翻译为简体字为“吉字节”。';
-$lang["terabyte-symbol-binary"]='TiB 的翻译是“提比”（一种计量单位，等于1024 GiB）。';
 $lang["upload_files"]='上传文件';
 $lang["upload_files-to_collection"]='上传文件（到集合 \'%collection\'）';
 $lang["ascending"]='升序';
@@ -2367,9 +2277,6 @@ $lang["save-conflict-title"]='编辑冲突';
 $lang["theme_home_promote"]='在主页上推广？';
 $lang["theme_home_page_text"]='主页文本';
 $lang["theme_home_page_image"]='主页图片';
-$lang["ref-title"]='请翻译： %ref - %title
-
-%ref - %title 的翻译为： %ref - %title';
 $lang["error-pageload"]='抱歉，加载此页面时出现错误。如果您正在执行搜索，请尝试优化您的搜索查询。如果问题仍然存在，请联系您的系统管理员。';
 $lang["copy-field"]='复制字段';
 $lang["copy-to-resource-type"]='复制到资源类型';
@@ -2424,9 +2331,6 @@ $lang["comments_body-placeholder"]='添加评论。使用@(用户名)来标记�
 $lang["comments_fullname-placeholder"]='您的姓名（必填）';
 $lang["comments_email-placeholder"]='您的电子邮件（必填）';
 $lang["comments_website-url-placeholder"]='网站';
-$lang["comments_flag-this-comment"]='请翻译：Flag
-
-标记';
 $lang["comments_flag-has-been-flagged"]='评论已标记。';
 $lang["comments_flag-reason-placeholder"]='标记评论的原因';
 $lang["comments_validation-fields-failed"]='请确保所有必填字段已正确填写。';
@@ -2595,103 +2499,6 @@ $lang["action-move-down"]='下移';
 $lang["action-move-to"]='移动到';
 $lang["delete_user_group_checkbox_alert_message"]='请注意，此操作还将删除与此用户组相关的所有内容文本。在“管理内容”中找到了%%RECORDSCOUNT%%条记录。';
 $lang["about__about"]='您的关于文本在此处。';
-$lang["all__comments_flag_notification_email_body"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_flag_notification_email_subject"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_policy"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_removal_message"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__emailbulk"]='请翻译：<br /><br />
-[text]<br /><br />
-[text_footer]
-
-[文本]<br /><br />
-[页脚文本]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]：[message]<br /><br />
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]：[message]<br /><br />
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [外部电子邮件收集消息]<br /><br />
-[消息]：[message]<br /><br />
-[点击链接查看收藏] [list]';
-$lang["all__emaillogindetails"]='[欢迎]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username]：[username]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[用户名]（[用户全名] - [用户电子邮件]）
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]：[名称]<br /><br />
-[lang_descriptionofproject]：[描述]<br /><br />
-[lang_deadline]：[截止日期]<br /><br />
-[lang_contacttelephone]：[联系电话]<br /><br />
-[lang_finaluse]：[最终用途]<br /><br />
-[lang_shaperequired]：[所需形状]<br /><br />
-[lang_noresourcesrequired]：[所需资源数]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[列表]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] 已分配给您。请登录 ResourceSpace 查看并处理此请求。<br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br /><br />
-
-[lang_researchrequestcompletemessage]：研究请求已完成。 <br /><br />
-[lang_clicklinkviewcollection]：请点击以下链接查看集合。 <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]：此电子邮件由 ResourceSpace 发送。 <br /><br />';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]：[username] <br />
-[list] <br />
-[details] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> ';
 $lang["all__footer"]='由 <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace 开源数字资产管理</a> 驱动';
 $lang["all__researchrequest"]='让我们的资源团队找到您所需的资源。';
 $lang["change_language__introtext"]='请选择下面的语言。';
@@ -2722,7 +2529,6 @@ $lang["done__user_request"]='您的用户账户请求已发送。您的登录详
 $lang["download_click__introtext"]='下载资源文件，请右键单击下面的链接并选择“另存为...”。然后会询问您想要保存文件的位置。要在浏览器中打开文件，只需单击链接即可。';
 $lang["download_progress__introtext"]='您的下载将很快开始。当您的下载完成后，请使用下面的链接继续。';
 $lang["downloadfile_nofile"]='所请求的文件未找到。';
-$lang["edit__batch"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["edit__multiple"]='请选择您希望覆盖的字段。您未选择的字段将保持不变。';
 $lang["home__restrictedtitle"]='欢迎使用 ResourceSpace [ver]';
 $lang["home__welcometext"]='简单、快速、免费的数字资产组织方式。';
@@ -2733,7 +2539,6 @@ $lang["resource_email__introtext"]='通过电子邮件快速与其他用户共�
 $lang["resource_request__introtext"]='您的请求即将完成。请提供请求原因，以便我们能够高效地回复。';
 $lang["search_advanced__introtext"]='<strong>搜索提示</strong><br />您留空或不勾选的任何部分都将包含搜索中的所有这些术语。例如，如果您将所有国家框留空，则搜索将返回来自所有这些国家的结果。如果您仅选择“阿尔及利亚”，则结果将仅包含来自“阿尔及利亚”的资源。';
 $lang["team_archive__introtext"]='编辑单个归档资源，只需搜索资源，然后在资源屏幕上的“资源工具”面板中单击“编辑”。所有准备归档的资源都列在“待归档资源”列表中。从该列表中，可以添加更多信息并将资源记录转移到归档中。';
-$lang["team_content__introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["team_copy__introtext"]='请输入您想要复制的资源的ID。只有资源数据将被复制 - 任何已上传的文件将不会被复制。';
 $lang["team_home__introtext"]='欢迎来到管理员区域。使用下面的链接管理资源、响应资源请求、管理特色收藏夹和更改系统设置。';
 $lang["team_report__introtext"]='请选择一个报告和一个日期范围。该报告可以在Microsoft Excel或类似的电子表格应用程序中打开。';
@@ -2747,7 +2552,6 @@ $lang["terms__terms"]='您的条款和条件在此处。';
 $lang["terms__upload_terms"]='您的上传条款和条件在此处。';
 $lang["themes__findpublic"]='公共收藏是其他用户共享的资源集合。';
 $lang["themes__introtext"]='精选集是由管理员选择的资源组，旨在展示系统中可用资源的示例。';
-$lang["upload__introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["user_password__introtext"]='请输入您的电子邮件地址，您的用户名和密码将发送给您。';
 $lang["user_preferences__introtext"]='在下面输入新密码以更改您的密码。';
 $lang["user_preferences__introtext_new"]='请在下方输入密码。';
@@ -2846,7 +2650,6 @@ $lang["tile_thmsl"]='精选集合';
 $lang["tile_custm"]='自定义';
 $lang["tile_pend"]='待定';
 $lang["plugin_category_general"]='通用的';
-$lang["plugin_category_api"]='API的翻译为“应用程序编程接口”。';
 $lang["plugin_category_advanced"]='高级的';
 $lang["plugin_category_design"]='设计';
 $lang["plugin_category_ecommerce"]='电子商务';
@@ -3153,7 +2956,6 @@ $lang["image_quality_92"]='打印';
 $lang["image_quality_80"]='网页';
 $lang["image_quality_50"]='低';
 $lang["image_quality_40"]='非常低';
-$lang["systemconfig_api"]='API的翻译为“应用程序编程接口”。';
 $lang["iiif_enable_option"]='启用 IIIF 支持。';
 $lang["iiif_disabled"]='IIIF未配置。';
 $lang["property-personal_data"]='可能包含个人数据。';
@@ -3230,17 +3032,6 @@ $lang["start"]='开始';
 $lang["file_integrity_summary"]='文件完整性报告';
 $lang["file_integrity_summary_failed"]='资源文件未通过完整性检查或已丢失。请点击链接查看这些资源，并根据需要采取行动，例如从备份中恢复文件。';
 $lang["file_integrity_fail_search"]='文件完整性故障';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='查看可疑资源';
 $lang["team_resource_integrity_fail_info"]='缺失或可能损坏文件的资源';
 $lang["collection_copy_resources"]='复制集合资源';
@@ -3278,7 +3069,7 @@ $lang["error_locked_other_user"]='资源被其他用户锁定。';
 $lang["error-edit_noaccess_resources"]='资源没有编辑权限：';
 $lang["error-edit_locked_resources"]='以下资源已被锁定：';
 $lang["locked_resource_search"]='锁定的资源';
-$lang["autocomplete_log_note"]='自动完成';
+$lang["autocomplete_log_note"]='(自动完成)';
 $lang["posted-file-not-found"]='文件未找到。';
 $lang["error-theme-missing"]='特色收藏缺失或未指定。';
 $lang["system_config_search_engines"]='搜索引擎';
@@ -3305,7 +3096,6 @@ $lang["job_value"]='价值';
 $lang["job_boost"]='提升作业';
 $lang["job_priority"]='优先级';
 $lang["csv_export_offline_option"]='离线生成CSV文件？这应该用于大型结果集。CSV文件生成完成后，您将通过ResourceSpace消息进行通知。';
-$lang["csv_export_filename"]='元数据导出_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='您的 CSV 导出已准备就绪。';
 $lang["offline_processing_disabled"]='此系统未配置离线作业处理。如需启用，请联系您的系统管理员。';
 $lang["csv_export_offline_only"]='离线处理必须在导出超过 %%RESOURCE_COUNT%% 个资源的数据时使用。';

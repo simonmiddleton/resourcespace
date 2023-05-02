@@ -1,0 +1,47 @@
+<?php
+
+
+$lang["posixldapauth_plugin_heading"]='Konfigurasjon av Posixldapauth-tillegget.';
+$lang["posixldapauth_enabled"]='Aktivert.';
+$lang["posixldapauth_ldap_server"]='LDAP-server:';
+$lang["posixldapauth_ldap_information"]='LDAP-informasjon.';
+$lang["posixldapauth_ldap_type"]='LDAP-type:';
+$lang["posixldapauth_open_directory"]='Åpen katalog.';
+$lang["posixldapauth_active_directory"]='Aktivt katalogtjeneste (Active Directory)';
+$lang["posixldapauth_ad_admin"]='AD-administrator:';
+$lang["posixldapauth_ad_password"]='AD-passord:';
+$lang["posixldapauth_ad_domain"]='AD-domene:';
+$lang["posixldapauth_base_dn"]='Grundleggende DN:';
+$lang["posixldapauth_user_container"]='Brukerbeholder:';
+$lang["posixldapauth_this_is_added_to_base_dn"]='Dette legges til grunn-DN.';
+$lang["posixldapauth_group_container"]='Gruppenavn:';
+$lang["posixldapauth_leave_blank_for_default_osx_server_mapping"]='Overskrider standard søkesti startpunktet for grupper.';
+$lang["posixldapauth_member_field"]='Medlemsfelt:';
+$lang["posixldapauth_use_to_overide_group_containers_member_field"]='Bruk for å overstyre medlemsfeltet til gruppebeholderne.';
+$lang["posixldapauth_member_field_type"]='Medlemsfelttype:';
+$lang["posixldapauth_default"]='Standardinnstilling';
+$lang["posixldapauth_user_name"]='Brukernavn.';
+$lang["posixldapauth_use_to_change_content_of_group_member_field"]='Bruk for å endre innholdet i feltet for gruppe-medlemmer.';
+$lang["posixldapauth_login_field"]='Påloggingsfelt:';
+$lang["posixldapauth_test_connection"]='Test tilkobling:';
+$lang["posixldapauth_resourcespace_configuration"]='ResourceSpace konfigurasjon';
+$lang["posixldapauth_user_suffix"]='Bruker Suffix:';
+$lang["posixldapauth_create_users"]='Opprett brukere:';
+$lang["posixldapauth_group_based_user_creation"]='Opprettelse av brukere basert på grupper:';
+$lang["posixldapauth_new_user_group"]='Ny brukergruppe:';
+$lang["posixldapauth_group_mapping"]='Gruppekartlegging.';
+$lang["posixldapauth_group_name"]='Gruppenavn.';
+$lang["posixldapauth_map_to"]='Kart til.';
+$lang["posixldapauth_enable_group"]='Aktiver gruppe.';
+$lang["posixldapauth_could_not_bind_to_ad_check_credentials"]='Kunne ikke binde til AD, vennligst sjekk legitimasjon.';
+$lang["posixldapauth_connection_to_ldap_server_failed"]='Tilkobling til LDAP-serveren mislyktes.';
+$lang["posixldapauth_error-msg"]='Feil: %msg%';
+$lang["posixldapauth_passed"]='Bestått.';
+$lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='Tester bestått, vennligst lagre innstillingene dine og gå tilbake for å sette gruppekobling.';
+$lang["posixldapauth_tests_failed_check_settings_and_test_again"]='Tester feilet, vennligst sjekk innstillingene dine og test på nytt.';
+$lang["posixldapauth_status_error_in"]='Statusfeil i.';
+$lang["posixldapauth_server_error"]='Serverfeil.';
+$lang["posixldapauth_could_not_connect_to_ldap_server"]='Kunne ikke koble til LDAP-serveren.';
+$lang["posixldapauth_unable_to_search_ldap_server"]='Kan ikke søke i LDAP-serveren.';
+$lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% mislyktes, vennligst sjekk innstillingene.';
+$lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP-søk vellykket, men ingen grupper funnet.';
