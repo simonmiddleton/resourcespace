@@ -1458,7 +1458,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction;
 
     # We will need this to log errors
     $uploadedfilename = getval("file_name",""); 
@@ -1710,7 +1710,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if(file_exists($pre_source))
                             {
                             list($checkw,$checkh) = @getimagesize($pre_source);
-                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size)
+                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size || $pre_source == $origfile) // If $pre_source == $origfile get icc profile again as this size maybe used as source for smaller sizes
                                 {
                                 $file = $pre_source;
                                 if($file == $origfile)
@@ -1957,6 +1957,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 $mpr_parts['sourceprofile']='';
                                 $mpr_parts['strip_target']=false;
                                 $mpr_parts['targetprofile']='';
+                                }
+                            else if ($icc_extraction)
+                                {
+                                // Keep any profile extracted (don't use -strip).
+                                $profile=" -colorspace ".$imagemagick_colorspace;
                                 }
                             else
                                 {
