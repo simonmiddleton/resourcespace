@@ -680,6 +680,7 @@ $popularity_sort=true;
 # What is the default sort order?
 # Options are date, colour, relevance, popularity, country
 $default_sort="relevance";
+$default_sort_direction="DESC";
 
 # What is the default sort order when viewing collection resources?
 # Options are date, colour, collection, popularity, country, resourcetype

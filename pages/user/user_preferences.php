@@ -125,6 +125,7 @@ include "../../include/header.php";
         '',
         true
     );
+    $page_def[] = config_add_single_select('default_sort_direction', $lang['userpreference_default_sort_order_label'], ['ASC' => 'Ascending', 'DESC' => 'Descending'], true, 300, '', true);
     $page_def[] = config_add_single_select('default_perpage', $lang['userpreference_default_perpage_label'], array(24, 48, 72, 120, 240), false, 300, '', true);
 
     // Default Display
