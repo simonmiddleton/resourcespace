@@ -18,7 +18,6 @@ $lang["checkmail_password"]='Lozinka';
 $lang["checkmail_extension_mapping"]='Vrsta resursa putem mapiranja ekstenzija datoteka.';
 $lang["checkmail_default_resource_type"]='Zadani tip resursa.';
 $lang["checkmail_extension_mapping_desc"]='Nakon odabira zadane vrste resursa, ispod se nalazi jedan unos za svaku vrstu resursa. <br />Da biste prisilili prenesene datoteke različitih vrsta u određenu vrstu resursa, dodajte popise razdvojene zarezima ekstenzija datoteka (npr. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Dozvoljene ekstenzije.';
 $lang["checkmail_subject_field"]='Polje predmeta';
 $lang["checkmail_body_field"]='Polje Tijela';
 $lang["checkmail_purge"]='Izbriši e-poštu nakon prijenosa?';

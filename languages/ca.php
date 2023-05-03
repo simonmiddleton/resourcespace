@@ -1636,7 +1636,7 @@ $lang["zipcommand_overridden"]='Però si us plau, tingueu en compte que $zipcomm
 $lang["lastscheduledtaskexection"]='Última execució programada de tasques (dies)';
 $lang["executecronphp"]='La coincidència de rellevància no serà efectiva i els informes periòdics per correu electrònic no es enviaran. Assegureu-vos que <a href=\'../batch/cron.php\'>batch/cron.php</a> s\'executi com a mínim una vegada al dia a través d\'una tasca cron o similar.';
 $lang["shouldbeormore"]='hauria de ser ? o més gran.';
-$lang["config_file"]='configuració: %fitxer';
+$lang["config_file"]='configuració: %file';
 $lang["large_file_support_64_bit"]='Suport de fitxers grans (plataforma de 64 bits)';
 $lang["large_file_warning_32_bit"]='ATENCIÓ: S\'està executant PHP de 32 bits. No es donarà suport a fitxers més grans de 2 GB.';
 $lang["server_timezone_check"]='La zona horària de PHP és la mateixa que utilitza MySQL.';
@@ -1848,7 +1848,7 @@ $lang["warningrequestapprovalfield"]='Advertència - ID de recurs % - si us plau
 $lang["yyyy-mm-dd"]='AAAA-MM-DD';
 $lang["resources-with-requeststatus0-0"]='(0 pendent)';
 $lang["resources-with-requeststatus0-1"]='(1 pendent)';
-$lang["resources-with-requeststatus0-2"]='(%nombre pendent)';
+$lang["resources-with-requeststatus0-2"]='(%number pendent)';
 $lang["researches-with-requeststatus0-0"]='(0 sense assignar)';
 $lang["researches-with-requeststatus0-1"]='(1 sense assignar)';
 $lang["researches-with-requeststatus0-2"]='(%number sense assignar)';
@@ -1936,7 +1936,7 @@ $lang["all-resourcetypes"]='recursos';
 $lang["all-collectiontypes"]='col·leccions';
 $lang["resourcetypes-no_collections"]='Tots els %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Tots els %collectiontypes%';
-$lang["resourcetypes-collections"]='Tots els %tipusderecurs% i tots els %tipusdecol·lecció%';
+$lang["resourcetypes-collections"]='Tots els %resourcetypes% i tots els %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Bloquejar l\'accés a l\'estat del flux de treball.';
 $lang["collection_share_status_warning"]='Avís - aquesta col·lecció té recursos en els següents estats, si us plau, comprova que aquests recursos seran accessibles per altres usuaris.';
 $lang["contactadmin"]='Contacteu amb l\'administrador.';
@@ -2695,23 +2695,6 @@ $lang["upload_share_email_subject"]='T\'ha estat enviat un enllaç de pujada des
 $lang["upload_share_email_text"]='ha enviat un enllaç per carregar fitxers a.';
 $lang["upload_share_email_password"]='Utilitza aquesta contrasenya per accedir a l\'enllaç.';
 $lang["upload_share_email_clicklink"]='Si us plau, utilitzeu l\'enllaç següent per començar a pujar fitxers.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [missatge]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Gràcies per pujar el fitxer. Si us plau, utilitza el botó de sota per pujar més recursos.';
 $lang["error_invalid_usergroup"]='Grup d\'usuari no vàlid.';
 $lang["error_invalid_date"]='Data no vàlida.';
@@ -2722,17 +2705,6 @@ $lang["error_no_resources_edit"]='No s\'han trobat recursos per editar. Si acabe
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='S\'han carregat recursos a la teva col·lecció compartida.';
 $lang["notify_upload_share_new_subject"]='Nous carregues externes.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new]
-<br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_notify_upload_share_new]
-<br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Les meves accions.';
 $lang["manage_shares_title"]='Comparticions externes.';
 $lang["share_purge_text"]='Eliminar les comparticions caducades.';

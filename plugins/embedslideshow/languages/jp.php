@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='埋め込み';
-$lang["embedslideshow_minimise"]='「スライドショーを最小化する」';
+$lang["embedslideshow_minimise"]='&minus; 「スライドショーを最小化する」';
 $lang["embedslideshow_maximise"]='スライドショーを最大化する。';
 $lang["embedslideshow_size"]='スライドショーのサイズは？';
 $lang["sizename_pixels"]='%name (%pixels ピクセル)';

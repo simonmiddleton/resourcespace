@@ -2,7 +2,6 @@
 
 
 $lang["embed"]='Ενσωμάτωση';
-$lang["embedslideshow_minimise"]='Ελαχιστοποίηση παρουσίασης διαφανειών.';
 $lang["embedslideshow_maximise"]='Μεγιστοποίηση παρουσίασης διαφανειών.';
 $lang["embedslideshow_size"]='Μέγεθος παρουσίασης;';
 $lang["sizename_pixels"]='%name (%pixels εικονοστοιχεία)';

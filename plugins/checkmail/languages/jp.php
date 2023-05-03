@@ -17,7 +17,6 @@ $lang["checkmail_password"]='パスワード';
 $lang["checkmail_extension_mapping"]='ファイル拡張子マッピングによるリソースタイプ';
 $lang["checkmail_default_resource_type"]='デフォルトのリソースタイプ';
 $lang["checkmail_extension_mapping_desc"]='デフォルトのリソースタイプセレクターの下に、各リソースタイプごとに1つの入力欄があります。<br />アップロードされた異なるタイプのファイルを特定のリソースタイプに強制するには、ファイル拡張子のカンマ区切りリストを追加してください（例：jpg、gif、png）。';
-$lang["checkmail_resource_type_population"]='許可された拡張子から。';
 $lang["checkmail_subject_field"]='件名フィールド';
 $lang["checkmail_body_field"]='本文フィールド';
 $lang["checkmail_purge"]='アップロード後にメールを削除しますか？';

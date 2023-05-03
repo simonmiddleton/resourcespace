@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Imutabil.';
-$lang["doi_info_wikipedia"]='Identificatorul de obiect digital (DOI) este un sistem de identificare persistentă a obiectelor digitale, cum ar fi documente științifice, seturi de date și alte tipuri de conținut digital. Acesta utilizează un format standardizat pentru a permite identificarea unică și permanentă a fiecărui obiect digital și pentru a facilita accesul la acesta prin intermediul internetului. DOI-urile sunt utilizate în special în mediul academic și de cercetare pentru a asigura citabilitatea și accesibilitatea durabilă a resurselor digitale.';
 $lang["doi_info_link"]='pe <a target="_blank" href="https://ro.wikipedia.org/wiki/Identificator_de_Obiect_Digital">Identificatorii de Obiecte Digitale (DOI)</a>.';
 $lang["doi_info_metadata_schema"]='Înregistrarea DOI la DataCite.org este descrisă în <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Documentația Schema Metadata Datacite</a>.';
 $lang["doi_info_mds_api"]='Pe API-DOI utilizat de acest plugin sunt specificate în <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Documentația API Datacite</a>.';

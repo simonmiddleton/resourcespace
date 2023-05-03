@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Integrer (as in "Integrer ressource")';
-$lang["embedslideshow_minimise"]='Minimer diasshowet.';
+$lang["embedslideshow_minimise"]='&minus; minimer diasshowet.';
 $lang["embedslideshow_maximise"]='Maksimer slideshowet.';
 $lang["embedslideshow_size"]='Billedshow størrelse?';
 $lang["embedslideshow_transitiontime"]='Varighed pr. dias?';

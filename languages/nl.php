@@ -1728,9 +1728,6 @@ $lang["nodownloadcollection"]='Je hebt geen toegang om een van de resources in d
 $lang["progress"]='Voortgang';
 $lang["ticktodeletethisresearchrequest"]='Aanvinken om dit verzoek te verwijderen.';
 $lang["done"]='Afgerond.';
-$lang["latlong"]='Please translate: Lat / long
-
-Please provide the context in which this term is being used.';
 $lang["geographicsearch"]='Geografische zoekopdracht.';
 $lang["geographicsearchresults"]='Geografische zoekresultaten';
 $lang["geographicsearchmissing"]='Geografische zoekcriteria ontbreken.';
@@ -1858,10 +1855,10 @@ $lang["resourceids"]='Bron-ID(\'s)';
 $lang["warningrequestapprovalfield"]='Waarschuwing - bron-ID % - let op de volgende punten voordat u goedkeurt.';
 $lang["resources-with-requeststatus0-0"]='(0 in behandeling)';
 $lang["resources-with-requeststatus0-1"]='(1 in behandeling)';
-$lang["resources-with-requeststatus0-2"]='(%aantal in afwachting)';
+$lang["resources-with-requeststatus0-2"]='(%number in afwachting)';
 $lang["researches-with-requeststatus0-0"]='(0 niet toegewezen)';
 $lang["researches-with-requeststatus0-1"]='(1 niet toegewezen)';
-$lang["researches-with-requeststatus0-2"]='(%aantal niet toegewezen)';
+$lang["researches-with-requeststatus0-2"]='(%number niet toegewezen)';
 $lang["upload_files"]='Bestanden uploaden.';
 $lang["upload_files-to_collection"]='Bestanden uploaden (naar de collectie \'%collection\')';
 $lang["ascending"]='Oplopend';
@@ -2718,23 +2715,6 @@ $lang["upload_share_email_subject"]='Je hebt een uploadlink ontvangen van';
 $lang["upload_share_email_text"]='heeft je een link gestuurd om bestanden te uploaden.';
 $lang["upload_share_email_password"]='Gebruik dit wachtwoord om toegang te krijgen tot de link.';
 $lang["upload_share_email_clicklink"]='Gebruik de onderstaande link om te beginnen met uploaden.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-Van: [from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-Klik op de onderstaande link om toegang te krijgen tot de gedeelde bron:<br />
-<br />
-[link]
-<br />
-<br />
-Wachtwoord: [passwordtext]';
 $lang["upload_share_complete"]='Bedankt voor het uploaden. Gebruik de onderstaande knop om meer resources te uploaden.';
 $lang["error_invalid_usergroup"]='Ongeldige gebruikersgroep.';
 $lang["error_invalid_date"]='Ongeldige datum.';
@@ -2745,11 +2725,6 @@ $lang["error_no_resources_edit"]='Geen bronnen gevonden om te bewerken. Als u zo
 $lang["password_unchanged"]='(ongewijzigd)';
 $lang["notify_upload_share_new"]='Bronnen zijn geüpload naar jouw gedeelde collectie.';
 $lang["notify_upload_share_new_subject"]='Nieuwe externe uploads.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Er is een nieuwe gedeelde collectie aangemaakt met de volgende bronnen:<br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Mijn aandelen.';
 $lang["manage_shares_title"]='Externe delingen.';
 $lang["share_purge_text"]='Verwijder verlopen shares.';

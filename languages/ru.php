@@ -1933,7 +1933,7 @@ $lang["all-resourcetypes"]='ресурсы';
 $lang["all-collectiontypes"]='коллекции';
 $lang["resourcetypes-no_collections"]='Все %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Все %collectiontypes%';
-$lang["resourcetypes-collections"]='Все %типыресурсов% и все %типыколлекций%';
+$lang["resourcetypes-collections"]='Все %resourcetypes% и все %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Заблокировать доступ к состоянию рабочего процесса.';
 $lang["collection_share_status_warning"]='Предупреждение - в этой коллекции есть ресурсы в следующих состояниях, пожалуйста, проверьте, будут ли эти ресурсы доступны другим пользователям.';
 $lang["contactadmin"]='Свяжитесь с администратором.';
@@ -2701,23 +2701,6 @@ $lang["upload_share_email_subject"]='Вам была отправлена ссы
 $lang["upload_share_email_text"]='отправил вам ссылку для загрузки файлов.';
 $lang["upload_share_email_password"]='Используйте этот пароль для доступа к ссылке.';
 $lang["upload_share_email_clicklink"]='Пожалуйста, используйте ссылку ниже, чтобы начать загрузку.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Спасибо за загрузку. Используйте кнопку ниже, чтобы загрузить больше ресурсов.';
 $lang["error_invalid_usergroup"]='Недействительная группа пользователей.';
 $lang["error_invalid_date"]='Неверная дата.';
@@ -2728,10 +2711,6 @@ $lang["error_no_resources_edit"]='Ресурсы для редактирован
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Ресурсы были загружены в вашу общую коллекцию.';
 $lang["notify_upload_share_new_subject"]='Новые внешние загрузки.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] - Новый ресурс был загружен и поделён с вами. <br />
-[lang_clicklinkviewcollection] - Нажмите на ссылку, чтобы просмотреть коллекцию. <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] - С уважением, [site_name].';
 $lang["my_shares"]='Мои доли.';
 $lang["manage_shares_title"]='Внешние общие доступы.';
 $lang["share_purge_text"]='Удалить истекшие общие доступы.';

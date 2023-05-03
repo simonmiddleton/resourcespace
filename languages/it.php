@@ -1847,7 +1847,7 @@ $lang["warningrequestapprovalfield"]='Attenzione - ID risorsa % - si prega di pr
 $lang["yyyy-mm-dd"]='AAAA-MM-GG';
 $lang["resources-with-requeststatus0-0"]='(0 in sospeso)';
 $lang["resources-with-requeststatus0-1"]='(1 in sospeso)';
-$lang["resources-with-requeststatus0-2"]='(%numero in attesa)';
+$lang["resources-with-requeststatus0-2"]='(%number in attesa)';
 $lang["researches-with-requeststatus0-0"]='(0 non assegnati)';
 $lang["researches-with-requeststatus0-1"]='(1 non assegnato)';
 $lang["researches-with-requeststatus0-2"]='(%number non assegnati)';
@@ -1934,7 +1934,6 @@ $lang["all-resourcetypes"]='risorse';
 $lang["all-collectiontypes"]='raccolte';
 $lang["resourcetypes-no_collections"]='Tutti i %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Tutti i tipi di raccolta %collectiontypes%';
-$lang["resourcetypes-collections"]='Tutti i tipi di risorse e tutti i tipi di collezioni.';
 $lang["hide_view_access_to_workflow_state"]='Blocca l\'accesso allo stato del flusso di lavoro.';
 $lang["collection_share_status_warning"]='Attenzione - questa collezione ha risorse in uno dei seguenti stati, per favore controlla che queste risorse siano accessibili ad altri utenti.';
 $lang["contactadmin"]='Contattare l\'amministratore.';
@@ -2692,14 +2691,6 @@ $lang["upload_share_email_subject"]='Ti è stato inviato un link di caricamento 
 $lang["upload_share_email_text"]='ti ha inviato un link per caricare dei file.';
 $lang["upload_share_email_password"]='Usa questa password per accedere al link.';
 $lang["upload_share_email_clicklink"]='Si prega di utilizzare il link sottostante per iniziare il caricamento.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[testo_password]';
 $lang["upload_share_complete"]='Grazie per aver caricato. Utilizza il pulsante qui sotto per caricare ulteriori risorse.';
 $lang["error_invalid_usergroup"]='Gruppo utenti non valido.';
 $lang["error_invalid_date"]='Data non valida.';
@@ -2710,12 +2701,6 @@ $lang["error_no_resources_edit"]='Nessuna risorsa trovata da modificare. Se hai 
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Le risorse sono state caricate nella tua collezione condivisa.';
 $lang["notify_upload_share_new_subject"]='Nuovi caricamenti esterni.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Nuovo caricamento condiviso: [resource_name] <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-Questo messaggio è stato inviato da ResourceSpace.';
 $lang["my_shares"]='Le mie condivisioni.';
 $lang["manage_shares_title"]='Condivisioni esterne.';
 $lang["share_purge_text"]='Elimina condivisioni scadute.';

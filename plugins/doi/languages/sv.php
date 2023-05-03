@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Omutlig.';
-$lang["doi_info_wikipedia"]='Digital Object Identifier (DOI) - Digitala objektidentifierare (DOI)';
 $lang["doi_info_link"]='på <a target="_blank" href="https://sv.wikipedia.org/wiki/Digital_Object_Identifier">DOI:er</a>.';
 $lang["doi_info_metadata_schema"]='På DOI-registreringen på DataCite.org anges i <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Datacite Metadata Schema Documentation</a>.';
 $lang["doi_info_mds_api"]='På DOI-API:et som används av denna plugin anges i <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API-dokumentationen</a>.';

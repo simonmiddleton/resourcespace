@@ -2128,7 +2128,7 @@ $lang["all-resourcetypes"]='resurssit';
 $lang["all-collectiontypes"]='kokoelmat';
 $lang["resourcetypes-no_collections"]='Kaikki %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Kaikki %collectiontypes%';
-$lang["resourcetypes-collections"]='Kaikki %resurssityypit% ja kaikki %kokoelmatyypit%.';
+$lang["resourcetypes-collections"]='Kaikki %resourcetypes% ja kaikki %collectiontypes%.';
 $lang["hide_view_access_to_workflow_state"]='Estä pääsy työnkulun tilaan.';
 $lang["collection_share_status_warning"]='Varoitus - tällä kokoelmalla on resursseja seuraavissa tiloissa, tarkista että nämä resurssit ovat käyttäjien saavutettavissa.';
 $lang["contactadmin"]='Ota yhteyttä ylläpitäjään.';
@@ -2895,23 +2895,6 @@ $lang["upload_share_email_subject"]='Sinulle on lähetetty latauslinkki käyttä
 $lang["upload_share_email_text"]='on lähettänyt sinulle linkin tiedostojen lataamista varten.';
 $lang["upload_share_email_password"]='Käytä tätä salasanaa linkin avaamiseen.';
 $lang["upload_share_email_clicklink"]='Käytä alla olevaa linkkiä aloittaaksesi tiedostojen lataamisen.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [viesti]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[salasanateksti]';
 $lang["upload_share_complete"]='Kiitos lataamisesta. Käytä alla olevaa painiketta ladataksesi lisää resursseja.';
 $lang["error_invalid_usergroup"]='Virheellinen käyttäjäryhmä.';
 $lang["error_invalid_date"]='Virheellinen päivämäärä.';
@@ -2922,10 +2905,6 @@ $lang["error_no_resources_edit"]='Ei resursseja muokattavaksi. Jos olet juuri la
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resursseja on ladattu jaettuun kokoelmaasi.';
 $lang["notify_upload_share_new_subject"]='Uudet ulkoiset lataukset.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] = Uusi kokoelma on jaettu kanssasi. <br />
-[lang_clicklinkviewcollection] = Klikkaa tätä linkkiä tarkastellaksesi kokoelmaa: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Tämä viesti on lähetetty automaattisesti ResourceSpacesta.';
 $lang["my_shares"]='Osakkeeni.';
 $lang["manage_shares_title"]='Ulkoiset jakamiset.';
 $lang["share_purge_text"]='Poista vanhentuneet jakamiset.';

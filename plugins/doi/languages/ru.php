@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Несменяемый.';
-$lang["doi_info_wikipedia"]='Цифровой идентификатор объекта (DOI) - это уникальный идентификатор, используемый для постоянной идентификации цифровых объектов, таких как научные статьи, наборы данных и другие ресурсы в Интернете. DOI обеспечивает постоянную ссылку на ресурс и может использоваться для цитирования и ссылок на него. DOI состоит из префикса и суффикса, разделенных косой чертой. Префикс обычно указывает на организацию, которая зарегистрировала DOI, а суффикс является уникальным идентификатором ресурса.';
 $lang["doi_info_link"]='на <a target="_blank" href="https://ru.wikipedia.org/wiki/Digital_Object_Identifier">DOI</a>.';
 $lang["doi_info_metadata_schema"]='На регистрации DOI на DataCite.org указаны в <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Документации по схеме метаданных Datacite</a>.';
 $lang["doi_info_mds_api"]='Информация об использовании DOI-API, используемого этим плагином, указана в <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Документации по API Datacite</a>.';

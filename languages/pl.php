@@ -1719,7 +1719,7 @@ $lang["zipcommand_overridden"]='Ale proszę zauważyć, że $zipcommand jest zde
 $lang["lastscheduledtaskexection"]='Ostatnie wykonanie zaplanowanego zadania (dni)';
 $lang["executecronphp"]='Dopasowanie istotności nie będzie skuteczne, a okresowe raporty e-mail nie zostaną wysłane. Upewnij się, że <a href=\'../batch/cron.php\'>batch/cron.php</a> jest wykonywany co najmniej raz dziennie za pomocą zadania cron lub podobnego.';
 $lang["shouldbeormore"]='powinno być ? lub większe';
-$lang["config_file"]='(konfiguracja: %plik)';
+$lang["config_file"]='(konfiguracja: %file)';
 $lang["large_file_support_64_bit"]='Wsparcie dla dużych plików (platforma 64-bitowa)';
 $lang["large_file_warning_32_bit"]='OSTRZEŻENIE: Uruchomiono PHP 32-bitowe. Pliki większe niż 2 GB nie będą obsługiwane.';
 $lang["server_timezone_check"]='Strefa czasowa PHP jest taka sama jak ta, którą używa MySQL.';
@@ -1933,7 +1933,7 @@ $lang["warningrequestapprovalfield"]='Ostrzeżenie - identyfikator zasobu % - pr
 $lang["yyyy-mm-dd"]='RRRR-MM-DD';
 $lang["resources-with-requeststatus0-0"]='(0 oczekujących)';
 $lang["resources-with-requeststatus0-1"]='(1 oczekujący)';
-$lang["resources-with-requeststatus0-2"]='(%liczba oczekujących)';
+$lang["resources-with-requeststatus0-2"]='(%number oczekujących)';
 $lang["researches-with-requeststatus0-0"]='(0 nieprzypisanych)';
 $lang["researches-with-requeststatus0-1"]='(1 nieprzypisany)';
 $lang["researches-with-requeststatus0-2"]='(%number nieprzypisanych)';
@@ -2021,7 +2021,7 @@ $lang["all-resourcetypes"]='zasoby';
 $lang["all-collectiontypes"]='kolekcje';
 $lang["resourcetypes-no_collections"]='Wszystkie %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Wszystkie %collectiontypes%';
-$lang["resourcetypes-collections"]='Wszystkie %typyzasobów% i wszystkie %typykolekcji%';
+$lang["resourcetypes-collections"]='Wszystkie %resourcetypes% i wszystkie %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Zablokuj dostęp do stanu przepływu pracy.';
 $lang["collection_share_status_warning"]='Ostrzeżenie - ta kolekcja zawiera zasoby w następujących stanach, proszę sprawdzić, czy te zasoby będą dostępne dla innych użytkowników.';
 $lang["contactadmin"]='Skontaktuj się z administratorem.';
@@ -2784,23 +2784,6 @@ $lang["upload_share_email_subject"]='Został Ci wysłany link do przesłania pli
 $lang["upload_share_email_text"]='wysłał(a) Ci link do przesłania plików.';
 $lang["upload_share_email_password"]='Użyj tego hasła, aby uzyskać dostęp do linku.';
 $lang["upload_share_email_clicklink"]='Proszę użyć poniższego linku, aby rozpocząć przesyłanie plików.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [wiadomość]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Dziękujemy za przesłanie. Prosimy użyć poniższego przycisku, aby przesłać więcej zasobów.';
 $lang["error_invalid_usergroup"]='Nieprawidłowa grupa użytkowników.';
 $lang["error_invalid_date"]='Nieprawidłowa data.';
@@ -2811,11 +2794,6 @@ $lang["error_no_resources_edit"]='Nie znaleziono zasobów do edycji. Jeśli wła
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Zasoby zostały przesłane do Twojej udostępnionej kolekcji.';
 $lang["notify_upload_share_new_subject"]='Nowe zewnętrzne przesyłki.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Nowy zasób został udostępniony z Tobą. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Moje udziały.';
 $lang["manage_shares_title"]='Udostępnienia zewnętrzne.';
 $lang["share_purge_text"]='Usuń wygasłe udziały.';

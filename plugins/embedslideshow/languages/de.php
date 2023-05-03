@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Einbetten';
-$lang["embedslideshow_minimise"]='- Diashow minimieren';
+$lang["embedslideshow_minimise"]='&minus; diashow minimieren';
 $lang["embedslideshow_maximise"]='Maximiere Diashow.';
 $lang["embedslideshow_size"]='Diashow-Größe?';
 $lang["embedslideshow_transitiontime"]='Dauer der Folie?';
