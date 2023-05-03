@@ -303,13 +303,13 @@ function api_put_resource_data($resource,array $data)
 
 function api_get_alternative_files($resource,$order_by="",$sort="",$type="")
     {
-    global $disable_alternative_files, $alt_files_visible_when_restricted;
+    global $alt_files_visible_when_restricted;
     $access = get_resource_access($resource);
 
     if($access == RESOURCE_ACCESS_INVALID_REQUEST)
         {return false;}
 
-    if($disable_alternative_files || ($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
+    if(($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
         {return false;}
     return get_alternative_files($resource,$order_by,$sort,$type);
     }
@@ -321,9 +321,7 @@ function api_get_resource_types()
 
 function api_add_alternative_file($resource, $name, $description = '', $file_name = '', $file_extension = '', $file_size = 0, $alt_type = '', $file = '')
     {
-    global $disable_alternative_files;
-
-    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if(0 < $resource && (!(get_edit_access($resource) || checkperm('A'))))
         {
         return false;
         }
@@ -384,8 +382,7 @@ function api_delete_access_keys($access_keys, $resources, $collections)
 
 function api_delete_alternative_file($resource,$ref)
 	{
-    global $disable_alternative_files;
-    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if(0 < $resource && (!(get_edit_access($resource) || checkperm('A'))))
         {
         return false;
         }

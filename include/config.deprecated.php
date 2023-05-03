@@ -17,9 +17,6 @@ $collection_public_hide_owner=true;
 // Display help links on pages
 $contextual_help_links=true;
 
-# Set to true to see the download iframe for debugging purposes.
-$debug_direct_download=false; 
-
 # Set the Default Level for Custom Access. 
 # This will only work for resources that haven't been set to custom previously, otherwise they will show their previously set values.
 /*
@@ -34,17 +31,6 @@ $default_customaccess=2;
 # $default_home_page="search.php?search=example";
 $default_home_page="home.php";
 
-
-# Specify field references for fields that you do not wish the blank default entry to appear for, so the first keyword node is selected by default.
-# e.g. array(3,12);
-$default_to_first_node_for_fields=array();
-
-# What is the default value for the user select box, for example when e-mailing resources?
-$default_user_select="";
-
-# Show and allow to remove custom access for users when editing a resource
-$delete_resource_custom_access = false;
-
 # add direct link to original file for each image size
 $direct_link_previews = false;
 
@@ -55,11 +41,6 @@ $direct_download_noauth = false;
 // make preview direct links go directly to filestore rather than through download.php
 // (note that filestore must be served through the web server for this to work.)
 $direct_link_previews_filestore = false;
-
-$disable_alternative_files = false;
-
-# Don't display the link to toggle thumbnails in collection frame
-$disable_collection_toggle=false;
 
 # Multi-lingual support for e-mails. Try switching this to true if e-mail links aren't working and ASCII characters alone are required (e.g. in the US).
 $disable_quoted_printable_enc=false;

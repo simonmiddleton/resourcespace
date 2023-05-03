@@ -271,18 +271,8 @@ if(!$save_as)
     <iframe id="dlIFrm"
             frameborder=0
             scrolling="auto"
-            <?php
-            if($debug_direct_download)
-                {
-                ?>width="600" height="200" style="display:block;"
-                <?php
-                }
-            else 
-                {
-                ?>style="display:none"
-                <?php
-                }
-                ?>> This browser can not use IFRAME.</iframe>
+            style="display:none"
+            > This browser can not use IFRAME.</iframe>
     <?php
     }
 
@@ -1952,7 +1942,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                             echo "</li>";
                                             }
 
-                                        if (!$disable_alternative_files && !checkperm('A')) 
+                                        if (!checkperm('A')) 
                                             { 
                                             echo "<li>";
                                             if($resource_locked && $resource['lock_user'] != $userref)
