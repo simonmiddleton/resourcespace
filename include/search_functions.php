@@ -2110,7 +2110,7 @@ function get_filter_sql($filterid)
 function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
     {
     # Takes $search and returns an array of individual keywords.
-    global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
+    global $permitted_html_tags, $permitted_html_attributes;
 
     if ($index && $is_date)
         {
@@ -2169,7 +2169,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
         if($keepquotes)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
-            $return=trim_array($matches[0],$config_trimchars . ",");
+            $return=trim_array($matches[0],",");
             }
         elseif (strpos($ns,"startdate") !== false || strpos($ns,"enddate") !== false)
             {
@@ -2181,7 +2181,11 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             $return=explode(" ",$ns);
             }
         // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
-        return trim_array($return,$config_trimchars . ($keepquotes?",":""));
+        if($keepquotes)
+            {
+            $return = trim_array($return,",");
+            }
+        return $return;
         }
     else
         {
@@ -2213,9 +2217,11 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
             }
         
-        
-        $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
-        
+        if($keepquotes)
+            {
+            $ns = trim_array($ns,",");
+            }
+
         if ($index && $partial_index) {
             return add_partial_index($ns);
         }

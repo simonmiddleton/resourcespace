@@ -604,8 +604,7 @@ hook("headerbottom"); ?>
 
 if($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login)
     {
-        array_push($omit_searchbar_pages, 'terms');
-        $collections_footer = false;
+    array_push($omit_searchbar_pages, 'terms');
     }
  
 # if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar    

@@ -324,7 +324,7 @@ if (getval("ajax","") == "")
 	</script><?php 
 	if (!hook("replacecdivrender"))
 		{
-        $col_on = $collections_footer && !in_array($pagename,$omit_collectiondiv_load_pages) && !checkperm("b") && isset($usercollection);
+        $col_on = !in_array($pagename,$omit_collectiondiv_load_pages) && !checkperm("b") && isset($usercollection);
 		if ($col_on) 
 			{
 			// Footer requires restypes as a string because it is urlencoding them

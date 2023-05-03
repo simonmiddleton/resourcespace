@@ -8,41 +8,14 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Option to remove all resources from the current collection once it has been requested
-$collection_empty_on_submit=false;
-
 # Ability to alter collection frame height
 $collection_frame_height=153;
-
-# add a prefix to all collection refs, to distinguish them from resource refs
-$collection_prefix = "";
 
 # Hide owner in list of public collections
 $collection_public_hide_owner=true;
 
-# Add the collections footer
-$collections_footer = true;
-
-# trim characters - will be removed from the beginning or end of the string, but not the middle
-# when indexing. Format for this argument is as described in PHP trim() documentation.
-# leave blank for no extra trimming.
-$config_trimchars="";
-
 // Display help links on pages
 $contextual_help_links=true;
-
-/*
-* Dash tile color picker/ selector
-* If $dash_tile_colour = true and there are no colour options, a colour picker (jsColor) will be used instead
-* Example of colour options array:
-* $dash_tile_colour_options = array('0A8A0E' => 'green', '0C118A' => 'blue');
-*/
-$dash_tile_colour         = true;
-$dash_tile_colour_options = array();
-/* End Dash Config Options */
-
-// Option to have the front end show pop up error when and invalid date value or format is entered e.g. 31-02-2020 or bad partial dates, this configuration could be removed once a more subtle way of erroring this is found.
-$date_validator=false;
 
 # Set to true to see the download iframe for debugging purposes.
 $debug_direct_download=false; 

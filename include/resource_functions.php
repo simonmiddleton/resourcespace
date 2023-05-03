@@ -579,7 +579,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     # Also re-index all keywords from indexable fields.
     global $lang, $multilingual_text_fields,
            $languages, $language, $FIXED_LIST_FIELD_TYPES,
-           $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
+           $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
            $userref, $userresourcedefaults;
 
@@ -863,20 +863,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     # date type, construct the value from the date/time dropdowns to be used in DB
                     $val=sanitize_date_field_input($fields[$n]["ref"], false);
-
-                    if ($date_validator && $val != "")
-                        {
-                        # date type, construct the value from the date/time dropdowns to be used in date validator
-                        $check_date_val=sanitize_date_field_input($fields[$n]["ref"], true);
-
-                        $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($check_date_val));
-                        $valid_date = str_replace("%row% ", "", $valid_date);
-                        if ($valid_date && !$valid_date == "")
-                            {
-                            $errors[$fields[$n]["ref"]] = $valid_date;
-                            continue;
-                            }
-                        }
 
                     // Upload template: always reset to today's date, if configured and field is hidden
                     if(0 > $ref
@@ -1354,7 +1340,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 function save_resource_data_multi($collection,$editsearch = array(), $postvals = [])
     {
-    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
+    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
     if(empty($postvals))
@@ -1840,20 +1826,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
-
-                if ($date_validator && $val != "")
-                    {
-                    # date type, construct the value from the date/time dropdowns to be used in date validator
-                    $check_date_val=sanitize_date_field_input($fields[$n]["ref"], true);
-
-                    $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($check_date_val));
-                    $valid_date = str_replace("%row% ", "", $valid_date);
-                    if ($valid_date && !$valid_date == "")
-                        {
-                        $errors[$fields[$n]["ref"]] = $valid_date;
-                        continue;
-                        }
-                    }
                 }
             elseif (
                     $multilingual_text_fields
