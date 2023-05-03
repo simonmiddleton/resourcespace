@@ -124,35 +124,6 @@ if ($search_titles)
     if(substr($search, 0, 11) == "!collection")
         {
         $col_title_ua = "";
-        if($collection_dropdown_user_access_mode)
-            {
-            $colusername = $collectiondata['fullname'];
-
-            # Work out the correct access mode to display
-            if (!hook('collectionaccessmode'))
-                {
-                switch($collectiondata["type"])
-                    {
-                    case COLLECTION_TYPE_PUBLIC:
-                        $colaccessmode = $lang["public"];
-                        break;
-
-                    case COLLECTION_TYPE_FEATURED:
-                        $colaccessmode = $lang["theme"];
-                        break;
-
-                    case COLLECTION_TYPE_STANDARD:
-                    default:
-                        $colaccessmode = $lang["private"];
-                        break;
-                    }
-
-                $col_title_ua = sprintf(" <span class=\"CollectionUser\">(%s%s)</span>",
-                    $colusername,
-                    ($colusername != "" ? "/{$colaccessmode}" : $colaccessmode));
-                }
-            }
-
         // add a tooltip to Smart Collection titles (which provides a more detailed view of the searchstring.    
         $alt_text = '';
         if ($pagename=="search" && isset($collectiondata['savedsearch']) && $collectiondata['savedsearch']!='')

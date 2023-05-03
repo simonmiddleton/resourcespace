@@ -183,32 +183,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                             $list[$n]['hidden']=false;
                             }
                         }
-                    
-                    if ($collection_dropdown_user_access_mode)
-                        {
-                        $colusername = $list[$n]['fullname'];
 
-                        if(!hook('collectionaccessmode'))
-                            {
-                            switch($list[$n]["type"])
-                                {
-                                case COLLECTION_TYPE_PUBLIC:
-                                    $accessmode = $lang["public"];
-                                    break;
-
-                                case COLLECTION_TYPE_FEATURED:
-                                    $accessmode = $lang["theme"];
-                                    break;
-
-                                case COLLECTION_TYPE_STANDARD:
-                                default:
-                                    $accessmode = $lang["private"];
-                                    break;
-                                }
-                            }
-                        }
-                        
-                    
                     #remove smart collections as they cannot be uploaded to.
                     if (!isset($list[$n]['savedsearch'])||(isset($list[$n]['savedsearch'])&&$list[$n]['savedsearch']==null))
                         {
@@ -220,7 +195,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                                 $hidden_collections_array[]=$list[$n];
                                 }
                             ?>
-                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?> 	selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?> <?php if ($collection_dropdown_user_access_mode){echo htmlspecialchars("(". $colusername."/".$accessmode.")"); } ?></option>
+                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?> 	selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
                             <?php }
                     
                         }

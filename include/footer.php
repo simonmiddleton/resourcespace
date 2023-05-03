@@ -319,7 +319,6 @@ if (getval("ajax","") == "")
 	else
 		{?>
 		usercollection='<?php echo htmlspecialchars($usercollection) ?>';
-		var collections_popout = <?php echo $collection_bar_popout? "true": "false"; ?>;
 		<?php
 		} ?>
 	</script><?php 
@@ -380,10 +379,6 @@ if (getval("ajax","") == "")
 				}
 			function InitThumbs()
 				{
-				<?php if ($collection_bar_hide_empty)
-					{					
-					echo "CheckHideCollectionBar();";
-					}?>
 				if(thumbs!="hide")
 					{
 					ShowThumbs();

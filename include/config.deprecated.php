@@ -8,20 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Option to hide the collection bar (hidden, not minimised) if it has no resources in it
-$collection_bar_hide_empty=false;
-
-# Pop-out Collection Bar Upon Collection Interaction such as "Select Collection"
-$collection_bar_popout=false;
-
-# Option to replace the collection actions dropdown with a simple 'download' link if collection_download is enabled
-$collection_download_only = false;
-
-# add user and access information to collection results in the collections panel dropdown
-# this extends the width of the dropdown and is intended to be used with $collections_compact_style
-# but should also be compatible with the traditional collections tools menu.
-$collection_dropdown_user_access_mode=false;
-
 # Option to remove all resources from the current collection once it has been requested
 $collection_empty_on_submit=false;
 

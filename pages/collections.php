@@ -416,7 +416,6 @@ else { ?>
 
 		jQuery(document).ready(function() {
 			jQuery('#CentralSpace').trigger('prepareDragDrop');
-			CheckHideCollectionBar();
 		});
 
         jQuery('#CentralSpace').on('resourcesaddedtocollection', function(response,resource_list) {
@@ -927,7 +926,7 @@ else if ($basket)
 	<?php
 	} # End of basket mode
 
-elseif (($k != "" && !$internal_share_access) || $collection_download_only)
+elseif (($k != "" && !$internal_share_access))
 	{
 	# ------------- Anonymous access, slightly different display ------------------
 	$tempcol=$cinfo;
@@ -967,14 +966,8 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 else
     { 
     # -------------------------- Standard display --------------------------------------------
-    if ($collection_dropdown_user_access_mode)
-        {?>
-        <div id="CollectionMenuExp"><?php
-        }
-    else
-        {?>
-        <div id="CollectionMenu"><?php
-        }
+    ?>
+    <div id="CollectionMenu"><?php
     
     if (!hook("thumbsmenu"))
         {
@@ -1007,21 +1000,7 @@ else
 								document.getElementById('colselect').submit();
 							  <?php 
 							  	} 
-							  ?>"
-							   
-					<?php 
-					if ($collection_dropdown_user_access_mode)
-						{
-					?>
-						class="SearchWidthExp"
-					<?php 
-					} 
-					else 
-					{ ?> 
-						class="SearchWidth"
-					<?php 
-					} 
-					?>>
+							  ?>" class="SearchWidth">
 
                     <?php
                     $found=false;
@@ -1030,36 +1009,10 @@ else
                         if(in_array($list[$n]['ref'],$hidden_collections))
                             {continue;}
 
-                        if ($collection_dropdown_user_access_mode)
-                            {    
-                            $colusername=$list[$n]['fullname'];
-                            
-                            # Work out the correct access mode to display
-                            if (!hook('collectionaccessmode'))
-                                {
-                                if ($list[$n]["public"]==0)
-                                    {
-                                    $accessmode= $lang["private"];
-                                    }
-                                else
-                                    {
-                                    if (strlen($list[$n]["theme"])>0)
-                                        {
-                                        $accessmode= $lang["theme"];
-                                        }
-                                    else
-                                        {
-                                        $accessmode= $lang["public"];
-                                        }
-                                    }
-                                }
-                            }
-                            
-
                         #show only active collections if a start date is set for $active_collections 
                         if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                             {?>
-                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($usercollection==$list[$n]["ref"]) {?> 	selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?> <?php if ($collection_dropdown_user_access_mode){echo htmlspecialchars("(". $colusername."/".$accessmode.")"); } ?></option><?php
+                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($usercollection==$list[$n]["ref"]) {?> 	selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option><?php
                             }
                         }
 
@@ -1087,7 +1040,7 @@ else
                         }?>
                     </select>
                     <br /><small><?php echo $count_result . " "; if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];} ?></small>
-                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo $lang['entercollectionname']?>" <?php if ($collection_dropdown_user_access_mode){?>class="SearchWidthExp"<?php } else { ?> class="SearchWidth"<?php } ?>>
+                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo $lang['entercollectionname']?>" class="SearchWidth">
                 </div>			
             </form>
 
@@ -1117,15 +1070,7 @@ else
 	?>
 
 	<!--Resource panels-->
-	<?php 
-	if ($collection_dropdown_user_access_mode)
-	{?>
-	<div id="CollectionSpace" class="CollectionSpaceExp">
-	<?php 
-	} 
-	else { ?>
 	<div id="CollectionSpace" class="CollectionSpace">
-	<?php } ?>
 
 	<?php 
 	# Loop through saved searches
@@ -1354,7 +1299,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 		<?php	
 
 		} // end of Basket Mode
-	elseif (($k != "" && !$internal_share_access) || $collection_download_only)
+	elseif (($k != "" && !$internal_share_access))
 		{
 		# Anonymous access, slightly different display
 		$tempcol=$cinfo;
