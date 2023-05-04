@@ -71,12 +71,14 @@ function tms_convert_value($value, $key, array $module)
 function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "", $onlymodule="")
   {
   global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password;
-  
+
+  debug('tms_link: tms_link_get_tms_data() $resource=' . $resource . ' $tms_object_id=' . json_encode($tms_object_id) . ' $resourcechecksum=' . $resourcechecksum . ' $onlymodule=' . $onlymodule);
   $conn = odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
 
     if(!$conn)
         {
         $error = odbc_errormsg();
+        debug('tms_link: odbc connection error: ' . $error);
         return $error;
         }
 
@@ -85,6 +87,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         $resource_data = get_resource_data($resource);
         if(!$resource_data)
             {
+            debug('tms_link: unable to get resource data for resource: ' . $resource);
             return $lang["resourceidnotfound"];
             }
         }   
@@ -124,11 +127,13 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             }
 
         $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";
+        debug('tms_link: tms count query to odbc: ' . $tmscountsql);
         $tmscountset = odbc_exec($conn, $tmscountsql);
         $tmscount_arr = odbc_fetch_array($tmscountset);
         $resultcount = end($tmscount_arr);
         if($resultcount == 0)
             {
+            debug('tms_link: No data returned from tms for tms object id(s): ' . json_encode($tms_object_id));
             return $lang["tms_link_no_tms_data"];
             }
 
@@ -149,6 +154,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
                 }  
             }
         $tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
+        debug('tms_link: tms column query to odbc: ' . $tmssql);
         $tmsresultset = odbc_exec($conn, $tmssql);
 
         for($r = 1; $r <= $resultcount; $r++)
