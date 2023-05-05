@@ -1508,7 +1508,7 @@ function rs_get_resource_type(int $ref)
  */
 function save_resource_type_field($ref,$columns,$postdata)
     {
-    global $regexp_slash_replace;
+    global $regexp_slash_replace, $migrate_data, $remove_data_restypes;
 
     $sync_field = (int)$postdata["sync_field"] ?? 0;
     $existingfield = get_resource_type_field($ref);
@@ -1572,17 +1572,27 @@ function save_resource_type_field($ref,$columns,$postdata)
             $params[]=$val;
             }
 
-        if($column == "global" && $val !== $existingfield["global"])
+        if($column == "global")
             {
+            // Also need to update all resource_type_field -> resource_type associations
             $setresypes = [];
-            foreach($resource_type_array as $resource_type=>$resource_type_name)
+            if($val == 0)
                 {
-                if(trim($postdata["field_restype_select_" . $resource_type] ?? "") != "")
+                $currentrestypes = get_resource_type_field_resource_types([$existingfield]);
+                // Only need to check them if field is not global
+                foreach($resource_type_array as $resource_type=>$resource_type_name)
                     {
-                    $setresypes[] = $resource_type;
-                    }
+                    if(trim($postdata["field_restype_select_" . $resource_type] ?? "") != "")
+                        {
+                        $setresypes[] = $resource_type;
+                        }
+                    }    
+                if($existingfield["type"] == 1 || count(array_diff($setresypes,$currentrestypes[$ref])) > 0)
+                    {
+                    // Remove existing data from the resource types that had data stored?
+                    $remove_data_restypes = true;
+                    }               
                 }
-            // Update all resource_type_field -> resource_type associations
             update_resource_type_field_resource_types($ref,$setresypes);
             }
 

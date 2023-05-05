@@ -48,9 +48,6 @@ echo number_format(sql_affected_rows()) . " orphaned resource log rows deleted."
 ps_query("DELETE FROM resource_related WHERE resource NOT IN (SELECT ref FROM resource) OR related NOT IN (SELECT ref FROM resource)");
 echo number_format(sql_affected_rows()) . " orphaned resource related rows deleted." . $newline;
 
-ps_query("DELETE FROM resource_type_field WHERE resource_type<>999 AND resource_type<>0 AND resource_type NOT IN (SELECT ref FROM resource_type)");
-echo number_format(sql_affected_rows()) . " orphaned fields deleted." . $newline;
-
 ps_query("DELETE FROM user_collection WHERE user NOT IN (SELECT ref FROM user) OR collection NOT IN (SELECT ref FROM collection)");
 echo number_format(sql_affected_rows()) . " orphaned user-collection relationships deleted." . $newline;
 
