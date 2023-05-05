@@ -75,7 +75,8 @@ $k = getval('k','');
 $upload_share_active = (upload_share_active() !== false);
 if($upload_share_active && $terms_upload && !check_upload_terms($collection_add,$k))
         {
-        exit(error_alert($lang["mustaccept"],false));
+        error_alert($lang["mustaccept"],false);
+        exit();
         }
 if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !(isset($_SERVER['HTTP_TUS_RESUMABLE']) && $validupload))
     {

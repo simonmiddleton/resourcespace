@@ -4,7 +4,8 @@ include "../include/authenticate.php";
 
 if(!$enable_themes || checkperm("b") || !checkperm("h"))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $ref = getval("ref", 0, true);
@@ -17,16 +18,19 @@ if(!collection_writeable($ref))
 $collection = get_collection($ref);
 if($collection === false) 
     {
-    exit(error_alert($lang["error-collectionnotfound"], true));
+    error_alert($lang["error-collectionnotfound"], true);
+    exit();
     }
 
 if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 if(getval("submitted", "") != "" && enforcePostRequest(false))
