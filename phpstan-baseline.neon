@@ -496,26 +496,6 @@ parameters:
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
 
 		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$configs\\.$#"
-			count: 1
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$download_endpoint\\.$#"
-			count: 1
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$id\\.$#"
-			count: 1
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$name\\.$#"
-			count: 2
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
 			message: "#^Undefined variable\\: \\$imagemagick_path$#"
 			count: 2
 			path: plugins/image_text/hooks/collection_download.php
