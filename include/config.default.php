@@ -3378,3 +3378,10 @@ $uppy_companion_url = "";
 # is run (normally daily). This script checks resources which were last checked more than 30 days ago. 
 # Consider increasing this if system contains a very large number of resources so all are checked regularly.
 $update_disk_usage_batch_size = 20000;
+
+// This sets the maximum number of characters in a node that will be processed and keywords extracted from.
+// WARNING - CHANGING THIS VALUE CAN SERIOUSLY IMPACT SEARCH PERFORMANCE 
+// To improve speed and quality of search results it is recommended to ensure that a sufficient number
+// of metadata fields and options are available. Relying on large text fields can result in unnecessary database bloat,
+// pollution of search results and irrelevant keywords.
+$node_keyword_index_chars=500;
