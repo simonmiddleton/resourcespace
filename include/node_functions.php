@@ -1149,6 +1149,7 @@ function check_node_indexed(array $node, $partial_index = false)
 */
 function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_date=false,bool $is_html=false)
     {
+    global $node_keyword_index_chars;
     if('' == trim($node['ref']) && '' == trim($node['name']) && '' == trim($node['resource_type_field']))
         {
         return false;
@@ -1182,7 +1183,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
     foreach($translations as $translation)
         {
         // Only index the first 500 characters
-        $translation = mb_strcut($translation,0,500);
+        $translation = mb_strcut($translation,0,$node_keyword_index_chars);
         
         $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
 
