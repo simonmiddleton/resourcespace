@@ -176,16 +176,6 @@ parameters:
 			path: include/message_functions.php
 
 		-
-			message: "#^Array has 2 duplicate keys with value 'sub' \\('sub', 'sub'\\)\\.$#"
-			count: 1
-			path: include/mime_types.php
-
-		-
-			message: "#^Array has 2 duplicate keys with value 'wmz' \\('wmz', 'wmz'\\)\\.$#"
-			count: 1
-			path: include/mime_types.php
-
-		-
 			message: "#^Result of function render_featured_collection_category_selector \\(void\\) is used\\.$#"
 			count: 1
 			path: include/render_functions.php
