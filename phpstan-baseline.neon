@@ -316,44 +316,14 @@ parameters:
 			path: pages/ajax/contactsheet.php
 
 		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 2
-			path: pages/collection_edit.php
-
-		-
 			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
 			count: 1
-			path: pages/collection_email.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 4
 			path: pages/collection_email.php
 
 		-
 			message: "#^Result of function send_collection_feedback \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/collection_feedback.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 4
-			path: pages/collection_set_category.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 2
-			path: pages/collection_share.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/collections_featured.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/edit.php
 
 		-
 			message: "#^Result of function purge_expired_shares \\(void\\) is used\\.$#"
@@ -407,11 +377,6 @@ parameters:
 
 		-
 			message: "#^Instantiated class TusPhp\\\\Tus\\\\Server not found\\.$#"
-			count: 1
-			path: pages/upload_batch.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/upload_batch.php
 
@@ -499,16 +464,6 @@ parameters:
 			message: "#^Function mplus_generate_connection_data not found\\.$#"
 			count: 1
 			path: plugins/museumplus/pages/museumplus_object_details.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/museumplus/pages/setup.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/museumplus/pages/setup_module.php
 
 		-
 			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
