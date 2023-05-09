@@ -1,14 +1,16 @@
 <?php
 // OpenAI key from https://openai.com/api/
 $openai_gpt_api_key = "";
-$openai_gpt_model = "text-davinci-003";
-$openai_gpt_prompt_prefix = "For the following JSON encoded array, ";
-$openai_gpt_prompt_return_json = "The output choices must be in the form of a JSON encoded array."; // Used for fixed list fields
-$openai_gpt_prompt_return_text = "The response must be in plain text.";
+$openai_gpt_model = "gpt-3.5-turbo";
+$openai_gpt_system_message = "You are a formal API required to extract or convert information from the data provided. For the provided %%IN_TYPE%% input, you will respond with %%OUT_TYPE%%";
+$openai_gpt_message_text = "text";
+$openai_gpt_message_input_JSON = "JSON";
+$openai_gpt_message_output_json = "a JSON formatted list";
+
 $openai_gpt_temperature = 0;
 
 // The following can't be changed from the plugin setup page
-$openai_gpt_endpoint = "https://api.openai.com/v1/completions";
+$openai_gpt_endpoint = "https://api.openai.com/v1/chat/completions";
 $openai_gpt_max_tokens = 1000;
 $openai_gpt_max_data_length = 10000;
 
