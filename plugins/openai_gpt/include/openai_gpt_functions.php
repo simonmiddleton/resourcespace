@@ -113,8 +113,8 @@ function openai_gpt_update_field($resource,$target_field,$values)
  * 
  * @param string    $apiKey             API key 
  * @param string    $model              Model name e.g. "text-davinci-003"
- * @param string    $messages           Prompt messages array to generate response from API
- *                                      e.g . "For the following city, list the country it is within:"
+ * @param array     $messages           Array of prompt messages to generate response from API.
+ *                                      See https://platform.openai.com/docs/guides/chat/introduction for more information
  * @param float     $temperature        Value between 0 and 1 - higher values means model will take more risks. Default 0.
  * @param int       $max_tokens         The maximum number of completions to generate, default 2048
  * 
