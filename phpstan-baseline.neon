@@ -311,11 +311,6 @@ parameters:
 			path: pages/ajax/collections.php
 
 		-
-			message: "#^Caught class Html2Pdf_exception not found\\.$#"
-			count: 1
-			path: pages/ajax/contactsheet.php
-
-		-
 			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/collection_email.php
