@@ -296,17 +296,13 @@ catch(Html2PdfException $e)
     {
     $formatter = new ExceptionFormatter($e);
 
-    echo $formatter->getHtmlMessage();
+    $contactsheetmessage = $e->getMessage();
 
-    exit();
-    }
-catch(Html2Pdf_exception $e)
-    {
-    debug('CONTACT-SHEET:' . $e->getMessage());
+    debug('CONTACT-SHEET:' . $contactsheetmessage);
     debug('CONTACT-SHEET:' . $e->getTraceAsString());
 	
 	// Starting point
-    if(0 == $field_value_limit)
+    if($field_value_limit === 0)
         {
         $field_value_limit = 1100;
         }
@@ -316,12 +312,14 @@ catch(Html2Pdf_exception $e)
         'field_value_limit' => $field_value_limit - 100,
     );
 
-	if(strpos($e->getMessage(),"does not fit on only one page") !== false)
+	if(strpos($contactsheetmessage,"does not fit on only one page") !== false)
 		{
 		$parameters["error"] = "contactsheet_data_toolong";
 		}
 	
     redirect(generateURL("{$baseurl}/pages/contactsheet_settings.php", $parameters));
+
+    echo $formatter->getHtmlMessage();
 
     exit();
     }
