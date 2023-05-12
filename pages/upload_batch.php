@@ -1052,7 +1052,7 @@ jQuery(document).ready(function () {
     ?>
 
 
-    uppy = new Uppy.Core({
+    uppy = new Uppy.Uppy({
         debug: <?php echo $debug_log ? "true" : "false" ?>,
         autoProceed: false,
         restrictions: {
