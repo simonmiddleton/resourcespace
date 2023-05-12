@@ -296,11 +296,6 @@ parameters:
 			path: pages/admin/admin_content_edit.php
 
 		-
-			message: "#^Result of function render_table \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/admin/tabs.php
-
-		-
 			message: "#^Result of function render_clear_selected_btn \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/ajax/collections.php
@@ -319,11 +314,6 @@ parameters:
 			message: "#^Result of function send_collection_feedback \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/collection_feedback.php
-
-		-
-			message: "#^Result of function purge_expired_shares \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/manage_external_shares.php
 
 		-
 			message: "#^Array has 2 duplicate keys with value 'sortable' \\(\"sortable\", \"sortable\"\\)\\.$#"

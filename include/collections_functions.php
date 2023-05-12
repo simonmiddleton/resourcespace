@@ -6704,7 +6704,7 @@ function external_upload_notify($collection, $k, $tempcollection)
  *                              "share_user"        - (int) user ID of share creator
  *                              "share_type"        - (int) 0=view, 1=upload
  *                              "share_collection"  - (int) Collection ID
- * @return void
+ * @return string|int
  */
 function purge_expired_shares($filteropts)
     {
