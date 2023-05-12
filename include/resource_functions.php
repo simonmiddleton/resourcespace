@@ -5738,6 +5738,12 @@ function check_use_watermark($download_key = "", $resource="")
         return false;
         }
 
+    $blockwatermark = hook("blockwatermark");
+    if($blockwatermark)
+	{
+        return false;
+        }
+
     # Cannot watermark unless permission "w" is present
     if(!checkperm('w'))
         {
