@@ -65,7 +65,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Only show the results (this will appear in an iframe)
         if (substr($restypes,0,11)!="Collections")
             {
-            $result=do_search($search,$restypes,"relevance",$archive,[0,0],"",false,DEPRECATED_STARSEARCH, false, false, "", false,false, true, false, false, $access);
+            $result=do_search($search,$restypes,"relevance",$archive,[0,1],"",false,DEPRECATED_STARSEARCH, false, false, "", false,false, true, false, false, $access);
             }
         else 
             {
