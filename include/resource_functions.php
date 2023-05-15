@@ -9307,3 +9307,69 @@ function resource_has_access_denied_by_RT_size(int $resource_type, string $size)
     $Trt = 'T' . $resource_type;
     return checkperm($Trt) || checkperm("{$Trt}_{$size}");
     }
+
+
+/**
+ * Revert primary resource file based on log entry data
+ *
+ * @param int   $resource       Resource ID
+ * @param array $logentry       Log data from get_resource_log(). Requires rse_version plugin to be enabled
+ * @param bool $createpreviews  Create previews?
+ * 
+ * @return bool
+ * 
+ */
+function revert_resource_file($resource,$logentry,$createpreviews=true)
+    {
+    global $lang;
+    // Find file extension of current resource.
+    $old_extension=ps_value("SELECT file_extension value FROM resource WHERE ref=?",array("i",$resource),"");
+    
+    // Copy current file to alternative file.
+    $old_path=get_resource_path($resource,true, '', true, $old_extension);
+    if (!file_exists($old_path))
+        {
+        debug("Revert failed: Missing file: $old_path ($old_extension)");
+        return false;
+        }
+
+    // Create a new alternative file based on the current resource
+    $alt_file=add_alternative_file($resource,'','','',$old_extension,0,'');
+    $new_path = get_resource_path($resource, true, '', true, $old_extension, -1, 1, false, "", $alt_file);
+
+    copy($old_path,$new_path);    
+            
+    // Also copy thumbnail
+    $old_thumb=get_resource_path($resource,true,'thm',true,"");
+    if (file_exists($old_thumb))
+        {
+        $new_thumb=get_resource_path($resource, true, 'thm', true, "", -1, 1, false, "", $alt_file);
+        copy($old_thumb,$new_thumb);
+        }
+        
+   // Update log so this has a pointer.
+    $log_ref=resource_log($resource,LOG_CODE_UPLOADED,0,$lang["revert_log_note"]);
+    $parameters=array("i",$alt_file, "i",$log_ref);
+    ps_query("UPDATE resource_log SET previous_file_alt_ref=? WHERE ref=?",$parameters);
+
+    // Now perform the revert, copy and recreate previews.
+    $revert_alt_ref=$logentry["previous_file_alt_ref"];
+    $revert_ext=ps_value("SELECT file_extension value FROM resource_alt_files WHERE ref=?",array("i",$revert_alt_ref),"");
+    
+    $revert_path=get_resource_path($resource, true, '', true, $revert_ext, -1, 1, false, "", $revert_alt_ref);
+    $current_path=get_resource_path($resource,true, '', true, $revert_ext);
+    if (!file_exists($revert_path))
+        {
+        debug("Revert fail... $revert_path not found.");
+        return false;
+        }
+
+    copy($revert_path,$current_path);
+    $parameters=array("s",$revert_ext, "i",$resource);
+    ps_query("UPDATE resource SET file_extension=?, has_image=0 WHERE ref=?",$parameters);
+    if($createpreviews)
+        {
+        create_previews($resource,false,$revert_ext);
+        }
+    return true;
+    }
