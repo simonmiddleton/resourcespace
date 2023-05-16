@@ -13,7 +13,7 @@
 
 function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$offset=0)
     {
-    $fetchrows = ($fetchrows > 0 ? $fetchrows : -1);
+    $fetchrows = ($fetchrows >= 0 ? $fetchrows : -1);
     $offset = (int)$offset;
 
     if($offset>0 && $fetchrows!=-1)
