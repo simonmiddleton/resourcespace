@@ -2762,7 +2762,6 @@ function is_html($string)
  * Set a cookie.
  * 
  * Note: The argument $daysexpire is not the same as the argument $expire in the PHP internal function setcookie.
- * Note: The $path argument is not used if $global_cookies = true
  *
  * @param  string $name
  * @param  string $value
@@ -2775,7 +2774,7 @@ function is_html($string)
  */
 function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
     {
-    global $baseurl_short, $baseurl_short, $global_cookies;
+    global $baseurl_short, $baseurl_short;
     if($path == "")
         {
         $path =  $baseurl_short;
@@ -2792,16 +2791,8 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
         }
 
     // Set new cookie, first remove any old previously set pages cookies to avoid clashes;           
-    if ($global_cookies)
-        {
-        setcookie($name, "", time() - 3600, "/pages", $domain, $secure, $httponly);
-        setcookie($name, (string) $value, (int) $expire, "/", $domain, $secure, $httponly);
-        }
-    else
-        {
-        setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
-        setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
-        }
+    setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
+    setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
     }
 
 /**

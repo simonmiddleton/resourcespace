@@ -2138,11 +2138,7 @@ $enable_thumbnail_creation_on_upload = true;
 
     // Hide map location panel by default (a link to show it will be displayed instead)?
     $hide_geolocation_panel = false;
-
-    // Show map search results in a modal?
-    $geo_search_modal_results = false;
-
-# Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
+    // Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
     // Default center and zoom for the map view when selecting a new location, as a world view.
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
     // The tools available on https://epsg.io/3857 can be used to get the coordinates of a location on the map or try an internet search for EPSG:3857.

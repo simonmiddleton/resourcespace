@@ -181,7 +181,6 @@ var errortext = "<?php echo $lang["error"] ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit=false;
 var branch_limit_field = new Array();
-var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 var TileNav = <?php echo ($tilenav?"true":"false") ?>;
 var errornotloggedin = '<?php echo htmlspecialchars($lang["error_not_logged_in"]) ?>';

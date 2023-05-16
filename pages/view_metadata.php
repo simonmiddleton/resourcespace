@@ -1,7 +1,7 @@
 <?php
 # Global everything we need, in case called inside a function (e.g. for push_metadata support)
 global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads,
-       $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$force_display_template_order_by,$modal,
+       $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$modal,
        $sort_tabs;
 
 // Is this a modal?
@@ -273,9 +273,9 @@ if(empty($fields_tab_names))
     }
     
 ?><?php hook("extrafields2");?>
-<?php if(!$force_display_template_order_by){ ?> <div class="clearerleft"></div> <?php } ?>
+<div class="clearerleft"></div>
 <?php if(!isset($related_type_show_with_data)) { echo $extra; } ?>
-<?php if($force_display_template_order_by){ ?> <div class="clearerleft"></div> <?php } ?>
+<div class="clearerleft"></div>
 <?php hook("renderafterresourcedetails"); ?>
 </div>
 <!-- End of Metadata-->

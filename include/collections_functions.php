@@ -3318,7 +3318,7 @@ function get_collection_comments($collection)
  */
 function send_collection_feedback($collection,$comment)
     {
-    global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
+    global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$regex_email;
     global $userref;
 
     $cinfo=get_collection($collection);    
@@ -3337,7 +3337,7 @@ function send_collection_feedback($collection,$comment)
     else
         {
         # External user.
-        if ($feedback_email_required && !preg_match ("/{$regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
+        if (!preg_match ("/{$regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
         $body.=$lang["fullname"] . ": " . getval("name","") . "\n";
         $body.=$lang["email"] . ": " . getval("email","") . "\n";
         }

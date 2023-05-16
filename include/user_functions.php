@@ -857,7 +857,7 @@ function save_user($ref)
  */
 function email_user_welcome($email,$username,$password,$usergroup)
     {
-    global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
+    global $applicationname,$email_from,$baseurl,$lang;
     
     # Fetch any welcome message for this user group
     $welcome=ps_value("SELECT welcome_message value FROM usergroup WHERE ref = ?",["i",$usergroup],"");
@@ -865,15 +865,7 @@ function email_user_welcome($email,$username,$password,$usergroup)
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
     $templatevars['username'] = $username;
-
-    if (trim($email_url_save_user)!="")
-        {
-        $templatevars['url']=$email_url_save_user;
-        }
-    else
-        {
-        $templatevars['url']=$baseurl;
-        }
+    $templatevars['url']=$baseurl;
     $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $templatevars['url'];
             
     send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);

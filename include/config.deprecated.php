@@ -68,26 +68,14 @@ $email_errors_address="";
 #enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
 $email_from_user=false;
 
-##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
-##  If blank, uses $baseurl 
-$email_url_save_user = ""; //emaillogindetails
-
-# Require email address to be entered when users are submitting collecion feedback
-$feedback_email_required=true;
-
 # Do not create any new snapshots when recreating FFMPEG previews. (This is to aid in migration to mp4 when custom previews have been uploaded)
 $ffmpeg_no_new_snapshots=false;
 
 # Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
 $file_integrity_ignore_states = array();
 
-# Force fields with display templates to obey "order by" numbering.
-$force_display_template_order_by=false;
 # Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
 $force_display_template_orderby=false;
-
-# Show geographical search results in a modal
-$geo_search_modal_results = true;
 
 # A list of upper/lower long/lat bounds, defining areas that will be excluded from geographical search results.
 # Areas are defined using values in the following sequence: southwest lat, southwest long, northeast lat, northeast long
@@ -97,10 +85,6 @@ $geo_search_restrict=array
 	# ,array(-10,-20,-8,-18) # Example omission zone 2
 	# ,array(1,1,2,2) # Example omission zone 3
     );
-    
-# Set cookies at root (for now, this is implemented for the colourcss cookie to preserve selection between pages/ team/ and plugin pages)
-# probably requires the user to clear cookies.
-$global_cookies=false;
 
 # Simpler search in header, expanding for the full box.
 # Work in progress - in development for larger ResourceSpace 9.0 release. Some functions may not work currently.
