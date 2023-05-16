@@ -44,7 +44,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
 <?php
-if($enable_theme_breadcrumbs && $parent > 0)
+if($parent > 0)
     {
     $links_trail = array(
         array(

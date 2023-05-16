@@ -103,25 +103,6 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
         if ($pagename=="edit"){$title=$lang['action-edit']." - ".$title;}
         
         echo "document.title = \"$applicationname - $title\";\n";
-
-        if($pagename=='edit' && $distinguish_uploads_from_edits) {
-
-			$js = sprintf("
-				jQuery(document).ready(function() {
-					var h1 = jQuery(\"h1\").text();
-
-					if(h1 == \"%s\") {
-						document.title = \"%s - \" + h1;\n
-					}
-				});
-			",
-				$lang["addresourcebatchbrowser"],
-				$applicationname);
-
-			echo $js;
-
-        }
-        
         echo "</script>";
     }
 

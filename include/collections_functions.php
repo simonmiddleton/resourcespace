@@ -3989,7 +3989,7 @@ function update_collection_user($collection,$newuser)
 function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
-           $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share, $enable_collection_copy,
+           $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
            $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
@@ -4398,7 +4398,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Contact Sheet
-    if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))
+    if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($contact_sheet_link_on_collection_bar))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/contactsheet_settings.php",$urlparams);
         $options[$o]['value']='contact_sheet';

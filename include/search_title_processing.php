@@ -140,10 +140,10 @@ if ($search_titles)
         $collection_trail = array();
         $branch_trail = array();
 
-        global $enable_themes, $enable_theme_breadcrumbs;
+        global $enable_themes;
 
         if(
-            $enable_themes && $enable_theme_breadcrumbs
+            $enable_themes
             && isset($collectiondata) && $collectiondata !== false
             && $collectiondata["type"] == COLLECTION_TYPE_FEATURED
         )

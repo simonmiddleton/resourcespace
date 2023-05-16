@@ -55,9 +55,6 @@ $disable_upload_preview = false;
 #$disk_quota_notification_interval=24;
 $disk_quota_notification_email='';
 
-# When displaying title of the resource, set the following to true if you want to show Upload resources or Edit resource when on edit page:
-$distinguish_uploads_from_edits=false;
-
 # Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 $download_file_lifetime=14;
 
@@ -74,8 +71,6 @@ $email_from_user=false;
 ##  The URL that goes in the bottom of the 'emaillogindetails' template (save_user function in general.php)
 ##  If blank, uses $baseurl 
 $email_url_save_user = ""; //emaillogindetails
-
-$enable_theme_breadcrumbs = true;
 
 # Require email address to be entered when users are submitting collecion feedback
 $feedback_email_required=true;
@@ -170,9 +165,6 @@ $launch_kb_on_login_for_groups=array();
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
 
-# if using $collections_compact_style, you may want to remove the contact sheet link from the Manage Collections page
-$manage_collections_contact_sheet_link=true;
-
 # How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
 $max_collection_thumbs=150;
 
@@ -200,9 +192,6 @@ $metadata_template_mandatory = false;
 # By default, only the checkbox list/dropdown fields can be multilingual by using the special syntax when defining
 # the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
 $multilingual_text_fields=false;
-
-# Hide mycontributions link from regular users
-$mycontributions_userlink=true;
 
 # Force MySQL Strict Mode? (regardless of existing setting) - This is useful for developers so that errors that might only occur when Strict Mode is enabled are caught. Strict Mode is enabled by default with some versions of MySQL. The typical error caused is when the empty string ('') is inserted into a numeric column when NULL should be inserted instead. With Strict Mode turned off, MySQL inserts NULL without complaining. With Strict Mode turned on, a warning/error is generated.
 $mysql_force_strict_mode = false;
