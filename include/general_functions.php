@@ -2244,13 +2244,9 @@ function format_display_field($value)
  * @param  integer $max_words_before_more
  * @return string
  */
-function format_string_more_link($string,$max_words_before_more=-1)
+function format_string_more_link($string,$max_words_before_more=30)
     {
     $words=preg_split('/[\t\f ]/',$string);
-    if ($max_words_before_more==-1)
-        {
-        global $max_words_before_more;
-        }
     if (count($words) < $max_words_before_more)
         {
         return $string;

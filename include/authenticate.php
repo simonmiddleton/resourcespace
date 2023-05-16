@@ -229,15 +229,11 @@ if (isset($ip_restrict_group)){
 		$allow=ip_matches($ip, $ip_restrict);
 		}
 
-	if (!$allow)
-		{
-		if ($iprestrict_friendlyerror)
-			{
-			exit("Sorry, but the IP address you are using to access the system (" . $ip . ") is not in the permitted list. Please contact an administrator.");
-			}
-		header("HTTP/1.0 403 Access Denied");
-		exit("Access denied.");
-		}
+    if (!$allow)
+        {
+        header("HTTP/1.0 403 Access Denied");
+        exit("Access denied.");
+        }
 	}
 }
 

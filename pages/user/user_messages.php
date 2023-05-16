@@ -159,16 +159,14 @@ include "../../include/header.php";
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
                 </td>
-                <?php if ($messages_actions_fullname) { ?>
-                    <td>
-                        <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=fullname&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                            <?php echo $lang["fullname"]?>
-                        </a>
-                        <?php if ($msg_order_by == "fullname") { ?>
-                            <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
-                        <?php } ?>
-                    </td>
-                <?php } ?>
+                <td>
+                    <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=fullname&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
+                        <?php echo $lang["fullname"]?>
+                    </a>
+                    <?php if ($msg_order_by == "fullname") { ?>
+                        <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
+                    <?php } ?>
+                </td>
                 <?php if ($messages_actions_usergroup) { ?>
                     <td><?php echo $lang["property-user_group"]; ?></td>
                 <?php } ?>
@@ -222,9 +220,7 @@ include "../../include/header.php";
                     <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true); ?></td>
                     <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars((string)$messages[$n]["owner"]); ?></td>
-                    <?php if ($messages_actions_fullname) { ?>
-                        <td class="SingleLine<?php echo $unread_css; ?>"><?php echo strip_tags_and_attributes($user['fullname']); ?></td>
-                    <?php } ?>
+                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo escape_quoted_data((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?></td>
                     <?php if ($messages_actions_usergroup) { ?>
                         <td class="<?php echo $unread_css; ?>"><?php echo $user['groupname']; ?></td>
                     <?php } ?>

@@ -110,20 +110,11 @@ $imagemagick_mpr_preserve_metadata_profiles=array('iptc');
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
 
-# Index the resource type, so searching for the resource type string will work (e.g. if you have a resource of type "photo" then "cat photo" will match even if the resource metadata itself doesn't contain the word 'photo')
-$index_resource_type=true;
-
-# Show friendly error to user instead of 403 if IP not in permitted range.
-$iprestrict_friendlyerror=false;
-
 # By default, keyword relationships are two-way 
 # (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
 # $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
 # then a search for "tiger" includes "tiger", but does not include "cat" matches.
 $keyword_relationships_one_way=false;
-
-# A list of groups for which the knowledge base will launch on login, until dismissed.
-$launch_kb_on_login_for_groups=array();
 
 # Prevent previews from creating versions that result in the same size?
 # If true pre, thm, and col sizes will not be considered.
@@ -132,19 +123,8 @@ $lean_preview_generation=false;
 # How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
 $max_collection_thumbs=150;
 
-// maximum number of words shown before more/less link is shown (used in resource log)
-$max_words_before_more=30;
-
-#Add full username column in my messages/actions pages
-$messages_actions_fullname = true;
-
 #Option to turn on metadata download in view.php.
 $metadata_download=false;
-
-# Custom logo to use when downloading metadata in PDF format
-$metadata_download_header_title = 'ResourceSpace';
-#$metadata_download_pdf_logo     = '/path/to/logo/location/logo.png';
-$metadata_download_footer_text  = '';
 
 // Ability to default metadata templates to a particular resource ID
 $metadata_template_default_option = 0;
