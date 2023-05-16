@@ -179,7 +179,7 @@ and running.
 $originals_separate_storage=false;
 
 $applicationname="ResourceSpace"; # The name of your implementation / installation (e.g. 'MyCompany Resource System')
-$applicationdesc=""; # Subtitle (i18n translated) if $header_text_title=true;
+$applicationdesc=""; # Subtitle (i18n translated)
 $header_favicon="gfx/interface/favicon.png";
 
 # Is the logo a link to the home page?

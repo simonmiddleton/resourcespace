@@ -86,26 +86,6 @@ $geo_search_restrict=array
 	# ,array(1,1,2,2) # Example omission zone 3
     );
 
-# Simpler search in header, expanding for the full box.
-# Work in progress - in development for larger ResourceSpace 9.0 release. Some functions may not work currently.
-$header_search=false;
-
-#replace header logo with text, application name and description
-$header_text_title=false;
-
-#Batch Uploads, do not display hidden collections
-$hidden_collections_hide_on_upload=false;
-#Batch Uploads, include show/hide hidden collection toggle. Must have $hidden_collections_hide_on_upload=true;
-$hidden_collections_upload_toggle=false;
-
-#collection_public.php - hide 'access' column
-$hide_access_column_public = false;
-#collection_manage.php - hide 'access' column
-$hide_access_column = false;
-
-# Hide "Generate URL" from the collection_share.php page?
-$hide_collection_share_generate_url=false;
-
 # Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
 $hide_failed_reset_text=true;
 

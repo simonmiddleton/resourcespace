@@ -372,28 +372,16 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
 
     if(!hook('replace_header_text_logo'))
         {
-        if($header_text_title) 
+        $header_img_src = get_header_image();
+        if($header_link && ($k=="" || $internal_share_access))
             {?>
-            <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
-            <?php if ($applicationdesc!="")
-                {?>
-                <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
-                <?php 
-                }
+            <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></a>
+            <?php
             }
         else
-            {
-            $header_img_src = get_header_image();
-            if($header_link && ($k=="" || $internal_share_access))
-                {?>
-                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></a>
-                <?php
-                }
-            else
-                {?>
-                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></div>
-                <?php
-                }
+            {?>
+            <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></div>
+            <?php
             }
         }
 
@@ -465,23 +453,6 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             if (!hook("replaceheadernav1"))
                 {
                 echo "<ul>";
-                if ($header_search && $k=="")
-                    { ?>
-                    <li>
-                        <form class="HeaderSearchForm" id="header_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
-                        <?php
-                        generateFormToken("header_search_form");
-                        ?>
-                        <input id="ssearchbox" name="search" type="text" class="searchwidth" placeholder="<?php echo $lang['simplesearch'] . '...'; ?>" value="<?php echo (isset($quicksearch)?$htmlspecialchars($quicksearch):"") ?>" />
-                        
-                        <a href="<?php echo $baseurl; ?>/pages/simple_search.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
-                                    <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
-                                </a>
-                        </form>
-                    </li>
-                    <?php
-                    }
-
                 if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d")))
                     {
                     $topuploadurl = get_upload_url("",$k);
@@ -607,9 +578,7 @@ if($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["H
     }
  
 # if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar    
-if ($header_search || (!checkperm("s") && !($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login)) ) )
-    { }
-    else 
+if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
     {
     # Include simple search sidebar?
 
@@ -674,23 +643,12 @@ hook('afteruicenter');
 
 if (!in_array($pagename, $not_authenticated_pages))
     {
-    // Set classes for CentralSpaceContainer
-    $csc_classes = array();
-    if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
-        {
-        if($header_search)
-            {
-            $csc_classes[] = "NoSearchBar";
-            }
-        }
-    echo '<div id="CentralSpaceContainer" ' . (count($csc_classes) > 0 ? 'class="' . implode(' ', $csc_classes) . '"' : '' ) . '>';
+    echo '<div id="CentralSpaceContainer">';
     }
 
 hook("aftercentralspacecontainer");
 ?>
 <div id="<?php echo $div?>">
-
-
 <?php
 
 hook("afterheader");

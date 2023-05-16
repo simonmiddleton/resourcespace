@@ -527,7 +527,7 @@ function promptBeforePaging()
 
 <td class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["itemstitle"]?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
-<?php if (!$hide_access_column){ ?><td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="type") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php }?>
+<td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_manage.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="type") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
 <td class="collectionin"><?php echo $lang["showcollectionindropdown"] ?></td>
 
@@ -557,7 +557,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     <td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collections[$n]["ref"], $find)); ?></td>
     <td class="created"><?php echo nicedate($collections[$n]["created"],true) ?></td>
     <td class="count"><?php echo $collections[$n]["count"] ?></td>
-    <?php if (! $hide_access_column){ ?>	<td class="access"><?php
+    <td class="access"><?php
     if(!hook('collectionaccessmode'))
         {
         switch($collections[$n]["type"])
@@ -576,8 +576,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
                 break;
             }
         }
-    ?></td><?php
-    }?>
+    ?></td>
 
 <td class="collectionin"><input type="checkbox" onClick='UpdateHiddenCollections(this, "<?php echo $collections[$n]['ref'] ?>", {<?php echo generateAjaxToken("colactions"); ?>});' <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
 

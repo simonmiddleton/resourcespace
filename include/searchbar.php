@@ -229,7 +229,7 @@ var categoryTreeChecksArray = [];
     <?php
     generateFormToken("simple_search_form");
 
-    if(!hook("replacesearchbox") && !$header_search)
+    if(!hook("replacesearchbox"))
         {
         ?>
         <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>" placeholder="<?php echo htmlspecialchars($lang["searchbutton"]); ?>" alt="<?php echo htmlspecialchars($lang["simplesearch"]); ?>">
