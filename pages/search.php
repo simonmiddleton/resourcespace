@@ -348,11 +348,6 @@ if (getval('recentdaylimit', '', true)!="") //set for recent search, don't set c
     {
     $daylimit=getval('recentdaylimit', '', true);
     }
-else if($recent_search_period_select==true && strpos($search,"!")===false) //set cookie for paging
-    {
-    $daylimit=getval("daylimit",""); 
-    rs_setcookie('daylimit', $daylimit,0,"","",false,false);
-    }
 else {$daylimit="";} // clear cookie for new search
 
 if ($order_by=="field{$date_field}")
@@ -1012,17 +1007,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
         {
         ?>
         <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">
-        <?php   
-        if($display_selector_dropdowns && $display != 'map')
-            { ?>
-            <select style="width:auto" id="displaysize" name="displaysize" onchange="CentralSpaceLoad(this.value,true);">
-            <?php if ($xlthumbs==true) { ?><option <?php if ($display=='xlthumbs'){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'xlthumbs')) ?>"><?php echo $lang['xlthumbs']?></option><?php } ?>
-            <option <?php if ($display=='thumbs'){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'thumbs')) ?>"><?php echo $lang['largethumbs']?></option>
-            <?php if ($searchlist==true) { ?><option <?php if ($display=='list'){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'list')) ?>"><?php echo $lang['list']?></option><?php } ?>
-            </select>
-            <?php
-            }
-        elseif($iconthumbs)
+        <?php 
+        if($iconthumbs)
             {
             if($xlthumbs == true)
                 {
@@ -1138,22 +1124,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         </div>
         <?php
         }
-    if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getval('recentdaylimit', '', true)==""){?>
-    <div class="InpageNavLeftBlock">
-        <select style="width:auto" id="resultsdisplay" name="resultsdisplay" onchange="CentralSpaceLoad(this.value,true);">
-        <?php $recent_search_period_array_count = count($recent_search_period_array);
-        for($n=0;$n<$recent_search_period_array_count;$n++){
-            if ($display_selector_dropdowns){?>
-                <option <?php if ($daylimit==$recent_search_period_array[$n]){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>$recent_search_period_array[$n])); ?>"><?php echo str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]); ?></option>
-            <?php } ?>
-        <?php } ?>
-        <option <?php if ($daylimit==""){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>"")); ?>"><?php echo $lang["anyday"] ?></option>
-        </select>
-    </div>
-    <?php } 
-    
-    # order by
-    #if (strpos($search,"!")===false)
+
     if ($search!="!duplicates" && $search!="!unused" && !hook("replacesearchsortorder")) 
         {
         // Relevance is the default sort sequence if viewing resources following a search
@@ -1226,7 +1197,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         }
 
-        if(($display_selector_dropdowns || $perpage_dropdown) && $display != 'map')
+        if($display != 'map')
             {
             ?>
             <div class="InpageNavLeftBlock">
@@ -1234,17 +1205,14 @@ if (!hook("replacesearchheader")) # Always show search header now.
             <?php
             $results_display_array_count = count($results_display_array);
             for($n = 0; $n < $results_display_array_count; $n++)
-                {
-                if($display_selector_dropdowns || $perpage_dropdown)
+                {               
+                if (isset($searchparams["offset"]))
                     {
-                    if (isset($searchparams["offset"]))
-                        {
-                        $new_offset = floor($searchparams["offset"] / max($results_display_array[$n],1)) * $results_display_array[$n];
-                        }
-                    ?>
-                    <option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n],"offset"=>$new_offset)); ?>"><?php echo str_replace("?",$results_display_array[$n],$lang["perpage_option"]); ?></option>
-                    <?php
+                    $new_offset = floor($searchparams["offset"] / max($results_display_array[$n],1)) * $results_display_array[$n];
                     }
+                ?>
+                <option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n],"offset"=>$new_offset)); ?>"><?php echo str_replace("?",$results_display_array[$n],$lang["perpage_option"]); ?></option>
+                <?php
                 }
                 ?>
                 </select>
@@ -1283,34 +1251,11 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 render_clear_selected_btn();
                 }
             }
-        
-        if (!$display_selector_dropdowns && !$perpage_dropdown){?>
-        <div class="InpageNavLeftBlock">
-        <?php 
-        $results_display_array_count = count($results_display_array);
-        for($n=0;$n<$results_display_array_count;$n++){?>
-        <?php if ($per_page==$results_display_array[$n]){?><span class="Selected"><?php echo urlencode($results_display_array[$n])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo urlencode($results_display_array[$n])?></a><?php } ?><?php if ($n>-1&&$n<count($results_display_array)-1){?>&nbsp;|<?php } ?>
-        <?php } ?>
-        </div>
-        <?php } 
     
-        if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getval('recentdaylimit', '', true)==""){?>
-        <div class="InpageNavLeftBlock">
-        <?php 
-        $recent_search_period_array_count = count($recent_search_period_array);
-        for($n=0;$n<$recent_search_period_array_count;$n++){
-            if ($daylimit==$recent_search_period_array[$n]){?><span class="Selected"><?php echo htmlspecialchars(str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]))?> </span>&nbsp;|&nbsp;<?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>$recent_search_period_array[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars(str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]))?></a>&nbsp;|&nbsp;<?php } 
-            }
-        if ($daylimit==""){?><span class="Selected"><?php echo $lang["all"] ?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>"")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["all"]?></a><?php } 
-        ?>              
-        </div>
-        <?php } ?>      
-        
-    <?php
     $totalpages=$per_page==0 ? 1 : ceil($result_count/$per_page);
     if ($offset>$result_count) {$offset=0;}
     $curpage=$per_page==0 ? 1 : floor($offset/$per_page)+1;
-    
+
     ?>
     </div>
     <?php hook("stickysearchresults"); ?> <!--the div TopInpageNavRight was added in after this hook so it may need to be adjusted -->

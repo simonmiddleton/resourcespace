@@ -55,9 +55,6 @@ $disable_upload_preview = false;
 #$disk_quota_notification_interval=24;
 $disk_quota_notification_email='';
 
-# Make dropdown selectors for Display and Results Display menus
-$display_selector_dropdowns=false;
-
 # When displaying title of the resource, set the following to true if you want to show Upload resources or Edit resource when on edit page:
 $distinguish_uploads_from_edits=false;
 
@@ -235,9 +232,6 @@ $pending_submission_prompt_review=true;
 # searchable (otherwise users can search only for their own resources pending submission
 $pending_submission_searchable_to_all=false;
 
-# Option that specifically allows the per-page dropdown without needing $display_selector_dropdown=true. This is useful if you'd like to use the display selector icons with per-page dropdowns.
-$perpage_dropdown = true;
-
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;
 
@@ -267,10 +261,6 @@ $random_sort=false;
 
 # Separator to use when rendering date range field values
 $range_separator = " / ";
-
-# Option to limit recent search to resources uploaded in the last X days
-$recent_search_period_select=false;
-$recent_search_period_array=array(1,7,14,60);
 
 #Size of the related resource previews on the resource page. Usually requires some restyling (#RelatedResources .CollectionPanelShell)
 #Takes the preview code such as "col","thm"
