@@ -11,6 +11,12 @@ function HookAdobe_linkDownloadCookies_notification_bypass()
     return true;
     }
 
+// Added to bypass watermark on open
+function HookAdobe_linkDownloadBlockwatermark()
+    {
+    return adobe_link_check_credentials();
+    }
+
 // Added to bypass cookies_notification check
 function HookAdobe_linkDownloadAllow_in_browser($permitted_mime)
     {

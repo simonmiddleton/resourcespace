@@ -12,11 +12,15 @@ if(getval("loginmodal",""))
 	<?php
 	}
 	
-# Do not display header / footer when dynamically loading CentralSpace contents.
+# Complete rendering of footer controlled elements and closure divs on full page load (ie. ajax is "")
+# This rendering is bypassed when dynamically loading content into CentralSpace (ajax is "true")
 if (getval("ajax","") == "" && !hook("replace_footer")) 
 	{ 
 	hook("beforefooter");
     ?>
+    </div><!--End CentralSpaceFC-->
+    </div><!--End CentralSpaceContainerFC-->
+    <!-- Footer closures -->
     <div class="clearer"></div>
 
     <!-- Use aria-live assertive for high priority changes in the content: -->
@@ -29,7 +33,6 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
     	} ?>
 
     <div class="clearerleft"></div>
-    </div><!--End div-CentralSpace-->
 
     <div class="clearer"></div>
 
@@ -67,13 +70,13 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
     } // end ajax
 
 /* always include the below as they are perpage */
-
 if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request"))
-    {
-    echo "</div><!-- End CentralSpaceContainer -->";
+    {?>
+    </div><!--End CentralSpacePP-->
+    </div><!--End CentralSpaceContainerPP-->
+    </div><!--End UICenterPP -->
+    <?php
     }
-    
-echo "</div><!-- End UICenter -->";
 
 hook("footerbottom");
 draw_performance_footer();

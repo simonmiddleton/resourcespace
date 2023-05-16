@@ -2599,6 +2599,7 @@ $lang['userpreference_user_interface'] = 'User interface';
 $lang['userpreference_enable_option'] = 'Enable';
 $lang['userpreference_disable_option'] = 'Disable';
 $lang['userpreference_default_sort_label'] = 'Default sort';
+$lang['userpreference_default_sort_order_label'] = 'Default sort direction';
 $lang['userpreference_default_perpage_label'] = 'Default per page';
 $lang['userpreference_default_display_label'] = 'Default display';
 $lang['userpreference_use_checkboxes_for_selection_label'] = 'Use checkboxes to add to collection';

@@ -1,5 +1,4 @@
 <?php
-
     
 function HookRse_VersionAllBeforeremoveexistingfile($ref)
     {
@@ -13,16 +12,16 @@ function HookRse_VersionAllBeforeremoveexistingfile($ref)
 
     $old_extension=ps_value("SELECT file_extension value from resource where ref=?",array("i",$ref),"");
 
-    if ($old_extension!="")	
+    if ($old_extension!="")
     	{
     	$old_path=get_resource_path($ref,true,"",true,$old_extension);
     	if (file_exists($old_path))
             {
             $alt_file=add_alternative_file($ref,'','','',$old_extension,0,'');
             $new_path = get_resource_path($ref, true, '', true, $old_extension, -1, 1, false, "", $alt_file);
-            
+
             copy($old_path,$new_path);
-            
+
             # Also copy thumbnail
             $old_thumb=get_resource_path($ref,true,'thm',true,"");
             if (file_exists($old_thumb))
@@ -67,7 +66,7 @@ function HookRse_VersionAllGet_alternative_files_extra_sql($resource)
     return $extra_query;
     }
 
-    
+
 function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$existing,$postvals,&$errors)
     {
     # Process the batch revert action - hooks in to the save operation (save_resource_data_multi())
@@ -85,9 +84,9 @@ function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$exi
                 {
                 $errors[$field["ref"]] = str_replace("%%DATE%%",$revert_min_time,$lang["rse_version_invalid_time"]);
                 return false;
-                }                                
+                }
             }
-        
+
         # Find the value of this field as of this date and time in the resource log.
         $parameters=array("i",$ref, "i",$field["ref"], "s",$revert_date);
         $value=ps_value("SELECT previous_value value from resource_log 
@@ -98,4 +97,13 @@ function HookRse_versionAllSave_resource_data_multi_extra_modes($ref,$field,$exi
         return $existing;
         }
     return false;
+    }
+
+function HookRse_versionAllGet_resource_log_extra_fields()
+    {
+    # Extend get_resource_log so that the state of the previous value is fetched also.
+    return new PreparedStatementQuery(
+        ",previous_file_alt_ref, ((r.previous_value IS NOT NULL AND (r.type='e' OR r.type='m' OR r.type='N')) 
+            OR (r.previous_file_alt_ref IS NOT NULL AND r.type='u')) revert_enabled"
+        );
     }

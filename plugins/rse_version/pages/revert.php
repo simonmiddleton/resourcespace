@@ -15,7 +15,7 @@ if(is_valid_revert_state_request())
     exit();
     }
 
-$ref=getval("ref","");
+$ref=getval("ref",0,true);
 
 # Load log entry
 $log=ps_query("SELECT " . columns_in("resource_log") . ", rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` FROM resource_log 
@@ -189,71 +189,30 @@ elseif($type==LOG_CODE_UPLOADED)
     # Process submit
     if (getval("revert_action","")=="revert" && enforcePostRequest(false))
         {
-        # Perform the reversion. First this reversion itself needs to be logged and therefore 'revertable'.
-        
-        # Find file extension of current resource.
-        $old_extension=ps_value("select file_extension value from resource where ref=?",array("i",$resource),"");
-        
-        # Ceate a new alternative file based on the current resource
-        $alt_file=add_alternative_file($resource,'','','',$old_extension,0,'');
-        $new_path = get_resource_path($resource, true, '', true, $old_extension, -1, 1, false, "", $alt_file);
-        
-        # Copy current file to alternative file.
-        $old_path=get_resource_path($resource,true, '', true, $old_extension);
-        if (file_exists($old_path))
+        # Perform the reversion.
+        $revertok = revert_resource_file($resource,$log);
+        if($revertok===true)
             {
-            copy($old_path,$new_path);
+            redirect("pages/view.php?ref=" . $resource);
+            exit;
             }
-        else
-            {
-            echo "Missing file: $old_path ($old_extension)";
-            exit();
-            }
-            
-        # Also copy thumbnail
-        $old_thumb=get_resource_path($resource,true,'thm',true,"");
-        if (file_exists($old_thumb))
-            {
-            $new_thumb=get_resource_path($resource, true, 'thm', true, "", -1, 1, false, "", $alt_file);
-            copy($old_thumb,$new_thumb);
-            }
-            
-        # Update log so this has a pointer.
-        $log_ref=resource_log($resource,LOG_CODE_UPLOADED,0,$lang["revert_log_note"]);
-        $parameters=array("i",$alt_file, "i",$log_ref);
-        ps_query("update resource_log set previous_file_alt_ref=? where ref=?",$parameters);
-    
-        # Now perform the revert, copy and recreate previews.
-        $revert_alt_ref=$log["previous_file_alt_ref"];
-        $revert_ext=ps_value("select file_extension value from resource_alt_files where ref=?",array("i",$revert_alt_ref),"");
-        
-        $revert_path=get_resource_path($resource, true, '', true, $revert_ext, -1, 1, false, "", $revert_alt_ref);
-        $current_path=get_resource_path($resource,true, '', true, $revert_ext);
-        if (file_exists($revert_path))
-            {
-            copy($revert_path,$current_path);
-            $parameters=array("s",$revert_ext, "i",$resource);
-            ps_query("update resource set file_extension=? where ref=?",$parameters);
-            create_previews($resource,false,$revert_ext);
-            }
-        else
-            {
-            echo "Revert fail... $revert_path not found.";exit();
-            }
-        redirect("pages/view.php?ref=" . $resource);
+        $error = $lang["error_upload_replace_file_fail"];        
         }
     }
 
-include "../../../include/header.php";
+include __DIR__ . "/../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo $resource ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
+<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape_quoted_data($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
+
+<?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo htmlspecialchars($error) ?></div><?php } ?>
+
 <h1><?php echo $lang["revert"]?></h1>
 <p><?php echo $lang['revertingclicktoproceed'];?></p>
 
-<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="return CentralSpacePost(this,true);">
-<input type="hidden" name="ref" value="<?php echo $ref ?>">
+<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateurl($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
+<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>">
 <input type="hidden" name="revert_action" value="revert">
 <?php
 generateFormToken("form");

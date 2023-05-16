@@ -3,7 +3,8 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php';
 if(!checkperm('a'))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $plugin_name = 'museumplus';

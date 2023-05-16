@@ -2260,7 +2260,7 @@ $lang["warningrequestapprovalfield"]='警告 - 资源 ID % - 在批准之前请�
 $lang["yyyy-mm-dd"]='年年年年-月月-日日';
 $lang["resources-with-requeststatus0-0"]='(0 待处理)';
 $lang["resources-with-requeststatus0-1"]='(1 待处理)';
-$lang["resources-with-requeststatus0-2"]='(%number待处理)';
+$lang["resources-with-requeststatus0-2"]='(%number 待处理)';
 $lang["researches-with-requeststatus0-0"]='(0 未分配)';
 $lang["researches-with-requeststatus0-1"]='（1 未分配）';
 $lang["researches-with-requeststatus0-2"]='(%number 未分配)';
@@ -2348,7 +2348,6 @@ $lang["all-resourcetypes"]='资源';
 $lang["all-collectiontypes"]='收藏夹';
 $lang["resourcetypes-no_collections"]='所有%resourcetypes%';
 $lang["no_resourcetypes-collections"]='所有%collectiontypes%';
-$lang["resourcetypes-collections"]='所有%资源类型%和所有%集合类型%。';
 $lang["hide_view_access_to_workflow_state"]='阻止访问工作流状态';
 $lang["collection_share_status_warning"]='警告 - 此集合中有以下状态的资源，请检查这些资源是否可供其他用户访问。';
 $lang["contactadmin"]='请联系管理员。';
@@ -3115,23 +3114,6 @@ $lang["upload_share_email_subject"]='你已收到一个上传链接。';
 $lang["upload_share_email_text"]='已向您发送了一个上传文件的链接。';
 $lang["upload_share_email_password"]='使用此密码访问链接。';
 $lang["upload_share_email_clicklink"]='请使用下面的链接开始上传。';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]：[message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='感谢您的上传。请使用下面的按钮上传更多资源。';
 $lang["error_invalid_usergroup"]='无效的用户组。';
 $lang["error_invalid_date"]='无效日期';
@@ -3142,15 +3124,6 @@ $lang["error_no_resources_edit"]='未找到可编辑的资源。如果您刚刚�
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='资源已上传到您的共享收藏。';
 $lang["notify_upload_share_new_subject"]='新的外部上传';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[lang_notify_upload_share_new]：您分享的资源已上传成功并可供查看。 <br />
-[lang_clicklinkviewcollection]：请点击以下链接查看资源集合。 <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]：此电子邮件由 ResourceSpace 发送。';
 $lang["my_shares"]='我的共享 (wǒ de gòngxiǎng)';
 $lang["manage_shares_title"]='外部共享';
 $lang["share_purge_text"]='删除已过期的共享。';

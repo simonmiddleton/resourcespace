@@ -82,7 +82,7 @@ if ($ffmpeg_get_par)
         
     preg_match('/PAR ([0-9]+):([0-9]+)/m', $output, $matches);
     
-    if (@intval($matches[1]) > 0 && @intval($matches[2]) > 0)
+    if (intval($matches[1]??0) > 0 && intval($matches[2]??0) > 0)
         {
         $par = $matches[1] / $matches[2];
         if($par < 1)

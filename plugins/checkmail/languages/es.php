@@ -18,9 +18,6 @@ $lang["checkmail_password"]='Contraseña';
 $lang["checkmail_extension_mapping"]='Tipo de recurso mediante asignación de extensión de archivo.';
 $lang["checkmail_default_resource_type"]='Tipo de recurso predeterminado.';
 $lang["checkmail_extension_mapping_desc"]='Después del selector de Tipo de Recurso Predeterminado, hay una entrada debajo para cada uno de sus Tipos de Recurso. <br />Para forzar que los archivos cargados de diferentes tipos se conviertan en un Tipo de Recurso específico, agregue listas separadas por comas de extensiones de archivo (por ejemplo, jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Por favor, traduce: <br />(from allowed_extensions)
-
-(desde extensiones_permitidas)';
 $lang["checkmail_subject_field"]='Campo de Asunto';
 $lang["checkmail_body_field"]='Campo de cuerpo.';
 $lang["checkmail_purge"]='¿Eliminar correos electrónicos después de cargarlos?';

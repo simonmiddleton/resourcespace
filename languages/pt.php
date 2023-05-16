@@ -579,7 +579,7 @@ $lang["property-icon"]='Ícone.';
 $lang["property-inherit_global_fields"]='Herdar campos globais.';
 $lang["information-inherit_global_fields"]='Devem ser incluídos campos globais para este tipo de recurso?';
 $lang["property-smart_theme_name"]='Nome da coleção com recursos em destaque.';
-$lang["property-exiftool_field"]='Por favor, traduza: Campo Exiftool.';
+$lang["property-exiftool_field"]='Campo Exiftool';
 $lang["property-fits_field"]='Campo FITS.';
 $lang["property-read_only_field"]='Campo de metadados somente leitura (ou seja, não será gravado no download).';
 $lang["information-fits_field"]='O campo FITS (File Information Tool Set) sobrescreverá os valores do Exiftool se um valor puder ser encontrado!';
@@ -721,9 +721,7 @@ $lang["collection_download_settings-not-an-array"]='$collection_download_setting
 $lang["listfile-argument-not-defined"]='$archiver_listfile_argument não está definido.';
 $lang["nothing_to_download"]='Nada para baixar.';
 $lang["copycollectionremoveall"]='Remover todos os recursos antes de copiar.';
-$lang["purgeanddelete"]='Por favor, traduza: Purge.
-
-Limpar.';
+$lang["purgeanddelete"]='Limpar';
 $lang["purgecollectionareyousure"]='Tem certeza de que deseja remover esta coleção E EXCLUIR todos os recursos nela?';
 $lang["collectionsdeleteempty"]='Excluir coleções vazias.';
 $lang["collectionsdeleteemptyareyousure"]='Tem certeza de que deseja excluir todas as suas próprias coleções vazias?';
@@ -897,9 +895,7 @@ $lang["continuetouser"]='Continuar para o login do usuário.';
 $lang["mustaccept"]='Você deve marcar a caixa para aceitar os termos antes de prosseguir.';
 $lang["termsmustindicateusage"]='Você deve indicar o uso planejado antes de prosseguir.';
 $lang["termsmustspecifyusagecomment"]='Você deve fornecer comentários de uso planejado antes de prosseguir.';
-$lang["proceed"]='Por favor, traduza: Proceed.
-
-Continuar.';
+$lang["proceed"]='Continuar';
 $lang["notavailableshort"]='N/D';
 $lang["allmonths"]='Todos os meses.';
 $lang["allgroups"]='Todos os grupos.';
@@ -923,9 +919,7 @@ $lang["were_available-2"]='estavam disponíveis';
 $lang["resource-0"]='recursos';
 $lang["resource-1"]='recurso';
 $lang["resource-2"]='recursos';
-$lang["status-note"]='Por favor, traduza: NOTE.
-
-Anotação.';
+$lang["status-note"]='Anotação';
 $lang["action-changelanguage"]='Alterar idioma.';
 $lang["loading"]='Carregando...';
 $lang["disable_languages"]='Desativar opções de seleção de idioma.';
@@ -1015,7 +1009,7 @@ $lang["collectionsthemes"]='Coleções em destaque e públicas relacionadas.';
 $lang["recent"]='Recente';
 $lang["n_recent"]='%qty Recursos adicionados recentemente.';
 $lang["batchcopyfrom"]='Copiar os dados abaixo do recurso com ID';
-$lang["copy"]='Por favor, traduza: Copiar.';
+$lang["copy"]='Copiar';
 $lang["zipall"]='Baixar';
 $lang["downloadzip"]='Baixar coleção como um arquivo.';
 $lang["collection_download_format"]='Formato de arquivo para download.';
@@ -1084,9 +1078,6 @@ $lang["ipaddressrestriction"]='Restrição de endereço IP (opcional)';
 $lang["searchfilteroverride"]='Substituir filtro de pesquisa.';
 $lang["wildcardpermittedeg"]='Curinga permitido, por exemplo.';
 $lang["collection_download_original"]='Arquivo original.';
-$lang["link"]='Por favor, traduza: Link
-
-"Link" em Português significa "ligação" ou "vínculo". No contexto de um software de gerenciamento de ativos digitais, pode se referir a um link para um recurso específico, como um link para download ou um link para uma página de visualização de um recurso.';
 $lang["uploadpreview"]='Carregar imagem de pré-visualização.';
 $lang["starttypingusername"]='Digite o nome de usuário / nome completo / nome do grupo';
 $lang["requestfeedback"]='Solicitar feedback<br />(a resposta será enviada por e-mail)';
@@ -1249,9 +1240,6 @@ $lang["setup-binpath"]='Caminho %bin.';
 $lang["setup-begin_installation"]='Iniciar instalação!';
 $lang["setup-smtp-settings"]='Configurações SMTP.';
 $lang["setup-if-usesmtp"]='Utilizar um servidor SMTP externo para e-mails de saída (por exemplo, Gmail). Usa o PHPMailer.';
-$lang["setup-if-smtpsecure"]='Por favor, traduza: \'\', \'tls\' ou \'ssl\'. Para o Gmail, é necessário \'tls\' ou \'ssl\'.
-
-Tradução: \'\', \'tls\' ou \'ssl\'. Para o Gmail, é necessário \'tls\' ou \'ssl\'.';
 $lang["setup-if-smtphost"]='Nome do host, por exemplo, \'smtp.gmail.com\'.';
 $lang["setup-if-smtpport"]='Número da porta, por exemplo, 465 para o Gmail usando SSL.';
 $lang["setup-if-smtpauth"]='Enviar credenciais para o servidor SMTP (falso para usar acesso anônimo)';
@@ -1376,7 +1364,7 @@ $lang["plugins-icon"]='Ícone.';
 $lang["plugins-deactivate"]='Desativar';
 $lang["plugins-moreinfo"]='Mais informações.';
 $lang["plugins-activate"]='Ativar.';
-$lang["plugins-purge"]='Por favor, traduza: Configuração de purga.';
+$lang["plugins-purge"]='Configuração de purga';
 $lang["plugins-headertext"]='Os plugins ampliam a funcionalidade do ResourceSpace.';
 $lang["plugins-legacyinst"]='Ativado via config.php.';
 $lang["plugins-upload-title"]='Obter configuração do arquivo.';
@@ -1406,7 +1394,7 @@ $lang["marker"]='Marcador.';
 $lang["markers"]='Marcadores.';
 $lang["map_configuration"]='Mapa de Resultados da Pesquisa.';
 $lang["edit_map_introtext"]='Aplique zoom e pan para a visualização do mapa de interesse, em seguida, clique no mapa para localizar o marcador de localização do recurso. Salve a geolocalização mais recente usando o botão Salvar e, em seguida, clique em \'Voltar para edição de recurso ou geolocalizar coleção\' para retornar. Para buscar uma localização específica ou nome de recurso geográfico, use o botão de busca no canto superior direito. Altere o mapa base usando o botão de camadas de mapa no canto superior direito. Salve o mapa em um arquivo PNG usando o botão de mapa no canto inferior esquerdo.';
-$lang["mapview"]='Por favor, traduza: Mapa.';
+$lang["mapview"]='Mapa.';
 $lang["maptitle"]='Visualização de mapa.';
 $lang["mapemptysearch"]='Nenhum resultado encontrado na pesquisa.';
 $lang["map_print_title"]='Mapa de Resultados de Busca.';
@@ -1508,9 +1496,7 @@ $lang["indicateusagemedium"]='Meio de uso.';
 $lang["usageincorrect"]='Você deve descrever o uso planejado e selecionar um meio.';
 $lang["savesearchassmartcollection"]='Salvar pesquisa como coleção inteligente.';
 $lang["smartcollection"]='Coleção inteligente';
-$lang["dosavedsearch"]='Por favor, traduza: "Do saved search"
-
-"Realizar pesquisa salva"';
+$lang["dosavedsearch"]='Realizar pesquisa salva';
 $lang["all"]='Tudo';
 $lang["allresourcessearchbar"]='Todos os recursos.';
 $lang["allcollectionssearchbar"]='Todas as coleções.';
@@ -1605,7 +1591,7 @@ $lang["columnheader-resource_downloads"]='Downloads de recursos.';
 $lang["columnheader-views"]='Visualizações';
 $lang["columnheader-added"]='Adicionado.';
 $lang["columnheader-creation_date"]='Data de criação.';
-$lang["columnheader-sent"]='Por favor, traduza: Enviado.';
+$lang["columnheader-sent"]='Enviado';
 $lang["columnheader-last_seen"]='Última visualização.';
 $lang["period"]='Período';
 $lang["lastndays"]='Últimos ? dias.';
@@ -1649,7 +1635,7 @@ $lang["zipcommand_overridden"]='Mas por favor, note que $zipcommand está defini
 $lang["lastscheduledtaskexection"]='Última execução agendada da tarefa (dias)';
 $lang["executecronphp"]='A correspondência de relevância não será efetiva e os relatórios periódicos por e-mail não serão enviados. Certifique-se de que o <a href=\'../batch/cron.php\'>batch/cron.php</a> seja executado pelo menos uma vez por dia através de um trabalho cron ou similar.';
 $lang["shouldbeormore"]='Deve ser ? ou maior.';
-$lang["config_file"]='Por favor, traduza: (configuração: %file)';
+$lang["config_file"]='(configuração: %file)';
 $lang["large_file_support_64_bit"]='Suporte a arquivos grandes (plataforma de 64 bits)';
 $lang["large_file_warning_32_bit"]='AVISO: Executando o PHP de 32 bits. Arquivos maiores que 2GB não serão suportados.';
 $lang["server_timezone_check"]='Fuso horário do PHP é o mesmo que o MySQL utiliza.';
@@ -1732,18 +1718,13 @@ $lang["nodownloadcollection"]='Você não tem acesso para baixar nenhum dos recu
 $lang["progress"]='Progresso.';
 $lang["ticktodeletethisresearchrequest"]='Marque para excluir esta solicitação.';
 $lang["done"]='Concluído.';
-$lang["latlong"]='Por favor, traduza: Lat / long
-
-Latitude / longitude';
 $lang["geographicsearch"]='Busca geográfica.';
 $lang["geographicsearchresults"]='Resultados de pesquisa geográfica.';
 $lang["geographicsearchmissing"]='Critério de pesquisa geográfica ausente.';
 $lang["geographicsearch_help"]='Arraste para selecionar uma área de pesquisa.';
 $lang["search_results_overlimit"]='Foram encontrados muitos recursos. Refine sua busca para habilitar esta visualização.';
 $lang["error-geotile-server-error"]='Não é possível recuperar os tiles do seu servidor de tiles.';
-$lang["purge"]='Por favor, traduza: Purge.
-
-Limpar.';
+$lang["purge"]='Limpar';
 $lang["purgeuserstitle"]='Excluir usuários.';
 $lang["purgeusers"]='Excluir usuários.';
 $lang["purgeuserscommand"]='Excluir contas de usuário que estiveram inativas nos últimos % meses e foram criadas antes desse período.';
@@ -1767,9 +1748,6 @@ $lang["nopreviewresources"]='Recursos sem pré-visualizações.';
 $lang["action-delete_permanently"]='Excluir permanentemente.';
 $lang["horizontal"]='Horizontal: Horizontal';
 $lang["vertical"]='Vertical: Vertical';
-$lang["cc-emailaddress"]='Por favor, traduza: CC %emailaddress
-
-CC %emailaddress significa "Com Cópia para %emailaddress".';
 $lang["list-recipients-label"]='Listar todos os destinatários no e-mail?';
 $lang["list-recipients"]='Esta mensagem foi enviada para os seguintes endereços de e-mail:';
 $lang["sort"]='Classificar';
@@ -1864,7 +1842,7 @@ $lang["resourceids"]='Identificador(es) do recurso.';
 $lang["warningrequestapprovalfield"]='Aviso - ID de recurso % - por favor, observe o seguinte antes de aprovar.';
 $lang["yyyy-mm-dd"]='AAAA-MM-DD';
 $lang["resources-with-requeststatus0-0"]='(0 pendentes)';
-$lang["resources-with-requeststatus0-1"]='Por favor, traduza: (1 pendente)';
+$lang["resources-with-requeststatus0-1"]='(1 pendente)';
 $lang["researches-with-requeststatus0-0"]='(0 não atribuído)';
 $lang["researches-with-requeststatus0-1"]='(1 não atribuído)';
 $lang["researches-with-requeststatus0-2"]='(%número não atribuído)';
@@ -1915,7 +1893,7 @@ $lang["nomatchingresults"]='Não há resultados correspondentes.';
 $lang["matchingresults"]='Resultados correspondentes.';
 $lang["resources"]='Recursos.';
 $lang["share-resource"]='Compartilhar recurso.';
-$lang["scope"]='Por favor, traduza: Escopo.';
+$lang["scope"]='Escopo';
 $lang["downloadmetadata"]='Baixar Metadados.';
 $lang["downloadingmetadata"]='Baixando metadados.';
 $lang["file-contains-metadata"]='O arquivo que você está baixando agora contém todos os metadados para este recurso.';
@@ -1951,8 +1929,8 @@ $lang["download_collection"]='Baixar coleção.';
 $lang["all-resourcetypes"]='recursos';
 $lang["all-collectiontypes"]='coleções';
 $lang["resourcetypes-no_collections"]='Todos os %resourcetypes%';
-$lang["no_resourcetypes-collections"]='Por favor, traduza: Todos os %collectiontypes%';
-$lang["resourcetypes-collections"]='Todos os %tiposderecurso% e todos os %tiposdecollection%';
+$lang["no_resourcetypes-collections"]='Todos os %collectiontypes%';
+$lang["resourcetypes-collections"]='Todos os %resourcetypes% e todos os %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Bloquear acesso ao estado do fluxo de trabalho.';
 $lang["collection_share_status_warning"]='Aviso - esta coleção possui recursos nos seguintes estados, por favor verifique se esses recursos estarão acessíveis para outros usuários.';
 $lang["contactadmin"]='Entre em contato com o administrador.';
@@ -1996,7 +1974,7 @@ $lang["merge_filename_title_question"]='Usar o nome do arquivo no título (se ne
 $lang["merge_filename_title_do_not_use"]='Não utilizar.';
 $lang["merge_filename_title_replace"]='Substituir';
 $lang["merge_filename_title_prefix"]='Prefixo';
-$lang["merge_filename_title_suffix"]='Por favor, traduza: Sufixo.';
+$lang["merge_filename_title_suffix"]='Sufixo';
 $lang["merge_filename_title_include_extensions"]='Incluir extensões?';
 $lang["merge_filename_title_spacer"]='Espaçador.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Recursos enviados pelo usuário.';
@@ -2075,7 +2053,7 @@ $lang["fieldhelp-no_config_override_help"]='Não há ajuda para este item de con
 $lang["fieldhelp-tick_to_delete_group"]='Você não tem permissão para excluir grupos de usuários que contenham usuários ativos ou sejam o pai de outros grupos.';
 $lang["fieldtitle-add_to_config_override"]='Adicionar à substituição de configuração.';
 $lang["fieldtitle-advanced_options"]='Opções avançadas.';
-$lang["fieldtitle-derestrict_filter"]='Por favor, traduza: Filtro de desbloqueio.';
+$lang["fieldtitle-derestrict_filter"]='Filtro de desbloqueio';
 $lang["fieldtitle-group_logo"]='Logotipo específico do grupo.';
 $lang["fieldtitle-group_logo_replace"]='Substituir logotipo específico do grupo.';
 $lang["fieldtitle-tick_to_delete_group"]='Marque para excluir este grupo.';
@@ -2244,7 +2222,7 @@ $lang["createdashtilemycollections"]='Minhas coleções (específicas do usuári
 $lang["createdashtileadvancedsearch"]='Link de pesquisa avançada.';
 $lang["createdashtilemycontributions"]='Minhas contribuições (específicas do usuário)';
 $lang["createdashtilehelpandadvice"]='Link de ajuda e conselhos.';
-$lang["createdashtileuserupload"]='Por favor, traduza: Título de upload (específico do usuário)';
+$lang["createdashtileuserupload"]='Título de upload (específico do usuário)';
 $lang["tile_thmbs"]='Único.';
 $lang["tile_multi"]='Múltiplo.';
 $lang["tile_blank"]='Em branco.';
@@ -2528,7 +2506,7 @@ $lang["actions_view_editable_as_resultset"]='Visualizar recursos para revisar co
 $lang["refinemetadata"]='Refinar metadados.';
 $lang["saveandnext"]='Salvar e próximo.';
 $lang["save_and_auto"]='Salvar tudo com valores bloqueados.';
-$lang["upload_sequence"]='Por favor, traduza: Sequência de upload.';
+$lang["upload_sequence"]='Sequência de upload';
 $lang["default_upload_sequence"]='Sequência padrão de upload.';
 $lang["upload_first_then_set_metadata"]='Carregar primeiro, depois definir metadados.';
 $lang["set_metadata_then_upload"]='Defina os metadados primeiro, depois faça o upload.';
@@ -2679,7 +2657,7 @@ $lang["my_jobs"]='Trabalhos.';
 $lang["job_reset"]='Redefinir.';
 $lang["job_status_0"]='Desativado.';
 $lang["job_status_1"]='Ativo.';
-$lang["job_status_2"]='Por favor, traduza: Completo.';
+$lang["job_status_2"]='Completo';
 $lang["job_status_3"]='Em Progresso.';
 $lang["job_status_5"]='Falhou.';
 $lang["jobs_action_purge_complete"]='Limpeza de trabalhos concluídos e falhados.';
@@ -2711,24 +2689,6 @@ $lang["upload_share_email_subject"]='Você recebeu um link de upload de.';
 $lang["upload_share_email_text"]='enviou-lhe um link para carregar ficheiros.';
 $lang["upload_share_email_password"]='Use esta senha para acessar o link.';
 $lang["upload_share_email_clicklink"]='Por favor, utilize o link abaixo para começar o envio.';
-$lang["upload_share_email_template"]='Por favor, traduza:<br />
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
-[lang_message] : [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[nome_remetente] [lang_upload_share_email_text] [nome_do_aplicativo]<br /><br /> 
-[lang_message] : [mensagem]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[texto_senha]';
 $lang["upload_share_complete"]='Obrigado por enviar. Por favor, use o botão abaixo para enviar mais recursos.';
 $lang["error_invalid_usergroup"]='Grupo de usuário inválido.';
 $lang["error_invalid_date"]='Data inválida.';
@@ -2739,11 +2699,6 @@ $lang["error_no_resources_edit"]='Nenhum recurso encontrado para editar. Se voc�
 $lang["password_unchanged"]='(inalterado)';
 $lang["notify_upload_share_new"]='Recursos foram carregados para sua coleção compartilhada.';
 $lang["notify_upload_share_new_subject"]='Novos uploads externos.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Você recebeu um compartilhamento de recursos. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Minhas ações.';
 $lang["manage_shares_title"]='Compartilhamentos externos.';
 $lang["share_purge_text"]='Excluir compartilhamentos expirados.';

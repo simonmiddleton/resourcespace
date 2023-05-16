@@ -87,7 +87,8 @@ else if(
     && !allow_featured_collection_share($collection)
 )
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 if(!$allow_share || checkperm("b"))
     {
@@ -123,7 +124,8 @@ else if(is_featured_collection_category($collection))
     $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
     if(empty($fc_resources))
         {
-        exit(error_alert($lang["cannotshareemptythemecategory"], true, 200));
+        error_alert($lang["cannotshareemptythemecategory"], true, 200);
+        exit();
         }
 
     // Further checks at collection-resource level. Recurse through category's sub FCs

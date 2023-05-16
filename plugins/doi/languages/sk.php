@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Nemenljivé';
-$lang["doi_info_wikipedia"]='Digitálny identifikátor objektu (DOI) je identifikátor pre digitálne objekty, ako sú vedecké články, súbory dát, alebo iné digitálne dokumenty. DOI poskytuje trvalý odkaz na objekt a umožňuje jednoduché vyhľadávanie a odkazovanie na neho. DOI sa skladá z predpony "10." a sufixu prideleného organizáciou, ktorá DOI spravuje.';
 $lang["doi_info_link"]='na <a target="_blank" href="https://sl.wikipedia.org/wiki/Digitalni_identifikator_objekta">digitalnih identifikatorjih objektov (DOI)</a>.';
 $lang["doi_info_metadata_schema"]='V registračnom procese DOI na DataCite.org sú uvedené v dokumentácii schémy metadát Datacite Metadata Kernel v3.1. <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf"> (zdroj) </a>.';
 $lang["doi_info_mds_api"]='Na DOI-API, ktorá je používaná týmto pluginom, sú uvedené v dokumentácii <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API</a>.';

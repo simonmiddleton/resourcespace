@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Incorporar';
-$lang["embedslideshow_minimise"]='Minimizar apresentação de slides.';
+$lang["embedslideshow_minimise"]='&minus; minimizar apresentação de slides.';
 $lang["embedslideshow_maximise"]='Maximizar apresentação de slides.';
 $lang["embedslideshow_size"]='Tamanho da apresentação de slides?';
 $lang["embedslideshow_transitiontime"]='Duração do slide?';

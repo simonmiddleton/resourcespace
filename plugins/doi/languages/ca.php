@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='No modificable.';
-$lang["doi_info_wikipedia"]='Identificador d\'Objecte Digital (DOI)';
 $lang["doi_info_link"]='en <a target="_blank" href="https://ca.wikipedia.org/wiki/Digital_Object_Identifier">Identificadors d\'Objectes Digitals (DOI)</a>.';
 $lang["doi_info_metadata_schema"]='Les instruccions per a la registració de DOI a DataCite.org estan especificades a la <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Documentació de l\'Esquema de Metadades de Datacite</a>.';
 $lang["doi_info_mds_api"]='Les especificacions de l\'API DOI utilitzada per aquest connector es troben a la <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Documentació de l\'API Datacite</a>.';

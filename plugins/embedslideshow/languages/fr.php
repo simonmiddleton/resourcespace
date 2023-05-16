@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Incorporer (or Intégrer)';
-$lang["embedslideshow_minimise"]='Réduire la diapositive.';
+$lang["embedslideshow_minimise"]='&minus; réduire la diapositive.';
 $lang["embedslideshow_maximise"]='Maximiser le diaporama.';
 $lang["embedslideshow_size"]='Taille du diaporama ?';
 $lang["embedslideshow_transitiontime"]='Durée de la diapositive ?';

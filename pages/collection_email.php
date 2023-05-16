@@ -20,7 +20,8 @@ $sharepwd       = getval('sharepassword', '');
 $collection = get_collection($ref);
 if($collection === false)
     {
-    exit(error_alert($lang["error-collectionnotfound"], true, 403));
+    error_alert($lang["error-collectionnotfound"], true, 403);
+    exit();
     }
 
 if($collection["type"] == COLLECTION_TYPE_FEATURED)
@@ -40,11 +41,13 @@ else if(
     && !allow_featured_collection_share($collection)
 )
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 if(!$allow_share || checkperm("b"))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $themeshare = false;
@@ -58,7 +61,8 @@ if(is_featured_collection_category($collection))
     // Check this is not an empty FC category
     if(empty(get_featured_collection_resources($collection, array("limit" => 1))))
         {
-        exit(error_alert($lang["cannotshareemptythemecategory"], true, 403));
+        error_alert($lang["cannotshareemptythemecategory"], true, 403);
+        exit();
         }
 
     // Further checks at collection-resource level. Recurse through category's sub FCs

@@ -196,7 +196,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
             "pre_url"=>$resource["xl_thumb"],
             "user_rating"=>''
             );
-        $result["count"]++;
+        $result["total"]++;
         }
     return $result;
     }

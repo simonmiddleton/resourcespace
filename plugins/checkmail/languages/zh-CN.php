@@ -18,7 +18,6 @@ $lang["checkmail_password"]='密码';
 $lang["checkmail_extension_mapping"]='资源类型通过文件扩展名映射';
 $lang["checkmail_default_resource_type"]='默认资源类型';
 $lang["checkmail_extension_mapping_desc"]='默认资源类型选择器后，每个资源类型下面都有一个输入框。<br />如果要将不同类型的上传文件强制转换为特定的资源类型，请添加逗号分隔的文件扩展名列表（例如：jpg、gif、png）。';
-$lang["checkmail_resource_type_population"]='从允许的扩展名。';
 $lang["checkmail_subject_field"]='主题字段';
 $lang["checkmail_body_field"]='正文字段';
 $lang["checkmail_purge"]='上传后清除电子邮件？';

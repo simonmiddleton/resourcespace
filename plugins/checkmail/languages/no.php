@@ -19,7 +19,6 @@ $lang["checkmail_password"]='Passord';
 $lang["checkmail_extension_mapping"]='Ressurstype via filtypekartlegging.';
 $lang["checkmail_default_resource_type"]='Standard ressurstype';
 $lang["checkmail_extension_mapping_desc"]='Etter standard ressurstypevelgeren er det en inndatafelt for hver av ressurstypene dine. <br />For å tvinge opplastede filer av forskjellige typer til en bestemt ressurstype, legg til komma-separerte lister over filtyper (f.eks. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='(tilattu_filtyper)';
 $lang["checkmail_subject_field"]='Emnefelt';
 $lang["checkmail_body_field"]='Kroppsfelt';
 $lang["checkmail_purge"]='Slette e-poster etter opplasting?';

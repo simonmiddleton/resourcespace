@@ -3,16 +3,19 @@ namespace ImageBanks;
 
 class Shutterstock extends Provider
     {
-    protected $id                = 2;
-    protected $name              = "Shutterstock";
-    protected $download_endpoint = "https://api.shutterstock.com/v2/images/";
-    
-    protected $configs = array(
-        "shutterstock_token" => "ENTER_TOKEN_HERE",
-        "shutterstock_result_limit" => "1000"
-    );
-    protected $warning = "";
 
+    function __construct(array $lang, string $temp_dir_path)
+        {
+        $this->id                = 2;
+        $this->name              = "Shutterstock";
+        $this->download_endpoint = "https://api.shutterstock.com/v2/images/";
+        $this->configs = array(
+            "shutterstock_token" => "ENTER_TOKEN_HERE",
+            "shutterstock_result_limit" => "1000");
+        $this->warning = "";
+        $this->lang = $lang;
+        $this->temp_dir_path = $temp_dir_path;
+        }
 
     public function checkDependencies()
         {

@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='不可变的';
-$lang["doi_info_wikipedia"]='请翻译：https://zh.wikipedia.org/wiki/%E6%95%B0%E5%AD%97%E5%AF%B9%E8%B1%A1%E6%A0%87%E8%AF%86符号';
 $lang["doi_info_link"]='在DOI上。';
 $lang["doi_info_metadata_schema"]='在 DataCite.org 上的 DOI 注册中，详细说明在 <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Datacite 元数据架构文档</a> 中。';
 $lang["doi_info_mds_api"]='此插件使用的DOI-API在<a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API文档</a>中说明。';

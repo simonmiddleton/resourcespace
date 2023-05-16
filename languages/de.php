@@ -1713,7 +1713,7 @@ $lang["all-resourcetypes"] = "Ressourcen"; # Will be used as %resourcetypes% if 
 $lang["all-collectiontypes"] = "Kollektionen"; # Will be used as %collectiontypes% if all collection types are searched.
 $lang["resourcetypes-no_collections"] = "Alle %Resourcetypes%"; # Use %RESOURCETYPES%, %resourcetypes% or %Resourcetypes% as a placeholder. The placeholder will be replaced with the resourcetype in plural (or $lang["all-resourcetypes"]), using the same case. E.g. "All %resourcetypes%" -> "All photos"
 $lang["no_resourcetypes-collections"] = "Alle %Collectiontypes%"; # Use %COLLECTIONTYPES%, %collectiontypes% or %Collectiontypes% as a placeholder. The placeholder will be replaced with the collectiontype (or $lang["all-collectiontypes"]), using the same case. E.g. "All %collectiontypes%" -> "All my collections"
-$lang["resourcetypes-collections"] = "Alle %Resourcetypes% und alle %Collectiontypes%"; # Please find the comments for $lang["resourcetypes-no_collections"] and $lang["no_resourcetypes-collections"]!
+$lang["resourcetypes-collections"] = "Alle %resourcetypes% und alle %collectiontypes%"; # Please find the comments for $lang["resourcetypes-no_collections"] and $lang["no_resourcetypes-collections"]!
 $lang["resourcetypes_separator"] = ", "; # The separator to be used when converting the array of searched resourcetype to a string. E.g. ", " -> "photos, documents"
 $lang["collectiontypes_separator"] = ", "; # The separator to be used when converting the array of searched collections to a string. E.g. ", " -> "public collections, themes"
 $lang["hide_view_access_to_workflow_state"]="Zugriff auf Status blockieren";
@@ -2951,14 +2951,6 @@ $lang["upload_share_email_subject"]='Du hast einen Upload-Link erhalten von';
 $lang["upload_share_email_text"]='hat Ihnen einen Link zum Hochladen von Dateien gesendet.';
 $lang["upload_share_email_password"]='Verwenden Sie dieses Passwort, um auf den Link zuzugreifen.';
 $lang["upload_share_email_clicklink"]='Bitte benutzen Sie den untenstehenden Link, um mit dem Hochladen zu beginnen.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[Nachricht] : [message]<br /><br />
-[Klicken Sie auf den folgenden Link, um auf die geteilte Ressource zuzugreifen]<br />
-<br />
-[link]
-<br />
-<br />
-[Passwort]';
 $lang["upload_share_complete"]='Vielen Dank für das Hochladen. Bitte benutzen Sie den untenstehenden Button, um weitere Ressourcen hochzuladen.';
 $lang["error_invalid_usergroup"]='Ungültige Benutzergruppe.';
 $lang["error_invalid_date"]='Ungültiges Datum.';
@@ -2969,11 +2961,6 @@ $lang["error_no_resources_edit"]='Keine Ressourcen zum Bearbeiten gefunden. Wenn
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Ressourcen wurden zu Ihrer geteilten Sammlung hochgeladen.';
 $lang["notify_upload_share_new_subject"]='Neue externe Uploads';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Ein neues Resource wurde hochgeladen und mit Ihnen geteilt. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Meine Freigaben.';
 $lang["manage_shares_title"]='Externe Freigaben';
 $lang["share_purge_text"]='Lösche abgelaufene Freigaben.';

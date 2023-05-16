@@ -170,9 +170,9 @@ $where_statements = array( // Where Statements
     "collection_log" => ""
 );
 
-if(count(get_activity_log('sorry, your login',0,0,$where_statements,"user",false))==0 
-|| count(get_activity_log('disabled',0,0,$where_statements,"user",false))==0
-|| count(get_activity_log('expired',0,0,$where_statements,"user",false))==0)
+if(count(get_activity_log('sorry, your login',0,NULL,$where_statements,"user",false))==0 
+|| count(get_activity_log('disabled',0,NULL,$where_statements,"user",false))==0
+|| count(get_activity_log('expired',0,NULL,$where_statements,"user",false))==0)
 {
 echo "get_activity_log() did not return the expected values";
 return false;

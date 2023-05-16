@@ -18,7 +18,8 @@ if(!$enable_themes)
 // Access control
 if($parent > 0 && !featured_collection_check_access_control($parent))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $smart_rtf = (int) getval("smart_rtf", 0, true);

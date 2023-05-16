@@ -1794,16 +1794,17 @@ function display_field($n, $field, $newtab=false,$modal=false)
     $locked_fields = explode(",",getval("lockedfields",""));
     }
 
-    if(!isset($copyfrom))
-        {
-        $copyfrom = getval('copyfrom', '');
-        }
+  if(!isset($copyfrom))
+    {
+    $copyfrom = getval('copyfrom', '');
+    }
 
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim((string) $value);
   $use_copyfrom=true;
-    if ($use != $ref && ($field["omit_when_copying"]))
+  $omit_when_copying_enacted=false;
+  if ($use != $ref && ($field["omit_when_copying"]))
         {
         debug("display_field: reverting copied value for field " . $field["ref"] . " as omit_when_copying is enabled");
         # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
@@ -1818,6 +1819,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 }
             }
         $selected_nodes = $original_nodes;
+        $omit_when_copying_enacted=true;
         }
     elseif(($ref<0 || $upload_review_mode) && isset($locked_fields) && in_array($field["ref"], $locked_fields) && $lastedited > 0)
         {
@@ -2104,7 +2106,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
-        $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
+        
+        // Establish the full set of selected nodes to be rendered for this field
+        // Do this only if the field's selected nodes haven't previously been adjusted to take account of omit_when_copying
+        if(!$omit_when_copying_enacted)
+            {
+            $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
+            }
+
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
             $name = "nodes[{$field['ref']}]";

@@ -1810,7 +1810,7 @@ $lang["resourceids"]='Identificator(i) de resursă(e)';
 $lang["warningrequestapprovalfield"]='Atenție - ID-ul resursei % - vă rugăm să luați în considerare următoarele aspecte înainte de a aproba.';
 $lang["resources-with-requeststatus0-0"]='(0 în așteptare)';
 $lang["resources-with-requeststatus0-1"]='(1 în așteptare)';
-$lang["resources-with-requeststatus0-2"]='(%număr în așteptare)';
+$lang["resources-with-requeststatus0-2"]='(%number în așteptare)';
 $lang["researches-with-requeststatus0-0"]='(0 neatribuite)';
 $lang["researches-with-requeststatus0-1"]='(1 neatribuit)';
 $lang["researches-with-requeststatus0-2"]='(%number neatribuite)';
@@ -1900,7 +1900,7 @@ $lang["all-resourcetypes"]='resurse';
 $lang["all-collectiontypes"]='colecții';
 $lang["resourcetypes-no_collections"]='Toate %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Toate %collectiontypes%';
-$lang["resourcetypes-collections"]='Toate %tipurileresurse% și toate %tipuricolecții%';
+$lang["resourcetypes-collections"]='Toate %resourcetypes% și toate %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Blocare acces la starea fluxului de lucru.';
 $lang["collection_share_status_warning"]='Atenție - această colecție conține resurse în următoarele stări, vă rugăm să verificați că aceste resurse vor fi accesibile și altor utilizatori.';
 $lang["contactadmin"]='Contactați administratorul.';
@@ -2664,13 +2664,6 @@ $lang["upload_share_email_subject"]='Ți s-a trimis un link de încărcare de la
 $lang["upload_share_email_text"]='ți-a trimis un link pentru încărcarea fișierelor.';
 $lang["upload_share_email_password"]='Folosește această parolă pentru a accesa link-ul.';
 $lang["upload_share_email_clicklink"]='Vă rugăm să utilizați link-ul de mai jos pentru a începe încărcarea.';
-$lang["upload_share_email_template"]='[nume_expeditor] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [mesaj]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]<br />
-<br />
-[text_parola]';
 $lang["upload_share_complete"]='Mulțumim pentru încărcare. Vă rugăm să utilizați butonul de mai jos pentru a încărca mai multe resurse.';
 $lang["error_invalid_usergroup"]='Grupul de utilizatori invalid.';
 $lang["error_invalid_date"]='Data invalidă.';
@@ -2681,12 +2674,6 @@ $lang["error_no_resources_edit"]='Nu s-au găsit resurse pentru editare. Dacă t
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resursele au fost încărcate în colecția ta partajată.';
 $lang["notify_upload_share_new_subject"]='Noi încărcări externe.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Ai primit o notificare că o resursă a fost încărcată și partajată cu tine. <br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-Acest mesaj a fost generat automat de ResourceSpace. Vă rugăm să nu răspundeți la acest mesaj.';
 $lang["my_shares"]='Părțile mele.';
 $lang["manage_shares_title"]='Distribuiri externe.';
 $lang["share_purge_text"]='Ștergeți partajările expirate.';

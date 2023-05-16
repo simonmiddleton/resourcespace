@@ -2,7 +2,6 @@
 
 
 $lang["embed"]='تضمين';
-$lang["embedslideshow_minimise"]='تصغير عرض الشرائح.';
 $lang["embedslideshow_maximise"]='تكبير عرض الشرائح إلى الحد الأقصى';
 $lang["embedslideshow_size"]='حجم عرض الشرائح؟';
 $lang["embedslideshow_transitiontime"]='المدة الزمنية للشريحة؟';

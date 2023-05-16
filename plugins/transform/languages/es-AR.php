@@ -13,9 +13,7 @@ $lang["height"]='Nueva altura.';
 $lang["noimagefound"]='Error: No se encontró imagen.';
 $lang["scaled"]='Escalado';
 $lang["cropped"]='Recortado';
-$lang["tweaked"]='Por favor, traducir: Tweaked
-
-Ajustado.';
+$lang["tweaked"]='Ajustado';
 $lang["nonnumericcrop"]='Error: Se solicitó un recorte no numérico.';
 $lang["description_for_alternative_file"]='Descripción (para archivo alternativo)';
 $lang["errorspecifiedbiggerthanoriginal"]='Error: El ancho o la altura especificados son mayores que los de la imagen original.';
@@ -25,7 +23,7 @@ $lang["rotation"]='Rotación.';
 $lang["rotation0"]='Sin rotación.';
 $lang["rotation90"]='90 grados en sentido horario (CW).';
 $lang["rotation180"]='180 grados.';
-$lang["rotation270"]='Por favor, traducir: 90 grados en sentido antihorario (CCW).';
+$lang["rotation270"]='90 grados en sentido antihorario (CCW)';
 $lang["fliphorizontal"]='¿Voltear horizontalmente?';
 $lang["transform_original"]='Transformar original.';
 $lang["priorversion"]='Versión anterior.';

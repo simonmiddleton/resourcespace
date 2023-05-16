@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Onveranderlijk.';
-$lang["doi_info_wikipedia"]='Digitale Object Identifier (DOI)';
 $lang["doi_info_link"]='op <a target="_blank" href="https://nl.wikipedia.org/wiki/Digital_Object_Identifier">DOI\'s</a>.';
 $lang["doi_info_metadata_schema"]='Op de DOI-registratie bij DataCite.org staan ​​de gegevens vermeld in de <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Documentatie van het Datacite Metadata-schema</a>.';
 $lang["doi_info_mds_api"]='De DOI-API die door deze plugin wordt gebruikt, wordt beschreven in de <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API-documentatie</a>.';

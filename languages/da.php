@@ -1576,7 +1576,7 @@ $lang["zipcommand_overridden"]='Men bemærk venligst, at $zipcommand er definere
 $lang["lastscheduledtaskexection"]='Seneste planlagte opgaveudførelse (dage)';
 $lang["executecronphp"]='Relevansmatching vil ikke være effektiv, og periodiske e-mail-rapporter vil ikke blive sendt. Sørg for, at <a href=\'../batch/cron.php\'>batch/cron.php</a> køres mindst én gang dagligt via en cron-job eller lignende.';
 $lang["shouldbeormore"]='skal være ? eller større';
-$lang["config_file"]='(Konfiguration: %fil)';
+$lang["config_file"]='(Konfiguration: %file)';
 $lang["large_file_support_64_bit"]='Støtte til store filer (64-bit platform)';
 $lang["large_file_warning_32_bit"]='ADVARSEL: Kører 32 bit PHP. Filer større end 2GB vil ikke blive understøttet.';
 $lang["server_timezone_check"]='PHP tidszone er den samme som MySQL bruger.';
@@ -1876,7 +1876,7 @@ $lang["all-resourcetypes"]='ressourcer';
 $lang["all-collectiontypes"]='samlinger';
 $lang["resourcetypes-no_collections"]='Alle %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Alle %collectiontypes%';
-$lang["resourcetypes-collections"]='Alle %resourcetyper% og alle %samlingstyper%';
+$lang["resourcetypes-collections"]='Alle %resourcetypes% og alle %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Bloker adgang til arbejdsgangstilstand.';
 $lang["collection_share_status_warning"]='Advarsel - denne samling har ressourcer i følgende tilstande, sørg for at disse ressourcer vil være tilgængelige for andre brugere.';
 $lang["contactadmin"]='Kontakt administrator.';
@@ -2637,25 +2637,6 @@ $lang["upload_share_email_subject"]='Du har modtaget et upload-link fra.';
 $lang["upload_share_email_text"]='Har sendt dig et link til at uploade filer til.';
 $lang["upload_share_email_password"]='Brug dette kodeord for at få adgang til linket.';
 $lang["upload_share_email_clicklink"]='Venligst brug nedenstående link for at begynde upload.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-Translated to Dansk:
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Tak fordi du har uploadet. Brug venligst knappen nedenfor for at uploade flere ressourcer.';
 $lang["error_invalid_usergroup"]='Ugyldig brugergruppe.';
 $lang["error_invalid_date"]='Ugyldig dato.';
@@ -2666,10 +2647,6 @@ $lang["error_no_resources_edit"]='Ingen ressourcer fundet til redigering. Hvis d
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Ressourcer er blevet uploadet til din delte samling.';
 $lang["notify_upload_share_new_subject"]='Nye eksterne upload.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] = Ny samling delt med dig<br />
-[lang_clicklinkviewcollection] = Klik her for at se samlingen<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Med venlig hilsen,';
 $lang["my_shares"]='Mine delinger.';
 $lang["manage_shares_title"]='Eksterne delinger.';
 $lang["share_purge_text"]='Slet udløbne delinger.';
