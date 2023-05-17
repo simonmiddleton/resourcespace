@@ -341,16 +341,7 @@ else
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$metadatatemplate = !$resetform ? (getval(
-    'metadatatemplate',
-    ($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
-    true
-    )) : $metadata_template_default_option;
-
-if($resetform)
-    {
-    $metadatatemplate =  $metadata_template_default_option;
-    }
+$metadatatemplate = getval('metadatatemplate',0,true);
     
 if ($lockable_fields && $lastedited > 0)
     {
@@ -587,16 +578,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
     hook("editbeforesave"); 
 	if(!$multiple)
         {
-        if(($ref < 0 || $upload_review_mode) && !$is_template && $metadata_template_mandatory && $metadatatemplate == 0)
-            {
-            $save_errors['metadatatemplate'] = $lang["usemetadatatemplate"] . ": " . $lang["requiredfield"];
-            $show_error=true;
-            }
-        else
-            {
-            $save_errors = process_edit_form($ref, $resource);
-            }
-        
+        $save_errors = process_edit_form($ref, $resource);
         if (($save_errors === true || $is_template) && getval("tweak","")=="")
             {
             if ($ref > 0 && getval("save","") != "" && enforcePostRequest($ajax))
@@ -1554,15 +1536,10 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
     {
     // Show metadata templates here
     $templates = get_metadata_templates();
-
-    $first_option_conditions = ($metadata_template_default_option == 0 && $metadatatemplate == 0);
+    $first_option_conditions = $metadatatemplate == 0;
     ?>
     <div class="Question <?php if($lockable_fields && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
         <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate'];
-        if (!$is_template && $metadata_template_mandatory)
-            {
-            echo "<sup>*</sup>";
-            }
         if ($lockable_fields)
             {
             renderLockButton('metadatatemplate', $locked_fields);
@@ -1575,10 +1552,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
             {
             $template_selected = '';
 
-            if(
-                ($metadatatemplate == 0 && $metadata_template_default_option == $template['ref'])
-                || ($metadatatemplate > 0 && $template['ref'] == $metadatatemplate)
-            )
+            if($template['ref'] == $metadatatemplate)
                 {
                 $template_selected = ' selected';
                 }

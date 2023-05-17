@@ -126,12 +126,6 @@ $max_collection_thumbs=150;
 #Option to turn on metadata download in view.php.
 $metadata_download=false;
 
-// Ability to default metadata templates to a particular resource ID
-$metadata_template_default_option = 0;
-
-// Force selection of a metadata template
-$metadata_template_mandatory = false;
-
 # Enable multi-lingual free text fields
 # By default, only the checkbox list/dropdown fields can be multilingual by using the special syntax when defining
 # the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
@@ -150,20 +144,8 @@ $normalize_keywords=true;
 # Allow sorting by resource_type on thumbnail views
 $order_by_resource_type=true;
 
-# pager dropdown
-$pager_dropdown=false;
-
-# Should the resources that are in the archive state "User Contributed - Pending Review" (-1) be
-# visible in the main searches (as with resources in the active state)?
-# The resources will not be downloadable, except to the contributer and those with edit capability to the resource.
-$pending_review_visible_to_all=false;
-
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
-
-# Should the resources that are in the archive state "User Contributed - Pending submission" (-2) be
-# searchable (otherwise users can search only for their own resources pending submission
-$pending_submission_searchable_to_all=false;
 
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;

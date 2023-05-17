@@ -797,7 +797,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
     debug_function_call("search_filter", func_get_args());
 
     global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
-    $geo_search_restrict,$pending_review_visible_to_all,$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
+    $geo_search_restrict,$search_all_workflow_states,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
     
     if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
     $userpermissions = (isset($userpermissions)) ? $userpermissions : array();
@@ -941,41 +941,25 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
-            $pending_states_visible_to_all_sql      = "";
-            $pending_states_visible_to_all_params   = [];
-            # Append standard filtering to hide resources in a pending state, whatever the search
-            if (!$pending_submission_searchable_to_all)
+            // Append standard filtering to hide resources in a pending state, whatever the search          
+            // except when the resource is of a type that the user has ert permission for
+            $rtexclusions = "";
+            $rtexclusions_params = [];
+            for ($n=0;$n<count($userpermissions);$n++)
                 {
-                $pending_states_visible_to_all_sql.= "(r.archive<>-2 OR r.created_by = ?)";
-                $pending_states_visible_to_all_params = ["i",$userref];
-                }
-            if (!$pending_review_visible_to_all)
-                {
-                $pending_states_visible_to_all_sql .= (($pending_states_visible_to_all_sql!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by = ?)";
-                array_push($pending_states_visible_to_all_params,"i",$userref);
-                }
-
-            if ($pending_states_visible_to_all_sql != "")
-                {
-                #Except when the resource is type that the user has ert permission for
-                $rtexclusions = "";
-                $rtexclusions_params = [];
-                for ($n=0;$n<count($userpermissions);$n++)
+                if (substr($userpermissions[$n],0,3)=="ert")
                     {
-                    if (substr($userpermissions[$n],0,3)=="ert")
+                    $rt=substr($userpermissions[$n],3);
+                    if (is_int_loose($rt))
                         {
-                        $rt=substr($userpermissions[$n],3);
-                        if (is_int_loose($rt))
-                            {
-                            $rtexclusions .= " OR (resource_type = ?)";
-                            array_push($rtexclusions_params,"i",$rt);
-                            }
+                        $rtexclusions .= " OR (resource_type = ?)";
+                        array_push($rtexclusions_params,"i",$rt);
                         }
                     }
-                $sql_filter->sql .= " AND ((" . $pending_states_visible_to_all_sql . ") " . $rtexclusions . ")";
-                $sql_filter->parameters = array_merge($sql_filter->parameters,$pending_states_visible_to_all_params,$rtexclusions_params);
-                unset($rtexclusions);
                 }
+            $sql_filter->sql .= " AND (((r.archive<>-2 OR r.created_by = ?) AND (r.archive<>-1 OR r.created_by = ?)) " . $rtexclusions . ")";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,["i",$userref,"i",$userref],$rtexclusions_params);
+            unset($rtexclusions);
             }
         }
     # Add code to filter out resoures in archive states that the user does not have access to due to a 'z' permission
@@ -1995,19 +1979,9 @@ function get_upload_here_selected_nodes($search, array $nodes)
 */
 function get_default_search_states()
     {
-    global $searchstates, $pending_submission_searchable_to_all, $pending_review_visible_to_all;
+    global $searchstates;
 
     $defaultsearchstates = isset($searchstates) ? $searchstates : array(0); // May be set by rse_workflow plugin
-
-    if($pending_submission_searchable_to_all)
-        {
-        $defaultsearchstates[] = -2;
-        }
-    if($pending_review_visible_to_all)
-        {
-        $defaultsearchstates[] = -1;
-        }
-
     $modifiedstates = hook("modify_default_search_states","",array($defaultsearchstates));
     if(is_array($modifiedstates))
         {

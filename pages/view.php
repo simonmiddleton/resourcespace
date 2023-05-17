@@ -222,13 +222,6 @@ if (isset($metadata_template_resource_type) && ($resource["resource_type"]==$met
 	else {$default_to_standard_title=true;}	
 	}
 
-if ($pending_review_visible_to_all && isset($userref) && $resource["created_by"]!=$userref && $resource["archive"]==-1 && !checkperm("e0"))
-	{
-	# When users can view resources in the 'User Contributed - Pending Review' state in the main search
-	# via the $pending_review_visible_to_all option, set access to restricted.
-	$access=1;
-	}
-
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
 	{
