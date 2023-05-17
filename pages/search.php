@@ -1612,12 +1612,11 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 
 hook("endofsearchpage");
 
-if($search_anchors && $display != 'map')
+if($display != 'map')
     { ?>
     <script>
     place     = '<?php echo getval("place", ""); ?>';
     display   = '<?php echo $display; ?>';
-    highlight = '<?php echo $search_anchors_highlight; ?>';
 
     jQuery(document).ready(function()
         {
@@ -1629,11 +1628,6 @@ if($search_anchors && $display != 'map')
             if(jQuery(elementScroll).length)
                 {
                 elementScroll.scrollIntoView();
-
-                if(highlight)
-                    {
-                    jQuery(elementScroll).addClass('search-anchor');
-                    }
                 }
             }
         });

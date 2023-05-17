@@ -2712,10 +2712,6 @@ $resource_view_use_pre = false;
 # NOTE: Enabling $resource_view_large_ext will override this.
 $resource_view_large_orientation = true;
 
-# Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
-# Show an edit icon/link in the search results.
-$search_results_edit_icon=true;
-
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
 

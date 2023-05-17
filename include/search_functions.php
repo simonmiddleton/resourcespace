@@ -600,7 +600,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
+           $collection, $usercollection, $internal_share_access, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -740,7 +740,7 @@ function compile_search_actions($top_actions)
         }
 
     // If all resources are editable, display an edit all link
-    if($top_actions && $show_edit_all_link && !$omit_edit_all)
+    if($top_actions && !$omit_edit_all)
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
         $options[$o]['value']='editsearchresults';

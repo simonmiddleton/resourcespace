@@ -48,13 +48,10 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	
 	$sharing_related=false;
 	if(getval("sharerelatedresources","")!=""){$sharing_related=true;}
-	if($sharing_related || $share_resource_as_collection)
+	if($sharing_related)
 		{
-		if($sharing_related)
-			{
-			// User has chosen to include related resources, so treat as sharing a new collection
-			$relatedshares=explode(",",getval("sharerelatedresources",""));
-			}
+        // User has chosen to include related resources, so treat as sharing a new collection
+        $relatedshares=explode(",",getval("sharerelatedresources",""));
 		// Create new collection
 		$allow_changes=(getval("allow_changes","")!=""?1:0);
 		$sharedcollection=create_collection($userref,i18n_get_translated($resource["field".$view_title_field]) . " Share " . nicedate(date("Y-m-d H:i:s")),$allow_changes);
@@ -120,116 +117,8 @@ include "../include/header.php";
 <label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo $resource["ref"]?></div>
 <div class="clearerleft"> </div>
 </div>
-
-
-
 <?php
-// -------- Related Resources (must be able to search for this to work)
-if ($share_resource_include_related && $enable_related_resources && checkperm("s") && ($k==""))
-	{
-		
-	$result=do_search("!related" . $ref);
-	if (count($result)>0) 
-		{
-		?>
-		<div class="Question" id="sharerelatedresources">
-		<label><?php echo $lang["sharerelatedresources"]?></label>
-		<input type="hidden" name="sharerelatedresources" id="sharerelatedresourcesfield"  value="" >
-		<div class="sharerelatedresources">
-		<?php
-	
-			for ($n=0;$n<count($result);$n++)
-				{
-				$related_restype=$result[$n]["resource_type"];
-				$related_restypes[]=$related_restype;
-				}
-			//reduce array to unique values
-			$related_restypes=array_unique($related_restypes);
-			$count_restypes=0;
-			foreach($related_restypes as $rtype)
-				{
-				?>
-				<div class="sharerelatedtype">
-				<?php
-				$restypename=ps_value("select name as value from resource_type where ref = ?",array("i",$rtype), "", "schema");
-				$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
-				?><!--Panel for related resources-->
-				
-				<div class="Title"><?php echo $restypename ?></div>
-				<?php
-				// loop and display the results by resource type
-				for ($n=0;$n<count($result);$n++)			
-					{	
-					if ($result[$n]["resource_type"]==$rtype){
-						$rref=$result[$n]["ref"];
-						$title=$result[$n]["field".$view_title_field];
-
-						// swap title fields if necessary
-
-						if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-							{
-							if ($result[$n]['resource_type']==$metadata_template_resource_type)
-								{
-								$title=$result[$n]["field".$metadata_template_title_field];
-								}	
-							}	
-								
-						?>
-						
-						<!--Resource Panel-->
-						<div class="ResourcePanelShellSmall">
-						<table border="0" class="ResourceAlignSmall"><tr><td>
-						<a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$result[$n]["preview_extension"],-1,1,checkperm("w"),$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
-						</tr></table>
-						<div class="ResourcePanelInfo"><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),15)?></a>&nbsp;</div>
-						<div class="ResourcePanelIcons"><input type="checkbox" id="share<?php echo $rref ?>" class="checkselect" onChange="UpdateRelatedField(this,<?php echo $rref ?>);"></div>
-						
-						</div>
-						<?php		
-						}
-					}
-					?>
-					</div><!-- end of sharerelatedtype -->
-					<div class="clearerleft"> </div>
-					<?php
-				} //end of display loop by resource extension
-		
-		?>
-		</div>
-		<div class="clearerleft"> </div>
-		</div>
-		
-		<div class="Question">
-		<label for="allow_changes"><?php echo $lang["sharerelatedresourcesaddremove"]?></label><input type=checkbox id="allow_changes" name="allow_changes" >
-		<div class="clearerleft"> </div>
-		</div>
-		
-		<script>
-		
-		sharerelated=new Array();
-		
-		function UpdateRelatedField(checkbox, ref)
-			{
-			if(checkbox.checked)
-				{
-				sharerelated.push(ref);
-				}
-			else
-				{				
-				sharerelated.splice(jQuery.inArray(ref, sharerelated), 1 );
-				}
-			jQuery('#sharerelatedresourcesfield').val(sharerelated);
-			}		
-		</script>
-		<?php
-		} 
-	// -------- End Related Resources
-	}
-	
-
-
- hook("resemailmoreinfo"); ?>
-
+hook("resemailmoreinfo"); ?>
 <div class="Question">
 <label for="message"><?php echo $lang["message"]?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
 <div class="clearerleft"> </div>

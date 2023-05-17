@@ -529,7 +529,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         if (!hook("viewallresults")) 
                             { ?>
                             <a class="upLink"
-                                href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up")) . (($search_anchors)?"&place=" . $ref:"") ?>"
+                                href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up","place"=>$ref)) ?>"
                                 onClick="return CentralSpaceLoad(this);">
                                 <?php echo $lang["viewallresults"]?>
                             </a>

@@ -180,15 +180,6 @@ $resource_type_force_selection=false;
 # IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)
 $search_all_workflow_states=false;
 
-# When returning to search results from the view page via "all" link, bring user to result location of viewed resource?
-$search_anchors=true;
-
-# Highlight last viewed result when using $search_anchors
-$search_anchors_highlight=false;
-
-# Show an edit icon/link in the search results.
-$search_results_edit_icon=true;
-
 # whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"
 $search_titles_shortnames=false;
 
@@ -197,19 +188,6 @@ $searchbar_buttons_at_bottom=true;
 
 # Enable list view option for search screen
 $searchlist=true;
-
-# Option to separate some resource types in searchbar selection boxes
-$separate_resource_types_in_searchbar=Array();
-
-
-# Always create a collection when sharing an individual resource via email
-$share_resource_as_collection=false;
-
-# Add option to include related resources when sharing single resource (creates a new collection)
-$share_resource_include_related=false;
-
-# Enable the 'edit all' function in the collection and search actions dropdowns
-$show_edit_all_link = true;
 
 // Show required field legend on upload
 $show_required_field_label = true;

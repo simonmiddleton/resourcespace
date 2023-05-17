@@ -3990,7 +3990,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     {
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
            $manage_collections_share_link, $allow_share, $enable_collection_copy,
-           $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
+           $manage_collections_remove_link, $userref, $collection_purge, $result,
            $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
@@ -4273,7 +4273,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
-    if(($k=="" || $internal_share_access) && $show_edit_all_link && $count_result>0)
+    if(($k=="" || $internal_share_access) && $count_result>0)
         {
         if($allow_multi_edit)
             {
