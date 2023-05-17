@@ -2675,6 +2675,8 @@ $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse B
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 $lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
 $lang['systemconfig_only_show_modified'] = 'Only show modified values';
+$lang['systemconfig_debug'] = 'Debug';
+$lang['systemconfig_debug_log_on_specific_user'] = "On (specific user)";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';

@@ -9,8 +9,67 @@ $find = getval("find", "");
 $only_modified = (getval('only_modified', 'no') == 'yes');
 if (!$searching) {$find = "";}
 
+// Common config fields' options
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 $yes_no_options         = array($lang['no'], $lang['yes']);
+
+
+
+
+
+
+
+
+// Debug section
+/*
+todo: uncomment once done and delete the active one (next page_def)
+$page_def[] = config_add_html(
+    '<h3 class="CollapsibleSectionHead collapsed">' . htmlspecialchars($lang['systemconfig_debug']) . '</h3>'
+    . '<div id="SystemConfigDebugSection" class="CollapsibleSection">'
+);
+*/
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemconfig_debug'] . '</h3><div id="SystemConfigDebugSection" class="CollapsibleSection">');
+// Faking a global so that we can apply some logic before enabling/disabling debug_log
+$system_config_debug_log_proxy = $debug_log ? $lang['systemconsoleonpermallusers'] : $lang['off'];
+get_config_option(null, 'system_config_debug_log_proxy', $system_config_debug_log_proxy);
+$debug_log_enabled_for_specific_user = getval('debug_log_enabled_for_specific_user', 0, true);
+$debug_log_options = [
+    $lang['systemconsoleonpermallusers'],
+    $lang['systemconsoleonallusers'],
+    $lang['systemconfig_debug_log_on_specific_user'],
+    $lang['off']
+];
+$page_def[] = config_add_single_select(
+    'system_config_debug_log_proxy',
+    $lang['systemconsoledebuglog'],
+    $debug_log_options,
+    false,
+    420,
+    '',
+    true,
+    'debug_log_selector_onchange();'# onchange_js
+);
+ob_clean();
+$autocomplete_user_scope = 'SystemConfigDebugLogSpecificUser_';
+$single_user_select_field_id = 'debug_log_enabled_for_specific_user';
+$single_user_select_field_value = $debug_log_enabled_for_specific_user;
+$single_user_select_field_onchange = 'debug_log_user_select_field_onchange();';
+?>
+<div id="SystemConfigDebugForUser" class="Question DisplayNone">
+    <label></label>
+    <?php include dirname(__DIR__, 2) . "/include/user_select.php"; ?> 
+    <div class="clearerleft"></div>
+</div>
+<?php
+$user_select_html = ob_get_contents();
+ob_clean();
+$page_def[] = config_add_html($user_select_html);
+$page_def[] = config_add_html('</div>');
+
+
+
+
+
 
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
@@ -544,6 +603,19 @@ include '../../include/header.php';
         } 
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); 
     ?>
+    <script>
+    function debug_log_selector_onchange()
+        {
+            console.info('onchange...');
+            return;
+        }
+
+    function debug_log_user_select_field_onchange()
+        {
+            console.info('debug_log_user_select_field_onchange: onchange...');
+            return;
+        }
+    </script>
 </div>
 <?php
 include '../../include/footer.php';
