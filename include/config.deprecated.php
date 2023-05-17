@@ -189,31 +189,8 @@ $searchbar_buttons_at_bottom=true;
 # Enable list view option for search screen
 $searchlist=true;
 
-// Show required field legend on upload
-$show_required_field_label = true;
-
-# Show the link to 'user contributed assets' on the My Contributions page
-# Allows non-admin users to see the assets they have contributed
-$show_user_contributed_resources=true;
-
-# Set this to true in order for the top bar to remain present when scrolling down the page
-$slimheader_fixed_position=false;
-
-# Omit archived resources from get_smart_themes (so if all resources are archived, the header won't show)
-# Generally it's not possible to check for the existence of results based on permissions,
-# but in the case of archived files, an extra join can help narrow the smart theme results to active resources.
-$smart_themes_omit_archived=false;
-
-# Store Resource Refs when uploading, this is useful for other developer tools to hook into the upload.
-$store_uploadedrefs=false;
-
 # Suppress SQL information in the debug log?
 $suppress_sql_log = false;
-
-# display an alert icon next to the Admin link 
-# and the relevant Admin item when there are requests that need managing
-# only affects users with permissions to do this.
-$team_centre_alert_icon = true;
 
 # Normally, image tweaks are only applied to scr size and lower. 
 # This could require recreating previews to sync up the various image rotations.

@@ -4438,7 +4438,7 @@ function EditNav()
 function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
     {
     global $lang, $multiple, $ref, $upload_review_mode, $noupload, $is_template,
-    $show_required_field_label, $modal, $edit_selection_collection_resources, $locked_fields;
+    $modal, $edit_selection_collection_resources, $locked_fields;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
@@ -4472,7 +4472,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             <?php
             }
 
-        if(!$is_template && $show_required_field_label && $requiredfields)
+        if(!$is_template && $requiredfields)
             {
             ?>
             <div class="RequiredFieldLabel"><sup>*</sup> <?php echo $lang['requiredfield']; ?></div>

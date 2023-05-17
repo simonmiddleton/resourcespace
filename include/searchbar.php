@@ -205,12 +205,7 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
 <script>
 var categoryTreeChecksArray = [];
 </script>
-<div id="SearchBox" <?php
-    if(isset($slimheader) && $slimheader && isset($slimheader_fixed_position) && $slimheader_fixed_position)
-        {
-        ?> class="SlimHeaderFixedPosition"<?php
-        }
-?>>
+<div id="SearchBox">
 
 <?php hook("searchbarbeforeboxpanel"); ?>
 

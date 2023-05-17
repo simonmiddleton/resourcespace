@@ -1902,8 +1902,6 @@ function get_smart_theme_headers()
  */
 function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array $field_meta = array())
     {
-    global $smart_themes_omit_archived;
-
     $return = array();
 
     // Determine if this should cascade onto children for category tree type

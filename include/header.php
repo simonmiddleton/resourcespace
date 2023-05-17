@@ -356,7 +356,6 @@ if ($pagename!="preview" && $pagename!="preview_all")
     <div id="Header" class="<?php
             echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : ' ui-layout-north ';
             echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
-            echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
             echo " " . $header_size;
     ?>">
 
@@ -510,7 +509,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                 <?php if (checkperm("t"))
                     { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                     <?php 
-                        if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+                        if (!$actions_on && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
                             $pending=ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",array(),0);
