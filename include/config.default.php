@@ -2270,9 +2270,6 @@ $geo_search_heatmap = false;
 # This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
 # $qlpreview_path="/usr/bin";
 
-// A list of extensions that QuickLook previews should NOT be used for.
-$qlpreview_exclude_extensions = array("tif","tiff");
-
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 

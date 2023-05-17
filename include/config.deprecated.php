@@ -152,18 +152,9 @@ $prevent_open_access_on_edit_for_active=false;
 
 # Allow a Preview page for entire collections (for more side to side comparison ability)
 $preview_all=false;
-# Minimize collections frame when visiting preview_all.php
-$preview_all_hide_collections=true;
 
 # Preview All default orientation ("v" for vertical or "h" for horizontal)
 $preview_all_default_orientation="h";
-
-# Show header and footer on resource preview page
-$preview_header_footer=false;
-
-# Allow unique quality settings for each preview size. This will use $imagemagick_quality as a default setting.
-# If you want to adjust the quality settings for internal previews you must also set $internal_preview_sizes_editable=true
-$preview_quality_unique=false;
 
 $psd_transparency_checkerboard=false;
 
@@ -174,22 +165,9 @@ $qlpreview_exclude_extensions=array("tif","tiff");
 
 $random_sort=false;
 
-# Separator to use when rendering date range field values
-$range_separator = " / ";
-
-#Size of the related resource previews on the resource page. Usually requires some restyling (#RelatedResources .CollectionPanelShell)
-#Takes the preview code such as "col","thm"
-$related_resource_preview_size="col";
-
 # Select the field to display in searchcrumbs for a related search (defaults to filename)
 # If this is set to a different field and the value is empty fallback to filename
 $related_search_searchcrumb_field=51;
-
-# Remove the line that separates collections panel menu from resources
-$remove_collections_vertical_line=false;
-
-# Show/ hide "Remove resources" link from collection bar:
-$remove_resources_link_on_collection_bar = TRUE;
 
 # Send confirmation emails to user when request sent or assigned
 $request_senduserupdates=true;

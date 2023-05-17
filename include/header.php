@@ -330,7 +330,7 @@ hook("bodystart"); ?>
 <!--Global Header-->
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
-if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all")
+if ($pagename!="preview" && $pagename!="preview_all")
     {
     // Standard header
     $homepage_url=$baseurl."/pages/".$default_home_page;

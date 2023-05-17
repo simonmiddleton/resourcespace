@@ -52,19 +52,6 @@ if (getval("save", false) && enforcePostRequest(false))
 
 	$height=getval("height",-1,true);
 	if ($height>=0) $cols["height"]=$height;
-	
-	if($preview_quality_unique)
-		{
-		$quality=getval("quality",0,true);
-		if($quality>0 && $quality<=100)
-			{
-			$cols["quality"]=$quality;
-			}
-		else
-			{
-			$cols["quality"]=$imagemagick_quality;	
-			}
-		}
 
 	$cols["allow_preview"]=(getval('allowpreview',false) ? "1" : "0");
 	$cols["allow_restricted"]=(getval('allowrestricted',false) ? "1" : "0");
@@ -150,19 +137,6 @@ include "../../include/header.php";
 			<div class="clearerleft"></div>
 		</div>
 		
-		<?php
-		if($preview_quality_unique)
-			{
-			?>
-			<div class="Question">
-				<label><?php echo $lang["property-quality"]; ?></label>
-				<input name="quality" type="text" class="shrtwidth" value="<?php echo($record['quality']!=''?$record['quality']:$imagemagick_quality)?>">
-				<div class="clearerleft"></div>
-			</div>
-			<?php
-			}
-		?>
-
 		<div class="Question">
 			<label><?php echo $lang['property-allow_preview']; ?></label>
 			<input name="allowpreview" type="checkbox" value="1"<?php if($record['allow_preview']) {?> checked="checked"<?php }?>>

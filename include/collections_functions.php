@@ -3992,7 +3992,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
            $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
-           $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
+           $show_searchitemsdiskusage, $emptycollection, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
@@ -4160,7 +4160,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
      // Remove all resources from collection
-     if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
+     if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && !$system_read_only && collection_writeable($collection_data['ref']))
      {
      $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php",$urlparams,array("emptycollection"=>$collection_data['ref'],"removeall"=>"true","ajax"=>"true","submitted"=>"removeall"));
      $options[$o]['value']     = 'empty_collection';
