@@ -59,8 +59,6 @@ if(is_array($results) && count($results) != $allcount)
     return false;
     }
 
-$allcount++;
-
 // SUBTEST E
 // Add a new resource in pending submission state and check it is not returned
 $userref=999;
@@ -75,8 +73,6 @@ if(count($results) != $allcount)
     return false;
     }
        
-$allcount++;
-
 // Reset to standard settings
 $userref = $saved_userref;
 $userpermissions = $savedpermissions;
