@@ -2953,7 +2953,10 @@ function get_featured_collection_resources(array $c, array $ctx)
                 $subfcimages = get_collection_resources($checkfc);
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
-                    $fcresources = array_merge($fcresources,$subfcimages);
+                    // The join defined above specifically excludes any resources that are not in the active archive state,
+                    // for the limiting via $ctx to function correctly we'll need to check for each resources state before adding it  to fcresources
+                    $resources = get_resource_data_batch($subfcimages);
+                    $fcresources = array_merge($fcresources,array_column(array_filter($resources, function($r){return $r['archive'] == "0";}), 'ref'));
                     } 
                 continue;
                 }
