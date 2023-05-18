@@ -105,30 +105,22 @@ if ($on_upload || (isset($ref) && $ref<0))
         if ($enable_add_collection_on_upload && !(isset($external_upload) && $external_upload))
             {
             $collection_add=getval("collection_add","");
-
-            if($upload_force_mycollection)
-                {
-                $usercollection = get_default_user_collection(true);
-                echo "<input type='hidden' name='collection_add' value='" . (int)$usercollection . "' />";
-                }
-            else
-                {
-                ?>
-                <div class="Question <?php if(!$on_upload && isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
+            ?>
+            <div class="Question <?php if(!$on_upload && isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
                 <label for="collection_add"><?php echo $lang["addtocollection"]?></label>
                 <select name="collection_add" id="collection_add" class="stdwidth" >
                 
-                <?php if (can_create_collections() && $upload_add_to_new_collection_opt && !$upload_force_mycollection)
+                <?php if (can_create_collections() && $upload_add_to_new_collection_opt)
                     {
                     ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option>
                     <?php
                     }
-                if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection") && !$upload_force_mycollection)
+                if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection"))
                     {
                     ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option>
                     <?php
                     }                
-               
+                
                 //If the user is attached to a collection that is not allowed to add resources to,
                 //then we hide this collection from the drop down menu of the upload page
                 $temp_list=get_user_collections($userref);
@@ -172,7 +164,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                         }
                     }
 
-                if (!$currentfound && !$upload_force_mycollection)
+                if (!$currentfound)
                     {
                     # The user's current collection has not been found in their list of collections (perhaps they have selected a theme to edit). Display this as a separate item.
                     $cc=get_collection($usercollection);
@@ -190,15 +182,13 @@ if ($on_upload || (isset($ref) && $ref<0))
                 </select>
                 <div class="clearerleft"> </div>
                 <div name="collectioninfo" id="collectioninfo" style="display:none;">
-                <div name="collectionname" id="collectionname" <?php if ($upload_add_to_new_collection_opt){ ?> style="display:block;"<?php } else { ?> style="display:none;"<?php } ?>>
-                <label for="entercolname"><?php echo $lang["collectionname"]?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
-                <input type=text id="entercolname" name="entercolname" class="stdwidth" value='<?php echo htmlentities(stripslashes(getval("entercolname","")), ENT_QUOTES);?>'> 
-                </div>
+                    <div name="collectionname" id="collectionname" <?php if ($upload_add_to_new_collection_opt){ ?> style="display:block;"<?php } else { ?> style="display:none;"<?php } ?>>
+                    <label for="entercolname"><?php echo $lang["collectionname"]?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
+                    <input type=text id="entercolname" name="entercolname" class="stdwidth" value='<?php echo htmlentities(stripslashes(getval("entercolname","")), ENT_QUOTES);?>'> 
+                    </div>
                 </div> <!-- end collectioninfo -->
-                </div> <!-- end question_collectionadd -->
-                <?php
-                }            
-            ?>
+            </div> <!-- end question_collectionadd -->
+
             <script>
             jQuery(document).ready(function() {
             jQuery('#collection_add').change(function (){
@@ -220,18 +210,6 @@ if ($on_upload || (isset($ref) && $ref<0))
   
 if($on_upload)
     {
-    if($upload_no_file)
-        {
-        ?>
-        <div class="Question" id="question_noupload">
-            <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
-            <div id="noupolad">
-                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_batch.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
-            </div>
-            <div class="clearerleft"> </div>
-        </div>
-        <?php
-        }
     ?>
     </div> <!-- End of Upload options -->
     <div class="BasicsBox">

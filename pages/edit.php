@@ -94,7 +94,6 @@ $uploadparams["redirecturl"] = $redirecturl;
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 $lastedited = getval('lastedited',0,true);
-$lockable_fields = $upload_review_lock_metadata && $upload_review_mode;
 $locked_fields = (!$resetform && getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
 $save_auto_next = getval("save_auto_next","") != "";
 
@@ -343,7 +342,7 @@ $resource=get_resource_data($ref);
 
 $metadatatemplate = getval('metadatatemplate',0,true);
     
-if ($lockable_fields && $lastedited > 0)
+if ($upload_review_mode && $lastedited > 0)
     {
     // Update resource data with locked resource data from last edited resource
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
@@ -1050,7 +1049,7 @@ include "../include/header.php";
 ?>
 <script>
 <?php
-if ($lockable_fields)
+if ($upload_review_mode)
     {
     echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
     }?>
@@ -1340,13 +1339,9 @@ else
                     <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
                     <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
                     <?php
-                    }
-                if ($tweak_allow_gamma)
-                    {?>
-                    <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
-                    <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
-                    <?php
                     }?>
+                <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
+                <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
                 <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
                 <?php
                 }
@@ -1394,9 +1389,9 @@ hook("editbefresmetadata"); ?>
     if(!$multiple)
         {
         ?>
-        <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
+        <div class="Question <?php if($upload_review_mode && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
             <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
-            if ($lockable_fields)
+            if ($upload_review_mode)
                 {
                 renderLockButton('resource_type', $locked_fields);
                 }?>
@@ -1538,9 +1533,9 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
     $templates = get_metadata_templates();
     $first_option_conditions = $metadatatemplate == 0;
     ?>
-    <div class="Question <?php if($lockable_fields && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
+    <div class="Question <?php if($upload_review_mode && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
         <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate'];
-        if ($lockable_fields)
+        if ($upload_review_mode)
             {
             renderLockButton('metadatatemplate', $locked_fields);
             }?>
@@ -1711,7 +1706,7 @@ if($upload_here)
     $all_selected_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
     }
 
-if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
+if ($upload_review_mode && count($locked_fields) > 0 && $lastedited > 0)
     {
     // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
     // $fields and $all_selected_nodes are passed by reference and so changed by this
@@ -1996,10 +1991,10 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
 
     hook("before_status_question");
     ?>
-      <div class="Question <?php if($lockable_fields && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+      <div class="Question <?php if($upload_review_mode && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status">
          <?php echo ($multiple ? "" : $lang["status"]);
-         if ($lockable_fields)
+         if ($upload_review_mode)
             {
             renderLockButton('archive', $locked_fields);
             }?>
@@ -2047,10 +2042,10 @@ else
 {
    if ($multiple) { ?><div class="Question"><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["access"]?></label></div><?php } ?>
 
-   <div class="Question <?php if($lockable_fields && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+   <div class="Question <?php if($upload_review_mode && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
       <label for="access">
       <?php echo $lang["access"];
-      if ($lockable_fields)
+      if ($upload_review_mode)
             {
             renderLockButton('access', $locked_fields);
             }
@@ -2104,7 +2099,7 @@ else
                  ?>
                  <table id="custom_access" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($resource["access"]!=3) { ?>display:none;<?php } ?>"><?php
                  global $default_customaccess;
-                 $customaccesssource = ($lockable_fields && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+                 $customaccesssource = ($upload_review_mode && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
                  $groups=get_resource_custom_access($customaccesssource);
                  $groups_count = count($groups);
                  for ($n=0;$n<$groups_count;$n++)
@@ -2157,9 +2152,9 @@ else
     {
        if ($multiple) { ?><div class="Question"><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
 
-       <div class="Question<?php if($lockable_fields && in_array("related_resources",$locked_fields)){echo " lockedQuestion ";} ?>" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+       <div class="Question<?php if($upload_review_mode && in_array("related_resources",$locked_fields)){echo " lockedQuestion ";} ?>" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
           <label for="related"><?php echo $lang["relatedresources"];
-           if ($lockable_fields)
+           if ($upload_review_mode)
             {
             renderLockButton('related_resources', $locked_fields);
             }?>
@@ -2173,7 +2168,7 @@ else
         
         if (!$editsearch)
             {
-            $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+            $relatedref = ($upload_review_mode && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
             $related = get_related_resources($relatedref);
 
             echo ((getval("resetform","")!="")?"":join(", ", $related));

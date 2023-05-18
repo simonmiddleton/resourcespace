@@ -192,25 +192,8 @@ $searchlist=true;
 # Suppress SQL information in the debug log?
 $suppress_sql_log = false;
 
-# Normally, image tweaks are only applied to scr size and lower. 
-# This could require recreating previews to sync up the various image rotations.
-$tweak_all_images=false;
-$tweak_allow_gamma=true;
-
-# Allows Dash Administrators to have their own dash whilst all other users have the managed dash ($managed_home_dash must be on)
-$unmanaged_home_dash_admins = false;
-
 # Index the unnormalized keyword in addition to the normalized version, also applies to keywords with diacritics removed. Quoted search can then be used to find matches for original unnormalized keyword.
 $unnormalized_index=false;
-
-#Batch uploads - always upload to Default Collection
-$upload_force_mycollection=false;
-
-# Allow users to skip upload and create resources with no attached file
-$upload_no_file=false;
-
-# Option to allow users to 'lock' metadata fields in upload_then_edit_mode
-$upload_review_lock_metadata = true;
 
 // Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
 // Requires "$upload_then_edit = true;"

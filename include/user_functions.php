@@ -2707,9 +2707,8 @@ function checkPermission_dashuser()
  */
 function checkPermission_dashmanage()
 	{
-	global $managed_home_dash,$unmanaged_home_dash_admins;
-	return (!checkPermission_anonymoususer()) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()))
-				|| ($unmanaged_home_dash_admins && checkPermission_dashadmin()));
+	global $managed_home_dash;
+	return (!checkPermission_anonymoususer()) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())));
     }
     
 /**
@@ -2722,7 +2721,7 @@ function checkPermission_dashmanage()
  */
 function checkPermission_dashcreate()
 	{
-	global $managed_home_dash,$unmanaged_home_dash_admins, $system_read_only;
+	global $managed_home_dash, $system_read_only;
 	return !checkPermission_anonymoususer() 
             && 
             !$system_read_only
@@ -2731,8 +2730,6 @@ function checkPermission_dashcreate()
 					(!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())) 
 				||
 					($managed_home_dash && checkPermission_dashadmin())
-				|| 
-					($unmanaged_home_dash_admins && checkPermission_dashadmin())
 				);
     }
 

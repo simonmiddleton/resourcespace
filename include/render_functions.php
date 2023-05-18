@@ -1780,8 +1780,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
-  $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $locked_fields, $lastedited, $copyfrom, $fields;
 
   // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
   debug("display_field()" . "n = " . $n . ", field ref=" . $field["ref"] . ", modal=" . ($modal ? "TRUE" : "FALSE"));
@@ -2047,7 +2046,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             echo "<sup>*</sup>";
             }
         } 
-     if ($upload_review_mode && $upload_review_lock_metadata)
+     if ($upload_review_mode)
         {
         renderLockButton($field["ref"], $locked_fields);
         }
