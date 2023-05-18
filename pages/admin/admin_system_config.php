@@ -2,6 +2,9 @@
 include '../../include/db.php';
 include '../../include/authenticate.php'; if(!checkperm('a')) { exit('Permission denied.'); }
 include_once '../../include/config_functions.php';
+include_once '../../include/ajax_functions.php';
+
+$ajax = getval('ajax', '') === 'true';
 
 // Search functionality
 $searching = (((getval("find", "") != "" && getval("clear_search", "") == "") || getval("only_modified", "no") == "yes") ? true : false);
@@ -29,45 +32,91 @@ $page_def[] = config_add_html(
 );
 */
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemconfig_debug'] . '</h3><div id="SystemConfigDebugSection" class="CollapsibleSection">');
-// Faking a global so that we can apply some logic before enabling/disabling debug_log
-$system_config_debug_log_proxy = $debug_log ? $lang['systemconsoleonpermallusers'] : $lang['off'];
-get_config_option(null, 'system_config_debug_log_proxy', $system_config_debug_log_proxy);
-$debug_log_enabled_for_specific_user = getval('debug_log_enabled_for_specific_user', 0, true);
+// "Faking" a global so that we can apply some logic before enabling/disabling debug_log
+$system_config_debug_log_interim = $lang['off'];
 $debug_log_options = [
-    $lang['systemconsoleonpermallusers'],
     $lang['systemconsoleonallusers'],
     $lang['systemconfig_debug_log_on_specific_user'],
-    $lang['off']
+    $lang['off'],
 ];
+if ($debug_log)
+    {
+    $debug_log_options = [$lang['systemconsoleonpermallusers']];
+    $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
+    }
+
+get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
+$debug_log_enabled_for_specific_user = getval('debug_log_enabled_for_specific_user', -1, true);
+$debug_expires = get_sysvar('debug_override_expires', '');
+if ($debug_expires !== '')
+    {
+    $debug_log_override_time_left = $debug_expires - time();
+    if ($debug_log_override_time_left < 0)
+        {
+        // todo: fix here...it's not OK to start with this.
+        $debug_log_override_time_left = 0;
+        }
+    }
+else
+    {
+    $debug_log_override_time_left = 300;
+    }
+
 $page_def[] = config_add_single_select(
-    'system_config_debug_log_proxy',
+    'system_config_debug_log_interim',
     $lang['systemconsoledebuglog'],
     $debug_log_options,
     false,
     420,
     '',
     true,
-    'debug_log_selector_onchange();'# onchange_js
+    'debug_log_selector_onchange(this);'
 );
 ob_clean();
 $autocomplete_user_scope = 'SystemConfigDebugLogSpecificUser_';
 $single_user_select_field_id = 'debug_log_enabled_for_specific_user';
 $single_user_select_field_value = $debug_log_enabled_for_specific_user;
-$single_user_select_field_onchange = 'debug_log_user_select_field_onchange();';
+$single_user_select_field_onchange = 'create_debug_log_override();';
+$SystemConfigDebugForUser_class = $system_config_debug_log_interim === $lang['systemconfig_debug_log_on_specific_user']
+    ? ''
+    : 'DisplayNone';
 ?>
-<div id="SystemConfigDebugForUser" class="Question DisplayNone">
+<div id="SystemConfigDebugForUser" class="Question <?php echo escape_quoted_data($SystemConfigDebugForUser_class); ?>">
     <label></label>
     <?php include dirname(__DIR__, 2) . "/include/user_select.php"; ?> 
     <div class="clearerleft"></div>
 </div>
 <?php
+render_text_question(
+    "{$lang['systemconsoleturnoffafter']} X {$lang['seconds']}",
+    'system_config_debug_log_duration',
+    sprintf(
+        '<span class="MarginLeft1rem"><span id="DebugLogOverrideTimerText">%s</span>s %s</span>',
+        $debug_log_override_time_left,
+        htmlspecialchars($lang['remaining'])
+    ),
+    true,
+    '',
+    $debug_log_override_time_left,
+    ['div_class' => ['DisplayNone']]
+);
 $user_select_html = ob_get_contents();
 ob_clean();
 $page_def[] = config_add_html($user_select_html);
 $page_def[] = config_add_html('</div>');
 
+/*
+- on all users
+create_debug_log_override(-1, duration);
+
+- on specific
+create_debug_log_override(user ID, duration);
 
 
+requires the following sysvars:
+- debug_override_user
+- debug_override_expires
+*/
 
 
 
@@ -499,6 +548,18 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
     exit();
     }
 
+if($ajax && getval('action', '') === 'create_debug_log_override' && enforcePostRequest($ajax))
+    {
+    $debug_user = getval('debug_override_user', '');
+    $debug_expires = getval('debug_override_expires', '');
+    if ($debug_user !== '' && $debug_expires !== '')
+        {
+        create_debug_log_override($debug_user, $debug_expires);
+        unset($GLOBALS['debug_log_override']);
+        ajax_send_response(200, ajax_response_ok_no_data());
+        }
+    ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_invalid_input'])));
+    }
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
 
@@ -604,17 +665,115 @@ include '../../include/header.php';
     config_generate_AutoSaveConfigOption_function($baseurl . '/pages/admin/admin_system_config.php'); 
     ?>
     <script>
-    function debug_log_selector_onchange()
+    function debug_log_selector_onchange(el)
         {
-            console.info('onchange...');
+            let value = jQuery(el).val();
+            let options_to_show_duration = <?php echo json_encode([
+                escape_quoted_data($lang['systemconsoleonallusers']),
+                escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']),
+            ]);?>;
+
+            // Display the user selection (if applicable)
+            if (value === '<?php echo escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']); ?>') {
+                jQuery('#SystemConfigDebugForUser').removeClass('DisplayNone');
+            } else {
+                jQuery('#SystemConfigDebugForUser').addClass('DisplayNone');
+            }
+
+            // Display the timer
+            if (options_to_show_duration.includes(value)) {
+                jQuery('#question_system_config_debug_log_duration').removeClass('DisplayNone');
+                create_debug_log_override();
+            } else {
+                jQuery('#question_system_config_debug_log_duration').addClass('DisplayNone');
+            }
+
+            if (value === '<?php echo escape_quoted_data($lang['off']); ?>') {
+                create_debug_log_override(-1, -1);
+            }
             return;
         }
 
-    function debug_log_user_select_field_onchange()
+    function create_debug_log_override(user_id, duration)
         {
-            console.info('debug_log_user_select_field_onchange: onchange...');
-            return;
+        user_id = Number(typeof user_id !== 'undefined' ? user_id : jQuery('#debug_log_enabled_for_specific_user').val());
+        duration = Number(typeof duration !== 'undefined' ? duration : jQuery('#system_config_debug_log_duration_input').val());
+
+        // Clearing the user is the same as having this enabled for all users.
+        if (user_id === 0) {
+            user_id = -1;
         }
+
+        console.debug('create_debug_log_override(user_id = %o, duration = %o)', user_id, duration);
+
+        jQuery.post(
+            baseurl + '/pages/admin/admin_system_config.php',
+            {
+                ajax: true,
+                action: 'create_debug_log_override',
+                debug_override_user: user_id,
+                debug_override_expires: duration,
+                <?php echo generateAjaxToken('create_debug_log_override'); ?>
+            },
+            null,
+            'json'
+        )
+            .done(function(data) {
+                let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
+                if (system_config_debug_log_interim.data('timer_started')) {
+                    system_config_debug_log_interim.data('reset_expiry', duration);
+                } else {
+                    debug_log_override_timer(duration, 'DebugLogOverrideTimerText')
+                        .then(function (timerdone) {
+                            console.log('timer is done %o', timerdone);
+                            system_config_debug_log_interim.removeData('timer_started');
+                        });
+                    system_config_debug_log_interim.data('timer_started', true);
+                }
+            })
+            .fail(function(jqXHR, textStatus, errorThrown)
+                {
+                let response = typeof jqXHR.responseJSON.data.message !== 'undefined'
+                    ? jqXHR.responseJSON.data.message
+                    : textStatus;
+                console.error("create_debug_log_override: %s - %s", errorThrown, response);
+                });
+
+        return;
+        }
+
+    function debug_log_override_timer(time_left, text)
+        {
+        return new Promise((resolve, reject) => {
+            var debug_log_override_timer = setInterval(() => {
+                let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
+                let reset_expiry = system_config_debug_log_interim.data('reset_expiry');
+
+                // Reset the time left if the user changed settings while still running
+                if (typeof reset_expiry !== 'undefined') {
+                    time_left = Number(reset_expiry);
+                    system_config_debug_log_interim.removeData('reset_expiry');
+                }
+
+                --time_left;
+
+                document.getElementById(text).textContent = time_left;
+                console.log('debug_log_override_timer: tick');
+
+                if (time_left <= 0) {
+                    clearInterval(debug_log_override_timer);
+                    resolve(true);
+                }
+            },
+            1000);
+        });
+        }
+
+    // todo: delete if not required after all
+    jQuery(function()
+        {
+        console.log('always..');
+        });
     </script>
 </div>
 <?php
