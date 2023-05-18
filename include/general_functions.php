@@ -91,9 +91,9 @@ function unescape($text)
 * 
 * @uses offset_user_local_timezone()
 * 
-* @var  string   $date
-* @var  boolean  $time
-* @var  boolean  $wordy
+* @var  string   $date       ISO format date which can be a BCE date (ie. with negative year -yyyy)
+* @var  boolean  $time       When TRUE and full date is present then append the hh:mm time part if present 
+* @var  boolean  $wordy      When TRUE return month name, otherwise return month number
 * @var  boolean  $offset_tz  Set to TRUE to offset based on time zone, FALSE otherwise
 * 
 * @return string Returns an empty string if date not set/invalid
@@ -102,21 +102,27 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     {
     global $lang, $date_d_m_y, $date_yyyy;
 
-    if($date == '' || strtotime($date) === false)
-        {
-        return '';
-        }
+    $date=trim((string)$date);
+    if($date == '') return '';
 
-    $original_time_part = substr($date, 11, 5);
+    $date_timestamp = strtotime($date); 
+    if($date_timestamp === false) return '';
+
+    // The unix timestamp will be negative for BCE dates
+    $bce_offset = ($date_timestamp < 0) ? 1 : 0;
+    // BCE dates cannot return year in truncated form
+    if($bce_offset == 1 && !$date_yyyy) return '';
+
+    $original_time_part = substr($date, $bce_offset + 11, 5);
     if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
         {
         $date = offset_user_local_timezone($date, 'Y-m-d H:i');
         }
 
-    $y = substr($date, 0, 4);
+    $y = substr($date, 0, $bce_offset + 4);
     if(!$date_yyyy)
         {
-        $y = substr($y, 2, 2);
+        $y = substr($y, 2, 2);  // Only truncate year for non-BCE dates
         }
 
     if($y == "")
@@ -124,20 +130,20 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return "-";
         };
 
-    $month_part = substr($date, 5, 2);
+    $month_part = substr($date, $bce_offset + 5, 2);
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
         return $y;
         }
 
-    $d = substr($date, 8, 2);    
+    $d = substr($date, $bce_offset + 8, 2);    
     if($d == "" || $d == "00")
         {
         return "{$m} {$y}";
         }
 
-    $t = $time ? " @ " . substr($date, 11, 5) : "";
+    $t = $time ? " @ " . substr($date, $bce_offset + 11, 5) : "";
 
     if($date_d_m_y)
         {
