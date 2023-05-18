@@ -199,38 +199,11 @@ $unnormalized_index=false;
 // Requires "$upload_then_edit = true;"
 $upload_review_mode_review_by_resourceid = true;
 
-# Show the fullname of the user who approved the account when editing user
-$user_edit_approved_by=false;
-# Also show the user email address if $user_edit_approved_by=true
-$user_edit_approved_by_email=false;
-
-# Show the fullname of the user who created the account when editing user
-$user_edit_created_by=false;
-# Also show the user email address if $user_edit_created_by=true
-$user_edit_created_by_email=false;
-
-# Allow user to remove their rating.
-$user_rating_remove=true;
-# play backwards (in development) - default 'j'
-$video_playback_backwards=false;
-
-# show video player in thumbs view 
-$video_player_thumbs_view=false;
-
-# use an ffmpeg alternative for search preview playback
-$video_player_thumbs_view_alt=false;
-
 # dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
 $videojs_resolution_selection_dynamicLabel=false;
 
-# Default DPI setting for the view page if no resolution is stored in the db.
-$view_default_dpi=300;
-
 # Height of map in pixels on resource view page
 $view_mapheight=200;
-
-# Set to true if wildcard should also be prepended to the keyword
-$wildcard_always_applied_leading = false;
 
 # Should *all* manually entered keywords (e.g. basic search and 'all fields' search on advanced search) be treated as wildcards?
 # E.g. "cat" will always match "catch", "catalogue", "category" with no need for an asterisk.

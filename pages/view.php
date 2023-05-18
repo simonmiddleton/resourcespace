@@ -1206,7 +1206,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             # DPI calculations
                             function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
                                 {
-                                global $lang, $imperial_measurements,$sizes,$n,$view_default_dpi;
+                                global $lang, $imperial_measurements,$sizes,$n;
                                 
                                 if (isset($sizes[$n]['resolution']) && $sizes[$n]['resolution']!=0 && is_int($sizes[$n]['resolution']))
                                     {
@@ -1214,7 +1214,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     }
                                 else if (!isset($dpi) || $dpi==0)
                                     {
-                                    $dpi=$view_default_dpi;
+                                    $dpi=300;
                                     }
 
                                 if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
