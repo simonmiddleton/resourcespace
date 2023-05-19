@@ -18,21 +18,29 @@ $yes_no_options         = array($lang['no'], $lang['yes']);
 
 
 
-
-
-
+// System section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
+$page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
+$page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
+$page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
+$page_def[] = config_add_single_select(
+    'user_local_timezone',
+    $lang['systemconfig_user_local_timezone'],
+    timezone_identifiers_list(),
+    false,
+    420,
+    '',
+    true);
+$page_def[] = config_add_html('</div>');
 
 
 // Debug section
-/*
-todo: uncomment once done and delete the active one (next page_def)
 $page_def[] = config_add_html(
     '<h3 class="CollapsibleSectionHead collapsed">' . htmlspecialchars($lang['systemconfig_debug']) . '</h3>'
     . '<div id="SystemConfigDebugSection" class="CollapsibleSection">'
 );
-*/
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemconfig_debug'] . '</h3><div id="SystemConfigDebugSection" class="CollapsibleSection">');
 
+// Determine the time left on debug log override
 $debug_log_default_duration = 300;
 $time_left = get_sysvar('debug_override_expires', time()) - time();
 if ($time_left > 0)
@@ -64,12 +72,6 @@ if ($debug_log)
     }
 get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
 
-
-
-
-
-$debug_log_enabled_for_specific_user = getval('debug_log_enabled_for_specific_user', -1, true);
-
 $page_def[] = config_add_single_select(
     'system_config_debug_log_interim',
     $lang['systemconsoledebuglog'],
@@ -82,8 +84,9 @@ $page_def[] = config_add_single_select(
 );
 ob_clean();
 $autocomplete_user_scope = 'SystemConfigDebugLogSpecificUser_';
-$single_user_select_field_id = 'debug_log_enabled_for_specific_user';
-$single_user_select_field_value = $debug_log_enabled_for_specific_user;
+$debug_override_user = (int) get_sysvar('debug_override_user', -1);
+$single_user_select_field_id = 'debug_override_user';
+$single_user_select_field_value = $debug_override_user;
 $single_user_select_field_onchange = 'create_debug_log_override();';
 $SystemConfigDebugForUser_class = $system_config_debug_log_interim === $lang['systemconfig_debug_log_on_specific_user']
     ? ''
@@ -112,24 +115,7 @@ $user_select_html = ob_get_contents();
 ob_clean();
 $page_def[] = config_add_html($user_select_html);
 $page_def[] = config_add_html('</div>');
-
-
-
-// System section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
-$page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
-$page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
-$page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
-$page_def[] = config_add_single_select(
-    'user_local_timezone',
-    $lang['systemconfig_user_local_timezone'],
-    timezone_identifiers_list(),
-    false,
-    420,
-    '',
-    true);
-$page_def[] = config_add_html('</div>');
-
+// End of Debug section
 
 
 // User interface section
@@ -690,7 +676,7 @@ include '../../include/header.php';
 
     function create_debug_log_override(user_id, duration)
         {
-        user_id = Number(typeof user_id !== 'undefined' ? user_id : jQuery('#debug_log_enabled_for_specific_user').val());
+        user_id = Number(typeof user_id !== 'undefined' ? user_id : jQuery('#debug_override_user').val());
         duration = Number(typeof duration !== 'undefined' ? duration : jQuery('#system_config_debug_log_duration_input').val());
 
         // Clearing the user is the same as having this enabled for all users.
