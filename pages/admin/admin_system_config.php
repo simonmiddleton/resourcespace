@@ -661,31 +661,31 @@ include '../../include/header.php';
     <script>
     function debug_log_selector_onchange(el)
         {
-            let value = jQuery(el).val();
-            let options_to_show_duration = <?php echo json_encode([
-                escape_quoted_data($lang['systemconsoleonallusers']),
-                escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']),
-            ]);?>;
+        let value = jQuery(el).val();
+        let options_to_show_duration = <?php echo json_encode([
+            escape_quoted_data($lang['systemconsoleonallusers']),
+            escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']),
+        ]);?>;
 
-            // Display the user selection (if applicable)
-            if (value === '<?php echo escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']); ?>') {
-                jQuery('#SystemConfigDebugForUser').removeClass('DisplayNone');
-            } else {
-                jQuery('#SystemConfigDebugForUser').addClass('DisplayNone');
-            }
+        // Display the user selection (if applicable)
+        if (value === '<?php echo escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']); ?>') {
+            jQuery('#SystemConfigDebugForUser').removeClass('DisplayNone');
+        } else {
+            jQuery('#SystemConfigDebugForUser').addClass('DisplayNone');
+        }
 
-            // Display the timer
-            if (options_to_show_duration.includes(value)) {
-                jQuery('#question_system_config_debug_log_duration').removeClass('DisplayNone');
-                create_debug_log_override();
-            } else {
-                jQuery('#question_system_config_debug_log_duration').addClass('DisplayNone');
-            }
+        // Display the timer
+        if (options_to_show_duration.includes(value)) {
+            jQuery('#question_system_config_debug_log_duration').removeClass('DisplayNone');
+            create_debug_log_override();
+        } else {
+            jQuery('#question_system_config_debug_log_duration').addClass('DisplayNone');
+        }
 
-            if (value === '<?php echo escape_quoted_data($lang['off']); ?>') {
-                create_debug_log_override(-1, -1);
-            }
-            return;
+        if (value === '<?php echo escape_quoted_data($lang['off']); ?>') {
+            create_debug_log_override(-1, -1);
+        }
+        return;
         }
 
     function create_debug_log_override(user_id, duration)
@@ -697,7 +697,6 @@ include '../../include/header.php';
         if (user_id === 0) {
             user_id = -1;
         }
-
         console.debug('create_debug_log_override(user_id = %o, duration = %o)', user_id, duration);
 
         jQuery.post(
@@ -735,6 +734,7 @@ include '../../include/header.php';
 
     function debug_log_override_timer(time_left, update_el)
         {
+        console.debug('debug_log_override_timer(time_left = %o, update_el = %o)', time_left, update_el);
         return new Promise((resolve, reject) => {
             var debug_log_override_timer = setInterval(() => {
                 let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
@@ -763,7 +763,7 @@ include '../../include/header.php';
 
     function debug_log_override_timer_done()
         {
-        console.log('timer finished');
+        console.debug('debug_log_override_timer_done');
         let option_off = '<?php echo escape_quoted_data($lang['off']); ?>';
         let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
 
