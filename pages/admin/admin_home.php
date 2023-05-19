@@ -66,7 +66,6 @@ include ("../../include/header.php");
 			<li><a href="<?php echo $baseurl_short; ?>pages/admin/tabs.php" onclick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-window-restore"></i><br /><?php echo $lang['system_tabs']; ?></a></li>
             <li><a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-check-square"></i><br /><?php echo $lang["installationcheck"]?></a></li>
 			<li><a href="<?php echo $baseurl_short; ?>pages/admin/admin_system_log.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-history"></i><br /><?php echo $lang["systemlog"]; ?></a></li>
-			<li><a href="<?php echo $baseurl?>/pages/team/team_system_console.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-terminal"></i><br /><?php echo $lang["systemconsole"]?></a></li>
 			<li><a href="<?php echo $baseurl_short?>pages/admin/admin_system_performance.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-bolt"></i><br /><?php echo $lang["system_performance"]?></a></li>
 			<li><a href="<?php echo $baseurl; ?>/pages/admin/admin_system_config.php" onClick="return CentralSpaceLoad(this, true);"><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang['systemconfig']; ?></a></li>
 			<?php

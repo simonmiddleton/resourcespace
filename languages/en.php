@@ -2562,20 +2562,11 @@ $lang['system_down_title'] = 'Attention!';
 $lang['system_down_message'] = 'System is down for maintenance. Thank you for your patience.';
 /* End of System Down page strings */
 
-/* System Console */
-$lang["systemconsole"]="Console";
+/* System Console (no longer available, these are re-used in System Config) */
 $lang["systemconsoledebuglog"]="Debug log";
-$lang["systemconsolememorycpu"]="Memory &amp; CPU";
-$lang["systemconsoledatabase"]="Database";
-$lang["systemconsolesqllogtransactions"]="SQL Transaction Log";
-$lang["systemconsoleactivitylog"]="Activity Log";
 $lang["systemconsoleturnoffafter"]="Turn off after";
 $lang["systemconsoleonpermallusers"]="On (permanently for all users)";
 $lang["systemconsoleonallusers"]="On (all users)";
-$lang["systemconsoleonfailedtopcommand"]="Failed to execute top command";
-$lang["systemconsoleonfailedtasklistcommand"]="Failed to execute tasklist command";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location not set, file not found or is not readable. Please check that '\$debug_log_readable=true;' is set in your configuration";
-$lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions not set or \$mysql_log_location file not found or is not readable";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Remove';
