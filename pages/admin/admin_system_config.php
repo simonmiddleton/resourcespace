@@ -38,15 +38,19 @@ $time_left = get_sysvar('debug_override_expires', time()) - time();
 if ($time_left > 0)
     {
     $debug_log_override_time_left = $time_left;
+    $system_config_debug_log_duration_question_class = '';
+    $debug_log_override_timer_active = true;
     }
 else
     {
     // reset 
     remove_config_option(null, 'system_config_debug_log_interim');
+    $system_config_debug_log_duration_question_class = 'DisplayNone';
+    $debug_log_override_timer_active = false;
     }
 $debug_log_override_time_left ??= $debug_log_default_duration;
 
-// "Faking" a global so that we can apply some logic before deciding to override debug_log
+// "Faking" a config option so that we can apply some logic before deciding to override debug_log
 $system_config_debug_log_interim = $lang['off'];
 $debug_log_options = [
     $lang['systemconsoleonallusers'],
@@ -102,7 +106,7 @@ render_text_question(
     true,
     '',
     $debug_log_default_duration,
-    ['div_class' => ['DisplayNone']]
+    ['div_class' => [$system_config_debug_log_duration_question_class]]
 );
 $user_select_html = ob_get_contents();
 ob_clean();
@@ -714,10 +718,7 @@ include '../../include/header.php';
                     system_config_debug_log_interim.data('reset_expiry', duration);
                 } else {
                     debug_log_override_timer(duration, 'DebugLogOverrideTimerText')
-                        .then(function (timerdone) {
-                            console.log('timer is done %o', timerdone);
-                            system_config_debug_log_interim.removeData('timer_started');
-                        });
+                        .then(debug_log_override_timer_done);
                     system_config_debug_log_interim.data('timer_started', true);
                 }
             })
@@ -760,11 +761,33 @@ include '../../include/header.php';
         });
         }
 
-    // todo: delete if not required after all
+    function debug_log_override_timer_done()
+        {
+        console.log('timer finished');
+        let option_off = '<?php echo escape_quoted_data($lang['off']); ?>';
+        let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
+
+        system_config_debug_log_interim.removeData('timer_started');
+        
+        if (system_config_debug_log_interim.val() !== option_off) {
+            system_config_debug_log_interim.val(option_off).change();
+        }
+        }
+
+<?php
+if ($debug_log_override_timer_active)
+    {
+    ?>
     jQuery(function()
         {
-        console.log('always..');
+        let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
+        debug_log_override_timer(<?php echo (int) $debug_log_override_time_left; ?>, 'DebugLogOverrideTimerText')
+            .then(debug_log_override_timer_done);
+        system_config_debug_log_interim.data('timer_started', true);
         });
+    <?php
+    }
+?>
     </script>
 </div>
 <?php
