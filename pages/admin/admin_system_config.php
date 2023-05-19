@@ -104,7 +104,7 @@ render_text_question(
         htmlspecialchars($lang['remaining'])
     ),
     true,
-    '',
+    ' onchange="create_debug_log_override(undefined, this.value);"',
     $debug_log_default_duration,
     ['div_class' => [$system_config_debug_log_duration_question_class]]
 );
