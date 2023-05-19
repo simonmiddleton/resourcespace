@@ -163,6 +163,34 @@ function set_config_option($user_id, $param_name, $param_value)
 
 
 /**
+ * Remove system/user preferences
+ * 
+ * @param ?int $user_id Database user ID
+ * @param string $name  Configuration option (variable) name
+ */
+function remove_config_option(?int $user_id, string $name): bool
+    {
+    if(trim($name) === '')
+        {
+        return false;
+        }
+
+    $user = is_null($user_id)
+        ? new PreparedStatementQuery('user IS NULL')
+        : new PreparedStatementQuery('user = ?', ['i', $user_id]);
+    
+    $psq = new PreparedStatementQuery(
+        "DELETE FROM user_preferences WHERE {$user->sql} AND parameter = ?",
+        array_merge($user->parameters, ['s', $name])
+    );
+
+    ps_query($psq->sql, $psq->parameters);
+    clear_query_cache('preferences');
+    return true;
+    }
+
+
+/**
 * Get config option value from the database (system wide -or- a user preference).
 * 
 * @param  ?integer $user_id         Current user ID. Use NULL to get the system wide setting.

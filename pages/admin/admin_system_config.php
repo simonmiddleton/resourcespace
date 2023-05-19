@@ -32,7 +32,21 @@ $page_def[] = config_add_html(
 );
 */
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemconfig_debug'] . '</h3><div id="SystemConfigDebugSection" class="CollapsibleSection">');
-// "Faking" a global so that we can apply some logic before enabling/disabling debug_log
+
+$debug_log_default_duration = 300;
+$time_left = get_sysvar('debug_override_expires', time()) - time();
+if ($time_left > 0)
+    {
+    $debug_log_override_time_left = $time_left;
+    }
+else
+    {
+    // reset 
+    remove_config_option(null, 'system_config_debug_log_interim');
+    }
+$debug_log_override_time_left ??= $debug_log_default_duration;
+
+// "Faking" a global so that we can apply some logic before deciding to override debug_log
 $system_config_debug_log_interim = $lang['off'];
 $debug_log_options = [
     $lang['systemconsoleonallusers'],
@@ -44,23 +58,13 @@ if ($debug_log)
     $debug_log_options = [$lang['systemconsoleonpermallusers']];
     $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
     }
-
 get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
+
+
+
+
+
 $debug_log_enabled_for_specific_user = getval('debug_log_enabled_for_specific_user', -1, true);
-$debug_expires = get_sysvar('debug_override_expires', '');
-if ($debug_expires !== '')
-    {
-    $debug_log_override_time_left = $debug_expires - time();
-    if ($debug_log_override_time_left < 0)
-        {
-        // todo: fix here...it's not OK to start with this.
-        $debug_log_override_time_left = 0;
-        }
-    }
-else
-    {
-    $debug_log_override_time_left = 300;
-    }
 
 $page_def[] = config_add_single_select(
     'system_config_debug_log_interim',
@@ -97,26 +101,13 @@ render_text_question(
     ),
     true,
     '',
-    $debug_log_override_time_left,
+    $debug_log_default_duration,
     ['div_class' => ['DisplayNone']]
 );
 $user_select_html = ob_get_contents();
 ob_clean();
 $page_def[] = config_add_html($user_select_html);
 $page_def[] = config_add_html('</div>');
-
-/*
-- on all users
-create_debug_log_override(-1, duration);
-
-- on specific
-create_debug_log_override(user ID, duration);
-
-
-requires the following sysvars:
-- debug_override_user
-- debug_override_expires
-*/
 
 
 
@@ -138,7 +129,6 @@ $page_def[] = config_add_html('</div>');
 
 
 // User interface section
-
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
 
 
@@ -742,7 +732,7 @@ include '../../include/header.php';
         return;
         }
 
-    function debug_log_override_timer(time_left, text)
+    function debug_log_override_timer(time_left, update_el)
         {
         return new Promise((resolve, reject) => {
             var debug_log_override_timer = setInterval(() => {
@@ -757,10 +747,11 @@ include '../../include/header.php';
 
                 --time_left;
 
-                document.getElementById(text).textContent = time_left;
+                document.getElementById(update_el).textContent = time_left;
                 console.log('debug_log_override_timer: tick');
 
                 if (time_left <= 0) {
+                    document.getElementById(update_el).textContent = 0;
                     clearInterval(debug_log_override_timer);
                     resolve(true);
                 }
