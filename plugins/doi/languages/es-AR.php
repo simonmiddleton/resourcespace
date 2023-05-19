@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Inmutable.';
-$lang["doi_info_wikipedia"]='Identificador de objeto digital (DOI)';
 $lang["doi_info_link"]='en <a target="_blank" href="https://es.wikipedia.org/wiki/Identificador_de_objeto_digital">Identificadores de Objetos Digitales (DOI)</a>.';
 $lang["doi_info_metadata_schema"]='En la registración de DOI en DataCite.org se detallan en la <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Documentación del Esquema de Metadatos de Datacite</a>.';
 $lang["doi_info_mds_api"]='Las especificaciones del DOI-API utilizado por este plugin se encuentran en la <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Documentación de la API de Datacite</a>.';
@@ -56,7 +55,6 @@ $lang["doi_sum_not_yet_archived"]='El recurso o los recursos no están marcados.
 $lang["doi_sum_not_yet_archived_2"]='Aún así, su acceso no está configurado como abierto.';
 $lang["doi_sum_ready_for_reg"]='El/Los recurso(s) está(n) listo(s) para ser registrado(s).';
 $lang["doi_sum_no_title"]='Los recursos todavía necesitan un título. Usando:';
-$lang["doi_sum_no_title_2"]='Por favor, traduzca: "as a title instead then."';
 $lang["doi_register_all"]='Registrar DOIs para todos los recursos en esta colección.';
 $lang["doi_sure_register_resource"]='¿Desea proceder con el registro de x recurso(s)?';
 $lang["doi_show_meta"]='Mostrar metadatos de DOI.';

@@ -1105,9 +1105,7 @@ $lang["continuetouser"]='Continuar para o login do usuário.';
 $lang["mustaccept"]='Você deve marcar a caixa para aceitar os termos antes de prosseguir.';
 $lang["termsmustindicateusage"]='Você deve indicar o uso planejado antes de prosseguir.';
 $lang["termsmustspecifyusagecomment"]='Você deve fornecer comentários de uso planejado antes de prosseguir.';
-$lang["proceed"]='Por favor, traduza: Proceed.
-
-Prosseguir.';
+$lang["proceed"]='Prosseguir';
 $lang["notavailableshort"]='N/D';
 $lang["allmonths"]='Todos os meses.';
 $lang["allgroups"]='Todos os grupos.';
@@ -1311,9 +1309,6 @@ $lang["setup-binpath"]='Caminho %bin.';
 $lang["setup-begin_installation"]='Iniciar instalação!';
 $lang["setup-smtp-settings"]='Configurações SMTP.';
 $lang["setup-if-usesmtp"]='Utilizar um servidor SMTP externo para e-mails de saída (por exemplo, Gmail). Usa o PHPMailer.';
-$lang["setup-if-smtpsecure"]='Por favor, traduza: \'\', \'tls\' ou \'ssl\'. Para o Gmail, é necessário \'tls\' ou \'ssl\'.
-
-Tradução: \'\' (vazio), \'tls\' ou \'ssl\'. Para o Gmail, é necessário \'tls\' ou \'ssl\'.';
 $lang["setup-if-smtphost"]='Nome do host, por exemplo, \'smtp.gmail.com\'.';
 $lang["setup-if-smtpport"]='Número da porta, por exemplo, 465 para o Gmail usando SSL.';
 $lang["setup-if-smtpauth"]='Enviar credenciais para o servidor SMTP (falso para usar acesso anônimo)';
@@ -1773,9 +1768,6 @@ $lang["nodownloadcollection"]='Você não tem acesso para baixar nenhum dos recu
 $lang["progress"]='Progresso.';
 $lang["ticktodeletethisresearchrequest"]='Marque para excluir esta solicitação.';
 $lang["done"]='Concluído.';
-$lang["latlong"]='Por favor, traduza: Lat / long
-
-Latitude / longitude';
 $lang["geographicsearch"]='Busca geográfica.';
 $lang["geographicsearchresults"]='Resultados de busca geográfica.';
 $lang["geographicsearchmissing"]='Critério de busca geográfica ausente.';
@@ -1807,9 +1799,6 @@ $lang["nopreviewresources"]='Recursos sem pré-visualizações.';
 $lang["action-delete_permanently"]='Excluir permanentemente.';
 $lang["horizontal"]='Horizontal: Horizontal';
 $lang["vertical"]='Vertical: Vertical';
-$lang["cc-emailaddress"]='Por favor, traduza: CC %emailaddress
-
-CC %emailaddress significa "Com Cópia para %endereço de email".';
 $lang["list-recipients-label"]='Listar todos os destinatários no e-mail?';
 $lang["list-recipients"]='Esta mensagem foi enviada para os seguintes endereços de e-mail:';
 $lang["sort"]='Classificar.';
@@ -1905,10 +1894,10 @@ $lang["warningrequestapprovalfield"]='Aviso - ID de recurso % - por favor, obser
 $lang["yyyy-mm-dd"]='AAAA-MM-DD';
 $lang["resources-with-requeststatus0-0"]='(0 pendentes)';
 $lang["resources-with-requeststatus0-1"]='(1 pendente)';
-$lang["resources-with-requeststatus0-2"]='(%número pendente)';
+$lang["resources-with-requeststatus0-2"]='(%number pendente)';
 $lang["researches-with-requeststatus0-0"]='(0 não atribuído)';
 $lang["researches-with-requeststatus0-1"]='(1 não atribuído)';
-$lang["researches-with-requeststatus0-2"]='(%número não atribuído)';
+$lang["researches-with-requeststatus0-2"]='(%number não atribuído)';
 $lang["upload_files"]='Enviar arquivos.';
 $lang["upload_files-to_collection"]='Enviar arquivos (para a coleção \'%collection\')';
 $lang["ascending"]='Crescente.';
@@ -1993,7 +1982,7 @@ $lang["all-resourcetypes"]='recursos';
 $lang["all-collectiontypes"]='coleções';
 $lang["resourcetypes-no_collections"]='Todos os %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Todos os %collectiontypes%';
-$lang["resourcetypes-collections"]='Todos os %tiposderecurso% e todos os %tiposdecollection%';
+$lang["resourcetypes-collections"]='Todos os %resourcetypes% e todos os %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Bloquear acesso ao estado do fluxo de trabalho.';
 $lang["collection_share_status_warning"]='Aviso - esta coleção possui recursos nos seguintes estados, por favor verifique se esses recursos estarão acessíveis para outros usuários.';
 $lang["contactadmin"]='Entre em contato com o administrador.';
@@ -2037,7 +2026,7 @@ $lang["merge_filename_title_question"]='Usar o nome do arquivo como título (se 
 $lang["merge_filename_title_do_not_use"]='Não utilizar.';
 $lang["merge_filename_title_replace"]='Substituir';
 $lang["merge_filename_title_prefix"]='Prefixo';
-$lang["merge_filename_title_suffix"]='Por favor, traduza: Sufixo.';
+$lang["merge_filename_title_suffix"]='Sufixo';
 $lang["merge_filename_title_include_extensions"]='Incluir extensões?';
 $lang["merge_filename_title_spacer"]='Espaçador.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Recursos enviados pelo usuário.';
@@ -2116,7 +2105,7 @@ $lang["fieldhelp-no_config_override_help"]='Não há ajuda para este item de con
 $lang["fieldhelp-tick_to_delete_group"]='Você não tem permissão para excluir grupos de usuários que contenham usuários ativos ou sejam o pai de outros grupos.';
 $lang["fieldtitle-add_to_config_override"]='Adicionar à substituição de configuração.';
 $lang["fieldtitle-advanced_options"]='Opções avançadas.';
-$lang["fieldtitle-derestrict_filter"]='Por favor, traduza: Filtro de desbloqueio.';
+$lang["fieldtitle-derestrict_filter"]='Filtro de desbloqueio';
 $lang["fieldtitle-group_logo"]='Logotipo específico do grupo.';
 $lang["fieldtitle-group_logo_replace"]='Substituir logotipo específico do grupo.';
 $lang["fieldtitle-tick_to_delete_group"]='Marque para excluir este grupo.';
@@ -2289,7 +2278,7 @@ $lang["createdashtilemycollections"]='Minhas coleções (específicas do usuári
 $lang["createdashtileadvancedsearch"]='Link de busca avançada.';
 $lang["createdashtilemycontributions"]='Minhas contribuições (específicas do usuário)';
 $lang["createdashtilehelpandadvice"]='Link de ajuda e conselhos.';
-$lang["createdashtileuserupload"]='Por favor, traduza: Título de upload (específico do usuário)';
+$lang["createdashtileuserupload"]='Título de upload (específico do usuário)';
 $lang["tile_thmbs"]='Único.';
 $lang["tile_multi"]='Multíplo.';
 $lang["tile_blank"]='Em branco.';
@@ -2758,24 +2747,6 @@ $lang["upload_share_email_subject"]='Você recebeu um link de upload de.';
 $lang["upload_share_email_text"]='enviou um link para você enviar arquivos para';
 $lang["upload_share_email_password"]='Use esta senha para acessar o link.';
 $lang["upload_share_email_clicklink"]='Por favor, utilize o link abaixo para começar o envio.';
-$lang["upload_share_email_template"]='Por favor, traduza:<br />
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
-[lang_message] : [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[de_nome] [lang_upload_share_email_text] [applicationname]<br /><br /> 
-[lang_message] : [mensagem]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[senha]';
 $lang["upload_share_complete"]='Obrigado por enviar. Por favor, use o botão abaixo para enviar mais recursos.';
 $lang["error_invalid_usergroup"]='Grupo de usuário inválido.';
 $lang["error_invalid_date"]='Data inválida.';
@@ -2786,15 +2757,6 @@ $lang["error_no_resources_edit"]='Nenhum recurso encontrado para editar. Se voc�
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Recursos foram enviados para sua coleção compartilhada.';
 $lang["notify_upload_share_new_subject"]='Novos uploads externos.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_notify_upload_share_new] - Novo compartilhamento de upload <br />
-[lang_clicklinkviewcollection] - Clique no link para visualizar a coleção <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] - Este é um e-mail automático enviado pelo ResourceSpace. Por favor, não responda.';
 $lang["my_shares"]='Minhas ações.';
 $lang["manage_shares_title"]='Compartilhamentos externos.';
 $lang["share_purge_text"]='Excluir compartilhamentos expirados.';

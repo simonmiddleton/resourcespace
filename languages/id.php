@@ -1878,7 +1878,7 @@ $lang["resourceids"]='ID Sumber Daya';
 $lang["warningrequestapprovalfield"]='Peringatan - ID sumber daya % - harap perhatikan hal berikut sebelum menyetujuinya.';
 $lang["resources-with-requeststatus0-0"]='(0 tertunda)';
 $lang["resources-with-requeststatus0-1"]='(1 tertunda)';
-$lang["resources-with-requeststatus0-2"]='(%jumlah tertunda)';
+$lang["resources-with-requeststatus0-2"]='(%number tertunda)';
 $lang["researches-with-requeststatus0-0"]='(0 belum ditugaskan)';
 $lang["researches-with-requeststatus0-1"]='(1 belum ditugaskan)';
 $lang["researches-with-requeststatus0-2"]='(%number belum ditugaskan)';
@@ -1967,7 +1967,7 @@ $lang["all-resourcetypes"]='sumber daya';
 $lang["all-collectiontypes"]='Kumpulan';
 $lang["resourcetypes-no_collections"]='Semua %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Semua %collectiontypes%';
-$lang["resourcetypes-collections"]='Semua %jenis sumber daya% dan semua %jenis koleksi%';
+$lang["resourcetypes-collections"]='Semua %resourcetypes% dan semua %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Memblokir akses ke status alur kerja.';
 $lang["collection_share_status_warning"]='Peringatan - koleksi ini memiliki sumber daya dalam keadaan berikut, harap periksa bahwa sumber daya ini akan dapat diakses oleh pengguna lain.';
 $lang["contactadmin"]='Hubungi administrator.';
@@ -4463,7 +4463,6 @@ $lang["resourceids"]='ID Sumber Daya';
 $lang["warningrequestapprovalfield"]='Peringatan - ID sumber daya % - harap perhatikan hal berikut sebelum menyetujuinya.';
 $lang["resources-with-requeststatus0-0"]='(0 tertunda)';
 $lang["resources-with-requeststatus0-1"]='(1 tertunda)';
-$lang["resources-with-requeststatus0-2"]='(%jumlah tertunda)';
 $lang["researches-with-requeststatus0-0"]='(0 belum ditugaskan)';
 $lang["researches-with-requeststatus0-1"]='(1 belum ditugaskan)';
 $lang["researches-with-requeststatus0-2"]='(%number belum ditugaskan)';
@@ -4550,7 +4549,6 @@ $lang["all-resourcetypes"]='sumber daya';
 $lang["all-collectiontypes"]='koleksi-koleksi';
 $lang["resourcetypes-no_collections"]='Semua %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Semua %collectiontypes%';
-$lang["resourcetypes-collections"]='Semua %jenis sumber daya% dan semua %jenis koleksi%';
 $lang["hide_view_access_to_workflow_state"]='Memblokir akses ke status alur kerja.';
 $lang["collection_share_status_warning"]='Peringatan - koleksi ini memiliki sumber daya dalam keadaan berikut, harap periksa bahwa sumber daya ini akan dapat diakses oleh pengguna lain.';
 $lang["contactadmin"]='Hubungi administrator.';
@@ -5317,14 +5315,6 @@ $lang["upload_share_email_subject"]='Anda telah menerima tautan unggah dari';
 $lang["upload_share_email_text"]='telah mengirimkan tautan untuk mengunggah berkas ke';
 $lang["upload_share_email_password"]='Gunakan kata sandi ini untuk mengakses tautan.';
 $lang["upload_share_email_clicklink"]='Silakan gunakan tautan di bawah ini untuk memulai pengunggahan.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[tautan]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Terima kasih telah mengunggah. Silakan gunakan tombol di bawah ini untuk mengunggah lebih banyak sumber daya.';
 $lang["error_invalid_usergroup"]='Grup pengguna tidak valid.';
 $lang["error_invalid_date"]='Tanggal tidak valid.';
@@ -5335,11 +5325,6 @@ $lang["error_no_resources_edit"]='Tidak ditemukan sumber daya untuk diedit. Jika
 $lang["password_unchanged"]='(unchanged) : (tidak berubah)';
 $lang["notify_upload_share_new"]='Sumber daya telah diunggah ke koleksi bersama Anda.';
 $lang["notify_upload_share_new_subject"]='Unggahan eksternal baru.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Anda telah berbagi koleksi baru dengan pengguna lain. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Bagian Saya';
 $lang["manage_shares_title"]='Berbagi Eksternal';
 $lang["share_purge_text"]='Hapus berbagi yang sudah kadaluarsa.';

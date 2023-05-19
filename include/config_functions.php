@@ -1508,13 +1508,16 @@ function rs_get_resource_type(int $ref)
  */
 function save_resource_type_field($ref,$columns,$postdata)
     {
-    global $regexp_slash_replace, $migrate_data, $remove_data_restypes;
+    global $regexp_slash_replace, $migrate_data;
 
     $sync_field = (int)$postdata["sync_field"] ?? 0;
     $existingfield = get_resource_type_field($ref);
     $params=array();$syncparams=array();
 
     $resource_types=get_resource_types("",true,false,true);
+
+    // Array of resource types to remove data from if no longer associated with field
+    $remove_data_restypes = [];
     foreach($resource_types as $resource_type)
         {
         $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
@@ -1571,7 +1574,6 @@ function save_resource_type_field($ref,$columns,$postdata)
             $params[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
             $params[]=$val;
             }
-
         if($column == "global")
             {
             // Also need to update all resource_type_field -> resource_type associations
@@ -1586,12 +1588,9 @@ function save_resource_type_field($ref,$columns,$postdata)
                         {
                         $setresypes[] = $resource_type;
                         }
-                    }    
-                if($existingfield["type"] == 1 || count(array_diff($setresypes,$currentrestypes[$ref])) > 0)
-                    {
-                    // Remove existing data from the resource types that had data stored?
-                    $remove_data_restypes = true;
-                    }               
+                    }
+                 // Set to remove existing data from the resource types that had data stored
+                 $remove_data_restypes = $existingfield["type"] == 1 ? array_column($resource_type_array,"ref") : array_diff($currentrestypes[$ref],$setresypes);
                 }
             update_resource_type_field_resource_types($ref,$setresypes);
             }
@@ -1647,6 +1646,10 @@ function save_resource_type_field($ref,$columns,$postdata)
         $syncparams[]="i";$syncparams[]=$ref;
 
         ps_query($syncsql,$syncparams);
+        }
+    if(count($remove_data_restypes)>0)
+        {
+        cleanup_invalid_nodes([$ref],$remove_data_restypes);
         }
     
     hook('afterresourcetypefieldeditsave');

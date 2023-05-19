@@ -1701,9 +1701,7 @@ $lang["zipcommand_overridden"]='Mais veuillez noter que $zipcommand est défini 
 $lang["lastscheduledtaskexection"]='Dernière exécution de tâche planifiée (jours)';
 $lang["executecronphp"]='La correspondance de pertinence ne sera pas efficace et les rapports périodiques par e-mail ne seront pas envoyés. Assurez-vous que <a href=\'../batch/cron.php\'>batch/cron.php</a> est exécuté au moins une fois par jour via une tâche cron ou similaire.';
 $lang["shouldbeormore"]='Doit être ? ou supérieur.';
-$lang["config_file"]='Veuillez traduire : (config : %file)
-
-(configuration : %fichier)';
+$lang["config_file"]='(configuration : %file)';
 $lang["large_file_support_64_bit"]='Prise en charge de fichiers volumineux (plateforme 64 bits)';
 $lang["large_file_warning_32_bit"]='ATTENTION : Exécution de PHP 32 bits. Les fichiers de plus de 2 Go ne seront pas pris en charge.';
 $lang["server_timezone_check"]='Le fuseau horaire PHP est le même que celui utilisé par MySQL.';
@@ -1919,10 +1917,10 @@ $lang["warningrequestapprovalfield"]='Attention - ID de ressource % - veuillez p
 $lang["yyyy-mm-dd"]='AAAA-MM-JJ';
 $lang["resources-with-requeststatus0-0"]='(0 en attente)';
 $lang["resources-with-requeststatus0-1"]='En attente (1)';
-$lang["resources-with-requeststatus0-2"]='(%nombre en attente)';
+$lang["resources-with-requeststatus0-2"]='(%number en attente)';
 $lang["researches-with-requeststatus0-0"]='(0 non attribué)';
 $lang["researches-with-requeststatus0-1"]='(1 non attribué)';
-$lang["researches-with-requeststatus0-2"]='(%nombre non assigné)';
+$lang["researches-with-requeststatus0-2"]='(%number non assigné)';
 $lang["upload_files"]='Télécharger des fichiers';
 $lang["upload_files-to_collection"]='Télécharger des fichiers (dans la collection \'%collection\')';
 $lang["ascending"]='Tri croissant';
@@ -2723,14 +2721,6 @@ $lang["upload_share_email_subject"]='Vous avez reçu un lien de téléchargement
 $lang["upload_share_email_text"]='a envoyé un lien pour télécharger des fichiers.';
 $lang["upload_share_email_password"]='Utilisez ce mot de passe pour accéder au lien.';
 $lang["upload_share_email_clicklink"]='Veuillez utiliser le lien ci-dessous pour commencer le téléchargement.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[texte_mot_de_passe]';
 $lang["upload_share_complete"]='Merci pour votre téléchargement. Veuillez utiliser le bouton ci-dessous pour télécharger plus de ressources.';
 $lang["error_invalid_usergroup"]='Groupe d\'utilisateurs invalide.';
 $lang["error_invalid_date"]='Date invalide.';
@@ -2741,15 +2731,6 @@ $lang["error_no_resources_edit"]='Aucune ressource trouvée à éditer. Si vous 
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Des ressources ont été téléchargées dans votre collection partagée.';
 $lang["notify_upload_share_new_subject"]='Nouvelles téléchargements externes.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-
-[nouvelle_notification_partage_upload] <br />
-[cliquez_lien_voir_collection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_pied_de_page]';
 $lang["my_shares"]='Mes partages.';
 $lang["manage_shares_title"]='Partages externes.';
 $lang["share_purge_text"]='Supprimer les partages expirés.';

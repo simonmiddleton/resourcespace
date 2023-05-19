@@ -2,9 +2,6 @@
 
 
 $lang["status4"]='Niezmienne.';
-$lang["doi_info_wikipedia"]='Proszę przetłumaczyć: https://en.wikipedia.org/wiki/Digital_Object_Identifier
-
-Identyfikator cyfrowy DOI (ang. Digital Object Identifier) to unikalny identyfikator przypisany do cyfrowego zasobu, takiego jak artykuł naukowy, książka elektroniczna czy plik multimedialny. DOI umożliwia trwałe i niezmiennikowe odniesienie do zasobu w Internecie, co ułatwia jego wyszukiwanie i cytowanie. DOI składa się z prefiksu "10." oraz ciągu znaków przypisanych przez organizację nadającą identyfikator.';
 $lang["doi_info_link"]='na <a target="_blank" href="https://pl.wikipedia.org/wiki/Digital_Object_Identifier">DOI</a>.';
 $lang["doi_info_metadata_schema"]='W rejestracji DOI na DataCite.org są określone w <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Dokumentacji schematu metadanych Datacite</a>.';
 $lang["doi_info_mds_api"]='Informacje dotyczące DOI-API używanego przez ten plugin są zawarte w <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Dokumentacji API Datacite</a>.';

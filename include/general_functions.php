@@ -91,9 +91,9 @@ function unescape($text)
 * 
 * @uses offset_user_local_timezone()
 * 
-* @var  string   $date
-* @var  boolean  $time
-* @var  boolean  $wordy
+* @var  string   $date       ISO format date which can be a BCE date (ie. with negative year -yyyy)
+* @var  boolean  $time       When TRUE and full date is present then append the hh:mm time part if present 
+* @var  boolean  $wordy      When TRUE return month name, otherwise return month number
 * @var  boolean  $offset_tz  Set to TRUE to offset based on time zone, FALSE otherwise
 * 
 * @return string Returns an empty string if date not set/invalid
@@ -102,21 +102,27 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     {
     global $lang, $date_d_m_y, $date_yyyy;
 
-    if($date == '' || strtotime($date) === false)
-        {
-        return '';
-        }
+    $date=trim((string)$date);
+    if($date == '') return '';
 
-    $original_time_part = substr($date, 11, 5);
+    $date_timestamp = strtotime($date); 
+    if($date_timestamp === false) return '';
+
+    // The unix timestamp will be negative for BCE dates
+    $bce_offset = ($date_timestamp < 0) ? 1 : 0;
+    // BCE dates cannot return year in truncated form
+    if($bce_offset == 1 && !$date_yyyy) return '';
+
+    $original_time_part = substr($date, $bce_offset + 11, 5);
     if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
         {
         $date = offset_user_local_timezone($date, 'Y-m-d H:i');
         }
 
-    $y = substr($date, 0, 4);
+    $y = substr($date, 0, $bce_offset + 4);
     if(!$date_yyyy)
         {
-        $y = substr($y, 2, 2);
+        $y = substr($y, 2, 2);  // Only truncate year for non-BCE dates
         }
 
     if($y == "")
@@ -124,20 +130,20 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return "-";
         };
 
-    $month_part = substr($date, 5, 2);
+    $month_part = substr($date, $bce_offset + 5, 2);
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
         return $y;
         }
 
-    $d = substr($date, 8, 2);    
+    $d = substr($date, $bce_offset + 8, 2);    
     if($d == "" || $d == "00")
         {
         return "{$m} {$y}";
         }
 
-    $t = $time ? " @ " . substr($date, 11, 5) : "";
+    $t = $time ? " @ " . substr($date, $bce_offset + 11, 5) : "";
 
     if($date_d_m_y)
         {
@@ -593,12 +599,12 @@ function get_site_text($page,$name,$getlanguage,$group)
  *
  * @param  mixed $page
  * @param  mixed $name
- * @return void
  */
-function check_site_text_custom($page,$name)
+function check_site_text_custom($page,$name): bool
     {    
     $check = ps_query("select custom from site_text where page = ? and name = ?", array("s", $page, "s", $name));
-    if (isset($check[0]["custom"])){return $check[0]["custom"];}
+
+    return $check[0]["custom"] ?? false;
     }
 
 /**
@@ -3052,28 +3058,16 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query(
-            'SELECT s.ref, resource_ref, r.resource_type, homepage_show, featured_collections_show, login_show
-               FROM slideshow AS s
-         LEFT JOIN `resource` AS r ON s.resource_ref = r.ref',
-         [],
-         'slideshow'
-     );
+    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
 
     $slideshow_files = array();
 
     foreach($slideshow_records as $slideshow)
         {
         $slideshow_file = $slideshow;
-        $has_resource_linked = (int) $slideshow['resource_ref'] > 0;
 
         $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
-        if(
-            // Transform plugin crop uses the original file to create the slideshow image.
-            ($has_resource_linked && resource_has_access_denied_by_RT_size((int)$slideshow['resource_type'], ''))
-            || !file_exists($image_file_path)
-            || !is_readable($image_file_path)
-        )
+        if (!file_exists($image_file_path) || !is_readable($image_file_path))
             {
             continue;
             }
@@ -3087,7 +3081,7 @@ function get_slideshow_files_data()
                 'nc' => $slideshow_file['checksum'],
             ));
 
-        if($has_resource_linked)
+        if ((int) $slideshow['resource_ref'] > 0)
             {
             $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
             }
@@ -4204,9 +4198,8 @@ function text($name)
  * Gets a list of site text sections, used for a multi-page help area.
  *
  * @param  mixed $page
- * @return void
  */
-function get_section_list($page)
+function get_section_list($page): array
 	{
 
     global $usergroup;
@@ -4303,9 +4296,8 @@ function get_ip()
  * For a value such as 10M return the kilobyte equivalent such as 10240. Used  by check.php
  *
  * @param  mixed $value
- * @return void
  */
-function ResolveKB($value)
+function ResolveKB($value): string
 {
 $value=trim(strtoupper($value));
 if (substr($value,-1,1)=="K")

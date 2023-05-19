@@ -1565,7 +1565,7 @@ $lang["zipcommand_deprecated"]='Η χρήση της εντολής $zipcommand 
 $lang["zipcommand_overridden"]='Παρακαλώ σημειώστε ότι το $zipcommand έχει καθοριστεί και αντικατασταθεί.';
 $lang["lastscheduledtaskexection"]='Τελευταία εκτέλεση προγραμματισμένης εργασίας (ημέρες)';
 $lang["shouldbeormore"]='Πρέπει να είναι ? ή μεγαλύτερο.';
-$lang["config_file"]='Ρύθμιση: %αρχείο';
+$lang["config_file"]='Ρύθμιση: %file';
 $lang["large_file_support_64_bit"]='Υποστήριξη μεγάλων αρχείων (64 bit πλατφόρμα)';
 $lang["large_file_warning_32_bit"]='ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Εκτελείτε 32 bit PHP. Τα αρχεία μεγαλύτερα από 2GB δεν θα υποστηρίζονται.';
 $lang["server_timezone_check"]='Η ζώνη ώρας του PHP είναι ίδια με αυτή που χρησιμοποιεί η MySQL.';
@@ -1773,7 +1773,6 @@ $lang["warningrequestapprovalfield"]='Προειδοποίηση - αναγνω�
 $lang["yyyy-mm-dd"]='ΕΕΕΕ-ΜΜ-ΗΗ';
 $lang["resources-with-requeststatus0-0"]='Μηδέν εκκρεμούντα (0 pending).';
 $lang["resources-with-requeststatus0-1"]='Αναμονή (1)';
-$lang["resources-with-requeststatus0-2"]='Αναμονή (%αριθμός σε αναμονή)';
 $lang["researches-with-requeststatus0-0"]='(0 μη ανατεθειμένα)';
 $lang["researches-with-requeststatus0-1"]='(1 μη ανατεθειμένο)';
 $lang["researches-with-requeststatus0-2"]='Μη ανατεθειμένα (%number)';
@@ -2583,23 +2582,6 @@ $lang["upload_share_email_subject"]='Σας έχει σταλεί ένας σύ�
 $lang["upload_share_email_text"]='σας έχει στείλει ένα σύνδεσμο για τη μεταφόρτωση αρχείων στο.';
 $lang["upload_share_email_password"]='Χρησιμοποιήστε αυτόν τον κωδικό πρόσβασης για να αποκτήσετε πρόσβαση στο σύνδεσμο.';
 $lang["upload_share_email_clicklink"]='Χρησιμοποιήστε τον παρακάτω σύνδεσμο για να ξεκινήσετε τη μεταφόρτωση.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-Από: [from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-Κάντε κλικ στον παρακάτω σύνδεσμο για να ανοίξετε το αρχείο:<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Ευχαριστούμε για το ανέβασμα. Χρησιμοποιήστε το κουμπί παρακάτω για να ανεβάσετε περισσότερους πόρους.';
 $lang["error_invalid_usergroup"]='Μη έγκυρη ομάδα χρηστών.';
 $lang["error_invalid_date"]='Μη έγκυρη ημερομηνία.';

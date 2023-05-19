@@ -80,7 +80,7 @@ function save_proposed_changes($ref)
                         $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
 						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                         
-						$val = $rangestart . "," . $rangeend;
+						$val = $rangestart . ", " . $rangeend;
 						}
 					else
 						{
@@ -110,13 +110,14 @@ function save_proposed_changes($ref)
 								{
 								$val.="-00-00";
 								}
-							$newval.= ($newval!=""?",":"") . $val;
+							$newval.= ($newval!=""?", ":"") . $val;
 							}
 						}
 						$val=$newval;
                     }
 				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{
+                    $include_time = $fields[$n]['type'] === FIELD_TYPE_DATE_AND_OPTIONAL_TIME;
                     # date type, construct the value from the date/time dropdowns
                     $val=sprintf("%04d", getval("field_" . $fields[$n]["ref"] . "-y",""));
                     if ((int)$val<=0) 
@@ -139,29 +140,29 @@ function save_proposed_changes($ref)
 										{
 										$val.=$field;
 										} 
-								     else 
+								     elseif($include_time)
 										{
 										$val.=":00";
 										}
                                     } 
-                                else 
+                                elseif($include_time)
                                     {
                                     $val.="00:00";
                                     }
                                 }
-                            else 
+                            elseif($include_time)
                                 {
                                 $val.=" 00:00:00";
                                 }
                             }
                          else 
                             {
-                            $val.="-00 00:00:00";
+                            $val.="-00" . ($include_time?" 00:00:00":"");
                             }
                         }
                     else 
                         {
-                        $val.="-00-00 00:00:00";
+                        $val.="-00-00" . ($include_time?" 00:00:00":"");
                         }
                     }
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))

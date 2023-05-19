@@ -61,7 +61,7 @@ if(getval("delete", "") != "" && enforcePostRequest(false))
     {
     $targettype=getval("targettype","");
     $prereq_action = getval("prereq_action", "");
-    $affectedresources=ps_array("select ref value from resource where resource_type=? and ref>0",array("i",$ref),0);
+    $affectedresources=ps_array("SELECT ref value FROM resource WHERE resource_type=? AND ref>0",array("i",$ref),0);
     $affected_rtfs = get_resource_type_fields(array($ref), "ref", "asc", "", array(), true);
     if(count($affectedresources)>0 && $targettype=="")
         {

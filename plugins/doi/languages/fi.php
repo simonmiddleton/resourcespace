@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Muuttumaton.';
-$lang["doi_info_wikipedia"]='Digitaalinen objektin tunniste (DOI) on järjestelmä, joka tarjoaa pysyvän tunnisteen digitaalisille objekteille, kuten tutkimusartikkeleille, tietokirjoille ja muille julkaisuille. DOI-järjestelmä mahdollistaa objektien yksilöinnin ja löytämisen verkossa, ja se on laajalti käytössä akateemisessa maailmassa. DOI:t ovat yleensä linkkejä, jotka ohjaavat käyttäjän objektin pysyvään sijaintiin verkossa.';
 $lang["doi_info_link"]='DOIn (Digital Object Identifier) kohdalla.';
 $lang["doi_info_metadata_schema"]='DOI-rekisteröinnissä DataCite.org-sivustolla ilmoitetaan <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">DataCite Metadata Schema -dokumentaatiossa</a>.';
 $lang["doi_info_mds_api"]='DOI-API:ta, jota tämä liitännäinen käyttää, on kuvattu <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API -dokumentaatiossa</a>.';

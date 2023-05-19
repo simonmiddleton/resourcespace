@@ -15,5 +15,5 @@ $lang["resourceconnect_search_info"]='Por favor, especifique en qué base de dat
 $lang["resourceconnect_collectionwarning"]='<span style=\'color:red;\'><strong>AVISO IMPORTANTE</strong>: Esta colección contiene activos de una base de datos remota. Estos no se incluirán en la operación a continuación.</span>';
 $lang["refineresults"]='Refinar resultados.';
 $lang["additionalkeywords"]='Palabras clave adicionales.';
-$lang["refine"]='Por favor, traduce: Refinar.';
+$lang["refine"]='Refinar';
 $lang["resourceconnect_help"]='Agregar recurso a una colección.';

@@ -1207,7 +1207,7 @@ function CheckDBStruct($path,$verbose=false)
 function sql_limit($offset, $rows)
     {
     $offset_true = !is_null($offset) && is_int_loose($offset) && $offset > 0;
-    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows > 0;
+    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows >= 0;
 
     $limit = ($offset_true || $rows_true ? 'LIMIT ' : '');
 
@@ -1257,7 +1257,7 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     $datacount = count($data);
 
     // Check if cached total will cause errors
-    if($datacount ==  0)
+    if($datacount ==  0 && $rows > 0)
         {
         // No data returned. Either beyond the last page of results or there were no results at all
         $total = min($total,$offset);

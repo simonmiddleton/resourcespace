@@ -1998,7 +1998,7 @@ $lang["warningrequestapprovalfield"]='Advarsel - ressurs-ID % - vennligst merk d
 $lang["yyyy-mm-dd"]='ÅÅÅÅ-MM-DD';
 $lang["resources-with-requeststatus0-0"]='(0 avventer)';
 $lang["resources-with-requeststatus0-1"]='(1 avventer)';
-$lang["resources-with-requeststatus0-2"]='(%antall venter)';
+$lang["resources-with-requeststatus0-2"]='(%number venter)';
 $lang["researches-with-requeststatus0-0"]='(0 ubehandlet)';
 $lang["researches-with-requeststatus0-1"]='(1 ubesatt)';
 $lang["researches-with-requeststatus0-2"]='(%number ikke tildelt)';
@@ -2087,7 +2087,7 @@ $lang["all-resourcetypes"]='ressurser';
 $lang["all-collectiontypes"]='samlinger';
 $lang["resourcetypes-no_collections"]='Alle %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Alle %collectiontypes%';
-$lang["resourcetypes-collections"]='Alle %resourcetyper% og alle %samlingstyper%';
+$lang["resourcetypes-collections"]='Alle %resourcetypes% og alle %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Blokker tilgang til arbeidsflytstatus.';
 $lang["collection_share_status_warning"]='Advarsel - denne samlingen har ressurser i følgende tilstander, vennligst sjekk at disse ressursene vil være tilgjengelige for andre brukere.';
 $lang["contactadmin"]='Kontakt administrator.';
@@ -2855,23 +2855,6 @@ $lang["upload_share_email_subject"]='Du har mottatt en opplastingslenke fra';
 $lang["upload_share_email_text"]='har sendt deg en lenke for å laste opp filer til';
 $lang["upload_share_email_password"]='Bruk dette passordet for å få tilgang til lenken.';
 $lang["upload_share_email_clicklink"]='Vennligst bruk lenken nedenfor for å starte opplastingen.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[fra_navn] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [melding]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passordtekst]';
 $lang["upload_share_complete"]='Takk for opplastingen. Vennligst bruk knappen nedenfor for å laste opp flere ressurser.';
 $lang["error_invalid_usergroup"]='Ugyldig brukergruppe.';
 $lang["error_invalid_date"]='Ugyldig dato.';
@@ -2882,11 +2865,6 @@ $lang["error_no_resources_edit"]='Ingen ressurser funnet å redigere. Hvis du ne
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Ressurser har blitt lastet opp til din delte samling.';
 $lang["notify_upload_share_new_subject"]='Nye eksterne opplastinger.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] 
-Ny ressurs delt med deg. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Mine delinger.';
 $lang["manage_shares_title"]='Eksterne delinger.';
 $lang["share_purge_text"]='Slett utløpte delinger.';

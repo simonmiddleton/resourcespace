@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Upottaa';
-$lang["embedslideshow_minimise"]='Vähennä diaesityksen kokoa.';
+$lang["embedslideshow_minimise"]='&minus; vähennä diaesityksen kokoa.';
 $lang["embedslideshow_maximise"]='Suurenna diaesitys.';
 $lang["embedslideshow_size"]='Diaesityksen koko?';
 $lang["sizename_pixels"]='%name (%pixels pikseliä)';

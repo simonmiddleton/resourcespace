@@ -2729,23 +2729,6 @@ $lang["upload_share_email_subject"]='以下のアップロードリンクが送�
 $lang["upload_share_email_text"]='あなたにファイルをアップロードするためのリンクが送信されました。';
 $lang["upload_share_email_password"]='このパスワードを使用してリンクにアクセスしてください。';
 $lang["upload_share_email_clicklink"]='以下のリンクを使用してアップロードを開始してください。';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]：[message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]：[message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='アップロードしていただきありがとうございます。さらにリソースをアップロードするには、以下のボタンを使用してください。';
 $lang["error_invalid_usergroup"]='ユーザーグループが無効です。';
 $lang["error_invalid_date"]='日付が無効です。';
@@ -2756,15 +2739,6 @@ $lang["error_no_resources_edit"]='編集するリソースが見つかりませ�
 $lang["password_unchanged"]='(変更なし)';
 $lang["notify_upload_share_new"]='共有コレクションにリソースがアップロードされました。';
 $lang["notify_upload_share_new_subject"]='新しい外部アップロード';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_notify_upload_share_new]：新しいリソースがアップロードされ、共有されました。<br />
-[lang_clicklinkviewcollection]：コレクションを表示するには、ここをクリックしてください。<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]：このメールは自動送信されています。返信しないでください。';
 $lang["my_shares"]='私の共有';
 $lang["manage_shares_title"]='外部共有';
 $lang["share_purge_text"]='期限切れの共有を削除する。';

@@ -3,14 +3,16 @@ namespace ImageBanks;
 
 class Pixabay extends Provider
     {
-    protected $id                = 1;
-    protected $name              = "Pixabay";
-    protected $download_endpoint = "https://pixabay.com/get/";
-    
-    protected $configs = array(
-        "pixabay_api_key" => "9664540-83e27f5c4cefd1aeb14fd8009"
-    );
-    protected $warning = "";
+ function __construct(array $lang, string $temp_dir_path)
+        {
+        $this->id                = 1;
+        $this->name              = "Pixabay";
+        $this->download_endpoint = "https://pixabay.com/get/";
+        $this->configs = array("pixabay_api_key" => "9664540-83e27f5c4cefd1aeb14fd8009");
+        $this->warning = "";
+        $this->lang = $lang;
+        $this->temp_dir_path = $temp_dir_path;
+        }
 
     public function checkDependencies()
         {

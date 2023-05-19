@@ -20,9 +20,6 @@ $lang["checkmail_password"]='Heslo.';
 $lang["checkmail_extension_mapping"]='Typ zdroja pomocou mapovania prípon súborov.';
 $lang["checkmail_default_resource_type"]='Predvolený typ zdroja.';
 $lang["checkmail_extension_mapping_desc"]='Po izbiri privzetega tipa vira je spodaj en vnos za vsak tip vira. <br />Če želite naložiti datoteke različnih tipov v določen vir, dodajte seznam ločenih vejic z razširitvami datotek (npr. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Prosimo, prevedite: <br />(from allowed_extensions)
-
-(iz dovoljenih razširitev)';
 $lang["checkmail_subject_field"]='Pole predmetu';
 $lang["checkmail_body_field"]='Pole Tela';
 $lang["checkmail_purge"]='Vymazať e-maily po nahratí?';

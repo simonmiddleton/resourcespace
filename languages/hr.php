@@ -1889,7 +1889,7 @@ $lang["all-resourcetypes"]='resursi';
 $lang["all-collectiontypes"]='kolekcije';
 $lang["resourcetypes-no_collections"]='Molimo prevedite: Svi %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Sve %collectiontypes%';
-$lang["resourcetypes-collections"]='Svi %tipoviresursa% i svi %tipovikolekcija%';
+$lang["resourcetypes-collections"]='Svi %resourcetypes% i svi %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Blokiraj pristup stanju radnog tijeka.';
 $lang["collection_share_status_warning"]='Upozorenje - ova kolekcija ima resurse u sljedećim stanjima, molimo provjerite hoće li ovi resursi biti dostupni drugim korisnicima.';
 $lang["contactadmin"]='Kontaktirajte administratora.';
@@ -2665,11 +2665,6 @@ $lang["error_no_resources_edit"]='Nema pronađenih resursa za uređivanje. Ako s
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resursi su učitani u vašu zajedničku kolekciju.';
 $lang["notify_upload_share_new_subject"]='Novi vanjski prijenosi.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Novi resurs je podijeljen s vama. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Moje dijeljenje.';
 $lang["manage_shares_title"]='Vanjske dijeljene veze.';
 $lang["share_purge_text"]='Izbriši istekle dijeljene resurse.';

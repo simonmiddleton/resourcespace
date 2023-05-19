@@ -91,11 +91,6 @@ parameters:
 			path: include/general_functions.php
 
 		-
-			message: "#^Result of function render_trash \\(void\\) is used\\.$#"
-			count: 1
-			path: include/header.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'C' \\(\"C\", \"C\"\\)\\.$#"
 			count: 1
 			path: include/image_processing.php
@@ -179,16 +174,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$sort_desc$#"
 			count: 1
 			path: include/message_functions.php
-
-		-
-			message: "#^Array has 2 duplicate keys with value 'sub' \\('sub', 'sub'\\)\\.$#"
-			count: 1
-			path: include/mime_types.php
-
-		-
-			message: "#^Array has 2 duplicate keys with value 'wmz' \\('wmz', 'wmz'\\)\\.$#"
-			count: 1
-			path: include/mime_types.php
 
 		-
 			message: "#^Result of function render_featured_collection_category_selector \\(void\\) is used\\.$#"
@@ -306,16 +291,6 @@ parameters:
 			path: include/user_functions.php
 
 		-
-			message: "#^Result of function check_site_text_custom \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/admin/admin_content_edit.php
-
-		-
-			message: "#^Result of function render_table \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/admin/tabs.php
-
-		-
 			message: "#^Result of function render_clear_selected_btn \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/ajax/collections.php
@@ -326,64 +301,14 @@ parameters:
 			path: pages/ajax/collections.php
 
 		-
-			message: "#^Caught class Html2Pdf_exception not found\\.$#"
-			count: 1
-			path: pages/ajax/contactsheet.php
-
-		-
-			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
-			count: 3
-			path: pages/check.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 2
-			path: pages/collection_edit.php
-
-		-
 			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
 			count: 1
-			path: pages/collection_email.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 4
 			path: pages/collection_email.php
 
 		-
 			message: "#^Result of function send_collection_feedback \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/collection_feedback.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 4
-			path: pages/collection_set_category.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 2
-			path: pages/collection_share.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/collections_featured.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/edit.php
-
-		-
-			message: "#^Result of function get_section_list \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/help.php
-
-		-
-			message: "#^Result of function purge_expired_shares \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/manage_external_shares.php
 
 		-
 			message: "#^Array has 2 duplicate keys with value 'sortable' \\(\"sortable\", \"sortable\"\\)\\.$#"
@@ -411,11 +336,6 @@ parameters:
 			path: pages/search.php
 
 		-
-			message: "#^Result of function ResolveKB \\(void\\) is used\\.$#"
-			count: 3
-			path: pages/setup.php
-
-		-
 			message: "#^Undefined variable\\: \\$lang$#"
 			count: 1
 			path: pages/setup.php
@@ -441,19 +361,9 @@ parameters:
 			path: pages/upload_batch.php
 
 		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/upload_batch.php
-
-		-
 			message: "#^Undefined variable\\: \\$original_download_name$#"
 			count: 1
 			path: plugins/adobe_link/hooks/view.php
-
-		-
-			message: "#^Undefined variable\\: \\$mtparams$#"
-			count: 1
-			path: plugins/annotate/hooks/view.php
 
 		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$notes\\.$#"
@@ -521,26 +431,6 @@ parameters:
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
 
 		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$configs\\.$#"
-			count: 1
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$download_endpoint\\.$#"
-			count: 1
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$id\\.$#"
-			count: 1
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
-			message: "#^Access to an undefined property ImageBanks\\\\Provider\\:\\:\\$name\\.$#"
-			count: 2
-			path: plugins/image_banks/include/AbstractProvider.php
-
-		-
 			message: "#^Undefined variable\\: \\$imagemagick_path$#"
 			count: 2
 			path: plugins/image_text/hooks/collection_download.php
@@ -556,25 +446,15 @@ parameters:
 			path: plugins/museumplus/pages/museumplus_object_details.php
 
 		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/museumplus/pages/setup.php
-
-		-
-			message: "#^Result of function error_alert \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/museumplus/pages/setup_module.php
-
-		-
 			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
 			count: 1
 			path: plugins/offline_archive/pages/restore_request.php
 
 		-
-			message: "#^Function each not found\\.$#"
+			message: "#^Class RSSFeed does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
-			path: plugins/rss2/pages/rssfeed.php
-
+			path: plugins/rss2/pages/rssfilter.php
+			
 		-
 			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
 			count: 1

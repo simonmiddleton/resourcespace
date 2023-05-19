@@ -2928,14 +2928,6 @@ $lang["upload_share_email_subject"]='Du har fått en uppladdningslänk skickad t
 $lang["upload_share_email_text"]='har skickat en länk till dig för att ladda upp filer till';
 $lang["upload_share_email_password"]='Använd detta lösenord för att komma åt länken.';
 $lang["upload_share_email_clicklink"]='Använd länken nedan för att börja ladda upp.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[länk]
-<br />
-<br />
-[lösenordstext]';
 $lang["upload_share_complete"]='Tack för att du laddade upp. Använd knappen nedan för att ladda upp fler resurser.';
 $lang["error_invalid_usergroup"]='Ogiltig användargrupp.';
 $lang["error_invalid_date"]='Ogiltigt datum.';
@@ -2946,10 +2938,6 @@ $lang["error_no_resources_edit"]='Inga resurser hittades att redigera. Om du pre
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resurser har laddats upp till din delade samling.';
 $lang["notify_upload_share_new_subject"]='Nya externa uppladdningar.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] = En användare har delat en samling med dig. <br />
-[lang_clicklinkviewcollection] = Klicka på länken nedan för att visa samlingen: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Vänliga hälsningar, ResourceSpace.';
 $lang["my_shares"]='Mina delningar.';
 $lang["manage_shares_title"]='Extern delning.';
 $lang["share_purge_text"]='Radera utgångna delningar.';
