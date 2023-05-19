@@ -6515,3 +6515,36 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
     </div>
 	<?php
 	}
+
+  
+/**
+* Renders a metadata field selector
+* 
+* @param string     $label      label for the field
+* @param string     $name       name of form select
+* @param string     $class      array CSS class to apply
+* @param boolean    $hidden     optionally hide the question usng CSS display:none
+* @param array      $current    Current selected value
+* 
+* @return void
+*/
+function render_resource_type_selector_question($label, $name, $class = "stdwidth", $hidden = false, $current = 0)
+    {
+    global $lang;
+    $parameters = array();
+
+    $resource_types = get_resource_types('',true,false,true);
+
+    echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
+    echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";
+    echo "<option value='' selected >" . $lang["select"] . "</option>";
+    foreach($resource_types as $resource_type)
+        {
+        $selected = ($resource_type["ref"] == $current ? "selected" : "");
+        echo "<option value='{$resource_type['ref']}' {$selected}>" . lang_or_i18n_get_translated($resource_type['name'],'fieldtitle-') . "</option>";
+        }
+    echo "</select>";
+    echo "<div class='clearerleft'></div>";
+    echo "</div>";
+    }

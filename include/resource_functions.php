@@ -3651,7 +3651,6 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                 if ($translate==true)
                     {
                     # Translate name
-                    //$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");
                     $resource_types[$n]["name"]=lang_or_i18n_get_translated($resource_types[$n]["name"], "resourcetype-");
                     }
                 $return[$resource_types[$n]["ref"]]=$resource_types[$n]; # Add to return array
@@ -3660,7 +3659,7 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
                 unset($return[$resource_types[$n]["ref"]]["resource_type_field"]);
                 }
             // Add associated fields to the resource_type_fields array
-            $return[$resource_types[$n]["ref"]]["resource_type_fields"] = array_filter(explode(",",$resource_types[$n]["resource_type_field"]),"is_int_loose");
+            $return[$resource_types[$n]["ref"]]["resource_type_fields"] = array_filter(explode(",",(string)$resource_types[$n]["resource_type_field"]),"is_int_loose");
             }
         }
     $restype_cache[$hash] = array_values($return);
