@@ -291,11 +291,6 @@ parameters:
 			path: include/user_functions.php
 
 		-
-			message: "#^Result of function check_site_text_custom \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/admin/admin_content_edit.php
-
-		-
 			message: "#^Result of function render_clear_selected_btn \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/ajax/collections.php

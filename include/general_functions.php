@@ -599,12 +599,12 @@ function get_site_text($page,$name,$getlanguage,$group)
  *
  * @param  mixed $page
  * @param  mixed $name
- * @return void
  */
-function check_site_text_custom($page,$name)
+function check_site_text_custom($page,$name): bool
     {    
     $check = ps_query("select custom from site_text where page = ? and name = ?", array("s", $page, "s", $name));
-    if (isset($check[0]["custom"])){return $check[0]["custom"];}
+
+    return $check[0]["custom"] ?? false;
     }
 
 /**
