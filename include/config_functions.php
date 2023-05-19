@@ -336,7 +336,6 @@ function process_config_options($user_id = null)
 
             $GLOBALS[$config_option['parameter']] = $param_value;
             }
-        debug_track_vars('end@process_config_options', $GLOBALS, ['user_id' => $user_id ?? 0]);
         }
 
     return;

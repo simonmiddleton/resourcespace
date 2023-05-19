@@ -3696,7 +3696,6 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				}
 			}
 
-        debug_track_vars('line-' . __LINE__ . '@include/general_functions.php', $GLOBALS, ['hook_name' => $name]);
 		return (isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false);
 		}
 

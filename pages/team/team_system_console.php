@@ -52,7 +52,7 @@ if ($callback == "")
     </div>    
     <?php
 
-	foreach (array("debuglog","memorycpu","database","sqllogtransactions", 'trackVars') as $section)
+	foreach (array("memorycpu","database","sqllogtransactions") as $section)
 	{
 		?><script>
 			var timeOutControl<?php echo $section; ?> = null;
