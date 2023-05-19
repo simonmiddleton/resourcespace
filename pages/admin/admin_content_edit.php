@@ -313,5 +313,3 @@ jQuery('#checkhtml').click(function(e) {
 </script>
 <?php		
 include "../../include/footer.php";
-?>
-

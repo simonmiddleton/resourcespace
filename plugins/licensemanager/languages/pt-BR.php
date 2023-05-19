@@ -2,7 +2,7 @@
 
 
 $lang["license_usage-book"]='Livro';
-$lang["license_usage-web"]='Web (in Portuguese): Web (or Rede)';
+$lang["license_usage-web"]='Web';
 $lang["license_usage-merchandise"]='Mercadoria';
 $lang["license_usage-tv"]='TV (Televisão)';
 $lang["license_management"]='Gerenciamento de licenças.';

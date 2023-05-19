@@ -11,7 +11,6 @@ $lang["transformblurb"]='Selecione a ação necessária e, em seguida, use os í
 $lang["transformblurb-original"]='Para recortar a imagem, arraste o cursor sobre a imagem. Você pode mover e redimensionar a caixa de recorte depois de criá-la. Quando terminar, pressione "transformar original". Opcionalmente, você pode escolher uma largura e/ou altura para redimensionar a imagem recortada.<br/><br/><strong>Todas as opções abaixo podem ser deixadas em branco.</strong> Se você não fornecer uma largura e altura, a largura e altura originais da área de recorte serão usadas.';
 $lang["width"]='Nova largura.';
 $lang["height"]='Nova altura.';
-$lang["px"]='Desculpe, "px" é uma unidade de medida de comprimento em inglês que significa "pixels" em português. Como não é uma frase completa, não requer tradução.';
 $lang["noimagefound"]='Erro: Nenhuma imagem encontrada.';
 $lang["scaled"]='Escalonado.';
 $lang["cropped"]='Recortado.';

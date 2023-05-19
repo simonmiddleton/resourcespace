@@ -21,7 +21,6 @@ $lang["posixldapauth_use_to_overide_group_containers_member_field"]='Usar para a
 $lang["posixldapauth_member_field_type"]='Tipo de campo de miembro:';
 $lang["posixldapauth_default"]='Valor predeterminado';
 $lang["posixldapauth_user_name"]='Nombre de usuario.';
-$lang["posixldapauth_rdn"]='Lo siento, necesito más contexto para proporcionar una traducción precisa de "RDN". ¿Podría proporcionar más información sobre cómo se utiliza esta cadena en ResourceSpace?';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Usar para cambiar el contenido del campo de miembro del grupo.';
 $lang["posixldapauth_login_field"]='Campo de inicio de sesión:';
 $lang["posixldapauth_test_connection"]='Probar conexión:';

@@ -25,6 +25,7 @@ $lang["video_tracks_offline_notice"]="Your request has been queued. You will be 
 $lang["video_tracks_export_file_created"] = "Your custom video file has been created.";
 $lang["video_tracks_export_file_failed"] = "Creation of the output file failed.";
 $lang["video_tracks_export_file_description"] = "Custom video file";
+$lang['video_tracks_upgrade_msg_deprecated_output_format'] = "IMPORTANT! The Video Tracks plugin has deprecated the output formats settings. They can only be set in config.php. The plugin will not work as intended until the configuration option has been copied over. Please copy the following:- %nl%####%nl%%output_formats_config%####%nl%";
 
 // Labels:
 $lang['video_tracks_generate_label'] = 'Generate';

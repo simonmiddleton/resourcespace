@@ -26,7 +26,6 @@ $lang["emu_module"]='وحدة EMu';
 $lang["emu_column_name"]='عمود وحدة EMu';
 $lang["emu_rs_field"]='حقل ResourceSpace';
 $lang["emu_add_mapping"]='إضافة تعيين الخرائط.';
-$lang["emu_upload_emu_field_label"]='EMu IRN تعني رقم تعريف الموارد في برنامج إدارة الموارد الرقمية EMu.';
 $lang["emu_confirm_upload_nodata"]='يرجى التحقق من الخانة لتأكيد رغبتك في المتابعة مع عملية الرفع.';
 $lang["emu_test_script_title"]='اختبار / تشغيل النص البرمجي';
 $lang["emu_run_script"]='العملية';

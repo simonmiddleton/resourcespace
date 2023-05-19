@@ -79,7 +79,7 @@ function AddArticle($title, $link, $description, $optional = '')
     // Channel optionals
     if( is_array($this->optional) and count($this->optional) )
     {
-      while( list($k, $v) = each($this->optional) ){
+      foreach($this->optional as $k => $v) {
         $out .= "<$k>$v</$k>\n";
       }
     }

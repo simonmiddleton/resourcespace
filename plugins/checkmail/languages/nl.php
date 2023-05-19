@@ -20,7 +20,6 @@ $lang["checkmail_password"]='Wachtwoord';
 $lang["checkmail_extension_mapping"]='Bron Type via Bestandsextensie Mapping';
 $lang["checkmail_default_resource_type"]='Standaard bron type.';
 $lang["checkmail_extension_mapping_desc"]='Na de standaard bron type selector, is er één invoerveld voor elk van uw bron types. <br />Om geüploade bestanden van verschillende typen in een specifiek bron type te dwingen, voegt u komma gescheiden lijsten van bestandsextensies toe (bijv. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='(toegestane_extensies)';
 $lang["checkmail_subject_field"]='Onderwerpveld';
 $lang["checkmail_body_field"]='Lichaamsveld.';
 $lang["checkmail_purge"]='E-mails verwijderen na uploaden?';

@@ -19,7 +19,6 @@ $lang["frame_rate_resource_field"]='Sortida de fotogrames per segon.';
 $lang["aspect_ratio_resource_field"]='Proporció d\'aspecte de sortida.';
 $lang["video-splice"]='Edició de vídeo.';
 $lang["video-splice-intro"]='Fes una barreja de diversos recursos de vídeo per formar un únic recurs de vídeo combinat. Arrossega i deixa anar les miniatures a continuació per reordenar els fragments de vídeo.';
-$lang["action-splice"]='Tallar i unir (Splice)';
 $lang["video_splice_order"]='Recursos de vídeo en ordre.';
 $lang["video_splice_select_video"]='Format de vídeo.';
 $lang["video_splice_select_resolution"]='Resolució del vídeo.';

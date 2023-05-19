@@ -25,7 +25,6 @@ $lang["emu_module"]='EMuモジュール';
 $lang["emu_column_name"]='EMuモジュールの列';
 $lang["emu_rs_field"]='ResourceSpaceのフィールド';
 $lang["emu_add_mapping"]='マッピングを追加する';
-$lang["emu_upload_emu_field_label"]='EMu IRNの翻訳はありません。EMuはコレクション管理ソフトウェアであり、IRNはオブジェクトの識別番号を表します。そのため、EMu IRNは「EMuのオブジェクトの識別番号」という意味です。';
 $lang["emu_confirm_upload_nodata"]='アップロードを続行することを確認するために、チェックボックスを確認してください。';
 $lang["emu_test_script_title"]='テスト/スクリプトの実行';
 $lang["emu_run_script"]='処理 (しょり)';

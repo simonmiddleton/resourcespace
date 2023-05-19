@@ -46,4 +46,3 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Αδυναμία σύν
 $lang["posixldapauth_unable_to_search_ldap_server"]='Αδυναμία αναζήτησης στον διακομιστή LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% απέτυχε, παρακαλώ ελέγξτε τις ρυθμίσεις.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Η αναζήτηση LDAP ήταν επιτυχής, αλλά δεν βρέθηκαν ομάδες.';
-$lang["posixldapauth_rdn"]='ΔΔΔ (Διακριτικός Αριθμός Πόρου)';

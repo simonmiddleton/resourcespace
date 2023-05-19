@@ -566,11 +566,9 @@ $lang["setup-baseurl"]="Βάση URL:";
 $lang["setup-emailfrom"]="Από την Διεύθυνση Email:";
 $lang["setup-emailnotify"]="Notify Email:";
 $lang["setup-spiderpassword"]="Spider Κωδικός πρόσβασης:";
-$lang["setup-scramblekey"]="Αναρριχώμαι κλειδιά:";
 $lang["setup-paths"]="Μονοπάτια";
 $lang["setup-pathsdetail"]="Για κάθε διαδρομή, πληκτρολογήστε τη διαδρομή ΧΩΡΙΣ καταβιβαζόμενου κάθετο σε κάθε δυαδικό. Για να απενεργοποιήσετε μια δυαδική, αφήστε κενό το μονοπάτι. Κάθε αυτόματη ανιχνευθεί διαδρομές έχουν ήδη συμπληρώνονται έστω και";
 $lang["setup-applicationname"]="Αίτηση Όνομα:";
-$lang["setup-basicsettingsfooter"]="ΣΗΜΕΙΩΣΗ: Το μόνο που απαιτείται &lt;strong&gt; &lt;/ strong&gt; Οι ρυθμίσεις σε αυτή τη σελίδα. Αν δεν ενδιαφέρεται για τον έλεγχο τις προηγμένες επιλογές, μπορείτε να κάνετε κλικ παρακάτω για να ξεκινήσει η διαδικασία εγκατάστασης.";
 $lang["setup-if_mysqlusername"]="Το όνομα χρήστη που χρησιμοποιείται για να συνδεθείτε με το διακομιστή MySQL. Ο χρήστης πρέπει να έχει δικαιώματα για τη δημιουργία πινάκων στη βάση δεδομένων που αναφέρεται κατωτέρω.";
 $lang["setup-if_mysqlpassword"]="Ο κωδικός για το MySQL username τέθηκε παραπάνω.";
 $lang["setup-if_mysqldb"]="Το όνομα της βάσης δεδομένων MySQL RS θα χρησιμοποιήσει. (Αυτή η βάση δεδομένων πρέπει να υπάρχει.)";
@@ -578,14 +576,10 @@ $lang["setup-if_mysqlbinpath"]="Η διαδρομή προς το MySQL binaries
 $lang["setup-if_baseurl"]="Η «βάση» για αυτό το δικτυακό τόπο εγκατάστασης. ΣΗΜΕΙΩΣΗ: Δεν καταβιβαζόμενου κάθετο.";
 $lang["setup-if_emailfrom"]="Η διεύθυνση ηλεκτρονικού ταχυδρομείου που από RS φαίνεται να προέρχονται.";
 $lang["setup-if_emailnotify"]="Η ηλεκτρονική διεύθυνση στην οποία πόρων / χρήστη / έρευνα αιτήσεις αποστέλλονται.";
-$lang["setup-if_spiderpassword"]="Η αράχνη είναι ένα κωδικό πρόσβασης που απαιτείται τομέα.";
-$lang["setup-if_scramblekey"]="Για να είναι δυνατή η αποκρυπτογράφηση, που το κλειδί για να αγωνίζομαι σκληρά να μαντέψετε-string (παρόμοιο με έναν κωδικό πρόσβασης). Αν αυτή είναι δημόσια τοποθέτηση, τότε αυτό είναι μια πολύ συνετή ιδέα. Αφήστε αυτό το πεδίο κενό για να απενεργοποιήσετε τον πόρο διαδρομής κρυπτογράφησης. Το πεδίο αυτό έχει ήδη τυχαιοποιημένη για σας, αλλά μπορείτε να το αλλάξετε να ταιριάζουν με μια υπάρχουσα εγκατάσταση, αν είναι απαραίτητο.";
 $lang["setup-if_applicationname"]="Το όνομα της εφαρμογής / εγκατάστασης (π.χ. «MyCompany Σύστημα Δυναμικού»).";
 $lang["setup-err_mysqlbinpath"]="Αδύνατο να εξακριβωθεί διαδρομή. Αφήστε κενό για να απενεργοποιήσετε.";
 $lang["setup-err_baseurl"]="Βάση URL είναι υποχρεωτικό πεδίο.";
 $lang["setup-err_baseurlverify"]="URL βάσης δεν φαίνεται να είναι σωστή (μπορεί να μην φορτώνεται license.txt).";
-$lang["setup-err_spiderpassword"]="Ο κωδικός πρόσβασης που απαιτείται για spider.php. ΣΗΜΑΝΤΙΚΟ: Randomise αυτό, για κάθε νέα εγκατάσταση. Ο πόρων θα είναι αναγνώσιμα από κάποιον που ξέρει αυτόν τον κωδικό πρόσβασης. Το πεδίο αυτό έχει ήδη τυχαιοποιημένη για σας, αλλά μπορείτε να το αλλάξετε να ταιριάζουν με μια υπάρχουσα εγκατάσταση, αν είναι απαραίτητο.";
-$lang["setup-err_scramblekey"]="Αν αυτή είναι μια δημόσια εγκατάσταση, τον καθορισμό των βασικών αναρριχώμαι συνιστάται.";
 $lang["setup-err_path"]="Αδύνατη η επαλήθευση της τοποθεσίας του";
 $lang["setup-emailerr"]="Μη έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου.";
 $lang["collectionlog"]="Συλλογή Εγγραφή";
@@ -674,7 +668,7 @@ $lang["fieldtitle-channel_mode"]='Λειτουργία καναλιού';
 $lang["fieldtitle-sample_rate"]='Ρυθμός δειγματοληψίας';
 $lang["fieldtitle-audio_bitrate"]='Ρυθμός μετάδοσης ήχου (Audio bitrate)';
 $lang["fieldtitle-frame_rate"]='Ρυθμός καρέ (καρέ ανά δευτερόλεπτο)';
-$lang["fieldtitle-video_bitrate"]='Ρυθμός μετάδοσης βίντεο (Video bitrate)';
+$lang["fieldtitle-video_bitrate"]='Ρυθμός μετάδοσης βίντεο';
 $lang["fieldtitle-aspect_ratio"]='Αναλογία διαστάσεων.';
 $lang["fieldtitle-video_size"]='Μέγεθος βίντεο.';
 $lang["fieldtitle-image_size"]='Μέγεθος εικόνας.';
@@ -780,7 +774,6 @@ $lang["property-onchange_macro"]='Στη μεταβολή μακροεντολή
 $lang["information-onchange_macro"]='Στη μακροεντολή αλλαγής: κώδικας που θα εκτελεστεί όταν αλλάζει η τιμή πεδίου. ΣΥΣΤΑΤΑΙ ΠΡΟΣΟΧΗ.';
 $lang["property-query"]='Ερώτημα.';
 $lang["information-id"]='Σημείωση: Το \'Id\' παρακάτω ΠΡΕΠΕΙ να οριστεί σε έναν μοναδικό κωδικό τριών χαρακτήρων.';
-$lang["property-id"]='Αναγνωριστικό (Id)';
 $lang["property-width"]='Πλάτος';
 $lang["property-height"]='Ύψος.';
 $lang["property-quality"]='Ποιότητα.';
@@ -806,14 +799,12 @@ $lang["themeselector"]='Προβεβλημένες συλλογές.';
 $lang["myrequests"]='Οι αιτήσεις μου.';
 $lang["collections"]='Συλλογές';
 $lang["changethemeto"]='Αλλαγή θέματος σε';
-$lang["xlthumbs"]='Πολύ μεγάλο (X-μεγάλο)';
 $lang["xlthumbstitle"]='Πολύ μεγάλες μικρογραφίες (thumbnails).';
 $lang["largethumbstitle"]='Μεγάλες μικρογραφίες.';
 $lang["smallthumbstitle"]='Μικρές μικρογραφίες.';
 $lang["strip"]='Αποστύλωση';
 $lang["striptitle"]='Προβολή λωρίδας.';
 $lang["listtitle"]='Προβολή λίστας';
-$lang["perpage_option"]='Αναζήτηση ανά σελίδα';
 $lang["powered_by"]='Κινούμενο με τη δύναμη του';
 $lang["powered_by_resourcespace"]='Κινούμενο από το ResourceSpace.';
 $lang["on"]='Ενεργός (Ενεργή for feminine objects)';
@@ -866,8 +857,6 @@ $lang["editcollectionresources"]='Επεξεργασία προεπισκοπή�
 $lang["collection_set_theme_category"]='Προσθήκη στην κατηγορία επιλεγμένων συλλογών.';
 $lang["collection_set_theme_category_title"]='Προσθέστε συλλογή στην κατηγορία συλλογών που προβάλλονται.';
 $lang["collection-name"]='Συλλογή: %collectionname%';
-$lang["collectionidprefix"]='Αναγνωριστικό στήλης (Col_ID)';
-$lang["_dupe"]='διπλότυπο (referring to a duplicate resource)';
 $lang["emailtousers_internal"]='Αποστολή e-mail στους χρήστες<br><br>Αρχίστε να πληκτρολογείτε το όνομα του χρήστη για αναζήτηση και κάντε κλικ στον αντίστοιχο χρήστη όταν τον βρείτε.';
 $lang["create_new_here"]='Δημιουργία εδώ';
 $lang["create_new_below"]='Δημιουργία σε νέα κατηγορία.';
@@ -927,8 +916,6 @@ $lang["page_collections_message"]='Η συνέχιση θα ακυρώσει τ�
 $lang["delete_all_selected"]='Διαγραφή όλων των επιλεγμένων.';
 $lang["range_no_start_header"]='Σφάλμα Εύρους';
 $lang["range_no_start"]='Δεν είναι δυνατό να τερματιστεί η σειρά χωρίς αρχή. Παρακαλώ απελευθερώστε το πλήκτρο shift.';
-$lang["lightbox-image"]='Εικόνα.';
-$lang["lightbox-of"]='του (masculine), της (feminine), των (plural)';
 $lang["treeobjecttype-resource_type"]='Τύπος πόρου';
 $lang["resources_selected-1"]='Επιλέχθηκε 1 πόρος.';
 $lang["resources_selected-2"]='%number επιλεγμένα αντικείμενα.';
@@ -949,23 +936,13 @@ $lang["youfoundresource"]='πόρος';
 $lang["youfoundresults"]='αποτελέσματα';
 $lang["selected"]='επιλεγμένος';
 $lang["youfoundresult"]='αποτέλεσμα';
-$lang["sortorder-asc"]='ASC: Αύξουσα σειρά (Ascending order)';
-$lang["sortorder-desc"]='Περιγραφή (Description)';
 $lang["modified"]='Τροποποιημένο (Tropopoiiméno)';
 $lang["resourcedownloads"]='Λήψη πόρων';
 $lang["filedimensions"]='Διαστάσεις αρχείου.';
 $lang["vieworiginalresource"]='Προβολή αρχικού αντικειμένου.';
 $lang["previewithsizename"]='Προεπισκόπηση %sizename';
 $lang["originalfileoftype"]='Αρχικό αρχείο %EXTENSION';
-$lang["fileoftype"]='Αρχείο.';
 $lang["cell-fileoftype"]='Αρχείο %EXTENSION';
-$lang["field-fileextension"]='Παρακαλώ μεταφράστε: %EXTENSION';
-$lang["fileextension-inside-brackets"]='Παρακαλώ μεταφράστε: [%EXTENSION] 
-
-[%EXTENSION] = [%ΕΠΕΚΤΑΣΗ]';
-$lang["fileextension"]='Παρακαλώ μεταφράστε: %EXTENSION. 
-
-(Note to reviewer: This string is a placeholder used in ResourceSpace to represent a file extension, such as .jpg or .pdf)';
 $lang["mp3_preview_file"]='Αρχείο προεπισκόπησης MP3';
 $lang["action-request"]='Αίτημα';
 $lang["requestlog"]='Αίτηση καταγραφής (Request log)';
@@ -999,7 +976,6 @@ $lang["log-a"]='Αλλαγή πρόσβασης';
 $lang["log-r"]='Αναστραμμένα μεταδεδομένα.';
 $lang["log-b"]='Δημιουργήθηκε εναλλακτικό.';
 $lang["log-y"]='Διαγραμμένος εναλλακτικός.';
-$lang["log-missinglang"]='Τύπος';
 $lang["log-adminpermissionsrequired"]='Απαιτείται πλήρης διαχειριστική άδεια!';
 $lang["log-removedcustomuseraccess"]='Αφαιρέθηκε προσαρμοσμένη πρόσβαση για τον χρήστη:';
 $lang["log-deleted_all"]='Όλοι οι πόροι αυτής της συλλογής διαγράφηκαν (μετακινήθηκαν στην κατάσταση %ARCHIVE)';
@@ -1057,8 +1033,6 @@ $lang["treeobjecttype-group"]='Ομάδα';
 $lang["groupsmart"]='Ομάδα (Έξυπνη)';
 $lang["confirmaddgroupsmart"]='Είστε σίγουρος ότι θέλετε να συμπεριλάβετε δυναμικά μέλη σε αυτήν την ομάδα;';
 $lang["back_to"]='Πίσω στην περιοχή %area.';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a string used in ResourceSpace or a term related to digital asset management software. Can you please provide more context or information about the term you want me to translate?';
-$lang["minute-abbreviated"]='I\'m sorry, but "MM" is not a language string used by ResourceSpace. Can you please provide me with more context or the full sentence where this term is used?';
 $lang["treeobjecttype-field"]='Πεδίο';
 $lang["save-return"]='Αποθήκευση & Επιστροφή';
 $lang["revert"]='Επαναφορά';
@@ -1083,7 +1057,6 @@ $lang["mustaccept"]='Πρέπει να επιλέξετε το πλαίσιο γ
 $lang["termsmustindicateusage"]='Πρέπει να δηλώσετε την προγραμματισμένη χρήση πριν συνεχίσετε.';
 $lang["termsmustspecifyusagecomment"]='Πρέπει να παρέχετε σχόλια σχετικά με την προγραμματισμένη χρήση πριν συνεχίσετε.';
 $lang["proceed"]='Προχωρήστε.';
-$lang["notavailableshort"]='Μη διαθέσιμο (Μ/Δ)';
 $lang["allmonths"]='Όλοι οι μήνες.';
 $lang["allgroups"]='Όλες οι ομάδες.';
 $lang["status-ok"]='Εντάξει.';
@@ -1092,7 +1065,6 @@ $lang["status-warning"]='ΠΡΟΕΙΔΟΠΟΙΗΣΗ';
 $lang["status-notinstalled"]='Μη εγκατεστημένο.';
 $lang["status-never"]='Ποτέ.';
 $lang["softwareversion"]='Έκδοση ?';
-$lang["softwarebuild"]='I\'m sorry, but the context of the term "? Build" is unclear to me. Can you please provide more information or the full sentence where this term is used in ResourceSpace?';
 $lang["softwarenotfound"]='Το \'?\' δεν βρέθηκε.';
 $lang["client-encoding"]='(κωδικοποίηση-πελάτη: %encoding)';
 $lang["db-default-encoding"]='(κωδικοποίηση-βάσης-δεδομένων: %encoding)';
@@ -1138,7 +1110,6 @@ $lang["item"]='αντικείμενο';
 $lang["stat-addedsmartcollection"]='Προστέθηκε έξυπνη συλλογή.';
 $lang["stat-removedresourcefromcollection"]='Αφαιρέθηκε το αντικείμενο από τη συλλογή.';
 $lang["stat-keywordusage-noresultsfound"]='Χρήση λέξεων-κλειδιών - δεν βρέθηκαν αποτελέσματα';
-$lang["plugin_field_fmt"]='Παρακαλώ μεταφράστε: %A (%B)';
 $lang["share_selected"]='Κοινοποίηση επιλεγμένων';
 $lang["sharecollection-name"]='Κοινοποίηση συλλογής - %collectionname';
 $lang["share_theme_category"]='Κοινοποίηση κατηγορίας επιλεγμένης συλλογής.';
@@ -1221,35 +1192,16 @@ $lang["setup-admin_username"]='Όνομα χρήστη διαχειριστή.';
 $lang["setup-admin_password"]='Κωδικός διαχειριστή.';
 $lang["setup-mysql_read_only_username"]='Όνομα χρήστη MySQL μόνο για ανάγνωση.';
 $lang["setup-mysql_read_only_password"]='Κωδικός πρόσβασης MySQL μόνο για ανάγνωση.';
-$lang["setup-apiscramblekey"]='Κλειδί ανακάτεμα API';
 $lang["setup-if_mysqlserver"]='Η διεύθυνση IP ή το <abbr title="Fully Qualified Domain Name">FQDN</abbr> της εγκατάστασης του διακομιστή MySQL σας. Εάν το MySql είναι εγκατεστημένο στον ίδιο διακομιστή με τον διακομιστή ιστού σας, χρησιμοποιήστε το "localhost".';
 $lang["setup-if_mysql_read_only_password"]='Ο κωδικός πρόσβασης για το όνομα χρήστη MySQL που εισαγάγατε παραπάνω.';
 $lang["setup-if_admin_username"]='Το όνομα χρήστη που χρησιμοποιείται για τη σύνδεση στο ResourceSpace. Αυτός ο χρήστης θα είναι ο πρώτος χρήστης του συστήματος.';
 $lang["setup-if_admin_password"]='Ο κωδικός πρόσβασης για το όνομα χρήστη Διαχειριστή που εισήχθη παραπάνω.';
-$lang["setup-if_apiscramblekey"]='Ορίστε το κλειδί ανακάτεμα του API ως μια ακολουθία χαρακτήρων δύσκολης μαντείας (παρόμοια με έναν κωδικό πρόσβασης). Εάν σχεδιάζετε να χρησιμοποιήσετε τα APIs, τότε αυτή είναι μια πολύ σοφή ιδέα.';
-$lang["setup-err_apiscramblekey"]='Εάν αυτή είναι μια δημόσια εγκατάσταση, συνιστάται η ρύθμιση του κλειδιού ανακάτεματος του API.';
 $lang["setup-err_phar_injection"]='Εντοπίστηκε δυνητική ενέργεια εισαγωγής αντικειμένου PHP Phar.';
 $lang["setup-admin_fullname_error"]='Πρέπει να συμπληρώσετε το πεδίο του πλήρους ονόματος.';
 $lang["setup-rs_initial_configuration"]='ResourceSpace: Αρχική Διαμόρφωση';
 $lang["setup-include_not_writable"]='\'/include\' δεν είναι εγγράψιμο. Απαιτείται μόνο κατά τη διάρκεια της εγκατάστασης.';
 $lang["setup-binpath"]='Διαδρομή %bin';
 $lang["setup-begin_installation"]='Ξεκινήστε την εγκατάσταση!';
-$lang["setup-generaloptions"]='Γενικές επιλογές';
-$lang["setup-allow_password_change"]='Να επιτρέπεται η αλλαγή κωδικού πρόσβασης;';
-$lang["setup-enable_remote_apis"]='Ενεργοποίηση απομακρυσμένων διεπαφών API;';
-$lang["setup-if_allowpasswordchange"]='Να επιτρέπεται στους τελικούς χρήστες να αλλάζουν τους κωδικούς πρόσβασής τους.';
-$lang["setup-if_enableremoteapis"]='Να επιτραπεί η απομακρυσμένη πρόσβαση στα πρόσθετα του API.';
-$lang["setup-allow_account_requests"]='Να επιτραπεί στους χρήστες να ζητήσουν λογαριασμούς;';
-$lang["setup-display_research_request"]='Εμφάνιση της λειτουργίας Αίτησης Έρευνας;';
-$lang["setup-if_displayresearchrequest"]='Επιτρέπει στους χρήστες να ζητήσουν πόρους μέσω ενός φόρμας, η οποία αποστέλλεται μέσω email.';
-$lang["setup-themes_as_home"]='Να χρησιμοποιηθεί η σελίδα των επιλεγμένων συλλογών ως αρχική σελίδα;';
-$lang["setup-remote_storage_locations"]='Απομακρυσμένες τοποθεσίες αποθήκευσης.';
-$lang["setup-use_remote_storage"]='Χρησιμοποιήστε απομακρυσμένη αποθήκευση;';
-$lang["setup-if_useremotestorage"]='Επιλέξτε αυτό το πλαίσιο για να ρυθμίσετε απομακρυσμένες τοποθεσίες αποθήκευσης για το RS. (Για χρήση άλλου διακομιστή για το αρχείο καταστήματος.)';
-$lang["setup-storage_directory"]='Κατάλογος αποθήκευσης';
-$lang["setup-if_storagedirectory"]='Πού να τοποθετήσετε τα αρχεία πολυμέσων. Μπορεί να είναι απόλυτη (/var/www/blah/blah) ή σχετική με την εγκατάσταση. ΣΗΜΕΙΩΣΗ: Χωρίς κάθετο.';
-$lang["setup-storage_url"]='Διεύθυνση URL αποθήκευσης';
-$lang["setup-if_storageurl"]='Πού είναι διαθέσιμος ο κατάλογος αποθήκευσης. Μπορεί να είναι απόλυτος (http://files.example.com) ή σχετικός με την εγκατάσταση. ΣΗΜΕΙΩΣΗ: Δεν υπάρχει κατάληξη κάθετου.';
 $lang["setup-smtp-settings"]='Ρυθμίσεις SMTP';
 $lang["setup-if-usesmtp"]='Χρησιμοποιήστε έναν εξωτερικό διακομιστή SMTP για την αποστολή εξερχόμενων email (π.χ. Gmail). Χρησιμοποιεί το PHPMailer.';
 $lang["setup-if-smtpsecure"]='Παρακαλώ μεταφράστε: \'\', \'tls\' ή \'ssl\'. Για το Gmail, απαιτείται \'tls\' ή \'ssl\'.
@@ -1260,9 +1212,6 @@ $lang["setup-if-smtpport"]='Αριθμός θύρας, π.χ. 465 για το Gm
 $lang["setup-if-smtpauth"]='Αποστολή διαπιστευτηρίων στον διακομιστή SMTP (false για χρήση ανώνυμης πρόσβασης)';
 $lang["setup-if-smtpusername"]='Όνομα χρήστη (πλήρης διεύθυνση email).';
 $lang["setup-if-smtppassword"]='Κωδικός πρόσβασης';
-$lang["design-options"]='Επιλογές Σχεδίασης';
-$lang["use-slim-theme"]='Χρησιμοποιήστε το σχεδιασμό SlimHeader;';
-$lang["setup-if_slimtheme"]='Χρησιμοποιήστε το σχεδιασμό SlimHeader αντί του αρχικού σχεδιασμού για να εμφανίσετε μια λεπτότερη μπάρα κεφαλίδας με ένα συνδεδεμένο λογότυπο από προεπιλογή.';
 $lang["setup-login_to"]='Σύνδεση στο σύστημα';
 $lang["setup-configuration_file_output"]='Έξοδος αρχείου ρυθμίσεων.';
 $lang["more-information"]='Περισσότερες πληροφορίες';
@@ -1292,7 +1241,6 @@ $lang["columnheader-expires"]='Λήγει.';
 $lang["expires-date"]='Λήξη: %date%';
 $lang["disabled"]='Απενεργοποιημένος.';
 $lang["resourcerequeststatus2"]='Απορρίφθηκε.';
-$lang["ppi"]='ΠΠΙ (Σημεία ανά ίντσα)';
 $lang["useasthemethumbnail"]='Χρησιμοποιήστε αυτό το αντικείμενο ως μικρογραφία κατηγορίας επιλεγμένης συλλογής;';
 $lang["sessionexpired"]='Έχετε αποσυνδεθεί αυτόματα επειδή ήσασταν αδρανής για περισσότερο από 30 λεπτά. Παρακαλούμε εισαγάγετε τα στοιχεία σας σύνδεσης για να συνεχίσετε.';
 $lang["resourcenotinresults"]='Ο τρέχων πόρος δεν βρίσκεται πλέον στα ενεργά αποτελέσματα αναζήτησής σας, οπότε η πλοήγηση στον επόμενο/προηγούμενο δεν είναι δυνατή.';
@@ -1372,13 +1320,11 @@ $lang["location-noneselected"]='Δεν υπάρχουν δεδομένα τοπ�
 $lang["location"]='Τοποθεσία';
 $lang["mapzoom"]='Εστίαση χάρτη';
 $lang["openstreetmap"]='Ανοικτός Χάρτης του Δρόμου (OpenStreetMap)';
-$lang["google_terrain"]='Google terrain: Τοπογραφικός χάρτης Google';
 $lang["google_default_map"]='Προεπιλεγμένος χάρτης της Google.';
 $lang["google_satellite"]='Δορυφορική εικόνα Google';
 $lang["marker"]='Μαρκαδόρος.';
 $lang["markers"]='Δείκτες';
 $lang["map_configuration"]='Χάρτης Αποτελεσμάτων Αναζήτησης';
-$lang["search_map_introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["mapview"]='Χάρτης.';
 $lang["maptitle"]='Προβολή χάρτη.';
 $lang["mapemptysearch"]='Δεν βρέθηκαν αποτελέσματα αναζήτησης.';
@@ -1409,7 +1355,6 @@ $lang["map_tfoutdoors"]='Εξωτερικά.';
 $lang["map_tfpioneer"]='Πρωτοπόρος.';
 $lang["map_tfmobileatlas"]='Κινητός Χάρτης';
 $lang["map_tfneighbourhood"]='Γειτονιά.';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" doesn\'t seem to be an English string used in ResourceSpace or any other digital asset management software that I\'m aware of. Can you please provide more context or information about the term?';
 $lang["map_hyddafull"]='Προεπιλεγμένος Χάρτης';
 $lang["map_hyddabase"]='Βάση.';
 $lang["map_stamen_group"]='Ανθοφόρο μέρος του ανθού.';
@@ -1420,7 +1365,6 @@ $lang["map_stamenterrain"]='Τοπίο.';
 $lang["map_stamenterrainback"]='Φόντο Εδάφους';
 $lang["map_stamenrelief"]='Ανακούφιση';
 $lang["map_stamenwatercolor"]='Ακουαρέλα.';
-$lang["map_esri_group"]='ESRI: Εταιρεία Λογισμικού Συστημάτων Πληροφορικής Χωρικών Δεδομένων (ΕΛΣΠΔ)';
 $lang["map_esristreet"]='Οδοί.';
 $lang["map_esritopo"]='Τοπογραφικός.';
 $lang["map_esriimagery"]='Εικόνες';
@@ -1430,12 +1374,9 @@ $lang["map_esriphysical"]='Φυσικός.';
 $lang["map_esriocean"]='Ωκεανός.';
 $lang["map_esrinatgeo"]='Εθνικό Γεωγραφικό.';
 $lang["map_esrigray"]='Γκρι καμβάς.';
-$lang["map_nasagibs_group"]='ΝΑSΑ GIBS (Global Imagery Browse Services)';
 $lang["map_nasagibscolor"]='Εικόνες Χρωμάτων Modis/Terra';
 $lang["map_nasagibsfalsecolor"]='Εικόνες False Color του Modis/Terra';
 $lang["map_nasagibsnight"]='Εικόνες νυχτερινής όρασης';
-$lang["map_mapbox_group"]='Mapbox: Πλατφόρμα χαρτογράφησης και πλοήγησης.';
-$lang["map_mapboxid"]='ΑΝΑΓΝΩΡΙΣΤΙΚΟ (ΑΡΙΘΜΟΣ)';
 $lang["map_mapboxtoken"]='Διακριτικό Πρόσβασης (Access Token)';
 $lang["map_mapbox"]='Προεπιλεγμένος Χάρτης';
 $lang["map_usgs_group"]='Ο Εθνικός Χάρτης';
@@ -1480,7 +1421,6 @@ $lang["exiftoolnotfound"]='Δεν ήταν δυνατόν να βρεθεί το
 $lang["existing_tags"]='Υπάρχοντες ετικέτες Exiftool.';
 $lang["new_tags"]='Νέες ετικέτες Exiftool (που θα προστεθούν κατά τη λήψη)';
 $lang["date_of_download"]='Ημερομηνία λήψης.';
-$lang["field_ref_and_name"]='%ref% - %name% μετάφραση: %αναφορά% - %όνομα%';
 $lang["metadata-report-fits_section"]='Ετικέτες FITS αντιστοιχισμένες.';
 $lang["indicateusage"]='Παρακαλώ περιγράψτε την προγραμματισμένη χρήση για αυτό το αντικείμενο.';
 $lang["usage"]='Χρήση';
@@ -1625,7 +1565,7 @@ $lang["zipcommand_deprecated"]='Η χρήση της εντολής $zipcommand 
 $lang["zipcommand_overridden"]='Παρακαλώ σημειώστε ότι το $zipcommand έχει καθοριστεί και αντικατασταθεί.';
 $lang["lastscheduledtaskexection"]='Τελευταία εκτέλεση προγραμματισμένης εργασίας (ημέρες)';
 $lang["shouldbeormore"]='Πρέπει να είναι ? ή μεγαλύτερο.';
-$lang["config_file"]='Ρύθμιση: %αρχείο';
+$lang["config_file"]='Ρύθμιση: %file';
 $lang["large_file_support_64_bit"]='Υποστήριξη μεγάλων αρχείων (64 bit πλατφόρμα)';
 $lang["large_file_warning_32_bit"]='ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Εκτελείτε 32 bit PHP. Τα αρχεία μεγαλύτερα από 2GB δεν θα υποστηρίζονται.';
 $lang["server_timezone_check"]='Η ζώνη ώρας του PHP είναι ίδια με αυτή που χρησιμοποιεί η MySQL.';
@@ -1639,8 +1579,6 @@ $lang["star"]='Αστέρι.';
 $lang["stars"]='Αστέρια.';
 $lang["noupload"]='Δεν υπάρχει ανέβασμα.';
 $lang["permissions"]='Δικαιώματα (Dikaiómata)';
-$lang["configdefault-title"]='I am ready to translate, but I don\'t see any text to translate. Please provide me with the English text that needs to be translated to Ελληνικά.';
-$lang["config-title"]='ΠΡΟΣΟΧΗ: Μην κάνετε συντακτικά λάθη. Αν χαλάσετε αυτό το αρχείο, πρέπει να το διορθώσετε στην πλευρά του διακομιστή!';
 $lang["file_too_large"]='Το αρχείο είναι πολύ μεγάλο.';
 $lang["field_updated"]='Το πεδίο ενημερώθηκε.';
 $lang["zoom"]='Μεγέθυνση (Zoom)';
@@ -1728,15 +1666,12 @@ $lang["editresourcetypewarning"]='Προειδοποίηση: Η αλλαγή τ
 $lang["geodragmode"]='Λειτουργία σύρσιμού';
 $lang["geodragmodearea"]='θέση καρφίτσας';
 $lang["geodragmodeareaselect"]='Επιλέξτε περιοχή αναζήτησης.';
-$lang["geodragmodepan"]='I\'m sorry, but "pan" is not a clear context. Can you please provide more information or context so I can provide an accurate translation?';
 $lang["substituted_original"]='αντικαταστάθηκε το αρχικό';
 $lang["use_original_if_size"]='Χρησιμοποιήστε το αρχικό αν η επιλεγμένη διάσταση δεν είναι διαθέσιμη;';
 $lang["originals-available-0"]='διαθέσιμος';
 $lang["originals-available-1"]='διαθέσιμος';
 $lang["originals-available-2"]='διαθέσιμος';
-$lang["inch-short"]='σε (pronounced "se")';
-$lang["centimetre-short"]='εκ. (abbreviation for εκατοστόμετρο, which means centimeter in Greek)';
-$lang["megapixel-short"]='ΜΠ';
+$lang["centimetre-short"]='εκ';
 $lang["deletedresource"]='Διαγραμμένο αντικείμενο.';
 $lang["deletedresources"]='Διαγραμμένοι πόροι.';
 $lang["nopreviewresources"]='Πόροι χωρίς προεπισκοπήσεις';
@@ -1838,19 +1773,9 @@ $lang["warningrequestapprovalfield"]='Προειδοποίηση - αναγνω�
 $lang["yyyy-mm-dd"]='ΕΕΕΕ-ΜΜ-ΗΗ';
 $lang["resources-with-requeststatus0-0"]='Μηδέν εκκρεμούντα (0 pending).';
 $lang["resources-with-requeststatus0-1"]='Αναμονή (1)';
-$lang["resources-with-requeststatus0-2"]='Αναμονή (%αριθμός σε αναμονή)';
 $lang["researches-with-requeststatus0-0"]='(0 μη ανατεθειμένα)';
 $lang["researches-with-requeststatus0-1"]='(1 μη ανατεθειμένο)';
 $lang["researches-with-requeststatus0-2"]='Μη ανατεθειμένα (%number)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string or a word in English that requires translation. Can you please provide more context or information so I can assist you better?';
-$lang["kilobyte-symbol"]='ΚΒ (Κιλομπάιτ)';
-$lang["megabyte-symbol"]='ΜΒ (Megabyte)';
-$lang["gigabyte-symbol"]='ΓΒ (Γιγα-Μπάιτ)';
-$lang["terabyte-symbol"]='I\'m sorry, but "TB" could have multiple meanings depending on the context. Could you please provide more information or the full sentence where this term is used?';
-$lang["kilobyte-symbol-binary"]='ΚiB (Kibibyte)';
-$lang["megabyte-symbol-binary"]='MiB stands for "Megabytes" and it can be translated in Greek as "Μεγα-Βαϊτ".';
-$lang["gigabyte-symbol-binary"]='GiB stands for "Gibibyte" and in Greek it is translated as "Γιβιμπάιτ".';
-$lang["terabyte-symbol-binary"]='TiB stands for "τεραβάιτ" which is a unit of digital information storage equivalent to 1024 gibibytes (GiB).';
 $lang["upload_files"]='Μεταφόρτωση αρχείων';
 $lang["upload_files-to_collection"]='Μεταφόρτωση αρχείων (στη συλλογή \'%collection\')';
 $lang["ascending"]='Αύξουσα.';
@@ -1864,7 +1789,6 @@ $lang["save-conflict-title"]='Σύγκρουση επεξεργασίας.';
 $lang["theme_home_promote"]='Προώθηση στην αρχική σελίδα;';
 $lang["theme_home_page_text"]='Κείμενο αρχικής σελίδας';
 $lang["theme_home_page_image"]='Εικόνα αρχικής σελίδας.';
-$lang["ref-title"]='%ref - %title μετάφραση: %ref - %title';
 $lang["copy-field"]='Αντιγραφή πεδίου';
 $lang["copy-to-resource-type"]='Αντιγραφή σε τύπο πόρου.';
 $lang["synchronise-changes-with-this-field"]='Συγχρονίστε τις αλλαγές με αυτό το πεδίο.';
@@ -2078,87 +2002,6 @@ $lang["action-move-up"]='Μετακίνηση προς τα πάνω.';
 $lang["action-move-down"]='Μετακίνηση προς τα κάτω.';
 $lang["action-move-to"]='Μετακίνηση σε';
 $lang["about__about"]='Ο κείμενος σχετικά με εσάς τοποθετείται εδώ.';
-$lang["all__comments_flag_notification_email_body"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_flag_notification_email_subject"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_policy"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__comments_removal_message"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-Από: [fromusername] [lang_emailcollectionmessage] <br /><br /> 
-Μήνυμα: [message]<br /><br /> 
-Κάντε κλικ στον σύνδεσμο για να δείτε τη συλλογή: [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-Κάντε κλικ στον σύνδεσμο για να δείτε τη συλλογή: [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]
-
-<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[μήνυμα]<br /><br /><a href="[url]">[ενσωματωμένη_εικόνα]</a><br /><br />[κείμενο_υποσέλιδου]';
-$lang["all__emaillogindetails"]='[καλωσόρισμα]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Εγκεκριμένοι Πόροι Χρήστη: 
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Υποβληθείσες πόροι από τον χρήστη
-[λίστα] <br />
-[Προβολή όλων των εκκρεμών υποβολών του χρήστη] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[Υποσέλιδο κειμένου]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Μη υποβληθέντα αντικείμενα χρήστη
-[λίστα]
-[Προβολή όλων των εκκρεμών αντικειμένων χρήστη]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[Υποσέλιδο κειμένου]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] -> Το αίτημα έρευνας έχει ανατεθεί σε εσάς. Παρακαλούμε ελέγξτε την καρτέλα "Αιτήματα Έρευνας" για περισσότερες πληροφορίες.<br /><br />
-[text_footer] -> Υπογραφή';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br />
-
-Από [fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [όνομα χρήστη] <br />
-[λίστα] <br />
-[λεπτομέρειες]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Κινούμενο από <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Αφήστε την ομάδα των πόρων μας να βρει τους πόρους που χρειάζεστε.';
 $lang["change_language__introtext"]='Παρακαλώ επιλέξτε τη γλώσσα σας παρακάτω.';
@@ -2175,7 +2018,6 @@ $lang["done__user_password"]='Ένα email που περιέχει το όνομ
 $lang["done__user_request"]='Το αίτημά σας για έναν λογαριασμό χρήστη έχει σταλεί. Οι στοιχεία σύνδεσής σας θα σας αποσταλούν σύντομα.';
 $lang["download_progress__introtext"]='Η λήψη σας θα ξεκινήσει σύντομα. Όταν ολοκληρωθεί η λήψη, χρησιμοποιήστε τους παρακάτω συνδέσμους για να συνεχίσετε.';
 $lang["downloadfile_nofile"]='Το αρχείο που ζητήθηκε δε βρέθηκε.';
-$lang["edit__batch"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["edit__multiple"]='Παρακαλώ επιλέξτε ποια πεδία θέλετε να αντικαταστήσετε. Τα πεδία που δεν θα επιλέξετε θα παραμείνουν ανέγγιχτα.';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
 
@@ -2188,7 +2030,6 @@ $lang["login__welcomelogin"]='Καλώς ήρθατε στο ResourceSpace. Πα
 $lang["local_tz"]='Τοπική ζώνη ώρας';
 $lang["resource_email__introtext"]='Μοιραστείτε γρήγορα αυτό το αντικείμενο με άλλους χρήστες μέσω email. Ένας σύνδεσμος αποστέλλεται αυτόματα. Μπορείτε επίσης να συμπεριλάβετε οποιοδήποτε μήνυμα ως μέρος του email.';
 $lang["resource_request__introtext"]='Το αίτημά σας είναι σχεδόν ολοκληρωμένο. Παρακαλούμε συμπεριλάβετε τον λόγο του αιτήματός σας, ώστε να μπορέσουμε να ανταποκριθούμε αποτελεσματικά.';
-$lang["team_content__introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["team_copy__introtext"]='Εισαγάγετε το αναγνωριστικό του αντικειμένου που θέλετε να αντιγράψετε. Θα αντιγραφούν μόνο τα δεδομένα του αντικειμένου - οποιοδήποτε αρχείο που έχει μεταφορτωθεί δεν θα αντιγραφεί.';
 $lang["team_report__introtext"]='Παρακαλώ επιλέξτε ένα αναφορά και ένα εύρος ημερομηνιών. Η αναφορά μπορεί να ανοίξει στο Microsoft Excel ή σε παρόμοια εφαρμογή υπολογιστικού φύλλου.';
 $lang["team_report__err_report_too_long"]='Το αναφορά είναι πολύ μεγάλη για να εμφανιστεί και έχει περικοπεί, παρακαλώ κατεβάστε την αντί αυτού!';
@@ -2200,7 +2041,6 @@ $lang["terms__terms"]='Οι όροι και οι προϋποθέσεις σας
 $lang["terms__upload_terms"]='Οι όροι και οι προϋποθέσεις για τις μεταφορτώσεις τοποθετούνται εδώ.';
 $lang["themes__findpublic"]='Οι δημόσιες συλλογές είναι συλλογές πόρων που έχουν κοινοποιηθεί από άλλους χρήστες.';
 $lang["themes__introtext"]='Οι επιλεγμένες συλλογές είναι ομάδες πόρων που έχουν επιλεγεί από τους διαχειριστές για να παρέχουν ένα παράδειγμα των διαθέσιμων πόρων στο σύστημα.';
-$lang["upload__introtext"]='I am sorry, but you have not provided any text to translate. Please provide the text you want me to translate.';
 $lang["user_password__introtext"]='Εισάγετε τη διεύθυνση email σας και οι όνομα χρήστη και ο κωδικός πρόσβασής σας θα σας αποσταλούν.';
 $lang["user_preferences__introtext"]='Εισάγετε ένα νέο κωδικό πρόσβασης παρακάτω για να αλλάξετε τον κωδικό πρόσβασής σας.';
 $lang["user_preferences__introtext_new"]='Παρακαλώ εισάγετε έναν κωδικό πρόσβασης παρακάτω.';
@@ -2227,9 +2067,6 @@ $lang["collection_download_too_large"]='Λυπούμαστε, αυτή η συλ
 $lang["all__passwordnewemailhtml"]='Παρακαλώ κάντε κλικ στον παρακάτω σύνδεσμο για να ορίσετε ένα νέο κωδικό πρόσβασης για το λογαριασμό σας.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Όνομα χρήστη: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Η μεταφόρτωση δεν είναι προσωρινά διαθέσιμη.';
 $lang["disk_size_no_upload_explain"]='Λόγω περιορισμένου χώρου, η μεταφόρτωση έχει απενεργοποιηθεί προσωρινά. Ζητούμε συγγνώμη για τυχόν αναστάτωση.';
-$lang["dash"]='Παρακαλώ μεταφράστε: Dash
-
-In which context is the term "Dash" used? It could have different translations depending on the context.';
 $lang["savethissearchtodash"]='Αποθήκευση στο πλακάκι του πίνακα ελέγχου.';
 $lang["createnewdashtile"]='Δημιουργία νέου πλακιδίου πίνακα ελέγχου.';
 $lang["specialdashtiles"]='Ειδικά πλακάκια παύλας';
@@ -2295,7 +2132,6 @@ $lang["tile_thmsl"]='Προβεβλημένη Συλλογή';
 $lang["tile_custm"]='Προσαρμοσμένο (Prosarmosmeno)';
 $lang["tile_pend"]='Εκκρεμεί.';
 $lang["plugin_category_general"]='Γενικός.';
-$lang["plugin_category_api"]='ΔΠΣ (Διεπαφή Προγραμματισμού Εφαρμογών)';
 $lang["plugin_category_advanced"]='Προηγμένος.';
 $lang["plugin_category_design"]='Σχεδιασμός.';
 $lang["plugin_category_ecommerce"]='Ηλεκτρονικό εμπόριο.';
@@ -2493,7 +2329,7 @@ $lang["new_report"]='Νέα έκθεση.';
 $lang["edit_report"]='Επεξεργασία αναφοράς.';
 $lang["all_activity"]='Όλες οι δραστηριότητες';
 $lang["all_resource_types"]='Όλοι οι τύποι πόρων.';
-$lang["report-graph-by-pie"]='ανάλυση (análysi)';
+$lang["report-graph-by-pie"]='ανάλυση';
 $lang["report-graph-by-piegroup"]='ανά ομάδα χρηστών';
 $lang["report-graph-by-pieresourcetype"]='ανά τύπο πόρου';
 $lang["report-graph-by-line"]='με την πάροδο του χρόνου';
@@ -2592,7 +2428,6 @@ $lang["image_quality_92"]='Εκτύπωση';
 $lang["image_quality_80"]='Ιστός';
 $lang["image_quality_50"]='Χαμηλός.';
 $lang["image_quality_40"]='Πολύ χαμηλό.';
-$lang["systemconfig_api"]='ΔΠΣ (Διεπαφή Προγραμματισμού Εφαρμογών)';
 $lang["iiif_enable_option"]='Ενεργοποίηση υποστήριξης IIIF';
 $lang["iiif_disabled"]='Το IIIF δεν έχει διαμορφωθεί.';
 $lang["property-personal_data"]='Μπορεί να περιέχει προσωπικά δεδομένα.';
@@ -2701,7 +2536,7 @@ $lang["error_locked_other_user"]='Ο πόρος είναι κλειδωμένο�
 $lang["error-edit_noaccess_resources"]='Δεν υπάρχει πρόσβαση επεξεργασίας στους πόρους.';
 $lang["error-edit_locked_resources"]='Οι ακόλουθοι πόροι είναι κλειδωμένοι:';
 $lang["locked_resource_search"]='Κλειδωμένοι πόροι.';
-$lang["autocomplete_log_note"]='Αυτόματη συμπλήρωση';
+$lang["autocomplete_log_note"]='(Αυτόματη συμπλήρωση)';
 $lang["posted-file-not-found"]='Το αρχείο που αναρτήθηκε δεν βρέθηκε.';
 $lang["error-theme-missing"]='Η επιλεγμένη συλλογή λείπει ή δεν έχει καθοριστεί.';
 $lang["system_config_search_engines"]='Μηχανές αναζήτησης';
@@ -2728,7 +2563,6 @@ $lang["job_value"]='Αξία';
 $lang["job_boost"]='Ενίσχυση εργασίας.';
 $lang["job_priority"]='Προτεραιότητα';
 $lang["csv_export_offline_option"]='Δημιουργία αρχείου CSV χωρίς σύνδεση στο διαδίκτυο; Αυτό πρέπει να χρησιμοποιηθεί για μεγάλα σύνολα αποτελεσμάτων. Θα ενημερωθείτε μέσω μηνύματος ResourceSpace μόλις είναι διαθέσιμο το αρχείο CSV.';
-$lang["csv_export_filename"]='εξαγωγή_μεταδεδομένων_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='Η εξαγωγή σας σε μορφή CSV είναι έτοιμη.';
 $lang["offline_processing_disabled"]='Η επεξεργασία εργασιών εκτός σύνδεσης δεν έχει ρυθμιστεί σε αυτό το σύστημα. Για να το ενεργοποιήσετε, παρακαλούμε επικοινωνήστε με το διαχειριστή του συστήματός σας.';
 $lang["csv_export_offline_only"]='Η επεξεργασία εκτός σύνδεσης πρέπει να χρησιμοποιηθεί όταν εξάγονται δεδομένα για περισσότερους από %%RESOURCE_COUNT%% πόρους.';
@@ -2748,23 +2582,6 @@ $lang["upload_share_email_subject"]='Σας έχει σταλεί ένας σύ�
 $lang["upload_share_email_text"]='σας έχει στείλει ένα σύνδεσμο για τη μεταφόρτωση αρχείων στο.';
 $lang["upload_share_email_password"]='Χρησιμοποιήστε αυτόν τον κωδικό πρόσβασης για να αποκτήσετε πρόσβαση στο σύνδεσμο.';
 $lang["upload_share_email_clicklink"]='Χρησιμοποιήστε τον παρακάτω σύνδεσμο για να ξεκινήσετε τη μεταφόρτωση.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-Από: [from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-Κάντε κλικ στον παρακάτω σύνδεσμο για να ανοίξετε το αρχείο:<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Ευχαριστούμε για το ανέβασμα. Χρησιμοποιήστε το κουμπί παρακάτω για να ανεβάσετε περισσότερους πόρους.';
 $lang["error_invalid_usergroup"]='Μη έγκυρη ομάδα χρηστών.';
 $lang["error_invalid_date"]='Μη έγκυρη ημερομηνία.';

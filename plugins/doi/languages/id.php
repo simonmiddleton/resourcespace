@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Tidak dapat diubah.';
-$lang["doi_info_wikipedia"]='Identifier Objek Digital (DOI) adalah sistem identifikasi yang digunakan untuk mengidentifikasi sumber daya digital seperti artikel jurnal, dokumen, dan dataset. DOI memberikan cara yang unik dan persisten untuk mengidentifikasi dan mengambil sumber daya digital, serta memastikan bahwa sumber daya tersebut dapat diakses dan dikelola dengan mudah. DOI terdiri dari awalan "10." diikuti oleh serangkaian angka dan huruf yang unik untuk setiap sumber daya. DOI juga dapat digunakan untuk menghubungkan sumber daya digital dengan metadata terkait seperti judul, penulis, dan informasi lisensi.';
 $lang["doi_info_link"]='pada <a target="_blank" href="https://id.wikipedia.org/wiki/Digital_Object_Identifier">DOI</a>.';
 $lang["doi_info_metadata_schema"]='Pada registrasi DOI di DataCite.org dijelaskan dalam <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Dokumentasi Skema Metadata Datacite</a>.';
 $lang["doi_info_mds_api"]='Pada DOI-API yang digunakan oleh plugin ini dijelaskan dalam <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Dokumentasi API Datacite</a>.';

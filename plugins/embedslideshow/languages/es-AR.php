@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Incrustar';
-$lang["embedslideshow_minimise"]='- minimizar presentación de diapositivas';
+$lang["embedslideshow_minimise"]='&minus; minimizar presentación de diapositivas';
 $lang["embedslideshow_maximise"]='Maximizar presentación de diapositivas.';
 $lang["embedslideshow_size"]='¿Tamaño de presentación de diapositivas?';
 $lang["sizename_pixels"]='%name (%pixels píxeles)';

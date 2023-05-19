@@ -566,11 +566,9 @@ $lang["setup-baseurl"]="Base URL:";
 $lang["setup-emailfrom"]="Od Email Adresa:";
 $lang["setup-emailnotify"]="Obavijesti Email:";
 $lang["setup-spiderpassword"]="Pauk Password:";
-$lang["setup-scramblekey"]="Jagmiti Ključ:";
 $lang["setup-paths"]="Staze";
 $lang["setup-pathsdetail"]="Za svaki put, upišite stazu bez pratećih usjek na svaku binarno. Da biste onemogućili binarnim, ostavite praznu stazu. Bilo koji auto-putova Otkrili su već popunjena u.";
 $lang["setup-applicationname"]="Application Name:";
-$lang["setup-basicsettingsfooter"]="NAPOMENA: Samo &lt;strong&gt; required &lt;/ strong&gt; su postavke na ovoj stranici. Ako niste zainteresirani za provjeru iz naprednih opcija, koju svibanj Kliknite ispod kako biste započeli postupak instalacije.";
 $lang["setup-if_mysqlusername"]="Korisničko ime koristiti za spajanje na vaš MySQL server. Ovaj korisnik mora imati prava za kreiranje tabele u bazi zove ispod.";
 $lang["setup-if_mysqlpassword"]="Lozinku za MySQL korisničko ime upišete.";
 $lang["setup-if_mysqldb"]="Imenom na MySQL bazu podataka RS će iskoristiti. (Ovaj mora postojati baza podataka.)";
@@ -578,14 +576,10 @@ $lang["setup-if_mysqlbinpath"]="Put do MySQL client binarne datoteke - npr. mysq
 $lang["setup-if_baseurl"]="The &#39;bazu&#39; web adresa za ovu instalaciju. NAPOMENA: Ne tegljeni posjekotina.";
 $lang["setup-if_emailfrom"]="Ova adresa e-pošte iz RS koje se pojavljuju na dolaze iz.";
 $lang["setup-if_emailnotify"]="Adresa e-pošte na koju resource / korisnika / istraživanje zahtjeva su poslani.";
-$lang["setup-if_spiderpassword"]="The Spider lozinka je obavezna polja.";
-$lang["setup-if_scramblekey"]="Da biste omogućili izokretanje, postavite jagmiti ključ biti teško za pogoditi žicu (slično lozinku). Ako je to javna instalaciju onda je to vrlo mudra ideja. Ovo polje ostavite prazno onemogućivanja resource izokretanje put. Ovo polje je već randomizirani za vas, ali možete promijeniti u utakmicu postojeću instalaciju, ako je to potrebno.";
 $lang["setup-if_applicationname"]="Naziv svoje implementacije / instalacija (npr. &#39;MyCompany Resource System &quot;).";
 $lang["setup-err_mysqlbinpath"]="Nije moguće provjeriti stazu. Ostavite prazno onemogućivanja.";
 $lang["setup-err_baseurl"]="Baza je URL polje obvezno.";
 $lang["setup-err_baseurlverify"]="Base URL se &#39;činiti se biti ispravna (ne mogu učitati license.txt).";
-$lang["setup-err_spiderpassword"]="Zaporke potrebne za spider.php. VAŽNO: Randomise to za svaku novu instalaciju. Vaš će se resursi čitati itko zna da ovaj lozinka. Ovo polje je već randomizirani za vas, ali možete promijeniti u utakmicu postojeću instalaciju, ako je to potrebno.";
-$lang["setup-err_scramblekey"]="Ako je to javna instalacije, postavljanje jagmiti tipka se preporučuje.";
 $lang["setup-err_path"]="Nije moguće provjeriti lokaciju";
 $lang["setup-emailerr"]="Nije valjana adresa e-pošte.";
 $lang["collectionlog"]="Zbirka Prijava";
@@ -791,7 +785,6 @@ $lang["information-derestrict_filter"]='Ukloni ograničenja filtera. Djelotvoran
 $lang["information-push_metadata"]='Ako je postavljeno, metapodaci za ovaj resurs bit će prikazani na stranici pregleda resursa za sve povezane resurse. Na primjer, možete povezati nekoliko fotografija s resursom osobe. Ako je ova značajka postavljena na resursu osobe, tada će se metapodaci osobe pojaviti na svim povezanim zapisima resursa fotografije, izbjegavajući dupliranje podataka u sustavu.';
 $lang["property-query"]='Upit';
 $lang["information-id"]='Napomena: \'Id\' ispod MORA biti postavljen na jedinstveni kod od tri znaka.';
-$lang["property-id"]='Identifikator (ID)';
 $lang["property-width"]='Širina';
 $lang["property-height"]='Visina';
 $lang["property-quality"]='Kvaliteta.';
@@ -821,13 +814,11 @@ $lang["xlthumbs"]='X-veliko.';
 $lang["xlthumbstitle"]='Dodatno veliki pregledi.';
 $lang["largethumbstitle"]='Velike sličice.';
 $lang["smallthumbstitle"]='Male sličice u minijaturi.';
-$lang["strip"]='Molimo vas da pojasnite u kojem kontekstu se koristi riječ "strip" u digitalnom upravljanju sadržajem kako bismo vam mogli pružiti točan prijevod. Hvala!';
 $lang["striptitle"]='Prikaz trake.';
 $lang["listtitle"]='Prikaz u obliku liste.';
 $lang["powered_by"]='Pokreće ga.';
 $lang["powered_by_resourcespace"]='Pokreće ResourceSpace.';
 $lang["on"]='Na.';
-$lang["off"]='Is the context related to digital asset management software? If so, could you please provide more context so that I can provide an accurate translation?';
 $lang["seconds"]='sekunde';
 $lang["reload"]='Ponovno učitaj';
 $lang["pause"]='Pauza.';
@@ -876,9 +867,6 @@ $lang["editcollectionresources"]='Uredi pregled zbirke.';
 $lang["collection_set_theme_category"]='Dodaj u kategoriju istaknutih zbirki.';
 $lang["collection_set_theme_category_title"]='Dodaj kolekciju u kategoriju istaknutih kolekcija.';
 $lang["collection-name"]='Zbirka: %collectionname%';
-$lang["collectionidprefix"]='Molim vas prevedite: Col_ID. 
-
-Sorry, "Col_ID" is an abbreviation and it is not clear what it stands for without additional context. Could you please provide more information or the full sentence where this abbreviation is used?';
 $lang["emailtousers_internal"]='E-pošta korisnicima<br><br>Upišite ime korisnika za pretraživanje, a zatim kliknite na traženog korisnika kada ga pronađete.';
 $lang["create_new_here"]='Stvori ovdje.';
 $lang["create_new_below"]='Stvorite u novoj kategoriji.';
@@ -937,8 +925,6 @@ $lang["page_collections_message"]='Nastavak će poništiti označene zbirke za b
 $lang["delete_all_selected"]='Izbriši sve odabrane.';
 $lang["range_no_start_header"]='Raspon pogreške.';
 $lang["range_no_start"]='Nije moguće završiti raspon bez početka. Molimo otpustite tipku Shift.';
-$lang["lightbox-image"]='Slika';
-$lang["lightbox-of"]='molim';
 $lang["treeobjecttype-resource_type"]='Vrsta resursa.';
 $lang["resources_selected-1"]='1 resurs odabran.';
 $lang["resources_selected-2"]='%number odabranih resursa.';
@@ -959,18 +945,13 @@ $lang["youfoundresource"]='resurs';
 $lang["youfoundresults"]='rezultati';
 $lang["selected"]='odabrano';
 $lang["youfoundresult"]='rezultat';
-$lang["sortorder-desc"]='Opis';
 $lang["modified"]='Izmijenjeno.';
 $lang["resourcedownloads"]='Preuzimanja resursa.';
 $lang["filedimensions"]='Dimenzije datoteke.';
 $lang["vieworiginalresource"]='Pregledaj izvorni resurs.';
 $lang["previewithsizename"]='%sizename Pregled';
 $lang["originalfileoftype"]='Izvorni %EXTENSION datoteka';
-$lang["fileoftype"]='Datoteka';
 $lang["cell-fileoftype"]='%EXTENSION Datoteka';
-$lang["field-fileextension"]='Please provide the context in which %EXTENSION is used in ResourceSpace.';
-$lang["fileextension-inside-brackets"]='[%EXTENZIJA]';
-$lang["fileextension"]='Please provide the context in which %EXTENSION is used in ResourceSpace.';
 $lang["mp3_preview_file"]='MP3 datoteka za pregledavanje';
 $lang["action-request"]='Zahtjev';
 $lang["requestlog"]='Zahtjev za zapisnik.';
@@ -1004,7 +985,6 @@ $lang["log-a"]='Promijeni pristup';
 $lang["log-r"]='Poništeni metapodaci.';
 $lang["log-b"]='Stvorena zamjena.';
 $lang["log-y"]='Izbrisana alternativa.';
-$lang["log-missinglang"]='I\'m sorry, I need more context to provide an accurate translation. Can you please provide the full sentence or phrase where the word "[type]" is used?';
 $lang["log-adminpermissionsrequired"]='Potrebna su potpuna administratorska ovlaštenja!';
 $lang["log-removedcustomuseraccess"]='Uklonjen prilagođeni pristup za korisnika:';
 $lang["log-deleted_all"]='Svi resursi ove kolekcije su izbrisani (prebačeni u stanje %ARCHIVE).';
@@ -1064,8 +1044,6 @@ $lang["treeobjecttype-group"]='Grupa';
 $lang["groupsmart"]='Grupa (pametna)';
 $lang["confirmaddgroupsmart"]='Jeste li sigurni da želite dinamički uključiti članove u ovu grupu?';
 $lang["back_to"]='Povratak na %area.';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a language string used by ResourceSpace. Can you please provide me with a specific string to translate?';
-$lang["minute-abbreviated"]='I\'m sorry, but "MM" is not a language string used by ResourceSpace. Can you please provide me with more context or the full sentence where this term is used?';
 $lang["treeobjecttype-field"]='Polje.';
 $lang["save-return"]='Spremi i vrati se.';
 $lang["revert"]='Povrati.';
@@ -1090,7 +1068,6 @@ $lang["mustaccept"]='Morate označiti okvir kako biste prihvatili uvjete prije n
 $lang["termsmustindicateusage"]='Morate navesti planiranu upotrebu prije nego što možete nastaviti.';
 $lang["termsmustspecifyusagecomment"]='Morate dostaviti planirane komentare o korištenju prije nego što možete nastaviti.';
 $lang["proceed"]='Nastavi.';
-$lang["notavailableshort"]='N/A can be translated to "Nije dostupno" which means "Not available".';
 $lang["allmonths"]='Svi mjeseci.';
 $lang["allgroups"]='Sve grupe.';
 $lang["status-ok"]='U redu.';
@@ -1099,7 +1076,6 @@ $lang["status-warning"]='UPOZORENJE';
 $lang["status-notinstalled"]='Nije instalirano.';
 $lang["status-never"]='Nikada.';
 $lang["softwareversion"]='Verzija?';
-$lang["softwarebuild"]='I\'m sorry, but the context of the term "? Build" is unclear. Could you please provide more information or the full sentence where this term is used in ResourceSpace?';
 $lang["softwarenotfound"]='\'?\' nije pronađeno.';
 $lang["client-encoding"]='(klijent-kodiranje: %kodiranje)';
 $lang["db-default-encoding"]='(baza podataka-kodiranje:% encoding)';
@@ -1145,7 +1121,6 @@ $lang["item"]='stavka';
 $lang["stat-addedsmartcollection"]='Dodana pametna kolekcija.';
 $lang["stat-removedresourcefromcollection"]='Uklonjen resurs iz kolekcije.';
 $lang["stat-keywordusage-noresultsfound"]='Upotreba ključnih riječi - nema pronađenih rezultata.';
-$lang["plugin_field_fmt"]='%M (%D)';
 $lang["share_selected"]='Podijeli odabrano.';
 $lang["sharecollection-name"]='Podijeli zbirku - %collectionname';
 $lang["share_theme_category"]='Podijeli kategoriju odabrane zbirke.';
@@ -1235,35 +1210,16 @@ $lang["setup-admin_password"]='Lozinka administratora.';
 $lang["setup-mysql_read_only_username"]='MySQL korisničko ime samo za čitanje.';
 $lang["setup-mysql_read_only_password"]='MySQL lozinka samo za čitanje.';
 $lang["setup-if_mysql_read_only_username"]='Korisničko ime koje se koristi za povezivanje na vaš MySQL poslužitelj u samo-čitanju modu. Ovaj korisnik mora imati samo SELECT prava. To je opcionalno i NE zahtijeva prava za stvaranje tablica ili umetanje podataka.';
-$lang["setup-apiscramblekey"]='Ključ za miješanje API-ja.';
 $lang["setup-if_mysqlserver"]='IP adresa ili <abbr title="Fully Qualified Domain Name">FQDN</abbr> vaše instalacije MySQL poslužitelja. Ako je MySql instaliran na istom poslužitelju kao i vaš web poslužitelj, koristite "localhost".';
 $lang["setup-if_mysql_read_only_password"]='Lozinka za MySQL korisničko ime uneseno gore.';
 $lang["setup-if_admin_username"]='Korisničko ime koje se koristi za povezivanje s ResourceSpace-om. Ovaj korisnik će biti prvi korisnik sustava.';
 $lang["setup-if_admin_password"]='Lozinka za Admin korisničko ime uneseno gore.';
-$lang["setup-if_apiscramblekey"]='Postavite ključ za miješanje API-ja da bude niz znakova koji je teško pogoditi (slično kao lozinka). Ako planirate koristiti API-je, ovo je vrlo mudra ideja.';
-$lang["setup-err_apiscramblekey"]='Ako je ovo javna instalacija, preporučuje se postavljanje ključa za miješanje API-ja.';
 $lang["setup-err_phar_injection"]='Otkriven je potencijalni napad PHP Object Injection za Phar.';
 $lang["setup-admin_fullname_error"]='Morate popuniti polje za puno ime.';
 $lang["setup-rs_initial_configuration"]='ResourceSpace: Početna konfiguracija';
 $lang["setup-include_not_writable"]='\'/include\' nije moguće pisati. Potrebno samo tijekom instalacije.';
 $lang["setup-binpath"]='Putanja %bin';
 $lang["setup-begin_installation"]='Započni instalaciju!';
-$lang["setup-generaloptions"]='Opće opcije.';
-$lang["setup-allow_password_change"]='Dozvoliti promjenu lozinke?';
-$lang["setup-enable_remote_apis"]='Omogućiti udaljene API-je?';
-$lang["setup-if_allowpasswordchange"]='Dopustite krajnjim korisnicima da promijene svoje lozinke.';
-$lang["setup-if_enableremoteapis"]='Dopusti udaljeni pristup API dodacima.';
-$lang["setup-allow_account_requests"]='Dozvoliti korisnicima da zatraže račune?';
-$lang["setup-display_research_request"]='Prikaži funkcionalnost zahtjeva za istraživanjem?';
-$lang["setup-if_displayresearchrequest"]='Omogućuje korisnicima da putem obrasca zatraže resurse koji se šalju e-poštom.';
-$lang["setup-themes_as_home"]='Koristiti stranicu s preporučenim kolekcijama kao početnu stranicu?';
-$lang["setup-remote_storage_locations"]='Udaljena mjesta za pohranu.';
-$lang["setup-use_remote_storage"]='Koristiti udaljeno pohranjivanje?';
-$lang["setup-if_useremotestorage"]='Označite ovaj okvir kako biste konfigurirali udaljene lokacije za RS. (Za korištenje druge poslužiteljske lokacije za pohranu datoteka.)';
-$lang["setup-storage_directory"]='Mapa pohrane';
-$lang["setup-if_storagedirectory"]='Gdje staviti medijske datoteke. Može biti apsolutna (/var/www/blah/blah) ili relativna u odnosu na instalaciju. NAPOMENA: Nema kose crte na kraju.';
-$lang["setup-storage_url"]='Pohrana URL-a.';
-$lang["setup-if_storageurl"]='Gdje je dostupan direktorij za pohranu. Može biti apsolutan (http://files.example.com) ili relativan u odnosu na instalaciju. NAPOMENA: Nema kose crte na kraju.';
 $lang["setup-smtp-settings"]='SMTP postavke.';
 $lang["setup-if-usesmtp"]='Koristi vanjski SMTP poslužitelj za odlazne e-pošte (npr. Gmail). Koristi PHPMailer.';
 $lang["setup-if-smtpsecure"]='"Molimo prevedite: \'\', \'tls\' ili \'ssl\'. Za Gmail, potreban je \'tls\' ili \'ssl\'."';
@@ -1272,9 +1228,6 @@ $lang["setup-if-smtpport"]='Broj porta, npr. 465 za Gmail korištenjem SSL-a.';
 $lang["setup-if-smtpauth"]='Pošalji vjerodajnice na SMTP poslužitelj (false za korištenje anonimnog pristupa)';
 $lang["setup-if-smtpusername"]='Korisničko ime (puni e-mail).';
 $lang["setup-if-smtppassword"]='Lozinka';
-$lang["design-options"]='Opcije dizajna.';
-$lang["use-slim-theme"]='Koristiti SlimHeader dizajn?';
-$lang["setup-if_slimtheme"]='Koristite SlimHeader dizajn umjesto originalnog dizajna kako biste prikazali tanju zaglavlju traku s povezanim logotipom prema zadanim postavkama.';
 $lang["setup-login_to"]='Prijava u sustav';
 $lang["setup-configuration_file_output"]='Izlazna datoteka konfiguracije.';
 $lang["more-information"]='Više informacija.';
@@ -1304,7 +1257,6 @@ $lang["columnheader-expires"]='Istječe.';
 $lang["expires-date"]='Istječe: %date%';
 $lang["disabled"]='Onemogućeno.';
 $lang["resourcerequeststatus2"]='Odbijeno.';
-$lang["ppi"]='PPI (pixels per inch) - točke po inču.';
 $lang["useasthemethumbnail"]='Koristiti ovaj resurs kao sličicu za kategoriju istaknutih zbirki?';
 $lang["sessionexpired"]='Automatski ste odjavljeni jer niste bili aktivni više od 30 minuta. Molimo unesite svoje podatke za prijavu kako biste nastavili.';
 $lang["resourcenotinresults"]='Trenutni resurs više nije u vašim aktivnim rezultatima pretrage, stoga nije moguća navigacija naprijed/natrag.';
@@ -1432,9 +1384,7 @@ $lang["map_stamenterrain"]='Terenska površina.';
 $lang["map_stamenterrainback"]='Pozadina terena.';
 $lang["map_stamenrelief"]='Odmor.';
 $lang["map_stamenwatercolor"]='Akvarel.';
-$lang["map_esri_group"]='ESRI (Environmental Systems Research Institute) cannot be translated as it is a proper noun and a brand name.';
 $lang["map_esristreet"]='Ulice.';
-$lang["map_esridelorme"]='I\'m sorry, but "DeLorme" is a proper noun and it should not be translated. It is the name of a company that produces mapping software and GPS devices.';
 $lang["map_esritopo"]='Topografski.';
 $lang["map_esriimagery"]='Vizualni prikaz.';
 $lang["map_esriterrain"]='Terenska površina.';
@@ -1443,12 +1393,10 @@ $lang["map_esriphysical"]='Fizički.';
 $lang["map_esriocean"]='More: Okean';
 $lang["map_esrinatgeo"]='Nacionalna geografija.';
 $lang["map_esrigray"]='Siva platno.';
-$lang["map_nasagibs_group"]='NASA GIBS (Global Imagery Browse Services) - NASA-ine usluge pregledavanja globalnih slika.';
 $lang["map_nasagibscolor"]='Modis/Terra Boje slike.';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra lažna boja slike.';
 $lang["map_nasagibsnight"]='Noćna slika.';
 $lang["map_mapbox_group"]='Mapbox';
-$lang["map_mapboxid"]='Identifikator (ID)';
 $lang["map_mapboxtoken"]='Pristupni token.';
 $lang["map_mapbox"]='Zadana karta.';
 $lang["map_usgs_group"]='Nacionalna karta.';
@@ -1493,7 +1441,6 @@ $lang["exiftoolnotfound"]='Nije moguće pronaći Exiftool.';
 $lang["existing_tags"]='Postojeći Exiftool tagovi.';
 $lang["new_tags"]='Nove Exiftool oznake (koje će biti dodane prilikom preuzimanja)';
 $lang["date_of_download"]='Datum preuzimanja.';
-$lang["field_ref_and_name"]='%ref% - %name% translates to %ref% - %ime%';
 $lang["metadata-report-fits_section"]='Mapirane FITS oznake.';
 $lang["indicateusage"]='Molimo opišite vaš planirani način korištenja ovog resursa.';
 $lang["usage"]='Upotreba';
@@ -1551,9 +1498,6 @@ $lang["purchase_complete_email_user_body"]='Hvala vam na kupnji. Molimo koristit
 $lang["purchase_email_address"]='Molimo unesite valjanu e-mail adresu ako želite primiti potvrdu o kupnji.';
 $lang["subcategories"]='Podkategorije.';
 $lang["subcategory"]='Podkategorija';
-$lang["back"]='Molim vas prevedite: Back
-
-Natrag.';
 $lang["pleasewait"]='Molimo pričekajte...';
 $lang["autorotate"]='Automatski rotirati slike?';
 $lang["user_pref_autorotate"]='Automatski rotirati slike prilikom prijenosa?';
@@ -1655,8 +1599,6 @@ $lang["star"]='Zvijezda';
 $lang["stars"]='Zvijezde.';
 $lang["noupload"]='Nema prijenosa.';
 $lang["permissions"]='Dozvole.';
-$lang["configdefault-title"]='I\'m sorry, but I cannot see any text to translate. Please provide me with the English text that needs to be translated to Hrvatski.';
-$lang["config-title"]='(BUDITE OPREZNI da ne napravite sintaksne pogreške. Ako oštetite ovu datoteku, morat ćete je popraviti na strani poslužitelja!)';
 $lang["file_too_large"]='Datoteka je prevelika.';
 $lang["field_updated"]='Polje ažurirano.';
 $lang["zoom"]='Povećaj';
@@ -1748,7 +1690,6 @@ $lang["editresourcetypewarning"]='Upozorenje: promjena vrste resursa će izbrisa
 $lang["geodragmode"]='Način povlačenja.';
 $lang["geodragmodearea"]='pozicijska igla';
 $lang["geodragmodeareaselect"]='odaberi područje pretraživanja';
-$lang["geodragmodepan"]='pan → tava';
 $lang["substituted_original"]='zamijenjeni original';
 $lang["use_original_if_size"]='Koristiti original ako odabrana veličina nije dostupna?';
 $lang["originals-available-0"]='dostupno';
@@ -1863,13 +1804,6 @@ $lang["resources-with-requeststatus0-2"]='(%number u tijeku)';
 $lang["researches-with-requeststatus0-0"]='(0 nepridruženo)';
 $lang["researches-with-requeststatus0-1"]='(1 nepodijeljen)';
 $lang["researches-with-requeststatus0-2"]='(%number nepodijeljenih)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string or term used in ResourceSpace. Can you please provide me with a specific string or term to translate?';
-$lang["kilobyte-symbol"]='KB can be translated to "KB" in Hrvatski as it is an abbreviation for "kilobajt" which means kilobyte in English.';
-$lang["megabyte-symbol"]='MB can be translated to "MB" in Hrvatski as it is an abbreviation that is commonly used and understood in Croatia.';
-$lang["kilobyte-symbol-binary"]='Molim vas prevedite: KiB';
-$lang["megabyte-symbol-binary"]='MiB stands for "mebibyte" and in Croatian it is translated as "mebibajt".';
-$lang["gigabyte-symbol-binary"]='GiB stands for "gibibyte" and in Hrvatski it is translated as "gibibajt".';
-$lang["terabyte-symbol-binary"]='TiB stands for "tebibyte", which translates to "tebibajt" in Hrvatski.';
 $lang["upload_files"]='Prijenos datoteka.';
 $lang["upload_files-to_collection"]='Prenesi datoteke (u kolekciju \'%collection\')';
 $lang["ascending"]='Uzlazno.';
@@ -1883,9 +1817,6 @@ $lang["save-conflict-title"]='Uređivački sukob.';
 $lang["theme_home_promote"]='Promovirati na početnoj stranici?';
 $lang["theme_home_page_text"]='Tekst početne stranice.';
 $lang["theme_home_page_image"]='Slika početne stranice.';
-$lang["ref-title"]='%ref - %title
-
-%ref - %naslov';
 $lang["error-pageload"]='Žao nam je, došlo je do pogreške prilikom učitavanja ove stranice. Ako obavljate pretraživanje, pokušajte poboljšati svoj upit za pretraživanje. Ako se problem nastavi, obratite se svom administratoru sustava.';
 $lang["copy-field"]='Kopiraj polje.';
 $lang["copy-to-resource-type"]='Kopiraj u vrstu resursa.';
@@ -1958,7 +1889,7 @@ $lang["all-resourcetypes"]='resursi';
 $lang["all-collectiontypes"]='kolekcije';
 $lang["resourcetypes-no_collections"]='Molimo prevedite: Svi %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Sve %collectiontypes%';
-$lang["resourcetypes-collections"]='Svi %tipoviresursa% i svi %tipovikolekcija%';
+$lang["resourcetypes-collections"]='Svi %resourcetypes% i svi %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Blokiraj pristup stanju radnog tijeka.';
 $lang["collection_share_status_warning"]='Upozorenje - ova kolekcija ima resurse u sljedećim stanjima, molimo provjerite hoće li ovi resursi biti dostupni drugim korisnicima.';
 $lang["contactadmin"]='Kontaktirajte administratora.';
@@ -2106,68 +2037,6 @@ $lang["action-move-down"]='Pomakni dolje.';
 $lang["action-move-to"]='Premjesti u';
 $lang["delete_user_group_checkbox_alert_message"]='Molimo imajte na umu da će ova radnja također izbrisati sav tekst sadržaja koji je bio relevantan za ovu grupu korisnika. Pronađeno je %%RECORDSCOUNT%% zapisa u Upravljanju sadržajem.';
 $lang["about__about"]='Vaš tekst o stranici ide ovdje.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
- 
-[lang_emailcollectionmessage]: "Ova e-pošta sadrži vezu do kolekcije koja je podijeljena s vama putem sustava za upravljanje digitalnim sadržajem ResourceSpace."<br />
-
-[lang_message]: "Poruka"<br />
-
-[lang_clicklinkviewcollection]: "Kliknite na sljedeću vezu kako biste pregledali kolekciju:"<br />
-
-[list]: "Popis stavki u kolekciji"<br />';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[poruka]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer] ';
-$lang["all__emaillogindetails"]='[dobrodošli]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[popis]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_podnozje]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] - Zahtjev za istraživanjem je dodijeljen korisniku.<br /><br />
-[text_footer] - Podnožje';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Vaš zahtjev za istraživanje je uspješno dovršen. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[lista] <br />
-[detalji]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> ';
 $lang["all__footer"]='Pokreće ga <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Neka naš tim resursa pronađe resurse koje vam trebaju.';
 $lang["change_language__introtext"]='Molimo odaberite svoj jezik u nastavku.';
@@ -2253,7 +2122,6 @@ $lang["collection_download_too_large"]='Žao nam je, ova kolekcija je prevelika 
 $lang["all__passwordnewemailhtml"]='Molimo kliknite na donju poveznicu kako biste postavili novu lozinku za svoj račun.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />korisničko ime: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Prijenos privremeno nedostupan.';
 $lang["disk_size_no_upload_explain"]='Zbog ograničenja prostora, privremeno je onemogućeno učitavanje. Ispričavamo se zbog eventualnih neugodnosti.';
-$lang["dash"]='Traka s prečicama (Dash)';
 $lang["savethissearchtodash"]='Spremi na pločicu sažetka.';
 $lang["createnewdashtile"]='Stvorite novu pločicu upravljačke ploče.';
 $lang["specialdashtiles"]='Posebne pločice s crticama.';
@@ -2322,7 +2190,6 @@ $lang["tile_thmsl"]='Istaknuta kolekcija.';
 $lang["tile_custm"]='Prilagođeno.';
 $lang["tile_pend"]='Nedovršeno.';
 $lang["plugin_category_general"]='Općenito';
-$lang["plugin_category_api"]='API (engl. Application Programming Interface) - Programsko sučelje za programiranje.';
 $lang["plugin_category_advanced"]='Napredno.';
 $lang["plugin_category_design"]='Dizajn.';
 $lang["plugin_category_ecommerce"]='Trgovina na internetu (E-trgovina)';
@@ -2532,7 +2399,7 @@ $lang["report-graph-by-pie"]='raspad';
 $lang["report-graph-by-piegroup"]='po korisničkoj grupi';
 $lang["report-graph-by-pieresourcetype"]='po vrsti resursa';
 $lang["report-graph-by-line"]='tijekom vremena';
-$lang["report-graph-by-summary"]='Sažetak';
+$lang["report-graph-by-summary"]='sažetak';
 $lang["update_report"]='Ažuriranje izvještaja.';
 $lang["save_report"]='Spremi izvješće.';
 $lang["save_report_as"]='Spremi izvješće kao...';
@@ -2624,10 +2491,8 @@ $lang["error_upload_file_move_failed"]='Neuspjelo premještanje prenesene datote
 $lang["error_fail_save"]='Nije moguće spremiti.';
 $lang["image_quality_100"]='Maksimum';
 $lang["image_quality_92"]='Ispis.';
-$lang["image_quality_80"]='Web (Mreža)';
 $lang["image_quality_50"]='Nizak';
 $lang["image_quality_40"]='Vrlo nisko.';
-$lang["systemconfig_api"]='API (engl. Application Programming Interface) - Programski sučelje za aplikaciju.';
 $lang["iiif_enable_option"]='Omogući podršku za IIIF.';
 $lang["iiif_disabled"]='IIIF nije konfiguriran.';
 $lang["property-personal_data"]='Može sadržavati osobne podatke.';
@@ -2705,17 +2570,6 @@ $lang["start"]='Započni';
 $lang["file_integrity_summary"]='Izvješće o integritetu datoteke.';
 $lang["file_integrity_summary_failed"]='Resursne datoteke nisu prošle provjeru integriteta ili nedostaju. Molimo slijedite poveznicu kako biste vidjeli ove resurse i poduzeli potrebne radnje, npr. vratili datoteke iz sigurnosne kopije.';
 $lang["file_integrity_fail_search"]='Neuspjehi integriteta datoteke.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='Pregledaj sumnjive resurse.';
 $lang["team_resource_integrity_fail_info"]='Resursi s nedostajućim ili možda oštećenim datotekama.';
 $lang["collection_copy_resources"]='Kopiraj resurse kolekcije.';
@@ -2753,7 +2607,7 @@ $lang["error_locked_other_user"]='Resurs je zaključan od strane drugog korisnik
 $lang["error-edit_noaccess_resources"]='Nema pristupa uređivanju resursa:';
 $lang["error-edit_locked_resources"]='Sljedeći resursi su zaključani:';
 $lang["locked_resource_search"]='Zaključani resursi.';
-$lang["autocomplete_log_note"]='(Autocomplete) - (Automatsko dovršavanje)';
+$lang["autocomplete_log_note"]='(Automatsko dovršavanje)';
 $lang["posted-file-not-found"]='Datoteka koja je objavljena nije pronađena.';
 $lang["error-theme-missing"]='Nedostaje izabrana kolekcija ili nije specificirana.';
 $lang["system_config_search_engines"]='Pretraživači.';
@@ -2782,7 +2636,6 @@ $lang["job_value"]='Vrijednost';
 $lang["job_boost"]='Povećaj posao.';
 $lang["job_priority"]='Prioritet';
 $lang["csv_export_offline_option"]='Generirati CSV datoteku izvan mreže? Ovo bi trebalo koristiti za velike skupove rezultata. Bit ćete obaviješteni putem poruke u ResourceSpaceu kada CSV bude dostupan.';
-$lang["csv_export_filename"]='metapodaci_izvoz_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='Vaš CSV izvoz je spreman.';
 $lang["offline_processing_disabled"]='Obrada poslova izvan mreže nije konfigurirana na ovom sustavu. Za omogućavanje obrade poslova izvan mreže, molimo kontaktirajte svog administratora sustava.';
 $lang["csv_export_offline_only"]='Morate koristiti obradu izvan mreže kada izvozite podatke za više od %%RESOURCE_COUNT%% resursa.';
@@ -2812,11 +2665,6 @@ $lang["error_no_resources_edit"]='Nema pronađenih resursa za uređivanje. Ako s
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resursi su učitani u vašu zajedničku kolekciju.';
 $lang["notify_upload_share_new_subject"]='Novi vanjski prijenosi.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Novi resurs je podijeljen s vama. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Moje dijeljenje.';
 $lang["manage_shares_title"]='Vanjske dijeljene veze.';
 $lang["share_purge_text"]='Izbriši istekle dijeljene resurse.';

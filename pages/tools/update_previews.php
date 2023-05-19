@@ -28,7 +28,7 @@ include_once "../../include/image_processing.php";
  * @param $ref Resource ref to update
  * @return bool True is resource exists
  */
-function update_preview($ref){
+function update_previews($ref){
     global $previewbased;
     $resourceinfo=ps_query("select " . columns_in("resource") . " from resource where ref=?",array("i",$ref));
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0]))){
@@ -47,7 +47,7 @@ $previewbased=getval("previewbased",false);
 
 if ($collectionid == false){
     if (!(is_numeric($ref) && $ref > 0)) $ref = 1;
-    if (update_preview($ref)){
+    if (update_previews($ref)){
     	?>
     	<img src="<?php echo get_resource_path($ref,false,"pre",false)?>">
     	<?php
@@ -82,7 +82,7 @@ else {
     else {
         $key = array_search($ref, $collection);
     }
-    if (update_preview($ref)){
+    if (update_previews($ref)){
         ?>
         <img src="<?php echo get_resource_path($ref,false,"pre",false)?>">
         <?php 

@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='غير قابل للتغيير';
-$lang["doi_info_wikipedia"]='مُعرِّف الكائن الرقمي (DOI) هو نظام تحديد هوية دائم للموارد الرقمية. يتم استخدامه في الغالب لتحديد الوثائق الأكاديمية والبحثية عبر الإنترنت، مثل المقالات العلمية. يتم تعيين مُعرِّف الكائن الرقمي للموارد الرقمية بواسطة منظمة التحكيم الدولية لتحديد الكائنات الرقمية (DOI). يتم تخزين المعرف في قاعدة بيانات مركزية تسمى مسجل DOI، ويتم استخدامه لتحديد الموارد الرقمية وتحديد مواقعها على الإنترنت.';
 $lang["doi_info_link"]='على مُعرّفات الكائن الرقمي (DOIs) <a target="_blank" href="https://en.wikipedia.org/wiki/Digital_Object_Identifier">(المعرّفات الرقمية للكائنات)</a>.';
 $lang["doi_info_metadata_schema"]='يتم ذكر التفاصيل المتعلقة بتسجيل DOI على DataCite.org في <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">وثائق مخطط بيانات Datacite Metadata</a>.';
 $lang["doi_info_mds_api"]='يتم تحديد تفاصيل واجهة برمجة تطبيقات DOI-API المستخدمة من قبل هذه الإضافة في <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">وثائق واجهة برمجة تطبيقات Datacite</a>.';

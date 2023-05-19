@@ -75,7 +75,8 @@ $k = getval('k','');
 $upload_share_active = (upload_share_active() !== false);
 if($upload_share_active && $terms_upload && !check_upload_terms($collection_add,$k))
         {
-        exit(error_alert($lang["mustaccept"],false));
+        error_alert($lang["mustaccept"],false);
+        exit();
         }
 if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !(isset($_SERVER['HTTP_TUS_RESUMABLE']) && $validupload))
     {
@@ -271,7 +272,8 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
         "{$baseurl}/pages/edit.php",
         array(
             'upload_review_mode' => true,
-            'collection_add' => $collection_add
+            'collection_add' => $collection_add,
+            'redirecturl' => $redirecturl,
         ));
 
 	# Clear the user template
@@ -712,7 +714,7 @@ if ($processupload)
                     if(strpos($auto_generated_resource_title_format, '%title') !== false)
                         {
                         $resource_detail = ps_query ("
-                        SELECT d.*, n.name FROM (SELECT r.ref, r.file_extension FROM resource r
+                        SELECT d.ref, d.file_extension, n.name FROM (SELECT r.ref, r.file_extension FROM resource r
                         WHERE r.ref = ?) as d
                         LEFT JOIN resource_node rn ON rn.resource=d.ref
                         LEFT JOIN node n ON n.ref=rn.node AND n.resource_type_field = ?
@@ -1050,7 +1052,7 @@ jQuery(document).ready(function () {
     ?>
 
 
-    uppy = new Uppy.Core({
+    uppy = new Uppy.Uppy({
         debug: <?php echo $debug_log ? "true" : "false" ?>,
         autoProceed: false,
         restrictions: {

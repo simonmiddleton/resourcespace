@@ -351,10 +351,6 @@ $lang["selectcollection"]="Valitse kokoelma";
 $lang["total"]="Kaikki";
 $lang["ownedbyyou"]="sinun omistamasi";
 
-# Lightbox
-$lang["lightbox-image"] = "Kuva";
-$lang["lightbox-of"] = "aiheesta";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Luo uusi resurssi";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Resurssityyppi";
@@ -434,7 +430,7 @@ $lang["download"]="Lataa";
 $lang["preview"]="Esikatselu";
 $lang["fullscreenpreview"]="Koko ruudun esikatselu";
 $lang["originalfileoftype"]="Alkuperäinen %EXTENSION -tiedosto"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION File" -> "Original PDF File"
-$lang["fileoftype"]="? -tiedosto"; # ? will be replaced, e.g. "MP4 File"
+$lang["fileoftype"]="? tiedosto"; # ? will be replaced, e.g. "MP4 File"
 $lang["cell-fileoftype"]="%EXTENSION -tiedosto"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION File" -> "JPG File"
 $lang["fileextension-inside-brackets"]="[%EXTENSION]"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "[%EXTENSION]" -> "[JPG]"
 $lang["fileextension"]="%EXTENSION"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION" -> "JPG"
@@ -644,7 +640,6 @@ $lang["termsandconditions"]="Säännöt ja ehdot";
 $lang["iaccept"]="Hyväksyn";
 $lang["contributedby"]="Tekijä";
 $lang["format"]="Muoto";
-$lang["notavailableshort"]="Ei ole";
 $lang["allmonths"]="Kaikki kuukaudet";
 $lang["allgroups"]="Kaikki ryhmät";
 $lang["status-ok"]="KUNNOSSA";
@@ -653,7 +648,6 @@ $lang["status-warning"]="VAROITUS";
 $lang["status-notinstalled"]="Ei asennettu";
 $lang["status-never"]="Ei koskaan";
 $lang["softwareversion"]="? versio"; # E.g. "PHP version"
-$lang["softwarebuild"]="? ohjelmaversio"; # E.g. "ResourceSpace Build"
 $lang["softwarenotfound"]="'?' ei löydy"; # ? will be replaced.
 $lang["client-encoding"]="(asiakasohjelman merkistökoodaus: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["browseruseragent"]="Selaimen käyttäjäagentti";
@@ -944,12 +938,9 @@ $lang["setup-baseurl"]="Perus-URL:";
 $lang["setup-emailfrom"]="Sähköpostin lähetysosoite:";
 $lang["setup-emailnotify"]="Sähköpostitiedot:";
 $lang["setup-spiderpassword"]="Hakukoneen salasana:";
-$lang["setup-scramblekey"]="Sekoitusavain:";
-$lang["setup-apiscramblekey"]="APIn sekoitusavain:";
 $lang["setup-paths"]="Polut";
 $lang["setup-pathsdetail"]="Kirjoita polku ilman lopussa olevaa kauttaviivaa jokaista binääritiedostoa varten. Binääritiedostojen ottamiseksi pois käytöstä voi polku olla tyhjä. Automaattisesti haetut polut on jo täytetty.";
 $lang["setup-applicationname"]="Sovelluksen nimi:";
-$lang["setup-basicsettingsfooter"]="HUOMAA: Ainoastaan <strong>vaaditut</strong> asetukset ovat tällä sivulla. Jos et tahdo tarkastaa kehittyneempiä valintoja, voit napsauttaa alta aloittaaksesi asennusprosessin.";
 $lang["setup-if_mysqlserver"]='IP-osoite tai <abbr title="Fully Qualified Domain Name">FQDN</abbr> MySQL-palvelimelle. Jos MySQL on samalla palvelimella kuin verkkopalvelin, kirjoita "localhost".';
 $lang["setup-if_mysqlusername"]="MySQL-palvelimeen yhdistettäessä käytettävä käyttäjätunnus. Tunnuksella täytyy olla oikeudet luoda taulukkoja alempana nimettyyn tietokantaan.";
 $lang["setup-if_mysqlpassword"]="Salasana alempana mainitulle MySQL-käyttäjätunnukselle.";
@@ -958,38 +949,16 @@ $lang["setup-if_mysqlbinpath"]="Polku MySQL-asiakasohjelman binääritiedostoihi
 $lang["setup-if_baseurl"]="Juuritason verkko-osoite tälle asennukselle. HUOMAA: ei kauttaviivaa loppuun.";
 $lang["setup-if_emailfrom"]="Osoite, josta ResourceSpacen sähköpostit näyttävät tulevan.";
 $lang["setup-if_emailnotify"]="Sähköpostiosoite, johon resurssi/käyttäjä/tutkimuspyynnöt lähetetään.";
-$lang["setup-if_spiderpassword"]="Hakukoneen salasana on vaadittu kenttä.";
-$lang["setup-if_scramblekey"]="Sekoitus on voimassa, kun sekoitusavain on asetettu vaikeasti arvattavaksi merkkijonoksi. Julkisessa asennuksessa tämä on hyvä idea. Tämän kentän voi jättää tyhjäksi, jolloin resurssipolku ei ole sekoitettu. Tämä kenttä on jo tehty satunnaisesti, mutta sen voi laittaa samaksi kuin nykyisessä asennuksessa, jos välttämätöntä.";
-$lang["setup-if_apiscramblekey"]="Aseta APIn sekoitusavain vaikeasti arvattavaksi merkkijonoksi (salasanan kaltaiseksi). Jos aiot käyttää APIa on tämä hyvä idea.";
 $lang["setup-if_applicationname"]="Asennuksesi nimi (esimerkiksi 'MinunYhtiöni resurssijärjestelmä').";
 $lang["setup-err_mysqlbinpath"]="Ei pysty varmistamaan polkua. Jätä tyhjäksi ettei tule voimaan.";
 $lang["setup-err_baseurl"]="Perus-URL on vaadittu kenttä.";
 $lang["setup-err_baseurlverify"]="Perus-URL ei näytä olevan oikein (ei voi ladata tiedostoa license.txt).";
-$lang["setup-err_spiderpassword"]="Salasana vaaditaan tiedostolle spider.php. TÄRKEÄÄ: satunnaista tämä jokaiselle uudelle asennukselle. Resurssejasi voi lukea kuka tahansa tämän salasanan tunteva. Tämä kenttä on jo satunnaistettu sinua varten, mutta voit muuttaa sen sopimaan olemassaolevaan asennukseen, jos välttämätöntä.";
-$lang["setup-err_scramblekey"]="Jos tämä on julkinen asennus, sekoitusavaimen asettaminen on suositeltavaa.";
-$lang["setup-err_apiscramblekey"]="Jos tämä on julkinen asennus, API-sekoitusavaimen asettaminen on suositeltavaa.";
 $lang["setup-err_path"]="Ei voi varmistaa sijaintia";
 $lang["setup-emailerr"]="Ei ole kelvollinen sähköpostiosoite.";
 $lang["setup-rs_initial_configuration"]="ResourceSpace: alkuasetukset";
 $lang["setup-include_not_writable"]="'/include' ei ole kirjoitettava. Tarvitaan vain asetuksen aikana.";
 $lang["setup-binpath"]="%bin -polku"; #%bin will be replaced, e.g. "Imagemagick Path"
 $lang["setup-begin_installation"]="Aloita asennus!";
-$lang["setup-generaloptions"]="Yleiset valinnat";
-$lang["setup-allow_password_change"]="Salli salasanan vaihtaminen?";
-$lang["setup-enable_remote_apis"]="Salli etäkäytön APIt?";
-$lang["setup-if_allowpasswordchange"]="Anna loppukäyttäjien vaihtaa salasanansa.";
-$lang["setup-if_enableremoteapis"]="Salli API-lisäosien etäkäyttö.";
-$lang["setup-allow_account_requests"]="Anna käyttäjien pyytää käyttäjätunnuksia?";
-$lang["setup-display_research_request"]="Näytä tutkimuspyynnön toiminto?";
-$lang["setup-if_displayresearchrequest"]="Antaa käyttäjien pyytää resursseja lomakkeella, joka lähetetään sähköpostilla.";
-$lang["setup-themes_as_home"]="Käytä teemojen sivua kotisivuna?";
-$lang["setup-remote_storage_locations"]="Etävarastojen sijainnit";
-$lang["setup-use_remote_storage"]="Käytä etävarastoja?";
-$lang["setup-if_useremotestorage"]="Rasti tämä laatikko määritelläksesi etävarastot ResourceSpacelle. (Käyttääksesi toista palvelinta tiedostovarastona.)";
-$lang["setup-storage_directory"]="Varastohakemisto";
-$lang["setup-if_storagedirectory"]="Minne mediatiedostot laitetaan. Voi olla absoluuttinen (/var/www/blah/blah) tai relatiivinen polku suhteessa asennukseen. HUOMAA: ei kauttaviivaa polun loppuun.";
-$lang["setup-storage_url"]="Varaston URL";
-$lang["setup-if_storageurl"]="Missä storagedir on saatavilla. Voi olla absoluuttinen (http://files.example.com) tai relatiivinen asennukseen nähden. HUOMAA: Ei kauttaviivaa loppuun.";
 $lang["setup-login_to"]="Kirjaudu sisään";
 $lang["setup-configuration_file_output"]="Asetustiedoston ulostulo";
 
@@ -1061,8 +1030,6 @@ $lang["publishstatus"]="Tallenna julkaistuna:";
 $lang["addnewcontent"]="Uusi sisältö (sivu, nimi)";
 $lang["hitcount"]="Osumia";
 $lang["downloads"]="Latauksia";
-
-$lang["addremove"]="";
 
 ##  Translations for standard log entries
 $lang["all_users"]="kaikki käyttäjät";
@@ -1187,7 +1154,6 @@ $lang["exiftoolnotfound"]="Ei löydy Exiftoolia";
 $lang["existing_tags"]="Nykyiset Exiftool-tunnisteet";
 $lang["new_tags"]="Uusi Exiftool-tunniste (joka lisätään ladattaessa)";
 $lang["date_of_download"]="[Latauksen päivämäärä]";
-$lang["field_ref_and_name"]="%ref% - %name%"; # %ref% and %name% will be replaced, e.g. 3 – Country
 
 $lang["indicateusage"]="Ole hyvä ja kuvaile tämän resurssin suunniteltua käyttötarkoitusta.";
 $lang["usage"]="Käyttö";
@@ -1367,10 +1333,6 @@ $lang["treenode-no_name"]="(ei nimeä)";
 $lang["treeobjecttype-preview_size"]="Esikatselun koko";
 
 $lang["permissions"]="Käyttöoikeudet";
-
-# System Setup File Editor
-$lang["configdefault-title"]="(kopioi ja liitä vaihtoehdot täältä)";
-$lang["config-title"]="(VARO syntaksivirheitä. Jos tämä tiedosto hajoaa, se pitää korjata palvelimella!)";
 
 # System Setup Properties Pane
 $lang["file_too_large"]="Liian suuri tiedosto";
@@ -1654,11 +1616,9 @@ $lang["smallthumbstitle"]='Pienet esikatselukuvat.';
 $lang["strip"]='Poista.';
 $lang["striptitle"]='Poista näkymä.';
 $lang["listtitle"]='Luettelonäkymä';
-$lang["perpage_option"]='Sivua kohti ? (referring to the number of items displayed on a single page)';
 $lang["powered_by"]='Käyttövoimana';
 $lang["powered_by_resourcespace"]='Käyttää ResourceSpace-ohjelmistoa.';
 $lang["on"]='Päällä.';
-$lang["off"]='Ei päällä / Pois päältä';
 $lang["seconds"]='sekunnit';
 $lang["pause"]='Tauko.';
 $lang["filterbutton"]='Suodatin';
@@ -1728,7 +1688,6 @@ $lang["resourcedownloads"]='Resurssien lataukset.';
 $lang["filedimensions"]='Tiedoston mitat';
 $lang["vieworiginalresource"]='Näytä alkuperäinen resurssi.';
 $lang["previewithsizename"]='%sizename Esikatselu';
-$lang["field-fileextension"]='Tiedostopääte';
 $lang["mp3_preview_file"]='MP3 Esikatselu Tiedosto';
 $lang["findtextinpdf"]='Etsi tekstiä PDF-tiedostosta.';
 $lang["unoconv_pdf"]='Tuotettu Open Officella.';
@@ -1924,9 +1883,6 @@ $lang["setup-if-smtpport"]='Porttinumero, esim. 465 Gmailin käyttöön SSL:n ka
 $lang["setup-if-smtpauth"]='Lähetä tunnistetiedot SMTP-palvelimelle (false käyttääksesi nimetöntä käyttöä)';
 $lang["setup-if-smtpusername"]='Käyttäjänimi (koko sähköpostiosoite).';
 $lang["setup-if-smtppassword"]='Salasana';
-$lang["design-options"]='Suunnitteluvaihtoehdot';
-$lang["use-slim-theme"]='Käytetäänkö SlimHeader-suunnittelua?';
-$lang["setup-if_slimtheme"]='Käytä SlimHeader-suunnittelua alkuperäisen suunnittelun sijaan, jotta ohjelma näyttää ohuemman oletusarvoisen yläpalkin, jossa on linkitetty logo.';
 $lang["more-information"]='Lisätietoja';
 $lang["setup-structuralplugins"]='Järjestelmän mallipohjat';
 $lang["setup-headercolourstyleoverride"]='Mukautetun otsikon taustaväri.';
@@ -1976,7 +1932,7 @@ $lang["map_osmde"]='Saksalainen tyyli.';
 $lang["map_osmfrance"]='OSM Ranska';
 $lang["map_osmch"]='OSM Sveitsi';
 $lang["map_osmbzh"]='OSM Luxemburg';
-$lang["map_osmhot"]='In Finnish, "Humanitarian" can be translated as "humanitaarinen".';
+$lang["map_osmhot"]='Humanitaarinen';
 $lang["map_osmmtb"]='Vuoripyöräilyn kartta Euroopasta.';
 $lang["map_osmhikebike"]='Retkeily- ja pyöräilykartta';
 $lang["map_otm"]='OSM Topografinen.';
@@ -1990,18 +1946,15 @@ $lang["map_tfoutdoors"]='Ulkoilma.';
 $lang["map_tfpioneer"]='Pioneer = Uudisasukas';
 $lang["map_tfmobileatlas"]='Mobiiliatlas.';
 $lang["map_tfneighbourhood"]='Naapurusto';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" does not seem to be an English string used in ResourceSpace. Can you please provide more context or information about where this string appears in the software?';
 $lang["map_hyddafull"]='Oletuskartta.';
 $lang["map_hyddabase"]='Perusta.';
 $lang["map_stamen_group"]='Kukkaosanen (Stamen)';
 $lang["map_stamentoner"]='Toner = Värikasetti';
 $lang["map_stamentonerlt"]='Tonerin keveys.';
-$lang["map_stamentonerback"]='Please provide more context. Is "Toner Background" a label, a button, a setting, or a description of an image? More information is needed to provide an accurate translation.';
 $lang["map_stamenterrain"]='Maasto.';
 $lang["map_stamenterrainback"]='Maaston tausta.';
 $lang["map_stamenrelief"]='Helpotus';
 $lang["map_stamenwatercolor"]='Vesiväri.';
-$lang["map_esri_group"]='ESRI does not require translation as it is a proper noun and a brand name. It stands for Environmental Systems Research Institute, Inc., a company that provides geographic information system (GIS) software, web GIS, and geodatabase management applications.';
 $lang["map_esristreet"]='Kadut';
 $lang["map_esritopo"]='Topografinen.';
 $lang["map_esriimagery"]='Kuvitus.';
@@ -2011,12 +1964,10 @@ $lang["map_esriphysical"]='Fyysinen';
 $lang["map_esriocean"]='Meri';
 $lang["map_esrinatgeo"]='Kansallinen maantiede.';
 $lang["map_esrigray"]='Harmaa kangas.';
-$lang["map_nasagibs_group"]='NASA GIBS = NASA:n yleinen kuvapalvelinjärjestelmä.';
 $lang["map_nasagibscolor"]='Modis/Terra Värikuvat';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra Väärävärikuvaus';
 $lang["map_nasagibsnight"]='Yökuvaus.';
 $lang["map_mapbox_group"]='Mapbox';
-$lang["map_mapboxid"]='Tunniste (ID)';
 $lang["map_mapboxtoken"]='Pääsyavain.';
 $lang["map_mapbox"]='Oletuskartta.';
 $lang["map_usgs_group"]='Kansallinen kartta.';
@@ -2109,8 +2060,6 @@ $lang["csvExportResultsMetadataPersonal"]='Vain sisällytä tietoja kentistä, j
 $lang["csvExportResultsMetadataAll"]='Sisällytä kaikki saatavilla olevat tiedot, kuten tekninen metadata ja yksityiskohtaiset tiedostotiedot.';
 $lang["csvAddMetadataCSVToArchive"]='Sisällytetäänkö metatietojen CSV-tiedosto arkistoon?';
 $lang["changessaved"]='Muutokset tallennettu.';
-$lang["kilobyte-symbol-binary"]='KiB is a unit of digital information storage and it stands for "kibibyte". In Suomi, it would be translated as "kibitavu".';
-$lang["gigabyte-symbol-binary"]='GiB stands for "gibibyte" which translates to "gibitavu" in Suomi.';
 $lang["save-conflict-error"]='Muokkauskonflikti. Päivitä sivu uudelleen.';
 $lang["save-conflict-multiple"]='Muokkauskonflikti. Päivitä sivu uudelleen.';
 $lang["save-conflict-title"]='Muokkauskonflikti.';
@@ -2179,8 +2128,7 @@ $lang["all-resourcetypes"]='resurssit';
 $lang["all-collectiontypes"]='kokoelmat';
 $lang["resourcetypes-no_collections"]='Kaikki %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Kaikki %collectiontypes%';
-$lang["resourcetypes-collections"]='Kaikki %resurssityypit% ja kaikki %kokoelmatyypit%.';
-$lang["resourcetypes_separator"]='Sorry, I cannot translate a comma as it has no meaning on its own. It is used as a punctuation mark to separate words or phrases in a sentence.';
+$lang["resourcetypes-collections"]='Kaikki %resourcetypes% ja kaikki %collectiontypes%.';
 $lang["hide_view_access_to_workflow_state"]='Estä pääsy työnkulun tilaan.';
 $lang["collection_share_status_warning"]='Varoitus - tällä kokoelmalla on resursseja seuraavissa tiloissa, tarkista että nämä resurssit ovat käyttäjien saavutettavissa.';
 $lang["contactadmin"]='Ota yhteyttä ylläpitäjään.';
@@ -2329,93 +2277,6 @@ $lang["action-move-down"]='Siirrä alaspäin.';
 $lang["action-move-to"]='Siirrä kohteeseen';
 $lang["delete_user_group_checkbox_alert_message"]='Huomioithan, että tämä toiminto poistaa myös kaiken sisältötekstin, joka liittyy tähän käyttäjäryhmään. Hallitse sisältöä -osiossa on löydetty %%RECORDSCOUNT%% tietuetta.';
 $lang["about__about"]='Sinun "Tietoja meistä" -tekstisi tulee tähän.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message]: [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_sähköpostikokoelmaviestintä] <br /><br /> 
-[lang_viesti]: [viesti]<br /><br /> 
-[lang_napsautalinkkiänäyttääksesi] [lista]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_sähköpostikokoelmaviestiulkoinen] <br /><br />
-[lang_viesti]: [viesti]<br /><br />
-[lang_napsautalinkkiänäkymäkokoelma] [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[viesti]<br /><br /><a href="[url]">[upotetun_kuvan_esikatselu]</a><br /><br />[teksti_alatunniste]';
-$lang["all__emaillogindetails"]='[tervetuloa]<br /><br />
-[lang_uudetkirjautumistiedot]<br /><br />
-[lang_käyttäjänimi] : [käyttäjänimi] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
-$lang["all__emailnewresearchrequestwaiting"]='[käyttäjänimi] ([käyttäjän koko nimi] - [käyttäjän sähköposti])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[nimi]<br /><br />
-[lang_descriptionofproject]:[kuvaus]<br /><br />
-[lang_deadline]:[määräaika]<br /><br />
-[lang_contacttelephone]:[yhteystiedot]<br /><br />
-[lang_finaluse]: [loppukäyttö]<br /><br />
-[lang_shaperequired]: [muoto]<br /><br />
-[lang_noresourcesrequired]: [ei vaadita resursseja]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Käyttäjän hyväksymät resurssit
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[luettelo]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[teksti_alatunniste]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[luettelo]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Tutkimuspyyntö on nyt määritetty sinulle.<br /><br />
-[text_footer] = Tämä viesti on lähetetty ResourceSpacesta.';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] = Tutkimuspyyntö on suoritettu onnistuneesti. Löydät pyyntöön liittyvät resurssit alla olevasta kokoelmasta.<br /><br />
-[lang_clicklinkviewcollection] = Klikkaa alla olevaa linkkiä tarkastellaksesi kokoelmaa.<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Tämä viesti on lähetetty automaattisesti. Älä vastaa tähän viestiin.';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[viesti]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [käyttäjänimi] <br />
-[lista] <br />
-[tiedot]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Käyttää <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace avoimen lähdekoodin digitaalisen aineistonhallinnan ohjelmistoa</a>';
 $lang["all__researchrequest"]='Anna meidän resurssitiimimme löytää tarvitsemasi resurssit.';
 $lang["change_language__introtext"]='Valitse kieli alla olevasta valikosta.';
@@ -2504,7 +2365,6 @@ $lang["collection_download_too_large"]='Valitettavasti tämä kokoelma on liian 
 $lang["all__passwordnewemailhtml"]='Ole hyvä ja klikkaa alla olevaa linkkiä asettaaksesi uuden salasanan tilillesi.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />käyttäjänimi: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Lataaminen ei ole tilapäisesti käytettävissä.';
 $lang["disk_size_no_upload_explain"]='Tilapäisesti tiedostojen lataaminen on estetty tilanpuutteen vuoksi. Pahoittelemme aiheutunutta vaivaa.';
-$lang["dash"]='Käännäthän: Dash';
 $lang["savethissearchtodash"]='Tallenna kojetaululaattaan';
 $lang["createnewdashtile"]='Luo uusi kojelaatta.';
 $lang["specialdashtiles"]='Erityiset viivapalat.';
@@ -2566,7 +2426,7 @@ $lang["createdashtilemycontributions"]='Minun panokseni (käyttäjäkohtainen)';
 $lang["createdashtilehelpandadvice"]='Ohje- ja neuvontalinkki.';
 $lang["createdashtileuserupload"]='Lataa kuvake (käyttäjäkohtainen)';
 $lang["tile_thmbs"]='Yksittäinen.';
-$lang["tile_multi"]='Use "Monipuolinen" to translate "Multi" in the context of ResourceSpace.';
+$lang["tile_multi"]='Monipuolinen';
 $lang["tile_blank"]='Tyhjä.';
 $lang["tile_analytics"]='Analytiikka.';
 $lang["tile_ftxt"]='Vain teksti.';
@@ -2574,7 +2434,6 @@ $lang["tile_thmsl"]='Esittelyssä oleva kokoelma.';
 $lang["tile_custm"]='Mukautettu.';
 $lang["tile_pend"]='Odottaa.';
 $lang["plugin_category_general"]='Yleinen';
-$lang["plugin_category_api"]='API: Sovellusliittymä (Application Programming Interface)';
 $lang["plugin_category_advanced"]='Edistynyt';
 $lang["plugin_category_design"]='Suunnittelu';
 $lang["plugin_category_ecommerce"]='Verkkokauppa';
@@ -2751,7 +2610,6 @@ $lang["user_pref_email_and_user_notifications"]='Lähetä minulle sähköposteja
 $lang["notification_email_subject"]='Ilmoitus sähköposti';
 $lang["mymessages_introtext"]='Voit määrittää, mitkä viestit näkyvät täällä muuttamalla käyttäjäasetuksiasi.';
 $lang["login_slideshow_image_notes"]='Tämä kuva tulee käyttöön vain kirjautumissivun taustakuvana.';
-$lang["media"]='Media = Media (This term is commonly used in Finnish language as well)';
 $lang["pixel_height"]='Pikselikorkeus.';
 $lang["pixel_width"]='Pikselileveys.';
 $lang["file_extension_label"]='Tiedostopääte.';
@@ -2780,11 +2638,11 @@ $lang["new_report"]='Uusi raportti.';
 $lang["edit_report"]='Muokkaa raporttia.';
 $lang["all_activity"]='Kaikki toiminta';
 $lang["all_resource_types"]='Kaikki resurssityypit.';
-$lang["report-graph-by-pie"]='Translation: hajoaminen';
+$lang["report-graph-by-pie"]='Hajoaminen';
 $lang["report-graph-by-piegroup"]='käyttäjäryhmän mukaan';
 $lang["report-graph-by-pieresourcetype"]='resurssityypin mukaan';
 $lang["report-graph-by-line"]='aikaa myöten';
-$lang["report-graph-by-summary"]='Yhteenveto';
+$lang["report-graph-by-summary"]='yhteenveto';
 $lang["update_report"]='Päivitä raportti.';
 $lang["save_report"]='Tallenna raportti.';
 $lang["save_report_as"]='Tallenna raportti nimellä...';
@@ -2879,7 +2737,6 @@ $lang["image_quality_92"]='Tulosta';
 $lang["image_quality_80"]='Verkko.';
 $lang["image_quality_50"]='Pieni.';
 $lang["image_quality_40"]='Erittäin alhainen.';
-$lang["systemconfig_api"]='API: Sovellusliittymä (Application Programming Interface)';
 $lang["iiif_enable_option"]='Ota IIIF-tuki käyttöön.';
 $lang["iiif_disabled"]='IIIF ei ole määritetty.';
 $lang["property-personal_data"]='Sisältää mahdollisesti henkilökohtaisia tietoja.';
@@ -2933,7 +2790,6 @@ $lang["filter_condition_label"]='Kriteerit.';
 $lang["filter_criteria_all"]='Kaikkien sääntöjen on täytyttävä.';
 $lang["filter_criteria_none"]='YHTÄÄN sääntöä ei saa täyttyä.';
 $lang["filter_criteria_any"]='MINKÄ TAHANSA säännöistä on täytyttävä.';
-$lang["filter_is_in"]='I\'m sorry, but "IS" is not a clear context for me to provide an accurate translation. Could you please provide more information or context about what you are referring to?';
 $lang["filter_is_not_in"]='EI OLE';
 $lang["filter_or"]='OLETAAN';
 $lang["filter_and"]='JA';
@@ -2956,25 +2812,6 @@ $lang["start"]='Aloita';
 $lang["file_integrity_summary"]='Tiedoston eheyden raportti.';
 $lang["file_integrity_summary_failed"]='Resurssitiedostojen eheys tarkistus epäonnistui tai tiedostoja puuttuu. Ole hyvä ja seuraa linkkiä nähdäksesi nämä resurssit ja toimi tarvittaessa, esimerkiksi palauttamalla tiedostot varmuuskopiosta.';
 $lang["file_integrity_fail_search"]='Tiedoston eheysvirhe.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-The context of these strings is unclear, so I cannot provide a translation.';
 $lang["team_resource_integrity_fail"]='Näytä epäilyttävät resurssit.';
 $lang["team_resource_integrity_fail_info"]='Resurssit, joissa puuttuu tai mahdollisesti on vioittuneita tiedostoja.';
 $lang["collection_copy_resources"]='Kopioi kokoelman resurssit.';
@@ -3039,7 +2876,6 @@ $lang["job_value"]='Arvo';
 $lang["job_boost"]='Kiihdytä työtehtävää';
 $lang["job_priority"]='Tärkeysjärjestys';
 $lang["csv_export_offline_option"]='Tuota CSV-tiedosto offline-tilassa? Tämä tulisi tehdä suurille tulosjoukoille. Sinulle ilmoitetaan ResourceSpace-viestillä, kun CSV-tiedosto on saatavilla.';
-$lang["csv_export_filename"]='metatietojen_viennin_%%HAKU%%_%%AIKA%%';
 $lang["csv_export_file_ready"]='CSV-vientisi on valmis.';
 $lang["offline_processing_disabled"]='Offline-työnkäsittelyä ei ole määritetty tälle järjestelmälle. Ota yhteyttä järjestelmänvalvojaan, jotta se voidaan ottaa käyttöön.';
 $lang["csv_export_offline_only"]='Offline-käsittelyä on käytettävä, kun vientiä varten käsitellään yli %%RESOURCE_COUNT%% resurssia.';
@@ -3059,23 +2895,6 @@ $lang["upload_share_email_subject"]='Sinulle on lähetetty latauslinkki käyttä
 $lang["upload_share_email_text"]='on lähettänyt sinulle linkin tiedostojen lataamista varten.';
 $lang["upload_share_email_password"]='Käytä tätä salasanaa linkin avaamiseen.';
 $lang["upload_share_email_clicklink"]='Käytä alla olevaa linkkiä aloittaaksesi tiedostojen lataamisen.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [viesti]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[salasanateksti]';
 $lang["upload_share_complete"]='Kiitos lataamisesta. Käytä alla olevaa painiketta ladataksesi lisää resursseja.';
 $lang["error_invalid_usergroup"]='Virheellinen käyttäjäryhmä.';
 $lang["error_invalid_date"]='Virheellinen päivämäärä.';
@@ -3086,10 +2905,6 @@ $lang["error_no_resources_edit"]='Ei resursseja muokattavaksi. Jos olet juuri la
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resursseja on ladattu jaettuun kokoelmaasi.';
 $lang["notify_upload_share_new_subject"]='Uudet ulkoiset lataukset.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] = Uusi kokoelma on jaettu kanssasi. <br />
-[lang_clicklinkviewcollection] = Klikkaa tätä linkkiä tarkastellaksesi kokoelmaa: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Tämä viesti on lähetetty automaattisesti ResourceSpacesta.';
 $lang["my_shares"]='Osakkeeni.';
 $lang["manage_shares_title"]='Ulkoiset jakamiset.';
 $lang["share_purge_text"]='Poista vanhentuneet jakamiset.';

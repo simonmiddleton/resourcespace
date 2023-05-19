@@ -24,7 +24,6 @@ $lang["posixldapauth_user_name"]='Nazwa użytkownika.';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Użyj, aby zmienić zawartość pola Członek grupy.';
 $lang["posixldapauth_login_field"]='Pole logowania:';
 $lang["posixldapauth_test_connection"]='Testuj połączenie:';
-$lang["posixldapauth_test"]='Test (Polish translation): Test';
 $lang["posixldapauth_resourcespace_configuration"]='Konfiguracja ResourceSpace';
 $lang["posixldapauth_user_suffix"]='Przyrostek użytkownika:';
 $lang["posixldapauth_create_users"]='Utwórz użytkowników:';

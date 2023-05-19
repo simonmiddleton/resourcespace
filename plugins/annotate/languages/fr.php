@@ -2,15 +2,15 @@
 
 
 $lang["annotations"]='Annotations (Annotations)';
-$lang["pdfwithnotes"]='Annotations PDF translates to Annotations PDF in French.';
-$lang["annotatepdfconfig"]='Annotations PDF translates to Annotations PDF in French.';
+$lang["pdfwithnotes"]='Annotations PDF';
+$lang["annotatepdfconfig"]='Annotations PDF';
 $lang["annotatepdfintrotext"]='Sélectionnez la taille de page pour votre PDF d\'annotations.';
 $lang["error-saving"]='Une erreur est survenue lors de l\'enregistrement de cette annotation.';
 $lang["error-deleting"]='Une erreur s\'est produite lors de la suppression de cette annotation.';
 $lang["action-add_note"]='Ajouter une annotation.';
 $lang["action-toggle-on"]='Afficher tout.';
 $lang["action-toggle-off"]='Masquer Tout.';
-$lang["note-1"]='1 annotation translates to 1 annotation in Français.';
+$lang["note-1"]='1 annotation';
 $lang["note-2"]='%nombre d\'annotations';
 $lang["annotate_configuration"]='Configurer les annotations.';
 $lang["extensions_to_exclude"]='Extensions à exclure<br />(séparées par des virgules) :';

@@ -19,7 +19,6 @@ $lang["frame_rate_resource_field"]='Bildwiederholrate-Ausgabe';
 $lang["aspect_ratio_resource_field"]='Seitenverhältnis-Ausgabe';
 $lang["video-splice"]='Video-Spleiß';
 $lang["video-splice-intro"]='Verknüpfen Sie mehrere Video-Ressourcen, um eine kombinierte Video-Ressource zu erstellen. Ziehen Sie die Miniaturansichten unten, um die Reihenfolge der Videoclips zu ändern.';
-$lang["action-splice"]='Please provide more context. "Splice" can have different meanings depending on the context in which it is used.';
 $lang["video_splice_order"]='Video-Ressourcen in Reihenfolge.';
 $lang["video_splice_select_video"]='Videoformat';
 $lang["video_splice_select_resolution"]='Videoauflösung';

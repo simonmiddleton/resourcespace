@@ -2,9 +2,9 @@
 
 
 $lang["license_usage-book"]='Bog.';
-$lang["license_usage-web"]='Web can be translated to "Net" in Dansk.';
+$lang["license_usage-web"]='Net';
 $lang["license_usage-merchandise"]='Varebeholdninger';
-$lang["license_usage-tv"]='TV can be translated to "Fjernsyn" in Dansk.';
+$lang["license_usage-tv"]='Fjernsyn';
 $lang["license_management"]='Licenshåndtering.';
 $lang["licensor_licensee"]='Licensgiver / licenshaver';
 $lang["new_license"]='Ny licens.';

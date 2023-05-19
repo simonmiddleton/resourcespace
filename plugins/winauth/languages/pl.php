@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Lista dozwolonych domen Windows (oddzielone przecinkam
 $lang["winauth_use_win_login"]='Zaloguj się przy użyciu uwierzytelnienia systemu Windows.';
 $lang["winauth_nouser"]='Twoje konto nie jest aktywowane w systemie. Prosimy o założenie konta lub skontaktowanie się z administratorem.';
 $lang["winauth_prefer_normal"]='Preferuj standardowe logowanie do ResourceSpace. Jeśli to prawda, użytkownicy zostaną domyślnie przekierowani do strony logowania, gdzie będzie opcja użycia uwierzytelniania systemu Windows.';
-$lang["winauth_test"]='Test (Polish translation): Test';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Jesteś zalogowany jako: [nazwa użytkownika]';
 $lang["winauth_not_logged_in"]='Nie jesteś zalogowany lub twój serwer internetowy nie został skonfigurowany poprawnie.';

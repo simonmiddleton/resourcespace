@@ -2,11 +2,6 @@
 
 
 $lang["status4"]='Uforanderlig.';
-$lang["doi_info_wikipedia"]='Venligst oversæt: https://da.wikipedia.org/wiki/Digital_Object_Identifier
-
-(Da jeg er en sprogmodel, kan jeg ikke åbne links. Men jeg har oversat teksten for dig.) 
-
-Digital Object Identifier (DOI) er en permanent identifikator til digitale objekter, såsom videnskabelige artikler, billeder, videoer og andre typer digitale dokumenter. DOI-systemet giver mulighed for at tildele en unik identifikator til hvert digitalt objekt, som kan bruges til at identificere og citere objektet i videnskabelige artikler og andre publikationer. DOI\'er administreres af International DOI Foundation (IDF) og tildeles af registreringsagenturer, der er godkendt af IDF.';
 $lang["doi_info_link"]='på <a target="_blank" href="https://da.wikipedia.org/wiki/Digital_Object_Identifier">DOIs</a>.';
 $lang["doi_info_metadata_schema"]='På DOI-registreringen på DataCite.org er angivet i <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Datacite Metadata Schema Documentation</a>.';
 $lang["doi_info_mds_api"]='På DOI-API\'en, som bruges af dette plugin, er angivet i <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API-dokumentationen</a>.';

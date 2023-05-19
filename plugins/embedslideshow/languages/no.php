@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Innebygg';
-$lang["embedslideshow_minimise"]='&minus; Minimer lysbildefremvisning';
+$lang["embedslideshow_minimise"]='&minus; minimer lysbildefremvisning';
 $lang["embedslideshow_maximise"]='Maksimer lysbildefremvisning.';
 $lang["embedslideshow_size"]='Bildefremvisningsstørrelse?';
 $lang["sizename_pixels"]='%name (%pixels piksler)';

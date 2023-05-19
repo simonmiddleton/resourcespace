@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Sallittujen Windows-verkkotunnusten luettelo (pilkulla
 $lang["winauth_use_win_login"]='Kirjaudu sisään käyttäen Windowsin tunnistautumista.';
 $lang["winauth_nouser"]='Tilisi ei ole käytössä järjestelmässä. Hae käyttäjätiliä tai ota yhteyttä järjestelmänvalvojaan.';
 $lang["winauth_prefer_normal"]='Suosi standardi ResourceSpace-kirjautumisia. Jos tämä on totta, käyttäjät ohjataan oletuksena kirjautumissivulle, jossa on mahdollisuus käyttää Windows-todennusta.';
-$lang["winauth_test"]='Test (Suomi): Testi';
+$lang["winauth_test"]='Testi';
 $lang["winauth_user_info"]='Olet kirjautuneena käyttäjänä: [käyttäjänimi]';
 $lang["winauth_not_logged_in"]='Et ole kirjautunut sisään tai verkkopalvelimesi asetuksia ei ole määritetty oikein.';

@@ -7,7 +7,6 @@ $lang["addrange"]='Pridať rozsah.';
 $lang["removerange"]='Odstrániť rozsah.';
 $lang["range"]='Rozsah';
 $lang["pages"]='stránky';
-$lang["to-page"]='na (used as a preposition)';
 $lang["outofrange"]='Mimo rozsahu.';
 $lang["invalidrange"]='Neplatný rozsah.';
 $lang["splitpdf_createnewresource"]='Vytvorte nový zdroj pre každý rozsah.';

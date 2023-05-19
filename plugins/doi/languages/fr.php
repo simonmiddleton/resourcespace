@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Inaltérable.';
-$lang["doi_info_wikipedia"]='Identifiant d\'objet numérique (DOI)';
 $lang["doi_info_link"]='sur les <a target="_blank" href="https://fr.wikipedia.org/wiki/Identifiant_d%27objet_num%C3%A9rique">Identifiants d\'Objet Numérique (DOI)</a>.';
 $lang["doi_info_metadata_schema"]='Les informations d\'enregistrement DOI sur DataCite.org sont indiquées dans la <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Documentation du schéma de métadonnées Datacite</a>.';
 $lang["doi_info_mds_api"]='Les informations sur l\'API DOI utilisée par ce plugin sont indiquées dans la <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Documentation de l\'API Datacite</a>.';

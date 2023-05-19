@@ -4,7 +4,7 @@
 $lang["license_usage-book"]='Libro';
 $lang["license_usage-web"]='Sito web';
 $lang["license_usage-merchandise"]='Merce';
-$lang["license_usage-tv"]='TV can be translated to "televisione" in Italiano.';
+$lang["license_usage-tv"]='Televisione';
 $lang["license_management"]='Gestione delle licenze.';
 $lang["licensor_licensee"]='Licenziante / Licenziatario';
 $lang["new_license"]='Nuova licenza.';

@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Fält för föreslagna nyckelord.';
 $lang["google_vision_landmarks_field"]='Fält för landmärken.';
 $lang["google_vision_text_field"]='Fält för extraherad text.';
 $lang["google_vision_logo_field"]='Fält för identifierade populära logotyper.';
-$lang["google_vision_api"]='Google Vision API = Google Vision API';
 $lang["google_vision_restypes"]='Aktiverade resurstyper.';
 $lang["google_vision_features"]='Aktiverad funktion detektering.';
 $lang["google_vision_autotitle"]='Automatiskt sätt titeln till det högst rankade sökordet.';

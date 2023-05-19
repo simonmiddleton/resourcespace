@@ -4,7 +4,8 @@ include '../../../include/authenticate.php';
 include '../../../include/ajax_functions.php';
 if(!checkperm('a'))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $museumplus_modules_config = plugin_decode_complex_configs($museumplus_modules_saved_config);

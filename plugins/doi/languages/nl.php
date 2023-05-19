@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Onveranderlijk.';
-$lang["doi_info_wikipedia"]='Digitale Object Identifier (DOI)';
 $lang["doi_info_link"]='op <a target="_blank" href="https://nl.wikipedia.org/wiki/Digital_Object_Identifier">DOI\'s</a>.';
 $lang["doi_info_metadata_schema"]='Op de DOI-registratie bij DataCite.org staan ​​de gegevens vermeld in de <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Documentatie van het Datacite Metadata-schema</a>.';
 $lang["doi_info_mds_api"]='De DOI-API die door deze plugin wordt gebruikt, wordt beschreven in de <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API-documentatie</a>.';
@@ -51,7 +50,6 @@ $lang["doi_not_successfully_registered_pl"]='Kon niet correct worden geregistree
 $lang["doi_reload"]='Herladen.';
 $lang["doi_successfully_set"]='is ingesteld.';
 $lang["doi_not_successfully_set"]='Is niet ingesteld.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Hulpbron(nen) heeft/hebben al een DOI.';
 $lang["doi_sum_not_yet_archived"]='bron(nen) is/zijn niet gemarkeerd';
 $lang["doi_sum_not_yet_archived_2"]='Maar de toegang is niet ingesteld op open.';

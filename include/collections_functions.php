@@ -2435,9 +2435,8 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
  * Returns all saved searches in a collection
  *
  * @param  integer $collection
- * @return void
  */
-function get_saved_searches($collection)
+function get_saved_searches($collection): array
 	{
 	return ps_query("select " . columns_in("collection_savedsearch") . " from collection_savedsearch where collection= ? order by created", ['i', $collection]);
 	}
@@ -2573,15 +2572,15 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
         $search_all_workflow_states = false;
         }
    
-    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,$editable_only,false,$res_access);
+    $results=do_search($search, $restypes, $order_by, $archivesearch,[0,-1],$sort,false,DEPRECATED_STARSEARCH,false,false,$daylimit,false,true,false,$editable_only,false,$res_access);
 
-	if(!is_array($results) || count($results) == 0)
+	if(!is_array($results) || (isset($results["total"]) && $results["total"] == 0))
         {
         return false;
         }
 
-    // To maintain current collection order but add the search items in the correct order we must first ove the existing collection resoruces out the way
-    $searchcount = count($results);
+    // To maintain current collection order but add the search items in the correct order we must first move the existing collection resources out the way
+    $searchcount = $results["total"];
     if($searchcount > 0)
         {
         ps_query("UPDATE collection_resource SET sortorder = if(isnull(sortorder), ?,sortorder + ?) WHERE collection= ?",
@@ -2630,22 +2629,22 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
     $resourcesnotadded = array(); # record the resources that are not added so we can display to the user
     $blockedtypes = array();# Record the resource types that are not added 
 
-	for ($r=0;$r<$searchcount;$r++)
+    foreach($results["data"] as $result)
         {
-        $resource=$results[$r]["ref"];
-        $archivestatus=$results[$r]["archive"];
+        $resource=$result["ref"];
+        $archivestatus=$result["archive"];
         
-        if(in_array($results[$r]["resource_type"],$collection_block_restypes))
+        if(in_array($result["resource_type"],$collection_block_restypes))
             {
-            $blockedtypes[] = $results[$r]["resource_type"];
+            $blockedtypes[] = $result["resource_type"];
             continue;
             }
 
         if (count($keys)>0)
-            {			
+            {
             if ( ($archivestatus < 0 && !$collection_allow_not_approved_share) || !can_share_resource($resource) )
                 {
-                $resourcesnotadded[$resource] = $results[$r];
+                $resourcesnotadded[$resource] = $result;
                 continue;
                 }
 
@@ -2666,7 +2665,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
                     $params[] = 'i'; $params[] = $keys[$n]["usergroup"];
                     }
                 # Insert a new access key entry for this resource/collection.
-                ps_query("insert into external_access_keys(resource,access_key,user,collection,date,access,password_hash,expires,usergroup) values (?, ?, ?, ?,now(), ?, ?, {$sql})",
+                ps_query("INSERT INTO external_access_keys(resource,access_key,user,collection,date,access,password_hash,expires,usergroup) VALUES (?, ?, ?, ?,NOW(), ?, ?, {$sql})",
                     array_merge([
                     'i', $resource,
                     's', $keys[$n]["access_key"],
@@ -2685,22 +2684,24 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
             }
         }
 
-    if (is_array($results))
+    if (is_array($results["data"]))
         {		
-        $modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results, $resourcesnotadded));
+        $modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results["data"], $resourcesnotadded));
         if (is_array($modifyNotAdded))
             $resourcesnotadded = $modifyNotAdded;
 
-        for ($n=0;$n<$searchcount;$n++)
+        $n = 0;
+        foreach($results["data"] as $result)
             {
-            $resource=$results[$n]["ref"];
-            if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
+            $resource=$result["ref"];
+            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"],$collection_block_restypes))
                 {
-                ps_query("delete from collection_resource where resource=? and collection=?",array("i",$resource,"i",$collection));
-                ps_query("insert into collection_resource(resource,collection,sortorder) values (?,?,?)",array("i",$resource,"i",$collection,"s",$n));
+                ps_query("DELETE FROM collection_resource WHERE resource=? AND collection=?",array("i",$resource,"i",$collection));
+                ps_query("INSERT INTO collection_resource(resource,collection,sortorder) VALUES (?,?,?)",array("i",$resource,"i",$collection,"s",$n));
                 
                 #log this
                 collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
+                $n++;
                 }
             }
 		}
@@ -2952,7 +2953,10 @@ function get_featured_collection_resources(array $c, array $ctx)
                 $subfcimages = get_collection_resources($checkfc);
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
-                    $fcresources = array_merge($fcresources,$subfcimages);
+                    // The join defined above specifically excludes any resources that are not in the active archive state,
+                    // for the limiting via $ctx to function correctly we'll need to check for each resources state before adding it  to fcresources
+                    $resources = get_resource_data_batch($subfcimages);
+                    $fcresources = array_merge($fcresources,array_column(array_filter($resources, function($r){return $r['archive'] == "0";}), 'ref'));
                     } 
                 continue;
                 }
@@ -3464,9 +3468,8 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
  * @param  string   $class
  * @param  string   $onclick  Additional onclick code to call before returning false.
  * 
- * @return void
  */
-function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false)
+function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false): string
     {
     # Generates a HTML link for removing a resource from a collection
     # The collection is referred to as the basket when in basket mode
@@ -6730,7 +6733,7 @@ function external_upload_notify($collection, $k, $tempcollection)
  *                              "share_user"        - (int) user ID of share creator
  *                              "share_type"        - (int) 0=view, 1=upload
  *                              "share_collection"  - (int) Collection ID
- * @return void
+ * @return string|int
  */
 function purge_expired_shares($filteropts)
     {

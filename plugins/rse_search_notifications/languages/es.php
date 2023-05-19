@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["search_notifications_watch_this_search"]='Por favor, traduce: "Observa esta búsqueda".';
+$lang["search_notifications_watch_this_search"]='Observa esta búsqueda';
 $lang["search_notifications_watched_searches"]='Búsquedas guardadas.';
 $lang["search_notifications_introtext"]='Utilice esta página para controlar sus búsquedas guardadas.<br /><br />Los administradores pueden controlar las búsquedas vigiladas para todos los usuarios.';
 $lang["search_notifications_no_watched_searches"]='No se encontraron búsquedas guardadas.';
@@ -20,8 +20,6 @@ $lang["disable_all"]='Desactivar todo.';
 $lang["enable_all"]='Habilitar todo.';
 $lang["disable"]='Desactivar';
 $lang["enable"]='Habilitar';
-$lang["checknow"]='Por favor, traduce: "Check now". 
-
-Revisar ahora.';
+$lang["checknow"]='Revisar ahora';
 $lang["columnheader-enabled"]='Habilitado.';
 $lang["columnheader-last-found"]='Último encontrado.';

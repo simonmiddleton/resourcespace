@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["openai_gpt_title"]='OpenAI integration can be translated to "OpenAI integration" in Danish.';
+$lang["openai_gpt_title"]='OpenAI integration';
 $lang["openai_gpt_intro"]='Tilføjer metadata genereret ved at sende eksisterende data til OpenAI API\'en med en tilpasselig prompt. Få din API-nøgle fra <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a><br />Se https://beta.openai.com/docs/introduction for mere detaljeret information.';
 $lang["property-openai_gpt_prompt"]='GPT Prompt kan oversættes til "GPT-anmodning".';
 $lang["property-openai_gpt_input_field"]='GPT Indtastningsfelt';

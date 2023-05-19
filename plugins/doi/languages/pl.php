@@ -2,9 +2,6 @@
 
 
 $lang["status4"]='Niezmienne.';
-$lang["doi_info_wikipedia"]='Proszę przetłumaczyć: https://en.wikipedia.org/wiki/Digital_Object_Identifier
-
-Identyfikator cyfrowy DOI (ang. Digital Object Identifier) to unikalny identyfikator przypisany do cyfrowego zasobu, takiego jak artykuł naukowy, książka elektroniczna czy plik multimedialny. DOI umożliwia trwałe i niezmiennikowe odniesienie do zasobu w Internecie, co ułatwia jego wyszukiwanie i cytowanie. DOI składa się z prefiksu "10." oraz ciągu znaków przypisanych przez organizację nadającą identyfikator.';
 $lang["doi_info_link"]='na <a target="_blank" href="https://pl.wikipedia.org/wiki/Digital_Object_Identifier">DOI</a>.';
 $lang["doi_info_metadata_schema"]='W rejestracji DOI na DataCite.org są określone w <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Dokumentacji schematu metadanych Datacite</a>.';
 $lang["doi_info_mds_api"]='Informacje dotyczące DOI-API używanego przez ten plugin są zawarte w <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Dokumentacji API Datacite</a>.';
@@ -51,7 +48,6 @@ $lang["doi_not_successfully_registered_pl"]='Nie można było zarejestrować pop
 $lang["doi_reload"]='Przeładuj.';
 $lang["doi_successfully_set"]='zostało ustawione.';
 $lang["doi_not_successfully_set"]='nie zostało ustawione.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Zasób(y) już ma/mają DOI.';
 $lang["doi_sum_not_yet_archived"]='Zasób(y) nie jest/są oznaczone.';
 $lang["doi_sum_not_yet_archived_2"]='Jednakże dostęp do tego zasobu lub ich dostęp nie jest ustawiony jako otwarty.';

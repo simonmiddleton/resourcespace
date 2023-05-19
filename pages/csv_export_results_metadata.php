@@ -31,7 +31,7 @@ if ($resources_found > 0)
     while ($chunk_offset < $resources_found)
         {
         $search_results = do_search($search, $restypes, $order_by, $archive, array($chunk_offset, $search_chunk_size), $sort, false, DEPRECATED_STARSEARCH, false, false, '', false, false, true, false, false, $access, null);
-        $resources_to_process = array_merge($resources_to_process, array_column($search_results, "ref"));
+        $resources_to_process = array_merge($resources_to_process, array_column($search_results["data"], "ref"));
         $chunk_offset = $chunk_offset + $search_chunk_size;
         }
     }   

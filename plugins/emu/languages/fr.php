@@ -26,7 +26,6 @@ $lang["emu_module"]='Module EMu.';
 $lang["emu_column_name"]='Colonne du module EMu.';
 $lang["emu_rs_field"]='Champ ResourceSpace';
 $lang["emu_add_mapping"]='Ajouter une correspondance.';
-$lang["emu_upload_emu_field_label"]='Please provide more context or information about the term "EMu IRN" so that I can provide an accurate translation.';
 $lang["emu_confirm_upload_nodata"]='Veuillez cocher la case pour confirmer que vous souhaitez poursuivre le téléchargement.';
 $lang["emu_test_script_title"]='Tester/Exécuter le script';
 $lang["emu_run_script"]='Veuillez traduire : Processus.';

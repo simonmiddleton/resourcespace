@@ -88,5 +88,4 @@ function Hookyt2rsViewreplacedownloadoptions()
 		return false;
 		}
 	}
-?>
 

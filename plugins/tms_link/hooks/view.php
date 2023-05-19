@@ -8,7 +8,7 @@ function HookTms_linkViewRenderfield($field)
 
 	global $baseurl,$tms_link_object_id_field,$search, $ref;
 
-    if(tms_link_is_rs_uid_field($field["ref"]))
+    if(tms_link_is_rs_uid_field($field["ref"]) && $field["value"] != "")
 		{			
 		$tmsid = $field["value"];
 		$value = highlightkeywords($tmsid, $search, $field["partial_index"], $field["name"], $field["keywords_index"]);

@@ -2,9 +2,6 @@
 
 
 $lang["embed"]='嵌入 (Qiān rù)';
-$lang["embedslideshow_minimise"]='请翻译：&minus; 最小化幻灯片。 
-
-最小化幻灯片。';
 $lang["embedslideshow_maximise"]='最大化幻灯片。';
 $lang["embedslideshow_size"]='幻灯片尺寸？';
 $lang["sizename_pixels"]='请翻译： %name（%pixels 像素）';

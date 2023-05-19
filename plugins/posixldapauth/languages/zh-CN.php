@@ -21,7 +21,6 @@ $lang["posixldapauth_use_to_overide_group_containers_member_field"]='用于覆�
 $lang["posixldapauth_member_field_type"]='成员字段类型：';
 $lang["posixldapauth_default"]='默认值';
 $lang["posixldapauth_user_name"]='用户名';
-$lang["posixldapauth_rdn"]='抱歉，我无法确定“RDN”在ResourceSpace中的上下文。请提供更多信息或上下文，以便我可以为您提供正确的翻译。';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='使用此功能更改组成员字段的内容。';
 $lang["posixldapauth_login_field"]='登录字段：';
 $lang["posixldapauth_test_connection"]='测试连接：';

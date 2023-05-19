@@ -26,7 +26,6 @@ $lang["emu_module"]='Modul EMu';
 $lang["emu_column_name"]='Stĺpec modulu EMu';
 $lang["emu_rs_field"]='Pole ResourceSpace.';
 $lang["emu_add_mapping"]='Pridať mapovanie.';
-$lang["emu_upload_emu_field_label"]='EMu IRN cannot be translated without additional context. EMu is a collections management software, and IRN is an acronym for "Internal Record Number". If you provide more information about the specific context in which this term is used, I can provide a more accurate translation.';
 $lang["emu_confirm_upload_nodata"]='Prosím, zaškrtnite políčko, aby ste potvrdili, že chcete pokračovať s nahrávaním.';
 $lang["emu_test_script_title"]='Test/Spusti skript.';
 $lang["emu_run_script"]='Spracovanie';

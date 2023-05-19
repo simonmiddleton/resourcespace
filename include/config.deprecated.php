@@ -418,7 +418,6 @@ $suppress_sql_log = false;
 $team_centre_alert_icon = true;
 
 # Normally, image tweaks are only applied to scr size and lower. 
-# If using Magictouch, you may want tweaks like rotation to be applied to the larger images as well.
 # This could require recreating previews to sync up the various image rotations.
 $tweak_all_images=false;
 $tweak_allow_gamma=true;

@@ -150,6 +150,9 @@ if($simple_search_pills_view)
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
 <script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
+<!-- DOMPurify -->
+<script src="<?php echo $baseurl; ?>/lib/js/purify.min.js"></script>
+
 <?php 
 global $not_authenticated_pages;
 $not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');

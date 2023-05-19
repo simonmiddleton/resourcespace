@@ -90,3 +90,16 @@ function HookTransformAllAdditional_title_pages()
         echo "</script>";
         }
     }
+
+function HookTransformAllreplace_resource_file_extra($resource)
+    {
+    // Delete the original_copy alternative when replacing the file via upload_batch
+    if(getval('saveaction', '') === '')
+        {
+        $path = get_resource_path($resource['ref'],true,"original_copy",false,$resource['file_extension']);
+        if(file_exists($path))
+            {
+            unlink($path);
+            }
+        }
+    }

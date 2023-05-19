@@ -17,7 +17,6 @@ $lang["checkmail_password"]='Contrasenya';
 $lang["checkmail_extension_mapping"]='Tipus de recurs a través de la correspondència d\'extensió de fitxer.';
 $lang["checkmail_default_resource_type"]='Tipus de recurs per defecte.';
 $lang["checkmail_extension_mapping_desc"]='Després del selector de Tipus de Recurs per defecte, hi ha una entrada per a cada un dels Tipus de Recurs. <br />Per forçar que els fitxers pujats de diferents tipus es converteixin en un Tipus de Recurs específic, afegiu llistes separades per comes d\'extensions de fitxers (ex. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Permesos d\'extensió.';
 $lang["checkmail_subject_field"]='Camp d\'assumpte';
 $lang["checkmail_body_field"]='Camp del cos.';
 $lang["checkmail_purge"]='Eliminar els correus electrònics després de pujar-los?';

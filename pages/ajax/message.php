@@ -383,18 +383,15 @@
         if (url!="")
             {
                 url=decodeURIComponent(url);
-                url="<a class='message_link' href='" + url + "'><?php echo htmlspecialchars($lang['link']); ?></a>";
+                url=DOMPurify.sanitize(url);
+                url="<a class='message_link' href='" + url + "'><?php echo escape_quoted_data($lang['link']); ?></a>";
             }
         if (typeof owner==="undefined" || owner=='')
             {
             owner = '<?php echo escape_quoted_data($applicationname); ?>';
             }
 
-        let message_text_div = document.createElement('div');
-        message_text_div.className = 'MessageText';
-        message_text_div.textContent = nl2br(message) + ' ' + url;
-
-        jQuery("#modal_dialog").append(message_text_div);
+        jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(DOMPurify.sanitize(message)) + "</div>" + url);
         jQuery("#modal_dialog").addClass('message_dialog');
         jQuery("#modal_dialog").dialog({
             title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,

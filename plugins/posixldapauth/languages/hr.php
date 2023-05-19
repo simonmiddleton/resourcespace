@@ -24,7 +24,6 @@ $lang["posixldapauth_user_name"]='Korisničko ime.';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Koristi se za promjenu sadržaja polja Član grupe.';
 $lang["posixldapauth_login_field"]='Polje za prijavu:';
 $lang["posixldapauth_test_connection"]='Testiranje veze:';
-$lang["posixldapauth_test"]='Test (Izrada probnog primjerka)';
 $lang["posixldapauth_resourcespace_configuration"]='Konfiguracija ResourceSpace-a.';
 $lang["posixldapauth_user_suffix"]='Korisnički sufiks:';
 $lang["posixldapauth_create_users"]='Stvaranje korisnika:';

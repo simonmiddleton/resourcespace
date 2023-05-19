@@ -613,7 +613,7 @@ $lang["property-regexp_filter"]='Regexp filter: Regexp-filter';
 $lang["information-regexp_filter"]='Reguliere expressie filtering - bijv. \'[A-Z]+\' zorgt ervoor dat alleen hoofdletters kunnen worden ingevoerd.';
 $lang["information-regexp_fail"]='De ingevoerde waarde was niet in het vereiste formaat.';
 $lang["property-tab_name"]='Tab naam';
-$lang["property-push_metadata"]='Push metadata can be translated to "Metadata doorvoeren".';
+$lang["property-push_metadata"]='Metadata doorvoeren';
 $lang["property-icon"]='Pictogram.';
 $lang["property-inherit_global_fields"]='Overnemen van globale velden.';
 $lang["information-inherit_global_fields"]='Moeten globale velden worden opgenomen voor dit resourcetype?';
@@ -641,9 +641,8 @@ $lang["property-onchange_macro"]='Op wijziging macro.';
 $lang["information-onchange_macro"]='Bij wijziging macro: code die moet worden uitgevoerd wanneer de veldwaarde is gewijzigd. VOORZICHTIGHEID IS GEBODEN.';
 $lang["information-derestrict_filter"]='Filter opheffen. Alleen effectief wanneer gebruikt in combinatie met het verwijderen van de g-toestemming, zodat alle resources beperkt zijn, tenzij aan de metadata-voorwaarde is voldaan.';
 $lang["information-push_metadata"]='Indien ingesteld, worden de metadata voor deze bron weergegeven op de bronweergavepagina voor alle gerelateerde bronnen. Bijvoorbeeld, je kunt verschillende foto\'s relateren aan een persoonlijke bron. Als deze eigenschap is ingesteld op de persoonlijke bron, dan zullen de persoonlijke metadata verschijnen op alle gerelateerde fotobronnen, waardoor duplicatie van gegevens in het systeem wordt vermeden.';
-$lang["property-query"]='Aanvraag (in the context of ResourceSpace)';
+$lang["property-query"]='Aanvraag';
 $lang["information-id"]='Opmerking: \'Id\' hieronder MOET worden ingesteld op een unieke code van drie tekens.';
-$lang["property-id"]='Id translates to "Id" in Nederlands. It is commonly used as an abbreviation for "identifier" in digital asset management software.';
 $lang["property-width"]='Breedte';
 $lang["property-height"]='Hoogte';
 $lang["property-quality"]='Kwaliteit.';
@@ -669,17 +668,11 @@ $lang["themeselector"]='Uitgelichte collecties.';
 $lang["myrequests"]='Mijn verzoeken';
 $lang["collections"]='Collecties';
 $lang["changethemeto"]='Verander thema naar';
-$lang["xlthumbs"]='X-large: Zeer groot.';
 $lang["xlthumbstitle"]='Extra grote miniaturen.';
 $lang["largethumbs"]='Groot';
 $lang["largethumbstitle"]='Grote miniaturen.';
 $lang["smallthumbs"]='Klein.';
 $lang["smallthumbstitle"]='Kleine miniaturen.';
-$lang["strip"]='Strip (in the context of ResourceSpace) can have different meanings depending on the context. Here are some possible translations:
-
-- Strip (noun): strook, band, reep. Example: "The image has a strip of metadata at the bottom."
-- Strip (verb, e.g. to strip metadata from a resource): verwijderen, weghalen, ontdoen. Example: "The script strips all metadata from the file."
-- Strip (noun, e.g. comic strip): stripverhaal, strip. Example: "We have a collection of classic comic strips in our library."';
 $lang["striptitle"]='Stripweergave';
 $lang["listtitle"]='Lijstweergave';
 $lang["perpage_option"]='? per pagina.';
@@ -734,8 +727,6 @@ $lang["editcollectionresources"]='Bewerk collectievoorbeelden.';
 $lang["collection_set_theme_category"]='Toevoegen aan uitgelichte collectie categorie.';
 $lang["collection_set_theme_category_title"]='Voeg collectie toe aan de categorie met uitgelichte collecties.';
 $lang["collection-name"]='Collectie: %collectionname%';
-$lang["collectionidprefix"]='Col_ID translates to "Kolom-ID" in Nederlands.';
-$lang["_dupe"]='Duplicate (Kopie)';
 $lang["emailtousers"]='E-mail naar gebruikers<br><br><b>Voor bestaande gebruikers</b> begin met het typen van de naam van de gebruiker om te zoeken, selecteer de gebruiker wanneer deze gevonden is en klik vervolgens op plus<br><br><b>Voor niet-geregistreerde gebruikers</b> typ het e-mailadres en klik vervolgens op plus.';
 $lang["emailtousers_internal"]='E-mail naar gebruikers<br><br>Begin met het typen van de naam van de gebruiker om te zoeken, klik vervolgens op de vereiste gebruiker wanneer deze is gevonden.';
 $lang["create_new_here"]='Maak hier aan.';
@@ -798,8 +789,6 @@ $lang["page_collections_message"]='Doorgaan zal de selectie van de collecties di
 $lang["delete_all_selected"]='Verwijder alle geselecteerde.';
 $lang["range_no_start_header"]='Bereikfout.';
 $lang["range_no_start"]='Kan bereik niet beëindigen zonder een start. Laat de shift-toets los.';
-$lang["lightbox-image"]='Afbeelding';
-$lang["lightbox-of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["treeobjecttype-resource_type"]='Middel voor bronbeheer.';
 $lang["resources_selected-1"]='1 bron geselecteerd.';
 $lang["resources_selected-2"]='%aantal geselecteerde resources';
@@ -820,18 +809,13 @@ $lang["youfoundresource"]='bron';
 $lang["youfoundresults"]='resultaten';
 $lang["selected"]='geselecteerd';
 $lang["youfoundresult"]='resultaat';
-$lang["sortorder-desc"]='Beschrijving';
 $lang["modified"]='Aangepast';
 $lang["resourcedownloads"]='Middelen downloads';
 $lang["filedimensions"]='Bestandsafmetingen.';
 $lang["vieworiginalresource"]='Bekijk het originele bestand.';
 $lang["previewithsizename"]='%sizename Voorbeeldweergave';
 $lang["originalfileoftype"]='Oorspronkelijk bestand %EXTENSION.';
-$lang["fileoftype"]='Bestand';
 $lang["cell-fileoftype"]='Bestandsextensie %EXTENSION';
-$lang["field-fileextension"]='Bestandsextensie.';
-$lang["fileextension-inside-brackets"]='[%EXTENSION] translates to [%EXTENSIE] in Nederlands.';
-$lang["fileextension"]='Bestandsextensie.';
 $lang["mp3_preview_file"]='MP3 Voorbeeldbestand';
 $lang["action-request"]='Aanvraag';
 $lang["requestlog"]='Verzoeklogboek';
@@ -867,7 +851,6 @@ $lang["log-a"]='Wijzig toegang';
 $lang["log-r"]='Teruggedraaide metadata.';
 $lang["log-b"]='Aangemaakt alternatief.';
 $lang["log-y"]='Verwijderde alternatief.';
-$lang["log-missinglang"]='Please provide more context or the full sentence where the word [type] is used, so I can provide an accurate translation.';
 $lang["log-adminpermissionsrequired"]='Volledige beheerdersrechten vereist!';
 $lang["log-removedcustomuseraccess"]='Verwijderde aangepaste toegang voor gebruiker:';
 $lang["log-deleted_all"]='Alle bronnen van deze collectie zijn verwijderd (verplaatst naar de status %ARCHIVE).';
@@ -928,9 +911,6 @@ $lang["treeobjecttype-group"]='Groep';
 $lang["groupsmart"]='Groep (Slim)';
 $lang["confirmaddgroupsmart"]='Weet u zeker dat u leden dynamisch wilt opnemen in deze groep?';
 $lang["back_to"]='Terug naar %area.';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a string used in ResourceSpace. Can you please provide me with more context or the full sentence where this string appears?';
-$lang["minute-abbreviated"]='I\'m sorry, but "MM" is not a language string used in ResourceSpace. Can you please provide me with more context or the full sentence where this term is used?';
-$lang["itemstitle"]='Items can be translated as "Items" in Nederlands. However, in the context of ResourceSpace, it could refer to "Resources" which can be translated as "Bronnen" in Nederlands.';
 $lang["treeobjecttype-field"]='Veld';
 $lang["save-return"]='Opslaan en terugkeren.';
 $lang["revert"]='Terugdraaien';
@@ -955,7 +935,6 @@ $lang["mustaccept"]='Je moet het vakje aanvinken om de voorwaarden te accepteren
 $lang["termsmustindicateusage"]='Je moet het geplande gebruik aangeven voordat je verder kunt gaan.';
 $lang["termsmustspecifyusagecomment"]='Je moet geplande gebruik opmerkingen verstrekken voordat je verder kunt gaan.';
 $lang["proceed"]='Doorgaan';
-$lang["notavailableshort"]='N/A can be translated as "niet van toepassing" in Nederlands.';
 $lang["allmonths"]='Alle maanden.';
 $lang["allgroups"]='Alle groepen.';
 $lang["status-ok"]='OK';
@@ -1011,7 +990,6 @@ $lang["item"]='item
 $lang["stat-addedsmartcollection"]='Toegevoegde slimme collectie.';
 $lang["stat-removedresourcefromcollection"]='Verwijderde bron uit collectie.';
 $lang["stat-keywordusage-noresultsfound"]='Geen resultaten gevonden voor trefwoordgebruik.';
-$lang["plugin_field_fmt"]='%A (%B) vertaalt naar: %A (%B)';
 $lang["share"]='Delen';
 $lang["share_selected"]='Delen geselecteerd';
 $lang["sharecollection"]='Delen collectie.';
@@ -1239,12 +1217,9 @@ $lang["setup-if_mysql_read_only_username"]='De gebruikersnaam die wordt gebruikt
 $lang["setup-emailfrom"]='E-mail afzenderadres.';
 $lang["setup-emailnotify"]='E-mailmelding';
 $lang["setup-spiderpassword"]='Spinwachtwoord';
-$lang["setup-scramblekey"]='Versleutelingssleutel';
-$lang["setup-apiscramblekey"]='API scramble key: API versleutelsleutel';
 $lang["setup-paths"]='Paden';
 $lang["setup-pathsdetail"]='Voor elk pad, voer het pad in zonder een schuine streep aan het einde naar elke binair bestand. Om een binair bestand uit te schakelen, laat het pad dan leeg. Alle automatisch gedetecteerde paden zijn al ingevuld.';
 $lang["setup-applicationname"]='Toepassingsnaam';
-$lang["setup-basicsettingsfooter"]='Let op: De enige <strong>verplichte</strong> instellingen bevinden zich op deze pagina. Als je geen interesse hebt in het bekijken van de geavanceerde opties, kun je hieronder klikken om het installatieproces te starten.';
 $lang["setup-if_mysqlserver"]='Het IP-adres of de <abbr title="Fully Qualified Domain Name">FQDN</abbr> van uw MySQL-serverinstallatie. Als MySql op dezelfde server als uw webserver is geïnstalleerd, gebruik dan "localhost".';
 $lang["setup-if_mysqlusername"]='De gebruikersnaam die wordt gebruikt om verbinding te maken met uw MySQL-server. Deze gebruiker moet rechten hebben om tabellen te maken in de onderstaande database.';
 $lang["setup-if_mysql_read_only_password"]='Het wachtwoord voor de MySQL gebruikersnaam hierboven ingevoerd.';
@@ -1256,16 +1231,10 @@ $lang["setup-if_admin_username"]='De gebruikersnaam die wordt gebruikt om verbin
 $lang["setup-if_admin_password"]='Het wachtwoord voor de hierboven ingevoerde Admin gebruikersnaam.';
 $lang["setup-if_emailfrom"]='Het adres waarvandaan e-mails van RS lijken te komen.';
 $lang["setup-if_emailnotify"]='Het e-mailadres waarnaar bron-/gebruikers-/onderzoeksverzoeken worden verzonden.';
-$lang["setup-if_spiderpassword"]='Het wachtwoord van de spider is een verplicht veld.';
-$lang["setup-if_scramblekey"]='Om scrambling in te schakelen, stel de scramble key in als een moeilijk te raden karakterreeks (vergelijkbaar met een wachtwoord). Als dit een openbare installatie is, is dit een zeer verstandig idee. Laat dit veld leeg om het scrambling van de resource paden uit te schakelen. Dit veld is al voor u willekeurig gegenereerd, maar u kunt het wijzigen om overeen te komen met een bestaande installatie, indien nodig.';
-$lang["setup-if_apiscramblekey"]='Stel de API-verhaspelingssleutel in op een moeilijk te raden tekenreeks (vergelijkbaar met een wachtwoord). Als je van plan bent om API\'s te gebruiken, is dit een zeer verstandig idee.';
 $lang["setup-if_applicationname"]='De naam van uw implementatie/installatie (bijv. \'MijnBedrijf HulpbronSysteem\').';
 $lang["setup-err_mysqlbinpath"]='Pad kan niet worden geverifieerd. Laat leeg om uit te schakelen.';
 $lang["setup-err_baseurl"]='Basis-URL is een verplicht veld.';
 $lang["setup-err_baseurlverify"]='De basis-URL lijkt niet correct te zijn (kon license.txt niet laden).';
-$lang["setup-err_spiderpassword"]='Het wachtwoord dat vereist is voor spider.php. BELANGRIJK: Maak dit wachtwoord willekeurig voor elke nieuwe installatie. Uw resources zullen leesbaar zijn voor iedereen die dit wachtwoord kent. Dit veld is al voor u willekeurig gemaakt, maar u kunt het wijzigen om overeen te komen met een bestaande installatie, indien nodig.';
-$lang["setup-err_scramblekey"]='Indien dit een openbare installatie betreft, wordt het aanbevolen om de scramble key in te stellen.';
-$lang["setup-err_apiscramblekey"]='Indien dit een openbare installatie betreft, wordt het aanbevolen om de API scramble key in te stellen.';
 $lang["setup-err_path"]='Niet in staat om de locatie te verifiëren.';
 $lang["setup-err_phar_injection"]='Mogelijke Phar PHP Object Injection gedetecteerd.';
 $lang["setup-emailerr"]='Geen geldig e-mailadres.';
@@ -1274,22 +1243,6 @@ $lang["setup-rs_initial_configuration"]='ResourceSpace: Initiële configuratie.'
 $lang["setup-include_not_writable"]='\'/include\' niet beschrijfbaar. Alleen vereist tijdens installatie.';
 $lang["setup-binpath"]='%bin Pad';
 $lang["setup-begin_installation"]='Start installatie!';
-$lang["setup-generaloptions"]='Algemene opties';
-$lang["setup-allow_password_change"]='Toestaan wachtwoordwijziging?';
-$lang["setup-enable_remote_apis"]='API\'s op afstand inschakelen?';
-$lang["setup-if_allowpasswordchange"]='Sta eindgebruikers toe om hun wachtwoorden te wijzigen.';
-$lang["setup-if_enableremoteapis"]='Toestaan van externe toegang tot API-plugins.';
-$lang["setup-allow_account_requests"]='Gebruikers toestaan om account aan te vragen?';
-$lang["setup-display_research_request"]='Toon de functionaliteit voor Onderzoeksverzoeken.';
-$lang["setup-if_displayresearchrequest"]='Stelt gebruikers in staat om middelen aan te vragen via een formulier dat per e-mail wordt verzonden.';
-$lang["setup-themes_as_home"]='Gebruik de pagina met uitgelichte collecties als startpagina?';
-$lang["setup-remote_storage_locations"]='Externe opslaglocaties.';
-$lang["setup-use_remote_storage"]='Gebruik externe opslag?';
-$lang["setup-if_useremotestorage"]='Vink dit vakje aan om externe opslaglocaties voor RS te configureren. (Om een andere server te gebruiken voor de bestandsopslag.)';
-$lang["setup-storage_directory"]='Opslagmap';
-$lang["setup-if_storagedirectory"]='Waar de mediabestanden moeten worden geplaatst. Kan absoluut (/var/www/blah/blah) of relatief aan de installatie zijn. OPMERKING: Geen afsluitende slash.';
-$lang["setup-storage_url"]='Opslag-URL';
-$lang["setup-if_storageurl"]='Waar de opslagmap beschikbaar is. Kan absoluut zijn (http://files.example.com) of relatief aan de installatie. OPMERKING: Geen schuine streep aan het einde.';
 $lang["setup-smtp-settings"]='SMTP-instellingen';
 $lang["setup-if-usesmtp"]='Gebruik een externe SMTP-server voor uitgaande e-mails (bijv. Gmail). Maakt gebruik van PHPMailer.';
 $lang["setup-if-smtpsecure"]='\'\', \'tls\' of \'ssl\'. Voor Gmail is \'tls\' of \'ssl\' vereist.';
@@ -1298,9 +1251,6 @@ $lang["setup-if-smtpport"]='Poortnummer, bijvoorbeeld 465 voor Gmail met SSL.';
 $lang["setup-if-smtpauth"]='Verzend referenties naar SMTP-server (false om anonieme toegang te gebruiken)';
 $lang["setup-if-smtpusername"]='Gebruikersnaam (volledig e-mailadres).';
 $lang["setup-if-smtppassword"]='Wachtwoord';
-$lang["design-options"]='Ontwerpopties';
-$lang["use-slim-theme"]='Gebruik het SlimHeader-ontwerp?';
-$lang["setup-if_slimtheme"]='Gebruik het SlimHeader-ontwerp in plaats van het originele ontwerp om standaard een dunner kopgedeelte met een gelinkt logo weer te geven.';
 $lang["setup-login_to"]='Inloggen op';
 $lang["setup-configuration_file_output"]='Configuratiebestand uitvoer.';
 $lang["more-information"]='Meer informatie.';
@@ -1359,7 +1309,6 @@ $lang["requestreason"]='Reden voor verzoek.';
 $lang["resourcerequeststatus0"]='In afwachting.';
 $lang["resourcerequeststatus1"]='Goedgekeurd.';
 $lang["resourcerequeststatus2"]='Afgewezen.';
-$lang["ppi"]='PPI staat voor Pixels Per Inch en verwijst naar de resolutie van een afbeelding.';
 $lang["useasthemethumbnail"]='Gebruik deze bron als een uitgelichte collectiecategorie miniaturenafbeelding?';
 $lang["sessionexpired"]='Je bent automatisch uitgelogd omdat je langer dan 30 minuten inactief was. Voer je inloggegevens in om door te gaan.';
 $lang["resourcenotinresults"]='De huidige bron zit niet meer in je actieve zoekresultaten, dus is het niet mogelijk om naar de volgende/vorige te navigeren.';
@@ -1448,7 +1397,7 @@ $lang["openstreetmap"]='OpenStreetMap';
 $lang["google_terrain"]='Google terrein.';
 $lang["google_default_map"]='Standaard Google-kaart.';
 $lang["google_satellite"]='Google satelliet.';
-$lang["marker"]='Marker translates to "Markeerstift" in Nederlands.';
+$lang["marker"]='Markeerstift';
 $lang["markers"]='Markeringen';
 $lang["map_configuration"]='Zoekresultatenkaart';
 $lang["edit_map_introtext"]='Zoom en pan naar het kaartweergave van interesse, klik vervolgens op de kaart om de locatie van de bronmarkering te vinden. Sla de meest recente geolocatie op met behulp van de knop Opslaan en klik vervolgens op \'Terug naar bronbewerking of geolocatiecollectie\' om terug te keren. Gebruik de zoekknop rechtsboven om te zoeken naar een specifieke locatie of geografische functienaam. Verander de basiskaart met behulp van de knop kaartlagen rechtsboven. Sla de kaart op als een PNG-bestand met behulp van de knop kaart linksonder.';
@@ -1465,7 +1414,7 @@ $lang["map_download"]='Download kaart als PNG-bestand, selecteer een grootte aan
 $lang["map_osm_group"]='OpenStreetMap (OSM)';
 $lang["map_osm"]='Standaard';
 $lang["map_osmde"]='Nederlands: Duitse stijl';
-$lang["map_osmfrance"]='OSM France translates to OSM Frankrijk in Nederlands.';
+$lang["map_osmfrance"]='OSM Frankrijk';
 $lang["map_osmch"]='OSM Zwitserland.';
 $lang["map_osmbzh"]='OSM Luxembourg would remain the same in Dutch as it stands for OpenStreetMap Luxembourg.';
 $lang["map_osmhot"]='Humanitair';
@@ -1492,9 +1441,7 @@ $lang["map_stamenterrain"]='Terrein';
 $lang["map_stamenterrainback"]='Achtergrond van terrein.';
 $lang["map_stamenrelief"]='Verlichting';
 $lang["map_stamenwatercolor"]='Aquarel.';
-$lang["map_esri_group"]='ESRI is not a word in English, it is actually an acronym that stands for Environmental Systems Research Institute. However, in Nederlands, it is commonly translated as "ESRI Nederland" or "ESRI Nederland B.V.", which is a company that provides geographic information system (GIS) software and services.';
 $lang["map_esristreet"]='Straten.';
-$lang["map_esridelorme"]='Sorry, but "DeLorme" is a proper noun and it should not be translated. It is the name of a company that produces mapping software and GPS devices.';
 $lang["map_esritopo"]='Topografisch';
 $lang["map_esriimagery"]='Afbeeldingen';
 $lang["map_esriterrain"]='Terrein';
@@ -1503,12 +1450,10 @@ $lang["map_esriphysical"]='Fysiek';
 $lang["map_esriocean"]='Oceaan.';
 $lang["map_esrinatgeo"]='National Geographic';
 $lang["map_esrigray"]='Grijze canvas.';
-$lang["map_nasagibs_group"]='NASA GIBS translates to NASA Global Imagery Browse Services.';
 $lang["map_nasagibscolor"]='Modis/Terra Kleurenbeelden.';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra False Color Beeldvorming';
 $lang["map_nasagibsnight"]='Nachtbeelden.';
 $lang["map_mapbox_group"]='Mapbox';
-$lang["map_mapboxid"]='ID (identificatie)';
 $lang["map_mapboxtoken"]='Toegangstoken.';
 $lang["map_mapbox"]='Standaardkaart';
 $lang["map_usgs_group"]='De Nationale Kaart';
@@ -1553,7 +1498,6 @@ $lang["exiftoolnotfound"]='Kon Exiftool niet vinden.';
 $lang["existing_tags"]='Bestaande Exiftool-tags.';
 $lang["new_tags"]='Nieuwe Exiftool-tags (die worden toegevoegd bij het downloaden)';
 $lang["date_of_download"]='Datum van download.';
-$lang["field_ref_and_name"]='%ref% - %name% vertaalt naar %ref% - %naam%';
 $lang["metadata-report-fits_section"]='FITS-tags toegewezen.';
 $lang["indicateusage"]='Beschrijf alstublieft het geplande gebruik voor deze bron.';
 $lang["usage"]='Gebruik';
@@ -1715,8 +1659,6 @@ $lang["star"]='Ster.';
 $lang["stars"]='Sterren';
 $lang["noupload"]='Geen upload.';
 $lang["permissions"]='Toestemmingen';
-$lang["configdefault-title"]='I am ready to translate, please provide the English strings that need to be translated.';
-$lang["config-title"]='Let op: (WEES VOORZICHTIG om geen syntaxisfouten te maken. Als je dit bestand breekt, moet je het aan de serverzijde repareren!)';
 $lang["file_too_large"]='Bestand te groot.';
 $lang["field_updated"]='Veld bijgewerkt.';
 $lang["zoom"]='Zoom';
@@ -1786,9 +1728,6 @@ $lang["nodownloadcollection"]='Je hebt geen toegang om een van de resources in d
 $lang["progress"]='Voortgang';
 $lang["ticktodeletethisresearchrequest"]='Aanvinken om dit verzoek te verwijderen.';
 $lang["done"]='Afgerond.';
-$lang["latlong"]='Please translate: Lat / long
-
-Please provide the context in which this term is being used.';
 $lang["geographicsearch"]='Geografische zoekopdracht.';
 $lang["geographicsearchresults"]='Geografische zoekresultaten';
 $lang["geographicsearchmissing"]='Geografische zoekcriteria ontbreken.';
@@ -1808,13 +1747,11 @@ $lang["editresourcetypewarning"]='Waarschuwing: het wijzigen van het bron type z
 $lang["geodragmode"]='Slepen modus';
 $lang["geodragmodearea"]='Positiepin.';
 $lang["geodragmodeareaselect"]='Selecteer zoekgebied.';
-$lang["geodragmodepan"]='pan → pan';
 $lang["substituted_original"]='vervangen origineel';
 $lang["use_original_if_size"]='Gebruik het origineel als de geselecteerde grootte niet beschikbaar is?';
 $lang["originals-available-0"]='Beschikbaar.';
 $lang["originals-available-1"]='Beschikbaar.';
 $lang["originals-available-2"]='Beschikbaar.';
-$lang["inch-short"]='in = in';
 $lang["deletedresource"]='Verwijderde bron.';
 $lang["deletedresources"]='Verwijderde bronnen.';
 $lang["nopreviewresources"]='Bronnen zonder voorbeelden.';
@@ -1916,21 +1853,12 @@ $lang["saved"]='Opgeslagen.';
 $lang["changessaved"]='Wijzigingen opgeslagen.';
 $lang["resourceids"]='Bron-ID(\'s)';
 $lang["warningrequestapprovalfield"]='Waarschuwing - bron-ID % - let op de volgende punten voordat u goedkeurt.';
-$lang["yyyy-mm-dd"]='YYYY-MM-DD translates to Jaar-Jaar-Maand-Dag.';
 $lang["resources-with-requeststatus0-0"]='(0 in behandeling)';
 $lang["resources-with-requeststatus0-1"]='(1 in behandeling)';
-$lang["resources-with-requeststatus0-2"]='(%aantal in afwachting)';
+$lang["resources-with-requeststatus0-2"]='(%number in afwachting)';
 $lang["researches-with-requeststatus0-0"]='(0 niet toegewezen)';
 $lang["researches-with-requeststatus0-1"]='(1 niet toegewezen)';
-$lang["researches-with-requeststatus0-2"]='(%aantal niet toegewezen)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string or term used in ResourceSpace. Can you please provide me with a specific string or term to translate?';
-$lang["kilobyte-symbol"]='KB stands for "kilobyte" and in Dutch it is "kilobyte".';
-$lang["megabyte-symbol"]='MB stands for Megabyte. In Dutch, it is translated as Megabyte.';
-$lang["terabyte-symbol"]='Sorry, I need more context to provide an accurate translation. TB could mean many things depending on the context. Could you please provide more information?';
-$lang["kilobyte-symbol-binary"]='KiB staat voor Kibibyte, een eenheid van digitale informatie gelijk aan 1024 bytes.';
-$lang["megabyte-symbol-binary"]='MiB staat voor "Mebibyte", wat een eenheid van digitale informatie-opslag is die gelijk is aan 1.048.576 bytes.';
-$lang["gigabyte-symbol-binary"]='GiB is an abbreviation for "gibibyte", which translates to "gibibyte" in Nederlands.';
-$lang["terabyte-symbol-binary"]='TiB is een afkorting voor "Tebibyte", wat overeenkomt met 1024 Gibibytes.';
+$lang["researches-with-requeststatus0-2"]='(%number niet toegewezen)';
 $lang["upload_files"]='Bestanden uploaden.';
 $lang["upload_files-to_collection"]='Bestanden uploaden (naar de collectie \'%collection\')';
 $lang["ascending"]='Oplopend';
@@ -1944,9 +1872,6 @@ $lang["save-conflict-title"]='Bewerkingsconflict.';
 $lang["theme_home_promote"]='Promoten op de startpagina?';
 $lang["theme_home_page_text"]='Startpagina tekst';
 $lang["theme_home_page_image"]='Startpagina afbeelding';
-$lang["ref-title"]='%ref - %title
-
-%ref - %titel';
 $lang["error-pageload"]='Sorry, er is een fout opgetreden bij het laden van deze pagina. Als u een zoekopdracht uitvoert, probeer dan uw zoekopdracht te verfijnen. Als het probleem aanhoudt, neem dan contact op met uw systeembeheerder.';
 $lang["copy-field"]='Kopieer veld.';
 $lang["copy-to-resource-type"]='Kopiëren naar het bronbestandstype.';
@@ -2170,93 +2095,6 @@ $lang["action-move-down"]='Verplaats naar beneden.';
 $lang["action-move-to"]='Verplaats naar';
 $lang["delete_user_group_checkbox_alert_message"]='Let op: deze actie zal ook alle inhoudstekst verwijderen die relevant was voor deze gebruikersgroep. Er zijn %%RECORDSCOUNT%% records gevonden in Beheer inhoud.';
 $lang["about__about"]='Uw "over ons" tekst komt hier.';
-$lang["all__emailbulk"]='[text]<br /><br />
-[tekst_voettekst]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-Van: [fromusername] 
-Onderwerp: [lang_emailcollectionmessage]
-
-Bericht: [message]
-
-Klik op de volgende link om de collectie te bekijken: [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-Van: [fromusername]<br />
-Onderwerp: [lang_emailcollectionmessageexternal]<br /><br />
-Bericht: [message]<br /><br />
-Klik op de volgende link om de collectie te bekijken: [list]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[bericht]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[tekst_footer]';
-$lang["all__emaillogindetails"]='[welkom]<br /><br />
-[lang_nieuweinloggegevens]<br /><br />
-[lang_gebruikersnaam] : [gebruikersnaam]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_voettekst]';
-$lang["all__emailnewresearchrequestwaiting"]='[gebruikersnaam] ([gebruikersvolledigenaam] - [gebruikersemail])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]: [naam]<br /><br />
-[lang_descriptionofproject]: [beschrijving]<br /><br />
-[lang_deadline]: [deadline]<br /><br />
-[lang_contacttelephone]: [contact]<br /><br />
-[lang_finaluse]: [eindgebruik]<br /><br />
-[lang_shaperequired]: [vorm]<br /><br />
-[lang_noresourcesrequired]: [geenbronnen]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Goedgekeurde bronnen van de gebruiker
-[list] <br />
-[Bekijk bijgedragen/ingediende bestanden] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted] <br />
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-
-Nederlands: <br />
-[lang_userresourcesunsubmitted] <br />
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-
-Opmerking: De context van deze string is niet duidelijk voor mij, dus ik kan geen specifieke vertaling geven.';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Onderzoeksverzoek toegewezen aan {assignee}.<br /><br />
-[text_footer] = Met vriendelijke groet,';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Uw onderzoeksverzoek is voltooid. U ontvangt een e-mail wanneer de verzameling beschikbaar is. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-Klik op de volgende link om de verzameling te bekijken: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] heeft u een bron gemaild:<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[Klik hier om de bron te bekijken]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[list] <br />
-[details] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [gebruikersnaam] <br />
-[list] <br />
-[details] <br /><br />
-[Klik om de bron te bekijken] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Aangedreven door <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Laat ons resources team de resources vinden die je nodig hebt.';
 $lang["change_language__introtext"]='Selecteer hieronder uw taal alstublieft.';
@@ -2413,7 +2251,6 @@ $lang["tile_thmsl"]='Uitgelichte collectie';
 $lang["tile_custm"]='Maatwerk';
 $lang["tile_pend"]='In afwachting.';
 $lang["plugin_category_general"]='Algemeen';
-$lang["plugin_category_api"]='API: Application Programming Interface (Toepassingsprogrammeerinterface)';
 $lang["plugin_category_advanced"]='Geavanceerd';
 $lang["plugin_category_design"]='Ontwerp';
 $lang["plugin_category_ecommerce"]='E-commerce.';
@@ -2623,11 +2460,10 @@ $lang["new_report"]='Nieuw rapport.';
 $lang["edit_report"]='Bewerk rapport';
 $lang["all_activity"]='Alle activiteit.';
 $lang["all_resource_types"]='Alle bron types.';
-$lang["report-graph-by-pie"]='In the context of digital asset management software, "breakdown" could have different meanings depending on the specific context. Could you please provide more context or the full sentence where the word "breakdown" is used?';
 $lang["report-graph-by-piegroup"]='per gebruikersgroep';
 $lang["report-graph-by-pieresourcetype"]='Op bron type';
 $lang["report-graph-by-line"]='in de loop van de tijd';
-$lang["report-graph-by-summary"]='Samenvatting';
+$lang["report-graph-by-summary"]='samenvatting';
 $lang["update_report"]='Bijwerken rapport';
 $lang["save_report"]='Opslaan rapport';
 $lang["save_report_as"]='Opslaan rapport als...';
@@ -2665,7 +2501,6 @@ $lang["headermid"]='Middelgroot';
 $lang["headerlarge"]='Groot';
 $lang["responsive_configtitle"]='Responsief';
 $lang["responsive_main_menu"]='Menu.';
-$lang["responsive_settings_menu"]='Account can be translated to "Account" in Nederlands.';
 $lang["responsive_more"]='Meer...';
 $lang["responsive_less"]='Minder...';
 $lang["responsive_collectiontogglehide"]='Verbergen';
@@ -2722,7 +2557,6 @@ $lang["image_quality_92"]='Afdrukken';
 $lang["image_quality_80"]='Web: Web';
 $lang["image_quality_50"]='Laag';
 $lang["image_quality_40"]='Zeer laag.';
-$lang["systemconfig_api"]='API: Application Programming Interface (Toepassingsprogrammeerinterface)';
 $lang["iiif_enable_option"]='Inschakelen van IIIF-ondersteuning.';
 $lang["iiif_disabled"]='IIIF is niet geconfigureerd.';
 $lang["property-personal_data"]='Kan persoonlijke gegevens bevatten.';
@@ -2776,7 +2610,7 @@ $lang["filter_condition_label"]='Criteria: Criteria';
 $lang["filter_criteria_all"]='ALLE regels moeten worden nageleefd.';
 $lang["filter_criteria_none"]='GEEN van de regels moet worden voldaan.';
 $lang["filter_criteria_any"]='EEN van de regels moet worden voldaan.';
-$lang["filter_is_not_in"]='IS NOT can be translated to "IS NIET" in Nederlands.';
+$lang["filter_is_not_in"]='IS NIET';
 $lang["filter_or"]='OR = OF';
 $lang["filter_and"]='EN';
 $lang["browse_bar_text"]='Bladeren';
@@ -2862,7 +2696,6 @@ $lang["job_value"]='Waarde';
 $lang["job_boost"]='Versterk taak.';
 $lang["job_priority"]='Prioriteit';
 $lang["csv_export_offline_option"]='CSV-bestand offline genereren? Dit moet worden gebruikt voor grote resultaatsverzamelingen. U ontvangt een melding via een ResourceSpace-bericht zodra het CSV-bestand beschikbaar is.';
-$lang["csv_export_filename"]='metadata_export_%%SEARCH%%_%%TIME%% can be translated to "metadata_exporteren_%%ZOEKEN%%_%%TIJD%%".';
 $lang["csv_export_file_ready"]='Je CSV-export is gereed.';
 $lang["offline_processing_disabled"]='Offline taakverwerking is niet geconfigureerd op dit systeem. Neem contact op met uw systeembeheerder om dit in te schakelen.';
 $lang["csv_export_offline_only"]='Offline verwerking moet worden gebruikt bij het exporteren van gegevens voor meer dan %%RESOURCE_COUNT%% bronnen.';
@@ -2882,23 +2715,6 @@ $lang["upload_share_email_subject"]='Je hebt een uploadlink ontvangen van';
 $lang["upload_share_email_text"]='heeft je een link gestuurd om bestanden te uploaden.';
 $lang["upload_share_email_password"]='Gebruik dit wachtwoord om toegang te krijgen tot de link.';
 $lang["upload_share_email_clicklink"]='Gebruik de onderstaande link om te beginnen met uploaden.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-Van: [from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-Klik op de onderstaande link om toegang te krijgen tot de gedeelde bron:<br />
-<br />
-[link]
-<br />
-<br />
-Wachtwoord: [passwordtext]';
 $lang["upload_share_complete"]='Bedankt voor het uploaden. Gebruik de onderstaande knop om meer resources te uploaden.';
 $lang["error_invalid_usergroup"]='Ongeldige gebruikersgroep.';
 $lang["error_invalid_date"]='Ongeldige datum.';
@@ -2909,11 +2725,6 @@ $lang["error_no_resources_edit"]='Geen bronnen gevonden om te bewerken. Als u zo
 $lang["password_unchanged"]='(ongewijzigd)';
 $lang["notify_upload_share_new"]='Bronnen zijn geüpload naar jouw gedeelde collectie.';
 $lang["notify_upload_share_new_subject"]='Nieuwe externe uploads.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Er is een nieuwe gedeelde collectie aangemaakt met de volgende bronnen:<br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Mijn aandelen.';
 $lang["manage_shares_title"]='Externe delingen.';
 $lang["share_purge_text"]='Verwijder verlopen shares.';

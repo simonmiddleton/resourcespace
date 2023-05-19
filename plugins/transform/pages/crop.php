@@ -1116,7 +1116,7 @@ renderBreadcrumbs($links_trail);
         <input type='hidden' name='origwidth' id='origwidth'  value='<?php echo $origwidth ?>' />
         <input type='hidden' name='origheight' id='origheight'  value='<?php echo $origheight ?>' />
         <input type='hidden' name='tfactions' id='tfactions'  value='<?php echo $tfactions ?>' />
-        <?php echo generateFormToken("imagetools_form"); ?>
+        <?php generateFormToken("imagetools_form"); ?>
 
     <div class="FloatingOptions">
         <?php
