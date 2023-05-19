@@ -1149,6 +1149,7 @@ function check_node_indexed(array $node, $partial_index = false)
 */
 function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_date=false,bool $is_html=false)
     {
+    global $node_keyword_index_chars;
     if('' == trim($node['ref']) && '' == trim($node['name']) && '' == trim($node['resource_type_field']))
         {
         return false;
@@ -1182,7 +1183,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
     foreach($translations as $translation)
         {
         // Only index the first 500 characters
-        $translation = mb_strcut($translation,0,500);
+        $translation = mb_strcut($translation,0,$node_keyword_index_chars);
         
         $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
 
@@ -2758,10 +2759,8 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[])
 
     $fields = count($fields)>0 ? array_intersect($fields,array_column($allfields,"ref")) : array_column($allfields,"ref");
     $restypes = count($restypes)>0 ? array_intersect($restypes,$allrestyperefs) : $allrestyperefs;
-
-    // exit(print_r($restypes));
     $restype_mappings = get_resource_type_field_resource_types();
-    $deletedrows = 0;;
+    $deletedrows = 0;
     foreach($restypes as $restype)
         {
         if(!in_array($restype,$allrestyperefs))
@@ -2772,15 +2771,16 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[])
         $remove_fields = [];
         foreach($fields as $field)
             {
-            if(!isset($fieldglobals[$field]))
+            if(!in_array($field, array_column($allfields,"ref")))
                 {
                 continue;
                 }
-            if($fieldglobals[$field]==0 && !in_array($restype,$restype_mappings[$field]))
+            if(((int)$fieldglobals[$field] == 0 && !in_array($restype,$restype_mappings[$field])))
                 {
                 $remove_fields[] = $field;
                 }
             }
+
         if(count($remove_fields)>0)
             {
             $query = "DELETE rn.* FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node WHERE r.resource_type = ? AND n.resource_type_field IN (" . ps_param_insert(count($remove_fields))  . ");";
