@@ -451,6 +451,11 @@ parameters:
 			path: plugins/offline_archive/pages/restore_request.php
 
 		-
+			message: "#^Class RSSFeed does not have a constructor and must be instantiated without any parameters\\.$#"
+			count: 1
+			path: plugins/rss2/pages/rssfilter.php
+			
+		-
 			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
 			count: 1
 			path: plugins/simplesaml/include/simplesaml_functions.php
