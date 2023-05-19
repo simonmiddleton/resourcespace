@@ -3882,7 +3882,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
 
     # Output some text to a debug file.
     # For developers only
-    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info, $debug_log_readable;
+    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
     if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
 
     # Cannot use the general.php: get_temp_dir() method here since general may not have been included.
@@ -3906,14 +3906,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
             {
             // Set the permissions if we can to prevent browser access (will not work on Windows)
             $f=fopen($debug_log_location,"a");
-            if($debug_log_readable)
-                {
-                chmod($debug_log_location,0666);
-                }
-            else
-                {
-                chmod($debug_log_location,0222);
-                }
+            chmod($debug_log_location,0222);
             }
         else
             {
