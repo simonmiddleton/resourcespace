@@ -697,7 +697,9 @@ function collection_writeable($collection)
         // System admin
         || checkperm("a")
         // Adding to active upload_share
-        || upload_share_active() == $collection;
+        || upload_share_active() == $collection
+        // This is a request collection and user is an admin user who can approve requests
+        || (checkperm("R") && $collectiondata['type'] == COLLECTION_TYPE_REQUEST && checkperm("t"));
 
     // Check if user has permission to manage research requests. If they do and the collection is research request allow writable.
     if ($writable === false && checkperm("r"))
