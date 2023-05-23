@@ -9,7 +9,7 @@ include "../../include/db.php";
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
 
 $offset=getval("offset",0,true);
-$find=getval("find","");
+$find=trim(getval("find",""));
 $order_by=getval("order_by","u.username");
 $group=getval("group",0);
 $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
@@ -142,7 +142,7 @@ include "../../include/header.php";
     if($usersfound == 0)
         {
         // No results, go to last page
-        $offset     = floor(($results-1)/$per_page)*$per_page;
+        $offset     = floor(MAX(($results-1),0)/$per_page)*$per_page;
         $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
         $results    = $users["total"];
         }
