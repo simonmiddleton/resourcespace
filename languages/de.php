@@ -1893,7 +1893,6 @@ $lang['systemconfig'] = 'Systemkonfiguration';
 $lang['systemconfig_description'] = 'Die Optionen auf dieser Seite gelten systemweit und betreffen auch Benutzern zugängliche Funktionen. Bitte berücksichtigen Sie, dass einige Optionen benutzerabhängig sind, und von diesen überschrieben werden können.';
 
 /* System Console */
-$lang["systemconsole"]="Systemmonitor";
 
 /* Manage slideshows */
 $lang["manage_slideshow"] = "Slideshow anpassen";
@@ -2512,17 +2511,9 @@ $lang["plugin_integrations"]='Integrationen';
 $lang["system_down_title"]='Achtung!';
 $lang["system_down_message"]='Das System ist wegen Wartungsarbeiten nicht verfügbar. Vielen Dank für Ihre Geduld.';
 $lang["systemconsoledebuglog"]='Fehlerprotokoll (or Protokollierung von Fehlern)';
-$lang["systemconsolememorycpu"]='Speicher &amp; CPU';
-$lang["systemconsoledatabase"]='Datenbank';
-$lang["systemconsolesqllogtransactions"]='SQL Transaktionsprotokoll';
-$lang["systemconsoleactivitylog"]='Aktivitätsprotokoll';
 $lang["systemconsoleturnoffafter"]='Ausschalten nach';
 $lang["systemconsoleonpermallusers"]='Dauerhaft für alle Benutzer aktiviert.';
 $lang["systemconsoleonallusers"]='Auf (alle Benutzer)';
-$lang["systemconsoleonfailedtopcommand"]='Fehler beim Ausführen des Befehls "top".';
-$lang["systemconsoleonfailedtasklistcommand"]='Fehler beim Ausführen des Tasklist-Befehls.';
-$lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location nicht festgelegt, Datei nicht gefunden oder nicht lesbar. Bitte überprüfen Sie, ob \'$debug_log_readable=true;\' in Ihrer Konfiguration festgelegt ist.';
-$lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions nicht gesetzt oder $mysql_log_location Datei nicht gefunden oder nicht lesbar.';
 $lang["trash_bin_title"]='Entfernen';
 $lang["trash_bin_delete_dialog_title"]='Ressource entfernen?';
 $lang["managecontent_defaulttextused"]='Der Text für die Standardsprache wird derzeit verwendet. Bearbeiten Sie den Text unten, um eine alternative Version für diese Sprache / Benutzergruppenauswahl zu erstellen.';

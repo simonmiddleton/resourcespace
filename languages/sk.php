@@ -2322,19 +2322,10 @@ $lang['system_down_message'] = 'Prebieha údržba systému. Ďakujeme Vám za tr
 /* End of System Down page strings */
 
 /* System Console */
-$lang["systemconsole"]="Systémová konzola";
 $lang["systemconsoledebuglog"]="Debug log";
-$lang["systemconsolememorycpu"]="Pamäť &amp; CPU";
-$lang["systemconsoledatabase"]="Databáza";
-$lang["systemconsolesqllogtransactions"]="Protokol SQL transakcií";
-$lang["systemconsoleactivitylog"]="Protokol aktivít";
 $lang["systemconsoleturnoffafter"]="Vypnúť po";
 $lang["systemconsoleonpermallusers"]="Zapnuté (trvalo pre všetkých používateľov)";
 $lang["systemconsoleonallusers"]="Zapnuté (všetci používatelia)";
-$lang["systemconsoleonfailedtopcommand"]="Nepodarilo sa spustiť príkaz top";
-$lang["systemconsoleonfailedtasklistcommand"]="Nepodarilo sa vykonať príkaz zoznamu úloh";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location nie je nastavená, súbor nebol nájdený alebo nie je pre aplikáciu čitateľný";
-$lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions nie je nastavený alebo súbor \$mysql_log_location nebol nájdený alebo nie je pre aplikáciu čitateľný";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Odstrániť';
