@@ -2272,11 +2272,6 @@ $lang["systemconsoleonfailedtopcommand"]='Mislukt om het top commando uit te voe
 $lang["systemconsoleonfailedtasklistcommand"]='Mislukt om de taaklijstopdracht uit te voeren.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location niet ingesteld, bestand niet gevonden of niet leesbaar. Controleer of \'$debug_log_readable=true;\' is ingesteld in uw configuratie.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions niet ingesteld of $mysql_log_location bestand niet gevonden of niet leesbaar.';
-$lang["systemconsoletrackVars"]='Tracking variabelen.';
-$lang["systemconsole_label_input_vars"]='Variabelnamen';
-$lang["systemconsole_help_track_vars"]='Gebruik een CSV van variabelenamen die je door het systeem wilt volgen. Dit wordt voornamelijk gebruikt voor debugdoeleinden, omdat het helpt bij het bepalen waar een specifieke variabele wordt ingesteld of overschreven.';
-$lang["systemconsole_label_input_track_period"]='Specificeer hoe lang variabelen moeten worden bijgehouden.';
-$lang["systemconsole_help_track_period"]='Waarde vertegenwoordigt minuten.';
 $lang["trash_bin_title"]='Verwijderen';
 $lang["trash_bin_delete_dialog_title"]='Verwijder bronbestand?';
 $lang["managecontent_defaulttextused"]='De tekst voor de standaardtaal wordt momenteel gebruikt. Bewerk de tekst hieronder om een alternatieve versie te maken voor deze taal/gebruikersgroep selectie.';

@@ -2523,11 +2523,6 @@ $lang["systemconsoleonfailedtopcommand"]='Fehler beim Ausführen des Befehls "to
 $lang["systemconsoleonfailedtasklistcommand"]='Fehler beim Ausführen des Tasklist-Befehls.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location nicht festgelegt, Datei nicht gefunden oder nicht lesbar. Bitte überprüfen Sie, ob \'$debug_log_readable=true;\' in Ihrer Konfiguration festgelegt ist.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions nicht gesetzt oder $mysql_log_location Datei nicht gefunden oder nicht lesbar.';
-$lang["systemconsoletrackVars"]='Verfolgungsvariablen';
-$lang["systemconsole_label_input_vars"]='Variablennamen';
-$lang["systemconsole_help_track_vars"]='Verwenden Sie eine CSV-Datei mit Variablennamen, die Sie im gesamten System verfolgen möchten. Dies wird hauptsächlich für Debugging-Zwecke verwendet, da es dabei hilft, festzustellen, wo eine bestimmte Variable gesetzt oder überschrieben wird.';
-$lang["systemconsole_label_input_track_period"]='Bitte geben Sie an, wie lange Variablen verfolgt werden sollen.';
-$lang["systemconsole_help_track_period"]='Wert repräsentiert Minuten.';
 $lang["trash_bin_title"]='Entfernen';
 $lang["trash_bin_delete_dialog_title"]='Ressource entfernen?';
 $lang["managecontent_defaulttextused"]='Der Text für die Standardsprache wird derzeit verwendet. Bearbeiten Sie den Text unten, um eine alternative Version für diese Sprache / Benutzergruppenauswahl zu erstellen.';

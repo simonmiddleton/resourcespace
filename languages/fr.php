@@ -2275,11 +2275,6 @@ $lang["systemconsoleonfailedtopcommand"]='Échec de l\'exécution de la commande
 $lang["systemconsoleonfailedtasklistcommand"]='Échec de l\'exécution de la commande tasklist.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location n\'est pas défini, le fichier est introuvable ou n\'est pas lisible. Veuillez vérifier que \'$debug_log_readable=true;\' est défini dans votre configuration.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions n\'est pas défini ou le fichier $mysql_log_location n\'a pas été trouvé ou n\'est pas lisible.';
-$lang["systemconsoletrackVars"]='Suivi des variables.';
-$lang["systemconsole_label_input_vars"]='Noms de variables.';
-$lang["systemconsole_help_track_vars"]='Utilisez un fichier CSV de noms de variables que vous souhaitez suivre dans tout le système. Cela est principalement utilisé à des fins de débogage car cela aide à déterminer où une variable spécifique est définie ou remplacée.';
-$lang["systemconsole_label_input_track_period"]='Précisez pendant combien de temps suivre les variables.';
-$lang["systemconsole_help_track_period"]='La valeur représente les minutes.';
 $lang["trash_bin_title"]='Supprimer';
 $lang["trash_bin_delete_dialog_title"]='Supprimer la ressource ?';
 $lang["managecontent_defaulttextused"]='Le texte pour la langue par défaut est actuellement utilisé. Modifiez le texte ci-dessous pour créer une version alternative pour cette langue / sélection de groupe d\'utilisateurs.';

@@ -2252,11 +2252,6 @@ $lang["systemconsoleonfailedtopcommand"]='No s\'ha pogut executar la comanda top
 $lang["systemconsoleonfailedtasklistcommand"]='No s\'ha pogut executar la comanda de llista de tasques.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location no està definit, el fitxer no s\'ha trobat o no es pot llegir. Si us plau, comproveu que \'$debug_log_readable=true;\' estigui definit a la vostra configuració.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions no està configurat o el fitxer $mysql_log_location no s\'ha trobat o no es pot llegir.';
-$lang["systemconsoletrackVars"]='Seguiment de variables.';
-$lang["systemconsole_label_input_vars"]='Noms de variables.';
-$lang["systemconsole_help_track_vars"]='Utilitza un CSV amb els noms de les variables que vols seguir en tot el sistema. Això s\'utilitza principalment per a fins de depuració, ja que ajuda a determinar on es defineix o substitueix una variable específica.';
-$lang["systemconsole_label_input_track_period"]='Especifica durant quant temps fer el seguiment de les variables.';
-$lang["systemconsole_help_track_period"]='El valor representa minuts.';
 $lang["trash_bin_title"]='Eliminar';
 $lang["trash_bin_delete_dialog_title"]='Eliminar recurs?';
 $lang["managecontent_defaulttextused"]='El text per al llenguatge per defecte està sent utilitzat actualment. Editeu el text a continuació per crear una versió alternativa per a aquest idioma / selecció de grup d\'usuaris.';

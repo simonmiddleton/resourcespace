@@ -2327,11 +2327,6 @@ $lang["systemconsoleonfailedtopcommand"]='فشل تنفيذ أمر الأعلى 
 $lang["systemconsoleonfailedtasklistcommand"]='فشل تنفيذ أمر tasklist.';
 $lang["systemconsoleondebuglognotsetorfound"]='الموقع غير مضبوط لسجل التصحيح، الملف غير موجود أو غير قابل للقراءة. يرجى التحقق من أن \'$debug_log_readable=true;\' مضبوط في التكوين الخاص بك.';
 $lang["systemconsoleonsqllognotsetorfound"]='المتغير $mysql_log_transactions غير معين أو ملف $mysql_log_location غير موجود أو غير قابل للقراءة.';
-$lang["systemconsoletrackVars"]='تتبع المتغيرات';
-$lang["systemconsole_label_input_vars"]='أسماء المتغيرات';
-$lang["systemconsole_help_track_vars"]='استخدم ملف CSV لأسماء المتغيرات التي ترغب في تتبعها في جميع أنحاء النظام. يستخدم هذا بشكل رئيسي لأغراض التصحيح حيث يساعد على تحديد مكان تعيين أو تجاوز متغير محدد.';
-$lang["systemconsole_label_input_track_period"]='تحديد مدة تتبع المتغيرات لمدة كم يومًا/شهورًا.';
-$lang["systemconsole_help_track_period"]='القيمة تمثل الدقائق.';
 $lang["trash_bin_title"]='إزالة';
 $lang["trash_bin_delete_dialog_title"]='إزالة المورد؟';
 $lang["managecontent_defaulttextused"]='النص الافتراضي يتم استخدامه حاليًا. يمكنك تعديل النص أدناه لإنشاء نسخة بديلة لهذه اللغة / اختيار مجموعة المستخدمين.';

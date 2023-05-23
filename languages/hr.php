@@ -2209,11 +2209,6 @@ $lang["systemconsoleonfailedtopcommand"]='Nije uspjelo izvršavanje naredbe top.
 $lang["systemconsoleonfailedtasklistcommand"]='Nije uspjelo izvršavanje naredbe tasklist.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location nije postavljen, datoteka nije pronađena ili nije čitljiva. Molimo provjerite jeste li postavili \'$debug_log_readable=true;\' u vašoj konfiguraciji.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions nije postavljen ili $mysql_log_location datoteka nije pronađena ili nije čitljiva.';
-$lang["systemconsoletrackVars"]='Pratiljenje varijabli.';
-$lang["systemconsole_label_input_vars"]='Nazivi varijabli.';
-$lang["systemconsole_help_track_vars"]='Koristite CSV datoteku s nazivima varijabli koje želite pratiti kroz sustav. To se uglavnom koristi u svrhu otklanjanja pogrešaka jer pomaže u određivanju gdje se određena varijabla postavlja ili zamjenjuje.';
-$lang["systemconsole_label_input_track_period"]='Odredite koliko dugo pratiti varijable.';
-$lang["systemconsole_help_track_period"]='Vrijednost predstavlja minute.';
 $lang["trash_bin_title"]='Ukloni';
 $lang["trash_bin_delete_dialog_title"]='Ukloniti resurs?';
 $lang["managecontent_defaulttextused"]='Tekst za zadanu jezičnu postavku (?) trenutno se koristi. Uredi tekst u nastavku kako bi se stvorila alternativna verzija za ovaj jezik / odabir korisničke grupe.';

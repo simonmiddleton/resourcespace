@@ -2344,11 +2344,6 @@ $lang["systemconsoleonfailedtopcommand"]='Nie udało się wykonać polecenia top
 $lang["systemconsoleonfailedtasklistcommand"]='Nie udało się wykonać polecenia tasklist.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location nie został ustawiony, plik nie został znaleziony lub nie jest czytelny. Proszę sprawdzić, czy w konfiguracji jest ustawione \'$debug_log_readable=true;\'.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions nie jest ustawione lub plik $mysql_log_location nie został znaleziony lub nie jest czytelny.';
-$lang["systemconsoletrackVars"]='Śledzenie zmiennych.';
-$lang["systemconsole_label_input_vars"]='Nazwy zmiennych.';
-$lang["systemconsole_help_track_vars"]='Użyj pliku CSV z nazwami zmiennych, które chcesz śledzić w całym systemie. Jest to głównie używane do celów debugowania, ponieważ pomaga określić, gdzie określona zmienna jest ustawiana lub nadpisywana.';
-$lang["systemconsole_label_input_track_period"]='Określ, jak długo śledzić zmienne.';
-$lang["systemconsole_help_track_period"]='Wartość reprezentuje minuty.';
 $lang["trash_bin_title"]='Usuń';
 $lang["trash_bin_delete_dialog_title"]='Usunąć zasób?';
 $lang["managecontent_defaulttextused"]='Tekst dla domyślnego języka (?) jest obecnie używany. Edytuj poniższy tekst, aby utworzyć alternatywną wersję dla tego języka / wyboru grupy użytkowników.';

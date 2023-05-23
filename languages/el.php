@@ -2151,10 +2151,6 @@ $lang["systemconsoleonfailedtopcommand"]='Αποτυχία εκτέλεσης τ
 $lang["systemconsoleonfailedtasklistcommand"]='Αποτυχία εκτέλεσης της εντολής tasklist.';
 $lang["systemconsoleondebuglognotsetorfound"]='Η τοποθεσία αρχείου καταγραφής αποσφαλμάτωσης $debug_log_location δεν έχει οριστεί, το αρχείο δεν βρέθηκε ή δεν είναι αναγνώσιμο. Παρακαλούμε ελέγξτε ότι η \'$debug_log_readable=true;\' έχει οριστεί στη διαμόρφωσή σας.';
 $lang["systemconsoleonsqllognotsetorfound"]='Η μεταβλητή $mysql_log_transactions δεν έχει οριστεί ή το αρχείο τοποθεσίας καταγραφής $mysql_log_location δεν βρέθηκε ή δεν είναι αναγνώσιμο.';
-$lang["systemconsoletrackVars"]='Μεταβλητές παρακολούθησης.';
-$lang["systemconsole_label_input_vars"]='Ονόματα μεταβλητών.';
-$lang["systemconsole_label_input_track_period"]='Καθορίστε πόσο καιρό να παρακολουθούνται οι μεταβλητές.';
-$lang["systemconsole_help_track_period"]='Η τιμή αντιπροσωπεύει λεπτά.';
 $lang["trash_bin_title"]='Αφαίρεση';
 $lang["trash_bin_delete_dialog_title"]='Αφαίρεση πόρου;';
 $lang["managecontent_defaulttextused"]='Ο κείμενος για την προεπιλεγμένη γλώσσα (?) χρησιμοποιείται αυτή τη στιγμή. Επεξεργαστείτε τον κείμενο παρακάτω για να δημιουργήσετε μια εναλλακτική εκδοχή για αυτήν τη γλώσσα / επιλογή ομάδας χρηστών.';

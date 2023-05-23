@@ -2413,11 +2413,6 @@ $lang["systemconsoleonfailedtopcommand"]='Klarte ikke å utføre top-kommandoen.
 $lang["systemconsoleonfailedtasklistcommand"]='Klarte ikke å utføre tasklist-kommandoen.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location er ikke satt, filen ble ikke funnet eller er ikke lesbar. Vennligst sjekk at \'$debug_log_readable=true;\' er satt i konfigurasjonen din.';
 $lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions er ikke satt eller $mysql_log_location-filen ikke funnet eller kan ikke leses.';
-$lang["systemconsoletrackVars"]='Sporingsvariabler.';
-$lang["systemconsole_label_input_vars"]='Variabelnavn';
-$lang["systemconsole_help_track_vars"]='Bruk en CSV-fil med variabelnavn som du ønsker å spore gjennom systemet. Dette brukes hovedsakelig til feilsøking da det hjelper med å bestemme hvor en spesifikk variabel blir satt eller overskrevet.';
-$lang["systemconsole_label_input_track_period"]='Angi hvor lenge variabler skal spores.';
-$lang["systemconsole_help_track_period"]='Verdien representerer minutter.';
 $lang["trash_bin_title"]='Fjern';
 $lang["trash_bin_delete_dialog_title"]='Fjern ressurs?';
 $lang["managecontent_defaulttextused"]='Teksten for standard språk (?) blir for øyeblikket brukt. Rediger teksten nedenfor for å opprette en alternativ versjon for dette språket / brukergruppevalget.';

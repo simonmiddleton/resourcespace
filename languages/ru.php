@@ -2258,11 +2258,6 @@ $lang["systemconsoleonfailedtopcommand"]='Не удалось выполнить
 $lang["systemconsoleonfailedtasklistcommand"]='Не удалось выполнить команду tasklist.';
 $lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location не установлен, файл не найден или не может быть прочитан. Пожалуйста, проверьте, что \'$debug_log_readable=true;\' установлен в вашей конфигурации.';
 $lang["systemconsoleonsqllognotsetorfound"]='Переменная $mysql_log_transactions не установлена или файл $mysql_log_location не найден или не может быть прочитан.';
-$lang["systemconsoletrackVars"]='Отслеживание переменных.';
-$lang["systemconsole_label_input_vars"]='Имена переменных.';
-$lang["systemconsole_help_track_vars"]='Используйте CSV-файл с именами переменных, которые вы хотите отслеживать в системе. Это главным образом используется для целей отладки, так как это помогает определить, где определена или переопределена конкретная переменная.';
-$lang["systemconsole_label_input_track_period"]='Укажите, на какой период следует отслеживать переменные.';
-$lang["systemconsole_help_track_period"]='Значение представляет минуты.';
 $lang["trash_bin_title"]='Удалить';
 $lang["trash_bin_delete_dialog_title"]='Удалить ресурс?';
 $lang["managecontent_defaulttextused"]='Текст для языка по умолчанию (?) в настоящее время используется. Отредактируйте текст ниже, чтобы создать альтернативную версию для этого языка / выбора группы пользователей.';
