@@ -51,7 +51,8 @@ input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBle
     border-radius: 4px;
 }
 
-input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], input[type="number"], textarea, button, select {
+input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], input[type="number"], textarea, button, select,
+input[type="date"] {
     padding: 4px 6px 4px 6px;
     vertical-align: middle;
     min-height: 28px;
