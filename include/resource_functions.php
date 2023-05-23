@@ -7355,7 +7355,11 @@ function get_resource_all_image_sizes($ref)
 
 function sanitize_date_field_input($date, $validate=false)
     {
-    $year   = sprintf("%04d", getval("field_" . $date . "-y",""));
+    $year_input = getval("field_" . $date . "-y","");
+    $year = sprintf("%04d", $year_input);  // Assume CE year
+    if(strlen($year_input)==5) {
+        $year = sprintf("%05d", $year_input);  // BCE year has leading -
+    }
     $month  = getval("field_" . $date . "-m","");
     $day    = getval("field_" . $date . "-d","");
     $hour   = getval("field_" . $date . "-h","");
