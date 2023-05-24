@@ -10,6 +10,7 @@ $sheetstyle        	= getval('sheetstyle', 'thumbnails');
 $field_value_limit 	= getval('field_value_limit', 0);
 $filename_uid      	= generateUserFilenameUID($userref);
 $error				= getval("error","");
+$order_by			= getval("order_by","");
 
 if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
 	{
@@ -108,6 +109,7 @@ if(!collection_readable($collection))
         <?php generateFormToken("contactsheetform"); ?>
         <input type=hidden name="c" value="<?php echo htmlspecialchars($collection); ?>">
         <input type=hidden name="field_value_limit" value="<?php echo urlencode($field_value_limit); ?>">
+        <input type=hidden name="order_by" value="<?php echo urlencode($order_by); ?>">
         <!--<div name="error" id="error"></div>-->
         <div class="BasicsBox" style="width:450px;float:left;margin-top:0;" >
         

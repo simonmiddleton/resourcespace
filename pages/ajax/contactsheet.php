@@ -24,7 +24,7 @@ else
     $size = strtoupper($size);
     }
 $columns           = getval('columns', 1);
-$order_by          = getval('orderby', 'relevance');
+$order_by          = getval('order_by', 'relevance');
 $sort              = getval('sort', 'asc');
 $orientation       = getval('orientation', '');
 $sheetstyle        = getval('sheetstyle', 'thumbnails');
