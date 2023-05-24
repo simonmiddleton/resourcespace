@@ -2257,8 +2257,6 @@ $lang["plugin_category_ecommerce"]='E-commerce.';
 $lang["plugin_integrations"]='Integraties';
 $lang["system_down_title"]='Let op!';
 $lang["system_down_message"]='Systeem is momenteel niet beschikbaar vanwege onderhoudswerkzaamheden. Bedankt voor uw geduld.';
-
-(Translation: Console)';
 $lang["systemconsoledebuglog"]='Foutopsporingslogboek';
 $lang["systemconsoleturnoffafter"]='Uitschakelen na';
 $lang["systemconsoleonpermallusers"]='Op (permanent voor alle gebruikers)';
