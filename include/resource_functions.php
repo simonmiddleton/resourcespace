@@ -6322,7 +6322,6 @@ function resource_type_config_override($resource_type, $only_onchange=true)
         if ($config_options!="")
             {
             override_rs_variables_by_eval($GLOBALS, $config_options);
-            debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         }
     }

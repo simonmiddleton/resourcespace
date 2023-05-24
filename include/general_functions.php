@@ -2899,96 +2899,6 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
     }
 
 
-
-/**
- * Tails a file using native PHP functions.
- * 
- * First introduced with system console.
- * Credit to:
- * http://www.geekality.net/2011/05/28/php-tail-tackling-large-files
- * 
- * As of 2020-06-29 the website is showing that all contents/code are CC BY 3.0
- * https://creativecommons.org/licenses/by/3.0/
- * 
- * Example:
- *   tail($file_path, 10, 4096, [
- *       'name' => 'resourcespace.tail_search',
- *       'params' => ['search_terms' => ['term1', 'term2']]
- *   ]);
- *
- * @param  string $filename
- * @param  integer $lines
- * @param  integer $buffer
- * @param  array   $filters  List of stream filters. Each value is an array containing the "name" and "params" keys. These
- *                           represent the filter name and its params.
- * @return string
- */
-function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
-    {
-    $f = fopen($filename, "rb");
-
-    // Jump to the last character, read it and adjust line number if necessary
-    // (Otherwise the result would be wrong if file doesn't end with a blank line)
-    fseek($f, -1, SEEK_END);
-    if(fread($f, 1) != "\n")
-        {
-        $lines -= 1;
-        }
-
-    // Create a temp output file resource so we can attach stream filters for whatever reason the calling code needs to
-    $output_fp = fopen('php://temp','r+');
-    foreach($filters as $filter)
-        {
-        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '' && is_array($filter['params']))
-            {
-            stream_filter_append($output_fp, $filter['name'], STREAM_FILTER_READ , $filter['params']);
-            }
-        }
-
-    // Start reading
-    $output = '';
-    $chunk = '';
-    $lines_pre_filtering = $lines;
-
-    // While we would like more
-    while(ftell($f) > 0 && $lines >= 0)
-        {
-        // Figure out how far back we should jump
-        $seek = min(ftell($f), $buffer);
-
-        // Do the jump (backwards, relative to where we are)
-        fseek($f, -$seek, SEEK_CUR);
-
-        // Read a chunk and prepend it to our output
-        $chunk = fread($f, $seek);
-        ftruncate($output_fp, 0);
-        rewind($output_fp);
-        fwrite($output_fp, $chunk);
-        fwrite($output_fp, $output);
-        rewind($output_fp);
-        $output = stream_get_contents($output_fp);
-
-        // Jump back to where we started reading
-        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
-
-        $lines = $lines_pre_filtering - substr_count($output, "\n");
-        }
-
-    // While we have too many lines
-    // (Because of buffer size we might have read too many)
-    while($lines++ < 0)
-        {
-        // Find first newline and remove all text before that
-        $output = substr($output, strpos($output, "\n") + 1);
-        }
-
-    fclose($f);
-    fclose($output_fp);
-    return $output;
-    }   
-
-
-
 /**
 * Utility function used to move the element of one array from a position 
 * to another one in the same array
@@ -3651,7 +3561,6 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		foreach ($hook_cache[$hook_cache_index] as $function)
 			{
 			$function_return_value = call_user_func_array($function, $params);
-            debug_track_vars('line-' . __LINE__ . '@include/general_functions.php', get_defined_vars(), ['hook_fct_name' => $function]);
 
 			if ($function_return_value === null)
 				{
@@ -3702,7 +3611,6 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				}
 			}
 
-        debug_track_vars('line-' . __LINE__ . '@include/general_functions.php', $GLOBALS, ['hook_name' => $name]);
 		return (isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false);
 		}
 
@@ -3980,7 +3888,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
 
     # Output some text to a debug file.
     # For developers only
-    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info, $debug_log_readable;
+    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
     if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
 
     # Cannot use the general.php: get_temp_dir() method here since general may not have been included.
@@ -4004,14 +3912,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
             {
             // Set the permissions if we can to prevent browser access (will not work on Windows)
             $f=fopen($debug_log_location,"a");
-            if($debug_log_readable)
-                {
-                chmod($debug_log_location,0666);
-                }
-            else
-                {
-                chmod($debug_log_location,0222);
-                }
+            chmod($debug_log_location,0222);
             }
         else
             {
