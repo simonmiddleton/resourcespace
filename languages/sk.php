@@ -2322,19 +2322,10 @@ $lang['system_down_message'] = 'Prebieha údržba systému. Ďakujeme Vám za tr
 /* End of System Down page strings */
 
 /* System Console */
-$lang["systemconsole"]="Systémová konzola";
 $lang["systemconsoledebuglog"]="Debug log";
-$lang["systemconsolememorycpu"]="Pamäť &amp; CPU";
-$lang["systemconsoledatabase"]="Databáza";
-$lang["systemconsolesqllogtransactions"]="Protokol SQL transakcií";
-$lang["systemconsoleactivitylog"]="Protokol aktivít";
 $lang["systemconsoleturnoffafter"]="Vypnúť po";
 $lang["systemconsoleonpermallusers"]="Zapnuté (trvalo pre všetkých používateľov)";
 $lang["systemconsoleonallusers"]="Zapnuté (všetci používatelia)";
-$lang["systemconsoleonfailedtopcommand"]="Nepodarilo sa spustiť príkaz top";
-$lang["systemconsoleonfailedtasklistcommand"]="Nepodarilo sa vykonať príkaz zoznamu úloh";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location nie je nastavená, súbor nebol nájdený alebo nie je pre aplikáciu čitateľný";
-$lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions nie je nastavený alebo súbor \$mysql_log_location nebol nájdený alebo nie je pre aplikáciu čitateľný";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Odstrániť';
@@ -3096,11 +3087,6 @@ $lang["tile_thmsl"]='Doporučená kolekce.';
 $lang["tile_custm"]='Používateľské (alternatívne: vlastné)';
 $lang["tile_pend"]='Nevyriešené.';
 $lang["plugin_integrations"]='Integrácie.';
-$lang["systemconsoletrackVars"]='Sledovacie premenné.';
-$lang["systemconsole_label_input_vars"]='Názvy premenných.';
-$lang["systemconsole_help_track_vars"]='Použite CSV s názvami premenných, ktoré chcete sledovať v celom systéme. Toto sa hlavne používa na účely ladenia, pretože pomáha určiť, kde sa konkrétna premenná nastavuje alebo prepisuje.';
-$lang["systemconsole_label_input_track_period"]='Určite, ako dlho sledovať premenné.';
-$lang["systemconsole_help_track_period"]='Hodnota predstavuje minúty.';
 $lang["userpreference_hide_search_resource_types"]='Skryť typy zdrojov pri jednoduchom a pokročilom vyhľadávaní.';
 $lang["userpreference_tilenav"]='Použite dlaždicový rozloženie pre navigačné menu.';
 $lang["userpreference_tilenavdefault"]='Použite dlaždicový rozloženie pre navigačné menu (predvolené nastavenie; používatelia si môžu toto zmeniť).';
