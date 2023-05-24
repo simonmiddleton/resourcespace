@@ -697,7 +697,9 @@ function collection_writeable($collection)
         // System admin
         || checkperm("a")
         // Adding to active upload_share
-        || upload_share_active() == $collection;
+        || upload_share_active() == $collection
+        // This is a request collection and user is an admin user who can approve requests
+        || (checkperm("R") && $collectiondata['type'] == COLLECTION_TYPE_REQUEST && checkperm("t"));
 
     // Check if user has permission to manage research requests. If they do and the collection is research request allow writable.
     if ($writable === false && checkperm("r"))
@@ -2953,7 +2955,10 @@ function get_featured_collection_resources(array $c, array $ctx)
                 $subfcimages = get_collection_resources($checkfc);
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
-                    $fcresources = array_merge($fcresources,$subfcimages);
+                    // The join defined above specifically excludes any resources that are not in the active archive state,
+                    // for the limiting via $ctx to function correctly we'll need to check for each resources state before adding it  to fcresources
+                    $resources = get_resource_data_batch($subfcimages);
+                    $fcresources = array_merge($fcresources,array_column(array_filter($resources, function($r){return $r['archive'] == "0";}), 'ref'));
                     } 
                 continue;
                 }

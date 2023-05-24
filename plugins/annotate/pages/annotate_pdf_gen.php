@@ -12,7 +12,7 @@ if (!in_array("annotate",$plugins))
     exit($lang["error-plugin-not-activated"]);
     }
 
-$ref=getval("ref",0,true);
+$ref=getval("ref",0);
 $size=getval("size","letter");
 $color=getval("color","yellow");
 $previewpage=getval("previewpage",1,true);

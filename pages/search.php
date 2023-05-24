@@ -1567,7 +1567,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             {
             // This is used to ensure that all resource panels are the same height 
             $resource_panel_height_max = 0;            
-            for ($n=0;$n<$result_count-$offset && $n<$resourcestoretrieve;$n++)
+            for ($n=0;$n<$resources_count-$offset && $n<$resourcestoretrieve;$n++)
                 {
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);
