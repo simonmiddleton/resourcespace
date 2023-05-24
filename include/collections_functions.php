@@ -4540,13 +4540,19 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     
-    // Relate all resources
+    // Relate / Unrelate all resources
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
         $options[$o]['label'] = $lang['relateallresources'];
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
+        $o++;
+
+        $options[$o]['value'] = 'unrelate_all';
+        $options[$o]['label'] = $lang['unrelateallresources'];
+        $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 290;
         $o++;
         }
 
@@ -5307,6 +5313,24 @@ function relate_all_collection($collection, $checkperms = true)
     return true;
     }
 
+/**
+* Un-relate all resources in a collection
+* 
+* @param integer  $collection   ID of collection
+*
+* @return boolean
+*/
+function unrelate_all_collection($collection, $checkperms = true)
+    {
+    if((string)(int)$collection != (string)$collection || ($checkperms && !allow_multi_edit($collection)))
+        {
+        return false;
+        }
+
+    ps_query('DELETE FROM resource_related WHERE `resource` IN (SELECT `resource` FROM collection_resource WHERE collection = ?) AND `related` IN (select `resource` FROM collection_resource WHERE collection = ?)', array('i', $collection, 'i', $collection));
+
+    return true;
+    }
 
 /**
 * Update collection type for one collection or batch

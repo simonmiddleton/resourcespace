@@ -1089,8 +1089,10 @@ $lang["removetext"]="Remove text / option(s)";
 $lang["find"]="Find";
 $lang["andreplacewith"]="...and replace with...";
 $lang["relateallresources"]="Relate all resources in this collection";
+$lang["unrelateallresources"]="Un-relate all resources in this collection";
 $lang["relate_selected_resources"] = "Relate selected resources";
 $lang['relateallresources_confirmation'] = 'All resources in this collection are now related';
+$lang['unrelateallresources_confirmation'] = 'None of the resources in this collection are now related';
 
 # New for 1.5
 $lang["columns"]="Columns";
