@@ -1671,7 +1671,7 @@ hook("endofsearchpage");
 if($search_anchors && $display != 'map')
     { ?>
     <script>
-    place     = '<?php echo getval("place", ""); ?>';
+    place     = '<?php echo htmlspecialchars(getval("place", "")); ?>';
     display   = '<?php echo $display; ?>';
     highlight = '<?php echo $search_anchors_highlight; ?>';
 
