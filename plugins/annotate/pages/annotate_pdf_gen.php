@@ -34,19 +34,13 @@ else
     $preview=false;
     }
 
-if (substr($ref,0,1)=="C")
+$is_collection=false;
+if(substr($ref,0,1)=="C")
     {
-	$is_collection=true;
-	$ref=substr($ref,1); 
-	$result=create_annotated_pdf($ref,true,$size,true,$preview);
-    } 
-else
-    { 
-	$is_collection=false;
-	$result=create_annotated_pdf($ref,false,$size,true,$preview);
+    $ref=substr($ref,1); 
+    $is_collection=true;
     }
-
-
+$result=create_annotated_pdf((int)$ref,$is_collection,$size,true,$preview);
 
 
 
