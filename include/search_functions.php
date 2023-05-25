@@ -1483,7 +1483,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         $sql->parameters = array_merge($sql_join->parameters,["s",$colour . "%","s","_" . $colour . "%"],$sql_filter->parameters);
         $searchsql = $sql_prefix . $sql->sql . $sql_suffix;
-        $sql = $searchsql;
+        $sql->sql  = $searchsql;
         }
 
     # Similar to a colour
