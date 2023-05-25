@@ -853,7 +853,7 @@ $lang["property-icon"]='Icône';
 $lang["property-inherit_global_fields"]='Hériter des champs globaux.';
 $lang["information-inherit_global_fields"]='Faut-il inclure des champs globaux pour ce type de ressource ?';
 $lang["property-smart_theme_name"]='Nom de collection avec fonctionnalités intelligentes.';
-$lang["property-exiftool_field"]='Veuillez traduire : Champ Exiftool.';
+$lang["property-exiftool_field"]='Champ Exiftool';
 $lang["property-fits_field"]='Champ FITS';
 $lang["property-read_only_field"]='Champ de métadonnées en lecture seule (c\'est-à-dire qu\'il ne sera pas réécrit lors du téléchargement).';
 $lang["information-fits_field"]='Le champ FITS (File Information Tool Set) écrasera les valeurs d\'Exiftool s\'il trouve une valeur !';
@@ -876,9 +876,7 @@ $lang["property-onchange_macro"]='Sur macro de modification.';
 $lang["information-onchange_macro"]='Sur macro de changement : code à exécuter lorsque la valeur du champ est modifiée. PRUDENCE CONSEILLÉE.';
 $lang["information-derestrict_filter"]='Filtre de dérestriction. N\'est efficace que lorsqu\'il est utilisé en conjonction avec la suppression de la permission "g" de sorte que toutes les ressources sont restreintes à moins que la condition de métadonnées ne soit remplie.';
 $lang["information-push_metadata"]='Si défini, les métadonnées de cette ressource seront affichées sur la page de visualisation de la ressource pour toutes les ressources associées. Par exemple, vous pouvez associer plusieurs photos à une ressource de personne. Si cette propriété est définie sur la ressource de personne, alors les métadonnées de la personne apparaîtront sur tous les enregistrements de ressources de photos associées, évitant ainsi la duplication des données dans le système.';
-$lang["property-query"]='Veuillez traduire : Query.
-
-Requête.';
+$lang["property-query"]='Requête';
 $lang["information-id"]='Remarque : \'Id\' ci-dessous DOIT être défini sur un code unique de trois caractères.';
 $lang["property-width"]='Largeur';
 $lang["property-height"]='Hauteur';
@@ -909,7 +907,7 @@ $lang["changethemeto"]='Changer le thème en';
 $lang["xlthumbstitle"]='Vignettes extra larges.';
 $lang["largethumbstitle"]='Grandes vignettes';
 $lang["smallthumbstitle"]='Petites vignettes';
-$lang["striptitle"]='Veuillez traduire : Vue en bande.';
+$lang["striptitle"]='Vue en bande';
 $lang["listtitle"]='Vue en liste';
 $lang["powered_by"]='Alimenté par';
 $lang["powered_by_resourcespace"]='Propulsé par ResourceSpace.';
@@ -1186,9 +1184,6 @@ $lang["were_available-2"]='sont disponibles';
 $lang["resource-0"]='ressources';
 $lang["resource-1"]='ressource';
 $lang["resource-2"]='ressources';
-$lang["status-note"]='Veuillez traduire : NOTE
-
-"NOTE" peut être traduit en français par "NOTE" (prononcé "noteu"). Cependant, dans le contexte de ResourceSpace, cela peut également faire référence à une fonctionnalité spécifique du logiciel, telle que la possibilité d\'ajouter des notes à une ressource ou à une collection. Dans ce cas, il peut être préférable de traduire "NOTE" par "NOTE" ou "REMARQUE".';
 $lang["action-changelanguage"]='Changer de langue.';
 $lang["loading"]='Chargement en cours...';
 $lang["disable_languages"]='Désactiver les options de sélection de langue.';
@@ -1546,7 +1541,7 @@ $lang["nometadatareport"]='Aucun rapport de métadonnées.';
 $lang["metadatawritewillbeattempted"]='La création de métadonnées sera tentée.';
 $lang["metadatatobewritten"]='Métadonnées qui seront écrites.';
 $lang["embeddedvalue"]='Valeur intégrée.';
-$lang["exiftooltag"]='Veuillez traduire : Balise Exiftool.';
+$lang["exiftooltag"]='Balise Exiftool';
 $lang["error"]='Erreur.';
 $lang["success"]='Succès.';
 $lang["exiftoolnotfound"]='Impossible de trouver Exiftool.';
@@ -1561,9 +1556,7 @@ $lang["indicateusagemedium"]='Support d\'utilisation';
 $lang["usageincorrect"]='Vous devez décrire l\'utilisation prévue et sélectionner un support.';
 $lang["savesearchassmartcollection"]='Enregistrer la recherche en tant que collection intelligente.';
 $lang["smartcollection"]='Collection intelligente';
-$lang["dosavedsearch"]='Veuillez traduire : Do saved search.
-
-Recherche enregistrée.';
+$lang["dosavedsearch"]='Recherche enregistrée';
 $lang["all"]='Tout.';
 $lang["allresourcessearchbar"]='Tous les ressources.';
 $lang["allcollectionssearchbar"]='Toutes les collections.';
@@ -1664,7 +1657,7 @@ $lang["lastndays"]='Derniers ? jours.';
 $lang["specificdays"]='Nombre spécifique de jours.';
 $lang["specificdaterange"]='Plage de dates spécifique.';
 $lang["emailperiodically"]='Créer un nouvel e-mail périodique.';
-$lang["emaileveryndays"]='Veuillez traduire : Envoyer ce rapport par e-mail tous les ? jours à :';
+$lang["emaileveryndays"]='Envoyer ce rapport par e-mail tous les ? jours à :';
 $lang["newemailreportcreated"]='Un nouvel e-mail périodique a été créé. Vous pouvez l\'annuler en utilisant le lien en bas de l\'e-mail.';
 $lang["unsubscribereport"]='Pour vous désabonner de ce rapport, cliquez sur le lien ci-dessous :';
 $lang["unsubscribed"]='Désabonné.';
@@ -1786,9 +1779,6 @@ $lang["nodownloadcollection"]='Vous n\'avez pas accès pour télécharger les re
 $lang["progress"]='Progrès';
 $lang["ticktodeletethisresearchrequest"]='Cocher pour supprimer cette demande.';
 $lang["done"]='Terminé.';
-$lang["latlong"]='Veuillez traduire : Lat / long
-
-Latitude / longitude';
 $lang["geographicsearch"]='Recherche géographique.';
 $lang["geographicsearchresults"]='Résultats de recherche géographique.';
 $lang["geographicsearchmissing"]='Critères de recherche géographique manquants.';
@@ -1819,9 +1809,6 @@ $lang["nopreviewresources"]='Ressources sans aperçus.';
 $lang["action-delete_permanently"]='Supprimer définitivement.';
 $lang["horizontal"]='Horizontal en Français se traduit par "Horizontal".';
 $lang["vertical"]='Vertical (Vertical)';
-$lang["cc-emailaddress"]='Veuillez traduire : CC %emailaddress
-
-CC signifie "Copie Carbone" en anglais et est utilisé pour envoyer une copie d\'un e-mail à une autre personne en plus du destinataire principal. La traduction en français serait "CC %adresseemail", où %adresseemail est l\'adresse e-mail de la personne à qui vous souhaitez envoyer une copie de l\'e-mail.';
 $lang["list-recipients-label"]='Afficher la liste de tous les destinataires dans l\'e-mail ?';
 $lang["list-recipients"]='Ce message a été envoyé aux adresses e-mail suivantes :';
 $lang["sort"]='Trier';
@@ -1843,9 +1830,7 @@ $lang["error-403-forbidden"]='403 Interdit.';
 $lang["error-plugin-not-activated"]='Plugin non activé.';
 $lang["error-failed-to-delete"]='Échec de la suppression.';
 $lang["error-failed-to-move"]='Échec du déplacement.';
-$lang["error-type-mismatch"]='Veuillez traduire : L\'argument \'%arg\' doit être du type %expected-type, %type donné. 
-
-';
+$lang["error-type-mismatch"]='L\'argument \'%arg\' doit être du type %expected-type, %type donné.';
 $lang["error-request-missing-key"]='Demande manquante du paramètre \'%key\'.';
 $lang["error-collection-unreadable"]='Votre utilisateur n\'a pas accès en lecture à la collection #%ref.';
 $lang["error-unable_to_register_filter"]='Impossible d\'enregistrer le filtre de flux \'%FILTER_NAME\' ! Le filtrage pourrait ne pas fonctionner correctement.';
@@ -1951,7 +1936,7 @@ $lang["contact_sheet_select_fields"]='Sélectionnez les champs de métadonnées 
 $lang["contact_sheet-add_logo_option"]='Ajouter un logo en haut de chaque page ?';
 $lang["contact_sheet-single_select_size"]='Qualité de l\'image.';
 $lang["contact_sheet_footer_address"]='XXX RUE PRINCIPALE, VILLE, ABC 123 - TÉL: (111) 000-8888 - FAX: (000) 111-9999';
-$lang["contact_sheet_footer_copyright"]='Veuillez traduire : &#0169; ResourceSpace. Tous droits réservés.';
+$lang["contact_sheet_footer_copyright"]='© ResourceSpace. Tous droits réservés.';
 $lang["caps-lock-on"]='Attention ! La touche Verr. Maj. est activée.';
 $lang["collectionnames"]='Noms de collection.';
 $lang["findcollectionthemes"]='Collections en vedette';
@@ -2050,7 +2035,7 @@ $lang["merge_filename_title_question"]='Utiliser le nom de fichier dans le titre
 $lang["merge_filename_title_do_not_use"]='Ne pas utiliser.';
 $lang["merge_filename_title_replace"]='Remplacer';
 $lang["merge_filename_title_prefix"]='Préfixe';
-$lang["merge_filename_title_suffix"]='Veuillez traduire : Suffixe.';
+$lang["merge_filename_title_suffix"]='Suffixe';
 $lang["merge_filename_title_include_extensions"]='Inclure les extensions ?';
 $lang["merge_filename_title_spacer"]='Espaceur.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Ressources soumises par l\'utilisateur.';
@@ -2128,7 +2113,7 @@ $lang["fieldhelp-no_config_override_help"]='Il n\'y a pas d\'aide pour cet élé
 $lang["fieldhelp-tick_to_delete_group"]='Vous n\'êtes pas autorisé à supprimer des groupes d\'utilisateurs qui contiennent des utilisateurs actifs ou qui sont le parent d\'autres groupes.';
 $lang["fieldtitle-add_to_config_override"]='Ajouter à la substitution de configuration.';
 $lang["fieldtitle-advanced_options"]='Options avancées.';
-$lang["fieldtitle-derestrict_filter"]='Veuillez traduire : Filtre de dérestriction.';
+$lang["fieldtitle-derestrict_filter"]='Filtre de dérestriction';
 $lang["fieldtitle-group_logo"]='Logo spécifique au groupe.';
 $lang["fieldtitle-group_logo_replace"]='Remplacer le logo spécifique au groupe.';
 $lang["fieldtitle-tick_to_delete_group"]='Cocher pour supprimer ce groupe.';
@@ -2596,9 +2581,7 @@ $lang["filter_condition_label"]='Critères.';
 $lang["filter_criteria_all"]='TOUTES les règles doivent être respectées.';
 $lang["filter_criteria_none"]='AUCUNE des règles ne doit être respectée.';
 $lang["filter_is_not_in"]='N\'EST PAS';
-$lang["filter_or"]='Veuillez traduire : OR
-
-"OU"';
+$lang["filter_or"]='OU';
 $lang["filter_and"]='ET';
 $lang["browse_bar_text"]='Parcourir';
 $lang["field_show_in_browse_bar"]='Afficher dans la barre de navigation.';
@@ -2650,7 +2633,7 @@ $lang["system_notification_email"]='[img_headerlogo]<br />
 [text_footer] : Texte de pied de page';
 $lang["error_edit_filter_invalid"]='Le filtre de modification n\'est pas correctement configuré pour ce groupe d\'utilisateurs. Veuillez contacter votre administrateur.';
 $lang["error_search_filter_invalid"]='Le filtre de recherche n\'est pas correctement configuré pour ce groupe d\'utilisateurs. Veuillez contacter votre administrateur.';
-$lang["action_lock"]='Veuillez traduire : Verrouiller.';
+$lang["action_lock"]='Verrouiller';
 $lang["action_unlock"]='Déverrouiller';
 $lang["status_locked"]='Verrouillé.';
 $lang["status_unlocked"]='Déverrouillé.';
