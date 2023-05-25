@@ -26,7 +26,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
     for($i = 0; $i < count($headers); $i++)
         {
-        $headers[$i] = mb_strtolower($headers[$i]);
+        $headers[$i] = mb_strtolower(trim($headers[$i], "\xEF\xBB\xBF "));
         }
 
 
