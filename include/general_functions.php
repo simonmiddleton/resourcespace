@@ -2064,7 +2064,7 @@ function escape_command_args($cmd, array $args)
 */
 function run_command($command, $geterrors = false, array $params = array())
     {
-    global $debug_log;
+    global $debug_log,$config_windows;
 
     $command = escape_command_args($command, $params);
     debug("CLI command: $command");
@@ -2074,7 +2074,15 @@ function run_command($command, $geterrors = false, array $params = array())
     );
     if($debug_log || $geterrors) 
         {
-        $descriptorspec[2] = array("pipe", "w"); // stderr is a file to write to
+        if($config_windows)
+            {
+            $log_location = get_temp_dir()."/run_command_stderror.txt";
+            $descriptorspec[2] = array("file", $log_location, "w");// stderr is a file to write to
+            }
+        else
+            {
+            $descriptorspec[2] = array("pipe", "w"); // stderr is a file to write to
+            }
         }
     $process = @proc_open($command, $descriptorspec, $pipe, NULL, NULL, array('bypass_shell' => true));
 
@@ -2083,12 +2091,12 @@ function run_command($command, $geterrors = false, array $params = array())
     $output = trim(stream_get_contents($pipe[1]));
     if($geterrors)
         {
-        $output .= trim(stream_get_contents($pipe[2]));
+        $output .= trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2]));
         }
     if ($debug_log)
         {
         debug("CLI output: $output");
-        debug("CLI errors: " . trim(stream_get_contents($pipe[2])));
+        debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
         }
     proc_close($process);
     return $output;
