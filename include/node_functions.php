@@ -2735,5 +2735,47 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
                     END))
         ELSE TRIM(" . $alias . ".name)
         END AS translated_name";
-    return;    
+    return;
+    }
+
+/**
+ * Migrate fixed list field data to text field data for a given resource reference. Useful when changing resource type field from a data type
+ * that can contain multiple values such as a dynamic keywords field. This script will concatenate the existing values and leave one remaining
+ * node for the new text field.
+ *
+ * @param  mixed $resource_type_field   Resource type field id. ** The field type should have been changed to a text type in advance 
+ *                                       - additional checks maybe need before calling this to ensure the fields are / were of the expected type.
+ *                                       see examples in pages/tools/migrate_fixed_to_text.php **
+ * @param  mixed $resource              Resource reference to be processed.
+ * @param  mixed $category_tree         Was the field data being migrated previously of type category tree? Specifying true will allow the format
+ *                                      of category tree branches to be preserved e.g. "level1/value, level2/value"
+ * @param  mixed $separator             Default is comma and space e.g. "value1, value2"
+ * 
+ * @return bool   True on success else false.
+ */
+function migrate_fixed_to_text(int $resource_type_field, int $resource, bool $category_tree, string $separator = ', ') : bool
+    {
+    $current_nodes = get_resource_nodes($resource, $resource_type_field, true, SORT_ASC); # Ordering will be as displayed on the view page.
+
+    if (count($current_nodes) < 2)
+        {
+        return true; # No need to make changes as no node / only one node present.
+        }
+
+    if ($category_tree)
+        {
+        $all_treenodes = get_cattree_nodes_ordered($resource_type_field, $resource, false);
+        $treenodenames = get_cattree_node_strings($all_treenodes, true);
+        $new_value = implode($separator, $treenodenames);
+        }
+    else
+        {
+        $current_nodes_names = array_column($current_nodes, 'name');
+        $current_nodes_translated = array_map("i18n_get_translated", $current_nodes_names);
+        $new_value = implode($separator, $current_nodes_translated);
+        }
+
+    delete_resource_nodes($resource, array_column($current_nodes, 'ref'), false);
+    $savenode = set_node(NULL, $resource_type_field, $new_value, NULL, 0);
+    return add_resource_nodes($resource, [$savenode], true, false);
     }
