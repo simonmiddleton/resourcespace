@@ -5983,7 +5983,7 @@ function display_related_resources($context)
     <div class="RecordPanel">
     <div id="RelatedResources">
     <div class="RecordResource">
-    <div class="Title"><?php echo $lang["relatedresources"]?></div>
+    <div class="Title"><?php echo htmlspecialchars($lang["relatedresources"]) ?></div>
     <?php
     if(checkperm("s")
         && ($k == "" || $internal_share_access)
@@ -5991,7 +5991,7 @@ function display_related_resources($context)
         {
         if(count(array_diff(array_column($arr_related,"resource_type"),$relatedtypes_shown)) > 0)
             {
-            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["clicktoviewasresultset"]) ?></a>
             <div class="clearerleft"> </div>
             <?php
             }
@@ -6041,7 +6041,7 @@ function display_related_resources($context)
                                         </a>
                                 </td></tr>
                             </table>
-                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
                         <?php hook("relatedresourceaddlink");?>
                         </div>
                         <?php
@@ -6152,7 +6152,7 @@ function display_related_resources($context)
                             </td>
                         </tr>
                         </table>
-                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo htmlspecialchars($rref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
                         <?php hook("relatedresourceaddlink");?>       
                     </div>
                     <?php
@@ -6176,7 +6176,7 @@ function display_related_resources($context)
             $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
             ?>
             <div class="clearerleft"></div>
-            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . htmlspecialchars($lang['related_resource_create']); ?></a>
             <?php
             }?>
         </div><!-- End of RelatedResources -->
