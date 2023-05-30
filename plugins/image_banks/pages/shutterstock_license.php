@@ -41,7 +41,7 @@ include_once "{$rs_root}/include/header.php";
     <tr class="DownloadDBlend" id="DownloadBox0">
         <td class="DownloadFileName"><h2><?php echo htmlspecialchars($lang["image_banks_shutterstock_id"] . " " . $id) ?></h2></td>
         <td class="DownloadButton">
-        <a id="downloadlink" target="_blank" href="https://www.shutterstock.com/image-photo/<?php echo $id ?>"><?php echo htmlspecialchars($lang["download"]) ?></a>
+        <a id="downloadlink" target="_blank" href="https://www.shutterstock.com/image-photo/<?php echo escape_quoted_data($id) ?>"><?php echo htmlspecialchars($lang["download"]) ?></a>
     	</td>
     </tr>
     </tbody></table>
