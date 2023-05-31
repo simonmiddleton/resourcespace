@@ -2076,12 +2076,13 @@ function run_command($command, $geterrors = false, array $params = array())
         {
         if($config_windows)
             {
-            $log_location = get_temp_dir()."/run_command_stderror.txt";
-            $descriptorspec[2] = array("file", $log_location, "w");// stderr is a file to write to
+            $pid = getmypid();
+            $log_location = get_temp_dir()."/error_".md5($command . serialize($params). $pid).".txt";
+            $descriptorspec[2] = array("file", $log_location, "w"); // stderr is a file that the child will write to
             }
         else
             {
-            $descriptorspec[2] = array("pipe", "w"); // stderr is a file to write to
+            $descriptorspec[2] = array("pipe", "w"); // stderr is a pipe that the child will write to
             }
         }
     $process = @proc_open($command, $descriptorspec, $pipe, NULL, NULL, array('bypass_shell' => true));
@@ -2098,6 +2099,7 @@ function run_command($command, $geterrors = false, array $params = array())
         debug("CLI output: $output");
         debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
         }
+    if($config_windows){unlink($log_location);}
     proc_close($process);
     return $output;
     }
