@@ -26,7 +26,6 @@ $lang["emu_module"]='Módulo EMu.';
 $lang["emu_column_name"]='Coluna do módulo EMu.';
 $lang["emu_rs_field"]='Campo do ResourceSpace.';
 $lang["emu_add_mapping"]='Adicionar mapeamento.';
-$lang["emu_upload_emu_field_label"]='Nº de referência do EMu.';
 $lang["emu_confirm_upload_nodata"]='Por favor, marque a caixa para confirmar que deseja prosseguir com o envio.';
 $lang["emu_test_script_title"]='Testar/Executar script.';
 $lang["emu_run_script"]='Processo';

@@ -315,7 +315,6 @@ $lang["collectionname"]="Samlingsnamn";
 $lang["collection-name"]="Samling: %collectionname%"; # %collectionname will be replaced, e.g. Collection: Cars
 $lang["collectionid"]="Samlingsnr";
 $lang["collectionidprefix"]="Saml_nr";
-$lang["_dupe"]="_dubblett";
 $lang["emailtousers"]="Mottagare<br><br><b>För mottagare med användarkonto:</b> Ange några bokstäver i användarens namn för att söka, klicka sedan på den hittade användaren och därefter på <b>+</b><br><br><b>För mottagare utan användarkonto:</b> Ange en e-postadress och klicka på <b>+</b>";
 $lang["removecollectionareyousure"]="Vill du avlägsna den här samlingen från listan?";
 $lang["managemycollections"]="Hantera Mina samlingar";
@@ -374,10 +373,6 @@ $lang["emailthemecollectionmessageexternal"]="har skickat samlingar med material
 $lang["emailthememessage"]="har skickat ett urval av teman från $applicationname till dig per e-post. Dessa teman har lagts till i Mina samlingar.";
 $lang["clicklinkviewthemes"]="Klicka på länken nedan om du vill visa temana.";
 $lang["clicklinkviewcollections"]="Klicka på länkarna nedan om du vill visa samlingarna.";
-
-# Lightbox
-$lang["lightbox-image"] = "Bild";
-$lang["lightbox-of"] = "av";
 
 # Resource create / edit / view
 $lang["createnewresource"]="Skapa nytt material";
@@ -462,11 +457,7 @@ $lang["download"]="Hämtning";
 $lang["preview"]="Förhandsgranskning";
 $lang["fullscreenpreview"]="Förhandsgranska på bildskärm";
 $lang["originalfileoftype"]="Originalfil (%extension)"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION File" -> "Original PDF File"
-$lang["fileoftype"]="?-fil"; # ? will be replaced, e.g. "MP4 File"
-$lang["cell-fileoftype"]="%Extension-fil"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION File" -> "JPG File"
-$lang["field-fileextension"]="%Extension"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION" -> "JPG"
-$lang["fileextension-inside-brackets"]="[%extension]"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "[%EXTENSION]" -> "[JPG]"
-$lang["fileextension"]="%extension"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "%EXTENSION" -> "JPG"
+$lang["fileoftype"]="? Fil"; # ? will be replaced, e.g. "MP4 File"
 $lang["log"]="Logg";
 $lang["resourcedetails"]="Egenskaper för material";
 $lang["offlineresource"]="Frånkopplat material";
@@ -681,7 +672,7 @@ $lang["termsandconditions"]="Användningsvillkor";
 $lang["iaccept"]="Jag accepterar";
 $lang["contributedby"]="Tillagt av";
 $lang["format"]="Format";
-$lang["notavailableshort"]="–";
+
 $lang["allmonths"]="Alla månader";
 $lang["allgroups"]="Alla grupper";
 $lang["status-ok"]="Okej";
@@ -690,7 +681,6 @@ $lang["status-warning"]="VARNING";
 $lang["status-notinstalled"]="Ej installerad";
 $lang["status-never"]="Aldrig";
 $lang["softwareversion"]="?-version"; # E.g. "PHP version"
-$lang["softwarebuild"]="?-bygge"; # E.g. "ResourceSpace Build"
 $lang["softwarenotfound"]="Programmet ’?’ hittades inte."; # ? will be replaced.
 $lang["client-encoding"]="(klientkodning: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["browseruseragent"]="Webbläsare";
@@ -997,12 +987,9 @@ $lang["setup-baseurl"]="Baswebbadress:";
 $lang["setup-emailfrom"]="E-post skickas från adress:";
 $lang["setup-emailnotify"]="E-post skickas till adress:";
 $lang["setup-spiderpassword"]="Spindellösenord:";
-$lang["setup-scramblekey"]="Skramlingsnyckel:";
-$lang["setup-apiscramblekey"]="Skramlingsnyckel för api:et:";
 $lang["setup-paths"]="Sökvägar";
 $lang["setup-pathsdetail"]="Ange sökväg, utan efterföljande snedstreck, för varje program. Lämna sökvägen tom för att inaktivera ett program. En del sökvägar har upptäckts och fyllts i automatiskt.";
 $lang["setup-applicationname"]="Programmets namn:";
-$lang["setup-basicsettingsfooter"]="Obs! Alla <strong>obligatoriska</strong> inställningar är samlade på den här sidan. Om du inte är intresserad av att kontrollera de avancerade inställningarna kan du klicka på <b>Starta&nbsp;installation</b>.";
 $lang["setup-if_mysqlserver"]="Ip-adressen eller <abbr title=\"Fullständigt kvalificerat domännamn\">fqdn</abbr> för MySQL-servern. Ange ’localhost’ om MySQL är installerad på samma server som webbservern.";
 $lang["setup-if_mysqlusername"]="Användarnamnet som ska användas för att ansluta till MySQL-servern. Användaren måste ha rättighet att skapa tabeller i databasen.";
 $lang["setup-if_mysqlpassword"]="Lösenordet för MySQL-användaren.";
@@ -1011,38 +998,16 @@ $lang["setup-if_mysqlbinpath"]="Sökvägen till MySQL-klientens programfiler, t.
 $lang["setup-if_baseurl"]="Baswebbadressen för den här installationen. Obs! Utan efterföljande snedstreck.";
 $lang["setup-if_emailfrom"]="Adressen som e-post från ResourceSpace tycks komma ifrån.";
 $lang["setup-if_emailnotify"]="E-postadress som materialbegäranden, kontoansökningar och researchförfrågningar ska skickas till.";
-$lang["setup-if_spiderpassword"]="Spindellösenordet är en obligatorisk uppgift.";
-$lang["setup-if_scramblekey"]="Ange en sträng att använda som skramlingssnyckel, om du vill aktivera skramling av materialsökvägar. Om det här är en installation nåbar från Internet rekommenderas detta starkt. Om du lämnar fältet tomt inaktiverar du skramling. Innehållet i fältet har redan slumpats fram för dig, men du kan ändra det så att det matchar en befintlig installation. Strängen ska vara svår att gissa – som ett lösenord.";
-$lang["setup-if_apiscramblekey"]="Ange en sträng att använda som skramlingsnyckel för api:et. Om du planerar att använda api:er rekommenderas detta starkt.";
 $lang["setup-if_applicationname"]="Namnet på implementationen/installationen (ex. MittFöretags mediaarkiv).";
 $lang["setup-err_mysqlbinpath"]="Det går inte att verifiera sökvägen. Lämna tomt för att inaktivera.";
 $lang["setup-err_baseurl"]="Baswebbadressen är ett obligatoriskt fält.";
 $lang["setup-err_baseurlverify"]="Baswebbadressen verkar inte vara korrekt (kunde inte läsa in license.txt).";
-$lang["setup-err_spiderpassword"]="Lösenord som krävs för ’spider.php’. VIKTIGT! Slumpa fram ett lösenord för varje ny installation. Allt material kommer att kunna läsas av den som kan detta lösenord. Innehållet i fältet har redan slumpats fram för dig, men du kan ändra det så att det matchar en befintlig installation.";
-$lang["setup-err_scramblekey"]="Om installationen är nåbar från Internet rekommenderas skramling starkt.";
-$lang["setup-err_apiscramblekey"]="Om installationen är nåbar från Internet rekommenderas skramling starkt.";
 $lang["setup-err_path"]="Det går inte att verifiera sökvägen för";
 $lang["setup-emailerr"]="Ogiltig e-postadress.";
 $lang["setup-rs_initial_configuration"]="ResourceSpace: Inledande konfiguration";
 $lang["setup-include_not_writable"]="Skrivrättighet till katalogen ’/include’ saknas. Krävs bara under installationen.";
 $lang["setup-binpath"]="Sökväg till %bin"; #%bin will be replaced, e.g. "Imagemagick Path"
 $lang["setup-begin_installation"]="Starta installation";
-$lang["setup-generaloptions"]="Allmänna alternativ";
-$lang["setup-allow_password_change"]="Tillåt byte av lösenord";
-$lang["setup-enable_remote_apis"]="Tillåt api-anrop utifrån";
-$lang["setup-if_allowpasswordchange"]="Tillåt användarna att byta sina egna lösenord.";
-$lang["setup-if_enableremoteapis"]="Tillåt fjärråtkomst till api-tilläggen.";
-$lang["setup-allow_account_requests"]="Tillåt ansökningar om användarkonton";
-$lang["setup-display_research_request"]="Visa funktionen researchfrågan";
-$lang["setup-if_displayresearchrequest"]="Tillåt användarna att skicka in researchförfrågningar via ett formulär, som sedan skickas per e-post.";
-$lang["setup-themes_as_home"]="Använd sidan Teman som startsida";
-$lang["setup-remote_storage_locations"]="Platser för fjärrlagring";
-$lang["setup-use_remote_storage"]="Använd fjärrlagring";
-$lang["setup-if_useremotestorage"]="Markera den här kryssrutan om du vill konfigurera fjärrlagring för ResourceSpace. (För att placera lagringskatalogen på en annan server.)";
-$lang["setup-storage_directory"]="Lagringskatalog";
-$lang["setup-if_storagedirectory"]="Var materialfilerna lagras. Kan vara en absolut sökväg (/var/www/blah/blah) eller relativ till installationen. Obs! Inget efterföljande snedstreck.";
-$lang["setup-storage_url"]="Lagringskatalogens webbadress";
-$lang["setup-if_storageurl"]="Var lagringskatalogen finns tillgänglig. Kan vara absolut (http://filer.exempel.se) eller relativ till installationen. Obs! Inget efterföljande snedstreck.";
 $lang["setup-login_to"]="Logga in i";
 $lang["setup-configuration_file_output"]="Utmatning till konfigurationsfilen";
 
@@ -1114,8 +1079,6 @@ $lang["publishstatus"]="Spara med publiceringsstatus:";
 $lang["addnewcontent"]="Nytt innehåll (sida, namn)";
 $lang["hitcount"]="Antal träffar";
 $lang["downloads"]="Hämtningar";
-
-$lang["addremove"]="";
 
 ##  Translations for standard log entries
 $lang["all_users"]="alla användare";
@@ -1250,7 +1213,6 @@ $lang["exiftoolnotfound"]="Exiftool kunde inte hittas";
 $lang["existing_tags"]="Existerande Exiftool-fält";
 $lang["new_tags"]="Nya Exiftool-fält (vilka kommer att läggas till vid hämtning)";
 $lang["date_of_download"]="[Datum vid nedladdning]";
-$lang["field_ref_and_name"]="%ref% – %name%"; # %ref% and %name% will be replaced, e.g. 3 – Country
 
 $lang["indicateusage"]="Beskriv hur du planerar att använda detta material.";
 $lang["usage"]="Användning";
@@ -1436,10 +1398,6 @@ $lang["treenode-no_name"]="Namnlös";
 $lang["treeobjecttype-preview_size"]="Storlek";
 
 $lang["permissions"]="Behörigheter";
-
-# System Setup File Editor
-$lang["configdefault-title"]="(Kopiera och klistra in inställningarna härifrån.)";
-$lang["config-title"]="Var <i>mycket</i> noga med att undvika syntaxfel. Om du skapar en fil med ett syntaxfel kan systemet bli obrukbart och felet kan då inte korrigeras inifrån ResourceSpace!";
 
 # System Setup Properties Pane
 $lang["file_too_large"]="Filen är för stor";
@@ -1643,7 +1601,7 @@ $lang["researches-with-requeststatus0-1"]="(1 ej tilldelad)"; # 1 Unassigned
 $lang["researches-with-requeststatus0-2"]="(%number ej tilldelade)"; # %number will be replaced, e.g. 3 Unassigned
 
 $lang["byte-symbol"]="B";
-$lang["kilobyte-symbol"]="kB"; # Egentligen handlar det om kiB o.s.v., men jag följer RS beteckningar.
+$lang["kilobyte-symbol"]="KB"; # Egentligen handlar det om kiB o.s.v., men jag följer RS beteckningar.
 $lang["megabyte-symbol"]="MB";
 $lang["gigabyte-symbol"]="GB";
 $lang["terabyte-symbol"]="TB";
@@ -1660,7 +1618,6 @@ $lang["save-error"]="Varning! Ändringarna kunde inte sparas automatiskt – spa
 $lang["theme_home_promote"]="Puffa för på startsidan?";
 $lang["theme_home_page_text"]="Pufftext";
 $lang["theme_home_page_image"]="Puffbild";
-$lang["ref-title"] = "%ref – %title"; # %ref and %title will be replaced, e.g. 3 - Sunset
 
 $lang["error-pageload"] = "Sidan kunde inte läsas in. Om du utförde en sökning kan du prova att förfina sökfrågan. Kontakta systemadministratören om problemet är bestående.";
 
@@ -1853,7 +1810,6 @@ $lang["property-table"]='Tabell';
 $lang["property-column"]='Kolumn';
 $lang["property-table_reference"]='Tabellreferens.';
 $lang["property-code"]='Kod';
-$lang["property-operation"]='Operation can be translated to "Operation" in Svenska. However, in the context of digital asset management software, it could also be translated as "Åtgärd" or "Operation".';
 $lang["themeselector"]='Utvalda samlingar.';
 $lang["changethemeto"]='Byt tema till';
 $lang["strip"]='Avlägsna.';
@@ -1918,7 +1874,6 @@ $lang["createpreviews"]='Skapa förhandsvisningar.';
 $lang["recreatepreviews_pending"]='Resurs(er) har markerats för förhandsgranskningsåterskapande.';
 $lang["relatedresources_onupload"]='Relatera alla resurser vid uppladdning.';
 $lang["selected"]='vald';
-$lang["sortorder-desc"]='Beskrivning';
 $lang["modified"]='Ändrad.';
 $lang["resourcedownloads"]='Resursnedladdningar';
 $lang["filedimensions"]='Fil dimensioner';
@@ -2007,7 +1962,7 @@ $lang["termsmustspecifyusagecomment"]='Du måste ange planerade användningskomm
 $lang["proceed"]='Fortsätt.';
 $lang["db-default-encoding"]='(databas-kodning: %kodning)';
 $lang["disable_languages"]='Inaktivera språkvalsalternativ.';
-$lang["import_export"]='Import/Export can be translated to "Importera/Exportera" in Svenska.';
+$lang["import_export"]='Importera/Exportera';
 $lang["import"]='Importera';
 $lang["export"]='Exportera';
 $lang["origin"]='Ursprung';
@@ -2100,9 +2055,6 @@ $lang["setup-if-smtpport"]='Portnummer, t.ex. 465 för Gmail med SSL.';
 $lang["setup-if-smtpauth"]='Skicka inloggningsuppgifter till SMTP-servern (false för att använda anonym åtkomst)';
 $lang["setup-if-smtpusername"]='Användarnamn (fullständig e-postadress).';
 $lang["setup-if-smtppassword"]='Lösenord.';
-$lang["design-options"]='Designalternativ.';
-$lang["use-slim-theme"]='Använd SlimHeader-designen?';
-$lang["setup-if_slimtheme"]='Använd SlimHeader-designen istället för den ursprungliga designen för att visa en tunnare huvudfält med en länkad logotyp som standard.';
 $lang["more-information"]='Mer information.';
 $lang["setup-structuralplugins"]='Systemmallar';
 $lang["setup-headercolourstyleoverride"]='Anpassad bakgrundsfärg för sidhuvudet.';
@@ -2133,7 +2085,6 @@ $lang["mapadd2-introtext"]='Den blå markören indikerar platsen för resursen s
 $lang["marker"]='Markör.';
 $lang["map_configuration"]='Sökresultatkarta.';
 $lang["map_introtext1"]='Kartan nedan visar resurser från sökresultatet som har en geolokalisering kopplad till dem. Markörens färg är inställd på resurstypen eller en anpassad metadatafält (nyckel nedanför kartan). När markörer skulle överlappa andra markörer används grön klustrering med ett nummer som indikerar antalet klustrade markörer, zooma in eller dubbelklicka på en kluster. Klicka på en enskild markör för att ladda en popup för den resursen som visar en förhandsgranskning av bilden. Klicka på förhandsgranskningen för att ladda ett fönster för den resursen. Hovra över en enskild markör för geokoordinaterna. Ändra bas-kartan med den övre högra kartknappen. Spara kartan till en PNG-fil med den nedre vänstra kartknappen.';
-$lang["search_map_introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["edit_map_introtext"]='Zooma och panorera till den kartvy som är av intresse, klicka sedan på kartan för att hitta resursens platsmarkör. Spara den senaste geoplatsen genom att använda Spara-knappen och klicka sedan på "Tillbaka till resursredigering eller geoplacera samling" för att återgå. För att söka efter en specifik plats eller geografisk funktion, använd den övre högra sökknappen. Ändra baskartan med den övre högra kartlagerknappen. Spara kartan som en PNG-fil med den nedre vänstra kartknappen.';
 $lang["mapview"]='Karta';
 $lang["maptitle"]='Kartvy.';
@@ -2149,7 +2100,7 @@ $lang["map_download"]='Ladda ner karta som en PNG-fil, välj en storlek till hö
 $lang["map_osm_group"]='Öppen gatukarta (OSM)';
 $lang["map_osm"]='Standard.';
 $lang["map_osmde"]='Tysk stil.';
-$lang["map_osmfrance"]='OSM France = OSM Frankrike';
+$lang["map_osmfrance"]='OSM Frankrike';
 $lang["map_osmch"]='OSM Schweiz';
 $lang["map_osmbzh"]='OSM Luxembourg should not be translated as it is an acronym for "OpenStreetMap Luxembourg" and should remain in English.';
 $lang["map_osmhot"]='Humanitär.';
@@ -2176,23 +2127,17 @@ $lang["map_stamenterrain"]='Terräng.';
 $lang["map_stamenterrainback"]='Terrängbakgrund.';
 $lang["map_stamenrelief"]='Lättnad';
 $lang["map_stamenwatercolor"]='Akvarell.';
-$lang["map_esri_group"]='ESRI is not a string that requires translation, as it is an acronym for Environmental Systems Research Institute, which is a company that produces GIS (Geographic Information System) software. However, if you need a translation for the acronym, it would be "Miljösystemforskningsinstitutet".';
 $lang["map_esristreet"]='Gator';
-$lang["map_esridelorme"]='I\'m sorry, but "DeLorme" is a proper noun and it should not be translated. It is the name of a company that produces mapping and GPS products.';
 $lang["map_esritopo"]='Topografisk.';
 $lang["map_esriimagery"]='Bildmaterial.';
 $lang["map_esriterrain"]='Terräng.';
 $lang["map_esrirelief"]='Skuggad relief.';
 $lang["map_esriphysical"]='Fysisk.';
 $lang["map_esriocean"]='Hav';
-$lang["map_esrinatgeo"]='National Geographic: National Geographic';
 $lang["map_esrigray"]='Grå duk.';
-$lang["map_nasagibs_group"]='NASA GIBS should remain the same in Svenska as it is an acronym and stands for "NASA Global Imagery Browse Services".';
 $lang["map_nasagibscolor"]='Modis/Terra Färgbilder';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra falsk färg-bildmaterial.';
 $lang["map_nasagibsnight"]='Nattbilder.';
-$lang["map_mapbox_group"]='Mapbox = Mapbox (There is no need to translate this term as it is a brand name)';
-$lang["map_mapboxid"]='ID can be translated to "ID" in Svenska as it is an abbreviation commonly used and understood in the language.';
 $lang["map_mapboxtoken"]='Åtkomsttoken.';
 $lang["map_mapbox"]='Standardkarta';
 $lang["map_usgs_group"]='Den nationella kartan.';
@@ -2274,10 +2219,6 @@ $lang["csvExportResultsMetadataPersonal"]='Endast inkludera data från fält som
 $lang["csvExportResultsMetadataAll"]='Inkludera data från alla tillgängliga fält, t.ex. teknisk metadata och detaljerad filinformation.';
 $lang["csvAddMetadataCSVToArchive"]='Inkludera metadata CSV-fil i arkivet?';
 $lang["changessaved"]='Ändringar sparade.';
-$lang["kilobyte-symbol-binary"]='KiB står för Kibibyte, en enhet för digital lagring som motsvarar 1024 byte.';
-$lang["megabyte-symbol-binary"]='MiB står för "Mebibyte", vilket är en datamängd som motsvarar 1 048 576 byte.';
-$lang["gigabyte-symbol-binary"]='GiB står för "gibibyte" och är en datalagringsenhet som motsvarar 1024 mebibyte (MiB).';
-$lang["terabyte-symbol-binary"]='TiB står för "tebibyte", vilket är en datamängd som motsvarar 1024 gibibyte (GiB).';
 $lang["save-conflict-error"]='Redigeringskonflikt. Vänligen ladda om sidan.';
 $lang["save-conflict-multiple"]='Redigeringskonflikt. Vänligen ladda om sidan.';
 $lang["save-conflict-title"]='Redigeringskonflikt.';
@@ -2322,7 +2263,7 @@ $lang["internal_share_grant_access_collection"]='Bevilja öppen åtkomst för in
 $lang["merge_filename_title_question"]='Använd filnamnet i titeln (om ingen inbäddad titel hittas)?';
 $lang["merge_filename_title_do_not_use"]='Använd inte.';
 $lang["merge_filename_title_replace"]='Ersätt';
-$lang["merge_filename_title_prefix"]='Prefix - Prefix (used in the context of metadata or naming conventions)';
+$lang["merge_filename_title_prefix"]='Prefix';
 $lang["merge_filename_title_suffix"]='Efternamn (Suffix)';
 $lang["merge_filename_title_include_extensions"]='Inkludera tillägg?';
 $lang["merge_filename_title_spacer"]='Avståndshållare.';
@@ -2427,106 +2368,6 @@ $lang["action-move-up"]='Flytta upp';
 $lang["action-move-down"]='Flytta nedåt.';
 $lang["action-move-to"]='Flytta till';
 $lang["delete_user_group_checkbox_alert_message"]='Observera att denna åtgärd också kommer att radera allt innehållstext som var relevant för denna användargrupp. Det finns %%RECORDSCOUNT%% poster som hittades i Hantera innehåll.';
-$lang["all__comments_flag_notification_email_body"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_flag_notification_email_subject"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_policy"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_removal_message"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] = [textfot]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_message] : [message]<br /><br /> 
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [lang_emailcollectionmessage] <br /><br /> 
-[lang_meddelande] : [meddelande]<br /><br /> 
-[lang_klickalänksekollektion] [lista]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessageexternal] - [från användarnamn] [extern e-postmeddelande om samling]<br /><br />
-[lang_message]: [meddelande]<br /><br />
-[lang_clicklinkviewcollection] [lista] - [klicka på länken för att visa samlingen] [lista]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[meddelande]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer] ';
-$lang["all__emaillogindetails"]='[välkommen]<br /><br />
-[lang_nya_inloggningsuppgifter]<br /><br />
-[lang_användarnamn] : [användarnamn]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_sidfot]';
-$lang["all__emailnewresearchrequestwaiting"]='[användarnamn] ([användarnamnfullständigt] - [användaremejl])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[namn]<br /><br />
-[lang_descriptionofproject]:[beskrivning]<br /><br />
-[lang_deadline]:[sistaansökningsdag]<br /><br />
-[lang_contacttelephone]:[kontakt]<br /><br />
-[lang_finaluse]: [slutanvändning]<br /><br />
-[lang_shaperequired]: [formkrav]<br /><br />
-[lang_noresourcesrequired]: [ingaressurserkrävs]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending] (Visa alla användares väntande)<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Forskningsbegäran har tilldelats till {assignee}.<br /><br />
-[text_footer] = Vänliga hälsningar,';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Din förfrågan har slutförts. Du kommer att meddelas när resurserna har lagts till i samlingen.<br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">Klicka här för att visa samlingen</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_haremejlatdigenresurs]<br /><br />
-[meddelande]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_klickaförattsepresursen]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
-[list] <br />
-[details]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username] : [användarnamn] <br />
-[list] <br />
-[detaljer]<br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["collection_download__write_metadata_on_download_label"]='Bädda in metadata för resursen i den nedladdade filen/filerna? Att aktivera detta kommer att göra nedladdningen långsammare.';
 $lang["downloadfile_nofile"]='Den begärda filen kunde inte hittas.';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
@@ -2537,7 +2378,6 @@ $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-b
 
 (This is a technical string that refers to an iframe element that displays the ResourceSpace knowledge base. It should not be translated.)';
 $lang["local_tz"]='Lokal tidszon';
-$lang["team_content__introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["team_report__err_report_too_long"]='Rapporten är för stor för att visas och har kapats, ladda ner den istället!';
 $lang["team_user__confirm-deletion"]='Är du säker på att du vill radera den här användaren permanent?';
 $lang["terms__upload_terms"]='Dina villkor för uppladdningar skrivs här.';
@@ -2565,11 +2405,6 @@ $lang["collection_download_too_large"]='Tyvärr, denna samling är för stor fö
 $lang["all__passwordnewemailhtml"]='Vänligen klicka på länken nedan för att ställa in ett nytt lösenord för ditt konto.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Användarnamn: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Uppladdning tillfälligt otillgänglig.';
 $lang["disk_size_no_upload_explain"]='På grund av utrymmesbegränsningar har uppladdning tillfälligt inaktiverats. Vi ber om ursäkt för eventuella olägenheter.';
-$lang["dash"]='Dash can have different meanings in the context of digital asset management software. Here are some possible translations:
-
-- Dash (noun): Bindestreck
-- Dash (verb, e.g. to dash a tag): Lägga till en tagg snabbt
-- Dashboard: Instrumentpanel or Översiktspanel (depending on the context)';
 $lang["savethissearchtodash"]='Spara till panelruta.';
 $lang["createnewdashtile"]='Skapa nytt panelkort.';
 $lang["specialdashtiles"]='Särskilda streckplattor.';
@@ -2631,7 +2466,6 @@ $lang["createdashtilemycontributions"]='Mina bidrag (användarspecifika)';
 $lang["createdashtilehelpandadvice"]='Hjälp- och rådgivningslänk.';
 $lang["createdashtileuserupload"]='Ladda upp flik (användarspecifik)';
 $lang["tile_thmbs"]='Enskild.';
-$lang["tile_multi"]='Multi = Flera/många (depending on the context)';
 $lang["tile_blank"]='Tomt.';
 $lang["tile_analytics"]='Analys';
 $lang["tile_ftxt"]='Endast text';
@@ -2639,31 +2473,16 @@ $lang["tile_thmsl"]='Utvald samling.';
 $lang["tile_custm"]='Anpassad.';
 $lang["tile_pend"]='Väntande.';
 $lang["plugin_category_general"]='Allmänt.';
-$lang["plugin_category_api"]='API: Application Programming Interface (Svenska: Gränssnitt för applikationsprogrammering)';
 $lang["plugin_category_advanced"]='Avancerad.';
 $lang["plugin_category_design"]='Design: Design';
 $lang["plugin_category_ecommerce"]='E-handel.';
 $lang["plugin_integrations"]='Integreringar.';
 $lang["system_down_title"]='Observera!';
 $lang["system_down_message"]='Systemet är nere för underhåll. Tack för ditt tålamod.';
-$lang["systemconsole"]='Konsol';
 $lang["systemconsoledebuglog"]='Felsökningslogg';
-$lang["systemconsolememorycpu"]='Minne och CPU.';
-$lang["systemconsoledatabase"]='Databas';
-$lang["systemconsolesqllogtransactions"]='SQL Transaktionslogg';
-$lang["systemconsoleactivitylog"]='Aktivitetslogg';
 $lang["systemconsoleturnoffafter"]='Stäng av efter';
 $lang["systemconsoleonpermallusers"]='På (permanent för alla användare)';
 $lang["systemconsoleonallusers"]='På (alla användare)';
-$lang["systemconsoleonfailedtopcommand"]='Misslyckades med att köra top-kommandot.';
-$lang["systemconsoleonfailedtasklistcommand"]='Misslyckades med att utföra tasklist-kommandot.';
-$lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location är inte inställd, filen hittades inte eller är inte läsbar. Vänligen kontrollera att \'$debug_log_readable=true;\' är inställt i din konfiguration.';
-$lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions är inte inställd eller $mysql_log_location filen hittades inte eller går inte att läsa.';
-$lang["systemconsoletrackVars"]='Spårningsvariabler.';
-$lang["systemconsole_label_input_vars"]='Variabelnamn';
-$lang["systemconsole_help_track_vars"]='Använd en CSV-fil med variabelnamn som du vill spåra i hela systemet. Detta används främst för felsökning eftersom det hjälper till att bestämma var en specifik variabel sätts eller åsidosätts.';
-$lang["systemconsole_label_input_track_period"]='Ange hur länge variabler ska spåras.';
-$lang["systemconsole_help_track_period"]='Värdet representerar minuter.';
 $lang["trash_bin_title"]='Ta bort';
 $lang["trash_bin_delete_dialog_title"]='Ta bort resursen?';
 $lang["managecontent_defaulttextused"]='Texten för standardspråket (?) används för närvarande. Redigera texten nedan för att skapa en alternativ version för detta språk / användargruppsval.';
@@ -2816,7 +2635,6 @@ $lang["user_pref_email_and_user_notifications"]='Skicka e-postmeddelanden till m
 $lang["notification_email_subject"]='E-postmeddelande för avisering.';
 $lang["mymessages_introtext"]='Du kan konfigurera vilka meddelanden som visas här genom att ändra dina användarinställningar.';
 $lang["login_slideshow_image_notes"]='Denna bild kommer endast att användas som bakgrund på inloggningssidan.';
-$lang["media"]='Media: Medier';
 $lang["pixel_height"]='Pixelhöjd';
 $lang["pixel_width"]='Pixelbredd';
 $lang["file_extension_label"]='Filändelse';
@@ -2845,7 +2663,6 @@ $lang["new_report"]='Ny rapport.';
 $lang["edit_report"]='Redigera rapport';
 $lang["all_activity"]='Alla aktiviteter.';
 $lang["all_resource_types"]='Alla resurstyper.';
-$lang["report-graph-by-pie"]='Sammansättning (if referring to a breakdown of a compound object) or Haveri (if referring to a technical or mechanical breakdown) or Kollaps (if referring to a system or process breakdown).';
 $lang["report-graph-by-piegroup"]='efter användargrupp';
 $lang["report-graph-by-pieresourcetype"]='efter resurstyp';
 $lang["report-graph-by-line"]='över tid';
@@ -2939,7 +2756,6 @@ $lang["image_quality_92"]='Skriv ut';
 $lang["image_quality_80"]='Webb.';
 $lang["image_quality_50"]='Låg';
 $lang["image_quality_40"]='Mycket låg.';
-$lang["systemconfig_api"]='API: Application Programming Interface (Svenska: Gränssnitt för applikationsprogrammering)';
 $lang["iiif_enable_option"]='Aktivera IIIF-stöd.';
 $lang["iiif_disabled"]='IIIF är inte konfigurerat.';
 $lang["property-personal_data"]='Kan innehålla personuppgifter.';
@@ -3052,7 +2868,7 @@ $lang["error_locked_other_user"]='Resursen är låst av en annan användare.';
 $lang["error-edit_noaccess_resources"]='Ingen redigeringsåtkomst till resurser:';
 $lang["error-edit_locked_resources"]='Följande resurser är låsta:';
 $lang["locked_resource_search"]='Låsta resurser.';
-$lang["autocomplete_log_note"]='(Autocomplete) = Automatisk komplettering';
+$lang["autocomplete_log_note"]='(Automatisk komplettering)';
 $lang["posted-file-not-found"]='Filen som har laddats upp har inte hittats.';
 $lang["error-theme-missing"]='Utvald samling saknas eller har inte specificerats.';
 $lang["system_config_search_engines"]='Sökmotorer.';
@@ -3079,7 +2895,6 @@ $lang["job_value"]='Värde';
 $lang["job_boost"]='Öka jobb.';
 $lang["job_priority"]='Prioritet';
 $lang["csv_export_offline_option"]='Generera CSV-fil offline? Detta bör användas för stora resultatuppsättningar. Du kommer att meddelas via ett ResourceSpace-meddelande när CSV-filen är tillgänglig.';
-$lang["csv_export_filename"]='metadata_export_%%SEARCH%%_%%TIME%% can be translated to "metadata_export_%%SEARCH%%_%%TIME%%" in Svenska. This appears to be a system-generated string that includes placeholders for variables such as "SEARCH" and "TIME" and should not be translated.';
 $lang["csv_export_file_ready"]='Din CSV-export är klar.';
 $lang["offline_processing_disabled"]='Offline-jobbhantering är inte konfigurerat på detta system. För att aktivera detta, kontakta din systemadministratör.';
 $lang["csv_export_offline_only"]='Offline-behandling måste användas när data exporteras för mer än %%RESOURCE_COUNT%% resurser.';
@@ -3099,14 +2914,6 @@ $lang["upload_share_email_subject"]='Du har fått en uppladdningslänk skickad t
 $lang["upload_share_email_text"]='har skickat en länk till dig för att ladda upp filer till';
 $lang["upload_share_email_password"]='Använd detta lösenord för att komma åt länken.';
 $lang["upload_share_email_clicklink"]='Använd länken nedan för att börja ladda upp.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[länk]
-<br />
-<br />
-[lösenordstext]';
 $lang["upload_share_complete"]='Tack för att du laddade upp. Använd knappen nedan för att ladda upp fler resurser.';
 $lang["error_invalid_usergroup"]='Ogiltig användargrupp.';
 $lang["error_invalid_date"]='Ogiltigt datum.';
@@ -3117,10 +2924,6 @@ $lang["error_no_resources_edit"]='Inga resurser hittades att redigera. Om du pre
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resurser har laddats upp till din delade samling.';
 $lang["notify_upload_share_new_subject"]='Nya externa uppladdningar.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] = En användare har delat en samling med dig. <br />
-[lang_clicklinkviewcollection] = Klicka på länken nedan för att visa samlingen: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Vänliga hälsningar, ResourceSpace.';
 $lang["my_shares"]='Mina delningar.';
 $lang["manage_shares_title"]='Extern delning.';
 $lang["share_purge_text"]='Radera utgångna delningar.';

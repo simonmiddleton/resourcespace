@@ -692,7 +692,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
     $snapshottime = 1;
     $duration = 0; // Set this as default if the duration is not determined so that previews will always work
     $cmd = $ffmpeg_fullpath . ' -i ' . escapeshellarg($file);
-    $out = run_command($cmd, true);
+    $out = run_command($cmd);
         
     debug("FFMPEG-VIDEO: Running information command: {$cmd}");
 
@@ -930,37 +930,49 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         * that will give us a source bitmap of approximately 1600 pixels.
         */
 
-            if ($extension=="pdf"){
-                
-                $pdfinfocommand="pdfinfo ".escapeshellarg($file);
-                $pdfinfo=shell_exec($pdfinfocommand);
-                $pdfinfo=explode("\n",$pdfinfo);
-                $pdfinfo=preg_grep("/\bPage\b.+\bsize\b/",$pdfinfo);
+            if ($extension == "pdf")
+                {
+                $pdfinfocommand = "pdfinfo " . escapeshellarg($file);
+                $pdfinfo = shell_exec($pdfinfocommand);
+                $pdfinfo = explode("\n", $pdfinfo);
+                $pdfinfo = preg_grep("/\bPage\b.+\bsize\b/", $pdfinfo);
                 sort($pdfinfo);
-                #die(print_r($pdfinfo));
-                if (isset($pdfinfo[0])){
-                    $pdfinfo=$pdfinfo[0];
+
+                if (isset($pdfinfo[0]))
+                    {
+                    $pdfinfo = $pdfinfo[0];
                     }
-                else {
-                    $pdfinfo="";
+                else
+                    {
+                    $pdfinfo = "";
                     }
-                if ($pdfinfo!=""){  
-                    $pdfinfo=explode(":",$pdfinfo);
-                    $wh=explode("x",$pdfinfo[1]);   
-                    $w=round(trim($wh[0]));
-                    $h=explode(" ",$wh[1]); 
-                    $h=round(trim($h[1]));
-                    if($w>$h){
-                        $pdf_max_dim=$w;
+
+                if ($pdfinfo != "")
+                    {
+                    $pdfinfo = explode(":", $pdfinfo);
+                    $wh = explode("x", $pdfinfo[1]);
+                    $w = round(trim($wh[0]));
+                    $h = explode(" ", $wh[1]);
+                    $h = round(trim($h[1]));
+                    if($w > $h)
+                        {
+                        $pdf_max_dim = $w;
                         }
                     else{
-                        $pdf_max_dim=$h;
+                        $pdf_max_dim = $h;
                         }
-                    $resolution=ceil((max($scr_width,$scr_height)*2)/($pdf_max_dim/72));
+
+                    if ($pdf_max_dim != 0)
+                        {
+                        $resolution = ceil((max($scr_width, $scr_height) * 2) / ($pdf_max_dim / 72));
+                        }
+                    else
+                        {
+                        $resolution = $pdf_resolution;
+                        }
+                    }
                 }
-                
-                
-            }
+
             if ($extension=="eps"){
                 # Locate imagemagick.
                 $identify_fullpath = get_utility_path("im-identify");

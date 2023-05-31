@@ -84,5 +84,3 @@ else
 	Done.	
 	<?php
 	}
-?>
-	

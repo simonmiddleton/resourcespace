@@ -24,7 +24,6 @@ $lang["posixldapauth_user_name"]='Brukernavn.';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Bruk for å endre innholdet i feltet for gruppe-medlemmer.';
 $lang["posixldapauth_login_field"]='Påloggingsfelt:';
 $lang["posixldapauth_test_connection"]='Test tilkobling:';
-$lang["posixldapauth_test"]='Test can be translated to "Test" in Norsk.';
 $lang["posixldapauth_resourcespace_configuration"]='ResourceSpace konfigurasjon';
 $lang["posixldapauth_user_suffix"]='Bruker Suffix:';
 $lang["posixldapauth_create_users"]='Opprett brukere:';

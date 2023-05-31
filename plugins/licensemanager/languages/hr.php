@@ -2,7 +2,7 @@
 
 
 $lang["license_usage-book"]='Knjiga';
-$lang["license_usage-web"]='Web (Mreža)';
+$lang["license_usage-web"]='Web';
 $lang["license_usage-merchandise"]='Materijal za prodaju.';
 $lang["license_usage-tv"]='TV (Televizija)';
 $lang["license_management"]='Upravljanje licencama.';

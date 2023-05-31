@@ -37,11 +37,13 @@ if ($collection===false)
 
 if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 401));
+    error_alert($lang["error-permissiondenied"], true, 401);
+    exit();
     }
 else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $resources=do_search("!collection".$ref);

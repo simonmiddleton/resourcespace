@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='建议关键词字段';
 $lang["google_vision_landmarks_field"]='地标字段';
 $lang["google_vision_text_field"]='提取文本的字段';
 $lang["google_vision_logo_field"]='检测到的热门标志的字段';
-$lang["google_vision_api"]='Google Vision API 的简体字翻译为：谷歌视觉 API。';
 $lang["google_vision_restypes"]='启用的资源类型';
 $lang["google_vision_features"]='启用功能检测';
 $lang["google_vision_autotitle"]='自动将标题设置为排名最高的关键词。';

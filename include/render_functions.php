@@ -1271,6 +1271,23 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         }
                     }); 
                     break;
+
+                case 'unrelate_all':
+                    var collection = <?php echo urlencode($collection_data['ref']);?>;
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: baseurl_short + 'pages/ajax/unrelate_resources.php?collection=' + collection,
+                        data: {<?php echo generateAjaxToken("unrelate_resources"); ?>},
+                        success: function(data) {
+                            if (data.trim() == "SUCCESS") {
+                                styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['unrelateallresources_confirmation']?>');
+                            }
+                        },
+                        error: function (err) {
+                            console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                        }
+                    }); 
+                    break;
                 <?php
                 }
 
@@ -1794,16 +1811,17 @@ function display_field($n, $field, $newtab=false,$modal=false)
     $locked_fields = explode(",",getval("lockedfields",""));
     }
 
-    if(!isset($copyfrom))
-        {
-        $copyfrom = getval('copyfrom', '');
-        }
+  if(!isset($copyfrom))
+    {
+    $copyfrom = getval('copyfrom', '');
+    }
 
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim((string) $value);
   $use_copyfrom=true;
-    if ($use != $ref && ($field["omit_when_copying"]))
+  $omit_when_copying_enacted=false;
+  if ($use != $ref && ($field["omit_when_copying"]))
         {
         debug("display_field: reverting copied value for field " . $field["ref"] . " as omit_when_copying is enabled");
         # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
@@ -1818,6 +1836,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 }
             }
         $selected_nodes = $original_nodes;
+        $omit_when_copying_enacted=true;
         }
     elseif(($ref<0 || $upload_review_mode) && isset($locked_fields) && in_array($field["ref"], $locked_fields) && $lastedited > 0)
         {
@@ -2104,7 +2123,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
-        $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
+        
+        // Establish the full set of selected nodes to be rendered for this field
+        // Do this only if the field's selected nodes haven't previously been adjusted to take account of omit_when_copying
+        if(!$omit_when_copying_enacted)
+            {
+            $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
+            }
+
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
             $name = "nodes[{$field['ref']}]";
@@ -3225,7 +3251,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 * 
 * @param string $type   type of trash_bin
 * 
-* @return void
+* @return string|void
 */ 
 
 function render_trash($type, $deletetext,$forjs=false)
@@ -4259,9 +4285,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			    }
 
             # Use a display template to render this field
-            $template = $field['display_template'];
+            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
             $template = str_replace('[title]', $title, $template);
-            $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
+            $template = str_replace('[value]', $value, $template);
             $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
@@ -4972,25 +4998,56 @@ function render_featured_collection(array $ctx, array $fc)
 * @param string  $permission   Permission identifier
 * @param string  $description  User friendly description of the permission
 * @param boolean $reverse      Reverse the permission
-* @param boolean $reload       Autosave changes done on this permission
-* @param boolean $disabled       Disable this permission as another supersedes it (greys it out and checks it)
-* 
-* @return void
+* @param boolean $reload       deprecated - Autosave changes done on this permission
+* @param boolean $disabled     Disable this permission as another supersedes it (greys it out and checks it)
 */
-function DrawOption($permission,$description,$reverse=false,$reload=false,$disabled=false)
+function DrawOption(string $permission, string $description, bool $reverse = false, bool $reload = false, bool $disabled = false): void
     {
     global $permissions,$permissions_done;
-    $checked=(in_array($permission,$permissions));
-    if ($reverse) {$checked=!$checked;}
+
+    // The description can contain <br> tags and "&mdash;" HTML entities which we still want to allow.
+    $description_escaped = nl2br(
+        str_replace(
+            '&amp;',
+            '&',
+            htmlspecialchars(preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $description))
+        ),
+        false
+    );
+
+    $checked = in_array($permission, $permissions);
+    if ($reverse)
+        {
+        $checked = !$checked;
+        }
+    
+    $input_value = $reverse ? "reverse" : "normal";
+    $base64_perm = base64_encode($permission);
+
+    // Other attributes - note: a disabled input also gets checked automatically (some plugins do it)
+    $disabled_attr = '';
+    $onchange_attr = " onchange=SavePermissions(['$base64_perm']);";
+    if ($disabled)
+        {
+        $checked = true;
+        $disabled_attr = ' disabled';
+        $onchange_attr = '';
+        }
+    $checked_attr = $checked ? ' checked' : '';
     ?>
-    <input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+    <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
-        <td><?php echo $description?></td>
-        <td><input type="checkbox" <?php if ($disabled) {$checked=true; ?>disabled<?php } ?> name="checked_<?php echo base64_encode($permission) ?>" <?php 
-            if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
+        <td><?php echo $description_escaped; ?></td>
+        <td>
+            <input
+                type="checkbox"
+                name="checked_<?php echo $base64_perm; ?>"
+                data-reverse="<?php echo (int) $reverse; ?>"
+                <?php echo $disabled_attr . $checked_attr . $onchange_attr; ?>>
+        </td>
     </tr>
     <?php
-    $permissions_done[]=$permission;
+    $permissions_done[] = $permission;
     }
 
 
@@ -5888,5 +5945,242 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
         }
 
     </script>
+    <?php
+    }
+
+
+/**
+ * Render all related resources on view page
+ *
+ * @param array $context Array with all required info from the view page
+ * 
+ * @return void
+ * 
+ */
+function display_related_resources($context)
+    {
+    $ref                        =  $context["ref"] ?? 0;
+    $k                          =  $context["k"] ?? "";
+    $userref                    =  $context["userref"] ?? 0;
+    $arr_related                =  $context["relatedresources"] ?? [];
+    $relatedtypes_shown         =  $context["related_types_shown"] ?? [];
+    $internal_share_access      =  $context["internal_share_access"] ?? false;
+    $related_restypes           =  $context["related_restypes"] ?? [];
+    $relatedtypes_shown         =  $context["relatedtypes_shown"] ?? [];
+    $edit_access                =  $context["edit_access"] ?? false;
+    $urlparams                  =  $context["urlparams"] ?? ["ref"=>$ref];    
+    
+    global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type, $related_resource_preview_size;
+    
+    $allrestypes = get_resource_types();
+    if($ref==0 || count(array_diff(array_column($allrestypes,"ref"),$relatedtypes_shown)) == 0) 
+        {
+        return;
+        }
+    ?>
+    <!--Display panel for related resources-->
+    <div class="RecordBox">
+    <div class="RecordPanel">
+    <div id="RelatedResources">
+    <div class="RecordResource">
+    <div class="Title"><?php echo htmlspecialchars($lang["relatedresources"]) ?></div>
+    <?php
+    if(checkperm("s")
+        && ($k == "" || $internal_share_access)
+        )
+        {
+        if(count(array_diff(array_column($arr_related,"resource_type"),$relatedtypes_shown)) > 0)
+            {
+            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["clicktoviewasresultset"]) ?></a>
+            <div class="clearerleft"> </div>
+            <?php
+            }
+        if($sort_relations_by_filetype)
+            {
+            // Sort by file extension
+            $related_file_extensions = array_unique(array_column($arr_related, "file_extension"));
+            foreach($related_file_extensions as $rext)
+                {
+                ?>
+                <h4><?php echo htmlspecialchars($rext); ?></h4>
+                <?php
+                # loop and display the results by file extension
+                for ($n=0;$n<count($arr_related);$n++)			
+                    {
+                    if(in_array($arr_related[$n]["resource_type"],$relatedtypes_shown))
+                        {
+                        // Don't show this type again.
+                        continue;
+                        }
+                    if ($arr_related[$n]["file_extension"]==$rext)
+                        {
+                        $rref=$arr_related[$n]["ref"];
+                        $title=$arr_related[$n]["field".$view_title_field];
+                        $access=get_resource_access($rref);
+                        $use_watermark=check_use_watermark();
+                        # swap title fields if necessary
+                        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+                            {
+                            if ($arr_related[$n]['resource_type']==$metadata_template_resource_type)
+                                {
+                                $title=$arr_related[$n]["field".$metadata_template_title_field];
+                                }
+                            }
+                        ?>
+                        <div class="CollectionPanelShell">
+                            <table border="0" class="CollectionResourceAlign">
+                                <tr><td>
+                                        <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                                        if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
+                                            { 
+                                            ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php
+                                            }
+                                        else
+                                            { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                            } ?>
+                                        </a>
+                                </td></tr>
+                            </table>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
+                        <?php hook("relatedresourceaddlink");?>
+                        </div>
+                        <?php
+                        }
+                    }
+                    ?>
+                <div class="clearerleft"> </div>
+                <?php
+                } #end of display loop by resource extension
+            } #end of IF sorted relations by extension
+        elseif($sort_relations_by_restype)
+            {
+            foreach($related_restypes as $rtype)
+                {
+                if(in_array($rtype,$relatedtypes_shown))
+                    {
+                    // Don't show this type again.
+                    continue;
+                    }
+                $restypename=ps_value("SELECT name AS value FROM resource_type WHERE ref = ?",array("i",$rtype), "", "schema");
+                $restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
+                ?>
+                <h4><?php echo htmlspecialchars($restypename); ?></h4>
+                <?php
+                # loop and display the results by file extension
+                for ($n=0;$n<count($arr_related);$n++)			
+                    {
+                    if ($arr_related[$n]["resource_type"]==$rtype)
+                        {
+                        $rref=$arr_related[$n]["ref"];
+                        $title=$arr_related[$n]["field".$view_title_field];
+                        $access=get_resource_access($rref);
+                        $use_watermark=check_use_watermark();
+                        # swap title fields if necessary
+                        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+                            {
+                            if ($arr_related[$n]['resource_type']==$metadata_template_resource_type)
+                                {
+                                $title=$arr_related[$n]["field".$metadata_template_title_field];
+                                }
+                            }
+                        ?>
+                        <!--Resource Panel-->
+                        <div class="CollectionPanelShell">
+                            <table border="0" class="CollectionResourceAlign">
+                                <tr><td>
+                                <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
+                                    { 
+                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php 
+                                    }
+                                else
+                                    { 
+                                    ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                    } ?>
+                                    </a>
+                                </td></tr>
+                            </table>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
+                        <?php hook("relatedresourceaddlink");?>
+                        </div>
+                        <?php
+                        }
+                    }
+                ?>
+                <div class="clearerleft"> </div>
+                <?php 
+                } #end of display loop by resource extension
+            } #end of IF sorted relations
+        else
+            {
+            // Related resources (default view)
+            for ($n=0;$n<count($arr_related);$n++)            
+                {
+                if(in_array($arr_related[$n]["resource_type"],$relatedtypes_shown))
+                    {
+                    // Don't show this type again.
+                    continue;
+                    }
+                $rref=$arr_related[$n]["ref"];
+                $title=$arr_related[$n]["field".$view_title_field];
+                $access=get_resource_access($rref);
+                $use_watermark=check_use_watermark();
+                # swap title fields if necessary
+
+                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
+                    {
+                    if ($arr_related[$n]["resource_type"]==$metadata_template_resource_type)
+                        {
+                        $title=$arr_related[$n]["field".$metadata_template_title_field];
+                        }	
+                    }        
+                ?>
+                <div class="CollectionPanelShell">
+                    <table border="0" class="CollectionResourceAlign">
+                        <tr>
+                            <td>
+                                <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], $related_resource_preview_size))
+                                    {
+                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" /><?php
+                                    }
+                                else
+                                    {
+                                    ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
+                                    }
+                                ?></a>
+                            </td>
+                        </tr>
+                        </table>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo htmlspecialchars($rref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
+                        <?php hook("relatedresourceaddlink");?>       
+                    </div>
+                    <?php
+                    }?>
+                <?php
+                } // End related resources default display
+            } // End of if any related resources exist
+        ?>
+        </div><!-- End of RecordResource -->
+        <?php if ($edit_access)
+            {
+            // Add link to create new related resource and view as result set
+            $add_related_params = [
+                "ref"=>-$userref,
+                "relateto"=>$ref,
+                "noupload"=>"true",
+                "recordonly"=>"true",
+                "collection_add"=>"false",
+                "redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams),
+                ];
+            $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
+            ?>
+            <div class="clearerleft"></div>
+            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . htmlspecialchars($lang['related_resource_create']); ?></a>
+            <?php
+            }?>
+        </div><!-- End of RelatedResources -->
+    </div><!-- End of RecordPanel -->
+    </div><!-- End of RecordBox -->
     <?php
     }

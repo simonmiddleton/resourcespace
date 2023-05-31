@@ -18,7 +18,6 @@ $lang["checkmail_password"]='Salasana';
 $lang["checkmail_extension_mapping"]='Resurssityyppi tiedostopäätekartan avulla.';
 $lang["checkmail_default_resource_type"]='Oletusarvoisen resurssityypin.';
 $lang["checkmail_extension_mapping_desc"]='Oletusresurssityypin valitsimen jälkeen on yksi syötekenttä jokaiselle resurssityypillesi. <br />Jos haluat pakottaa eri tiedostotyypit latautumaan tiettyyn resurssityyppiin, lisää pilkulla erotettu luettelo tiedostopäätteistä (esim. jpg,gif,png).';
-$lang["checkmail_resource_type_population"]='Sallituista tiedostopäätteistä.';
 $lang["checkmail_subject_field"]='Aihe-kenttä';
 $lang["checkmail_body_field"]='Kehon kenttä.';
 $lang["checkmail_purge"]='Poistetaanko sähköpostit latauksen jälkeen?';

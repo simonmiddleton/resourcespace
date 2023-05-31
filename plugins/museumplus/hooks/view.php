@@ -63,12 +63,6 @@ function HookMuseumplusViewRenderfield($field, $resource)
         return false;
         }
 
-
-    if(!checkperm('a'))
-        {
-        return false;
-        }
-
     if($field_ref == $rs_uid_field)
         {
         $mpid = $field_value;

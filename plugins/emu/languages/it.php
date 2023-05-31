@@ -25,7 +25,6 @@ $lang["emu_rs_mappings_header"]='Regole di mappatura EMu - ResourceSpace.';
 $lang["emu_module"]='Modulo EMu.';
 $lang["emu_column_name"]='Colonna del modulo EMu.';
 $lang["emu_rs_field"]='Campo di ResourceSpace';
-$lang["emu_upload_emu_field_label"]='EMu IRN translates to "EMu IRN" as it is an acronym and does not have a specific meaning in English or Italiano.';
 $lang["emu_confirm_upload_nodata"]='Si prega di selezionare la casella per confermare di voler procedere con il caricamento.';
 $lang["emu_test_script_title"]='Prova/ Esegui script.';
 $lang["emu_run_script"]='Elaborazione';

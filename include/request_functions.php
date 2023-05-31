@@ -277,9 +277,8 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
  * @param  integer $ref 
  * @param  mixed $details
  * @param  mixed $external_email
- * @return void
  */
-function email_collection_request($ref,$details,$external_email)
+function email_collection_request($ref,$details,$external_email): bool
     {
     global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,
     $resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;

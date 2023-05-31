@@ -13,7 +13,7 @@
 
 function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$offset=0)
     {
-    $fetchrows = ($fetchrows > 0 ? $fetchrows : -1);
+    $fetchrows = ($fetchrows >= 0 ? $fetchrows : -1);
     $offset = (int)$offset;
 
     if($offset>0 && $fetchrows!=-1)
@@ -248,7 +248,7 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
         foreach($refs as $ref)
             {
             $resource = get_resource_data($ref);
-            if(!is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
+            if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
                 {
                 $return[$ref] = "";
                 continue;

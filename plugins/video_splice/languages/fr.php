@@ -1,7 +1,6 @@
 <?php
 
 
-$lang["action-trim"]='Please provide more context. "Trim" can have different meanings in the context of digital asset management software.';
 $lang["video-trim"]='Coupe vidéo.';
 $lang["video-trim-warning"]='Avertissement de recadrage';
 $lang["video-trim-warning-text"]='Votre point de début ou de fin de rognage dépasse la durée de prévisualisation de la vidéo.<br><br>La prévisualisation fournie ne représentera pas entièrement le résultat final. Veuillez envisager d\'augmenter la durée de prévisualisation de votre vidéo et de recréer les fichiers de prévisualisation si vous souhaitez prévisualiser le résultat rogné.';

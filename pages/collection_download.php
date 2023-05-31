@@ -832,5 +832,3 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 </div>
 <?php 
 include "../include/footer.php";
-?>
-

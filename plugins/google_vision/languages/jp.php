@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='推奨キーワードのためのフィー�
 $lang["google_vision_landmarks_field"]='ランドマーク用のフィールド';
 $lang["google_vision_text_field"]='抽出されたテキストのフィールド';
 $lang["google_vision_logo_field"]='検出された人気のあるロゴのためのフィールド';
-$lang["google_vision_api"]='Google Vision APIの日本語訳は「Google Vision API」です。';
 $lang["google_vision_restypes"]='有効なリソースタイプ';
 $lang["google_vision_features"]='機能検出を有効にしました。';
 $lang["google_vision_autotitle"]='自動的にタイトルを最高ランキングのキーワードに設定する。';

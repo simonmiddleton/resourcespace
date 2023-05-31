@@ -6,7 +6,6 @@ $lang["ldapserver"]='Server LDAP.';
 $lang["ldap_encoding"]='Codificarea datelor primită de la serverul LDAP (setată în cazul în care nu este UTF-8 și datele nu sunt afișate corect - de exemplu, numele afișat).';
 $lang["domain"]='Domeniu AD, dacă sunt mai multe separate prin punct şi virgulă.';
 $lang["emailsuffix"]='Sufixul de e-mail - utilizat dacă nu se găsesc date de atribut de e-mail.';
-$lang["port"]='Port - Port (referring to a digital asset management software context)';
 $lang["basedn"]='DN de bază. Dacă utilizatorii se află în mai multe DN-uri, separați-le cu punct și virgulă.';
 $lang["loginfield"]='Câmp de autentificare.';
 $lang["usersuffix"]='Sufix utilizator (un punct va fi adăugat în fața sufixului)';

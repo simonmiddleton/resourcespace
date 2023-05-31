@@ -2,8 +2,8 @@
 
 
 $lang["license_usage-book"]='Buch';
-$lang["license_usage-web"]='Web (German translation): Netz';
-$lang["license_usage-merchandise"]='Merchandise can be translated to "Waren" or "Merchandising".';
+$lang["license_usage-web"]='Netz';
+$lang["license_usage-merchandise"]='Merchandising';
 $lang["license_usage-tv"]='Fernseher';
 $lang["license_management"]='Lizenzverwaltung.';
 $lang["licensor_licensee"]='Lizenzgeber / Lizenznehmer';

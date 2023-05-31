@@ -570,11 +570,9 @@ $lang["setup-baseurl"]="Base URL:";
 $lang["setup-emailfrom"]="Email Fra Adresse:";
 $lang["setup-emailnotify"]="Email Advisér:";
 $lang["setup-spiderpassword"]="Spider Adgangskode:";
-$lang["setup-scramblekey"]="Kamp Nøgle:";
 $lang["setup-paths"]="Paths";
 $lang["setup-pathsdetail"]="For hver vej, skal du indtaste stien uden en skråstreg efter hver enkelt binær. Du kan deaktivere en binær, forlade stien tomt. Enhver registreret automatisk stier der allerede er fyldt i.";
 $lang["setup-applicationname"]="Anvendelse Navn:";
-$lang["setup-basicsettingsfooter"]="BEMÆRK: Den eneste &lt;strong&gt; kræves &lt;/ strong&gt; indstillinger er på denne side. Hvis du ikke er interesseret i at kontrollere de avancerede indstillinger, kan du klikke nedenfor for at begynde installationen.";
 $lang["setup-if_mysqlserver"]='The IP address or <abbr title=Fully Qualified Domain Name>FQDN</abbr> of your MySQL server installation.  If MySql is installed on the same server as your web server, use localhost.';
 $lang["setup-if_mysqlusername"]="Brugernavnet bruges til at oprette forbindelse til din MySQL-serveren. Denne bruger skal have rettigheder til at oprette tabeller i databasen navngivet nedenfor.";
 $lang["setup-if_mysqlpassword"]="Adgangskoden for MySQL brugernavn indtastet ovenfor.";
@@ -583,14 +581,10 @@ $lang["setup-if_mysqlbinpath"]="Stien til MySQL klient binaries - f.eks mysqldum
 $lang["setup-if_baseurl"]="Den »base« web-adressen for denne installation. BEMÆRK: Ingen skråstreg.";
 $lang["setup-if_emailfrom"]="Den adresse, e-mails fra RS synes at komme fra.";
 $lang["setup-if_emailnotify"]="Den e-mail-adresse, som ressource / brugeren / forskning anmodninger er sendt.";
-$lang["setup-if_spiderpassword"]="Edderkoppen kodeord er et obligatorisk felt.";
-$lang["setup-if_scramblekey"]="For at aktivere scrambling, indstille kamp nøglen til at være svære at gætte strengen (svarende til et password). Hvis dette er et offentligt anlæg så er det en meget klog idé. Lad dette felt være tomt for at deaktivere ressource vej scrambling. Dette område er allerede blevet randomiseret til dig, men du kan ændre det til at matche en eksisterende installation, hvis det er nødvendigt.";
 $lang["setup-if_applicationname"]="Navnet på din implementering / installation (f.eks&#39; mycompany Resource System &quot;).";
 $lang["setup-err_mysqlbinpath"]="Ude af stand til at kontrollere stien. Lad den stå tom for at deaktivere.";
 $lang["setup-err_baseurl"]="Base-webadresse er et obligatorisk felt.";
 $lang["setup-err_baseurlverify"]="Base URL synes ikke at være korrekt (kunne ikke indlæse license.txt).";
-$lang["setup-err_spiderpassword"]="Adgangskoden er nødvendige for spider.php. VIGTIGT: Randomise dette for hver ny installation. Dine ressourcer vil kunne læses af enhver, der kender dette password. Dette område er allerede blevet randomiseret til dig, men du kan ændre det til at matche en eksisterende installation, hvis det er nødvendigt.";
-$lang["setup-err_scramblekey"]="Hvis dette er et offentligt anlæg, og i den kamp nøglen anbefales.";
 $lang["setup-err_path"]="Ude af stand til at kontrollere placeringen af";
 $lang["setup-emailerr"]="Ikke en gyldig email-adresse.";
 $lang["collectionlog"]="Indsamling Log";
@@ -666,7 +660,6 @@ $lang["fieldtitle-camera_make_and_model"]='Kamera mærke / model';
 $lang["fieldtitle-original_filename"]='Oprindeligt filnavn.';
 $lang["fieldtitle-video_contents_list"]='Videoindholdsliste';
 $lang["fieldtitle-source"]='Kilde';
-$lang["fieldtitle-website"]='Website can be translated to "Hjemmeside" in Dansk.';
 $lang["fieldtitle-artist"]='Kunstner.';
 $lang["fieldtitle-album"]='Album.';
 $lang["fieldtitle-track"]='Spor';
@@ -677,7 +670,6 @@ $lang["fieldtitle-channel_mode"]='Kanaltilstand';
 $lang["fieldtitle-sample_rate"]='Prøvefrekvens.';
 $lang["fieldtitle-audio_bitrate"]='Lyd bitrate.';
 $lang["fieldtitle-frame_rate"]='Billedhastighed.';
-$lang["fieldtitle-video_bitrate"]='Video bitrate translates to Video bitrate in Danish.';
 $lang["fieldtitle-aspect_ratio"]='Sideforhold.';
 $lang["fieldtitle-video_size"]='Video størrelse.';
 $lang["fieldtitle-image_size"]='Billedstørrelse';
@@ -703,7 +695,6 @@ $lang["fieldtype-radio_buttons"]='Radioknapper.';
 $lang["fieldtype-warning_message"]='Advarselmeddelelse';
 $lang["fieldtype-date_range"]='Datointerval';
 $lang["documentation-permissions"]='Se venligst <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Videnbasen</a></b> for yderligere information om tilladelser.';
-$lang["property-reference"]='Reference can be translated to "Reference" in Danish.';
 $lang["property-name"]='Navn';
 $lang["property-permissions"]='Tilladelser.';
 $lang["property-permissions_inherit"]='Arv fra overordnet gruppe.';
@@ -771,7 +762,6 @@ $lang["property-exiftool_field"]='Venligst oversæt: Exiftool felt.';
 $lang["property-fits_field"]='FITS felt.';
 $lang["property-read_only_field"]='Skrivebeskyttet metadatafelt (dvs. vil ikke skrive tilbage ved download)';
 $lang["information-fits_field"]='FITS (File Information Tool Set) feltet vil overskrive Exiftool-værdier, hvis en værdi kan findes!';
-$lang["property-exiftool_filter"]='Exiftool filter can be translated to "Exiftool filter". It is a technical term and it is not commonly translated to other languages.';
 $lang["property-help_text"]='Hjælpetekst';
 $lang["property-tooltip_text"]='Værktøjstip tekst';
 $lang["information-tooltip_text"]='Værktøjstip tekst: Tekst der vil fremkomme i simpel/avanceret søgning, når markøren holdes over feltet.';
@@ -792,7 +782,6 @@ $lang["information-derestrict_filter"]='Fjern begrænsningsfilter. Kun effektivt
 $lang["information-push_metadata"]='Hvis denne egenskab er sat, vil metadata for denne ressource blive vist på ressourcevisningssiden for alle relaterede ressourcer. For eksempel kan du relatere flere fotos til en personressource. Hvis denne egenskab er sat på personressourcen, vil personmetadataen blive vist på alle relaterede fotorekorder, hvilket undgår duplikering af data i systemet.';
 $lang["property-query"]='Forespørgsel.';
 $lang["information-id"]='Bemærk: \'Id\' nedenfor SKAL indstilles til en unik kode på tre tegn.';
-$lang["property-id"]='Id (in ResourceSpace) can be translated to "ID" in Dansk. It refers to the unique identification number assigned to each resource in the system.';
 $lang["property-width"]='Bredde';
 $lang["property-height"]='Højde';
 $lang["property-quality"]='Kvalitet.';
@@ -813,7 +802,6 @@ $lang["property-table"]='Tabel.';
 $lang["property-column"]='Kolonne';
 $lang["property-table_reference"]='Tabelreference.';
 $lang["property-code"]='Kode';
-$lang["property-operation"]='Operation can be translated to "Operation" in Danish. However, in the context of digital asset management software, it could also be translated to "Handling" or "Funktion".';
 $lang["themeselector"]='Udvalgte samlinger.';
 $lang["myrequests"]='Mine anmodninger.';
 $lang["collections"]='Samlinger';
@@ -828,10 +816,8 @@ $lang["listtitle"]='Listevisning';
 $lang["powered_by"]='Drevet af';
 $lang["powered_by_resourcespace"]='Drevet af ResourceSpace.';
 $lang["on"]='På';
-$lang["off"]='Off kan oversættes til "Slukket" eller "Fra". Det afhænger af konteksten, hvor ordet bruges i ResourceSpace.';
 $lang["seconds"]='sekunder';
 $lang["reload"]='Genindlæs';
-$lang["pause"]='Pause (in Danish: Pause)';
 $lang["filterbutton"]='Filtrer';
 $lang["stopbutton"]='Stop = Stop';
 $lang["loadmorebutton"]='Indlæs mere';
@@ -876,8 +862,6 @@ $lang["editcollectionresources"]='Rediger samlingsoversigter';
 $lang["collection_set_theme_category"]='Tilføj til kategori for fremhævede samlinger.';
 $lang["collection_set_theme_category_title"]='Tilføj samling til kategori for fremhævede samlinger.';
 $lang["collection-name"]='Samling: %collectionname%';
-$lang["collectionidprefix"]='Col_ID could be translated to "Kolonne-ID" in Dansk.';
-$lang["_dupe"]='Duplicate (Kopi)';
 $lang["emailtousers_internal"]='E-mail til brugere<br><br>Begynd at skrive brugerens navn for at søge, og klik derefter på den ønskede bruger, når den er fundet.';
 $lang["create_new_here"]='Opret her';
 $lang["create_new_below"]='Opret i en ny kategori.';
@@ -913,9 +897,7 @@ $lang["collectionsdeleteemptyareyousure"]='Er du sikker på, at du vil slette al
 $lang["collectionsnothemeselected"]='Du skal vælge eller indtaste navnet på en fremhævet kollektionskategori.';
 $lang["downloaded"]='Downloadet.';
 $lang["contents"]='Indhold';
-$lang["forthispackage"]='Venligst oversæt: for dette pakke. 
-
-(Could you please provide the full context of the phrase "for this package"?)';
+$lang["forthispackage"]='For dette pakke';
 $lang["didnotinclude"]='Ikke inkluderet.';
 $lang["selectcollection"]='Vælg samling.';
 $lang["total"]='Total = Samlet';
@@ -938,8 +920,6 @@ $lang["page_collections_message"]='Fortsætning vil fravælge samlingerne marker
 $lang["delete_all_selected"]='Slet alle valgte.';
 $lang["range_no_start_header"]='Ugyldigt interval.';
 $lang["range_no_start"]='Kan ikke afslutte interval uden en start. Slip venligst shift-tasten.';
-$lang["lightbox-image"]='Billede';
-$lang["lightbox-of"]='af';
 $lang["treeobjecttype-resource_type"]='Ressourcetype.';
 $lang["resources_selected-1"]='1 ressource valgt.';
 $lang["resources_selected-2"]='%number ressourcer valgt.';
@@ -960,18 +940,13 @@ $lang["youfoundresource"]='ressource';
 $lang["youfoundresults"]='resultater';
 $lang["selected"]='valgt';
 $lang["youfoundresult"]='resultat';
-$lang["sortorder-desc"]='Beskrivelse';
 $lang["modified"]='Ændret.';
 $lang["resourcedownloads"]='Ressource downloads (Download af ressourcer)';
 $lang["filedimensions"]='Filstørrelse.';
 $lang["vieworiginalresource"]='Vis original ressource.';
 $lang["previewithsizename"]='%sizename Forhåndsvisning';
 $lang["originalfileoftype"]='Original %EXTENSION fil';
-$lang["fileoftype"]='Filstørrelse. (Assuming that the context is asking for the translation of "File Size")';
 $lang["cell-fileoftype"]='%EXTENSION Fil';
-$lang["field-fileextension"]='%EXTENSION translates to %UDVIDELSE in Dansk.';
-$lang["fileextension-inside-brackets"]='[%EXTENSION] can be translated to [%UDVIDELSE] in Dansk.';
-$lang["fileextension"]='%EXTENSION translates to %UDVIDELSE in Dansk.';
 $lang["mp3_preview_file"]='MP3 forhåndsvisningsfil.';
 $lang["action-request"]='Anmodning';
 $lang["requestlog"]='Anmodningslog.';
@@ -1005,7 +980,6 @@ $lang["log-a"]='Ændre adgang.';
 $lang["log-r"]='Tilbageført metadata.';
 $lang["log-b"]='Oprettet alternativ.';
 $lang["log-y"]='Slettet alternativ.';
-$lang["log-missinglang"]='Venligst specificer konteksten for [type] for at give en mere præcis oversættelse. "Type" kan oversættes til flere forskellige ord på dansk afhængigt af konteksten, såsom "type", "art", "kategori", "slags", "form" osv.';
 $lang["log-adminpermissionsrequired"]='Fulde administratorrettigheder kræves!';
 $lang["log-removedcustomuseraccess"]='Fjernet brugerdefineret adgang for bruger:';
 $lang["log-deleted_all"]='Alle ressourcer i denne samling er slettet (flyttet til tilstanden %ARCHIVE).';
@@ -1020,7 +994,6 @@ $lang["log_code_c"]='Oprettet';
 $lang["log_code_C"]='Kopieret.';
 $lang["log_code_d"]='Downloadet fil.';
 $lang["log_code_e"]='Redigeret';
-$lang["log_code_E"]='Emailed can be translated to "Sendt pr. e-mail" in Dansk.';
 $lang["log_code_l"]='Logget ind.';
 $lang["log_code_m"]='Multi-redigeret.';
 $lang["log_code_O"]='Bruger tilmelding.';
@@ -1065,8 +1038,6 @@ $lang["treeobjecttype-group"]='Gruppe';
 $lang["groupsmart"]='Gruppe (Smart)';
 $lang["confirmaddgroupsmart"]='Er du sikker på, at du vil inkludere medlemmer dynamisk i denne gruppe?';
 $lang["back_to"]='Tilbage til %område';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a string used in ResourceSpace, and it is not clear what it refers to. Can you please provide more context or information about where this string is used?';
-$lang["minute-abbreviated"]='I\'m sorry, but "MM" is not a language string used by ResourceSpace. Can you please provide me with more context or the full sentence where this term is used?';
 $lang["treeobjecttype-field"]='Felt.';
 $lang["save-return"]='Gem og vend tilbage.';
 $lang["revert"]='Tilbagefør';
@@ -1091,7 +1062,6 @@ $lang["mustaccept"]='Du skal markere afkrydsningsfeltet for at acceptere vilkår
 $lang["termsmustindicateusage"]='Du skal angive planlagt brug, før du kan fortsætte.';
 $lang["termsmustspecifyusagecomment"]='Du skal angive planlagte brugsanvisninger, før du kan fortsætte.';
 $lang["proceed"]='Fortsæt.';
-$lang["notavailableshort"]='N/A can be translated to "Ikke relevant" in Dansk.';
 $lang["allmonths"]='Alle måneder.';
 $lang["allgroups"]='Alle grupper.';
 $lang["status-ok"]='OK = OK';
@@ -1100,7 +1070,6 @@ $lang["status-warning"]='ADVARSEL';
 $lang["status-notinstalled"]='Ikke installeret.';
 $lang["status-never"]='Aldrig.';
 $lang["softwareversion"]='Venligst oversæt: ? version';
-$lang["softwarebuild"]='I\'m sorry, but the context of the term "? Build" is unclear to me. Can you please provide more information or the full sentence where this term is used in ResourceSpace?';
 $lang["softwarenotfound"]='\'?\' blev ikke fundet.';
 $lang["client-encoding"]='(klientkodning: %encoding)';
 $lang["db-default-encoding"]='(database-kodning: %encoding)';
@@ -1119,7 +1088,7 @@ $lang["status-note"]='BEMÆRKNING';
 $lang["action-changelanguage"]='Skift sprog.';
 $lang["loading"]='Indlæser...';
 $lang["disable_languages"]='Deaktiver sprogvalgsmuligheder.';
-$lang["import_export"]='Import/Export can be translated to: Import/eksport.';
+$lang["import_export"]='Import/ Eksport.';
 $lang["import"]='Importér';
 $lang["export"]='Eksportér';
 $lang["origin"]='Oprindelse';
@@ -1145,7 +1114,6 @@ $lang["function_not_enabled"]='Denne funktion er ikke aktiveret.';
 $lang["stat-addedsmartcollection"]='Tilføjet smart samling.';
 $lang["stat-removedresourcefromcollection"]='Fjernet ressource fra samling.';
 $lang["stat-keywordusage-noresultsfound"]='Nøgleord brugt - ingen resultater fundet.';
-$lang["plugin_field_fmt"]='Please provide more context as this string is not sufficient to provide an accurate translation.';
 $lang["share_selected"]='Del valgte.';
 $lang["sharecollection-name"]='Del samling - %collectionname';
 $lang["share_theme_category"]='Del fremhævet samling kategori.';
@@ -1233,34 +1201,15 @@ $lang["setup-admin_password"]='Admin adgangskode';
 $lang["setup-mysql_read_only_username"]='MySQL læse-kun brugernavn.';
 $lang["setup-mysql_read_only_password"]='MySQL læse-kun adgangskode.';
 $lang["setup-if_mysql_read_only_username"]='Brugernavnet der anvendes til at forbinde til din MySQL-server i skrivebeskyttet tilstand. Denne bruger skal kun have SELECT-rettigheder. Det er valgfrit og kræver IKKE rettigheder til at oprette tabeller eller indsætte data.';
-$lang["setup-apiscramblekey"]='API forvirringsnøgle.';
 $lang["setup-if_mysql_read_only_password"]='Adgangskoden til MySQL-brugernavnet indtastet ovenfor.';
 $lang["setup-if_admin_username"]='Brugernavnet der bruges til at forbinde til ResourceSpace. Denne bruger vil være den første bruger af systemet.';
 $lang["setup-if_admin_password"]='Adgangskoden til den angivne Admin-brugernavn ovenfor.';
-$lang["setup-if_apiscramblekey"]='Sæt API-forvirringsnøglen til at være en svær-at-gætte tegnfølge (lignende en adgangskode). Hvis du planlægger at bruge API\'er, er dette en meget klog idé.';
-$lang["setup-err_apiscramblekey"]='Hvis dette er en offentlig installation, anbefales det at indstille API scramble nøglen.';
 $lang["setup-err_phar_injection"]='Potentiel Phar PHP Object Injection opdaget.';
 $lang["setup-admin_fullname_error"]='Du skal udfylde feltet "fulde navn".';
 $lang["setup-rs_initial_configuration"]='ResourceSpace: Første konfiguration.';
 $lang["setup-include_not_writable"]='\'/include\' ikke skrivbar. Kun nødvendig under installation.';
 $lang["setup-binpath"]='%bin Sti';
 $lang["setup-begin_installation"]='Begynd installationen!';
-$lang["setup-generaloptions"]='Generelle indstillinger.';
-$lang["setup-allow_password_change"]='Tillad ændring af adgangskode?';
-$lang["setup-enable_remote_apis"]='Aktivér fjern-API\'er?';
-$lang["setup-if_allowpasswordchange"]='Tillad slutbrugere at ændre deres adgangskoder.';
-$lang["setup-if_enableremoteapis"]='Tillad fjernadgang til API-plugins.';
-$lang["setup-allow_account_requests"]='Skal brugerne have mulighed for at anmode om konti?';
-$lang["setup-display_research_request"]='Vis funktionaliteten til Forskningsanmodningsanmodningen?';
-$lang["setup-if_displayresearchrequest"]='Tillader brugere at anmode om ressourcer via en formular, som bliver sendt pr. e-mail.';
-$lang["setup-themes_as_home"]='Vil du bruge siden med fremhævede samlinger som startside?';
-$lang["setup-remote_storage_locations"]='Fjernlagringssteder';
-$lang["setup-use_remote_storage"]='Vil du bruge fjernlagring?';
-$lang["setup-if_useremotestorage"]='Marker af dette felt for at konfigurere fjernlagringssteder for RS. (For at bruge en anden server til filopbevaring.)';
-$lang["setup-storage_directory"]='Lagringsmappe.';
-$lang["setup-if_storagedirectory"]='Hvor skal mediefilerne placeres. Kan være absolut (/var/www/blah/blah) eller relativ til installationen. BEMÆRK: Ingen efterfølgende skråstreg.';
-$lang["setup-storage_url"]='Lagrings-URL';
-$lang["setup-if_storageurl"]='Hvor lagringsmappen er tilgængelig. Kan være absolut (http://files.example.com) eller relativ til installationen. BEMÆRK: Ingen efterfølgende skråstreg.';
 $lang["setup-smtp-settings"]='SMTP-indstillinger.';
 $lang["setup-if-usesmtp"]='Brug en ekstern SMTP-server til udgående e-mails (f.eks. Gmail). Bruger PHPMailer.';
 $lang["setup-if-smtpsecure"]='"tls" eller "ssl". For Gmail er "tls" eller "ssl" påkrævet.';
@@ -1269,9 +1218,6 @@ $lang["setup-if-smtpport"]='Portnummer, f.eks. 465 for Gmail ved brug af SSL.';
 $lang["setup-if-smtpauth"]='Send legitimations til SMTP-server (false for at bruge anonym adgang)';
 $lang["setup-if-smtpusername"]='Brugernavn (fuld e-mailadresse).';
 $lang["setup-if-smtppassword"]='Adgangskode';
-$lang["design-options"]='Designindstillinger.';
-$lang["use-slim-theme"]='Vil du bruge SlimHeader-designet?';
-$lang["setup-if_slimtheme"]='Brug SlimHeader-designet i stedet for det oprindelige design for at vise en tyndere headerbjælke som standard med et linket logo.';
 $lang["setup-login_to"]='Log ind på';
 $lang["setup-configuration_file_output"]='Konfigurationsfil output.';
 $lang["more-information"]='Mere information.';
@@ -1303,7 +1249,6 @@ $lang["disabled"]='Deaktiveret.';
 $lang["resourcerequeststatus0"]='Afventer.';
 $lang["resourcerequeststatus1"]='Godkendt.';
 $lang["resourcerequeststatus2"]='Afvist.';
-$lang["ppi"]='PPI kan oversættes til "Pixels pr. tomme" og refererer til antallet af pixels i en digital billedfil pr. tomme af billedet. Det bruges til at beskrive billedets opløsning og kvalitet.';
 $lang["useasthemethumbnail"]='Vil du bruge dette ressource som et fremhævet samling kategori miniaturebillede?';
 $lang["sessionexpired"]='Du er blevet logget ud automatisk, fordi du har været inaktiv i mere end 30 minutter. Indtast venligst dine loginoplysninger for at fortsætte.';
 $lang["resourcenotinresults"]='Den nuværende ressource er ikke længere inden for dine aktive søgeresultater, så næste/forrige navigation er ikke mulig.';
@@ -1393,7 +1338,6 @@ $lang["google_satellite"]='Google satellit';
 $lang["marker"]='Markør';
 $lang["markers"]='Markører.';
 $lang["map_configuration"]='Søgeresultater Kort.';
-$lang["search_map_introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["edit_map_introtext"]='Panorer og zoom ind til det ønskede kortudsnit, klik derefter på kortet for at placere ressourceplaceringens markør. Gem den seneste geolokation ved at klikke på Gem-knappen og klik derefter på \'Tilbage til ressource-redigering eller geolokalisering af samling\' for at vende tilbage. Brug den øverste højre søgeknap for at søge efter et specifikt sted eller geografisk funktion. Skift basemappet ved at bruge knappen øverst til højre for kortlagene. Gem kortet som en PNG-fil ved at bruge knappen nederst til venstre på kortet.';
 $lang["mapview"]='Kort.';
 $lang["maptitle"]='Kortvisning.';
@@ -1408,31 +1352,18 @@ $lang["map_download"]='Download kort som en PNG-fil, vælg en størrelse til hø
 $lang["map_osm_group"]='OpenStreetMap (OSM)';
 $lang["map_osm"]='Standard';
 $lang["map_osmde"]='Tysk stil';
-$lang["map_osmfrance"]='OSM France can be translated to "OSM Frankrig" in Dansk.';
 $lang["map_osmch"]='OSM Schweiz';
-$lang["map_osmbzh"]='OSM Luxembourg could be translated to "OSM Luxembourg" as it is an acronym and refers to a proper noun.';
 $lang["map_osmhot"]='Humanitær.';
 $lang["map_osmmtb"]='Terrænkort over mountainbike-ruter i Europa.';
 $lang["map_osmhikebike"]='Vandre- og cykelkort.';
 $lang["map_otm"]='OSM Topografisk.';
-$lang["map_tf_group"]='Thunderforest (This is a proper noun and should not be translated)';
 $lang["map_tfapi"]='API-kode.';
-$lang["map_tfocm"]='OpenCycleMap (OCM) kan oversættes til "ÅbenCykelKort" på dansk.';
 $lang["map_tftransport"]='Transport.';
-$lang["map_tftransportdark"]='Transport Dark can have different meanings depending on the context in which it is used in ResourceSpace. Here are some possible translations:
-
-- Hent mørke: This could refer to downloading or retrieving a dark version of a resource.
-- Overfør mørke: This could refer to transferring a dark version of a resource from one location to another.
-- Flyt mørke: This could refer to moving a dark version of a resource within ResourceSpace, for example from one collection to another.
-- Transporter mørke: This could be a more general translation that could apply to any action that involves moving or transferring a dark version of a resource.
-
-If you can provide more context about how the term is being used in ResourceSpace, I can give a more accurate translation.';
 $lang["map_tflandscape"]='Landskab.';
 $lang["map_tfoutdoors"]='Udendørs';
 $lang["map_tfpioneer"]='Pioner.';
 $lang["map_tfmobileatlas"]='Mobil Atlas.';
 $lang["map_tfneighbourhood"]='Nabolag.';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" does not seem to be an English string used in ResourceSpace. Can you please provide more context or information about where this word appears?';
 $lang["map_hyddafull"]='Standardkort';
 $lang["map_hyddabase"]='Grundlag';
 $lang["map_stamen_group"]='Støvdragt';
@@ -1443,7 +1374,6 @@ $lang["map_stamenterrain"]='Terræn';
 $lang["map_stamenterrainback"]='Terrænbaggrund.';
 $lang["map_stamenrelief"]='Lindring';
 $lang["map_stamenwatercolor"]='Akvarel.';
-$lang["map_esri_group"]='ESRI cannot be translated as it is an acronym for Environmental Systems Research Institute, which is a company that produces geographic information system (GIS) software.';
 $lang["map_esristreet"]='Gader';
 $lang["map_esritopo"]='Topografisk.';
 $lang["map_esriimagery"]='Billedmateriale.';
@@ -1451,14 +1381,11 @@ $lang["map_esriterrain"]='Terræn.';
 $lang["map_esrirelief"]='Skyggefuld relief.';
 $lang["map_esriphysical"]='Fysisk.';
 $lang["map_esriocean"]='Hav';
-$lang["map_esrinatgeo"]='National Geographic -> National Geographic';
 $lang["map_esrigray"]='Gråt Lærred.';
-$lang["map_nasagibs_group"]='NASA GIBS could be translated to "NASA Global Imagery Browse Services".';
 $lang["map_nasagibscolor"]='Modis/Terra Farvebilleder';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra Falsk Farvebilleder';
 $lang["map_nasagibsnight"]='Nattebilleder.';
 $lang["map_mapbox_group"]='Mapbox.';
-$lang["map_mapboxid"]='ID kan oversættes til "ID-nummer" eller "identifikationsnummer".';
 $lang["map_mapboxtoken"]='Adgangstoken.';
 $lang["map_mapbox"]='Standardkort';
 $lang["map_usgs_group"]='Den Nationale Kort.';
@@ -1505,7 +1432,6 @@ $lang["exiftoolnotfound"]='Kunne ikke finde Exiftool.';
 $lang["existing_tags"]='Eksisterende Exiftool-tags.';
 $lang["new_tags"]='Nye Exiftool-tags (som vil blive tilføjet ved download)';
 $lang["date_of_download"]='Dato for download.';
-$lang["field_ref_and_name"]='%ref% - %name% can be translated to: %ref% - %navn%';
 $lang["metadata-report-fits_section"]='FITS-tags mappet.';
 $lang["indicateusage"]='Venligst beskriv din planlagte brug af denne ressource.';
 $lang["usage"]='Anvendelse';
@@ -1650,7 +1576,7 @@ $lang["zipcommand_overridden"]='Men bemærk venligst, at $zipcommand er definere
 $lang["lastscheduledtaskexection"]='Seneste planlagte opgaveudførelse (dage)';
 $lang["executecronphp"]='Relevansmatching vil ikke være effektiv, og periodiske e-mail-rapporter vil ikke blive sendt. Sørg for, at <a href=\'../batch/cron.php\'>batch/cron.php</a> køres mindst én gang dagligt via en cron-job eller lignende.';
 $lang["shouldbeormore"]='skal være ? eller større';
-$lang["config_file"]='(Konfiguration: %fil)';
+$lang["config_file"]='(Konfiguration: %file)';
 $lang["large_file_support_64_bit"]='Støtte til store filer (64-bit platform)';
 $lang["large_file_warning_32_bit"]='ADVARSEL: Kører 32 bit PHP. Filer større end 2GB vil ikke blive understøttet.';
 $lang["server_timezone_check"]='PHP tidszone er den samme som MySQL bruger.';
@@ -1664,8 +1590,6 @@ $lang["star"]='Stjerne';
 $lang["stars"]='Stjerner';
 $lang["noupload"]='Ingen upload.';
 $lang["permissions"]='Tilladelser.';
-$lang["configdefault-title"]='I am ready to translate, please provide the English strings that need to be translated.';
-$lang["config-title"]='(VÆR OPMÆRKSOM på ikke at lave syntaksfejl. Hvis du ødelægger denne fil, skal du rette det på server-siden!)';
 $lang["file_too_large"]='Fil for stor.';
 $lang["field_updated"]='Felt opdateret.';
 $lang["zoom"]='Zoom';
@@ -1755,15 +1679,13 @@ $lang["purgeusersnousers"]='Der er ingen brugere at slette.';
 $lang["editallresourcetypewarning"]='Advarsel: Ændring af ressourcetype vil slette eventuelle ressourcetype-specifikke metadata, der i øjeblikket er gemt for de valgte ressourcer.';
 $lang["editresourcetypewarning"]='Advarsel: Ændring af ressourcetypen vil slette eventuelle ressourcetype-specifikke metadata, der i øjeblikket er gemt for denne ressource.';
 $lang["geodragmode"]='Træk-tilstand';
-$lang["geodragmodearea"]='Position pin can be translated to "Positioneringsnål".';
+$lang["geodragmodearea"]='Positioneringsnål';
 $lang["geodragmodeareaselect"]='Vælg søgeområde.';
-$lang["geodragmodepan"]='Please provide more context. "Pan" can have multiple meanings in English and the appropriate translation to Dansk will depend on the intended meaning in the context of digital asset management software.';
 $lang["substituted_original"]='Erstattet original.';
 $lang["use_original_if_size"]='Brug originalen hvis den valgte størrelse ikke er tilgængelig?';
 $lang["originals-available-0"]='tilgængelig';
 $lang["originals-available-1"]='tilgængelig';
 $lang["originals-available-2"]='tilgængelig';
-$lang["inch-short"]='i (generally used as a preposition) = i (generelt brugt som en præposition)';
 $lang["deletedresource"]='Slettet ressource.';
 $lang["deletedresources"]='Slettede ressourcer.';
 $lang["nopreviewresources"]='Ressourcer uden forhåndsvisninger.';
@@ -1872,14 +1794,6 @@ $lang["resources-with-requeststatus0-2"]='(%number afventer)';
 $lang["researches-with-requeststatus0-0"]='(0 ikke tildelt)';
 $lang["researches-with-requeststatus0-1"]='(1 ikke tildelt)';
 $lang["researches-with-requeststatus0-2"]='(%number ikke tildelt)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string used by ResourceSpace. Could you please provide me with a specific string to translate?';
-$lang["kilobyte-symbol"]='KB can be translated to "KB" in Danish as it is an abbreviation that stands for "kilobyte" in both English and Danish.';
-$lang["megabyte-symbol"]='MB translates to "megabyte" in Dansk.';
-$lang["gigabyte-symbol"]='GB can be translated to "gigabyte" in Dansk.';
-$lang["kilobyte-symbol-binary"]='KiB står for "kibibyte", som er en datamengde på 1024 byte.';
-$lang["megabyte-symbol-binary"]='MiB står for "Mebibyte", som er en datamengde som tilsvarer 1 048 576 byte.';
-$lang["gigabyte-symbol-binary"]='GiB står for "gibibyte", som er en datalagringsenhet som tilsvarer 1024 mebibyte (MiB).';
-$lang["terabyte-symbol-binary"]='TiB står for "tebibyte", som er en datalagringsenhet som tilsvarer 1024 gibibyte (GiB).';
 $lang["upload_files"]='Upload filer.';
 $lang["upload_files-to_collection"]='Overfør filer (til samlingen \'%collection\')';
 $lang["ascending"]='Stigende.';
@@ -1893,7 +1807,6 @@ $lang["save-conflict-title"]='Redigeringskonflikt.';
 $lang["theme_home_promote"]='Fremhæv på hjemmesiden?';
 $lang["theme_home_page_text"]='Startside tekst';
 $lang["theme_home_page_image"]='Forsidebillede.';
-$lang["ref-title"]='%ref - %title translates to %ref - %titel.';
 $lang["error-pageload"]='Beklager, der opstod en fejl under indlæsning af denne side. Hvis du udfører en søgning, bedes du forsøge at præcisere din søgeforespørgsel. Hvis problemet fortsætter, bedes du kontakte din systemadministrator.';
 $lang["copy-field"]='Kopier felt.';
 $lang["copy-to-resource-type"]='Kopiér til ressourcetype.';
@@ -1929,7 +1842,6 @@ $lang["matchingresults"]='matchende resultater';
 $lang["resources"]='Ressourcer.';
 $lang["share-resource"]='Del ressource';
 $lang["scope"]='Område.';
-$lang["downloadmetadata"]='Download metadata can be translated to "Download metadata" in Danish.';
 $lang["downloadingmetadata"]='Henter metadata.';
 $lang["file-contains-metadata"]='Filen, du downloader nu, indeholder al metadata for denne ressource.';
 $lang["metadata"]='Metadata: Metadata (data om data)';
@@ -1947,8 +1859,6 @@ $lang["comments_submit-button-label"]='Indsend';
 $lang["comments_body-placeholder"]='Tilføj en kommentar. Brug @(brugernavn) for at tagge personer.';
 $lang["comments_fullname-placeholder"]='Dit navn (påkrævet)';
 $lang["comments_email-placeholder"]='Din e-mail (påkrævet)';
-$lang["comments_website-url-placeholder"]='Website can be translated to "Hjemmeside" in Dansk.';
-$lang["comments_flag-this-comment"]='Flag kan oversættes til "flag" på dansk.';
 $lang["comments_flag-has-been-flagged"]='Kommentar markeret.';
 $lang["comments_flag-reason-placeholder"]='Årsag til at markere kommentar.';
 $lang["comments_validation-fields-failed"]='Venligst sørg for, at alle obligatoriske felter er korrekt udfyldt.';
@@ -1966,7 +1876,7 @@ $lang["all-resourcetypes"]='ressourcer';
 $lang["all-collectiontypes"]='samlinger';
 $lang["resourcetypes-no_collections"]='Alle %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Alle %collectiontypes%';
-$lang["resourcetypes-collections"]='Alle %resourcetyper% og alle %samlingstyper%';
+$lang["resourcetypes-collections"]='Alle %resourcetypes% og alle %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Bloker adgang til arbejdsgangstilstand.';
 $lang["collection_share_status_warning"]='Advarsel - denne samling har ressourcer i følgende tilstande, sørg for at disse ressourcer vil være tilgængelige for andre brugere.';
 $lang["contactadmin"]='Kontakt administrator.';
@@ -2012,9 +1922,6 @@ $lang["merge_filename_title_replace"]='Erstat';
 $lang["merge_filename_title_prefix"]='Præfiks';
 $lang["merge_filename_title_suffix"]='Efterstavelse.';
 $lang["merge_filename_title_include_extensions"]='Skal filtypenavne inkluderes?';
-$lang["merge_filename_title_spacer"]='Venligst oversæt: Spacer
-
-Jeg antager, at du mener "Spacer" som en funktion i ResourceSpace. På dansk kan det oversættes til "Mellemrum". Funktionen bruges til at tilføje mellemrum mellem elementer i en samling eller metadatafelter i et ressourceobjekt.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Brugerindsendte ressourcer.';
 $lang["send_collection_to_admin_emailsubject"]='Samling uploadet af';
 $lang["send_collection_to_admin_usercontributedcollection"]='uploadede disse ressourcer som en samling i sin helhed.';
@@ -2117,112 +2024,6 @@ $lang["action-move-down"]='Flyt ned.';
 $lang["action-move-to"]='Flyt til';
 $lang["delete_user_group_checkbox_alert_message"]='Bemærk venligst, at denne handling også vil slette al indholdstekst, der var relevant for denne brugergruppe. Der er %%RECORDSCOUNT%% poster fundet i Administrer indhold.';
 $lang["about__about"]='Din "Om" tekst kommer her.';
-$lang["all__comments_flag_notification_email_body"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_flag_notification_email_subject"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_policy"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__comments_removal_message"]='I\'d be happy to! What would you like me to translate?';
-$lang["all__emailbulk"]='[text]<br /><br />
-[text_footer] 
-
-[tekst]<br /><br />
-[tekst_fodnote]';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessage] : Besked om samling<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]: Klik på linket for at se samlingen.';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[fromusername] [lang_emailcollectionmessageexternal] : Besked sendt fra bruger [fromusername] til eksterne modtagere, der indeholder en samling af ressourcer.<br /><br />
-[lang_message]: Beskedtekst<br /><br />
-[lang_clicklinkviewcollection] [list]: Klik på følgende link for at se samlingen af ressourcer: [list]';
-$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[besked]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer] ';
-$lang["all__emaillogindetails"]='[velkommen]<br /><br />
-[lang_nyelogindetaljer]<br /><br />
-[lang_brugernavn] : [brugernavn]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[tekst_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[brugernavn] ([brugerfuldenavn] - [brugeremail])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[navn]<br /><br />
-[lang_descriptionofproject]:[beskrivelse]<br /><br />
-[lang_deadline]:[deadline]<br /><br />
-[lang_contacttelephone]:[kontakt]<br /><br />
-[lang_finaluse]: [endeligbrug]<br /><br />
-[lang_shaperequired]: [formkrav]<br /><br />
-[lang_noresourcesrequired]: [ingenressourcer]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[liste]
-[lang_viewalluserpending]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] = Forskningsanmodning tildelt.<br /><br />
-[text_footer] = Fodnotetekst';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] 
-Din anmodning om forskning er blevet fuldført. Du kan se resultaterne i følgende samling:<br /><br />
-
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-
-[text_footer]
-Venlig hilsen.';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br />
-
-[fromusername] [lang_haremodtagetetressource]<br /><br />
-[besked]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_klikforatseeressource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[list] <br />
-[details] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [brugernavn] <br />
-[liste] <br />
-[detaljer] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Drevet af <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Lad vores ressourceteam finde de ressourcer, du har brug for.';
 $lang["change_language__introtext"]='Vælg venligst dit sprog nedenfor.';
@@ -2253,7 +2054,6 @@ $lang["done__user_request"]='Din anmodning om en brugerkonto er blevet sendt. Di
 $lang["download_click__introtext"]='For at downloade ressourcefilen, højreklik på nedenstående link og vælg "Gem som...". Du vil derefter blive spurgt, hvor du vil gemme filen. For at åbne filen i din browser skal du blot klikke på linket.';
 $lang["download_progress__introtext"]='Dit download vil starte om kort tid. Når din download er færdig, brug venligst nedenstående links for at fortsætte.';
 $lang["downloadfile_nofile"]='Den anmodede fil blev ikke fundet.';
-$lang["edit__batch"]='I\'d be happy to! What would you like me to translate?';
 $lang["edit__multiple"]='Vælg venligst hvilke felter du ønsker at overskrive. Felter du ikke vælger vil forblive uændrede.';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
 
@@ -2271,7 +2071,6 @@ $lang["resource_email__introtext"]='Del hurtigt denne ressource med andre bruger
 $lang["resource_request__introtext"]='Din anmodning er næsten færdig. Venligst inkluder årsagen til din anmodning, så vi kan svare effektivt.';
 $lang["search_advanced__introtext"]='<strong>Søgetip</strong><br />Enhver sektion, som du lader være tom eller ikke markerer, vil inkludere ALLE de termer i søgningen. Hvis du f.eks. lader alle land-bokse være tomme, vil søgningen returnere resultater fra alle lande. Hvis du kun vælger \'Algeriet\', vil resultaterne KUN indeholde ressourcer fra \'Algeriet\'.';
 $lang["team_archive__introtext"]='For at redigere individuelle arkivressourcer, skal du blot søge efter ressourcen og klikke på "Rediger" i "Ressourceværktøjs"-panelet på ressource-skærmen. Alle ressourcer, der er klar til at blive arkiveret, er opført på listen "Afventende ressourcer". Fra denne liste er det muligt at tilføje yderligere information og overføre ressourceposten til arkivet.';
-$lang["team_content__introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["team_copy__introtext"]='Indtast ID\'et på den ressource, du gerne vil kopiere. Kun ressource-data vil blive kopieret - eventuelle uploadede filer vil ikke blive kopieret.';
 $lang["team_home__introtext"]='Velkommen til admin-området. Brug nedenstående links til at administrere ressourcer, besvare ressourceanmodninger, administrere fremhævede samlinger og ændre systemindstillinger.';
 $lang["team_report__introtext"]='Vælg venligst en rapport og en datointerval. Rapporten kan åbnes i Microsoft Excel eller et lignende regnearksprogram.';
@@ -2285,7 +2084,6 @@ $lang["terms__terms"]='Dine vilkår og betingelser placeres her.';
 $lang["terms__upload_terms"]='Dine vilkår og betingelser for upload placeres her.';
 $lang["themes__findpublic"]='Offentlige samlinger er samlinger af ressourcer, der er blevet delt af andre brugere.';
 $lang["themes__introtext"]='Udvalgte samlinger er grupper af ressourcer, der er blevet udvalgt af administratorerne for at give et eksempel på de ressourcer, der er tilgængelige i systemet.';
-$lang["upload__introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["user_password__introtext"]='Indtast din e-mailadresse, og dit brugernavn og adgangskode vil blive sendt til dig.';
 $lang["user_preferences__introtext"]='Indtast en ny adgangskode nedenfor for at ændre din adgangskode.';
 $lang["user_preferences__introtext_new"]='Indtast venligst en adgangskode nedenfor.';
@@ -2314,9 +2112,6 @@ $lang["collection_download_too_large"]='Beklager, denne samling er for stor til 
 $lang["all__passwordnewemailhtml"]='Venligst klik på nedenstående link for at indstille en ny adgangskode til din konto.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Brugernavn: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Upload er midlertidigt utilgængelig.';
 $lang["disk_size_no_upload_explain"]='På grund af pladsbegrænsninger er upload midlertidigt deaktiveret. Vi beklager eventuelle ulemper.';
-$lang["dash"]='Venligst oversæt: Dash
-
-Sorry, "Dash" can have multiple meanings in English. Can you please provide more context or information about what you are referring to?';
 $lang["savethissearchtodash"]='Gem til dashboard-flise.';
 $lang["createnewdashtile"]='Opret nyt dashboard flise.';
 $lang["specialdashtiles"]='Særlige stiplede fliser.';
@@ -2378,45 +2173,20 @@ $lang["createdashtilemycontributions"]='Mine bidrag (brugerspecifik)';
 $lang["createdashtilehelpandadvice"]='Hjælp- og rådgivningslink.';
 $lang["createdashtileuserupload"]='Upload-titel (brugerspecifik)';
 $lang["tile_thmbs"]='Enkelt';
-$lang["tile_multi"]='Multi can have different meanings in the context of digital asset management software. Here are some possible translations:
-
-- Multi (as a prefix): Flere (e.g. "multilingual" = "flersproget")
-- Multi (as a standalone word, referring to multiple items): Flere (e.g. "select multiple resources" = "vælg flere ressourcer")
-- Multi (as a standalone word, referring to a feature or function): Flere (e.g. "multi-user mode" = "flerbruger-tilstand")
-- Multi (as an abbreviation for "multimedia"): Multimedie (e.g. "upload multimedia files" = "upload multimediefiler")
-
-If you can provide more context for the specific use of "multi", I can give a more accurate translation.';
-$lang["tile_analytics"]='Analytics can be translated to "Analyse" in Dansk.';
 $lang["tile_ftxt"]='Kun tekst.';
 $lang["tile_thmsl"]='Udvalgt samling.';
 $lang["tile_custm"]='Tilpasset.';
 $lang["tile_pend"]='Afventer.';
 $lang["plugin_category_general"]='Generelt.';
-$lang["plugin_category_api"]='API (Application Programming Interface) can be translated to Dansk as "Programmeringsgrænseflade".';
 $lang["plugin_category_advanced"]='Avanceret';
-$lang["plugin_category_design"]='Design can be translated to "Design" in Dansk.';
 $lang["plugin_category_ecommerce"]='E-handel.';
 $lang["plugin_integrations"]='Integreringer.';
 $lang["system_down_title"]='Bemærk!';
 $lang["system_down_message"]='Systemet er nede på grund af vedligeholdelse. Tak for din tålmodighed.';
-$lang["systemconsole"]='Konsol';
 $lang["systemconsoledebuglog"]='Fejlfinding log.';
-$lang["systemconsolememorycpu"]='Hukommelse og CPU.';
-$lang["systemconsoledatabase"]='Database: Database';
-$lang["systemconsolesqllogtransactions"]='SQL transaktionslog.';
-$lang["systemconsoleactivitylog"]='Aktivitetslog.';
 $lang["systemconsoleturnoffafter"]='Sluk efter.';
 $lang["systemconsoleonpermallusers"]='På (permanent for alle brugere)';
 $lang["systemconsoleonallusers"]='På (alle brugere)';
-$lang["systemconsoleonfailedtopcommand"]='Kunne ikke udføre top-kommandoen.';
-$lang["systemconsoleonfailedtasklistcommand"]='Kunne ikke udføre tasklist-kommandoen.';
-$lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location er ikke angivet, filen blev ikke fundet eller kan ikke læses. Kontroller venligst, at \'$debug_log_readable=true;\' er angivet i din konfiguration.';
-$lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions er ikke sat eller $mysql_log_location filen blev ikke fundet eller kan ikke læses.';
-$lang["systemconsoletrackVars"]='Sporingsvariabler.';
-$lang["systemconsole_label_input_vars"]='Variabelnavne.';
-$lang["systemconsole_help_track_vars"]='Brug en CSV-fil med variabelnavne, som du ønsker at spore i hele systemet. Dette bruges primært til fejlfinding, da det hjælper med at bestemme, hvor en bestemt variabel bliver sat eller overskrevet.';
-$lang["systemconsole_label_input_track_period"]='Angiv hvor længe variablerne skal spores.';
-$lang["systemconsole_help_track_period"]='Værdi repræsenterer minutter.';
 $lang["trash_bin_title"]='Fjern';
 $lang["trash_bin_delete_dialog_title"]='Fjern ressource?';
 $lang["managecontent_defaulttextused"]='Teksten for standardsproget (?) bliver i øjeblikket brugt. Rediger teksten nedenfor for at oprette en alternativ version for dette sprog / brugergruppevalg.';
@@ -2593,7 +2363,6 @@ $lang["jq_notify_user_preparing_archive"]='Forbereder arkiv til samling download
 $lang["permission_manage_external_shares"]='Kan administrere eksterne delinger med udløb sat til "Aldrig".';
 $lang["manage_external_shares"]='Eksterne delinger.';
 $lang["filter_label"]='Filtrer';
-$lang["rse_analytics"]='Analytics can be translated to "Analyse" in Dansk.';
 $lang["new_report"]='Ny rapport.';
 $lang["edit_report"]='Rediger rapport.';
 $lang["all_activity"]='Alle aktiviteter.';
@@ -2602,7 +2371,7 @@ $lang["report-graph-by-pie"]='nedbrud';
 $lang["report-graph-by-piegroup"]='Efter brugergruppe';
 $lang["report-graph-by-pieresourcetype"]='Efter ressourcetype';
 $lang["report-graph-by-line"]='med tiden';
-$lang["report-graph-by-summary"]='Venligst oversæt: opsummering';
+$lang["report-graph-by-summary"]='opsummering';
 $lang["update_report"]='Opdater rapport';
 $lang["save_report"]='Gem rapport';
 $lang["save_report_as"]='Gem rapport som...';
@@ -2639,7 +2408,6 @@ $lang["headersmall"]='Lille.';
 $lang["headermid"]='Mellemstor.';
 $lang["headerlarge"]='Stor';
 $lang["responsive_configtitle"]='Fleksibel.';
-$lang["responsive_main_menu"]='Menu can be translated to "Menu" in Dansk.';
 $lang["responsive_settings_menu"]='Konto';
 $lang["responsive_more"]='Mere...';
 $lang["responsive_less"]='Mindre...';
@@ -2675,7 +2443,7 @@ $lang["upload_first_then_set_metadata"]='Upload først, og sæt derefter metadat
 $lang["set_metadata_then_upload"]='Angiv metadata først, og upload derefter.';
 $lang["annotate_text_link_label"]='Aktiver/deaktiver tilstand for noteringsfunktionen.';
 $lang["annotate_annotation_label"]='Annotation (in ResourceSpace: Notat)';
-$lang["annotate_annotations_label"]='Noter (in the context of adding notes or comments to a resource)';
+$lang["annotate_annotations_label"]='Noter';
 $lang["byte_prefix_mode_decimal"]='Brug decimaler til filstørrelser (1000 multipler, KB/MB/GB/TB) i stedet for binære (1024 multipler, KiB/MiB/GiB/TiB).';
 $lang["error_upload_resource_alternatives_batch"]='Når du bruger denne funktion (se $upload_alternatives_suffix), SKAL din originale fil være den første i køen!';
 $lang["error_upload_resource_not_found"]='En ressource-ID kunne ikke findes!';
@@ -2694,10 +2462,9 @@ $lang["error_upload_file_move_failed"]='Kunne ikke flytte den uploadede fil. Ven
 $lang["error_fail_save"]='Kan ikke gemme.';
 $lang["image_quality_100"]='Maksimum.';
 $lang["image_quality_92"]='Udskriv';
-$lang["image_quality_80"]='Web can be translated to "Net" in Dansk.';
+$lang["image_quality_80"]='Net';
 $lang["image_quality_50"]='Lav';
 $lang["image_quality_40"]='Meget lav.';
-$lang["systemconfig_api"]='API (Application Programming Interface) can be translated to Dansk as "Programmeringsgrænseflade".';
 $lang["iiif_enable_option"]='Aktivér IIIF-understøttelse.';
 $lang["iiif_disabled"]='IIIF er ikke konfigureret.';
 $lang["property-personal_data"]='Kan indeholde personlige oplysninger.';
@@ -2751,7 +2518,6 @@ $lang["filter_condition_label"]='Kriterier.';
 $lang["filter_criteria_all"]='ALLE regler skal overholdes.';
 $lang["filter_criteria_none"]='Ingen af ​​reglerne skal opfyldes.';
 $lang["filter_criteria_any"]='ALLE regler skal overholdes.';
-$lang["filter_is_in"]='Without context, "IS" could mean many things. Please provide more information or context so I can provide an accurate translation.';
 $lang["filter_is_not_in"]='ER IKKE.';
 $lang["filter_or"]='ELLER';
 $lang["filter_and"]='OG';
@@ -2774,25 +2540,6 @@ $lang["start"]='Start';
 $lang["file_integrity_summary"]='Rapport om filintegritet.';
 $lang["file_integrity_summary_failed"]='Ressourcefiler har fejlet integritetskontroller eller mangler. Følg venligst linket for at se disse ressourcer og træffe de nødvendige handlinger, f.eks. gendan filer fra backup.';
 $lang["file_integrity_fail_search"]='Fil integritetsfejl.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-The context of these strings is unclear, so I cannot provide a translation.';
 $lang["team_resource_integrity_fail"]='Se mistænkelige ressourcer.';
 $lang["team_resource_integrity_fail_info"]='Ressourcer med manglende eller muligvis korrupte filer.';
 $lang["collection_copy_resources"]='Kopiér ressourcer fra samling';
@@ -2857,7 +2604,6 @@ $lang["job_value"]='Værdi';
 $lang["job_boost"]='Forbedr job.';
 $lang["job_priority"]='Prioritet';
 $lang["csv_export_offline_option"]='Generer CSV-fil offline? Dette bør bruges til store resultatsæt. Du vil blive underrettet via en ResourceSpace-besked, når CSV\'en er tilgængelig.';
-$lang["csv_export_filename"]='metadata_export_%%SEARCH%%_%%TIME%% can be translated to "metadata eksportering_%%SØG%%_%%TID%%".';
 $lang["csv_export_file_ready"]='Din CSV-eksport er klar.';
 $lang["offline_processing_disabled"]='Offline jobbehandling er ikke konfigureret på dette system. Kontakt venligst din systemadministrator for at aktivere dette.';
 $lang["csv_export_offline_only"]='Offline behandling skal anvendes, når der eksporteres data for mere end %%RESOURCE_COUNT%% ressourcer.';
@@ -2877,25 +2623,6 @@ $lang["upload_share_email_subject"]='Du har modtaget et upload-link fra.';
 $lang["upload_share_email_text"]='Har sendt dig et link til at uploade filer til.';
 $lang["upload_share_email_password"]='Brug dette kodeord for at få adgang til linket.';
 $lang["upload_share_email_clicklink"]='Venligst brug nedenstående link for at begynde upload.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-Translated to Dansk:
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Tak fordi du har uploadet. Brug venligst knappen nedenfor for at uploade flere ressourcer.';
 $lang["error_invalid_usergroup"]='Ugyldig brugergruppe.';
 $lang["error_invalid_date"]='Ugyldig dato.';
@@ -2906,10 +2633,6 @@ $lang["error_no_resources_edit"]='Ingen ressourcer fundet til redigering. Hvis d
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Ressourcer er blevet uploadet til din delte samling.';
 $lang["notify_upload_share_new_subject"]='Nye eksterne upload.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] = Ny samling delt med dig<br />
-[lang_clicklinkviewcollection] = Klik her for at se samlingen<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer] = Med venlig hilsen,';
 $lang["my_shares"]='Mine delinger.';
 $lang["manage_shares_title"]='Eksterne delinger.';
 $lang["share_purge_text"]='Slet udløbne delinger.';

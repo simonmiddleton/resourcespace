@@ -158,6 +158,11 @@ function findPluginFromSearch(array $plugin, $search)
         return true;
         }
 
+    if(isset($plugin["title"]) && stripos($plugin["title"], $search) !== false)
+        {
+        return true;
+        }
+
     if(isset($plugin["descrip"]) && stripos($plugin["descrip"], $search) !== false)
         {
         return true;

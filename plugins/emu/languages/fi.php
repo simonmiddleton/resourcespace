@@ -25,7 +25,6 @@ $lang["emu_module"]='EMu-moduuli';
 $lang["emu_column_name"]='EMu-moduulin sarake';
 $lang["emu_rs_field"]='ResourceSpace-kenttä';
 $lang["emu_add_mapping"]='Lisää kartoitus.';
-$lang["emu_upload_emu_field_label"]='EMu IRN:n suomennos on EMu-tunnusnumero.';
 $lang["emu_confirm_upload_nodata"]='Ole hyvä ja merkitse ruutu, jotta voit vahvistaa haluavasi jatkaa tiedoston lataamista.';
 $lang["emu_test_script_title"]='Testaa / Suorita skripti';
 $lang["emu_run_script"]='Prosessi';

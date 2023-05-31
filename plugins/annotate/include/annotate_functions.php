@@ -181,7 +181,8 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 			unset($notes);
 			if ($resources[$n]['annotation_count']!=0)
 				{
-				$notes=ps_query("select ref,top_pos,left_pos,width,height,preview_width,preview_height,note,note_id,user,page from annotate_notes where ref=? and page=?",array("i",$ref,"i",$page));
+				$notes=ps_query("SELECT a.ref,top_pos,left_pos,width,height,preview_width,preview_height,note,note_id,user,page, name `value` 
+                                FROM annotate_notes a JOIN node n ON a.node = n.ref WHERE a.ref=? AND page=?",array("i",$ref,"i",$page));
 				$notepages=1; // Normally notes will all fit on one page, but may not
 				foreach ($notes as $note)
 					{
@@ -204,7 +205,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 					$pdf->SetY($ypos);
 					$note_user=get_user($note['user']);
 					$pdf->SetLineStyle($style);
-					$noteparts=explode(":",$note['note'],2);
+					$noteparts=explode(":",$note['value'],2);
 					// If the notes went over the page, we  went back to image for annotation, so we need to return to the page with the last row of the table before adding next row
 					if($notepages>1){$pdf->setPage($currentpdfpage+($notepages-1));}
 					

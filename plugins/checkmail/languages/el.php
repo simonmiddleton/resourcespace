@@ -17,7 +17,6 @@ $lang["checkmail_password"]='Κωδικός πρόσβασης';
 $lang["checkmail_extension_mapping"]='Τύπος Πόρου μέσω Χαρτογράφησης Επέκτασης Αρχείου';
 $lang["checkmail_default_resource_type"]='Προεπιλεγμένος Τύπος Πόρου';
 $lang["checkmail_extension_mapping_desc"]='Μετά τον επιλογέα Προεπιλεγμένου Τύπου Πόρου, υπάρχει ένα πεδίο εισαγωγής κάτω από κάθε Τύπο Πόρου σας. <br /> Για να εξαναγκάσετε αρχεία που ανεβαίνουν διαφορετικού τύπου σε ένα συγκεκριμένο Τύπο Πόρου, προσθέστε λίστες διαχωρισμένες με κόμμα από επεκτάσεις αρχείων (π.χ. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Από τις επιτρεπόμενες επεκτάσεις.';
 $lang["checkmail_subject_field"]='Πεδίο Θέματος';
 $lang["checkmail_body_field"]='Πεδίο Σώματος';
 $lang["checkmail_purge"]='Να διαγραφούν τα e-mails μετά τη μεταφόρτωση;';

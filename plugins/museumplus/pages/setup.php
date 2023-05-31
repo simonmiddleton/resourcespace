@@ -3,7 +3,8 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php';
 if(!checkperm('a'))
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 
 $plugin_name = 'museumplus';
@@ -68,10 +69,10 @@ $script_last_ran_content = sprintf(
     <input name=\"script_last_ran\" type=\"text\" value=\"%s\" disabled style=\"width: 420px;\">
 </div>
 <div class=\"clearerleft\"></div>",
-$lang['museumplus_last_run_date'],
-$museumplus_script_last_ran
+htmlspecialchars($lang['museumplus_last_run_date']),
+escape_quoted_data($museumplus_script_last_ran)
 );
-//$script_last_ran_content = str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_last_run_date']);
+
 $page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_boolean_select('museumplus_enable_script', $lang['museumplus_enable_script']);
 $page_def[] = config_add_text_input('museumplus_interval_run', $lang['museumplus_interval_run']);

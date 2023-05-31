@@ -2,7 +2,7 @@
 include "../../include/db.php";
 command_line_only();
 
-function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens = 2048, $messages, $uid="") {
+function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens = 2048, $messages=array(), $uid="") {
     // Set the endpoint URL
     $endpoint = "https://api.openai.com/v1/chat/completions";
     

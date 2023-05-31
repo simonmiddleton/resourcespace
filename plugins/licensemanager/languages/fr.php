@@ -2,11 +2,11 @@
 
 
 $lang["license_usage-book"]='Livre';
-$lang["license_usage-web"]='Web (French Translation: Web)';
+$lang["license_usage-web"]='Web';
 $lang["license_usage-merchandise"]='Marchandise';
 $lang["license_usage-tv"]='Télévision';
 $lang["license_management"]='Gestion de licence.';
-$lang["licensor_licensee"]='Licensor / Licensee can be translated to "Cédant / Cessionnaire".';
+$lang["licensor_licensee"]='Cédant / Cessionnaire';
 $lang["new_license"]='Nouvelle licence.';
 $lang["edit_license"]='Modifier la licence.';
 $lang["delete_license"]='Supprimer la licence.';

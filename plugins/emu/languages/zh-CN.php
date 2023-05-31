@@ -26,7 +26,6 @@ $lang["emu_module"]='EMu模块';
 $lang["emu_column_name"]='EMu模块列';
 $lang["emu_rs_field"]='ResourceSpace字段';
 $lang["emu_add_mapping"]='添加映射 (Tiānjiā yìngpìan)';
-$lang["emu_upload_emu_field_label"]='EMu IRN 的简体字翻译为：EMu 资源标识号。';
 $lang["emu_confirm_upload_nodata"]='请勾选该框以确认您希望继续上传。';
 $lang["emu_test_script_title"]='测试/运行脚本';
 $lang["emu_run_script"]='处理 (Chǔ lǐ)';

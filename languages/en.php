@@ -478,10 +478,6 @@ $lang["delete_all_selected"] = "Delete all selected";
 $lang["range_no_start_header"] = "Range Error";
 $lang["range_no_start"] = "Cannot end range without a start. Please release the shift key.";
 
-# Lightbox
-$lang["lightbox-image"] = "Image";
-$lang["lightbox-of"] = "of";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Create new resource";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Resource type";
@@ -889,7 +885,6 @@ $lang["status-warning"]="WARNING";
 $lang["status-notinstalled"]="Not installed";
 $lang["status-never"]="Never";
 $lang["softwareversion"]="? version"; # E.g. "PHP version"
-$lang["softwarebuild"]="? Build"; # E.g. "ResourceSpace Build"
 $lang["softwarenotfound"]="'?' not found"; # ? will be replaced.
 $lang["client-encoding"]="(client-encoding: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["db-default-encoding"] = "(database-encoding: %encoding)"; # %encoding will be replaced
@@ -931,6 +926,7 @@ $lang["counting_resources"] = "counting resources...";
 $lang["not_allowed"] = "Not allowed";
 $lang["no_results_found"] = "No results found";
 $lang["function_not_enabled"] = "This function is not enabled.";
+$lang['remaining'] = 'remaining';
 
 # Pager
 $lang["next"]="Next";
@@ -1093,8 +1089,10 @@ $lang["removetext"]="Remove text / option(s)";
 $lang["find"]="Find";
 $lang["andreplacewith"]="...and replace with...";
 $lang["relateallresources"]="Relate all resources in this collection";
+$lang["unrelateallresources"]="Un-relate all resources in this collection";
 $lang["relate_selected_resources"] = "Relate selected resources";
 $lang['relateallresources_confirmation'] = 'All resources in this collection are now related';
+$lang['unrelateallresources_confirmation'] = 'None of the resources in this collection are now related';
 
 # New for 1.5
 $lang["columns"]="Columns";
@@ -1278,12 +1276,9 @@ $lang["setup-if_mysql_read_only_username"] = "The username used to connect to yo
 $lang["setup-emailfrom"]="Email from address";
 $lang["setup-emailnotify"]="Email notify";
 $lang["setup-spiderpassword"]="Spider password";
-$lang["setup-scramblekey"]="Scramble key";
-$lang["setup-apiscramblekey"]="API scramble key";
 $lang["setup-paths"]="Paths";
 $lang["setup-pathsdetail"]="For each path, enter the path without a trailing slash to each binary.  To disable a binary, leave the path blank.  Any auto-detected paths have already been filled in.";
 $lang["setup-applicationname"]="Application name";
-$lang["setup-basicsettingsfooter"]="NOTE: The only <strong>required</strong> settings are on this page.  If you're not interested in checking out the advanced options, you may click below to begin the installation process.";
 $lang["setup-if_mysqlserver"]='The IP address or <abbr title="Fully Qualified Domain Name">FQDN</abbr> of your MySQL server installation.  If MySql is installed on the same server as your web server, use "localhost".';
 $lang["setup-if_mysqlusername"]="The username used to connect to your MySQL server.  This user must have rights to create tables in the database named below.";
 $lang["setup-if_mysqlpassword"]= $lang["setup-if_mysql_read_only_password"] = "The password for the MySQL username entered above.";
@@ -1294,16 +1289,10 @@ $lang['setup-if_admin_username']='The username used to connect to ResourceSpace.
 $lang['setup-if_admin_password']='The password for the Admin username entered above.';
 $lang["setup-if_emailfrom"]="The address that emails from RS appear to come from.";
 $lang["setup-if_emailnotify"]="The email address to which resource/user/research requests are sent.";
-$lang["setup-if_spiderpassword"]="The spider password is a required field.";
-$lang["setup-if_scramblekey"]="To enable scrambling, set the scramble key to be a hard-to-guess character sequence (similar to a password).  If this is a public installation then this is a very wise idea.  Leave this field blank to disable resource path scrambling. This field has already been randomised for you, but you can change it to match an existing installation, if necessary.";
-$lang["setup-if_apiscramblekey"]="Set the api scramble key to be a hard-to-guess character sequence (similar to a password).  If you plan to use APIs then this is a very wise idea.";
 $lang["setup-if_applicationname"]="The name of your implementation / installation (e.g. 'MyCompany Resource System').";
 $lang["setup-err_mysqlbinpath"]="Unable to verify path.  Leave blank to disable.";
 $lang["setup-err_baseurl"]="Base URL is a required field.";
 $lang["setup-err_baseurlverify"]="Base URL does not seem to be correct (could not load license.txt).";
-$lang["setup-err_spiderpassword"]="The password required for spider.php.  IMPORTANT: Randomise this for each new installation. Your resources will be readable by anyone that knows this password.  This field has already been randomised for you, but you can change it to match an existing installation, if necessary.";
-$lang["setup-err_scramblekey"]="If this is a public installation, setting the scramble key is recommended.";
-$lang["setup-err_apiscramblekey"]="If this is a public installation, setting the api scramble key is recommended.";
 $lang["setup-err_path"]="Unable to verify location of";
 $lang["setup-err_phar_injection"]="Potential Phar PHP Object Injection detected.";
 $lang["setup-emailerr"]="Not a valid email address.";
@@ -1312,22 +1301,6 @@ $lang["setup-rs_initial_configuration"]="ResourceSpace: Initial Configuration";
 $lang["setup-include_not_writable"]="'/include' not writable. Only required during setup.";
 $lang["setup-binpath"]="%bin Path"; #%bin will be replaced, e.g. "Imagemagick Path"
 $lang["setup-begin_installation"]="Begin installation!";
-$lang["setup-generaloptions"]="General options";
-$lang["setup-allow_password_change"]="Allow password change?";
-$lang["setup-enable_remote_apis"]="Enable remote APIs?";
-$lang["setup-if_allowpasswordchange"]="Allow end users to change their passwords.";
-$lang["setup-if_enableremoteapis"]="Allow remote access to API plugins.";
-$lang["setup-allow_account_requests"]="Allow users to request accounts?";
-$lang["setup-display_research_request"]="Display the Research Request functionality?";
-$lang["setup-if_displayresearchrequest"]="Allows users to request resources via a form, which is e-mailed.";
-$lang["setup-themes_as_home"]="Use the featured collections page as the home page?";
-$lang["setup-remote_storage_locations"]="Remote Storage Locations";
-$lang["setup-use_remote_storage"]="Use remote storage?";
-$lang["setup-if_useremotestorage"]="Check this box to configure remote storage locations for RS. (To use another server for filestore.)";
-$lang["setup-storage_directory"]="Storage directory";
-$lang["setup-if_storagedirectory"]="Where to put the media files. Can be absolute (/var/www/blah/blah) or relative to the installation. NOTE: No trailing slash.";
-$lang["setup-storage_url"]="Storage URL";
-$lang["setup-if_storageurl"]="Where the storagedir is available. Can be absolute (http://files.example.com) or relative to the installation. NOTE: No trailing slash.";
 $lang["setup-smtp-settings"]="SMTP Settings";
 $lang["setup-if-usesmtp"]="Use an external SMTP server for outgoing emails (e.g. Gmail). Uses PHPMailer";
 $lang["setup-if-smtpsecure"]="'', 'tls' or 'ssl'. For Gmail, 'tls' or 'ssl' is required.";
@@ -1336,9 +1309,6 @@ $lang["setup-if-smtpport"]="Port number, e.g. 465 for Gmail using SSL.";
 $lang["setup-if-smtpauth"]="Send credentials to SMTP server (false to use anonymous access)";
 $lang["setup-if-smtpusername"]="Username (full email address).";
 $lang["setup-if-smtppassword"]="Password";
-$lang["design-options"]="Design Options";
-$lang["use-slim-theme"]="Use the SlimHeader Design?";
-$lang["setup-if_slimtheme"]="Use the SlimHeader design rather than the original design to display a thinner header bar with a linked logo by default.";
 $lang["setup-login_to"]="Login to";
 $lang["setup-configuration_file_output"]="Configuration file output";
 $lang["more-information"]="More information";
@@ -1852,10 +1822,6 @@ $lang["noupload"]="No upload";
 
 
 $lang["permissions"]="Permissions";
-
-# System Setup File Editor
-$lang["configdefault-title"]="(copy and paste options from here)";
-$lang["config-title"]="(BE CAREFUL not to make syntax errors. If you break this file, you must fix server-side!)";
 
 # System Setup Properties Pane
 $lang["file_too_large"]="File too large";
@@ -2553,6 +2519,7 @@ $lang['view_tiles'] = 'View tiles';
 $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'View version information on the ResourceSpace website';
 $lang["upgrade_in_progress"] = "Upgrade in progress";
+$lang["upgrade_script"] = "Upgrade script";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2597,25 +2564,11 @@ $lang['system_down_title'] = 'Attention!';
 $lang['system_down_message'] = 'System is down for maintenance. Thank you for your patience.';
 /* End of System Down page strings */
 
-/* System Console */
-$lang["systemconsole"]="Console";
+/* System Console (no longer available, these are re-used in System Config) */
 $lang["systemconsoledebuglog"]="Debug log";
-$lang["systemconsolememorycpu"]="Memory &amp; CPU";
-$lang["systemconsoledatabase"]="Database";
-$lang["systemconsolesqllogtransactions"]="SQL Transaction Log";
-$lang["systemconsoleactivitylog"]="Activity Log";
 $lang["systemconsoleturnoffafter"]="Turn off after";
 $lang["systemconsoleonpermallusers"]="On (permanently for all users)";
 $lang["systemconsoleonallusers"]="On (all users)";
-$lang["systemconsoleonfailedtopcommand"]="Failed to execute top command";
-$lang["systemconsoleonfailedtasklistcommand"]="Failed to execute tasklist command";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location not set, file not found or is not readable. Please check that '\$debug_log_readable=true;' is set in your configuration";
-$lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions not set or \$mysql_log_location file not found or is not readable";
-$lang['systemconsoletrackVars'] = "Tracking variables";
-$lang['systemconsole_label_input_vars'] = "Variable names";
-$lang['systemconsole_help_track_vars'] = "Use a CSV of variable names that you wish to track throughout the system. This is mainly used for debugging purposes as it helps determining where a specific variable is being set or overriden.";
-$lang['systemconsole_label_input_track_period'] = "Specify how long to track variables for";
-$lang['systemconsole_help_track_period'] = "Value represents minutes.";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Remove';
@@ -2635,6 +2588,7 @@ $lang['userpreference_user_interface'] = 'User interface';
 $lang['userpreference_enable_option'] = 'Enable';
 $lang['userpreference_disable_option'] = 'Disable';
 $lang['userpreference_default_sort_label'] = 'Default sort';
+$lang['userpreference_default_sort_order_label'] = 'Default sort direction';
 $lang['userpreference_default_perpage_label'] = 'Default per page';
 $lang['userpreference_default_display_label'] = 'Default display';
 $lang['userpreference_use_checkboxes_for_selection_label'] = 'Use checkboxes to add to collection';
@@ -2710,6 +2664,8 @@ $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse B
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 $lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
 $lang['systemconfig_only_show_modified'] = 'Only show modified values';
+$lang['systemconfig_debug'] = 'Debug';
+$lang['systemconfig_debug_log_on_specific_user'] = "On (specific user)";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -3088,6 +3044,7 @@ $lang["status_locked_self"]                 = "You have locked this resource";
 $lang["error_locked_by_user"]               = "Resource is locked by %%USER%%";
 $lang["error_locked_other_user"]            = "Resource is locked by another user";
 $lang["error-edit_noaccess_resources"]      = "No edit access to resources: ";
+$lang["error-edit_noaccess_related_resources"] = "Unable to relate resources. No access to: ";
 $lang["error-edit_locked_resources"]        = "The following resources are locked: ";
 $lang["locked_resource_search"]             = "Locked resources";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
@@ -3193,3 +3150,4 @@ $lang["error_invalid_revert_option"]        = "The previously stored value '%%VA
 $lang["error_invalid_revert_date"]          = "The previously stored date '%%VALUE%%' is invalid. Please update the resource manually if required.";
 $lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
 $lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
+$lang["related_resource_create"]            = "Create new related resource";

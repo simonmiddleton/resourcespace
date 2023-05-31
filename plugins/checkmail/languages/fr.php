@@ -18,7 +18,6 @@ $lang["checkmail_password"]='Mot de passe.';
 $lang["checkmail_extension_mapping"]='Type de ressource via la correspondance d\'extension de fichier.';
 $lang["checkmail_default_resource_type"]='Type de ressource par défaut.';
 $lang["checkmail_extension_mapping_desc"]='Après le sélecteur de type de ressource par défaut, il y a une entrée ci-dessous pour chacun de vos types de ressources. <br />Pour forcer les fichiers téléchargés de différents types dans un type de ressource spécifique, ajoutez des listes de extensions de fichiers séparées par des virgules (ex. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='Please provide the full context in which the string "<br />(from allowed_extensions)" is used in the software. This will help me provide an accurate translation.';
 $lang["checkmail_subject_field"]='Champ Sujet';
 $lang["checkmail_body_field"]='Champ de corps.';
 $lang["checkmail_purge"]='Supprimer les e-mails après téléchargement ?';

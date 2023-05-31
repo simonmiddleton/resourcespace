@@ -26,7 +26,6 @@ $lang["emu_module"]='EMu modul';
 $lang["emu_column_name"]='EMu modul stupac';
 $lang["emu_rs_field"]='Polje ResourceSpace-a';
 $lang["emu_add_mapping"]='Dodaj mapiranje.';
-$lang["emu_upload_emu_field_label"]='EMu IRN (Internal Registration Number) - EMu IRN (Interni registracijski broj)';
 $lang["emu_confirm_upload_nodata"]='Molimo označite okvir kako biste potvrdili da želite nastaviti s prijenosom.';
 $lang["emu_test_script_title"]='Testiraj/ Pokreni skriptu.';
 $lang["emu_run_script"]='Obrada';

@@ -61,10 +61,10 @@ $tms_modules_mappings_html = "
 
 foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module)
     {
-    $tms_link_module_name = htmlspecialchars($tms_link_module['module_name']);
-    $tms_link_tms_uid_field = htmlspecialchars($tms_link_module['tms_uid_field']);
+    $tms_link_module_name = htmlspecialchars($tms_link_module['module_name']??"");
+    $tms_link_tms_uid_field = htmlspecialchars($tms_link_module['tms_uid_field']??"");
 
-    $tms_link_rs_uid_field = get_resource_type_field($tms_link_module['rs_uid_field']);
+    $tms_link_rs_uid_field = get_resource_type_field($tms_link_module['rs_uid_field']??"");
     if(false !== $tms_link_rs_uid_field)
         {
         $tms_link_rs_uid_field = htmlspecialchars($tms_link_rs_uid_field['title']);

@@ -267,7 +267,6 @@ function setup_user(array $userdata)
         {
         // We need to get all globals as we don't know what may be referenced here
         override_rs_variables_by_eval($GLOBALS, $config_options);
-        debug_track_vars('end@setup_user', get_defined_vars());
         }
 
     // Set default workflow states to show actions for, if not manually set by user
@@ -1122,6 +1121,7 @@ function auto_create_user_account($hash="")
         # Managed approving
         # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
         # but also adds the new user name to the mail)
+        global $user_pref_user_management_notifications;
         
         $templatevars['name']=getval("name","");
         $templatevars['email']=getval("email","");
@@ -1156,7 +1156,7 @@ function auto_create_user_account($hash="")
         $message->append_text("lang_userrequestnotification3");
         $message->append_text("<br/><br/>" . $templatevars['linktouser']);
         $message->user_preference =  [
-            "user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true],
+            "user_pref_user_management_notifications" => ["requiredvalue" => true, "default" => $user_pref_user_management_notifications],
             "actions_account_requests"=>["requiredvalue"=>false,"default"=>true],
             ];
         $message->url = $url;
@@ -1185,7 +1185,7 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify, $user_registration_opt_in,$user_account_auto_creation;
+    global $applicationname, $baseurl, $lang, $customContents, $account_email_exists_notify, $user_registration_opt_in, $user_account_auto_creation, $user_pref_user_management_notifications;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getval('name', ''));
@@ -1219,7 +1219,7 @@ function email_user_request()
         $message->append_text($customContents . "<br/><br/>");
         }
     $message->append_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
-    $message->user_preference = ["user_pref_user_management_notifications"=>["requiredvalue"=>true,"default"=>true]];
+    $message->user_preference = ["user_pref_user_management_notifications" => ["requiredvalue" => true, "default" => $user_pref_user_management_notifications]];
     $message->url = $baseurl . "/pages/team/team_user.php";
     send_user_notification($approval_notify_users,$message);
 

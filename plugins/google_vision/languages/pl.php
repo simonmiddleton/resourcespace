@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Pole na sugerowane słowa kluczowe.';
 $lang["google_vision_landmarks_field"]='Pole dla punktów orientacyjnych.';
 $lang["google_vision_text_field"]='Pole dla wyodrębnionego tekstu.';
 $lang["google_vision_logo_field"]='Pole dla wykrytych popularnych logo.';
-$lang["google_vision_api"]='Google Vision API - Interfejs programowania aplikacji Google Vision';
 $lang["google_vision_restypes"]='Włączone typy zasobów.';
 $lang["google_vision_features"]='Włączona detekcja funkcji.';
 $lang["google_vision_autotitle"]='Automatycznie ustaw tytuł na słowo kluczowe o najwyższej rangi.';

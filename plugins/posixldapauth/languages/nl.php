@@ -26,7 +26,6 @@ $lang["posixldapauth_user_name"]='Gebruikersnaam';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Gebruik om de inhoud van het veld Groepslid te wijzigen.';
 $lang["posixldapauth_login_field"]='Inlogveld:';
 $lang["posixldapauth_test_connection"]='Test Verbinding:';
-$lang["posixldapauth_test"]='Test (Nederlands): Test';
 $lang["posixldapauth_resourcespace_configuration"]='ResourceSpace Configuratie';
 $lang["posixldapauth_user_suffix"]='Gebruikersachtervoegsel:';
 $lang["posixldapauth_create_users"]='Gebruikers aanmaken:';

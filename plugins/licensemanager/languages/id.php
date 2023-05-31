@@ -2,7 +2,7 @@
 
 
 $lang["license_usage-book"]='Buku';
-$lang["license_usage-web"]='Web (Situs Web)';
+$lang["license_usage-web"]='Web';
 $lang["license_usage-merchandise"]='Barang dagangan';
 $lang["license_usage-tv"]='TV (Televisi)';
 $lang["license_management"]='Manajemen Lisensi.';
@@ -15,7 +15,7 @@ $lang["licensemanager_new"]='Lisensi baru.';
 $lang["managelicenses"]='Lisensi';
 $lang["outbound"]='Keluar';
 $lang["outbound_license_description"]='Kami adalah pemegang hak cipta.';
-$lang["inbound"]='Masuk (for example: Lalu lintas masuk, email masuk)';
+$lang["inbound"]='Masuk';
 $lang["inbound_license_description"]='Mereka adalah pemegang hak cipta.';
 $lang["no_expiry_date"]='Tidak ada tanggal kadaluarsa.';
 $lang["action-unlink"]='Membatalkan tautan.';

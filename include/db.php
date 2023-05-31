@@ -56,18 +56,15 @@ if (PHP_VERSION_ID<PHP_VERSION_SUPPORTED) {exit("PHP version not supported. Your
 if (file_exists(dirname(__FILE__)."/config.default.php"))
     {
     include dirname(__FILE__) . "/config.default.php";
-    $track_vars_after_config_default = get_defined_vars();
     }
 if (file_exists(dirname(__FILE__)."/config.deprecated.php"))
     {
     include dirname(__FILE__) . "/config.deprecated.php";
-    $track_vars_after_config_deprecated = get_defined_vars();
     }
 
 # Load the real config
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
-$track_vars_after_config = get_defined_vars();
 
 // Set exception_ignore_args so that if $log_error_messages_url is set it receives all the necessary 
 // information to perform troubleshooting
@@ -157,7 +154,6 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
 
 	# Load and use the config
 	eval($remote_config);
-    debug_track_vars('after@remote_config', get_defined_vars());
 	}
 
 if($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFIG_FORCE_OBFUSCATION"))
@@ -198,12 +194,6 @@ if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 // Reset prepared statement cache before reconnecting
 unset($prepared_statement_cache);
 sql_connect();
-
-// Track variables for any process that matters but is before we connect to the database (it needs access to sysvars table)
-debug_track_vars('after@include/config.default.php', $track_vars_after_config_default);
-debug_track_vars('after@include/config.deprecated.php', $track_vars_after_config_deprecated);
-debug_track_vars('after@include/config.php', $track_vars_after_config);
-unset($track_vars_after_config_default, $track_vars_after_config_deprecated, $track_vars_after_config);
 
 # Automatically set a HTTPS URL if running on the SSL port.
 if(isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"]==443)

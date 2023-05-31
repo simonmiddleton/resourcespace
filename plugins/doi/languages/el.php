@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Αμετάβλητος.';
-$lang["doi_info_wikipedia"]='Ψηφιακό Αναγνωριστικό Αντικειμένου (DOI) είναι ένα μοναδικό αναγνωριστικό που χρησιμοποιείται για την αναγνώριση διαδικτυακών πόρων, όπως επιστημονικά άρθρα, βιβλία, εικόνες και βίντεο. Το DOI παρέχει μια μόνιμη σύνδεση με τον πόρο και επιτρέπει την εύκολη αναζήτηση και αναφορά σε αυτόν. Το σύστημα DOI διαχειρίζεται η Διεθνής Οργάνωση Κανονιστικών Αρχών (International DOI Foundation) και η χρήση του απαιτεί την αγορά ενός αναγνωριστικού από την ίδια την οργάνωση που δημιουργεί τον πόρο.';
 $lang["doi_info_link"]='στα <a target="_blank" href="https://en.wikipedia.org/wiki/Digital_Object_Identifier">DOI</a>.';
 $lang["doi_info_metadata_schema"]='Οι πληροφορίες για την εγγραφή DOI στο DataCite.org αναφέρονται στο <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Εγχειρίδιο Σχήματος Μεταδεδομένων Datacite</a>.';
 $lang["doi_info_mds_api"]='Οι πληροφορίες για το DOI-API που χρησιμοποιεί αυτό το πρόσθετο αναφέρονται στο <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Εγχειρίδιο χρήσης του Datacite API</a>.';
@@ -49,7 +48,6 @@ $lang["doi_not_successfully_registered_pl"]='Δεν μπόρεσε να εγγρ
 $lang["doi_reload"]='Επαναφόρτωση';
 $lang["doi_successfully_set"]='έχει οριστεί.';
 $lang["doi_not_successfully_set"]='δεν έχει οριστεί.';
-$lang["doi_sum_of"]='του (masculine), της (feminine), των (plural)';
 $lang["doi_sum_already_reg"]='Οι πόροι έχουν ήδη ένα DOI.';
 $lang["doi_sum_not_yet_archived"]='Οι πόροι δεν έχουν επισημανθεί.';
 $lang["doi_sum_not_yet_archived_2"]='Ωστόσο, η πρόσβαση του/της/των δεν έχει οριστεί ως ανοιχτή.';

@@ -18,7 +18,6 @@ $lang["checkmail_password"]='كلمة المرور';
 $lang["checkmail_extension_mapping"]='نوع المورد عبر تعيين امتداد الملفات';
 $lang["checkmail_default_resource_type"]='نوع المصدر الافتراضي';
 $lang["checkmail_extension_mapping_desc"]='بعد محدد نوع المورد الافتراضي، يوجد مدخل واحد أدناه لكل من أنواع الموارد الخاصة بك. <br /> لإجبار الملفات التي تم تحميلها من أنواع مختلفة إلى نوع مورد محدد، أضف قوائم مفصولة بفواصل للامتدادات (مثال: jpg، gif، png).';
-$lang["checkmail_resource_type_population"]='من (allowed_extensions)';
 $lang["checkmail_subject_field"]='حقل الموضوع';
 $lang["checkmail_body_field"]='حقل الجسم';
 $lang["checkmail_purge"]='هل تريد حذف الرسائل الإلكترونية بعد الرفع؟';

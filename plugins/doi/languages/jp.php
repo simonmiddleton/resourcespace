@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='不変の (Fuhenn no)';
-$lang["doi_info_wikipedia"]='デジタルオブジェクト識別子 (DOI)';
 $lang["doi_info_link"]='DOIsについて。';
 $lang["doi_info_metadata_schema"]='DOI登録に関する情報は、<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Dataciteメタデータスキーマドキュメント</a>に記載されています。';
 $lang["doi_info_mds_api"]='このプラグインで使用されるDOI-APIに関する情報は、<a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite APIドキュメンテーション</a>に記載されています。';

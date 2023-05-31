@@ -3,43 +3,16 @@ namespace ImageBanks;
 
 abstract class Provider
     {
-    protected $lang;
-    protected $temp_dir_path = "";
-
-    public final function __construct(array $lang, $temp_dir_path)
-        {
-        if(!isset($this->id))
-            {
-            throw new \LogicException(get_class($this) . ' must have a $id property');
-            }
-
-        if(!isset($this->name))
-            {
-            throw new \LogicException(get_class($this) . ' must have a $name property');
-            }
-
-        if(!isset($this->download_endpoint))
-            {
-            throw new \LogicException(get_class($this) . ' must have a $download_endpoint property');
-            }
-
-        if(!isset($this->configs))
-            {
-            throw new \LogicException(get_class($this) . ' must have a $configs property');
-            }
-
-        if(!isset($this->warning))
-            {
-            throw new \LogicException(get_class($this) . ' must have a $warning property');
-            }
-
-        $this->lang = $lang;
-        $this->temp_dir_path = $temp_dir_path;
-        }
+    protected array $lang;
+    protected string $temp_dir_path = "";
+    protected int $id;
+    protected string $name;
+    protected string $download_endpoint;
+    protected array $configs;
+    protected string $warning;
 
     abstract public function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);
-
 
     /**
     * Register configuration options required by the Provider in the GLOBAL scope

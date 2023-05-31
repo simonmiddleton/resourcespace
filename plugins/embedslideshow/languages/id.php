@@ -2,7 +2,7 @@
 
 
 $lang["embed"]='Menanamkan (Embed)';
-$lang["embedslideshow_minimise"]='- meminimalkan tampilan slide show';
+$lang["embedslideshow_minimise"]='&minus; meminimalkan tampilan slide show';
 $lang["embedslideshow_maximise"]='Maksimalkan tampilan slide.';
 $lang["embedslideshow_size"]='Ukuran tampilan slide?';
 $lang["sizename_pixels"]='%name (%pixels piksel)';

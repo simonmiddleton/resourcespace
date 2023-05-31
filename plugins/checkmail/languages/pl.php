@@ -17,7 +17,6 @@ $lang["checkmail_password"]='Hasło';
 $lang["checkmail_extension_mapping"]='Typ zasobu poprzez mapowanie rozszerzeń plików.';
 $lang["checkmail_default_resource_type"]='Domyślny typ zasobu.';
 $lang["checkmail_extension_mapping_desc"]='Po selektorze Domyślnego typu zasobu znajduje się jedno pole wejściowe poniżej dla każdego z typów zasobów. <br />Aby wymusić przesłanie plików różnych typów do określonego typu zasobu, dodaj oddzielone przecinkami listy rozszerzeń plików (np. jpg, gif, png).';
-$lang["checkmail_resource_type_population"]='(dozwolone rozszerzenia)';
 $lang["checkmail_subject_field"]='Pole tematu';
 $lang["checkmail_body_field"]='Pole treści.';
 $lang["checkmail_purge"]='Usuń e-maile po przesłaniu?';

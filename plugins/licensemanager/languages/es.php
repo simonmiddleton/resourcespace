@@ -2,7 +2,7 @@
 
 
 $lang["license_usage-book"]='Libro';
-$lang["license_usage-web"]='Web (Sitio web)';
+$lang["license_usage-web"]='Web';
 $lang["license_usage-merchandise"]='Mercancía';
 $lang["license_usage-tv"]='Televisión';
 $lang["license_management"]='Gestión de licencias.';
@@ -13,9 +13,7 @@ $lang["delete_license"]='Eliminar licencia.';
 $lang["license_id"]='Identificación de licencia.';
 $lang["licensemanager_new"]='Nueva licencia.';
 $lang["managelicenses"]='Licencias.';
-$lang["outbound"]='Por favor, traduce: Outbound.
-
-"Outbound" se traduce al español como "Saliente".';
+$lang["outbound"]='Saliente';
 $lang["outbound_license_description"]='(nosotros somos los titulares de los derechos de autor)';
 $lang["inbound"]='Entrante';
 $lang["inbound_license_description"]='(Ellos son los titulares de los derechos de autor)';

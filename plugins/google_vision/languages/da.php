@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Felt til foreslåede nøgleord.';
 $lang["google_vision_landmarks_field"]='Felt til landemærker.';
 $lang["google_vision_text_field"]='Felt til udtrukket tekst.';
 $lang["google_vision_logo_field"]='Felt til registrerede populære logoer.';
-$lang["google_vision_api"]='Google Vision API can be translated to "Google Vision API". However, if you prefer a Danish translation, it would be "Google Vision API".';
 $lang["google_vision_restypes"]='Aktiverede ressourcetyper.';
 $lang["google_vision_features"]='Aktiveret funktion detektion.';
 $lang["google_vision_autotitle"]='Automatisk indstil titlen til det højest rangerede nøgleord.';
