@@ -2454,3 +2454,18 @@ input[type="text"]#iconpicker-input {
 .inline_config_search {
     display: inline-block;
 }
+
+.skip-to-main-content {
+    position: absolute;
+    left: -9999px;
+    z-index: 999;
+    padding: 1em;
+    background-color: white;
+    opacity: 0;
+}
+
+.skip-to-main-content:focus {
+    left: 0;
+    top: 50px;
+    opacity: 1;
+}
