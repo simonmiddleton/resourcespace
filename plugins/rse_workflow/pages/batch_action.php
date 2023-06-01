@@ -154,7 +154,7 @@ include_once '../../../include/header.php';
             if($modal)
                 {
                 ?>
-                <a href="#" class="closeLink fa fa-times" onclick="ModalClose();"></a>
+                <a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
                 <?php
                 }
                 ?>
