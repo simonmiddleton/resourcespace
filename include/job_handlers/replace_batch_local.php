@@ -196,14 +196,7 @@ if(count($errors) > 0)
     {
     $logtext[] = "ERRORS: -";
     $logtext = array_merge($logtext,$errors);
-    if($offline_job_delete_completed)
-        {
-        job_queue_delete($jobref);
-        }
-    else
-        {
-        job_queue_update($jobref,$job_data,STATUS_ERROR);
-        }
+    job_queue_update($jobref,$job_data,STATUS_ERROR);
     }
 else
     {
