@@ -285,8 +285,7 @@ if ($request !== false)
             <div class="clearerleft"></div>
         </div>
 
-        <div class="QuestionSubmit">
-            <label></label>          
+        <div class="QuestionSubmit">    
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
         </div>
     </form>

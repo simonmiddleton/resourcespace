@@ -308,7 +308,6 @@ include '../include/header.php';
                 }?>
 
             <div class="Question"  id="QuestionJobFilterSubmit">
-                <label></label>
                 <input type="button" id="filter" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
                 <input type="button" id="clearfilter" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
                 <div class="clearerleft"></div>

@@ -269,13 +269,8 @@ include "../../include/header.php";
                 }?>
                 
             <div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
-                <label></label>
                 <input type="button" class="stdwidth" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo $ref . $url_params; ?>',true);" value="<?php echo $lang["launchpermissionsmanager"]; ?>"></input>                       
                 <div class="clearerleft"></div>         
-                <label></label>
-                <div class="clearerleft"></div>
-                <label></label>
-                <div class="clearerleft"></div>
             </div> <!-- End of permissions_area -->
         </div>
 
@@ -383,7 +378,6 @@ include "../../include/header.php";
                 }?>
             
             <div id ="config_area" <?php if(in_array("config_options",$record['inherit'])){echo "style=display:none;";} ?>> 
-                <label></label>
                 <textarea name="config_options" id="configOptionsBox" class="stdwidth" rows="12" cols="50"><?php echo $record['config_options']; ?></textarea>
                 <div class="clearerleft"></div>
             </div>
@@ -472,7 +466,6 @@ include "../../include/header.php";
         </div>
         
         <div class="QuestionSubmit">
-            <label for="buttonsave"></label>
             <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
         </div>
 

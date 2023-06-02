@@ -424,7 +424,6 @@ switch($csvstep)
                 </div>               
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                    <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
                     <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
                 <div class="clearerleft"> </div>
@@ -532,7 +531,6 @@ switch($csvstep)
                 </div>   
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                    <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
                     <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
                     <div class="clearerleft"> </div>
@@ -620,7 +618,6 @@ switch($csvstep)
                     <?php
                     }?>                
                 <div class="Question">
-                    <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
                     <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
                     <div class="clearerleft"> </div>
@@ -691,7 +688,6 @@ switch($csvstep)
                 <input type="hidden" id="csvstep" name="csvstep" value="5" > 
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                    <label for="submit"></label>
                     <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
                     <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>" <?php if (!$valid_csv){echo "onclick=\"return confirm('" . $lang["csv_upload_ignore_errors"] . "');\"";} ?>>
                     <div class="clearerleft"> </div>

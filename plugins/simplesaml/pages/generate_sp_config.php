@@ -263,7 +263,6 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
         </div>
 
         <div class="QuestionSubmit">
-            <label for="buttons"></label>
             <input name="sp_submit" type="submit" value="<?php echo $lang["simplesaml_sp_generate_config"]; ?>" onclick="jQuery('#sp_submit').val('true');return CentralSpacePost(this.form,true);">
         </div>
 </form>

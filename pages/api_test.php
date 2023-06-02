@@ -127,7 +127,6 @@ if ($api_function!="")
     }
 ?>
 <div class="QuestionSubmit">
-    <label></label>
     <input type="hidden" name="submitting" value="" id="submitting" />
     <input type="submit" name="submit" value="Submit" onclick="document.getElementById('submitting').value='true';" />
 </div>

@@ -139,7 +139,7 @@ foreach($action_dates_extra_config as $action_dates_extra_config)
 
 $page_def_extra .= "</table>
     <div class='clearerleft' ></div>";    
-$page_def_extra .= "<label></label><a onclick='addActionDatesExtraRow()'><i aria-hidden='true' class='fa fa-plus-circle'></i></a>
+$page_def_extra .= "<a onclick='addActionDatesExtraRow()'><i aria-hidden='true' class='fa fa-plus-circle'></i></a>
 </div>";
 $page_def_extra .="<script>
 jQuery(document).ready(function() {

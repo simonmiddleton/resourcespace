@@ -236,7 +236,6 @@ include "../include/header.php";
 		</div>
 
 		<div class="QuestionSubmit">
-			<label for="buttons"></label>	
 			<input name="download" type="submit" value="<?php echo $lang['download']; ?>" />
 		</div>
 	</form>

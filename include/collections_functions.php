@@ -4620,7 +4620,6 @@ function new_featured_collection_form(int $parent)
                 <div class="clearleft"></div>
             </div>
             <div class="QuestionSubmit" >
-                <label></label>
                 <input type="submit" name="create" value="<?php echo $lang["create"]; ?>"></input>
                 <div class="clearleft"></div>
             </div>

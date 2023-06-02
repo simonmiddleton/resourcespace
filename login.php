@@ -286,8 +286,7 @@ if (!hook("replaceloginform"))
             </div>
         <?php } ?>
 
-        <div class="QuestionSubmit">
-            <label for="buttons"> </label>          
+        <div class="QuestionSubmit">       
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
         </div>
 

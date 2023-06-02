@@ -97,7 +97,6 @@ include dirname(__FILE__)."/../../../include/header.php";
         <div class="clearerleft"> </div>
 
         <div class="QuestionSubmit">
-            <label for="buttons"> </label>
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
         </div>
     </form>

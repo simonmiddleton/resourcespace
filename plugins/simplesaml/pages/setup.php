@@ -176,7 +176,7 @@ jQuery("#simplesaml_rsconfig").change(function(event)
 </script>
 
 
-<div class='Question' id='sp_config_links'><label></label><div class='Fixed'>
+<div class='Question' id='sp_config_links'><div class='Fixed'>
     <?php
     $samlphplink = $simplesaml_rsconfig ? $baseurl_short . "plugins/simplesaml/lib/www" : str_replace($_SERVER["DOCUMENT_ROOT"], "", $simplesaml_lib_path . "/www");
     if(isset($simplesaml_lib_path) && file_exists($simplesaml_lib_path . "/config/authsources.php"))

@@ -134,8 +134,7 @@ for ($n=0;$n<count($users);$n++)
 
 <?php hook('research_request_extra_fields'); ?>
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="savexxx" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>

@@ -475,7 +475,6 @@ switch ($callback)
 
             ?>
             <div class="Question">
-                <label for="submit">&nbsp;</label>
                 <input type="submit"
                        name="save"
                        value="<?php echo htmlspecialchars($lang['save']); ?>"

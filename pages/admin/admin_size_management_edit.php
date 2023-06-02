@@ -191,7 +191,6 @@ include "../../include/header.php";
 		?>
 
 		<div class="QuestionSubmit">
-			<label for="buttonsave"></label>
 			<input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
 		</div>
 

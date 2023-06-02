@@ -49,8 +49,7 @@ $jumpcount=1;
 
 <div class="BasicsBox">
 	<form method="post">
-        <?php generateFormToken("news_add"); ?>
-		<label for="buttons"> </label>		
+        <?php generateFormToken("news_add"); ?>	
 		<input name="create" type="submit" value="<?php echo $lang["news_add"]?>"/>
 	</form>
 </div>
