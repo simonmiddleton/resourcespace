@@ -217,10 +217,10 @@ if(isset($videojs_resolution_selection))
                 <?php if ($view_as_gif)
                      {
                      ?>
-                     ?"controls": false,
-                     ?"autoplay": true,
-                     ?"loop": true
-                     ?<?php
+                     "controls": false,
+                     "autoplay": true,
+                     "loop": true
+                     <?php
                      }
                 ?>
 			<?php if($play_on_hover && !$view_as_gif){?>
