@@ -130,7 +130,15 @@ if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$f
 	{
 	exit(); // Do not proceed, replacetranscode hook intends to avoid everything below
 	}
-	
+
+if ($extension == 'gif')
+    {
+    # When processing a GIF file $video_preview_hls_support is unavailable.
+    $video_preview_hls_support = 0;
+    global $ffmpeg_preview_gif_options;
+    $ffmpeg_preview_options = $ffmpeg_preview_gif_options;
+    }
+
 if($video_preview_hls_support!=0)
     {
     // Start the content for the main m3u8 file
@@ -216,7 +224,7 @@ if($video_preview_hls_support!=0)
     
     file_put_contents($hlsmainfile,$hlscontent);
     }
-	
+ 
 if($video_preview_hls_support!=1)
     {
     $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_preview_options -t $ffmpeg_preview_seconds -s {$width}x{$height} " . escapeshellarg($targetfile);

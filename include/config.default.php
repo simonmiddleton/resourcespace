@@ -633,6 +633,10 @@ $originals_separate_storage_ffmpegalts_as_previews=false;
 # $qtfaststart_path="/usr/bin";
 # $qtfaststart_extensions=array("mp4","m4v","mov");
 
+# Create a video preview of GIF files. This will be used on the view page to display the animation rather than a static image preview.
+$ffmpeg_preview_gif = true;
+$ffmpeg_preview_gif_options = '-movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"';
+
 # Allow users to request accounts?
 $allow_account_request=true;
 
@@ -3380,3 +3384,4 @@ $update_disk_usage_batch_size = 20000;
 // of metadata fields and options are available. Relying on large text fields can result in unnecessary database bloat,
 // pollution of search results and irrelevant keywords.
 $node_keyword_index_chars=500;
+

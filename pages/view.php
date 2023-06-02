@@ -678,7 +678,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             true,
                             'pre',
                             false,
-                            (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? 'm3u8' : $ffmpeg_preview_extension
+                            ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $ffmpeg_preview_extension
                         );
 
                         # Default use_watermark if required by related_resources
@@ -694,6 +694,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             !(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
                             && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
                             && file_exists($video_preview_file)
+                            && ($ffmpeg_preview_gif || (!$ffmpeg_preview_gif && $resource["file_extension"] != 'gif'))
                             )
 	                        {
 	                        # Include the player if a video preview file exists for this resource.
