@@ -4544,13 +4544,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
-        $options[$o]['label'] = $lang['relateallresources'];
+        $options[$o]['label'] = htmlspecialchars($lang['relateallresources']);
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
         $o++;
 
         $options[$o]['value'] = 'unrelate_all';
-        $options[$o]['label'] = $lang['unrelateallresources'];
+        $options[$o]['label'] = htmlspecialchars($lang['unrelateallresources']);
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
         $o++;
@@ -5291,7 +5291,7 @@ function collection_cleanup_inaccessible_resources($collection)
 */
 function relate_all_collection($collection, $checkperms = true)
     {
-    if((string)(int)$collection != (string)$collection || ($checkperms && !allow_multi_edit($collection)))
+    if(!is_int_loose($collection) || ($checkperms && !allow_multi_edit($collection)))
         {
         return false;
         }
@@ -5322,7 +5322,7 @@ function relate_all_collection($collection, $checkperms = true)
 */
 function unrelate_all_collection($collection, $checkperms = true)
     {
-    if((string)(int)$collection != (string)$collection || ($checkperms && !allow_multi_edit($collection)))
+    if(!is_int_loose($collection) || ($checkperms && !allow_multi_edit($collection)))
         {
         return false;
         }
