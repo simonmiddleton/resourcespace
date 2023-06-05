@@ -2099,7 +2099,7 @@ function run_command($command, $geterrors = false, array $params = array())
         debug("CLI output: $output");
         debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
         }
-    if($config_windows){unlink($log_location);}
+    if($config_windows && isset($log_location)){unlink($log_location);}
     proc_close($process);
     return $output;
     }
