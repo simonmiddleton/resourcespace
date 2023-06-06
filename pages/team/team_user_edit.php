@@ -168,7 +168,7 @@ if($modal)
 generateFormToken("team_user_edit");
 ?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
-<input type=hidden name=backurl value="<?php echo getval("backurl", $baseurl_short . "pages/team/team_user.php?nc=" . time())?>">
+<input type=hidden name=backurl value="<?php echo escape_quoted_data(getval("backurl", $baseurl_short . "pages/team/team_user.php?nc=" . time()))?>">
 <input type=hidden name="save" value="save" /><!-- to capture default action -->
 
 

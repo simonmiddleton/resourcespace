@@ -1263,7 +1263,24 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                         success: function(data) {
                             if (data.trim() == "SUCCESS") {
-                                styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['relateallresources_confirmation']?>');
+                                styledalert('<?php echo htmlspecialchars($lang["complete"])?>', '<?php echo htmlspecialchars($lang['relateallresources_confirmation'])?>');
+                            }
+                        },
+                        error: function (err) {
+                            console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                        }
+                    }); 
+                    break;
+
+                case 'unrelate_all':
+                    var collection = <?php echo urlencode($collection_data['ref']);?>;
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: baseurl_short + 'pages/ajax/unrelate_resources.php?collection=' + collection,
+                        data: {<?php echo generateAjaxToken("unrelate_resources"); ?>},
+                        success: function(data) {
+                            if (data.trim() == "SUCCESS") {
+                                styledalert('<?php echo htmlspecialchars($lang["complete"])?>', '<?php echo htmlspecialchars($lang['unrelateallresources_confirmation'])?>');
                             }
                         },
                         error: function (err) {
@@ -5963,7 +5980,7 @@ function display_related_resources($context)
     <div class="RecordPanel">
     <div id="RelatedResources">
     <div class="RecordResource">
-    <div class="Title"><?php echo $lang["relatedresources"]?></div>
+    <div class="Title"><?php echo htmlspecialchars($lang["relatedresources"]) ?></div>
     <?php
     if(checkperm("s")
         && ($k == "" || $internal_share_access)
@@ -5971,7 +5988,7 @@ function display_related_resources($context)
         {
         if(count(array_diff(array_column($arr_related,"resource_type"),$relatedtypes_shown)) > 0)
             {
-            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["clicktoviewasresultset"]) ?></a>
             <div class="clearerleft"> </div>
             <?php
             }
@@ -6021,7 +6038,7 @@ function display_related_resources($context)
                                         </a>
                                 </td></tr>
                             </table>
-                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
                         <?php hook("relatedresourceaddlink");?>
                         </div>
                         <?php
@@ -6132,7 +6149,7 @@ function display_related_resources($context)
                             </td>
                         </tr>
                         </table>
-                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo htmlspecialchars($rref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
                         <?php hook("relatedresourceaddlink");?>       
                     </div>
                     <?php
@@ -6156,7 +6173,7 @@ function display_related_resources($context)
             $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
             ?>
             <div class="clearerleft"></div>
-            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . htmlspecialchars($lang['related_resource_create']); ?></a>
             <?php
             }?>
         </div><!-- End of RelatedResources -->

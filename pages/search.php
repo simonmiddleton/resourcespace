@@ -1615,7 +1615,7 @@ hook("endofsearchpage");
 if($display != 'map')
     { ?>
     <script>
-    place     = '<?php echo getval("place", ""); ?>';
+    place     = '<?php echo escape_quoted_data(getval("place", "")); ?>';
     display   = '<?php echo $display; ?>';
 
     jQuery(document).ready(function()

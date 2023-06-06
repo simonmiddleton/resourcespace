@@ -986,7 +986,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 $val=$field_default_value;
                 $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
             }
-
+        
             if( $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
                 && (
@@ -1000,8 +1000,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     ($ref > 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
                     // An existing resource continuous field with neither an input value nor a resource default
                     || ($ref > 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val)==0 && !$field_has_default_for_user)
-                    // A template without an existing value and no resource default
-                    || ($ref < 0 && $fields[$n]["value"] == '' && !$field_has_default_for_user)
+                    // A template node field with neither any nodes submitted nor a resource default
+                    || ($ref < 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
+                    // A template continuous field with neither an input value nor a resource default
+                    || ($ref < 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val)==0 && !$field_has_default_for_user)
                 )
                 // Not a metadata template
                 && !$is_template
@@ -6294,7 +6296,6 @@ function resource_type_config_override($resource_type, $only_onchange=true)
         if ($config_options!="")
             {
             override_rs_variables_by_eval($GLOBALS, $config_options);
-            debug_track_vars('end@resource_type_config_override', get_defined_vars());
             }
         }
     }
@@ -7327,7 +7328,11 @@ function get_resource_all_image_sizes($ref)
 
 function sanitize_date_field_input($date, $validate=false)
     {
-    $year   = sprintf("%04d", getval("field_" . $date . "-y",""));
+    $year_input = getval("field_" . $date . "-y","");
+    $year = sprintf("%04d", $year_input);  // Assume CE year
+    if(strlen($year_input)==5) {
+        $year = sprintf("%05d", $year_input);  // BCE year has leading -
+    }
     $month  = getval("field_" . $date . "-m","");
     $day    = getval("field_" . $date . "-d","");
     $hour   = getval("field_" . $date . "-h","");

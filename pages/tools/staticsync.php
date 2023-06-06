@@ -251,6 +251,7 @@ function ProcessFolder($folder)
         $skipfc_create = false; // Flag to prevent creation of new FC
         $filetype        = filetype($fullpath);
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
+        $file = basename($fullpath);
             
         if ($staticsync_mapped_category_tree && !$treeprocessed)
             {
@@ -282,11 +283,6 @@ function ProcessFolder($folder)
             }
 
         # -------FILES---------------
-        if ($filetype == "file") 
-            {
-            $file = basename($fullpath);
-            }
-            
         if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
             {
             if (isset($staticsync_file_minimum_age) && (time() -  filectime($folder . "/" . $file) < $staticsync_file_minimum_age))

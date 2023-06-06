@@ -697,7 +697,9 @@ function collection_writeable($collection)
         // System admin
         || checkperm("a")
         // Adding to active upload_share
-        || upload_share_active() == $collection;
+        || upload_share_active() == $collection
+        // This is a request collection and user is an admin user who can approve requests
+        || (checkperm("R") && $collectiondata['type'] == COLLECTION_TYPE_REQUEST && checkperm("t"));
 
     // Check if user has permission to manage research requests. If they do and the collection is research request allow writable.
     if ($writable === false && checkperm("r"))
@@ -2950,7 +2952,10 @@ function get_featured_collection_resources(array $c, array $ctx)
                 $subfcimages = get_collection_resources($checkfc);
                 if(is_array($subfcimages) && count($subfcimages) > 0)
                     {
-                    $fcresources = array_merge($fcresources,$subfcimages);
+                    // The join defined above specifically excludes any resources that are not in the active archive state,
+                    // for the limiting via $ctx to function correctly we'll need to check for each resources state before adding it  to fcresources
+                    $resources = get_resource_data_batch($subfcimages);
+                    $fcresources = array_merge($fcresources,array_column(array_filter($resources, function($r){return $r['archive'] == "0";}), 'ref'));
                     } 
                 continue;
                 }
@@ -4532,13 +4537,19 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     
-    // Relate all resources
+    // Relate / Unrelate all resources
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
-        $options[$o]['label'] = $lang['relateallresources'];
+        $options[$o]['label'] = htmlspecialchars($lang['relateallresources']);
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
+        $o++;
+
+        $options[$o]['value'] = 'unrelate_all';
+        $options[$o]['label'] = htmlspecialchars($lang['unrelateallresources']);
+        $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 290;
         $o++;
         }
 
@@ -5272,7 +5283,7 @@ function collection_cleanup_inaccessible_resources($collection)
 */
 function relate_all_collection($collection, $checkperms = true)
     {
-    if((string)(int)$collection != (string)$collection || ($checkperms && !allow_multi_edit($collection)))
+    if(!is_int_loose($collection) || ($checkperms && !allow_multi_edit($collection)))
         {
         return false;
         }
@@ -5294,6 +5305,24 @@ function relate_all_collection($collection, $checkperms = true)
     return true;
     }
 
+/**
+* Un-relate all resources in a collection
+* 
+* @param integer  $collection   ID of collection
+*
+* @return boolean
+*/
+function unrelate_all_collection($collection, $checkperms = true)
+    {
+    if(!is_int_loose($collection) || ($checkperms && !allow_multi_edit($collection)))
+        {
+        return false;
+        }
+
+    ps_query('DELETE FROM resource_related WHERE `resource` IN (SELECT `resource` FROM collection_resource WHERE collection = ?) AND `related` IN (select `resource` FROM collection_resource WHERE collection = ?)', array('i', $collection, 'i', $collection));
+
+    return true;
+    }
 
 /**
 * Update collection type for one collection or batch

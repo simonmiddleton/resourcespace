@@ -91,51 +91,6 @@ parameters:
 			path: include/general_functions.php
 
 		-
-			message: "#^Array has 2 duplicate keys with value 'C' \\(\"C\", \"C\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 2 duplicate keys with value 'O' \\(\"O\", \"O\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 3 duplicate keys with value 'E' \\(\"E\", \"E\", \"E\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 3 duplicate keys with value 'N' \\(\"N\", \"N\", \"N\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 3 duplicate keys with value 'R' \\(\"R\", \"R\", \"R\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 3 duplicate keys with value 'Y' \\(\"Y\", \"Y\", \"Y\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 4 duplicate keys with value 'G' \\(\"G\", \"G\", \"G\", \"G\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 4 duplicate keys with value 'P' \\(\"P\", \"P\", \"P\", \"P\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Array has 5 duplicate keys with value 'B' \\(\"B\", \"B\", \"B\", \"B\", \"B\"\\)\\.$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
 			message: "#^Undefined variable\\: \\$original_extension$#"
 			count: 1
 			path: include/image_processing.php
@@ -289,11 +244,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$lang$#"
 			count: 2
 			path: include/user_functions.php
-
-		-
-			message: "#^Result of function check_site_text_custom \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/admin/admin_content_edit.php
 
 		-
 			message: "#^Result of function render_clear_selected_btn \\(void\\) is used\\.$#"
@@ -455,6 +405,11 @@ parameters:
 			count: 1
 			path: plugins/offline_archive/pages/restore_request.php
 
+		-
+			message: "#^Class RSSFeed does not have a constructor and must be instantiated without any parameters\\.$#"
+			count: 1
+			path: plugins/rss2/pages/rssfilter.php
+			
 		-
 			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
 			count: 1

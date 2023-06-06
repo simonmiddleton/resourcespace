@@ -10,24 +10,24 @@ include_once "../languages/en.php"; # Because this may not be included automatic
 $ref        = getval('ref', '');
 $key        = getval('k', '');
 $size       = getval('size', 'pre');
-$transition = (int)getval('transition', 4);
+$transition = (int)getval('transition', 4, true);
 $showtext   = getval('showtext', '0');
 
-$player_width        = getval('width', '');
-$player_height        = getval('height', '');
-if (!is_numeric($player_width) || !is_numeric($player_height))
+$player_width   = getval('width', 0, true);
+$player_height  = getval('height', 0, true);
+if ($player_width === 0 || $player_height === 0)
     {
-    exit("Height and width parameters must be numeric.");
+    exit("Invalid height and width parameters.");
     }
 $player_height = $player_height - 48;
 $player_ratio = $player_width / $player_height;
-	
+    
 # Check key is valid
 if (!check_access_key_collection($ref,$key))
-	{
-	exit($lang["embedslideshow_notavailable"]);
-	}
-	
+    {
+    exit($lang["embedslideshow_notavailable"]);
+    }
+    
 # Load watermark settings
 $use_watermark=check_use_watermark();
 
@@ -61,60 +61,60 @@ var timer;
 $page=1;
 $resources=do_search("!collection" . $ref);
 foreach ($resources as $resource)
-	{
-		
-	$file_path=get_resource_path($resource["ref"],true,$size,false,$resource["preview_extension"],-1,1,$use_watermark);
-	if (file_exists($file_path))
-		{
-		$preview_path=get_resource_path($resource["ref"],false,$size,false,$resource["preview_extension"],-1,1,$use_watermark);		
-		}
-	else
-	
-		{
-		# Fall back to 'pre' size
-		$preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-		
+    {
+        
+    $file_path=get_resource_path($resource["ref"],true,$size,false,$resource["preview_extension"],-1,1,$use_watermark);
+    if (file_exists($file_path))
+        {
+        $preview_path=get_resource_path($resource["ref"],false,$size,false,$resource["preview_extension"],-1,1,$use_watermark);		
+        }
+    else
+    
+        {
+        # Fall back to 'pre' size
+        $preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
+        }
+        
 
-	
-	# sets height and width to display 
-	if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"])&&$resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
-	$ratio=$resource["thumb_width"]/$resource["thumb_height"];
-	
-	if ($ratio > $player_ratio) // Base on the width unless we have been asked to scale to specific width
-		{
-		# Landscape image, width is the largest - scale the height
-		$width = $player_width - 8;
-		$height=floor($width / $ratio);
-		}
-	else
-		{
-		$height = $player_height;
-		$width = floor($height* $ratio);
-		}		
-	?>
-	<a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo ($page + 1) ?>,false,false);return false;">
+    
+    # sets height and width to display 
+    if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"])&&$resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
+    $ratio=$resource["thumb_width"]/$resource["thumb_height"];
+    
+    if ($ratio > $player_ratio) // Base on the width unless we have been asked to scale to specific width
+        {
+        # Landscape image, width is the largest - scale the height
+        $width = $player_width - 8;
+        $height=floor($width / $ratio);
+        }
+    else
+        {
+        $height = $player_height;
+        $width = floor($height* $ratio);
+        }		
+    ?>
+    <a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo ($page + 1) ?>,false,false);return false;">
         <img border="0" width=<?php echo $width ?> height=<?php echo $height; ?> src="<?php echo $preview_path ?>">
     </a>
-	<?php 
-	global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
-	if($embedslideshow_textfield && $showtext) 
-		{ 
-		$resource_data = i18n_get_translated(get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield));
-		if($resource_data !="") 
-			{
-			?>
-			<span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_data;?></span>
-			<?php
-			}		
-		} ?>
-	<script type="text/javascript">
-	embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):0; ?>;
-	embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):0; ?>;
-	</script>
-	<?php
-	$page++;
-	}
+    <?php 
+    global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
+    if($embedslideshow_textfield && $showtext) 
+        { 
+        $resource_data = i18n_get_translated(get_data_by_field($resource["ref"],$embedslideshow_resourcedatatextfield));
+        if($resource_data !="") 
+            {
+            ?>
+            <span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_data;?></span>
+            <?php
+            }		
+        } ?>
+    <script type="text/javascript">
+    embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):0; ?>;
+    embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):0; ?>;
+    </script>
+    <?php
+    $page++;
+    }
 $maxpages=$page-1;
 ?>
 
@@ -158,52 +158,52 @@ $('#embedslideshow_auto').fadeTo(100,0.4);
 <script type="text/javascript">
 
 function embedslideshow_ShowPage(page_set,from_auto,jump)
-	{
-	if (!embedslideshow_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
-	
-	if (embedslideshow_page==page_set && jump) {alert("<?php echo $lang["embedslideshow_alreadyonpage"]?>");return false;}
-	
-	// Fade out pause button if manually clicked
-	if (!embedslideshow_auto)
-		{
-		jQuery('#embedslideshow_auto').fadeTo(100,0.4);
-		}
-		
-	// Faster fade time when manually clicked
-	if (embedslideshow_auto) {var embedslideshow_fadetime=1000;} else {var embedslideshow_fadetime=200;}
-	
-	// Fade out current page
-	jQuery('#embedslideshow_preview' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
-	jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
-		
-	embedslideshow_page=page_set;
-	if (embedslideshow_page>(<?php echo $maxpages ?>)) {embedslideshow_page=1;} // back to first page
-	if (embedslideshow_page<1) {embedslideshow_page=<?php echo $maxpages ?>;} // to last page
-	
-	//document.getElementById("embedslideshow_preview").innerHTML=embedslideshow_pages[embedslideshow_page];
+    {
+    if (!embedslideshow_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
+    
+    if (embedslideshow_page==page_set && jump) {alert("<?php echo $lang["embedslideshow_alreadyonpage"]?>");return false;}
+    
+    // Fade out pause button if manually clicked
+    if (!embedslideshow_auto)
+        {
+        jQuery('#embedslideshow_auto').fadeTo(100,0.4);
+        }
+        
+    // Faster fade time when manually clicked
+    if (embedslideshow_auto) {var embedslideshow_fadetime=1000;} else {var embedslideshow_fadetime=200;}
+    
+    // Fade out current page
+    jQuery('#embedslideshow_preview' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
+    jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
+        
+    embedslideshow_page=page_set;
+    if (embedslideshow_page>(<?php echo $maxpages ?>)) {embedslideshow_page=1;} // back to first page
+    if (embedslideshow_page<1) {embedslideshow_page=<?php echo $maxpages ?>;} // to last page
+    
+    //document.getElementById("embedslideshow_preview").innerHTML=embedslideshow_pages[embedslideshow_page];
 
-	// Center in space
-	jQuery('#embedslideshow_preview' + embedslideshow_page).css('top',embedslideshow_y_offsets[embedslideshow_page] + 'px');
-	jQuery('#embedslideshow_preview' + embedslideshow_page).css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
-	jQuery('.embedslideshow_text').css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
-	
-		
-	// Fade in new page
-	jQuery('#embedslideshow_preview' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
-	jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
+    // Center in space
+    jQuery('#embedslideshow_preview' + embedslideshow_page).css('top',embedslideshow_y_offsets[embedslideshow_page] + 'px');
+    jQuery('#embedslideshow_preview' + embedslideshow_page).css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+    jQuery('.embedslideshow_text').css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+    
+        
+    // Fade in new page
+    jQuery('#embedslideshow_preview' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
+    jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
 
-  	
-	if (embedslideshow_auto) {timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo ($transition==0?4000:$transition * 1000) ?>);} else {clearTimeout(timer);}
-	
-	document.getElementById('embedslideshow_page_box').value=embedslideshow_page;
-	}
+      
+    if (embedslideshow_auto) {timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo ($transition==0?4000:$transition * 1000) ?>);} else {clearTimeout(timer);}
+    
+    document.getElementById('embedslideshow_page_box').value=embedslideshow_page;
+    }
 
 
 embedslideshow_ShowPage(1,false,false);
 
 // publishes total page count after forward slash next to actual page
 function totalPages(){
-	document.getElementById('page-count').innerHTML = <?php echo $maxpages ?>;
+    document.getElementById('page-count').innerHTML = <?php echo $maxpages ?>;
 }
 totalPages();
 

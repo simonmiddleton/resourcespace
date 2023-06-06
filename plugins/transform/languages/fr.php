@@ -14,9 +14,7 @@ $lang["height"]='Nouvelle hauteur.';
 $lang["noimagefound"]='Erreur : Aucune image trouvée.';
 $lang["scaled"]='Échelonné';
 $lang["cropped"]='Cadré';
-$lang["tweaked"]='Veuillez traduire : Tweaked
-
-Ajusté.';
+$lang["tweaked"]='Ajusté';
 $lang["nonnumericcrop"]='Erreur : Recadrage non numérique demandé.';
 $lang["description_for_alternative_file"]='Description (pour fichier alternatif)';
 $lang["errorspecifiedbiggerthanoriginal"]='Erreur : La largeur ou la hauteur spécifiée est supérieure à celle de l\'image d\'origine.';
