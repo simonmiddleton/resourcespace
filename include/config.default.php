@@ -680,6 +680,7 @@ $popularity_sort=true;
 # What is the default sort order?
 # Options are date, colour, relevance, popularity, country
 $default_sort="relevance";
+$default_sort_direction="DESC";
 
 # What is the default sort order when viewing collection resources?
 # Options are date, colour, collection, popularity, country, resourcetype
@@ -2279,11 +2280,6 @@ $qlpreview_exclude_extensions = array("tif","tiff");
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
-// Allow debug log to be readable by ResourceSpace? This must be set to true if using the sytem console to access the log.
-// Unless this is set to true ResourceSpace will attempt to make the file write-only (this will not work on Windows servers). 
-// Please note that if the debug log is located under the web root then extra care should be taken to prevent unauthorised access e.g. by configuring web server rules to deny direct access
-$debug_log_readable=false;
-
 // Optional extended debugging information from backtrace (records pagename and calling functions).
 $debug_extended_info = false;
 
@@ -3377,3 +3373,10 @@ $uppy_companion_url = "";
 # is run (normally daily). This script checks resources which were last checked more than 30 days ago. 
 # Consider increasing this if system contains a very large number of resources so all are checked regularly.
 $update_disk_usage_batch_size = 20000;
+
+// This sets the maximum number of characters in a node that will be processed and keywords extracted from.
+// WARNING - CHANGING THIS VALUE CAN SERIOUSLY IMPACT SEARCH PERFORMANCE 
+// To improve speed and quality of search results it is recommended to ensure that a sufficient number
+// of metadata fields and options are available. Relying on large text fields can result in unnecessary database bloat,
+// pollution of search results and irrelevant keywords.
+$node_keyword_index_chars=500;

@@ -46,4 +46,3 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Não foi possível cone
 $lang["posixldapauth_unable_to_search_ldap_server"]='Incapaz de pesquisar o servidor LDAP.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% falhou, por favor verifique as configurações.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='Busca LDAP bem-sucedida, mas nenhum grupo encontrado.';
-$lang["posixldapauth_rdn"]='Descritor de Recursos Nomeados (RDN)';

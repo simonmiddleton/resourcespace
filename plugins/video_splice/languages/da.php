@@ -1,11 +1,10 @@
 <?php
 
 
-$lang["action-trim"]='Trim betyder at beskære eller skære en del af en fil eller et billede for at fjerne uønskede dele eller reducere størrelsen. I ResourceSpace kan Trim også referere til en funktion, der tillader brugere at beskære billeder direkte i systemet.';
 $lang["video-trim"]='Video Trim på dansk er "Video beskæring".';
 $lang["video-trim-warning"]='Beskæring Advarsel.';
 $lang["video-trim-warning-text"]='Dine start- eller slutklip punkter overskrider længden af video-previewet.<br><br>Det viste preview vil ikke fuldt ud repræsentere det endelige resultat. Overvej venligst at øge længden af dit video-preview og genskabe preview-filer, hvis du ønsker at forhåndsvise det beskårne resultat.';
-$lang["video-trim_upload-type"]='Upload Type can be translated to "Uploadtype".';
+$lang["video-trim_upload-type"]='Uploadtype';
 $lang["video-trim_new-response"]='Nye ressourcer oprettet: Ressource-ID(er) [%links]. Du kan fortsætte med at foretage yderligere beskæringer nedenfor.';
 $lang["video-trim_alt-response"]='Alternative fil(er) oprettet for ressource %ref: Alternative ID(er) [ %links]. Du kan fortsætte med at lave yderligere beskæringer nedenfor.';
 $lang["videospliceconfiguration"]='Video Splice Konfiguration.';
@@ -13,15 +12,12 @@ $lang["specify_resource_type"]='Venligst specificer, for hvilken ressource type,
 $lang["video_resource_type"]='Ressourcetype for splice-værktøjets output.';
 $lang["video_allowed_extensions"]='Video filudvidelser tilladt til trim- og splejsningsværktøjet.';
 $lang["description_resource_field"]='Beskrivelsesudgang.';
-$lang["video_bitrate_resource_field"]='Video bitrate output can be translated to "Video bitrate output" in Danish.';
+$lang["video_bitrate_resource_field"]='Video bitrate output';
 $lang["video_size_resource_field"]='Video størrelsesudgang.';
 $lang["frame_rate_resource_field"]='Billedhastighed output.';
 $lang["aspect_ratio_resource_field"]='Sideforhold forholdsmæssig udgang.';
 $lang["video-splice"]='Video Splice kan oversættes til "Video Sammensætning".';
 $lang["video-splice-intro"]='Sammenflet flere videokilder for at danne en samlet videokilde. Træk og slip miniaturebillederne nedenfor for at ændre rækkefølgen af videoklip.';
-$lang["action-splice"]='Venligst oversæt: Splice
-
-Splice kan oversættes til "splejs" på dansk. I konteksten af digital asset management software kan det referere til at kombinere to eller flere separate ressourcer eller filer til en enkelt fil eller ressource.';
 $lang["video_splice_order"]='Videoressourcer i rækkefølge.';
 $lang["video_splice_select_video"]='Videoformat.';
 $lang["video_splice_select_resolution"]='Videoopløsning';

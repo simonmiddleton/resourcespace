@@ -4,7 +4,7 @@
 $lang["license_usage-book"]='Bok';
 $lang["license_usage-web"]='Nettleser';
 $lang["license_usage-merchandise"]='Vareutstyr';
-$lang["license_usage-tv"]='TV can be translated to "TV" in Norsk, as it is an acronym that is commonly used and understood in the language.';
+$lang["license_usage-tv"]='TV';
 $lang["license_management"]='Lisenshåndtering.';
 $lang["licensor_licensee"]='Lisensgiver / lisensmottaker';
 $lang["new_license"]='Ny lisens.';

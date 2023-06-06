@@ -1,9 +1,7 @@
 <?php
 
 
-$lang["action-trim"]='Por favor, traduce: Trim.
-
-Recortar.';
+$lang["action-trim"]='Recortar';
 $lang["video-trim"]='Recorte de vídeo.';
 $lang["video-trim-warning"]='Advertencia de recorte.';
 $lang["video-trim-warning-text"]='El punto de recorte de inicio o final excede la longitud de la vista previa del video.<br><br>La vista previa proporcionada no representará completamente el resultado final, considere aumentar la longitud de la vista previa del video y recrear los archivos de vista previa si desea previsualizar el resultado recortado.';

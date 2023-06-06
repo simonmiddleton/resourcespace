@@ -85,7 +85,7 @@ if ($enable_related_resources)
                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                         }
                     echo "<div class=\"clearerleft\" ></div>";
-                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . $lang["upload"] . "</a>";
+                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a>";
                     }
                 }
 			else
@@ -102,7 +102,7 @@ if ($enable_related_resources)
 						<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 						<tbody>
 							<tr class="ListviewTitleStyle">
-								<td><h3><?php echo $restypename; ?></h3></td>		
+								<td><h3><?php echo htmlspecialchars($restypename); ?></h3></td>		
 								<td><div class="ListTools"></div></td>                                    
 							</tr>
 							<?php
@@ -141,7 +141,7 @@ if ($enable_related_resources)
                                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                                         }
 
-									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . $lang["upload"] . "</a></div></td>";
+									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a></div></td>";
 									}
 							?>
 						</tbody>

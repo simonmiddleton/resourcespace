@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Liste der erlaubten Windows-Domänen (durch Komma getr
 $lang["winauth_use_win_login"]='Anmeldung mit Windows-Authentifizierung.';
 $lang["winauth_nouser"]='Ihr Konto ist im System nicht aktiviert. Bitte beantragen Sie ein Konto oder kontaktieren Sie Ihren Administrator.';
 $lang["winauth_prefer_normal"]='Bevorzuge Standard-ResourceSpace-Anmeldungen. Wenn dies zutrifft, werden Benutzer standardmäßig zur Anmeldeseite umgeleitet, auf der die Option zur Verwendung der Windows-Authentifizierung angeboten wird.';
-$lang["winauth_test"]='Test (German translation): Test';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Sie sind angemeldet als: [Benutzername]';
 $lang["winauth_not_logged_in"]='Sie sind nicht angemeldet oder Ihr Webserver wurde nicht korrekt konfiguriert.';

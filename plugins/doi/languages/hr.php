@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Nepromjenjiv.';
-$lang["doi_info_wikipedia"]='Digitalni identifikator objekta (DOI) je jedinstveni identifikator koji se koristi za trajno označavanje digitalnih objekata kao što su članci, knjige, slike i datoteke. DOI-ovi se koriste za jednostavno pronalaženje tih objekata na internetu i osiguravaju trajnu povezanost s njima, čak i ako se njihova lokacija promijeni. DOI-ovi se često koriste u akademskim i znanstvenim publikacijama kako bi se osigurala jednostavna referenca na citirane izvore.';
 $lang["doi_info_link"]='na <a target="_blank" href="https://en.wikipedia.org/wiki/Digital_Object_Identifier">DOI-ima</a>.';
 $lang["doi_info_metadata_schema"]='Na registraciji DOI-a na DataCite.org navedeno je u <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">Dokumentaciji o shemi metapodataka Datacite</a>.';
 $lang["doi_info_mds_api"]='Na DOI-API koju koristi ovaj dodatak navedeno je u <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API dokumentaciji</a>.';
@@ -49,7 +48,6 @@ $lang["doi_not_successfully_registered_pl"]='Nije se moglo registrirati ispravno
 $lang["doi_reload"]='Ponovno učitaj';
 $lang["doi_successfully_set"]='postavljeno je.';
 $lang["doi_not_successfully_set"]='nije postavljeno.';
-$lang["doi_sum_of"]='molim? "of" je veznik koji se koristi za povezivanje riječi u rečenici. Potrebna mi je cijela rečenica ili fraza kako bih mogao pružiti prikladnu uslugu prevođenja.';
 $lang["doi_sum_already_reg"]='Resurs(i) već ima/ju DOI.';
 $lang["doi_sum_not_yet_archived"]='resurs(i) nisu označeni';
 $lang["doi_sum_not_yet_archived_2"]='Još uvijek ili njihov pristup nije postavljen na otvoreno.';

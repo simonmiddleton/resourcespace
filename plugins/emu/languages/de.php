@@ -26,7 +26,6 @@ $lang["emu_module"]='EMu-Modul';
 $lang["emu_column_name"]='EMu-Modulspalte';
 $lang["emu_rs_field"]='ResourceSpace-Feld';
 $lang["emu_add_mapping"]='Hinzufügen von Zuordnung.';
-$lang["emu_upload_emu_field_label"]='EMu IRN could be translated as "EMu Identifikationsnummer" in Deutsch.';
 $lang["emu_confirm_upload_nodata"]='Bitte setzen Sie das Kästchen, um zu bestätigen, dass Sie mit dem Upload fortfahren möchten.';
 $lang["emu_test_script_title"]='Test/Skript ausführen';
 $lang["emu_run_script"]='Prozess';

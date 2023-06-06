@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Lista över tillåtna Windows-domäner (kommaseparerad
 $lang["winauth_use_win_login"]='Logga in med Windows-autentisering.';
 $lang["winauth_nouser"]='Ditt konto är inte aktiverat i systemet. Vänligen ansök om ett konto eller kontakta din administratör.';
 $lang["winauth_prefer_normal"]='Föredra standard ResourceSpace-inloggningar. Om detta är sant kommer användare att omdirigeras till inloggningssidan som standard, där det kommer att finnas möjlighet att använda Windows-autentisering.';
-$lang["winauth_test"]='Test (Swedish): Test';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Du är inloggad som: [användarnamn]';
 $lang["winauth_not_logged_in"]='Du är inte inloggad eller din webbserver har inte konfigurerats korrekt.';

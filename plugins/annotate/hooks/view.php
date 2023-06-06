@@ -112,27 +112,6 @@ function HookAnnotateViewRenderinnerresourcepreview()
                     
                     <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo $lang["fullscreenpreview"]?>"><?php echo LINK_CARET . $lang["fullscreenpreview"]?></a>
                 <?php
-                // Magictouch plugin compatibility
-                global $magictouch_account_id;
-
-                if('' != $magictouch_account_id)
-                    {
-                    global $plugins, $magictouch_rt_exclude, $magictouch_ext_exclude;
-
-                    if(in_array('magictouch', $plugins)
-                        && !in_array($resource['resource_type'], $magictouch_rt_exclude)
-                        && !in_array($resource['file_extension'], $magictouch_ext_exclude)
-                        && !defined('MTFAIL'))
-                        {
-                            
-                        // Set alternative target based on where user came from
-                        $targetpage = $baseurl_short . "pages/" . ((getval("from","")=="search") ? "search.php" : "view.php");                            
-                        ?>
-                        &nbsp;<a style="display:inline;" href="<?php echo generateURL($targetpage, $urlparams, $mtparams); ?>" onClick="document.cookie='annotate=off';return CentralSpaceLoad(this);">&gt;&nbsp;<?php echo $lang['zoom']?></a>
-                        <?php
-                        }
-                    }
-                    // end of Magictouch plugin compatibility
 
                 if($annotate_pdf_output)
                     {

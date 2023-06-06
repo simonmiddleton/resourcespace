@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["annotations"]='Noter (in the context of adding comments or notes to a resource)';
+$lang["annotations"]='Noter';
 $lang["pdfwithnotes"]='PDF-annoteringer';
 $lang["annotatepdfconfig"]='PDF-annoteringer';
 $lang["annotatepdfintrotext"]='Vælg sidestørrelsen til din Annotations PDF.';
@@ -10,7 +10,7 @@ $lang["error-deleting"]='Der opstod en fejl ved sletning af den påtegning.';
 $lang["action-add_note"]='Tilføj annotering.';
 $lang["action-toggle-on"]='Vis alle.';
 $lang["action-toggle-off"]='Skjul alle.';
-$lang["note-1"]='1 annotation translates to 1 annotation.';
+$lang["note-1"]='1 annotation';
 $lang["note-2"]='%number notater.';
 $lang["annotate_configuration"]='Annotér konfiguration.';
 $lang["extensions_to_exclude"]='Udelukkede udvidelser<br />(kommasepareret):';

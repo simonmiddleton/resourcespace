@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Feld für vorgeschlagene Stichwörter.';
 $lang["google_vision_landmarks_field"]='Feld für Landmarken.';
 $lang["google_vision_text_field"]='Feld für extrahierten Text.';
 $lang["google_vision_logo_field"]='Feld für erkannte beliebte Logos.';
-$lang["google_vision_api"]='Google Vision API (Google Vision Schnittstelle)';
 $lang["google_vision_restypes"]='Aktivierte Ressourcentypen';
 $lang["google_vision_features"]='Aktivierte Funktionserkennung.';
 $lang["google_vision_autotitle"]='Automatisch den Titel auf das am höchsten bewertete Schlüsselwort setzen.';

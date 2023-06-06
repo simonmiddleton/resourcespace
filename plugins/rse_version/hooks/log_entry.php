@@ -1,15 +1,5 @@
 <?php
 
-function HookRse_versionLog_entryGet_resource_log_extra_fields()
-    {
-    # Extend get_resource_log so that the state of the previous value is fetched also.
-    return new PreparedStatementQuery(
-        ",((r.previous_value IS NOT NULL AND (r.type='e' OR r.type='m' OR r.type='N')) 
-            OR (r.previous_file_alt_ref IS NOT NULL AND r.type='u')) revert_enabled"
-        );
-    }
-
-
 function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry)
     {
     global $lang, $baseurl;    

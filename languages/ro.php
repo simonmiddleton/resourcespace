@@ -220,13 +220,11 @@ $lang["anymonth"]='Orice lună.';
 $lang["anyday"]='Orice zi.';
 $lang["anycountry"]='Orice țară.';
 $lang["resultsdisplay"]='Afișare rezultate.';
-$lang["xlthumbs"]='Verry mare (literally "very large")';
 $lang["xlthumbstitle"]='Miniaturi extra mari.';
 $lang["largethumbs"]='Mare.';
 $lang["largethumbstitle"]='Miniaturi mari.';
 $lang["smallthumbs"]='Mic.';
 $lang["smallthumbstitle"]='Miniaturi mici.';
-$lang["strip"]='Vă rugăm să precizați contextul în care este utilizat termenul "Strip" în cadrul software-ului ResourceSpace. Există mai multe sensuri ale cuvântului "Strip" în limba engleză, iar traducerea corectă depinde de contextul în care este utilizat.';
 $lang["striptitle"]='Vizualizare cu bandă.';
 $lang["list"]='Lista.';
 $lang["listtitle"]='Vizualizare listă.';
@@ -435,7 +433,6 @@ $lang["page_collections_message"]='Continuarea va anula selecția colecțiilor m
 $lang["delete_all_selected"]='Ștergeți toate elementele selectate.';
 $lang["range_no_start_header"]='Eroare de interval.';
 $lang["range_no_start"]='Nu se poate încheia intervalul fără un început. Vă rugăm să eliberați tasta Shift.';
-$lang["lightbox-image"]='Imagine.';
 $lang["createnewresource"]='Creați o resursă nouă.';
 $lang["resourcetype"]='Tip resursă.';
 $lang["treeobjecttype-resource_type"]='Tip resursă.';
@@ -530,14 +527,6 @@ $lang["preview"]='Previzualizare';
 $lang["previewithsizename"]='Previzualizare %sizename';
 $lang["fullscreenpreview"]='Previzualizare pe ecran complet.';
 $lang["originalfileoftype"]='Fișierul original %EXTENSION';
-$lang["cell-fileoftype"]='Extensia %EXTENSION a fișierului.';
-$lang["field-fileextension"]='Vă rugăm să traduceți: %EXTENSION
-
-%EXTENSION se referă la extensia unui fișier, de exemplu .jpg, .pdf, .docx, etc.';
-$lang["fileextension-inside-brackets"]='[%EXTENSION] se traduce ca fiind Extensie.';
-$lang["fileextension"]='Vă rugăm să traduceți: %EXTENSION
-
-%EXTENSION se referă la extensia unui fișier, de exemplu .jpg, .pdf, .docx, etc.';
 $lang["mp3_preview_file"]='Fișier de previzualizare MP3.';
 $lang["log"]='Jurnal de activitate';
 $lang["resourcedetails"]='Detalii resursă.';
@@ -600,7 +589,6 @@ $lang["log-a"]='Schimbare acces.';
 $lang["log-r"]='Metadatele revertite.';
 $lang["log-b"]='Creat alternativă.';
 $lang["log-y"]='Șters alternativ.';
-$lang["log-missinglang"]='Tip.';
 $lang["log-adminpermissionsrequired"]='Este necesară permisiunea completă de administrator!';
 $lang["log-removedcustomuseraccess"]='Accesul personalizat pentru utilizator a fost eliminat.';
 $lang["log-deleted_all"]='Toate resursele acestei colecții au fost șterse (mutate în starea %ARCHIVE).';
@@ -742,23 +730,8 @@ $lang["researchrequestcompletemessage"]='Cererea ta de cercetare este completă 
 $lang["researchrequestcomplete"]='Cererea de cercetare a fost finalizată.';
 $lang["researchrequest_custom_field_required"]='Câmpul personalizat \'%field\' este obligatoriu și lipsește.';
 $lang["selectgroupuser"]='Selectați grupul/utilizatorul...';
-$lang["select"]='Select... can have different meanings depending on the context. Here are some possible translations:
-
-- If it refers to selecting an option from a dropdown menu or a list, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting one or more items from a group of items, it can be translated as "Selectați..." or "Bifați...".
-- If it refers to selecting a resource or a collection in ResourceSpace, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a user or a group in ResourceSpace, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a workflow or a download option in ResourceSpace, it can be translated as "Selectați..." or "Alegeți...".
-
-Please provide more context if you need a more specific translation.';
-$lang["selectloading"]='Select... can have different meanings depending on the context. Here are some possible translations:
-
-- If it refers to selecting a resource or a group of resources, it can be translated as "Selectați..." or "Selectați resursele...".
-- If it refers to selecting an option from a dropdown menu, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a language or a region, it can be translated as "Selectați..." or "Alegeți...".
-- If it refers to selecting a date or a time, it can be translated as "Selectați..." or "Alegeți...".
-
-If you provide more context, I can give you a more accurate translation.';
+$lang["select"]='Selectați...';
+$lang["selectloading"]='Selectați....';
 $lang["add"]='Adăugare';
 $lang["create"]='Creați.';
 $lang["group"]='Grup.';
@@ -775,8 +748,6 @@ $lang["fromdate"]='De la dată.';
 $lang["day"]='Zi';
 $lang["month"]='Lună.';
 $lang["year"]='An:';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a language string used by ResourceSpace. Can you please provide me with a specific string to translate?';
-$lang["minute-abbreviated"]='I\'m sorry, but "MM" is not a language string used by ResourceSpace. Can you please provide me with a specific string to translate?';
 $lang["itemstitle"]='Elemente.';
 $lang["tools"]='Unelte.';
 $lang["created"]='Creat.';
@@ -846,7 +817,6 @@ $lang["contributedby"]='Contribuit de';
 $lang["format"]='Vă rugăm să traduceți: Format
 
 Formatul';
-$lang["notavailableshort"]='N/A can be translated as "Nedeterminat" or "Indisponibil" depending on the context.';
 $lang["allmonths"]='Toate lunile.';
 $lang["allgroups"]='Toate grupurile.';
 $lang["status-ok"]='OK - Acordat / În regulă.';
@@ -873,7 +843,7 @@ $lang["status-note"]='NOTĂ';
 $lang["action-changelanguage"]='Schimbă limba.';
 $lang["loading"]='Se încarcă...';
 $lang["disable_languages"]='Dezactivați opțiunile de selecție a limbii.';
-$lang["import_export"]='Import/Export - Importare/Exportare';
+$lang["import_export"]='Importare/Exportare';
 $lang["import"]='Importare';
 $lang["export"]='Exportare';
 $lang["origin"]='Origine';
@@ -1203,12 +1173,9 @@ $lang["setup-if_mysql_read_only_username"]='Numele de utilizator folosit pentru 
 $lang["setup-emailfrom"]='Adresa de email expeditor.';
 $lang["setup-emailnotify"]='Notificare prin email.';
 $lang["setup-spiderpassword"]='Parolă de păianjen.';
-$lang["setup-scramblekey"]='Cheie de amestecare.';
-$lang["setup-apiscramblekey"]='Cheie de amestecare API.';
 $lang["setup-paths"]='Căi.';
 $lang["setup-pathsdetail"]='Pentru fiecare cale, introduceți calea fără o bară oblică la sfârșit pentru fiecare binar. Pentru a dezactiva un binar, lăsați calea goală. Orice căi detectate automat au fost deja completate.';
 $lang["setup-applicationname"]='Numele aplicației.';
-$lang["setup-basicsettingsfooter"]='NOTĂ: Singurele setări <strong>necesare</strong> sunt pe această pagină. Dacă nu sunteți interesat să verificați opțiunile avansate, puteți da clic mai jos pentru a începe procesul de instalare.';
 $lang["setup-if_mysqlserver"]='Adresa IP sau <abbr title="Fully Qualified Domain Name">FQDN</abbr> a instalației tale de server MySQL. Dacă MySql este instalat pe același server ca serverul tău web, folosește "localhost".';
 $lang["setup-if_mysqlusername"]='Numele de utilizator folosit pentru a se conecta la serverul tău MySQL. Acest utilizator trebuie să aibă drepturi pentru a crea tabele în baza de date numită mai jos.';
 $lang["setup-if_mysql_read_only_password"]='Parola pentru numele de utilizator MySQL introdus mai sus.';
@@ -1220,16 +1187,10 @@ $lang["setup-if_admin_username"]='Numele de utilizator folosit pentru conectarea
 $lang["setup-if_admin_password"]='Parola pentru numele de utilizator Admin introdus mai sus.';
 $lang["setup-if_emailfrom"]='Adresa de la care par să vină emailurile din RS.';
 $lang["setup-if_emailnotify"]='Adresa de email către care sunt trimise cererile de resurse/utilizatori/cercetare.';
-$lang["setup-if_spiderpassword"]='Câmpul parolă păianjen este obligatoriu.';
-$lang["setup-if_scramblekey"]='Pentru a activa amestecarea, setați cheia de amestecare să fie o secvență de caractere greu de ghicit (similară cu o parolă). Dacă aceasta este o instalare publică, atunci aceasta este o idee foarte înțeleaptă. Lăsați acest câmp necompletat pentru a dezactiva amestecarea căilor de resurse. Acest câmp a fost deja randomizat pentru dvs., dar îl puteți schimba pentru a se potrivi cu o instalare existentă, dacă este necesar.';
-$lang["setup-if_apiscramblekey"]='Setează cheia de amestecare a API-ului să fie o secvență de caractere greu de ghicit (similară cu o parolă). Dacă planifici să utilizezi API-uri, atunci aceasta este o idee foarte înțeleaptă.';
 $lang["setup-if_applicationname"]='Numele implementării / instalării tale (de exemplu, "Sistemul de Resurse al Companiei Mele").';
 $lang["setup-err_mysqlbinpath"]='Imposibil de verificat calea. Lăsați gol pentru a dezactiva.';
 $lang["setup-err_baseurl"]='Câmpul URL de bază este obligatoriu.';
 $lang["setup-err_baseurlverify"]='Adresa de bază URL nu pare să fie corectă (nu s-a putut încărca license.txt).';
-$lang["setup-err_spiderpassword"]='Parola necesară pentru spider.php. IMPORTANT: Randomizați aceasta pentru fiecare instalare nouă. Resursele dvs. vor fi citibile de oricine cunoaște această parolă. Acest câmp a fost deja randomizat pentru dvs., dar puteți să-l schimbați pentru a se potrivi cu o instalare existentă, dacă este necesar.';
-$lang["setup-err_scramblekey"]='Dacă aceasta este o instalare publică, se recomandă setarea cheii de amestecare.';
-$lang["setup-err_apiscramblekey"]='Dacă aceasta este o instalare publică, se recomandă setarea cheii de amestecare a API-ului.';
 $lang["setup-err_path"]='Nu se poate verifica locația.';
 $lang["setup-err_phar_injection"]='A fost detectată o posibilă injectare de obiecte PHP Phar.';
 $lang["setup-emailerr"]='Adresa de email nu este validă.';
@@ -1237,22 +1198,6 @@ $lang["setup-admin_fullname_error"]='Trebuie să completați câmpul nume comple
 $lang["setup-rs_initial_configuration"]='ResourceSpace: Configurare inițială.';
 $lang["setup-include_not_writable"]='\'/include\' nu poate fi scris. Este necesar doar în timpul instalării.';
 $lang["setup-begin_installation"]='Începeți instalarea!';
-$lang["setup-generaloptions"]='Opțiuni generale.';
-$lang["setup-allow_password_change"]='Permiteți schimbarea parolei?';
-$lang["setup-enable_remote_apis"]='Permiteți API-uri la distanță?';
-$lang["setup-if_allowpasswordchange"]='Permiteți utilizatorilor finali să-și schimbe parolele.';
-$lang["setup-if_enableremoteapis"]='Permiteți accesul la distanță la modulele API.';
-$lang["setup-allow_account_requests"]='Permiteți utilizatorilor să solicite conturi?';
-$lang["setup-display_research_request"]='Afișați funcționalitatea de Cerere de cercetare?';
-$lang["setup-if_displayresearchrequest"]='Permite utilizatorilor să solicite resurse prin intermediul unui formular, care este trimis prin e-mail.';
-$lang["setup-themes_as_home"]='Folosește pagina de colecții recomandate ca pagină de start?';
-$lang["setup-remote_storage_locations"]='Locații de stocare la distanță.';
-$lang["setup-use_remote_storage"]='Folosiți stocare la distanță?';
-$lang["setup-if_useremotestorage"]='Bifați această casetă pentru a configura locațiile de stocare remote pentru RS. (Pentru a utiliza un alt server pentru stocarea fișierelor.)';
-$lang["setup-storage_directory"]='Director de stocare';
-$lang["setup-if_storagedirectory"]='Unde să puneți fișierele media. Pot fi absolute (/var/www/blah/blah) sau relative la instalare. NOTĂ: Fără bară oblică la sfârșit.';
-$lang["setup-storage_url"]='URL de stocare';
-$lang["setup-if_storageurl"]='Unde este disponibil directorul de stocare. Poate fi absolut (http://files.example.com) sau relativ la instalare. NOTĂ: Fără bară diagonală la sfârșit.';
 $lang["setup-smtp-settings"]='Configurări SMTP.';
 $lang["setup-if-usesmtp"]='Folosește un server SMTP extern pentru trimiterea de e-mailuri (de exemplu, Gmail). Folosește PHPMailer.';
 $lang["setup-if-smtpsecure"]='Vă rugăm să traduceți: \'\', \'tls\' sau \'ssl\'. Pentru Gmail, este necesar \'tls\' sau \'ssl\'.';
@@ -1261,9 +1206,6 @@ $lang["setup-if-smtpport"]='Vă rugăm să traduceți: Numărul portului, de exe
 $lang["setup-if-smtpauth"]='Trimiteți credențialele către serverul SMTP (fals pentru a utiliza accesul anonim)';
 $lang["setup-if-smtpusername"]='Nume de utilizator (adresa de email completă).';
 $lang["setup-if-smtppassword"]='Parolă.';
-$lang["design-options"]='Opțiuni de design.';
-$lang["use-slim-theme"]='Folosești design-ul SlimHeader?';
-$lang["setup-if_slimtheme"]='Folosiți designul SlimHeader în locul designului original pentru a afișa o bară de antet mai subțire cu un logo asociat implicit.';
 $lang["setup-login_to"]='Conectare la';
 $lang["setup-configuration_file_output"]='Fișierul de configurare de ieșire.';
 $lang["more-information"]='Mai multe informații.';
@@ -1453,7 +1395,6 @@ $lang["map_stamenterrain"]='Teren.';
 $lang["map_stamenterrainback"]='Fundal Teren.';
 $lang["map_stamenrelief"]='Ușurare.';
 $lang["map_stamenwatercolor"]='Aquarelă.';
-$lang["map_esri_group"]='ESRI nu necesită traducere, este un acronim pentru "Environmental Systems Research Institute", o companie specializată în software de sistem informațional geografic (GIS).';
 $lang["map_esristreet"]='Străzi.';
 $lang["map_esritopo"]='Topografic.';
 $lang["map_esriimagery"]='Vizualizare.';
@@ -1461,14 +1402,10 @@ $lang["map_esriterrain"]='Teren.';
 $lang["map_esrirelief"]='Relief umbrit.';
 $lang["map_esriphysical"]='Fizic.';
 $lang["map_esriocean"]='Ocean = Ocean';
-$lang["map_esrinatgeo"]='National Geographic - Geografie Națională';
 $lang["map_esrigray"]='Pânză gri.';
-$lang["map_nasagibs_group"]='NASA GIBS se referă la Sistemul de Imagini de la Bordul Globului (Global Imagery Browse Services) al NASA.';
 $lang["map_nasagibscolor"]='Imagistica color Modis/Terra.';
 $lang["map_nasagibsfalsecolor"]='Imaginile False Color Modis/Terra.';
 $lang["map_nasagibsnight"]='Imagistica de noapte.';
-$lang["map_mapbox_group"]='Mapbox - HărțiBox';
-$lang["map_mapboxid"]='ID poate fi tradus ca "ID-ul" sau "identificatorul".';
 $lang["map_mapboxtoken"]='Token de acces.';
 $lang["map_mapbox"]='Hartă implicită.';
 $lang["map_usgs_group"]='Harta Națională.';
@@ -1513,7 +1450,6 @@ $lang["exiftoolnotfound"]='Nu s-a putut găsi Exiftool.';
 $lang["existing_tags"]='Etichete Exiftool existente.';
 $lang["new_tags"]='Noi etichete Exiftool (care vor fi adăugate la descărcare)';
 $lang["date_of_download"]='Data descărcării.';
-$lang["field_ref_and_name"]='%ref% - %name% se traduce ca %ref% - %name%.';
 $lang["metadata-report-fits_section"]='Etichetele FITS mapate.';
 $lang["indicateusage"]='Vă rugăm să descrieți utilizarea planificată pentru acest resursă.';
 $lang["usage"]='Utilizare';
@@ -1673,8 +1609,6 @@ $lang["star"]='Stea.';
 $lang["stars"]='Stele.';
 $lang["noupload"]='Nicio încărcare.';
 $lang["permissions"]='Permisiuni.';
-$lang["configdefault-title"]='I\'m ready to start translating, please provide me with the English strings to be translated.';
-$lang["config-title"]='VĂ RUGĂM să fiți ATENȚI să nu faceți erori de sintaxă. Dacă stricați acest fișier, trebuie să îl reparați de pe server!';
 $lang["file_too_large"]='Fișier prea mare.';
 $lang["field_updated"]='Câmp actualizat.';
 $lang["zoom"]='Zoom';
@@ -1773,7 +1707,6 @@ $lang["use_original_if_size"]='Folosește originalul dacă dimensiunea selectat�
 $lang["originals-available-0"]='disponibil';
 $lang["originals-available-1"]='disponibil';
 $lang["originals-available-2"]='disponibil';
-$lang["inch-short"]='în';
 $lang["deletedresource"]='Resursa ștearsă.';
 $lang["deletedresources"]='Resurse șterse.';
 $lang["nopreviewresources"]='Resurse fără previzualizări.';
@@ -1875,16 +1808,13 @@ $lang["saved"]='Salvat.';
 $lang["changessaved"]='Modificările au fost salvate.';
 $lang["resourceids"]='Identificator(i) de resursă(e)';
 $lang["warningrequestapprovalfield"]='Atenție - ID-ul resursei % - vă rugăm să luați în considerare următoarele aspecte înainte de a aproba.';
-$lang["yyyy-mm-dd"]='YYYY-MM-DD se referă la formatul de dată an-lună-zi, de exemplu 2022-01-31.';
 $lang["resources-with-requeststatus0-0"]='(0 în așteptare)';
 $lang["resources-with-requeststatus0-1"]='(1 în așteptare)';
-$lang["resources-with-requeststatus0-2"]='(%număr în așteptare)';
+$lang["resources-with-requeststatus0-2"]='(%number în așteptare)';
 $lang["researches-with-requeststatus0-0"]='(0 neatribuite)';
 $lang["researches-with-requeststatus0-1"]='(1 neatribuit)';
 $lang["researches-with-requeststatus0-2"]='(%number neatribuite)';
 $lang["megabyte-symbol"]='MB (megabyte) - megaoctet.';
-$lang["megabyte-symbol-binary"]='MiB se referă la mebibyte, o unitate de măsură a capacității de stocare a datelor, echivalentă cu 1.048.576 de bytes.';
-$lang["terabyte-symbol-binary"]='TiB stands for "tebibyte" and in Limba română it is translated as "tebibaiți".';
 $lang["upload_files"]='Încărcați fișiere.';
 $lang["upload_files-to_collection"]='Încărcați fișiere (în colecția \'%collection\')';
 $lang["ascending"]='Crescător.';
@@ -1898,7 +1828,6 @@ $lang["save-conflict-title"]='Conflict de editare.';
 $lang["theme_home_promote"]='Promovați pe pagina principală?';
 $lang["theme_home_page_text"]='Textul de pe pagina principală.';
 $lang["theme_home_page_image"]='Imaginea paginii principale.';
-$lang["ref-title"]='%ref - %title se traduce ca %ref - %titlu.';
 $lang["error-pageload"]='Ne pare rău, a apărut o eroare la încărcarea acestei pagini. Dacă efectuați o căutare, încercați să rafinați interogarea de căutare. Dacă problema persistă, vă rugăm să contactați administratorul sistemului.';
 $lang["copy-field"]='Vă rugăm să traduceți: Copiere câmp.';
 $lang["copy-to-resource-type"]='Copiază în tipul de resursă.';
@@ -1971,7 +1900,7 @@ $lang["all-resourcetypes"]='resurse';
 $lang["all-collectiontypes"]='colecții';
 $lang["resourcetypes-no_collections"]='Toate %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Toate %collectiontypes%';
-$lang["resourcetypes-collections"]='Toate %tipurileresurse% și toate %tipuricolecții%';
+$lang["resourcetypes-collections"]='Toate %resourcetypes% și toate %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Blocare acces la starea fluxului de lucru.';
 $lang["collection_share_status_warning"]='Atenție - această colecție conține resurse în următoarele stări, vă rugăm să verificați că aceste resurse vor fi accesibile și altor utilizatori.';
 $lang["contactadmin"]='Contactați administratorul.';
@@ -2014,20 +1943,9 @@ $lang["internal_share_grant_access_collection"]='Acordați acces deschis utiliza
 $lang["merge_filename_title_question"]='Folosește numele fișierului în titlu (dacă nu este găsit niciun titlu încorporat)?';
 $lang["merge_filename_title_do_not_use"]='Nu utilizați.';
 $lang["merge_filename_title_replace"]='Înlocuire';
-$lang["merge_filename_title_prefix"]='Prefix (in ResourceSpace context): Prefix.';
+$lang["merge_filename_title_prefix"]='Prefix';
 $lang["merge_filename_title_suffix"]='Vă rugăm să traduceți: Sufix.';
 $lang["merge_filename_title_include_extensions"]='Includere extensii?';
-$lang["merge_filename_title_spacer"]='Vă rugăm să traduceți: Spacer
-
-Iată câteva opțiuni posibile pentru traducerea termenului "Spacer" în limba română, în funcție de contextul în care este utilizat în software-ul ResourceSpace:
-
-- Distanțier
-- Element de separare
-- Spațiator
-- Element de umplere
-- Element de golire
-
-Vă rugăm să oferiți mai multe informații despre contextul în care este utilizat termenul pentru a putea oferi o traducere mai precisă.';
 $lang["send_collection_to_admin_emailedcollectionname"]='Resurse trimise de utilizatori.';
 $lang["send_collection_to_admin_emailsubject"]='Colectie incarcata de';
 $lang["send_collection_to_admin_usercontributedcollection"]='Încărcate aceste resurse ca o colecție întreagă.';
@@ -2123,97 +2041,13 @@ $lang["show_resources"]='Afișează resursele.';
 $lang["team_user_contributions"]='Contribuții.';
 $lang["team_user_view_contributions"]='Vizualizare contribuții.';
 $lang["action-title_apply"]='Aplică.';
-$lang["property-orphaned"]='Fără părinți (literally) / Orfan (commonly used)';
+$lang["property-orphaned"]='Orfan';
 $lang["admin_field_deleted"]='Câmp șters.';
 $lang["action-move-up"]='Mută în sus.';
 $lang["action-move-down"]='Mută în jos.';
 $lang["action-move-to"]='Mută în';
 $lang["delete_user_group_checkbox_alert_message"]='Vă rugăm să rețineți că această acțiune va șterge și tot conținutul text care era relevant pentru acest grup de utilizatori. Au fost găsite %%RECORDSCOUNT%% înregistrări în Gestionarea conținutului.';
 $lang["about__about"]='Textul tău despre se introduce aici.';
-$lang["all__emaillogindetails"]='[bun venit]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[lang_userresourcesapproved]
-[list] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-This string seems to be incomplete or duplicated. Please provide more context or clarify the intended meaning.';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-[lang_userresourcessubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] 
-
-This string is used to display a list of resources submitted by a user. It includes a link to view all pending resources submitted by the user. The [url] tag is replaced with the actual URL. The [text_footer] tag is replaced with the footer text.';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_userresourcesunsubmitted]
-[list] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] - Cererea de cercetare a fost atribuită cu succes utilizatorului selectat. Vă rugăm să verificați starea cererii în pagina dvs. de profil.<br /><br />
-[text_footer] - Aceasta este o notificare automată generată de ResourceSpace. Vă rugăm să nu răspundeți la acest mesaj.';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-Cererea dvs. de cercetare a fost finalizată cu succes. Veți primi un e-mail cu un link către colecția de resurse solicitată. <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-Apăsați pe acest link pentru a vizualiza colecția: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br /><br />
-
-[fromusername] [lang_ți-a-trimis-un-resursă-pe-email]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_apasă-pentru-a-vedea-resursa]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username]<br />
-[list]<br />
-[details]<br /><br />
-[lang_clicktoviewresource]<br /><br />
-<a href="[url]">[url]</a>
-
-[lang_username]: [nume_utilizator]<br />
-[list]<br />
-[details]<br /><br />
-[lang_clicktoviewresource]<br /><br />
-<a href="[url]">[url]</a>';
 $lang["all__footer"]='Funcționează cu ajutorul <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Permiteți echipei noastre de resurse să găsească resursele de care aveți nevoie.';
 $lang["change_language__introtext"]='Vă rugăm să selectați limba dumneavoastră mai jos.';
@@ -2296,13 +2130,6 @@ $lang["collection_download_too_large"]='Ne pare rău, această colecție este pr
 $lang["all__passwordnewemailhtml"]='Vă rugăm să faceți clic pe link-ul de mai jos pentru a seta o nouă parolă pentru contul dvs.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />Nume de utilizator: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Încărcarea este temporar indisponibilă.';
 $lang["disk_size_no_upload_explain"]='Din cauza restricțiilor de spațiu, încărcarea a fost dezactivată temporar. Ne cerem scuze pentru orice neplăcere.';
-$lang["dash"]='Vă rog să traduceți: Dash
-
-"Dash" poate avea mai multe sensuri în contextul ResourceSpace, așa că vă rog să alegeți varianta potrivită:
-
-- Dacă se referă la "Dashboard", adică panoul de control al utilizatorului, atunci traducerea potrivită ar fi "Tablou de bord".
-- Dacă se referă la "dash" ca semn de punctuație (liniuță scurtă), atunci traducerea potrivită ar fi "liniuță".
-- Dacă se referă la "dash" ca o acțiune de ștergere rapidă a unui element dintr-o colecție, atunci traducerea potrivită ar fi "ștergere rapidă".';
 $lang["savethissearchtodash"]='Salvează pe panoul de bord.';
 $lang["createnewdashtile"]='Creați o nouă piesă de bord.';
 $lang["specialdashtiles"]='Plăci speciale cu linii de despărțire.';
@@ -2371,31 +2198,16 @@ $lang["tile_thmsl"]='Coleție recomandată.';
 $lang["tile_custm"]='Personalizat.';
 $lang["tile_pend"]='În așteptare.';
 $lang["plugin_category_general"]='General - General';
-$lang["plugin_category_api"]='API (Interfață de programare a aplicațiilor)';
 $lang["plugin_category_advanced"]='Avansat.';
 $lang["plugin_category_design"]='Proiectare.';
 $lang["plugin_category_ecommerce"]='Comerț electronic.';
 $lang["plugin_integrations"]='Integrări.';
 $lang["system_down_title"]='Atenție!';
 $lang["system_down_message"]='Sistemul este indisponibil pentru mentenanță. Vă mulțumim pentru răbdare.';
-$lang["systemconsole"]='Consolă.';
 $lang["systemconsoledebuglog"]='Jurnal de depanare (Debug log).';
-$lang["systemconsolememorycpu"]='Viteză de memorie și procesor (CPU)';
-$lang["systemconsoledatabase"]='Bază de date.';
-$lang["systemconsolesqllogtransactions"]='Jurnalul de tranzacții SQL.';
-$lang["systemconsoleactivitylog"]='Jurnal de activitate.';
 $lang["systemconsoleturnoffafter"]='Închideți după.';
 $lang["systemconsoleonpermallusers"]='Pe (permanent pentru toți utilizatorii)';
 $lang["systemconsoleonallusers"]='Pe (toți utilizatorii)';
-$lang["systemconsoleonfailedtopcommand"]='Nu s-a putut executa comanda top.';
-$lang["systemconsoleonfailedtasklistcommand"]='Nu s-a putut executa comanda tasklist.';
-$lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location nu este setat, fișierul nu a fost găsit sau nu poate fi citit. Vă rugăm să verificați dacă \'$debug_log_readable=true;\' este setat în configurația dvs.';
-$lang["systemconsoleonsqllognotsetorfound"]='Variabila $mysql_log_transactions nu este setată sau fișierul $mysql_log_location nu a fost găsit sau nu poate fi citit.';
-$lang["systemconsoletrackVars"]='Urmărirea variabilelor.';
-$lang["systemconsole_label_input_vars"]='Numele variabilelor.';
-$lang["systemconsole_help_track_vars"]='Folosește un fișier CSV cu numele de variabile pe care dorești să le urmărești în întregul sistem. Acest lucru este utilizat în principal în scopuri de depanare, deoarece ajută la determinarea locului în care o anumită variabilă este setată sau suprascrisă.';
-$lang["systemconsole_label_input_track_period"]='Specificați cât timp să urmăriți variabilele.';
-$lang["systemconsole_help_track_period"]='Valoarea reprezintă minutele.';
 $lang["trash_bin_title"]='Elimină.';
 $lang["trash_bin_delete_dialog_title"]='Eliminați resursa?';
 $lang["managecontent_defaulttextused"]='Textul pentru limba implicită (?) este în prezent utilizat. Editați textul de mai jos pentru a crea o versiune alternativă pentru această selecție de limbă/grup de utilizatori.';
@@ -2548,7 +2360,6 @@ $lang["user_pref_email_and_user_notifications"]='Trimite-mi e-mailuri în plus f
 $lang["notification_email_subject"]='Email de notificare.';
 $lang["mymessages_introtext"]='Puteți configura ce mesaje apar aici prin schimbarea preferințelor dvs. de utilizator.';
 $lang["login_slideshow_image_notes"]='Această imagine va fi utilizată doar ca fundal pentru pagina de autentificare.';
-$lang["media"]='Media - Media (referring to digital assets such as images, videos, audio files, etc.)';
 $lang["pixel_height"]='Înălțimea pixelilor.';
 $lang["pixel_width"]='Lățimea pixelilor.';
 $lang["file_extension_label"]='Extensie de fișier.';
@@ -2676,12 +2487,8 @@ $lang["error_upload_file_move_failed"]='Nu s-a putut muta fișierul încărcat. 
 $lang["error_fail_save"]='Imposibil de salvat.';
 $lang["image_quality_100"]='Valoare maximă.';
 $lang["image_quality_92"]='Tipărire.';
-$lang["image_quality_80"]='Vă rugăm să traduceți: Web.
-
-"Web" se traduce în Limba română ca "Web". Este un termen utilizat în mod obișnuit și nu are o traducere specifică în limba română.';
 $lang["image_quality_50"]='Scăzut.';
 $lang["image_quality_40"]='Foarte scăzut.';
-$lang["systemconfig_api"]='API (Interfață de programare a aplicațiilor)';
 $lang["iiif_enable_option"]='Activare suport IIIF.';
 $lang["iiif_disabled"]='IIIF nu este configurat.';
 $lang["property-personal_data"]='Poate conține date personale.';
@@ -2797,7 +2604,7 @@ $lang["error_locked_other_user"]='Resursa este blocată de către un alt utiliza
 $lang["error-edit_noaccess_resources"]='Nu aveți acces de editare la resurse:';
 $lang["error-edit_locked_resources"]='Următoarele resurse sunt blocate:';
 $lang["locked_resource_search"]='Resurse blocate.';
-$lang["autocomplete_log_note"]='Completare automată.';
+$lang["autocomplete_log_note"]='(Completare automată)';
 $lang["posted-file-not-found"]='Fișierul postat nu a fost găsit.';
 $lang["error-theme-missing"]='Colectia recomandata lipseste sau nu a fost specificata.';
 $lang["system_config_search_engines"]='Motoare de căutare.';
@@ -2824,7 +2631,6 @@ $lang["job_value"]='Valoare.';
 $lang["job_boost"]='Îmbunătățirea sarcinii.';
 $lang["job_priority"]='Prioritate.';
 $lang["csv_export_offline_option"]='Generați fișierul CSV offline? Acest lucru ar trebui utilizat pentru seturi mari de rezultate. Veți fi notificat printr-un mesaj ResourceSpace odată ce fișierul CSV este disponibil.';
-$lang["csv_export_filename"]='export_metadate_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='Exportul tău CSV este pregătit.';
 $lang["offline_processing_disabled"]='Procesarea de sarcini offline nu este configurată în acest sistem. Pentru a o activa, vă rugăm să contactați administratorul sistemului.';
 $lang["csv_export_offline_only"]='Trebuie utilizat procesarea offline atunci când se exportă date pentru mai mult de %%RESOURCE_COUNT%% resurse.';
@@ -2844,13 +2650,6 @@ $lang["upload_share_email_subject"]='Ți s-a trimis un link de încărcare de la
 $lang["upload_share_email_text"]='ți-a trimis un link pentru încărcarea fișierelor.';
 $lang["upload_share_email_password"]='Folosește această parolă pentru a accesa link-ul.';
 $lang["upload_share_email_clicklink"]='Vă rugăm să utilizați link-ul de mai jos pentru a începe încărcarea.';
-$lang["upload_share_email_template"]='[nume_expeditor] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [mesaj]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]<br />
-<br />
-[text_parola]';
 $lang["upload_share_complete"]='Mulțumim pentru încărcare. Vă rugăm să utilizați butonul de mai jos pentru a încărca mai multe resurse.';
 $lang["error_invalid_usergroup"]='Grupul de utilizatori invalid.';
 $lang["error_invalid_date"]='Data invalidă.';
@@ -2861,12 +2660,6 @@ $lang["error_no_resources_edit"]='Nu s-au găsit resurse pentru editare. Dacă t
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='Resursele au fost încărcate în colecția ta partajată.';
 $lang["notify_upload_share_new_subject"]='Noi încărcări externe.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new] <br />
-Ai primit o notificare că o resursă a fost încărcată și partajată cu tine. <br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer] <br />
-Acest mesaj a fost generat automat de ResourceSpace. Vă rugăm să nu răspundeți la acest mesaj.';
 $lang["my_shares"]='Părțile mele.';
 $lang["manage_shares_title"]='Distribuiri externe.';
 $lang["share_purge_text"]='Ștergeți partajările expirate.';

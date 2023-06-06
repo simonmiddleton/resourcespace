@@ -87,7 +87,8 @@ else if(
     && !allow_featured_collection_share($collection)
 )
     {
-    exit(error_alert($lang["error-permissiondenied"], true, 403));
+    error_alert($lang["error-permissiondenied"], true, 403);
+    exit();
     }
 if(!$allow_share || checkperm("b"))
     {
@@ -123,7 +124,8 @@ else if(is_featured_collection_category($collection))
     $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
     if(empty($fc_resources))
         {
-        exit(error_alert($lang["cannotshareemptythemecategory"], true, 200));
+        error_alert($lang["cannotshareemptythemecategory"], true, 200);
+        exit();
         }
 
     // Further checks at collection-resource level. Recurse through category's sub FCs
@@ -472,12 +474,12 @@ include "../include/header.php";
 				?>
 				<tr>
 				<td><div class="ListTitle"><a target="_blank" href="<?php echo $baseurl . "?c=" . urlencode($ref) . "&k=" . urlencode($keys[$n]["access_key"]) ?>"><?php echo htmlspecialchars($keys[$n]["access_key"]) ?></a></div></td>
-				<td><?php echo htmlspecialchars(resolve_users($keys[$n]["user"]))?></td>
-				<td><?php echo htmlspecialchars($keys[$n]["email"]) ?></td>
-				<td><?php echo htmlspecialchars(nicedate($keys[$n]["date"],true, true, true));	?></td>
-				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true, true, true)); ?></td>
-				<td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)) ?></td>
-				<td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]); ?></td>
+				<td><?php echo htmlspecialchars(resolve_users($keys[$n]["user"])??"")?></td>
+				<td><?php echo htmlspecialchars($keys[$n]["email"]??"") ?></td>
+				<td><?php echo htmlspecialchars(nicedate($keys[$n]["date"],true, true, true)??"");	?></td>
+				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true, true, true)??""); ?></td>
+				<td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)??"") ?></td>
+				<td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]??""); ?></td>
 				<?php
 				if (!empty($social_media_links))
 					{

@@ -2,7 +2,6 @@
 
 
 $lang["status4"]='Muuttumaton.';
-$lang["doi_info_wikipedia"]='Digitaalinen objektin tunniste (DOI) on järjestelmä, joka tarjoaa pysyvän tunnisteen digitaalisille objekteille, kuten tutkimusartikkeleille, tietokirjoille ja muille julkaisuille. DOI-järjestelmä mahdollistaa objektien yksilöinnin ja löytämisen verkossa, ja se on laajalti käytössä akateemisessa maailmassa. DOI:t ovat yleensä linkkejä, jotka ohjaavat käyttäjän objektin pysyvään sijaintiin verkossa.';
 $lang["doi_info_link"]='DOIn (Digital Object Identifier) kohdalla.';
 $lang["doi_info_metadata_schema"]='DOI-rekisteröinnissä DataCite.org-sivustolla ilmoitetaan <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf">DataCite Metadata Schema -dokumentaatiossa</a>.';
 $lang["doi_info_mds_api"]='DOI-API:ta, jota tämä liitännäinen käyttää, on kuvattu <a target="_blank" href="https://support.datacite.org/docs/mds-api-guide">Datacite API -dokumentaatiossa</a>.';
@@ -49,7 +48,6 @@ $lang["doi_not_successfully_registered_pl"]='Ei voitu rekisteröidä oikein.';
 $lang["doi_reload"]='Lataa uudelleen.';
 $lang["doi_successfully_set"]='on asetettu.';
 $lang["doi_not_successfully_set"]='Ei ole asetettu.';
-$lang["doi_sum_of"]='Please provide more context or the full sentence where "of" is used so I can provide an accurate translation.';
 $lang["doi_sum_already_reg"]='Resurssilla tai resursseilla on jo DOI.';
 $lang["doi_sum_not_yet_archived"]='Resurssia ei ole merkitty.';
 $lang["doi_sum_not_yet_archived_2"]='Mutta sen/tämän resurssin saatavuus ei ole asetettu avoimeksi.';

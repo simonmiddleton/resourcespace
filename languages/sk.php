@@ -451,10 +451,6 @@ $lang["emailthememessage"]="Vám poslal e-mailom výber odporúčaných zbierok 
 $lang["clicklinkviewthemes"]="Kliknutím na odkaz nižšie zobrazíte vybrané zbierky.";
 $lang["clicklinkviewcollections"]="Kliknutím na odkazy nižšie zobrazíte zbierky.";
 
-# Lightbox
-$lang["lightbox-image"] = "Obrázok";
-$lang["lightbox-of"] = "";
-
 # Resource create / edit / view
 $lang["createnewresource"]="Vytvoriť nový zdroj";
 $lang["treeobjecttype-resource_type"]=$lang["resourcetype"]="Typ zdroja";
@@ -517,8 +513,6 @@ $lang["youfoundresults"]="výsledkov"; # e.g. you found 17 resources
 $lang["youfoundresult"]="výsledok"; # e.g. you found 1 resource
 $lang["display"]="Zobraziť"; # e.g. Display: thumbnails / list
 $lang["sortorder"]="Zoradiť";
-$lang['sortorder-asc']  = 'Vzostupne';
-$lang['sortorder-desc'] = 'Zostupne';
 $lang["relevance"]="Relevantnosť";
 $lang["asadded"]="Ako bolo pridané";
 $lang["popularity"]="Popularita";
@@ -831,7 +825,6 @@ $lang["status-warning"]="UPOZORNENIE";
 $lang["status-notinstalled"]="Nie je nainštalované";
 $lang["status-never"]="Nikdy";
 $lang["softwareversion"]="? verzia"; # E.g. "Verzia PHP"
-$lang["softwarebuild"]="? zostava"; # E.g. "Zostavenie ResourceSpace"
 $lang["softwarenotfound"]="'?' nenájdené"; # ? will be replaced.
 $lang["client-encoding"]="(kódovanie klienta: %encoding)"; # %encoding will be replaced, e.g. client-encoding: utf8
 $lang["browseruseragent"]="Používateľský agent prehliadača";
@@ -1193,12 +1186,9 @@ $lang['setup-admin_password'] = 'Heslo správcu';
 $lang["setup-emailfrom"]="Adresa odosielateľa E-mailu";
 $lang["setup-emailnotify"]="Notifikuj e-mailom";
 $lang["setup-spiderpassword"]="Heslo pavúka";
-$lang["setup-scramblekey"]="Kódovací kľúč";
-$lang["setup-apiscramblekey"]="Kódovací kľuč API";
 $lang["setup-paths"]="Cesty";
 $lang["setup-pathsdetail"]="Zadajte cestu bez koncovej lomky ku každému binárnemu súboru. Ak chcete deaktivovať binárny súbor, nechajte cestu prázdnu. Všetky automaticky zistené cesty už boli vyplnené.";
 $lang["setup-applicationname"]="Názov aplikácie";
-$lang["setup-basicsettingsfooter"]="POZNÁMKA: Na tejto stránke sú iba <strong> požadované </strong> nastavenia. Ak nemáte záujem vyskúšať si rozšírené možnosti, môžete kliknutím nižšie spustiť proces inštalácie.";
 $lang["setup-if_mysqlserver"]='IP adresa alebo <abbr title="Fully Qualified Domain Name"> FQDN </abbr> vašej inštalácie servera MySQL. Ak je MySql nainštalovaný na rovnakom serveri ako Váš webový server, použite „localhost“.';
 $lang["setup-if_mysqlusername"]="Používateľské meno použité na pripojenie k Vášmu serveru MySQL. Tento používateľ musí mať práva na vytváranie tabuliek v databáze uvedenej nižšie.";
 $lang["setup-if_mysqlpassword"]="Heslo pre používateľské meno MySQL zadané vyššie.";
@@ -1209,16 +1199,10 @@ $lang['setup-if_admin_username']='Používateľské meno správcu, použité na 
 $lang['setup-if_admin_password']='Zadané heslo pre používateľské meno správcu.';
 $lang["setup-if_emailfrom"]="Adresa odosielateľa pre e-maily odosielané zo systému ResourceSpace.";
 $lang["setup-if_emailnotify"]="E-mailová adresa, na ktorú sa posielajú žiadosti týkajúce sa zdrojov/používateľov/vyhľadávania.";
-$lang["setup-if_spiderpassword"]="Heslo pavúka je povinné pole.";
-$lang["setup-if_scramblekey"]="Ak chcete povoliť skramblovanie, nastavte kódovací kľúča na ťažko odhadnuteľnú postupnosť znakov (podobnú heslu). Je to dôležité. Toto pole nechajte prázdne pre zakázanie kódovania cesty zdroja. Toto pole pre vás už bolo predvyplnené, ale v prípade potreby ho môžete zmeniť tak, aby sa zhodovalo s existujúcou inštaláciou.";
-$lang["setup-if_apiscramblekey"]="Nastavte kódovací kľúč API na sekvenciu náhodných znakov (podobné heslu). Ak plánujete používať rozhranie API, je to dôležité.";
 $lang["setup-if_applicationname"]="Názov vašej implementácie / inštalácie (napr. „MyCompany Resource System“).";
 $lang["setup-err_mysqlbinpath"]="Cesta sa nedá overiť. Ak ju chcete zakázať, ponechajte ju prázdnu.";
 $lang["setup-err_baseurl"]="Základná adresa URL je povinné pole.";
 $lang["setup-err_baseurlverify"]="Zdá sa, že základná adresa URL nie je správna (nepodarilo sa načítať súbor license.txt).";
-$lang["setup-err_spiderpassword"]="Heslo požadované pre spider.php. DÔLEŽITÉ: Pri každej novej inštalácii ho zvoľte náhodne. Vaše prostriedky budú čitateľné pre kohokoľvek, kto pozná toto heslo. Toto pole už bolo pre vás predvyplnené, ale v prípade potreby ho môžete zmeniť tak, aby sa zhodovalo s existujúcou inštaláciou.";
-$lang["setup-err_scramblekey"]="Ak ide o verejnú inštaláciu, odporúča sa nastavenie kľúča kódovania.";
-$lang["setup-err_apiscramblekey"]="Ak ide o verejnú inštaláciu, odporúča sa nastavenie kľúča kódovania API.";
 $lang["setup-err_path"]="Nepodarilo sa overiť polohu";
 $lang["setup-emailerr"]="Neplatná e-mailová adresa.";
 $lang["setup-admin_fullname_error"] = "Musíte vyplniť celé meno";
@@ -1226,22 +1210,6 @@ $lang["setup-rs_initial_configuration"]="ResourceSpace: Počiatočná konfigurá
 $lang["setup-include_not_writable"]="priečinok '/include' nie je zapisovateľný. Zapisovateľnosť sa vyžaduje iba počas nastavovania.";
 $lang["setup-binpath"]="Cesta k %bin"; #%bin will be replaced, e.g. "Imagemagickova cesta"
 $lang["setup-begin_installation"]="Zahájiť inštaláciu!";
-$lang["setup-generaloptions"]="Všeobecné možnosti";
-$lang["setup-allow_password_change"]="Povoliť zmenu hesla?";
-$lang["setup-enable_remote_apis"]="Povoliť vzdialené rozhranie API?";
-$lang["setup-if_allowpasswordchange"]="Povoliť koncovým používateľom zmeniť svoje heslá.";
-$lang["setup-if_enableremoteapis"]="Povoliť vzdialený prístup k API doplnkov.";
-$lang["setup-allow_account_requests"]="Povoliť používateľom požiadať o účet?";
-$lang["setup-display_research_request"]="Zobraziť funkciu žiadosti o pomoc s vyhľadaním zdrojov?";
-$lang["setup-if_displayresearchrequest"]="Umožňuje používateľom požiadať o zdroje prostredníctvom formulára, ktorý je odoslaný e-mailom.";
-$lang["setup-themes_as_home"]="Použiť stránku odporúčaných kolekcií ako domovskú stránku?";
-$lang["setup-remote_storage_locations"]="Lokality vzdialených úložisk";
-$lang["setup-use_remote_storage"]="Používať vzdialené úložisko?";
-$lang["setup-if_useremotestorage"]="Začiarknutím tohto políčka nakonfigurujete vzdialené úložiská. (Ak chcete použiť iný server namiesto /filestore)";
-$lang["setup-storage_directory"]="Adresár úložiska";
-$lang["setup-if_storagedirectory"]="Kam umiestniť súbory médií. Môže to byť absolútne cesty (napr. /var/www/bla/bla) alebo cesty relatívne k inštalácii. POZNÁMKA: Bez koncových /.";
-$lang["setup-storage_url"]="URL úložiska";
-$lang["setup-if_storageurl"]="Kde sa nachádza úložisko. URL Môže byť absolútne (http://files.example.com) alebo relatívne k inštalácii. POZNÁMKA: Bez lomeno na konci.";
 $lang["setup-ftp_settings"]="Nastavenia FTP";
 $lang["setup-if_ftpserver"]="Potrebné iba v prípade, že plánujete použiť funkciu nahrávania z FTP.";
 $lang["setup-smtp-settings"]="Nastavenia SMTP";
@@ -1252,9 +1220,6 @@ $lang["setup-if-smtpport"]="Číslo portu, napr. 465 pre Gmail cez SSL.";
 $lang["setup-if-smtpauth"]="Autentifikovať sa na server SMTP (vypnúť pre použitie anonymného prístupu)";
 $lang["setup-if-smtpusername"]="Používateľské meno (úplná e-mailová adresa).";
 $lang["setup-if-smtppassword"]="Heslo";
-$lang["design-options"]="Možnosti dizajnu";
-$lang["use-slim-theme"]="Použíť dizajn SlimHeader?";
-$lang["setup-if_slimtheme"]="Použiť SlimHeader dizajn na zobrazenie tenšej lišty záhlavia logom namiesto štandardného dizajnu.";
 $lang["setup-login_to"]="Prihlásiť sa";
 $lang["setup-configuration_file_output"]="Výpis z konfiguračného súboru";
 $lang["more-information"]="Viac informácií";
@@ -1337,8 +1302,6 @@ $lang["publishstatus"]="Uložiť aj so stavom zverejnenia:";
 $lang["addnewcontent"]="Nový obsah (stránka, názov)";
 $lang["hitcount"]="Počet výskytov";
 $lang["downloads"]="Stiahnuté";
-
-$lang["addremove"]="Pridať/Odobrať";
 
 ##  Translations for standard log entries
 $lang["all_users"]="všetci používatelia";
@@ -1477,7 +1440,6 @@ $lang["exiftoolnotfound"]="Nástroj Exiftool sa nepodarilo nájsť";
 $lang["existing_tags"]="Existujúce značky nástroja Exiftool";
 $lang["new_tags"]="Nové značky nástroja Exiftool (ktoré sa pridajú po stiahnutí)";
 $lang["date_of_download"]="[Dátum stiahnutia]";
-$lang["field_ref_and_name"]="%ref% - %name%"; # %ref% and %name% will be replaced, e.g. 3 – Country
 $lang['metadata-report-fits_section'] = 'Namapované značky FITS';
 
 $lang["indicateusage"]="Opíšte plánované použitie tohto zdroja.";
@@ -1662,10 +1624,6 @@ $lang["noupload"]="Nič nahrané";
 
 
 $lang["permissions"]="Oprávnenia";
-
-# System Setup File Editor
-$lang["configdefault-title"]="(skopírujte možnosti odtiaľto)";
-$lang["config-title"]="(POZOR, aby ste neurobili chyby v syntaxe. Ak tento súbor poškodíte, opraviť sa bude dať len na strane servera!)";
 
 # System Setup Properties Pane
 $lang["file_too_large"]="Súbor je príliš veľký";
@@ -2184,20 +2142,6 @@ $lang["all__comments_flag_notification_email_body"]="";
 $lang["all__comments_flag_notification_email_subject"]="";
 $lang["all__comments_policy"]="";
 $lang["all__comments_removal_message"]="";
-$lang["all__emailbulk"]="[img_gfx/titles/title.gif]<br /><br />\n[text]<br /><br />\n[text_footer]\n";
-$lang["all__emailcollection"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessage] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcollectionexternal"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> \n[lang_message] : [message]<br /><br /> \n[lang_clicklinkviewcollection] [list]\n";
-$lang["all__emailcontactadmin"]="[img_../gfx/titles/title.gif]<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href=\"[url]\">[embed_thumbnail]</a><br /><br />[text_footer]";
-$lang["all__emaillogindetails"]="[img_gfx/titles/title.gif]<br />\n[welcome]<br /><br /> \n[lang_newlogindetails]<br /><br /> \n[lang_username] : [username] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnewresearchrequestwaiting"]="[img_gfx/titles/title.gif]<br />\n[username] ([userfullname] - [useremail])\n[lang_haspostedresearchrequest]<br /><br />\n[lang_nameofproject]:[name]<br /><br />\n[lang_descriptionofproject]:[description]<br /><br />\n[lang_deadline]:[deadline]<br /><br />\n[lang_contacttelephone]:[contact]<br /><br />\n[lang_finaluse]: [finaluse]<br /><br />\n[lang_shaperequired]: [shape]<br /><br />\n[lang_noresourcesrequired]: [noresources]<br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n<a href=\"[teamresearchurl]\">[teamresearchurl]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesapproved"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesapproved]\n[list] <br />\n[lang_viewcontributedsubittedl] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcessubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcessubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailnotifyresourcesunsubmitted"]="[img_gfx/titles/title.gif]<br />\n[lang_userresourcesunsubmitted]\n[list] <br />\n[lang_viewalluserpending] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailreminder"]="[img_gfx/titles/title.gif]<br />\n[lang_newlogindetails] <br /><br />\n[lang_username] : [username] <br /> \n[lang_password]  : [password] <br /><br />\n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestassigned"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestassignedmessage]<br /><br />\n[text_footer]\n";
-$lang["all__emailresearchrequestcomplete"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresource"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
-$lang["all__emailresourcerequest"]="[img_gfx/titles/title.gif]<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
 $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace Open Source Digital Asset Management</a>";
 $lang["all__researchrequest"]="Nechajte náš tím nájsť pre Vás potrebné zdroje.";
 $lang["all__searchpanel"]="Vyhľadávajte pomocou popisov, kľúčových slov a čísel zdrojov";
@@ -2378,19 +2322,10 @@ $lang['system_down_message'] = 'Prebieha údržba systému. Ďakujeme Vám za tr
 /* End of System Down page strings */
 
 /* System Console */
-$lang["systemconsole"]="Systémová konzola";
 $lang["systemconsoledebuglog"]="Debug log";
-$lang["systemconsolememorycpu"]="Pamäť &amp; CPU";
-$lang["systemconsoledatabase"]="Databáza";
-$lang["systemconsolesqllogtransactions"]="Protokol SQL transakcií";
-$lang["systemconsoleactivitylog"]="Protokol aktivít";
 $lang["systemconsoleturnoffafter"]="Vypnúť po";
 $lang["systemconsoleonpermallusers"]="Zapnuté (trvalo pre všetkých používateľov)";
 $lang["systemconsoleonallusers"]="Zapnuté (všetci používatelia)";
-$lang["systemconsoleonfailedtopcommand"]="Nepodarilo sa spustiť príkaz top";
-$lang["systemconsoleonfailedtasklistcommand"]="Nepodarilo sa vykonať príkaz zoznamu úloh";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location nie je nastavená, súbor nebol nájdený alebo nie je pre aplikáciu čitateľný";
-$lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions nie je nastavený alebo súbor \$mysql_log_location nebol nájdený alebo nie je pre aplikáciu čitateľný";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Odstrániť';
@@ -2902,7 +2837,6 @@ $lang["job_data"]                           = "Dáta úlohy";
 $lang["job_value"]                          = "Hodnota";
 
 $lang['csv_export_offline_option']          = "Generovať súbor CSV na pozadí? Použite pre veľké dátové sety. O pripravenosti CSV budete notifikovaný emailom.";
-$lang["csv_export_filename"]                = "metadata_export_%%SEARCH%%_%%TIME%%";
 $lang["csv_export_file_ready"]              = "Váš export do CSV je pripravený";
 $lang["offline_processing_disabled"]        = "Vykonávanie úloh na pozadí nieje povolené. Pre povolenie kontaktujte správcu systému.";
 $lang['csv_export_offline_only']            = "Vykonávanie úloh na pozadí je vyžadované pre export viac než %%RESOURCE_COUNT%% zdrojov";
@@ -3046,7 +2980,6 @@ $lang["mapadd-introtext"]='Približajte in premaknite pogled na zemljevidu na ob
 $lang["mapadd2-introtext"]='Modrý značkovač označuje umiestnenie zdroja, ktorý sa dá presúvať ťahaním. Zmeňte podkladovú mapu pomocou tlačidla mapy v pravom hornom rohu. Uložte mapu do súboru PNG pomocou tlačidla mapy v ľavom dolnom rohu.';
 $lang["marker"]='Značka.';
 $lang["map_configuration"]='Mapa výsledkov vyhľadávania.';
-$lang["search_map_introtext"]='I\'d be happy to! What would you like me to translate?';
 $lang["edit_map_introtext"]='Približajte in premaknite se na želeni pogled zemljevida, nato kliknite na zemljevid, da najdete označevalec lokacije vira. Shranite najnovejšo geolokacijo s klikom na gumb Shrani in nato kliknite \'Nazaj na urejanje vira ali geolokacijo zbirke\', da se vrnete. Za iskanje določene lokacije ali imena geografske značilnosti uporabite zgornji desni iskalni gumb. Spremenite osnovni zemljevid z uporabo gumba za plasti zemljevida v zgornjem desnem kotu. Zemljevid shranite v datoteko PNG z uporabo spodnjega levega gumba za zemljevid.';
 $lang["mapview"]='Map - Mapa';
 $lang["maptitle"]='Zobrazenie mapy.';
@@ -3063,7 +2996,6 @@ $lang["map_osm"]='Predvolené.';
 $lang["map_osmde"]='Nemecký štýl.';
 $lang["map_osmfrance"]='OSM Francúzsko';
 $lang["map_osmch"]='OSM Švajčiarsko';
-$lang["map_osmbzh"]='OSM Luxembourg should remain the same in Slovenčina as it is an acronym for OpenStreetMap Luxembourg.';
 $lang["map_osmhot"]='Humanitárny';
 $lang["map_osmmtb"]='Mapa horských bicyklov v Európe.';
 $lang["map_osmhikebike"]='Mapa pre turistiku a cykloturistiku.';
@@ -3079,7 +3011,6 @@ $lang["map_tfpioneer"]='Pionier.';
 $lang["map_tfmobileatlas"]='Mobilný atlas.';
 $lang["map_tfneighbourhood"]='Susedstvo';
 $lang["map_hyddafull"]='Predvolená mapa.';
-$lang["map_hyddabase"]='Základný (or Báza)';
 $lang["map_stamentoner"]='Toner';
 $lang["map_stamentonerlt"]='Svetla toner barva.';
 $lang["map_stamentonerback"]='Pozadie tonera.';
@@ -3087,7 +3018,6 @@ $lang["map_stamenterrain"]='Terén.';
 $lang["map_stamenterrainback"]='Pozadie terénu.';
 $lang["map_stamenrelief"]='Uľavenie';
 $lang["map_stamenwatercolor"]='Akvarel.';
-$lang["map_esri_group"]='ESRI - to be translated as "ESRI" as it is a proper noun and a brand name.';
 $lang["map_esristreet"]='Ulice.';
 $lang["map_esritopo"]='Topografický';
 $lang["map_esriimagery"]='Vizuálne zobrazenie (alternatively: Obrazový materiál)';
@@ -3097,18 +3027,15 @@ $lang["map_esriphysical"]='Fyzický';
 $lang["map_esriocean"]='Oceán.';
 $lang["map_esrinatgeo"]='Národná geografická.';
 $lang["map_esrigray"]='Sivá plátno.';
-$lang["map_nasagibs_group"]='NASA GIBS should remain in English as it is an acronym for "NASA Global Imagery Browse Services".';
 $lang["map_nasagibscolor"]='Modis/Terra farebné snímky.';
 $lang["map_nasagibsfalsecolor"]='Modis/Terra Falošné Farebné Zobrazenie';
 $lang["map_nasagibsnight"]='Nočné obrazy.';
-$lang["map_mapbox_group"]='Mapbox - Mapbox';
-$lang["map_mapboxid"]='Identifikátor (ID)';
 $lang["map_mapboxtoken"]='Prístupový token.';
 $lang["map_mapbox"]='Predvolená mapa.';
 $lang["map_usgs_group"]='Národná mapa';
 $lang["map_usgstopo"]='US Topografická.';
-$lang["map_usgsimagery"]='US Imagery can be translated to Slovenčina as "Ameriška slikovna gradiva".';
-$lang["map_usgsimagerytopo"]='US Imagery & Topographic can be translated to "Americké obrázky a topografické mapy".';
+$lang["map_usgsimagery"]='Ameriška slikovna gradiva';
+$lang["map_usgsimagerytopo"]='Americké obrázky a topografické mapy';
 $lang["success"]='Úspech.';
 $lang["user_pref_autorotate"]='Automatické otáčanie obrázkov pri nahrávaní?';
 $lang["run_report_on_search_results"]='Spustiť správu o týchto výsledkoch.';
@@ -3160,11 +3087,6 @@ $lang["tile_thmsl"]='Doporučená kolekce.';
 $lang["tile_custm"]='Používateľské (alternatívne: vlastné)';
 $lang["tile_pend"]='Nevyriešené.';
 $lang["plugin_integrations"]='Integrácie.';
-$lang["systemconsoletrackVars"]='Sledovacie premenné.';
-$lang["systemconsole_label_input_vars"]='Názvy premenných.';
-$lang["systemconsole_help_track_vars"]='Použite CSV s názvami premenných, ktoré chcete sledovať v celom systéme. Toto sa hlavne používa na účely ladenia, pretože pomáha určiť, kde sa konkrétna premenná nastavuje alebo prepisuje.';
-$lang["systemconsole_label_input_track_period"]='Určite, ako dlho sledovať premenné.';
-$lang["systemconsole_help_track_period"]='Hodnota predstavuje minúty.';
 $lang["userpreference_hide_search_resource_types"]='Skryť typy zdrojov pri jednoduchom a pokročilom vyhľadávaní.';
 $lang["userpreference_tilenav"]='Použite dlaždicový rozloženie pre navigačné menu.';
 $lang["userpreference_tilenavdefault"]='Použite dlaždicový rozloženie pre navigačné menu (predvolené nastavenie; používatelia si môžu toto zmeniť).';

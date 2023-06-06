@@ -4,7 +4,6 @@
 $lang["emu_configuration"]='EMu Konfiguration.';
 $lang["emu_api_settings"]='API server indstillinger.';
 $lang["emu_api_server"]='Serveradresse (f.eks. http://[server.adresse])';
-$lang["emu_api_server_port"]='Server port can be translated to "Serverport".';
 $lang["emu_resource_types"]='Vælg ressourcetyper, der er linket til EMu.';
 $lang["emu_email_notify"]='E-mailadresse, som scriptet vil sende notifikationer til. Lad være blank for at bruge standardnotifikationsadressen i systemet.';
 $lang["emu_script_failure_notify_days"]='Antal dage efter hvilke en advarsel skal vises og en e-mail skal sendes, hvis scriptet ikke er fuldført.';
@@ -26,7 +25,6 @@ $lang["emu_module"]='EMu-modul.';
 $lang["emu_column_name"]='EMu modul kolonne.';
 $lang["emu_rs_field"]='ResourceSpace felt.';
 $lang["emu_add_mapping"]='Tilføj kortlægning.';
-$lang["emu_upload_emu_field_label"]='EMu IRN could be translated to "EMu identifikationsnummer".';
 $lang["emu_confirm_upload_nodata"]='Venligst markér afkrydsningsfeltet for at bekræfte, at du ønsker at fortsætte med uploaden.';
 $lang["emu_test_script_title"]='Test/ Kør script.';
 $lang["emu_run_script"]='Behandling';

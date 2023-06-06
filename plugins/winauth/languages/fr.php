@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Liste des domaines Windows autorisés (séparés par d
 $lang["winauth_use_win_login"]='Connexion en utilisant l\'authentification Windows.';
 $lang["winauth_nouser"]='Votre compte n\'est pas activé sur le système. Veuillez demander la création d\'un compte ou contacter votre administrateur.';
 $lang["winauth_prefer_normal"]='Préférez les connexions standard de ResourceSpace. Si cette option est activée, les utilisateurs seront redirigés vers la page de connexion par défaut où ils auront la possibilité d\'utiliser l\'authentification Windows.';
-$lang["winauth_test"]='Test (French): Test';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Vous êtes connecté en tant que : [nom d\'utilisateur]';
 $lang["winauth_not_logged_in"]='Vous n\'êtes pas connecté ou votre serveur web n\'a pas été configuré correctement.';

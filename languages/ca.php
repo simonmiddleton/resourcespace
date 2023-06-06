@@ -564,7 +564,6 @@ $lang["resourcetype-audio"]='Àudio';
 $lang["resourcetype-global_fields"]='Camps globals.';
 $lang["resourcetype-archive_only"]='Només arxiu.';
 $lang["resourcetype-photo-2"]='Fotografies.';
-$lang["resourcetype-document-2"]='Documents -> Documents';
 $lang["resourcetype-video-2"]='Vídeos.';
 $lang["resourcetype-audio-2"]='Àudio';
 $lang["imagesize-thumbnail"]='Miniatura';
@@ -582,7 +581,6 @@ $lang["fieldtitle-credit"]='Crèdit.';
 $lang["fieldtitle-date"]='Data.';
 $lang["fieldtitle-expiry_date"]='Data de caducitat.';
 $lang["fieldtitle-caption"]='Llegenda.';
-$lang["fieldtitle-notes"]='Notes -> Notes';
 $lang["fieldtitle-named_persons"]='Persona(s) nomenada(s)';
 $lang["fieldtitle-camera_make_and_model"]='Marca / Model de la càmera';
 $lang["fieldtitle-original_filename"]='Nom d\'arxiu original.';
@@ -713,7 +711,6 @@ $lang["information-derestrict_filter"]='Desbloquejar el filtre. Només és efect
 $lang["information-push_metadata"]='Si s\'estableix, les metadades d\'aquest recurs es mostraran a la pàgina de visualització del recurs per a qualsevol recurs relacionat. Per exemple, podeu relacionar diverses fotos amb un recurs de persona. Si aquesta propietat està establerta en el recurs de persona, llavors les metadades de la persona apareixeran en tots els registres de recursos de fotos relacionats, evitant la duplicació de dades en el sistema.';
 $lang["property-query"]='Consulta';
 $lang["information-id"]='Nota: \'Id\' a continuació HA DE ser establert com un codi únic de tres caràcters.';
-$lang["property-id"]='Identificador';
 $lang["property-width"]='Amplada';
 $lang["property-height"]='Alçada';
 $lang["property-quality"]='Qualitat.';
@@ -747,7 +744,7 @@ $lang["smallthumbstitle"]='Miniatures petites.';
 $lang["strip"]='Despullar';
 $lang["striptitle"]='Vista de tira.';
 $lang["listtitle"]='Vista de llista.';
-$lang["perpage_option"]='Per pàgina.';
+$lang["perpage_option"]='? per pàgina.';
 $lang["powered_by"]='Alimentat per';
 $lang["powered_by_resourcespace"]='Funciona amb ResourceSpace.';
 $lang["on"]='En.';
@@ -800,8 +797,6 @@ $lang["collection_set_theme_category"]='Afegir a la categoria de col·lecció de
 $lang["collection_set_theme_category_title"]='Afegir col·lecció a la categoria de col·leccions destacades.';
 $lang["theme"]='Col·lecció destacada';
 $lang["collection-name"]='Col·lecció: %collectionname%';
-$lang["collectionidprefix"]='Identificador de Col·lecció';
-$lang["_dupe"]='Duplicat';
 $lang["emailtousers_internal"]='Correu electrònic als usuaris<br><br>Comenceu a escriure el nom de l\'usuari per cercar-lo i feu clic a l\'usuari requerit quan el trobeu.';
 $lang["create_new_here"]='Crear aquí.';
 $lang["create_new_below"]='Crear en una nova categoria.';
@@ -864,8 +859,6 @@ $lang["page_collections_message"]='Continuar deseleccionarà les col·leccions m
 $lang["delete_all_selected"]='Eliminar tots els seleccionats.';
 $lang["range_no_start_header"]='Error de rang.';
 $lang["range_no_start"]='No es pot finalitzar l\'interval sense un inici. Si us plau, alliberi la tecla Majúscules.';
-$lang["lightbox-image"]='Imatge';
-$lang["lightbox-of"]='de';
 $lang["treeobjecttype-resource_type"]='Tipus de recurs';
 $lang["resources_selected-1"]='1 recurs seleccionat.';
 $lang["resources_selected-2"]='%number recursos seleccionats.';
@@ -886,20 +879,13 @@ $lang["youfoundresource"]='recurs';
 $lang["youfoundresults"]='resultats';
 $lang["selected"]='seleccionat';
 $lang["youfoundresult"]='resultat';
-$lang["sortorder-desc"]='DESC no és una paraula completa en anglès, però en el context de ResourceSpace, pot ser una abreviació de "Descripció" o "Descripcions". Si us plau, proporcioneu més context per a una millor traducció.';
 $lang["modified"]='Modificat';
 $lang["resourcedownloads"]='Descàrregues de recursos';
 $lang["filedimensions"]='Dimensions del fitxer.';
 $lang["vieworiginalresource"]='Veure el recurs original.';
 $lang["previewithsizename"]='Previsualització de %sizename';
 $lang["originalfileoftype"]='Fitxer original %EXTENSION';
-$lang["fileoftype"]='Fitxer';
 $lang["cell-fileoftype"]='%EXTENSION Fitxer';
-$lang["field-fileextension"]='Extensió.';
-$lang["fileextension-inside-brackets"]='Si us plau, tradueixi: [%EXTENSION]
-
-[%EXTENSION] es refereix a l\'extensió d\'un arxiu, com ara .jpg, .pdf, .docx, etc.';
-$lang["fileextension"]='Extensió.';
 $lang["mp3_preview_file"]='Fitxer de previsualització MP3.';
 $lang["action-request"]='Sol·licitud';
 $lang["requestlog"]='Registre de sol·licituds';
@@ -928,14 +914,12 @@ $lang["log-E"]='Recurs compartit per correu electrònic.';
 $lang["log-v"]='Recurs visualitzat.';
 $lang["log-x"]='Recurs eliminat.';
 $lang["log-l"]='Connectat.';
-$lang["log-o"]='Can you please provide more context? In which part of the software is this string used?';
 $lang["log-t"]='Fitxer transforma\'t.';
 $lang["log-s"]='Canvi d\'estat.';
 $lang["log-a"]='Canvi d\'accés.';
 $lang["log-r"]='Metadades revertides.';
 $lang["log-b"]='Creat alternativa.';
 $lang["log-y"]='Eliminat alternatiu.';
-$lang["log-missinglang"]='Tipus.';
 $lang["log-adminpermissionsrequired"]='Es requereix permís d\'administrador complet!';
 $lang["log-removedcustomuseraccess"]='Eliminat l\'accés personalitzat per a l\'usuari:';
 $lang["log-deleted_all"]='Tots els recursos d\'aquesta col·lecció han estat eliminats (moguts a l\'estat %ARCHIVE)';
@@ -996,7 +980,6 @@ $lang["treeobjecttype-group"]='Grup';
 $lang["groupsmart"]='Grup (Intel·ligent)';
 $lang["confirmaddgroupsmart"]='Esteu segur que voleu incloure dinàmicament membres en aquest grup?';
 $lang["back_to"]='Tornar a %àrea.';
-$lang["hour-abbreviated"]='I\'m sorry, but "HH" is not a string used in ResourceSpace or a word in English that can be translated to Català. Can you please provide more context or information about the meaning of "HH"?';
 $lang["itemstitle"]='Elements';
 $lang["treeobjecttype-field"]='Camp de dades.';
 $lang["save-return"]='Desa i retorna.';
@@ -1023,7 +1006,6 @@ $lang["termsmustindicateusage"]='Cal indicar l\'ús previst abans de continuar.'
 $lang["termsmustspecifyusagecomment"]='Cal proporcionar comentaris sobre l\'ús previst abans de continuar.';
 $lang["proceed"]='Continuar';
 $lang["contributedby"]='Contribuït per';
-$lang["notavailableshort"]='No disponible (Not available)';
 $lang["allmonths"]='Tots els mesos.';
 $lang["allgroups"]='Tots els grups.';
 $lang["status-ok"]='D\'acord.';
@@ -1032,7 +1014,6 @@ $lang["status-warning"]='AVÍS';
 $lang["status-notinstalled"]='No instal·lat.';
 $lang["status-never"]='Mai.';
 $lang["softwareversion"]='Versió ?';
-$lang["softwarebuild"]='No puc proporcionar una traducció precisa sense més context. Potser es refereix a la construcció d\'un recurs o col·lecció en ResourceSpace? En aquest cas, la traducció seria "Construir". Si necessites més informació, si us plau, proporcioneu més context.';
 $lang["softwarenotfound"]='\'?\' no s\'ha trobat.';
 $lang["client-encoding"]='(codificació del client: %encoding)';
 $lang["db-default-encoding"]='(codificació de la base de dades: %encoding)';
@@ -1080,7 +1061,6 @@ $lang["stat-archivesearch"]='Cerca a l\'arxiu.';
 $lang["stat-addedsmartcollection"]='Afegida col·lecció intel·ligent.';
 $lang["stat-removedresourcefromcollection"]='Eliminat el recurs de la col·lecció.';
 $lang["stat-keywordusage-noresultsfound"]='Ús de paraules clau - no s\'han trobat resultats.';
-$lang["plugin_field_fmt"]='%A (%B) en català seria: %A (%B)';
 $lang["share_selected"]='Compartir seleccionat';
 $lang["sharecollection-name"]='Compartir col·lecció - %nomcol·lecció';
 $lang["share_theme_category"]='Compartir la categoria de col·lecció destacada.';
@@ -1232,12 +1212,9 @@ $lang["setup-if_mysql_read_only_username"]='El nom d\'usuari utilitzat per conne
 $lang["setup-emailfrom"]='Adreça de correu electrònic remitent';
 $lang["setup-emailnotify"]='Notificació per correu electrònic.';
 $lang["setup-spiderpassword"]='Contrasenya d\'aranya.';
-$lang["setup-scramblekey"]='Clau d\'ofuscació.';
-$lang["setup-apiscramblekey"]='Clau d\'ofuscació de l\'API.';
 $lang["setup-paths"]='Rutes.';
 $lang["setup-pathsdetail"]='Per a cada ruta, introdueix la ruta sense barra inclinada al final per a cada binari. Per desactivar un binari, deixa la ruta en blanc. Totes les rutes detectades automàticament ja han estat omplertes.';
 $lang["setup-applicationname"]='Nom de l\'aplicació.';
-$lang["setup-basicsettingsfooter"]='NOTA: Les úniques opcions <strong>obligatòries</strong> es troben en aquesta pàgina. Si no esteu interessat en comprovar les opcions avançades, podeu clicar a continuació per començar el procés d\'instal·lació.';
 $lang["setup-if_mysqlserver"]='La direcció IP o el <abbr title="Fully Qualified Domain Name">FQDN</abbr> del teu servidor d\'instal·lació de MySQL. Si MySql està instal·lat en el mateix servidor que el teu servidor web, utilitza "localhost".';
 $lang["setup-if_mysqlusername"]='El nom d\'usuari utilitzat per connectar-se al servidor MySQL. Aquest usuari ha de tenir drets per crear taules a la base de dades esmentada a continuació.';
 $lang["setup-if_mysql_read_only_password"]='La contrasenya per al nom d\'usuari MySQL introduït anteriorment.';
@@ -1249,16 +1226,10 @@ $lang["setup-if_admin_username"]='El nom d\'usuari utilitzat per connectar-se a 
 $lang["setup-if_admin_password"]='La contrasenya per al nom d\'usuari d\'administrador introduït anteriorment.';
 $lang["setup-if_emailfrom"]='La direcció des d\'on semblen provenir els correus electrònics de RS.';
 $lang["setup-if_emailnotify"]='La direcció de correu electrònic a la qual s\'envien les sol·licituds de recursos/usuaris/investigació.';
-$lang["setup-if_spiderpassword"]='El camp de contrasenya d\'aranya és obligatori.';
-$lang["setup-if_scramblekey"]='Per habilitar l\'encriptació, establiu la clau d\'encriptació com una seqüència de caràcters difícil d\'endevinar (similar a una contrasenya). Si aquesta és una instal·lació pública, aquesta és una idea molt sàvia. Deixeu aquest camp en blanc per desactivar l\'encriptació de la ruta del recurs. Aquest camp ja ha estat aleatoritzat per a vosaltres, però podeu canviar-lo per coincidir amb una instal·lació existent, si és necessari.';
-$lang["setup-if_apiscramblekey"]='Estableix la clau d\'encriptació de l\'API com una seqüència de caràcters difícil d\'endevinar (similar a una contrasenya). Si planegeu utilitzar les APIs, això és una idea molt encertada.';
 $lang["setup-if_applicationname"]='El nom de la vostra implementació / instal·lació (per exemple, \'Sistema de Recursos de la Meva Empresa\').';
 $lang["setup-err_mysqlbinpath"]='No es pot verificar la ruta. Deixeu-ho en blanc per desactivar-ho.';
 $lang["setup-err_baseurl"]='La URL base és un camp obligatori.';
 $lang["setup-err_baseurlverify"]='La URL base no sembla correcta (no s\'ha pogut carregar el fitxer license.txt).';
-$lang["setup-err_spiderpassword"]='La contrasenya requerida per a spider.php. IMPORTANT: Randomitza-la per a cada nova instal·lació. Els teus recursos seran llegibles per a qualsevol que conegui aquesta contrasenya. Aquest camp ja ha estat randomitzat per a tu, però pots canviar-lo per a que coincideixi amb una instal·lació existent, si és necessari.';
-$lang["setup-err_scramblekey"]='Si aquesta és una instal·lació pública, es recomana establir la clau d\'embolicament.';
-$lang["setup-err_apiscramblekey"]='Si aquesta és una instal·lació pública, es recomana establir la clau d\'escalfament de l\'API.';
 $lang["setup-err_path"]='No es pot verificar la ubicació de.';
 $lang["setup-err_phar_injection"]='S\'ha detectat una possible injecció d\'objectes PHP Phar.';
 $lang["setup-emailerr"]='Adreça de correu electrònic no vàlida.';
@@ -1267,22 +1238,6 @@ $lang["setup-rs_initial_configuration"]='ResourceSpace: Configuració Inicial';
 $lang["setup-include_not_writable"]='\'/include\' no és escribible. Només és necessari durant la configuració.';
 $lang["setup-binpath"]='Ruta de %bin.';
 $lang["setup-begin_installation"]='Comença la instal·lació!';
-$lang["setup-generaloptions"]='Opcions generals.';
-$lang["setup-allow_password_change"]='Permetre el canvi de contrasenya?';
-$lang["setup-enable_remote_apis"]='Activar les APIs remotes?';
-$lang["setup-if_allowpasswordchange"]='Permetre als usuaris finals canviar les seves contrasenyes.';
-$lang["setup-if_enableremoteapis"]='Permetre l\'accés remot als connectors API.';
-$lang["setup-allow_account_requests"]='Permetre als usuaris sol·licitar comptes?';
-$lang["setup-display_research_request"]='Mostra la funcionalitat de sol·licitud de recerca?';
-$lang["setup-if_displayresearchrequest"]='Permet als usuaris sol·licitar recursos a través d\'un formulari, que s\'envia per correu electrònic.';
-$lang["setup-themes_as_home"]='Voleu utilitzar la pàgina de col·leccions destacades com a pàgina d\'inici?';
-$lang["setup-remote_storage_locations"]='Ubicacions de magatzematge remotes.';
-$lang["setup-use_remote_storage"]='Utilitzar emmagatzematge remot?';
-$lang["setup-if_useremotestorage"]='Marqueu aquesta casella per configurar ubicacions de magatzematge remotes per a RS. (Per utilitzar un altre servidor per al magatzematge de fitxers.)';
-$lang["setup-storage_directory"]='Directori d\'emmagatzematge';
-$lang["setup-if_storagedirectory"]='On posar els fitxers multimèdia. Pot ser absolut (/var/www/blah/blah) o relatiu a la instal·lació. NOTA: Sense barra final.';
-$lang["setup-storage_url"]='URL d\'emmagatzematge';
-$lang["setup-if_storageurl"]='On és disponible el directori d\'emmagatzematge. Pot ser absolut (http://files.example.com) o relatiu a la instal·lació. NOTA: Sense barra inclinada al final.';
 $lang["setup-smtp-settings"]='Configuració SMTP';
 $lang["setup-if-usesmtp"]='Utilitza un servidor SMTP extern per als correus electrònics sortints (per exemple, Gmail). Utilitza PHPMailer.';
 $lang["setup-if-smtpsecure"]='"tls" o "ssl". Per a Gmail, és necessari "tls" o "ssl".';
@@ -1291,9 +1246,6 @@ $lang["setup-if-smtpport"]='Número de port, per exemple 465 per a Gmail usant S
 $lang["setup-if-smtpauth"]='Enviar credencials al servidor SMTP (fals per utilitzar l\'accés anònim)';
 $lang["setup-if-smtpusername"]='Nom d\'usuari (adreça de correu electrònic completa).';
 $lang["setup-if-smtppassword"]='Contrasenya';
-$lang["design-options"]='Opcions de disseny.';
-$lang["use-slim-theme"]='Voleu utilitzar el disseny SlimHeader?';
-$lang["setup-if_slimtheme"]='Utilitza el disseny SlimHeader en lloc del disseny original per mostrar una barra d\'encapçalament més fina amb un logotip enllaçat per defecte.';
 $lang["setup-login_to"]='Iniciar sessió a';
 $lang["setup-configuration_file_output"]='Fitxer de configuració de sortida.';
 $lang["more-information"]='Més informació.';
@@ -1352,7 +1304,6 @@ $lang["requestreason"]='Motiu de la sol·licitud.';
 $lang["resourcerequeststatus0"]='Pendent.';
 $lang["resourcerequeststatus1"]='Aprovat.';
 $lang["resourcerequeststatus2"]='Rebutjat.';
-$lang["ppi"]='PPI significa "píxels per polzada" (pixels per inch) en català.';
 $lang["useasthemethumbnail"]='Voleu utilitzar aquest recurs com a miniatura de categoria destacada de la col·lecció?';
 $lang["sessionexpired"]='Heu estat desconnectat automàticament perquè heu estat inactiu durant més de 30 minuts. Si us plau, introduïu les vostres dades d\'inici de sessió per continuar.';
 $lang["resourcenotinresults"]='El recurs actual ja no es troba dins dels resultats de cerca actius, per tant, la navegació següent/anterior no és possible.';
@@ -1360,7 +1311,6 @@ $lang["publishstatus"]='Desa amb l\'estat de publicació:';
 $lang["addnewcontent"]='Nou contingut (pàgina, nom)';
 $lang["hitcount"]='Nombre de visites.';
 $lang["downloads"]='Descàrregues';
-$lang["addremove"]='Please provide more context or the specific usage of "+/-" in ResourceSpace so I can provide an accurate translation. Thank you.';
 $lang["list_file_extension"]='Extensió.';
 $lang["all_users"]='tots els usuaris';
 $lang["new_resource"]='nou recurs';
@@ -1444,7 +1394,6 @@ $lang["marker"]='Marcador.';
 $lang["markers"]='Marcadors.';
 $lang["map_configuration"]='Resultats de cerca en forma de mapa.';
 $lang["map_introtext1"]='El mapa següent mostra els recursos dels resultats de cerca que tenen una geolocalització associada. El color del marcador es defineix pel tipus de recurs o per un camp de metadades personalitzat (clau que es mostra sota el mapa). Quan els marcadors es superposen, s\'utilitza l\'agrupació de color verd amb un número que indica la quantitat de marcadors agrupats. Per veure\'ls, feu zoom o feu doble clic a l\'agrupació. Cliqueu en un marcador individual per carregar una finestra emergent que mostra una imatge prèvia del recurs. Cliqueu la imatge prèvia per carregar una finestra per a aquest recurs. Passeu el cursor per sobre d\'un marcador individual per veure les geocoordenades. Podeu canviar la base del mapa fent servir el botó del mapa de la part superior dreta. Podeu desar el mapa en un fitxer PNG fent servir el botó del mapa de la part inferior esquerra.';
-$lang["search_map_introtext"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
 $lang["edit_map_introtext"]='Fes zoom i panoramitza fins a la vista del mapa d\'interès, després fes clic al mapa per localitzar el marcador de la ubicació del recurs. Desa la geolocalització més recent fent servir el botó Desa i després fes clic a "Torna a editar recurs o geolocalitzar col·lecció" per tornar enrere. Per cercar una ubicació específica o un nom de característica geogràfica, fes servir el botó de cerca superior dret. Canvia la base del mapa fent servir el botó de capes de mapa superior dret. Desa el mapa en un fitxer PNG fent servir el botó inferior esquerre del mapa.';
 $lang["mapview"]='Mapa.';
 $lang["maptitle"]='Vista de mapa.';
@@ -1477,9 +1426,7 @@ $lang["map_tfoutdoors"]='A l\'aire lliure.';
 $lang["map_tfpioneer"]='Pioner.';
 $lang["map_tfmobileatlas"]='Atles Mòbil.';
 $lang["map_tfneighbourhood"]='Barri';
-$lang["map_hydda_group"]='I\'m sorry, but "Hydda" doesn\'t seem to be an English word or a term used in ResourceSpace. Can you please provide more context or information about the term?';
 $lang["map_hyddafull"]='Mapa per defecte.';
-$lang["map_hyddabase"]='Base -> Base de dades';
 $lang["map_stamen_group"]='Estamen.';
 $lang["map_stamentoner"]='Tòner.';
 $lang["map_stamentonerlt"]='Llum de tòner.';
@@ -1488,23 +1435,17 @@ $lang["map_stamenterrain"]='Terreny';
 $lang["map_stamenterrainback"]='Fons del terreny.';
 $lang["map_stamenrelief"]='Alliberament';
 $lang["map_stamenwatercolor"]='Aquarel·la.';
-$lang["map_esri_group"]='ESRI no necessita traducció ja que és un acrònim que representa el nom de l\'empresa creadora del programari de SIG (Sistemes d\'Informació Geogràfica) i significa "Environmental Systems Research Institute".';
 $lang["map_esristreet"]='Carrers';
-$lang["map_esridelorme"]='No puc proporcionar una traducció precisa de "DeLorme" ja que és un nom propi i no té una traducció establerta en català.';
 $lang["map_esritopo"]='Topogràfic.';
 $lang["map_esriimagery"]='Imatgeria';
 $lang["map_esriterrain"]='Terreny';
 $lang["map_esrirelief"]='Relleu ombrat';
 $lang["map_esriphysical"]='Físic';
 $lang["map_esriocean"]='Oceà.';
-$lang["map_esrinatgeo"]='National Geographic -> National Geographic';
 $lang["map_esrigray"]='Lona Grisa.';
-$lang["map_nasagibs_group"]='NASA GIBS -> NASA GIBS (Sistema d\'informació de fons de la Terra de la NASA)';
 $lang["map_nasagibscolor"]='Imatges en color de Modis/Terra.';
 $lang["map_nasagibsfalsecolor"]='Imatges de color fals de Modis/Terra.';
 $lang["map_nasagibsnight"]='Imatges nocturnes.';
-$lang["map_mapbox_group"]='Mapbox -> Mapbox';
-$lang["map_mapboxid"]='Identificador';
 $lang["map_mapboxtoken"]='Token d\'accés.';
 $lang["map_mapbox"]='Mapa per defecte.';
 $lang["map_usgs_group"]='El Mapa Nacional.';
@@ -1549,7 +1490,6 @@ $lang["exiftoolnotfound"]='No s\'ha pogut trobar Exiftool.';
 $lang["existing_tags"]='Etiquetes Exiftool existents.';
 $lang["new_tags"]='Noves etiquetes d\'Exiftool (que s\'afegiran en descarregar)';
 $lang["date_of_download"]='Data de descàrrega.';
-$lang["field_ref_and_name"]='%ref% - %name% -> %ref% - %nom%';
 $lang["metadata-report-fits_section"]='Etiquetes FITS mapejades.';
 $lang["indicateusage"]='Si us plau, descriu l\'ús previst per a aquest recurs.';
 $lang["usage"]='Ús';
@@ -1607,7 +1547,6 @@ $lang["purchase_complete_email_user_body"]='Gràcies per la teva compra. Si us p
 $lang["purchase_email_address"]='Si us plau, introdueixi una adreça de correu electrònic vàlida si desitja rebre la confirmació de la seva compra.';
 $lang["subcategories"]='Subcategories -> Subcategories (Subcategories)';
 $lang["subcategory"]='Subcategoria.';
-$lang["back"]='Please provide more context. "Back" can have different translations depending on the intended meaning in the context of digital asset management software.';
 $lang["pleasewait"]='Si us plau, espera...';
 $lang["autorotate"]='Girar automàticament les imatges?';
 $lang["user_pref_autorotate"]='Girar les imatges automàticament en pujar-les?';
@@ -1697,7 +1636,7 @@ $lang["zipcommand_overridden"]='Però si us plau, tingueu en compte que $zipcomm
 $lang["lastscheduledtaskexection"]='Última execució programada de tasques (dies)';
 $lang["executecronphp"]='La coincidència de rellevància no serà efectiva i els informes periòdics per correu electrònic no es enviaran. Assegureu-vos que <a href=\'../batch/cron.php\'>batch/cron.php</a> s\'executi com a mínim una vegada al dia a través d\'una tasca cron o similar.';
 $lang["shouldbeormore"]='hauria de ser ? o més gran.';
-$lang["config_file"]='configuració: %fitxer';
+$lang["config_file"]='configuració: %file';
 $lang["large_file_support_64_bit"]='Suport de fitxers grans (plataforma de 64 bits)';
 $lang["large_file_warning_32_bit"]='ATENCIÓ: S\'està executant PHP de 32 bits. No es donarà suport a fitxers més grans de 2 GB.';
 $lang["server_timezone_check"]='La zona horària de PHP és la mateixa que utilitza MySQL.';
@@ -1711,8 +1650,6 @@ $lang["star"]='Estrella';
 $lang["stars"]='Estrelles.';
 $lang["noupload"]='No pujar.';
 $lang["permissions"]='Permisos.';
-$lang["configdefault-title"]='I\'m sorry, I cannot see any text to translate. Please provide me with the English text that needs to be translated to Català.';
-$lang["config-title"]='Si us plau, tingueu cura de no cometre errors de sintaxi. Si es trenca aquest fitxer, caldrà arreglar-ho en el servidor.';
 $lang["file_too_large"]='Fitxer massa gran.';
 $lang["field_updated"]='Camp actualitzat.';
 $lang["zoom"]='Ampliació';
@@ -1802,15 +1739,11 @@ $lang["editresourcetypewarning"]='Avís: canviar el tipus de recurs eliminarà q
 $lang["geodragmode"]='Mode d\'arrossegament.';
 $lang["geodragmodearea"]='posició del punxó';
 $lang["geodragmodeareaselect"]='seleccionar àrea de cerca';
-$lang["geodragmodepan"]='pa';
 $lang["substituted_original"]='Substituït original.';
 $lang["use_original_if_size"]='Utilitzar l\'original si la mida seleccionada no està disponible?';
 $lang["originals-available-0"]='disponible';
 $lang["originals-available-1"]='disponible';
 $lang["originals-available-2"]='disponible';
-$lang["inch-short"]='en (in Català)';
-$lang["centimetre-short"]='Centímetre.';
-$lang["at-resolution"]='Sorry, I need more context to provide an accurate translation. @ can have different meanings depending on the context in which it is used.';
 $lang["deletedresource"]='Recurs eliminat.';
 $lang["deletedresources"]='Recursos eliminats.';
 $lang["nopreviewresources"]='Recursos sense previsualitzacions.';
@@ -1915,21 +1848,10 @@ $lang["warningrequestapprovalfield"]='Advertència - ID de recurs % - si us plau
 $lang["yyyy-mm-dd"]='AAAA-MM-DD';
 $lang["resources-with-requeststatus0-0"]='(0 pendent)';
 $lang["resources-with-requeststatus0-1"]='(1 pendent)';
-$lang["resources-with-requeststatus0-2"]='(%nombre pendent)';
+$lang["resources-with-requeststatus0-2"]='(%number pendent)';
 $lang["researches-with-requeststatus0-0"]='(0 sense assignar)';
 $lang["researches-with-requeststatus0-1"]='(1 sense assignar)';
 $lang["researches-with-requeststatus0-2"]='(%number sense assignar)';
-$lang["byte-symbol"]='I\'m sorry, but "B" is not a language string or a word in English that requires translation. Can you please provide me with a context or a full sentence so I can assist you better?';
-$lang["kilobyte-symbol"]='Please provide the context in which "KB" is being used. It could stand for different things depending on the context.';
-$lang["megabyte-symbol"]='MB: MB (megabyte)';
-$lang["kilobyte-symbol-binary"]='Per favor, tradueixi: KiB
-
-KiB significa "kibibyte" en anglès i es refereix a una unitat de mesura de la quantitat de dades. En català, es pot traduir com a "kibibyte" o "quilobit".';
-$lang["megabyte-symbol-binary"]='MiB significa "mebibyte", que és una unitat de mesura de la quantitat de dades en un arxiu o en un dispositiu de memòria.';
-$lang["gigabyte-symbol-binary"]='Si us plau, tradueixi: GiB
-
-GiB significa "gigabyte binari" i és una unitat de mesura de la capacitat de l\'emmagatzematge d\'informació. És equivalent a 1.073.741.824 bytes.';
-$lang["terabyte-symbol-binary"]='TiB significa "Tebibyte", una unidad de medida de almacenamiento de datos que equivale a 1024 Gibibytes.';
 $lang["upload_files"]='Pujar fitxers.';
 $lang["upload_files-to_collection"]='Pujar fitxers (a la col·lecció \'%collection\')';
 $lang["ascending"]='Ascendent';
@@ -1943,7 +1865,6 @@ $lang["save-conflict-title"]='Conflicte d\'edició.';
 $lang["theme_home_promote"]='Promocionar a la pàgina d\'inici?';
 $lang["theme_home_page_text"]='Text de la pàgina d\'inici.';
 $lang["theme_home_page_image"]='Imatge de la pàgina d\'inici.';
-$lang["ref-title"]='%ref - %title -> %ref - %títol';
 $lang["error-pageload"]='Ho sentim, s\'ha produït un error en carregar aquesta pàgina. Si estàs realitzant una cerca, si us plau, intenta refinar la teva consulta de cerca. Si el problema persisteix, si us plau, contacta amb l\'administrador del sistema.';
 $lang["copy-field"]='Copiar camp';
 $lang["copy-to-resource-type"]='Copiar a tipus de recurs.';
@@ -1998,7 +1919,6 @@ $lang["comments_body-placeholder"]='Afegir un comentari. Utilitza @(nom d\'usuar
 $lang["comments_fullname-placeholder"]='El teu nom (obligatori)';
 $lang["comments_email-placeholder"]='El teu correu electrònic (obligatori)';
 $lang["comments_website-url-placeholder"]='Lloc web.';
-$lang["comments_flag-this-comment"]='Please provide more context. "Flag" can have different translations depending on its usage in the context of digital asset management software.';
 $lang["comments_flag-has-been-flagged"]='Comentari marcat.';
 $lang["comments_flag-reason-placeholder"]='Motiu per marcar el comentari.';
 $lang["comments_validation-fields-failed"]='Assegureu-vos que tots els camps obligatoris estiguin correctament omplerts.';
@@ -2016,9 +1936,7 @@ $lang["all-resourcetypes"]='recursos';
 $lang["all-collectiontypes"]='col·leccions';
 $lang["resourcetypes-no_collections"]='Tots els %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Tots els %collectiontypes%';
-$lang["resourcetypes-collections"]='Tots els %tipusderecurs% i tots els %tipusdecol·lecció%';
-$lang["resourcetypes_separator"]='Sorry, it seems that the string you provided is incomplete. It does not contain any text to translate. Please provide the full string.';
-$lang["collectiontypes_separator"]='Sorry, it seems that the string you provided is incomplete. It does not contain any text to translate. Please provide the full string.';
+$lang["resourcetypes-collections"]='Tots els %resourcetypes% i tots els %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Bloquejar l\'accés a l\'estat del flux de treball.';
 $lang["collection_share_status_warning"]='Avís - aquesta col·lecció té recursos en els següents estats, si us plau, comprova que aquests recursos seran accessibles per altres usuaris.';
 $lang["contactadmin"]='Contacteu amb l\'administrador.';
@@ -2167,97 +2085,6 @@ $lang["action-move-down"]='Desplaçar cap avall.';
 $lang["action-move-to"]='Moure a';
 $lang["delete_user_group_checkbox_alert_message"]='Si us plau, tingueu en compte que aquesta acció també eliminarà tot el text de contingut que era rellevant per a aquest grup d\'usuaris. S\'han trobat %%RECORDSCOUNT%% registres a Gestió de contingut.';
 $lang["about__about"]='El text sobre tu persona va aquí.';
-$lang["all__comments_flag_notification_email_body"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
-$lang["all__comments_flag_notification_email_subject"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
-$lang["all__comments_policy"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
-$lang["all__comments_removal_message"]='Sorry, you forgot to provide the text that needs to be translated. Please provide the text so I can assist you with the translation.';
-$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]<br /><br />
-
-[deusername] [lang_emailcollectionmessage] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]';
-$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br />
-[lang_message]: [message]<br /><br />
-[lang_clicklinkviewcollection] [list]
-
-[fromusername] [missatge_de_col·lecció_de_correu_extern] <br /><br />
-[missatge]: [message]<br /><br />
-[feu clic a l\'enllaç per veure la col·lecció] [list]';
-$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[missatge]<br /><br /><a href="[url]">[incrusta_miniatura]</a><br /><br />[text_peu]';
-$lang["all__emaillogindetails"]='[benvinguda]<br /><br />
-[lang_newlogindetails]<br /><br />
-[lang_username] : [username] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[name]<br /><br />
-[lang_descriptionofproject]:[description]<br /><br />
-[lang_deadline]:[deadline]<br /><br />
-[lang_contacttelephone]:[contact]<br /><br />
-[lang_finaluse]: [finaluse]<br /><br />
-[lang_shaperequired]: [shape]<br /><br />
-[lang_noresourcesrequired]: [noresources]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]
-
-[username] ([userfullname] - [useremail])
-[lang_haspostedresearchrequest]<br /><br />
-[lang_nameofproject]:[name]<br /><br />
-[lang_descriptionofproject]:[description]<br /><br />
-[lang_deadline]:[deadline]<br /><br />
-[lang_contacttelephone]:[contact]<br /><br />
-[lang_finaluse]: [finaluse]<br /><br />
-[lang_shaperequired]: [shape]<br /><br />
-[lang_noresourcesrequired]: [noresources]<br /><br />
-<a href="[url]">[url]</a><br /><br />
-<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
-[llista] <br />
-[lang_viewcontributedsubittedl] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
-[llista] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
-[llista] <br />
-[lang_viewalluserpending] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage] - Missatge d\'assignació de sol·licitud de recerca<br /><br />
-[text_footer] - Peu de pàgina';
-$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br />
-[lang_clicklinkviewcollection] <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-Missatge de sol·licitud d\'investigació completat. <br /><br />
-Feu clic en el següent enllaç per veure la col·lecció: <br /><br />
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
-$lang["all__emailresource"]='[fromusername] [lang_hasemailedyouaresource]<br /><br />
-[message]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
-[text_footer]<br />
-
-[fromusername] [lang_tehaenviatunaressource]<br /><br />
-[missatge]<br /><br />
-<a href="[url]">[embed_thumbnail]</a><br /><br />
-[lang_clicaparaveurelarrecurs]<br /><a href="[url]">[nomdelrecurs] - [url]</a><br /><br />
-[peudefoto]';
-$lang["all__emailresourcerequest"]='[lang_username]: [username] <br />
-[llista] <br />
-[detalls] <br /><br />
-[lang_clicktoviewresource] <br /><br />
-<a href="[url]">[url]</a> ';
 $lang["all__footer"]='Funciona amb <a target="_blank" href="https://www.resourcespace.com/">ResourceSpace Open Source Digital Asset Management</a>';
 $lang["all__researchrequest"]='Permeteu que el nostre equip de recursos trobi els recursos que necessiteu.';
 $lang["change_language__introtext"]='Si us plau, seleccioneu el vostre idioma a continuació.';
@@ -2284,7 +2111,6 @@ $lang["done__user_request"]='La teva sol·licitud per a un compte d\'usuari ha e
 $lang["download_click__introtext"]='Per descarregar el fitxer de recursos, feu clic amb el botó dret del ratolí sobre l\'enllaç de sota i seleccioneu "Desa com...". Aleshores se us demanarà on voleu desar el fitxer. Per obrir el fitxer al vostre navegador, feu clic directament a l\'enllaç.';
 $lang["download_progress__introtext"]='La teva descàrrega començarà en breu. Quan la descàrrega finalitzi, utilitza els enllaços següents per continuar.';
 $lang["downloadfile_nofile"]='El fitxer sol·licitat no s\'ha trobat.';
-$lang["edit__batch"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
 $lang["edit__multiple"]='Si us plau, seleccioneu quins camps voleu sobreescriure. Els camps que no seleccioneu es deixaran intactes.';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
 
@@ -2300,7 +2126,6 @@ $lang["resource_email__introtext"]='Compartiu ràpidament aquest recurs amb altr
 $lang["resource_request__introtext"]='La teva sol·licitud està gairebé completa. Si us plau, inclou la raó de la teva sol·licitud perquè puguem respondre eficientment.';
 $lang["search_advanced__introtext"]='<strong>Suggeriment de cerca</strong><br />Qualsevol secció que deixeu en blanc o sense marcar inclourà TOTS els termes en la cerca. Per exemple, si deixeu totes les caselles de país buides, la cerca retornarà resultats de tots els països. Si seleccioneu només \'Algèria\', llavors els resultats contindran NOMÉS recursos d\'\'Algèria\'.';
 $lang["team_archive__introtext"]='Per editar recursos individuals de l\'arxiu, simplement cal cercar el recurs i clicar a "Editar" al panell "Eina de Recurs" a la pantalla del recurs. Tots els recursos que estan llestos per ser arxivats apareixen a la llista "Recursos Pendents". Des d\'aquesta llista es pot afegir informació addicional i transferir el registre del recurs a l\'arxiu.';
-$lang["team_content__introtext"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
 $lang["team_copy__introtext"]='Introduïu la ID del recurs que voleu copiar. Només es copiaran les dades del recurs, no s\'hi copiarà cap fitxer pujat.';
 $lang["team_home__introtext"]='Benvingut/da a l\'àrea d\'administració. Utilitza els enllaços següents per administrar recursos, respondre a sol·licituds de recursos, gestionar col·leccions destacades i modificar la configuració del sistema.';
 $lang["team_report__introtext"]='Si us plau, trieu un informe i un rang de dates. L\'informe es pot obrir en Microsoft Excel o en una aplicació similar de full de càlculs.';
@@ -2316,7 +2141,6 @@ $lang["terms__upload_terms"]='Les vostres condicions i termes per a les pujades 
 $lang["themes__findpublic"]='Les col·leccions públiques són col·leccions de recursos que han estat compartides per altres usuaris.';
 $lang["themes__introtext"]='Les col·leccions destacades són grups de recursos que han estat seleccionats pels administradors per proporcionar un exemple dels recursos disponibles en el sistema.';
 $lang["themes__manage"]='Organitza i edita les col·leccions destacades disponibles en línia. Les col·leccions destacades són col·leccions especialment promocionades. <br /><br /><strong>1 Per crear una nova entrada en una col·lecció destacada - construeix una col·lecció</strong><br /> Escull <strong>Les meves col·leccions</strong> del menú superior principal i configura una nova col·lecció <strong>pública</strong>. Recorda incloure un nom de col·lecció destacada durant la configuració. Utilitza un nom de col·lecció destacada existent per agrupar la col·lecció sota una col·lecció destacada actual (assegura\'t d\'escriure-lo exactament igual), o tria un títol nou per crear una col·lecció destacada nova. Mai permetis als usuaris afegir/eliminar recursos de les col·leccions destacades. <br /> <br /><strong>2 Per editar el contingut d\'una entrada existent en una col·lecció destacada</strong><br /> Escull <strong>editar col·lecció</strong>. Els elements d\'aquella col·lecció apareixeran al panell <strong>Les meves col·leccions</strong> a la part inferior de la pantalla. Utilitza les eines estàndard per editar, eliminar o afegir recursos. <br /> <br /><strong>3 Per canviar el nom d\'una col·lecció destacada o moure una col·lecció perquè aparegui sota una col·lecció destacada diferent</strong><br /> Escull <strong>editar propietats</strong> i edita la categoria de col·lecció destacada o el nom de la col·lecció. Utilitza un nom de col·lecció destacada existent per agrupar la col·lecció sota una col·lecció destacada actual (assegura\'t d\'escriure-lo exactament igual), o tria un títol nou per crear una col·lecció destacada nova. <br /> <br /><strong>4 Per eliminar una col·lecció d\'una col·lecció destacada</strong><br /> Escull <strong>editar propietats</strong> i elimina les paraules de la categoria de col·lecció destacada.';
-$lang["upload__introtext"]='I\'m sorry, there is no text provided for me to translate. Please provide the text you would like me to translate.';
 $lang["user_password__introtext"]='Introduïu la vostra adreça de correu electrònic i se us enviarà el vostre nom d\'usuari i contrasenya.';
 $lang["user_preferences__introtext"]='Introduïu una nova contrasenya a continuació per canviar la vostra contrasenya.';
 $lang["user_preferences__introtext_new"]='Si us plau, introdueix una contrasenya a continuació.';
@@ -2344,7 +2168,6 @@ $lang["collection_download_too_large"]='Ho sentim, aquesta col·lecció és mass
 $lang["all__passwordnewemailhtml"]='Si us plau, feu clic a l\'enllaç següent per establir una nova contrasenya per al vostre compte.<br /><br />URL: <a href="[url]" target="_blank" >[url]</a><br />nom d\'usuari: [username]<br />[text_footer]';
 $lang["disk_size_no_upload_heading"]='Pujada temporalment no disponible.';
 $lang["disk_size_no_upload_explain"]='A causa de limitacions d\'espai, la càrrega ha estat temporalment desactivada. Ens disculpem per les molèsties que pugui ocasionar.';
-$lang["dash"]='Please provide more context. "Dash" can have different translations in Català depending on the context.';
 $lang["savethissearchtodash"]='Desa a la icona del tauler';
 $lang["createnewdashtile"]='Crear una nova icona de tauler de comandament.';
 $lang["specialdashtiles"]='Les "Special dash tiles" es tradueixen com "Tessel·les especials del tauler de comandament".';
@@ -2362,7 +2185,6 @@ $lang["dashtilestyle"]='Estil de quadricula de taula de comandaments.';
 $lang["returntopreviouspage"]='Tornar a la pàgina anterior.';
 $lang["showresourcecount"]='Mostrar el comptador de recursos?';
 $lang["tilebin"]='Eliminar';
-$lang["last"]='Please provide more context or the full sentence where "Last" is used so I can provide an accurate translation.';
 $lang["managedefaultdash"]='Totes les miniatures d\'usuari.';
 $lang["dashtile"]='Taulell de tauler de comandament.';
 $lang["manage_own_dash"]='Pot gestionar el seu propi quadre de comandament.';
@@ -2406,38 +2228,21 @@ $lang["createdashtilemycontributions"]='Les meves contribucions (específiques d
 $lang["createdashtilehelpandadvice"]='Enllaç d\'ajuda i consell.';
 $lang["createdashtileuserupload"]='Pujada de fitxers (específic de l\'usuari)';
 $lang["tile_thmbs"]='Solter/a (if referring to marital status) or Únic/a (if referring to a single item or resource)';
-$lang["tile_multi"]='Please provide more context. "Multi" can have different meanings depending on the context in which it is used.';
-$lang["tile_blank"]='Please provide more context or the full sentence where "Blank" is used in ResourceSpace so I can provide an accurate translation.';
 $lang["tile_analytics"]='Analítica.';
 $lang["tile_ftxt"]='Només text.';
 $lang["tile_thmsl"]='Col·lecció destacada.';
 $lang["tile_pend"]='Pendent.';
 $lang["plugin_category_general"]='General -> General';
-$lang["plugin_category_api"]='API (Interfície de programació d\'aplicacions)';
 $lang["plugin_category_advanced"]='Avançat';
 $lang["plugin_category_design"]='Disseny.';
 $lang["plugin_category_ecommerce"]='Comerç electrònic.';
 $lang["plugin_integrations"]='Integracions.';
 $lang["system_down_title"]='Atenció!';
 $lang["system_down_message"]='El sistema està en manteniment. Gràcies per la vostra paciència.';
-$lang["systemconsole"]='Consola.';
 $lang["systemconsoledebuglog"]='Registre de depuració.';
-$lang["systemconsolememorycpu"]='Memòria i CPU.';
-$lang["systemconsoledatabase"]='Base de dades.';
-$lang["systemconsolesqllogtransactions"]='Registre de transaccions SQL.';
-$lang["systemconsoleactivitylog"]='Registre d\'activitat';
 $lang["systemconsoleturnoffafter"]='Apaga després.';
 $lang["systemconsoleonpermallusers"]='En (permanent per a tots els usuaris)';
 $lang["systemconsoleonallusers"]='En (tots els usuaris)';
-$lang["systemconsoleonfailedtopcommand"]='No s\'ha pogut executar la comanda top.';
-$lang["systemconsoleonfailedtasklistcommand"]='No s\'ha pogut executar la comanda de llista de tasques.';
-$lang["systemconsoleondebuglognotsetorfound"]='$debug_log_location no està definit, el fitxer no s\'ha trobat o no es pot llegir. Si us plau, comproveu que \'$debug_log_readable=true;\' estigui definit a la vostra configuració.';
-$lang["systemconsoleonsqllognotsetorfound"]='$mysql_log_transactions no està configurat o el fitxer $mysql_log_location no s\'ha trobat o no es pot llegir.';
-$lang["systemconsoletrackVars"]='Seguiment de variables.';
-$lang["systemconsole_label_input_vars"]='Noms de variables.';
-$lang["systemconsole_help_track_vars"]='Utilitza un CSV amb els noms de les variables que vols seguir en tot el sistema. Això s\'utilitza principalment per a fins de depuració, ja que ajuda a determinar on es defineix o substitueix una variable específica.';
-$lang["systemconsole_label_input_track_period"]='Especifica durant quant temps fer el seguiment de les variables.';
-$lang["systemconsole_help_track_period"]='El valor representa minuts.';
 $lang["trash_bin_title"]='Eliminar';
 $lang["trash_bin_delete_dialog_title"]='Eliminar recurs?';
 $lang["managecontent_defaulttextused"]='El text per al llenguatge per defecte està sent utilitzat actualment. Editeu el text a continuació per crear una versió alternativa per a aquest idioma / selecció de grup d\'usuaris.';
@@ -2623,7 +2428,7 @@ $lang["report-graph-by-pie"]='descomposició';
 $lang["report-graph-by-piegroup"]='per grup d\'usuaris';
 $lang["report-graph-by-pieresourcetype"]='per tipus de recurs';
 $lang["report-graph-by-line"]='amb el temps';
-$lang["report-graph-by-summary"]='Resum';
+$lang["report-graph-by-summary"]='resum';
 $lang["update_report"]='Informe d\'actualització.';
 $lang["save_report"]='Desa el informe.';
 $lang["save_report_as"]='Desa el informe com a...';
@@ -2716,9 +2521,7 @@ $lang["error_fail_save"]='No es pot desar.';
 $lang["image_quality_100"]='Màxim.';
 $lang["image_quality_92"]='Imprimir';
 $lang["image_quality_80"]='Web: Web';
-$lang["image_quality_50"]='Please provide more context or the full sentence where the word "Low" is used, as it can have different translations in Català depending on the context.';
 $lang["image_quality_40"]='Molt baix.';
-$lang["systemconfig_api"]='API (Interfície de programació d\'aplicacions)';
 $lang["iiif_enable_option"]='Habilitar el suport IIIF.';
 $lang["iiif_disabled"]='IIIF no està configurat.';
 $lang["property-personal_data"]='Pot contenir dades personals.';
@@ -2796,17 +2599,6 @@ $lang["start"]='Iniciar';
 $lang["file_integrity_summary"]='Informe d\'integritat del fitxer.';
 $lang["file_integrity_summary_failed"]='Els fitxers de recursos han fallat en les comprovacions d\'integritat o estan desapareguts. Si us plau, segueix el següent enllaç per veure aquests recursos i prendre les accions necessàries, com ara restaurar els fitxers des de la còpia de seguretat.';
 $lang["file_integrity_fail_search"]='Fallades d\'integritat del fitxer.';
-$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[img_headerlogo]<br />
-[lang_file_integrity_summary_failed] <br /><br /> 
-[lang_file_integrity_fail_search] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["team_resource_integrity_fail"]='Veure recursos sospitosos.';
 $lang["team_resource_integrity_fail_info"]='Recursos amb fitxers que falten o possiblement estan corruptes.';
 $lang["collection_copy_resources"]='Copiar recursos de la col·lecció.';
@@ -2870,7 +2662,6 @@ $lang["job_value"]='Valor';
 $lang["job_boost"]='Impulsar feina.';
 $lang["job_priority"]='Prioritat.';
 $lang["csv_export_offline_option"]='Generar fitxer CSV sense connexió? Això s\'hauria d\'utilitzar per conjunts de resultats grans. Se us notificarà a través d\'un missatge de ResourceSpace una vegada que el fitxer CSV estigui disponible.';
-$lang["csv_export_filename"]='exportació_de_metadades_%%SEARCH%%_%%TIME%%';
 $lang["csv_export_file_ready"]='La vostra exportació CSV està llesta.';
 $lang["offline_processing_disabled"]='El processament de tasques fora de línia no està configurat en aquest sistema. Per habilitar-ho, si us plau, contacteu amb l\'administrador del sistema.';
 $lang["csv_export_offline_only"]='S\'ha d\'utilitzar el processament sense connexió quan s\'exporten dades per a més de %%RESOURCE_COUNT%% recursos.';
@@ -2890,23 +2681,6 @@ $lang["upload_share_email_subject"]='T\'ha estat enviat un enllaç de pujada des
 $lang["upload_share_email_text"]='ha enviat un enllaç per carregar fitxers a.';
 $lang["upload_share_email_password"]='Utilitza aquesta contrasenya per accedir a l\'enllaç.';
 $lang["upload_share_email_clicklink"]='Si us plau, utilitzeu l\'enllaç següent per començar a pujar fitxers.';
-$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [message]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]
-
-[from_name] [lang_upload_share_email_text] [applicationname]<br /><br />
-[lang_message]: [missatge]<br /><br />
-[lang_upload_share_email_clicklink]<br />
-<br />
-[link]
-<br />
-<br />
-[passwordtext]';
 $lang["upload_share_complete"]='Gràcies per pujar el fitxer. Si us plau, utilitza el botó de sota per pujar més recursos.';
 $lang["error_invalid_usergroup"]='Grup d\'usuari no vàlid.';
 $lang["error_invalid_date"]='Data no vàlida.';
@@ -2917,17 +2691,6 @@ $lang["error_no_resources_edit"]='No s\'han trobat recursos per editar. Si acabe
 $lang["password_unchanged"]='(unchanged)';
 $lang["notify_upload_share_new"]='S\'han carregat recursos a la teva col·lecció compartida.';
 $lang["notify_upload_share_new_subject"]='Nous carregues externes.';
-$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new]
-<br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]
-
-[lang_notify_upload_share_new]
-<br />
-[lang_clicklinkviewcollection] <br /><br /> 
-<a href="[url]">[url]</a><br /><br />
-[text_footer]';
 $lang["my_shares"]='Les meves accions.';
 $lang["manage_shares_title"]='Comparticions externes.';
 $lang["share_purge_text"]='Eliminar les comparticions caducades.';
@@ -2978,7 +2741,6 @@ $lang["resourcetype-audio"]='Àudio';
 $lang["resourcetype-global_fields"]='Camps globals.';
 $lang["resourcetype-archive_only"]='Només arxiu.';
 $lang["resourcetype-photo-2"]='Fotografies.';
-$lang["resourcetype-document-2"]='Documents -> Documents';
 $lang["resourcetype-video-2"]='Vídeos.';
 $lang["resourcetype-audio-2"]='Àudio';
 $lang["imagesize-thumbnail"]='Miniatura';
@@ -2996,7 +2758,6 @@ $lang["fieldtitle-credit"]='Crèdit.';
 $lang["fieldtitle-date"]='Data.';
 $lang["fieldtitle-expiry_date"]='Data de caducitat.';
 $lang["fieldtitle-caption"]='Llegenda.';
-$lang["fieldtitle-notes"]='Notes -> Notes';
 $lang["fieldtitle-named_persons"]='Persona(s) nomenada(s)';
 $lang["fieldtitle-camera_make_and_model"]='Marca / Model de la càmera';
 $lang["fieldtitle-original_filename"]='Nom d\'arxiu original.';
@@ -3128,16 +2889,12 @@ $lang["information-derestrict_filter"]='Desbloquejar el filtre. Només és efect
 $lang["information-push_metadata"]='Si s\'estableix, les metadades d\'aquest recurs es mostraran a la pàgina de visualització del recurs per a qualsevol recurs relacionat. Per exemple, podeu relacionar diverses fotos amb un recurs de persona. Si aquesta propietat està establerta en el recurs de persona, llavors les metadades de la persona apareixeran en tots els registres de recursos de fotos relacionats, evitant la duplicació de dades en el sistema.';
 $lang["property-query"]='Consulta';
 $lang["information-id"]='Nota: \'Id\' a continuació HA DE ser establert com un codi únic de tres caràcters.';
-$lang["property-id"]='Identificador';
 $lang["property-width"]='Amplada';
 $lang["property-height"]='Alçada';
 $lang["property-quality"]='Qualitat.';
-$lang["xlthumbs"]='Molt gran (X-gran)';
 $lang["setup-mysqlerrorserver"]='No es pot connectar amb el servidor.';
 $lang["columnheader-expires"]='Caduca.';
 $lang["report-resources_with_zero_downloads"]='Recursos sense cap descàrrega.';
 $lang["view__storyextract"]='Extracte de la història:';
 $lang["tile_custm"]='Personalitzat.';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificació del sistema';
-$lang["gigabyte-symbol"]='GB: GB (gigabyte)';
-$lang["terabyte-symbol"]='TB en català és TB (terabyte).';

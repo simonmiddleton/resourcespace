@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Kenttä ehdotetuille avainsanoille.';
 $lang["google_vision_landmarks_field"]='Kenttä maamerkeille.';
 $lang["google_vision_text_field"]='Kenttä poimittua tekstiä varten.';
 $lang["google_vision_logo_field"]='Kenttä havaituille suosituille logoille.';
-$lang["google_vision_api"]='Google Vision API -> Google Vision -rajapinta';
 $lang["google_vision_restypes"]='Käytössä olevat resurssityypit.';
 $lang["google_vision_features"]='Ominaisuuden tunnistus on käytössä.';
 $lang["google_vision_autotitle"]='Aseta otsikko automaattisesti korkeimman sijoituksen avainsanalle.';

@@ -1263,7 +1263,24 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                         success: function(data) {
                             if (data.trim() == "SUCCESS") {
-                                styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['relateallresources_confirmation']?>');
+                                styledalert('<?php echo htmlspecialchars($lang["complete"])?>', '<?php echo htmlspecialchars($lang['relateallresources_confirmation'])?>');
+                            }
+                        },
+                        error: function (err) {
+                            console.log("AJAX error : " + JSON.stringify(err, null, 2));
+                        }
+                    }); 
+                    break;
+
+                case 'unrelate_all':
+                    var collection = <?php echo urlencode($collection_data['ref']);?>;
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: baseurl_short + 'pages/ajax/unrelate_resources.php?collection=' + collection,
+                        data: {<?php echo generateAjaxToken("unrelate_resources"); ?>},
+                        success: function(data) {
+                            if (data.trim() == "SUCCESS") {
+                                styledalert('<?php echo htmlspecialchars($lang["complete"])?>', '<?php echo htmlspecialchars($lang['unrelateallresources_confirmation'])?>');
                             }
                         },
                         error: function (err) {
@@ -1794,16 +1811,17 @@ function display_field($n, $field, $newtab=false,$modal=false)
     $locked_fields = explode(",",getval("lockedfields",""));
     }
 
-    if(!isset($copyfrom))
-        {
-        $copyfrom = getval('copyfrom', '');
-        }
+  if(!isset($copyfrom))
+    {
+    $copyfrom = getval('copyfrom', '');
+    }
 
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim((string) $value);
   $use_copyfrom=true;
-    if ($use != $ref && ($field["omit_when_copying"]))
+  $omit_when_copying_enacted=false;
+  if ($use != $ref && ($field["omit_when_copying"]))
         {
         debug("display_field: reverting copied value for field " . $field["ref"] . " as omit_when_copying is enabled");
         # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
@@ -1818,6 +1836,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 }
             }
         $selected_nodes = $original_nodes;
+        $omit_when_copying_enacted=true;
         }
     elseif(($ref<0 || $upload_review_mode) && isset($locked_fields) && in_array($field["ref"], $locked_fields) && $lastedited > 0)
         {
@@ -2104,7 +2123,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
-        $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
+        
+        // Establish the full set of selected nodes to be rendered for this field
+        // Do this only if the field's selected nodes haven't previously been adjusted to take account of omit_when_copying
+        if(!$omit_when_copying_enacted)
+            {
+            $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
+            }
+
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
             $name = "nodes[{$field['ref']}]";
@@ -3225,7 +3251,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 * 
 * @param string $type   type of trash_bin
 * 
-* @return void
+* @return string|void
 */ 
 
 function render_trash($type, $deletetext,$forjs=false)
@@ -5957,7 +5983,7 @@ function display_related_resources($context)
     <div class="RecordPanel">
     <div id="RelatedResources">
     <div class="RecordResource">
-    <div class="Title"><?php echo $lang["relatedresources"]?></div>
+    <div class="Title"><?php echo htmlspecialchars($lang["relatedresources"]) ?></div>
     <?php
     if(checkperm("s")
         && ($k == "" || $internal_share_access)
@@ -5965,7 +5991,7 @@ function display_related_resources($context)
         {
         if(count(array_diff(array_column($arr_related,"resource_type"),$relatedtypes_shown)) > 0)
             {
-            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
+            ?><a href="<?php echo $baseurl ?>/pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["clicktoviewasresultset"]) ?></a>
             <div class="clearerleft"> </div>
             <?php
             }
@@ -6015,7 +6041,7 @@ function display_related_resources($context)
                                         </a>
                                 </td></tr>
                             </table>
-                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
                         <?php hook("relatedresourceaddlink");?>
                         </div>
                         <?php
@@ -6126,7 +6152,7 @@ function display_related_resources($context)
                             </td>
                         </tr>
                         </table>
-                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
+                        <div class="CollectionPanelInfo"><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo htmlspecialchars($rref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),$related_resources_title_trim)) ?></a>&nbsp;</div>
                         <?php hook("relatedresourceaddlink");?>       
                     </div>
                     <?php
@@ -6150,7 +6176,7 @@ function display_related_resources($context)
             $addrelated_url = generateURL($baseurl_short . "pages/edit.php",$add_related_params);       
             ?>
             <div class="clearerleft"></div>
-            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . $lang['related_resource_create']; ?></a>
+            <a href="<?php echo $addrelated_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_PLUS  . htmlspecialchars($lang['related_resource_create']); ?></a>
             <?php
             }?>
         </div><!-- End of RelatedResources -->

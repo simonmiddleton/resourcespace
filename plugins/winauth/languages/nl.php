@@ -8,6 +8,6 @@ $lang["winauth_domains"]='Lijst van toegestane Windows-domeinen (gescheiden door
 $lang["winauth_use_win_login"]='Inloggen met Windows-verificatie.';
 $lang["winauth_nouser"]='Uw account is niet geactiveerd in het systeem. Vraag een account aan of neem contact op met uw beheerder.';
 $lang["winauth_prefer_normal"]='Geef de voorkeur aan standaard ResourceSpace logins. Als dit waar is, worden gebruikers standaard doorgestuurd naar de login-pagina waar de optie is om Windows Authenticatie te gebruiken.';
-$lang["winauth_test"]='Test (Nederlands): Test';
+$lang["winauth_test"]='Test';
 $lang["winauth_user_info"]='Je bent ingelogd als: [gebruikersnaam]';
 $lang["winauth_not_logged_in"]='Je bent niet ingelogd of je webserver is niet correct geconfigureerd.';

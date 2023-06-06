@@ -1207,7 +1207,7 @@ function CheckDBStruct($path,$verbose=false)
 function sql_limit($offset, $rows)
     {
     $offset_true = !is_null($offset) && is_int_loose($offset) && $offset > 0;
-    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows > 0;
+    $rows_true   = !is_null($rows) && is_int_loose($rows) && $rows >= 0;
 
     $limit = ($offset_true || $rows_true ? 'LIMIT ' : '');
 
@@ -1257,7 +1257,7 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     $datacount = count($data);
 
     // Check if cached total will cause errors
-    if($datacount ==  0)
+    if($datacount ==  0 && $rows > 0)
         {
         // No data returned. Either beyond the last page of results or there were no results at all
         $total = min($total,$offset);
@@ -1326,6 +1326,20 @@ function ps_param_fill($array,$type)
     return $parameters;
     }
 
+/**
+ * Assists in generating parameter arrays where all of the parameters for a given section of sql are the same. 
+ * 
+ * @param string $string A portion of sql that contains one or more placeholders
+ * @param string $value The value that should be used to generaete the array of parameters
+ * @param string $type The colomn type of $value as per ps_query
+ * 
+ * @return array
+ */
+function ps_fill_param_array($string, $value, $type)
+    {
+    $placeholder_count=substr_count($string,"?");
+    return ps_param_fill(array_fill(0, $placeholder_count, $value), $type);  
+    }
 
 /**
  * Re-order rows in the table

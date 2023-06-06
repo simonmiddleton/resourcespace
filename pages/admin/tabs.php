@@ -168,7 +168,7 @@ include '../../include/header.php';
     ]); ?>
     <p><?php echo htmlspecialchars($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
 
-    <?php echo render_table($table_info); ?>
+    <?php render_table($table_info); ?>
 
     <!-- Create new tab form -->
     <form method="post" action="<?php echo $admin_tabs_management_page_url; ?>" onsubmit="return CentralSpacePost(this, false);">

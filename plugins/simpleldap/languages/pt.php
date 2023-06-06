@@ -7,7 +7,6 @@ $lang["ldap_encoding"]='Codificação de dados recebidos do servidor LDAP (defin
 $lang["domain"]='Domínio AD, se múltiplos separar com ponto e vírgula.';
 $lang["emailsuffix"]='Sufixo de e-mail - usado se nenhum dado de atributo de e-mail for encontrado.';
 $lang["port"]='Porta';
-$lang["basedn"]='Por favor, traduza: Base DN. Se os usuários estiverem em vários DNs, separe com ponto e vírgula.';
 $lang["loginfield"]='Campo de Login.';
 $lang["usersuffix"]='Sufixo do usuário (um ponto será adicionado antes do sufixo)';
 $lang["groupfield"]='Campo de Grupo.';

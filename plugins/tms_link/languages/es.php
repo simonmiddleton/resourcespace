@@ -21,9 +21,6 @@ $lang["tms_link_no_tms_resources"]='No se encontraron recursos de TMS. Por favor
 $lang["tms_link_no_resource"]='No se especificó ningún recurso.';
 $lang["tms_link_resource_id"]='Identificador de recurso.';
 $lang["tms_link_object_id"]='Identificador de objeto.';
-$lang["tms_link_checksum"]='Please translate: Checksum
-
-Suma de verificación';
 $lang["tms_link_no_tms_data"]='No se devolvieron datos desde TMS.';
 $lang["tms_link_field_mappings"]='Mapeo de campos de TMS a campos de ResourceSpace.';
 $lang["tms_link_resourcespace_field"]='Campo de ResourceSpace.';

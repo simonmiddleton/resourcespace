@@ -51,7 +51,8 @@ input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBle
     border-radius: 4px;
 }
 
-input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], input[type="number"], textarea, button, select {
+input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], input[type="number"], textarea, button, select,
+input[type="date"] {
     padding: 4px 6px 4px 6px;
     vertical-align: middle;
     min-height: 28px;
@@ -186,6 +187,7 @@ select::-ms-expand
 .DisplayNone { display: none !important; }
 .AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
 .PointerEventsNone { pointer-events: none; }
+.MarginLeft1rem { margin-left: 1rem; }
 
 /* General Form tags */
 .checkoption {vertical-align: top;display: inline-block;width: 195px;margin: 2px; *display:inline;*zoom: 1;}

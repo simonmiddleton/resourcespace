@@ -91,9 +91,9 @@ function unescape($text)
 * 
 * @uses offset_user_local_timezone()
 * 
-* @var  string   $date
-* @var  boolean  $time
-* @var  boolean  $wordy
+* @var  string   $date       ISO format date which can be a BCE date (ie. with negative year -yyyy)
+* @var  boolean  $time       When TRUE and full date is present then append the hh:mm time part if present 
+* @var  boolean  $wordy      When TRUE return month name, otherwise return month number
 * @var  boolean  $offset_tz  Set to TRUE to offset based on time zone, FALSE otherwise
 * 
 * @return string Returns an empty string if date not set/invalid
@@ -102,21 +102,27 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     {
     global $lang, $date_d_m_y, $date_yyyy;
 
-    if($date == '' || strtotime($date) === false)
-        {
-        return '';
-        }
+    $date=trim((string)$date);
+    if($date == '') return '';
 
-    $original_time_part = substr($date, 11, 5);
+    $date_timestamp = strtotime($date); 
+    if($date_timestamp === false) return '';
+
+    // The unix timestamp will be negative for BCE dates
+    $bce_offset = ($date_timestamp < 0) ? 1 : 0;
+    // BCE dates cannot return year in truncated form
+    if($bce_offset == 1 && !$date_yyyy) return '';
+
+    $original_time_part = substr($date, $bce_offset + 11, 5);
     if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
         {
         $date = offset_user_local_timezone($date, 'Y-m-d H:i');
         }
 
-    $y = substr($date, 0, 4);
+    $y = substr($date, 0, $bce_offset + 4);
     if(!$date_yyyy)
         {
-        $y = substr($y, 2, 2);
+        $y = substr($y, 2, 2);  // Only truncate year for non-BCE dates
         }
 
     if($y == "")
@@ -124,20 +130,20 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return "-";
         };
 
-    $month_part = substr($date, 5, 2);
+    $month_part = substr($date, $bce_offset + 5, 2);
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
         return $y;
         }
 
-    $d = substr($date, 8, 2);    
+    $d = substr($date, $bce_offset + 8, 2);    
     if($d == "" || $d == "00")
         {
         return "{$m} {$y}";
         }
 
-    $t = $time ? " @ " . substr($date, 11, 5) : "";
+    $t = $time ? " @ " . substr($date, $bce_offset + 11, 5) : "";
 
     if($date_d_m_y)
         {
@@ -593,12 +599,12 @@ function get_site_text($page,$name,$getlanguage,$group)
  *
  * @param  mixed $page
  * @param  mixed $name
- * @return void
  */
-function check_site_text_custom($page,$name)
+function check_site_text_custom($page,$name): bool
     {    
     $check = ps_query("select custom from site_text where page = ? and name = ?", array("s", $page, "s", $name));
-    if (isset($check[0]["custom"])){return $check[0]["custom"];}
+
+    return $check[0]["custom"] ?? false;
     }
 
 /**
@@ -2058,7 +2064,7 @@ function escape_command_args($cmd, array $args)
 */
 function run_command($command, $geterrors = false, array $params = array())
     {
-    global $debug_log;
+    global $debug_log,$config_windows;
 
     $command = escape_command_args($command, $params);
     debug("CLI command: $command");
@@ -2068,7 +2074,16 @@ function run_command($command, $geterrors = false, array $params = array())
     );
     if($debug_log || $geterrors) 
         {
-        $descriptorspec[2] = array("pipe", "w"); // stderr is a file to write to
+        if($config_windows)
+            {
+            $pid = getmypid();
+            $log_location = get_temp_dir()."/error_".md5($command . serialize($params). $pid).".txt";
+            $descriptorspec[2] = array("file", $log_location, "w"); // stderr is a file that the child will write to
+            }
+        else
+            {
+            $descriptorspec[2] = array("pipe", "w"); // stderr is a pipe that the child will write to
+            }
         }
     $process = @proc_open($command, $descriptorspec, $pipe, NULL, NULL, array('bypass_shell' => true));
 
@@ -2077,13 +2092,14 @@ function run_command($command, $geterrors = false, array $params = array())
     $output = trim(stream_get_contents($pipe[1]));
     if($geterrors)
         {
-        $output .= trim(stream_get_contents($pipe[2]));
+        $output .= trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2]));
         }
     if ($debug_log)
         {
         debug("CLI output: $output");
-        debug("CLI errors: " . trim(stream_get_contents($pipe[2])));
+        debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
         }
+    if($config_windows && isset($log_location)){unlink($log_location);}
     proc_close($process);
     return $output;
     }
@@ -2893,96 +2909,6 @@ function generateURL($url, array $parameters = array(), array $set_params = arra
     }
 
 
-
-/**
- * Tails a file using native PHP functions.
- * 
- * First introduced with system console.
- * Credit to:
- * http://www.geekality.net/2011/05/28/php-tail-tackling-large-files
- * 
- * As of 2020-06-29 the website is showing that all contents/code are CC BY 3.0
- * https://creativecommons.org/licenses/by/3.0/
- * 
- * Example:
- *   tail($file_path, 10, 4096, [
- *       'name' => 'resourcespace.tail_search',
- *       'params' => ['search_terms' => ['term1', 'term2']]
- *   ]);
- *
- * @param  string $filename
- * @param  integer $lines
- * @param  integer $buffer
- * @param  array   $filters  List of stream filters. Each value is an array containing the "name" and "params" keys. These
- *                           represent the filter name and its params.
- * @return string
- */
-function tail($filename, $lines = 10, $buffer = 4096, array $filters = [])
-    {
-    $f = fopen($filename, "rb");
-
-    // Jump to the last character, read it and adjust line number if necessary
-    // (Otherwise the result would be wrong if file doesn't end with a blank line)
-    fseek($f, -1, SEEK_END);
-    if(fread($f, 1) != "\n")
-        {
-        $lines -= 1;
-        }
-
-    // Create a temp output file resource so we can attach stream filters for whatever reason the calling code needs to
-    $output_fp = fopen('php://temp','r+');
-    foreach($filters as $filter)
-        {
-        if(isset($filter['name'], $filter['params']) && trim($filter['name']) !== '' && is_array($filter['params']))
-            {
-            stream_filter_append($output_fp, $filter['name'], STREAM_FILTER_READ , $filter['params']);
-            }
-        }
-
-    // Start reading
-    $output = '';
-    $chunk = '';
-    $lines_pre_filtering = $lines;
-
-    // While we would like more
-    while(ftell($f) > 0 && $lines >= 0)
-        {
-        // Figure out how far back we should jump
-        $seek = min(ftell($f), $buffer);
-
-        // Do the jump (backwards, relative to where we are)
-        fseek($f, -$seek, SEEK_CUR);
-
-        // Read a chunk and prepend it to our output
-        $chunk = fread($f, $seek);
-        ftruncate($output_fp, 0);
-        rewind($output_fp);
-        fwrite($output_fp, $chunk);
-        fwrite($output_fp, $output);
-        rewind($output_fp);
-        $output = stream_get_contents($output_fp);
-
-        // Jump back to where we started reading
-        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
-
-        $lines = $lines_pre_filtering - substr_count($output, "\n");
-        }
-
-    // While we have too many lines
-    // (Because of buffer size we might have read too many)
-    while($lines++ < 0)
-        {
-        // Find first newline and remove all text before that
-        $output = substr($output, strpos($output, "\n") + 1);
-        }
-
-    fclose($f);
-    fclose($output_fp);
-    return $output;
-    }   
-
-
-
 /**
 * Utility function used to move the element of one array from a position 
 * to another one in the same array
@@ -3052,28 +2978,16 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query(
-            'SELECT s.ref, resource_ref, r.resource_type, homepage_show, featured_collections_show, login_show
-               FROM slideshow AS s
-         LEFT JOIN `resource` AS r ON s.resource_ref = r.ref',
-         [],
-         'slideshow'
-     );
+    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
 
     $slideshow_files = array();
 
     foreach($slideshow_records as $slideshow)
         {
         $slideshow_file = $slideshow;
-        $has_resource_linked = (int) $slideshow['resource_ref'] > 0;
 
         $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
-        if(
-            // Transform plugin crop uses the original file to create the slideshow image.
-            ($has_resource_linked && resource_has_access_denied_by_RT_size((int)$slideshow['resource_type'], ''))
-            || !file_exists($image_file_path)
-            || !is_readable($image_file_path)
-        )
+        if (!file_exists($image_file_path) || !is_readable($image_file_path))
             {
             continue;
             }
@@ -3087,7 +3001,7 @@ function get_slideshow_files_data()
                 'nc' => $slideshow_file['checksum'],
             ));
 
-        if($has_resource_linked)
+        if ((int) $slideshow['resource_ref'] > 0)
             {
             $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
             }
@@ -3682,7 +3596,6 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		foreach ($hook_cache[$hook_cache_index] as $function)
 			{
 			$function_return_value = call_user_func_array($function, $params);
-            debug_track_vars('line-' . __LINE__ . '@include/general_functions.php', get_defined_vars(), ['hook_fct_name' => $function]);
 
 			if ($function_return_value === null)
 				{
@@ -3733,7 +3646,6 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				}
 			}
 
-        debug_track_vars('line-' . __LINE__ . '@include/general_functions.php', $GLOBALS, ['hook_name' => $name]);
 		return (isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false);
 		}
 
@@ -4011,7 +3923,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
 
     # Output some text to a debug file.
     # For developers only
-    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info, $debug_log_readable;
+    global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
     if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
 
     # Cannot use the general.php: get_temp_dir() method here since general may not have been included.
@@ -4035,14 +3947,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
             {
             // Set the permissions if we can to prevent browser access (will not work on Windows)
             $f=fopen($debug_log_location,"a");
-            if($debug_log_readable)
-                {
-                chmod($debug_log_location,0666);
-                }
-            else
-                {
-                chmod($debug_log_location,0222);
-                }
+            chmod($debug_log_location,0222);
             }
         else
             {
@@ -4229,9 +4134,8 @@ function text($name)
  * Gets a list of site text sections, used for a multi-page help area.
  *
  * @param  mixed $page
- * @return void
  */
-function get_section_list($page)
+function get_section_list($page): array
 	{
 
     global $usergroup;
@@ -4328,9 +4232,8 @@ function get_ip()
  * For a value such as 10M return the kilobyte equivalent such as 10240. Used  by check.php
  *
  * @param  mixed $value
- * @return void
  */
-function ResolveKB($value)
+function ResolveKB($value): string
 {
 $value=trim(strtoupper($value));
 if (substr($value,-1,1)=="K")

@@ -1458,7 +1458,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction;
 
     # We will need this to log errors
     $uploadedfilename = getval("file_name",""); 
@@ -1710,7 +1710,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if(file_exists($pre_source))
                             {
                             list($checkw,$checkh) = @getimagesize($pre_source);
-                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size)
+                            if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size || $pre_source == $origfile) // If $pre_source == $origfile get icc profile again as this size maybe used as source for smaller sizes
                                 {
                                 $file = $pre_source;
                                 if($file == $origfile)
@@ -1958,6 +1958,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 $mpr_parts['strip_target']=false;
                                 $mpr_parts['targetprofile']='';
                                 }
+                            else if ($icc_extraction)
+                                {
+                                // Keep any profile extracted (don't use -strip).
+                                $profile=" -colorspace ".$imagemagick_colorspace;
+                                }
                             else
                                 {
                                 # By default, strip the colour profiles ('+' is remove the profile, confusingly)
@@ -2032,7 +2037,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -2434,38 +2439,38 @@ function get_colour_key($image)
     # Extracts a colour key for the image, like a soundex.
     $width=imagesx($image);$height=imagesy($image);
     $colours=array(
-    "K"=>array(0,0,0),          # Black
-    "W"=>array(255,255,255),    # White
-    "E"=>array(200,200,200),    # Grey
-    "E"=>array(140,140,140),    # Grey
-    "E"=>array(100,100,100),    # Grey
-    "R"=>array(255,0,0),        # Red
-    "R"=>array(128,0,0),        # Dark Red
-    "R"=>array(180,0,40),       # Dark Red
-    "G"=>array(0,255,0),        # Green
-    "G"=>array(0,128,0),        # Dark Green
-    "G"=>array(80,120,90),      # Faded Green
-    "G"=>array(140,170,90),     # Pale Green
-    "B"=>array(0,0,255),        # Blue
-    "B"=>array(0,0,128),        # Dark Blue
-    "B"=>array(90,90,120),      # Dark Blue
-    "B"=>array(60,60,90),       # Dark Blue
-    "B"=>array(90,140,180),     # Light Blue
-    "C"=>array(0,255,255),      # Cyan
-    "C"=>array(0,200,200),      # Cyan
-    "M"=>array(255,0,255),      # Magenta
-    "Y"=>array(255,255,0),      # Yellow
-    "Y"=>array(180,160,40),     # Yellow
-    "Y"=>array(210,190,60),     # Yellow
-    "O"=>array(255,128,0),      # Orange
-    "O"=>array(200,100,60),     # Orange
-    "P"=>array(255,128,128),    # Pink
-    "P"=>array(200,180,170),    # Pink
-    "P"=>array(200,160,130),    # Pink
-    "P"=>array(190,120,110),    # Pink
-    "N"=>array(110,70,50),      # Brown
-    "N"=>array(180,160,130),    # Pale Brown
-    "N"=>array(170,140,110),    # Pale Brown
+    "K" => array(array(0,0,0)),         # Black
+    "W" => array(array(255,255,255)),   # White
+    "E" => array(array(200,200,200),
+                array(140,140,140),
+                array(100,100,100)),    # Grey
+    "R" => array(array(255,0,0),        # Red
+                array(128,0,0),         # Dark Red
+                array(180,0,40)),       # Dark Red
+    "G" => array(array(0,255,0),        # Green
+                array(0,128,0),         # Dark Green
+                array(80,120,90),       # Faded Green
+                array(140,170,90)),     # Pale Green
+    "B" => array(array(0,0,255),        # Blue
+                array(0,0,128),         # Dark Blue
+                array(90,90,120),       # Dark Blue
+                array(60,60,90),        # Dark Blue
+                array(90,140,180)),     # Light Blue
+    "C" => array(array(0,255,255),      # Cyan
+                array(0,200,200)),      # Cyan
+    "M" => array(array(255,0,255)),     # Magenta
+    "Y" => array(array(255,255,0),      # Yellow
+                array(180,160,40),      # Yellow
+                array(210,190,60)),     # Yellow
+    "O" => array(array(255,128,0),      # Orange
+                array(200,100,60)),     # Orange
+    "P" => array(array(255,128,128),    # Pink
+                array(200,180,170),     # Pink
+                array(200,160,130),     # Pink
+                array(190,120,110)),    # Pink
+    "N" => array(array(110,70,50),      # Brown
+                array(180,160,130),     # Pale Brown
+                array(170,140,110)),    # Pale Brown
     );
     $table=array();
     $depth=50;
@@ -2480,10 +2485,17 @@ function get_colour_key($image)
             # Work out which colour this is
             $bestdist=99999;$bestkey="";
             reset ($colours);
-            foreach ($colours as $key=>$value)
+            foreach ($colours as $key => $colour_value)
                 {
-                $distance=sqrt(pow(abs($red-$value[0]),2)+pow(abs($green-$value[1]),2)+pow(abs($blue-$value[2]),2));
-                if ($distance<$bestdist) {$bestdist=$distance;$bestkey=$key;}
+                foreach($colour_value as $value)
+                    {
+                    $distance = sqrt(pow(abs($red - $value[0]), 2) + pow(abs($green - $value[1]), 2) + pow(abs($blue - $value[2]), 2));
+                    if ($distance < $bestdist)
+                        {
+                        $bestdist = $distance;
+                        $bestkey = $key;
+                        }
+                    }
                 }
             # Add this colour to the colour table.
             if (array_key_exists($bestkey,$table)) {$table[$bestkey]++;} else {$table[$bestkey]=1;}

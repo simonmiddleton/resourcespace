@@ -6,7 +6,6 @@ $lang["google_vision_label_field"]='Pole pre navrhované kľúčové slová.';
 $lang["google_vision_landmarks_field"]='Pole pre orientačné body.';
 $lang["google_vision_text_field"]='Pole pre extrahovaný text.';
 $lang["google_vision_logo_field"]='Pole pre zistené populárne logo.';
-$lang["google_vision_api"]='Google Vision API -> Google Vision API';
 $lang["google_vision_restypes"]='Povolene typy zdrojov.';
 $lang["google_vision_features"]='Povolene zaznávanie funkcií.';
 $lang["google_vision_autotitle"]='Automaticky nastavte názov na kľúčové slovo s najvyšším hodnotením.';

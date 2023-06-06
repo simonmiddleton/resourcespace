@@ -26,7 +26,6 @@ $lang["emu_module"]='Moduł EMu';
 $lang["emu_column_name"]='Kolumna modułu EMu';
 $lang["emu_rs_field"]='Pole ResourceSpace';
 $lang["emu_add_mapping"]='Dodaj mapowanie.';
-$lang["emu_upload_emu_field_label"]='EMu IRN should not be translated as it is an acronym and technical term specific to the EMu collections management software.';
 $lang["emu_confirm_upload_nodata"]='Proszę zaznaczyć pole wyboru, aby potwierdzić, że chcesz kontynuować przesyłanie pliku.';
 $lang["emu_test_script_title"]='Testuj/Uruchom skrypt.';
 $lang["emu_run_script"]='Proces';
