@@ -211,7 +211,9 @@ jQuery(document).ready(function ()
                     .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
                 });
 
-            });
+            },
+            <?php echo generate_csrf_js_object('get_collections_resource_count'); ?>
+        );
         }
     <?php if (!$themes_simple_view)
         {
@@ -257,7 +259,12 @@ jQuery(function() {
                 <?php
                 }
                 ?>
-            api('reorder_featured_collections', {'refs': fcs_new_order});
+            api(
+                'reorder_featured_collections',
+                {'refs': fcs_new_order},
+                null,
+                <?php echo generate_csrf_js_object('reorder_featured_collections'); ?>
+            );
             }
     });
 });

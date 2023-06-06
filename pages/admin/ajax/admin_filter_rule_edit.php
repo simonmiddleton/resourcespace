@@ -199,7 +199,9 @@ function updateFieldOptions(question)
 
                 jQuery('.filter_rule_nodes').chosen();
                 }
-        });
+        },
+        <?php echo generate_csrf_js_object('get_field_options'); ?>
+    );
     jQuery('#modal').css('overflow', 'visible');
     }
 

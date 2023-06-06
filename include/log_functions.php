@@ -205,14 +205,6 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
 
     $sql_query = new PreparedStatementQuery();
 
-    $fill_params = function(string $string) use ($search)
-        {
-        $placeholder_count=substr_count($string,"?");
-        $search_value = "%{$search}%";
-        return ps_param_fill(array_fill(0, $placeholder_count, $search_value), 's');
-        };
-
-
     $sql_query->sql  = "
                     SELECT
                         `activity_log`.`logged` AS 'datetime',
@@ -248,7 +240,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
     
 
     $sql_query->sql .=  "(" . $search_block . " {$when_statements} ELSE `activity_log`.`log_code` END) )";
-    $sql_query->parameters = array_merge($sql_query->parameters, $fill_params($search_block), $when_parameters);
+    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $when_parameters);
 
     $sql_query->sql .=
                   "UNION
@@ -285,7 +277,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR ? LIKE (CASE BINARY(`resource_log`.`type`)"; 
                             
     $sql_query->sql .= "(" . $search_block . " {$when_statements} ELSE `resource_log`.`type` END) )";
-    $sql_query->parameters = array_merge($sql_query->parameters, $fill_params($search_block), $when_parameters);
+    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $when_parameters);
 
 
     $sql_query->sql .=
@@ -321,7 +313,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR ? LIKE (CASE BINARY(`collection_log`.`type`)";
     
     $sql_query->sql .= "(" . $search_block . " {$when_statements} ELSE `collection_log`.`type` END) )";
-    $sql_query->parameters = array_merge($sql_query->parameters, $fill_params($search_block), $when_parameters);
+    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $when_parameters);
 
     $sql_query->sql .= "ORDER BY `datetime` DESC";
 

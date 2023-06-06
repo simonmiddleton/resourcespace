@@ -395,3 +395,10 @@ if(
 
     exit($lang["error-csrf-verification-failed"]);
     }
+elseif (defined('API_CALL') && $_SERVER['REQUEST_METHOD'] === 'POST' && !isValidCSRFToken($csrf_token, $usersession))
+    {
+    ajax_send_response(
+        400,
+        ajax_response_fail(ajax_build_message("{$lang['error-csrf-verification']}: {$lang['error_invalid_input']}"))
+    );
+    }

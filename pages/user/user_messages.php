@@ -398,7 +398,9 @@ include "../../include/header.php";
                 msgowner  = response['msgowner'];
                 message_modal(msgtext,msgurl,ref,msgowner);
                 }
-            });
+            },
+            <?php echo generate_csrf_js_object('get_user_message'); ?>
+        );
         }
  
 </script>

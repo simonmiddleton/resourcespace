@@ -1940,13 +1940,15 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 ?> <a id='delete_link_" . $ref . "' href='#' onclick="
                                                 if (confirm('<?php echo $lang['filedeleteconfirm'] ?>'))
                                                     {
-                                                        api(
+                                                    api(
                                                         'delete_resource',
                                                         {'resource':'<?php echo $ref?>'}, 
                                                         function(response){
                                                             ModalLoad('<?php echo $redirect_url ?>',true);
+                                                        },
+                                                        <?php echo escape_quoted_data(generate_csrf_js_object('delete_resource')); ?>
+                                                    );
                                                     }
-                                                );}
                                                 " ><i class='fa fa-fw fa-trash'></i>&nbsp;<?php echo $deletetext ?></a>
                                                 <?php }
                                             echo "</li>";
