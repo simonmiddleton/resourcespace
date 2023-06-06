@@ -285,10 +285,11 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 EOT;
         generateFormToken("comment_form");
         hook("beforecommentbody");
+        $api_native_csrf_gu = generate_csrf_data_for_api_native_authmode('get_users');
         echo <<<EOT
                 <input id="comment_form_collection_ref" type="hidden" name="collection_ref" value="{$collection_ref}"></input>
                 <input id="comment_form_resource_ref" type="hidden" name="resource_ref" value="{$resource_ref}"></input>
-                <textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="{$comments_max_characters}" placeholder="{$lang['comments_body-placeholder']}" onkeyup="TaggingProcess(this)"></textarea>
+                <textarea class="CommentFormBody" id="comment_form_body" name="body" maxlength="{$comments_max_characters}" placeholder="{$lang['comments_body-placeholder']}" onkeyup="TaggingProcess(this)" {$api_native_csrf_gu}></textarea>
 
 EOT;
 

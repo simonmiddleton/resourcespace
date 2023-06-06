@@ -1,7 +1,6 @@
 <?php
 include "../include/db.php";
 header('Content-Type: application/json');
-include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/ajax_functions.php";
@@ -58,6 +57,7 @@ if($function != "login")
     {
     if($authmode == "native")
         {
+        define('API_AUTHMODE_NATIVE', true);
         include(__DIR__ . "/../include/authenticate.php");
         }
     else
@@ -74,11 +74,17 @@ if($function != "login")
         $validuser = setup_user(get_user(get_user_by_username($user)));
         if(!$validuser)
             {
-            ajax_permission_denied();
+            ajax_send_response(
+                401,
+                ['error' => [
+                    'status' => 401,
+                    'title'  => $GLOBALS['lang']['unauthorized'],
+                    'detail' => $GLOBALS['lang']['error-permissiondenied']
+                ]]
+            );
             }
         }
     }
-# Run the requested query
+
 echo execute_api_call($query, $pretty);
 debug("API: finished execute_api_call({$query});");
-
