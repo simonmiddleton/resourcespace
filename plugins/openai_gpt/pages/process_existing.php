@@ -34,9 +34,6 @@ $help_text = "\n    NAME
     -o
     --overwrite     Overwrite existing data in the field? Note that if overwrite is enabled and the input field
                     contains no data the target field will be cleared. False by default
-    -o
-    --overwrite     Overwrite existing data in the field? Note that if overwrite is enabled and the input field
-                    contains no data the target field will be cleared. False by default
 
     EXAMPLES
 
