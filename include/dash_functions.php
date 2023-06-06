@@ -2105,7 +2105,9 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
                 {
                 jQuery('div#' + TILE_ID + ' p.no_resources').removeClass('DisplayNone');
                 }
-            });
+            },
+            <?php echo generate_csrf_js_object('get_dash_search_data'); ?>
+        );
         });
     </script>
     <?php

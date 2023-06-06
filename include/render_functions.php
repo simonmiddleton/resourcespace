@@ -3669,7 +3669,7 @@ function render_selected_collection_actions()
 
     if($refs_to_remove > 0)
         {
-        $callback_csrf_token = generateCSRFToken($usersession, "remove_selected_from_collection");
+        $callback_csrf_token = generateCSRFToken($usersession, "collection_remove_resources");
         $render_actions_extra_options = array(
             array(
                 "value" => "remove_selected_from_collection",

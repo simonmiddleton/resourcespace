@@ -904,7 +904,9 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                                     api('send_collection_to_admin',{'collection': <?php echo $collection_add; ?>}, function(response)
                                                                         {
                                                                         console.debug('A copy of collection #<?php echo $collection_add; ?> has been sent for review.');
-                                                                        });
+                                                                        },
+                                                                        <?php echo generate_csrf_js_object('send_collection_to_admin'); ?>
+                                                                    );
                                                                     <?php
                                                                     }
                                                                 echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";

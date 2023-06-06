@@ -3453,12 +3453,16 @@ function collection_is_research_request($collection)
  * 
  * @return string
  */
-function add_to_collection_link($resource,$search="",$extracode="",$size="",$class="")
+function add_to_collection_link($resource,$search="",$extracode="",$size="",$class=""): string
     {
-    global $lang;
-
-    return "<a class=\"addToCollection " . $class . "\" href=\"#\" title=\"" . $lang["addtocurrentcollection"] . "\" onClick=\"AddResourceToCollection(event,'" . $resource . "','" . $size . "');" . $extracode . " return false;\" data-resource-ref=\"{$resource}\">";
-
+    $resource = (int) $resource;
+    $size = escape_quoted_data($size);
+    $class = escape_quoted_data($class);
+    return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$GLOBALS['lang']["addtocurrentcollection"]}\""
+        . " onClick=\"AddResourceToCollection(event,'{$resource}','{$size}'); {$extracode} return false;\""
+        . " data-resource-ref=\"{$resource}\""
+        . generate_csrf_data_for_api_native_authmode('add_resource_to_collection')
+        . ">";
     }
 
 
@@ -3476,15 +3480,15 @@ function remove_from_collection_link($resource,$search="",$class="", string $onc
     # Generates a HTML link for removing a resource from a collection
     # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
-
-    if ($basketmode) 
-        {
-        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefrombasket"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
-        }
-    else 
-        {
-        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
-        }
+    $resource = (int) $resource;
+    $class = escape_quoted_data($class);
+    $title = escape_quoted_data($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"]);
+    $pagename = escape_quoted_data($pagename);
+    return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
+        . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""
+        . "data-resource-ref=\"{$resource}\""
+        . generate_csrf_data_for_api_native_authmode('remove_resource_from_collection')
+        . ">";
     }
 
 

@@ -349,7 +349,9 @@ function delete_access_key_multiple()
         api('delete_access_keys', params, function(response)
             {
             CentralSpaceLoad(window.location.href);
-            });
+            },
+            <?php echo generate_csrf_js_object('delete_access_keys'); ?>
+        );
 
             return false;
         }

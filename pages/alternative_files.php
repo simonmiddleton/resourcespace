@@ -96,8 +96,9 @@ function clickDelete(){
                     error++;
                     
                     }
-                }
-            );
+                },
+            <?php echo generate_csrf_js_object('delete_alternative_file'); ?>
+        );
     });
 
     if (errors > 0){styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfilesdeletefail']?>');return false;}
@@ -227,8 +228,9 @@ for ($n=0;$n<count($files);$n++)
                         {
                         styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfiledeletefail']?>');
                         }
-                    }
-                );
+                    },
+                <?php echo escape_quoted_data(generate_csrf_js_object('delete_alternative_file')); ?>
+            );
             }
         return false;
     "><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
