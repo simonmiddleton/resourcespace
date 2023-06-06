@@ -37,7 +37,6 @@ $collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
-$context = getval("context", "");
 $submitted = getval("submitted", "");
 $external_upload = upload_share_active();
 $redirecturl = getval("redirecturl","");
