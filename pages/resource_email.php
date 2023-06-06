@@ -46,54 +46,20 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 	
-	$sharing_related=false;
-	if(getval("sharerelatedresources","")!=""){$sharing_related=true;}
-	if($sharing_related)
-		{
-        // User has chosen to include related resources, so treat as sharing a new collection
-        $relatedshares=explode(",",getval("sharerelatedresources",""));
-		// Create new collection
-		$allow_changes=(getval("allow_changes","")!=""?1:0);
-		$sharedcollection=create_collection($userref,i18n_get_translated($resource["field".$view_title_field]) . " Share " . nicedate(date("Y-m-d H:i:s")),$allow_changes);
-		
-		add_resource_to_collection($ref,$sharedcollection,false,"",$resource["resource_type"]);
-		if($sharing_related)
-			{
-			foreach($relatedshares as $relatedshare)
-				{
-				add_resource_to_collection($relatedshare,$sharedcollection);
-				}			
-			}
-		$errors=email_collection($sharedcollection,i18n_get_collection_name($sharedcollection),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,false,"","",$list_recipients,$add_internal_access, $sharepwd);
-		// Hide from drop down by default
-		show_hide_collection($sharedcollection, false, $userref);
-		
-		if ($errors=="")
-			{
-			// Log this	
-			// fix for bomb on multiple collections, daily stat object ref must be a single number.
-			$crefs=explode(",",$ref);
-			foreach ($crefs as $cref){		
-				daily_stat("E-mailed collection",$cref);
-			}
-			if (!hook("replacecollectionemailredirect")){
-				redirect($baseurl_short."pages/done.php?text=collection_email");
-				}
-			}
-		}
-	else
-		{
-		// Email single resource
-		$errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group, $sharepwd);
-		if ($errors=="")
-			{
-			// Log this			
-			daily_stat("E-mailed resource",$ref);
-			if (!hook("replaceresourceemailredirect")){
-				redirect("pages/done.php?text=resource_email&resource=".urlencode($ref)."&search=".urlencode($search)."&offset=".urlencode($offset)."&order_by=".urlencode($order_by)."&sort=".urlencode($sort)."&archive=".urlencode($archive));
-			}
-			}
-		}
+    // Email single resource
+    $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group, $sharepwd);
+    if ($errors=="")
+        {
+        // Log this			
+        daily_stat("E-mailed resource",$ref);
+        if (!hook("replaceresourceemailredirect"))
+            {
+            $params = get_search_params();
+            $params["text"]     = "resource_email";
+            $params["resource"] = $ref;
+            redirect(generateURL($baseurl_short . "pages/done.php",$params));
+            }
+        }
 	}
 
 include "../include/header.php";
