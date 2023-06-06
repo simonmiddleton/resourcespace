@@ -37,6 +37,8 @@ $collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$context = getval("context", "");
+$submitted = getval("submitted", "");
 $external_upload = upload_share_active();
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
@@ -443,6 +445,26 @@ if ($ref<0 && !(checkperm("c") || checkperm("d")))
 if (!get_edit_access($ref,$resource["archive"],false,$resource))
     {
     # The user is not allowed to edit this resource or the resource doesn't exist.
+    
+    # If this edit request was submitted, then it makes sense to divert to the view page
+    if($submitted==="true")
+        {
+        $redirecturl = generateURL("{$baseurl}/pages/view.php",
+            array('ref' => $ref,
+                  'search' => $search,
+                  'order_by' => $order_by,
+                  'offset' => $offset,
+                  'restypes' => $restypes,
+                  'archive'	=> $archive,
+                  'default_sort_direction' => $default_sort_direction,
+                  'sort' => $sort,
+                  'k' => $k
+                  )
+            );
+        redirect($redirecturl);
+        }
+
+    # This edit is a request via a link, so show the regular permission error
     $error=$lang['error-permissiondenied'];
     error_alert($error,!$modal);
     exit();
