@@ -951,9 +951,7 @@ elseif (($k != "" && !$internal_share_access))
                 }
             }
         ?>
-        <?php if (!$disable_collection_toggle) { ?>
-        <br/><a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang["hidethumbnails"]?></a>
-    <?php } ?>
+        <a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang["hidethumbnails"]?></a>
     </div>
     <?php 
     }

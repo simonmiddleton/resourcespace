@@ -160,9 +160,6 @@ $psd_transparency_checkerboard=false;
 
 $public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
 
-# A list of extensions that QLPreview should NOT be used for.
-$qlpreview_exclude_extensions=array("tif","tiff");
-
 $random_sort=false;
 
 # Select the field to display in searchcrumbs for a related search (defaults to filename)
