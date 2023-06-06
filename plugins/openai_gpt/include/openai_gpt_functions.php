@@ -4,7 +4,7 @@
  * Send the new field value to the OpenAI API in order to update the linked field 
  *
  * @param int|array $resources          Resource ID or array of resource IDS
- * @param array     $target_field       Target metadata field (array
+ * @param array     $target_field       Target metadata field array from get_resource_type_field()
  * @param array     $values             Array of strings from the field currently being processed
  * 
  * @return bool|array                   Array indicating success/failure 
@@ -19,10 +19,7 @@ function openai_gpt_update_field($resources,$target_field,$values)
     $openai_gpt_max_tokens, $openai_gpt_max_data_length;
 
     // Don't update if not a valid field type
-    if(!in_array($target_field["type"],$valid_ai_field_types) 
-        || 
-        count($values) == 0
-        )
+    if(!in_array($target_field["type"],$valid_ai_field_types))
         {
         return false;
         }
@@ -33,34 +30,36 @@ function openai_gpt_update_field($resources,$target_field,$values)
         }
 
     $resources = array_filter($resources,"is_int_loose");
+    $valid_response = false;
 
-    $results = [];
-    foreach($resources as $resource)
+    // Get data to use
+    // Remove any i18n variants and use default system language
+    $prompt_values  = [];
+    $saved_language = $language;
+    $language       = $defaultlanguage;
+
+    foreach($values as $value)
         {
-        if(isset($openai_gpt_processed[$resource . "_" . $target_field["ref"]]))
+        if(substr($value,0,1) == "~")
             {
-            // This resource/field has already been processed
-            continue;
+            $prompt_values[] = mb_strcut(i18n_get_translated($value),0,$openai_gpt_max_data_length);
             }
-        debug("openai_gpt_update_field() - resource # " . $resource . ", target field #" . $target_field["ref"]);
-
-        // Remove any i18n variants and use default system language
-        $prompt_values = [];
-        $saved_language = $language;
-        $language = $defaultlanguage;
-        foreach($values as $value)
+        elseif(trim($value) != "")
             {
-            if(substr($value,0,1) == "~")
-                {
-                $prompt_values[] = mb_strcut(i18n_get_translated($value),0,$openai_gpt_max_data_length);
-                }
-            else
-                {
-                $prompt_values[] = mb_strcut($value,0,$openai_gpt_max_data_length);
-                }
+            $prompt_values[] = mb_strcut($value,0,$openai_gpt_max_data_length);
             }
-        $language = $saved_language;
+        }
+    $language = $saved_language;
 
+    // Generate prompt (only if there are any strings)
+    if(count($prompt_values)==0)
+        {
+        // No nodes present, fake a valid response to clear target field
+        $newvalue = '';
+        $valid_response = true;
+        }
+    else
+        {
         $prompt = $openai_gpt_prompt_prefix . $target_field["openai_gpt_prompt"] . (in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES) ? " " . $openai_gpt_prompt_return_json : " " . $openai_gpt_prompt_return_text) . json_encode($prompt_values);
 
         debug("openai_gpt - sending request prompt '" . $prompt . "'");    
@@ -87,12 +86,33 @@ function openai_gpt_update_field($resources,$target_field,$values)
                     $newstrings[] = is_int_loose($attribute) ? $value : $attribute . " : " . $value;
                     }            
                 // update_field() will separate on NODE_NAME_STRING_SEPARATOR
-                $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newstrings);          
+                $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newstrings);
                 }
             else
                 {
                 $newvalue = $openai_response;
                 }
+            $valid_response = true;
+            }
+        else
+            {           
+            debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
+            $valid_response = false;
+            }
+        }
+
+    $results = [];
+    foreach($resources as $resource)
+        {
+        if(isset($openai_gpt_processed[$resource . "_" . $target_field["ref"]]))
+            {
+            // This resource/field has already been processed
+            continue;
+            }
+        if($valid_response)
+            {
+            debug("openai_gpt_update_field() - resource # " . $resource . ", target field #" . $target_field["ref"]);
+        
             // Set a flag to prevent any possibility of infinite recursion within update_field()
             $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
 
@@ -100,11 +120,9 @@ function openai_gpt_update_field($resources,$target_field,$values)
             $results[$resource] = $result;
             }
         else
-            {           
-            debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
-            $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
+            {
             $results[$resource] = false;
-            }
+            }        
         }
     return $results;
     }
