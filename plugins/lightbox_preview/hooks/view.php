@@ -83,7 +83,7 @@ function HookLightbox_previewViewRenderaltthumb()
     global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $n, $k, $search,
             $offset, $sort, $order_by, $archive;
 
-    $url = false;# getPreviewURL($resource, $altfiles[$n]['ref']);
+    $url = getPreviewURL($resource, $altfiles[$n]['ref']);
     if ($url === false)
         return false;
 
