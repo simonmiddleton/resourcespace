@@ -119,6 +119,7 @@ $use_cases = [
 ];
 foreach ($use_cases as $uc)
     {
+    $use_native_input_for_date_field = true;
     $errors = [];
     $result = update_field($uc['input']['resource'], $uc['input']['rtf'], $uc['input']['value'], $errors, false);
     if(!($uc['expected'] === $result && $uc['errors'] === count($errors)))

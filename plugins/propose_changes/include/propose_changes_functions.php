@@ -115,7 +115,7 @@ function save_proposed_changes($ref)
 						}
 						$val=$newval;
                     }
-                else if($fields[$n]['type'] === FIELD_TYPE_DATE)
+                else if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                     {
                     $val = getval("field_{$fields[$n]['ref']}", '');
                     if(!validateDatetime($val, 'Y-m-d'))
