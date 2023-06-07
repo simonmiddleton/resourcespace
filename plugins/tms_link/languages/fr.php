@@ -35,9 +35,6 @@ $lang["tms_link_test_count"]='Nombre d\'enregistrements pour tester le script - 
 $lang["tms_link_last_run_date"]='Dernière exécution du script :';
 $lang["tms_link_script_failure_notify_days"]='Nombre de jours après lesquels afficher une alerte et envoyer un e-mail si le script n\'a pas été complété.';
 $lang["tms_link_script_problem"]='AVERTISSEMENT - le script TMS n\'a pas été exécuté avec succès au cours des %jours% derniers jours. Dernière heure d\'exécution :';
-$lang["tms_link_upload_tms_field"]='Veuillez traduire : TMS ObjectID
-
-Identifiant d\'objet TMS';
 $lang["tms_link_upload_nodata"]='Aucune donnée TMS trouvée pour cet ID d\'objet :';
 $lang["tms_link_confirm_upload_nodata"]='Veuillez cocher la case pour confirmer que vous souhaitez poursuivre le téléchargement.';
 $lang["tms_link_enable_update_script"]='Activer le script de mise à jour TMS.';

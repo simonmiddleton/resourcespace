@@ -106,12 +106,12 @@ if (isset($error)) { ?><div class="FormError"><?php echo $error?></div><?php } ?
 </div>
 
 <div id="message_screen" style="<?php if($message_type!=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN && $message_type!=(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)) {?>display:none;<?php } ?>">
-	<div class="Question"><label><?php echo $lang["message_url"]?></label><input name="url" type="text" class="stdwidth Inline required" value="<?php echo getval("url",""); ?>"><div class="clearerleft"></div></div>
+	<div class="Question"><label><?php echo $lang["message_url"]?></label><input name="url" type="text" class="stdwidth Inline required" value="<?php echo escape_quoted_data(getval("url","")); ?>"><div class="clearerleft"></div></div>
 </div>
 
 <div id="message_email" style="<?php if($message_type!==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL && $message_type!=(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)) {?>display:none;<?php } ?>">
 	<div class="Question"><label><?php echo $lang["emailhtml"]?></label><input name="html" type="checkbox" value="yes" <?php if (getval("html","")=="yes") { ?>checked<?php } ?>><div class="clearerleft"> </div></div>
-	<div class="Question"><label><?php echo $lang["emailsubject"]?></label><input name="subject" type="text" class="stdwidth Inline required" value="<?php echo getval("subject",$applicationname)?>"><div class="clearerleft"> </div></div>
+	<div class="Question"><label><?php echo $lang["emailsubject"]?></label><input name="subject" type="text" class="stdwidth Inline required" value="<?php echo escape_quoted_data(getval("subject",$applicationname))?>"><div class="clearerleft"> </div></div>
 </div>
 
 <div class="Question"><label><?php echo $lang["text"]?></label><textarea name="text" class="stdwidth Inline required" rows=25 cols=50><?php echo htmlspecialchars(getval("text",""))?></textarea><div class="clearerleft"> </div></div>

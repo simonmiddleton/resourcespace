@@ -743,6 +743,13 @@ function do_search(
                                         if ($contains_separators === true)
                                             {
                                             $keyword_split = split_keywords($keyword);
+                                            
+                                            if($field_short_name_specified){
+                                                $keyword_split = array_map(function($k) use ($fieldname)
+                                                {
+                                                    return "$fieldname:$k";
+                                                },$keyword_split);
+                                            }
                                             $keywords = array_merge($keywords,$keyword_split);
                                             continue;
                                             }

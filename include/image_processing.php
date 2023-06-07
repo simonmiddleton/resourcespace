@@ -2439,38 +2439,38 @@ function get_colour_key($image)
     # Extracts a colour key for the image, like a soundex.
     $width=imagesx($image);$height=imagesy($image);
     $colours=array(
-    "K"=>array(0,0,0),          # Black
-    "W"=>array(255,255,255),    # White
-    "E"=>array(200,200,200),    # Grey
-    "E"=>array(140,140,140),    # Grey
-    "E"=>array(100,100,100),    # Grey
-    "R"=>array(255,0,0),        # Red
-    "R"=>array(128,0,0),        # Dark Red
-    "R"=>array(180,0,40),       # Dark Red
-    "G"=>array(0,255,0),        # Green
-    "G"=>array(0,128,0),        # Dark Green
-    "G"=>array(80,120,90),      # Faded Green
-    "G"=>array(140,170,90),     # Pale Green
-    "B"=>array(0,0,255),        # Blue
-    "B"=>array(0,0,128),        # Dark Blue
-    "B"=>array(90,90,120),      # Dark Blue
-    "B"=>array(60,60,90),       # Dark Blue
-    "B"=>array(90,140,180),     # Light Blue
-    "C"=>array(0,255,255),      # Cyan
-    "C"=>array(0,200,200),      # Cyan
-    "M"=>array(255,0,255),      # Magenta
-    "Y"=>array(255,255,0),      # Yellow
-    "Y"=>array(180,160,40),     # Yellow
-    "Y"=>array(210,190,60),     # Yellow
-    "O"=>array(255,128,0),      # Orange
-    "O"=>array(200,100,60),     # Orange
-    "P"=>array(255,128,128),    # Pink
-    "P"=>array(200,180,170),    # Pink
-    "P"=>array(200,160,130),    # Pink
-    "P"=>array(190,120,110),    # Pink
-    "N"=>array(110,70,50),      # Brown
-    "N"=>array(180,160,130),    # Pale Brown
-    "N"=>array(170,140,110),    # Pale Brown
+    "K" => array(array(0,0,0)),         # Black
+    "W" => array(array(255,255,255)),   # White
+    "E" => array(array(200,200,200),
+                array(140,140,140),
+                array(100,100,100)),    # Grey
+    "R" => array(array(255,0,0),        # Red
+                array(128,0,0),         # Dark Red
+                array(180,0,40)),       # Dark Red
+    "G" => array(array(0,255,0),        # Green
+                array(0,128,0),         # Dark Green
+                array(80,120,90),       # Faded Green
+                array(140,170,90)),     # Pale Green
+    "B" => array(array(0,0,255),        # Blue
+                array(0,0,128),         # Dark Blue
+                array(90,90,120),       # Dark Blue
+                array(60,60,90),        # Dark Blue
+                array(90,140,180)),     # Light Blue
+    "C" => array(array(0,255,255),      # Cyan
+                array(0,200,200)),      # Cyan
+    "M" => array(array(255,0,255)),     # Magenta
+    "Y" => array(array(255,255,0),      # Yellow
+                array(180,160,40),      # Yellow
+                array(210,190,60)),     # Yellow
+    "O" => array(array(255,128,0),      # Orange
+                array(200,100,60)),     # Orange
+    "P" => array(array(255,128,128),    # Pink
+                array(200,180,170),     # Pink
+                array(200,160,130),     # Pink
+                array(190,120,110)),    # Pink
+    "N" => array(array(110,70,50),      # Brown
+                array(180,160,130),     # Pale Brown
+                array(170,140,110)),    # Pale Brown
     );
     $table=array();
     $depth=50;
@@ -2485,10 +2485,17 @@ function get_colour_key($image)
             # Work out which colour this is
             $bestdist=99999;$bestkey="";
             reset ($colours);
-            foreach ($colours as $key=>$value)
+            foreach ($colours as $key => $colour_value)
                 {
-                $distance=sqrt(pow(abs($red-$value[0]),2)+pow(abs($green-$value[1]),2)+pow(abs($blue-$value[2]),2));
-                if ($distance<$bestdist) {$bestdist=$distance;$bestkey=$key;}
+                foreach($colour_value as $value)
+                    {
+                    $distance = sqrt(pow(abs($red - $value[0]), 2) + pow(abs($green - $value[1]), 2) + pow(abs($blue - $value[2]), 2));
+                    if ($distance < $bestdist)
+                        {
+                        $bestdist = $distance;
+                        $bestkey = $key;
+                        }
+                    }
                 }
             # Add this colour to the colour table.
             if (array_key_exists($bestkey,$table)) {$table[$bestkey]++;} else {$table[$bestkey]=1;}

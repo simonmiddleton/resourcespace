@@ -927,6 +927,7 @@ $lang["counting_resources"] = "counting resources...";
 $lang["not_allowed"] = "Not allowed";
 $lang["no_results_found"] = "No results found";
 $lang["function_not_enabled"] = "This function is not enabled.";
+$lang['remaining'] = 'remaining';
 
 # Pager
 $lang["next"]="Next";
@@ -1089,8 +1090,10 @@ $lang["removetext"]="Remove text / option(s)";
 $lang["find"]="Find";
 $lang["andreplacewith"]="...and replace with...";
 $lang["relateallresources"]="Relate all resources in this collection";
+$lang["unrelateallresources"]="Un-relate all resources in this collection";
 $lang["relate_selected_resources"] = "Relate selected resources";
 $lang['relateallresources_confirmation'] = 'All resources in this collection are now related';
+$lang['unrelateallresources_confirmation'] = 'None of the resources in this collection are now related';
 
 # New for 1.5
 $lang["columns"]="Columns";
@@ -2561,25 +2564,11 @@ $lang['system_down_title'] = 'Attention!';
 $lang['system_down_message'] = 'System is down for maintenance. Thank you for your patience.';
 /* End of System Down page strings */
 
-/* System Console */
-$lang["systemconsole"]="Console";
+/* System Console (no longer available, these are re-used in System Config) */
 $lang["systemconsoledebuglog"]="Debug log";
-$lang["systemconsolememorycpu"]="Memory &amp; CPU";
-$lang["systemconsoledatabase"]="Database";
-$lang["systemconsolesqllogtransactions"]="SQL Transaction Log";
-$lang["systemconsoleactivitylog"]="Activity Log";
 $lang["systemconsoleturnoffafter"]="Turn off after";
 $lang["systemconsoleonpermallusers"]="On (permanently for all users)";
 $lang["systemconsoleonallusers"]="On (all users)";
-$lang["systemconsoleonfailedtopcommand"]="Failed to execute top command";
-$lang["systemconsoleonfailedtasklistcommand"]="Failed to execute tasklist command";
-$lang["systemconsoleondebuglognotsetorfound"]="\$debug_log_location not set, file not found or is not readable. Please check that '\$debug_log_readable=true;' is set in your configuration";
-$lang["systemconsoleonsqllognotsetorfound"]="\$mysql_log_transactions not set or \$mysql_log_location file not found or is not readable";
-$lang['systemconsoletrackVars'] = "Tracking variables";
-$lang['systemconsole_label_input_vars'] = "Variable names";
-$lang['systemconsole_help_track_vars'] = "Use a CSV of variable names that you wish to track throughout the system. This is mainly used for debugging purposes as it helps determining where a specific variable is being set or overriden.";
-$lang['systemconsole_label_input_track_period'] = "Specify how long to track variables for";
-$lang['systemconsole_help_track_period'] = "Value represents minutes.";
 
 /* Global Trash Bin */
 $lang['trash_bin_title'] = 'Remove';
@@ -2675,6 +2664,8 @@ $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse B
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 $lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
 $lang['systemconfig_only_show_modified'] = 'Only show modified values';
+$lang['systemconfig_debug'] = 'Debug';
+$lang['systemconfig_debug_log_on_specific_user'] = "On (specific user)";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2897,7 +2888,7 @@ $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your
 $lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
 $lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Please make sure there are no other featured collections or featured collection categories under this collection";
-$lang["error_multiple_preview_tools"] = "Please disable the curent preview tool and then try again.";
+$lang["error_multiple_preview_tools"] = "Please disable the current preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
 $lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
 $lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";

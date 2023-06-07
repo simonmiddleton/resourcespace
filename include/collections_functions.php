@@ -697,7 +697,9 @@ function collection_writeable($collection)
         // System admin
         || checkperm("a")
         // Adding to active upload_share
-        || upload_share_active() == $collection;
+        || upload_share_active() == $collection
+        // This is a request collection and user is an admin user who can approve requests
+        || (checkperm("R") && $collectiondata['type'] == COLLECTION_TYPE_REQUEST && checkperm("t"));
 
     // Check if user has permission to manage research requests. If they do and the collection is research request allow writable.
     if ($writable === false && checkperm("r"))
@@ -3446,17 +3448,23 @@ function collection_is_research_request($collection)
  * @param  integer  $resource   ID of resource
  * @param  string   $search     Search parameters
  * @param  string   $extracode  Additonal code to be run when link is selected
+ *                              IMPORTANT: never use untrusted data here!
  * @param  string   $size       Resource size if appropriate
  * @param  string   $class      Class to be applied to link
  * 
  * @return string
  */
-function add_to_collection_link($resource,$search="",$extracode="",$size="",$class="")
+function add_to_collection_link($resource,$search="",$extracode="",$size="",$class=""): string
     {
-    global $lang;
-
-    return "<a class=\"addToCollection " . $class . "\" href=\"#\" title=\"" . $lang["addtocurrentcollection"] . "\" onClick=\"AddResourceToCollection(event,'" . $resource . "','" . $size . "');" . $extracode . " return false;\" data-resource-ref=\"{$resource}\">";
-
+    $resource = (int) $resource;
+    $size = escape_quoted_data($size);
+    $class = escape_quoted_data($class);
+    $title = escape_quoted_data($GLOBALS['lang']["addtocurrentcollection"]);
+    return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
+        . " onClick=\"AddResourceToCollection(event,'{$resource}','{$size}'); {$extracode} return false;\""
+        . " data-resource-ref=\"{$resource}\""
+        . generate_csrf_data_for_api_native_authmode('add_resource_to_collection')
+        . ">";
     }
 
 
@@ -3474,15 +3482,15 @@ function remove_from_collection_link($resource,$search="",$class="", string $onc
     # Generates a HTML link for removing a resource from a collection
     # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
-
-    if ($basketmode) 
-        {
-        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefrombasket"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
-        }
-    else 
-        {
-        return "<a class=\"removeFromCollection " . $class . "\" href=\"#\" title=\"" . $lang["removefromcurrentcollection"] . "\" onClick=\"RemoveResourceFromCollection(event,'" . $resource . "','" . $pagename . "');{$onclick} return false;\" data-resource-ref=\"{$resource}\">";
-        }
+    $resource = (int) $resource;
+    $class = escape_quoted_data($class);
+    $title = escape_quoted_data($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"]);
+    $pagename = escape_quoted_data($pagename);
+    return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
+        . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""
+        . "data-resource-ref=\"{$resource}\""
+        . generate_csrf_data_for_api_native_authmode('remove_resource_from_collection')
+        . ">";
     }
 
 
@@ -4538,13 +4546,19 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     
-    // Relate all resources
+    // Relate / Unrelate all resources
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
-        $options[$o]['label'] = $lang['relateallresources'];
+        $options[$o]['label'] = htmlspecialchars($lang['relateallresources']);
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
+        $o++;
+
+        $options[$o]['value'] = 'unrelate_all';
+        $options[$o]['label'] = htmlspecialchars($lang['unrelateallresources']);
+        $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 290;
         $o++;
         }
 
@@ -5283,7 +5297,7 @@ function collection_cleanup_inaccessible_resources($collection)
 */
 function relate_all_collection($collection, $checkperms = true)
     {
-    if((string)(int)$collection != (string)$collection || ($checkperms && !allow_multi_edit($collection)))
+    if(!is_int_loose($collection) || ($checkperms && !allow_multi_edit($collection)))
         {
         return false;
         }
@@ -5305,6 +5319,24 @@ function relate_all_collection($collection, $checkperms = true)
     return true;
     }
 
+/**
+* Un-relate all resources in a collection
+* 
+* @param integer  $collection   ID of collection
+*
+* @return boolean
+*/
+function unrelate_all_collection($collection, $checkperms = true)
+    {
+    if(!is_int_loose($collection) || ($checkperms && !allow_multi_edit($collection)))
+        {
+        return false;
+        }
+
+    ps_query('DELETE FROM resource_related WHERE `resource` IN (SELECT `resource` FROM collection_resource WHERE collection = ?) AND `related` IN (select `resource` FROM collection_resource WHERE collection = ?)', array('i', $collection, 'i', $collection));
+
+    return true;
+    }
 
 /**
 * Update collection type for one collection or batch

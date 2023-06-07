@@ -31,6 +31,6 @@ if($success)
 else
     {
     http_response_code(403);
-    exit($lang["error-permissiondenied"]);
+    exit(htmlspecialchars($lang["error-permissiondenied"]));
     }
 

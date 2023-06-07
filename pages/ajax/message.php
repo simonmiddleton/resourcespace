@@ -320,13 +320,9 @@
 			return;
 		}
 
-        let message_box_div = document.createElement('div');
-        message_box_div.className = 'MessageBox';
-        message_box_div.setAttribute('style', 'display: none;');
-        message_box_div.setAttribute('id', id);
-        message_box_div.textContent = nl2br(message) + '<br>' + url;
-
-        jQuery('div#MessageContainer').append(message_box_div).after(function()
+    jQuery('div#MessageContainer')
+        .append("<div class='MessageBox' style='display: none;' id='" + id + "'>" + nl2br(DOMPurify.sanitize(message)) + "<br />" + url + "</div>")
+        .after(function()
 		{
 			var t = window.setTimeout(function()
 			{

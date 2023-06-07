@@ -64,7 +64,11 @@ if ($enable_related_resources)
                         
                         if($edit_access)
                             {
-                            echo "<div class=\"ResourcePanelInfo\" ><a href=\"#\" onClick=\"if(confirm('" . $lang["related_resource_confirm_delete"] . "')){relateresources(" . $ref . "," . $relatedresource["ref"] . ",'remove');jQuery('#RelatedResource_" . $relatedresource["ref"] . "').remove();}return false;\" >" . LINK_CARET . $lang["action-remove"] . "</a></div>";
+                            echo "<div class=\"ResourcePanelInfo\" ><a href=\"#\" onClick=\"if(confirm('"
+                                . escape_quoted_data($lang["related_resource_confirm_delete"]) . "')){relateresources(" . (int) $ref . "," . (int) $relatedresource["ref"] . ",'remove'"
+                                . escape_quoted_data(generate_csrf_js_object('update_related_resource'))
+                                .");jQuery('#RelatedResource_" . (int) $relatedresource["ref"] . "').remove();}return false;\" >"
+                                . LINK_CARET . htmlspecialchars($lang["action-remove"]) . "</a></div>";
                             }?>
                         </div>
                         <?php
@@ -81,7 +85,7 @@ if ($enable_related_resources)
                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                         }
                     echo "<div class=\"clearerleft\" ></div>";
-                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . $lang["upload"] . "</a>";
+                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a>";
                     }
                 }
 			else
@@ -98,7 +102,7 @@ if ($enable_related_resources)
 						<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 						<tbody>
 							<tr class="ListviewTitleStyle">
-								<td><h3><?php echo $restypename; ?></h3></td>		
+								<td><h3><?php echo htmlspecialchars($restypename); ?></h3></td>		
 								<td><div class="ListTools"></div></td>                                    
 							</tr>
 							<?php
@@ -114,7 +118,11 @@ if ($enable_related_resources)
 										echo "<td>";
 										if($edit_access)
 											{
-											echo "<div class=\"ListTools\" ><a href=\"#\" onClick=\"if(confirm('" . escape_quoted_data($lang["related_resource_confirm_delete"]) . "')){relateresources(" . (int) $ref . ", $related_resource_ref,'remove');}return false;\" >" . LINK_CARET . htmlspecialchars($lang["action-remove"]) . "</a></div>";
+											echo "<div class=\"ListTools\" ><a href=\"#\" onClick=\"if(confirm('"
+                                                . escape_quoted_data($lang["related_resource_confirm_delete"]) . "')){relateresources(" . (int) $ref . ", $related_resource_ref,'remove', "
+                                                . escape_quoted_data(generate_csrf_js_object('update_related_resource'))
+                                                . ");}return false;\">"
+                                                . LINK_CARET . htmlspecialchars($lang["action-remove"]) . "</a></div>";
 											}
 										echo "</td>";	
 										echo "</tr>";	
@@ -133,7 +141,7 @@ if ($enable_related_resources)
                                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                                         }
 
-									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . $lang["upload"] . "</a></div></td>";
+									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a></div></td>";
 									}
 							?>
 						</tbody>

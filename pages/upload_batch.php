@@ -1035,18 +1035,23 @@ jQuery(document).ready(function () {
         'GoogleDrive' => true,
         'Facebook' => true,
         'Dropbox' => true,
-        'Onedrive' => true,
+        'OneDrive' => true,
         'Box' => true,
         'Instagram' => true,
         'Zoom' => true,
         'Unsplash' => true,
         );
 
-    foreach($uploader_plugins as $uploader_plugin)
+    for($n=0;$n<count($uploader_plugins);$n++)
         {
-        if(isset($supported_plugins[$uploader_plugin]))
+        // Fix for change to name in updated library that will break old configs
+        if($uploader_plugins[$n] == "Onedrive")
             {
-            echo "var " . $uploader_plugin  . "= Uppy." . $uploader_plugin . ";\n";
+            $uploader_plugins[$n] = "OneDrive";
+            }
+        if(isset($supported_plugins[$uploader_plugins[$n]]))
+            {
+            echo "var " . $uploader_plugins[$n]  . "= Uppy." . $uploader_plugins[$n] . ";\n";
             }
         }
     ?>
@@ -1119,7 +1124,9 @@ jQuery(document).ready(function () {
                         newcol = parseInt(response);
                         console.debug('Created collection #' + newcol);
                         redirurl =  ReplaceUrlParameter(redirurl, 'collection_add', newcol);
-                        });
+                        },
+                        <?php echo generate_csrf_js_object('create_collection'); ?>
+                    );
                     }
                 }
              // Encode the file names
@@ -1636,7 +1643,9 @@ function postUploadActions()
         api('send_collection_to_admin',{'collection': newcol}, function(response)
             {
             console.debug('A copy of collection #' + newcol + ' has been sent to for review.');
-            });
+            },
+            <?php echo generate_csrf_js_object('send_collection_to_admin'); ?>
+        );
         <?php
         }?>
 
@@ -1651,7 +1660,9 @@ function postUploadActions()
         api('relate_all_resources',{'related': resource_keys}, function(response)
             {
             console.debug('Completed relating uploaded resources');
-            });
+            },
+            <?php echo generate_csrf_js_object('relate_all_resources'); ?>
+        );
         }
 
     <?php
@@ -1695,12 +1706,12 @@ function postUploadActions()
             {
             CentralSpaceLoad('<?php echo $redirecturl ?>',true);
             }
-        uppy.reset();
+        uppy.cancelAll();
         <?php
         }
     elseif($plupload_clearqueue)
         {
-        echo "uppy.reset();";
+        echo "uppy.cancelAll();";
         }?>
 
     if(upRedirBlock)

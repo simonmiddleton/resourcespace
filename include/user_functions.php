@@ -267,7 +267,6 @@ function setup_user(array $userdata)
         {
         // We need to get all globals as we don't know what may be referenced here
         override_rs_variables_by_eval($GLOBALS, $config_options);
-        debug_track_vars('end@setup_user', get_defined_vars());
         }
 
     // Set default workflow states to show actions for, if not manually set by user

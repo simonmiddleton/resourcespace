@@ -83,7 +83,7 @@ renderBreadcrumbs($links_trail);
 <?php } ?>
 </p>
 
-<input type=hidden name="plugin" value="<?php echo getval('plugin','')?>"/>
+<input type=hidden name="plugin" value="<?php echo escape_quoted_data(getval('plugin',''))?>"/>
   
 <input name="save" type="submit" value="<?php echo $lang["save"] ?>">
 </form>
