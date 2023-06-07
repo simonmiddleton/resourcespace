@@ -692,7 +692,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
     $snapshottime = 1;
     $duration = 0; // Set this as default if the duration is not determined so that previews will always work
     $cmd = $ffmpeg_fullpath . ' -i ' . escapeshellarg($file);
-    $out = run_command($cmd);
+    $out = run_command($cmd, true);
         
     debug("FFMPEG-VIDEO: Running information command: {$cmd}");
 
