@@ -2743,11 +2743,12 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
  *
  * @param array $fields=[]      Array of resource_type_field refs
  * @param array $restypes=[]    Array of resource_type refs
+ * @param bool  $dryrun         Don't delete, just return count of rows that will be affected
  * 
- * @return int Count of rows deleted
+ * @return int Count of rows deleted/to delete
  * 
  */
-function cleanup_invalid_nodes(array $fields = [],array $restypes=[])
+function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryrun=false)
     {
     $allrestypes = get_resource_types('',false,false,true);
     $allrestyperefs = array_column($allrestypes,"ref");
@@ -2783,11 +2784,20 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[])
 
         if(count($remove_fields)>0)
             {
-            $query = "DELETE rn.* FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node WHERE r.resource_type = ? AND n.resource_type_field IN (" . ps_param_insert(count($remove_fields))  . ");";
-            $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
-            ps_query($query,$params);
-            $deletedrows += sql_affected_rows();
+            if($dryrun)
+                {
+                $query = "SELECT COUNT(*) AS value FROM resource_node LEFT JOIN resource r ON r.ref=resource_node.resource LEFT JOIN node n ON n.ref=resource_node.node WHERE r.resource_type = ? AND n.resource_type_field IN (" . ps_param_insert(count($remove_fields))  . ");";
+                $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
+                $deletedrows = ps_value($query,$params,0);
+                }
+            else
+                {
+                $query = "DELETE rn.* FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node WHERE r.resource_type = ? AND n.resource_type_field IN (" . ps_param_insert(count($remove_fields))  . ");";
+                $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
+                ps_query($query,$params);
+                $deletedrows += sql_affected_rows();
+                }
             }
         }
-    return $deletedrows > 0 ? "Deleted " . $deletedrows . " rows" :  "No rows found";
+    return $deletedrows > 0 ? ((!$dryrun ? "Deleted " : "Found ") . $deletedrows . " row(s)") :  "No rows found";
     }

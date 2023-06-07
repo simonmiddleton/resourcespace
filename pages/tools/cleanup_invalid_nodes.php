@@ -1,22 +1,24 @@
 <?php
 include "../../include/db.php";
 include_once "../../include/authenticate.php";
-if(!checkperm("a")){exit("Access denied");}
+if(!checkperm("a")){exit($lang["error-permissiondenied"]);}
 
 set_time_limit(0);
 
-$restype    = getval("restype",0,true);
-$field      = getval("field",0,true);
-$dryrun     = getval("dryrun","") != "";
-$backurl    = getval("backurl","");
+$cleanuprestype = getval("cleanuprestype",'');
+$cleanupfield   = getval("cleanupfield",0,true);
+$dryrun         = getval("dryrun","") != "";
+$backurl        = getval("backurl","");
 
-if(getval("submit","") != "")
+$cleanuprestypes = explode(",",$cleanuprestype);
+$cleanuprestypes = array_filter($cleanuprestypes,"is_int_loose");
+
+if(getval("submit","") != "" && $cleanupfield !=0)
     {
-    $result = cleanup_invalid_nodes([$field],[$restype]);
+    $result = cleanup_invalid_nodes([$cleanupfield],$cleanuprestypes, $dryrun);
     }
     
 include_once "../../include/header.php";
-
 
 ?>
 <div class="BasicsBox">
@@ -24,7 +26,7 @@ include_once "../../include/header.php";
     if($backurl=="")
         {?>
         <p>
-            <a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a>
+            <a href="<?php echo escape_quoted_data($backurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["back"]) ?></a>
         </p>
         <?php
         }
@@ -33,17 +35,17 @@ include_once "../../include/header.php";
         render_top_page_error_style($result);
         }    
     ?>
-	<h1>Cleanup invalid node data</h1>
+	<h1><?php echo htmlspecialchars($lang["cleanup_invalid_nodes"]) ?></h1>
 
 	<form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/cleanup_invalid_nodes.php" onsubmit="return CentralSpacePost(this,true);">
      <?php generateFormToken("cleanup_invalid_nodes"); ?>
     <?php
-    render_field_selector_question($lang["field"],"field",[],"medwidth",false,$field);
-    render_resource_type_selector_question($lang["property-resource_type"], "restype","medwidth",$restype);
+    render_field_selector_question($lang["field"],"cleanupfield",[],"medwidth",false,$cleanupfield);
+    render_resource_type_selector_question($lang["property-resource_type"], "cleanuprestype","medwidth",false,$cleanuprestype[0] ?? 0);
     ?>
 	<div class="Question" >
-		<label for="dryrun" ><?php echo $lang["admin_resource_type_field_migrate_dry_run"] ?></label>
-		<input class="medwidth" type="checkbox" name="dryrun" value="true">
+		<label for="dryrun" ><?php echo htmlspecialchars($lang["admin_resource_type_field_migrate_dry_run"]) ?></label>
+		<input class="medwidth" type="checkbox" name="dryrun" value="true" <?php if($dryrun){echo" checked";} ?>>
         <div class="clearerleft"> </div>
 	</div>
     <div class="Question" >

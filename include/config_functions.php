@@ -1508,7 +1508,7 @@ function rs_get_resource_type(int $ref)
  */
 function save_resource_type_field($ref,$columns,$postdata)
     {
-    global $regexp_slash_replace, $migrate_data;
+    global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
     $sync_field = (int)$postdata["sync_field"] ?? 0;
     $existingfield = get_resource_type_field($ref);
@@ -1649,7 +1649,9 @@ function save_resource_type_field($ref,$columns,$postdata)
         }
     if(count($remove_data_restypes)>0)
         {
-        cleanup_invalid_nodes([$ref],$remove_data_restypes);
+        // Don't delete invalid nodes immediately in case of accidental/inadvertent change - just show a link to the cleanup page
+        $cleanup_url = generateURL($baseurl . "/pages/tools/cleanup_invalid_nodes.php",["cleanupfield"=>$ref, "cleanuprestype"=>implode(",",$remove_data_restypes)]);
+        $onload_message= ["title" => $lang["cleanup_invalid_nodes"],"text" => str_replace("%%CLEANUP_LINK%%","<br/><a href='" . $cleanup_url . "' target='_blank'>" . $lang["cleanup_invalid_nodes"] . "</a>",$lang["information_field_restype_deselect_cleanup"])];
         }
     
     hook('afterresourcetypefieldeditsave');

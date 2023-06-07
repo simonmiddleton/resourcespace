@@ -32,7 +32,6 @@ else
         $quicksearch = $search;
         }
     }
-
 if($basic_simple_search)
     {
     $restypes    = '';

@@ -6540,8 +6540,6 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 function render_resource_type_selector_question($label, $name, $class = "stdwidth", $hidden = false, $current = 0)
     {
     global $lang;
-    $parameters = array();
-
     $resource_types = get_resource_types('',true,false,true);
 
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";

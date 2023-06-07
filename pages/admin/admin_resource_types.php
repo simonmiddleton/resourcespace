@@ -1,19 +1,11 @@
 <?php
 
 include "../../include/db.php";
-
 include "../../include/authenticate.php";
-
-if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
-
+if(!checkperm("a")){exit($lang["error-permissiondenied"]);}
 
 $restype_order_by=getval("restype_order_by","ref");
-$restype_sort=getval("restype_sort","asc");
-
-if(!in_array($restype_order_by,array("ref","name","tab_name","order_by","fieldcount"))){$restype_order_by="ref";}
+$restype_sort=strtolower(getval("restype_sort","asc") == "asc") ? "asc" : "desc";
 
 $url_params = array("restype_order_by"=>$restype_order_by,"restype_sort"=>$restype_sort);
 $url=generateURL($baseurl . "/pages/admin/admin_resource_types.php",$url_params);
@@ -35,30 +27,45 @@ if ($newtype!="" && enforcePostRequest(false))
 
 $resource_types=get_resource_types();
 
+foreach($resource_types as &$resource_type)
+    {
+    $resource_type["fieldcount"] = count($resource_type["resource_type_fields"]);
+    }
+
+// Sort resource types
+if(isset($resource_types[0][$restype_order_by]))
+    {
+    usort($resource_types, function ($a, $b) use ($restype_order_by, $restype_sort) {return ($restype_sort == "asc" ? $a[$restype_order_by] <=> $b[$restype_order_by] : $b[$restype_order_by] <=> $a[$restype_order_by]);});
+    }
+
 include "../../include/header.php";
 
 function addColumnHeader($orderName, $labelKey)
     {
-	global $baseurl, $url, $group, $restype_order_by, $restype_sort, $find, $lang;
+    global $baseurl, $url, $restype_order_by, $restype_sort, $find, $lang;
 
-	if ($restype_order_by == $orderName && $restype_sort=="asc")
-		$arrow = '<span class="DESC"></span>';
-	else if ($restype_order_by == $orderName && $restype_sort=="desc")
-		$arrow = '<span class="ASC"></span>';
-	else
-		$arrow = '';
+    if ($restype_order_by == $orderName)
+        {
+        $arrow = '<span class="' . strtoupper($restype_sort) . '"></span>';
+        $linksort = ($restype_sort=="asc") ? 'desc' : 'asc';
+        }
+    else
+        {
+        $arrow = '';
+        $linksort = 'asc';
+        }
 
-	?><td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo $orderName ?>&restype_sort=<?php echo ($restype_sort=="asc") ? 'desc' : 'asc';
-			?>&find=<?php echo urlencode((string)$find)?>&backurl=<?php echo urlencode((string)$url) ?>" onClick="return CentralSpaceLoad(this);"><?php
-			echo $lang[$labelKey] . $arrow ?></a></td>
-	
-      <?php
+    ?><td><a href="<?php echo $baseurl ?>/pages/admin/admin_resource_types.php?restype_order_by=<?php echo htmlspecialchars($orderName) ?>&restype_sort=<?php echo $linksort;
+            ?>&find=<?php echo urlencode((string)$find)?>&backurl=<?php echo urlencode((string)$url) ?>" onClick="return CentralSpaceLoad(this);"><?php
+            echo htmlspecialchars($lang[$labelKey]) . $arrow ?></a></td>
 
-      }
+        <?php
+
+        }
 ?>	
 
 <div class="BasicsBox">
-<h1><?php echo $lang["resource_types_manage"]; ?></h1>
+<h1><?php echo htmlspecialchars($lang["resource_types_manage"]); ?></h1>
 <?php
 	$links_trail = array(
 	    array(
@@ -77,7 +84,7 @@ function addColumnHeader($orderName, $labelKey)
   
   <?php
   $introtext=text("introtext");
-  if($introtext!=""){ echo "<p>" . text("introtext") . "</p>";}
+  if($introtext!=""){ echo "<p>" . htmlspecialchars(text("introtext")) . "</p>";}
   
 $allow_reorder=false;
 // Allow sorting if we are ordering a single resource type, or if $use_order_by_tab_view is true (which means order_by values are across all resource types) and we can see all fields
@@ -85,7 +92,7 @@ if($restype_order_by=="order_by"){$allow_reorder=true;}
 
 if(!$allow_reorder)
   {?>
-  <a href="<?php echo $baseurl . "/pages/admin/admin_resource_types.php?restype_order_by=order_by&restype_sort=asc" ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["admin_resource_type_reorder_mode"]?></a></p>  
+  <a href="<?php echo $baseurl . "/pages/admin/admin_resource_types.php?restype_order_by=order_by&restype_sort=asc" ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["admin_resource_type_reorder_mode"]) ?></a></p>  
   <?php
   }
   ?>
@@ -93,7 +100,7 @@ if(!$allow_reorder)
 <div class="FormError" id="PageError"
   <?php
   if (!isset($error_text)) { ?> style="display:none;"> <?php }
-  else { echo ">" . $error_text ; } ?>
+  else { echo ">" . htmlspecialchars($error_text) ; } ?>
 </div>
 
 <div class="Listview ListviewTight">
@@ -106,7 +113,7 @@ addColumnHeader('name', 'property-name');
 addColumnHeader('fieldcount', 'admin_resource_type_field_count');
 ?>
 
-<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"]) ?></div></td>
 </tr>
 <tbody id="resource_type_table_body">
 <?php
@@ -130,10 +137,9 @@ for ($n=0;$n<count($resource_types);$n++)
                 <?php
                 if($resource_types[$n]["resource_type_fields"]!="")
                     {
-                    $fieldcount = count($resource_types[$n]["resource_type_fields"]);
                     ?>
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo $fieldcount ?>
+                    <?php echo $resource_types[$n]["fieldcount"] ?>
                     </a>
                     <?php
                     }
@@ -149,14 +155,14 @@ for ($n=0;$n<count($resource_types);$n++)
                 if($restype_order_by=="order_by")
                         {
                         ?>		
-                        <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($resource_types)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move down</a>
-                        <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET ?>Move up	</a>
+                        <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($resource_types)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET . htmlspecialchars($lang['action-move-down']) ?></a>
+                        <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET . htmlspecialchars($lang['action-move-up'])?></a>
                         <?php
                         }
                     ?>
                 <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
 
-                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo $lang["metadatafields"]?> </a>
+                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo htmlspecialchars($lang["metadatafields"]) ?> </a>
                 
             </div>
         </td>
@@ -173,10 +179,10 @@ for ($n=0;$n<count($resource_types);$n++)
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php"  onSubmit="return CentralSpacePost(this,true);" >
         <?php generateFormToken("admin_resource_types"); ?>
         <div class="Question">
-            <label for="newtype"><?php echo $lang["admin_resource_type_create"]?></label>
+            <label for="newtype"><?php echo htmlspecialchars($lang["admin_resource_type_create"]) ?></label>
             <div class="tickset">
                 <div class="Inline"><input type=text name="newtype" id="newtype" maxlength="100" class="shrtwidth" /></div>
-                <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
+                <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["create"]) ?>&nbsp;&nbsp;" /></div>
             </div>
             <div class="clearerleft"> </div>
         </div>
@@ -201,17 +207,10 @@ function ReorderResourceTypes(idsInOrder)
         <?php echo generateAjaxToken('ReorderResourceTypes'); ?>
     },
         success: function() {
-        
-        //jQuery('.movelink').show();
-        jQuery('.movedownlink:last').prop("disabled",true);
-        jQuery('.moveuplink:first').prop("disabled",true);
-        jQuery('.movedownlink:not(:last)').prop("disabled",false);
-        jQuery('.moveuplink:not(:first)').prop("disabled",false);
-        //$( "input:not(:checked) + span" )
-        //alert("SUCCESS");
-        //var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
-        //var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
-        //if ((ref==null)&&(results!== null)&&('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1])) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
+            jQuery('.movedownlink:last').prop("disabled",true);
+            jQuery('.moveuplink:first').prop("disabled",true);
+            jQuery('.movedownlink:not(:last)').prop("disabled",false);
+            jQuery('.moveuplink:not(:first)').prop("disabled",false);
             }
         });
     }
@@ -250,7 +249,7 @@ function enableRestypesort(){
                     {
                     $errormessage=$lang["admin_resource_type_reorder_information_tab_order"];
                     ?>
-                    jQuery('#PageError').html("<?php echo $errormessage ?>").show();
+                    jQuery('#PageError').html("<?php echo htmlspecialchars($errormessage) ?>").show();
                     jQuery( "#resource_type_table_body" ).sortable( "cancel" );
                     <?php
                     }

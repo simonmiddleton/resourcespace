@@ -184,6 +184,7 @@ $lang["information-push_metadata"]="If set, the metadata for this resource will 
 $lang["property-query"]="Query";
 
 $lang["information-id"]="Note: 'Id' below MUST be set to a three character unique code.";
+$lang["information_field_restype_deselect_cleanup"]="To remove existing field data from the deselected resource types, click on the following link %%CLEANUP_LINK%%"; 
 $lang["property-id"]="Id";
 $lang["property-width"]="Width";
 $lang["property-height"]="Height";
@@ -3159,3 +3160,5 @@ $lang["error_invalid_revert_date"]          = "The previously stored date '%%VAL
 $lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
 $lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
 $lang["related_resource_create"]            = "Create new related resource";
+$lang["cleanup_invalid_nodes"]              = "Cleanup invalid node data";
+$lang["cleanup_invalid_node_dry_run"]       = "Don't delete data, just return the number of rows to be deleted?";
