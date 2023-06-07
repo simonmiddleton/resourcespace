@@ -318,8 +318,7 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
 
 
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>

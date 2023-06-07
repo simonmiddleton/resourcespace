@@ -270,7 +270,6 @@ else if ($saved)
     ?>
 
     <div class="Question" id="QuestionSubmit">
-        <label for="buttons"> </label>
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
     </div>
 </form>

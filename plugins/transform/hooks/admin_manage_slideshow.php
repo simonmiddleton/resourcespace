@@ -18,7 +18,6 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
     $new_slideshow_id = isset($last_slideshow_file["ref"]) ? ($last_slideshow_file["ref"] + 1) : 1;
     ?>
     <div id="add_new_slideshow" class="Question">
-        <label></label>
         <span class="stdwidth">
             <button type="submit" onclick="jQuery('#new_slideshow_form').fadeIn(); return false;"><?php echo $lang['action-add-new']; ?></button>
             <form
@@ -28,7 +27,6 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
                 onsubmit="return CentralSpacePost(this);"
             >
                 <?php generateFormToken("add_new_slideshow"); ?>
-                <label></label>
                 <input 
                     name="ref"
                     type="text"

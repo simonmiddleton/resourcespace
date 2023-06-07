@@ -52,9 +52,9 @@ include "../../include/header.php";
     <?php if($modal)
         {
         ?>
-        <a class="maxLink fa fa-expand" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);"></a>
+        <a class="maxLink fa fa-expand" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape_quoted_data($lang["maximise"]); ?>"></a>
         &nbsp;
-        <a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
+        <a href="#" class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
         <?php
         }
         ?>
@@ -285,8 +285,7 @@ if ($request !== false)
             <div class="clearerleft"></div>
         </div>
 
-        <div class="QuestionSubmit">
-            <label></label>          
+        <div class="QuestionSubmit">    
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
         </div>
     </form>

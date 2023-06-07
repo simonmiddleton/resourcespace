@@ -709,7 +709,7 @@ if (getval("ajax","") == "")
 	<!-- Start of modal support -->
 	<div id="modal_overlay" onClick="ModalClose();"></div>
 	<div id="modal_outer">
-	<div id="modal">
+	<div id="modal" tabindex="0">
 	</div>
 	</div>
 	<div id="modal_dialog" style="display:none;"></div>

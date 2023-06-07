@@ -63,8 +63,7 @@ include "../../../include/header.php";
 </select>
 <div class="clearerleft"> </div></div>
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="batch" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>

@@ -301,8 +301,7 @@ if(!$user_select_internal)
 <?php hook("additionalemailfield");?>
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["emailresourcetitle"]?>&nbsp;&nbsp;" />
 </div>
 <?php } // end replaceemailsubmitbutton ?>

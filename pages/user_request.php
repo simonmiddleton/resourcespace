@@ -339,8 +339,7 @@ function submitForm()
     }
 </script>
 
-<div class="QuestionSubmit UserRequestSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit UserRequestSubmit">		
 <input name='save' value='yes' type='hidden'>
 <input name="user_save" id="user_submit" onclick="submitForm()" type="button" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
 </div>

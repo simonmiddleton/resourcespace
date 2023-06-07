@@ -356,7 +356,6 @@ if(!$internal_share_only)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">
-<label for="buttons"> </label>			
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php if ($themeshare){echo $lang["email_theme_category"];} else {echo $lang["emailcollectiontitle"];}?>&nbsp;&nbsp;" />
 </div>
 <?php } # end hook replaceemailsubmitbutton ?>

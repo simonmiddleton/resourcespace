@@ -132,8 +132,8 @@ elseif ($previous_page_modal)
                 if($modal)
                     {
                     ?>
-                    &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);"></a>
-                    &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();"></a>
+                    &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params)); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape_quoted_data($lang["maximise"]); ?>"></a>
+                    &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
                     <?php
                     }
                 ?>

@@ -711,8 +711,8 @@ $lang["statisticsfor"]="Statistics for"; # e.g. Statistics for 2007
 $lang["printallforyear"]="Print all statistics for this year";
 
 # Log in / user account
-$lang["nopassword"]="Click here to apply for an account";
-$lang["forgottenpassword"]="Click here if you have forgotten your password";
+$lang["nopassword"]="Apply for an account";
+$lang["forgottenpassword"]="Forgotten password?";
 $lang["keepmeloggedin"]="Keep me logged in on this device";
 $lang["columnheader-username"]=$lang["username"]="Username";
 $lang["password"]="Password";
@@ -3151,3 +3151,5 @@ $lang["error_invalid_revert_date"]          = "The previously stored date '%%VAL
 $lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
 $lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
 $lang["related_resource_create"]            = "Create new related resource";
+
+$lang["skip-to-main-content"]               = "Skip to main content";

@@ -351,7 +351,6 @@ include "../include/header.php";
 			hook("additionalcollectionshare");?>
 			
 			<div class="QuestionSubmit">
-			<label for="buttons"> </label>
 			<?php 
 			if ($editing  && !$editexternalurl)
 				{?>

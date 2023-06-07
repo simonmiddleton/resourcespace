@@ -424,8 +424,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
 			<div class="clearerleft"></div>
 		</div>
 		
-		<div class="QuestionSubmit">
-			<label for="buttons"> </label>			
+		<div class="QuestionSubmit">		
 			<input 
                 name="save"
                 type="button"

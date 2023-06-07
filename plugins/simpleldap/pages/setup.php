@@ -356,7 +356,6 @@ echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['lda
 <div class="clearerleft"></div>
 
 <div class="Question">
-	<label for="submit"></label>
 <input type="submit" name="save" value="<?php echo $lang["save"]?>">
 <input type="submit" name="submit" value="<?php echo $lang["plugins-saveandexit"]?>">
 

@@ -141,7 +141,6 @@ function addColumnHeader($orderName, $labelKey)
 	if ($find!="") {
 		?>
 		<div class="QuestionSubmit">
-			<label for="buttonsave"></label>
 			<input name="buttonsave" type="button" onclick="CentralSpaceLoad('admin_size_management.php',false);"
 				   value="&nbsp;&nbsp;<?php echo $lang["clearbutton"]; ?>&nbsp;&nbsp;">
 		</div>

@@ -444,8 +444,7 @@ if ($user["approved"]==1 && !hook("loginasuser"))
 
 
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">			
 <input name="save" type="submit" id="user_edit_save" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>

@@ -101,7 +101,6 @@ include '../../include/header.php';
 
 
         <div class="Question" <?php if(isset($error)){echo "style=\"display: none;\"";}?>>
-            <label for="export"></label>
             <input type="button" name="export" value="<?php echo $lang["export"]; ?>" onClick="jQuery(this.form).submit();" >
             <div class="clearerleft"> </div>
         </div>
