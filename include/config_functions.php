@@ -1412,7 +1412,7 @@ function save_resource_type(int $ref, array $savedata)
         switch($savecol)
             {
             case "name":               
-                $setcolumns[] = "`name`";
+                $setcolumns[] = "name";
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 100);
                 break;

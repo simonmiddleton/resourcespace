@@ -1,19 +1,11 @@
 <?php
-/**
- * User edit form display page (part of Team Center)
- * 
- * @package ResourceSpace
- * @subpackage Pages_Team
- */
 include "../../include/db.php";
 
 include "../../include/authenticate.php"; 
 include "../../lib/fontawesome/resourcespace/icon_classes.php";
 
-if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
+if(!checkperm("a")){exit($lang["error-permissiondenied"]);}
+
 
 $ref                   = getval('ref', '', true);
 $name                  = getval('name', '');
@@ -23,6 +15,8 @@ $tab                   = (int) getval('tab', 0);
 $colour                = getval('colour', 0, true);
 $push_metadata         = ('' != getval('push_metadata', '') ? 1 : 0);
 $icon                  = getval('icon', '');
+
+$allrestypes           = get_resource_types('',true,true,true);
 
 $restype_order_by=getval("restype_order_by","rt");
 $restype_sort=getval("restype_sort","asc");
@@ -38,7 +32,7 @@ if($backurl=="")
     $backurl=$baseurl . "/pages/admin/admin_resource_types.php?ref=" . $ref;
     }
 
-if (getval("save","")!="" && enforcePostRequest(false))
+if (getval("restype_save","")!="" && enforcePostRequest(false))
     {
     # Save resource type data
     $savedata = [
@@ -57,53 +51,61 @@ if (getval("save","")!="" && enforcePostRequest(false))
 
 $confirm_delete = false;
 $confirm_move_associated_rtf = false;
-if(getval("delete", "") != "" && enforcePostRequest(false))
+if(getval("restype_delete", "") != "" && enforcePostRequest(false))
     {
-    $targettype=getval("targettype","");
+    $targettype=getval("targettype",-1,true);
     $prereq_action = getval("prereq_action", "");
+    $validtargets = array_column($allrestypes,"ref");
+
     $affectedresources=ps_array("SELECT ref value FROM resource WHERE resource_type=? AND ref>0",array("i",$ref),0);
     $affected_rtfs = get_resource_type_fields(array($ref), "ref", "asc", "", array(), true);
-    if(count($affectedresources)>0 && $targettype=="")
+    $dependentfields=[];
+    foreach($affected_rtfs as $affected_rtf)
         {
-        //User needs to confirm a new resource type
+        if($affected_rtf["global"] == 0 && count(explode(",",$affected_rtf["resource_types"])) == 1)
+            {
+            // Field only applies to this resource type
+            $dependentfields[]=$affected_rtf["ref"];
+            }
+        }
+
+    // If we have a target type, move the current resources to the new resource type
+    if($targettype > -1 && $targettype != $ref)
+        {
+        if(in_array($targettype,$validtargets) && $prereq_action == "move_affected_resources")
+            {
+            foreach($affectedresources as $affectedresource)
+                {
+                update_resource_type($affectedresource,$targettype);
+                }
+            $affectedresources = [];
+            }
+
+        if(in_array($targettype,array_merge($validtargets,[0])) && $prereq_action == "move_affected_rtfs")
+            {
+            foreach($dependentfields as $dependentfield)
+                {
+                update_resource_type_field_resource_types($dependentfield,[$targettype]);
+                }
+            $dependentfields = [];
+            }
+        }
+    
+    if(count($affectedresources)>0)
+        {
+        // User needs to confirm a new resource type
         $confirm_delete=true;
         }
-    else if(count($affected_rtfs) > 0 && $targettype == "")
+    else if(count($dependentfields) > 0)
         {
         $confirm_move_associated_rtf = true;
         }
     else
         {
-        //If we have a target type, move the current resources to the new resource type
-        if($targettype!="" && $targettype!=$ref)
-            {
-            if($prereq_action == "move_affected_resources")
-                {
-                foreach($affectedresources as $affectedresource)
-                    {
-                    update_resource_type($affectedresource,$targettype);
-                    }
-                }
-
-            if($prereq_action == "move_affected_rtfs")
-                {
-                foreach($affected_rtfs as $affected_rtf)
-                    {
-                    ps_query("UPDATE resource_type_field SET resource_type = ? 
-                               WHERE ref = ?",array("i",$targettype, "i",$affected_rtf['ref']));
-                    clear_query_cache("schema");
-                    }
-                }
-            }
-
-        $affectedresources = ps_array("SELECT ref AS value FROM resource WHERE resource_type = ? AND ref > 0",array("i",$ref),0);
-        $affected_rtfs = get_resource_type_fields(array($ref), "ref", "asc", "", array(), true);
-        if(count($affectedresources) === 0 && count($affected_rtfs) === 0)
-            {
-            ps_query("DELETE from resource_type where ref=?",array("i",$ref));
-            clear_query_cache("schema");
-            redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
-            }
+        // Safe to delete
+        ps_query("DELETE from resource_type where ref=?",array("i",$ref));
+        clear_query_cache("schema");
+        redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
         }
     }
 $actions_required = ($confirm_delete || $confirm_move_associated_rtf);
@@ -143,7 +145,12 @@ renderBreadcrumbs($links_trail);
 <?php if (isset($error_text)) { ?><div class="FormError"><?php echo $error_text?></div><?php } ?>
 <?php if (isset($saved_text)) { ?><div class="PageInfoMessage"><?php echo $saved_text?></div><?php } ?>
 
-<form method=post action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo urlencode($ref) ?>&backurl=<?php echo urlencode ($url) ?>">
+<form method=post action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo urlencode($ref) ?>&backurl=<?php echo urlencode ($url) ?>" onSubmit="return CentralSpacePost(this,true);">
+
+<input type="hidden" name="ref" value="<?php echo urlencode($ref) ?>">
+<input type="hidden" id="restype_save" name="restype_save" value="">
+<input type="hidden" id="restype_delete" name="restype_delete" value="">
+
 <?php
 generateFormToken("admin_resource_type_edit");
 
@@ -154,14 +161,14 @@ if($actions_required)
     <?php
     if($confirm_delete)
         {
-        echo str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"]) . "<br />";
+        echo htmlspecialchars(str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"])) . "<br />";
         ?>
         <input type="hidden" name="prereq_action" value="move_affected_resources">
         <?php
         }
     else if($confirm_move_associated_rtf)
         {
-        echo str_replace("%COUNT", count($affected_rtfs), $lang["resource_type_delete_assoc_rtf_confirm"]) . "<br>";
+        echo htmlspecialchars(str_replace("%COUNT", count($affected_rtfs), $lang["resource_type_delete_assoc_rtf_confirm"])) . "<br>";
         ?>
         <input type="hidden" name="prereq_action" value="move_affected_rtfs">
         <?php
@@ -170,12 +177,6 @@ if($actions_required)
     echo $lang["resource_type_delete_select_new"];
     ?>
     </div>
-    <?php
-    
-    $destrestypes=$resource_types= ps_query("SELECT ref, name FROM resource_type
-	                                          WHERE ref<>?
-	                                          ORDER BY name asc",array("i",$ref));
-    ?>
     <div class="Question">  
     <label for="targettype"><?php echo $lang["resourcetype"]; ?></label>    
     <div class="tickset">
@@ -188,11 +189,14 @@ if($actions_required)
         <option value="0"><?php echo $lang["resourcetype-global_field"]; ?></option>
         <?php
         }
-	  for($n=0;$n<count($destrestypes);$n++){
-	?>
-		<option value="<?php echo $destrestypes[$n]["ref"]; ?>"><?php echo htmlspecialchars(i18n_get_translated($destrestypes[$n]["name"])); ?></option>
-	<?php
-	  }
+	for($n=0;$n<count($allrestypes);$n++)
+        {
+        if($allrestypes[$n]["ref"] != $ref)
+            {?>
+		    <option value="<?php echo $allrestypes[$n]["ref"]; ?>"><?php echo htmlspecialchars(i18n_get_translated($allrestypes[$n]["name"])); ?></option>
+            <?php
+            }
+	    }
 	?>
         </select>
       </div>
@@ -201,18 +205,16 @@ if($actions_required)
     </div>
     <div class="QuestionSubmit">
         <label for="buttons"> </label>			
-        <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" />
-        <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirm-deletion"]?>');"/>
+        <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onClick="history.go(-1);return false;"/>
+        <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#restype_delete').val('yes');this.form.submit();}else{jQuery('#restype_delete').val('');}return false;"/>
+
     </div>
     <?php
     exit();	
     }
 else
     {
-?> 
-    
-    <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
-    
+    ?>    
     <div class="Question"><label><?php echo $lang["property-reference"]?></label>
 	<div class="Fixed"><?php echo  $restypedata["ref"] ?></div>
 	<div class="clearerleft"> </div>
@@ -270,8 +272,8 @@ else
     
     <div class="QuestionSubmit">
     <label for="buttons"> </label>			
-    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
-    <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirm-deletion"]?>');"/>
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
+    <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>
     </div>
     <?php
     } // End of normal page (not confirm deletion)

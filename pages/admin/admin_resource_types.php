@@ -21,7 +21,7 @@ if($backurl=="")
 $newtype=getval("newtype","");
 if ($newtype!="" && enforcePostRequest(false))
 	{
-	$new = create_resource_type(["name"=>$newtype]);
+	$new = create_resource_type($newtype);
     redirect($baseurl_short."pages/admin/admin_resource_type_edit.php?ref=" . $new);
 	}
 
