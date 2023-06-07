@@ -1706,12 +1706,12 @@ function postUploadActions()
             {
             CentralSpaceLoad('<?php echo $redirecturl ?>',true);
             }
-        uppy.reset();
+        uppy.cancelAll();
         <?php
         }
     elseif($plupload_clearqueue)
         {
-        echo "uppy.reset();";
+        echo "uppy.cancelAll();";
         }?>
 
     if(upRedirBlock)
