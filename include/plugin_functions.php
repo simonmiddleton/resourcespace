@@ -1001,15 +1001,15 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
     $rtypes=get_resource_types();
     ?>
     <div class="Question">
-        <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-        <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
+        <label for="<?php echo escape_quoted_data($name) ?>" title="<?php echo escape_quoted_data(str_replace('%cvn', $name, $lang['plugins-configvar'])) ?>"><?php echo htmlspecialchars($label) ?></label>
+        <fieldset id="<?php echo escape_quoted_data($name) ?>" class="MultiRTypeSelect">
             <?php foreach($rtypes as $rtype) { ?>
                 <input type="checkbox"
-                    value="<?php echo $rtype['ref'] ?>"
-                    name="<?php echo $name ?>[]"
-                    id="<?php echo $name . $rtype['ref'] ?>"
+                    value="<?php echo escape_quoted_data($rtype['ref']) ?>"
+                    name="<?php echo escape_quoted_data($name) ?>[]"
+                    id="<?php echo escape_quoted_data($name . $rtype['ref']) ?>"
                     <?php echo (in_array($rtype['ref'],$current) ? ' checked="checked"' : '') ?>>
-                <label for="<?php echo $name . $rtype['ref'] ?>"><?php echo lang_or_i18n_get_translated($rtype['name'],'resourcetype-') ?></label>
+                <label for="<?php echo escape_quoted_data($name . $rtype['ref']) ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
                 <br />
             <?php } ?>
         </fieldset>
