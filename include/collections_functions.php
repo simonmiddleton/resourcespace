@@ -3448,6 +3448,7 @@ function collection_is_research_request($collection)
  * @param  integer  $resource   ID of resource
  * @param  string   $search     Search parameters
  * @param  string   $extracode  Additonal code to be run when link is selected
+ *                              IMPORTANT: never use untrusted data here!
  * @param  string   $size       Resource size if appropriate
  * @param  string   $class      Class to be applied to link
  * 
@@ -3458,7 +3459,8 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
     $resource = (int) $resource;
     $size = escape_quoted_data($size);
     $class = escape_quoted_data($class);
-    return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$GLOBALS['lang']["addtocurrentcollection"]}\""
+    $title = escape_quoted_data($GLOBALS['lang']["addtocurrentcollection"]);
+    return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
         . " onClick=\"AddResourceToCollection(event,'{$resource}','{$size}'); {$extracode} return false;\""
         . " data-resource-ref=\"{$resource}\""
         . generate_csrf_data_for_api_native_authmode('add_resource_to_collection')
