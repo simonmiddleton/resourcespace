@@ -3350,7 +3350,7 @@ $field_column_string_separator = ',';
 // GoogleDrive*
 // Facebook*
 // Dropbox*
-// Onedrive*
+// OneDrive*
 // Instagram*
 // Zoom*
 // Unsplash*
@@ -3360,7 +3360,7 @@ $field_column_string_separator = ',';
 // $uploader_plugins[] = "GoogleDrive";
 // $uploader_plugins[] = "Facebook";
 // $uploader_plugins[] = "Webcam";
-// $uploader_plugins[] = "Onedrive";
+// $uploader_plugins[] = "OneDrive";
 
 $uploader_plugins = [];
 $uppy_companion_url = "";

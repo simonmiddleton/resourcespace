@@ -1035,18 +1035,23 @@ jQuery(document).ready(function () {
         'GoogleDrive' => true,
         'Facebook' => true,
         'Dropbox' => true,
-        'Onedrive' => true,
+        'OneDrive' => true,
         'Box' => true,
         'Instagram' => true,
         'Zoom' => true,
         'Unsplash' => true,
         );
 
-    foreach($uploader_plugins as $uploader_plugin)
+    for($n=0;$n<count($uploader_plugins);$n++)
         {
-        if(isset($supported_plugins[$uploader_plugin]))
+        // Fix for change to name in updated library that will break old configs
+        if($uploader_plugins[$n] == "Onedrive")
             {
-            echo "var " . $uploader_plugin  . "= Uppy." . $uploader_plugin . ";\n";
+            $uploader_plugins[$n] = "OneDrive";
+            }
+        if(isset($supported_plugins[$uploader_plugins[$n]]))
+            {
+            echo "var " . $uploader_plugins[$n]  . "= Uppy." . $uploader_plugins[$n] . ";\n";
             }
         }
     ?>
