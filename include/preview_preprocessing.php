@@ -5,7 +5,7 @@
 # for example types that use GhostScript or FFmpeg.
 #
 
-global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $qlpreview_exclude_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path;
+global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -80,7 +80,7 @@ if (is_array($preview_preprocessing_results)){
     For everything except Audio/Video files, attempt to generate a QuickLook preview first.
    ----------------------------------------
 */
-if (isset($qlpreview_path) && !in_array($extension, $qlpreview_exclude_extensions) && !in_array($extension, $ffmpeg_supported_extensions) && !in_array($extension, $ffmpeg_audio_extensions) && !isset($newfile))
+if (isset($qlpreview_path) && !in_array($extension, ["tif","tiff"]) && !in_array($extension, $ffmpeg_supported_extensions) && !in_array($extension, $ffmpeg_audio_extensions) && !isset($newfile))
     {
     $qlpreview_command=$qlpreview_path."/qlpreview -generatePreviewOnly yes -imageType jpg -maxWidth 800 -maxHeight 800 -asIcon no -preferFileIcon no -inPath " . escapeshellarg($file) . " -outPath " . escapeshellarg($target);
     debug("qlpreview command: " . $qlpreview_command);
@@ -123,15 +123,14 @@ if ($exiftool_fullpath!=false)
                     {
                     # Watermark creation for additional pages.
                     global $watermark;
-                    $preview_quality=get_preview_quality($size);
-                    $scr_size=ps_query("select width,height from preview_size where id='scr'");
+                    $scr_size=ps_query("SELECT width,height FROM preview_size WHERE id='scr'");
                     if(empty($scr_size))
                         {
                         # since this is not an application required size we can't assume there's a record for it
-                        $scr_size=ps_query("select width,height from preview_size where id='pre'");
+                        $scr_size=ps_query("SELECT width,height FROM preview_size WHERE id='pre'");
                         }
                     $scr_width=$scr_size[0]['width'];
-                    $scr_height=$scr_size[0]['height'];            
+                    $scr_height=$scr_size[0]['height'];
                     if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative)))
                         {
                         if (isset($watermark) && $alternative==-1)
@@ -139,7 +138,7 @@ if ($exiftool_fullpath!=false)
                             $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                             if (file_exists($path)) {unlink($path);}
                             $watermarkreal=dirname(__FILE__). "/../" . $watermark;
-                            $command2 = $convert_fullpath . " \"$target\"[0] -quality $preview_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
+                            $command2 = $convert_fullpath . " \"$target\"[0] -quality $imagemagick_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
                             $output=run_command($command2);
                             }
                         }
@@ -1014,11 +1013,9 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         $size="";if ($n>1) {$size="scr";} # Use screen size for other pages.
         $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative); 
         if (file_exists($target)) {unlink($target);}
-        
-        $preview_quality=get_preview_quality($size);
 
         if ($dUseCIEColor){$dUseCIEColor=" -dUseCIEColor ";} else {$dUseCIEColor="";}
-        $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=".$preview_quality." -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
+        $gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=" . $imagemagick_quality . " -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
         $output=run_command($gscommand2);
 
         # Stop trying when after the last page

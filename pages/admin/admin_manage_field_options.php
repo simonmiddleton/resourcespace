@@ -494,17 +494,6 @@ if($ajax)
 ?>
 
     <p><?php echo $lang['manage_metadata_text']; render_help_link("resourceadmin/modifying-field-options");?></p>
-    <?php
-    if(in_array($field, $default_to_first_node_for_fields))
-        {
-        ?>
-        <p><?php echo $lang["metadata_first_option_is_default"]; ?>
-        <p>
-            <a href="<?php echo $baseurl; ?>/pages/tools/update_empty_field_with_default.php?field=<?php echo $field?>" onClick="CentralSpaceLoad(this,true);"><?php echo $lang['metadata_populate_default_node_for_empty_values']; ?></a>
-        </p>
-        <?php
-        }
-        ?>
     <div id="AdminManageMetadataFieldOptions" class="ListView">
     <?php
     if(7 != $field_data['type'])

@@ -144,8 +144,7 @@ else
 		  <tr class="ListviewTitleStyle">
 			  <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["date"]; ?></a></td>
 			  
-			<?php if ($messages_actions_fullname){?><td> <?php if ($order_by=="name"       ) {?><td><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["user"]; ?></a></td>
-			<?php } ?>
+			<td> <?php if ($order_by=="name"       ) {?><td><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["user"]; ?></a></td>
 			<?php if ($messages_actions_usergroup){?><td> <?php  if ($order_by=="usergroup"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["columnheader-user_group"]; ?></a></td>
 			<?php } ?>
 			  <td><?php if ($order_by=="ref"        ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"ref")) ?>"         onClick="return CentralSpaceLoad(this);"><?php echo $lang["property-reference"]; ?></a></td>
@@ -200,11 +199,8 @@ else
 		  ?>
 			<tr>
 				<td><?php echo nicedate($all_actions[$n]["date"], true, true, true); ?></td>
-				<?php if ($messages_actions_fullname)
-						{
-						echo "<td>" . strip_tags_and_attributes(tidy_trim(TidyList($all_actions[$n]["user"]),$list_search_results_title_trim)) . "</td>";	
-						}?>
-				<?php if ($messages_actions_usergroup)
+				<?php echo "<td>" . strip_tags_and_attributes(tidy_trim(TidyList($all_actions[$n]["user"]),$list_search_results_title_trim)) . "</td>";
+				if ($messages_actions_usergroup)
 						{
 						echo "<td>" .$all_actions[$n]["usergroup"] . "</td>";
 						}?>	

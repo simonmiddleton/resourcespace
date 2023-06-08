@@ -281,7 +281,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
 function email_collection_request($ref,$details,$external_email): bool
     {
     global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,
-    $resource_request_reason_required,$collection_empty_on_submit,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
+    $resource_request_reason_required,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
@@ -313,11 +313,6 @@ function email_collection_request($ref,$details,$external_email): bool
             {
             remove_resource_from_collection($colresource,$newcopy,false);
             }
-        }
-
-    if($collection_empty_on_submit)
-        {
-        remove_all_resources_from_collection($ref);
         }
 
     $ref=$newcopy;
@@ -484,7 +479,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,
         $watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,
         $resource_type_request_emails_and_email_notify, $manage_request_admin,$resource_request_reason_required,
-        $admin_resource_access_notifications, $collection_empty_on_submit,$notify_manage_request_admin,
+        $admin_resource_access_notifications, $notify_manage_request_admin,
         $assigned_to_user, $admin_resource_access_notifications;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
@@ -535,10 +530,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 {
                 remove_resource_from_collection($colresource,$c,false);
                 }
-            }
-        if($collection_empty_on_submit)
-            {
-            remove_all_resources_from_collection($ref);
             }
 
         $ref=$c; # Proceed as normal

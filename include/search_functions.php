@@ -600,7 +600,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset,
-           $collection, $usercollection, $internal_share_access, $show_edit_all_link, $system_read_only, $search_access;
+           $collection, $usercollection, $internal_share_access, $system_read_only, $search_access;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
@@ -740,7 +740,7 @@ function compile_search_actions($top_actions)
         }
 
     // If all resources are editable, display an edit all link
-    if($top_actions && $show_edit_all_link && !$omit_edit_all)
+    if($top_actions && !$omit_edit_all)
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
         $options[$o]['value']='editsearchresults';
@@ -797,7 +797,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
     debug_function_call("search_filter", func_get_args());
 
     global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
-    $geo_search_restrict,$pending_review_visible_to_all,$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
+    $geo_search_restrict,$search_all_workflow_states,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
     
     if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
     $userpermissions = (isset($userpermissions)) ? $userpermissions : array();
@@ -941,41 +941,25 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
-            $pending_states_visible_to_all_sql      = "";
-            $pending_states_visible_to_all_params   = [];
-            # Append standard filtering to hide resources in a pending state, whatever the search
-            if (!$pending_submission_searchable_to_all)
+            // Append standard filtering to hide resources in a pending state, whatever the search          
+            // except when the resource is of a type that the user has ert permission for
+            $rtexclusions = "";
+            $rtexclusions_params = [];
+            for ($n=0;$n<count($userpermissions);$n++)
                 {
-                $pending_states_visible_to_all_sql.= "(r.archive<>-2 OR r.created_by = ?)";
-                $pending_states_visible_to_all_params = ["i",$userref];
-                }
-            if (!$pending_review_visible_to_all)
-                {
-                $pending_states_visible_to_all_sql .= (($pending_states_visible_to_all_sql!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by = ?)";
-                array_push($pending_states_visible_to_all_params,"i",$userref);
-                }
-
-            if ($pending_states_visible_to_all_sql != "")
-                {
-                #Except when the resource is type that the user has ert permission for
-                $rtexclusions = "";
-                $rtexclusions_params = [];
-                for ($n=0;$n<count($userpermissions);$n++)
+                if (substr($userpermissions[$n],0,3)=="ert")
                     {
-                    if (substr($userpermissions[$n],0,3)=="ert")
+                    $rt=substr($userpermissions[$n],3);
+                    if (is_int_loose($rt))
                         {
-                        $rt=substr($userpermissions[$n],3);
-                        if (is_int_loose($rt))
-                            {
-                            $rtexclusions .= " OR (resource_type = ?)";
-                            array_push($rtexclusions_params,"i",$rt);
-                            }
+                        $rtexclusions .= " OR (resource_type = ?)";
+                        array_push($rtexclusions_params,"i",$rt);
                         }
                     }
-                $sql_filter->sql .= " AND ((" . $pending_states_visible_to_all_sql . ") " . $rtexclusions . ")";
-                $sql_filter->parameters = array_merge($sql_filter->parameters,$pending_states_visible_to_all_params,$rtexclusions_params);
-                unset($rtexclusions);
                 }
+            $sql_filter->sql .= " AND (((r.archive<>-2 OR r.created_by = ?) AND (r.archive<>-1 OR r.created_by = ?)) " . $rtexclusions . ")";
+            $sql_filter->parameters = array_merge($sql_filter->parameters,["i",$userref,"i",$userref],$rtexclusions_params);
+            unset($rtexclusions);
             }
         }
     # Add code to filter out resoures in archive states that the user does not have access to due to a 'z' permission
@@ -1995,19 +1979,9 @@ function get_upload_here_selected_nodes($search, array $nodes)
 */
 function get_default_search_states()
     {
-    global $searchstates, $pending_submission_searchable_to_all, $pending_review_visible_to_all;
+    global $searchstates;
 
     $defaultsearchstates = isset($searchstates) ? $searchstates : array(0); // May be set by rse_workflow plugin
-
-    if($pending_submission_searchable_to_all)
-        {
-        $defaultsearchstates[] = -2;
-        }
-    if($pending_review_visible_to_all)
-        {
-        $defaultsearchstates[] = -1;
-        }
-
     $modifiedstates = hook("modify_default_search_states","",array($defaultsearchstates));
     if(is_array($modifiedstates))
         {
@@ -2110,7 +2084,7 @@ function get_filter_sql($filterid)
 function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
     {
     # Takes $search and returns an array of individual keywords.
-    global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
+    global $permitted_html_tags, $permitted_html_attributes;
 
     if ($index && $is_date)
         {
@@ -2169,7 +2143,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
         if($keepquotes)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
-            $return=trim_array($matches[0],$config_trimchars . ",");
+            $return=trim_array($matches[0],",");
             }
         elseif (strpos($ns,"startdate") !== false || strpos($ns,"enddate") !== false)
             {
@@ -2181,7 +2155,11 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             $return=explode(" ",$ns);
             }
         // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
-        return trim_array($return,$config_trimchars . ($keepquotes?",":""));
+        if($keepquotes)
+            {
+            $return = trim_array($return,",");
+            }
+        return $return;
         }
     else
         {
@@ -2213,9 +2191,11 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
             }
         
-        
-        $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
-        
+        if($keepquotes)
+            {
+            $ns = trim_array($ns,",");
+            }
+
         if ($index && $partial_index) {
             return add_partial_index($ns);
         }

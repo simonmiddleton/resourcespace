@@ -10,6 +10,13 @@ if('' == $k || !check_access_key($ref, $k))
     include '../include/authenticate.php';
     }
 include_once '../include/pdf_functions.php';
+require_once '../lib/html2pdf/vendor/autoload.php';
+
+use Spipu\Html2Pdf\Html2Pdf;
+use Spipu\Html2Pdf\Exception\Html2PdfException;
+use Spipu\Html2Pdf\Exception\ExceptionFormatter;
+ob_start();
+
 
 $resource = get_resource_data($ref);
 
@@ -80,47 +87,24 @@ if ($download && $download_file_type == 'text')
 
 // Process PDF file download
 if($download && $download_file_type === 'pdf') {
-	$html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/vendor/autoload.php';
-	ob_start();
-	if(!file_exists($html2pdf_path)) {
-		die('html2pdf class file is missing. Please make sure you have it under lib folder.');
-	}
-	require_once($html2pdf_path);
-
-	$logo_src_path = $baseurl . '/gfx/titles/title.png';
-	if(isset($metadata_download_pdf_logo) && trim($metadata_download_pdf_logo) != '') {
-		$logo_src_path = $baseurl . $metadata_download_pdf_logo;
-	}
-
-	$PDF_filename = $lang['metadata'] .'_' . $filename . '.pdf';
-
-	$content = '';
-
-	?>
+    $logo_src_path = $baseurl . '/gfx/titles/logo.png';    
+    $PDF_filename = $lang['metadata'] .'_' . $filename . '.pdf';
+    $content = '';
+    ?>
 	<!-- Start structure of PDF file in HTML -->
 	<page backtop="25mm" backbottom="10mm" backleft="5mm" backright="5mm">
 		<page_header>
-			<table cellspacing="0" style="width: 100%;">
+			<table cellspacing="0" style="width: 95%;margin-left:15px;">
 		        <tr>
-		            <td style="width: 75%;"><h1><?php echo $metadata_download_header_title; ?></h1></td>
-		            <td style="width: 25%; <?php if(!isset($metadata_download_pdf_logo)) { ?> background-color: #383838; <?php } ?>" align=right>
-		                <img style="height: 40px; max-width: 100%" src="<?php echo $logo_src_path; ?>" alt="Logo" >
+		            <td style="width: 75%;"><h1><?php echo $applicationname; ?></h1></td>
+		            <td style="width: 25%;" align=right>
+		                <img style="height: 50px; max-width: 100%" src="<?php echo $logo_src_path; ?>" alt="Logo" >
 		            </td>
 		        </tr>
 		    </table>
 		</page_header>
 		<page_footer>
 			<table style="width: 100%;">
-			<?php
-			if(isset($metadata_download_footer_text) && trim($metadata_download_footer_text) != '')
-				{
-				?>
-				<tr>
-					<td colspan="3"><?php echo $metadata_download_footer_text; ?></td>
-				</tr>
-				<?php
-				}
-				?>
 				<tr>
 					<td style="text-align: left; width: 33%"><?php echo $PDF_filename; ?></td>
 					<td style="text-align: center; width: 34%">page [[page_cu]]/[[page_nb]]</td>
@@ -158,7 +142,7 @@ if($download && $download_file_type === 'pdf') {
 
 	$content = ob_get_clean();
 
-	$html2pdf = new HTML2PDF('P', 'A4', $language);
+	$html2pdf = new Html2Pdf('P', 'A4', $language);
 	$html2pdf->WriteHTML($content);
 	$html2pdf->Output($PDF_filename);
 }

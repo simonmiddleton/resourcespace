@@ -301,7 +301,7 @@ include "../include/header.php";
 		?>
 		
 		<?php 
-		if(!$internal_share_only && $hide_collection_share_generate_url==false)
+		if(!$internal_share_only)
 			{ ?>
 			<li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo $lang["generateurl"]?></a></li> <?php 
 			} 

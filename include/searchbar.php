@@ -205,12 +205,7 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
 <script>
 var categoryTreeChecksArray = [];
 </script>
-<div id="SearchBox" <?php
-    if(isset($slimheader) && $slimheader && isset($slimheader_fixed_position) && $slimheader_fixed_position)
-        {
-        ?> class="SlimHeaderFixedPosition"<?php
-        }
-?>>
+<div id="SearchBox">
 
 <?php hook("searchbarbeforeboxpanel"); ?>
 
@@ -229,7 +224,7 @@ var categoryTreeChecksArray = [];
     <?php
     generateFormToken("simple_search_form");
 
-    if(!hook("replacesearchbox") && !$header_search)
+    if(!hook("replacesearchbox"))
         {
         ?>
         <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo escape_quoted_data(stripslashes(@$quicksearch))?>" placeholder="<?php echo escape_quoted_data($lang["searchbutton"]); ?>" aria-label="<?php echo escape_quoted_data($lang["simplesearch"]); ?>">
@@ -395,19 +390,12 @@ if (!$basic_simple_search && !$hide_search_resource_types)
     $inputBoxClass="tickbox";
     $resetTickAllCall="";
     $clear_function .="jQuery('#TickBox" . $types[$n]["ref"] . "').prop('checked',true);";
-    if ($searchbar_selectall && (!in_array($types[$n]["ref"],$separate_resource_types_in_searchbar)) )
+    if ($searchbar_selectall)
         {  
         $tickBoxClass     .=" tickindent";
         $resetTickAllCall .="resetTickAll();";
         $clear_function   .="resetTickAll();";
-        }
-    if (in_array($types[$n]["ref"],$separate_resource_types_in_searchbar)) 
-        { 
-        $inputBoxClass    .="sep";
-        ?>
-        <div class="spacer"></div>
-        <?php 
-        } ?>
+        }?>
         <div class="<?php echo $tickBoxClass; ?>">
         <input class="<?php echo $inputBoxClass; ?>" id="TickBox<?php echo $types[$n]["ref"]?>" 
             type="checkbox" value="yes" name="resource<?php echo $types[$n]["ref"]?>"  

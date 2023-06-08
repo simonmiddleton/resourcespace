@@ -179,7 +179,7 @@ and running.
 $originals_separate_storage=false;
 
 $applicationname="ResourceSpace"; # The name of your implementation / installation (e.g. 'MyCompany Resource System')
-$applicationdesc=""; # Subtitle (i18n translated) if $header_text_title=true;
+$applicationdesc=""; # Subtitle (i18n translated)
 $header_favicon="gfx/interface/favicon.png";
 
 # Is the logo a link to the home page?
@@ -2138,11 +2138,7 @@ $enable_thumbnail_creation_on_upload = true;
 
     // Hide map location panel by default (a link to show it will be displayed instead)?
     $hide_geolocation_panel = false;
-
-    // Show map search results in a modal?
-    $geo_search_modal_results = false;
-
-# Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
+    // Cache openstreetmap tiles on your server. This is slower when loading, but eliminates non-ssl content warnings if your site is SSL (requires curl)
     // Default center and zoom for the map view when selecting a new location, as a world view.
     // For example, to specify the USA, use $geolocation_default_bounds = '-10494743.596017,4508852.6025659,4'; or for Utah, use $geolocation_default_bounds = '-12328577.96607,4828961.5663655,6';
     // The tools available on https://epsg.io/3857 can be used to get the coordinates of a location on the map or try an internet search for EPSG:3857.
@@ -2274,9 +2270,6 @@ $geo_search_heatmap = false;
 # This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
 # $qlpreview_path="/usr/bin";
 
-// A list of extensions that QuickLook previews should NOT be used for.
-$qlpreview_exclude_extensions = array("tif","tiff");
-
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
@@ -2303,12 +2296,6 @@ $suppress_sql_log = false;
 #
 # The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
 # $metadata_template_title_field=10; # ** SEE NOTE (1)
-
-// Ability to default metadata templates to a particular resource ID
-$metadata_template_default_option = 0;
-
-// Force selection of a metadata template
-$metadata_template_mandatory = false;
 
 # enable a list of collections that a resource belongs to, on the view page
 $view_resource_collections=false;
@@ -2719,10 +2706,6 @@ $resource_view_use_pre = false;
 # Use the larger layout on the view page for landscape images, smaller layout for portrait images.
 # NOTE: Enabling $resource_view_large_ext will override this.
 $resource_view_large_orientation = true;
-
-# Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
-# Show an edit icon/link in the search results.
-$search_results_edit_icon=true;
 
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;

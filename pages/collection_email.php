@@ -163,11 +163,6 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 		}
 	}
 
-
-if ($collection_dropdown_user_access_mode){
-$users=get_users();
-}
-
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -232,31 +227,8 @@ else
 			$list=get_user_collections($userref);
 			$found=false;
 			for ($n=0;$n<count($list);$n++)
-				{
-
-				if ($collection_dropdown_user_access_mode){    
-					foreach ($users as $user){
-						if ($user['ref']==$list[$n]['user']){$colusername=$user['fullname'];}
-					}
-					# Work out the correct access mode to display
-					if (!hook('collectionaccessmode')) {
-						if ($list[$n]["public"]==0){
-							$accessmode= $lang["private"];
-						}
-						else{
-							if (strlen($list[$n]["theme"])>0){
-								$accessmode= $lang["theme"];
-							}
-						else{
-								$accessmode= $lang["public"];
-							}
-						}
-					}
-				}
-
-
-					?>	
-				<option value="<?php echo $list[$n]["ref"]?>" <?php if ($ref==$list[$n]["ref"]) {?> 	selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?><?php if ($collection_dropdown_user_access_mode){echo "&nbsp;&nbsp;".htmlspecialchars("(". $colusername."/".$accessmode.")"); } ?></option>
+				{?>	
+				<option value="<?php echo $list[$n]["ref"]?>" <?php if ($ref==$list[$n]["ref"]) {?> 	selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
 				<?php 
 				}
 			if ($found==false)

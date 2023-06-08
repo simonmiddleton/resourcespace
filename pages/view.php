@@ -222,13 +222,6 @@ if (isset($metadata_template_resource_type) && ($resource["resource_type"]==$met
 	else {$default_to_standard_title=true;}	
 	}
 
-if ($pending_review_visible_to_all && isset($userref) && $resource["created_by"]!=$userref && $resource["archive"]==-1 && !checkperm("e0"))
-	{
-	# When users can view resources in the 'User Contributed - Pending Review' state in the main search
-	# via the $pending_review_visible_to_all option, set access to restricted.
-	$access=1;
-	}
-
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
 	{
@@ -271,18 +264,8 @@ if(!$save_as)
     <iframe id="dlIFrm"
             frameborder=0
             scrolling="auto"
-            <?php
-            if($debug_direct_download)
-                {
-                ?>width="600" height="200" style="display:block;"
-                <?php
-                }
-            else 
-                {
-                ?>style="display:none"
-                <?php
-                }
-                ?>> This browser can not use IFRAME.</iframe>
+            style="display:none"
+            > This browser can not use IFRAME.</iframe>
     <?php
     }
 
@@ -546,7 +529,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         if (!hook("viewallresults")) 
                             { ?>
                             <a class="upLink"
-                                href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up")) . (($search_anchors)?"&place=" . $ref:"") ?>"
+                                href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up","place"=>$ref)) ?>"
                                 onClick="return CentralSpaceLoad(this);">
                                 <?php echo $lang["viewallresults"]?>
                             </a>
@@ -1223,7 +1206,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             # DPI calculations
                             function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
                                 {
-                                global $lang, $imperial_measurements,$sizes,$n,$view_default_dpi;
+                                global $lang, $imperial_measurements,$sizes,$n;
                                 
                                 if (isset($sizes[$n]['resolution']) && $sizes[$n]['resolution']!=0 && is_int($sizes[$n]['resolution']))
                                     {
@@ -1231,7 +1214,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     }
                                 else if (!isset($dpi) || $dpi==0)
                                     {
-                                    $dpi=$view_default_dpi;
+                                    $dpi=300;
                                     }
 
                                 if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
@@ -1954,7 +1937,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                             echo "</li>";
                                             }
 
-                                        if (!$disable_alternative_files && !checkperm('A')) 
+                                        if (!checkperm('A')) 
                                             { 
                                             echo "<li>";
                                             if($resource_locked && $resource['lock_user'] != $userref)

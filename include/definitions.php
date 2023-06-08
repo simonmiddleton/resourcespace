@@ -211,7 +211,6 @@ define ('NODE_TOKEN_OR','|');
 define ('NODE_TOKEN_NOT','!');
 define ('NODE_NAME_STRING_SEPARATOR','@@|@@');
 
-
 // Full text search prefix
 define ('FULLTEXT_SEARCH_PREFIX', '@FULL_TEXT');
 define ('FULLTEXT_SEARCH_QUOTES_PLACEHOLDER', '[QUOTES]');
@@ -824,3 +823,7 @@ const VIEW_IN_BROWSER_EXTENSIONS = ['pdf', 'mp3'];
 
 // PHP stream wrappers that will be blocked when attempting uploads by URL via the API.
 const BLOCKED_STREAM_WRAPPERS = ['php', 'file'];
+
+
+// Separator to use when rendering date range field values
+define('DATE_RANGE_SEPARATOR'," / ");

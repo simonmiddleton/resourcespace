@@ -279,7 +279,7 @@ switch ($returntype)
         $fc_parent = validate_collection_parent(array("parent" => $fc_parent));
 
         // Add 'create new' option
-        if($collection_allow_creation && checkperm("h"))
+        if(checkperm("h") && can_create_collections())
             {
             $item = array(
                 "id" => "{$id}-FC:new",
@@ -332,9 +332,8 @@ switch ($returntype)
         break;
     
     case "C":
-        // My collections
-        
-        if($collection_allow_creation && !checkperm("b"))
+        // My collections        
+        if(can_create_collections())
             {
             // Add 'create new' option
             $return_items[$n] = array();

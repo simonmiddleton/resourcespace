@@ -8,7 +8,7 @@ function HookWordpress_ssoAllProvideusercredentials()
     if (isset($_COOKIE["user"]) && $_COOKIE["user"]!="|") {return true;}
 
     global $username,$hashsql,$session_hash,$baseurl,$lang,$wordpress_sso_url, $wordpress_sso_secret, $wordpress_sso_auto_create;
-    global $wordpress_sso_auto_approve, $wordpress_sso_auto_create_group,$global_cookies,$user_select_sql,$session_autologout;
+    global $wordpress_sso_auto_approve, $wordpress_sso_auto_create_group,$user_select_sql,$session_autologout;
 
     $session_hash="";
     @$_COOKIE["user"]="|";

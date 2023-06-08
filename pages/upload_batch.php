@@ -205,7 +205,7 @@ resource_type_config_override($resource_type);
 
 $hidden_collection = false;
 # Create a new collection?
-if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$upload_force_mycollection)
+if($collection_add == "new" && ($processupload  || !$upload_then_edit))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
@@ -293,11 +293,7 @@ if($modify_redirecturl!==false)
 	$redirecturl=$modify_redirecturl;
 	}
 
-if($upload_force_mycollection)
-    {
-    $collection_add = get_default_user_collection(true);
-    }
-elseif($collection_add=='undefined')
+if($collection_add=='undefined')
     {
     # Fallback to current user collection if nothing was passed in
     $collection_add = $usercollection;
@@ -950,26 +946,6 @@ if ($processupload)
     // Return JSON-RPC response
     exit(json_encode($result));
     }
-elseif ($upload_no_file && getval("createblank","")!="")
-	{
-    $ref=copy_resource(0-$userref,$lang["createdfromwebuploader"]); 
-                                
-    if($ref === false)
-        {
-        // If user doesn't have a resource template (usually this happens when a user had from the first time upload_then_edit mode on), create resource using default values.
-        $ref = create_resource($resource_type, $setarchivestate,-1,$lang["createdfromwebuploadertemplate"]);
-        }
-
-	// Add to collection?
-	if (is_numeric($collection_add))
-		{
-		add_resource_to_collection($ref,$collection_add);
-		}
-    rs_setcookie('lockedfields', '', 1);
-    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true"));
-    redirect($redirecturl);
-    exit();
-	}
 
 // Check if upload should be disabled because the filestore location is indexed and browseable
 $cfb = check_filestore_browseability();
@@ -989,7 +965,7 @@ include "../include/header.php";
 redirurl = '<?php echo $redirecturl ?>';
 var resource_keys=[];
 var processed_resource_keys=[];
-var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
+var relate_on_upload = <?php echo ($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes") ? " true" : "false"; ?>;
 // Set flag allowing for blocking auto redirect after upload if errors are encountered
 upRedirBlock = false;
 logopened = false;

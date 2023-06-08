@@ -174,7 +174,7 @@ echo "<br />";
 
 <td class="count"><?php if ($col_order_by=="count") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=count&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["itemstitle"]?></a><?php if ($col_order_by=="count") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
-<?php if (!$hide_access_column_public){ ?><td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="public") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php } ?>
+<td class="access"><?php if ($col_order_by=="type") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=type&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["access"]?></a><?php if ($col_order_by=="public") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 <?php hook("beforecollectiontoolscolumnheader");?>
 
 <td class="tools"><div class="ListTools"><?php echo $lang['actions']?></div></td>
@@ -200,26 +200,23 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
         <td class="created"><?php echo nicedate($collections[$n]["created"],true)?></td>
         <td class="count"><?php echo $collections[$n]["count"]?></td>
         <?php 
-        if(!$hide_access_column_public)
+        switch($collections[$n]["type"])
             {
-            switch($collections[$n]["type"])
-                {
-                case COLLECTION_TYPE_PUBLIC:
-                    $access_str = $lang["public"];
-                    break;
+            case COLLECTION_TYPE_PUBLIC:
+                $access_str = $lang["public"];
+                break;
 
-                case COLLECTION_TYPE_FEATURED:
-                    $access_str = $lang["theme"];
-                    break;
+            case COLLECTION_TYPE_FEATURED:
+                $access_str = $lang["theme"];
+                break;
 
-                default:
-                    $access_str = $lang["private"];
-                    break;
-                }
-            ?>
-            <td class="access"><?php echo htmlspecialchars($access_str); ?></td>
-            <?php 
+            default:
+                $access_str = $lang["private"];
+                break;
             }
+        ?>
+        <td class="access"><?php echo htmlspecialchars($access_str); ?></td>
+        <?php 
         hook("beforecollectiontoolscolumn");
 
         $action_selection_id = 'collectionpublic_action_selection' . $collections[$n]["ref"] . "_bottom_" . $collections[$n]["ref"] ;

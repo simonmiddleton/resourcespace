@@ -65,7 +65,7 @@ function do_search(
     global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $usergroup,
         $userref,$k, $DATE_FIELD_TYPES,$stemming, $usersearchfilter, $userpermissions, $usereditfilter, $userdata,
         $lang, $baseurl, $internal_share_access, $config_separators, $date_field, $noadd, $wildcard_always_applied,
-        $wildcard_always_applied_leading, $index_resource_type, $index_contributed_by, $max_results, $config_search_for_number,
+        $index_contributed_by, $max_results, $config_search_for_number,
         $category_tree_search_use_and_logic, $date_field, $FIXED_LIST_FIELD_TYPES;
 
     if($editable_only && !$returnsql && trim((string) $k) != "" && !$internal_share_access)
@@ -192,11 +192,9 @@ function do_search(
         // Resource ID is no longer indexed, if search is just for a single integer then include this
         $searchidmatch = ps_value("SELECT COUNT(*) AS value FROM resource WHERE ref = ?",["i",$search],0) != 0;
         }
-    if ($index_resource_type)
-        {
-        // Resource type is no longer  indexed but this will still honour the config by including in search
-        $restypenames = get_resource_types();;
-        }
+  
+    // Resource type is no longer indexed
+    $restypenames = get_resource_types();
 
     # Extract search parameters and split to keywords.
     $search_params=$search;
@@ -377,7 +375,7 @@ function do_search(
                 $non_field_keyword_sql->sql .= " UNION (SELECT " . (int)$keyword . " AS resource, [bit_or_condition] 1 AS score)";
                 $canskip = true;
                 }
-            elseif ($index_resource_type && in_array(mb_strtolower($keyword),array_map("mb_strtolower",array_column($restypenames,"name"))))
+            elseif (in_array(mb_strtolower($keyword),array_map("mb_strtolower",array_column($restypenames,"name"))))
                 {
                 // Resource type is no longer actually indexed but this will still honour the config by including in search
                 $non_field_keyword_sql->sql .= " UNION (SELECT r.ref AS resource, [bit_or_condition] 1 AS score FROM resource r LEFT JOIN resource_type rt ON r.resource_type=rt.ref WHERE r.ref > 0 AND rt.name LIKE ?)";
@@ -683,11 +681,6 @@ function do_search(
                                     {
                                     # Suffix asterisk if none supplied and using $wildcard_always_applied mode.
                                     $keyword = $keyword . "*";
-
-                                    if ($wildcard_always_applied_leading)
-                                        {
-                                        $keyword = '*' . $keyword;
-                                        }
                                     }
 
                                 # Keyword contains a wildcard. Expand.
@@ -1026,7 +1019,7 @@ function do_search(
                 $fixedunioncondition = new PreparedStatementQuery();
 				foreach($quotedkeywords as $quotedkeyword)
 					{
-					global $noadd, $wildcard_always_applied, $wildcard_always_applied_leading;
+					global $noadd, $wildcard_always_applied;
 					if (in_array($quotedkeyword, $noadd)) # skip common words that are excluded from indexing
 						{
 						# Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.

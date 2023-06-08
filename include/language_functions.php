@@ -573,7 +573,7 @@ function http_get_preferred_language($strict_mode=false)
  */
 function setLanguage()
 	{
-	global $browser_language,$disable_languages,$defaultlanguage,$languages,$global_cookies,$baseurl_short;
+	global $browser_language,$disable_languages,$defaultlanguage,$languages,$baseurl_short;
 	$language="";
 	if (isset($_GET["language_set"]))
 	    {
@@ -581,23 +581,15 @@ function setLanguage()
 	    if(array_key_exists($language,$languages)) 
 			{
 		    # Cannot use the general.php: rs_setcookie() here since general may not have been included.
-		    if ($global_cookies)
-		        {
-		        # Remove previously set cookies to avoid clashes
-		        setcookie("language", "", time() - 3600, $baseurl_short . "pages/", '', false, true);
-		        setcookie("language", "", time() - 3600, $baseurl_short, '', false, true);
-		        # Set new cookie
-		        setcookie("language", $language, time() + (3600*24*1000), "/", '', false, true);
-		        }
-		    else
-		        {
-		        # Set new cookie
-		        setcookie("language", $language, time() + (3600*24*1000));
-		        setcookie("language", $language, time() + (3600*24*1000), $baseurl_short . "pages/", '', false, true);
-		        }
+            # Set new cookie
+            setcookie("language", $language, time() + (3600*24*1000));
+            setcookie("language", $language, time() + (3600*24*1000), $baseurl_short . "pages/", '', false, true);		    
 		    return $language;
 		    }
-		    else{$language="";}
+		else
+            {
+            $language="";
+            }
 	    }
 	if (isset($_GET["language"]) && array_key_exists($_GET["language"],$languages)) {return $_GET["language"];}	
 	if (isset($_POST["language"]) && array_key_exists($_POST["language"],$languages)) {return $_POST["language"];}
