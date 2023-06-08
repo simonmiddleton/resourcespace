@@ -737,12 +737,10 @@ function do_search(
                                             {
                                             $keyword_split = split_keywords($keyword);
                                             
-                                            if($field_short_name_specified){
-                                                $keyword_split = array_map(function($k) use ($fieldname)
+                                            if($field_short_name_specified)
                                                 {
-                                                    return "$fieldname:$k";
-                                                },$keyword_split);
-                                            }
+                                                $keyword_split = array_map(prefix_value($fieldname.":"),$keyword_split);
+                                                }
                                             $keywords = array_merge($keywords,$keyword_split);
                                             continue;
                                             }
