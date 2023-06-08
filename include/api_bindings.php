@@ -375,6 +375,20 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     // A file has been specified so add it as alternative
+    $deletesourcefile = false;
+    if (api_validate_upload_url($file))
+        {
+        // Path is a url
+        $upload_key = uniqid($resource . "_");
+        $file = temp_local_download_remote_file($file, $upload_key);
+        $deletesourcefile = true;
+        if(trim($file_extension)=="")
+            {
+            $path_parts = pathinfo($file);
+            $file_extension = $path_parts['extension'] ?? '';
+            }
+        }   
+
     $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
     $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
 
@@ -384,7 +398,10 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     chmod($rs_alternative_path, 0777);
-
+    if($deletesourcefile)
+        {
+        unlink($file);
+        }
     $file_size = @filesize_unlimited($rs_alternative_path);
 
     ps_query("UPDATE resource_alt_files SET file_size= ?, creation_date = NOW() WHERE resource = ? AND ref = ?", ['s', $file_size, 's', $resource, 's', $alternative_ref]);
