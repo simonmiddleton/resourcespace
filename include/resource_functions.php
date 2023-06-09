@@ -864,6 +864,17 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     # date type, construct the value from the date/time dropdowns to be used in DB
                     $val=sanitize_date_field_input($fields[$n]["ref"], false);
 
+                    // A proper input:date field
+                    if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
+                        {
+                        $val = getval("field_{$fields[$n]['ref']}", '');
+                        if($val !== '' && !validateDatetime($val, 'Y-m-d'))
+                            {
+                            $errors[$fields[$n]['ref']] = $val;
+                            continue;
+                            }
+                        }
+
                     // Upload template: always reset to today's date, if configured and field is hidden
                     if(0 > $ref
                         && $reset_date_upload_template
@@ -1824,7 +1835,16 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             }
         else
             {
-            if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+            if($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
+                {
+                $val = $postvals["field_{$fields[$n]['ref']}"] ?? '';
+                if($val !== '' && !validateDatetime($val, 'Y-m-d'))
+                    {
+                    $errors[$fields[$n]['ref']] = $val;
+                    continue;
+                    }
+                }
+            else if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
@@ -2836,6 +2856,17 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             // Nothing to do
             return true;
+            }
+
+        if (
+            $GLOBALS['use_native_input_for_date_field']
+            && $fieldinfo['type'] === FIELD_TYPE_DATE
+            && $value !== ''
+            && !validateDatetime($value, 'Y-m-d')
+        )
+            {
+            $errors[] = sprintf('%s: %s', i18n_get_translated($fieldinfo['title']), $lang['invalid_date_generic']);
+            return false;
             }
 
         $curnode = $existing_resource_node["ref"] ?? 0 ;

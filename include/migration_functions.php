@@ -243,19 +243,6 @@ function random_char()
     }
 
 /**
-* Utility function to check string is a valid date/time
-*
-* @param string $datestring       - date string
-* @param string $format           - DateTime format to compare
-* @return boolean
-*/
-function validateDatetime($datestring, $format = 'Y-m-d H:i:s')
-    {
-    $date = DateTime::createFromFormat($format, $datestring);
-    return $date && $date->format($format) == $datestring;
-    }
-
-/**
 * Utility function to randomly alter date by offset
 *
 * @param string $fromdate       - date string

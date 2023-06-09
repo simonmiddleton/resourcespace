@@ -3363,3 +3363,11 @@ $update_disk_usage_batch_size = 20000;
 // of metadata fields and options are available. Relying on large text fields can result in unnecessary database bloat,
 // pollution of search results and irrelevant keywords.
 $node_keyword_index_chars=500;
+
+/* 
+Display date metadatada fields using the native input type "date".
+
+IMPORTANT: enabling this will mean partial dates (e.g May 2023) are no longer supported and existing data will get
+cleared after the next resource edit (as & when users do it).
+*/
+$use_native_input_for_date_field = false;

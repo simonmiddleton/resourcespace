@@ -5030,6 +5030,19 @@ function prefix_value(string $prefix): Closure
     }
 
 /**
+* Utility function to check string is a valid date/time with a specific format.
+*
+* @param string $datetime Date/time value
+* @param string $format The format that date/time value should be in. {@see https://www.php.net/manual/en/datetimeimmutable.createfromformat.php}
+* @return boolean
+*/
+function validateDatetime(string $datetime, string $format = 'Y-m-d H:i:s'): bool
+    {
+    $date = DateTimeImmutable::createFromFormat($format, $datetime);
+    return $date && $date->format($format) === $datetime;
+    }
+
+/**
  *  @param string $haystack Value to be checked
  *  @param string $needle Substing to seach for in the haystack
  * 

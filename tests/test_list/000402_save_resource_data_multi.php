@@ -16,6 +16,8 @@ $ct_opt_colors_red = set_node(null, $rtf_cat_tree, '~en:red~fr:rouge', $ct_opt_c
 $ct_opt_colors_black = set_node(null, $rtf_cat_tree, '~en:black~fr:noire', $ct_opt_colors, 10);
 $ct_opt_colors_blue = set_node(null, $rtf_cat_tree, '~en:blue~fr:bleue', $ct_opt_colors, 30);
 
+$rtf_date = create_resource_type_field("Test #402 date", 1, FIELD_TYPE_DATE, 'test_402_date', false);
+
 // Resources
 $resource_a = create_resource(1, 0);
 $resource_b = create_resource(1, 0);
@@ -51,6 +53,44 @@ $assert_same_all_resources_fieldx = function($resources, $rtf)
     };
 // --- End of Set up
 
+
+
+$use_cases = [
+    [
+        'name' => 'Date in wrong (dmY) format should error and let user know',
+        'input' => [
+            'collection' => $collection_ref,
+            'postvals' => [
+                "field_{$rtf_date}" => '01-04-2022',
+                "editthis_field_{$rtf_date}" => 'yes',
+                "modeselect_{$rtf_date}" => 'RT',
+            ],
+        ],
+        'expected' => [$rtf_date => '01-04-2022'], // it means it errored - see save_resource_data
+    ],
+    [
+        'name' => 'Date in expected (yyyy-mm-dd) format',
+        'input' => [
+            'collection' => $collection_ref,
+            'postvals' => [
+                "field_{$rtf_date}" => '2023-04-18',
+                "editthis_field_{$rtf_date}" => 'yes',
+                "modeselect_{$rtf_date}" => 'RT',
+            ],
+        ],
+        'expected' => true,
+    ],
+];
+foreach ($use_cases as $uc)
+    {
+    $result = save_resource_data_multi($uc['input']['collection'], [], $uc['input']['postvals']);
+    
+    if($uc['expected'] !== $result)
+        {
+        echo "Use case: {$uc['name']} - ";
+        return false;
+        }
+    }
 
 
 // Check field_column_string_separator is applied for fixed list fields
@@ -149,8 +189,9 @@ if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value
 $field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
 unset(
-    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a, $resource_b, $collection_ref, $resources_list,
-    $assert_same_all_resources_fieldx, $cat_tree_fieldx_value, $cat_tree_fieldX_values, $expected_cat_tree_fieldx_value
+    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a, $resource_b, $collection_ref, $resources_list, $rtf_date,
+    $assert_same_all_resources_fieldx, $cat_tree_fieldx_value, $cat_tree_fieldX_values, $expected_cat_tree_fieldx_value,
+    $use_cases
 );
  
 return true;
