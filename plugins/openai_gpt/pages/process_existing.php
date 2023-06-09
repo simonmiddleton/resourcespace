@@ -9,8 +9,9 @@ if(!in_array("openai_gpt",$plugins))
     }
 
 $collections    = [];
-$targetfield          = 0;
+$targetfield    = 0;
 $overwrite      = false;
+$collectionset  = false;
 
 $help_text = "\n    NAME
     process_existing.php - update openai_gpt derived fields from existing data.
@@ -56,8 +57,11 @@ if($cli_options !== false)
                 $collections = $option_value;
                 continue;
                 }
-
-            $collections[] = $option_value;
+            else if((string)(int)$option_value == (string)$option_value)
+                {
+                $collections[] = $option_value;
+                }
+            $collectionset = true;
             }
         if(in_array($option_name, array('f', 'field')))
             {
@@ -68,6 +72,11 @@ if($cli_options !== false)
             $overwrite=true;
             }
         }
+    }
+
+if($collectionset && empty($collections))
+    {
+    exit($help_text . "Invalid syntax. Please note that a collection ID must be specified immediately following the '-c' or '--collection' e.g -c55\n\n");
     }
 
 if($targetfield==0)
@@ -131,6 +140,7 @@ if(!$overwrite)
     }
 
 echo "Found ". count($arr_toprocess) . " valid resource(s) to process\n";
+flush();ob_flush();
 // Sort into an array indexed by nodes so resources with the same data can be processed together
 $nodegroups = [];
 foreach($arr_toprocess as $resource)
@@ -151,6 +161,7 @@ $arr_failure = [];
 foreach($nodegroups as $nodehash=>$nodegroup)
     {
     echo "Processing resources: " . implode(",",$nodegroup["resources"]) . "\n";
+    flush();ob_flush();
     $strings = ($nodehash != "BLANK" && count($nodegroup["nodes"]) > 0) ? get_node_strings($nodegroup["nodes"]) : [];
     $updated = openai_gpt_update_field($nodegroup["resources"],$targetfield_data,$strings);
     if($updated)
@@ -163,6 +174,7 @@ foreach($nodegroups as $nodehash=>$nodegroup)
         $arr_failure = array_merge($arr_failure,$nodegroup["resources"]);
         echo " - ERROR. None of the above resources were updated\n";
         }
+    flush();ob_flush();
     }
 
 $c_success = count($arr_success);
