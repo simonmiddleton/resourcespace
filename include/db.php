@@ -170,7 +170,6 @@ if(isset($system_read_only) && $system_read_only)
     {
     $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
     $global_permissions="p";
-    $remove_resources_link_on_collection_bar = false;
     $mysql_log_transactions=false;
     $enable_collection_copy = false;
     }

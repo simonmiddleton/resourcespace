@@ -76,8 +76,7 @@ if (isset($userconfirmmessage))
     </div>
 
     <div class="QuestionSubmit">
-        <?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>
-        <label for="buttons"> </label>			
+        <?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>		
         <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["offline_archive_request_restore"]?>&nbsp;&nbsp;" />
         </div>

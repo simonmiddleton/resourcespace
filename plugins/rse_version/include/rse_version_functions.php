@@ -41,7 +41,6 @@ function render_revert_state_form()
             <input type="hidden" name="action" value="revert_state">
             <?php generateFormToken("rse_version_revert_state_form"); ?>
             <div class="QuestionSubmit">
-                <label for="buttons"> </label>
                 <input name="revert" type="submit" value="<?php echo $lang["revert"]; ?>">
             </div>
         </form>

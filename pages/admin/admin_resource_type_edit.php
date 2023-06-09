@@ -230,8 +230,7 @@ if($actions_required)
     </div>
 	<div class="clearerleft"> </div>
     </div>
-    <div class="QuestionSubmit">
-        <label for="buttons"> </label>			
+    <div class="QuestionSubmit">		
         <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" />
         <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirm-deletion"]?>');"/>
     </div>
@@ -308,8 +307,7 @@ else
         <div class="clearerleft"></div>
     </div>
     
-    <div class="QuestionSubmit">
-    <label for="buttons"> </label>			
+    <div class="QuestionSubmit">		
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
     <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirm-deletion"]?>');"/>
     </div>

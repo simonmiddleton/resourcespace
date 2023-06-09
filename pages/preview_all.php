@@ -119,12 +119,12 @@ function ReorderResources(id1,id2)
 <br/>
 <table id="preview_all_table" style="width:100%;">
 <tr><p style="margin:7px 0 7px 0;padding:0;"><a class="enterLink" href="<?php if ($backto!=''){echo urlencode($backto);} else { echo $baseurl_short.'pages/search';}?>.php?search=%21collection<?php echo urlencode($colref)?>&order_by=<?php echo urlencode($order_by)?>&col_order_by=<?php echo urlencode($col_order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a>
-&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/preview_all.php?backto=<?php echo urlencode($backto)?>&ref=<?php echo urlencode($colref)?>&vertical=h&offset=<?php echo urlencode($offset)?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&col_order_by=<?php echo urlencode($col_order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>">&gt; <?php echo $lang["horizontal"]; ?> </a>
-&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/preview_all.php?backto=<?php echo urlencode($backto)?>&ref=<?php echo urlencode($colref)?>&vertical=v&offset=<?php echo urlencode($offset)?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&col_order_by=<?php echo urlencode($col_order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>">&gt; <?php echo $lang["vertical"]; ?> </a>
+&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/preview_all.php?backto=<?php echo urlencode($backto)?>&ref=<?php echo urlencode($colref)?>&vertical=h&offset=<?php echo urlencode($offset)?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&col_order_by=<?php echo urlencode($col_order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>"><?php echo LINK_CARET . $lang["horizontal"]; ?> </a>
+&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/preview_all.php?backto=<?php echo urlencode($backto)?>&ref=<?php echo urlencode($colref)?>&vertical=v&offset=<?php echo urlencode($offset)?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&col_order_by=<?php echo urlencode($col_order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>"><?php echo LINK_CARET . $lang["vertical"]; ?> </a>
 </tr>
 
 <?php 
-echo $search_title;
+echo "<h1>" . $search_title . "</h1>";
 
 $heightmod = 120;
 for ($x=0;$x<count($result);$x++){
@@ -249,10 +249,8 @@ if (maxheight><?php echo $imageheight?>){
 </table>
 
 <script type="text/javascript">
-<?php if ($preview_all_hide_collections) { ?>
-	CollectionDivLoad("<?php echo $baseurl ?>/pages/collections.php?ref=<?php echo urlencode($collection) ?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>&thumbs=hide");
-<?php } ?>
 
+	CollectionDivLoad("<?php echo $baseurl ?>/pages/collections.php?ref=<?php echo urlencode($collection) ?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>&thumbs=hide");
 	window.onresize=function(event){
 	var maxheight=window.innerHeight-<?php echo $heightmod?>;
     if (isNaN(maxheight)){maxheight=document.documentElement.clientHeight-<?php echo $heightmod?>;}

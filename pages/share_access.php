@@ -49,7 +49,6 @@ include "../include/header.php";
 	</div>
 	
 	<div class="QuestionSubmit">
-	<label></label>
     <input type=hidden name="submit" value=true">
 	<input name="submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" />
 	</div>

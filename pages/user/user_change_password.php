@@ -188,7 +188,6 @@ else
 
 
 	<div class="QuestionSubmit">
-	<label for="buttons"> </label>
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" /><div class="clearerleft"> </div>
 	</div>
 	</form>

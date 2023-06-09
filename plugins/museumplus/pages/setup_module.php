@@ -193,7 +193,6 @@ if(isset($error))
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
-            <label></label>
             <input type="submit" name="save" value="<?php echo $lang["save"]; ?>">
         </div>
     </form>  <!-- end of MplusModuleConfigForm -->

@@ -146,8 +146,7 @@ if(!$modal)
 	?>
 	
 	<div class="QuestionSubmit">
-	<input name="save" type="hidden" value="true" />
-	<label for="buttons"> </label>			
+	<input name="save" type="hidden" value="true" />	
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["deleteresource"]?>&nbsp;&nbsp;"  onclick="return ModalPost(this.form,true);"/>		
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  onclick='return CentralSpaceLoad("<?php echo $cancelurl ?>",true);'/>
 	</div>

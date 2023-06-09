@@ -431,7 +431,7 @@ function get_alluser_available_tiles($tile="null")
  */
 function get_default_dash($user_group_id = null, $edit_mode = false)
     {
-    global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $dash_tile_colour, $dash_tile_colour_options;
+    global $baseurl,$baseurl_short,$lang,$anonymous_login,$username;
 
     #Build Tile Templates
     $tiles = ps_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,dash_tile.default_order_by as 'order_by',dash_tile.allow_delete FROM dash_tile WHERE dash_tile.all_users = 1 AND dash_tile.ref NOT IN (SELECT dash_tile FROM usergroup_dash_tile) AND (dash_tile.allow_delete=1 OR (dash_tile.allow_delete=0 AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile))) ORDER BY default_order_by");
@@ -478,17 +478,13 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 
         $order+=10;
 
-        $tile_custom_style = '';
+        $tile_custom_style = '';       
+        $buildstring = explode('?', $tile['url']);
+        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
 
-        if($dash_tile_colour)
+        if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
             {
-            $buildstring = explode('?', $tile['url']);
-            parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
-
-            if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
-                {
-                $tile_custom_style .= get_tile_custom_style($buildstring);
-                }
+            $tile_custom_style .= get_tile_custom_style($buildstring);
             }
 
         if(in_array($tile['tile'], $hidden_tiles))
@@ -640,7 +636,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 function get_managed_dash()
     {
     global $baseurl,$baseurl_short,$lang,$anonymous_login,$username, $userref, $usergroup;
-    global $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash, $help_modal;
+    global $managed_home_dash, $help_modal;
     #Build Tile Templates
     $tiles = ps_query("
         SELECT dash_tile.ref AS 'tile',
@@ -671,17 +667,12 @@ function get_managed_dash()
     
     foreach($tiles as $tile)
         {
-        $tile_custom_style = '';
-    if($dash_tile_colour)
+        $tile_custom_style = '';   
+        $buildstring = explode('?', $tile['url']);
+        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
+        if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
             {
-            $buildstring = explode('?', $tile['url']);
-            parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
-            
-            if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
-                {
-                $tile_custom_style .= get_tile_custom_style($buildstring);
-                
-                }
+            $tile_custom_style .= get_tile_custom_style($buildstring);
             }
         ?>
         <a 
@@ -1152,7 +1143,7 @@ function get_user_available_tiles($user,$tile="null")
  */
 function get_user_dash($user)
     {
-    global $baseurl,$baseurl_short,$lang,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
+    global $baseurl,$baseurl_short,$lang,$help_modal;
 
     #Build User Dash and recalculate order numbers on display
     $user_tiles = ps_query("SELECT dash_tile.ref AS 'tile', dash_tile.title, dash_tile.all_users, dash_tile.url, dash_tile.reload_interval_secs, dash_tile.link, user_dash_tile.ref AS 'user_tile', user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user = ? ORDER BY user_dash_tile.order_by asc, dash_tile.ref desc", array("i", $user));
@@ -1169,13 +1160,9 @@ function get_user_dash($user)
         parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
 
         $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
-
-        if($dash_tile_colour)
+        if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
             {
-            if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
-                {
-                $tile_custom_style .= get_tile_custom_style($buildstring);
-                }
+            $tile_custom_style .= get_tile_custom_style($buildstring);
             }
         ?>
         <a 
@@ -1493,18 +1480,18 @@ function build_dash_tile_list($dtiles_available)
 */
 function allow_tile_colour_change($tile_type, $tile_style = '')
     {
-    global $lang, $dash_tile_colour, $dash_tile_colour_options, $tile_styles;
+    global $tile_styles;
 
     $allowed_styles = array('blank', 'ftxt');
 
     // Check a specific style for a type
-    if($dash_tile_colour && '' !== $tile_style && !in_array($tile_style, $allowed_styles))
+    if('' !== $tile_style && !in_array($tile_style, $allowed_styles))
         {
         return false;
         }
 
     // Is one of the allowed styles in the styles available for this tile type?
-    if($dash_tile_colour && isset($tile_styles[$tile_type]) && 0 < count(array_intersect($tile_styles[$tile_type], $allowed_styles)))
+    if(isset($tile_styles[$tile_type]) && 0 < count(array_intersect($tile_styles[$tile_type], $allowed_styles)))
         {
         return true;
         }
@@ -1523,7 +1510,7 @@ function allow_tile_colour_change($tile_type, $tile_style = '')
 */
 function render_dash_tile_colour_chooser($tile_style, $tile_colour)
     {
-    global $lang, $dash_tile_colour, $dash_tile_colour_options, $baseurl;
+    global $lang, $baseurl;
     if('ftxt' == $tile_style)
         {
         ?>
@@ -1537,12 +1524,8 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         <?php
         }
         ?>
-            <label><?php echo $lang['colour']; ?></label>
-    <?php
-    // Show either color picker OR a drop down selector
-    if(0 === count($dash_tile_colour_options))
-        {
-        ?>
+        <label><?php echo $lang['colour']; ?></label>
+   
         <script src="<?php echo $baseurl; ?>/lib/spectrum/spectrum.js"></script>
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/spectrum/spectrum.css" />
         <input id="tile_style_colour" name="tlstylecolour" type="text" onchange="update_tile_preview_colour(this.value);" value="<?php echo $tile_colour; ?>">
@@ -1554,24 +1537,6 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
                 preferredFormat: 'rgb'
             });
         </script>
-        <?php
-        }
-    else
-        {
-        ?>
-        <select id="tile_style_colour" name="tile_style_colour" onchange="update_tile_preview_colour(this.value);">
-        <?php
-        foreach($dash_tile_colour_options as $dash_tile_colour_option_value => $dash_tile_colour_option_text)
-            {
-            ?>
-            <option value="<?php echo $dash_tile_colour_option_value; ?>"><?php echo $dash_tile_colour_option_text; ?></option>
-            <?php
-            }
-        ?>
-        </select>
-        <?php
-        }
-        ?>
 
     <!-- Show/ hide colour picker/ selector -->
     <script>

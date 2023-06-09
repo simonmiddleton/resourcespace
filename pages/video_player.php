@@ -1,30 +1,13 @@
 <?php
 # Video player - plays the preview file created to preview video resources.
 include_once __DIR__ . '/../include/video_functions.php';
-global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,
-$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
+global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,
+$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
 $video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource;
 
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
 $alternative = is_null($alternative) ? -1 : $alternative;
-
-if(
-       $video_player_thumbs_view_alt
-    && isset($video_player_thumbs_view_alt_name)
-    && 'search' == $pagename
-    && 'list' != $display
-)
-    {
-    $use_video_alts = true;
-
-    $alternative = ps_value("
-            SELECT ref AS `value`
-              FROM resource_alt_files
-             WHERE resource = ?
-               AND name = ?
-        ",array("i",$ref,"s",$video_player_thumbs_view_alt_name),-1);
-    }
 
 //Create array of video sources
 $video_preview_sources=array();

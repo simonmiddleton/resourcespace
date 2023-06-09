@@ -163,8 +163,7 @@ if(isset($download_usage_prevent_options))
 
         <?php if ($usage_textbox_below && !$remove_usage_textbox) {  echo html_usagecomments($usagecomment,$error); } ?>
 
-        <div class="QuestionSubmit">
-            <label for="buttons"> </label>          
+        <div class="QuestionSubmit">        
             <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
         </div>
 

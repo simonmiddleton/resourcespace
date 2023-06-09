@@ -78,24 +78,6 @@ jQuery(document).ready(function() {
             case <?php echo $keyboard_navigation_view_all; ?>: if(!modOn){CentralSpaceLoad('<?php echo $baseurl;?>/pages/search.php?search=!collection'+document.getElementById("currentusercollection").innerHTML+'&k='+share,true)};
                      break;
             <?php if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview)){?>
-				<?php if($video_playback_backwards){ ?>
-					case <?php echo $keyboard_navigation_video_search_backwards?>:
-						//console.log("backwards button pressed");
-						//console.log("Player is "+vidActive);
-						curPlayback=vidActive.playbackRate();
-						//console.log("Current playback rate is "+curPlayback);
-						if(playback=='backward'){
-							newPlayback=curPlayback+1;
-						}
-						else{
-							newPlayback=1;
-						}
-						//console.log("New playback rate is "+newPlayback);
-						playback='backward';
-						videoRewind(newPlayback);
-						break;
-				<?php } ?>
-				
 				case <?php echo $keyboard_navigation_video_search_play_pause?>:
 					<?php if($pagename=='view' || $pagename=='preview'){ ?>
 						vidActive=document.getElementById('introvideo<?php echo $ref?>');

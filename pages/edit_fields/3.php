@@ -1,6 +1,5 @@
 <?php
 /* -------- Drop down list ------------------ */ 
-global $default_to_first_node_for_fields;
 
 // Selected nodes should be used most of the times.
 // When searching, an array of searched_nodes can be found instead
@@ -34,8 +33,8 @@ if((bool) $field['automatic_nodes_ordering'])
             }
             ?>>
 <?php
-global $default_to_first_node_for_fields, $pagename;
-if(!hook('replacedropdowndefault', '', array($field)) && (!in_array($field["ref"],$default_to_first_node_for_fields) || (in_array($field["ref"],$default_to_first_node_for_fields) && $pagename=="edit" && getval("uploader","")=="" && $value=='')))
+global $pagename;
+if(!hook('replacedropdowndefault', '', array($field)))
     {
     ?>
     <option value=""></option>

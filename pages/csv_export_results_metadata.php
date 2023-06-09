@@ -146,8 +146,7 @@ elseif (isset($message))
         </div>
 
 
-        <div class="QuestionSubmit">
-            <label for="buttons"> </label>        
+        <div class="QuestionSubmit">       
             <input type="hidden" name="submit" value="true" />  
             <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
         </div>

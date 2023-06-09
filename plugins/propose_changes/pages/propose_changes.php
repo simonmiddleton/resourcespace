@@ -354,7 +354,7 @@ function propose_changes_display_field($n, $field)
     {
     global $ref, $original_fields, $multilingual_text_fields,
     $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
-    $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
+    $FIXED_LIST_FIELD_TYPES, $edit_autosave;
 
     $edit_autosave=false;
     $name="field_" . $field["ref"];

@@ -201,7 +201,7 @@ if (!hook("replaceloginform"))
 
         <?php $header_img_src = get_header_image(); ?>
         <div id="LoginHeader">
-            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg">
+            <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname ?>">
         </div>
         
         <h1><?php echo text("welcomelogin")?></h1>
@@ -228,7 +228,7 @@ if (!hook("replaceloginform"))
         <?php if ($disable_languages==false) { ?>	
             <div class="Question HalfWidth">
                 <label for="language"><?php echo $lang["language"]?></label>
-                <select id="language" class="stdwidth" name="language" onChange="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
+                <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
                 <?php reset ($languages); foreach ($languages as $key=>$value) { ?>
                     <option value="<?php echo $key?>" <?php if ($language==$key) { ?>selected<?php } ?>><?php echo $value?></option>
                 <?php } ?>
@@ -238,7 +238,7 @@ if (!hook("replaceloginform"))
         <?php } ?>
 
         <div class="Question HalfWidth">
-            <label for="user_local_timezone"><?php echo $lang["local_tz"]; ?></label>
+            <label for="user_local_tz"><?php echo htmlspecialchars($lang["local_tz"]); ?></label>
             <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
             <?php
 
@@ -286,8 +286,7 @@ if (!hook("replaceloginform"))
             </div>
         <?php } ?>
 
-        <div class="QuestionSubmit">
-            <label for="buttons"> </label>          
+        <div class="QuestionSubmit">       
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
         </div>
 

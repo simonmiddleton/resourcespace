@@ -339,13 +339,13 @@ function api_put_resource_data($resource,array $data)
 
 function api_get_alternative_files($resource,$order_by="",$sort="",$type="")
     {
-    global $disable_alternative_files, $alt_files_visible_when_restricted;
+    global $alt_files_visible_when_restricted;
     $access = get_resource_access($resource);
 
     if($access == RESOURCE_ACCESS_INVALID_REQUEST)
         {return false;}
 
-    if($disable_alternative_files || ($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
+    if(($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
         {return false;}
     return get_alternative_files($resource,$order_by,$sort,$type);
     }
@@ -363,9 +363,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         return $assert_post;
         }
 
-    global $disable_alternative_files;
-
-    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if((0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
         {
         return false;
         }
@@ -377,6 +375,20 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     // A file has been specified so add it as alternative
+    $deletesourcefile = false;
+    if (api_validate_upload_url($file))
+        {
+        // Path is a url
+        $upload_key = uniqid($resource . "_");
+        $file = temp_local_download_remote_file($file, $upload_key);
+        $deletesourcefile = true;
+        if(trim($file_extension)=="")
+            {
+            $path_parts = pathinfo($file);
+            $file_extension = $path_parts['extension'] ?? '';
+            }
+        }   
+
     $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
     $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
 
@@ -386,7 +398,10 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     chmod($rs_alternative_path, 0777);
-
+    if($deletesourcefile)
+        {
+        unlink($file);
+        }
     $file_size = @filesize_unlimited($rs_alternative_path);
 
     ps_query("UPDATE resource_alt_files SET file_size= ?, creation_date = NOW() WHERE resource = ? AND ref = ?", ['s', $file_size, 's', $resource, 's', $alternative_ref]);
@@ -438,8 +453,7 @@ function api_delete_alternative_file($resource,$ref)
         return $assert_post;
         }
 
-    global $disable_alternative_files;
-    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if(0 < $resource && (!(get_edit_access($resource) || checkperm('A'))))
         {
         return false;
         }
@@ -635,7 +649,7 @@ function api_create_collection($name,$forupload=false)
         }
 
     global $userref, $collection_allow_creation;
-    if (checkperm("b") || !$collection_allow_creation)
+    if (!can_create_collections())
         {
         return false;
         }

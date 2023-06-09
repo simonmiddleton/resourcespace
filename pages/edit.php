@@ -95,7 +95,6 @@ $uploadparams["redirecturl"] = $redirecturl;
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 $lastedited = getval('lastedited',0,true);
-$lockable_fields = $upload_review_lock_metadata && $upload_review_mode;
 $locked_fields = (!$resetform && getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
 $save_auto_next = getval("save_auto_next","") != "";
 
@@ -342,18 +341,9 @@ else
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$metadatatemplate = !$resetform ? (getval(
-    'metadatatemplate',
-    ($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
-    true
-    )) : $metadata_template_default_option;
-
-if($resetform)
-    {
-    $metadatatemplate =  $metadata_template_default_option;
-    }
+$metadatatemplate = getval('metadatatemplate',0,true);
     
-if ($lockable_fields && $lastedited > 0)
+if ($upload_review_mode && $lastedited > 0)
     {
     // Update resource data with locked resource data from last edited resource
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
@@ -608,16 +598,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
     hook("editbeforesave"); 
 	if(!$multiple)
         {
-        if(($ref < 0 || $upload_review_mode) && !$is_template && $metadata_template_mandatory && $metadatatemplate == 0)
-            {
-            $save_errors['metadatatemplate'] = $lang["usemetadatatemplate"] . ": " . $lang["requiredfield"];
-            $show_error=true;
-            }
-        else
-            {
-            $save_errors = process_edit_form($ref, $resource);
-            }
-        
+        $save_errors = process_edit_form($ref, $resource);
         if (($save_errors === true || $is_template) && getval("tweak","")=="")
             {
             if ($ref > 0 && getval("save","") != "" && enforcePostRequest($ajax))
@@ -1089,7 +1070,7 @@ include "../include/header.php";
 ?>
 <script>
 <?php
-if ($lockable_fields)
+if ($upload_review_mode)
     {
     echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
     }?>
@@ -1379,13 +1360,9 @@ else
                     <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
                     <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
                     <?php
-                    }
-                if ($tweak_allow_gamma)
-                    {?>
-                    <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
-                    <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
-                    <?php
                     }?>
+                <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
+                <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
                 <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
                 <?php
                 }
@@ -1433,9 +1410,9 @@ hook("editbefresmetadata"); ?>
     if(!$multiple)
         {
         ?>
-        <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
+        <div class="Question <?php if($upload_review_mode && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
             <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
-            if ($lockable_fields)
+            if ($upload_review_mode)
                 {
                 renderLockButton('resource_type', $locked_fields);
                 }?>
@@ -1575,16 +1552,11 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
     {
     // Show metadata templates here
     $templates = get_metadata_templates();
-
-    $first_option_conditions = ($metadata_template_default_option == 0 && $metadatatemplate == 0);
+    $first_option_conditions = $metadatatemplate == 0;
     ?>
-    <div class="Question <?php if($lockable_fields && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
+    <div class="Question <?php if($upload_review_mode && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
         <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate'];
-        if (!$is_template && $metadata_template_mandatory)
-            {
-            echo "<sup>*</sup>";
-            }
-        if ($lockable_fields)
+        if ($upload_review_mode)
             {
             renderLockButton('metadatatemplate', $locked_fields);
             }?>
@@ -1596,10 +1568,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
             {
             $template_selected = '';
 
-            if(
-                ($metadatatemplate == 0 && $metadata_template_default_option == $template['ref'])
-                || ($metadatatemplate > 0 && $template['ref'] == $metadatatemplate)
-            )
+            if($template['ref'] == $metadatatemplate)
                 {
                 $template_selected = ' selected';
                 }
@@ -1758,7 +1727,7 @@ if($upload_here)
     $all_selected_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
     }
 
-if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
+if ($upload_review_mode && count($locked_fields) > 0 && $lastedited > 0)
     {
     // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
     // $fields and $all_selected_nodes are passed by reference and so changed by this
@@ -2043,10 +2012,10 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
 
     hook("before_status_question");
     ?>
-      <div class="Question <?php if($lockable_fields && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+      <div class="Question <?php if($upload_review_mode && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status">
          <?php echo ($multiple ? "" : $lang["status"]);
-         if ($lockable_fields)
+         if ($upload_review_mode)
             {
             renderLockButton('archive', $locked_fields);
             }?>
@@ -2094,10 +2063,10 @@ else
 {
    if ($multiple) { ?><div class="Question"><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["access"]?></label></div><?php } ?>
 
-   <div class="Question <?php if($lockable_fields && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+   <div class="Question <?php if($upload_review_mode && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
       <label for="access">
       <?php echo $lang["access"];
-      if ($lockable_fields)
+      if ($upload_review_mode)
             {
             renderLockButton('access', $locked_fields);
             }
@@ -2151,7 +2120,7 @@ else
                  ?>
                  <table id="custom_access" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($resource["access"]!=3) { ?>display:none;<?php } ?>"><?php
                  global $default_customaccess;
-                 $customaccesssource = ($lockable_fields && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+                 $customaccesssource = ($upload_review_mode && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
                  $groups=get_resource_custom_access($customaccesssource);
                  $groups_count = count($groups);
                  for ($n=0;$n<$groups_count;$n++)
@@ -2204,9 +2173,9 @@ else
     {
        if ($multiple) { ?><div class="Question"><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
 
-       <div class="Question<?php if($lockable_fields && in_array("related_resources",$locked_fields)){echo " lockedQuestion ";} ?>" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+       <div class="Question<?php if($upload_review_mode && in_array("related_resources",$locked_fields)){echo " lockedQuestion ";} ?>" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
           <label for="related"><?php echo $lang["relatedresources"];
-           if ($lockable_fields)
+           if ($upload_review_mode)
             {
             renderLockButton('related_resources', $locked_fields);
             }?>
@@ -2220,7 +2189,7 @@ else
         
         if (!$editsearch)
             {
-            $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+            $relatedref = ($upload_review_mode && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
             $related = get_related_resources($relatedref);
 
             echo ((getval("resetform","")!="")?"":join(", ", $related));
@@ -2247,103 +2216,6 @@ else
       </div>
       <?php
       }
-    
-
-
-    if($ref > 0 && !$upload_review_mode && $delete_resource_custom_access)
-    {
-       $query ='SELECT rca.user AS user_ref,
-                IF(u.fullname IS NOT NULL, u.fullname, u.username) AS user
-                FROM resource_custom_access AS rca
-                INNER JOIN user AS u ON rca.user = u.ref
-                WHERE resource = ?';
-       $rca_users = ps_query($query, ['i', $ref]);
-       
-       $group_query =  'SELECT rca.usergroup AS usergroup_ref, u.name AS name
-                        FROM resource_custom_access AS rca
-                        INNER JOIN usergroup AS u ON rca.usergroup = u.ref
-                        WHERE resource = ?';
-       $rca_usergroups = ps_query($group_query, ['i', $ref]);
-
-       ?>
-    </div> <!-- end of previous collapsible section -->
-    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo $lang["resource_custom_access"]?></h2>
-    <div  id="ResourceCustomAccessSection" <?php echo ($collapsible_sections) ? 'class="CollapsibleSection"' : ''; ?>>
-       <script type="text/javascript">
-       function removeCustomAccess(ref,type) {
-        jQuery.ajax({
-          type: 'POST',
-          url: '<?php echo $baseurl_short; ?>pages/ajax/remove_custom_access.php',
-          data: {
-            ajax: 'true',
-            resource: <?php echo $ref; ?>,
-            ref: ref,
-            type: type,
-            <?php echo generateAjaxToken("removeCustomAccess"); ?>
-         },
-         success: function() {
-			 if(type=='user')
-				{
-				jQuery('#rca_user_' + ref).remove();
-				}
-			else if (type=='usergroup')
-				{
-				jQuery('#rca_usergroup_' + ref).remove();	
-				}
-         }
-      });
-     }
-     </script>
-     <div class="Question" id="question_resource_custom_access">
-      <label for="res_custom_access"><?php echo $lang['remove_custom_access_users_groups']?></label>
-      <!-- table here -->
-      <table id="res_custom_access" cellpadding="3" cellspacing="3">
-        <tbody>
-          <?php
-          foreach ($rca_users as $rca_user_info)
-			{
-             ?>
-             <tr id="rca_user_<?php echo $rca_user_info['user_ref'] ?>">
-               <td valign="middle" nowrap=""><?php echo $rca_user_info['user']; ?></td>
-               <td valign="middle" nowrap="">&nbsp;</td>
-               <td width="10" valign="middle">
-                 <input type="hidden" name="remove_access_user_ref" value="<?php echo $rca_user_info['user_ref'] ?>">
-                 <input type="submit" name="remove_access" value="Remove access" onClick="removeCustomAccess(<?php echo $rca_user_info['user_ref']; ?>,'user'); return false;">
-              </td>
-           </tr>
-           <?php
-			}
-        foreach ($rca_usergroups as $rca_usergroup_info)
-			{
-             ?>
-             <tr id="rca_group_<?php echo $rca_usergroup_info['usergroup_ref'] ?>">
-               <td valign="middle" nowrap=""><?php echo $rca_usergroup_info['name']." (".$lang['group'].")"?></td>
-               <td valign="middle" nowrap="">&nbsp;</td>
-               <td width="10" valign="middle">
-                 <input type="hidden" name="remove_access_usergroup_ref" value="<?php echo $rca_usergroup_info['usergroup_ref'] ?>">
-                 <input type="submit" name="remove_access_group" value="Remove access" onClick="removeCustomAccess(<?php echo $rca_usergroup_info['usergroup_ref']; ?>,'usergroup'); return false;">
-              </td>
-           </tr>
-           <?php
-        }
-
-                    // Add a default message if no users are attached
-        if(count($rca_users) == 0 && count($rca_usergroups) == 0)
-        {
-          ?>
-          <tr>
-            <td><?php echo $lang['remove_custom_access_no_users_found']; ?></td>
-         </tr>
-         <?php
-      }
-      ?>
-   </tbody>
-</table>
-<!-- end of table -->
-<div class="clearerleft"> </div>
-</div>
-<?php
-}
 
 // Multiple method of changing geolocation.
 if ($multiple && !$disable_geocoding)
