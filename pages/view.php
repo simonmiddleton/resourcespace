@@ -698,7 +698,15 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             )
 	                        {
 	                        # Include the player if a video preview file exists for this resource.
-	                        $download_multisize=false; ?>
+	                        if ($resource["file_extension"] != 'gif')
+                                    {
+                                    $download_multisize = false; 
+                                    }
+                                else
+                                    {
+                                    $download_multisize = true; // gif preview sizes remain available when using $ffmpeg_preview_gif
+                                    }
+                            ?>
 	                        <div id="previewimagewrapper">
 	                            <?php 
                                 if(!hook("customflvplay")) // Note: Legacy hook name; video_player.php no longer deals with FLV files.

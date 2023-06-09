@@ -44,7 +44,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 
 	if(file_exists($video_preview))
 		{
-		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
+		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, true);
 		$video_preview_type = "video/{$ffmpeg_preview_extension}";
 		}		
 			
