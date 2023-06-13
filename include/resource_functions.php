@@ -7177,7 +7177,11 @@ function save_original_file_as_alternative($ref)
     # Move the old file to the alternative file location
     if(!hook('save_original_alternative_extra', '', array('origpath' => $origpath, 'newaltpath' => $newaltpath)))
         {
-        $result = rename($origpath, $newaltpath);
+        # It's possible that there is no original in the filestore, so rename it only if present
+        if (file_exists($origpath)) 
+            {
+            $result = rename($origpath, $newaltpath);
+            }
         }
 
     if ($alternative_file_previews)
