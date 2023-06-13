@@ -95,22 +95,11 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
     # ----- end of header row checks, process each of the rows checking data -----
     $restypefields = get_resource_type_fields();
-
     foreach($restypefields as $field)
         {
         $allfields[$field["ref"]] = $field;
         $allfields[$field["ref"]]["options"] =  in_array($field["type"],$FIXED_LIST_FIELD_TYPES) ? get_field_options($field["ref"],true) : array();
-        $allfields[$field["ref"]]["resource_types"] = array();
-        foreach($resource_types as $resource_type => $resource_type_info)
-            {
-            if($field["resource_type"] == $resource_type
-                ||
-                $field["resource_type"] == 0 && $resource_type_info["inherit_global_fields"] == 1
-                )
-                {
-                $allfields[$field["ref"]]["resource_types"][] = $resource_type;
-                }
-            }
+        $allfields[$field["ref"]]["resource_types"] = $field["global"] == 0 ? explode(",",$field["resource_types"]) : array_keys($resource_types);
         }
     array_push($messages,
         "{$lang['csv_upload_process']} " . ($processcsv ? $lang['csv_upload_step5'] : $lang['csv_upload_step4']),

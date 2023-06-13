@@ -593,7 +593,18 @@ switch($csvstep)
                                 {
                                     echo " selected ";
                                 }
-                            echo  ">" . htmlspecialchars(i18n_get_translated($field["title"])) . ($field["resource_type"] != 0 && isset($resource_types[$field["resource_type"]]) ? (" (" . $resource_types[$field["resource_type"]]["name"]  . ")"): "") . "</option>\n";
+                            echo  ">" . htmlspecialchars(i18n_get_translated($field["title"]));
+                            if($field["global"] !== 1)
+                                {
+                                $fieldrestypes = explode(",",$field["resource_types"]);
+                                $fieldrestypenames = [];
+                                foreach($fieldrestypes as $fieldrestype)
+                                    {
+                                    $fieldrestypenames[] = $resource_types[$fieldrestype]["name"];
+                                    }
+                                echo "(" .  implode(",",$fieldrestypenames) . ")";
+                                }
+                            echo "</option>\n";
                             }
                         echo "</select></td>";
                         echo "<td>";
