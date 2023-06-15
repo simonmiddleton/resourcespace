@@ -7160,6 +7160,14 @@ function save_original_file_as_alternative($ref)
 
     // Make the original into an alternative, need resource data so we can get filepath/extension
     $origdata     = get_resource_data($ref);
+    $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
+    # It's possible that there is no original in the filestore; quit if this is the case
+    if (!file_exists($origpath)) 
+        {
+        debug("ERROR: Unable to find original file to save as alternative: " . $origpath);
+        return false;
+        }
+
     $origfilename = get_data_by_field($ref, $filename_field_use);
 
     $newaltname        = str_replace('%EXTENSION', strtoupper($origdata['file_extension']), $lang['replace_resource_original_description']);
@@ -7172,16 +7180,11 @@ function save_original_file_as_alternative($ref)
 
     $newaref = add_alternative_file($ref, $newaltname, $newaltdescription, $origfilename, $origdata['file_extension'], $origdata['file_size']);
 
-    $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
     $newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
     # Move the old file to the alternative file location
     if(!hook('save_original_alternative_extra', '', array('origpath' => $origpath, 'newaltpath' => $newaltpath)))
         {
-        # It's possible that there is no original in the filestore, so rename it only if present
-        if (file_exists($origpath)) 
-            {
-            $result = rename($origpath, $newaltpath);
-            }
+        $result = rename($origpath, $newaltpath);
         }
 
     if ($alternative_file_previews)
@@ -7238,11 +7241,9 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     // save original file as an alternative file
     if($replace_resource_preserve_option && $keep_original)
         {
+        // the following save may not succeed because there is no original in which case a debug log will have been created
+        // allow replace resource to continue with its principal task of uploading
         $savedasalt = save_original_file_as_alternative($ref);
-        if(!$savedasalt)
-            {
-            return false;
-            }
         }
 
     if (filter_var($file_location, FILTER_VALIDATE_URL))

@@ -776,7 +776,7 @@ if ($processupload)
             if (!$success)
                 {
                 $result["status"] = false;
-                $result["message"] = $lang["alternative_file_created"];
+                $result["message"] = $lang["error_upload_replace_file_fail"];
                 $result["error"] = 109;
                 $result["id"] = $replace_resource;
                 }
@@ -905,10 +905,8 @@ if ($processupload)
                         debug("batch_replace upload: replacing resource with id " . $ref);
                         daily_stat("Resource upload",$ref);
 
-                        # Save the original file as an alternative file?
+                        # The replace may need to keep the original (if one exists) by saving it as an alternative file
                         $keep_original = getval('keep_original', '');
-                        $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : true;
-
                         $success = replace_resource_file($ref,$upfilepath,$no_exif,$autorotate,$keep_original);
                         if (!$success)
                             {
