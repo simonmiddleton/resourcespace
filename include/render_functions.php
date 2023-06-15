@@ -4272,6 +4272,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # Include display template when necessary
 		if (!$valueonly && trim($field["display_template"] ?? "")!="")
 			{
+            $value_for_url=$value;
 			# Highlight keywords
 			$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 			
@@ -4282,12 +4283,14 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			    }
 
             # Use a display template to render this field
-            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
+            $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
+            $template = str_replace('[url]', urlencode($value_for_url), $template);
             $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
+            $template = strip_tags_and_attributes($template, array("a"), array("href", "target"));
 
             /*Language strings
             Format: [lang-language-name_here]
