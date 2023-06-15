@@ -4547,13 +4547,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
-        $options[$o]['label'] = htmlspecialchars($lang['relateallresources']);
+        $options[$o]['label'] = $lang['relateallresources'];
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
         $o++;
 
         $options[$o]['value'] = 'unrelate_all';
-        $options[$o]['label'] = htmlspecialchars($lang['unrelateallresources']);
+        $options[$o]['label'] = $lang['unrelateallresources'];
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
         $o++;

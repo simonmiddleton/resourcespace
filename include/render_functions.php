@@ -1019,7 +1019,7 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
         $result .= ' data-' . $data_attr_key . '="' . $data_attr_value . '"';
         }
 
-    $result .= '>' . $label . '</option>';
+    $result .= '>' . htmlspecialchars($label) . '</option>';
 
     return $result;
     }
