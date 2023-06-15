@@ -46,7 +46,7 @@ if($date_d_m_y){
 
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["day"]?></option>
-<?php for ($m=1;$m<=31;$m++) {?><option <?php if($m==$dd){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
+<?php for ($d=1;$d<=31;$d++) {?><option value="<?php echo sprintf("%02d",$d)?>"<?php if($d==$dd){echo " selected";}?>><?php echo sprintf("%02d",$d)?></option><?php } ?>
 </select>
     
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
@@ -67,66 +67,104 @@ else{
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["day"]?></option>
-<?php for ($m=1;$m<=31;$m++) {?><option <?php if($m==$dd){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
+<?php for ($d=1;$d<=31;$d++) {?><option value="<?php echo sprintf("%02d",$d)?>"<?php if($d==$dd){echo " selected";}?>><?php echo sprintf("%02d",$d)?></option><?php } ?>
 </select>
 <?php
 }
 ?>
 <script>
-	//Get value of the date element before the change
-	jQuery('[id^=<?php echo $name;?>]').on('focus', function(){
+	// When any element of this date gains focus, store its current value before any change
+    jQuery('[id^=<?php echo $name;?>]').on('focus', function(){
 		jQuery.data(this, 'current', jQuery(this).val());
 	});
-	//Check the value of the date after the change
-	jQuery('[id^=<?php echo $name . '-';?>]').on('change', function(){
-		let day   = jQuery('#<?php echo $name;?>-d').val();
+	// When any element of the date is changed, validate all elements of the date
+	jQuery('[id^=<?php echo $name.'-';?>]').on('change', function(){
+        // Note which part of the date is being changed
+        let date_part=jQuery(this).attr('id');
+        date_part=date_part.substring(8); // datapart will be -d or -m or -y
+
+        let day   = jQuery('#<?php echo $name;?>-d').val();
 		let month = jQuery('#<?php echo $name;?>-m').val();
 		let year  = jQuery('#<?php echo $name;?>-y').val(); 
-        // The minimum viable non-blank date must have a valid year 
+        // The minimum viable non-blank date must have a valid year which can be CE or BCE
         let year_formatted="";
-		if (year != "") {
-            let year_is_valid=false;
-            if(jQuery.isNumeric(year)) {
-                if(year >=-9999 && year <=9999) {
-                    year_is_valid=true;
-                    // Refresh year to ensure it is in the correct format yyyy or -yyyy
-                    if(year>=0) {
-                        year_formatted = year.toString().padStart(4,'0');
+		if (date_part=="-y") {
+            if (year != "") {
+                let year_is_valid=false;
+                if(jQuery.isNumeric(year)) {
+                    if(year >=-9999 && year <=9999) {
+                        year_is_valid=true;
+                        // Refresh year to ensure it is in the correct format yyyy or -yyyy
+                        if(year>=0) {
+                            year_formatted = year.toString().padStart(4,'0');
+                        }
+                        else {
+                            year_formatted = "-"+(0-year).toString().padStart(4,'0');
+                        }
+                        jQuery(this).val(year_formatted);
                     }
-                    else {
-                        year_formatted = "-"+(0-year).toString().padStart(4,'0');
-                    }
-                    jQuery(this).val(year_formatted);
+                }
+                if (!year_is_valid) {
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                    jQuery(this).val(jQuery.data(this, 'current'));
                 }
             }
-            if (!year_is_valid) {
-                styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
-                jQuery(this).val(jQuery.data(this, 'current'));
+            else {
+                jQuery(this).val("");
             }
+            year  = jQuery('#<?php echo $name;?>-y').val();
         }
+
+        // Partial date viability check  
+        let year_numeric=jQuery.isNumeric(year);
+        let month_numeric=jQuery.isNumeric(month);
+        let day_numeric=jQuery.isNumeric(day);
+        let date_is_valid=true;
+        if(year_numeric)
+            {
+            if(month_numeric && day_numeric)
+                {
+                date_is_valid=true;
+                }
+            else 
+                {
+                if(day_numeric)
+                    {  
+                    date_is_valid=false;
+                    }
+                }
+            }
+		else 
+            {
+            if(year_numeric || month_numeric)
+                {  
+                date_is_valid=false;
+                }
+		    }
+        
+        if(!date_is_valid){
+            styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+            jQuery(this).val(jQuery.data(this, 'current'))
+        }
+
         // Fully entered date viability check  
-		if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
-			// Construct an ISO date string formatted as yyyy-mm-dd (or -yyyy-mm-dd for BCE date)
-			let date_entered_iso = year_formatted + '-' + month + '-' + day;
-            // When the whole date is entered then date object creation allows the presence of additional days 
-            let date_entered_obj = new Date(date_entered_iso);
-            let date_viable_iso = "";
-            // To check the viability of the entered date we must convert the date object back to ISO format
+		if(year_numeric && month_numeric && day_numeric){
+            // For CE dates only, check the viability of the entered date we must convert the date object back to ISO format
+            // BCE dates are accepted as-is because this technique does not work for them due to known limitations of the Date class
             if (year>=0) {
+    			// Construct an ISO date string formatted as yyyy-mm-dd (or -yyyy-mm-dd for BCE date)
+	    		let date_entered_iso = year + '-' + month + '-' + day;
+                // When the whole date is entered then date object creation allows the presence of additional days 
+                let date_entered_obj = new Date(date_entered_iso);
+                let date_viable_iso = "";
                 date_viable_iso = date_entered_obj.toISOString().split('T')[0];
+                // So an entered ISO date of 2021-02-30 will convert back into 2021-03-02
+                // If the entered ISO date matches its converted back counterpart then it's a viable date  
+                if(date_entered_iso !== date_viable_iso){
+                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                    jQuery(this).val(jQuery.data(this, 'current'))
+                }
             }
-            else { // BCE date
-                date_entered_obj.setYear(year); // Set year explicitly to ensure BCE year is set correctly
-                date_viable_iso = date_entered_obj.toISOString().split('T')[0];
-                // Adjust BCE date so the year is always four digits long
-                date_viable_iso = "-" + date_viable_iso.substring(3);
-            }
-            // So an entered ISO date of 2021-02-30 will convert back into 2021-03-02
-            // If the entered ISO date matches its converted back counterpart then it's a viable date  
-            if(date_entered_iso !== date_viable_iso){
-				styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
-				jQuery(this).val(jQuery.data(this, 'current'))
-			}
 		}
 	})
 </script>

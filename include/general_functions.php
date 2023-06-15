@@ -108,8 +108,8 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     $date_timestamp = strtotime($date); 
     if($date_timestamp === false) return '';
 
-    // The unix timestamp will be negative for BCE dates
-    $bce_offset = ($date_timestamp < 0) ? 1 : 0;
+    // Check whether unix timestamp is a BCE date
+    $bce_offset = ($date_timestamp < strtotime("0000-00-00")) ? 1 : 0;
     // BCE dates cannot return year in truncated form
     if($bce_offset == 1 && !$date_yyyy) return '';
 
