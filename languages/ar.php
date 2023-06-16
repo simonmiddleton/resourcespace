@@ -913,8 +913,6 @@ $lang["information-regexp_fail"]='القيمة المدخلة ليست بالت�
 $lang["property-tab_name"]='اسم التبويب';
 $lang["property-push_metadata"]='دفع البيانات الوصفية';
 $lang["property-icon"]='أيقونة';
-$lang["property-inherit_global_fields"]='وراثة الحقول العامة';
-$lang["information-inherit_global_fields"]='هل يجب تضمين الحقول العالمية لهذا نوع المورد؟';
 $lang["property-smart_theme_name"]='اسم مجموعة الميزات الذكية';
 $lang["property-exiftool_field"]='حقل Exiftool';
 $lang["property-fits_field"]='حقل FITS';
