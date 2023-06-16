@@ -219,7 +219,8 @@ if(isset($videojs_resolution_selection))
                      ?>
                      "controls": false,
                      "autoplay": true,
-                     "loop": true
+                     "loop": true,
+                     "muted": true
                      <?php
                      }
                 ?>
