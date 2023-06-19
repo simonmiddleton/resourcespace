@@ -9,8 +9,8 @@ function HookNewsHomeHomebeforepanels()
 	$results=count($news);
    	?>
 
-	<div id="NewsPanel">
-    	<h2><span class="fa fa-newspaper-o"></span>&nbsp;<?php echo $lang['title']; ?></h2>
+	<div class="BasicsBox" id="NewsPanel">
+		<h2><span class="fa fa-newspaper-o"></span>&nbsp;<?php echo $lang['title']; ?></h2>
 		<?php
 			if($results > 0)
 			{
