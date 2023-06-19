@@ -205,6 +205,20 @@ $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 if ($saveaction != '' && enforcePostRequest(false))
     {
+
+    $original_rotation = get_image_orientation($originalpath);
+    $preview_rotation  = get_image_orientation($crop_pre_file);
+    
+    $temp_original_file = false;
+    if($original_rotation !== $preview_rotation)
+        {
+        $tmp_path = get_temp_dir(false,'') . "/transform_temp_rotated_original.jpg";
+        copy($originalpath, $tmp_path);
+        AutoRotateImage($tmp_path);
+        $originalpath = $tmp_path;
+        $temp_original_file = true;
+        }
+    
     $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
@@ -296,6 +310,10 @@ if ($saveaction != '' && enforcePostRequest(false))
 
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
+    if($temp_original_file === true)
+        {
+        unlink($tmp_path);
+        }
 
     if($transformed)
         {
