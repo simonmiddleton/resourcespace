@@ -110,9 +110,9 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0);
-    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0);
-    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0);
+    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0, "global"=>0, "resource_types"=>'Collections');
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
@@ -3121,20 +3121,20 @@ function update_search_from_request($search)
     }
 
 function get_search_default_restypes()
-	{
-	global $search_includes_resources;
-	$defaultrestypes=array();
-	if($search_includes_resources)
-		{
-		$defaultrestypes[] = "Global";
-		}
-	  else
-		{
-		$defaultrestypes[] = "Collections";
-		if($search_includes_themes){$defaultrestypes[] = "themes";}
-		}	
-	return $defaultrestypes;
-	}
+    {
+    global $search_includes_resources, $search_includes_themes;
+    $defaultrestypes=array();
+    if($search_includes_resources)
+        {
+        $defaultrestypes[] = "Global";
+        }
+    else
+        {
+        $defaultrestypes[] = "Collections";
+        if($search_includes_themes){$defaultrestypes[] = "FeaturedCollections";}
+        }	
+    return $defaultrestypes;
+    }
 	
 function get_selectedtypes()
     {

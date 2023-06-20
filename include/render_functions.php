@@ -445,7 +445,25 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
+        <div class="Question <?php 
+        // Add class for each supported resource type to allow showing/hiding on advanced search
+        if($field["resource_types"] == "Collections")
+            {
+            echo "QuestionSearchRestypeCollections";
+            }
+        elseif($field["global"] == 1)
+            {
+            echo "QuestionSearchRestypeGlobal";
+            }
+        else
+            {
+            echo "QuestionSearchRestypeSpec ";
+            foreach(explode(",",$field["resource_types"]) as $fieldrestype)
+                {
+                echo "QuestionSearchRestype" . (int)$fieldrestype . " ";
+                }
+            }
+        ?>" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
         if (strlen((string) $field["tooltip_text"])>=1)
             {
             echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";

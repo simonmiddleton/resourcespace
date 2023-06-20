@@ -426,8 +426,8 @@ if (!$basic_simple_search && !$hide_search_resource_types)
     <?php if ($clear_button_unchecks_collections){$colcheck="false";}else {$colcheck="true";}
     if ($search_includes_themes) 
         { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxThemes" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("themes",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxThemes">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php  
-        $clear_function.="jQuery('#TickBoxThemes').prop('checked'," . $colcheck . ");";
+        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxFeaturedCollections" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("FeaturedCollections",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxFeaturedCollections">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php  
+        $clear_function.="jQuery('#TickBoxFeaturedCollections').prop('checked'," . $colcheck . ");";
         if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
         }
        
