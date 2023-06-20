@@ -1738,15 +1738,16 @@ $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) 
     {
-        // TODO Fix this
+    $edit_valid_fields = get_resource_type_fields($items_resource_types);
+    $edit_valid_fields = array_column($edit_valid_fields,"ref");
     $fields_to_include = array();
     foreach ($fields as $field_candidate) 
         {
-        if( ($field_candidate["resource_type"] == 0) || (in_array($field_candidate["resource_type"],$items_resource_types) ) ) 
+        if($field_candidate["global"] == 1 || in_array($field_candidate["ref"],$edit_valid_fields))
             {
             $fields_to_include[]=$field_candidate;
             }
-        }    
+        }
     $fields=$fields_to_include;
     }
 
