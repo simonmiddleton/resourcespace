@@ -3107,7 +3107,7 @@ function isValidCSRFToken($token_data, $session_id)
         return false;
         }
 
-    if($csrf_data["session"] == $session_id)
+    if($csrf_data["session"] === $session_id)
         {
         return true;
         }
