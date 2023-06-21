@@ -227,7 +227,7 @@ for ($n=0;$n<count($fields);$n++)
         <?php if (!hook('replacenamecolumn'))
             {
             ?><td>
-                <?php echo str_highlight($fields[$n]["name"],$find,STR_HIGHLIGHT_SIMPLE);?>
+                <?php echo str_highlight($fields[$n]["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?>
             </td><?php
             }?>
         <td>
@@ -236,13 +236,7 @@ for ($n=0;$n<count($fields);$n++)
             echo ($fields[$n]["type"]!="") ? $lang[$field_types[$fields[$n]["type"]]] : $lang[$field_types[0]];
             ?>
         </td>
-    <?php if (!hook('replacenamecolumn')) {
-        ?><td>
-            <?php echo str_highlight($fields[$n]["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?>
-        </td><?php
-    }?>
-        <td>        
-            <?php echo ($fields[$n]["type"]!="")?$lang[$field_types[$fields[$n]["type"]]]:$lang[$field_types[0]];  // if no value it is treated as type 0 (single line text)
+        <?php 
         # Resolve resource type names
         if((bool)$fields[$n]["global"] == 1)
             {
