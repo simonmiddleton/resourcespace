@@ -1895,14 +1895,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
-                        $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
+                        $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
                         $mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
-                        $mpr_parts['targetprofile']=$targetprofile;
+                        $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
                         //$mpr_parts['colorspace']='';
                         }
                     else
                         {
-                        $profile  = " -strip -profile $iccpath $icc_preview_options $targetprofile";
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . $icc_preview_options . escapeshellarg($targetprofile);
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
@@ -1944,7 +1944,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 }
                             else
                                 {
-                                $profile="-profile $default_icc_file ";
+                                $profile="-profile " . escapeshellarg($default_icc_file);
                                 }
                             }
                         else
@@ -1959,12 +1959,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             else if ($icc_extraction)
                                 {
                                 // Keep any profile extracted (don't use -strip).
-                                $profile=" -colorspace ".$imagemagick_colorspace;
+                                $profile=" -colorspace ".escapeshellarg($imagemagick_colorspace);
                                 }
                             else
                                 {
                                 # By default, strip the colour profiles ('+' is remove the profile, confusingly)
-                                $profile="-strip -colorspace ".$imagemagick_colorspace;
+                                $profile="-strip -colorspace ". escapeshellarg($imagemagick_colorspace);
                                 }
                             }
                         }
@@ -1976,10 +1976,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if($crop)
                             {
                             // Add crop argument for tiling
-                            $runcommand .= " -crop " . $cropw . "x" . $croph . "+" . $cropx . "+" . $cropy;
+                            $runcommand .= " -crop " . escapeshellarg($cropw) . "x" . escapeshellarg($croph) . "+" . escapeshellarg($cropx) . "+" . escapeshellarg($cropy);
                             }
                         
-                        $runcommand .= " -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
+                        $runcommand .= " -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {
                             $command_list.=$runcommand."\n";
@@ -2029,13 +2029,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
                     
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
