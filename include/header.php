@@ -313,7 +313,7 @@ endif; # !hook("customhtmlheader")
 </head>
 <body lang="<?php echo $language ?>" class="<?php echo implode(' ', $body_classes); ?>" <?php if (isset($bodyattribs)) { ?><?php echo $bodyattribs?><?php } ?>>
 
-<a href="#UICenter" class="skip-to-main-content"><?php echo $lang["skip-to-main-content"]; ?></a>
+<a href="#UICenter" class="skip-to-main-content"><?php echo htmlspecialchars($lang["skip-to-main-content"]); ?></a>
 
 <!-- Processing graphic -->
 <div id='ProcessingBox' style='display: none'><h3><?php echo $lang["status_processing"]; ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
