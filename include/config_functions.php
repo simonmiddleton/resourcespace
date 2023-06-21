@@ -727,10 +727,24 @@ function config_add_single_select($config_var, $label, $choices = '', $usekeys =
  * @param string        $title     Title to be used for the label title. Default: null
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
+ * @param string        $help      Help text to display for this question
  */
-function config_boolean_select($name, $label, $current, $choices = '', $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false)
+function config_boolean_select(
+    $name,
+    $label,
+    $current,
+    $choices = '',
+    $width = 420,
+    $title = null,
+    $autosave = false,
+    $on_change_js = null,
+    $hidden = false,
+    string $help = ''
+)
     {
     global $lang;
+
+    $help = trim($help);
 
     if($choices == '')
         {
@@ -742,8 +756,10 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
         // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
         }
+    
+    $html_question_id = "question_{$name}";
     ?>
-    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
+    <div class="Question" id="<?php echo escape_quoted_data($html_question_id); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
 
         <?php
@@ -763,6 +779,12 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
         </select>
+        <?php
+        if ($help !== '')
+            {
+            render_question_form_helper($help, $html_question_id, []);
+            }
+        ?>
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -778,10 +800,11 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
  * @param string array $choices array of the text to display for the two choices: False and True. Defaults
  *          to array('False', 'True') in the local language.
  * @param integer $width the width of the input field in pixels. Default: 420.
+ * @param string $help Help text to display for this question
  */
-function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false)
+function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false, string $help = '')
     {
-    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden);
+    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden, $help);
     }
 	
 /**
@@ -1151,7 +1174,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'boolean_select':
-                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
 
             case 'single_select':

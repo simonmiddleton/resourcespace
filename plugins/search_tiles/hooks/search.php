@@ -12,7 +12,7 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
     {
     if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collections))
         {
-        global $baseurl_short, $collection_prefix, $search_tiles_text_shadow,$search_tiles_collection_count;
+        global $baseurl_short, $search_tiles_collection_count;
         $tile_height=180;
         $tile_width=250;
         for ($n=0;$n<count($collections);$n++)
@@ -72,7 +72,7 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
                     }
                 }?>
                 <h2 class="title thmbs_tile">
-                <?php echo htmlspecialchars(str_replace(array("\"","'"),"", $collection_prefix . i18n_get_collection_name($collections[$n]))); ?>
+                <?php echo htmlspecialchars(str_replace(array("\"","'"),"", i18n_get_collection_name($collections[$n]))); ?>
                 </h2>
                 <?php
                 if($search_tiles_collection_count)

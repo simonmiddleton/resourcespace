@@ -458,7 +458,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?><br/>
+        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape_quoted_data(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
         
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
@@ -1019,7 +1019,7 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
         $result .= ' data-' . $data_attr_key . '="' . $data_attr_value . '"';
         }
 
-    $result .= '>' . $label . '</option>';
+    $result .= '>' . htmlspecialchars($label) . '</option>';
 
     return $result;
     }
@@ -1263,7 +1263,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                         success: function(data) {
                             if (data.trim() == "SUCCESS") {
-                                styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['relateallresources_confirmation']?>');
+                                styledalert('<?php echo htmlspecialchars($lang["complete"])?>', '<?php echo htmlspecialchars($lang['relateallresources_confirmation'])?>');
                             }
                         },
                         error: function (err) {
@@ -1280,7 +1280,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         data: {<?php echo generateAjaxToken("unrelate_resources"); ?>},
                         success: function(data) {
                             if (data.trim() == "SUCCESS") {
-                                styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['unrelateallresources_confirmation']?>');
+                                styledalert('<?php echo htmlspecialchars($lang["complete"])?>', '<?php echo htmlspecialchars($lang['unrelateallresources_confirmation'])?>');
                             }
                         },
                         error: function (err) {
@@ -1797,8 +1797,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
-  $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $locked_fields, $lastedited, $copyfrom, $fields;
 
   // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
   debug("display_field()" . "n = " . $n . ", field ref=" . $field["ref"] . ", modal=" . ($modal ? "TRUE" : "FALSE"));
@@ -2064,7 +2063,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             echo "<sup>*</sup>";
             }
         } 
-     if ($upload_review_mode && $upload_review_lock_metadata)
+     if ($upload_review_mode)
         {
         renderLockButton($field["ref"], $locked_fields);
         }
@@ -2726,8 +2725,6 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
 */
 function render_new_featured_collection_cta(string $url, array $ctx)
     {
-    global $collection_allow_creation;
-
     if('' === $url)
         {
         return;
@@ -3669,7 +3666,7 @@ function render_selected_collection_actions()
 
     if($refs_to_remove > 0)
         {
-        $callback_csrf_token = generateCSRFToken($usersession, "remove_selected_from_collection");
+        $callback_csrf_token = generateCSRFToken($usersession, "collection_remove_resources");
         $render_actions_extra_options = array(
             array(
                 "value" => "remove_selected_from_collection",
@@ -4138,7 +4135,7 @@ function display_upload_options()
 
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{		
-	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
+	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $force_display_template_orderby;
 
 	$value=$field["value"];
     $title=htmlspecialchars($field["title"]);
@@ -4205,7 +4202,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		{
 		$rangedates = explode(",",(string)$value);		
 		natsort($rangedates);
-		$value=implode($range_separator,$rangedates);
+		$value=implode(DATE_RANGE_SEPARATOR,$rangedates);
 		}
 	
         if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -4275,6 +4272,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # Include display template when necessary
 		if (!$valueonly && trim($field["display_template"] ?? "")!="")
 			{
+            $value_for_url=$value;
 			# Highlight keywords
 			$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 			
@@ -4285,12 +4283,14 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			    }
 
             # Use a display template to render this field
-            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
+            $template = $field['display_template'];
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
+            $template = str_replace('[url]', urlencode($value_for_url), $template);
             $template = str_replace('[warning]', $warningtext, $template);
             $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', $dismisslink, $template);
+            $template = strip_tags_and_attributes($template, array("a"), array("href", "target"));
 
             /*Language strings
             Format: [lang-language-name_here]
@@ -4429,18 +4429,18 @@ function EditNav()
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
-        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>"></a>
+        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape_quoted_data($lang["previous"]); ?>"></a>
    
         <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo $lang["viewallresults"]?></a>
    
-        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>"></a>
+        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape_quoted_data($lang["next"]); ?>"></a>
    
         <?php
         }
     if ($modal)
         { ?>
-        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);"></a>
-        &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
+        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape_quoted_data($lang["maximise"]); ?>"></a>
+        &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
         <?php
         } ?>
     </div></div><?php
@@ -4457,7 +4457,7 @@ function EditNav()
 function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults=false)
     {
     global $lang, $multiple, $ref, $upload_review_mode, $noupload, $is_template,
-    $show_required_field_label, $modal, $edit_selection_collection_resources, $locked_fields;
+    $modal, $edit_selection_collection_resources, $locked_fields;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
@@ -4491,7 +4491,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             <?php
             }
 
-        if(!$is_template && $show_required_field_label && $requiredfields)
+        if(!$is_template && $requiredfields)
             {
             ?>
             <div class="RequiredFieldLabel"><sup>*</sup> <?php echo $lang['requiredfield']; ?></div>
@@ -5814,7 +5814,7 @@ function render_antispam_question()
             </div>
         </label> 
         <input type="text" name="antispam_user_code" class="stdwidth" value="">
-        <input type=text name="antispam" class="stdwidth" value="">
+        <input type=text name="antispam" id="antispam" class="stdwidth" value="">
         <div class="clearerleft"></div>        
     </div>
     <?php
@@ -5970,7 +5970,7 @@ function display_related_resources($context)
     $edit_access                =  $context["edit_access"] ?? false;
     $urlparams                  =  $context["urlparams"] ?? ["ref"=>$ref];    
     
-    global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type, $related_resource_preview_size;
+    global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type;
     
     $allrestypes = get_resource_types();
     if($ref==0 || count(array_diff(array_column($allrestypes,"ref"),$relatedtypes_shown)) == 0) 
@@ -6140,9 +6140,9 @@ function display_related_resources($context)
                         <tr>
                             <td>
                                 <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], $related_resource_preview_size))
+                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], "col"))
                                     {
-                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" /><?php
+                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" /><?php
                                     }
                                 else
                                     {

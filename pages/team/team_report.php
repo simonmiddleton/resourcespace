@@ -114,7 +114,6 @@ if($delete != '')
 					<div class="clearerleft"></div>
 				</div>
 				<div class="QuestionSubmit">
-					<label for="buttons"> </label>
 					<input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
 				</div>
 			</form>
@@ -152,7 +151,6 @@ if($unsubscribe != '')
 					<div class="clearerleft"></div>
 				</div>
 				<div class="QuestionSubmit">
-					<label for="buttons"> </label>
 					<input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
 				</div>
 			</form>
@@ -303,7 +301,6 @@ foreach($report_options as $report_opt)
 	<div id="EmailSetup" style="display:none;">
 		<!-- E-mail Period select -->
 		<div class="Question">
-			<label for="email_days"></label>
 			<div class="Fixed" style="width: 400px;">
 			<?php
 			$textbox="<input type=\"text\" id=\"email_days\" name=\"email_days\" size=\"4\" value=\"7\">";
@@ -340,8 +337,7 @@ foreach($report_options as $report_opt)
     <script language="text/javascript">
     var do_download=false;
     </script>
-    <div class="QuestionSubmit" id="SubmitBlock">
-        <label for="buttons"></label>			
+    <div class="QuestionSubmit" id="SubmitBlock">		
         <input name="save" type="submit" onClick="do_download=false;" value="<?php echo htmlspecialchars($lang["viewreport"]); ?>" />
         <input name="download" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["downloadreport"]); ?>" />
         <input name="view_as_search_results"

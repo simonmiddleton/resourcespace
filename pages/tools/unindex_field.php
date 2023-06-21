@@ -59,7 +59,7 @@ if (!(PHP_SAPI == 'cli'))
         <?php generateFormToken("Unindex_field"); ?>
         <?php render_field_selector_question("Choose field to remove indexes from", "field",[]); ?>
         <div class="Question">
-            <label></label><input type="submit" name="submit" value="Unindex field">
+            <input type="submit" name="submit" value="Unindex field">
         </div>
     </form>
     <?php

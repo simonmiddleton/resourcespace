@@ -10,11 +10,10 @@ $modified_user_rating=hook("modifyuserrating");
 if ($modified_user_rating){$result[$n]['user_rating']=$modified_user_rating;}
 
 $rating_count=$resource["user_rating_count"];
-global $user_rating_remove;
 if ($rating=="") {$rating=0;}
 if ($rating_count=="") {$rating_count=0;}
 // for 'remove rating' tool, determine if user has a rating for this resource
-if ($user_rating_remove && $user_rating_only_once) {
+if ($user_rating_only_once) {
 	$ratings=array();
 	$ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
 	$current="";
@@ -92,7 +91,7 @@ function UserRatingSet(userref,ref,rating)
 <td id="UserRatingMessage"><?php echo $lang["ratethisresource"]?></td>
 <td width="33%" class="RatingStars" onMouseOut="UserRatingDisplay(<?php echo htmlspecialchars($rating) ?>,'StarCurrent');">
 <div class="RatingStarsContainer">
-<?php if ($user_rating_remove && $user_rating_only_once) {?><a href="#" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,0);return false;" title="<?php echo $lang["ratingremovehover"]?>" style="display:<?php echo $removeratingvis;?>"><span id="RatingStarLink0">X&nbsp;&nbsp;</span></a><?php }?>
+<?php if ($user_rating_only_once) {?><a href="#" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,0);return false;" title="<?php echo $lang["ratingremovehover"]?>" style="display:<?php echo $removeratingvis;?>"><span id="RatingStarLink0">X&nbsp;&nbsp;</span></a><?php }?>
 <?php for ($n=1;$n<=5;$n++)
 	{
 	?><a href="#" onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,<?php echo $n?>);return false;" id="RatingStarLink<?php echo $n?>"><span id="RatingStar<?php echo $n?>" class="Star<?php echo ($n<=$rating?"Current":"Empty")?>"><img src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15"></span></a><?php

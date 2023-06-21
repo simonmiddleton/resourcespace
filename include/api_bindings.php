@@ -102,6 +102,12 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $lang;
     if (!(checkperm("c") || checkperm("d")) || checkperm("XU" . $resource_type))
         {
@@ -183,6 +189,12 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit, $userref;
 
     // This user's template or real resources only
@@ -216,11 +228,23 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
 
 function api_delete_resource($resource)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     return delete_resource($resource);        
     }
 
 function api_copy_resource($from,$resource_type=-1)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $lang;
     return copy_resource($from,$resource_type,$lang["createdfromapi"]);            
     }
@@ -232,6 +256,12 @@ function api_get_resource_log($resource, $fetchrows=-1)
     
 function api_update_resource_type($resource,$type)
 	{
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     return update_resource_type($resource,$type);
     }
 
@@ -297,19 +327,25 @@ function api_get_resource_data($resource)
 
 function api_put_resource_data($resource,array $data)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if (is_null($data)) {return false;}
     return put_resource_data($resource,$data);
     }
 
 function api_get_alternative_files($resource,$order_by="",$sort="",$type="")
     {
-    global $disable_alternative_files, $alt_files_visible_when_restricted;
+    global $alt_files_visible_when_restricted;
     $access = get_resource_access($resource);
 
     if($access == RESOURCE_ACCESS_INVALID_REQUEST)
         {return false;}
 
-    if($disable_alternative_files || ($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
+    if(($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
         {return false;}
     return get_alternative_files($resource,$order_by,$sort,$type);
     }
@@ -321,9 +357,13 @@ function api_get_resource_types()
 
 function api_add_alternative_file($resource, $name, $description = '', $file_name = '', $file_extension = '', $file_size = 0, $alt_type = '', $file = '')
     {
-    global $disable_alternative_files;
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
 
-    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if((0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
         {
         return false;
         }
@@ -335,6 +375,20 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     // A file has been specified so add it as alternative
+    $deletesourcefile = false;
+    if (api_validate_upload_url($file))
+        {
+        // Path is a url
+        $upload_key = uniqid($resource . "_");
+        $file = temp_local_download_remote_file($file, $upload_key);
+        $deletesourcefile = true;
+        if(trim($file_extension)=="")
+            {
+            $path_parts = pathinfo($file);
+            $file_extension = $path_parts['extension'] ?? '';
+            }
+        }   
+
     $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
     $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
 
@@ -344,7 +398,10 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     chmod($rs_alternative_path, 0777);
-
+    if($deletesourcefile)
+        {
+        unlink($file);
+        }
     $file_size = @filesize_unlimited($rs_alternative_path);
 
     ps_query("UPDATE resource_alt_files SET file_size= ?, creation_date = NOW() WHERE resource = ? AND ref = ?", ['s', $file_size, 's', $resource, 's', $alternative_ref]);
@@ -360,6 +417,12 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
 function api_delete_access_keys($access_keys, $resources, $collections)
 	{
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     // Incoming parameters are csv strings; "-" entries denote a null resource or collection     
     // The number of entries in each parameter is always the same
     $access_key_array=explode(",",$access_keys);
@@ -384,8 +447,13 @@ function api_delete_access_keys($access_keys, $resources, $collections)
 
 function api_delete_alternative_file($resource,$ref)
 	{
-    global $disable_alternative_files;
-    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
+    if(0 < $resource && (!(get_edit_access($resource) || checkperm('A'))))
         {
         return false;
         }
@@ -394,6 +462,12 @@ function api_delete_alternative_file($resource,$ref)
 
 function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
@@ -415,6 +489,12 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
     
 function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
@@ -498,6 +578,12 @@ function api_get_user_collections()
     
 function api_add_resource_to_collection($resource,$collection='',$search='')
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $usercollection;
     if($collection=='')
         {
@@ -508,6 +594,12 @@ function api_add_resource_to_collection($resource,$collection='',$search='')
     
 function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $usercollection;
     if($collection=='')
         {
@@ -518,6 +610,12 @@ function api_collection_add_resources($collection='',$resources = '',$search = '
 
 function api_remove_resource_from_collection($resource,$collection='')
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $usercollection;
     if($collection=='')
         {
@@ -528,6 +626,12 @@ function api_remove_resource_from_collection($resource,$collection='')
 
 function api_collection_remove_resources($collection='',$resources='',$removeall = false,$selected=false)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $usercollection;
     if($collection=='')
         {
@@ -538,8 +642,14 @@ function api_collection_remove_resources($collection='',$resources='',$removeall
     
 function api_create_collection($name,$forupload=false)
 	{
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $userref, $collection_allow_creation;
-    if (checkperm("b") || !$collection_allow_creation)
+    if (!can_create_collections())
         {
         return false;
         }
@@ -554,6 +664,12 @@ function api_create_collection($name,$forupload=false)
     
 function api_delete_collection($ref)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if (checkperm("b") || !collection_writeable($ref))
         {return false;}
     return delete_collection($ref);
@@ -578,6 +694,12 @@ function api_search_public_collections($search="", $order_by="name", $sort="ASC"
     
 function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by = 0,$returnexisting = false)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $FIXED_LIST_FIELD_TYPES;
         
     $fieldinfo = get_resource_type_field($resource_type_field);
@@ -597,6 +719,18 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
 
 function api_add_resource_nodes($resource,$nodestring)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     // This is only for super admins
     if(!checkperm('a'))
         {
@@ -636,6 +770,12 @@ function api_add_resource_nodes($resource,$nodestring)
     
  function api_add_resource_nodes_multi($resources,$nodestring)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     // This is only for super admins
     if(!checkperm('a'))
         {return false;}        
@@ -644,11 +784,11 @@ function api_add_resource_nodes($resource,$nodestring)
     return add_resource_nodes_multi($resourcearr,$nodes,false,true);
     }
     
-function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0)
+function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, $field = 0, $log_code="")
     {
-    return resource_log_last_rows($minref, $days, $maxrecords);
+    return resource_log_last_rows($minref, $days, $maxrecords, $field, $log_code);
     }
-
+    
 function api_get_resource_all_image_sizes($resource)
     {
     return get_resource_all_image_sizes($resource);
@@ -662,6 +802,12 @@ function api_get_node_id($value, $resource_type_field)
     }
 function api_replace_resource_file($ref, $file_location, $no_exif=false, $autorotate=false, $keep_original=true)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $rse_version_block, $plugins, $usergroup,$rse_version_override_groups, $replace_resource_preserve_option;
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
@@ -779,6 +925,12 @@ function api_get_resource_collections($ref)
 
 function api_update_related_resource($ref,$related,$add=true) 
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $enable_related_resources;
     if(!$enable_related_resources)
         {
@@ -813,6 +965,12 @@ function api_get_users($find="", $exact_username_match=false)
 
 function api_save_collection(int $ref, array $coldata)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if(checkperm("b"))
         {
         return false;
@@ -869,6 +1027,12 @@ function api_get_collection(int $ref)
 
 function api_send_user_message($users,$text)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     $success = send_user_message($users,$text);
     return $success;
     }
@@ -885,6 +1049,12 @@ function api_get_system_status()
 
 function api_relate_all_resources($related)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     global $enable_related_resources;
     if(!$enable_related_resources)
         {
@@ -899,16 +1069,34 @@ function api_relate_all_resources($related)
 
 function api_show_hide_collection($collection, $show, $user)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     return show_hide_collection($collection, $show, $user);
     }
 
 function api_send_collection_to_admin($collection)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     return send_collection_to_admin($collection);
     }
 
 function api_reorder_featured_collections($refs)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if(can_reorder_featured_collections())
         {
         sql_reorder_records('collection', $refs);
@@ -927,6 +1115,12 @@ function api_get_dash_search_data($link,$promimg)
 
 function api_reorder_tabs($refs)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if(acl_can_manage_tabs())
         {
         sql_reorder_records('tab', $refs);
@@ -939,6 +1133,12 @@ function api_reorder_tabs($refs)
 
 function api_delete_tabs($refs)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if(acl_can_manage_tabs())
         {
         return delete_tabs($refs);
@@ -950,6 +1150,12 @@ function api_delete_tabs($refs)
 
 function api_save_tab($tab)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if(acl_can_manage_tabs())
         {
         if(save_tab($tab))
@@ -968,6 +1174,12 @@ function api_save_tab($tab)
 
 function api_mark_email_as_invalid($email)
     {
+    $assert_post = api_assert_post_request();
+    if (!empty($assert_post))
+        {
+        return $assert_post;
+        }
+
     if(!checkperm('a'))
         {
         return false;

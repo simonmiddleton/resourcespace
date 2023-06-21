@@ -25,8 +25,8 @@ if (count($collections)!=0){
 <td><?php echo $lang["id"]?></td>
 <td><?php echo $lang["created"]?></td>
 <td><?php echo $lang["itemstitle"]?></td>
-<?php if (! $hide_access_column){ ?><td><?php echo $lang["access"]?></td><?php } ?>
-	<?php hook("beforecollectiontoolscolumnheader");?>
+<td><?php echo $lang["access"]?></td>
+<?php hook("beforecollectiontoolscolumnheader");?>
 <td><div class="ListTools"><?php echo $lang["actions"]?></div></td>
 </tr>
 <?php
@@ -37,10 +37,10 @@ for ($n=0;$n<count($collections);$n++)
 	<td><div class="ListTitle">
     <a onClick="return CentralSpaceLoad(this,true);" <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"><?php echo i18n_get_collection_name($collections[$n])?></a></div></td>
 	<td><?php echo htmlspecialchars($collections[$n]["fullname"])?></td>
-	<td><?php echo $collection_prefix . $collections[$n]["ref"]?></td>
+	<td><?php echo $collections[$n]["ref"]?></td>
 	<td><?php echo nicedate($collections[$n]["created"],true)?></td>
 	<td><?php echo $collections[$n]["count"]?></td>
-<?php if (! $hide_access_column){ ?>	<td><?php
+    <td><?php
     switch($collections[$n]["type"])
         {
         case COLLECTION_TYPE_PUBLIC:
@@ -56,9 +56,7 @@ for ($n=0;$n<count($collections);$n++)
             echo $lang["private"];
             break;
         }
-?></td><?php
-}
-?>
+    ?></td>
 <?php hook('beforecollectiontoolscolumn'); ?>
 	<td>
 		<div class="ListTools">

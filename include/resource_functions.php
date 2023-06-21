@@ -579,7 +579,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     # Also re-index all keywords from indexable fields.
     global $lang, $multilingual_text_fields,
            $languages, $language, $FIXED_LIST_FIELD_TYPES,
-           $DATE_FIELD_TYPES, $date_validator, $range_separator, $reset_date_field, $reset_date_upload_template,
+           $DATE_FIELD_TYPES, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
            $userref, $userresourcedefaults;
 
@@ -779,7 +779,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
                         $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
 
-                        $newval = $rangestart . $range_separator . $rangeend;
+                        $newval = $rangestart . DATE_RANGE_SEPARATOR . $rangeend;
                         $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
                         $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
                         }
@@ -812,7 +812,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                                 $val.="-00-00";
                                 }
 
-                            $newval.= ($newval!=""?$range_separator:"") . $val;
+                            $newval.= ($newval != "" ? DATE_RANGE_SEPARATOR : "") . $val;
                             if($val!=="")
                                 {
                                 $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
@@ -864,16 +864,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     # date type, construct the value from the date/time dropdowns to be used in DB
                     $val=sanitize_date_field_input($fields[$n]["ref"], false);
 
-                    if ($date_validator && $val != "")
+                    // A proper input:date field
+                    if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                         {
-                        # date type, construct the value from the date/time dropdowns to be used in date validator
-                        $check_date_val=sanitize_date_field_input($fields[$n]["ref"], true);
-
-                        $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($check_date_val));
-                        $valid_date = str_replace("%row% ", "", $valid_date);
-                        if ($valid_date && !$valid_date == "")
+                        $val = getval("field_{$fields[$n]['ref']}", '');
+                        if($val !== '' && !validateDatetime($val, 'Y-m-d'))
                             {
-                            $errors[$fields[$n]["ref"]] = $valid_date;
+                            $errors[$fields[$n]['ref']] = $val;
                             continue;
                             }
                         }
@@ -1356,7 +1353,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 function save_resource_data_multi($collection,$editsearch = array(), $postvals = [])
     {
-    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $range_separator, $date_validator, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
+    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
     if(empty($postvals))
@@ -1701,7 +1698,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
                 $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
 
-                $newval = $rangestart . $range_separator . $rangeend;
+                $newval = $rangestart . DATE_RANGE_SEPARATOR . $rangeend;
                 $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangestart, null, null);
                 $daterangenodes[]=set_node(null, $fields[$n]["ref"], $rangeend, null, null);
                 }
@@ -1736,7 +1733,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     if($val!=="")
                         {
                         $daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null);
-                        $newval .= ($newval!=""?$range_separator:"") . $val;
+                        $newval .= ($newval!=""?DATE_RANGE_SEPARATOR:"") . $val;
                         }
                     }
                 }
@@ -1798,7 +1795,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         if(in_array($fields[$n]['ref'], $joins))
                             {
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
-                            $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode($range_separator,$log_node_names);
+                            $resource_update_params[$ref][]="s";$resource_update_params[$ref][] = implode(DATE_RANGE_SEPARATOR,$log_node_names);
                             }
                         $updated_resources[$ref][$fields[$n]['ref']] = $log_node_names; // To pass to hook
                         }
@@ -1838,24 +1835,19 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             }
         else
             {
-            if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+            if($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
+                {
+                $val = $postvals["field_{$fields[$n]['ref']}"] ?? '';
+                if($val !== '' && !validateDatetime($val, 'Y-m-d'))
+                    {
+                    $errors[$fields[$n]['ref']] = $val;
+                    continue;
+                    }
+                }
+            else if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
-
-                if ($date_validator && $val != "")
-                    {
-                    # date type, construct the value from the date/time dropdowns to be used in date validator
-                    $check_date_val=sanitize_date_field_input($fields[$n]["ref"], true);
-
-                    $valid_date = str_replace("%field%", $fields[$n]['name'], check_date_format($check_date_val));
-                    $valid_date = str_replace("%row% ", "", $valid_date);
-                    if ($valid_date && !$valid_date == "")
-                        {
-                        $errors[$fields[$n]["ref"]] = $valid_date;
-                        continue;
-                        }
-                    }
                 }
             elseif (
                     $multilingual_text_fields
@@ -2495,7 +2487,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true, $nodevalues=false)
     {
-    global $category_tree_add_parents, $userref, $FIXED_LIST_FIELD_TYPES, $lang, $range_separator;
+    global $category_tree_add_parents, $userref, $FIXED_LIST_FIELD_TYPES, $lang;
 
     $resource_data = get_resource_data($resource);
     if ($resource_data === false)
@@ -2641,7 +2633,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 $nodes_to_add[] = $current_dates[$rangestart] ?? set_node(null, $fieldinfo["ref"], $rangestart, null, null);
                 $nodes_to_add[] = $current_dates[$rangeend] ?? set_node(null, $fieldinfo["ref"], $rangeend, null, null);
 
-                $value = $rangestart . $range_separator . $rangeend;
+                $value = $rangestart . DATE_RANGE_SEPARATOR . $rangeend;
                 }
             elseif($fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE)
                 {
@@ -2864,6 +2856,17 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             // Nothing to do
             return true;
+            }
+
+        if (
+            $GLOBALS['use_native_input_for_date_field']
+            && $fieldinfo['type'] === FIELD_TYPE_DATE
+            && $value !== ''
+            && !validateDatetime($value, 'Y-m-d')
+        )
+            {
+            $errors[] = sprintf('%s: %s', i18n_get_translated($fieldinfo['title']), $lang['invalid_date_generic']);
+            return false;
             }
 
         $curnode = $existing_resource_node["ref"] ?? 0 ;
@@ -7157,6 +7160,14 @@ function save_original_file_as_alternative($ref)
 
     // Make the original into an alternative, need resource data so we can get filepath/extension
     $origdata     = get_resource_data($ref);
+    $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
+    # It's possible that there is no original in the filestore; quit if this is the case
+    if (!file_exists($origpath)) 
+        {
+        debug("ERROR: Unable to find original file to save as alternative: " . $origpath);
+        return false;
+        }
+
     $origfilename = get_data_by_field($ref, $filename_field_use);
 
     $newaltname        = str_replace('%EXTENSION', strtoupper($origdata['file_extension']), $lang['replace_resource_original_description']);
@@ -7169,7 +7180,6 @@ function save_original_file_as_alternative($ref)
 
     $newaref = add_alternative_file($ref, $newaltname, $newaltdescription, $origfilename, $origdata['file_extension'], $origdata['file_size']);
 
-    $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
     $newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
     # Move the old file to the alternative file location
     if(!hook('save_original_alternative_extra', '', array('origpath' => $origpath, 'newaltpath' => $newaltpath)))
@@ -7231,11 +7241,9 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     // save original file as an alternative file
     if($replace_resource_preserve_option && $keep_original)
         {
+        // the following save may not succeed because there is no original in which case a debug log will have been created
+        // allow replace resource to continue with its principal task of uploading
         $savedasalt = save_original_file_as_alternative($ref);
-        if(!$savedasalt)
-            {
-            return false;
-            }
         }
 
     if (filter_var($file_location, FILTER_VALIDATE_URL))
@@ -7655,31 +7663,6 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $lastrestricted=$sizes[$n]["allow_restricted"];
         }
     return $return;
-    }
-
-
-/**
- * Get quality value for a given preview size.
- *
- * @param  string  $size   ID of preview size
- *
- * @return int
- */
-function get_preview_quality($size)
-    {
-    global $imagemagick_quality,$preview_quality_unique;
-    $preview_quality=$imagemagick_quality; // default
-    if($preview_quality_unique)
-        {
-        debug("convert: select quality value from preview_size where id='$size'");
-        $quality_val=ps_value("select quality value from preview_size where id=?",array("s",$size), '');
-        if($quality_val!='')
-            {
-            $preview_quality=$quality_val;
-            }
-        }
-    debug("convert: preview quality for $size=$preview_quality");
-    return $preview_quality;
     }
 
 /**

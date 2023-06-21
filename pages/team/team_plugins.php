@@ -75,10 +75,14 @@ for ($n=0;$n<count($inst_plugins)-1;$n++)
     # Check if group access is permitted by YAML file. Needed because plugin may have been enabled before this development)
     $plugin_yaml_path = get_plugin_path($inst_plugins[$n]["name"])."/".$inst_plugins[$n]["name"].".yaml";
     $py = get_plugin_yaml($plugin_yaml_path, false);  
-    $inst_plugins[$n]['disable_group_select'] = $py['disable_group_select'];
-    if((!isset($inst_plugins[$n]['config_url']) || trim($inst_plugins[$n]['config_url']) == "") && isset($py['config_url']))
+    
+    // Override YAML values (not config) with updated plugin YAML
+    foreach(["title","name","icon","author","desc","version","category","config_url"] as $yaml_idx)
         {
-        $inst_plugins[$n]['config_url'] = $py['config_url'];
+        if(isset($py[$yaml_idx]))
+            {
+            $inst_plugins[$n][$yaml_idx] = $py[$yaml_idx];
+            }
         }
     }
         

@@ -61,7 +61,6 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             } ?>
 
         <div class="QuestionSubmit" style="padding-top:0;margin-top:0;">
-        <label for="buttons"> </label>
         <input name="generateslideshow" type="submit" value="&nbsp;&nbsp;<?php echo $lang["generateslideshowhtml"]?>&nbsp;&nbsp;" />
         </div>
         <?php

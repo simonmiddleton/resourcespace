@@ -124,8 +124,7 @@ for ($n=0;$n<count($users);$n++)
 
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["copyexistingresources"])?></label>
-<input name="copyexisting" type="checkbox" value="yes"><b><?php echo $lang["yes"]?></b> <?php echo htmlspecialchars($lang["typecollectionid"])?><br/>
-<strong><?php echo htmlspecialchars($collection_prefix)?></strong> <input name="copyexistingref" type="text" class="shrtwidth">
+<input name="copyexisting" type="checkbox" value="yes"><b><?php echo $lang["yes"]?></b> <?php echo htmlspecialchars($lang["typecollectionid"])?><br/><input name="copyexistingref" type="text" class="shrtwidth">
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["ticktodeletethisresearchrequest"])?></label>
@@ -134,8 +133,7 @@ for ($n=0;$n<count($users);$n++)
 
 <?php hook('research_request_extra_fields'); ?>
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="savexxx" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>

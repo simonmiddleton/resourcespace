@@ -40,12 +40,7 @@ if ($map_zoomslider)
     $zoomslider = 'true';
     $zoomcontrol = 'false';
     }
-
-$display = getval("display", $default_display);
-if ($default_display == 'map' || $display == 'map')
-    {
-    $geo_search_modal_results = false;
-    }?>
+?>
 
 <!-- Drag mode selector -->
 <div id="GeoDragMode">

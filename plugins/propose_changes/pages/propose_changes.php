@@ -107,7 +107,7 @@ if(
                 $acceptedfields[]=$proposed_change["resource_type_field"];
                 }
             }
-        $proposed_changes_fields = array_column($proposed_changes,"resource_type_field");
+        $proposed_changes_fields = array_values(array_filter(array_column($proposed_changes, 'resource_type_field')));
         // Actually save the data
         save_resource_data($ref,false,$acceptedfields);
         daily_stat("Resource edit",$ref);
@@ -354,7 +354,7 @@ function propose_changes_display_field($n, $field)
     {
     global $ref, $original_fields, $multilingual_text_fields,
     $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
-    $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
+    $FIXED_LIST_FIELD_TYPES, $edit_autosave;
 
     $edit_autosave=false;
     $name="field_" . $field["ref"];

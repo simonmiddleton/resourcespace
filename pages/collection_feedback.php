@@ -142,15 +142,14 @@ if ($errors!="")
 	<div class="clearerleft"> </div>
 	</div>
 	<div class="Question">
-	<label for="email"><?php echo $lang["youremailaddress"]; if ($feedback_email_required){echo " *";}?></label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+	<label for="email"><?php echo $lang["youremailaddress"]; ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php
 	}
 ?>
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["send"]?>&nbsp;&nbsp;" />
 </div>
 </form>

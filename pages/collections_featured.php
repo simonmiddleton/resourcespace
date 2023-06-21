@@ -44,7 +44,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
 <?php
-if($enable_theme_breadcrumbs && $parent > 0)
+if($parent > 0)
     {
     $links_trail = array(
         array(
@@ -134,7 +134,7 @@ unset($rendering_options["smart"]);
 
 if($k == "" && $smart_rtf == 0)
     {
-    if($collection_allow_creation && checkperm("h"))
+    if(checkperm("h")&& can_create_collections())
         {
         render_new_featured_collection_cta(
             generateURL(
@@ -211,7 +211,9 @@ jQuery(document).ready(function ()
                     .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
                 });
 
-            });
+            },
+            <?php echo generate_csrf_js_object('get_collections_resource_count'); ?>
+        );
         }
     <?php if (!$themes_simple_view)
         {
@@ -257,7 +259,12 @@ jQuery(function() {
                 <?php
                 }
                 ?>
-            api('reorder_featured_collections', {'refs': fcs_new_order});
+            api(
+                'reorder_featured_collections',
+                {'refs': fcs_new_order},
+                null,
+                <?php echo generate_csrf_js_object('reorder_featured_collections'); ?>
+            );
             }
     });
 });

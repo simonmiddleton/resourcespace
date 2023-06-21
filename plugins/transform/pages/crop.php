@@ -205,6 +205,20 @@ $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 if ($saveaction != '' && enforcePostRequest(false))
     {
+
+    $original_rotation = get_image_orientation($originalpath);
+    $preview_rotation  = get_image_orientation($crop_pre_file);
+    
+    $temp_original_file = false;
+    if($original_rotation !== $preview_rotation)
+        {
+        $tmp_path = get_temp_dir(false,'') . "/transform_temp_rotated_original.jpg";
+        copy($originalpath, $tmp_path);
+        AutoRotateImage($tmp_path);
+        $originalpath = $tmp_path;
+        $temp_original_file = true;
+        }
+    
     $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
@@ -296,6 +310,10 @@ if ($saveaction != '' && enforcePostRequest(false))
 
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
+    if($temp_original_file === true)
+        {
+        unlink($tmp_path);
+        }
 
     if($transformed)
         {
@@ -1160,7 +1178,6 @@ renderBreadcrumbs($links_trail);
                         }
                     ?>
                     <div class="QuestionSubmit">
-                        <label for="submit">&nbsp;</label>
                         <input type='submit' name='savealternative' value="<?php echo $lang['savealternative']; ?>"  onclick="postCrop();return false;" />
                         <div class="clearerleft"></div>
                     </div>
@@ -1174,7 +1191,6 @@ renderBreadcrumbs($links_trail);
                 render_dropdown_question($lang["format"],"new_ext",array_combine($cropper_formatarray , $cropper_formatarray),strtoupper($orig_ext));
                 ?>
                 <div class="QuestionSubmit">
-                    <label for="submit">&nbsp;</label>
                     <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" onclick="postCrop(true);return false;" />
                 
                     <div class="clearerleft"></div>
@@ -1201,7 +1217,6 @@ renderBreadcrumbs($links_trail);
                         <div class="clearerleft"></div>
                     </div>
                     <div class="Question">
-                        <label for="submit">&nbsp;</label>
                         <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>"  onclick="postCrop();return false;" />
                         <div class="clearerleft"></div>
                     </div>
@@ -1211,7 +1226,6 @@ renderBreadcrumbs($links_trail);
 
             <div class="imagetools_save_action" id="imagetools_preview_actions" style="display:none;">
                 <div class="QuestionSubmit">
-                    <label for="submit">&nbsp;</label>
                     <input type='submit' name='preview' value="<?php echo $lang['useaspreviewimage']; ?>"   onclick="postCrop();return false;"/>
                     <div class="clearerleft"></div>
                 </div>
@@ -1230,7 +1244,7 @@ renderBreadcrumbs($links_trail);
                 render_text_question($lang["slideshowsequencenumber"],"sequence",'',true,'',$manage_slideshow_id);
                 ?>
                 <div class="QuestionSubmit">
-                    <label></label>
+
                     <input type="submit"
                         name="submitTransformAction"
                         value="<?php echo $lang['replaceslideshowimage']; ?>" onclick="postCrop();return false;" >
@@ -1338,7 +1352,6 @@ renderBreadcrumbs($links_trail);
                 }
             ?>
             <div class="QuestionSubmit">
-                <label for="submit">&nbsp;</label>
                 <input type='submit' name='updatepreview' onclick="cropReload();return false;" value="<?php echo $lang['transform_update_preview']; ?>" />
                 <div class="clearerleft"></div>
             </div>

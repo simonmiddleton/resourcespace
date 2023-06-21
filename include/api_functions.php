@@ -454,3 +454,19 @@ function api_validate_upload_url($url)
 
     return false;
     }
+
+/**
+ * Assert API request is using POST method.
+ * @return array Returns JSend data back {@see ajax_functions.php} if not POST method
+ */
+function api_assert_post_request(): array
+    {
+    // Applicable only to native authmode to limit BC only for the ResourceSpace UI (which is using this mode)
+    if (!defined('API_AUTHMODE_NATIVE') || $_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+        return [];
+        }
+
+    http_response_code(405);
+    return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-method-not_allowed']));
+    }

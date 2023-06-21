@@ -349,7 +349,9 @@ function delete_access_key_multiple()
         api('delete_access_keys', params, function(response)
             {
             CentralSpaceLoad(window.location.href);
-            });
+            },
+            <?php echo generate_csrf_js_object('delete_access_keys'); ?>
+        );
 
             return false;
         }
@@ -491,7 +493,6 @@ function clearsharefilter()
 
 
             <div class="Question"  id="QuestionShareFilterSubmit">
-                <label></label>
                 <input type="button" id="filter_button" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('ShareFilterForm'));">
                 <input type="button" id="clear_button" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="clearsharefilter();return CentralSpacePost(document.getElementById('ShareFilterForm'));">
                 <div class="clearerleft"></div>

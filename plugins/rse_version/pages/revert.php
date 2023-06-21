@@ -305,7 +305,6 @@ if ($type==LOG_CODE_UPLOADED) {
 <?php } ?>
 
 <div class="QuestionSubmit">
-    <label for="buttons"> </label>
     <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo $lang["revert"]?>&nbsp;&nbsp;" />
 </div>
 

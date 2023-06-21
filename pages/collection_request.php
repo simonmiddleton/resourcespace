@@ -220,8 +220,7 @@ if($use_antispam)
 
 
 	<div class="QuestionSubmit">
-	<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>
-	<label for="buttons"> </label>			
+	<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>			
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo urlencode($ref) ?>';"/>&nbsp;
 	<input name="save" value="true" type="hidden" />
 	<input type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestcollection"]?>&nbsp;&nbsp;" />

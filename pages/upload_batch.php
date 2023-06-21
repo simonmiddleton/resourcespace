@@ -205,7 +205,7 @@ resource_type_config_override($resource_type);
 
 $hidden_collection = false;
 # Create a new collection?
-if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$upload_force_mycollection)
+if($collection_add == "new" && ($processupload  || !$upload_then_edit))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
@@ -293,11 +293,7 @@ if($modify_redirecturl!==false)
 	$redirecturl=$modify_redirecturl;
 	}
 
-if($upload_force_mycollection)
-    {
-    $collection_add = get_default_user_collection(true);
-    }
-elseif($collection_add=='undefined')
+if($collection_add=='undefined')
     {
     # Fallback to current user collection if nothing was passed in
     $collection_add = $usercollection;
@@ -780,7 +776,7 @@ if ($processupload)
             if (!$success)
                 {
                 $result["status"] = false;
-                $result["message"] = $lang["alternative_file_created"];
+                $result["message"] = $lang["error_upload_replace_file_fail"];
                 $result["error"] = 109;
                 $result["id"] = $replace_resource;
                 }
@@ -909,10 +905,8 @@ if ($processupload)
                         debug("batch_replace upload: replacing resource with id " . $ref);
                         daily_stat("Resource upload",$ref);
 
-                        # Save the original file as an alternative file?
+                        # The replace may need to keep the original (if one exists) by saving it as an alternative file
                         $keep_original = getval('keep_original', '');
-                        $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : true;
-
                         $success = replace_resource_file($ref,$upfilepath,$no_exif,$autorotate,$keep_original);
                         if (!$success)
                             {
@@ -950,26 +944,6 @@ if ($processupload)
     // Return JSON-RPC response
     exit(json_encode($result));
     }
-elseif ($upload_no_file && getval("createblank","")!="")
-	{
-    $ref=copy_resource(0-$userref,$lang["createdfromwebuploader"]); 
-                                
-    if($ref === false)
-        {
-        // If user doesn't have a resource template (usually this happens when a user had from the first time upload_then_edit mode on), create resource using default values.
-        $ref = create_resource($resource_type, $setarchivestate,-1,$lang["createdfromwebuploadertemplate"]);
-        }
-
-	// Add to collection?
-	if (is_numeric($collection_add))
-		{
-		add_resource_to_collection($ref,$collection_add);
-		}
-    rs_setcookie('lockedfields', '', 1);
-    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true"));
-    redirect($redirecturl);
-    exit();
-	}
 
 // Check if upload should be disabled because the filestore location is indexed and browseable
 $cfb = check_filestore_browseability();
@@ -989,7 +963,7 @@ include "../include/header.php";
 redirurl = '<?php echo $redirecturl ?>';
 var resource_keys=[];
 var processed_resource_keys=[];
-var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
+var relate_on_upload = <?php echo ($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes") ? " true" : "false"; ?>;
 // Set flag allowing for blocking auto redirect after upload if errors are encountered
 upRedirBlock = false;
 logopened = false;
@@ -1035,18 +1009,23 @@ jQuery(document).ready(function () {
         'GoogleDrive' => true,
         'Facebook' => true,
         'Dropbox' => true,
-        'Onedrive' => true,
+        'OneDrive' => true,
         'Box' => true,
         'Instagram' => true,
         'Zoom' => true,
         'Unsplash' => true,
         );
 
-    foreach($uploader_plugins as $uploader_plugin)
+    for($n=0;$n<count($uploader_plugins);$n++)
         {
-        if(isset($supported_plugins[$uploader_plugin]))
+        // Fix for change to name in updated library that will break old configs
+        if($uploader_plugins[$n] == "Onedrive")
             {
-            echo "var " . $uploader_plugin  . "= Uppy." . $uploader_plugin . ";\n";
+            $uploader_plugins[$n] = "OneDrive";
+            }
+        if(isset($supported_plugins[$uploader_plugins[$n]]))
+            {
+            echo "var " . $uploader_plugins[$n]  . "= Uppy." . $uploader_plugins[$n] . ";\n";
             }
         }
     ?>
@@ -1119,7 +1098,9 @@ jQuery(document).ready(function () {
                         newcol = parseInt(response);
                         console.debug('Created collection #' + newcol);
                         redirurl =  ReplaceUrlParameter(redirurl, 'collection_add', newcol);
-                        });
+                        },
+                        <?php echo generate_csrf_js_object('create_collection'); ?>
+                    );
                     }
                 }
              // Encode the file names
@@ -1636,7 +1617,9 @@ function postUploadActions()
         api('send_collection_to_admin',{'collection': newcol}, function(response)
             {
             console.debug('A copy of collection #' + newcol + ' has been sent to for review.');
-            });
+            },
+            <?php echo generate_csrf_js_object('send_collection_to_admin'); ?>
+        );
         <?php
         }?>
 
@@ -1651,7 +1634,9 @@ function postUploadActions()
         api('relate_all_resources',{'related': resource_keys}, function(response)
             {
             console.debug('Completed relating uploaded resources');
-            });
+            },
+            <?php echo generate_csrf_js_object('relate_all_resources'); ?>
+        );
         }
 
     <?php
@@ -1695,12 +1680,12 @@ function postUploadActions()
             {
             CentralSpaceLoad('<?php echo $redirecturl ?>',true);
             }
-        uppy.reset();
+        uppy.cancelAll();
         <?php
         }
     elseif($plupload_clearqueue)
         {
-        echo "uppy.reset();";
+        echo "uppy.cancelAll();";
         }?>
 
     if(upRedirBlock)

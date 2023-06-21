@@ -229,15 +229,11 @@ if (isset($ip_restrict_group)){
 		$allow=ip_matches($ip, $ip_restrict);
 		}
 
-	if (!$allow)
-		{
-		if ($iprestrict_friendlyerror)
-			{
-			exit("Sorry, but the IP address you are using to access the system (" . $ip . ") is not in the permitted list. Please contact an administrator.");
-			}
-		header("HTTP/1.0 403 Access Denied");
-		exit("Access denied.");
-		}
+    if (!$allow)
+        {
+        header("HTTP/1.0 403 Access Denied");
+        exit("Access denied.");
+        }
 	}
 }
 
@@ -394,4 +390,11 @@ if(
         }
 
     exit($lang["error-csrf-verification-failed"]);
+    }
+elseif (defined('API_CALL') && $_SERVER['REQUEST_METHOD'] === 'POST' && !isValidCSRFToken($csrf_token, $usersession))
+    {
+    ajax_send_response(
+        400,
+        ajax_response_fail(ajax_build_message("{$lang['error-csrf-verification']}: {$lang['error_invalid_input']}"))
+    );
     }

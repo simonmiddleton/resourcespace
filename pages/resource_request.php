@@ -260,8 +260,7 @@ if($use_antispam)
 
 hook("resource_request_form_bottom");
 ?>
-	<div class="QuestionSubmit">
-	<label for="buttons"> </label>			
+	<div class="QuestionSubmit">		
 	<input name="save" value="true" type="hidden" />
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />

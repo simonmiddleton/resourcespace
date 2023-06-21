@@ -275,7 +275,6 @@ foreach	($groups as $group)
 <?php
 	if ($find!="" || $filter_by_permissions!="" || $filter_by_parent!="") {
 ?>		<div class="QuestionSubmit">
-			<label for="buttonsave"></label>
 			<input name="buttonsave" type="submit"
 				   onclick="CentralSpaceLoad('admin_group_management.php?orderby=<?php echo $order_by;
 				   ?>',false);" value="&nbsp;&nbsp;<?php echo $lang["clearall"]; ?>&nbsp;&nbsp;">

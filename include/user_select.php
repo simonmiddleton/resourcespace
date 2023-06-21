@@ -2,9 +2,7 @@
 
 # AJAX user selection.
 
-global $default_user_select;
 if (!isset($userstring)) {$userstring="";}
-if ($userstring=="") {$userstring=$default_user_select;}
 
 // $autocomplete_user_scope needs to be set if we have more than one user select field on a page
 if(!isset($autocomplete_user_scope)){$autocomplete_user_scope = "";} 

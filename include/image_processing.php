@@ -1788,13 +1788,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $addcheckbdpre .= " tile:pattern:checkerboard -modulate 150,100 -scale " . $cb_scale . "% ";
                     }
                 $addcheckbdafter = "-compose over -composite ";
-                }            
-
-            $preview_quality=get_preview_quality($ps[$n]['id']);
+                }
 
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $imagemagick_quality;
                 }
 
             # fetch target width and height
@@ -2513,26 +2511,12 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
 
     # Use the screen resolution version for processing
-    global $tweak_all_images, $ffmpeg_supported_extensions;
+    global $ffmpeg_supported_extensions;
 
-    if ($tweak_all_images){
-        $file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
-        if (!file_exists($file)) {
-            $file=get_resource_path($ref,true,"lpr",false,$extension,-1,1,false,'',$alternative);$top="lpr";
-            if (!file_exists($file)) {
-                $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
-                if (!file_exists($file)) {
-                    $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
-                }
-            }
-        }
-    }
-    else {
-        $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
-        if (!file_exists($file)) {
-            # Some images may be too small to have a scr.  Try pre:
-            $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
-        }
+    $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
+    if (!file_exists($file)) {
+        # Some images may be too small to have a scr.  Try pre:
+        $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
     }
     
     if (!file_exists($file)) {return false;}
@@ -2560,12 +2544,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     list($tw,$th) = @getimagesize($file);   
     
     # Save all images
-    if ($tweak_all_images){
-        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id <> ?", ['s', $top]);
-    }
-    else {
-        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
-    }
+    $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
     for ($n=0;$n<count($ps);$n++)
         {
         # fetch target width and height

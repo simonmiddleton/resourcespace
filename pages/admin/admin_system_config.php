@@ -224,6 +224,17 @@ $page_def[] = config_add_boolean_select('comments_resource_enable', $lang['syste
 $page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenavdefault'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select(
+    'use_native_input_for_date_field',
+    $lang['systemconfig_use_native_input_for_date_field'],
+    $enable_disable_options,
+    420,
+    '',
+    true,
+    null,
+    false,
+    $lang['systemconfig_native_date_input_no_partials_supported'],
+);
 $page_def[] = config_add_html('</div>');
 
 

@@ -396,8 +396,6 @@ $lang["addtocollection"]="Pridať do zbierky";
 $lang["cantmodifycollection"]="Túto zbierku nemôžete upraviť.";
 $lang["currentcollection"]="Aktuálna zbierka";
 $lang["viewcollection"]="Zobraziť kolekciu";
-$lang['hiddencollections_hide']="Skryť skryté zbierky";
-$lang['hiddencollections_show']="Zobraziť skryté zbierky";
 $lang['hide_collection']="Skryť zbierku z lišty zbierok";
 $lang["viewall"]="Zobraziť všetko";
 $lang['view_all_resources'] = 'Zobraziť všetky zdroje';
@@ -574,8 +572,6 @@ $lang["statuscode"]="Stavový kód";
 $lang["unoconv_pdf"]="generované Open Office";
 $lang['calibre_pdf']="generované programom Calibre";
 $lang["resourcenotfound"]="Zdroj nenájdený.";
-$lang["resource_custom_access"] = "Vlastné nastavenie prístupu k zdroju";
-$lang['remove_custom_access_users_groups'] = 'Používatelia a skupiny s vlastným prístupom';
 $lang['remove_custom_access_no_users_found'] = 'Nenašli sa žiadni používatelia alebo skupiny s vlastným prístupom.';
 $lang['action-generate_pdf'] = 'Vygenerovať PDF';
 $lang['lock-tooltip']='Uzamknite pole, ktoré sa má skopírovať do ďalšieho zdroja';
@@ -628,9 +624,6 @@ $lang["log_code_+"] = "Zapnuté";
 $lang["log_code_-"] = "Vypnuté";
 
 $lang['user_created_by']='Vytvoril';
-$lang['user_autocreated']='Automaticky vytvorené';
-$lang['user_approved_by']='Schválil';
-$lang['user_autoapproved']='Automaticky schválené';
 
 $lang["backtoresourceview"]="Späť na zobrazenie zdrojov";
 $lang["continuetoresourceview"]="Pokračuvať na zobrazenie zdrojov";
@@ -1620,7 +1613,6 @@ $lang["anynumberofstars"]="Ľubovoľný počet hviezdičiek";
 $lang["star"]="Hviezda";
 $lang["stars"]="Hviezdy";
 
-$lang["noupload"]="Nič nahrané";
 
 
 $lang["permissions"]="Oprávnenia";
@@ -1992,9 +1984,6 @@ $lang["shared_collections"]="Zdieľané zbierky";
 $lang["internal"]="Interný";
 $lang["managecollectionslink"]="Spravovať zbierky";
 $lang["showcollectionindropdown"]="Zobraziť v paneli zbierok";
-$lang["sharerelatedresources"]="Zahrnúť súvisiace zdroje.<br> Ak je niektorý z nich vybraný, vytvorí sa a bude zdieľať nová zbierka";
-$lang["sharerelatedresourcesaddremove"]="Ak zdieľate súvisiace zdroje, umožnite iným používateľom pridávať / odoberať prostriedky z novej zbierky";
-$lang["create_empty_resource"]="Preskočiť nahrávanie a vytvoriť nový prostriedok bez pridruženého súboru";
 $lang["entercollectionname"]="Zadajte názov a stlačte Enter";
 $lang["embedded_metadata"]="Vložené metadáta";
 $lang["embedded_metadata_extract_option"]="Extrahovať";
@@ -2459,8 +2448,6 @@ $lang["mysql_throughput"]="Priepustnosť MySQL";
 $lang["cpu_benchmark"]="Referenčná hodnota výkonu CPU";
 $lang["disk_write_speed"]="Rýchlosť zápisu na disk";
 $lang["metadata_option_change_warning"]="Upozorňujeme, že úrava týchto nastavení v súčasnosti automaticky nezmení uložené parametre. Na migráciu existujúcich uložených hodnôt sa musí použiť dávková úprava.";
-$lang['metadata_first_option_is_default']='Prvá možnosť sa použije ako predvolená možnosť pre toto pole. Ak chcete nastaviť predvolenú možnosť pre všetky prostriedky, v ktorých momentálne chýba hodnota pre toto pole, použite odkaz uvedený nižšie.';
-$lang['metadata_populate_default_node_for_empty_values']='Vyplniť predvolenou hodnotou';
 
 /* Manage slideshows */
 $lang["manage_slideshow"] = "Správa prezentácie";
@@ -2929,7 +2916,6 @@ $lang["createdfromstaticsync"]='Vytvorené z StaticSync.';
 $lang["createdfromcontactsheet"]='Vytvorené z kontaktného listu.';
 $lang["createdfrommergerssystems"]='Vytvorené zlúčením systémov RS.';
 $lang["createdfromwebuploader"]='Vytvorené z nahrávača webových stránok.';
-$lang["createdfromwebuploadertemplate"]='Vytvorené z Web Uploaderu ako šablóna.';
 $lang["createdfromsplittingpdf"]='Vytvorené rozdelením PDF súboru.';
 $lang["createdfromteamcentre"]='Vytvorené z ponuky zdrojov.';
 $lang["log-X"]='Zamknutý zdroj.';

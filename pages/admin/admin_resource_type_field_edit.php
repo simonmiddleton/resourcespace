@@ -703,8 +703,7 @@ else
     ?>
     </div><!-- End of hidden advanced section -->    
     
-    <div class="QuestionSubmit">
-    <label for="buttons"> </label>			
+    <div class="QuestionSubmit">	
     <input name="save" type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;&nbsp;&nbsp;" />&nbsp;&nbsp;
     <input type="button" class="button" onClick="CentralSpaceLoad('<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $ref . "&backurl=" . $url ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["copy-field"] ?>&nbsp;&nbsp;" >
     <input name="migrate_data" id="migrate_data" type="hidden" value="">

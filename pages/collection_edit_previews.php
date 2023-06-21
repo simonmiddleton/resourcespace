@@ -110,41 +110,38 @@ include "../include/header.php";
 <?php generateFormToken("collectionform"); ?>
 <input type=hidden value='<?php echo urlencode($ref) ?>' name="ref" id="ref"/>
 
-<?php if (!checkperm("F*")) { ?>
-<div class="Question">
-<label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="document.getElementById('collectionform').submit();">
-<option value=""><?php echo $lang["select"]?></option>
-<?php //if ($resource["has_image"]==1) { 
-?>
-<?php
-# On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
-# A local configuration setting allows this to be rectified
-if (!$image_rotate_reverse_options)
-	{
-	?>
-	<option value="rotateclock"><?php echo $lang["rotateclockwise"]?></option>
-	<option value="rotateanti"><?php echo $lang["rotateanticlockwise"]?></option>
-	<?php
-	}
-else
-	{
-	?>
-	<option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
-	<option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
-	<?php
-	}
-?>
-<?php if ($tweak_allow_gamma){?>
-<option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
-<option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
-<?php } ?>
-<option value="restore"><?php echo $lang["recreatepreviews"]?></option>
+<?php if (allow_multi_edit($resources,$ref))
+    { ?>
+    <div class="Question">
+    <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="document.getElementById('collectionform').submit();">
+    <option value=""><?php echo $lang["select"]?></option>
+    <?php //if ($resource["has_image"]==1) { 
+    ?>
+    <?php
+    # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
+    # A local configuration setting allows this to be rectified
+    if (!$image_rotate_reverse_options)
+        {
+        ?>
+        <option value="rotateclock"><?php echo $lang["rotateclockwise"]?></option>
+        <option value="rotateanti"><?php echo $lang["rotateanticlockwise"]?></option>
+        <?php
+        }
+    else
+        {
+        ?>
+        <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
+        <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
+        <?php
+        }?>
+    <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
+    <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
+    <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
 
-?>
-</select>
-<div class="clearerleft"> </div>
-</div>
-<?php } 
+    </select>
+    <div class="clearerleft"> </div>
+    </div><?php
+     } 
 ?>
 
 </div>

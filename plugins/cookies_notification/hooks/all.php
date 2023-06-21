@@ -77,7 +77,7 @@ function HookCookies_notificationAllAfteruicenter()
                 user_option = 1;
                 }
 
-            SetCookie('accepted_cookies_use', user_option, 1, global_cookies);
+            SetCookie('accepted_cookies_use', user_option, 1);
             jQuery('#CookiesUseWrapper').slideUp();
 
             <?php if($is_authenticated) { ?>

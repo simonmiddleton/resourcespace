@@ -209,7 +209,7 @@ jQuery(function() {
                 .find('tr:not(:first-child) > td:nth-child(2)')
                 .map((i, val) => parseInt(jQuery(val).text())).get();
             console.debug('[Re-ordering tabs] tabs_new_order = %o', tabs_new_order);
-            api('reorder_tabs', {'refs': tabs_new_order});
+            api('reorder_tabs', {'refs': tabs_new_order}, null, <?php echo generate_csrf_js_object('reorder_tabs'); ?>);
             }
     });
 });
@@ -230,7 +230,9 @@ function delete_tabs(el, refs)
                 {
                 styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error-failed-to-delete"]); ?>");
                 }
-            });
+            },
+        <?php echo generate_csrf_js_object('delete_tabs'); ?>
+        );
         };
 
     return false;
@@ -275,7 +277,9 @@ function update_tab(el, ref, action)
                     {
                     styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", response.data.message);
                     }
-            });
+            },
+            <?php echo generate_csrf_js_object('save_tab'); ?>
+        );
 
 
         // Show the translated tab name and hide the inline edit input

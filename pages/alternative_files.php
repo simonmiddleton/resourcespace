@@ -96,8 +96,9 @@ function clickDelete(){
                     error++;
                     
                     }
-                }
-            );
+                },
+            <?php echo generate_csrf_js_object('delete_alternative_file'); ?>
+        );
     });
 
     if (errors > 0){styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfilesdeletefail']?>');return false;}
@@ -141,8 +142,8 @@ elseif($previous_page_modal)
             if($modal)
                 {
                 ?>
-                <a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php", $urlparams, array("modal" => "")); ?>" onclick="return CentralSpaceLoad(this);"></a>
-                &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();"></a>
+                <a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/alternative_files.php", $urlparams, array("modal" => "")); ?>" onclick="return CentralSpaceLoad(this);" title="<?php echo escape_quoted_data($lang["maximise"]); ?>"></a>
+                &nbsp;<a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
                 <?php
                 }
                 ?>
@@ -227,8 +228,9 @@ for ($n=0;$n<count($files);$n++)
                         {
                         styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfiledeletefail']?>');
                         }
-                    }
-                );
+                    },
+                <?php echo escape_quoted_data(generate_csrf_js_object('delete_alternative_file')); ?>
+            );
             }
         return false;
     "><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
