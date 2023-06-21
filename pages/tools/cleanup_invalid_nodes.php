@@ -20,7 +20,36 @@ if(getval("submit","") != "" && $cleanupfield !=0)
     
 include_once "../../include/header.php";
 
+$allfields = get_resource_type_fields("","order_by");
+foreach($allfields as $field)
+    {
+    if($field["global"] == 0)
+        {
+        $validfields[] = $field;
+        }
+    }
 ?>
+<script>
+fieldtypes = [];
+<?php
+foreach($validfields as $validfield)
+    {
+    echo "fieldtypes[" . $validfield["ref"] . "] = [" . $validfield["resource_types"] . "];\n";
+    }
+?>
+jQuery(document).ready(function()
+    {
+    jQuery('#cleanupfield').on('change',function()
+        {
+        id=(this.value);
+        jQuery('#cleanuprestype option').attr('disabled', false);
+        // Disable all valid resource types
+        fieldtypes[id].forEach(function(currentValue, index, arr) {
+            jQuery('#cleanuprestype option[value=' + currentValue + ']').attr('disabled', true);
+            });    
+        });
+    });
+</script>
 <div class="BasicsBox">
 	<?php 
     if($backurl=="")
@@ -40,7 +69,8 @@ include_once "../../include/header.php";
 	<form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/cleanup_invalid_nodes.php" onsubmit="return CentralSpacePost(this,true);">
      <?php generateFormToken("cleanup_invalid_nodes"); ?>
     <?php
-    render_field_selector_question($lang["field"],"cleanupfield",[],"medwidth",false,$cleanupfield);
+    render_dropdown_question($lang["field"], "cleanupfield", array_column($validfields,"title","ref"),$cleanupfield,'',["input_class"=>"medwidth"]);    
+    
     render_resource_type_selector_question($lang["property-resource_type"], "cleanuprestype","medwidth",false,$cleanuprestype[0] ?? 0);
     ?>
 	<div class="Question" >

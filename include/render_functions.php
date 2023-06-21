@@ -6562,7 +6562,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 
   
 /**
-* Renders a metadata field selector
+* Renders a resource type selection dropdown
 * 
 * @param string     $label      label for the field
 * @param string     $name       name of form select
