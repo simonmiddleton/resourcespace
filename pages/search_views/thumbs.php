@@ -153,7 +153,7 @@ if (!hook("renderresultthumb"))
                         render_resource_image($result[$n],$thm_url,$display);
                         // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
                         // when user hovers over the preview thumbnail
-                        if(1 < $ffmpeg_snapshot_frames && in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && 0 < get_video_snapshots($ref, false, true))
+                        if(1 < $ffmpeg_snapshot_frames && (in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) || ($result[$n]['file_extension'] == 'gif' && $ffmpeg_preview_gif)) && 0 < get_video_snapshots($ref, false, true))
                             {
                             ?>
                             <script>

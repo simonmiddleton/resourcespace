@@ -5,7 +5,9 @@
 # for example types that use GhostScript or FFmpeg.
 #
 
-global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path;
+global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
+$pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
+$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -27,7 +29,10 @@ else
     $file=get_resource_path($ref,true,"tmp",false,$extension);
     $target=get_resource_path($ref,true,"tmp",false,"jpg");
     }
-    
+
+# Check if GIF is to be treated as a video type for the creation of previews
+if ($ffmpeg_preview_gif) {$ffmpeg_supported_extensions[] = 'gif';}
+
 # Set up ImageMagick
 putenv("MAGICK_HOME=" . $imagemagick_path);
 

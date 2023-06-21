@@ -3,7 +3,7 @@
 include_once __DIR__ . '/../include/video_functions.php';
 global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,
 $keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
-$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource;
+$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource, $ffmpeg_preview_gif;
 
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
@@ -13,6 +13,13 @@ $alternative = is_null($alternative) ? -1 : $alternative;
 $video_preview_sources=array();
 $vidindex=0;
 
+$view_as_gif = false;
+if ($ffmpeg_preview_gif && $resource['file_extension'] == 'gif' && $alternative === -1)
+    {
+    $view_as_gif = true;
+    $video_preview_hls_support = 0;
+    }
+
 if($video_preview_hls_support!=1 || !$video_preview_player_hls) 
 	{
 	// Look for a standard preview video with the expected extension.
@@ -20,7 +27,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 
 	if(file_exists($video_preview))
 		{
-		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
+		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, true);
 		$video_preview_type = "video/{$ffmpeg_preview_extension}";
 		}		
 			
@@ -46,8 +53,8 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 		$vidindex++;
 		}
 	}
-	
-if($video_preview_hls_support!=0)
+
+if($video_preview_hls_support!=0 && !$view_as_gif)
 	{
 	$playlistfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
 	if(file_exists($playlistfile))
@@ -71,7 +78,7 @@ if($use_video_alts)
     $alternative = -1;
     }
 	
-if(isset($videojs_resolution_selection))
+if(isset($videojs_resolution_selection) && !$view_as_gif)
 	{
 	// Add in each version of the hls stream
 	foreach ($video_hls_streams as $video_hls_stream)
@@ -190,7 +197,17 @@ if(isset($videojs_resolution_selection))
 		id="<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>"
 		controls
 		data-setup='{ 
-			<?php if($play_on_hover){?>
+                <?php if ($view_as_gif)
+                     {
+                     ?>
+                     "controls": false,
+                     "autoplay": true,
+                     "loop": true,
+                     "muted": true
+                     <?php
+                     }
+                ?>
+			<?php if($play_on_hover && !$view_as_gif){?>
 				"loadingSpinner" : false,
 				"TextTrackDisplay" : true,
 				"nativeTextTracks": false,
@@ -209,7 +226,7 @@ if(isset($videojs_resolution_selection))
 					<?php } ?>
 				}
 			<?php }
-			if(isset($videojs_resolution_selection) && count($video_preview_sources)>0)
+			if(isset($videojs_resolution_selection) && count($video_preview_sources)>0 && !$view_as_gif)
 				{?>
 				"plugins": {
 						"videoJsResolutionSwitcher": {
@@ -248,7 +265,7 @@ if(isset($videojs_resolution_selection))
 		<?php display_video_subtitles($ref,$access); ?>
 	</video>
 
-<?php if($play_on_hover){ ?>	
+<?php if($play_on_hover && !$view_as_gif){ ?>	
 		<script>
 		var videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?> = jQuery('#<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>');
 		</script>

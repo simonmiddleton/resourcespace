@@ -1165,7 +1165,7 @@ function iptc_return_utf8($text)
  
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
-    global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge,$lang;
+    global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge, $lang, $ffmpeg_preview_gif;
     global $previews_allow_enlarge, $offline_job_queue, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     # Used to preemptively create folder
@@ -1336,7 +1336,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
     
         
-    if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif"))
+    if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif" && !$ffmpeg_preview_gif))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
         if (isset($imagemagick_path))
@@ -1458,7 +1458,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
 
     # We will need this to log errors
     $uploadedfilename = getval("file_name",""); 
@@ -1500,7 +1500,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         if (file_exists($scr_path) && !$previewbased) {unlink($scr_path);}
         $scr_wm_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,true,"",$alternative);  
         if (file_exists($scr_wm_path) && !$previewbased) {unlink($scr_wm_path);}
-        
+
         $prefix = '';
         # Camera RAW images need prefix
         if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext))
@@ -3423,7 +3423,7 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
  */ 
 function delete_previews($resource,$alternative=-1)
     {
-    global $ffmpeg_preview_extension, $watermark;
+    global $ffmpeg_preview_extension, $ffmpeg_supported_extensions, $watermark;
     
     // If a resource array has been passed we already have the extensions
     if(is_array($resource))
@@ -3449,7 +3449,6 @@ function delete_previews($resource,$alternative=-1)
     $resourcefolder = $dirinfo["dirname"];
 
     $presizes=ps_array("select id value from preview_size",array());
-    $presizes[]="snapshot"; // To include any video snapshots
     $pagecount=get_page_count($resource_data,$alternative);
     foreach($presizes as $presize)
         {
@@ -3469,6 +3468,11 @@ function delete_previews($resource,$alternative=-1)
                     }
                 }
             }
+        }
+
+    if (in_array($extension, $ffmpeg_supported_extensions) || $extension == 'gif')
+        {
+        remove_video_previews($resource);
         }
 
     $delete_prefixes = array();
@@ -4100,4 +4104,26 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     return file_exists($outputpath);
+    }
+
+function remove_video_previews(int $resource) : void
+    {
+    global $ffmpeg_preview_extension;
+
+    # Remove pre size video
+    $pre_video_size = get_resource_path($resource, true, "pre", false, $ffmpeg_preview_extension, -1, 1, false, "", -1);
+    if (file_exists($pre_video_size))
+        {
+        unlink($pre_video_size);
+        }
+
+    # Remove snapshots
+    $directory = dirname($pre_video_size);
+    foreach (glob($directory . "/*") as $filetoremove)
+            {
+            if (strpos($filetoremove, 'snapshot_') !== false)
+                {
+                unlink($filetoremove);
+                }
+            }
     }
