@@ -75,7 +75,7 @@ jQuery(document).ready(function()
     ?>
 	<div class="Question" >
 		<label for="dryrun" ><?php echo htmlspecialchars($lang["admin_resource_type_field_migrate_dry_run"]) ?></label>
-		<input class="medwidth" type="checkbox" name="dryrun" value="true" <?php if($dryrun){echo" checked";} ?>>
+		<input type="checkbox" name="dryrun" value="true" <?php if($dryrun){echo" checked";} ?>>
         <div class="clearerleft"> </div>
 	</div>
     <div class="Question" >
