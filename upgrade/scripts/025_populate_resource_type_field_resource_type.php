@@ -1,6 +1,22 @@
 <?php
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Start decoupling of resource types and fields to enable multi type support...");
 
+$field_tinfo = ps_query('DESCRIBE resource_type_field');
+if(!is_array($field_tinfo))
+    {
+    $msg = '[error] Unable to describe table "resource_type_field"';
+    logScript($msg);
+    message_add($notification_users, "Upgrade script 025: {$msg}", '', null, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, MESSAGE_DEFAULT_TTL_SECONDS);
+    return;
+    }
+
+if(!in_array("resource_type",array_column($field_tinfo,"Field")))
+    {
+    // No resource_type column, script not required
+    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Finished decoupling of resource types and fields to enable multi type support!");
+    return;
+    }
+
 // Clear out any entries added by dbstruct
 ps_query("TRUNCATE resource_type_field_resource_type");
 
