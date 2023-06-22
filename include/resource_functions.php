@@ -4907,7 +4907,7 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
         's', $file_name,
         's', $file_extension,
         'i', $file_size,
-        'i', $alt_type
+        's', $alt_type
         ]
     );
 	return sql_insert_id();
