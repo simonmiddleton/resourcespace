@@ -124,21 +124,28 @@ else{
             {
             if(month_numeric && day_numeric)
                 {
-                date_is_valid=true;
+                date_is_valid=true; // All present
                 }
             else 
                 {
                 if(day_numeric)
                     {  
-                    date_is_valid=false;
+                    date_is_valid=false; // Year and day without month
                     }
                 }
             }
-		else 
+		else // Year absent
             {
-            if(year_numeric || month_numeric)
+            if(day_numeric && !month_numeric)
                 {  
-                date_is_valid=false;
+                date_is_valid=true; // Allow day only
+                }
+            else
+                {
+                if(!day_numeric && month_numeric)
+                    {  
+                    date_is_valid=false; // Prevent month only
+                    }
                 }
 		    }
         
