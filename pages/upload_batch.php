@@ -382,7 +382,11 @@ if($embedded_data_user_select || isset($embedded_data_user_select_fields))
 if($replace_resource_preserve_option && '' != $replace_resource)
     {
     $original_resource_data                          = get_resource_data($replace_resource);
-    $default_replace_resource_original_alt_filename  = str_replace('%EXTENSION', strtoupper($original_resource_data['file_extension']), $lang['replace_resource_original_description']);
+    $default_replace_resource_original_alt_filename  = str_replace(
+        '%EXTENSION',
+        strtoupper($original_resource_data['file_extension']??""),
+        $lang['replace_resource_original_description']
+    );
     $default_replace_resource_original_alt_filename .= nicedate(date('Y-m-d H:i'), true);
 
     $uploadparams['replace_resource_original_alt_filename'] = $default_replace_resource_original_alt_filename;
