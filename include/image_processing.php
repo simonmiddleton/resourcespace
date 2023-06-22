@@ -4105,6 +4105,13 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     return file_exists($outputpath);
     }
 
+/**
+* For a given resource reference, remove the video pre size and all snapshots.
+*
+* @param  int   $resource   Resource to remove video previews.
+*
+* @return void
+*/
 function remove_video_previews(int $resource) : void
     {
     global $ffmpeg_preview_extension;
