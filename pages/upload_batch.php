@@ -469,7 +469,7 @@ if ($processupload)
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
     debug("upload_batch - processing. Looking for file at " . $upfilepath);
 
-    if(!file_exists($upfilepath))
+    if(!file_exists($upfilepath) || is_dir($upfilepath))
         {
         debug("upload_batch - unable to locate file received from user " . $username . ",  file path " . $upfilepath . ",  filename " . $upfilename);
         $result["status"] = false;
@@ -481,7 +481,7 @@ if ($processupload)
 
     # Banned extension?
     global $banned_extensions;
-    if (in_array($extension,$banned_extensions))
+    if (is_banned_extension($extension))
         {
         debug("upload_batch - invalid file extension received from user " . $username . ",  filename " . $upfilename);
         $result["status"] = false;
