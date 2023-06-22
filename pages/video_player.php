@@ -246,7 +246,7 @@ if(isset($videojs_resolution_selection))
 		preload="<?php echo $preload?>"
 		width="<?php echo $width?>" 
 		height="<?php echo $height?>" 
-		class="video-js vjs-default-skin vjs-big-play-centered <?php if($pagename=='search'){echo "video-$display";}?>" 
+		class="video-js vjs-default-skin vjs-big-play-centered <?php if($pagename=='search'){echo "video-$display";} if($view_as_gif){echo ' vjs-gif-transparent';}?>" 
 		poster="<?php echo $thumb_raw?>"
 		<?php if($play_on_hover){ ?>
 			onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();"
