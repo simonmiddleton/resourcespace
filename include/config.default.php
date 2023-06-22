@@ -1388,7 +1388,7 @@ $feedback_resource_select=false;
 # - this option relates to specific user tracking for the more detailed report.
 $log_resource_views=false;
 
-# A list of file extentions of file types that cannot be uploaded for security reasons.
+# A list of file extensions that cannot be uploaded for security reasons.
 # For example; uploading a PHP file may allow arbirtary execution of code, depending on server security settings.
 $banned_extensions=array("php","cgi","pl","exe","asp","jsp", 'sh', 'bash', 'phtml', 'phps', 'phar', 'py', 'jar');
 
@@ -3329,7 +3329,7 @@ $field_column_string_separator = ',';
 //
 // Nearly all of these plugins require the setting up of a Companion server which is not part of or affiliated with ResourceSpace. 
 // Please refer to the official Companion documentation for instructions on setting this up https://uppy.io/docs/companion/
-// Note that companion server should have the ResourceSpace URL included in the 'COMPANION_UPLOAD_URLS' environmnent variable
+// Note that companion server should have the ResourceSpace URL included in the 'COMPANION_UPLOAD_URLS' environment variable
 // 
 // Supported options (* requires a Companion server and $uppy_companion_url to be set)
 //
@@ -3350,6 +3350,8 @@ $field_column_string_separator = ',';
 // $uploader_plugins[] = "OneDrive";
 
 $uploader_plugins = [];
+
+// The valid Companion server URL
 $uppy_companion_url = "";
 
 # Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.

@@ -204,3 +204,47 @@ function resign_all_code($confirm = true, $output = true, $output_changes_only =
         set_sysvar("code_sign_required","");
         }
     }
+
+/**
+ * Compares provided token with 
+ * 
+ * Used by isValidCSRFToken() 
+ * Also used on upload_batch to validate an upload session when user cookie not available (i.e. companion uploads)
+ *
+ * @uses rsDecrypt()
+ * 
+ * @param string $token_data    Encrypted token data
+ * @param string $id            Identifier
+ * 
+ * @return bool
+ * 
+ */
+function rs_validate_token($token_data, $id)
+    {
+    if(trim($token_data) === "")
+        {
+        debug("rs_validate_token(): INVALID - no token data");
+        return false;
+        }
+
+    $plaintext = rsDecrypt($token_data, $id);
+    if($plaintext === false)
+        {
+        debug("rs_validate_token(): INVALID - unable to decrypt token data");
+        return false;
+        }
+    $csrf_data = json_decode($plaintext, true);
+    if(is_null($csrf_data))
+        {
+        debug("rs_validate_token(): INVALID - unable to decode token data");
+        return false;
+        }
+
+    if($csrf_data["session"] === $id)
+        {
+        return true;
+        }
+
+    debug("rs_validate_token(): INVALID - decoded value does not match");
+    return false;
+    }

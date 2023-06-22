@@ -3072,9 +3072,9 @@ function generateCSRFToken($session_id, $form_id)
 /**
 * Checks if CSRF Token is valid
 * 
-* @uses rsDecrypt()
+* @uses rs_validate_token()
 * 
-* @return boolean  Returns TRUE if token has been decrypted or CSRF is not enabled, FALSE otherwise
+* @return boolean  Returns TRUE if token is valid or CSRF is not enabled, FALSE otherwise
 */
 function isValidCSRFToken($token_data, $session_id)
     {
@@ -3084,37 +3084,9 @@ function isValidCSRFToken($token_data, $session_id)
         {
         return true;
         }
-
-    if($token_data === "")
-        {
-        debug("CSRF: INVALID - no token data");
-        return false;
-        }
-
-    $plaintext = rsDecrypt($token_data, $session_id);
-
-    if($plaintext === false)
-        {
-        debug("CSRF: INVALID - unable to decrypt token data");
-        return false;
-        }
-
-    $csrf_data = json_decode($plaintext, true);
-
-    if(is_null($csrf_data))
-        {
-        debug("CSRF: INVALID - unable to decode token data");
-        return false;
-        }
-
-    if($csrf_data["session"] === $session_id)
-        {
-        return true;
-        }
-
-    debug("CSRF: INVALID - session ID did not match: {$csrf_data['session']} vs {$session_id}");
-
-    return false;
+    
+    $csrf_valid = rs_validate_token($token_data, $session_id);
+    return $csrf_valid;    
     }
 
 

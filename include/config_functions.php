@@ -630,7 +630,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
 * @param string  $label              Label for field
 * @param string  $form_action        URL where the form should post to
 * @param int     $width              Width of the input file HTML tag. Default - 420
-* @param array   $valid_extensions   Optional array of file extentions that will be validated during upload, see config_process_file_input()
+* @param array   $valid_extensions   Optional array of file extensions that will be validated during upload, see config_process_file_input()
 */
 function config_add_file_input($config_var, $label, $form_action, $width = 420, $valid_extensions = array())
     {   
@@ -1115,7 +1115,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                 // without storing the full path in the database
                 $saved_filename          = sprintf('[storage_url]/%s/%s.%s', $file_location, $config_name, $uploaded_file_extension);
 
-                if(in_array(strtolower($uploaded_file_extension), array_map('strtolower', $banned_extensions)) || ($uploaded_file_extension == "." || $uploaded_file_extension == "" || $uploaded_file_extension == '"'))
+                if(is_banned_extension($uploaded_file_extension))
                     {
                     trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
                     }
