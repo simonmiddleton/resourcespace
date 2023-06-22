@@ -31,8 +31,8 @@ if (getval("submit","")=="")
 	# ------------------- Show the size selection screen -----------------------
 	?>
 	<div class="BasicsBox"> 
-	  <h1><?php echo $lang["buynow"]?></h1>
-	  <p><?php echo $lang["buynowintro"]?></p>
+	  <h1><?php echo htmlspecialchars($lang["buynow"])?></h1>
+	  <p><?php echo htmlspecialchars($lang["buynowintro"])?></p>
 	   
 	<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php">
         <?php generateFormToken("buynow"); ?>
@@ -54,7 +54,7 @@ if (getval("submit","")=="")
 		if (count($sizes)==0)
 			{
 			?>
-			<?php echo $lang["nodownloadsavailable"] ?>
+			<?php echo htmlspecialchars($lang["nodownloadsavailable"]) ?>
 			<?php
 			}
 		else
@@ -110,7 +110,7 @@ if (getval("submit","")=="")
 		?>
 	
 	<?php if ($showbuy) { ?>
-		<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["buynow"]?>&nbsp;&nbsp;&nbsp;"></p>
+		<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["buynow"])?>&nbsp;&nbsp;&nbsp;"></p>
 	<?php } ?>
 	</form>
 	</div>
@@ -176,17 +176,17 @@ else
 	<?php hook ("price_display_extras"); ?>
 
 	<table class="InfoTable">
-	<tr><td><?php echo $lang["subtotal"] ?></td><td align="right"><?php echo $currency_symbol . " " . number_format($totalprice_ex_discount,2) ?></td></tr>
+	<tr><td><?php echo htmlspecialchars($lang["subtotal"]) ?></td><td align="right"><?php echo $currency_symbol . " " . number_format($totalprice_ex_discount,2) ?></td></tr>
 
 	<?php if ($totalprice!=$totalprice_ex_discount || true) { 
 		# Display discount (always for now)
 		?>	
-		<tr><td><?php echo $lang["discountsapplied"] ?></td><td align="right"><?php echo $currency_symbol . " " . number_format($totalprice_ex_discount-$totalprice,2) ?></td></tr>
+		<tr><td><?php echo htmlspecialchars($lang["discountsapplied"]) ?></td><td align="right"><?php echo $currency_symbol . " " . number_format($totalprice_ex_discount-$totalprice,2) ?></td></tr>
 		<?php
 		}
 	?>
 			
-	<tr><td><strong><?php echo $lang["totalprice"] ?></strong></td><td align="right"><strong><?php echo $currency_symbol . " " . number_format($totalprice,2) ?></strong></td></tr>
+	<tr><td><strong><?php echo htmlspecialchars($lang["totalprice"]) ?></strong></td><td align="right"><strong><?php echo $currency_symbol . " " . number_format($totalprice,2) ?></strong></td></tr>
 	</table>
 	<br />
 	
@@ -207,7 +207,7 @@ else
 			<input type="hidden" name="custom" value="<?php echo urlencode($userref." ".$usercollection); ?>">
 			<input type="hidden" name="charset" value="utf-8">
 			<?php echo $paypal ?>
-			<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["proceedtocheckout"]?>&nbsp;&nbsp;&nbsp;"></p>
+			<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["proceedtocheckout"])?>&nbsp;&nbsp;&nbsp;"></p>
 			</form>
 			<?php
 			}
@@ -218,9 +218,9 @@ else
 		{
 		# Invoice payment.
 		?>
-		<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php" onsubmit="return confirm('<?php echo $lang["areyousurepayaccount"] ?>');">
+		<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php" onsubmit="return confirm('<?php echo escape_quoted_data($lang["areyousurepayaccount"]) ?>');">
             <?php generateFormToken("purchaseonaccount_form"); ?>
-		<p><input type="submit" name="purchaseonaccount"  value="&nbsp;&nbsp;&nbsp;<?php echo $lang["purchaseonaccount"]?>&nbsp;&nbsp;&nbsp;"></p>
+		<p><input type="submit" name="purchaseonaccount"  value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["purchaseonaccount"])?>&nbsp;&nbsp;&nbsp;"></p>
 	
 		</form>
 		<?php

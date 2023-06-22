@@ -176,8 +176,8 @@ if($browse_on)
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
 var pagename="<?php echo $pagename?>";
-var errorpageload = "<h1><?php echo $lang["error"] ?></h1><p><?php echo str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"])) ?></p>";
-var errortext = "<?php echo $lang["error"] ?>";
+var errorpageload = "<h1><?php echo htmlspecialchars($lang["error"]) ?></h1><p><?php echo htmlspecialchars(str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"]))) ?></p>";
+var errortext = "<?php echo escape_quoted_data($lang["error"]) ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit=false;
 var branch_limit_field = new Array();
@@ -191,7 +191,7 @@ if (!hook("replacetrashbin", "", array("js" => true)))
     echo "global_trash_html += '" . render_trash("trash","", true) . "';\n";
     }
 ?>
-oktext="<?php echo $lang["ok"] ?>";
+oktext="<?php echo htmlspecialchars($lang["ok"]) ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementContainer='.ui-layout-container';
 var scrolltopElementCollection='.ui-layout-south';
@@ -316,7 +316,7 @@ endif; # !hook("customhtmlheader")
 <a href="#UICenter" class="skip-to-main-content"><?php echo htmlspecialchars($lang["skip-to-main-content"]); ?></a>
 
 <!-- Processing graphic -->
-<div id='ProcessingBox' style='display: none'><h3><?php echo $lang["status_processing"]; ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+<div id='ProcessingBox' style='display: none'><h3><?php echo htmlspecialchars($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
 
 <!-- Loading graphic -->
 <?php
@@ -403,7 +403,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                             }
                         else 
                             {
-                            echo $lang["responsive_settings_menu"];
+                            echo htmlspecialchars($lang["responsive_settings_menu"]);
                             }?>
                         </span>
                     <?php if ($user_profile_image != "")
@@ -416,7 +416,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                         }
                     ?></a>
                 <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
-                    <span class="rbText"><?php echo $lang["responsive_main_menu"]; ?></span>
+                    <span class="rbText"><?php echo htmlspecialchars($lang["responsive_main_menu"]); ?></span>
                     <span class="fa fa-fw fa-lg fa-bars"></span>
                 </a>
             </div>
@@ -442,9 +442,9 @@ if ($pagename!="preview" && $pagename!="preview_all")
                 {
                 ?>
                 <ul>
-                <li><a href="<?php echo $baseurl?>/login.php"><?php echo $lang["login"]?></a></li>
+                <li><a href="<?php echo $baseurl?>/login.php"><?php echo htmlspecialchars($lang["login"]) ?></a></li>
                 <?php hook("addtoplinksanon");?>
-                <?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["contactus"]?></a></li><?php } ?>
+                <?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["contactus"]) ?></a></li><?php } ?>
                 </ul>
                 <?php
                 } /* end replaceheadernav1anon */
@@ -459,7 +459,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                     $topuploadurl = get_upload_url("",$k);
                     ?>
                     <li class="HeaderLink UploadButton">
-                        <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]; ?></a>
+                        <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo htmlspecialchars($lang["upload"]); ?></a>
                     </li><?php
                     }
             
@@ -467,7 +467,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                     {
                     ?>
                     <li>
-                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo $lang['myaccount']; ?>" title="<?php echo $lang['myaccount']; ?>">
+                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo htmlspecialchars($lang['myaccount']); ?>" title="<?php echo htmlspecialchars($lang['myaccount']); ?>">
                         <?php
                         if (isset($header_include_username) && $header_include_username)
                             {
@@ -509,7 +509,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape_quoted_data($lang['teamcentre']); ?>" title="<?php echo escape_quoted_data($lang['teamcentre']); ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                     <?php 
                         if (!$actions_on && (checkperm("R")||checkperm("r")))
                             {

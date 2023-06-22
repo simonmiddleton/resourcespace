@@ -490,7 +490,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			$minmax=explode('|',str_replace("numrange","",$value));
 			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
 			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
-            echo $lang["from"]; ?><input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"><?php echo $lang["to"]; ?><input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
+            echo htmlspecialchars($lang["from"]); ?><input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"><?php echo htmlspecialchars($lang["to"]); ?><input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
 			<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
 		    <?php 
 			# Add to the clear function so clicking 'clear' clears this box.
@@ -707,7 +707,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
             ?>      
             <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anyyear"]?></option>
+              <option value=""><?php echo htmlspecialchars($lang["anyyear"])?></option>
               <?php
               $y=date("Y");
               $y += $maxyear_extends_current;
@@ -721,12 +721,12 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
             
             <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anymonth"]?></option>
+              <option value=""><?php echo htmlspecialchars($lang["anymonth"])?></option>
               <?php
               for ($d=1;$d<=12;$d++)
                 {
                 $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                ?><option <?php if ($d==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$d-1])?></option><?php
                 }
               ?>
             </select>
@@ -735,7 +735,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             	{ 
             	?>
 				<select name="<?php echo $name?>_day" id="<?php echo $id?>_day" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-				  <option value=""><?php echo $lang["anyday"]?></option>
+				  <option value=""><?php echo htmlspecialchars($lang["anyday"])?></option>
 				  <?php
 				  for ($d=1;$d<=31;$d++)
 					{
@@ -824,7 +824,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                    onClick="
                         jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
                         
-                        return false;"><?php echo $lang['showhidetree']; ?></a>
+                        return false;"><?php echo htmlspecialchars($lang['showhidetree']); ?></a>
                         <div id="cattree_<?php echo $field['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
@@ -1076,7 +1076,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     ?>
                 <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?> aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
             <?php } ?>
-            <option class="SelectAction" selected disabled hidden value=""><?php echo $lang["actions-select"]?></option>
+            <option class="SelectAction" selected disabled hidden value=""><?php echo htmlspecialchars($lang["actions-select"])?></option>
             <?php
 
             // Collection Actions
@@ -1230,7 +1230,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'remove_collection':
-                    if(confirm("<?php echo $lang['removecollectionareyousure']; ?>")) {
+                    if(confirm("<?php echo escape_quoted_data($lang['removecollectionareyousure']); ?>")) {
                         // most likely will need to be done the same way as delete_collection
                         var post_data = {
                             ajax: true,
@@ -1248,7 +1248,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'purge_collection':
-                    if(confirm('<?php echo $lang["purgecollectionareyousure"]; ?>'))
+                    if(confirm('<?php echo escape_quoted_data($lang["purgecollectionareyousure"]); ?>'))
                         {
                         document.getElementById('collectionpurge').value='".urlencode($collections[$n]["ref"])."';
                         document.getElementById('collectionform').submit();
@@ -1303,7 +1303,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     }
                 ?>
                 case 'delete_collection':
-                    if(confirm('<?php echo $lang["collectiondeleteconfirm"]; ?>')) {
+                    if(confirm('<?php echo escape_quoted_data($lang["collectiondeleteconfirm"]); ?>')) {
                         var post_data = {
                             ajax: true,
                             dropdown_actions: true,
@@ -1371,7 +1371,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'empty_collection':
-                    if(!confirm('<?php echo $lang["emptycollectionareyousure"]; ?>'))
+                    if(!confirm('<?php echo escape_quoted_data($lang["emptycollectionareyousure"]); ?>'))
                         {
                         break;
                         }
@@ -1391,7 +1391,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 global $delete_requires_password;
                 ?>
                 case 'delete_all_in_collection':
-                    if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
+                    if(confirm('<?php echo escape_quoted_data($lang["deleteallsure"]); ?>'))
                         {<?php
                         if ($delete_requires_password)
                             {
@@ -1721,8 +1721,8 @@ function render_access_key_tr(array $record)
         <td><?php echo htmlspecialchars((-1 == $record['access']) ? '' : $lang['access' . $record['access']]); ?></td>
         <td>
             <div class="ListTools">
-                <a href="#" onClick="delete_access_key('<?php echo $record['access_key']; ?>', '<?php echo $record['resource']; ?>', '<?php echo $record['collection']; ?>');"><?php echo LINK_CARET ?><?php echo $lang['action-delete']; ?></a>
-                <a href="<?php echo $edit_link; ?>"><?php echo LINK_CARET ?><?php echo $lang['action-edit']; ?></a>
+                <a href="#" onClick="delete_access_key('<?php echo $record['access_key']; ?>', '<?php echo $record['resource']; ?>', '<?php echo $record['collection']; ?>');"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang['action-delete']); ?></a>
+                <a href="<?php echo $edit_link; ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang['action-edit']); ?></a>
             </div>
         </td>
     </tr>
@@ -1758,7 +1758,7 @@ function display_multilingual_text_field($n, $field, $translations)
   {
   global $language, $languages, $lang;
   ?>
-  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo $lang["showtranslations"]?>';} else {l.style.display='block';this.innerHTML='<?php echo $lang["hidetranslations"]?>';} return false;"><?php echo $lang["showtranslations"]?></a></p>
+  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape_quoted_data($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape_quoted_data($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"])?></a></p>
   <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
      <?php
      reset($languages);
@@ -1879,7 +1879,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
   if ($field["resource_type"]!=$lastrt && $lastrt!=-1 && $collapsible_sections)
       {
-      ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars(get_resource_type_name($field["resource_type"]))?> <?php echo $lang["properties"]?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref==-1) echo "Upload"; ?><?php echo $field["resource_type"]; ?>Section"><?php
+      ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars(get_resource_type_name($field["resource_type"]))?> <?php echo htmlspecialchars($lang["properties"])?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref==-1) echo "Upload"; ?><?php echo $field["resource_type"]; ?>Section"><?php
       }
     $lastrt=$field["resource_type"];
 
@@ -1961,22 +1961,22 @@ function display_field($n, $field, $newtab=false,$modal=false)
         }
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
-      <label for="modeselectinput"><?php echo $lang["editmode"]?></label>
+      <label for="modeselectinput"><?php echo htmlspecialchars($lang["editmode"])?></label>
       <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="<?php echo $onchangejs;hook ("edit_all_mode_js"); ?>">
-      <option value="RT"><?php echo $lang["replacealltext"]?></option>
+      <option value="RT"><?php echo htmlspecialchars($lang["replacealltext"])?></option>
       <?php
       if (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
         # 'Find and replace', prepend and 'copy from field' options apply to text boxes only.
         ?>
-        <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
-        <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo $lang["edit_copy_from_field"]?></option>
+        <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["findandreplace"])?></option>
+        <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["edit_copy_from_field"])?></option>
         <?php
         if(!$multilingual_text_fields)
             {
             // Prepending text doesn't work wih multilingual fields
             ?>
-            <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
+            <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["prependtext"])?></option>
             <?php
             }
         }
@@ -1984,7 +1984,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         {
         # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields onl.
         ?>
-        <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
+        <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["appendtext"])?></option>
         <?php
         }
       if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
@@ -1994,7 +1994,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             {
             # And it only applies if the field is optional
             ?> 
-        <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
+        <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["removetext"])?></option>
         <?php
             }
         }
@@ -2012,8 +2012,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
       <div class="Question" id="findreplace_<?php echo $n?>" style="display:none;border-top:none;">
         <label>&nbsp;</label>
-        <?php echo $lang["find"]?> <input type="text" name="find_<?php echo $field["ref"]?>" class="shrtwidth">
-        <?php echo $lang["andreplacewith"]?> <input type="text" name="replace_<?php echo $field["ref"]?>" class="shrtwidth">
+        <?php echo htmlspecialchars($lang["find"])?> <input type="text" name="find_<?php echo $field["ref"]?>" class="shrtwidth">
+        <?php echo htmlspecialchars($lang["andreplacewith"])?> <input type="text" name="replace_<?php echo $field["ref"]?>" class="shrtwidth">
       </div><!-- End of findreplace_<?php echo $n?> -->
 
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
@@ -2225,7 +2225,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                <input type="radio" id="exif_extract_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="yes" checked>
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_extract_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_extract_option"] ?></label>
+               <label class="customFieldLabel" for="exif_extract_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars($lang["embedded_metadata_extract_option"]) ?></label>
             </td>
 
 
@@ -2233,7 +2233,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                <input type="radio" id="no_exif_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="no">
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="no_exif_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_donot_extract_option"] ?></label>
+               <label class="customFieldLabel" for="no_exif_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars($lang["embedded_metadata_donot_extract_option"]) ?></label>
             </td>
 
 
@@ -2241,7 +2241,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                <input type="radio" id="exif_append_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="append">
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_append_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_append_option"] ?></label>
+               <label class="customFieldLabel" for="exif_append_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars($lang["embedded_metadata_append_option"]) ?></label>
             </td>
 
 
@@ -2249,7 +2249,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                <input type="radio" id="exif_prepend_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="prepend">
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_prepend_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_prepend_option"] ?></label>
+               <label class="customFieldLabel" for="exif_prepend_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars($lang["embedded_metadata_prepend_option"]) ?></label>
             </td>
 
          </tr>
@@ -2339,13 +2339,13 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
     <!--  date range search start -->   		
     <!--- start date -->	
     <div class="stdwidth indent <?php echo $name?>_range" id="<?php echo $name?>_from">
-    <label class="InnerLabel"><?php echo $lang["fromdate"]?></label>
+    <label class="InnerLabel"><?php echo htmlspecialchars($lang["fromdate"])?></label>
     
         <?php 		
         if($date_d_m_y)
             {  
             ?>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_start_day"
              <?php
             if ($forsearch && $autoupdate) 
@@ -2362,7 +2362,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 }
               ?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_start_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2375,7 +2375,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$d-1])?></option><?php
                     }?>
             </select>
             <?php
@@ -2383,7 +2383,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         else
             { 
             ?>		
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_start_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2396,10 +2396,10 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1] ?></option><?php
                     }?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_start_day"
               <?php 
                 if ($forsearch && $autoupdate) 
@@ -2420,7 +2420,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             }
         if($forsearch)
             {?>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
             <select name="<?php echo htmlspecialchars($name) ?>_start_year"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2441,7 +2441,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             }
         else
             {?>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
             <input size="5" name="<?php echo htmlspecialchars($name) ?>_start_year" id="<?php echo htmlspecialchars($name) ?>_start_year" type="text" value="<?php echo $found_start_year ?>"
                 <?php 
                 if ($forsearch && $autoupdate)
@@ -2462,12 +2462,12 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
     
     
     <div class="stdwidth indent <?php echo $name?>_range" id="<?php echo $name?>_to" >
-    <label class="InnerLabel"><?php echo $lang["todate"]?></label>
+    <label class="InnerLabel"><?php echo htmlspecialchars($lang["todate"])?></label>
     <?php 		
         if($date_d_m_y)
             {
             ?>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_end_day"
               <?php 
                 if ($forsearch && $autoupdate) 
@@ -2483,7 +2483,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     ?><option <?php if ($d==$found_end_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
                     }?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_end_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2496,7 +2496,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$d-1])?></option><?php
                     }?>
             </select>
             <?php
@@ -2504,7 +2504,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         else
             {
             ?>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_end_month" <?php 
                 if (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } 
@@ -2516,10 +2516,10 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$d-1]) ?></option><?php
                     }?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_end_day"
               <?php 
                 if ($forsearch && $autoupdate) 
@@ -2540,7 +2540,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             }
         if($forsearch)
             {?>
-            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
             <select name="<?php echo $name?>_end_year" 
             <?php 
             if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
@@ -2561,7 +2561,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 }
             else
                 {?>
-                <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
+                <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
                 <input size="5" name="<?php echo htmlspecialchars($name) ?>_end_year" id="<?php echo htmlspecialchars($name) ?>_end_year" type="text" value="<?php echo $found_end_year ?>"
                     <?php 
                     
@@ -2810,7 +2810,7 @@ function renderLockButton($name, $locked_fields=array())
     {
     global $lang;
     ?>
-    <button type="submit" class="lock_icon" id="lock_icon_<?php echo htmlspecialchars($name) ; ?>" onClick="toggleFieldLock('<?php echo htmlspecialchars($name) ; ?>');return false;" title="<?php echo $lang['lock-tooltip']; ?>">
+    <button type="submit" class="lock_icon" id="lock_icon_<?php echo htmlspecialchars($name) ; ?>" onClick="toggleFieldLock('<?php echo htmlspecialchars($name) ; ?>');return false;" title="<?php echo escape_quoted_data($lang['lock-tooltip']); ?>">
         <i aria-hidden="true" class="fa <?php if(in_array($name,$locked_fields)){echo "fa-lock";} else {echo "fa-unlock";} ?> fa-fw"></i>
     </button>
     <?php    
@@ -2970,7 +2970,7 @@ function render_share_options($shareopts=array())
     if(!hook('replaceemailaccessselector'))
         {?>
         <div class="Question" id="question_access">
-            <label for="archive"><?php echo $lang["access"] ?></label>
+            <label for="archive"><?php echo htmlspecialchars($lang["access"]) ?></label>
             <select class="stdwidth" name="access" id="access">
             <?php
             # List available access levels. The highest level must be the minimum user access level.
@@ -2978,7 +2978,7 @@ function render_share_options($shareopts=array())
                 { 
                 $selected = $editaccesslevel == $n;
                 ?>
-                <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo $lang["access" . $n]?></option>
+                <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo htmlspecialchars($lang["access" . $n])?></option>
                 <?php 
                 } 
                 ?>
@@ -2991,12 +2991,12 @@ function render_share_options($shareopts=array())
         {
         ?>
         <div class="Question">
-            <label><?php echo $lang["expires"] ?></label>
+            <label><?php echo htmlspecialchars($lang["expires"]) ?></label>
             <select name="expires" class="stdwidth">
             <?php 
             if($resource_share_expire_never) 
                 { ?>
-                <option value=""><?php echo $lang["never"]?></option><?php 
+                <option value=""><?php echo htmlspecialchars($lang["never"])?></option><?php 
                 } 
             for ($n=0;$n<=$resource_share_expire_days;$n++)
                 {
@@ -3025,7 +3025,7 @@ function render_share_options($shareopts=array())
         # for this share (the default is to use the current user's user group).
         ?>
         <div class="Question">
-            <label for="groupselect"><?php echo $lang["share_using_permissions_from_user_group"]; ?></label>
+            <label for="groupselect"><?php echo htmlspecialchars($lang["share_using_permissions_from_user_group"]); ?></label>
             <select id="groupselect" name="usergroup" class="stdwidth">
             <?php $grouplist = get_usergroups(true);
             foreach ($grouplist as $group)
@@ -4431,7 +4431,7 @@ function EditNav()
         {?>
         <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape_quoted_data($lang["previous"]); ?>"></a>
    
-        <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo $lang["viewallresults"]?></a>
+        <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo htmlspecialchars($lang["viewallresults"])?></a>
    
         <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape_quoted_data($lang["next"]); ?>"></a>
    
@@ -4487,14 +4487,14 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         <?php
         if($upload_review_mode)
             {
-            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
+            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save_and_auto"]) ?>&nbsp;&nbsp;" />
             <?php
             }
 
         if(!$is_template && $requiredfields)
             {
             ?>
-            <div class="RequiredFieldLabel"><sup>*</sup> <?php echo $lang['requiredfield']; ?></div>
+            <div class="RequiredFieldLabel"><sup>*</sup> <?php echo htmlspecialchars($lang['requiredfield']); ?></div>
             <?php
             }
 
@@ -4545,13 +4545,13 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 			switch ($availableCount)
 				{
 				case 0:
-					echo $lang["are_available-0"];
+					echo htmlspecialchars($lang["are_available-0"]);
 					break;
 				case 1:
-					echo $lang["are_available-1"];
+					echo htmlspecialchars($lang["are_available-1"]);
 					break;
 				default:
-					echo $lang["are_available-2"];
+					echo htmlspecialchars($lang["are_available-2"]);
 					break;
 				}
 			echo ")";
@@ -4599,7 +4599,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
         <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
                 onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));
                 <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('collectionform'));">                
-            <option value="0"><?php echo $lang["select"]; ?></option>
+            <option value="0"><?php echo htmlspecialchars($lang["select"]); ?></option>
         <?php
         // Allow user to move FC category to the root. Because we don't expose the collection type to the user, this will
         // give users the ability to convert between public collection and featured category at root level without access
@@ -4608,7 +4608,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
             {
             $dummy_root_lvl_selected = ($collection["type"] == COLLECTION_TYPE_FEATURED && $parent == 0 ? "selected" : "");
             ?>
-            <option value="root" <?php echo $dummy_root_lvl_selected; ?>><?php echo $lang["featured_collection_root_category"]; ?></option>
+            <option value="root" <?php echo $dummy_root_lvl_selected; ?>><?php echo htmlspecialchars($lang["featured_collection_root_category"]); ?></option>
             <?php
             }
         foreach($featured_collection_categories as $fc_category)
@@ -5802,7 +5802,7 @@ function render_antispam_question()
     <div class="Question">
         <input type="hidden" name="antispamcode" value="<?php echo $rndcode; ?>">
         <input type="hidden" name="antispamtime" value="<?php echo $timestamp; ?>">
-        <label for="antispam"><?php echo $lang["enterantispamcode"]; ?><br>
+        <label for="antispam"><?php echo htmlspecialchars($lang["enterantispamcode"]); ?><br>
             <div id="AntiSpamImage" style="
             margin: 0 0 .1em;
             background: url(data:image/gif;base64,<?php echo base64_encode($imagedata); ?>) top left no-repeat;
@@ -5875,7 +5875,7 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
         </div>
         <div id="iconpicker-container">
             <div class="iconpicker-title">
-                <input type="text" id="iconpicker-filter" placeholder="<?php echo $lang['icon_picker_placeholder'] ?>" onkeyup="filterIcons()">
+                <input type="text" id="iconpicker-filter" placeholder="<?php echo escape_quoted_data($lang['icon_picker_placeholder']) ?>" onkeyup="filterIcons()">
             </div>
             <div class="iconpicker-content">
                 <?php foreach ($font_awesome_icons as $icon_name)

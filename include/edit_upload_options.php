@@ -112,12 +112,12 @@ if ($on_upload || (isset($ref) && $ref<0))
                 
                 <?php if (can_create_collections() && $upload_add_to_new_collection_opt)
                     {
-                    ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option>
+                    ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo htmlspecialchars($lang["createnewcollection"]) ?>)</option>
                     <?php
                     }
                 if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection"))
                     {
-                    ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option>
+                    ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo htmlspecialchars($lang["batchdonotaddcollection"]) ?></option>
                     <?php
                     }                
                 

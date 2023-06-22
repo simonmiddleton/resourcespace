@@ -1524,7 +1524,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         <?php
         }
         ?>
-        <label><?php echo $lang['colour']; ?></label>
+        <label><?php echo htmlspecialchars($lang['colour']); ?></label>
    
         <script src="<?php echo $baseurl; ?>/lib/spectrum/spectrum.js"></script>
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/spectrum/spectrum.css" />

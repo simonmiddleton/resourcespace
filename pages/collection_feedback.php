@@ -61,18 +61,18 @@ if ($errors!="")
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang["sendfeedback"]?></h1>
-<?php if ($done) { ?><p><?php echo $lang["feedbacksent"]?></p><?php } else { ?>
+<h1><?php echo htmlspecialchars($lang["sendfeedback"])?></h1>
+<?php if ($done) { ?><p><?php echo htmlspecialchars($lang["feedbacksent"])?></p><?php } else { ?>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/collection_feedback.php">
     <?php generateFormToken("collection_feedback"); ?>
     <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
     <input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection) ?>">
 
-<p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["download_collection"]?></a></p>
+<p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["download_collection"])?></a></p>
 <?php if ($feedback_resource_select)
 	{
-	?><h2><?php echo $lang["selectedresources"]?>:</h2><?php
+	?><h2><?php echo htmlspecialchars($lang["selectedresources"])?>:</h2><?php
 	# Show thumbnails and allow the user to select resources.
 	$result=do_search("!collection" . $collection,"","resourceid",0,-1,"desc");
 	for ($n=0;$n<count($result);$n++)
@@ -129,7 +129,7 @@ if ($errors!="")
 
 <div class="Question">
 <?php if ($errors!="") { ?><div class="FormError"><?php echo $errors?></div><?php } ?>
-<label for="comment"><?php echo $lang["message"]?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo htmlspecialchars($comment) ?></textarea>
+<label for="comment"><?php echo htmlspecialchars($lang["message"])?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo htmlspecialchars($comment) ?></textarea>
 <div class="clearerleft"> </div>
 </div>
 
@@ -138,11 +138,11 @@ if ($errors!="")
 	# For external users, ask for their name/e-mail in case this has been passed to several users.
 	?>
 	<div class="Question">
-	<label for="name"><?php echo $lang["yourname"]?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars(getval("name","")) ?>">
+	<label for="name"><?php echo htmlspecialchars($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars(getval("name","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<div class="Question">
-	<label for="email"><?php echo $lang["youremailaddress"]; ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+	<label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php
@@ -150,7 +150,7 @@ if ($errors!="")
 ?>
 
 <div class="QuestionSubmit">		
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["send"]?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["send"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 <?php } ?>

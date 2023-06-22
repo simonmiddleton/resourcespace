@@ -102,9 +102,9 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
 	
 include "../include/header.php";
 ?>
-<p style="margin:7px 0 7px 0;padding:0;"><a onClick="return CentralSpaceLoad(this,true);" href="<?php if ($backto!=''){echo $backto;} else { echo $baseurl_short.'pages/search';}?>.php?search=!collection<?php echo urlencode($ref)?>&order_by=<?php echo urlencode($order_by) ?>&col_order_by=<?php echo urlencode($col_order_by) ?>&sort=<?php echo urlencode($sort) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a></p><br />
+<p style="margin:7px 0 7px 0;padding:0;"><a onClick="return CentralSpaceLoad(this,true);" href="<?php if ($backto!=''){echo $backto;} else { echo $baseurl_short.'pages/search';}?>.php?search=!collection<?php echo urlencode($ref)?>&order_by=<?php echo urlencode($order_by) ?>&col_order_by=<?php echo urlencode($col_order_by) ?>&sort=<?php echo urlencode($sort) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresults"])?></a></p><br />
 <div class="BasicsBox">
-<h1><?php echo $lang["editresourcepreviews"]?></h1>
+<h1><?php echo htmlspecialchars($lang["editresourcepreviews"])?></h1>
 <p><?php echo text("introtext")?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit_previews.php">
 <?php generateFormToken("collectionform"); ?>
@@ -113,8 +113,8 @@ include "../include/header.php";
 <?php if (allow_multi_edit($resources,$ref))
     { ?>
     <div class="Question">
-    <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="document.getElementById('collectionform').submit();">
-    <option value=""><?php echo $lang["select"]?></option>
+    <label><?php echo htmlspecialchars($lang["imagecorrection"])?><br/><?php echo htmlspecialchars($lang["previewthumbonly"])?></label><select class="stdwidth" name="tweak" id="tweak" onChange="document.getElementById('collectionform').submit();">
+    <option value=""><?php echo htmlspecialchars($lang["select"])?></option>
     <?php //if ($resource["has_image"]==1) { 
     ?>
     <?php
@@ -123,20 +123,20 @@ include "../include/header.php";
     if (!$image_rotate_reverse_options)
         {
         ?>
-        <option value="rotateclock"><?php echo $lang["rotateclockwise"]?></option>
-        <option value="rotateanti"><?php echo $lang["rotateanticlockwise"]?></option>
+        <option value="rotateclock"><?php echo htmlspecialchars($lang["rotateclockwise"])?></option>
+        <option value="rotateanti"><?php echo htmlspecialchars($lang["rotateanticlockwise"])?></option>
         <?php
         }
     else
         {
         ?>
-        <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
-        <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
+        <option value="rotateanti"><?php echo htmlspecialchars($lang["rotateclockwise"])?></option>
+        <option value="rotateclock"><?php echo htmlspecialchars($lang["rotateanticlockwise"])?></option>
         <?php
         }?>
-    <option value="gammaplus"><?php echo $lang["increasegamma"]?></option>
-    <option value="gammaminus"><?php echo $lang["decreasegamma"]?></option>
-    <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
+    <option value="gammaplus"><?php echo htmlspecialchars($lang["increasegamma"])?></option>
+    <option value="gammaminus"><?php echo htmlspecialchars($lang["decreasegamma"])?></option>
+    <option value="restore"><?php echo htmlspecialchars($lang["recreatepreviews"])?></option>
 
     </select>
     <div class="clearerleft"> </div>
@@ -146,6 +146,6 @@ include "../include/header.php";
 
 </div>
 <?php		
-if ($done){echo $lang['done'];}
+if ($done){echo htmlspecialchars($lang['done']);}
 include "../include/footer.php";
 ?>

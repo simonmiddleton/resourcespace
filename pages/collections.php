@@ -299,11 +299,11 @@ else { ?>
 							jQuery(this)
 								.closest(".ui-dialog")
 								.find(".ui-dialog-title")
-								.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
+								.html("<?php echo escape_quoted_data($lang["trash_bin_delete_dialog_title"]) . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
 						},
 						buttons: {
 							// Confirm removal of this resource from the resolved collection
-							"<?php echo $lang['yes']; ?>": function() {
+							"<?php echo escape_quoted_data($lang['yes']); ?>": function() {
 								var class_of_drag=jQuery(this).data('class_of_drag');
 								var resource_id = jQuery(this).data("resource_id");
 								var collection_id=jQuery(this).data('collection_id');
@@ -325,7 +325,7 @@ else { ?>
 								jQuery(this).dialog('close');
 							},
 							// Cancel resource removal
-							"<?php echo $lang['no']; ?>": function() {
+							"<?php echo escape_quoted_data($lang['no']); ?>": function() {
 								var class_of_drag=jQuery(this).data('class_of_drag');
 								var resource_id = jQuery(this).data("resource_id");
 								var collection_id=jQuery(this).data('collection_id');
@@ -501,7 +501,7 @@ if ($add!="")
         if(!$allowadd)
             {			
             ?>
-            <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
+            <script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
             <?php
             }
         }
@@ -514,7 +514,7 @@ if ($add!="")
             #add to current collection		
             if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getval("size",""))==false)
                 { ?>
-                <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+                <script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
                 }
             else
                 {		
@@ -527,7 +527,7 @@ if ($add!="")
         # Show warning?
         if (isset($collection_share_warning) && $collection_share_warning)
             {
-            ?><script language="Javascript">alert("<?php echo $lang["sharedcollectionaddwarning"]?>");</script><?php
+            ?><script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddwarning"])?>");</script><?php
             }
         }
     }
@@ -553,7 +553,7 @@ if ($remove!="")
         #remove from current collection
         if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
             {
-            ?><script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+            ?><script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
             }
         else
             {
@@ -578,7 +578,7 @@ if ($addsearch!=-1)
 
     if ($usercollection == -$userref || !collection_writeable($usercollection))
         { ?>
-        <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+        <script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
         }
     else
         {
@@ -588,7 +588,7 @@ if ($addsearch!=-1)
             {
             // If collection has been shared externally users with this permission can't add resources
             ?>
-            <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
+            <script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
             <?php
             }
         else
@@ -631,7 +631,7 @@ if ($addsearch!=-1)
                         $warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
                         }
 
-                    ?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
+                    ?><script language="Javascript">styledalert("<?php echo escape_quoted_data($lang["status-warning"]); ?>","<?php echo $warningtext; ?>",600);</script><?php
                     }
                 # Log this
                 daily_stat("Add saved search items to collection",0);
@@ -646,7 +646,7 @@ if ($removesearch!="")
 	{
     if (!collection_writeable($usercollection))
         { ?>
-        <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
+        <script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
         }
     else
         {
@@ -760,30 +760,30 @@ else if ($basket)
 	# ------------------------ Basket Mode ----------------------------------------
 	?>
 	<div id="CollectionMenu">
-	<h2><?php echo $lang["yourbasket"] ?></h2>
+	<h2><?php echo htmlspecialchars($lang["yourbasket"]) ?></h2>
 	<form action="<?php echo $baseurl_short?>pages/purchase.php">
 
 	<?php 
 	if ($count_result==0) 
 	{ ?>
-	<p><?php echo $lang["yourbasketisempty"] ?></p><br /><br /><br />
+	<p><?php echo htmlspecialchars($lang["yourbasketisempty"]) ?></p><br /><br /><br />
 	<?php 
 	} 
 	else 
 	{ ?>
-	<p><?php if ($count_result==1) {echo $lang["yourbasketcontains-1"];} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
+	<p><?php if ($count_result==1) {echo htmlspecialchars($lang["yourbasketcontains-1"]);} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
 
 	<?php  
 	# If they have already selected the size, we can show a total price here.
-	?><br/><?php echo $lang["totalprice"] ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?>
+	?><br/><?php echo htmlspecialchars($lang["totalprice"]) ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?>
 	
 	</p>
 
-	<p style="padding-bottom:10px;"><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["buynow"] ?>&nbsp;&nbsp;&nbsp;" /></p>
+	<p style="padding-bottom:10px;"><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["buynow"]) ?>&nbsp;&nbsp;&nbsp;" /></p>
 	<?php 
 	} ?>
-    <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo LINK_CARET ?><?php echo $lang["hidethumbnails"]?></a>
-    <a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["viewpurchases"]?></a>
+    <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["hidethumbnails"])?></a>
+    <a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["viewpurchases"])?></a>
 	</form>
 	</div>
 	<div id="CollectionSpace" class="CollectionSpace">
@@ -934,11 +934,11 @@ elseif (($k != "" && !$internal_share_access))
         </div>
         <?php
         if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
-            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
+            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a>
         <?php } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
-        <a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
+        <a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a>
         <?php }
-        if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo $lang["sendfeedback"]?></a><?php } ?>
+        if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["sendfeedback"])?></a><?php } ?>
         <?php if ($count_result>0 && checkperm("q"))
             { 
             # Ability to request a whole collection (only if user has restricted access to any of these resources)
@@ -946,12 +946,12 @@ elseif (($k != "" && !$internal_share_access))
             if ($min_access!=0)
                 {
                 ?>
-                <br/><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo $lang["requestall"]?></a>
+                <br/><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["requestall"])?></a>
                 <?php
                 }
             }
         ?>
-        <a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang["hidethumbnails"]?></a>
+        <a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["hidethumbnails"])?></a>
     </div>
     <?php 
     }
@@ -966,11 +966,11 @@ else
         if (!hook("replacecollectiontitle") && !hook("replacecollectiontitlemax"))
             {?>
             <h2 id="CollectionsPanelHeader">
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php"><?php echo $lang["mycollections"]?></a>
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php"><?php echo htmlspecialchars($lang["mycollections"])?></a>
             </h2><?php
             }?>
             <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
-                <div style="padding:0;margin:0;"><?php echo $lang["currentcollection"]?>: 
+                <div style="padding:0;margin:0;"><?php echo htmlspecialchars($lang["currentcollection"])?>: 
                     <br />
                     <select name="collection" id="collection" aria-label="<?php echo escape_quoted_data($lang["collections"]) ?>"
 
@@ -1021,18 +1021,18 @@ else
                         elseif($validcollection==0)
                             {
                             ?>
-                            <option selected><?php echo $lang["error-collectionnotfound"] ?></option>
+                            <option selected><?php echo htmlspecialchars($lang["error-collectionnotfound"]) ?></option>
                             <?php  
                             }
                         }
                     
                     if (can_create_collections())
                         {?>
-                        <option value="new">(<?php echo $lang["createnewcollection"]?>)</option><?php
+                        <option value="new">(<?php echo htmlspecialchars($lang["createnewcollection"])?>)</option><?php
                         }?>
                     </select>
-                    <br /><small><?php echo $count_result . " "; if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];} ?></small>
-                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo $lang['entercollectionname']?>" class="SearchWidth">
+                    <br /><small><?php echo $count_result . " "; if ($count_result==1){echo htmlspecialchars($lang["item"]);} else {echo htmlspecialchars($lang["items"]);} ?></small>
+                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo escape_quoted_data($lang['entercollectionname'])?>" class="SearchWidth">
                 </div>			
             </form>
 
@@ -1050,7 +1050,7 @@ else
         hook('collectiontool');
         ?>
         <li>
-            <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang['hidethumbnails']; ?></a>
+            <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang['hidethumbnails']); ?></a>
         </li>
         </ul>
     </div>
@@ -1227,7 +1227,7 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 			</tr>
 		</table>
 		<div class="CollectionPanelInfo">
-			<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>"><?php echo $lang['viewall']?>...</a>
+			<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>"><?php echo htmlspecialchars($lang['viewall'])?>...</a>
 		</div>
 	</div>
 	<?php
@@ -1263,22 +1263,22 @@ if (count($addarray)>0 && $addarray[0]!="")
 		{
 		# ------------------------ Basket Mode ----------------------------------------
 		?>
-		<div id="CollectionMinTitle"><h2><?php echo $lang["yourbasket"] ?></h2></div>
+		<div id="CollectionMinTitle"><h2><?php echo htmlspecialchars($lang["yourbasket"]) ?></h2></div>
 		<div id="CollectionMinRightNav" class="CollectionBasket">
 		<form action="<?php echo $baseurl_short?>pages/purchase.php">
 		<ul>
 		
 		<?php if ($count_result==0) { ?>
-		<li><?php echo $lang["yourbasketisempty"] ?></li>
+		<li><?php echo htmlspecialchars($lang["yourbasketisempty"]) ?></li>
 		<?php } else { 
 
 		# If they have already selected the size, we can show a total price here.
-		?><li><?php echo $lang["totalprice"] ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?></li>
-		<li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection)?>"><?php echo $lang["viewall"]?></a></li>
-		<li><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["buynow"] ?>&nbsp;&nbsp;&nbsp;" /></li>
+		?><li><?php echo htmlspecialchars($lang["totalprice"]) ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?></li>
+		<li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection)?>"><?php echo htmlspecialchars($lang["viewall"])?></a></li>
+		<li><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($lang["buynow"]) ?>&nbsp;&nbsp;&nbsp;" /></li>
 		<?php }
-        ?><li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang["showthumbnails"]?></a></li>
-		<li><a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewpurchases"]?></a></li>
+        ?><li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["showthumbnails"])?></a></li>
+		<li><a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["viewpurchases"])?></a></li>
 		</ul>
 		</form>
 
@@ -1298,11 +1298,11 @@ if (count($addarray)>0 && $addarray[0]!="")
             {
             if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result) > 0)
                 {?>
-                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo $lang["action-download"]?></a></li>
+                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo htmlspecialchars($lang["action-download"])?></a></li>
                 <?php
                 }
             if ($feedback)
-                {?><li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo $lang["sendfeedback"]?></a></li><?php
+                {?><li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo htmlspecialchars($lang["sendfeedback"])?></a></li><?php
                 }
             if ($count_result>0)
                 { 
@@ -1315,7 +1315,7 @@ if (count($addarray)>0 && $addarray[0]!="")
                     <?php
                     }
                 }?>
-            <li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang["showthumbnails"]?></a></li><?php
+            <li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["showthumbnails"])?></a></li><?php
             } # end hook("replaceanoncollectiontools") ?>
 	</div>
 	<?php 
@@ -1324,7 +1324,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 		{
 		?>
 		<div class="ToggleThumbsContainer">
-			<a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo $lang['showthumbnails']; ?></a>
+			<a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang['showthumbnails']); ?></a>
 		</div>
 
 		<?php hook('aftertogglethumbs'); ?>
@@ -1342,7 +1342,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 		if(!hook('replace_collectionmindroptitle'))
 			{
 			?>
-		<div id="CollectionMinDropTitle"><?php echo $lang['currentcollection']; ?>:&nbsp;</div>
+		<div id="CollectionMinDropTitle"><?php echo htmlspecialchars($lang['currentcollection']); ?>:&nbsp;</div>
     		<?php
     		} # end hook replace_collectionmindroptitle
     		?>
@@ -1351,7 +1351,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 	 			  id="colselect2" 
 	 			  onsubmit="newcolname=encodeURIComponent(jQuery('#entername2').val());CollectionDivLoad('<?php echo $baseurl_short; ?>pages/collections.php?thumbs=hide&collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k); ?>&search=<?php echo urlencode($search)?>&entername='+newcolname);return false;">
 				<div class="MinSearchItem" id="MinColDrop">
-					<input type=text id="entername2" name="entername" placeholder="<?php echo $lang['entercollectionname']; ?>" style="display:inline;display:none;" class="SearchWidthExp">
+					<input type=text id="entername2" name="entername" placeholder="<?php echo escape_quoted_data($lang['entercollectionname']); ?>" style="display:inline;display:none;" class="SearchWidthExp">
 				</div>
 				<script>jQuery('#collection').clone().attr('id','collection2').attr('onChange',"if(document.getElementById('collection2').value=='new'){document.getElementById('entername2').style.display='inline';document.getElementById('entername2').focus();return false;}<?php if (!checkperm('b')){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k) ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url ?>');<?php } else { ?>document.getElementById('colselect2').submit();<?php } ?>").prependTo('#MinColDrop');</script>
 	  		</form>
@@ -1362,7 +1362,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 	?>
 	<!--Collection Count-->	
 	<?php if(!hook("replace_collectionminitems")){?>
-	<div id="CollectionMinitems"><strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];}?></div>
+	<div id="CollectionMinitems"><strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo htmlspecialchars($lang["item"]);} else {echo htmlspecialchars($lang["items"]);}?></div>
 	<?php } # end hook replace_collectionminitems ?>
 	</div>
 

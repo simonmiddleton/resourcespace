@@ -29,7 +29,7 @@ include "../../include/header.php";
 
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
-  <h1><?php echo $lang["manageresearchrequests"]?></h1>
+  <h1><?php echo htmlspecialchars($lang["manageresearchrequests"])?></h1>
   <p><?php echo text("introtext");render_help_link('resourceadmin/user-research-requests');?></p>
  
 <?php 
@@ -48,13 +48,13 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=ref&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["researchid"]?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=name&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["nameofproject"]?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=created&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["date"]?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=status&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["status"]?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=assigned_to&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["assignedto"]?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=collection&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["collectionid"]?></a></td>
-<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=ref&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["researchid"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=name&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["nameofproject"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=created&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["date"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=status&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["status"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=assigned_to&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["assignedto"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=collection&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["collectionid"])?></a></td>
+<td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
 </tr>
 
 <?php
@@ -77,17 +77,17 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 
 </table>
 </div>
-<div class="BottomInpageNav"><div class="InpageNavLeftBlock"><a href="<?php echo $baseurl_short?>pages/research_request.php?assign=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["createresearchforuser"]?></a></div><?php pager(false); ?></div>
+<div class="BottomInpageNav"><div class="InpageNavLeftBlock"><a href="<?php echo $baseurl_short?>pages/research_request.php?assign=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["createresearchforuser"])?></a></div><?php pager(false); ?></div>
 </div>
 
 
 <div class="BasicsBox">
     <form method="GET" action="<?php echo $baseurl_short?>pages/team/team_research.php">
 		<div class="Question">
-			<label for="findpublic"><?php echo $lang["searchresearchrequests"]?></label>
+			<label for="findpublic"><?php echo htmlspecialchars($lang["searchresearchrequests"])?></label>
 			<div class="tickset">
 			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo $find?>" maxlength="100" class="shrtwidth" /></div>
-			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
+			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
 			</div>
 			<div class="clearerleft"> </div>
 		</div>

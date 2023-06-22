@@ -15,19 +15,19 @@ if (count($collections)!=0){
         <div class="RecordBox">
         <div class="RecordPanel">
         <div id="AssociatedCollections"> 
-        <div class="Title"><?php echo $lang['associatedcollections']?></div>
+        <div class="Title"><?php echo htmlspecialchars($lang['associatedcollections'])?></div>
 
 <div class="Listview nopadding" >
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["collectionname"]?></td>
-<td><?php echo $lang["owner"]?></td>
-<td><?php echo $lang["id"]?></td>
-<td><?php echo $lang["created"]?></td>
-<td><?php echo $lang["itemstitle"]?></td>
-<td><?php echo $lang["access"]?></td>
+<td><?php echo htmlspecialchars($lang["collectionname"])?></td>
+<td><?php echo htmlspecialchars($lang["owner"])?></td>
+<td><?php echo htmlspecialchars($lang["id"])?></td>
+<td><?php echo htmlspecialchars($lang["created"])?></td>
+<td><?php echo htmlspecialchars($lang["itemstitle"])?></td>
+<td><?php echo htmlspecialchars($lang["access"])?></td>
 <?php hook("beforecollectiontoolscolumnheader");?>
-<td><div class="ListTools"><?php echo $lang["actions"]?></div></td>
+<td><div class="ListTools"><?php echo htmlspecialchars($lang["actions"])?></div></td>
 </tr>
 <?php
 
@@ -44,16 +44,16 @@ for ($n=0;$n<count($collections);$n++)
     switch($collections[$n]["type"])
         {
         case COLLECTION_TYPE_PUBLIC:
-            echo $lang["public"];
+            echo htmlspecialchars($lang["public"]);
             break;
 
         case COLLECTION_TYPE_FEATURED:
-            echo $lang["theme"];
+            echo htmlspecialchars($lang["theme"]);
             break;
 
         case COLLECTION_TYPE_STANDARD:
         default:
-            echo $lang["private"];
+            echo htmlspecialchars($lang["private"]);
             break;
         }
     ?></td>

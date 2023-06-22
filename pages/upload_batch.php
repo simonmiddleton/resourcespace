@@ -1929,7 +1929,7 @@ hook('plupload_before_status');
 <div class="BasicsBox" >
     <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo htmlspecialchars($lang["log"]); ?></h2>
     <div class="CollapsibleSection" id="UploadLogSection">
-        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
+        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo htmlspecialchars($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
     </div> <!-- End of UploadLogSection -->
 </div>
 </div>

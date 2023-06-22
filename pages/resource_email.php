@@ -65,9 +65,9 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoshareresource"]; ?></a></p>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoshareresource"]); ?></a></p>
 
-<h1><?php echo $lang["emailresourcetitle"]?></h1>
+<h1><?php echo htmlspecialchars($lang["emailresourcetitle"])?></h1>
 
 <p><?php echo text("introtext");render_help_link("user/sharing-resources");?></p>
 
@@ -75,18 +75,18 @@ include "../include/header.php";
 <input type=hidden name=ref value="<?php echo htmlspecialchars($ref)?>">
 <?php generateFormToken("resourceform"); ?>
 <div class="Question">
-<label><?php echo $lang["resourcetitle"]?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource["field".$view_title_field]))?></div>
+<label><?php echo htmlspecialchars($lang["resourcetitle"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource["field".$view_title_field]))?></div>
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo $resource["ref"]?></div>
+<label><?php echo htmlspecialchars($lang["resourceid"])?></label><div class="Fixed"><?php echo $resource["ref"]?></div>
 <div class="clearerleft"> </div>
 </div>
 <?php
 hook("resemailmoreinfo"); ?>
 <div class="Question">
-<label for="message"><?php echo $lang["message"]?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
+<label for="message"><?php echo htmlspecialchars($lang["message"])?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
 <div class="clearerleft"> </div>
 </div>
 
@@ -106,7 +106,7 @@ include "../include/user_select.php"; ?>
 
 <?php if ($list_recipients){?>
 <div class="Question">
-<label for="list_recipients"><?php echo $lang["list-recipients-label"]; ?></label><input type=checkbox id="list_recipients" name="list_recipients">
+<label for="list_recipients"><?php echo htmlspecialchars($lang["list-recipients-label"]); ?></label><input type=checkbox id="list_recipients" name="list_recipients">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -117,7 +117,7 @@ include "../include/user_select.php"; ?>
 	if(get_edit_access($ref,$resource['archive'],false,$resource))
 		{?>
 		<div class="Question">
-		<label for="grant_internal_access"><?php echo $lang["internal_share_grant_access"] ?></label>
+		<label for="grant_internal_access"><?php echo htmlspecialchars($lang["internal_share_grant_access"]) ?></label>
 		<input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
 		<div class="clearerleft"> </div>
 		</div>
@@ -140,7 +140,7 @@ if(!$user_select_internal)
 <?php if ($useremail!="") { // Only allow this option if there is an email address available for the user.
 ?>
 <div class="Question">
-<label for="use_user_email"><?php echo $lang["emailfromuser"].$useremail.". ".$lang["emailfromsystem"].$email_from ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
+<label for="use_user_email"><?php echo htmlspecialchars($lang["emailfromuser"]).$useremail.". ".$lang["emailfromsystem"].$email_from ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -157,7 +157,7 @@ if(!$user_select_internal)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">		
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["emailresourcetitle"]?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
 </div>
 <?php } // end replaceemailsubmitbutton ?>
 

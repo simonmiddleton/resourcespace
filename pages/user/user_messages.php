@@ -27,8 +27,8 @@ include "../../include/header.php";
 <div class="BasicsBox">
     <div class="VerticalNav">
         <ul>
-            <h1><?php echo $lang["mymessages"]?></h1>
-            <p><?php echo $lang["mymessages_introtext"];render_help_link('user/messages'); ?></p>
+            <h1><?php echo htmlspecialchars($lang["mymessages"])?></h1>
+            <p><?php echo htmlspecialchars($lang["mymessages_introtext"]);render_help_link('user/messages'); ?></p>
 
             <?php if ($user_preferences) { ?>
                 <li>
@@ -52,7 +52,7 @@ include "../../include/header.php";
                 </div> <!-- End of VerticalNav -->
                 </div> <!-- End of BasicsBox -->
                 <?php
-                echo $lang['mymessages_youhavenomessages'];
+                echo htmlspecialchars($lang['mymessages_youhavenomessages']);
                 include "../../include/footer.php";
                 return;
                 }
@@ -89,7 +89,7 @@ include "../../include/header.php";
  
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
-            <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
+            <div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["resultsdisplay"])?>:
                 <?php 
                 for ($n=0; $n<count($list_display_array); $n++)
                     {
@@ -110,13 +110,13 @@ include "../../include/header.php";
  
                 if ($per_page==99999)
                     { ?>
-                    <span class="Selected"><?php echo $lang["all"]?></span>
+                    <span class="Selected"><?php echo htmlspecialchars($lang["all"])?></span>
                     <?php
                     }
                 else
                     { ?>
                     <a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["all"]?>
+                        <?php echo htmlspecialchars($lang["all"])?>
                     </a>
                     <?php
                     }
@@ -129,13 +129,13 @@ include "../../include/header.php";
 
     <div class="ListViewBulkActions">
         <span id="messages-delete-selected" class="DisabledLink">
-            <i class="fas fa-trash-alt"></i><?php echo $lang["action-delete"]; ?>
+            <i class="fas fa-trash-alt"></i><?php echo htmlspecialchars($lang["action-delete"]); ?>
                 </span>
         <span id="messages-mark-selected-read" class="DisabledLink">
-            <i class="fas fa-envelope-open"></i><?php echo $lang["mymessages_markread"]; ?>
+            <i class="fas fa-envelope-open"></i><?php echo htmlspecialchars($lang["mymessages_markread"]); ?>
                 </span>
         <span id="messages-mark-selected-unread" class="DisabledLink">
-            <i class="fas fa-envelope"></i><?php echo $lang["mymessages_markunread"]; ?>
+            <i class="fas fa-envelope"></i><?php echo htmlspecialchars($lang["mymessages_markunread"]); ?>
                 </span>
     </div>
 
@@ -145,7 +145,7 @@ include "../../include/header.php";
                 <td><input type="checkbox" id="messages-select-all"></td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=created&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["created"]?>
+                        <?php echo htmlspecialchars($lang["created"])?>
                     </a>
                     <?php if ($msg_order_by == "created") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -153,7 +153,7 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=from&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["from"]?>
+                        <?php echo htmlspecialchars($lang["from"])?>
                     </a>
                     <?php if ($msg_order_by == "from") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -161,18 +161,18 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=fullname&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["fullname"]?>
+                        <?php echo htmlspecialchars($lang["fullname"])?>
                     </a>
                     <?php if ($msg_order_by == "fullname") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
                 </td>
                 <?php if ($messages_actions_usergroup) { ?>
-                    <td><?php echo $lang["property-user_group"]; ?></td>
+                    <td><?php echo htmlspecialchars($lang["property-user_group"]); ?></td>
                 <?php } ?>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=message&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["message"]?>
+                        <?php echo htmlspecialchars($lang["message"])?>
                     </a>
                     <?php if ($msg_order_by == "message") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -180,7 +180,7 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=expires&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["expires"]?>
+                        <?php echo htmlspecialchars($lang["expires"])?>
                     </a>
                     <?php if ($msg_order_by == "expires") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -188,13 +188,13 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=seen&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo $lang["seen"]?>
+                        <?php echo htmlspecialchars($lang["seen"])?>
                     </a>
                     <?php if ($msg_order_by == "seen") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
                 </td>
-                <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                <td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
             </tr>
             <?php
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)

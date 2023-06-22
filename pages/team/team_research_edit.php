@@ -30,7 +30,7 @@ if (!$research)
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["editresearchrequest"];render_help_link('resourceadmin/user-research-requests');?></h1>
+<h1><?php echo htmlspecialchars($lang["editresearchrequest"]);render_help_link('resourceadmin/user-research-requests');?></h1>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/team/team_research_edit.php" onSubmit="return CentralSpacePost(this,true);">
     <?php generateFormToken("team_research_edit"); ?>
@@ -64,7 +64,7 @@ include "../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 <?php if (!hook("replaceresearcheditresourcetypes")){?>
-	<div class="Question"><label><?php echo $lang["resourcetypes"]?></label><div class="Fixed">
+	<div class="Question"><label><?php echo htmlspecialchars($lang["resourcetypes"])?></label><div class="Fixed">
 	<?php $first=true;$set=explode(", ",$research["resource_types"]);$types=get_resource_types();for ($n=0;$n<count($types);$n++) {if (in_array($types[$n]["ref"],$set)) {if (!$first) {echo ", ";}echo htmlspecialchars($types[$n]["name"]);$first=false;}} ?>
 	</div>
 	<div class="clearerleft"> </div></div>
@@ -124,7 +124,7 @@ for ($n=0;$n<count($users);$n++)
 
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["copyexistingresources"])?></label>
-<input name="copyexisting" type="checkbox" value="yes"><b><?php echo $lang["yes"]?></b> <?php echo htmlspecialchars($lang["typecollectionid"])?><br/><input name="copyexistingref" type="text" class="shrtwidth">
+<input name="copyexisting" type="checkbox" value="yes"><b><?php echo htmlspecialchars($lang["yes"])?></b> <?php echo htmlspecialchars($lang["typecollectionid"])?><br/><input name="copyexistingref" type="text" class="shrtwidth">
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["ticktodeletethisresearchrequest"])?></label>
