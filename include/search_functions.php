@@ -2642,7 +2642,7 @@ function get_simple_search_fields()
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
    
     # First get all the fields
-    $allfields=get_resource_type_fields("","resource_type,order_by");
+    $allfields=get_resource_type_fields("","global,order_by");
     
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
@@ -2658,7 +2658,7 @@ function get_simple_search_fields()
             # Must be either indexed or a fixed list type
             ($allfields[$n]["keywords_index"] == 1 || in_array($allfields[$n]["type"],$FIXED_LIST_FIELD_TYPES))
         &&    
-            metadata_field_view_access($allfields[$n]["ref"]) && !checkperm("T" . $allfields[$n]["resource_type"] ))
+            metadata_field_view_access($allfields[$n]["ref"]))
             {
             $allfields[$n]["title"] = lang_or_i18n_get_translated($allfields[$n]["title"], "fieldtitle-");            
             $return[] = $allfields[$n];

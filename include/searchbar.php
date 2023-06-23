@@ -557,9 +557,9 @@ elseif($restypes=='')
     ?>
     <script type="text/javascript">
 
-    function FilterBasicSearchOptions(clickedfield,resourcetype)
+    function FilterBasicSearchOptions(clickedfield,resourcetypes)
         {
-        if (resourcetype!=0)
+        if (resourcetypes!=0)
             {
             // When selecting resource type specific fields, automatically untick all other resource types, because selecting something from this field will never produce resources from the other resource types.
             
@@ -570,7 +570,12 @@ elseif($restypes=='')
             for ($n=0;$n<count($types);$n++)
                 {
                 ?>
-                if (resourcetype!=<?php echo $types[$n]["ref"]?>) {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);} else {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', true);}
+                if (resourcetypes.indexOf(<?php echo $types[$n]["ref"]?>) == -1) {
+                    jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);
+                }
+                else {
+                    jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', true);
+                }
                 <?php
                 }
                 ?>
@@ -638,11 +643,20 @@ elseif($restypes=='')
               && ( empty($simple_search_display_condition) || (!empty($simple_search_display_condition) && !in_array($fields[$n]['ref'],$simple_search_display_condition))  )  )
                 {
                 // Process resource type checkboxes, whether checked or unchecked 
-                if ($fields[$n]["resource_type"]!=0) 
-                    { 
-                    ?>
-                    if (document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>') !== null && !jQuery('#TickBox<?php echo $fields[$n]["resource_type"] ?>').prop('checked'))
-                        { 
+                if ($fields[$n]["global"]!=1) 
+                    {
+                    echo "hidethisfield=false;\n";
+                    foreach(explode(",",$fields[$n]["resource_types"]) as $restype)
+                        {?>
+                        if (document.getElementById('TickBox<?php echo $restype ?>') !== null && !jQuery('#TickBox<?php echo $restype ?>').prop('checked'))
+                            {
+                            hidethisfield=true;
+                            }
+                        <?php
+                        }?>
+
+                    if(hidethisfield)
+                        {
                         // Process unchecked element
                         ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
                         document.getElementById(ssearchfieldname).style.display='none';
@@ -712,11 +726,10 @@ elseif($restypes=='')
                             ssearchhiddenfield.splice(ssindex, 1);
                             }
                         }
-
-                <?php
+                    <?php
+                    }
                 }
             }
-        }
         ?>
 
         // Save the hidden field names for use when searchbar is redisplayed
@@ -733,7 +746,7 @@ elseif($restypes=='')
     # Reset the data in each of the searchfields including global 
     for ($n=0;$n<count($fields);$n++)
         {
-        if ($fields[$n]["resource_type"]==0) 
+        if ($fields[$n]["global"]==1) 
             {
             ?>
             if (includeglobals) 
@@ -799,7 +812,7 @@ elseif($restypes=='')
                 }
             }
 
-            if ($fields[$n]["resource_type"]==0) 
+            if ($fields[$n]["global"]==1) 
                 {
                 ?>
                 }
