@@ -39,6 +39,15 @@ unset($unoconv_path);
 // Create file to sync
 copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_path . "teststatic.jpg");
 
+// Required for test L ($nogo)
+$nogo = '[to_skip]';
+$test_nogo_path = $syncdir . "to_skip/";
+if (!file_exists($test_nogo_path))
+    {
+    mkdir($test_nogo_path,0777,true);
+    }
+copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_nogo_path . "skipped.jpg");
+
 // Required for test C 
 $staticsync_folder_structure=true;
 
@@ -217,6 +226,14 @@ if(!is_array($alts_k)
     )
     {
     echo "Test K failed: \$staticsync_alt_suffix_array failed - ";
+    return false;
+    }
+
+// Test L - $nogo : Confirm resource was not created from "skipped.jpg"
+$results=do_search("skipped");
+if (is_array($results) && count($results) > 0)
+    {
+    echo "Test L failed: File in \$nogo location was imported - ";
     return false;
     }
 
