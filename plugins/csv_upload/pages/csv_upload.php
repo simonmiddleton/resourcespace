@@ -596,13 +596,17 @@ switch($csvstep)
                             echo  ">" . htmlspecialchars(i18n_get_translated($field["title"]));
                             if($field["global"] !== 1)
                                 {
-                                $fieldrestypes = explode(",",$field["resource_types"]);
+                                $fieldrestypes = explode(",",(string)$field["resource_types"]);
                                 $fieldrestypenames = [];
                                 foreach($fieldrestypes as $fieldrestype)
                                     {
                                     $fieldrestypenames[] = $resource_types[$fieldrestype]["name"];
                                     }
-                                echo "(" .  implode(",",$fieldrestypenames) . ")";
+                                if(count($fieldrestypes) < count($restypearr)-1)
+                                    {
+                                    // Don't show this if they are linked to all but one resource types
+                                    echo " (" .  implode(",",$fieldrestypenames) . ")";
+                                    }
                                 }
                             echo "</option>\n";
                             }
