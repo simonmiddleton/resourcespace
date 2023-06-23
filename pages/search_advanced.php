@@ -16,7 +16,7 @@ $archive=implode(",",$selected_archive_states);
 $archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
 
 # Selectedtypes is a list of (resource type) checkboxes which are checked
-# Selectedtypes can also contain Global and Media which are virtual checkboxes which are always considered to be checked
+# Selectedtypes can also contain FeaturedCollections if $search_includes_themes = true
 $selectedtypes=get_selectedtypes();
 
 $access = getval("access", null, true);
@@ -242,10 +242,12 @@ var resTypes=Array();
 <?php
 
 $types=get_resource_types();
-
 for ($n=0;$n<count($types);$n++)
 	{
-	echo "resTypes[" .  $n  . "]=" . $types[$n]["ref"] . ";";
+    if(!in_array( $types[$n]["ref"],$hide_resource_types))
+        {
+        echo "resTypes[" .  $n  . "]=" . $types[$n]["ref"] . ";";
+        }
 	}
 ?>
 
@@ -296,6 +298,7 @@ jQuery(document).ready(function()
         // Process checkbox change from unchecked to checked
         if (jQuery(this).is(":checked")) {
             if (id=="Global") {
+                // Global checked
                 selectedtypes=["Global"];
                 // Global has been checked, check all other checkboxes
                 jQuery('.SearchTypeItemCheckbox').prop('checked',true);
@@ -322,9 +325,14 @@ jQuery(document).ready(function()
                 advSearchShowHideSection('Media',false);
             }
             else {
+                // Standard resource type checked
                 selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != "FeaturedCollections";});
+                if(selectedtypes.length == resTypes.length)
+                    {
+                    selectedtypes = ["Global"];
+                    }
                 selectedtypes.push(id);
-                console.debug("Showing fields for selected types" + selectedtypes);
+                console.debug("Showing fields for selected types: " + selectedtypes);
                 jQuery('#SearchGlobal').prop('checked',false);
                 jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',false);
 
@@ -338,12 +346,13 @@ jQuery(document).ready(function()
                 jQuery('.QuestionSearchRestypeSpec').hide();
                 validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
                 jQuery(validselector).show();
-
                 checkHideTypeSpecific();
             }
         }
         else { // Process checkbox change from checked to unchecked
             if (id=="Global") {
+                // Global unchecked
+                selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != "Global";});
                 console.debug("Showing fields for selected types");
                 selectedtypes=[];
                 jQuery('.SearchTypeItemCheckbox').prop('checked',false);
@@ -363,10 +372,13 @@ jQuery(document).ready(function()
                 checkHideTypeSpecific();
             }
             else {
+                // Standard resource type unchecked
                 jQuery('#SearchGlobal').prop('checked',false);
+                if(selectedtypes=="Global") {
+                    // Need to set all other types and unset this one
+                    selectedtypes = resTypes;
+                    }
                 selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != id;});
-                console.debug("Showing fields for selected types" + selectedtypes);
-
                 advSearchShowHideSection('Global',true);
                 advSearchShowHideSection('Restype',true);
                 advSearchShowHideSection('FeaturedCollections',false);
