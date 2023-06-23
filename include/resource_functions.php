@@ -7874,7 +7874,6 @@ function get_fields($field_refs)
                order_by,
                keywords_index,
                partial_index,
-               resource_type,
                resource_column,
                display_field,
                use_for_similar,
@@ -7921,14 +7920,6 @@ function get_fields($field_refs)
             $return[] = $field;
             }
         }
-
-    /*for($n = 0; $n < count($fields); $n++)
-        {
-        if(metadata_field_view_access($fields[$n]["ref"]))
-            {
-            $return[]=$fields[$n];
-            }
-        }*/
 
     return $return;
     }
