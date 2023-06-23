@@ -7,7 +7,7 @@ type,int(11),Field type. See include/definitions.php
 order_by,int(11),Metadata field order defined by administrators.
 keywords_index,int(11),Set if values of this field should be indexed.
 partial_index,int(11),Allows searching and matching algorithms to check only parts of this field values.
-resource_type,int(11),Resource type specific field. Use Global if it's a general use metadata field (ie applies to all resource types).
+global,int(1),Set to 1 if field is applicable to all resource types. If set to 0 then mappings are stored in resource_type_field_resource_type. Replaces the old resource_type column.
 resource_column,varchar(50),Points to a resource table column to keep it up to date. Deprecated?
 display_field,int(11),Determines if a field is visible on the resource view page
 use_for_similar,int(11),Means the field is available to help users find similar resources
