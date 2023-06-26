@@ -47,31 +47,35 @@ if (getval("save","")!="" && enforcePostRequest(false))
     log_activity(null,LOG_CODE_EDITED,$allowed_extensions,'resource_type','allowed_extensions',$ref);
     log_activity(null,LOG_CODE_EDITED,$tab,'resource_type','tab',$ref);
 
-    if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
+    if($execution_lockout) # Not allowed to save PHP if execution_lockout set
+        {
+        ps_query(
+            "UPDATE resource_type
+                SET `name` = ?, 
+                allowed_extensions = ?, tab = ?, push_metadata = ?, inherit_global_fields = ?, colour = ?, icon = ?
+                WHERE ref = ?",
+            [
+            's', $name,
+            's', $allowed_extensions, 'i', $tab ?: null, 'i', $push_metadata, 'i', $inherit_global_fields, 'i', $colour, 's', $icon, 'i', $ref
+            ]
+        );
+        }
+    else
+        {
+        ps_query(
+            "UPDATE resource_type
+                SET `name` = ?,
+                    config_options = ?,
+                    allowed_extensions = ?, tab = ?, push_metadata = ?, inherit_global_fields = ?, colour = ?, icon = ?
+                WHERE ref = ?",
+            [
+            's', $name,
+            's', $config_options,
+            's', $allowed_extensions, 'i', $tab ?: null, 'i', $push_metadata, 'i', $inherit_global_fields, 'i', $colour, 's', $icon, 'i', $ref
+            ]
+        );
+        }
 
-    ps_query(
-        "UPDATE resource_type
-            SET `name` = ?,
-                config_options = ?,
-                allowed_extensions = ?,
-                tab = ?,
-                push_metadata = ?,
-                inherit_global_fields = ?,
-                colour = ?,
-                icon = ?
-          WHERE ref = ?",
-        [
-        's', $name,
-        's', $config_options,
-        's', $allowed_extensions,
-        'i', $tab ?: null,
-        'i', $push_metadata,
-        'i', $inherit_global_fields,
-        'i', $colour,
-        's', $icon,
-        'i', $ref,
-        ]
-    );
     clear_query_cache("schema");
 
     redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
