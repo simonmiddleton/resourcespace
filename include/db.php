@@ -300,9 +300,22 @@ if (isset($language) && $language=="us") {$language="en-US";}
 include dirname(__FILE__)."/../languages/en.php";
 if ($language!="en")
 	{
-	if (substr($language, 2, 1)=='-' && substr($language, 0, 2)!='en')
-	@include dirname(__FILE__)."/../languages/" . safe_file_name(substr($language, 0, 2)) . ".php";
-	@include dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+    if (substr($language, 2, 1)!='-')
+        {
+        $language = substr($language, 0, 2);
+        }
+    
+    $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        include dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        }
+    catch (Throwable $e)
+        {
+        debug("Unable to include language file $language.php");
+        }
+    $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 	}
 
 # Register all plugins
