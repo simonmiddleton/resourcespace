@@ -472,7 +472,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         array_push ($messages,$logtext);
         
 		$cell_count=-1;
-		
 
         // Update resource type if required
         if($csv_set_options["update_existing"] && $resource_type_set != 0)
@@ -638,6 +637,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                             $error_count++;
                             $logtext = " Error: \"{$field_name}\" - the value \"{$cell_value_item}\" is not in the metadata field option list - line {$line_count}";
                             csv_upload_log($logfile,$logtext);
+                            array_push ($messages,$logtext);
                             continue 2;
                             }
                         }

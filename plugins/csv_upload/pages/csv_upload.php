@@ -594,7 +594,7 @@ switch($csvstep)
                                     echo " selected ";
                                 }
                             echo  ">" . htmlspecialchars(i18n_get_translated($field["title"]));
-                            if($field["global"] !== 1)
+                            if((int)$field["global"] !== 1)
                                 {
                                 $fieldrestypes = explode(",",(string)$field["resource_types"]);
                                 $fieldrestypenames = [];
