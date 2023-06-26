@@ -3107,6 +3107,8 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
 */
 function generate_featured_collection_image_urls(array $resource_refs, string $size)
     {
+    global $baseurl;
+
     $images = array();
 
     $refs_list = array_filter($resource_refs, 'is_numeric');
@@ -3115,7 +3117,7 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
         return $images;
         }
 
-    $refs_rtype = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")", ps_param_fill($refs_list,"i"),'featured_collections');
+    $refs_rtype = ps_query("SELECT ref, resource_type, file_extension FROM resource WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")", ps_param_fill($refs_list,"i"),'featured_collections');
 
     foreach($refs_rtype as $ref_rt)
         {
@@ -3126,6 +3128,11 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
             {
             $images[] = get_resource_path($ref, false, $size, false);
             }
+        }
+
+    if(count($images) == 0 && count($refs_rtype) != 0)
+        {
+        $images[] = $baseurl . '/gfx/' . get_nopreview_icon($refs_rtype[0]['resource_type'],$refs_rtype[0]['file_extension'],true);
         }
 
     return $images;
