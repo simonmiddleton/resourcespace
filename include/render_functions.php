@@ -810,7 +810,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 {
                     jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                     {
-                        FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);
+                        FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_types"]) ?>);
                     });
                 });
             </script>
