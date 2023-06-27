@@ -27,13 +27,14 @@ ps_query("INSERT INTO resource_type_field_resource_type (resource_type_field,res
 $noglobals = ps_array("SELECT ref value FROM resource_type WHERE inherit_global_fields=0");
 if(count($noglobals) == 0)
     {
-    // All resource types inherit ther global fields
+    // All resource types inherit the global fields
     // If resource_type is 0 or 999, global is 1. For all higher values of resource_type, global is zero.
     ps_query("UPDATE resource_type_field SET global=IF(resource_type=999,1,1-LEAST(1,resource_type))");
     }
 else
     {
     // No global flags can be set if any resource type does not inherit the global fields (this option is now removed from the interface)
+    ps_query("UPDATE resource_type_field SET global=0");
     $allrestypes = get_resource_types();
     $globalrestypes = array_diff(array_column($allrestypes,"ref"),$noglobals);    
     $globalfields = ps_array("SELECT ref value FROM resource_type_field WHERE resource_type=0 OR resource_type=999");
@@ -52,6 +53,5 @@ else
         ps_query("INSERT INTO resource_type_field_resource_type (resource_type_field,resource_type) VALUES " . implode(",",$addvals));
         }
     }
-
-
+clear_query_cache("schema");
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Finished decoupling of resource types and fields to enable multi type support!");
