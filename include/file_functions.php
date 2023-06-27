@@ -221,11 +221,31 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
     {
     $pathinfo   = pathinfo($uploadedfile['name']);
     $extension  = $pathinfo['extension'] ?? "";
-    if(in_array(strtolower($extension),array_map("strtolower",$validextensions)))
+    if(in_array(strtolower($extension),array_map("strtolower",$validextensions)) && !is_banned_extension($extension))
         {
         return true;
         }
     return false;
+    }
+
+/**
+ * Is the given extension in the list of blocked extensions?
+ * Also ensures extension is no longer than 10 characters due to resource.file_extension limit
+ *
+ * @param  string    $extension - file extension to check
+ * 
+ * @return bool
+ */
+function is_banned_extension($extension)
+    {
+    global $banned_extensions;    
+
+    return (in_array(strtolower($extension), array_map('strtolower', $banned_extensions)) ||
+        strlen($extension) > 10 ||
+        $extension == "." ||
+        $extension == "" ||
+        $extension == '"'
+        );
     }
 
 /**

@@ -1,7 +1,10 @@
 <?php
 command_line_only();
 
+// --- Set up
+$rtf_date = create_resource_type_field("Test #250 date", 1, FIELD_TYPE_DATE, 'test_250_date', false);
 $resourcea=create_resource(1,0);
+
 // Create a standard text field
 $field_title = 'Text field ABC';
 $text_field_abc = create_resource_type_field($field_title, 1, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, 'textfieldabc', false);
@@ -100,8 +103,36 @@ if($newtitle != $resdata["field" . $view_title_field])
     return false;    
     }
 
-// Reset
+$use_cases = [
+    [
+        'name' => 'Date in expected (yyyy-mm-dd) format',
+        'input' => ['resource' => $resourcea, 'rtf' => $rtf_date, 'value' => '2023-04-18'],
+        'expected' => true,
+        'errors' => 0,
+    ],
+    [
+        'name' => 'Date in wrong (dmY) format should error and let user know',
+        'input' => ['resource' => $resourcea, 'rtf' => $rtf_date, 'value' => '01-04-2022'],
+        'expected' => false,
+        'errors' => 1,
+    ],
+];
+foreach ($use_cases as $uc)
+    {
+    $use_native_input_for_date_field = true;
+    $errors = [];
+    $result = update_field($uc['input']['resource'], $uc['input']['rtf'], $uc['input']['value'], $errors, false);
+    if(!($uc['expected'] === $result && $uc['errors'] === count($errors)))
+        {
+        echo "Use case: {$uc['name']} - ";
+        return false;
+        }
+    }
+
+
+
+// Tear down
 $view_title_field = $saved_view_title_field;
+unset($use_cases, $result, $rtf_date);
 
 return true;
-

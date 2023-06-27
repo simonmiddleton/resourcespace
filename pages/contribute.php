@@ -27,7 +27,7 @@ include "../include/header.php";
 <?php
 foreach(get_workflow_states() as $workflow_state)
     {
-    if(($show_user_contributed_resources && $workflow_state != 0) && checkperm("z{$workflow_state}"))
+    if($workflow_state != 0 && checkperm("z{$workflow_state}"))
         {
         continue;
         }

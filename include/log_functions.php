@@ -109,10 +109,12 @@ function logScript($message, $file = null)
 * @param integer   $minref      (Optional) Minimum ref of resource log entry to return (default 0)
 * @param integer   $days       (Optional) Number of days to return. e.g 3 = all results for today, yesterday and the day before. Default = 7 (ignored if minref supplied)
 * @param integer   $maxrecords  (Optional) Maximum number of records to return. Default = all rows (0)
+* @param integer   $field       (Optional) Limit results to a particular metadata field
+* @param string    $log_code    (Optional) Limit results to a particular log code
 * 
 * @return array
 */   
- function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0)
+function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, $field = 0, $log_code = '')
     {
     if(!checkperm('v'))
         {
@@ -131,7 +133,19 @@ function logScript($message, $file = null)
         $sql .= " AND datediff(now(),date) < ?";
         $parameters[]="i"; $parameters[]=(int)$days;
         }
+
+    if($field > 0)
+        {
+        $sql .= " AND resource_type_field = ?";
+        $parameters[]="i"; $parameters[]=(int)$field;
+        }
         
+    if($log_code != "")
+        {
+        $sql .= " AND type = ?";
+        $parameters[]="s"; $parameters[]=$log_code;
+        }
+
     if($maxrecords > 0)
         {
         $sql .= " LIMIT " . (int)$maxrecords;

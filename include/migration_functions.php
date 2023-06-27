@@ -243,19 +243,6 @@ function random_char()
     }
 
 /**
-* Utility function to check string is a valid date/time
-*
-* @param string $datestring       - date string
-* @param string $format           - DateTime format to compare
-* @return boolean
-*/
-function validateDatetime($datestring, $format = 'Y-m-d H:i:s')
-    {
-    $date = DateTime::createFromFormat($format, $datestring);
-    return $date && $date->format($format) == $datestring;
-    }
-
-/**
 * Utility function to randomly alter date by offset
 *
 * @param string $fromdate       - date string
@@ -294,13 +281,20 @@ function mix_date($fromdate, $maxoffset=30)
 /**
 * Utility function to randomly scramble string
 *
-* @param string $string       - Text string to scramble
-* @param boolean $recurse     - Optionally prevent recursion (maybe called by another mix unction)
+* @param null|string $string Text string to scramble
+* @param boolean $recurse Optionally prevent recursion (maybe called by another mix unction)
 * @return string
 */
-function mix_text($string, $recurse=true)
+function mix_text(?string $string, bool $recurse=true): string
     {
     global $mixcache, $mime_type_by_extension;
+
+    $string ??= '';
+    if (trim($string) === '')
+        {
+        return '';
+        }
+
     if(isset($mixcache[md5($string)]))
         {
         return $mixcache[md5($string)];
@@ -527,13 +521,12 @@ function mix_email($string)
 /**
 * Utility function to escape and replace any empty strings with NULLS for exported SQL scripts 
 *
-* @param string $value           - value to check
-* 
+* @param null|string $value Value to check
 * @return string
 */
-function safe_export($value)
+function safe_export(?string $value): string
     {
-    return trim($value)=="" ? "NULL" : "'" . escape_check($value) . "'";
+    return trim($value ?? '')=="" ? "NULL" : "'" . escape_check($value) . "'";
     }
 
 /**

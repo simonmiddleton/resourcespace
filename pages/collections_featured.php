@@ -44,7 +44,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox FeaturedSimpleLinks">
 <?php
-if($enable_theme_breadcrumbs && $parent > 0)
+if($parent > 0)
     {
     $links_trail = array(
         array(
@@ -134,7 +134,7 @@ unset($rendering_options["smart"]);
 
 if($k == "" && $smart_rtf == 0)
     {
-    if($collection_allow_creation && checkperm("h"))
+    if(checkperm("h")&& can_create_collections())
         {
         render_new_featured_collection_cta(
             generateURL(
@@ -228,7 +228,7 @@ jQuery(document).ready(function ()
                 el.attr('data-actions-populating','1');
                 var action_selection_id = el.attr('id');
                 var colref = el.attr('data-col-id');
-                LoadActions('collections',action_selection_id,'collection',colref);
+                LoadActions('themes',action_selection_id,'collection',colref);
                 });
         <?php
         }?>

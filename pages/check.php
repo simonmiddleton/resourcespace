@@ -223,7 +223,7 @@ $php_tz = date_default_timezone_get();
 $mysql_tz = ps_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", array(), '');
 $tz_check_fail_msg = str_replace(array('%phptz%', '%mysqltz%'), array($php_tz, $mysql_tz), $lang['server_timezone_check_fail']);
 $timezone_check = "{$lang['status-warning']}: {$tz_check_fail_msg}";
-if($php_tz == $mysql_tz)
+if(strtoupper($php_tz) == strtoupper($mysql_tz))
     {
     $timezone_check = $lang['status-ok'];
     }

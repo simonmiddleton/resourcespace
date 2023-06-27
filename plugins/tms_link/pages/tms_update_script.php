@@ -230,7 +230,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                         $resource_type_field_data = get_resource_type_field($tms_link_field_id);
                         if($resource_type_field_data!==false && $resource_type_field_data['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR)
                             {
-                            $newval = strip_tags($tmsresult[$tms_link_column_name]);
+                            $newval = escape_check($tmsresult[$tms_link_column_name]);
                             $newval = str_replace('&nbsp;', ' ', $newval);
                             }
                             

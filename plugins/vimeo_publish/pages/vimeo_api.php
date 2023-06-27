@@ -161,7 +161,6 @@ if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id
         <label for="video_description"><?php echo $lang['vimeo_publish_video_description']; ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video_description" name="video_description"><?php echo strip_tags($default_video_description); ?></textarea>
         <br>
-        <label></label>
         <input type="submit" value="<?php echo $lang['vimeo_publish_button_text']; ?>" onClick="return confirmSubmit();"/>
     </div>
     <script>

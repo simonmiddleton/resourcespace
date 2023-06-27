@@ -233,7 +233,6 @@ else if($delete_requires_password && $delete_all)
 
     <div class="QuestionSubmit">
     <input name="submitted" type="hidden" value=true />
-    <label for="buttons"> </label>
     <input 
         name="save" 
         type="submit" 
@@ -462,8 +461,7 @@ else
         include "plugins/collection_edit.php";
         }
     ?>
-    <div class="QuestionSubmit">
-        <label for="buttons"> </label>			
+    <div class="QuestionSubmit">		
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
     </div>
 </form>

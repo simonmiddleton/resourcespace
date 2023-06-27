@@ -118,7 +118,6 @@ function HookRse_versionEditBefore_status_question()
         <div class="clearerleft"></div>
     </div>
     <div class="Question" id="revert_status_to_date" style="display: none; border-top: none;">
-        <label></label>
         <input type="text" name="revert_status_to_date" class="stdwidth" value="<?php echo date("Y-m-d H:i"); ?>" />
         <div class="clearerleft"></div>
     </div>

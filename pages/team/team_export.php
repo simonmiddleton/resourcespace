@@ -39,12 +39,12 @@ include "../../include/header.php";
 
 <div class="BasicsBox"> 
 
-  <h1><?php echo $lang["exportdata"]?></h1>
+  <h1><?php echo htmlspecialchars($lang["exportdata"]) ?></h1>
   
 <form method="post" action="<?php echo $baseurl_short?>pages/team/team_export.php">
     <?php generateFormToken("team_export"); ?>
 <div class="Question">
-<label for="type"><?php echo $lang["exporttype"]?></label>
+<label for="type"><?php echo htmlspecialchars($lang["exporttype"])?></label>
 <select id="type" name="type" class="stdwidth">
 <option value="sql">mysqldump - SQL</option>
 <option value="xml">mysqldump - XML</option>
@@ -52,9 +52,8 @@ include "../../include/header.php";
 <div class="clearerleft"> </div>
 </div>
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["exportdata"]?>&nbsp;&nbsp;" />
+<div class="QuestionSubmit">		
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["exportdata"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 

@@ -659,7 +659,7 @@ function ajax_download(download_offline, tar)
 
 
 	<input type=hidden name="id" value="<?php echo htmlspecialchars($uniqid) ?>">
-	<iframe id="downloadiframe" <?php if (!$debug_direct_download){?>style="display:none;"<?php } ?>></iframe>
+	<iframe id="downloadiframe" style="display:none;"></iframe>
 
 
 <?php 

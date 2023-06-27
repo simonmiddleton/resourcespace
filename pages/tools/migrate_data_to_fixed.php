@@ -146,6 +146,7 @@ if(getval("submit","") != "")
                         $newnode = $newnoderef;
                         $logtext .= " - Added node for '" . htmlspecialchars($newvalue) . "' - ref: " . $newnode . PHP_EOL;
                         $newnodecounter = count($existing_nodes);
+                        $nodes_to_add[] = $newnode;
                         $existing_nodes[$newnodecounter]["ref"] = $newnoderef;
                         $existing_nodes[$newnodecounter]["name"] = $newvalue;
                         $newnoderef++;
@@ -159,9 +160,9 @@ if(getval("submit","") != "")
                 if(!$dryrun)
                     {
                     add_resource_nodes_multi($resources,$nodes_to_add);
+                    delete_resource_nodes_multi($resources,[$node["ref"]]);
                     }
                 }
-            delete_resource_nodes_multi($resources,[$node["ref"]]);
             
             if($deletedata)
                 {

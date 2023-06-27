@@ -62,6 +62,7 @@ if($suppress_output)
     }
 
 set_time_limit(60*60*40);
+echo "StaticSync started at " . date('Y-m-d H:i:s',time()) . PHP_EOL;
 
 # Check for a process lock
 if (is_process_lock("staticsync")) 
@@ -1117,7 +1118,7 @@ ProcessFolder($syncdir);
 
 debug("StaticSync: \$done = " . json_encode($done));
 
-// Look for alternative files that may have not been processed
+echo " - Checking for alternative files that have not been processed" . PHP_EOL;
 foreach($alternativefiles as $alternativefile)
     {
     $shortpath = str_replace($syncdir . "/", '', $alternativefile);
@@ -1152,7 +1153,7 @@ foreach($alternativefiles as $alternativefile)
         }
     }
 
-echo "...done." . PHP_EOL;
+echo " - Checking deleted files" . PHP_EOL;
 
 if (!$staticsync_ingest)
     {
@@ -1226,6 +1227,7 @@ if (!$staticsync_ingest)
         }
 
     # Remove any themes that are now empty as a result of deleted files.
+    echo " - Checking for empty featured collections" . PHP_EOL;
     foreach($fc_branches as $fc_branch)
         {
         // Reverse the branch path to start from the leaf node. This way, when you reach the category you won't have any
@@ -1240,11 +1242,11 @@ if (!$staticsync_ingest)
 
             if(delete_collection($fc["ref"]) === false)
                 {
-                echo " - Unable to delete featured collection #{$fc["ref"]}" . PHP_EOL;
+                echo " -- Unable to delete featured collection #{$fc["ref"]}" . PHP_EOL;
                 }
             else
                 {
-                echo " - Deleted featured collection #{$fc["ref"]}" . PHP_EOL;
+                echo " -- Deleted featured collection #{$fc["ref"]}" . PHP_EOL;
                 }
             }
         }
@@ -1266,7 +1268,7 @@ if(count($errors) > 0)
         }
     }
         
-echo "...Complete" . PHP_EOL;
+echo "\nStaticSync completed at " . date('Y-m-d H:i:s',time()) . PHP_EOL;
 
 if($suppress_output)
     {

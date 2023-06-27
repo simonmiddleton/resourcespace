@@ -12,6 +12,7 @@ $obfuscate      = ($system_download_config_force_obfuscation || $job_data["obfus
 $userref        = $job_data["userref"];
 $separatesql    = $job_data["separatesql"] == "true"; 
 $path           = $mysql_bin_path . "/mysqldump";
+$cmd_db_pass    = $mysql_password === '' ? '' : '-p' . escapeshellarg($mysql_password);
 
 if(!$system_download_config)
     {
@@ -50,9 +51,17 @@ if(!isset($joberror))
         echo "Exporting table " . $exporttable . "\n";
         $dumpfile = $separatesql ? $dumppath . "/" . $exporttable . ".sql" : $dumppath . "/resourcespace.sql";
 
-        // Add the 'CREATE TABLE' command
-        $dumpcmd = $path . " -h " . $mysql_server . " -u " . $mysql_username . ($mysql_password == "" ? "" : " -p" . $mysql_password) . " " . $mysql_db . " --no-tablespaces --no-data " . $exporttable . " >> " . $dumpfile;
-        run_command($dumpcmd);
+        run_command(
+            "{$path} -h db_host -u db_user {$cmd_db_pass} --no-tablespaces --no-data db_name export_table >> dump_file",
+            false,
+            [
+                'db_host' => $mysql_server,
+                'db_user' => $mysql_username,
+                'db_name' => $mysql_db,
+                'export_table' => $exporttable,
+                'dump_file' => $dumpfile,
+            ]
+        );
         
         $sql = "SET sql_mode = '';\n"; // Ensure that any old values that may not now be valid are still accepted into new DB
         $output = fopen($dumpfile,'a');

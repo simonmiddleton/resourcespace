@@ -43,8 +43,7 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
+<div class="QuestionSubmit">		
 <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" />
 </div>
 </form>

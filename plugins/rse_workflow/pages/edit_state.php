@@ -246,7 +246,7 @@ else if ($saved)
         </div>
 
         <?php
-        if($search_all_workflow_states || $code ==0 || ($code == -1 && $pending_review_visible_to_all) || ($code == -2 &&$pending_submission_searchable_to_all))
+        if($search_all_workflow_states || $code==0)
             {
             echo "<input id='simple_search' type='hidden' value='1' />";
             }
@@ -270,7 +270,6 @@ else if ($saved)
     ?>
 
     <div class="Question" id="QuestionSubmit">
-        <label for="buttons"> </label>
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
     </div>
 </form>

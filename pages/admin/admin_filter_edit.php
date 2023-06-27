@@ -273,7 +273,6 @@ include "../../include/header.php";
 
 
                 <div class="Question">
-                    <label for="ruleadd"></label>
                     <input name="ruleadd" type="button" onclick="addFilterRule();"value="&nbsp;&nbsp;<?php echo $lang["filter_rule_add"]; ?>&nbsp;&nbsp;">
                 <div class="clearerleft"></div>
                 </div>
@@ -285,7 +284,6 @@ include "../../include/header.php";
                 </div>
                         
                 <div class="QuestionSubmit">
-                    <label for="save"></label>
                     <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onClick="return CentralSpacePost(this.form,true);">
                 </div>
 

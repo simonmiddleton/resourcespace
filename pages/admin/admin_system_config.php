@@ -224,6 +224,17 @@ $page_def[] = config_add_boolean_select('comments_resource_enable', $lang['syste
 $page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('tilenav', $lang['userpreference_tilenavdefault'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select(
+    'use_native_input_for_date_field',
+    $lang['systemconfig_use_native_input_for_date_field'],
+    $enable_disable_options,
+    420,
+    '',
+    true,
+    null,
+    false,
+    $lang['systemconfig_native_date_input_no_partials_supported'],
+);
 $page_def[] = config_add_html('</div>');
 
 
@@ -282,15 +293,23 @@ $page_def[] = config_add_single_select(
     '',
     true
 );
+$default_display_array = array();
+$default_display_array['thumbs'] = $lang['largethumbstitle'];
+if($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs')
+    {
+    $default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
+    }
+if($searchlist || $GLOBALS['default_display'] == 'list')
+    {
+    $default_display_array['list'] = $lang['listtitle'];
+    }
+$default_display_array['strip']  = $lang['striptitle'];
+
 $page_def[] = config_add_single_select('default_perpage', $lang['userpreference_default_perpage_label'], $results_display_array, false, 420, '', true);
 $page_def[] = config_add_single_select(
     'default_display',
     $lang['userpreference_default_display_label'],
-    array(
-        'thumbs'      => $lang['largethumbstitle'],
-        'xlthumbs'    => $lang['xlthumbstitle'],
-        'list'        => $lang['listtitle']
-    ),
+    $default_display_array,
     true,
     420,
     '',

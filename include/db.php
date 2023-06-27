@@ -170,7 +170,6 @@ if(isset($system_read_only) && $system_read_only)
     {
     $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
     $global_permissions="p";
-    $remove_resources_link_on_collection_bar = false;
     $mysql_log_transactions=false;
     $enable_collection_copy = false;
     }
@@ -301,9 +300,22 @@ if (isset($language) && $language=="us") {$language="en-US";}
 include dirname(__FILE__)."/../languages/en.php";
 if ($language!="en")
 	{
-	if (substr($language, 2, 1)=='-' && substr($language, 0, 2)!='en')
-	@include dirname(__FILE__)."/../languages/" . safe_file_name(substr($language, 0, 2)) . ".php";
-	@include dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+    if (substr($language, 2, 1)!='-')
+        {
+        $language = substr($language, 0, 2);
+        }
+    
+    $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        include dirname(__FILE__)."/../languages/" . safe_file_name($language) . ".php";
+        }
+    catch (Throwable $e)
+        {
+        debug("Unable to include language file $language.php");
+        }
+    $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 	}
 
 # Register all plugins

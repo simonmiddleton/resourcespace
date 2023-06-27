@@ -65,7 +65,7 @@ if(getval("submit",FALSE) && enforcePostRequest(false))
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-	<h1><?php echo $lang["manage_own_dash"];?></h1>
+	<h1><?php echo $lang["manage_dash_tiles"];?></h1>
 	<p>
 		<?php echo $lang["manageowndashinto"];render_help_link('user/create-dash-tile');?>
 	</p>

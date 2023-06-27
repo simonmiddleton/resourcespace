@@ -266,11 +266,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }   
             }
 
-        # Banned extension?
-        if (in_array(strtolower($extension), array_map('strtolower', $banned_extensions))) {return false;}
-
-        # ensure extension is no longer than 10 characters due to resource.file_extension field def: varchar(10)
-        if (strlen($extension) > 10) {return false;}
+        if(is_banned_extension($extension))
+            {
+            return false;
+            }
 
         $filepath=get_resource_path($ref,true,"",true,$extension);
 
@@ -1165,7 +1164,7 @@ function iptc_return_utf8($text)
  
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
-    global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge,$lang;
+    global $imagemagick_path, $preview_generate_max_file_size, $previews_allow_enlarge, $lang, $ffmpeg_preview_gif;
     global $previews_allow_enlarge, $offline_job_queue, $preview_no_flatten_extensions, $preview_keep_alpha_extensions;
 
     # Used to preemptively create folder
@@ -1336,7 +1335,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
     
         
-    if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif"))
+    if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif" && !$ffmpeg_preview_gif))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
         if (isset($imagemagick_path))
@@ -1458,7 +1457,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
 
     # We will need this to log errors
     $uploadedfilename = getval("file_name",""); 
@@ -1500,7 +1499,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         if (file_exists($scr_path) && !$previewbased) {unlink($scr_path);}
         $scr_wm_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,true,"",$alternative);  
         if (file_exists($scr_wm_path) && !$previewbased) {unlink($scr_wm_path);}
-        
+
         $prefix = '';
         # Camera RAW images need prefix
         if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext))
@@ -1788,13 +1787,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $addcheckbdpre .= " tile:pattern:checkerboard -modulate 150,100 -scale " . $cb_scale . "% ";
                     }
                 $addcheckbdafter = "-compose over -composite ";
-                }            
-
-            $preview_quality=get_preview_quality($ps[$n]['id']);
+                }
 
             if(!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $preview_quality;
+                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $imagemagick_quality;
                 }
 
             # fetch target width and height
@@ -1897,14 +1894,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
-                        $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
+                        $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
                         $mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
-                        $mpr_parts['targetprofile']=$targetprofile;
+                        $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
                         //$mpr_parts['colorspace']='';
                         }
                     else
                         {
-                        $profile  = " -strip -profile $iccpath $icc_preview_options $targetprofile";
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . $icc_preview_options . escapeshellarg($targetprofile);
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
@@ -1946,7 +1943,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 }
                             else
                                 {
-                                $profile="-profile $default_icc_file ";
+                                $profile="-profile " . escapeshellarg($default_icc_file);
                                 }
                             }
                         else
@@ -1961,12 +1958,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             else if ($icc_extraction)
                                 {
                                 // Keep any profile extracted (don't use -strip).
-                                $profile=" -colorspace ".$imagemagick_colorspace;
+                                $profile=" -colorspace ".escapeshellarg($imagemagick_colorspace);
                                 }
                             else
                                 {
                                 # By default, strip the colour profiles ('+' is remove the profile, confusingly)
-                                $profile="-strip -colorspace ".$imagemagick_colorspace;
+                                $profile="-strip -colorspace ". escapeshellarg($imagemagick_colorspace);
                                 }
                             }
                         }
@@ -1978,10 +1975,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if($crop)
                             {
                             // Add crop argument for tiling
-                            $runcommand .= " -crop " . $cropw . "x" . $croph . "+" . $cropx . "+" . $cropy;
+                            $runcommand .= " -crop " . escapeshellarg($cropw) . "x" . escapeshellarg($croph) . "+" . escapeshellarg($cropx) . "+" . escapeshellarg($cropy);
                             }
                         
-                        $runcommand .= " -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
+                        $runcommand .= " -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {
                             $command_list.=$runcommand."\n";
@@ -2031,13 +2028,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
                     
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -2513,26 +2510,12 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     # On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
 
     # Use the screen resolution version for processing
-    global $tweak_all_images, $ffmpeg_supported_extensions;
+    global $ffmpeg_supported_extensions;
 
-    if ($tweak_all_images){
-        $file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
-        if (!file_exists($file)) {
-            $file=get_resource_path($ref,true,"lpr",false,$extension,-1,1,false,'',$alternative);$top="lpr";
-            if (!file_exists($file)) {
-                $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
-                if (!file_exists($file)) {
-                    $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
-                }
-            }
-        }
-    }
-    else {
-        $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
-        if (!file_exists($file)) {
-            # Some images may be too small to have a scr.  Try pre:
-            $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
-        }
+    $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
+    if (!file_exists($file)) {
+        # Some images may be too small to have a scr.  Try pre:
+        $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
     }
     
     if (!file_exists($file)) {return false;}
@@ -2560,12 +2543,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     list($tw,$th) = @getimagesize($file);   
     
     # Save all images
-    if ($tweak_all_images){
-        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id <> ?", ['s', $top]);
-    }
-    else {
-        $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
-    }
+    $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
     for ($n=0;$n<count($ps);$n++)
         {
         # fetch target width and height
@@ -3444,7 +3422,7 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
  */ 
 function delete_previews($resource,$alternative=-1)
     {
-    global $ffmpeg_preview_extension, $watermark;
+    global $ffmpeg_preview_extension, $ffmpeg_supported_extensions, $watermark;
     
     // If a resource array has been passed we already have the extensions
     if(is_array($resource))
@@ -3470,7 +3448,6 @@ function delete_previews($resource,$alternative=-1)
     $resourcefolder = $dirinfo["dirname"];
 
     $presizes=ps_array("select id value from preview_size",array());
-    $presizes[]="snapshot"; // To include any video snapshots
     $pagecount=get_page_count($resource_data,$alternative);
     foreach($presizes as $presize)
         {
@@ -3490,6 +3467,11 @@ function delete_previews($resource,$alternative=-1)
                     }
                 }
             }
+        }
+
+    if (in_array($extension, $ffmpeg_supported_extensions) || $extension == 'gif')
+        {
+        remove_video_previews($resource);
         }
 
     $delete_prefixes = array();
@@ -4121,4 +4103,33 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     return file_exists($outputpath);
+    }
+
+/**
+* For a given resource reference, remove the video pre size and all snapshots.
+*
+* @param  int   $resource   Resource to remove video previews.
+*
+* @return void
+*/
+function remove_video_previews(int $resource) : void
+    {
+    global $ffmpeg_preview_extension;
+
+    # Remove pre size video
+    $pre_video_size = get_resource_path($resource, true, "pre", false, $ffmpeg_preview_extension, -1, 1, false, "", -1);
+    if (file_exists($pre_video_size))
+        {
+        unlink($pre_video_size);
+        }
+
+    # Remove snapshots
+    $directory = dirname($pre_video_size);
+    foreach (glob($directory . "/*") as $filetoremove)
+            {
+            if (strpos($filetoremove, 'snapshot_') !== false)
+                {
+                unlink($filetoremove);
+                }
+            }
     }

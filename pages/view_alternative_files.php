@@ -39,6 +39,7 @@ if ($alt_access)
 			<?php
 			}
 
+        global $alt_thm;
         $alt_thm = '';
         $alt_pre = '';
         if($alternative_file_previews)

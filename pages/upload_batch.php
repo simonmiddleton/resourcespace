@@ -3,60 +3,61 @@
 use Predis\Protocol\Text\Handler\StatusResponse;
 
 include "../include/db.php";
-
-if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
+$upload_session = "";
+$tusupload = false;
+$tus_validated = false;
+if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN']))
     {
-    if(isset($_SERVER['HTTP_UPPY_AUTH_TOKEN']))
-        {
-        $validupload = false;
-        // Token should be in form 'cs:xxxxxxxxxx-ct:xxxxxxxxxx'
-        $companion_sessinfo = explode("-",$_SERVER["HTTP_UPPY_AUTH_TOKEN"]);
-        if(count($companion_sessinfo) == 2)
-            {
-            $upload_session = substr($companion_sessinfo[0],3);
-            $companiontoken = substr($companion_sessinfo[1],3);
-            if(isValidCSRFToken($companiontoken, $upload_session))
-                {
-                $validupload = true;
-                }
-            }
-        }
+    $tusupload = true;
     if(isset($_SERVER['HTTP_UPLOAD_METADATA']))
         {
-        // Uppy can only send the token in upload-metadata
-        // Extract extra POST data
+        // Check file extension
         $uppy_metadata_arr = explode(",",$_SERVER['HTTP_UPLOAD_METADATA']);
         foreach($uppy_metadata_arr as $uppy_metadata)
             {
             $data = explode(" ", $uppy_metadata);
-            if(isset($data[0]) && isset($data[1]))
+            if($data[0] == "filename")
                 {
-                if(substr($data[0],0,3) == "rs_")
+                $upfilename = $data[1] ?? "";
+                $upfilename = str_replace("RS_FORWARD_SLASH","/",$upfilename);
+                if(base64_encode(base64_decode($upfilename)) == $upfilename)
                     {
-                    $key = substr($data[0],3);
-                    if(!isset($_POST[$key]))
-                        {
-                        $val = base64_decode($data[1]);
-                        $_POST[$key] = $val;
-                        }
+                    // Encoded by Uppy
+                    $upfilename = base64_decode($upfilename);
+                    }
+                $uploadpathinfo     = pathinfo($upfilename);
+                $uploaded_extension = $uploadpathinfo['extension'] ?? ""; 
+                if(is_banned_extension($uploaded_extension))
+                    {                    
+                    debug("upload_batch - invalid file extension received. File name: '" . $upfilename . "'");
+                    http_response_code(401);
+                    die(str_replace("%%FILETYPE%%",$uploaded_extension,$lang["error_upload_invalid_file"]));
                     }
                 }
             }
         }
 
-    if(!isset($validupload) || !$validupload)
+    // Validate TUS upload auth token - should be in form 'cs:xxxxxxxxxx-ct:xxxxxxxxxx'
+    $companion_sessinfo = explode("-",$_SERVER["HTTP_UPPY_AUTH_TOKEN"]);
+    if(count($companion_sessinfo) == 2)
         {
-        exit ("Permission denied.");
+        $upload_session = substr($companion_sessinfo[0],3);
+        $companiontoken = substr($companion_sessinfo[1],3);
+        if(strlen(trim($upload_session)) == 64 && strlen(trim($companiontoken)) == 542 && rs_validate_token($companiontoken, $upload_session))
+            {
+            $tus_validated = true;
+            }
         }
-    // Force pagename as cannot handle Uppy files suffix
-    $pagename = "upload_batch";
     }
-else
-    {
-    $currentsession = getval("upload_session","");
-    $upload_session = $currentsession != "" ? $currentsession : generateSecureKey(64);
-    rs_setcookie("upload_session",$upload_session);
-    }
+
+// Calculate target directory path for current upload session
+$currentsession = getval("upload_session",$upload_session);
+$upload_session = $currentsession != "" ? $currentsession : generateSecureKey(64);
+rs_setcookie("upload_session",$upload_session);
+$targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . "upload_" . hash("SHA256",$upload_session .   $scramble_key);
+// Use PHP APCU cache if available as more robust, unless on Windows as too many errors reported
+$cachestore = (function_exists('apcu_fetch') && !$config_windows) ? "apcu" : "file";
+$overquota  = overquota();
 
 // The collection_add parameter can have the following values:-
 //  'new'       Add to new collection
@@ -78,7 +79,7 @@ if($upload_share_active && $terms_upload && !check_upload_terms($collection_add,
         error_alert($lang["mustaccept"],false);
         exit();
         }
-if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !(isset($_SERVER['HTTP_TUS_RESUMABLE']) && $validupload))
+if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !($tusupload && $tus_validated))
     {
     include "../include/authenticate.php";
     if (! (checkperm("c") || checkperm("d")))
@@ -87,14 +88,14 @@ if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !(isset($_
         }
     }
 
-// TUS handling
-// Use PHP APCU cache if available as more robust, unless on Windows as too many errors reported
-$cachestore = (function_exists('apcu_fetch') && !$config_windows) ? "apcu" : "file";
-
-$targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . "upload_" . $upload_session;
-if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
+if($tusupload && $tus_validated)
     {
-    // This code handles the actual TUS file upload from Uppy. Once the file is on the system RS takes over
+    // Process file upload. This code handles the actual TUS file upload from Uppy/Companion.
+    if ($overquota)
+        {
+        exit($lang["overquota"]);
+        }
+
     require_once __DIR__ . '/../lib/tus/vendor/autoload.php';
     \TusPhp\Config::set(__DIR__ . '/../include/tusconfig.php');
     $server   = new \TusPhp\Tus\Server($cachestore);
@@ -132,10 +133,8 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']))
     exit(0); // As this is the end of the TUS upload handler no further processing to be performed.
     }
 
-
 include_once "../include/image_processing.php";
 
-$overquota                              = overquota();
 $resource_type                          = getval('resource_type', '');
 $collectionname                         = getval('entercolname', '');
 $search                                 = getval('search', '');
@@ -205,7 +204,7 @@ resource_type_config_override($resource_type);
 
 $hidden_collection = false;
 # Create a new collection?
-if($collection_add == "new" && ($processupload  || !$upload_then_edit) && !$upload_force_mycollection)
+if($collection_add == "new" && ($processupload  || !$upload_then_edit))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname=="")
@@ -293,11 +292,7 @@ if($modify_redirecturl!==false)
 	$redirecturl=$modify_redirecturl;
 	}
 
-if($upload_force_mycollection)
-    {
-    $collection_add = get_default_user_collection(true);
-    }
-elseif($collection_add=='undefined')
+if($collection_add=='undefined')
     {
     # Fallback to current user collection if nothing was passed in
     $collection_add = $usercollection;
@@ -387,7 +382,11 @@ if($embedded_data_user_select || isset($embedded_data_user_select_fields))
 if($replace_resource_preserve_option && '' != $replace_resource)
     {
     $original_resource_data                          = get_resource_data($replace_resource);
-    $default_replace_resource_original_alt_filename  = str_replace('%EXTENSION', strtoupper($original_resource_data['file_extension']), $lang['replace_resource_original_description']);
+    $default_replace_resource_original_alt_filename  = str_replace(
+        '%EXTENSION',
+        strtoupper($original_resource_data['file_extension']??""),
+        $lang['replace_resource_original_description']
+    );
     $default_replace_resource_original_alt_filename .= nicedate(date('Y-m-d H:i'), true);
 
     $uploadparams['replace_resource_original_alt_filename'] = $default_replace_resource_original_alt_filename;
@@ -474,7 +473,7 @@ if ($processupload)
     $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
     debug("upload_batch - processing. Looking for file at " . $upfilepath);
 
-    if(!file_exists($upfilepath))
+    if(!file_exists($upfilepath) || is_dir($upfilepath))
         {
         debug("upload_batch - unable to locate file received from user " . $username . ",  file path " . $upfilepath . ",  filename " . $upfilename);
         $result["status"] = false;
@@ -486,7 +485,7 @@ if ($processupload)
 
     # Banned extension?
     global $banned_extensions;
-    if (in_array($extension,$banned_extensions))
+    if (is_banned_extension($extension))
         {
         debug("upload_batch - invalid file extension received from user " . $username . ",  filename " . $upfilename);
         $result["status"] = false;
@@ -780,7 +779,7 @@ if ($processupload)
             if (!$success)
                 {
                 $result["status"] = false;
-                $result["message"] = $lang["alternative_file_created"];
+                $result["message"] = $lang["error_upload_replace_file_fail"];
                 $result["error"] = 109;
                 $result["id"] = $replace_resource;
                 }
@@ -909,10 +908,8 @@ if ($processupload)
                         debug("batch_replace upload: replacing resource with id " . $ref);
                         daily_stat("Resource upload",$ref);
 
-                        # Save the original file as an alternative file?
+                        # The replace may need to keep the original (if one exists) by saving it as an alternative file
                         $keep_original = getval('keep_original', '');
-                        $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : true;
-
                         $success = replace_resource_file($ref,$upfilepath,$no_exif,$autorotate,$keep_original);
                         if (!$success)
                             {
@@ -950,26 +947,6 @@ if ($processupload)
     // Return JSON-RPC response
     exit(json_encode($result));
     }
-elseif ($upload_no_file && getval("createblank","")!="")
-	{
-    $ref=copy_resource(0-$userref,$lang["createdfromwebuploader"]); 
-                                
-    if($ref === false)
-        {
-        // If user doesn't have a resource template (usually this happens when a user had from the first time upload_then_edit mode on), create resource using default values.
-        $ref = create_resource($resource_type, $setarchivestate,-1,$lang["createdfromwebuploadertemplate"]);
-        }
-
-	// Add to collection?
-	if (is_numeric($collection_add))
-		{
-		add_resource_to_collection($ref,$collection_add);
-		}
-    rs_setcookie('lockedfields', '', 1);
-    $redirecturl = generateURL($baseurl_short . "pages/edit.php",$searchparams,array("ref"=>$ref,"refreshcollectionframe"=>"true"));
-    redirect($redirecturl);
-    exit();
-	}
 
 // Check if upload should be disabled because the filestore location is indexed and browseable
 $cfb = check_filestore_browseability();
@@ -989,7 +966,7 @@ include "../include/header.php";
 redirurl = '<?php echo $redirecturl ?>';
 var resource_keys=[];
 var processed_resource_keys=[];
-var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
+var relate_on_upload = <?php echo ($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes") ? " true" : "false"; ?>;
 // Set flag allowing for blocking auto redirect after upload if errors are encountered
 upRedirBlock = false;
 logopened = false;
@@ -1154,23 +1131,22 @@ jQuery(document).ready(function () {
             }
         });
 
-        uppy.setMeta({
+    uppy.setMeta({
+        <?php
+        if($CSRF_enabled)
+            {
+            echo "rs_" . $CSRF_token_identifier . ": '" . generateCSRFToken($upload_session, "upload_batch") . "',";
+            }
+        if($k != "")
+            {
+            // This is an external upload, add data so that we can authenticate Uppy uploads
+            ?>
+            rs_k: '<?php echo htmlspecialchars($k) ?>',
+            rs_collection_add: '<?php echo (int)$collection_add ?>',
             <?php
-            if($CSRF_enabled)
-                {
-                echo "rs_" . $CSRF_token_identifier . ": '" . generateCSRFToken($upload_session, "upload_batch") . "',";
-                }
-            if($k != "")
-                {
-                // This is an external upload, add data so that we can authenticate Uppy uploads
-                ?>
-                rs_k: '<?php echo htmlspecialchars($k) ?>',
-                rs_collection_add: '<?php echo (int)$collection_add ?>',
-                <?php
-                }?>
-            });
-
-
+            }?>
+        });
+        
     uppy.use(Dashboard, {
         id: 'Dashboard',
         target: '#uploader',
@@ -1953,7 +1929,7 @@ hook('plupload_before_status');
 <div class="BasicsBox" >
     <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo htmlspecialchars($lang["log"]); ?></h2>
     <div class="CollapsibleSection" id="UploadLogSection">
-        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
+        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo htmlspecialchars($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
     </div> <!-- End of UploadLogSection -->
 </div>
 </div>

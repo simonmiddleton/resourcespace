@@ -108,8 +108,8 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     $date_timestamp = strtotime($date); 
     if($date_timestamp === false) return '';
 
-    // The unix timestamp will be negative for BCE dates
-    $bce_offset = ($date_timestamp < 0) ? 1 : 0;
+    // Check whether unix timestamp is a BCE date
+    $bce_offset = ($date_timestamp < strtotime("0000-00-00")) ? 1 : 0;
     // BCE dates cannot return year in truncated form
     if($bce_offset == 1 && !$date_yyyy) return '';
 
@@ -1544,7 +1544,7 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
  */
 function pager($break=true,$scrolltotop=true,$options=array())
     {
-    global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
+    global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pagename;
     $validoptions = array(
         "curpage",
         "url",
@@ -1553,7 +1553,6 @@ function pager($break=true,$scrolltotop=true,$options=array())
         "offset",
         "per_page",
         "jumpcount",
-        "pager_dropdown",
         "confirm_page_change"
     );
     foreach($validoptions as $validoption)
@@ -1580,29 +1579,15 @@ function pager($break=true,$scrolltotop=true,$options=array())
     if(!hook("replace_pager")){
         unset($url_params["offset"]);
         if ($totalpages!=0 && $totalpages!=1){?>     
-            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
+            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo htmlspecialchars($lang["previous"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
-            <?php if ($pager_dropdown)
-                {
-                $id=rand();?>
-                <select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}" <?php } ?>>
-                <?php for ($n=1;$n<$totalpages+1;$n++){?>
-                    <option value='<?php echo $n?>' <?php if ($n==$curpage){?>selected<?php } ?>><?php echo $n?></option>
-                <?php } ?>
-                </select><?php
-                }
-            else
-                {?>
-                <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
+            <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo htmlspecialchars($lang["jumptopage"]) ?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
             &nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
-
-                <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a><?php
-                } ?>
-
+            <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo htmlspecialchars($lang["jumptopage"]) ?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo htmlspecialchars($lang["page"]) ?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo htmlspecialchars($lang["of"]) ?>&nbsp;<?php echo $totalpages?></a>
             &nbsp;&nbsp;<?php
             if ($curpage<$totalpages)
                 {
-                ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
+                ?><a class="nextPageLink" title="<?php echo htmlspecialchars($lang["next"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
                 }?><i aria-hidden="true" class="fa fa-arrow-right"></i>
             <?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
             </span>
@@ -2260,13 +2245,9 @@ function format_display_field($value)
  * @param  integer $max_words_before_more
  * @return string
  */
-function format_string_more_link($string,$max_words_before_more=-1)
+function format_string_more_link($string,$max_words_before_more=30)
     {
     $words=preg_split('/[\t\f ]/',$string);
-    if ($max_words_before_more==-1)
-        {
-        global $max_words_before_more;
-        }
     if (count($words) < $max_words_before_more)
         {
         return $string;
@@ -2778,7 +2759,6 @@ function is_html($string)
  * Set a cookie.
  * 
  * Note: The argument $daysexpire is not the same as the argument $expire in the PHP internal function setcookie.
- * Note: The $path argument is not used if $global_cookies = true
  *
  * @param  string $name
  * @param  string $value
@@ -2791,7 +2771,7 @@ function is_html($string)
  */
 function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", $secure = false, $httponly = true)
     {
-    global $baseurl_short, $baseurl_short, $global_cookies;
+    global $baseurl_short, $baseurl_short;
     if($path == "")
         {
         $path =  $baseurl_short;
@@ -2808,16 +2788,8 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
         }
 
     // Set new cookie, first remove any old previously set pages cookies to avoid clashes;           
-    if ($global_cookies)
-        {
-        setcookie($name, "", time() - 3600, "/pages", $domain, $secure, $httponly);
-        setcookie($name, (string) $value, (int) $expire, "/", $domain, $secure, $httponly);
-        }
-    else
-        {
-        setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
-        setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
-        }
+    setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
+    setcookie($name, (string) $value, (int) $expire, $path, $domain, $secure, $httponly);
     }
 
 /**
@@ -3100,9 +3072,9 @@ function generateCSRFToken($session_id, $form_id)
 /**
 * Checks if CSRF Token is valid
 * 
-* @uses rsDecrypt()
+* @uses rs_validate_token()
 * 
-* @return boolean  Returns TRUE if token has been decrypted or CSRF is not enabled, FALSE otherwise
+* @return boolean  Returns TRUE if token is valid or CSRF is not enabled, FALSE otherwise
 */
 function isValidCSRFToken($token_data, $session_id)
     {
@@ -3112,37 +3084,9 @@ function isValidCSRFToken($token_data, $session_id)
         {
         return true;
         }
-
-    if($token_data === "")
-        {
-        debug("CSRF: INVALID - no token data");
-        return false;
-        }
-
-    $plaintext = rsDecrypt($token_data, $session_id);
-
-    if($plaintext === false)
-        {
-        debug("CSRF: INVALID - unable to decrypt token data");
-        return false;
-        }
-
-    $csrf_data = json_decode($plaintext, true);
-
-    if(is_null($csrf_data))
-        {
-        debug("CSRF: INVALID - unable to decode token data");
-        return false;
-        }
-
-    if($csrf_data["session"] == $session_id)
-        {
-        return true;
-        }
-
-    debug("CSRF: INVALID - session ID did not match: {$csrf_data['session']} vs {$session_id}");
-
-    return false;
+    
+    $csrf_valid = rs_validate_token($token_data, $session_id);
+    return $csrf_valid;    
     }
 
 
@@ -5055,6 +4999,19 @@ function prefix_value(string $prefix): Closure
         {
         return $prefix . $value;
         };
+    }
+
+/**
+* Utility function to check string is a valid date/time with a specific format.
+*
+* @param string $datetime Date/time value
+* @param string $format The format that date/time value should be in. {@see https://www.php.net/manual/en/datetimeimmutable.createfromformat.php}
+* @return boolean
+*/
+function validateDatetime(string $datetime, string $format = 'Y-m-d H:i:s'): bool
+    {
+    $date = DateTimeImmutable::createFromFormat($format, $datetime);
+    return $date && $date->format($format) === $datetime;
     }
 
 /**

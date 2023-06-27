@@ -126,7 +126,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Table header styling */
 .ListviewStyle thead, .ListviewTitleStyle {
-    background: gray;
+    background: #6a6a6a;
     text-transform: uppercase;
 }
 .ListviewTitleStyle td, .ListviewTitleStyle th, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
@@ -300,7 +300,7 @@ div.autocomplete ul li {color: #000;}
 /* Messaging */
 span.Pill {
     color: white;
-    background: red;
+    background: #e41e3f;
 }
 div.MessageBox {
     border: 1px solid darkgray;

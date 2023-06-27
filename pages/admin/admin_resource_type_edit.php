@@ -37,17 +37,19 @@ if (getval("restype_save","")!="" && enforcePostRequest(false))
     # Save resource type data
     $savedata = [
         "name" => $name,
-        "config_options" => $config_options,
         "allowed_extensions" => $allowed_extensions,
         "tab" => $tab,
         "push_metadata" => $push_metadata,
         "colour" => $colour,
         "icon" => $icon,
     ];
+    if(!$execution_lockout)
+        {
+        $savedata["config_options"] = $config_options;
+        }
     save_resource_type($ref, $savedata);
     redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
     }
-
 
 $confirm_delete = false;
 $confirm_move_associated_rtf = false;
@@ -203,8 +205,7 @@ if($actions_required)
     </div>
 	<div class="clearerleft"> </div>
     </div>
-    <div class="QuestionSubmit">
-        <label for="buttons"> </label>			
+    <div class="QuestionSubmit">		
         <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onClick="history.go(-1);return false;"/>
         <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#restype_delete').val('yes');this.form.submit();}else{jQuery('#restype_delete').val('');}return false;"/>
 
@@ -270,8 +271,7 @@ else
     <div class="clearerleft"> </div>
     </div>
     
-    <div class="QuestionSubmit">
-    <label for="buttons"> </label>			
+    <div class="QuestionSubmit">		
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
     <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>
     </div>

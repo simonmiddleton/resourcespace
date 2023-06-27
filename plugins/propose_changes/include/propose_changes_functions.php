@@ -2,7 +2,7 @@
 
 function save_proposed_changes($ref)
 	{
-    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $range_separator;
+    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES;
 
     if(!is_numeric($ref))
         {
@@ -114,6 +114,19 @@ function save_proposed_changes($ref)
 							}
 						}
 						$val=$newval;
+                    }
+                else if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
+                    {
+                    $val = getval("field_{$fields[$n]['ref']}", '');
+                    if(!validateDatetime($val, 'Y-m-d'))
+                        {
+                        $errors[$fields[$n]["ref"]] = str_replace(
+                            [' %row%', '%date%', '%field%'],
+                            ['', $val, $fields[$n]['name']],
+                            $GLOBALS['lang']['invalid_date_error']
+                        );
+                        continue;
+                        }
                     }
 				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{

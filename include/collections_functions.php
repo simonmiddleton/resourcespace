@@ -1904,8 +1904,6 @@ function get_smart_theme_headers()
  */
 function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array $field_meta = array())
     {
-    global $smart_themes_omit_archived;
-
     $return = array();
 
     // Determine if this should cascade onto children for category tree type
@@ -2527,7 +2525,6 @@ function get_search_title($searchstring)
     if (isset($searchvars["search"])){$search=$searchvars["search"];}else{$search="";}
     if (isset($searchvars["restypes"])){$restypes=$searchvars["restypes"];}else{$restypes="";}
 
-    $collection_dropdown_user_access_mode=false;
     include(dirname(__FILE__)."/search_title_processing.php");
 
     if ($restypes!="")
@@ -3110,6 +3107,8 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
 */
 function generate_featured_collection_image_urls(array $resource_refs, string $size)
     {
+    global $baseurl;
+
     $images = array();
 
     $refs_list = array_filter($resource_refs, 'is_numeric');
@@ -3118,7 +3117,7 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
         return $images;
         }
 
-    $refs_rtype = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")", ps_param_fill($refs_list,"i"),'featured_collections');
+    $refs_rtype = ps_query("SELECT ref, resource_type, file_extension FROM resource WHERE ref IN (" . ps_param_insert(count($refs_list)) . ")", ps_param_fill($refs_list,"i"),'featured_collections');
 
     foreach($refs_rtype as $ref_rt)
         {
@@ -3129,6 +3128,11 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
             {
             $images[] = get_resource_path($ref, false, $size, false);
             }
+        }
+
+    if(count($images) == 0 && count($refs_rtype) != 0)
+        {
+        $images[] = $baseurl . '/gfx/' . get_nopreview_icon($refs_rtype[0]['resource_type'],$refs_rtype[0]['file_extension'],true);
         }
 
     return $images;
@@ -3324,7 +3328,7 @@ function get_collection_comments($collection)
  */
 function send_collection_feedback($collection,$comment)
     {
-    global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$feedback_email_required,$regex_email;
+    global $applicationname,$lang,$userfullname,$userref,$k,$feedback_resource_select,$regex_email;
     global $userref;
 
     $cinfo=get_collection($collection);    
@@ -3343,7 +3347,7 @@ function send_collection_feedback($collection,$comment)
     else
         {
         # External user.
-        if ($feedback_email_required && !preg_match ("/{$regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
+        if (!preg_match ("/{$regex_email}/", getval("email",""))) {$errors[]=$lang["youremailaddress"] . ": " . $lang["requiredfield"];return $errors;}
         $body.=$lang["fullname"] . ": " . getval("name","") . "\n";
         $body.=$lang["email"] . ": " . getval("email","") . "\n";
         }
@@ -4001,10 +4005,10 @@ function update_collection_user($collection,$newuser)
 function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
-           $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share, $enable_collection_copy,
-           $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
+           $manage_collections_share_link, $allow_share, $enable_collection_copy,
+           $manage_collections_remove_link, $userref, $collection_purge, $result,
            $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
-           $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
+           $show_searchitemsdiskusage, $emptycollection, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $collection_download_settings, $contact_sheet, $pagename,$upload_then_edit, $enable_related_resources,$list, $enable_themes,
@@ -4172,7 +4176,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
      // Remove all resources from collection
-     if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
+     if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && !$system_read_only && collection_writeable($collection_data['ref']))
      {
      $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php",$urlparams,array("emptycollection"=>$collection_data['ref'],"removeall"=>"true","ajax"=>"true","submitted"=>"removeall"));
      $options[$o]['value']     = 'empty_collection';
@@ -4285,7 +4289,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
-    if(($k=="" || $internal_share_access) && $show_edit_all_link && $count_result>0)
+    if(($k=="" || $internal_share_access) && $count_result>0)
         {
         if($allow_multi_edit)
             {
@@ -4410,7 +4414,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Contact Sheet
-    if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))
+    if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($contact_sheet_link_on_collection_bar))
         {
         $data_attribute['url'] = generateURL($baseurl_short . "pages/contactsheet_settings.php",$urlparams);
         $options[$o]['value']='contact_sheet';
@@ -4550,13 +4554,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
         {
         $options[$o]['value'] = 'relate_all';
-        $options[$o]['label'] = htmlspecialchars($lang['relateallresources']);
+        $options[$o]['label'] = $lang['relateallresources'];
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 280;
         $o++;
 
         $options[$o]['value'] = 'unrelate_all';
-        $options[$o]['label'] = htmlspecialchars($lang['unrelateallresources']);
+        $options[$o]['label'] = $lang['unrelateallresources'];
         $options[$o]['category']  = ACTIONGROUP_ADVANCED;
         $options[$o]['order_by']  = 290;
         $o++;
@@ -4609,14 +4613,9 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
 */
 function new_featured_collection_form(int $parent)
     {
-    global $baseurl_short, $lang, $collection_allow_creation;
+    global $baseurl_short, $lang;
 
-    if(!$collection_allow_creation)
-        {
-        return;
-        }
-
-    if(!checkperm('h'))
+    if(!checkperm('h') || !can_create_collections())
         {
         http_response_code(401);
         exit($lang['error-permissiondenied']);
@@ -4637,7 +4636,6 @@ function new_featured_collection_form(int $parent)
                 <div class="clearleft"></div>
             </div>
             <div class="QuestionSubmit" >
-                <label></label>
                 <input type="submit" name="create" value="<?php echo $lang["create"]; ?>"></input>
                 <div class="clearleft"></div>
             </div>
@@ -7074,4 +7072,13 @@ function check_upload_terms(int $collection, string $k) : bool
         $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==1);
         return $return;
         }
+    }
+
+function can_create_collections()
+    {
+    global $anonymous_user_session_collection;
+    return  !( // Return FALSE if any of these conditions are true
+        checkperm("b") 
+         || (is_anonymous_user() && !$anonymous_user_session_collection) // User is an anonymous user
+        );
     }

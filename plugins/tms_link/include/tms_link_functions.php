@@ -3,7 +3,7 @@
 function unistr_to_ords($str, $encoding = 'UTF-8'){        
     // Turns a string of unicode characters into an array of ordinal values,
     // Even if some of those characters are multibyte.
-    $str = mb_convert_encoding($str,"UCS-4BE",$encoding);
+    $str = mb_convert_encoding((string) $str,"UCS-4BE",$encoding);
     $ords = "";;
     
     // Visit each unicode character
@@ -47,7 +47,7 @@ function tms_convert_value($value, $key, array $module)
 	$mappings=array_values($mappings);
         if(strtoupper($mappings[$tms_rs_mapping_index]["encoding"]) != "UTF-8")
             {
-            return mb_convert_encoding($value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
+            return mb_convert_encoding((string) $value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
             }
         else
             {
@@ -56,12 +56,12 @@ function tms_convert_value($value, $key, array $module)
         }
 
     // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
-    $encoding = mb_detect_encoding($value, getEncodingOrder(), true);
+    $encoding = mb_detect_encoding((string) $value, getEncodingOrder(), true);
 
     // Check if field is defined as UTF-16 or it's not an UTF-8 field
     if(in_array($key, $GLOBALS['tms_link_text_columns']) || !in_array($key, $GLOBALS['tms_link_numeric_columns']))
         {
-        return mb_convert_encoding($value, 'UTF-8', 'UCS-2LE');
+        return mb_convert_encoding((string) $value, 'UTF-8', 'UCS-2LE');
         }
 
     return $value;

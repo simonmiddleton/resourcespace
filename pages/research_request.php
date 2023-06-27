@@ -177,8 +177,7 @@ include "../include/header.php";
             include dirname(__FILE__) . "/../plugins/research_request.php";
             }
         ?>
-        <div class="QuestionSubmit">
-            <label for="buttons"> </label>          
+        <div class="QuestionSubmit">      
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["sendrequest"]?>&nbsp;&nbsp;" />
         </div>
 

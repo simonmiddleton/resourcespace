@@ -1029,19 +1029,28 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
             continue;
             }
         debug("Sending notification to user #" . $userdetails["ref"]);
-        get_config_option($userdetails['ref'],'email_user_notifications', $send_email);
+        get_config_option($userdetails['ref'],'email_user_notifications', $send_email_over_notification);
+        get_config_option($userdetails['ref'],'email_and_user_notifications', $send_email_and_notification);
+        $send_email = (
+            ($send_email_over_notification || $send_email_and_notification      // Either email preference is set
+                || $forcemail)                                                  // Force email ignoring preferences
+            && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL));       // Email is valid
+        $send_message = 
+            !$send_email                                                        // No email so must send notification
+            || (!$send_email_over_notification || $send_email_and_notification);// Send message set in preferences
+
         if(!isset($userlanguages[$userdetails['lang']]))
             {
             $userlanguages[$userdetails['lang']] = [];
             $userlanguages[$userdetails['lang']]["emails"] = [];
             $userlanguages[$userdetails['lang']]["message_users"] = [];
             }
-        if(($send_email && filter_var($userdetails["email"], FILTER_VALIDATE_EMAIL)) || $forcemail)
+        if($send_email)
             {
             debug("Sending email to user #" . $userdetails["ref"]);
             $userlanguages[$userdetails['lang']]["emails"][] = $userdetails["email"];
             }
-        else
+        if($send_message)
             {
             debug("Sending system message to user #" . $userdetails["ref"]);
             $userlanguages[$userdetails['lang']]["message_users"][]=$userdetails["ref"];

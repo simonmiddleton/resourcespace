@@ -493,7 +493,6 @@ function clearsharefilter()
 
 
             <div class="Question"  id="QuestionShareFilterSubmit">
-                <label></label>
                 <input type="button" id="filter_button" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('ShareFilterForm'));">
                 <input type="button" id="clear_button" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="clearsharefilter();return CentralSpacePost(document.getElementById('ShareFilterForm'));">
                 <div class="clearerleft"></div>

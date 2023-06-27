@@ -176,12 +176,11 @@ if($browse_on)
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
 var pagename="<?php echo $pagename?>";
-var errorpageload = "<h1><?php echo $lang["error"] ?></h1><p><?php echo str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"])) ?></p>";
-var errortext = "<?php echo $lang["error"] ?>";
+var errorpageload = "<h1><?php echo htmlspecialchars($lang["error"]) ?></h1><p><?php echo htmlspecialchars(str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"]))) ?></p>";
+var errortext = "<?php echo escape_quoted_data($lang["error"]) ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit=false;
 var branch_limit_field = new Array();
-var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 var TileNav = <?php echo ($tilenav?"true":"false") ?>;
 var errornotloggedin = '<?php echo htmlspecialchars($lang["error_not_logged_in"]) ?>';
@@ -192,12 +191,11 @@ if (!hook("replacetrashbin", "", array("js" => true)))
     echo "global_trash_html += '" . render_trash("trash","", true) . "';\n";
     }
 ?>
-oktext="<?php echo $lang["ok"] ?>";
+oktext="<?php echo htmlspecialchars($lang["ok"]) ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementContainer='.ui-layout-container';
 var scrolltopElementCollection='.ui-layout-south';
 var scrolltopElementModal='#modal'
-collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
 <?php
 
 if($browse_on)
@@ -315,8 +313,10 @@ endif; # !hook("customhtmlheader")
 </head>
 <body lang="<?php echo $language ?>" class="<?php echo implode(' ', $body_classes); ?>" <?php if (isset($bodyattribs)) { ?><?php echo $bodyattribs?><?php } ?>>
 
+<a href="#UICenter" class="skip-to-main-content"><?php echo htmlspecialchars($lang["skip-to-main-content"]); ?></a>
+
 <!-- Processing graphic -->
-<div id='ProcessingBox' style='display: none'><h3><?php echo $lang["status_processing"]; ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+<div id='ProcessingBox' style='display: none'><h3><?php echo htmlspecialchars($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
 
 <!-- Loading graphic -->
 <?php
@@ -332,7 +332,7 @@ hook("bodystart"); ?>
 <!--Global Header-->
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
-if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all")
+if ($pagename!="preview" && $pagename!="preview_all")
     {
     // Standard header
     $homepage_url=$baseurl."/pages/".$default_home_page;
@@ -358,7 +358,6 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
     <div id="Header" class="<?php
             echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : ' ui-layout-north ';
             echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
-            echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
             echo " " . $header_size;
     ?>">
 
@@ -374,28 +373,16 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
 
     if(!hook('replace_header_text_logo'))
         {
-        if($header_text_title) 
+        $header_img_src = get_header_image();
+        if($header_link && ($k=="" || $internal_share_access))
             {?>
-            <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
-            <?php if ($applicationdesc!="")
-                {?>
-                <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
-                <?php 
-                }
+            <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></a>
+            <?php
             }
         else
-            {
-            $header_img_src = get_header_image();
-            if($header_link && ($k=="" || $internal_share_access))
-                {?>
-                <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></a>
-                <?php
-                }
-            else
-                {?>
-                <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></div>
-                <?php
-                }
+            {?>
+            <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname;?>"></div>
+            <?php
             }
         }
 
@@ -416,7 +403,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                             }
                         else 
                             {
-                            echo $lang["responsive_settings_menu"];
+                            echo htmlspecialchars($lang["responsive_settings_menu"]);
                             }?>
                         </span>
                     <?php if ($user_profile_image != "")
@@ -429,7 +416,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                         }
                     ?></a>
                 <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
-                    <span class="rbText"><?php echo $lang["responsive_main_menu"]; ?></span>
+                    <span class="rbText"><?php echo htmlspecialchars($lang["responsive_main_menu"]); ?></span>
                     <span class="fa fa-fw fa-lg fa-bars"></span>
                 </a>
             </div>
@@ -455,9 +442,9 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                 {
                 ?>
                 <ul>
-                <li><a href="<?php echo $baseurl?>/login.php"><?php echo $lang["login"]?></a></li>
+                <li><a href="<?php echo $baseurl?>/login.php"><?php echo htmlspecialchars($lang["login"]) ?></a></li>
                 <?php hook("addtoplinksanon");?>
-                <?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["contactus"]?></a></li><?php } ?>
+                <?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["contactus"]) ?></a></li><?php } ?>
                 </ul>
                 <?php
                 } /* end replaceheadernav1anon */
@@ -467,29 +454,12 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             if (!hook("replaceheadernav1"))
                 {
                 echo "<ul>";
-                if ($header_search && $k=="")
-                    { ?>
-                    <li>
-                        <form class="HeaderSearchForm" id="header_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
-                        <?php
-                        generateFormToken("header_search_form");
-                        ?>
-                        <input id="ssearchbox" name="search" type="text" class="searchwidth" placeholder="<?php echo $lang['simplesearch'] . '...'; ?>" value="<?php echo (isset($quicksearch)?$htmlspecialchars($quicksearch):"") ?>" />
-                        
-                        <a href="<?php echo $baseurl; ?>/pages/simple_search.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
-                                    <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
-                                </a>
-                        </form>
-                    </li>
-                    <?php
-                    }
-
                 if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d")))
                     {
                     $topuploadurl = get_upload_url("",$k);
                     ?>
                     <li class="HeaderLink UploadButton">
-                        <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]; ?></a>
+                        <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo htmlspecialchars($lang["upload"]); ?></a>
                     </li><?php
                     }
             
@@ -497,7 +467,7 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
                     {
                     ?>
                     <li>
-                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo $lang['myaccount']; ?>" title="<?php echo $lang['myaccount']; ?>">
+                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo htmlspecialchars($lang['myaccount']); ?>" title="<?php echo htmlspecialchars($lang['myaccount']); ?>">
                         <?php
                         if (isset($header_include_username) && $header_include_username)
                             {
@@ -539,9 +509,9 @@ if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all"
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo $lang['teamcentre']; ?>" title="<?php echo $lang['teamcentre']; ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape_quoted_data($lang['teamcentre']); ?>" title="<?php echo escape_quoted_data($lang['teamcentre']); ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                     <?php 
-                        if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+                        if (!$actions_on && (checkperm("R")||checkperm("r")))
                             {
                             # Show pill count if there are any pending requests
                             $pending=ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",array(),0);
@@ -605,14 +575,11 @@ hook("headerbottom"); ?>
 
 if($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login)
     {
-        array_push($omit_searchbar_pages, 'terms');
-        $collections_footer = false;
+    array_push($omit_searchbar_pages, 'terms');
     }
  
 # if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar    
-if ($header_search || (!checkperm("s") && !($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login)) ) )
-    { }
-    else 
+if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
     {
     # Include simple search sidebar?
 
@@ -677,23 +644,12 @@ hook('afteruicenter');
 
 if (!in_array($pagename, $not_authenticated_pages))
     {
-    // Set classes for CentralSpaceContainer
-    $csc_classes = array();
-    if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
-        {
-        if($header_search)
-            {
-            $csc_classes[] = "NoSearchBar";
-            }
-        }
-    echo '<div id="CentralSpaceContainer" ' . (count($csc_classes) > 0 ? 'class="' . implode(' ', $csc_classes) . '"' : '' ) . '>';
+    echo '<div id="CentralSpaceContainer">';
     }
 
 hook("aftercentralspacecontainer");
 ?>
 <div id="<?php echo $div?>">
-
-
 <?php
 
 hook("afterheader");

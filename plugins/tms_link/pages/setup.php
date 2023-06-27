@@ -183,7 +183,7 @@ if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit
 	else
 		{
 		$logfilepath=$tms_link_log_directory . DIRECTORY_SEPARATOR . "tms_import_log_test.log";
-		$logfile=@fopen($logfilepath,a);
+		$logfile=@fopen($logfilepath,'a');
 		if(!file_exists($logfilepath))
 			{
 			$errortext = 'Unable to create log file in directory: ' . htmlspecialchars($tms_link_log_directory);			

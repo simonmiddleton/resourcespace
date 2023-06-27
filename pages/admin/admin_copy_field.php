@@ -8,16 +8,22 @@ if(!checkperm('a'))
 
 $ref    = getval('ref', 0,true);
 $copied = '';
-$title  = ps_value("SELECT title AS `value` FROM resource_type_field WHERE ref = ?", array("i",$ref), '', "schema");
+$current = get_resource_type_field($ref);
+$title = $current["title"];
 
 # Perform copy
 if (getval("saveform","")!="" && $ref > 0 && enforcePostRequest(false))
 	{
 	$sync=getval("sync","");
     $allcolumns = columns_in("resource_type_field",null,null,true);
-	$insert = array_diff($allcolumns,["ref"]);
+	$allcolumns = array_diff($allcolumns,["name"]);
+	$insert = array_diff($allcolumns,["ref","name"]);
 
-	ps_query("INSERT INTO resource_type_field (" . implode(",",$allcolumns) . ") SELECT NULL, " . implode(",",$insert)	. " FROM resource_type_field WHERE ref = ?",["i",$ref]);
+    // Create new short name 
+    $allcolumns[] = "name";
+    $newname = $current["name"] . "copy";
+
+	ps_query("INSERT INTO resource_type_field (" . implode(",",$allcolumns) . ") SELECT NULL, " . implode(",",$insert)	. ",? FROM resource_type_field WHERE ref = ?",["s",$newname,"i",$ref]);
 
 	$copied = sql_insert_id();
 

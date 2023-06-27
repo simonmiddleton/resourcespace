@@ -16,9 +16,51 @@ $ct_opt_colors_red = set_node(null, $rtf_cat_tree, '~en:red~fr:rouge', $ct_opt_c
 $ct_opt_colors_black = set_node(null, $rtf_cat_tree, '~en:black~fr:noire', $ct_opt_colors, 10);
 $ct_opt_colors_blue = set_node(null, $rtf_cat_tree, '~en:blue~fr:bleue', $ct_opt_colors, 30);
 
+$rtf_date = create_resource_type_field("Test #401 date", 1, FIELD_TYPE_DATE, 'test_401_date', false);
+
+// Resources
 $resource_a = create_resource(1, 0);
+$resource_b = create_resource(1, 0);
 // --- End of Set up
 
+
+
+$use_cases = [
+    [
+        'name' => 'Date in expected (yyyy-mm-dd) format',
+        'input' => ['ref' => $resource_a, 'autosave_field' => $rtf_date],
+        'post' => ['value' => '2023-04-18'],
+        'expected' => true,
+    ],
+    [
+        'name' => 'Date in wrong (dmY) format should error and let user know',
+        'input' => ['ref' => $resource_b, 'autosave_field' => $rtf_date],
+        'post' => ['value' => '01-04-2022'],
+        'expected' => [$rtf_date => '01-04-2022'], // it means it errored - see save_resource_data
+    ],
+];
+foreach ($use_cases as $uc)
+    {
+    $_POST["field_{$rtf_date}"] = $uc['post']['value'];
+    $result = save_resource_data($uc['input']['ref'], false, $uc['input']['autosave_field']);
+    
+    if($uc['expected'] !== $result)
+        {
+        echo "Use case: {$uc['name']} - ";
+        return false;
+        }
+    
+    // Check (internal) saving behaviour (e.g for a date field, if input is invalid it shouldn't be saved)
+    $saved_value = get_data_by_field($uc['input']['ref'], $uc['input']['autosave_field'], true);
+    if(
+        ($result === true && $uc['post']['value'] !== $saved_value)
+        || (is_array($result) && $saved_value !== '')
+    )
+        {
+        echo "Use case (data save): {$uc['name']} - ";
+        return false;
+        }
+    }
 
 
 // Check field_column_string_separator is applied for fixed list fields
@@ -87,9 +129,10 @@ $field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
 unset(
     $initial_field_column_string_separator,
-    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b,
+    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $rtf_date,
     $rtf_cat_tree, $ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black, $ct_opt_colors_blue, $ct_opt_numbers,
-    $resource_a
+    $resource_a, $resource_b,
+    $use_cases
 );
  
 return true;

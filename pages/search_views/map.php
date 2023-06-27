@@ -14,7 +14,6 @@ global $baseurl, $mapsearch_height, $map_default, $geomarker, $preview_paths;
 global $map_centerview, $map_zoomslider, $map_zoomnavbar, $map_kml, $map_kml_file;
 global $map_retina, $marker_resource_preview, $MARKER_COLORS;
 
-$display_selector_dropdowns = false;
 $zoomslider = 'false';
 $zoomcontrol = 'true';
 
