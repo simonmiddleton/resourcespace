@@ -5,7 +5,6 @@ command_line_only();
 // Save userref for the end as we need to set user back to this one
 $original_user_ref = $userref;
 
-
 // Active resource - un-restricted
 $resource_unrestricted_access = create_resource(1, 0);
 update_archive_status($resource_unrestricted_access, 0);
@@ -46,7 +45,7 @@ unset($udata_cache);
 setup_user(get_user($user_000410));
 
 $default_user_000410_permissions = $userpermissions;
-
+$GLOBALS['get_resource_data_cache'] = [];
 for($i = 0; $i < count($use_cases); $i++)
     {
     $resource = $use_cases[$i]['resource'];

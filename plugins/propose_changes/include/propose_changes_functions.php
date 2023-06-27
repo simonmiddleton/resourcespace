@@ -317,7 +317,7 @@ function get_proposed_changes($ref, $userid)
                                AND user = ?
                        ) AS d ON d.resource_type_field = f.ref AND d.resource = ?
              GROUP BY f.ref
-             ORDER BY f.resource_type, f.order_by, f.ref;";
+             ORDER BY f.global DESC, f.order_by, f.ref;";
     $parameters=array("i",$ref, "i",$userid, "i",$ref);
     $changes = ps_query($query, $parameters);
 
@@ -334,4 +334,219 @@ function delete_proposed_changes($ref, $userid="")
         $parameters=array_merge($parameters,array("i",$userid));
         }
     ps_query($query, $parameters);
+    }
+
+# Allows language alternatives to be entered for free text metadata fields.
+function propose_changes_display_multilingual_text_field($n, $field, $translations)
+    {
+    global $language, $languages, $lang;
+    ?>
+    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo $lang["showtranslations"]?>';} else {l.style.display='block';this.innerHTML='<?php echo $lang["hidetranslations"]?>';} return false;"><?php echo $lang["showtranslations"]?></a></p>
+    <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
+    <?php
+    reset($languages);
+    foreach ($languages as $langkey => $langname)
+        {
+        if ($language!=$langkey)
+            {
+            if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
+            ?>
+            <tr>
+            <td nowrap valign="top"><?php echo htmlspecialchars($langname)?>&nbsp;&nbsp;</td>
+
+            <?php
+            if ($field["type"]==0)
+                {
+                ?>
+                <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo htmlspecialchars($transval)?>"></td>
+                <?php
+                }
+            else
+                {
+                ?>
+                <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo htmlspecialchars($transval)?></textarea></td>
+                <?php
+                }
+            ?>
+            </tr>
+            <?php
+            }
+        }
+    ?></table><?php
+    }
+
+function propose_changes_display_field($n, $field)
+    {
+    global $ref, $original_fields, $multilingual_text_fields,
+    $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
+    $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
+
+    $edit_autosave=false;
+    $name="field_" . $field["ref"];
+    $value=$field["value"];
+    $value=trim($value??"");
+    $proposed_value="";            
+    # is there a proposed value set for this field?
+    foreach($proposed_changes as $proposed_change)
+        {
+        if($proposed_change['resource_type_field'] == $field['ref'])
+            {
+            $proposed_value = $proposed_change['value'];
+            }
+        }
+
+    // Don't show this if user is an admin viewing proposed changes, needs to be on form so that form is still submitted with all data
+    if ($editaccess && $proposed_value=="")
+        {
+        ?>
+        <div style="display:none" >
+        <?php
+        }
+
+    if ($multilingual_text_fields)
+        {
+        # Multilingual text fields - find all translations and display the translation for the current language.
+        $translations=i18n_get_translations($value);
+        if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
+        }
+
+    ?>
+    <div class="Question ProposeChangesQuestion" id="question_<?php echo $n?>">
+    <div class="Label ProposeChangesLabel" ><?php echo htmlspecialchars($field["title"])?></div>
+
+    <?php 
+    # Define some Javascript for help actions (applies to all fields)
+    $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
+
+    #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
+    $modified_field_type="";
+    $modified_field_type=(hook("modifyfieldtype"));
+    if ($modified_field_type){$field["type"]=$modified_field_type-1;}
+
+    hook("addfieldextras");
+
+    // ------------------------------
+    // Show existing value so can edit
+    $value=preg_replace("/^,/","",$field["value"]??"");
+    $realvalue = $value; // Store this in case it gets changed by view processing
+    // debug("BANG " . $field["ref"] . " - ". $value);
+    if ($value!="")
+            {
+            # Draw this field normally.			
+            ?><div class="propose_changes_current ProposeChangesCurrent"><?php display_field_data($field,true); ?></div><?php
+            }                        
+        else
+            {
+            ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo $lang["propose_changes_novalue"] ?></div>    
+            <?php
+            }
+        if(!$editaccess && $proposed_value=="")
+            {
+            ?>
+            <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"] ?>">
+            <input type="submit" value="<?php echo $lang["propose_changes_buttontext"] ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
+            </div>
+            <?php
+            }?>
+
+    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if($proposed_value==""){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"] ?>">
+    <input type="hidden" id="propose_change_<?php echo $field["ref"] ?>" name="propose_change_<?php echo $field["ref"] ?>" value="true" <?php if($proposed_value==""){echo "disabled=\"disabled\""; } ?> />
+    <?php
+    # ----------------------------  Show field -----------------------------------
+    // Checkif we have a proposed value for this field
+    if('' != $proposed_value)
+        {
+        $value = $proposed_value;
+        }
+    else
+        {
+        $value = $realvalue;
+        }
+
+    $type = $field['type'];
+
+    if('' == $type)
+        {
+        $type = 0;
+        }
+
+    if (!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
+        {
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $name = "nodes[{$field['ref']}]";
+
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
+                }
+
+            $selected_nodes = (trim($proposed_value) != "" ? explode(', ', $proposed_value) : array());
+            if(!$editaccess && '' == $proposed_value)
+                {
+                $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
+                }
+            }
+        else if ($field["type"]==FIELD_TYPE_DATE_RANGE)
+            {
+            $rangedates = explode(",",$value);
+            natsort($rangedates);
+            $value=implode(",",$rangedates);
+            }
+
+        $is_search = false;
+
+        include dirname(__FILE__) . "/../../../pages/edit_fields/{$type}.php";
+        }
+    # ----------------------------------------------------------------------------
+    ?>
+        </div><!-- close proposed_change_<?php echo $field["ref"] ?> -->
+        <?php
+        if($editaccess)
+            {
+            ?>     
+            <div class="ProposeChangesAccept ProposeChangesAcceptDeleteColumn">
+            <table>
+            <tr>
+            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo $lang["propose_changes_accept_change"] ?></td>
+            <td>
+            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo $lang["action-delete"] ?></td>
+            </tr>
+            </table>
+            </div>
+            <?php
+            }
+
+    if (trim($field["help_text"]!=""))
+        {
+        # Show inline help for this field.
+        # For certain field types that have no obvious focus, the help always appears.
+        ?>
+        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(htmlspecialchars(i18n_get_translated($field["help_text"],false))))?></div></div>
+        <?php
+        }
+
+    # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
+    if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
+        {
+        propose_changes_display_multilingual_text_field($n, $field, $translations);
+        }
+    ?>
+    <div class="clearerleft"> </div>
+    </div><!-- end of question_<?php echo $n?> div -->
+    <?php
+    // Don't show this if user is an admin viewing proposed changes
+    if ($editaccess && $proposed_value=="")
+        {
+        ?>
+        </div><!-- End of hidden field -->
+        <?php
+        }
     }

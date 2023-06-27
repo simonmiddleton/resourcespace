@@ -17,7 +17,7 @@
  * $lang['cfg-<fieldname>'] to use for the element label.
  * 
  * <code>
- * $options = sql_select("SELECT name as label, ref as value FROM resource_types");
+ * $options = sql_select("SELECT name AS label, ref AS value FROM resource_type");
  * 
  * render_select_option('myfield', $options, 18);
  * </code>
@@ -1345,3 +1345,367 @@ function override_rs_variables_by_eval(array $variables, string $code)
 
     return;
     }
+
+
+/**
+ * Update the resource_type_field - resource_type mappings
+ *
+ * @param int $ref                  Resource type field ref
+ * @param array $resource_types     Array of resource type refs
+ * 
+ * @return void
+ * 
+ */
+function update_resource_type_field_resource_types(int $ref,array $resource_types)
+    {
+    ps_query("DELETE FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$ref]);
+    if(in_array(0,$resource_types))
+        {
+        // Global field, cannot have specific fields assigned
+        ps_query("UPDATE resource_type_field SET global=1 WHERE ref = ?",["i",$ref]);
+        }
+    elseif(count($resource_types)>0)
+        {
+        $query = "INSERT INTO resource_type_field_resource_type (resource_type_field, resource_type) VALUES ";
+        $valuestring = "(" . (int)$ref . (str_repeat(",?),(" . $ref,count($resource_types)-1)) . ",?)";
+        ps_query($query .$valuestring,ps_param_fill($resource_types,"i"));
+        ps_query("UPDATE resource_type_field SET global=0 WHERE ref = ?",["i",$ref]);
+        }
+    clear_query_cache("schema");
+    }
+
+
+/**
+ * Get all resource_type->resource-type_field associations
+ * 
+ * @param array $fields Optional array of resource_type_field data returned by get_resource_type_fields()
+ * 
+ * @return array    Array with resource_type_field ID as keys and arrays of resource_type IDs as values
+ * 
+ */
+function get_resource_type_field_resource_types(array $fields = [])
+    {
+    $field_restypes = [];
+    $allrestypes = array_column(get_resource_types("",false,true,true),"ref");
+    if(count($fields)==0)
+        {
+        $fields = get_resource_type_fields();
+        }
+
+    foreach($fields as $field)
+        {
+        if($field["global"]==1)
+            {
+            $field_restypes[$field["ref"]] = $allrestypes;
+            }
+        else
+            {
+            $field_restypes[$field["ref"]] = explode(",",(string) $field["resource_types"]);
+            }
+        }
+    return $field_restypes;
+    }
+
+/**
+ * Create a new resource type with the specified name
+ *
+ * @param $name         Name of new resouce type
+ * 
+ * @return int| bool    ref of new resource type or false if invalid data passed
+ * 
+ */
+function create_resource_type($name)
+    {
+    if(!checkperm('a') || trim($name) == "")
+        {
+        return false;
+        }
+
+    ps_query("INSERT INTO resource_type (name) VALUES (?) ",array("s",$name));
+    $newid = sql_insert_id();
+    clear_query_cache("schema");
+    return $newid;
+    }
+
+/**
+ * Save updated resource_type data
+ *
+ * @param int   $ref        Ref of resource type
+ * @param array $savedata   Array of column values
+ * 
+ * @return bool
+ * 
+ */
+
+function save_resource_type(int $ref, array $savedata)
+    {
+    global $execution_lockout;
+
+    $restypes = get_resource_types("",true,false,true);
+    $restype_refs = array_column($restypes,"ref");
+    if(!checkperm('a') || !in_array($ref,$restype_refs))
+        {
+        return false;
+        }
+
+    $setcolumns = [];
+    $setparams = [];
+    $restypes = array_combine($restype_refs,$restypes);
+    foreach($savedata as $savecol=>$saveval)
+        {
+        debug("checking for column " . $savecol . " in " . print_r($restype_refs,true));
+        if($saveval == $restypes[$ref][$savecol])
+            {
+            // Unchanged value, skip
+            continue;
+            }
+        switch($savecol)
+            {
+            case "name":               
+                $setcolumns[] = "name";
+                $setparams[] = "s";
+                $setparams[] = mb_strcut($saveval, 0, 100);
+                break;
+
+            case "order_by":
+            case "push_metadata":
+            case "tab":
+            case "colour":
+                $setcolumns[] = $savecol;
+                $setparams[] = "i";
+                $setparams[] = $saveval;
+                break;
+
+            case "config_options":
+                if (!$execution_lockout) 
+                    {
+                    // Not allowed to save PHP if execution_lockout set.
+                    $setcolumns[] = $savecol;
+                    $setparams[] = "s";
+                    $setparams[] = $saveval;
+                    }
+                break;
+
+            case "allowed_extensions":
+                $setcolumns[] = $savecol;
+                $setparams[] = "s";
+                $setparams[] = $saveval;
+                break;
+                
+            case "icon":            
+                $setcolumns[] = $savecol;
+                $setparams[] = "s";
+                $setparams[] = mb_strcut($saveval, 0, 120);
+                break;
+
+            default:
+                // Invalid option, ignore
+                break;
+            }
+        }
+    if(count($setcolumns) == 0)
+        {
+        return false;
+        }
+    
+    $setparams[] = "i";
+    $setparams[] = $ref;
+    
+    ps_query(
+        "UPDATE resource_type
+            SET " . implode("=?,",$setcolumns) . "=?
+            WHERE ref = ?", $setparams
+        );
+
+    for($n=0;$n<count($setcolumns);$n++)
+        {
+        log_activity(null,LOG_CODE_EDITED,$setparams[(2*$n)+1],'resource_type',$setcolumns[$n],$ref,null,$restypes[$ref][$setcolumns[$n]]);
+        }
+
+    clear_query_cache("schema");
+    }
+
+
+/**
+ * Get resource_type data
+ *
+ * @param int $ref
+ * 
+ * @return array
+ * 
+ */
+function rs_get_resource_type(int $ref)
+    {
+    $return = ps_query("SELECT " . columns_in('resource_type') . "
+                    FROM resource_type
+                WHERE ref = ?
+                ORDER BY `name`",
+            array("i",$ref),
+            "schema"
+            );
+    return $return;
+    }
+
+/**
+ * Save resource type field - used on pages/admin/admin_resource_type_field_edit.php
+ *
+ * @param int   $ref        Field ID
+ * @param array $columns    Array of column data
+ * @param mixed $postdata   POST'd data
+ * 
+ * @return bool 
+ * 
+ */
+function save_resource_type_field($ref,$columns,$postdata)
+    {
+    global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
+
+    $sync_field = (int)$postdata["sync_field"] ?? 0;
+    $existingfield = get_resource_type_field($ref);
+    $params=array();$syncparams=array();
+
+    $resource_types=get_resource_types("",true,false,true);
+
+    // Array of resource types to remove data from if no longer associated with field
+    $remove_data_restypes = [];
+    foreach($resource_types as $resource_type)
+        {
+        $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
+        }
+        
+    foreach ($columns as $column=>$column_detail)		
+        {
+        if ($column_detail[2]==1)
+            {
+            $val= (int)(bool)($postdata[$column] ?? 0);
+            }		
+        else
+            {
+            $val=trim($postdata[$column] ?? "");
+            if($column == 'regexp_filter')
+                {
+                $val = str_replace('\\', $regexp_slash_replace, $val);   
+                }
+        
+            if($column == "type" && $val != $existingfield["type"] && (bool)$postdata["migrate_data"] ?? false)
+                {
+                // Need to migrate field data
+                $migrate_data = true;				
+                }
+            
+            // Set shortname if not already set or invalid
+            if($column=="name" && ($val=="" || in_array($val,array("basicday","basicmonth","basicyear"))))
+                {
+                $val="field" . $ref;
+                }
+
+            if($column === 'tab' && $val == 0)
+                {
+                $val = ''; # set to blank so the code will convert to SQL NULL later
+                }
+            }
+        if (isset($sql))
+            {
+            $sql.=",";
+            }
+        else
+            {
+            $sql="UPDATE resource_type_field SET ";
+            }		
+        
+        $sql.="{$column}=";
+        if ($val=="")
+            {
+            $sql.="NULL";
+            }
+        else    
+            {
+            $sql.="?";
+            $params[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+            $params[]=$val;
+            }
+        if($column == "global")
+            {
+            // Also need to update all resource_type_field -> resource_type associations
+            $setresypes = [];
+            if($val == 0)
+                {
+                $currentrestypes = get_resource_type_field_resource_types([$existingfield]);
+                // Only need to check them if field is not global
+                foreach($resource_type_array as $resource_type=>$resource_type_name)
+                    {
+                    if(trim($postdata["field_restype_select_" . $resource_type] ?? "") != "")
+                        {
+                        $setresypes[] = $resource_type;
+                        }
+                    }
+                 // Set to remove existing data from the resource types that had data stored
+                 $remove_data_restypes = $existingfield["type"] == 1 ? array_column($resource_type_array,"ref") : array_diff($currentrestypes[$ref],$setresypes);
+                }
+            update_resource_type_field_resource_types($ref,$setresypes);
+            }
+
+        log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
+
+        // Add SQL to update synced fields if field is marked as a sync field
+        if ($sync_field!="" && $sync_field>0 && $column_detail[3]==1)
+            {
+            if (isset($syncsql))
+                {
+                $syncsql.=",";
+                }
+            else
+                {
+                $syncsql="UPDATE resource_type_field SET ";
+                }
+            $syncsql.="{$column}=";
+            if ($val=="")
+                {
+                $syncsql.="NULL";
+                }
+            else    
+                {
+                $syncsql.="?";
+                $syncparams[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
+                $syncparams[]=$val;
+                }
+            }
+        }
+    // add field_constraint sql
+    if (isset($postdata["field_constraint"]) && trim($postdata["field_constraint"]) != "")
+        {
+        $sql.=",field_constraint=?";
+        $params[]="i";$params[]= (int)$postdata["field_constraint"];
+        }
+
+    // Add automatic nodes ordering if set (available only for fixed list fields - except category trees)
+    $sql .= ", automatic_nodes_ordering = ?";
+    $params[]="i";$params[]= (1 == ($postdata['automatic_nodes_ordering'] ?? 0) ? 1 : 0);
+
+    $sql .= " WHERE ref = ?";
+    $params[]="i";$params[]=$ref;
+
+    ps_query($sql,$params);
+    clear_query_cache("schema");
+    clear_query_cache("featured_collections");
+
+    if($sync_field!="" && $sync_field>0)
+        {
+        $syncsql.=" WHERE ref=? OR sync_field=?";
+        $syncparams[]="i";$syncparams[]=$sync_field;
+        $syncparams[]="i";$syncparams[]=$ref;
+
+        ps_query($syncsql,$syncparams);
+        }
+    if(count($remove_data_restypes)>0)
+        {
+        // Don't delete invalid nodes immediately in case of accidental/inadvertent change - just show a link to the cleanup page
+        $cleanup_url = generateURL($baseurl . "/pages/tools/cleanup_invalid_nodes.php",["cleanupfield"=>$ref, "cleanuprestype"=>implode(",",$remove_data_restypes)]);
+        $onload_message= ["title" => $lang["cleanup_invalid_nodes"],"text" => str_replace("%%CLEANUP_LINK%%","<br/><a href='" . $cleanup_url . "' target='_blank'>" . $lang["cleanup_invalid_nodes"] . "</a>",$lang["information_field_restype_deselect_cleanup"])];
+        }
+    
+    hook('afterresourcetypefieldeditsave');
+    
+    return true;
+    }
+   

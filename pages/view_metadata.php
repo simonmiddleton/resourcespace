@@ -2,7 +2,7 @@
 # Global everything we need, in case called inside a function (e.g. for push_metadata support)
 global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount, $resource_hit_count_on_downloads,
        $show_contributed_by,$baseurl_short,$search,$enable_related_resources,$modal,
-       $sort_tabs;
+       $sort_tabs, $arr_fieldrestypes;
 
 // Is this a modal?
 $modal=(getval("modal","")=="true");
@@ -214,9 +214,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     for($i = 0; $i < count($fields); $i++)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-
-        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'] 
-                                               || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
+        if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
             {
             if($displaycondition && $tab_ref == $fields[$i]['tab'])
                 {
@@ -271,7 +269,6 @@ if(empty($fields_tab_names))
             }
         }
     }
-    
 ?><?php hook("extrafields2");?>
 <div class="clearerleft"></div>
 <?php if(!isset($related_type_show_with_data)) { echo $extra; } ?>

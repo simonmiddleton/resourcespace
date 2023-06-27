@@ -2779,3 +2779,67 @@ function migrate_fixed_to_text(int $resource_type_field, int $resource, bool $ca
     $savenode = set_node(NULL, $resource_type_field, $new_value, NULL, 0);
     return add_resource_nodes($resource, [$savenode], true, false);
     }
+
+/**
+ * Remove invalid field data from resources, optionally just for the specified resource types and/or fields
+ *
+ * @param array $fields=[]      Array of resource_type_field refs
+ * @param array $restypes=[]    Array of resource_type refs
+ * @param bool  $dryrun         Don't delete, just return count of rows that will be affected
+ * 
+ * @return int Count of rows deleted/to delete
+ * 
+ */
+function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryrun=false)
+    {
+    $allrestypes = get_resource_types('',false,false,true);
+    $allrestyperefs = array_column($allrestypes,"ref");
+    $allfields = get_resource_type_fields();
+    $fieldglobals = array_column($allfields,"global","ref");
+
+    $restypes = array_filter($restypes,function ($val) {return $val > 0;});
+    $fields = array_filter($fields,function ($val) {return $val > 0;});
+
+    $fields = count($fields)>0 ? array_intersect($fields,array_column($allfields,"ref")) : array_column($allfields,"ref");
+    $restypes = count($restypes)>0 ? array_intersect($restypes,$allrestyperefs) : $allrestyperefs;
+    $restype_mappings = get_resource_type_field_resource_types();
+    $deletedrows = 0;
+    foreach($restypes as $restype)
+        {
+        if(!in_array($restype,$allrestyperefs))
+            {
+            continue;
+            }
+        // Find invalid fields for this resource type
+        $remove_fields = [];
+        foreach($fields as $field)
+            {
+            if(!in_array($field, array_column($allfields,"ref")))
+                {
+                continue;
+                }
+            if(((int)$fieldglobals[$field] == 0 && !in_array($restype,$restype_mappings[$field])))
+                {
+                $remove_fields[] = $field;
+                }
+            }
+
+        if(count($remove_fields)>0)
+            {
+            if($dryrun)
+                {
+                $query = "SELECT COUNT(*) AS value FROM resource_node LEFT JOIN resource r ON r.ref=resource_node.resource LEFT JOIN node n ON n.ref=resource_node.node WHERE r.resource_type = ? AND n.resource_type_field IN (" . ps_param_insert(count($remove_fields))  . ");";
+                $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
+                $deletedrows = ps_value($query,$params,0);
+                }
+            else
+                {
+                $query = "DELETE rn.* FROM resource_node rn LEFT JOIN resource r ON r.ref=rn.resource LEFT JOIN node n ON n.ref=rn.node WHERE r.resource_type = ? AND n.resource_type_field IN (" . ps_param_insert(count($remove_fields))  . ");";
+                $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
+                ps_query($query,$params);
+                $deletedrows += sql_affected_rows();
+                }
+            }
+        }
+    return $deletedrows > 0 ? ((!$dryrun ? "Deleted " : "Found ") . $deletedrows . " row(s)") :  "No rows found";
+    }

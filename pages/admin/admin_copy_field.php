@@ -6,90 +6,34 @@ if(!checkperm('a'))
     exit('Permission denied.');
     }
 
-$ref    = getval('ref', '');
+$ref    = getval('ref', 0,true);
 $copied = '';
-$title  = ps_value("SELECT title AS `value` FROM resource_type_field WHERE ref = ?", array("i",$ref), '', "schema");
+$current = get_resource_type_field($ref);
+$title = $current["title"];
 
 # Perform copy
-if (getval("saveform","")!="" && enforcePostRequest(false))
+if (getval("saveform","")!="" && $ref > 0 && enforcePostRequest(false))
 	{
-	$params=array("i",getval("resource_type",""),"i",$ref);
-
 	$sync=getval("sync","");
-	if ($sync==1) {$sync="?";$params[]="i";$params[]=$ref;} else {$sync="null";}
-	
-	ps_query("insert into resource_type_field
-	(
-		name,
-		title,
-		type,
-		order_by,
-		keywords_index,
-		partial_index,
-		resource_type,
-		resource_column,
-		display_field,
-		use_for_similar,
-		iptc_equiv,
-		display_template,
-		required,
-		smart_theme_name,
-		exiftool_field,
-		advanced_search,
-		simple_search,
-		help_text,
-		display_as_dropdown,
-		external_user_access,
-		autocomplete_macro,
-		hide_when_uploading,
-		hide_when_restricted,
-		value_filter,
-		exiftool_filter,
-		omit_when_copying,
-		tooltip_text,
-		regexp_filter,
-                display_condition,
-                onchange_macro,
-		sync_field
-	)
-	
-	select
-	
-		name,
-		title,
-		type,
-		9999,
-		keywords_index,
-		partial_index,
-		?,
-		resource_column,
-		display_field,
-		use_for_similar,
-		iptc_equiv,
-		display_template,
-		required,
-		smart_theme_name,
-		exiftool_field,
-		advanced_search,
-		simple_search,
-		help_text,
-		display_as_dropdown,
-		external_user_access,
-		autocomplete_macro,
-		hide_when_uploading,
-		hide_when_restricted,
-		value_filter,
-		exiftool_filter,
-		omit_when_copying,
-		tooltip_text,
-		regexp_filter,
-                display_condition,
-                onchange_macro,
-		" . $sync . "
-		from resource_type_field where ref=?
-		",$params);
+    $allcolumns = columns_in("resource_type_field",null,null,true);
+	$allcolumns = array_diff($allcolumns,["name"]);
+	$insert = array_diff($allcolumns,["ref","name"]);
+
+    // Create new short name 
+    $allcolumns[] = "name";
+    $newname = $current["name"] . "copy";
+
+	ps_query("INSERT INTO resource_type_field (" . implode(",",$allcolumns) . ") SELECT NULL, " . implode(",",$insert)	. ",? FROM resource_type_field WHERE ref = ?",["s",$newname,"i",$ref]);
 
 	$copied = sql_insert_id();
+
+    // Copy any field mappings
+    ps_query("INSERT INTO resource_type_field_resource_type (resource_type_field,resource_type) SELECT ?,resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$copied,"i",$ref]);
+
+    if ($sync==1)
+        {
+        ps_query("UPDATE resource_type_field SET sync_field = ? WHERE ref = ?",["i",$ref,"i",$copied]);
+        }
 
     // Copy nodes if resource type is a fixed list type:
     copy_resource_type_field_nodes($ref, $copied);
@@ -133,7 +77,7 @@ renderBreadcrumbs($links_trail);
 if(isset($saved_text))
     {
     ?>
-    <div class="PageInformal"><?php echo $saved_text; ?></div>
+    <div class="PageInformal"><?php echo htmlspecialchars($saved_text); ?></div>
     <?php
     }
     ?>
@@ -141,30 +85,16 @@ if(isset($saved_text))
         <?php generateFormToken("admin_copy_field"); ?>
         <input type="hidden" name="saveform" value="true">
         <input type="hidden" name="ref" value="<?php echo $ref; ?>">
-        <p><?php echo $lang['copy-to-resource-type']; ?><br />
-            <select name="resource_type" style="width:100%;">
-        <?php
-        $types = get_resource_types();
-        for($n = 0; $n < count($types); $n++)
-            {
-            ?>
-            <option value="<?php echo $types[$n]['ref']; ?>"><?php echo $types[$n]['name']; ?></option>
-            <?php
-            }
-            ?>
+        <p>
+        <?php echo htmlspecialchars($lang['synchronise-changes-with-this-field']) ; ?><br />
+            <select name="sync" style="width:100%;">
+                <option value="0"><?php echo htmlspecialchars($lang['no']) ; ?></option>
+                <option value="1"><?php echo htmlspecialchars($lang['yes']) ; ?></option>
             </select>
         </p>
-
-    <p>
-    <?php echo $lang['synchronise-changes-with-this-field']; ?><br />
-        <select name="sync" style="width:100%;">
-            <option value="0"><?php echo $lang['no']; ?></option>
-            <option value="1"><?php echo $lang['yes']; ?></option>
-        </select>
-    </p>
-    <p align="right">
-        <input type="submit" name="copy" value="<?php echo $lang['copy']; ?>" style="width:100px;">
-    </p>
+        <p align="right">
+            <input type="submit" name="copy" value="<?php echo htmlspecialchars($lang['copy']) ; ?>" style="width:100px;">
+        </p>
     </form>
 
 </div><!--End of BasicsBox -->

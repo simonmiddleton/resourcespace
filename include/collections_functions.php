@@ -1246,7 +1246,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     if ($restypes!="") 
         {
         $restypes_x=explode(",",$restypes);
-        $search_includes_themes_now=in_array("themes",$restypes_x);
+        $search_includes_themes_now=in_array("FeaturedCollections",$restypes_x);
         } 
 
     if ($search_includes_themes_now)
@@ -2529,7 +2529,7 @@ function get_search_title($searchstring)
 
     if ($restypes!="")
         { 
-        $resource_types=get_resource_types($restypes);
+        $resource_types=get_resource_types($restypes,true,false,true);
         foreach($resource_types as $type)
             {
             $typenames[]=$type['name'];

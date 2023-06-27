@@ -7,13 +7,12 @@ type,int(11),Field type. See include/definitions.php
 order_by,int(11),Metadata field order defined by administrators.
 keywords_index,int(11),Set if values of this field should be indexed.
 partial_index,int(11),Allows searching and matching algorithms to check only parts of this field values.
-resource_type,int(11),Resource type specific field. Use Global if it's a general use metadata field (ie applies to all resource types).
+global,int(1),Set to 1 if field is applicable to all resource types. If set to 0 then mappings are stored in resource_type_field_resource_type. Replaces the old resource_type column.
 resource_column,varchar(50),Points to a resource table column to keep it up to date. Deprecated?
 display_field,int(11),Determines if a field is visible on the resource view page
 use_for_similar,int(11),Means the field is available to help users find similar resources
 iptc_equiv,varchar(20),IPTC codes for extracting embedded metadata. See https://www.resourcespace.com/knowledge-base/resourceadmin/metadata-read-write-mapping
 display_template,text,Custom HTML display template
-tab_name,varchar(50),Tab name under which this field should be rendered when viewing a resource. DEPRECATED - use the tab column instead. From version >9.8 all tab names have been migrated to the system tabs.
 required,int(11),Mark field as mandatory.
 smart_theme_name,varchar(200),Generate featured collections based on the values of this field
 exiftool_field,varchar(200),Exif values for extracting from embedded metadata.

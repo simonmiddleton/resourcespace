@@ -30,6 +30,8 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
         $resource_types[$restype["ref"]] = $restype;
         }
 
+    $field_restypes = get_resource_type_field_resource_types();
+
     // Break resources up into smaller arrays to avoid hitting memory limits
     $resourcebatches = array_chunk($resources, 2000);
 
@@ -102,15 +104,9 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
                         (!$personal || $restypefield["personal_data"])
                     && 
                         ($alldata || $restypefield["include_in_csv_export"])
-                    && 
-                        !(checkperm("T" . $restypefield["resource_type"]))
                     &&
                         (
-                        $restypefield["resource_type"] == $resdata["resource_type"]
-                        ||
-                        ($restypefield["resource_type"] == 0 && (bool)$resource_types[$resdata["resource_type"]]["inherit_global_fields"])
-                        ||
-                        ($restypefield["resource_type"] == 999 && $resdata["archive"] == 2)
+                        isset($field_restypes[$restypefield["ref"]]) && in_array($resdata["resource_type"],$field_restypes[$restypefield["ref"]])
                         )
                     )
                     {

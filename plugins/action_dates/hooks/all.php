@@ -120,7 +120,12 @@ function HookAction_datesCronCron()
             {
             echo "action_dates: Checking state action field $action_dates_deletefield.".$LINE_END;
             }
-
+      
+        $validrestypes = false;
+        if($fieldinfo["global"] == 0)
+            {
+            $validrestypes = ps_query("SELECT resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$action_dates_deletefield]);
+            }
         if($action_dates_reallydelete)
             {
             # FULL DELETION - Build candidate list of resources which have the deletion date field populated
@@ -133,6 +138,13 @@ function HookAction_datesCronCron()
                 }
             $sql .="WHERE r.ref > 0 AND n.resource_type_field = ?";
             $sql_params=array_merge($sql_params,array("i",$action_dates_deletefield));
+
+            // Filter resource types that shouldn't have access to the field
+            if(is_array($validrestypes))
+                {
+                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) .") ";
+                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes,"i"));
+                }
             $candidate_resources = ps_query($sql,$sql_params);
             }
         else
@@ -144,8 +156,9 @@ function HookAction_datesCronCron()
                 }
             # NOT FULL DELETION - Build candidate list of resources which have the deletion date field populated
             #                     and which are neither in the resource deletion state nor in the action dates new state
-            $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource ";
-            $sql_params = array();
+            $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource WHERE r.ref > 0 AND n.resource_type_field = ? ";
+            $sql_params = ["i",$action_dates_deletefield];
+
 
             if (!empty($eligible_states))
                 {
@@ -156,13 +169,12 @@ function HookAction_datesCronCron()
             $sql .= " AND r.archive NOT IN (?,?) ";
             $sql_params = array_merge($sql_params,["i",$resource_deletion_state,"i",$action_dates_new_state]);
 
-            $sql .= "WHERE r.ref > 0 AND n.resource_type_field = ?";
-            $sql_params = array_merge($sql_params,["i",$action_dates_deletefield]);
-
-            // Filter results to only ones that should have access to the field
-            $sql .= " AND ((r.resource_type in (select ref from resource_type where inherit_global_fields = 1) and exists (select * from resource_type_field where resource_type = 0 and ref = ?)) OR r.resource_type = (select resource_type from resource_type_field where ref = ?))";
-            $sql_params = array_merge($sql_params, ['i', $action_dates_deletefield,'i', $action_dates_deletefield]);
-
+            // Filter resource types that shouldn't have access to the field
+            if(is_array($validrestypes))
+                {
+                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) .") ";
+                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes,"i"));
+                }
             $candidate_resources = ps_query($sql,$sql_params);
 
             # NOT FULL DELETION - Resolve the target archive state to which candidate resources are to be moved
@@ -179,7 +191,6 @@ function HookAction_datesCronCron()
         foreach($candidate_resources as $resource)
             {
             $ref = $resource['resource'];
-
             $action_date_target = date_create($resource["value"]);   # Value of the restrict date from metadata
             
             # Candidate deletion date reached or passed 
@@ -404,6 +415,13 @@ function HookAction_datesCronCron()
         {
         $datefield = get_resource_type_field($action_dates_extra_config_setting["field"]);
         $field = $datefield["ref"];
+
+        $validrestypes = false;
+        if($datefield["global"] == 0)
+            {
+            $validrestypes = ps_query("SELECT resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$field]);
+            }
+
         $newstatus = $action_dates_extra_config_setting["status"];
         if(in_array($datefield['type'],$DATE_FIELD_TYPES))
             {
@@ -420,17 +438,22 @@ function HookAction_datesCronCron()
             WHERE r.ref > 0 
                 AND n.resource_type_field = ?
                 AND r.archive<> ? 
-                AND r.archive<> ?
-                AND ((r.resource_type in (select ref from resource_type where inherit_global_fields = 1) and exists (select * from resource_type_field where resource_type = 0 and ref = ?)) OR r.resource_type = (select resource_type from resource_type_field where ref = ?))    
+                AND r.archive<> ?   
                 ";
             
             $sql_params=array(
                 "i",$field,
                 "i",$resource_deletion_state,
                 "i",$newstatus,
-                "i",$field,
-                "i",$field
             );
+
+            // Filter resource types that shouldn't have access to the field
+            if(is_array($validrestypes))
+                {
+                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) .") ";
+                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes,"i"));
+                }
+
             $additional_resources=ps_query($sql,$sql_params);
 
             foreach ($additional_resources as $resource)

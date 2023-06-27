@@ -894,33 +894,49 @@ function config_add_multi_group_select($config_var, $label, $width=300)
     }
 
 /**
- * Generate an html multi-select + options block for selecting multiple the RS field types. The
- * Generate an html multi-select + options block for selecting multiple the RS field types. The
+ * Generate an html multi-select + options block for selecting multiple RS field types. The
  * selected field type is posted as an array of the values of the "ref" column of the selected
  * field types.
  *
  * @param string $name the name of the select block. Usually the name of the config variable being set.
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
- * @param integer array $current the current value of the config variable being set
+ * @param array  $current Array holding the current field IDs of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
+ * @param integer $size - Number of visible options. Default 7
+ * @param integer $rtype - Limit to fields associated with a specific resource type 
  */
-function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$ftype=false) 
+function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$rtype=false) 
     {
     global $lang;
-    if($ftype===false){
-    	$fields = ps_query('select f.ref, f.title, f.name, rt.name as rt_name from resource_type_field f left join resource_type rt on f.resource_type = rt.ref order by rt.ref, f.title, f.name', array(), "schema");
+    if($rtype===false){
+    	$fields = get_resource_type_fields("","order_by");
     }
     else{
-    	$fields = ps_query('select f.ref, f.title, f.name, rt.name as rt_name from resource_type_field f left join resource_type rt on f.resource_type = rt.ref where f.resource_type = ? order by f.title, f.name', array("i", $ftype), "schema");
+    	$fields = get_resource_type_fields($rtype,"order_by");
     }
-?>
-  <div class="Question">
+    $all_resource_types = get_resource_types();
+    $resource_types = array_column($all_resource_types,"name","ref");
+    //exit(print_r($all_resource_types));
+    ?>
+    <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
     <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
-<?php
+    <?php
     foreach($fields as $field)
         {
-        echo '    <option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current)?' selected':'') . '>' . lang_or_i18n_get_translated($field['title'],'fieldtitle-') . (($field['rt_name']!='')?' (' . lang_or_i18n_get_translated($field['rt_name'],'"resourcetype-') . ')':'') . '</option>';
+        $str_restypes = "";
+        $fieldrestypes = explode(",",(string)$field["resource_types"]);
+        $fieldrestypenames = [];
+        foreach($fieldrestypes as $fieldrestype)
+            {
+            $fieldrestypenames[] =i18n_get_translated($resource_types[$fieldrestype]);
+            }
+        if(count($fieldrestypes) < count($all_resource_types)-2)
+            {
+            // Don't show this if they are linked to all but one resource types
+            $str_restypes = " (" .  implode(",",$fieldrestypenames) . ")";
+            }
+        echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes .  '</option>';
         }
 ?>
     </select>
@@ -954,7 +970,7 @@ function config_add_multi_ftype_select($config_var, $label, $width=300,$size=7,$
 function config_single_rtype_select($name, $label, $current, $width=300)
     {
     global $lang;
-    $rtypes=get_resource_types();
+    $rtypes=get_resource_types("",true,false,true);
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>

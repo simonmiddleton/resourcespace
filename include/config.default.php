@@ -1587,7 +1587,6 @@ $related_resources_title_trim=15;
 
 # TITLE field: Default title for all resources 
 # Should be used as title on the View and Collections pages.
-# This field will be inherited even if Inherit Global fields is set to false.
 $view_title_field=8; # ** SEE NOTE (1)
 
 # Searchable Date Field:

@@ -121,11 +121,8 @@ switch ($returntype)
             $return_items[$n]["modal"] = true;
             $n++;
             }
-        // Resource types can be configured to not have global fields in which case we only present the user fields valid for
-        // this resource type
-        $inherit_global_fields = (bool) ps_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = ?", array("i",$returnid), true, "schema");
-        $gettypes = ($inherit_global_fields == true) ? array(0) : array(); // determine whether to display global fields
-        $gettypes[] = (int)$returnid; // add selected resource type fields
+        
+        $gettypes = [0,(int)$returnid]; // add selected resource type fields
         $allfields = get_resource_type_fields($gettypes,"order_by",'asc','',$FIXED_LIST_FIELD_TYPES);
         
         foreach($allfields as $field)

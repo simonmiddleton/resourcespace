@@ -445,7 +445,25 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
+        <div class="Question <?php 
+        // Add class for each supported resource type to allow showing/hiding on advanced search
+        if($field["resource_types"] == "Collections")
+            {
+            echo "QuestionSearchRestypeCollections";
+            }
+        elseif($field["global"] == 1)
+            {
+            echo "QuestionSearchRestypeGlobal";
+            }
+        else
+            {
+            echo "QuestionSearchRestypeSpec ";
+            foreach(explode(",",$field["resource_types"]) as $fieldrestype)
+                {
+                echo "QuestionSearchRestype" . (int)$fieldrestype . " ";
+                }
+            }
+        ?>" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
         if (strlen((string) $field["tooltip_text"])>=1)
             {
             echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
@@ -479,7 +497,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         if ((int)$field['field_constraint']==0)
             { 
 			
-			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
+			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_types"]) ?>);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
 		    }
@@ -562,7 +580,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 ?>
                 <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>"
                     <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
-                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
+                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars(($field["global"] == 1 ? "[0]" : "[" . $field["resource_types"] . "]")) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php
                 foreach($field['nodes'] as $node)
@@ -1739,9 +1757,6 @@ function is_field_displayed($field)
     # Conditions under which the field is not displayed
     return !(
         ($field['active']==0)
-        ||
-        # Field is an archive only field
-        (isset($resource["archive"]) && $resource["archive"]==0 && $field["resource_type"]==999)
         # Field does not have individual write access allowed; and does not have edit access allowed on upload
         || (checkperm("F*") && !checkperm("F-" . $field["ref"]) && !($ref < 0 && checkperm("P" . $field["ref"])))
         # Field has write access denied directly
@@ -1794,7 +1809,7 @@ function display_multilingual_text_field($n, $field, $translations)
 
 function display_field($n, $field, $newtab=false,$modal=false)
   {
-  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
+  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastglobal,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $locked_fields, $lastedited, $copyfrom, $fields;
@@ -1877,11 +1892,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
   if ($multiple && ((getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
 
-  if ($field["resource_type"]!=$lastrt && $lastrt!=-1 && $collapsible_sections)
-      {
-      ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars(get_resource_type_name($field["resource_type"]))?> <?php echo htmlspecialchars($lang["properties"])?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref==-1) echo "Upload"; ?><?php echo $field["resource_type"]; ?>Section"><?php
-      }
-    $lastrt=$field["resource_type"];
+  if ($field["global"] == 0 && $lastglobal && $collapsible_sections)
+    {
+    ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars($lang["typespecific"]); ?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref<0) echo "Upload"; ?>TypeSpecificSection"><?php
+    }
 
     # Blank form if 'reset form' has been clicked
     if('' != getval('resetform', ''))
@@ -2185,6 +2199,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $is_search = false;
 
         include "edit_fields/{$type}.php";
+        $lastglobal = $field['global']==1;
         }
 		
     # ----------------------------------------------------------------------------
@@ -6183,4 +6198,395 @@ function display_related_resources($context)
     </div><!-- End of RecordPanel -->
     </div><!-- End of RecordBox -->
     <?php
+    }
+
+/**
+ * Display appropriate field constraint for use on admin_resource_type_field_edit.php e.g. single select/Number
+ *
+ * @param int   Metadata field ID
+ * @param int   Current field type    
+ * 
+ * @return void
+ * 
+ */
+function admin_resource_type_field_constraint($ref, $currentvalue)
+	{
+	global $lang;
+	$constraint=ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref=?",array("i",$ref),0, "schema");
+	?>
+		<div class="clearerleft"></div>
+	</div> <!-- end question -->
+	<div class="Question">
+		<label><?php echo $lang["property-field_constraint"]?></label>
+		<select id="field_constraint" name="field_constraint" class="stdwidth" onchange="CentralSpacePost(this.form);">
+
+			<option value="0" <?php if ($constraint==0) { echo " selected"; } ?>><?php echo htmlspecialchars($lang["property-field_constraint-none"]) ?></option>
+			<option value="1" <?php if ($constraint==1) { echo " selected"; } ?>><?php echo htmlspecialchars(($currentvalue==FIELD_TYPE_TEXT_BOX_SINGLE_LINE ? $lang["property-field_constraint-number"] : $lang["property-field_constraint-singlekeyword"]))?></option>
+		</select>
+		<?php
+	}
+	
+/**
+ * Render metadata field option input on admin_resource_type_field_edit.php
+ *
+ * @param string $propertyname          Field property/column name
+ * @param string $propertytitle         Title 
+ * @param string $helptext              Help text
+ * @param mixed $type                   Input type (0=text,1=boolean,2=text area)
+ * @param mixed $currentvalue           Current field setting
+ * @param int   $fieldtype              Field type. See definitions.php
+ * @param bool  $system_date_field      Is this field set as the system $date_field?
+ * 
+ * @return void
+ * 
+ */
+function admin_resource_type_field_option($propertyname,$propertytitle,$helptext,$type,$currentvalue,$fieldtype,$system_date_field)
+	{
+    debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
+
+	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield,
+    $resource_type_array, $existingrestypes, $regexp_slash_replace, $resource_type_array;
+	if($propertyname=="linked_data_field")
+		{
+		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
+			{
+			// The linked_data_field column is is only used for date range fields at present
+			$propertytitle = $lang["property-field_raw_edtf"];
+			}
+		else
+			{
+			return;
+			}
+		}
+    $resource_types=get_resource_types("",true,false,true);
+    foreach($resource_types as $resource_type)
+        {
+        $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
+        }
+    
+    if($propertyname == 'regexp_filter')
+        {
+        $currentvalue = str_replace($regexp_slash_replace, '\\', (string) $currentvalue);
+        }
+		
+	$alt_helptext=hook('rtfieldedithelptext', 'admin_resource_type_field_edit', array($propertyname));
+	if($alt_helptext!==false){
+	    $helptext=$alt_helptext;
+	}
+	
+	?>
+	<div class="Question" >
+        <label><?php echo ($propertytitle!="") ? htmlspecialchars((string) $propertytitle) : htmlspecialchars((string) $propertyname); ?></label>
+        <?php
+        if($propertyname=="global")
+            { 
+            // Special case - new global/resource type selector
+            ?>
+            <table>
+                <tr>
+                    <td>
+                        <input type="checkbox" 
+                            name="global" 
+                            id="globalfield" 
+                            value="1"
+                            <?php if($currentvalue == 1) { ?> checked="checked"<?php } ?>s
+                            onchange="showHideResTypeSelector();">
+                        <?php echo htmlspecialchars($lang["resourcetype-global_field"]) ?>
+                    </td>
+                </tr>
+                <?php
+                foreach($resource_type_array as $resource_type=>$restypename)
+                    {
+                    ?>
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                name="field_restype_select_<?php echo $resource_type; ?>"
+                                id="field_restype_select_<?php echo $resource_type; ?>" 
+                                class="field_restype_select"
+                                value="1"
+                                <?php if($currentvalue == 1) { ?> disabled="true"<?php } ?>
+                                <?php if(in_array($resource_type,$existingrestypes)) { ?> checked="checked"<?php } ?>>
+                            <?php echo htmlspecialchars($restypename) ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                ?>
+            </table>
+            <script>
+            function showHideResTypeSelector() {
+                if(jQuery("#globalfield").prop("checked")){
+                    jQuery(".field_restype_select").display = 'none';
+                    jQuery(".field_restype_select").prop('checked',false);
+                    jQuery(".field_restype_select").prop('disabled',true);
+                }
+                else {                    
+                    jQuery(".field_restype_select").display = 'block';
+                    jQuery(".field_restype_select").prop('disabled',false);
+                }
+            }
+            </script>
+            <?php
+            }
+        elseif($propertyname=="type")
+            {
+            global $field_types;
+            
+            // Sort  so that the display order makes some sense
+            //natsort($field_types);
+            ?>
+                <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>"
+                        name="<?php echo htmlspecialchars((string) $propertyname); ?>"
+                        class="stdwidth"
+                        onchange="
+                                <?php if(!$newfield)
+                                {?>
+                                newval=parseInt(this.value);
+                                if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1))
+                                    {
+                                    jQuery('input[name=\'keywords_index\']')[0].checked = true;
+
+                                    if(confirm('<?php echo escape_quoted_data($lang["admin_resource_type_field_migrate_data_prompt"]) ?>'))
+                                        {
+                                        jQuery('#migrate_data').val('yes');
+                                        }
+                                    else
+                                        {
+                                        jQuery('#migrate_data').val('');
+                                        }
+
+                                    this.form.submit();
+                                    }
+                                    
+                                    else if ((jQuery.inArray(newval,text_fields) > -1) && (jQuery.inArray(current_type,fixed_list_fields) > -1)) 
+                                {
+                                    if(confirm('<?php echo $lang["admin_resource_type_field_cannot_migrate_data_prompt"] ?>'))
+                                        {
+                                            this.form.submit(); 
+                                        } else {
+                                            jQuery('#field_edit_type').val(current_type);
+                                        }
+                                }
+                                else
+                                    {
+                                    this.form.submit();
+                                    }
+                                <?php
+                                }
+                            else
+                                {
+                                ?>
+                                this.form.submit();
+                                <?php
+                                }
+                                ?>
+                ">
+                <?php
+                foreach($field_types as $field_type=>$field_type_description)
+                    {
+                    ?>
+                    <option value="<?php echo $field_type ?>"<?php if ($currentvalue == $field_type) { echo " selected"; } ?>><?php echo $lang[$field_type_description] ; ?></option>
+                    <?php
+                    }
+                ?>
+                </select>
+            <?php
+            if (in_array($currentvalue, $FIXED_LIST_FIELD_TYPES))
+                {
+                ?>
+                <div class="clearerleft"></div>
+                </div> <!-- end question -->
+
+                <div class="Question">
+                    <label><?php echo $lang['options']; ?></label>
+                    <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
+                    <div class="clearerleft"></div>
+
+                <?php
+                if(FIELD_TYPE_CATEGORY_TREE != $currentvalue)
+                    {
+                    ?>
+                    </div>
+                    <?php
+                    $field_index              = array_search($ref, array_column($allfields, 'ref'));
+                    $automatic_nodes_ordering = (false !== $field_index ? $allfields[$field_index]['automatic_nodes_ordering'] : 0);
+                    ?>
+                    <div class="Question">
+                        <label><?php echo $lang['property-automatic_nodes_ordering_label']; ?></label>
+                        <input type="checkbox" name="automatic_nodes_ordering" value="1"<?php if(1 == $automatic_nodes_ordering) { ?> checked="checked"<?php } ?>>
+                    <?php
+                    // create constraints selector
+                    admin_resource_type_field_constraint($ref, $currentvalue);
+                    }
+                }
+            elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
+                { // create constraints selector
+				admin_resource_type_field_constraint($ref, $currentvalue);
+                }
+            }
+        elseif($propertyname=="linked_data_field")
+            {
+            if ($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
+                {
+                // The linked_data_field column is is only used for date range fields at present			
+                // Used to store the raw EDTF string submitted
+                ?>
+                <input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
+                <?php
+                }
+            }
+		elseif($propertyname=="sync_field")
+			{
+			global $allfields, $resource_type_array;
+			
+			// Sort  so that the display order makes some sense
+			
+			?>
+			  <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
+				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
+				<?php
+				foreach($allfields as $field)
+					{
+					if($field["ref"]!=$ref) // Don't show itself as an option to sync with
+					    {?>
+					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]) )?></option>
+					    <?php
+					    }
+					}
+				?>				
+				</select>
+			<?php
+			}
+        else if($propertyname === 'tab')
+            {
+            ?>
+            <select class="stdwidth" name="<?php echo escape_quoted_data($propertyname); ?>">
+            <?php
+            foreach(get_tab_name_options() as $tab_ref => $tab_name)
+                {
+                $selected = $tab_ref === (int) $currentvalue ? 'selected' : '';
+                ?>
+                <option value="<?php echo (int) $tab_ref; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars((string) $tab_name); ?></option>
+                <?php
+                }
+            ?>
+            </select>
+            <?php
+            }
+		elseif($type==1)
+			{
+			if ($propertyname=="advanced_search" && $system_date_field)
+                {
+                ?><input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                $helptext=$lang["property-system_date_help_text"];
+                }
+            else
+                {
+                ?><input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                }
+			}
+		elseif($type==2)
+			{
+			?>
+			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
+			<?php
+			}
+		else
+			{
+			?>
+			<input id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string) $currentvalue)?>">
+			<?php
+			}
+
+		if($helptext!="")
+				{
+				?>
+				<div class="FormHelp" style="padding:0;clear:left;" >
+					<div class="FormHelpInner"><?php echo str_replace("%ref",$ref,$helptext) ?>
+					</div>
+				</div>
+				<?php
+				}
+
+    if($propertyname == "name")
+        {
+        ?>
+        <div id="shortname_err_msg" class="FormHelp DisplayNone" style="padding:0;clear:left;" >
+            <div class="FormHelpInner PageInformal"><?php echo $lang["warning_duplicate_shortname_fields"]; ?></div>
+        </div>
+        <script>
+        var validate_shortname_in_progress = false;
+        jQuery("input[name='name']").keyup(function(event)
+            {
+            if(validate_shortname_in_progress)
+                {
+                return;
+                }
+
+            validate_shortname_in_progress = true;
+
+            jQuery.get(
+                baseurl + "/pages/admin/ajax/validate_rtf_shortname.php",
+                {
+                ref: "<?php echo $ref; ?>",
+                new_shortname: event.target.value
+                },
+                function (response)
+                    {
+                    var err_msg_el = jQuery("#shortname_err_msg");
+                    if(err_msg_el.hasClass("DisplayNone") === false)
+                        {
+                        err_msg_el.addClass("DisplayNone");
+                        }
+
+                    if(typeof response.data !== "undefined" && !response.data.valid)
+                        {
+                        err_msg_el.removeClass("DisplayNone");
+                        }
+
+                    validate_shortname_in_progress = false;
+                    },
+                "json");
+
+            return;
+            });
+        </script>
+        <?php
+        }
+        ?>
+        <div class="clearerleft"></div>
+    </div>
+	<?php
+	}
+
+  
+/**
+* Renders a resource type selection dropdown
+* 
+* @param string     $label      label for the field
+* @param string     $name       name of form select
+* @param string     $class      array CSS class to apply
+* @param boolean    $hidden     optionally hide the question usng CSS display:none
+* @param array      $current    Current selected value
+* 
+* @return void
+*/
+function render_resource_type_selector_question($label, $name, $class = "stdwidth", $hidden = false, $current = 0)
+    {
+    global $lang;
+    $resource_types = get_resource_types('',true,false,true);
+
+    echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
+    echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";
+    echo "<option value='' selected >" . $lang["select"] . "</option>";
+    foreach($resource_types as $resource_type)
+        {
+        $selected = ($resource_type["ref"] == $current ? "selected" : "");
+        echo "<option value='{$resource_type['ref']}' {$selected}>" . lang_or_i18n_get_translated($resource_type['name'],'fieldtitle-') . "</option>";
+        }
+    echo "</select>";
+    echo "<div class='clearerleft'></div>";
+    echo "</div>";
     }

@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 24);
+define('SYSTEM_UPGRADE_LEVEL', 25);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -369,7 +369,7 @@ $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "most_popular_images" => 10,
     "manual" => 100,
 );
-$COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED);
+$COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED, COLLECTION_TYPE_SHARE_UPLOAD);
 
 
 // ----------------------------------------------

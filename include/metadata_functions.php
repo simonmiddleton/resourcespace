@@ -16,7 +16,7 @@
 * 
 * @param string $file_path Physical path to the file
 * 
-* @return SimpleXMLElement
+* @return bool | SimpleXMLElement   
 */
 function runFitsForFile($file_path)
     {
@@ -28,14 +28,18 @@ function runFitsForFile($file_path)
 
     if(false === $fits)
         {
-        trigger_error('FITS library could not be located!');
+        debug('ERROR: FITS library could not be located!');
+        return false;
         }
 
     putenv("LD_LIBRARY_PATH={$fits_path_escaped}/tools/mediainfo/linux");
 
     $return = run_command("{$fits} -i {$file} -xc");
-
-    return new SimpleXMLElement($return);
+    if(trim($return) != "")
+        {
+        return new SimpleXMLElement($return);
+        };
+    return false;
     }
 
 
@@ -130,16 +134,8 @@ function extractFitsMetadata($file_path, $resource)
     $resource_type = $resource['resource_type'];
 
     // Get a list of all the fields that have a FITS field set
-    $rs_fields_to_read_for = ps_query("
-           SELECT rtf.ref,
-                  rtf.`type`,
-                  rtf.`name`,
-                  rtf.fits_field
-             FROM resource_type_field AS rtf
-            WHERE length(rtf.fits_field) > 0
-              AND (rtf.resource_type = ? OR rtf.resource_type = 0)
-         ORDER BY fits_field;
-    ", ['s', $resource_type], "schema");
+    $allfields = get_resource_type_fields($resource_type);
+    $rs_fields_to_read_for = array_filter($allfields,function($field){return trim((string)$field["fits_field"]) != "";});
 
     if(0 === count($rs_fields_to_read_for))
         {
@@ -148,11 +144,15 @@ function extractFitsMetadata($file_path, $resource)
 
     // Run FITS and extract metadata
     $fits_xml            = runFitsForFile($file_path);
+    if(!$fits_xml)
+        {
+        return false;
+        }
     $fits_updated_fields = array();
 
     foreach($rs_fields_to_read_for as $rs_field)
         {
-        $fits_fields = explode(',', $rs_field['fits_field']);
+        $fits_fields = explode(',', (string)$rs_field['fits_field']);
 
         foreach($fits_fields as $fits_field)
             {

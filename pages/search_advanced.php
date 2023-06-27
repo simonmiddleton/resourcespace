@@ -9,14 +9,14 @@ $archivechoices=getval("archive",getval("saved_archive",get_default_search_state
 if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
 foreach($archivechoices as $archivechoice)
     {
-    if(is_numeric($archivechoice)) {$selected_archive_states[] = $archivechoice;}  
+    if(is_numeric($archivechoice)) {$selected_archive_states[] = $archivechoice;}
     }
 
 $archive=implode(",",$selected_archive_states);
 $archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
 
 # Selectedtypes is a list of (resource type) checkboxes which are checked
-# Selectedtypes can also contain Global and Media which are virtual checkboxes which are always considered to be checked
+# Selectedtypes can also contain FeaturedCollections if $search_includes_themes = true
 $selectedtypes=get_selectedtypes();
 
 $access = getval("access", null, true);
@@ -40,7 +40,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             $restypes .= substr($key,12);
             }
 
-		if ($key == "hiddenfields") 
+		if ($key == "hiddenfields")
 		    {
 		    $hiddenfields=$value;
 		    }
@@ -51,10 +51,10 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
         {
         $restypes = '';
         }
-		
+
 	# advanced search - build a search query and redirect
 	$fields=array_merge(get_advanced_search_fields(false, $hiddenfields ),get_advanced_search_collection_fields(false, $hiddenfields ));
-  
+
 	# Build a search query from the search form
 	$search=search_form_to_search_query($fields);
 	$search=refine_searchstring($search);
@@ -63,11 +63,11 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 	if (getval("countonly","")!="")
 		{
 		# Only show the results (this will appear in an iframe)
-        if (substr($restypes,0,11)!="Collections")
+        if (substr($restypes,0,19) != "FeaturedCollections")
             {
             $result=do_search($search,$restypes,"relevance",$archive,[0,0],"",false,DEPRECATED_STARSEARCH, false, false, "", false,false, true, false, false, $access);
             }
-        else 
+        else
             {
             $order_by=$default_collection_sort;
             $sort="DESC";
@@ -79,9 +79,9 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             }
         else
             {
-            $count=0;				
+            $count=0;
             }
-			
+
 		?>
 		<html>
 		<script type="text/javascript">
@@ -99,7 +99,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                 console.debug("Finished updating result count");
                 var updatingcount = false;
                 }
-		
+
 		<?php if ($count==0) { ?>
 			populate_view_buttons("<?php echo $lang["nomatchingresults"] ?>");
 		<?php } else { ?>
@@ -112,7 +112,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		}
 	else
 		{
-		# Log this			
+		# Log this
 		daily_stat("Advanced search",$userref);
 
         redirect(
@@ -140,11 +140,11 @@ $full_text_search = "";
 
 foreach($advanced_search_properties as $advanced_search_property=>$code)
   {$$advanced_search_property="";}
- 
+
 $values=array();
-	
+
 if (getval("resetform","")!="")
-  { 
+  {
   $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$full_text_search="";
   $restypes=get_search_default_restypes();
   $selected_archive_states=array(0);
@@ -167,7 +167,7 @@ else
       $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
 	  if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
 		  {
-            
+
           if((substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"")
             {
             $nk=explode(":",substr($keyword,1,-1));
@@ -242,116 +242,164 @@ var resTypes=Array();
 <?php
 
 $types=get_resource_types();
-
 for ($n=0;$n<count($types);$n++)
 	{
-	echo "resTypes[" .  $n  . "]=" . $types[$n]["ref"] . ";";
+    if(!in_array( $types[$n]["ref"],$hide_resource_types))
+        {
+        echo "resTypes[" .  $n  . "]=" . $types[$n]["ref"] . ";";
+        }
 	}
 ?>
-	
+
+function advSearchShowHideSection(name,show) {
+    // Show or hide sections
+    console.debug('advSearchShowHide(' + name + ',' + show + ');');
+    if(show){
+        jQuery('#AdvancedSearch' + name + 'SectionHead').show();
+        if (getCookie('AdvancedSearch' + name + 'Section') != "collapsed") {
+            jQuery('#AdvancedSearch' + name + 'Section').show();
+            }
+        }
+    else {
+        jQuery('#AdvancedSearch' + name + 'SectionHead').hide();
+        jQuery('#AdvancedSearch' + name + 'Section').hide();
+        }
+    }
+
+function checkHideTypeSpecific() {
+    // Hide type specific section if no valid fields
+    jQuery('#AdvancedSearchRestypeSection').show();
+    if(jQuery('.QuestionSearchRestypeSpec:visible').length == 0)
+        {
+        console.debug("Hiding resource type specific section");
+        jQuery('#AdvancedSearchRestypeSectionHead').hide();
+        jQuery('#AdvancedSearchRestypeSection').hide();
+        }
+    if (getCookie('AdvancedSearchRestypeSection')=="collapsed")
+        {
+        jQuery('#AdvancedSearchRestypeSection').hide();
+        }
+    }
+
 jQuery(document).ready(function()
     {
     selectedtypes=['<?php echo implode("','",$selectedtypes) ?>'];
     if(selectedtypes[0]===""){selectedtypes.shift();}
 
-    jQuery('.SearchTypeCheckbox').change(function() 
+    // Hide invalid fields
+    jQuery('.QuestionSearchRestypeSpec').hide();
+    validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
+    jQuery(validselector).show();
+
+    jQuery('.SearchTypeCheckbox').change(function()
         {
         id=(this.name).substr(12);
 
         // Process checkbox change from unchecked to checked
         if (jQuery(this).is(":checked")) {
             if (id=="Global") {
-				selectedtypes=["Global"];
-				//Hide specific resource type areas
-				jQuery('.ResTypeSectionHead').hide();
-				jQuery('.ResTypeSection').hide();
-				
-				// Global has been checked, check all other checkboxes
-				jQuery('.SearchTypeItemCheckbox').prop('checked',true);
-				//Uncheck Collections
-				jQuery('#SearchCollectionsCheckbox').prop('checked',false);	
-
-				jQuery('#AdvancedSearchGlobalSectionHead').show();
-				if (getCookie('AdvancedSearchGlobalSection')!="collapsed"){jQuery("#AdvancedSearchGlobalSection").show();}				
-				jQuery('#AdvancedSearchMediaSectionHead').show();
-				if (getCookie('AdvancedSearchMediaSection')!="collapsed"){jQuery("#AdvancedSearchMediaSection").show();}
-			}
-			else if (id=="Collections") {
-				//Uncheck All checkboxes
-                jQuery('.SearchTypeCheckbox').prop('checked',false);		
-
-                //Check Collections
-				selectedtypes=["Collections"];
-				jQuery('#SearchCollectionsCheckbox').prop('checked',true);
-				jQuery('.tickboxcoll').prop('checked',true);
-				
-
-				// Show collection search sections	
-				jQuery('#AdvancedSearchCollectionsSectionHead').show();
-				if (getCookie('AdvancedSearchCollectionsSection')!="collapsed"){jQuery("#AdvancedSearchCollectionsSection").show();}
+                // Global checked
+                selectedtypes=["Global"];
+                // Global has been checked, check all other checkboxes
+                jQuery('.SearchTypeItemCheckbox').prop('checked',true);
+                //Uncheck Featured Collections
+                jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',false);
+                advSearchShowHideSection('Global',true);
+                advSearchShowHideSection('Restype',false);
+                advSearchShowHideSection('FeaturedCollections',false);
+                advSearchShowHideSection('Resource',true);
+                advSearchShowHideSection('Media',true);
             }
-            else {	
-				selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != "Collections";});				
-				selectedtypes.push(id);	
+            else if (id=="FeaturedCollections") {
+                console.debug("Showing fields for FeaturedCollections");
+                //Uncheck All checkboxes
+                jQuery('.SearchTypeCheckbox').prop('checked',false);
+                // Check Featured Collections
+                selectedtypes=["FeaturedCollections"];
+                jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',true);
 
-				//Hide specific resource type areas
-				jQuery('.ResTypeSectionHead').hide();
-				jQuery('.ResTypeSection').hide();
-				
+                advSearchShowHideSection('Global',false);
+                advSearchShowHideSection('Restype',false);
+                advSearchShowHideSection('FeaturedCollections',true);
+                advSearchShowHideSection('Resource',false);
+                advSearchShowHideSection('Media',false);
+            }
+            else {
+                // Standard resource type checked
+                selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != "FeaturedCollections";});
+                if(selectedtypes.length == resTypes.length)
+                    {
+                    selectedtypes = ["Global"];
+                    }
+                selectedtypes.push(id);
+                console.debug("Showing fields for selected types: " + selectedtypes);
                 jQuery('#SearchGlobal').prop('checked',false);
-				jQuery('#SearchCollectionsCheckbox').prop('checked',false);		
-				// Show global and media search sections	
-                jQuery("#AdvancedSearchGlobalSectionHead").show();
-                if (getCookie('AdvancedSearchGlobalSection')!="collapsed"){jQuery("#AdvancedSearchGlobalSection").show();}
-				jQuery('#AdvancedSearchMediaSectionHead').show();
-				if (getCookie('AdvancedSearchMediaSection')!="collapsed"){jQuery("#AdvancedSearchMediaSection").show();}						
-				
-				// Show resource type specific search sections	if only one checked
-				if(selectedtypes.length==1){
-					if (getCookie('AdvancedSearch'+id+'Section')!="collapsed"){jQuery('#AdvancedSearch'+id+'Section').show();}
-					jQuery('#AdvancedSearch'+id+'SectionHead').show();				
-				}
-			}
+                jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',false);
+
+                advSearchShowHideSection('Global',true);
+                advSearchShowHideSection('Restype',true);
+                advSearchShowHideSection('FeaturedCollections',false);
+                advSearchShowHideSection('Resource',true);
+                advSearchShowHideSection('Media',true);
+
+                // Hide fields that are not valid for the selected types
+                jQuery('.QuestionSearchRestypeSpec').hide();
+                validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
+                jQuery(validselector).show();
+                checkHideTypeSpecific();
+            }
         }
         else { // Process checkbox change from checked to unchecked
-			if (id=="Global") {		
-				selectedtypes=[];	
-	     		jQuery('.SearchTypeItemCheckbox').prop('checked',false);
-			}
-			else if (id=="Collections") {
-				selectedtypes=[];
-
-				// Hide collection search sections	
-				jQuery('#AdvancedSearchCollectionsSectionHead').hide();
+            if (id=="Global") {
+                // Global unchecked
+                selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != "Global";});
+                console.debug("Showing fields for selected types");
+                selectedtypes=[];
+                jQuery('.SearchTypeItemCheckbox').prop('checked',false);
             }
-			else {								
-                jQuery('#SearchGlobal').prop('checked',false);
-				
-				//Hide specific resource type areas
-				jQuery('.ResTypeSectionHead').hide();
-				jQuery('.ResTypeSection').hide();
-				
-				// If global was previously checked, make sure all other types are now checked
-				selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != id;});
-				if(selectedtypes.length==1){
-					if (getCookie('AdvancedSearch'+selectedtypes[0]+'Section')!="collapsed") jQuery('#AdvancedSearch'+selectedtypes[0]+'Section').show();
-					jQuery('#AdvancedSearch'+selectedtypes[0]+'SectionHead').show();				
-				}
-			}
-			//Always Show Global and Media
-			jQuery("#AdvancedSearchGlobalSectionHead").show();
-            if (getCookie('AdvancedSearchGlobalSection')!="collapsed"){jQuery("#AdvancedSearchGlobalSection").show();}
-			jQuery('#AdvancedSearchMediaSectionHead').show();
-			if (getCookie('AdvancedSearchMediaSection')!="collapsed"){jQuery("#AdvancedSearchMediaSection").show();}
-		}
+            else if (id=="FeaturedCollections") {
+                advSearchShowHideSection('Global',true);
+                advSearchShowHideSection('Restype',true);
+                advSearchShowHideSection('FeaturedCollections',false);
+                advSearchShowHideSection('Resource',true);
+                advSearchShowHideSection('Media',true);
 
-		// End of checkbox change processing; update cookie with checkbox values 
+                // Hide fields that are not valid for the selected types
+                jQuery('.QuestionSearchRestypeSpec').hide();
+                validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
+                jQuery(validselector).show();
+
+                checkHideTypeSpecific();
+            }
+            else {
+                // Standard resource type unchecked
+                jQuery('#SearchGlobal').prop('checked',false);
+                if(selectedtypes=="Global") {
+                    // Need to set all other types and unset this one
+                    selectedtypes = resTypes;
+                    }
+                selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != id;});
+                advSearchShowHideSection('Global',true);
+                advSearchShowHideSection('Restype',true);
+                advSearchShowHideSection('FeaturedCollections',false);
+                advSearchShowHideSection('Resource',true);
+                advSearchShowHideSection('Media',true);
+
+                // Hide fields that are not valid for the selected types
+                jQuery('.QuestionSearchRestypeSpec').hide();
+                validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
+                jQuery(validselector).show();
+                checkHideTypeSpecific();
+            }
+        }
+
+        // End of checkbox change processing; update cookie with checkbox values
         SetCookie("advanced_search_section", selectedtypes);
         UpdateResultCount();
 
         }); // End of SearchTypeCheckbox change function call
 
-    jQuery('.CollapsibleSectionHead').click(function() 
+    jQuery('.CollapsibleSectionHead').click(function()
             {
             cur=jQuery(this).next();
             cur_id=cur.attr("id");
@@ -367,23 +415,22 @@ jQuery(document).ready(function()
                 jQuery(this).addClass('expanded');
                 jQuery(this).removeClass('collapsed');
                 }
-    
+
             cur.slideToggle();
-           
-            
+
             return false;
-            }).each(function() 
+            }).each(function()
                 {
-                    cur_id=jQuery(this).next().attr("id"); 
+                    cur_id=jQuery(this).next().attr("id");
                     if (getCookie(cur_id)=="collapsed")
                         {
                         jQuery(this).next().hide();
                         jQuery(this).addClass('collapsed');
                         }
                     else jQuery(this).addClass('expanded');
-    
+
                 });
-    
+
     });
 </script>
 
@@ -410,24 +457,20 @@ function UpdateResultCount()
     console.debug("Updating result count");
     // set the target of the form to be the result count iframe and submit
     document.getElementById("advancedform").target="resultcount";
-    document.getElementById("countonly").value="yes";	
+    document.getElementById("countonly").value="yes";
     jQuery("#advancedform").submit();
     document.getElementById("advancedform").target="";
     document.getElementById("countonly").value="";
     }
-	
+
 jQuery(document).ready(function(){
     jQuery('#advancedform').submit(function() {
-        if (jQuery('#AdvancedSearchCollectionsSection').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
-            {
-            jQuery('.tickboxcoll').prop('checked',false);
-            }
         var inputs = jQuery('#advancedform :input');
         var hiddenfields = Array();
         inputs.each(function() {
-            if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));            
+            if (jQuery(this).parent().is(":hidden")) hiddenfields.push((this.name).substr(6));
             });
-        jQuery("#hiddenfields").val(hiddenfields.toString());    	    	
+        jQuery("#hiddenfields").val(hiddenfields.toString());
         });
     });
 
@@ -443,7 +486,7 @@ if($search_includes_resources && !hook("advsearchrestypes") && !$hide_search_res
  {?>
  <div class="Question">
  <label><?php echo $lang["search-mode"]?></label><?php
- 
+
  $wrap=0;
 
  $checked=false;
@@ -462,7 +505,7 @@ elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
 	{
 	if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
 	$wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
-	$checked=false;	
+	$checked=false;
 	if(!empty($selectedtypes[0]) && (in_array("Global",$selectedtypes) || in_array($types[$n]["ref"],$selectedtypes)))
 		{
 		$checked=true;
@@ -472,7 +515,7 @@ elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
 		$checked=true;
 		}
 
-	?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php	
+	?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
 	}
  ?>
  <?php if ($search_includes_themes)
@@ -480,7 +523,7 @@ elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
  ?></tr><tr><td>&nbsp;</td>
  </tr>
  <tr>
- <td valign=middle><input type=checkbox id="SearchCollectionsCheckbox" class="SearchTypeCheckbox" name="resourcetypeCollections" value="yes" <?php if (in_array("Collections",$restypes) || in_array("mycol",$restypes) || in_array("pubcol",$restypes) || in_array("themes",$restypes)) { ?>checked<?php }?>></td><td valign=middle><?php print $lang["collections"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+ <td valign=middle><input type=checkbox id="SearchFeaturedCollectionsCheckbox" class="SearchTypeCheckbox" name="resourcetypeFeaturedCollections" value="yes" <?php if (in_array("FeaturedCollections",$restypes)) { ?>checked<?php }?>></td><td valign=middle><?php print $lang["themes"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
  <?php
 	 }
  ?>
@@ -494,23 +537,23 @@ elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
 if (!hook('advsearchallfields')) { ?>
 <!-- Search across all fields -->
 <input type="hidden" id="hiddenfields" name="hiddenfields" value="">
-    
+
 <div class="Question">
 <label for="allfields"><?php echo $lang["allfields"]?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo htmlspecialchars($allwords)?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
-<h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchGlobalSectionHead" 
-<?php if (in_array("Collections",$selectedtypes)) 
-		{?> 
-		style="display: none;" 
+<h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchGlobalSectionHead"
+<?php if (in_array("FeaturedCollections",$selectedtypes))
+		{?>
+		style="display: none;"
 <?php 	} ?>>
 <?php echo $lang["resourcetype-global_fields"]; ?>
 </h1>
-<div class="AdvancedSection" id="AdvancedSearchGlobalSection" 
-<?php if (in_array("Collections",$selectedtypes)) 
-		{?> 
-		style="display: none;" 
+<div class="AdvancedSection" id="AdvancedSearchGlobalSection"
+<?php if (in_array("FeaturedCollections",$selectedtypes))
+		{?>
+		style="display: none;"
 <?php 	} ?>>
 
 <?php if (!hook('advsearchresid')) { ?>
@@ -566,40 +609,42 @@ if (!$daterange_search)
 <?php
 # Fetch fields
 $fields=get_advanced_search_fields($archiveonly);
-$showndivide=-1;
+$showndivide=false;
 
 # Preload resource types
 $rtypes=get_resource_types();
+$rtypecount = count($rtypes);
+// Order by resource types for displaying in sections
+$fieldorders = [];
+$fieldglobal = [];
+foreach($fields as $field)
+    {
+    $fieldorders[$field["ref"]]   = $field["order_by"];
+    $fieldglobal[$field["ref"]]   = ($field["global"] == 1 || count(explode(",",$field["resource_types"])) == $rtypecount) ? 1 : 0;
+    }
+array_multisort($fieldglobal, SORT_DESC, $fieldorders, SORT_ASC, $fields);
 
 for ($n=0;$n<count($fields);$n++)
-	{
-	# Show a dividing header for resource type specific fields?
-	if (($fields[$n]["resource_type"]!=0) && ($showndivide!=$fields[$n]["resource_type"]))
-		{
-		$showndivide=$fields[$n]["resource_type"];
-		$label="??";
-		# Find resource type name
-		for ($m=0;$m<count($rtypes);$m++)
-			{
-			# Note: get_resource_types() has already translated the resource type name for the current user.
-			if ($rtypes[$m]["ref"]==$fields[$n]["resource_type"]) {$label=$rtypes[$m]["name"];}
-			}
-		?>
+    {
+    # Show a dividing header for resource type specific fields
+    if (($fields[$n]["global"] != 1 && count(explode(",",$field["resource_types"])) != $rtypecount) && !$showndivide)
+        {
+        $showndivide=true;
+        ?>
 		</div>
-            <h1 class="AdvancedSectionHead CollapsibleSectionHead ResTypeSectionHead"
-                id="AdvancedSearch<?php echo $fields[$n]["resource_type"]; ?>SectionHead"
+            <h1 class="AdvancedSectionHead CollapsibleSectionHead"  id="AdvancedSearchRestypeSectionHead"
                 <?php
-                if(!in_array($fields[$n]["resource_type"], $restypes) || in_array("Global", $restypes) || count($restypes) > 1)
+                if(in_array("Global", $restypes))
                     {
                     ?> style="display: none;"
                     <?php
                     }
                     ?>
-            ><?php echo $lang["typespecific"] . ": " . $label ?></h1>
-        <div class="AdvancedSection ResTypeSection"
-             id="AdvancedSearch<?php echo $fields[$n]["resource_type"]; ?>Section"
+            ><?php echo $lang["typespecific"] ?></h1>
+        <div class="AdvancedSection"
+             id="AdvancedSearchRestypeSection"
              <?php
-             if(!in_array($fields[$n]["resource_type"], $selectedtypes))
+            if(in_array("Global", $restypes))
                 {
                 ?> style="display: none;"
                 <?php
@@ -613,7 +658,7 @@ for ($n=0;$n<count($fields);$n++)
 	if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
 	# Clearbutton means resetform
 	$resetform=getval("resetform","");
-	if ($resetform != "") 
+	if ($resetform != "")
 		{
 		$value="";
 		}
@@ -623,178 +668,147 @@ for ($n=0;$n<count($fields);$n++)
 ?>
 </div>
 
-<!-- Full text search (uses built in MySQL indexing) -->
-<div class="Question">
-    <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape_quoted_data($full_text_search); ?>" onChange="UpdateResultCount();">
-    <div class="clearerleft"> </div>
-</div>
+<!-- Resource section-->
+<h1 class="AdvancedSectionHead CollapsibleSectionHead ResourceSectionHead"  id="AdvancedSearchResourceSectionHead"><?php echo $lang["advancedsearch_resource_section"] ?></h1>
+<div class="AdvancedSection ResourceSection"
+    id="AdvancedSearchResourceSection">
+
+    <!-- Full text search (uses built in MySQL indexing) -->
+    <div class="Question">
+        <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape_quoted_data($full_text_search); ?>" onChange="UpdateResultCount();">
+        <div class="clearerleft"> </div>
+    </div>
 
 <?php
-global $advanced_search_archive_select;
 if($advanced_search_archive_select)
-	{
-    // Create an array for the archive states
-	$available_archive_states = array();
-	$all_archive_states=array_merge(range(-2,3),$additional_archive_states);
-	foreach($all_archive_states as $archive_state_ref)
-		{
-		if(!checkperm("z" . $archive_state_ref))
-			{
-			$available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref]))?$lang["status" . $archive_state_ref]:$archive_state_ref;
-			}
-		}
-	?>
-    
-    <div class="Question" id="question_archive" >
-		<label><?php echo $lang["status"]?></label>
-		<table cellpadding=2 cellspacing=0>
-            
-            <?php
-            foreach ($available_archive_states as $archive_state=>$state_name)
-                {
-                ?>
-                  <tr>
-                    <td width="1">
-                   <input type="checkbox"
-                          name="archive[]"
-                          value="<?php echo $archive_state; ?>"
-                          onChange="UpdateResultCount();"<?php 
-                       if (in_array($archive_state,$selected_archive_states))
-                           {
-                           ?>
-                           checked
-                           <?php
-                           }?>
-                       >
-               </td>
-               <td><?php echo htmlspecialchars(i18n_get_translated($state_name)); ?>&nbsp;</td>
-               </tr>
-                <?php  
-                }
-            ?>
-        </table>
-    </div>
-    <div class="clearerleft"></div>
-    <?php
-	}
-else
-	{?>
-	<input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive)?>">
-	<?php
-	}
-
-if(checkperm("v"))
-    {
-    render_question_div("search_advanced_access_question", function() use ($lang, $access)
         {
-        ?>
-        <label for="search_advanced_access"><?php echo htmlspecialchars($lang["access"]); ?></label>
-        <select id="search_advanced_access" class="SearchWidth" name="access" onchange="UpdateResultCount();">
-            <option><?php echo $lang["all"]; ?></option>
-        <?php
-        foreach(range(0, 2) as $access_level)
+        // Create an array for the archive states
+        $available_archive_states = array();
+        $all_archive_states=array_merge(range(-2,3),$additional_archive_states);
+        foreach($all_archive_states as $archive_state_ref)
             {
-            $label = htmlspecialchars($lang["access{$access_level}"]);
-            $extra_attributes = (!is_null($access) && $access_level == $access ? " selected" : "");
-
-            echo render_dropdown_option($access_level, $label, array(), $extra_attributes);
+            if(!checkperm("z" . $archive_state_ref))
+                {
+                $available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref]))?$lang["status" . $archive_state_ref]:$archive_state_ref;
+                }
             }
         ?>
-        </select>
-        <?php
-        });
-    }
 
-if($advanced_search_contributed_by)
-    {
-    ?>
-    <div class="Question">
-        <label><?php echo $lang["contributedby"]; ?></label>
+        <div class="Question" id="question_archive" >
+            <label><?php echo $lang["status"]?></label>
+            <table cellpadding=2 cellspacing=0>
+
+                <?php
+                foreach ($available_archive_states as $archive_state=>$state_name)
+                    {
+                    ?>
+                    <tr>
+                        <td width="1">
+                    <input type="checkbox"
+                            name="archive[]"
+                            value="<?php echo $archive_state; ?>"
+                            onChange="UpdateResultCount();"<?php
+                        if (in_array($archive_state,$selected_archive_states))
+                            {
+                            ?>
+                            checked
+                            <?php
+                            }?>
+                        >
+                </td>
+                <td><?php echo htmlspecialchars(i18n_get_translated($state_name)); ?>&nbsp;</td>
+                </tr>
+                    <?php
+                    }
+                ?>
+            </table>
+        </div>
+        <div class="clearerleft"></div>
         <?php
-        $single_user_select_field_value=$properties_contributor;
-        $single_user_select_field_id='properties_contributor';
-        $single_user_select_field_onchange='UpdateResultCount();';
-    	$userselectclass="searchWidth";
-        include "../include/user_select.php";
-    	?>
-        <script>
-    	jQuery('#properties_contributor').change(function(){UpdateResultCount();});
-    	</script>
-    	<?php
-        unset($single_user_select_field_value);
-        unset($single_user_select_field_id);
-        unset($single_user_select_field_onchange);
+        }
+    else
+        {?>
+        <input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive)?>">
+        <?php
+        }
+
+    if(checkperm("v"))
+        {
+        render_question_div("search_advanced_access_question", function() use ($lang, $access)
+            {
+            ?>
+            <label for="search_advanced_access"><?php echo htmlspecialchars($lang["access"]); ?></label>
+            <select id="search_advanced_access" class="SearchWidth" name="access" onchange="UpdateResultCount();">
+                <option><?php echo $lang["all"]; ?></option>
+            <?php
+            foreach(range(0, 2) as $access_level)
+                {
+                $label = htmlspecialchars($lang["access{$access_level}"]);
+                $extra_attributes = (!is_null($access) && $access_level == $access ? " selected" : "");
+
+                echo render_dropdown_option($access_level, $label, array(), $extra_attributes);
+                }
+            ?>
+            </select>
+            <?php
+            });
+        }
+
+    if($advanced_search_contributed_by)
+        {
         ?>
+        <div class="Question">
+            <label><?php echo $lang["contributedby"]; ?></label>
+            <?php
+            $single_user_select_field_value=$properties_contributor;
+            $single_user_select_field_id='properties_contributor';
+            $single_user_select_field_onchange='UpdateResultCount();';
+            $userselectclass="searchWidth";
+            include "../include/user_select.php";
+            ?>
+            <script>
+            jQuery('#properties_contributor').change(function(){UpdateResultCount();});
+            </script>
+            <?php
+            unset($single_user_select_field_value);
+            unset($single_user_select_field_id);
+            unset($single_user_select_field_onchange);
+            ?>
+        </div>
+        <?php
+        }
+    ?>
+    </div>
+
+<?php if ($search_includes_themes)
+    { ?>
+    <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchFeaturedCollectionsSectionHead" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>><?php echo $lang["themes"]; ?></h1>
+    <div class="AdvancedSection" id="AdvancedSearchFeaturedCollectionsSection" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>>
+    <?php
+    $fields=get_advanced_search_collection_fields();
+    for ($n=0;$n<count($fields);$n++)
+        {
+        # Work out a default value
+        if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
+        # Clearbutton means resetform
+        $resetform=getval("resetform","");
+        if ($resetform != "")
+            {
+            $value="";
+            }
+        # Render this field
+        render_search_field($fields[$n], $fields, $value, true, "SearchWidth", false, array(), $searched_nodes, $resetform);
+        }?>
     </div>
     <?php
     }
-?>
-
-<?php if ($search_includes_themes) { ?>
-<h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchCollectionsSectionHead" <?php if (!in_array("Collections",$selectedtypes)) {?> style="display: none;" <?php } ?>><?php echo $lang["collections"]; ?></h1>
-<div class="AdvancedSection" id="AdvancedSearchCollectionsSection" <?php if (!in_array("Collections",$selectedtypes)) {?> style="display: none;" <?php } ?>>
-
-<script type="text/javascript">	
-function resetTickAllColl(){
-	var checkcount=0;
-	// set tickall to false, then check if it should be set to true.
-	jQuery('.rttickallcoll').prop('checked',false);
-	var tickboxes=jQuery('#advancedform .tickboxcoll');
-		jQuery(tickboxes).each(function (elem) {
-            if( tickboxes[elem].checked){checkcount=checkcount+1;}
-        });
-	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').prop('checked',true);}	
-}
-</script>
-<div class="Question">
-<label><?php echo $lang["scope"]?></label><?php
-
-$types=get_resource_types();
-$wrap=0;
-?>
-<table><tr>
-<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery(".rttickallcoll").prop("checked")));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
-
-<?php
-$clear_function="";
-if ($search_includes_themes) 
-    { ?>
-    <td align="middle"><?php if ($searchbar_selectall){ ?>&nbsp;&nbsp;<?php } ?><input class="tickboxcoll" id="TickBoxThemes" type="checkbox" name="resourcetypethemes" value="yes" <?php if ((count($restypes)==1 && $restypes[0]=="Collections") || in_array("themes",$restypes)) {?>checked="checked"<?php } ?>onClick="resetTickAllColl();" onChange="UpdateResultCount();"/><?php echo $lang["findcollectionthemes"]?></td><?php	
-    $clear_function.="document.getElementById('TickBoxThemes').checked=true;";
-    $clear_function.="resetTickAllColl();";
-    }
-?>
-</tr></table></div>
-<script type="text/javascript">resetTickAllColl();</script>
-<?php
- $fields=get_advanced_search_collection_fields();
- for ($n=0;$n<count($fields);$n++)
-	 {
-	 # Work out a default value
-	 if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
-	 # Clearbutton means resetform
-	 $resetform=getval("resetform","");
-	 if ($resetform != "") 
-	 	{
-		$value="";
-		}
-	 # Render this field
-	 render_search_field($fields[$n], $fields, $value, true, "SearchWidth", false, array(), $searched_nodes, $resetform);
-	 }
-?>
-</div>
-
-<?php
-}
-
-
 
 if($advanced_search_media_section)
     {
     ?>
     <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchMediaSectionHead" ><?php echo $lang["media"]; ?></h1>
     <div class="AdvancedSection" id="AdvancedSearchMediaSection">
-    <?php 
+    <?php
     render_split_text_question($lang["pixel_height"], array('media_heightmin'=>$lang['from'],'media_heightmax'=>$lang['to']),$lang["pixels"], true, " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"", array('media_heightmin'=>$media_heightmin,'media_heightmax'=>$media_heightmax));
     render_split_text_question($lang["pixel_width"], array('media_widthmin'=>$lang['from'],'media_widthmax'=>$lang['to']),$lang["pixels"], true, " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"", array('media_widthmin'=>$media_widthmin,'media_widthmax'=>$media_widthmax));
     render_split_text_question($lang["filesize"], array('media_filesizemin'=>$lang['from'],'media_filesizemax'=>$lang['to']),$lang["megabyte-symbol"], false, " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"", array('media_filesizemin'=>$media_filesizemin,'media_filesizemax'=>$media_filesizemax));

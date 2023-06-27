@@ -194,44 +194,39 @@ else
 			echo "</tr>";
 			}
 		}
-
     $fits = get_utility_path('fits');
     if(false !== $fits)
         {
-        include "../../include/metadata_functions.php";
-
         // $image should contain the original file
         $fits_xml      = runFitsForFile($image);
-
+        
         // Get a list of all the fields that have a FITS field set
-        $rs_fields_to_read_for = ps_query("
-               SELECT rtf.ref,
-                      rtf.`type`,
-                      rtf.`name`,
-                      rtf.title,
-                      rtf.fits_field
-                 FROM resource_type_field AS rtf
-                WHERE length(rtf.fits_field) > 0
-                  AND (rtf.resource_type = ? OR rtf.resource_type = 0)
-             ORDER BY fits_field;
-        ", array("i", $resource_type), "schema");
+        $allfields = get_resource_type_fields($resource_type);
+        $rs_fields_to_read_for = array_filter($allfields,function($field){return trim((string)$field["fits_field"]) != "";});
 
         ?>
         <tr>
-            <td colspan="5"><?php echo $lang['metadata-report-fits_section']; ?></td>
+            <td colspan="5"><?php echo htmlspecialchars($lang['metadata-report-fits_section']) ; ?></td>
         </tr>
         <?php
 
         foreach($rs_fields_to_read_for as $rs_field)
             {
-            $fits_fields = explode(',', $rs_field['fits_field']);
+            $fits_fields = explode(',', (string)$rs_field['fits_field']);
 
             ?>
             <tr>
             <?php
             foreach($fits_fields as $fits_field)
                 {
-                $fits_field_value = getFitsMetadataFieldValue($fits_xml, $fits_field);
+                if($fits_xml !== false)
+                    {
+                    $fits_field_value = getFitsMetadataFieldValue($fits_xml, $fits_field);
+                    }
+                else
+                    {
+                    $fits_field_value = $lang["notavailableshort"];
+                    }
 
                 if('' == $fits_field_value)
                     {
@@ -255,7 +250,6 @@ else
                 }
             }
         }
-
     # Add tags which don't exist in the original file?
     if ($exiftool_write&&$file_writability)
         {

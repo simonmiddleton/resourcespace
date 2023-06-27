@@ -435,6 +435,18 @@ if($export && isset($folder_path))
             )
         ),
         array(
+            "name" => "resource_type_field_resource_type",
+            "formatted_name" => "resource type field resource types",
+            "filename" => "resource_type_field_resource_type",
+            "record_feedback" => array(
+                "text" => "Resource type field -> Resource type mappings",
+                "placeholders" => array("resource_type_field", "resource_type"),
+            ),
+            "sql" => array(
+                    "where" => "resource_type_field IN (SELECT ref FROM resource_type_field)",
+                ),
+        ),
+        array(
             "name" => "node",
             "formatted_name" => "nodes",
             "filename" => "nodes",
@@ -999,14 +1011,13 @@ if($import && isset($folder_path))
 
         // New record
         ps_query(
-            "INSERT INTO resource_type(`name`, config_options, allowed_extensions, tab_name, push_metadata, inherit_global_fields) VALUES (?, ?, ?, ?, ?, ?);",
+            "INSERT INTO resource_type(`name`, config_options, allowed_extensions, tab_name, push_metadata) VALUES (?, ?, ?, ?, ?, ?);",
             [
                 's', trim($resource_type["name"]) != "" ? $resource_type["name"] : null,
                 's', trim($resource_type["config_options"]) != "" ? $resource_type["config_options"] : null,
                 's', trim($resource_type["allowed_extensions"]) != "" ? $resource_type["allowed_extensions"] : null,
                 's', trim($resource_type["tab_name"]) != "" ? $resource_type["tab_name"] : null,
                 'i', trim($resource_type["push_metadata"]) != "" ? $resource_type["push_metadata"] : null,
-                'i', trim($resource_type["inherit_global_fields"]) != "" ? $resource_type["inherit_global_fields"] : null,
             ]
         );
         $new_rt_ref = sql_insert_id();
@@ -1016,7 +1027,6 @@ if($import && isset($folder_path))
         log_activity(null, LOG_CODE_EDITED, $resource_type["allowed_extensions"], 'resource_type', 'allowed_extensions', $new_rt_ref);
         log_activity(null, LOG_CODE_EDITED, $resource_type["tab_name"], 'resource_type', 'tab_name', $new_rt_ref);
         log_activity(null, LOG_CODE_EDITED, $resource_type["push_metadata"], 'resource_type', 'push_metadata', $new_rt_ref);
-        log_activity(null, LOG_CODE_EDITED, $resource_type["inherit_global_fields"], 'resource_type', 'inherit_global_fields', $new_rt_ref);
 
         logScript("Created new record #{$new_rt_ref} '{$resource_type["name"]}'");
         $resource_types_spec[$resource_type["ref"]] = $new_rt_ref;

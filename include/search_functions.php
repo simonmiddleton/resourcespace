@@ -50,12 +50,11 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=ps_query("SELECT " . columns_in('resource_type_field') . " FROM resource_type_field WHERE advanced_search=1 AND active=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by", array(), "schema"); // Constants do not need to be parameters in the prepared statement
-
+    $fields=ps_query("SELECT " . columns_in("resource_type_field","f") . ", GROUP_CONCAT(rtfrt.resource_type) resource_types FROM resource_type_field f LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = f.ref  WHERE f.advanced_search=1 AND f.active=1 AND (f.keywords_index=1 AND length(f.name)>0) AND (f.global=1 OR rtfrt.resource_type IS NOT NULL) GROUP BY f.ref ORDER BY f.global DESC, f.order_by ASC", [], "schema"); // Constants do not need to be parameters in the prepared statement
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
-        if (metadata_field_view_access($fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
+        if (metadata_field_view_access($fields[$n]["ref"]) && !in_array($fields[$n]["ref"], $hiddenfields))
             {
             $return[]=$fields[$n];
             if($fields[$n]["ref"]==$date_field)
@@ -64,7 +63,6 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
                 }
             }
         }
-
     # If not already in the list of advanced search metadata fields, insert the field which is the designated searchable date ($date_field)
     if(!$date_field_already_present 
         && $daterange_search 
@@ -72,7 +70,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
-        if (!is_array($date_field_data) || !isset($date_field_data['resource_type']))
+        if (!is_array($date_field_data))
             {
             debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
             return $return;
@@ -81,10 +79,13 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         $return1=array();
         for ($n=0;$n<count($return);$n++)
             {
-            if (isset($date_field_data['resource_type']) && $return[$n]["resource_type"] == $date_field_data['resource_type'])
+            if (isset($date_field_data))
                 {
-                $return1[]=$date_field_data;
-                $date_field_data=null; # Only insert it once
+                if (count(array_intersect(explode(",",(string)$return[$n]["resource_types"]),explode(",",(string)$date_field_data['resource_types'])))>0)
+                    {
+                    $return1[]=$date_field_data;
+                    $date_field_data=null; # Only insert it once
+                    }
                 }
             $return1[]=$return[$n];
             }
@@ -109,9 +110,9 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0);
-    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0);
-    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0);
+    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0, "global"=>0, "resource_types"=>'Collections');
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
@@ -1102,7 +1103,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             }
         
         // Check for blocked/allowed resource types
-        $allrestypes = get_resource_types();
+        $allrestypes = get_resource_types("",false,false,true);
         $blockedrestypes = array();
         foreach($allrestypes as $restype)
             {
@@ -2621,7 +2622,7 @@ function get_simple_search_fields()
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
    
     # First get all the fields
-    $allfields=get_resource_type_fields("","resource_type,order_by");
+    $allfields=get_resource_type_fields("","global,order_by");
     
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
@@ -2637,7 +2638,7 @@ function get_simple_search_fields()
             # Must be either indexed or a fixed list type
             ($allfields[$n]["keywords_index"] == 1 || in_array($allfields[$n]["type"],$FIXED_LIST_FIELD_TYPES))
         &&    
-            metadata_field_view_access($allfields[$n]["ref"]) && !checkperm("T" . $allfields[$n]["resource_type"] ))
+            metadata_field_view_access($allfields[$n]["ref"]))
             {
             $allfields[$n]["title"] = lang_or_i18n_get_translated($allfields[$n]["title"], "fieldtitle-");            
             $return[] = $allfields[$n];
@@ -2659,7 +2660,7 @@ function get_fields_for_search_display($field_refs)
         }
 
     # Executes query.
-    $fields = ps_query("select ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint, active, value_filter from resource_type_field where ref in (" . ps_param_insert(count($field_refs)) . ")",ps_param_fill($field_refs,"i"), "schema");
+    $fields = ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where ref in (" . ps_param_insert(count($field_refs)) . ")",ps_param_fill($field_refs,"i"), "schema");
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
@@ -3100,20 +3101,20 @@ function update_search_from_request($search)
     }
 
 function get_search_default_restypes()
-	{
-	global $search_includes_resources;
-	$defaultrestypes=array();
-	if($search_includes_resources)
-		{
-		$defaultrestypes[] = "Global";
-		}
-	  else
-		{
-		$defaultrestypes[] = "Collections";
-		if($search_includes_themes){$defaultrestypes[] = "themes";}
-		}	
-	return $defaultrestypes;
-	}
+    {
+    global $search_includes_resources, $search_includes_themes;
+    $defaultrestypes=array();
+    if($search_includes_resources)
+        {
+        $defaultrestypes[] = "Global";
+        }
+    else
+        {
+        $defaultrestypes[] = "Collections";
+        if($search_includes_themes){$defaultrestypes[] = "FeaturedCollections";}
+        }	
+    return $defaultrestypes;
+    }
 	
 function get_selectedtypes()
     {

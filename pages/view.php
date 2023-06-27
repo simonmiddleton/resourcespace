@@ -112,6 +112,8 @@ if ($resource===false)
         }
     exit();
     }
+// Get resource_type -> resource_type_field associations
+$arr_fieldrestypes = get_resource_type_field_resource_types();
 
 hook("aftergetresourcedataview","",array($ref,$resource));
 
@@ -2195,7 +2197,6 @@ if ($comments_resource_enable && ($k=="" || $internal_share_access))
     }
 
 hook("w2pspawn");
-
 // include collections listing
 if ($view_resource_collections && !checkperm('b')){ ?>
 	<div id="resourcecollections"></div>
@@ -2299,7 +2300,6 @@ if($enable_related_resources)
         
     display_related_resources($relatedcontext);
     }
-
 if ($show_related_themes==true )
     {
     // Public/featured collections

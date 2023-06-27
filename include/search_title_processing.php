@@ -190,7 +190,7 @@ if ($search_titles)
         {
         # Which resource types (if any) are selected?
         $searched_types_refs_array = explode(",", $restypes); # Searched resource types and collection types
-        $resource_types_array = get_resource_types("", false); # Get all resource types, untranslated
+        $resource_types_array = get_resource_types("", false,false,true); # Get all resource types, untranslated
         $searched_resource_types_names_array = array();
         for ($n = 0; $n < count($resource_types_array); $n++) 
             {
