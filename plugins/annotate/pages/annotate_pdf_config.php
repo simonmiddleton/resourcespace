@@ -155,57 +155,68 @@ function loadIt() {
 
 <div class="BasicsBox" style="float:left;">
 
-    <?php if (!$is_collection){?>
-    <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&annotate=true" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <?php 
+    
+    $urlparams = [
+        'ref' => $ref, 
+        'search' => $search, 
+        'offset' => $offset, 
+        'order_by' => $order_by, 
+        'sort' => $sort, 
+        'archive' => $archive
+    ];
+    
+    if (!$is_collection){?>
+    <p><a href="<?php echo generateURL($baseurl_short . 'pages/view.php', $urlparams, ['annotate' => 'true'])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresourceview"])?></a></p>
     <?php } else {?>
-    <p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo substr($ref,1)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a></p>
+    <p><a href="<?php echo generateURL($baseurl_short . 'pages/search.php?', $urlparams, ['search' => '!collection' . substr($ref,1)])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresults"])?></a></p>
     <?php } ?>
 
     <h1><?php echo $lang["annotatepdfconfig"]?></h1>
 
     <?php if ($annotate){?>
     <div id="heading" style="float:left;margin-bottom:0;" >
-        <p id="introtext"><?php echo $lang["annotatepdfintrotext"]?></p>
+        <p id="introtext"><?php echo htmlspecialchars($lang["annotatepdfintrotext"])?></p>
     </div>
     <div style="clear:left;"></div>
 
     <div id="configform" >
 
         <form method=post name="annotateform" id="annotateform" action="<?php echo $baseurl_short?>plugins/annotate/pages/annotate_pdf_gen.php" >
-        <input type=hidden name="ref" value="<?php echo $ref?>">
-        <input type=hidden name="annotateid" value="<?php echo $annotateid?>">
+        <input type=hidden name="ref" value="<?php echo escape_quoted_data($ref)?>">
+        <input type=hidden name="annotateid" value="<?php echo escape_quoted_data($annotateid)?>">
         <?php
         generateFormToken("annotateform");
         if ($is_collection){?>
         <div class="Question">
-        <label><?php echo $lang["collection"]?></label><div class="Fixed"><?php echo i18n_get_collection_name($collection)?></div>
+        <label><?php echo htmlspecialchars($lang["collection"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($collection))?></div>
         <div class="clearerleft"> </div>
         </div>
 
         <?php } else { ?>
         <div class="Question">
-        <label><?php echo $lang["resourcetitle"]?></label><div class="Fixed"><?php echo i18n_get_translated($resources[0]['field'.$view_title_field])?></div>
+        <label><?php echo htmlspecialchars($lang["resourcetitle"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resources[0]['field'.$view_title_field]))?></div>
         <div class="clearerleft"> </div>
         </div>
         <?php } ?>
 
         <div class="Question">
-        <label><?php echo $lang["size"]?></label>
+        <label><?php echo htmlspecialchars($lang["size"])?></label>
         <select class="shrtwidth" name="size" id="size" onChange="jQuery().annotate('preview');	"><?php echo $papersize_select ?>
         </select>
         <div class="clearerleft"> </div>
         </div>
 
         <div name="previewPageOptions" id="previewPageOptions" class="Question" style="display:none">
-        <label><?php echo $lang['previewpage']?></label>
+        <label><?php echo htmlspecialchars($lang['previewpage'])?></label>
         <select class="shrtwidth" name="previewpage" id="previewpage" onChange="jQuery().annotate('preview');	">
         </select>
         </div>
         <?php if ($annotate_debug){?><div name="error" id="error"></div><?php } ?>
         <?php if ($annotate_debug){?><div name="error2" id="error2"></div><?php } ?>
         <div class="QuestionSubmit">	
-        <input name="preview" type="button" value="&nbsp;&nbsp;<?php echo $lang["preview"]?>&nbsp;&nbsp;" onClick="jQuery().annotate('preview');	"/>
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" />
+        <input name="preview" type="button" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["preview"])?>&nbsp;&nbsp;" onClick="jQuery().annotate('preview');	"/>
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["create"])?>&nbsp;&nbsp;" />
         </div>
         </form>
 

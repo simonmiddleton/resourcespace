@@ -93,7 +93,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
             ?>
             <div id="wrapper" class="annotate-view-wrapper">
                 <div>
-                <img id="toAnnotate" onload="annotate(<?php echo $ref?>,'<?php echo $k?>','<?php echo $w?>','<?php echo $h?>',<?php echo getval("annotate_toggle",true)?>, 1, <?php echo $modal; ?>);" src="<?php echo $imageurl?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+                <img id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape_quoted_data($k)?>','<?php echo escape_quoted_data($w)?>','<?php echo escape_quoted_data($h)?>',<?php echo escape_quoted_data(getval("annotate_toggle",true))?>, 1, <?php echo escape_quoted_data($modal); ?>);" src="<?php echo escape_quoted_data($imageurl)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
                 </div>
 
                 <div class="annotate-view-preview-links" >
@@ -110,13 +110,13 @@ function HookAnnotateViewRenderinnerresourcepreview()
                     "k"         => $k
                     ); ?>
                     
-                    <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo $lang["fullscreenpreview"]?>"><?php echo LINK_CARET . $lang["fullscreenpreview"]?></a>
+                    <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo escape_quoted_data($lang["fullscreenpreview"])?>"><?php echo LINK_CARET . escape_quoted_data($lang["fullscreenpreview"])?></a>
                 <?php
 
                 if($annotate_pdf_output)
                     {
                     ?>
-                    &nbsp;&nbsp;<a style="display:inline;float:right;" class="nowrap" href="<?php echo $baseurl_short?>plugins/annotate/pages/annotate_pdf_config.php?ref=<?php echo $ref?>&ext=<?php echo $resource["preview_extension"]?>&k=<?php echo $k?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["pdfwithnotes"]?></a>
+                    &nbsp;&nbsp;<a style="display:inline;float:right;" class="nowrap" href="<?php echo generateURL($baseurl_short . 'plugins/annotate/pages/annotate_pdf_config.php', $urlparams)?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["pdfwithnotes"]?></a>
                     <?php
                     }
                     ?>
@@ -146,18 +146,18 @@ function HookAnnotateViewpreviewlinkbar()
         ?> 
         <tr class="DownloadDBlend">
             <td class="DownloadFileName">
-                <h2><?php echo $lang["preview"]?></h2>
+                <h2><?php echo htmlspecialchars($lang["preview"])?></h2>
                 <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
-                <p><?php echo $preview_with_sizename; ?></p>
+                <p><?php echo htmlspecialchars($preview_with_sizename); ?></p>
             </td>
             <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
             <?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
             ?>
             <td class="DownloadButton">
-                <a class="enterLink previewsize-<?php echo $data_viewsize; ?>" 
+                <a class="enterLink previewsize-<?php echo escape_quoted_data($data_viewsize); ?>" 
                     id="previewlink"
-                    data-viewsize="<?php echo $data_viewsize; ?>"
-                    data-viewsizeurl="<?php echo $data_viewsizeurl; ?>"  
+                    data-viewsize="<?php echo escape_quoted_data($data_viewsize); ?>"
+                    data-viewsizeurl="<?php echo escape_quoted_data($data_viewsizeurl); ?>"  
                     href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
                     <?php echo $lang["action-view"]?>
                 </a>

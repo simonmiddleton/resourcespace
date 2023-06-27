@@ -85,7 +85,7 @@ $h = $sizes[1];
     } ?>
 <div>
 		<td>
-            <img id="toAnnotate" onload="annotate(<?php echo $ref?>,'<?php echo $k?>','<?php echo $w?>','<?php echo $h?>',<?php echo getval("annotate_toggle",true)?>,<?php echo getval('page', 1); ?>);" src="<?php echo $url?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+            <img id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape_quoted_data($k)?>','<?php echo escape_quoted_data($w)?>','<?php echo escape_quoted_data($h)?>',<?php echo escape_quoted_data(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape_quoted_data($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
         </td>
     <?php
     if($nextpage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
@@ -99,7 +99,7 @@ $h = $sizes[1];
 <div style="padding-top:5px;">
 
      <?php if ($annotate_pdf_output){?>
-     &nbsp;&nbsp;<a style="display:inline;float:right;margin-right:10px;" href="<?php echo $baseurl?>/plugins/annotate/pages/annotate_pdf_config.php?ref=<?php echo $ref?>&ext=<?php echo $resource["preview_extension"]?>&k=<?php echo $k?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" >&gt;&nbsp;<?php echo $lang["pdfwithnotes"]?></a> &nbsp;&nbsp;
+     &nbsp;&nbsp;<a style="display:inline;float:right;margin-right:10px;" href="<?php echo generateURL($baseurl. '/plugins/annotate/pages/annotate_pdf_config.php?', $urlparams, ['ext' => $resource["preview_extension"]])?>" >&gt;&nbsp;<?php echo htmlspecialchars($lang["pdfwithnotes"])?></a> &nbsp;&nbsp;
      <?php } ?>
      	</div>
     </tr></table>
