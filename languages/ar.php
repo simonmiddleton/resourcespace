@@ -2034,7 +2034,6 @@ $lang["merge_filename_title_question"]='هل تريد استخدام اسم ال
 $lang["merge_filename_title_do_not_use"]='لا تستخدم.';
 $lang["merge_filename_title_replace"]='استبدال';
 $lang["merge_filename_title_prefix"]='بادئة';
-$lang["merge_filename_title_suffix"]='Please provide the context in which "Suffix" is being used in ResourceSpace. This will help me provide an accurate translation.';
 $lang["merge_filename_title_include_extensions"]='هل تريد تضمين الامتدادات؟';
 $lang["merge_filename_title_spacer"]='مسافة فارغة.';
 $lang["send_collection_to_admin_emailedcollectionname"]='الموارد المقدمة من المستخدم.';

@@ -12,7 +12,6 @@ $lang["transformblurb-original"]='Untuk memotong gambar, seret penunjuk Anda di 
 $lang["width"]='Lebar baru.';
 $lang["height"]='Ketinggian baru.';
 $lang["noimagefound"]='Kesalahan: Tidak ditemukan gambar.';
-$lang["scaled"]='Diperkecil (if referring to image size) or Diperbesar (if referring to image size)';
 $lang["cropped"]='Dipotong.';
 $lang["tweaked"]='Disesuaikan.';
 $lang["nonnumericcrop"]='Kesalahan: Permintaan pemangkasan non-numerik.';

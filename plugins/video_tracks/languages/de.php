@@ -21,7 +21,6 @@ $lang["video_tracks_export_folder"]='Ordner exportieren, um generierte Videos zu
 $lang["error_video_tracks_export_folder"]='Export-Ordner ist nicht vom Webserver beschreibbar.';
 $lang["video_tracks_generate"]='Generieren';
 $lang["video_tracks_options"]='Verfügbare Dateiausgabeoptionen. Diese sollten auf dem Server getestet werden, um sicherzustellen, dass die Syntax für Ihre Installation von ffmpeg/avconv korrekt ist.';
-$lang["video_tracks_command"]='Please provide the full context and the specific command you want to translate.';
 $lang["video_tracks_option_name"]='Ausgabeformat-Code';
 $lang["video_tracks_process_size_limit"]='Maximale Größe der Ressourcendatei, die sofort verarbeitet wird (MB). Größere Dateien werden offline verarbeitet und der Benutzer wird nach Abschluss benachrichtigt.';
 $lang["video_tracks_offline_notice"]='Ihre Anfrage wurde in die Warteschlange gestellt. Sie werden benachrichtigt, wenn die neue Datei generiert wurde.';

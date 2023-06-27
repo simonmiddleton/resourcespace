@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["feedback_user_survey"]='Studiu de utilizator (literally) / Chestionar pentru utilizatori (more commonly used)';
+$lang["feedback_user_survey"]='Chestionar pentru utilizatori';
 $lang["feedback_thank_you"]='Mulțumesc pentru feedback-ul tău.';
 $lang["feedback_your_full_name"]='Numele tău complet.';
 $lang["feedback_remind_me_later"]='Amintește-mă mai târziu.';

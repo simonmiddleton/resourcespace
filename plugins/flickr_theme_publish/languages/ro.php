@@ -16,10 +16,6 @@ $lang["flickronceloggedinreload"]='După ce v-ați autentificat în aplicație, 
 $lang["flickr_publish_as"]='Publică ca:';
 $lang["flickr_public"]='public -> public';
 $lang["flickr_private"]='viziune';
-$lang["flickr-publish-public"]='Public -> Public (in Limba română)';
-$lang["flickr-publish-private"]='Vă rugăm să traduceți: Privat
-
-"Privat" poate fi tradus în limba română ca "Confidențial" sau "Privat".';
 $lang["flickr_clear_photoid_help"]='Puteți șterge ID-urile de fotografii Flickr stocate pentru toate fotografiile din acest set. Aceasta va determina republicarea lor pe Flickr, chiar dacă au fost publicate anterior. Acest lucru poate fi util dacă ați șters fotografiile de pe Flickr și doriți să le adăugați din nou.';
 $lang["clear-flickr-photoids"]='Ștergeți ID-urile fotografiilor Flickr.';
 $lang["action-clear-flickr-photoids"]='Vă rugăm să traduceți: ID-uri foto clare.';

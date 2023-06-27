@@ -25,10 +25,6 @@ $lang["youtube_publish_video_tags"]='Etichete video.';
 $lang["youtube_publish_access"]='Setare acces.';
 $lang["youtube_public"]='public = public';
 $lang["youtube_private"]='viziune';
-$lang["youtube_publish_public"]='Public -> Public (in Limba română)';
-$lang["youtube_publish_private"]='Vă rugăm să traduceți: Privat
-
-"Privat" poate fi tradus în Limba română ca "Privat" sau "Confidențial", în funcție de contextul în care este utilizat în software-ul ResourceSpace.';
 $lang["youtube_publish_unlisted"]='Nelistat.';
 $lang["youtube_publish_button_text"]='Publică.';
 $lang["youtube_publish_use_oauth2"]='Folosiți OAuth 2.0?';

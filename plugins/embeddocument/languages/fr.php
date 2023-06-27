@@ -7,7 +7,6 @@ $lang["embeddocument_allow_original_download"]='Autoriser le téléchargement de
 $lang["embeddocument_alreadyonpage"]='Entrez un numéro de page dans la case de droite pour accéder à une page spécifique.';
 $lang["embeddocument_download_pdf"]='télécharger le PDF';
 $lang["embeddocument_minimise"]='Réduire au minimum.';
-$lang["embeddocument_maximise"]='Please provide the context in which "maximise" is used in ResourceSpace. It could have different translations depending on the context.';
 $lang["embeddocument_heading"]='Configuration du visualiseur de documents à distance.';
 $lang["embeddocument_specify_resourcetype"]='Veuillez préciser pour quel type de ressource la fonctionnalité "intégrer" doit apparaître.';
 $lang["embeddocument_document_resourcetype"]='Type de ressource de visualisation de document à distance.';

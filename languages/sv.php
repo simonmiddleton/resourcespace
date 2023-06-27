@@ -2093,12 +2093,10 @@ $lang["map_osm"]='Standard.';
 $lang["map_osmde"]='Tysk stil.';
 $lang["map_osmfrance"]='OSM Frankrike';
 $lang["map_osmch"]='OSM Schweiz';
-$lang["map_osmbzh"]='OSM Luxembourg should not be translated as it is an acronym for "OpenStreetMap Luxembourg" and should remain in English.';
 $lang["map_osmhot"]='Humanitär.';
 $lang["map_osmmtb"]='Terrängcykelkarta över Europa.';
 $lang["map_osmhikebike"]='Vandrings- och cykelkarta';
 $lang["map_otm"]='OSM Topografisk.';
-$lang["map_tf_group"]='Thunderforest (no translation needed as it is a brand name)';
 $lang["map_tfapi"]='API-kod.';
 $lang["map_tfocm"]='ÖppenCykelKarta (ÖCK)';
 $lang["map_tftransport"]='Transport = Transport';
@@ -2343,7 +2341,7 @@ $lang["property-user_group_remove_parent"]='(ta bort förälder)';
 $lang["resource_type_delete_confirmation"]='Det finns %%RESOURCECOUNT%% resurs(er) av denna typ.';
 $lang["resource_type_delete_assoc_rtf_confirm"]='Det finns %COUNT metadatafält kopplade till denna resurstyp.';
 $lang["resource_type_delete_select_new"]='Vänligen välj resurstypen som dessa kommer att konverteras till.';
-$lang["resourcetype-global_field"]='Global: Global';
+$lang["resourcetype-global_field"]='Global';
 $lang["search_title_hasdata"]='Resurser med data i fältet.';
 $lang["search_title_empty"]='Resurser utan data i fältet.';
 $lang["show_resources"]='Visa resurser.';
@@ -2358,13 +2356,6 @@ $lang["action-move-to"]='Flytta till';
 $lang["delete_user_group_checkbox_alert_message"]='Observera att denna åtgärd också kommer att radera allt innehållstext som var relevant för denna användargrupp. Det finns %%RECORDSCOUNT%% poster som hittades i Hantera innehåll.';
 $lang["collection_download__write_metadata_on_download_label"]='Bädda in metadata för resursen i den nedladdade filen/filerna? Att aktivera detta kommer att göra nedladdningen långsammare.';
 $lang["downloadfile_nofile"]='Den begärda filen kunde inte hittas.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (Swedish translation)
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> 
-
-(This is a technical string that refers to an iframe element that displays the ResourceSpace knowledge base. It should not be translated.)';
 $lang["local_tz"]='Lokal tidszon';
 $lang["team_report__err_report_too_long"]='Rapporten är för stor för att visas och har kapats, ladda ner den istället!';
 $lang["team_user__confirm-deletion"]='Är du säker på att du vill radera den här användaren permanent?';

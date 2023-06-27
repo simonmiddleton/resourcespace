@@ -2364,7 +2364,6 @@ $lang["confirm_remove_custom_usergroup_access"]='Это отменит все н
 $lang["applogo_does_not_exists"]='Загруженный логотип больше не доступен.';
 $lang["manage_metadata_field_options"]='Опции поля метаданных.';
 $lang["manage_metadata_field_options_import_options"]='Опции импорта.';
-$lang["system_performance"]='Выступление (if referring to a live performance) or Производительность (if referring to software or hardware performance).';
 $lang["mysql_throughput"]='Пропускная способность MySQL.';
 $lang["cpu_benchmark"]='Тест производительности ЦП (Центрального процессора)';
 $lang["disk_write_speed"]='Скорость записи на диск';

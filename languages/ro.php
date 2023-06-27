@@ -328,10 +328,6 @@ $lang["contributedsubittedl"]='Contribuțiile mele - active.';
 $lang["editcollection"]='Editare colecție.';
 $lang["editcollectionresources"]='Editarea previzualizărilor colecției.';
 $lang["access"]='Acces.';
-$lang["private"]='Vă rugăm să traduceți: Privat
-
-"Privat" poate fi tradus în Limba română ca "Privat" sau "Confidențial", în funcție de contextul în care este utilizat în software-ul ResourceSpace.';
-$lang["public"]='Public -> Public (This word is already used in Limba română as well)';
 $lang["attachedusers"]='Utilizatori atașați.';
 $lang["themecategory"]='Categorie de colecție recomandată.';
 $lang["collection_set_theme_category"]='Adăugați la categoria de colecție recomandată.';
@@ -756,7 +752,6 @@ $lang["continue"]='Continuare';
 $lang["cancel"]='Anulați.';
 $lang["view"]='Vizualizare';
 $lang["type"]='Tip.';
-$lang["text"]='Text -> Text (this word is the same in both English and Limba română)';
 $lang["yes"]='Da.';
 $lang["no"]='Nu.';
 $lang["key"]='Cheie:';
@@ -952,7 +947,6 @@ $lang["deleteallresourcesfromcollection"]='Ștergeți toate resursele.';
 $lang["deleteallsure"]='Sunteți sigur că doriți să ȘTERGEȚI aceste resurse? Aceasta va șterge resursele în sine, nu doar le va elimina din această colecție.';
 $lang["batchdonotaddcollection"]='(nu adăuga la o colecție)';
 $lang["collectionsthemes"]='Coleții conexe recomandate și publice.';
-$lang["recent"]='Recent -> Recent (no translation needed, it\'s the same in Limba română)';
 $lang["n_recent"]='%qty Resurse adăugate recent';
 $lang["batchcopyfrom"]='Copiați datele de mai jos din resursa cu ID-ul';
 $lang["copy"]='Copie.';
@@ -1543,7 +1537,6 @@ $lang["columnheader-resource_downloads"]='Descărcări de resurse.';
 $lang["columnheader-views"]='Vizualizări.';
 $lang["columnheader-added"]='Adăugat.';
 $lang["columnheader-creation_date"]='Data de creare.';
-$lang["columnheader-sent"]='Vă rugăm să specificați contextul în care este utilizat cuvântul "Sent" în software-ul ResourceSpace. Acesta poate fi utilizat în mai multe locuri, cum ar fi într-un mesaj de confirmare a trimiterii unei resurse sau într-o listă de elemente trimise.';
 $lang["columnheader-last_seen"]='Ultima dată văzut.';
 $lang["period"]='Perioadă.';
 $lang["lastndays"]='Ultimele ? zile.';
@@ -1669,9 +1662,6 @@ $lang["nodownloadcollection"]='Nu aveți acces pentru a descărca niciunul dintr
 $lang["progress"]='Progres.';
 $lang["ticktodeletethisresearchrequest"]='Bifați pentru a șterge această cerere.';
 $lang["done"]='Efectuat.';
-$lang["latlong"]='Vă rugăm să traduceți: Lat / long
-
-Lat / long se traduce în Limba română ca "Latitudine / Longitudine".';
 $lang["geographicsearch"]='Căutare geografică.';
 $lang["geographicsearchresults"]='Rezultate de căutare geografice.';
 $lang["geographicsearchmissing"]='Criteriile de căutare geografică lipsesc.';
@@ -1704,9 +1694,6 @@ $lang["nopreviewresources"]='Resurse fără previzualizări.';
 $lang["action-delete_permanently"]='Șterge definitiv.';
 $lang["horizontal"]='Orizontal.';
 $lang["vertical"]='Vertical - Vertical.';
-$lang["cc-emailaddress"]='Vă rugăm să traduceți: CC %emailaddress
-
-CC %emailaddress se traduce în Limba română ca: CC %adresădeemail.';
 $lang["list-recipients-label"]='Enumerați toți destinatarii în e-mail?';
 $lang["list-recipients"]='Acest mesaj a fost trimis la următoarele adrese de e-mail:';
 $lang["sort"]='Sortare';
@@ -2126,7 +2113,6 @@ $lang["existingdashtilefound-2"]='Titlul specificat există deja. Vă rugăm să
 $lang["createdashtilefreetext"]='Creați o cărămidă cu linie de text numai.';
 $lang["enterdefaultorderby"]='Introduceți numărul poziției implicite.';
 $lang["dashtiletitle"]='Titlu.';
-$lang["dashtiletext"]='Text -> Text (this word is the same in both English and Limba română)';
 $lang["dashtilelink"]='Link-ul țintă al plăcii.';
 $lang["nodashtilefound"]='Nu a fost găsit niciun panou de bord potrivit.';
 $lang["existingdashtilefound"]='Titlul specificat există deja în Tabloul tău de bord.';
@@ -2484,9 +2470,6 @@ $lang["api-help"]='Vă rugăm să consultați <a target="_blank" href="https://w
 $lang["api-view-documentation"]='Vizualizare documentație.';
 $lang["api-php-code"]='Cod PHP.';
 $lang["api-php-help"]='Lipiți textul de mai jos în sistemul de la distanță pentru a apela funcția API introdusă cu parametrii furnizați.';
-$lang["font"]='Vă rugăm să traduceți: Font
-
-Font = Font (in Limba română nu există o traducere specifică pentru acest termen, de aceea se folosește termenul în limba engleză)';
 $lang["upload_success"]='Succes.';
 $lang["user_registration_opt_in_message"]='Sunt de acord ca datele personale pe care le-am furnizat mai sus să fie prelucrate în scopul accesării acestui sistem. Această prelucrare include înregistrarea activității mele și contactarea mea, dacă este necesar, pentru utilizarea sistemului.';
 $lang["activity_log_admin_log_in_as"]='Utilizatorul de administrare \'%USERNAME_FROM\' s-a conectat ca \'%USERNAME_TO\'';

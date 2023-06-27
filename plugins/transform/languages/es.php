@@ -14,7 +14,6 @@ $lang["height"]='Nueva altura.';
 $lang["noimagefound"]='Error: No se encontró ninguna imagen.';
 $lang["scaled"]='Escalado';
 $lang["cropped"]='Recortado';
-$lang["tweaked"]='Por favor, proporcione más contexto para la palabra "tweaked". ¿En qué contexto se utiliza en el software de gestión de activos digitales ResourceSpace?';
 $lang["nonnumericcrop"]='Error: Se solicitó un recorte no numérico.';
 $lang["description_for_alternative_file"]='Descripción (para archivo alternativo)';
 $lang["errorspecifiedbiggerthanoriginal"]='Error: El ancho o la altura especificados son mayores que los de la imagen original.';

@@ -54,7 +54,7 @@ $lang["tms_link_formatid"]='Identifiant de format à utiliser pour les enregistr
 $lang["tms_link_colordepthid"]='Identifiant de profondeur de couleur à utiliser pour les enregistrements de médias insérés.';
 $lang["tms_link_media_path"]='Chemin racine vers le stockage de fichiers qui sera stocké dans TMS, par exemple \\RS_SERVERilestore\\. Assurez-vous que la barre oblique finale est incluse. Le nom de fichier stocké dans TMS inclura le chemin relatif à partir de la racine du stockage de fichiers.';
 $lang["tms_link_modules_mappings"]='Synchronisation des modules supplémentaires (tables/vues)';
-$lang["tms_link_module"]='Module (French Translation): Module';
+$lang["tms_link_module"]='Module';
 $lang["tms_link_tms_uid_field"]='Champ UID TMS';
 $lang["tms_link_rs_uid_field"]='Champ UID de ResourceSpace';
 $lang["tms_link_applicable_rt"]='Types de ressources applicables.';

@@ -13,8 +13,8 @@ $lang["checkmail_cronjobprob"]='Il tuo cronjob di controllo della posta potrebbe
 Esempio di cron job che viene eseguito ogni minuto:<br />
 * * * * * cd /var/www/resourcespace/plugins/checkmail/pages; php ./cron_check_email.php >> /var/log/cron.log 2>&1<br /><br />';
 $lang["checkmail_imap_server"]='Server Imap<br />(gmail="imap.gmail.com:993/ssl")';
-$lang["checkmail_email"]='Email in Italiano is "Email" (pronounced as "e-mail").';
-$lang["checkmail_password"]='Password in Italiano is "Password".';
+$lang["checkmail_email"]='Email';
+$lang["checkmail_password"]='Password';
 $lang["checkmail_extension_mapping"]='Tipo di risorsa tramite mappatura dell\'estensione del file.';
 $lang["checkmail_default_resource_type"]='Tipo di risorsa predefinito.';
 $lang["checkmail_extension_mapping_desc"]='Dopo il selettore del tipo di risorsa predefinito, c\'è un campo di input per ciascuno dei tuoi tipi di risorsa. <br />Per forzare i file caricati di tipi diversi in un tipo di risorsa specifico, aggiungi elenchi di estensioni di file separati da virgola (es. jpg, gif, png).';

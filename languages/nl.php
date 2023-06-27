@@ -976,9 +976,7 @@ $lang["counting_resources"]='Het tellen van resources...';
 $lang["not_allowed"]='Niet toegestaan.';
 $lang["no_results_found"]='Geen resultaten gevonden.';
 $lang["function_not_enabled"]='Deze functie is niet ingeschakeld.';
-$lang["item"]='item
-
-(Translation: item)';
+$lang["item"]='item';
 $lang["stat-addedsmartcollection"]='Toegevoegde slimme collectie.';
 $lang["stat-removedresourcefromcollection"]='Verwijderde bron uit collectie.';
 $lang["stat-keywordusage-noresultsfound"]='Geen resultaten gevonden voor trefwoordgebruik.';
@@ -1307,9 +1305,7 @@ $lang["resourcenotinresults"]='De huidige bron zit niet meer in je actieve zoekr
 $lang["publishstatus"]='Opslaan met publicatiestatus:';
 $lang["addnewcontent"]='Nieuwe inhoud (pagina, naam)';
 $lang["hitcount"]='Aantal hits.';
-$lang["downloads"]='Downloads
-
-(Translation: Downloads)';
+$lang["downloads"]='Downloads';
 $lang["list_file_extension"]='Uitbreiding';
 $lang["all_users"]='alle gebruikers';
 $lang["new_resource"]='nieuwe bron';
@@ -1413,9 +1409,7 @@ $lang["map_osmhot"]='Humanitair';
 $lang["map_osmmtb"]='Mountainbikekaart van Europa.';
 $lang["map_osmhikebike"]='Wandel- en fietskaart';
 $lang["map_otm"]='OSM Topografisch.';
-$lang["map_tf_group"]='Thunderforest (no translation needed as it is a brand name)';
 $lang["map_tfapi"]='API-code';
-$lang["map_tfocm"]='OpenCycleMap (OCM) vertaalt naar Nederlands als OpenFietsKaart (OFK).';
 $lang["map_tftransport"]='Vervoer';
 $lang["map_tftransportdark"]='Transport donker.';
 $lang["map_tflandscape"]='Landschap';
@@ -1585,9 +1579,7 @@ $lang["columnheader-downloaded_by_user"]='Gedownload door gebruiker.';
 $lang["columnheader-user_group"]='Gebruikersgroep';
 $lang["columnheader-resource_title"]='Titel van het bestand.';
 $lang["columnheader-title"]='Titel';
-$lang["columnheader-downloads"]='Downloads
-
-(Translation: Downloads)';
+$lang["columnheader-downloads"]='Downloads';
 $lang["columnheader-group_name"]='Groepsnaam';
 $lang["columnheader-resource_downloads"]='Middelen downloads';
 $lang["columnheader-views"]='Weergaven';

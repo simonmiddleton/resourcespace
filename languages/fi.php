@@ -1927,7 +1927,6 @@ $lang["map_osmhot"]='Humanitaarinen';
 $lang["map_osmmtb"]='Vuoripyöräilyn kartta Euroopasta.';
 $lang["map_osmhikebike"]='Retkeily- ja pyöräilykartta';
 $lang["map_otm"]='OSM Topografinen.';
-$lang["map_tf_group"]='Thunderforest (no translation needed as it is a brand name)';
 $lang["map_tfapi"]='API-koodi';
 $lang["map_tfocm"]='OpenCycleMap (OCM) - Avoin pyöräilykartta (OCM)';
 $lang["map_tftransport"]='Kuljetus';

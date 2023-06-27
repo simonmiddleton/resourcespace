@@ -1053,7 +1053,6 @@ $lang["filterbutton"]='Filtruj.';
 $lang["stopbutton"]='Zatrzymaj.';
 $lang["loadmorebutton"]='Załaduj więcej.';
 $lang["treeobjecttype-report"]='Raport';
-$lang["systemlog"]='Dziennik (if referring to a record of events or actions) or Zalogować się (if referring to the action of logging in)';
 $lang["users"]='Użytkownicy';
 $lang["emailhtml"]='Włącz obsługę HTML - treść wiadomości e-mail musi być sformatowana w HTML.';
 $lang["emailmarkedinvalid"]='Adres e-mail został oznaczony jako nieprawidłowy.';
@@ -1115,7 +1114,6 @@ $lang["collection_download_settings-not-defined"]='$collection_download_settings
 $lang["collection_download_settings-not-an-array"]='$collection_download_settings nie jest tablicą.';
 $lang["listfile-argument-not-defined"]='$archiver_listfile_argument nie jest zdefiniowany.';
 $lang["nothing_to_download"]='Nic do pobrania.';
-$lang["purgeanddelete"]='Usuń (this translation refers to the action of removing or deleting something completely)';
 $lang["purgecollectionareyousure"]='Czy na pewno chcesz usunąć tę kolekcję I USUNĄĆ wszystkie zasoby w niej zawarte?';
 $lang["collectionsdeleteempty"]='Usuń puste kolekcje.';
 $lang["collectionsdeleteemptyareyousure"]='Czy na pewno chcesz usunąć wszystkie swoje puste kolekcje?';
@@ -2188,11 +2186,6 @@ $lang["download_click__introtext"]='Aby pobrać plik zasobu, kliknij prawym przy
 $lang["download_progress__introtext"]='Pobieranie rozpocznie się wkrótce. Po zakończeniu pobierania, skorzystaj z poniższych linków, aby kontynuować.';
 $lang["downloadfile_nofile"]='Plik nie został znaleziony.';
 $lang["edit__multiple"]='Proszę wybrać pola, które chcesz nadpisać. Pola, których nie wybierzesz, pozostaną nietknięte.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (Polish translation)
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (Context: This is an HTML code that embeds a ResourceSpace knowledge base page into a website. No translation is necessary.)';
 $lang["home__restrictedtext"]='Proszę kliknąć na link, który został przesłany w wiadomości e-mail, aby uzyskać dostęp do wybranych dla Ciebie zasobów.';
 $lang["home__restrictedtitle"]='Witaj w ResourceSpace [ver]';
 $lang["home__welcometext"]='Prosty, szybki i darmowy sposób na organizowanie Twoich zasobów cyfrowych.';
