@@ -48,9 +48,6 @@ if (!file_exists($test_nogo_path))
     }
 copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_nogo_path . "skipped.jpg");
 
-// Required for test C 
-$staticsync_folder_structure=true;
-
 // Required for test D
 $staticsync_extension_mapping[2]=array("txt");
 file_put_contents($test_path . "testtextsync.txt","TEST");

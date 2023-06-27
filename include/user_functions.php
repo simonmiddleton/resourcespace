@@ -892,7 +892,7 @@ function email_reset_link($email,$newuser=false)
     // Don't send password reset links if we don't control the password
     $blockreset = isset($details["origin"]) && trim($details["origin"]) != "";
 
-    global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
+    global $applicationname, $email_from, $baseurl, $lang;
 
     if(!$blockreset)
         {
