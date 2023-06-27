@@ -2411,7 +2411,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1] ?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo htmlspecialchars($lang["months"]) [$d-1] ?></option><?php
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
@@ -6217,7 +6217,7 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
 		<div class="clearerleft"></div>
 	</div> <!-- end question -->
 	<div class="Question">
-		<label><?php echo $lang["property-field_constraint"]?></label>
+		<label><?php  echo htmlspecialchars($lang["property-field_constraint"]) ?></label>
 		<select id="field_constraint" name="field_constraint" class="stdwidth" onchange="CentralSpacePost(this.form);">
 
 			<option value="0" <?php if ($constraint==0) { echo " selected"; } ?>><?php echo htmlspecialchars($lang["property-field_constraint-none"]) ?></option>
@@ -6361,7 +6361,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                                     
                                     else if ((jQuery.inArray(newval,text_fields) > -1) && (jQuery.inArray(current_type,fixed_list_fields) > -1)) 
                                 {
-                                    if(confirm('<?php echo $lang["admin_resource_type_field_cannot_migrate_data_prompt"] ?>'))
+                                    if(confirm('<?php echo escape_quoted_data($lang["admin_resource_type_field_cannot_migrate_data_prompt"]) ?>'))
                                         {
                                             this.form.submit(); 
                                         } else {
@@ -6386,7 +6386,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                 foreach($field_types as $field_type=>$field_type_description)
                     {
                     ?>
-                    <option value="<?php echo $field_type ?>"<?php if ($currentvalue == $field_type) { echo " selected"; } ?>><?php echo $lang[$field_type_description] ; ?></option>
+                    <option value="<?php echo $field_type ?>"<?php if ($currentvalue == $field_type) { echo " selected"; } ?>><?php echo htmlspecialchars($lang[$field_type_description])  ; ?></option>
                     <?php
                     }
                 ?>
@@ -6399,8 +6399,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                 </div> <!-- end question -->
 
                 <div class="Question">
-                    <label><?php echo $lang['options']; ?></label>
-                    <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
+                    <label><?php  echo htmlspecialchars($lang['options']) ; ?></label>
+                    <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php  echo htmlspecialchars($lang['property-options_edit_link']) ; ?></a></span>
                     <div class="clearerleft"></div>
 
                 <?php
@@ -6413,7 +6413,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                     $automatic_nodes_ordering = (false !== $field_index ? $allfields[$field_index]['automatic_nodes_ordering'] : 0);
                     ?>
                     <div class="Question">
-                        <label><?php echo $lang['property-automatic_nodes_ordering_label']; ?></label>
+                        <label><?php  echo htmlspecialchars($lang['property-automatic_nodes_ordering_label']) ; ?></label>
                         <input type="checkbox" name="automatic_nodes_ordering" value="1"<?php if(1 == $automatic_nodes_ordering) { ?> checked="checked"<?php } ?>>
                     <?php
                     // create constraints selector
@@ -6444,7 +6444,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			
 			?>
 			  <select id="field_edit_<?php echo htmlspecialchars((string) $propertyname); ?>" name="<?php echo htmlspecialchars((string) $propertyname); ?>" class="stdwidth">
-				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
+				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php  echo htmlspecialchars($lang["select"]) ; ?></option>
 				<?php
 				foreach($allfields as $field)
 					{
@@ -6513,7 +6513,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
         {
         ?>
         <div id="shortname_err_msg" class="FormHelp DisplayNone" style="padding:0;clear:left;" >
-            <div class="FormHelpInner PageInformal"><?php echo $lang["warning_duplicate_shortname_fields"]; ?></div>
+            <div class="FormHelpInner PageInformal"><?php  echo htmlspecialchars($lang["warning_duplicate_shortname_fields"]) ; ?></div>
         </div>
         <script>
         var validate_shortname_in_progress = false;

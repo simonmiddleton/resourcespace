@@ -80,7 +80,7 @@ jQuery(document).ready(function()
 	</div>
     <div class="Question" >
 		<input type="hidden" id="submitinput" name="submit" value="">
-		<input type="submit" name="submit" value="<?php echo $lang["action-submit-button-label"] ?>" onclick="document.getElementById('submitinput').value='true';">
+		<input type="submit" name="submit" value="<?php echo escape_quoted_data($lang["action-submit-button-label"]) ?>" onclick="document.getElementById('submitinput').value='true';">
         <div class="clearerleft"> </div>
 	</div>
     

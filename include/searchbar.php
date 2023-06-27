@@ -373,7 +373,7 @@ if (!$basic_simple_search && !$hide_search_resource_types)
         if (checkcount==tickboxes.length){jQuery('#rttickallcoll').prop('checked',true);}   
     }
     </script>
-    <div class="tick"><input type='checkbox' id='rttickallres' name='rttickallres' checked onclick='jQuery("#simple_search_form .tickbox").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallres").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo $lang['allresourcessearchbar']?></div>
+    <div class="tick"><input type='checkbox' id='rttickallres' name='rttickallres' checked onclick='jQuery("#simple_search_form .tickbox").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallres").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo htmlspecialchars($lang['allresourcessearchbar']) ?></div>
     <?php }?>
     <?php
     $rt=explode(",",@$restypes);
@@ -409,12 +409,12 @@ if (!$basic_simple_search && !$hide_search_resource_types)
 
     ?><div class="spacer"></div>
     <?php if ($searchbar_selectall && $search_includes_themes) { ?>
-    <div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo $lang['allcollectionssearchbar']?></div>
+    <div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); SimpleSearchFieldsHideOrShow(true); '/>&nbsp;<?php echo htmlspecialchars($lang['allcollectionssearchbar']) ?></div>
     <?php }?>
     <?php if ($clear_button_unchecks_collections){$colcheck="false";}else {$colcheck="true";}
     if ($search_includes_themes) 
         { ?>
-        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxFeaturedCollections" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("FeaturedCollections",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxFeaturedCollections">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php  
+        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxFeaturedCollections" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("FeaturedCollections",$rt))) {?>checked="checked"<?php } ?> onClick="SimpleSearchFieldsHideOrShow(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxFeaturedCollections">&nbsp;<?php echo htmlspecialchars($lang["findcollectionthemes"]) ?></label></div><?php  
         $clear_function.="jQuery('#TickBoxFeaturedCollections').prop('checked'," . $colcheck . ");";
         if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
         }
@@ -587,7 +587,7 @@ elseif($restypes=='')
                 {
                 if (jQuery('field_<?php echo htmlspecialchars($optionfields[$n]) ?>').attr('selectedIndex', 0))
                     {
-                    jQuery('field_<?php echo htmlspecialchars($optionfields[$n]) ?>').html("<option value=''><?php echo $lang["pleasewaitsmall"] ?></option>");
+                    jQuery('field_<?php echo htmlspecialchars($optionfields[$n]) ?>').html("<option value=''><?php echo htmlspecialchars($lang["pleasewaitsmall"])  ?></option>");
                     }
                 }
             else
@@ -818,9 +818,9 @@ elseif($restypes=='')
             {
                 ?>  
     
-                 <?php  echo $lang["bydate"]?><br />
-    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo $lang['year'];?>" aria-label="<?php echo escape_quoted_data($lang['year']) ?>">
-              <option selected="selected" value=""><?php echo $lang["anyyear"]?></option>
+                 <?php echo htmlspecialchars($lang["bydate"]) ?><br />
+    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php  echo escape_quoted_data($lang['year']);?>" aria-label="<?php echo escape_quoted_data($lang['year']) ?>">
+              <option selected="selected" value=""><?php echo htmlspecialchars($lang["anyyear"]) ?></option>
               <?php
               
               $y=date("Y");
@@ -834,18 +834,18 @@ elseif($restypes=='')
     
             <?php if ($searchbyday) { ?><br /><?php } ?>
     
-            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo $lang['month'];?>" aria-label="<?php echo escape_quoted_data($lang['month']) ?>">
-              <option selected="selected" value=""><?php echo $lang["anymonth"]?></option>
+            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php  echo escape_quoted_data($lang['month']);?>" aria-label="<?php echo escape_quoted_data($lang['month']) ?>">
+              <option selected="selected" value=""><?php echo htmlspecialchars($lang["anymonth"]) ?></option>
               <?php
               for ($n=1;$n<=12;$n++)
                     {
                     $m=str_pad($n,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($n==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]?></option><?php
+                    ?><option <?php if ($n==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$n-1]) ?></option><?php
                     }
               ?>
     
-            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php echo $lang['day'];?>">
-              <option selected="selected" value=""><?php echo $lang["anyday"]?></option>
+            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php  echo escape_quoted_data($lang['day']);?>">
+              <option selected="selected" value=""><?php echo htmlspecialchars($lang["anyday"]) ?></option>
               <?php
               for ($n=1;$n<=31;$n++)
                     {
@@ -859,7 +859,7 @@ elseif($restypes=='')
                 ?>
     
     <?php if (isset($resourceid_simple_search) and $resourceid_simple_search){ ?>
-             <div class="SearchItem"><?php echo $lang["resourceid"]?><br />
+             <div class="SearchItem"><?php echo htmlspecialchars($lang["resourceid"]) ?><br />
              <input id="searchresourceid" name="searchresourceid" type="text" class="SearchWidth" value="" />
              </div>
     <?php } ?>
@@ -885,12 +885,12 @@ elseif($restypes=='')
   </form>
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
-  <?php if (! $disable_geocoding) { ?><p><i aria-hidden="true" class="fa fa-fw fa-globe"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo $lang["geographicsearch"]?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo $lang["gotoadvancedsearch"]?></a></p><?php } ?>
+  <?php if (! $disable_geocoding) { ?><p><i aria-hidden="true" class="fa fa-fw fa-globe"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo htmlspecialchars($lang["geographicsearch"]) ?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo htmlspecialchars($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 
-  <?php if ($view_new_material) { ?><p><i aria-hidden="true" class="fa fa-fw  fa-clock-o"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search.php?search=<?php echo urlencode("!last".$recent_search_quantity)?>"><?php echo $lang["viewnewmaterial"]?></a></p><?php } ?>
+  <?php if ($view_new_material) { ?><p><i aria-hidden="true" class="fa fa-fw  fa-clock-o"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search.php?search=<?php echo urlencode("!last".$recent_search_quantity)?>"><?php echo htmlspecialchars($lang["viewnewmaterial"]) ?></a></p><?php } ?>
     
     <?php } ?> <!-- END of Searchbarreplace hook -->
     </div>
@@ -906,13 +906,13 @@ elseif($restypes=='')
     <br /><div id="LoginBoxPanel" class="LoginBoxPanel" >
     <div class="SearchSpace">
 
-      <h2><?php echo $lang["login"]?></h2>
+      <h2><?php echo htmlspecialchars($lang["login"]) ?></h2>
 
     <form id="anonymous_login_form" method="post" action="<?php echo $baseurl?>/login.php">
-        <div class="SearchItem"><?php echo $lang["username"]?><br/><input type="text" name="username" id="name" class="SearchWidth" /></div>
-        <div class="SearchItem"><?php echo $lang["password"]?><br/><input type="password" name="password" id="password" class="SearchWidth" /></div>
+        <div class="SearchItem"><?php echo htmlspecialchars($lang["username"]) ?><br/><input type="text" name="username" id="name" class="SearchWidth" /></div>
+        <div class="SearchItem"><?php echo htmlspecialchars($lang["password"]) ?><br/><input type="password" name="password" id="password" class="SearchWidth" /></div>
         <div class="SearchItem">
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["login"]) ?>&nbsp;&nbsp;" />
         </div>
     </form>
     <p><br/><?php
@@ -934,9 +934,9 @@ elseif($restypes=='')
     <div id="ResearchBoxPanel">
     <div class="SearchSpace">
     <?php if (!hook("replaceresearchrequestboxcontent"))  { ?>
-    <h2><?php echo $lang["researchrequest"]?></h2>
+    <h2><?php echo htmlspecialchars($lang["researchrequest"]) ?></h2>
     <p><?php echo text("researchrequest")?></p>
-    <div class="HorizontalWhiteNav"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/research_request.php">&gt; <?php echo $lang["researchrequestservice"]?></a></div>
+    <div class="HorizontalWhiteNav"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/research_request.php">&gt; <?php echo htmlspecialchars($lang["researchrequestservice"]) ?></a></div>
     </div><br />
     <?php } /* end replaceresearchrequestboxcontent */ ?>
     </div>
@@ -949,8 +949,8 @@ elseif($restypes=='')
 <?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
     <div class="PoweredByPanel">
         <a href="https://www.resourcespace.com" target="_blank">
-            <span><?php echo $lang["powered_by"]; ?></span>
-            <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php echo $lang['powered_by_resourcespace']; ?>">
+            <span><?php echo htmlspecialchars($lang["powered_by"]) ; ?></span>
+            <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php  echo escape_quoted_data($lang['powered_by_resourcespace']); ?>">
         </a>
     </div>
 <?php } ?>

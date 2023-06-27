@@ -341,7 +341,7 @@ function propose_changes_display_multilingual_text_field($n, $field, $translatio
     {
     global $language, $languages, $lang;
     ?>
-    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo $lang["showtranslations"]?>';} else {l.style.display='block';this.innerHTML='<?php echo $lang["hidetranslations"]?>';} return false;"><?php echo $lang["showtranslations"]?></a></p>
+    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape_quoted_data($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape_quoted_data($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"]) ?></a></p>
     <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
     <?php
     reset($languages);
@@ -429,7 +429,6 @@ function propose_changes_display_field($n, $field)
     // Show existing value so can edit
     $value=preg_replace("/^,/","",$field["value"]??"");
     $realvalue = $value; // Store this in case it gets changed by view processing
-    // debug("BANG " . $field["ref"] . " - ". $value);
     if ($value!="")
             {
             # Draw this field normally.			
@@ -437,14 +436,14 @@ function propose_changes_display_field($n, $field)
             }                        
         else
             {
-            ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo $lang["propose_changes_novalue"] ?></div>    
+            ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo htmlspecialchars($lang["propose_changes_novalue"])  ?></div>    
             <?php
             }
         if(!$editaccess && $proposed_value=="")
             {
             ?>
             <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"] ?>">
-            <input type="submit" value="<?php echo $lang["propose_changes_buttontext"] ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
+            <input type="submit" value="<?php echo escape_quoted_data($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
             </div>
             <?php
             }?>
@@ -515,9 +514,9 @@ function propose_changes_display_field($n, $field)
             <div class="ProposeChangesAccept ProposeChangesAcceptDeleteColumn">
             <table>
             <tr>
-            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo $lang["propose_changes_accept_change"] ?></td>
+            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo htmlspecialchars($lang["propose_changes_accept_change"])  ?></td>
             <td>
-            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo $lang["action-delete"] ?></td>
+            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo htmlspecialchars($lang["action-delete"])  ?></td>
             </tr>
             </table>
             </div>

@@ -176,19 +176,19 @@ if($actions_required)
         <?php
         }
     
-    echo $lang["resource_type_delete_select_new"];
+    echo htmlspecialchars($lang["resource_type_delete_select_new"]) ;
     ?>
     </div>
     <div class="Question">  
-    <label for="targettype"><?php echo $lang["resourcetype"]; ?></label>    
+    <label for="targettype"><?php echo htmlspecialchars($lang["resourcetype"]) ; ?></label>    
     <div class="tickset">
       <div class="Inline"><select name="targettype" id="targettype" >
-        <option value="" selected ><?php echo $lang["select"]; ?></option>
+        <option value="" selected ><?php echo htmlspecialchars($lang["select"]) ; ?></option>
 	<?php
     if($confirm_move_associated_rtf)
         {
         ?>
-        <option value="0"><?php echo $lang["resourcetype-global_field"]; ?></option>
+        <option value="0"><?php echo htmlspecialchars($lang["resourcetype-global_field"]) ; ?></option>
         <?php
         }
 	for($n=0;$n<count($allrestypes);$n++)
@@ -206,8 +206,8 @@ if($actions_required)
 	<div class="clearerleft"> </div>
     </div>
     <div class="QuestionSubmit">		
-        <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onClick="history.go(-1);return false;"/>
-        <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#restype_delete').val('yes');this.form.submit();}else{jQuery('#restype_delete').val('');}return false;"/>
+        <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["cancel"]) ?>&nbsp;&nbsp;" onClick="history.go(-1);return false;"/>
+        <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["action-delete"]) ?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape_quoted_data($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit();}else{jQuery('#restype_delete').val('');}return false;"/>
 
     </div>
     <?php
@@ -216,13 +216,13 @@ if($actions_required)
 else
     {
     ?>    
-    <div class="Question"><label><?php echo $lang["property-reference"]?></label>
+    <div class="Question"><label><?php echo htmlspecialchars($lang["property-reference"]) ?></label>
 	<div class="Fixed"><?php echo  $restypedata["ref"] ?></div>
 	<div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
-	<label><?php echo $lang["property-name"]?></label>
+	<label><?php echo htmlspecialchars($lang["property-name"]) ?></label>
 	<input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string)$restypedata["name"])?>" />
 	<div class="clearerleft"> </div>
     </div>
@@ -232,11 +232,11 @@ else
     ?>
     
     <div class="Question">
-	<label><?php echo $lang["property-allowed_extensions"]?></label>
+	<label><?php echo htmlspecialchars($lang["property-allowed_extensions"]) ?></label>
 	<input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string)$restypedata["allowed_extensions"])?>" />
 	
 	<div class="FormHelp" style="padding:0;clear:left;" >
-	    <div class="FormHelpInner"><?php echo $lang["information-allowed_extensions"] ?>
+	    <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-allowed_extensions"])  ?>
 	    </div>
 	</div>    
 	<div class="clearerleft"> </div>    
@@ -244,10 +244,10 @@ else
     
     <?php if (!$execution_lockout) { ?>
     <div class="Question">
-	<label><?php echo $lang["property-override_config_options"] ?></label>
+	<label><?php echo htmlspecialchars($lang["property-override_config_options"])  ?></label>
 	<textarea name="config_options" class="stdwidth" rows=5 cols=50><?php echo htmlspecialchars((string)$restypedata["config_options"])?></textarea>
 	<div class="FormHelp" style="padding:0;clear:left;" >
-	    <div class="FormHelpInner"><?php echo $lang["information-resource_type_config_override"] ?>
+	    <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-resource_type_config_override"])  ?>
 	    </div>
 	</div>
 	<div class="clearerleft"> </div>
@@ -262,18 +262,18 @@ else
     ?>
     
         <div class="Question">
-    <label><?php echo $lang["property-push_metadata"]?></label>
+    <label><?php echo htmlspecialchars($lang["property-push_metadata"]) ?></label>
     <input name="push_metadata" type="checkbox" value="yes" <?php if ($restypedata["push_metadata"]==1) { echo "checked"; } ?> />
     <div class="FormHelp" style="padding:0;clear:left;" >
-        <div class="FormHelpInner"><?php echo $lang["information-push_metadata"] ?>
+        <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-push_metadata"])  ?>
         </div>
     </div>
     <div class="clearerleft"> </div>
     </div>
     
     <div class="QuestionSubmit">		
-    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
-    <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php  echo escape_quoted_data($lang["save"])?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
+    <input name="delete" type="submit" value="&nbsp;&nbsp;<?php  echo escape_quoted_data($lang["action-delete"])?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape_quoted_data($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>
     </div>
     <?php
     } // End of normal page (not confirm deletion)
