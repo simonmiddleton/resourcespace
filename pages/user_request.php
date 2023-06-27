@@ -311,7 +311,8 @@ if($user_registration_opt_in)
     ?>
     <div class="Question">
         <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
-        <label for="login_opt_in" style="margin-top:0;"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
+        <label for="login_opt_in" style="margin-top:0;">
+        <?php echo strip_tags_and_attributes($lang['user_registration_opt_in_message'],array("a"),array("href","target")); ?></label>
         <div class="clearer"></div>
     </div>
     <?php
