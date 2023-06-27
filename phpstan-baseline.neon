@@ -96,6 +96,11 @@ parameters:
 			path: include/image_processing.php
 
 		-
+			message: "#^Undefined variable\\: \\$preview_quality$#"
+			count: 2
+			path: include/image_processing.php
+
+		-
 			message: "#^Undefined variable\\: \\$processfile$#"
 			count: 1
 			path: include/image_processing.php
@@ -271,16 +276,6 @@ parameters:
 			path: pages/manage_jobs.php
 
 		-
-			message: "#^Instantiated class HTML2PDF not found\\.$#"
-			count: 1
-			path: pages/metadata_download.php
-
-		-
-			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/resource_email.php
-
-		-
 			message: "#^Result of function email_resource_request \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/resource_request.php
@@ -409,7 +404,7 @@ parameters:
 			message: "#^Class RSSFeed does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: plugins/rss2/pages/rssfilter.php
-			
+
 		-
 			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
 			count: 1
