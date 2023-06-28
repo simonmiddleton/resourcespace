@@ -206,7 +206,7 @@ function resign_all_code($confirm = true, $output = true, $output_changes_only =
     }
 
 /**
- * Compares provided token with 
+ * Used to compare the user's provided token with the expected value derived from the given identifier
  * 
  * Used by isValidCSRFToken() 
  * Also used on upload_batch to validate an upload session when user cookie not available (i.e. companion uploads)
