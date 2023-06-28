@@ -1330,8 +1330,8 @@ function ps_param_fill($array,$type)
  * Assists in generating parameter arrays where all of the parameters for a given section of sql are the same. 
  * 
  * @param string $string A portion of sql that contains one or more placeholders
- * @param string $value The value that should be used to generaete the array of parameters
- * @param string $type The colomn type of $value as per ps_query
+ * @param string $value The value that should be used to generate the array of parameters
+ * @param string $type The column type of $value as per ps_query
  * 
  * @return array
  */
