@@ -1932,7 +1932,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
         for($n=0;$n<$resultcount;$n++)
             {
             // if using fetchrows some results may just be == 0 - remove from results array
-            if ($results[$n]==0) 
+            if (!isset($results[$n]) || $results[$n]==0) 
                 {
                 //unset($results[$n]); 
                 continue;

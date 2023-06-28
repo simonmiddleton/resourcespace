@@ -66,16 +66,40 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
+    
+    $structured = false;
+    if(!is_array($fetchrows) && strpos((string)$fetchrows,",") !== false)
+        {
+        $fetchrows = explode(",",$fetchrows);
+        if(count($fetchrows) !== 2)
+            {
+            $fetchrows = -1;
+            }
+        else
+            {
+            $structured = false;
+            }
+        }
 
     $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
     
     if (!is_array($results))
         {
-        return array();
+        return $structured ? ["total"=> 0, "data" => []] : [];
         }
         
     $get_resource_table_joins = get_resource_table_joins();
-    $resultcount= count ($results);
+    if(is_array($results) && isset($results["total"]))
+        {
+        $totalcount = $results["total"];
+        $results = $results["data"];
+        $resultcount = count($results);
+        }
+    else
+        {
+        $totalcount = $resultcount = count($results);
+        }
+
     for($n=0;$n<$resultcount;$n++)
         {
         if(is_array($results[$n]))
@@ -83,7 +107,7 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
             $results[$n] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
             }
         }
-    return $results;
+    return $structured ? ["total"=> $totalcount, "data" => $results] : $results;
     }
   
 function api_get_resource_field_data($resource)
