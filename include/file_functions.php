@@ -265,3 +265,46 @@ function remove_empty_temp_directory(string $path_to_file = "")
         rmdir($path_to_folder);
         }
     }
+
+
+/**
+ * Confirm upload path is one of valid paths adding any in $valid_upload_paths from config.
+ *
+ * @param   string   $file_path   Upload path.
+ * @return  bool
+ */
+function is_valid_upload_path(string $file_path) : bool
+    {
+    global $storagedir, $syncdir, $batch_replace_local_folder, $valid_upload_paths, $tempdir;
+
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        $file_path = realpath($file_path);
+        }
+    catch (Exception $e)
+        {
+        debug("Invalid file path specified" . $e->getMessage());
+        return false;
+        }
+    unset($GLOBALS["use_error_exception"]);
+    $valid_upload_paths = $valid_upload_paths ?? [];
+    $valid_upload_paths[] = $storagedir;
+    if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }   
+    if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
+    if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
+
+    foreach($valid_upload_paths as $valid_upload_path)
+        {
+        if(is_dir($valid_upload_path))
+            {
+            $checkpath = realpath($valid_upload_path);
+            if(strpos($file_path,$checkpath) === 0)
+                {
+                return true;
+                }
+            }
+        }
+
+    return false;
+    }

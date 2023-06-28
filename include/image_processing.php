@@ -33,7 +33,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing;
-    global $storagedir, $syncdir, $batch_replace_local_folder, $valid_upload_paths, $tempdir;
 
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -45,36 +44,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     if(trim($file_path) != "")
         {
         // Check a valid path is specified
-        $validpath = false;
-        $GLOBALS["use_error_exception"] = true;
-        try
-            {
-            $file_path = realpath($file_path);
-            }
-        catch (Exception $e)
-            {
-            debug("Invalid file path specified");
-            return false;
-            }
-        unset($GLOBALS["use_error_exception"]);
-        $valid_upload_paths = $valid_upload_paths ?? [];
-        $valid_upload_paths[] = $storagedir;
-        if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }   
-        if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
-        if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
- 
-        foreach($valid_upload_paths as $valid_upload_path)
-            {
-            if(is_dir($valid_upload_path))
-                {
-                $checkpath = realpath($valid_upload_path);
-                if(strpos($file_path,$checkpath) === 0)
-                    {
-                    $validpath = true;
-                    }
-                }
-            }
-        if (!$validpath)
+        if (!is_valid_upload_path($file_path))
             {
             debug("Invalid file path specified: " . $file_path);
             return false;

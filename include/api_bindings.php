@@ -118,7 +118,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
-    if (!api_validate_upload_url($url))
+    if ($url != "" && !api_validate_upload_url($url))
         {
         // URL failed validation
         return false;
@@ -368,6 +368,11 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         return false;
         }
 
+    if ($file_extension != '' && is_banned_extension($file_extension))
+        {
+        return false;
+        }
+
     // Just insert record in the database
     if('' == trim($file))
         {
@@ -387,7 +392,20 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
             $path_parts = pathinfo($file);
             $file_extension = $path_parts['extension'] ?? '';
             }
-        }   
+        }
+    else if (is_valid_upload_path($file))
+        {
+        // Path is a file
+        if (is_banned_extension(pathinfo($file, PATHINFO_EXTENSION)))
+            {
+            return false;
+            }
+        }
+    else if ($file != "")
+        {
+        // Couldn't validate path supplied
+        return false;
+        }
 
     $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
     $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
