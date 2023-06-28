@@ -66,40 +66,29 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
-    
-    $structured = false;
-    if(!is_array($fetchrows) && strpos((string)$fetchrows,",") !== false)
+    if(is_array($fetchrows) || strpos((string)$fetchrows,",") !== false)
         {
-        $fetchrows = explode(",",$fetchrows);
-        if(count($fetchrows) !== 2)
-            {
-            $fetchrows = -1;
-            }
-        else
-            {
-            $structured = false;
-            }
+        $structured = true;
         }
-
-    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
     
-    if (!is_array($results))
-        {
-        return $structured ? ["total"=> 0, "data" => []] : [];
-        }
-        
-    $get_resource_table_joins = get_resource_table_joins();
+    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);    
+           
     if(is_array($results) && isset($results["total"]))
         {
         $totalcount = $results["total"];
         $results = $results["data"];
         $resultcount = count($results);
         }
-    else
+    elseif (is_array($results))
         {
         $totalcount = $resultcount = count($results);
         }
+    else
+        {
+        return $structured ? ["total"=> 0, "data" => []] : [];
+        }
 
+    $get_resource_table_joins = get_resource_table_joins();
     for($n=0;$n<$resultcount;$n++)
         {
         if(is_array($results[$n]))
