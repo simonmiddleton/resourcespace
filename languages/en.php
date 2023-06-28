@@ -3141,3 +3141,4 @@ $lang["skip-to-main-content"]               = "Skip to main content";
 $lang["cleanup_invalid_nodes"]              = "Cleanup invalid node data";
 $lang["cleanup_invalid_node_dry_run"]       = "Don't delete data, just return the number of rows to be deleted?";
 $lang["advancedsearch_resource_section"]    = "Resource data";
+$lang["error-reload-required"]              = "ResourceSpace has been updated. Please reload the page";

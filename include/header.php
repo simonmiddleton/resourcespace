@@ -14,6 +14,20 @@ $loginas=getval("loginas","");
 # Do not display header / footer when dynamically loading CentralSpace contents.
 $ajax=getval("ajax","");
 
+// Force full page reload if CSS or JS has been updated
+$current_css_reload = getval("css_reload_key",0,true);
+if($ajax != "" && $current_css_reload != 0 && $current_css_reload != $css_reload_key)
+    {
+    http_response_code(205);
+    $return["error"] = array(
+        "status" => 205,
+        "title"  => $lang["error-reload-required"],
+    );
+    echo json_encode($return);
+    exit();
+    }
+rs_setcookie("css_reload_key", $css_reload_key);
+
 if ($ajax=="" && !hook("replace_header")) { 
 
 if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request"))
