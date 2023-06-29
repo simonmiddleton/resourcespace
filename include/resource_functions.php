@@ -2707,7 +2707,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     if(count($fieldoptiontranslations) < 2)
                         {
                         $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
-                        debug("update_field: current field option: '" . trim($fieldnode['name']) . "'");
+                        //debug("update_field: current field option: '" . trim($fieldnode['name']) . "'");
                         }
                     else
                         {
@@ -2717,14 +2717,14 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                             if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
                                 {
                                 $currentoptions[]=trim($fieldnode['name']);
-                                debug("update_field: current field option: '" . $fieldnode['name']);
+                                //debug("update_field: current field option: '" . $fieldnode['name']);
                                 }
                             else
                                 {
                                 # Support both 2 character and 5 character language codes (for example en, en-US).
                                 $p=strpos($fieldoptiontranslations[$n],':');
                                 $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
-                                debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)));
+                                //debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)));
                                 }
                             }
                         }
