@@ -190,22 +190,22 @@ if($browse_on)
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
 var pagename="<?php echo $pagename?>";
-var errorpageload = "<h1><?php echo htmlspecialchars($lang["error"]) ?></h1><p><?php echo htmlspecialchars(str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"]))) ?></p>";
+var errorpageload = "<h1><?php echo escape_quoted_data($lang["error"]) ?></h1><p><?php echo escape_quoted_data(str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"]))) ?></p>";
 var errortext = "<?php echo escape_quoted_data($lang["error"]) ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit=false;
 var branch_limit_field = new Array();
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 var TileNav = <?php echo ($tilenav?"true":"false") ?>;
-var errornotloggedin = '<?php echo htmlspecialchars($lang["error_not_logged_in"]) ?>';
-var login = '<?php echo htmlspecialchars($lang["login"]) ?>';
+var errornotloggedin = '<?php echo escape_quoted_data($lang["error_not_logged_in"]) ?>';
+var login = '<?php echo escape_quoted_data($lang["login"]) ?>';
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
     {
     echo "global_trash_html += '" . render_trash("trash","", true) . "';\n";
     }
 ?>
-oktext="<?php echo htmlspecialchars($lang["ok"]) ?>";
+oktext="<?php echo escape_quoted_data($lang["ok"]) ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementContainer='.ui-layout-container';
 var scrolltopElementCollection='.ui-layout-south';
@@ -239,7 +239,7 @@ $extrafooterhtml="";
 <!-- Colour stylesheet -->
 <link href="<?php echo $baseurl?>/css/colour.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!-- Override stylesheet -->
-<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo htmlspecialchars($k); ?>&css_reload_key=<?php echo $css_reload_key?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo escape_quoted_data($k); ?>&css_reload_key=<?php echo $css_reload_key?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
@@ -481,7 +481,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                     {
                     ?>
                     <li>
-                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo htmlspecialchars($lang['myaccount']); ?>" title="<?php echo htmlspecialchars($lang['myaccount']); ?>">
+                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape_quoted_data($lang['myaccount']); ?>" title="<?php echo escape_quoted_data($lang['myaccount']); ?>">
                         <?php
                         if (isset($header_include_username) && $header_include_username)
                             {

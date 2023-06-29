@@ -427,7 +427,7 @@ function confirm_delete_user(el)
         return true;
         }
 
-    return confirm('<?php echo htmlspecialchars($lang['team_user__confirm-deletion']); ?>');
+    return confirm('<?php echo escape_quoted_data($lang['team_user__confirm-deletion']); ?>');
     }
 </script>
 <?php		

@@ -263,7 +263,7 @@ include "../include/header.php";
 		<?php generateFormToken("find"); ?>
         <div class="Question">
 			<div class="tickset">
-			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo htmlspecialchars(unescape($find)); ?>" maxlength="100" class="shrtwidth" /></div>
+			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data(unescape($find)); ?>" maxlength="100" class="shrtwidth" /></div>
 			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
 			 <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value='';submit();" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["clearbutton"])?>&nbsp;&nbsp;" /></div>
 			</div>

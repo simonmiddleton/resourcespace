@@ -43,7 +43,7 @@ include "../include/header.php";
         <div class="Question">
             <label for="find"><?php echo htmlspecialchars($lang["searchpubliccollections"])?></label>
             <div class="xtickset">
-             <div class="Inline"><input type=text name="find" id="find" value="<?php echo htmlspecialchars(unescape($find)) ?>" maxlength="100" class="shrtwidth" /></div>
+             <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data(unescape($find)) ?>" maxlength="100" class="shrtwidth" /></div>
              <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
             <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value='';CentralSpacePost(document.getElementById('pc_searchform'),true);" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["clearbutton"])?>&nbsp;&nbsp;" /></div>
             </div>

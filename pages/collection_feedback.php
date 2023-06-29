@@ -66,8 +66,8 @@ if ($errors!="")
 
 <form method="post" action="<?php echo $baseurl_short?>pages/collection_feedback.php">
     <?php generateFormToken("collection_feedback"); ?>
-    <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
-    <input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection) ?>">
+    <input type="hidden" name="k" value="<?php echo escape_quoted_data($k) ?>">
+    <input type="hidden" name="collection" value="<?php echo escape_quoted_data($collection) ?>">
 
 <p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["download_collection"])?></a></p>
 <?php if ($feedback_resource_select)
@@ -106,7 +106,7 @@ if ($errors!="")
 				$path=get_resource_path ($ref, false,"",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 				}
 		
-		?><a class="lightbox-feedback" href="<?php echo $path?>" title="<?php echo htmlspecialchars($displaytitle) ?>"><img width="<?php echo $result[$n]["thumb_width"]?>" height="<?php echo $result[$n]["thumb_height"]?>" src="<?php echo get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && isset($watermark))) && $access==1,$result[$n]["file_modified"])?>" class="ImageBorder"></a>
+		?><a class="lightbox-feedback" href="<?php echo $path?>" title="<?php echo escape_quoted_data($displaytitle) ?>"><img width="<?php echo $result[$n]["thumb_width"]?>" height="<?php echo $result[$n]["thumb_height"]?>" src="<?php echo get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && isset($watermark))) && $access==1,$result[$n]["file_modified"])?>" class="ImageBorder"></a>
 		<?php } else { ?>		<img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>"/><?php } ?>
 
 		
@@ -138,11 +138,11 @@ if ($errors!="")
 	# For external users, ask for their name/e-mail in case this has been passed to several users.
 	?>
 	<div class="Question">
-	<label for="name"><?php echo htmlspecialchars($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars(getval("name","")) ?>">
+	<label for="name"><?php echo htmlspecialchars($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo escape_quoted_data(getval("name","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<div class="Question">
-	<label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+	<label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape_quoted_data(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
 	<?php
@@ -150,7 +150,7 @@ if ($errors!="")
 ?>
 
 <div class="QuestionSubmit">		
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["send"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["send"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 <?php } ?>

@@ -250,7 +250,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                 ?>
                 <tr id="node_<?php echo $new_record_ref; ?>">
                     <td>
-                        <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo htmlspecialchars($new_option_name); ?>" onblur="this.value=this.value.trim()" >
+                        <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo escape_quoted_data($new_option_name); ?>" onblur="this.value=this.value.trim()" >
                     </td>
                     <td align="left">0</td>
                     
@@ -500,12 +500,12 @@ if($ajax)
         {
         ?>
         <form id="FilterNodeOptions" class="FormFilter" method="GET" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php">
-            <input type="hidden" name="field" value="<?php echo htmlspecialchars($field); ?>">
+            <input type="hidden" name="field" value="<?php echo escape_quoted_data($field); ?>">
             <fieldset>
                 <legend><?php echo htmlspecialchars($lang['filter_label']); ?></legend>
                 <div class="FilterItemContainer">
                     <label><?php echo htmlspecialchars($lang['name']); ?></label>
-                    <input type="text" name="filter_by_name" value="<?php echo htmlspecialchars($filter_by_name); ?>">
+                    <input type="text" name="filter_by_name" value="<?php echo escape_quoted_data($filter_by_name); ?>">
                 </div>
                 <button type="submit"><?php echo htmlspecialchars($lang['filterbutton']); ?></button>
                 <button class="ClearButton" type="submit" onCLick="ClearFilterForm('FilterNodeOptions'); return false;"><?php echo htmlspecialchars($lang['clearbutton']); ?></button>
@@ -565,7 +565,7 @@ if($ajax)
             ?>
             <tr id="node_<?php echo $node['ref']; ?>">
                 <td>
-                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo htmlspecialchars($node['name']); ?>" onblur="this.value=this.value.trim()" >
+                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo escape_quoted_data($node['name']); ?>" onblur="this.value=this.value.trim()" >
                 </td>
                 <td align="left">
                     <?php echo $node['use_count'] ?>

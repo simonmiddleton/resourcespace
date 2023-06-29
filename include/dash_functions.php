@@ -509,9 +509,9 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
             href="<?php echo $link?>" <?php echo $newtab ? "target='_blank'" : "";?>
             onClick="if(dragging){dragging=false;return false;}" 
             class="HomePanel DashTile DashTileDraggable <?php echo $tile["allow_delete"]? "":"conftile";?>" 
-            id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
+            id="tile<?php echo escape_quoted_data($tile["tile"]);?>"
         >
-            <div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo $contents_tile_class; ?>" style="<?php echo $tile_custom_style; ?>">
+            <div id="contents_tile<?php echo escape_quoted_data($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo $contents_tile_class; ?>" style="<?php echo $tile_custom_style; ?>">
                 <?php
                 if (strpos($tile["url"],"dash_tile.php")!==false)
                     {
@@ -523,9 +523,9 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                     ?>
                 <p>Loading...</p>
                 <script>
-                    height = jQuery("#contents_tile<?php echo htmlspecialchars($tile["tile"]);?>").height();
-                    width = jQuery("#contents_tile<?php echo htmlspecialchars($tile["tile"]);?>").width();
-                    jQuery("#contents_tile<?php echo htmlspecialchars($tile["tile"]);?>").load("<?php echo $baseurl."/".$tile["url"]."&tile=".htmlspecialchars($tile["tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    height = jQuery("#contents_tile<?php echo escape_quoted_data($tile["tile"]);?>").height();
+                    width = jQuery("#contents_tile<?php echo escape_quoted_data($tile["tile"]);?>").width();
+                    jQuery("#contents_tile<?php echo escape_quoted_data($tile["tile"]);?>").load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape_quoted_data($tile["tile"]);?>&tlwidth="+width+"&tlheight="+height);
                 </script>
             </div>
             
@@ -697,9 +697,9 @@ function get_managed_dash()
             $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
             ?>
             class="HomePanel DashTile DashTileDraggable <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>" 
-            id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
+            id="tile<?php echo escape_quoted_data($tile["tile"]);?>"
         >
-            <div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
+            <div id="contents_tile<?php echo escape_quoted_data($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
                 <?php if (strpos($tile["url"],"dash_tile.php")!==false) 
                     {
                     # Only pre-render the title if using a "standard" tile and therefore we know the H2 will be in the target data.
@@ -709,9 +709,9 @@ function get_managed_dash()
                     } ?>
                 <p>Loading...</p>
                 <script>
-                    height = jQuery("#contents_tile<?php echo htmlspecialchars($tile["tile"]);?>").height();
-                    width = jQuery("#contents_tile<?php echo htmlspecialchars($tile["tile"]);?>").width();
-                    jQuery("#contents_tile<?php echo htmlspecialchars($tile["tile"]);?>").load("<?php echo $baseurl."/".$tile["url"]."&tile=".htmlspecialchars($tile["tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    height = jQuery("#contents_tile<?php echo escape_quoted_data($tile["tile"]);?>").height();
+                    width = jQuery("#contents_tile<?php echo escape_quoted_data($tile["tile"]);?>").width();
+                    jQuery("#contents_tile<?php echo escape_quoted_data($tile["tile"]);?>").load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape_quoted_data($tile["tile"]);?>&tlwidth="+width+"&tlheight="+height);
                 </script>
             </div>
         </a>
@@ -1183,14 +1183,14 @@ function get_user_dash($user)
             onClick="if(dragging){dragging=false;return false;}<?php if ($tile["link"] != "") {echo $newtab? "": "return " . ($help_modal && strpos($link,"pages/help.php")!==false?"ModalLoad(this,true);":"CentralSpaceLoad(this,true);");} else {echo "return false;";}?>" 
             class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?> <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>"
             tile="<?php echo $tile['tile']; ?>"
-            id="user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>"
+            id="user_tile<?php echo escape_quoted_data($tile["user_tile"]);?>"
         >
-            <div id="contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
+            <div id="contents_user_tile<?php echo escape_quoted_data($tile["user_tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
                 <script>
                 jQuery(function(){
-                    var height = jQuery("#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>").height();
-                    var width = jQuery("#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>").width();
-                    jQuery('#contents_user_tile<?php echo htmlspecialchars($tile["user_tile"]) ?>').load("<?php echo $baseurl."/".$tile["url"]."&tile=".htmlspecialchars($tile["tile"]);?>&user_tile=<?php echo htmlspecialchars($tile["user_tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    var height = jQuery("#contents_user_tile<?php echo escape_quoted_data($tile["user_tile"]);?>").height();
+                    var width = jQuery("#contents_user_tile<?php echo escape_quoted_data($tile["user_tile"]);?>").width();
+                    jQuery('#contents_user_tile<?php echo escape_quoted_data($tile["user_tile"]) ?>').load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape_quoted_data($tile["tile"]);?>&user_tile=<?php echo escape_quoted_data($tile["user_tile"]);?>&tlwidth="+width+"&tlheight="+height);
                 });
                 </script>
             </div>
@@ -1439,7 +1439,7 @@ function build_dash_tile_list($dtiles_available)
               </td>
               <td>
                   <a 
-                      href="<?php echo (mb_strtolower(substr($tile["link"],0,4))=="http")? htmlspecialchars($tile["link"]): $baseurl."/".htmlspecialchars($tile["link"]);?>"
+                      href="<?php echo (mb_strtolower(substr($tile["link"],0,4))=="http")? escape_quoted_data($tile["link"]): $baseurl."/".escape_quoted_data($tile["link"]);?>"
                       target="_blank"
                   >
                       <?php echo htmlspecialchars($lang["dashtilevisitlink"]); ?>
@@ -1729,8 +1729,8 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
         if (pagename == "home")
         {
             var tileid = "<?php echo $tile["ref"]?>"; //Needs to be set for delete functionality
-            var usertileid = "<?php echo htmlspecialchars(substr($tile_id, 18)); ?>" //Needs to be set for delete functionality
-            var usertileidname = "#<?php echo htmlspecialchars(substr($tile_id, 9)); ?>";
+            var usertileid = "<?php echo escape_quoted_data(substr($tile_id, 18)); ?>" //Needs to be set for delete functionality
+            var usertileidname = "#<?php echo escape_quoted_data(substr($tile_id, 9)); ?>";
             var dashtileactionsid = "#DashTileActions_" + usertileid;
             var deletetileid = ".dash-delete_" + usertileid;
             var editlink = "<?php echo (isset($tile["url"])?$tile["url"]:"") ; ?>";

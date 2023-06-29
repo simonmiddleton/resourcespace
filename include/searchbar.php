@@ -634,7 +634,7 @@ elseif($restypes=='')
                 if ($fields[$n]["global"]!=1) 
                     {
                     echo "hidethisfield=false;\n";
-                    foreach(explode(",",$fields[$n]["resource_types"]) as $restype)
+                    foreach(explode(",",(string)$fields[$n]["resource_types"]) as $restype)
                         {?>
                         if (document.getElementById('TickBox<?php echo $restype ?>') !== null && !jQuery('#TickBox<?php echo $restype ?>').prop('checked'))
                             {
