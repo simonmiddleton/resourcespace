@@ -2877,6 +2877,7 @@ $lang["error_save_not_allowed_fc_has_children"] = "Unable to save the change. Pl
 $lang["error_multiple_preview_tools"] = "Please disable the current preview tool and then try again.";
 $lang["missing_folder"] = 'ERROR - The path to the upload folder has not been set.';
 $lang["error_upload_replace_file_fail"] = "Failed to replace resource file";
+$lang["error_upload_replace_file_fail_invalid_collection"] = "Failed to replace resource file. Collection reference supplied is invalid.";
 $lang["error_upload_replace_no_matching_file"] = "No valid resource to replace found with filename %%FILENAME%%";
 $lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resources found with filename %%FILENAME%%";
 $lang["error_upload_invalid_file"] = "Invalid file type: %%FILETYPE%%";

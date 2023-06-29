@@ -817,6 +817,15 @@ if ($processupload)
             else
                 {
                 $replace_resources = get_collection_resources($batch_replace_col);
+                if ($replace_resources === false)
+                    {
+                    $result["status"] = false;
+                    $result["message"] = $lang["error_upload_replace_file_fail_invalid_collection"];
+                    $result["error"] = 109;
+                    $result["id"] = htmlspecialchars($batch_replace_col);
+                    unlink($upfilepath);
+                    exit(json_encode($result));
+                    }
                 debug("batch_replace upload: replacing resources within collection " . $batch_replace_col . " only");
                 }
 
