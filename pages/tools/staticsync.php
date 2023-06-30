@@ -784,6 +784,8 @@ function ProcessFolder($folder)
                             if(count($test) == 0)
                                 {
                                 ps_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES (?, ?, NOW())", ['i', $collection, 'i', $r]);
+                                $new_fcs_order = reorder_all_featured_collections_with_parent($sqlset['parent'] ?? null);
+                                log_activity("via Static Sync, adding resource to collection #{$collection}", LOG_CODE_REORDERED, implode(', ', $new_fcs_order), 'collection');
                                 }
                             }
                         else

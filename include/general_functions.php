@@ -5024,3 +5024,15 @@ function string_ends_with($haystack, $needle)
     {
     return substr($haystack, strlen($haystack) - strlen($needle), strlen($needle)) === $needle;
     }
+
+/**
+ * Helper function to set the order_by key of an array to zero.
+ * 
+ * @param array item Item for which we need to set the order_by
+ * @return array Same item with the order_by key zero.
+ */
+function set_order_by_to_zero(array $item): array
+    {
+    $item['order_by'] = 0;
+    return $item;
+    }

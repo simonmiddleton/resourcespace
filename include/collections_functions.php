@@ -1753,37 +1753,8 @@ function save_collection($ref, $coldata=array())
     // Re-order featured collections tree at the level of this collection (if applicable - only for featured collections)
     if(isset($reorder_fcs))
         {
-        if(isset($sqlset["parent"]) && $sqlset["parent"] > 0)
-            {
-            $sql_where_parent_is = '= ?';
-            $sql_where_parent_is_bp = ['i', $sqlset["parent"]];
-            }
-        else
-            {
-            $sql_where_parent_is = 'IS NULL';
-            $sql_where_parent_is_bp = [];
-            }
-
-
-        // get FCs at the new level and re-order them
-        $fcs_after_update = ps_query(
-              "SELECT DISTINCT c.ref,
-                      c.`name`,
-                      c.`type`,
-                      c.parent,
-                      c.order_by,
-                      count(DISTINCT cr.resource) > 0 AS has_resources
-                 FROM collection AS c
-            LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
-                WHERE c.`type` = ?
-                  AND c.parent {$sql_where_parent_is}
-             GROUP BY c.ref",
-            array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent_is_bp)
-        );
-        usort($fcs_after_update, 'order_featured_collections');
-        $new_fc_level_order = array_column($fcs_after_update, 'ref');
-        sql_reorder_records('collection', $new_fc_level_order);
-        log_activity("via save_collection({$ref})", LOG_CODE_REORDERED, implode(', ', $new_fc_level_order), 'collection');
+        $new_fcs_order = reorder_all_featured_collections_with_parent($sqlset['parent'] ?? null);
+        log_activity("via save_collection({$ref})", LOG_CODE_REORDERED, implode(', ', $new_fcs_order), 'collection');
         }
 
     // When a collection is now saved as a Featured Collection (must have resources) under an existing branch, apply all 
@@ -7081,4 +7052,38 @@ function can_create_collections()
         checkperm("b") 
          || (is_anonymous_user() && !$anonymous_user_session_collection) // User is an anonymous user
         );
+    }
+
+/**
+ * Re-order all featured collections at a particular tree depth.
+ * 
+ * @param null|integer parent ID of the featured collections' parent to target
+ * @return array Featured collection IDs list, in the new order
+ */
+function reorder_all_featured_collections_with_parent(?int $parent): array
+    {
+    $sql_where_parent = is_null($parent)
+        ? new PreparedStatementQuery('IS NULL')
+        : new PreparedStatementQuery('= ?', ['i', $parent]);
+    $fcs_at_depth = ps_query(
+          "SELECT DISTINCT c.ref,
+                  c.`name`,
+                  c.`type`,
+                  c.parent,
+                  c.order_by,
+                  count(DISTINCT cr.resource) > 0 AS has_resources
+             FROM collection AS c
+        LEFT JOIN collection_resource AS cr ON c.ref = cr.collection
+            WHERE c.`type` = ?
+              AND c.parent {$sql_where_parent->sql}
+         GROUP BY c.ref",
+        array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent->parameters)
+    );
+
+    $fcs_at_depth = array_map('set_order_by_to_zero', $fcs_at_depth);
+    usort($fcs_at_depth, 'order_featured_collections');
+    $new_fcs_order = array_column($fcs_at_depth, 'ref');
+    sql_reorder_records('collection', $new_fcs_order);
+    
+    return $new_fcs_order;
     }
