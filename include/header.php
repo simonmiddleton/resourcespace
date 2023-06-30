@@ -40,8 +40,15 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
         }
     }
 
-$noauth_page = ($pagename == "login");
-	
+$noauth_page = in_array(
+    $pagename,
+    array(
+        "login",
+        "user_change_password",
+        "user_request",
+        "done",
+    ));
+
 ?><!DOCTYPE html>
 <html lang="<?php echo $language ?>">	
 
