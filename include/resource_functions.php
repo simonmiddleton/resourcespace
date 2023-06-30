@@ -677,7 +677,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
                     }
-
                 // Check nodes are valid for this field
                 if(FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type'])
                     {
@@ -1633,6 +1632,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 else
                     {
                     $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
+                    debug("BANG " . print_r($nodes_to_add));
                     debug('Adding nodes to resource #' . $ref . ' : ' . implode(',',$added_nodes));
                     $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
                     debug('Removed nodes from resource #' . $ref . ' : ' . implode(',',$removed_nodes));

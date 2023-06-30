@@ -1921,44 +1921,73 @@ function rebuild_specific_field_search_from_node(array $node)
 
 function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="DESC",$access_override=false,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
     {
-    # Search capability.
+    global $access;
+
+    $structured = false;
+    if(is_array($fetchrows))
+        {
+        $structured = true;
+        }
+    elseif(!is_array($fetchrows) && strpos((string)$fetchrows,",") !== false)
+        {
+        $fetchrows = explode(",",$fetchrows);
+        if(count($fetchrows) == 2)
+            {
+            $structured = true;
+            }
+        else
+            {
+            $fetchrows = 0;
+            }
+        }
+
+    if($structured)
+        {
+        array_map(function($val){return $val>0 ? $val : 0;},$fetchrows);
+        }
+
     # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
     $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,DEPRECATED_STARSEARCH,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
     if(is_string($getsizes)){$getsizes=explode(",",$getsizes);}
     $getsizes = array_map('trim', $getsizes);
-    if(is_array($results) && is_array($getsizes) && count($getsizes)>0)
+
+    if (!is_array($results))
         {
-        $resultcount=count($results);
-        for($n=0;$n<$resultcount;$n++)
+        return $results;
+        }
+
+    $total = $results["total"] ?? count($results);
+    $resultset = $results["data"] ?? $results;
+
+    if(is_array($resultset) && is_array($getsizes) && count($getsizes)>0)
+        {
+        $available=get_all_image_sizes(true,($access==1));
+        for($n=0;$n<$total;$n++)
             {
             // if using fetchrows some results may just be == 0 - remove from results array
-            if ($results[$n]==0) 
+            if (!isset($resultset[$n]) || $resultset[$n]==0) 
                 {
-                //unset($results[$n]); 
                 continue;
                 }
 
-            global $access;
-            $access=get_resource_access($results[$n]);
+            $access=get_resource_access($resultset[$n]);
             $use_watermark=check_use_watermark();
 
-            if($results[$n]["access"]==2){continue;} // No images for confidential resources
-            $available=get_all_image_sizes(true,($access==1));
+            if($resultset[$n]["access"]==2){continue;} // No images for confidential resources
             foreach ($getsizes as $getsize)
                 {
                 if(!(in_array($getsize,array_column($available,"id")))){continue;}
                 if(
-                    !resource_has_access_denied_by_RT_size($results[$n]['resource_type'], $getsize)
-                    && file_exists(get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark))
+                    !resource_has_access_denied_by_RT_size($resultset[$n]['resource_type'], $getsize)
+                    && file_exists(get_resource_path($resultset[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark))
                 )
                     {
-                    $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
+                    $resultset[$n]["url_" . $getsize]=get_resource_path($resultset[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
                     }
                 }
-
             }
         }
-    return $results;
+    return $structured ? ["total"=> $total, "data" => $resultset] : $resultset;
     }
 
 
@@ -3301,12 +3330,12 @@ function setup_search_chunks($fetchrows, ?int &$chunk_offset, ?int &$search_chun
     {
     if (is_array($fetchrows) && isset($fetchrows[0]) && isset($fetchrows[1]))
         {
-        $chunk_offset = $fetchrows[0];
-        $search_chunk_size = $fetchrows[1];
+        $chunk_offset = max((int)$fetchrows[0],0);
+        $search_chunk_size = (int)$fetchrows[1];
         }
     else
         {
         $chunk_offset = 0;
-        $search_chunk_size = $fetchrows;
+        $search_chunk_size = (int)$fetchrows;
         }
     }
