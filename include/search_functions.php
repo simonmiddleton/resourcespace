@@ -3331,7 +3331,7 @@ function setup_search_chunks($fetchrows, ?int &$chunk_offset, ?int &$search_chun
     if (is_array($fetchrows) && isset($fetchrows[0]) && isset($fetchrows[1]))
         {
         $chunk_offset = max((int)$fetchrows[0],0);
-        $search_chunk_size = abs((int)$fetchrows[1]);
+        $search_chunk_size = (int)$fetchrows[1];
         }
     else
         {
