@@ -3336,6 +3336,6 @@ function setup_search_chunks($fetchrows, ?int &$chunk_offset, ?int &$search_chun
     else
         {
         $chunk_offset = 0;
-        $search_chunk_size = abs((int)$fetchrows);
+        $search_chunk_size = (int)$fetchrows;
         }
     }
