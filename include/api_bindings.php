@@ -66,6 +66,7 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
+    $structured = false;
     if(is_array($fetchrows) || strpos((string)$fetchrows,",") !== false)
         {
         $structured = true;
