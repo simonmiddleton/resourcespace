@@ -164,15 +164,15 @@ if ($alt_access)
             ?>
             <tr class="DownloadDBlend">
             <?php
-            $preview_url = generateURL($baseurl . "/pages/download.php", ["ref" => $ref, "ext" => $altfiles[$n]["file_extension"], "alternative" => $altfiles[$n]["ref"], "noattach" => "true"]);
+            $preview_url = generateURL($baseurl . "/pages/download.php", ["ref" => $ref, "ext" => $altfiles[$n]["file_extension"], "alternative" => $altfiles[$n]["ref"], "noattach" => "true", 'k' => $k]);
             
             if($terms_download)
                 {
-                $preview_url = generateURL($baseurl . "/pages/terms.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref']]);
+                $preview_url = generateURL($baseurl . "/pages/terms.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref'], 'k' => $k]);
                 }
             elseif($download_usage)
                 {
-                $preview_url = generateURL($baseurl . "/pages/download_usage.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref']]);
+                $preview_url = generateURL($baseurl . "/pages/download_usage.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref'], 'k' => $k]);
                 }
             ?>
             <td colspan="2" class="DownloadButton"><a href="<?php echo $preview_url;?>" target="_blank"><?php echo htmlspecialchars($lang["view_in_browser"]);?></a></td>
