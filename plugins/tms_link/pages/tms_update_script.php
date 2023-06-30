@@ -230,8 +230,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                         $resource_type_field_data = get_resource_type_field($tms_link_field_id);
                         if($resource_type_field_data!==false && $resource_type_field_data['type'] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR)
                             {
-                            $newval = escape_check($tmsresult[$tms_link_column_name]);
-                            $newval = str_replace('&nbsp;', ' ', $newval);
+                            $newval = str_replace('&nbsp;', ' ', $tmsresult[$tms_link_column_name]);
                             }
                             
                         if ($existingval!== $newval)
@@ -245,7 +244,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                                     fwrite($logfile,$logmessage);
                                     }
 
-                                update_field($tms_resources[$ri]["resource"], $tms_link_field_id, escape_check($tmsresult[$tms_link_column_name]));
+                                update_field($tms_resources[$ri]["resource"], $tms_link_field_id, $tmsresult[$tms_link_column_name]);
                                 }
 
                             if($tms_link_field_id != $tms_link_checksum_field)
