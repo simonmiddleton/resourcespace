@@ -1070,7 +1070,7 @@ jQuery(document).ready(function () {
                     uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
                     browseFiles: '<?php echo escape_quoted_data($lang["upload_browse"]) ?>',
                     uploadXFiles: '<?php echo escape_quoted_data($lang["upload_start"]) ?>',
-                    dropPaste: '<?php echo escape_quoted_data($lang["upload_droparea_text"]) ?>',
+                    dropPasteFiles: '<?php echo escape_quoted_data($lang["upload_droparea_text"]) ?>',
                 },
             },
 
