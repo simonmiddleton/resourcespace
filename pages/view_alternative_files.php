@@ -74,14 +74,16 @@ if ($alt_access)
             <script>
             jQuery(document).ready(function() {
                 orig_preview=jQuery('#previewimage').attr('src');
-                orig_width=jQuery('#previewimage').width();
+                orig_height=jQuery('#previewimage').height();
                 jQuery("#alt_file_preview_<?php echo $altfiles[$n]['ref'] ?>").mouseenter(function() {
                     orig_preview=jQuery('#previewimage').attr('src');
                     orig_height=jQuery('#previewimage').height();
                     jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');
-                    jQuery('#previewimage').height(orig_height); 
+                    if(orig_height!=0) {
+                        jQuery('#previewimage').height(orig_height); 
+                    }
                 }).mouseleave(function() {
-                    jQuery('#previewimage').attr('src',orig_preview).attr('height',orig_height);
+                    jQuery('#previewimage').attr('src',orig_preview);
                 });
             });
             </script>
