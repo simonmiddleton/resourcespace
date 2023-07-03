@@ -35,7 +35,7 @@ renderBreadcrumbs($links_trail);
 <p></p>
 <ul>
 	<li>
-		<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&modifylink=true&freetext=Helpful%20tips%20here&nostyleoptions=true&tile_audience=true&link=http://resourcespace.org/knowledge-base/&title=Knowledge%20Base";?>">
+		<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&modifylink=true&freetext=Helpful%20tips%20here&nostyleoptions=true&tile_audience=true&link=https://resourcespace.com/knowledge-base/&title=Knowledge%20Base";?>">
 			<?php echo $lang["createdashtilefreetext"];?>
 		</a>
 	</li>
