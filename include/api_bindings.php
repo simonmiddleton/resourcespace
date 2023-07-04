@@ -401,11 +401,6 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         $upload_key = uniqid($resource . "_");
         $file = temp_local_download_remote_file($file, $upload_key);
         $deletesourcefile = true;
-        if(trim($file_extension)=="")
-            {
-            $path_parts = pathinfo($file);
-            $file_extension = $path_parts['extension'] ?? '';
-            }
         }
     else if (is_valid_upload_path($file))
         {
@@ -419,6 +414,12 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         {
         // Couldn't validate path supplied
         return false;
+        }
+
+    if(trim($file_extension)=="")
+        {
+        $path_parts = pathinfo($file);
+        $file_extension = $path_parts['extension'] ?? '';
         }
 
     $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
