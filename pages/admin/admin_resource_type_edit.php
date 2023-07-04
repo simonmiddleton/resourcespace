@@ -170,7 +170,7 @@ if($actions_required)
         }
     else if($confirm_move_associated_rtf)
         {
-        echo htmlspecialchars(str_replace("%COUNT", count($affected_rtfs), $lang["resource_type_delete_assoc_rtf_confirm"])) . "<br>";
+        echo htmlspecialchars(str_replace("%COUNT", count($dependentfields), $lang["resource_type_delete_assoc_rtf_confirm"])) . "<br>";
         ?>
         <input type="hidden" name="prereq_action" value="move_affected_rtfs">
         <?php

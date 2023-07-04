@@ -340,6 +340,10 @@ else
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
+// if($resource === false)
+//     {
+    
+//     }
 
 $metadatatemplate = getval('metadatatemplate',0,true);
     
