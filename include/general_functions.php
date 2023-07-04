@@ -948,7 +948,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
             $body.="--PHP-mixed-" . $random_hash . $eol;
             $body.="Content-Type: application/octet-stream; name=\"" . $filename . "\"" . $eol; 
             $body.="Content-Transfer-Encoding: base64" . $eol;
-            $body.="Content-Disposition: attachment; filename=\"" . $filename . "\"'" . $eol . $eol;
+            $body.="Content-Disposition: attachment; filename=\"" . $filename . "\"" . $eol . $eol;
             $body.=$attachment;
             }
         $body.="--PHP-mixed-" . $random_hash . "--" . $eol; # Final terminating boundary.
