@@ -1615,12 +1615,11 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     width: 250px;
 }
 #login_box .QuestionSubmit {
-    float: right;
     margin-top: 5px;
+    padding: 1em 0;
 }
 #login_box .UserRequestSubmit {
     display: block;
-    text-align: right;
     float: none;
 }
 #login_box .QuestionSubmit label {
@@ -1633,7 +1632,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 #login_box .Question.KeepLoggedIn {
     display: inline-block;
-    margin: 12px 0 20px 0;
 }
 
 #login_box .KeepLoggedIn label {
