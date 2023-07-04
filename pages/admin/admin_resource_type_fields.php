@@ -16,7 +16,7 @@ if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when post
     
     
 $restypefilter=getval("restypefilter","");
-$restypesfilter=($restypefilter != "")?array((int)$restypefilter):"";
+$restypesfilter=($restypefilter != "")?array((int)$restypefilter):[];
 $field_order_by=getval("field_order_by","order_by");
 $field_sort=getval("field_sort","asc");
 $reorder_view=getval("reorder_view",false);
@@ -106,6 +106,13 @@ function addColumnHeader($orderName, $labelKey)
     }
 
 $fields=get_resource_type_fields($restypesfilter, $field_order_by, $field_sort, $find, array(),true);
+
+if(!empty($restypesfilter) && !in_array(0,$restypesfilter))
+    {
+    // Don't show global fields as a specific resource type has been selected
+    $fields = array_values(array_filter($fields,function($field){return $field["global"] != 1;}));
+    }
+
 $resource_types=get_resource_types();
 $arr_restypes=array_column($resource_types,"name","ref");
 

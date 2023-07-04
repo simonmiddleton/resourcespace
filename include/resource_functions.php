@@ -8179,22 +8179,22 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
     $joins[] = " LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field = rtf.ref";
     $joins[] = " LEFT JOIN tab t ON t.ref=rtf.tab";
    
-    foreach($restypes as $restype)
+    if(count($restypes) > 0)
         {
-        if($restype === 0)
+        // Always return global fields
+        $restypeconditions[]  = "global=1";
+        foreach($restypes as $restype)
             {
-            // Global field is a special case
-            $restypeconditions[]  = "global=1"; 
-            }
-        else
-            {
-            $restypeconditions[] = "FIND_IN_SET(?,resource_types)";
-            $groupparams[] = "i";$groupparams[] = $restype;
+            if($restype > 0)
+                {
+                $restypeconditions[] = "FIND_IN_SET(?,resource_types)";
+                $groupparams[] = "i";$groupparams[] = $restype;
+                }
             }
         }
 
     if(count($restypeconditions) > 0)
-        {
+        { 
         $groupcondition = " HAVING ((" . implode(") OR (",$restypeconditions) . "))";
         }
 
