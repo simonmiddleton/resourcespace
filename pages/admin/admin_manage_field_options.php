@@ -1098,12 +1098,25 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
 
     <?php 
     // Select a parent node to import for
-    if(7 == $field_data['type'])
+    if($field_data['type'] == FIELD_TYPE_CATEGORY_TREE)
         {
         $import_export_parent_nodes = array('' => '');
+        $level = 0;
+        $lastnode = 0;
         foreach(get_nodes($field, null, true) as $import_export_parent_node)
             {
-            $import_export_parent_nodes[$import_export_parent_node['ref']] = $import_export_parent_node['name'];
+            if(is_null($import_export_parent_node['parent']))
+                {
+                $level = 0;
+                }
+            elseif($lastnode == $import_export_parent_node['parent'])
+                {
+                $level++;                
+                }
+
+            if($import_export_parent_node['ref'])
+            $import_export_parent_nodes[$import_export_parent_node['ref']] = (str_repeat("-",$level)) . $import_export_parent_node['name'];
+            $lastnode = $import_export_parent_node['ref'];
             }
 
         render_dropdown_question(
