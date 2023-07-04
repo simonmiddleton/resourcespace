@@ -927,14 +927,17 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
         $str_restypes = "";
         $fieldrestypes = explode(",",(string)$field["resource_types"]);
         $fieldrestypenames = [];
-        foreach($fieldrestypes as $fieldrestype)
+        if($field["global"] != 1)
             {
-            $fieldrestypenames[] =i18n_get_translated($resource_types[$fieldrestype]);
-            }
-        if(count($fieldrestypes) < count($all_resource_types)-2)
-            {
-            // Don't show this if they are linked to all but one resource types
-            $str_restypes = " (" .  implode(",",$fieldrestypenames) . ")";
+            foreach($fieldrestypes as $fieldrestype)
+                {
+                $fieldrestypenames[] =i18n_get_translated($resource_types[$fieldrestype]);
+                }
+            if(count($fieldrestypes) < count($all_resource_types)-2)
+                {
+                // Don't show this if they are linked to all but one resource types
+                $str_restypes = " (" .  implode(",",$fieldrestypenames) . ")";
+                }
             }
         echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes .  '</option>';
         }
