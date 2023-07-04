@@ -904,39 +904,26 @@ function do_search(
                                             return false;
                                             }
 
-                                        $rtype = ps_value("SELECT resource_type value FROM resource_type_field WHERE ref = ?",["i",$nodatafield], 0, "schema");
-                                        if ($rtype != 0)
+                                        $nodatafieldinfo = get_resource_type_field($nodatafield);
+                                        if ($nodatafieldinfo["global"] != 1)
                                             {
-                                            if ($rtype == 999)
-                                                {
-                                                $restypesql = "AND (r[union_index].archive=1 or r[union_index].archive=2) AND ";
-                                                if ($sql_filter->sql != "")
-                                                    {
-                                                    $sql_filter->sql .= " AND ";
-                                                    }
-                                                $sql_filter->sql .= str_replace("r[union_index].archive='0'", "(r[union_index].archive=1 or r[union_index].archive=2)", $sql_filter->sql);
-                                                }
-                                            else
-                                                {
-                                                $restypesql = "and r[union_index].resource_type ='$rtype' ";
-                                                }
+                                            $restypesql = " AND r[union_index].resource_type IN (" . (string)$nodatafieldinfo["resource_types"] . ") ";
                                             }
                                         else
                                             {
                                             $restypesql = "";
                                             }
 
-                                        $nodatafieldtype = ps_value("SELECT `type` value FROM resource_type_field WHERE ref = ?",["i",$nodatafield], 0, "schema");
-
                                         // Check that nodes are empty
-                                        $union = new PreparedStatementQuery();                                        $union->sql = "SELECT ref AS resource, [bit_or_condition] 1 AS score FROM resource r[union_index] WHERE r[union_index].ref NOT IN
-                                                (
-                                                SELECT rn.resource FROM
-                                                node n
-                                                right JOIN resource_node rn ON rn.node=n.ref
-                                                where  n.resource_type_field = ?
-                                                group by rn.resource
-                                                )";
+                                        $union = new PreparedStatementQuery();
+                                        $union->sql = "SELECT ref AS resource, [bit_or_condition] 1 AS score FROM resource r[union_index] WHERE r[union_index].ref NOT IN
+                                        (
+                                        SELECT rn.resource FROM
+                                        node n
+                                        RIGHT JOIN resource_node rn ON rn.node=n.ref
+                                        WHERE  n.resource_type_field = ? $restypesql
+                                        GROUP BY rn.resource
+                                        )";
                                         $union->parameters = ["i",$nodatafield];
                                         $sql_keyword_union[] = $union;
                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
@@ -1499,7 +1486,7 @@ function do_search(
 
     # Compile final SQL
     $results_sql = new PreparedStatementQuery();
-    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . "  WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
+    $results_sql->sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t->sql . " WHERE " . $t2->sql . $sql->sql . " GROUP BY r.ref, user_access, group_access ORDER BY " . $order_by . $sql_suffix;
     $results_sql->parameters = array_merge($t->parameters,$t2->parameters,$sql->parameters);
 
     # Debug
