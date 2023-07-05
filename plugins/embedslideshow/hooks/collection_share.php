@@ -7,6 +7,11 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
     <li><i aria-hidden="true" class="fa fa-fw fa-slideshare"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $ref?>&embedslideshow=true"><?php echo $lang["embedslideshow"]?></a></li>
     <?php
     
+    if (!is_int_loose($ref))
+        {
+        return false;
+        }
+    
     if (getval("embedslideshow","")!="" )
         {
         ?>
