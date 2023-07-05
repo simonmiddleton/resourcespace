@@ -548,11 +548,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             # Translate all options
             $adjusted_dropdownoptions=hook("adjustdropdownoptions");
             if ($adjusted_dropdownoptions){$options=$adjusted_dropdownoptions;}
-            
-            if($forsearchbar)
-            	{
-            	$optionfields[]=$field["name"]; # Append to the option fields array, used by the AJAX dropdown filtering
-            	}
 
             $node_options = array_column($field["nodes"], "name");
 
@@ -807,7 +802,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             <script type="text/javascript">
                 jQuery(document).ready(function()
                 {
-                    jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                    jQuery('#SearchBox').on('categoryTreeChanged', function(e,node)
                     {
                         FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',<?php echo htmlspecialchars((string)$field["resource_types"]) ?>);
                     });

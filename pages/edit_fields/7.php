@@ -352,13 +352,13 @@ if(!$is_search)
         for(var i = 0; i < selected_rs_node_ids.length; i++)
             {
             // Trigger an event so we can chain actions once we've changed a category tree option
-            jQuery('#CentralSpace').trigger('categoryTreeChanged', [{node: selected_rs_node_ids[i]}]);
+            jQuery('#<?php echo $forsearchbar ? "SearchBox" : "CentralSpace" ?>').trigger('categoryTreeChanged', [{node: selected_rs_node_ids[i]}]);
             }
 
         if(selected_rs_node_ids.length == 0)
             {
             // Category tree cleared
-            jQuery('#CentralSpace').trigger('categoryTreeChanged', 0);
+            jQuery('#<?php echo $forsearchbar ? "SearchBox" : "CentralSpace" ?>').trigger('categoryTreeChanged', 0);
             }
 
         <?php

@@ -547,8 +547,9 @@ elseif($restypes=='')
 
     function FilterBasicSearchOptions(clickedfield,resourcetypes)
         {
-        if (resourcetypes!=0)
+        if (typeof resourcetypes !== 'undefined' && resourcetypes!=0)
             {
+            resourcetypes = resourcetypes.toString().split(",");
             // When selecting resource type specific fields, automatically untick all other resource types, because selecting something from this field will never produce resources from the other resource types.
             
             // Always untick the Tick All box
@@ -558,7 +559,7 @@ elseif($restypes=='')
             for ($n=0;$n<count($types);$n++)
                 {
                 ?>
-                if (resourcetypes.indexOf(<?php echo $types[$n]["ref"]?>) == -1) {
+                if (resourcetypes.indexOf('<?php echo $types[$n]["ref"]?>') == -1) {
                     jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);
                 }
                 else {
@@ -570,36 +571,6 @@ elseif($restypes=='')
             // Hide any fields now no longer relevant.  
             SimpleSearchFieldsHideOrShow(false);
             }
-
-        <?php
-        // When using more than one dropdown field, automatically filter field options using AJAX
-        // in a attempt to avoid blank results sets through excessive selection of filters.
-        if ($simple_search_dropdown_filtering && count($optionfields)>1) { ?>
-        var Filter="";
-        var clickedfieldno="";
-        <?php for ($n=0;$n<count($optionfields);$n++)
-            {
-            ?>
-            Filter += "<?php if ($n>0) {echo ";";} ?><?php echo htmlspecialchars($optionfields[$n]) ?>:" + jQuery('#field_<?php echo htmlspecialchars($optionfields[$n])?>').value;
-            
-            // Display waiting message
-            if (clickedfield!='<?php echo htmlspecialchars($optionfields[$n]) ?>')
-                {
-                if (jQuery('field_<?php echo htmlspecialchars($optionfields[$n]) ?>').attr('selectedIndex', 0))
-                    {
-                    jQuery('field_<?php echo htmlspecialchars($optionfields[$n]) ?>').html("<option value=''><?php echo htmlspecialchars($lang["pleasewaitsmall"])  ?></option>");
-                    }
-                }
-            else
-                {
-                clickedfieldno='<?php echo $n ?>';
-                }
-            <?php
-            } ?>
-        
-        // Send AJAX post request.
-        jQuery.get('<?php echo $baseurl_short?>pages/ajax/filter_basic_search_options.php?nofilter=' + encodeURIComponent(clickedfieldno) + '&filter=' + encodeURIComponent(Filter), { success: function(data, textStatus, jqXHR) {eval(data);} });
-        <?php } ?>
         }
 
 
