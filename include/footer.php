@@ -17,9 +17,14 @@ if(getval("loginmodal",""))
 if (getval("ajax","") == "" && !hook("replace_footer")) 
 	{ 
 	hook("beforefooter");
+    if(!in_array($pagename,["login","user_password","preview_all","user_request"]))
+        {
+        ?>
+        </div><!--End CentralSpaceFC-->
+        </div><!--End CentralSpaceContainerFC-->
+        <?php
+        }
     ?>
-    </div><!--End CentralSpaceFC-->
-    </div><!--End CentralSpaceContainerFC-->
     <!-- Footer closures -->
     <div class="clearer"></div>
 
