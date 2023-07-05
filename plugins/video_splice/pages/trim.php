@@ -209,16 +209,6 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             $alt_ref
         );
 
-        // Set created_by, archive and extension
-        ps_query("update resource set created_by= ?,archive= ?,file_extension= ? where ref= ?",
-                [
-                'i', $userref,
-                'i', get_default_archive_state(),
-                's', $ffmpeg_preview_extension,
-                'i', $alt_ref
-                ]        
-        );
-
         // Unlink the target
         if (file_exists($target)) {unlink ($target);}
 
