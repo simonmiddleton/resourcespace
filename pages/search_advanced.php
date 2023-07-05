@@ -101,9 +101,9 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                 }
 
 		<?php if ($count==0) { ?>
-			populate_view_buttons("<?php echo htmlspecialchars($lang["nomatchingresults"])  ?>");
+			populate_view_buttons("<?php echo escape_quoted_data($lang["nomatchingresults"])  ?>");
 		<?php } else { ?>
-			populate_view_buttons("<?php echo htmlspecialchars($lang["view"] . " " . number_format($count) . " " . $lang["matchingresults"]) ?>");
+			populate_view_buttons("<?php echo escape_quoted_data($lang["view"] . " " . number_format($count) . " " . $lang["matchingresults"]) ?>");
 		<?php } ?>
 		</script>
 		</html>
@@ -539,7 +539,7 @@ if (!hook('advsearchallfields')) { ?>
 <input type="hidden" id="hiddenfields" name="hiddenfields" value="">
 
 <div class="Question">
-<label for="allfields"><?php echo htmlspecialchars($lang["allfields"]) ?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo htmlspecialchars($allwords)?>" onChange="UpdateResultCount();">
+<label for="allfields"><?php echo htmlspecialchars($lang["allfields"]) ?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo escape_quoted_data($allwords)?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -559,7 +559,7 @@ if (!hook('advsearchallfields')) { ?>
 <?php if (!hook('advsearchresid')) { ?>
 <!-- Search for resource ID(s) -->
 <div class="Question">
-<label for="resourceids"><?php echo htmlspecialchars($lang["resourceids"]) ?></label><input class="SearchWidth" type=text name="resourceids" id="resourceids" value="<?php echo htmlspecialchars(getval("resourceids","")) ?>" onChange="UpdateResultCount();">
+<label for="resourceids"><?php echo htmlspecialchars($lang["resourceids"]) ?></label><input class="SearchWidth" type=text name="resourceids" id="resourceids" value="<?php echo escape_quoted_data(getval("resourceids","")) ?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php }
@@ -728,7 +728,7 @@ if($advanced_search_archive_select)
         }
     else
         {?>
-        <input type="hidden" name="archive" value="<?php echo htmlspecialchars($archive)?>">
+        <input type="hidden" name="archive" value="<?php echo escape_quoted_data($archive)?>">
         <?php
         }
 

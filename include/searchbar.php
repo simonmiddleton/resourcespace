@@ -883,7 +883,7 @@ elseif($restypes=='')
         <div class="SearchItem"><?php echo htmlspecialchars($lang["username"]) ?><br/><input type="text" name="username" id="name" class="SearchWidth" /></div>
         <div class="SearchItem"><?php echo htmlspecialchars($lang["password"]) ?><br/><input type="password" name="password" id="password" class="SearchWidth" /></div>
         <div class="SearchItem">
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["login"]) ?>&nbsp;&nbsp;" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["login"]) ?>&nbsp;&nbsp;" />
         </div>
     </form>
     <p><br/><?php
@@ -907,7 +907,7 @@ elseif($restypes=='')
     <?php if (!hook("replaceresearchrequestboxcontent"))  { ?>
     <h2><?php echo htmlspecialchars($lang["researchrequest"]) ?></h2>
     <p><?php echo text("researchrequest")?></p>
-    <div class="HorizontalWhiteNav"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/research_request.php">&gt; <?php echo htmlspecialchars($lang["researchrequestservice"]) ?></a></div>
+    <div class="HorizontalWhiteNav"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/research_request.php"><?php echo LINK_CARET . htmlspecialchars($lang["researchrequestservice"]) ?></a></div>
     </div><br />
     <?php } /* end replaceresearchrequestboxcontent */ ?>
     </div>
